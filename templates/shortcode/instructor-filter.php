@@ -103,6 +103,7 @@ if ( $total_categories && $total_categories > $limit ) {
 	<div class="tutor-instructor-filter-result">
 		<div class="filter-pc">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right tutor-mb-24">
+				<!-- @todo: remove las icon -->
 				<span class="las la-search tutor-input-group-icon"></span>
 				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" />
 			</div>
