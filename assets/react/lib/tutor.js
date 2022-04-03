@@ -86,16 +86,6 @@ window.tutor_popup = function($, icon, padding) {
 	return { popup: this.popup };
 };
 
-window.tutorDotLoader = (loaderType) => {
-	return `
-    <div class="tutor-dot-loader ${loaderType ? loaderType : ''}">
-        <span class="dot dot-1"></span>
-        <span class="dot dot-2"></span>
-        <span class="dot dot-3"></span>
-        <span class="dot dot-4"></span>
-    </div>`;
-};
-
 window.tutor_date_picker = () => {
 	if (jQuery.datepicker) {
 		var format = _tutorobject.wp_date_format;

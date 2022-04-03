@@ -86,10 +86,8 @@ $image_base = tutor()->url . '/assets/images/';
 		<label class="tutor-d-block tutor-mb-12 tutor-form-label">
 			<?php esc_html_e( 'Courses', 'tutor' ); ?>
 		</label>
-		<select class="tutor-form-select tutor-form-control-sm tutor-announcement-course-sorting">
-
+		<select class="tutor-form-select tutor-announcement-course-sorting">
 			<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
-
 			<?php if ( $courses ) : ?>
 				<?php foreach ( $courses as $course ) : ?>
 					<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>

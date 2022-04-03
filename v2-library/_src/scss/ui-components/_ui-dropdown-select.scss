@@ -19,7 +19,7 @@
 		// max-height: 304px;
 		// width: calc(100% - 12px);
 		width: 100%;
-		max-height: 285px;
+		max-height: 290px;
 		overflow-y: auto;
 		transition: all 100ms;
 		order: 1;
@@ -102,7 +102,10 @@
 	}
 
 	&-selected {
-		padding: 6px 20px;
+		font-size: 16px;
+		font-weight: 400;
+   		line-height: 1.4;
+		padding: 10px 16px;
 		cursor: pointer;
 		> div:first-child {
 			@extend .text-medium-body;

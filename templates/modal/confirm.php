@@ -1,8 +1,8 @@
 <?php
 /**
- * Tutor prompt alert template
+ * Tutor confirm alert template
  *
- * Display various prompt messages
+ * Display confirm window
  *
  *
  * @since v2.0.2
