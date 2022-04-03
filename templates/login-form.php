@@ -20,15 +20,15 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
     <input type="hidden" name="tutor_action" value="tutor_user_login" />
     <input type="hidden" name="redirect_to" value="<?php echo esc_url( tutor()->current_url ) ?>" />
 
-    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-20">
+    <div class="tutor-mb-20">
         <input type="text" class="tutor-form-control" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" />
     </div>
-    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-32">
+
+    <div class="tutor-mb-32">
         <input type="password" class="tutor-form-control" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" value="" size="20" />
     </div>
-    <div class="tutor-login-error">
 
-    </div>
+    <div class="tutor-login-error"></div>
     <?php
         do_action("tutor_login_form_middle");
         do_action("login_form");

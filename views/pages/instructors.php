@@ -293,8 +293,8 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Password', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-16">
-							<span class="tutor-icon-eye-line tutor-input-group-icon-right tutor-password-reveal"></span>
+						<div class="tutor-form-wrap tutor-mb-16">
+							<span class="tutor-icon-eye-line tutor-form-icon tutor-form-icon-reverse tutor-password-reveal"></span>
 							<input type="password" name="password" id="tutor-instructor-pass"  class="tutor-form-control tutor-mb-12" minlength="8" placeholder="*******" autocomplete="new-password" required/>
 						</div>
 					</div>
@@ -302,8 +302,8 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Retype Password', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-16">
-							<span class="tutor-icon-eye-line tutor-input-group-icon-right tutor-password-reveal"></span>
+						<div class="tutor-form-wrap tutor-mb-16">
+							<span class="tutor-icon-eye-line tutor-form-icon tutor-form-icon-reverse tutor-password-reveal"></span>
 							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-12" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.', 'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
 						</div>
 					</div>
