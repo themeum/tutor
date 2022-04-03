@@ -15,9 +15,9 @@
 				<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Settings', 'tutor' ); ?></span>
 			</div>
 			<div class="tutor-col-md-5 tutor-col-xl-6 tutor-mb-24 tutor-mb-md-0">
-				<div class="tutor-options-search tutor-input-group tutor-form-control-has-icon">
-					<span class="tutor-icon-search tutor-input-group-icon tutor-color-black-50" area-hidden="true"></span>
-					<input type="search" accesskey="s" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search ...⌃⌥ + S or Alt+S for shortcut', 'tutor' ); ?>" />
+				<div class="tutor-options-search tutor-form-wrap">
+					<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
+					<input type="search" accesskey="s" autofocus autocomplete="off" id="search_settings" class="tutor-form-control tutor-form-control-lg" placeholder="<?php esc_html_e( 'Search ...⌃⌥ + S or Alt+S for shortcut', 'tutor' ); ?>" />
 					<div class="search-popup-opener search_result"></div>
 				</div>
 			</div>

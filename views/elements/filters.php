@@ -6,7 +6,7 @@
 				<form action="" method="post" id="tutor-admin-bulk-action-form">
 					<input type="hidden" name="action" value="<?php esc_html_e( $data['ajax_action'] ); ?>"/>
 					<div class="tutor-form-select-with-btn">
-						<select name="bulk-action" title="Please select an action" class="tutor-form-select tutor-form-control-sm">
+						<select name="bulk-action" title="Please select an action" class="tutor-form-select">
 							<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
 								<option value="<?php echo esc_attr( $v['value'] ); ?>">
 									<?php echo esc_html( $v['option'] ); ?>
@@ -57,7 +57,7 @@
 					<label class="tutor-form-label">
 						<?php esc_html_e( 'Course', 'tutor' ); ?>
 					</label>
-					<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-course">
+					<select class="tutor-form-select" id="tutor-backend-filter-course">
 						<?php if ( count( $courses ) ) : ?>
 								<option value="">
 									<?php esc_html_e( 'All Courses', 'tutor' ); ?>
@@ -78,7 +78,7 @@
 					<label class="tutor-form-label">
 						<?php esc_html_e( 'Category', 'tutor' ); ?>
 					</label>
-					<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-category">
+					<select class="tutor-form-select" id="tutor-backend-filter-category">
 						<?php if ( count( $categories ) ) : ?>
 								<option value="">
 									<?php esc_html_e( 'All Category', 'tutor' ); ?>
@@ -100,7 +100,7 @@
 						<label class="tutor-form-label">
 						<?php esc_html_e( 'Sort By', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-order" data-search="no">
+						<select class="tutor-form-select" id="tutor-backend-filter-order" data-search="no">
 						<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
 									<?php esc_html_e( 'DESC', 'tutor' ); ?>
 								</option>
@@ -119,17 +119,18 @@
 				<div class="tutor-wp-dashboard-filter-item">
 					<form action="" method="get" id="tutor-admin-search-filter-form">
 						<label class="tutor-form-label">
-						<?php esc_html_e( 'Search', 'tutor' ); ?>
+							<?php esc_html_e( 'Search', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
-							<span class="tutor-icon-search tutor-input-group-icon tutor-color-black-50"></span>
+						<div class="tutor-form-wrap">
+							<span class="tutor-form-icon"><span class="tutor-icon-search" area-hidden="true"></span></span>
 							<input
 								type="search"
 								class="tutor-form-control"
 								id="tutor-backend-filter-search"
 								name="search"
 								placeholder="<?php esc_html_e( 'Search...' ); ?>"
-								value="<?php esc_html_e( wp_unslash( $search ) ); ?>" />
+								value="<?php esc_html_e( wp_unslash( $search ) ); ?>"
+							/>
 						</div>
 					</form>
 				</div>

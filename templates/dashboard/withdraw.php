@@ -134,8 +134,8 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 									<?php do_action( 'tutor_withdraw_form_before' ); ?>
 									
 									<label class="tutor-form-label" for="tutor_withdraw_amount"><?php esc_html_e( 'Amount', 'tutor' ); ?></label>
-									<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-border tutor-mb-16">
-										<span class="tutor-input-group-icon"><?php echo esc_attr( $currency_symbol ); ?></span>
+									<div class="tutor-form-wrap tutor-mb-16">
+										<span class="tutor-form-icon"><?php echo esc_attr( $currency_symbol ); ?></span>
 										<input type="number" class="tutor-form-control" min="<?php echo esc_attr( $min_withdraw ); ?>" name="tutor_withdraw_amount" id="tutor_withdraw_amount" step=".01" required />
 									</div>
 
