@@ -402,7 +402,6 @@ window.tutor_toast = function(title, description, type) {
 
 	if (!jQuery('.tutor-toast-parent').length) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
-		// jQuery('body').append('<div class="tutor-notification tutor-is-danger tutor-mb-16"></div>');
 	}
 
 	// var icons = {

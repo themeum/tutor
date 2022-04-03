@@ -25,26 +25,6 @@
             }
         }
     }
-
-    .tutor-input-group.tutor-form-control-has-icon {
-        // .tutor-input-group-icon {
-        //     font-size: 30px;
-        //     line-height: unset;
-        //     height: 100%;
-        //     width: unset;
-        //     display: flex;
-        //     align-items: center;
-        //     justify-content: center;
-        //     left: 8px;
-        //     color: $black-50;
-        // }
-        input.tutor-form-control {
-            &:focus {
-                box-shadow: 0 0 0 1px $brand-wordpress;
-                border-color: transparent !important;
-            }
-        }
-    }
 }
 
 .tutor-addons-card {
