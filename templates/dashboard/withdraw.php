@@ -68,8 +68,8 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 			if ( $is_balance_sufficient && $withdraw_method_name ) {
 				?>
 				<div class="tutor-col-lg-auto">
-					<button class="tutor-btn tutor-btn-primary open-withdraw-form-btn">
-					<?php esc_html_e( 'Withdrawal Request', 'tutor' ); ?>
+					<button class="tutor-btn tutor-btn-primary" data-tutor-modal-target="tutor-earning-withdraw-modal">
+						<?php esc_html_e( 'Withdrawal Request', 'tutor' ); ?>
 					</button>
 				</div>
 					<?php
@@ -94,89 +94,80 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	<?php
 	if ( $is_balance_sufficient && $withdraw_method_name ) {
 		?>
-		<div class="tutor-earning-withdraw-form-wrap">
-			<div>
-				<div class="tutor-withdrawal-pop-up-success">
-					<div>
-						<i class="tutor-icon-times tutor-color-black-40" action-close-withdraw-form data-reload="yes"></i>
-						<br />
-						<br />
-						<div style="text-align:center">
-							<img src="<?php echo $image_base; ?>icon-cheers.svg" />
-							<div class="tutor-fs-4"><?php esc_html_e( 'Your withdrawal request has been successfully accepted', 'tutor' ); ?></div>
-							<span class="tutor-fs-6 tutor-color-black-60"><?php esc_html_e( 'Please check your transaction notification on your connected withdrawal method', 'tutor' ); ?></span>
-						</div>
-						<br />
-						<br />
-						<div class="tutor-withdraw-form-response"></div>
-					</div>
-				</div>
-				<div class="tutor-withdrawal-op-up-frorm ">
-					<i class="tutor-icon-times tutor-color-black-40" action-close-withdraw-form></i> <!-- @todo: fix the close btn position -->
-					<div>
-						<div class="tutor-svg tutor-round-box tutor-fs-2 tutor-p-8">
-							<?php echo tutor_utils()->get_svg_icon('wallet'); ?>
-						</div>
-						<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mt-20">
-							<?php esc_html_e( 'Withdrawal Request', 'tutor' ); ?>
-						</div>
-						<p class="tutor-mb-40"><?php esc_html_e( 'Please enter withdrawal amount and click the submit request button', 'tutor' ); ?></p>
-						<table>
-							<tbody>
-								<tr>
-									<td>
-										<span><?php esc_html_e( 'Current Balance', 'tutor' ); ?></span><br />
-										<b><?php echo wp_kses_post( $balance_formatted ); ?></b>
-									</td>
-									<td>
-										<span><?php esc_html_e( 'Selected Payment Method', 'tutor' ); ?></span><br />
-										<b><?php esc_html_e( $withdraw_method_name ); ?></b>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div>
-					<?php
-						/**
-						 * @since 1.8.1
-						 * set min value for withdraw input field as per settings
-						 * field req step .01
-						 */
+		<div id="tutor-earning-withdraw-modal" class="tutor-modal">
+			<div class="tutor-modal-overlay"></div>
+			<div class="tutor-modal-window">
+				<div class="tutor-modal-content tutor-modal-content-white">
+					<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+						<span class="tutor-icon-times" area-hidden="true"></span>
+					</button>
 
-					?>
-						<form id="tutor-earning-withdraw-form" action="" method="post">
-							<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-							<input type="hidden" value="tutor_make_an_withdraw" name="action" />
-							<?php do_action( 'tutor_withdraw_form_before' ); ?>
-							<div class="withdraw-form-field-row">
-								<label for="tutor_withdraw_amount"><?php esc_html_e( 'Amount', 'tutor' ); ?></label>
-								<div class="withdraw-form-field-amount">
-									<span>
-										<span><?php echo esc_attr( $currency_symbol ); ?></span>
-									</span>
-									<input type="number" min="<?php echo esc_attr( $min_withdraw ); ?>" name="tutor_withdraw_amount" id="tutor_withdraw_amount" step=".01" required>
-								</div>
-								<div class="tutor-d-flex tutor-align-items-center">
-									<span class="tutor-mr-8"><img src="<?php echo $image_base; ?>info-icon-question.svg" /></span>
-									<span><?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . strip_tags( $formatted_min_withdraw_amount ); ?></span>
-								</div>
+					<div class="tutor-modal-body">
+						<div class="tutor-py-20 tutor-px-24">
+							<div class="tutor-round-box tutor-round-box-lg tutor-mb-16">
+								<span class="tutor-icon-wallet" area-hidden="true"></span>
 							</div>
 
-							<div class="tutor-withdraw-button-container">
-								<button class="tutor-btn tutor-btn-outline-primary" action-close-withdraw-form><?php esc_html_e( 'Cancel', 'tutor' ); ?></button>
-								<button class="tutor-btn tutor-btn-primary" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php esc_html_e( 'Submit Request', 'tutor' ); ?></button>
+							<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'Withdrawal Request', 'tutor' ); ?></div>
+							<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Please check your transaction notification on your connected withdrawal method', 'tutor' ); ?></div>
+
+							<div class="tutor-row tutor-mt-32">
+								<div class="tutor-col">
+									<div class="tutor-fs-6 tutor-color-black-70 tutor-mb-4"><?php esc_html_e( 'Current Balance', 'tutor' ); ?></div>
+									<div class="tutor-fs-6 tutor-fw-bold tutor-color-black"><?php echo wp_kses_post( $balance_formatted ); ?></div>
+								</div>
+
+								<div class="tutor-col">
+									<div class="tutor-fs-6 tutor-color-black-70 tutor-mb-4"><?php esc_html_e( 'Selected Payment Method', 'tutor' ); ?></div>
+									<div class="tutor-fs-6 tutor-fw-bold tutor-color-black"><?php esc_html_e( $withdraw_method_name ); ?></div>
+								</div>
 							</div>
+						</div>
 
-							<div class="tutor-withdraw-form-response"></div>
+						<div class="tutor-mx-n32 tutor-my-32"><div class="tutor-hr" area-hidden="true"></div></div>
 
-							<?php do_action( 'tutor_withdraw_form_after' ); ?>
-						</form>
+						<form id="tutor-earning-withdraw-form" method="post">
+							<div class="tutor-py-20 tutor-px-24">
+								<div>
+									<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+									<input type="hidden" value="tutor_make_an_withdraw" name="action" />
+									<?php do_action( 'tutor_withdraw_form_before' ); ?>
+									
+									<label class="tutor-form-label" for="tutor_withdraw_amount"><?php esc_html_e( 'Amount', 'tutor' ); ?></label>
+									<div class="tutor-form-wrap tutor-mb-16">
+										<span class="tutor-form-icon"><?php echo esc_attr( $currency_symbol ); ?></span>
+										<input type="number" class="tutor-form-control" min="<?php echo esc_attr( $min_withdraw ); ?>" name="tutor_withdraw_amount" id="tutor_withdraw_amount" step=".01" required />
+									</div>
+
+									<div class="tutor-form-help tutor-d-flex tutor-align-items-center">
+										<span class="tutor-icon-circle-question-mark tutor-mr-8" area-hidden="true"></span>
+										<span><?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . strip_tags( $formatted_min_withdraw_amount ); ?></span>
+									</div>
+
+									<div class="tutor-withdraw-form-response"></div>
+
+									<?php do_action( 'tutor_withdraw_form_after' ); ?>
+								</div>
+
+								<div class="tutor-d-flex tutor-mt-48">
+									<div>
+										<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+											<?php _e( 'Cancel', 'tutor' ); ?>
+										</button>
+									</div>
+
+									<div class="tutor-ml-auto">
+										<button type="submit" name="withdraw-form-submit" id="tutor-earning-withdraw-btn" class="tutor-btn tutor-btn-primary tutor-modal-btn-edit tutor-ml-16">
+											<?php esc_html_e( 'Submit Request', 'tutor' ); ?>
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
 		<?php
 	}
 	
