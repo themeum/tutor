@@ -104,19 +104,19 @@ $filters = array(
 						<th class="tutor-table-rows-sorting">
 							<div class="tutor-color-black-60">
 								<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
-								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon"></span>
+								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class="tutor-color-black-60">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
-								<span class="tutor-icon-order-down-filled up-down-icon"></span>
+								<span class="tutor-icon-order-down up-down-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class=" tutor-color-black-60">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
-								<span class="tutor-icon-order-down-filled up-down-icon"></span>
+								<span class="tutor-icon-order-down up-down-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
@@ -124,13 +124,13 @@ $filters = array(
 								<span class="tutor-fs-7">
 									<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
 								</span>
-								<span class="tutor-icon-order-down-filled up-down-icon"></span>
+								<span class="tutor-icon-order-down up-down-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 						<div class="tutor-color-black-60">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
-							<span class="tutor-icon-order-down-filled up-down-icon"></span>
+							<span class="tutor-icon-order-down up-down-icon"></span>
 						</div>
 						</th>
 						<th class="tutor-shrink"></th>
@@ -156,7 +156,7 @@ $filters = array(
 											<?php echo esc_html( $list->display_name ); ?>
 										</span>
 										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
-											<span class="tutor-icon-detail-link-filled"></span>
+											<span class="tutor-icon-external-link"></span>
 										</a>
 									</div>
 								</td>
@@ -185,8 +185,8 @@ $filters = array(
 												</option>
 											<?php endforeach; ?>
 										</select>
-										<i class="icon1 tutor-icon-eye-fill-filled"></i>
-										<i class="icon2 tutor-icon-angle-down-filled"></i>
+										<i class="icon1 tutor-icon-eye-bold"></i>
+										<i class="icon2 tutor-icon-angle-down"></i>
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
@@ -225,17 +225,17 @@ $filters = array(
 	</div>
 </div>
 
-<div id="tutor-instructor-add-new" class="tutor-modal modal-sticky-header-footer tutor-modal-is-close-inside-header">
+<div id="tutor-instructor-add-new" class="tutor-modal tutor-modal-scrollable">
   <span class="tutor-modal-overlay"></span>
-  <div class="tutor-modal-root">
-	<div class="tutor-modal-inner">
-	<form action="" method="post" id="tutor-new-instructor-form" autocomplete="off">
+  <div class="tutor-modal-window">
+	<div class="tutor-modal-content">
+	<form method="post" id="tutor-new-instructor-form" autocomplete="off">
 	  <div class="tutor-modal-header">
 		<div class="tutor-modal-title tutor-fs-6 tutor-fw-bold tutor-color-black-70">
 			<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
 		</div>
 		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="tutor-icon-line-cross-line"></span>
+			<span class="tutor-icon-times"></span>
 		</button>
 	  </div>
 		  <div class="tutor-modal-body-alt tutor-bg-gray-10">
@@ -294,7 +294,7 @@ $filters = array(
 							<?php esc_html_e( 'Password', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-16">
-							<span class="tutor-icon-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
+							<span class="tutor-icon-eye-line tutor-input-group-icon-right tutor-password-reveal"></span>
 							<input type="password" name="password" id="tutor-instructor-pass"  class="tutor-form-control tutor-mb-12" minlength="8" placeholder="*******" autocomplete="new-password" required/>
 						</div>
 					</div>
@@ -303,7 +303,7 @@ $filters = array(
 							<?php esc_html_e( 'Retype Password', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-16">
-							<span class="tutor-icon-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
+							<span class="tutor-icon-eye-line tutor-input-group-icon-right tutor-password-reveal"></span>
 							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-12" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.', 'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
 						</div>
 					</div>
@@ -358,11 +358,11 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 	?>
 <div id="tutor-ins-approval-1" class="tutor-modal tutor-modal-is-close-beside tutor-modal-ins-approval tutor-is-active">
 	<span class="tutor-modal-overlay"></span>
-	<div class="tutor-modal-root">
+	<div class="tutor-modal-window">
 		<button data-tutor-modal-close="true" class="tutor-modal-close">
-			<span class="tutor-icon-56 tutor-icon-line-cross-line"></span>
+			<span class="tutor-fs-2 tutor-icon-times"></span>
 		</button>
-		<div class="tutor-modal-inner">
+		<div class="tutor-modal-content">
 		<?php if ( $instructor_data ) : ?>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-text-wrap">
@@ -422,7 +422,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 						<?php else : ?>
 							<div class="tutor-alert tutor-danger">
 								<div class="tutor-alert-text">
-									<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-12"></span>
+									<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-times-line tutor-mr-12"></span>
 									<span>
 										<?php esc_html_e( 'Attempted invalid action', 'tutor' ); ?>
 									</span>
@@ -438,7 +438,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 					<div class="tutor-modal-text-wrap">
 						<div class="tutor-alert tutor-danger">
 							<div class="tutor-alert-text">
-								<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-12"></span>
+								<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-times-line tutor-mr-12"></span>
 								<span>
 									<?php esc_html_e( 'Invalid instructor', 'tutor' ); ?>
 								</span>

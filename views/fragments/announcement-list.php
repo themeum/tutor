@@ -5,33 +5,32 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 	$announcment_id    = $announcement ? $announcement->ID : null;
 	$announcment_title = $announcement ? $announcement->post_title : '';
 	$summary           = $announcement ? $announcement->post_content : '';
-
 	// Assign fallback course id
 	( ! $course_id && count( $courses ) ) ? $course_id = $courses[0]->ID : 0;
 	?>
-	<form class="tutor-modal modal-sticky-header-footer tutor-announcements-form" id="<?php echo $id; ?>">
-		<span class="tutor-modal-overlay"></span>
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
+	<form class="tutor-modal tutor-modal-scrollable tutor-announcements-form" id="<?php echo $id; ?>">
+		<div class="tutor-modal-overlay"></div>
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content">
 				<div class="tutor-modal-header">
-					<div class="tutor-fs-6 tutor-fw-bold tutor-color-black-70 tutor-modal-title">
-						<?php echo $title; ?>
+					<div class="tutor-modal-title">
+						<?php echo esc_html( $title ); ?>
 					</div>
-					<button data-tutor-modal-close class="tutor-modal-close">
-						<span class="tutor-icon-line-cross-line"></span>
+					<button class="tutor-modal-close tutor-iconic-btn" data-tutor-modal-close role="button">
+						<span class="tutor-icon-times" area-hidden="true"></span>
 					</button>
 				</div>
 
-				<div class="tutor-modal-body-alt modal-container">
+				<div class="tutor-modal-body">
 					<?php tutor_nonce_field(); ?>
-					<input type="hidden" name="announcement_id" value="<?php echo $announcment_id; ?>">
+					<input type="hidden" name="announcement_id" value="<?php echo esc_attr( $announcment_id ); ?>">
 					<input type="hidden" name="action" value="tutor_announcement_create"/>
-					<input type="hidden" name="action_type" value="<?php echo $announcement ? 'update' : 'create'; ?>"/>
+					<input type="hidden" name="action_type" value="<?php echo esc_attr( $announcement ? 'update' : 'create' ); ?>"/>
 					<div class="tutor-form-group tutor-mb-20 tutor-form-group-select-md">
 						<label class="tutor-form-label">
-							<?php _e( 'Select Course', 'tutor' ); ?>
+							<?php esc_html_e( 'Select Course', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select tutor-form-control" name="tutor_announcement_course" required>
+						<select class="tutor-form-select tutor-form-control no-tutor-dropdown" name="tutor_announcement_course" required>
 							<?php if ( $courses ) : ?>
 								<?php foreach ( $courses as $course ) : ?>
 									<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID ); ?>>
@@ -39,34 +38,32 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 									</option>
 								<?php endforeach; ?>
 							<?php else : ?>
-								<option><?php esc_html_e( 'No course found', 'tutor' ); ?></option>
+								<option value=""><?php esc_html_e( 'No course found', 'tutor' ); ?></option>
 							<?php endif; ?>
 						</select>
 					</div>
 					<div class="tutor-form-group">
 						<label class="tutor-form-label">
-							<?php _e( 'Announcement Title', 'tutor' ); ?>
+							<?php esc_html_e( 'Announcement Title', 'tutor' ); ?>
 						</label>
-						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php _e( 'Announcement title', 'tutor' ); ?>" maxlength="255" required>
+						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php esc_html_e( 'Announcement title', 'tutor' ); ?>" maxlength="255" required>
 					</div>
 					<div class="tutor-form-group">
 						<label class="tutor-form-label" for="tutor_announcement_course">
-							<?php _e( 'Summary', 'tutor' ); ?>
+							<?php esc_html_e( 'Summary', 'tutor' ); ?>
 						</label>
-						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php
-							echo $summary;
-						?></textarea>
+						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php esc_html_e( 'Summary...', 'tutor' ); ?>" required><?php echo esc_textarea( $summary ); ?></textarea>
 					</div>
 
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
 				</div>
 
-				<div class="tutor-modal-footer tutor-d-flex tutor-justify-between">
+				<div class="tutor-modal-footer">
 					<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary">
-						<?php _e( 'Publish', 'tutor' ); ?>
+						<?php esc_html_e( 'Publish', 'tutor' ); ?>
 					</button>
 					<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary">
-						<?php _e( 'Cancel', 'tutor' ); ?>
+						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 					</button>
 				</div>
 			</div>
@@ -81,18 +78,18 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 	<div id="<?php echo $id; ?>" class="tutor-modal modal-view-double-segment">
 		<div class="tutor-modal-overlay"></div>
 
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content">
 				<div class="tutor-modal-header">
 					<button data-tutor-modal-close class="tutor-modal-close tutor-color-muted">
-						<span class="tutor-icon-line-cross-line"></span>
+						<span class="tutor-icon-times"></span>
 					</button>
 				</div>
 
 				<div class="tutor-modal-body tutor-align-items-start">
 					<div class="tutor-mb-32">
-						<span class="tutor-round-icon tutor-fs-1 tutor-p-12">
-							<i class="tutor-icon-speaker-filled" area-hidden="true"></i>
+						<span class="tutor-round-box tutor-round-box-lg">
+							<i class="tutor-icon-bullhorn" area-hidden="true"></i>
 						</span>
 					</div>
 
@@ -157,10 +154,10 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 	?>
 	<div id="<?php echo $id; ?>" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner tutor-modal-close-inner">
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content tutor-modal-close-inner">
 				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="tutor-icon-line-cross-line" area-hidden="true"></span>
+					<span class="tutor-icon-times" area-hidden="true"></span>
 				</button>
 
 				<div class="tutor-modal-body tutor-text-center">
@@ -285,21 +282,21 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										</button>
 									</div>
 
-									<div class="tutor-popup-opener">
-										<button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $update_modal_id; ?>_action">
-											<span class="toggle-icon"></span>
+									<div class="tutor-dropdown-parent">
+										<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+											<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 										</button>
-										<ul class="popup-menu" id="<?php echo $update_modal_id; ?>_action">
+										<ul class="tutor-dropdown tutor-dropdown-dark">
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
-													<i class="tutor-icon-edit-filled tutor-color-design-white"></i>
-													<span class="tutor-fs-6 tutor-color-white"><?php _e( 'Edit', 'tutor' ); ?></span>
+													<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+													<span><?php _e( 'Edit', 'tutor' ); ?></span>
 												</a>
 											</li>
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
-													<i class="tutor-icon-delete-fill-filled tutor-color-design-white"></i>
-													<span class="tutor-fs-6 tutor-color-white"><?php _e( 'Delete', 'tutor' ); ?></span>
+													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+													<span><?php _e( 'Delete', 'tutor' ); ?></span>
 												</a>
 											</li>
 										</ul>
@@ -336,8 +333,8 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 		// 'current'   => $paged,
 		// 'total'     => $the_query->max_num_pages,
 		// 'type'      => 'array',
-		// 'previous_text' => '<span class="tutor-icon-angle-left-filled"></span>',
-		// 'next_text' => '<span class="tutor-icon-angle-right-filled"></span>'
+		// 'previous_text' => '<span class="tutor-icon-angle-left"></span>',
+		// 'next_text' => '<span class="tutor-icon-angle-right"></span>'
 		// ));
 
 		/**

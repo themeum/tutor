@@ -424,7 +424,7 @@ class Options_V2
 				'slug'     => 'general',
 				'desc'     => __('General Settings', 'tutor'),
 				'template' => 'basic',
-				'icon'     => 'tutor-icon-earth-filled',
+				'icon'     => 'tutor-icon-earth',
 				'blocks'   => array(
 					array(
 						'label'      => false,
@@ -493,7 +493,7 @@ class Options_V2
 				'slug'     => 'course',
 				'desc'     => __('Course Settings', 'tutor'),
 				'template' => 'basic',
-				'icon'     => 'tutor-icon-book-open-filled',
+				'icon'     => 'tutor-icon-book-open',
 				'blocks'   => array(
 					'block_course' => array(
 						'label'      => '',
@@ -671,7 +671,7 @@ class Options_V2
 				'slug'     => 'monetization',
 				'desc'     => __('Monitization Settings', 'tutor'),
 				'template' => 'basic',
-				'icon'     => 'tutor-icon-discount-filled-filled',
+				'icon'     => 'tutor-icon-badge-discount',
 				'blocks'   => array(
 					'block_options' => array(
 						'label'      => __('Options', 'tutor'),
@@ -818,7 +818,7 @@ class Options_V2
 				'slug'     => 'design',
 				'desc'     => __('Design Settings', 'tutor'),
 				'template' => 'design',
-				'icon'     => 'tutor-icon-design-filled',
+				'icon'     => 'tutor-icon-color-palette',
 				'blocks'   => array(
 					'block_course'    => array(
 						'label'      => __('Course', 'tutor'),
@@ -1446,7 +1446,7 @@ class Options_V2
 				'slug'     => 'advanced',
 				'desc'     => __('Advanced Settings', 'tutor'),
 				'template' => 'basic',
-				'icon'     => 'tutor-icon-filter-filled',
+				'icon'     => 'tutor-icon-filter',
 				'blocks'   => array(
 					array(
 						'label'      => __('Course', 'tutor'),

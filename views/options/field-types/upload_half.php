@@ -28,7 +28,7 @@ $field_id     = 'field_' . $field['key'];
 			<label for="signature-uploader" class="tutor-btn tutor-btn-primary tutor-btn-sm image_upload_button">
 				<input type="hidden" class="input_file" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
 				<input type="file" class="image_uploader" id="<?php echo esc_attr( $field_id ); ?>" accept=".jpg, .jpeg, .png, .svg">
-				<span class="tutor-btn-icon tutor-icon-image-filled"></span>
+				<span class="tutor-btn-icon tutor-icon-image-landscape"></span>
 				<span><?php _e("Upload Image", "tutor"); ?></span>
 			</label>
 		</div>

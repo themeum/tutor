@@ -219,16 +219,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			e.preventDefault();
 			const formData = new FormData(commonConfirmForm);
 			//show loading
-			const loadingButton = commonConfirmForm.querySelector('.tutor-btn-loading');
+			const loadingButton = commonConfirmForm.querySelector('#tutor-common-form-submit-btn');
 			const prevHtml = loadingButton.innerHTML;
-			loadingButton.innerHTML = `<div class="ball"></div>
-      <div class="ball"></div>
-      <div class="ball"></div>
-      <div class="ball"></div>`;
+			loadingButton.classList.add('is-loading');
 
 			const post = await ajaxHandler(formData);
 			//after post back button text
 			loadingButton.innerHTML = prevHtml;
+			loadingButton.classList.remove('is-loading');
 			//hide modal
 			if (commonConfirmModal.classList.contains('tutor-is-active')) {
 				commonConfirmModal.classList.remove('tutor-is-active');

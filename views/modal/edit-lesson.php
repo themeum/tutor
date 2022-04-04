@@ -11,7 +11,7 @@
         <div class="tutor-input-group">
             <input type="text" name="lesson_title" class="tutor-form-control" value="<?php echo stripslashes($post->post_title); ?>"/>
             <div class="tutor-input-feedback tutor-has-icon">
-                <i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                <i class="tutor-icon-circle-info-o tutor-input-feedback-icon"></i>
                 <?php _e('Lesson titles are displayed publicly wherever required.', 'tutor'); ?>
             </div>
         </div>
@@ -25,7 +25,7 @@
                 if (get_tutor_option('enable_lesson_classic_editor')){
                     ?>
                         <a class="tutor-ml-12" target="_blank" href="<?php echo esc_url(get_admin_url()); ?>post.php?post=<?php echo $post->ID; ?>&action=edit" >
-                            <i class="tutor-icon-edit-filled"></i> <?php echo __('WP Editor', 'tutor'); ?>
+                            <i class="tutor-icon-edit"></i> <?php echo __('WP Editor', 'tutor'); ?>
                         </a>
                     <?php
                 }
@@ -36,7 +36,7 @@
                 wp_editor(stripslashes($post->post_content), 'tutor_lesson_modal_editor', array( 'editor_height' => 150));
             ?>
             <div class="tutor-input-feedback tutor-has-icon tutor-mt-17">
-                <i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                <i class="tutor-icon-circle-info-o tutor-input-feedback-icon"></i>
                 <?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
             </div>
         </div>

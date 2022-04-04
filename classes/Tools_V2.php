@@ -92,7 +92,7 @@ class Tools_V2 {
 				'desc'      => __( 'Status Settings', 'tutor' ),
 				'template'  => 'status',
 				'view_path' => tutor()->path . 'views/options/template/',
-				'icon'      => 'tutor-icon-chart-filled',
+				'icon'      => 'tutor-icon-chart-pie',
 				'blocks'    => array(
 					'wordpress_environment' => array(
 						'label'      => __( 'WordPress environment', 'tutor' ),
@@ -314,7 +314,7 @@ class Tools_V2 {
 				'desc'      => __( 'Import/Export Settings', 'tutor' ),
 				'template'  => 'import_export',
 				'view_path' => tutor()->path . 'views/options/template/',
-				'icon'      => 'tutor-icon-import-export-filled',
+				'icon'      => 'tutor-icon-import-export',
 				'blocks'    => array(),
 			),
 			'tutor_pages'   => array(
@@ -324,7 +324,7 @@ class Tools_V2 {
 				'desc'      => __( 'Tutor Pages Settings', 'tutor' ),
 				'template'  => 'tutor_pages',
 				'view_path' => tutor()->path . 'views/options/template/',
-				'icon'      => 'tutor-icon-review-line',
+				'icon'      => 'tutor-icon-page-review',
 				'blocks'    => array(
 					'block' => array(),
 				),
@@ -333,7 +333,7 @@ class Tools_V2 {
 				'label'  => __( 'Setup Wizard', 'tutor' ),
 				'slug'   => 'tutor-setup',
 				'desc'   => __( 'Setup Wizard Settings', 'tutor' ),
-				'icon'   => 'tutor-icon-earth-filled',
+				'icon'   => 'tutor-icon-earth',
 				'blocks' => array(
 					'block' => array(),
 				),

@@ -46,20 +46,20 @@
         <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap" data-topic-id="<?php echo $topic->ID; ?>">
             <div class="tutor-topics-top">
                 <div class="tutor-topic-title">
-                    <span class="<?php echo $is_topic ? 'tutor-icon-humnurger-filled course-move-handle' : 'tutor-icon-warning-f'; ?> tutor-px-12"></span>
+                    <span class="<?php echo $is_topic ? 'tutor-icon-hamburger-menu course-move-handle' : 'tutor-icon-warning'; ?> tutor-px-12"></span>
                     <span class="topic-inner-title tutor-fs-6 tutor-fw-bold tutor-color-black tutor-d-flex tutor-align-items-center">
                         <?php echo stripslashes($topic->post_title); ?>
                     </span>
                     <?php if($is_topic): ?>
                         <span class="tutor-iconic-btn" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>">
-                            <i class="tutor-icon-edit-filled" area-hidden="true"></i>
+                            <i class="tutor-icon-edit" area-hidden="true"></i>
                         </span>
                         <span class="topic-delete-btn tutor-iconic-btn">
-                            <i class="tutor-icon-delete-stroke-filled" area-hidden="true"></i>
+                            <i class="tutor-icon-trashcan-line" area-hidden="true"></i>
                         </span>
                     <?php endif; ?>
                     <span class="expand-collapse-wrap">
-                        <i class="tutor-icon-angle-down-filled" area-hidden="true"></i>
+                        <i class="tutor-icon-angle-down" area-hidden="true"></i>
                     </span>
                 </div>
                 <?php
@@ -111,18 +111,18 @@
                             ?>
                             <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-assignmentø-<?php echo $content->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $content->ID; ?>">
                                 <div class="tutor-course-content-top tutor-d-flex tutor-align-items-center">
-                                    <span class="tutor-icon-humnurger-filled tutor-cursor-move tutor-px-12"></span>
+                                    <span class="tutor-icon-hamburger-menu tutor-cursor-move tutor-px-12"></span>
                                     <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-assignment-modal' : ''; ?>" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?>
                                     </a>
                                     <div class="tutor-course-content-top-right-action">
                                         <?php if($is_topic): ?>
                                             <a href="javascript:;" class="open-tutor-assignment-modal tutor-iconic-btn" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                                <span class="tutor-icon-edit-filled" area-hidden="true"></span>
+                                                <span class="tutor-icon-edit" area-hidden="true"></span>
                                             </a>
                                         <?php endif; ?>
                                         <a href="javascript:;" class="tutor-delete-lesson-btn tutor-iconic-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                            <span class="tutor-icon-delete-stroke-filled" area-hidden="true"></span>
+                                            <span class="tutor-icon-trashcan-line" area-hidden="true"></span>
                                         </a>
                                     </div>
                                 </div>
@@ -133,18 +133,18 @@
                             ?>
                             <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
                                 <div class="tutor-course-content-top tutor-d-flex tutor-align-items-center">
-                                    <span class="tutor-icon-humnurger-filled tutor-cursor-move tutor-px-12"></span>
+                                    <span class="tutor-icon-hamburger-menu tutor-cursor-move tutor-px-12"></span>
                                     <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-lesson-modal' : ''; ?>" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?>
                                     </a>
                                     <div class="tutor-course-content-top-right-action">
                                         <?php if($is_topic): ?>
                                             <a href="javascript:;" class="open-tutor-lesson-modal tutor-iconic-btn" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                                <span class="tutor-icon-edit-filled" area-hidden="true"></span>
+                                                <span class="tutor-icon-edit" area-hidden="true"></span>
                                             </a>
                                         <?php endif; ?>
                                         <a href="javascript:;" class="tutor-delete-lesson-btn tutor-iconic-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                            <span class="tutor-icon-delete-stroke-filled" area-hidden="true"></span>
+                                            <span class="tutor-icon-trashcan-line" area-hidden="true"></span>
                                         </a>
                                     </div>
                                 </div>
@@ -163,12 +163,12 @@
                         <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
 
                         <button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
-                            <i class="tutor-icon-plus-square-filled tutor-mr-8"></i>
+                            <i class="tutor-icon-plus-square tutor-mr-8"></i>
                             <?php _e('Lesson', 'tutor'); ?>
                         </button>
 
                         <button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-add-quiz-btn" data-topic-id="<?php echo $topic->ID; ?>">
-                            <i class="tutor-icon-plus-square-filled tutor-mr-8"></i>
+                            <i class="tutor-icon-plus-square tutor-mr-8"></i>
                             <?php _e('Quiz', 'tutor'); ?>
                         </button>
 

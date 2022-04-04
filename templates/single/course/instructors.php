@@ -39,7 +39,7 @@ if($instructors && count($instructors)) {
 							</div>
 						<?php endif; ?>
 						<div class="tutor-ins-summary tutor-fs-6 tutor-color-black-60 tutor-mt-20">
-							<?php echo htmlspecialchars($instructor->tutor_profile_bio); ?>
+							<?php echo preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "",  $instructor->tutor_profile_bio); ?>
 						</div>
 					</div>
 				</div>
@@ -50,7 +50,7 @@ if($instructors && count($instructors)) {
 					?>
 					<div class="tutor-ins-meta tutor-d-flex">
 						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center">
-							<span class="tutor-icon-user-filled tutor-mr-8"></span>
+							<span class="tutor-icon-user-line tutor-mr-8"></span>
 							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">
 								<?php echo tutor_utils()->get_total_students_by_instructor($instructor->ID); ?>
 							</span>
@@ -59,7 +59,7 @@ if($instructors && count($instructors)) {
 							</span>
 						</div>
 						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center ">
-							<span class="tutor-icon-mortarboard-line tutor-mr-8"></span>
+							<span class="tutor-icon-mortarboard-o tutor-mr-8"></span>
 							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">
 								<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?>
 							</span>

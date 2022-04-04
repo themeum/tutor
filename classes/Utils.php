@@ -2746,11 +2746,11 @@ class Utils {
 				),
 				'settings'    => array(
 					'title' => __( 'Settings', 'tutor' ),
-					'icon'  => 'tutor-icon-settings-filled',
+					'icon'  => 'tutor-icon-gear',
 				),
 				'logout'      => array(
 					'title' => __( 'Logout', 'tutor' ),
-					'icon'  => 'tutor-icon-signout-filled',
+					'icon'  => 'tutor-icon-signout',
 				),
 			)
 		);
@@ -3472,12 +3472,12 @@ class Utils {
 			$intRating = (int) $current_rating;
 
 			if ( $intRating >= $i ) {
-				$output .= '<i class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></i>';
+				$output .= '<i class="tutor-icon-star-bold" data-rating-value="' . $i . '"></i>';
 			} else {
 				if ( ( $current_rating - $i ) >= -0.5 ) {
-					$output .= '<i class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></i>';
+					$output .= '<i class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></i>';
 				} else {
-					$output .= '<i class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></i>';
+					$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
 				}
 			}
 		}
@@ -3501,13 +3501,13 @@ class Utils {
 			<div class="tutor-rating-stars">
 				<?php
 				for ( $i = 1; $i <= 5; $i++ ) {
-					$class = 'tutor-icon-star-line-filled';
+					$class = 'tutor-icon-star-line';
 
 					if ( $i <= round( $current_rating ) ) {
-						$class = 'tutor-icon-star-full-filled';
+						$class = 'tutor-icon-star-bold';
 					}
 
-					// ToDo: Add half start later. tutor-icon-star-half-filled
+					// ToDo: Add half start later. tutor-icon-star-half-bold
 					echo '<span class="' . $class . '"></span>';
 				}
 				?>
@@ -3536,12 +3536,12 @@ class Utils {
 			$intRating = (int) $current_rating;
 
 			if ( $intRating >= $i ) {
-				$output .= '<span class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></span>';
+				$output .= '<span class="tutor-icon-star-bold" data-rating-value="' . $i . '"></span>';
 			} else {
 				if ( ( $current_rating - $i ) >= -0.5 ) {
-					$output .= '<span class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></span>';
+					$output .= '<span class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></span>';
 				} else {
-					$output .= '<span class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></span>';
+					$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
 				}
 			}
 		}
@@ -4331,8 +4331,8 @@ class Utils {
 			}
 		}
 
-
-		if ( !isset($args['tab']) || isset( $args['no_archive'] ) && 'all' === $args['tab'] ) {
+		// This block causes error in single question if archived. 
+		/* if ( !isset($args['tab']) || isset( $args['no_archive'] ) && 'all' === $args['tab'] ) {
 			$query_all = $query;
 			$query     = array();
 			foreach ( $query_all as $m_query ) {
@@ -4340,7 +4340,7 @@ class Utils {
 					$query[] = $m_query;
 				}
 			}
-		}
+		} */
 
 		if ( $question_id ) {
 			return isset( $query[0] ) ? $query[0] : null;
@@ -4658,52 +4658,52 @@ class Utils {
 		$types = array(
 			'true_false'        => array(
 				'name'   => __( 'True/False', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-icon-yes-no-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-icon-circle-half"></i></span>',
 				'is_pro' => false,
 			),
 			'single_choice'     => array(
 				'name'   => __( 'Single Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-mark-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-mark"></i></span>',
 				'is_pro' => false,
 			),
 			'multiple_choice'   => array(
 				'name'   => __( 'Multiple Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-multiple-choice-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-double-mark"></i></span>',
 				'is_pro' => false,
 			),
 			'open_ended'        => array(
 				'name'   => __( 'Open Ended', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"></span><i class="tutor-quiz-type-icon tutor-icon-open-ended-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"></span><i class="tutor-quiz-type-icon tutor-icon-text-width"></i></span>',
 				'is_pro' => false,
 			),
 			'fill_in_the_blank' => array(
 				'name'   => __( 'Fill In The Blanks', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-icon-fill-gaps-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-icon-hourglass"></i></span>',
 				'is_pro' => false,
 			),
 			'short_answer'      => array(
 				'name'   => __( 'Short Answer', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-short-ans-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-minimize"></i></span>',
 				'is_pro' => true,
 			),
 			'matching'          => array(
 				'name'   => __( 'Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-matching-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-arrow-right-left"></i></span>',
 				'is_pro' => true,
 			),
 			'image_matching'    => array(
 				'name'   => __( 'Image Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-image-matching-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-images"></i></span>',
 				'is_pro' => true,
 			),
 			'image_answering'   => array(
 				'name'   => __( 'Image Answering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-camera-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-camera"></i></span>',
 				'is_pro' => true,
 			),
 			'ordering'          => array(
 				'name'   => __( 'Ordering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-ordering-z-to-a-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-ordering-z-a"></i></span>',
 				'is_pro' => true,
 			),
 		);
@@ -5862,19 +5862,19 @@ class Utils {
 		$icons = array(
 			'facebook' => array(
 				'share_class' => 's_facebook',
-				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-facebook-brand"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-facebook"></i>',
 				'text'        => __( 'Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
-				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-twitter-brand"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-twitter"></i>',
 				'text'        => __( 'Twitter', 'tutor' ),
 				'color'       => '#4CA0EB',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
-				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-linkedin-brand"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-linkedin"></i>',
 				'text'        => __( 'Linkedin', 'tutor' ),
 				'color'       => '#3967B6',
 			),
@@ -5895,27 +5895,27 @@ class Utils {
 			 '_tutor_profile_facebook' => array(
 				 'label'        => __( 'Facebook', 'tutor' ),
 				 'placeholder'  => 'https://facebook.com/username',
-				 'icon_classes' => 'tutor-icon-facebook-brand',
+				 'icon_classes' => 'tutor-icon-brand-facebook',
 			 ),
 			 '_tutor_profile_twitter'  => array(
 				 'label'        => __( 'Twitter', 'tutor' ),
 				 'placeholder'  => 'https://twitter.com/username',
-				 'icon_classes' => 'tutor-icon-twitter-brand',
+				 'icon_classes' => 'tutor-icon-brand-twitter',
 			 ),
 			 '_tutor_profile_linkedin' => array(
 				 'label'        => __( 'Linkedin', 'tutor' ),
 				 'placeholder'  => 'https://linkedin.com/username',
-				 'icon_classes' => 'tutor-icon-linkedin-brand',
+				 'icon_classes' => 'tutor-icon-brand-linkedin',
 			 ),
 			 '_tutor_profile_website'  => array(
 				 'label'        => __( 'Website', 'tutor' ),
 				 'placeholder'  => 'https://example.com/',
-				 'icon_classes' => 'tutor-icon-earth-filled',
+				 'icon_classes' => 'tutor-icon-earth',
 			 ),
 			 '_tutor_profile_github'   => array(
 				 'label'        => __( 'Github', 'tutor' ),
 				 'placeholder'  => 'https://github.com/username',
-				 'icon_classes' => 'tutor-icon-github-logo-brand',
+				 'icon_classes' => 'tutor-icon-brand-github',
 			 ),
 		 );
 
@@ -7455,11 +7455,11 @@ class Utils {
 
 		$html = '';
 		if ( $is_completed ) {
-			$html = '<span class="course-completion-status course-completed"><i class="tutor-icon-mark-filled"></i> ' . __( 'Completed', 'tutor' ) . ' </span>';
+			$html = '<span class="course-completion-status course-completed"><i class="tutor-icon-mark"></i> ' . __( 'Completed', 'tutor' ) . ' </span>';
 		} else {
 			$is_in_progress = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
 			if ( $is_in_progress ) {
-				$html = '<span class="course-completion-status course-inprogress"><i class="tutor-icon-refresh-l"></i> ' . __( 'In Progress', 'tutor' ) . ' </span>';
+				$html = '<span class="course-completion-status course-inprogress"><i class="tutor-icon-refresh-o"></i> ' . __( 'In Progress', 'tutor' ) . ' </span>';
 			} else {
 				$html = '<span class="course-completion-status course-not-taken"><i class="tutor-icon-spinner"></i> ' . __( 'Not Taken', 'tutor' ) . ' </span>';
 			}
@@ -9239,22 +9239,22 @@ class Utils {
 			'my-courses'    => array(
 				'title'    => __( 'My Courses', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'tutor-icon-space-filled',
+				'icon'     => 'tutor-icon-rocket',
 			),
 			'announcements' => array(
 				'title'    => __( 'Announcements', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'tutor-icon-speaker-filled',
+				'icon'     => 'tutor-icon-bullhorn',
 			),
 			'withdraw'      => array(
 				'title'    => __( 'Withdrawals', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'tutor-icon-wallet-filled',
+				'icon'     => 'tutor-icon-wallet',
 			),
 			'quiz-attempts' => array(
 				'title'    => __( 'Quiz Attempts', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'tutor-icon-quiz-filled',
+				'icon'     => 'tutor-icon-quiz-o',
 			),
 		);
 	}
@@ -9271,35 +9271,35 @@ class Utils {
 		return array(
 			'index'            => array(
 				'title' => __( 'Dashboard', 'tutor' ),
-				'icon'  => 'tutor-icon-dashboard-filled',
+				'icon'  => 'tutor-icon-dashboard',
 			),
 			'my-profile'       => array(
 				'title' => __( 'My Profile', 'tutor' ),
-				'icon'  => 'tutor-icon-man-user-filled',
+				'icon'  => 'tutor-icon-user-bold',
 			),
 			'enrolled-courses' => array(
 				'title' => __( 'Enrolled Courses', 'tutor' ),
-				'icon'  => 'tutor-icon-college-graduation-filled',
+				'icon'  => 'tutor-icon-mortarboard-o',
 			),
 			'wishlist'         => array(
 				'title' => __( 'Wishlist', 'tutor' ),
-				'icon'  => 'tutor-icon-fav-full-filled',
+				'icon'  => 'tutor-icon-bookmark-bold',
 			),
 			'reviews'          => array(
 				'title' => __( 'Reviews', 'tutor' ),
-				'icon'  => 'tutor-icon-star-full-filled',
+				'icon'  => 'tutor-icon-star-bold',
 			),
 			'my-quiz-attempts' => array(
 				'title' => __( 'My Quiz Attempts', 'tutor' ),
-				'icon'  => 'tutor-icon-quiz-attempt-filled',
+				'icon'  => 'tutor-icon-quiz-attempt',
 			),
 			'purchase_history' => array(
 				'title' => __( 'Order History', 'tutor' ),
-				'icon'  => 'tutor-icon-cart-filled',
+				'icon'  => 'tutor-icon-cart-bold',
 			),
 			'question-answer'  => array(
 				'title' => __( 'Question & Answer', 'tutor' ),
-				'icon'  => 'tutor-icon-question-filled',
+				'icon'  => 'tutor-icon-question',
 			),
 		);
 	}

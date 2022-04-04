@@ -31,13 +31,13 @@ if ( $total_categories && $total_categories > $limit ) {
 	<div class="tutor-instructor-filter-sidebar">
 		<div class="tutor-instructor-customize-wrapper">
 			<div class="tutor-instructor-filters">
-				<i class="tutor-icon-customize-filled tutor-color-text-brand"></i>
+				<i class="tutor-icon-slider-vertical tutor-color-text-brand"></i>
 				<span class="tutor-fs-5 tutor-fw-medium tutor-color-black">
 					<?php esc_html_e( 'Filters', 'tutor' ); ?>
 				</span>
 			</div>
 			<div class="tutor-instructor-customize-clear clear-instructor-filter">
-				<i class="tutor-icon-line-cross-line design-dark"></i>
+				<i class="tutor-icon-times design-dark"></i>
 				<span className="tutor-color-muted tutor-fs-6">
 					<?php esc_html_e( 'Clear', 'tutor' ); ?>
 				</span>
@@ -75,7 +75,7 @@ if ( $total_categories && $total_categories > $limit ) {
 			<?php if ( $show_more ) : ?>
 				<div class="tutor-instructor-category-show-more">
 					<div class="tutor-fs-7 tutor-fw-medium" data-id="<?php esc_attr_e( $category_id ); ?>">
-						<i class="tutor-icon-plus-bold-filled tutor-color-text-brand"></i>
+						<i class="tutor-icon-plus-o tutor-color-text-brand"></i>
 						<span class="tutor-fs-7 tutor-fw-medium tutor-color-black-60" action-tutor-toggle-more role="button">
 							<?php esc_html_e( 'Show More', 'tutor' ); ?>
 							<span class="tutor-show-more-loading"></span>
@@ -93,7 +93,7 @@ if ( $total_categories && $total_categories > $limit ) {
 			<div class="tutor-instructor-rating-range-wrapper">
 				<div class="tutor-instructor-ratings">
 					<?php for ( $i = 1; $i < 6; $i++ ) : ?>
-						<i class="tutor-icon-star-line-filled tutor-color-black-fill-20" data-value="<?php echo $i; ?>"></i>
+						<i class="tutor-icon-star-line tutor-color-black-fill-20" data-value="<?php echo $i; ?>"></i>
 					<?php endfor; ?> 
 				</div>
 				<span class="tutor-fs-6 tutor-fw-medium tutor-black-60 tutor-instructor-rating-filter"></span>   
@@ -124,10 +124,10 @@ if ( $total_categories && $total_categories > $limit ) {
 		<div class="filter-mobile">
 			<div class="mobile-filter-container">
 				<div class="keyword-field mobile-screen">
-					<i class="tutor-icon-magnifying-glass-line"></i>
+					<i class="tutor-icon-magnifying-glass"></i>
 					<input type="text" name="keyword" placeholder="<?php _e( 'Search any instructor...', 'tutor' ); ?>"/>
 				</div>
-				<i class="tutor-icon-filter-filled"></i>
+				<i class="tutor-icon-filter"></i>
 			</div>
 			<div class="mobile-filter-popup">
 
@@ -136,7 +136,7 @@ if ( $total_categories && $total_categories > $limit ) {
 						<div class="expand-instructor-filter"></div>
 						<span>Category</span>
 						<span class="clear-instructor-filter">
-							<i class="tutor-icon-line-cross-line"></i> <span><?php esc_html_e( 'Clear All', 'tutor' ); ?></span>
+							<i class="tutor-icon-times"></i> <span><?php esc_html_e( 'Clear All', 'tutor' ); ?></span>
 						</span>
 					</div>
 
@@ -163,7 +163,7 @@ if ( $total_categories && $total_categories > $limit ) {
 					<?php if ( $show_more ) : ?>
 					<div class="tutor-instructor-category-show-more tutor-mb-24">
 						<div class="tutor-fs-7 tutor-fw-medium" data-id="<?php esc_attr_e( $category_id ); ?>">
-							<i class="tutor-icon-plus-bold-filled tutor-color-text-brand"></i>
+							<i class="tutor-icon-plus-o tutor-color-text-brand"></i>
 							<span class="tutor-fs-7 tutor-fw-medium tutor-black-60" action-tutor-toggle-more role="button">
 								<?php esc_html_e( 'Show More', 'tutor' ); ?>
 								<span class="tutor-show-more-loading"></span>

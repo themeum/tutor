@@ -299,7 +299,7 @@ $border: (
 	}
 }
 
-// svg icon
+// icon
 .tutor {
 	&-svg {
 		svg {
@@ -307,13 +307,32 @@ $border: (
 			width: 1em;
 		}
 	}
+}
 
-	&-round-icon {
-		display: inline-flex;
-		line-height: 1 !important;
-		background-color: var(--tutor-primary-lighter);
-		color: var(--tutor-primary-color);
-		border-radius: 100px;
+.tutor-round-box {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 60px;
+	height: 60px;
+	border-radius: 60px;
+	overflow: hidden;
+	color: var(--tutor-primary-color);
+	background: var(--tutor-primary-lighter);
+
+	[class^="tutor-icon-"],
+	[class*=" tutor-icon-"] {
+		display: inline-block;
+		font-size: 28px;
+	}
+
+	@include media-breakpoint-down(lg) {
+		width: 44px;
+		height: 44px;
+		[class^="tutor-icon-"],
+		[class*=" tutor-icon-"] {
+			font-size: 20px;
+		}
 	}
 }
 

@@ -11,10 +11,10 @@
 <div id="tutor-modal-bulk-action" class="tutor-modal tutor-modal-confirmation">
 	<span class="tutor-modal-overlay"></span>
 	<button data-tutor-modal-close class="tutor-modal-close">
-		<span class="tutor-icon-line-cross-line"></span>
+		<span class="tutor-icon-times"></span>
 	</button>
-	<div class="tutor-modal-root">
-		<div class="tutor-modal-inner">
+	<div class="tutor-modal-window">
+		<div class="tutor-modal-content">
 			<div class="tutor-modal-body tutor-text-center">
 				<div class="tutor-modal-icon">
 					<img src="<?php echo esc_url( tutor()->icon_dir . 'reset.svg' ); ?>" alt="reset-icon"/>
@@ -24,7 +24,7 @@
 				</div>
 				<div class="tutor-alert tutor-warning tutor-mt-32">
 					<div class="tutor-alert-text">
-						<span class="tutor-alert-icon tutor-icon-34  tutor-icon-warning-filled tutor-mr-12"></span>
+						<span class="tutor-alert-icon tutor-fs-4 tutor-icon-warning tutor-mr-12"></span>
 						<span class="color-warning-100 tutor-modal-message">Null</span>
 					</div>
 				</div>

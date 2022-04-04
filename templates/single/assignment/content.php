@@ -52,7 +52,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 	<div class="tutor-topbar-left-item tutor-d-flex">
 		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-				<span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+				<span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 			</a>
 		</div>
 		<div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
@@ -92,7 +92,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 		<div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
 			<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>">
-				<span class="tutor-icon-line-cross-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+				<span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 			</a>
 		</div>
 	</div>
@@ -101,7 +101,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 <div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
 	<div class="tutor-mobile-top-nav tutor-d-grid">
 		<a href="<?php echo esc_url( get_the_permalink( isset( $previous_id ) ? $previous_id : '' ) ); ?>">
-			<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
+			<span class="tutor-top-nav-icon tutor-icon-previous design-lightgrey"></span>
 		</a>
 		<div class="tutor-top-nav-title tutor-fs-6 tutor-color-black">
 			<?php
@@ -206,7 +206,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			<div class="quiz-flash-message tutor-mt-24 tutor-mt-sm-32">
 				<div class="tutor-quiz-warning-box time-over tutor-d-flex tutor-align-items-center tutor-justify-between">
 					<div class="flash-info tutor-d-flex tutor-align-items-center">
-						<span class="tutor-icon-cross-cricle-filled tutor-color-design-danger tutor-mr-8"></span>
+						<span class="tutor-icon-circle-times-bold tutor-color-design-danger tutor-mr-8"></span>
 						<span class="tutor-fs-7 tutor-color-danger-100">
 							<?php _e( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor' ); ?>
 						</span>
@@ -263,7 +263,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 								</div>
 								<div class="tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
 									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank" download>
-										<span class="tutor-icon-download-line"></span>
+										<span class="tutor-icon-download"></span>
 									</a>
 								</div>
 							</div>
@@ -365,7 +365,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 													</div>
 													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
 														<a href="<?php echo esc_url( $attachment->url ); ?>" data-id="<?php echo esc_attr( $assignment_comment_id ); ?>" data-name="<?php echo esc_attr( $attachment->name ); ?>" target="_blank">
-															<span class="tutor-icon-cross-filled color-design-brand"></span>
+															<span class="tutor-icon-times-o color-design-brand"></span>
 														</a>
 													</div>
 												</div>
@@ -409,7 +409,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 						</div>
 						<div class="tutor-show-more-btn tutor-pt-12">
 							<button class="tutor-btn tutor-btn-icon tutor-btn-outline-primary tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
-								<span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand" id="no-icon"></span>
+								<span class="btn-icon tutor-icon-plus tutor-color-design-brand" id="no-icon"></span>
 								<span class="tutor-color-black"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
 							</button>
 						</div>
@@ -561,7 +561,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 								array(
 									'alert_class' => 'tutor-alert tutor-danger',
 									'message'     => __( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor_pro' ),
-									'icon'        => ' tutor-icon-cross-circle-outline-filled',
+									'icon'        => ' tutor-icon-circle-times-line',
 								)
 							);
 						}
@@ -612,7 +612,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 													</div>
 													<div class="tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
 														<a download href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>" target="_blank">
-															<span class="tutor-icon-download-line tutor-color-design-brand"></span>
+															<span class="tutor-icon-download tutor-color-brand"></span>
 														</a>
 													</div>
 												</div>
@@ -650,7 +650,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							</div>
 							<div class="tutor-show-more-btn tutor-pt-12">
 								<button class="tutor-btn tutor-btn-icon tutor-btn-outline-primary tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
-									<span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand" id="no-icon"></span>
+									<span class="btn-icon tutor-icon-plus tutor-color-design-brand" id="no-icon"></span>
 									<span class="tutor-color-black"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
 								</button>
 							</div>

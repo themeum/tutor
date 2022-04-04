@@ -17,7 +17,7 @@
 		?>
 			<div class="filter-widget-search">
 				<div class="tutor-input-group tutor-form-control-has-icon tutor-from-control">
-					<span class="tutor-icon-search-filled tutor-input-group-icon tutor-color-black-50"></span>
+					<span class="tutor-icon-search tutor-input-group-icon tutor-color-black-50"></span>
 					<input type="Search" class="tutor-form-control" name="keyword" placeholder="<?php _e( 'Search...' ); ?>"/>
 				</div>
 			</div>
@@ -110,7 +110,7 @@
 			<div class="filter-widget-input">
 				<div class="tutor-clear-all-filter">
 					<a href="#" onclick="window.location.reload()">
-						<i class="tutor-icon-cross-filled"></i> <?php esc_html_e( 'Clear All Filters', 'tutor' ); ?>
+						<i class="tutor-icon-times-o"></i> <?php esc_html_e( 'Clear All Filters', 'tutor' ); ?>
 					</a>
 				</div>
 			</div>
