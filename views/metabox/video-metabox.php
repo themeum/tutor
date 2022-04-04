@@ -41,9 +41,8 @@ function tutor_video_input_state($videoSource, $source){
 }
 ?>
 
-
 <div class="tutor-mb-32">
-    <label class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-pb-10">
+    <label class="tutor-form-label">
         <?php
         if ($post->post_type === tutor()->course_post_type) {
             _e('Course Intro Video', 'tutor');
@@ -52,6 +51,7 @@ function tutor_video_input_state($videoSource, $source){
         }
         ?>
     </label>
+    
     <div class="tutor-input-group tutor-mb-16 tutor-mt-12 tutor-d-block">
         <div class="tutor-video-upload-wrap">
             <div class="tutor-dropdown-icon-pack tutor-mt-4" data-video_source="<?php echo empty($videoSource) ? '' : $videoSource; ?>">
@@ -62,7 +62,7 @@ function tutor_video_input_state($videoSource, $source){
                 <i class="tutor-icon-link" data-for="external_url"></i>
                 <i class="tutor-icon-coding" data-for="embedded"></i>
             </div>
-            <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown">
+            <select name="video[source]" class="tutor-form-control tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
                 <?php
                 foreach ($video_sources as $value => $source) {
