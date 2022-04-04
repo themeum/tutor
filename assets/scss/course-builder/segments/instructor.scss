@@ -13,11 +13,8 @@ $inst_gap: 30px;
     }
 }
 .tutor-course-available-instructors {
-    // display: flex;
-    // flex-wrap: wrap;
     .added-instructor-item {
-        // flex: 0 0 calc(50% - #{$inst_gap});
-        // max-width: calc(50% - #{$inst_gap});
+        background-color: #FFFFFF;
         border: 1px solid #dcdfe5;
         padding: 13px;
         display: inline-flex;
@@ -25,37 +22,14 @@ $inst_gap: 30px;
         border-radius: 4px;
         position: relative;
         box-sizing: border-box;
-        // margin: 0px #{$inst_gap} #{$inst_gap} 0;
-        
-        .instructor-control {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            font-size: 12px;
-            -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
-            -webkit-transition: 300ms;
-            transition: 300ms;
-            background: white;
-            height: calc(100% - 5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 10px;
-
-            a {
-                text-decoration: none;
-            }
-        }
 
         &:not(:hover){
             .instructor-control {
                 display: none;
             }
         }
+
         .instructor-icon {
-            // height: 45px;
-            // width: 45px;
             height: auto !important;
             max-width: 45px;
             overflow: hidden;
@@ -96,45 +70,17 @@ $inst_gap: 30px;
 
 // Multi instructor picker modal
 #tutor_course_instructor_modal {
-
-    .tutor-modal-body{
-        padding: 40px ​50px;
-    }
-
-    
-    .tutor-modal-body-alt{
-        padding: 0;
-        text-align: left;
-    }
-
-    .instructor-modal-title {
-        text-align: left;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 20px;
-        color: #1D1F37;
-        border-bottom: 1px solid #CDCFD5;
-        position: relative;
-        padding-bottom: 20px;
-        margin-bottom: 36px;
-        
-        .tutor-modal-close{
-            position: absolute;
-            right: 0;
-            top: 0;
-        }
-    }
-
     .tutor-search-result {
         position: absolute;
         z-index: 99;
-        width: 300px;
+        width: 400px;
+        box-sizing: border-box;
         background: white;
         max-height: 216px;
         overflow: auto;
         border: 1px solid #CDCFD5;
-        box-sizing: border-box;
         border-radius: 6px;
+
         &:empty{
             display: none;
             border: none;
@@ -143,55 +89,29 @@ $inst_gap: 30px;
             height: 0;
         }
 
-        &>div{
+        & > div{
             display: flex;
             align-items: center;
-            padding: 12px 0;
+            padding: 12px 20px;
 
             &:hover{
                 background: #EFF1F7;
             }
 
             img {
-                // Profile pic
-                width: 34px;
-                height: 34px;
-                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                border-radius: 50px;
                 overflow: hidden;
-                margin: 0 19px;
+                margin: 0 16px 0 0;
             }
 
-            span {
-                // Name
-                flex: 1;
-                display: inline-block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                line-height: 23px;
-                font-style: normal;
-                font-weight: 500;
-                font-size: 16px;
-                color: #212327;
-
-                &>span{
-                    // Email
-                    font-style: normal;
-                    font-weight: normal;
-                    font-size: 13px;
-                    color: #5B616F;
-                }
-            }
-
-            i{
-                // Add icon
-                padding: 0 20px;
-                color: var(--tutor-primary-color);
-                font-size: 24px;
-                cursor: pointer;
+            .tutor-instructor-single-action {
+                margin-left: auto;
             }
 
             &:not(:hover){
-                i{
+                .tutor-instructor-single-action {
                     display: none;
                 }
             }
