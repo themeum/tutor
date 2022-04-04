@@ -304,6 +304,10 @@ $disabled-color: #E9E9EA !default;
 	}
 }
 
+.tutor-animation-spin {
+	animation: rotateSpinner 0.8s linear infinite;
+}
+
 @keyframes rotateSpinner {
 	to {
 		transform: rotate(360deg);

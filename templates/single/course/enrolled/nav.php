@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php do_action('tutor_course/single/enrolled/nav/before'); ?>
-<ul class="tutor-nav">
+<ul class="tutor-nav" tutor-priority-nav>
 	<?php
 		foreach ( $course_nav_item as $nav_key => $nav_item ) {
 			/**
@@ -27,8 +27,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			 */
 			$default_active_key = apply_filters( 'tutor_default_topics_active_tab', 'info' );
 			?>
-				<li class="tutor-nav-item<?php echo $nav_key == $default_active_key ? ' is-active' : ''; ?>">
-					<a href="#" data-tutor-nav-target="tutor-course-details-tab-<?php echo $nav_key; ?>"><?php echo $nav_item['title']; ?></a>
+				<li class="tutor-nav-item">
+					<a class="<?php echo $nav_key == $default_active_key ? 'is-active' : ''; ?>" href="#" data-tutor-nav-target="tutor-course-details-tab-<?php echo $nav_key; ?>"><?php echo $nav_item['title']; ?></a>
 				</li>
 			<?php
 		}
