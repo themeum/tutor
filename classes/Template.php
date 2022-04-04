@@ -449,7 +449,7 @@ class Template extends Tutor_Base {
 	public function redirect_to_url() {
 		global $wp_query;
 		$query_vars = $wp_query->query_vars;
-		if ( isset( $query_vars['tutor_dashboard_page'] ) && 'create-course' === $query_vars['tutor_dashboard_page'] ) {
+		if ( isset( $query_vars['tutor_dashboard_page'] ) && 'create-course' === $query_vars['tutor_dashboard_page'] && tutor_utils()->is_instructor(get_current_user_id(), true)) {
 			$post_type = tutor()->course_post_type;
 			if ( isset( $_GET['course_ID'] ) && '' !== $_GET['course_ID'] ) {
 				return;

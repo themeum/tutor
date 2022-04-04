@@ -14,7 +14,7 @@
 			<div class="tutor-app-process-alert">
 				<div style="border: 1px solid var(--tutor-color-brand);" class="tutor-primary tutor-py-12 tutor-px-20 tutor-radius-6">
 					<div class="tutor-alert-text tutor-d-flex tutor-align-items-center">
-						<span class="tutor-icon-circle-outline-info-filled tutor-mr-12 tutor-h4 tutor-color-brand" area-hidden="true"></span>
+						<span class="tutor-icon-circle-info tutor-mr-12 tutor-h4 tutor-color-brand" area-hidden="true"></span>
 						<span>
 							<?php esc_html_e( 'Tutor LMS can be used to edit content built using that extension. It cannot edit layouts made before.', 'tutor' ); ?>
 						</span>

@@ -35,13 +35,13 @@
         <?php if(count($more_popups)): ?>
             <div class="tab-header-item-seemore tutor-ml-auto">
                 <div class="tab-header-item-seemore-toggle" data-seemore-target="tutor-settings-tab-seemore-11">
-                    <span class="icon-seemore tutor-icon-line-cross-line tutor-icon-20 tutor-color-text-brand"></span>
+                    <span class="icon-seemore tutor-icon-times  tutor-color-text-brand"></span>
                 </div>
                 <div id="tutor-settings-tab-seemore-11" class="tab-header-item-seemore-popup">
                     <ul>
                         <?php foreach($more_popups as $tab): ?>
                             <li class="tab-header-item" data-tutor-tab-target="tutor-settings-tab-<?php echo $tab['key']; ?>">
-                                <span class="tutor-icon-github-logo-brand tutor-icon-18 tutor-mr-8"></span>
+                                <span class="tutor-icon-brand-github  tutor-mr-8"></span>
                                 <span><?php echo $tab['label']; ?></span>
                             </li>
                         <?php endforeach; ?>

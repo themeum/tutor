@@ -26,7 +26,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
     <?php } ?>
     <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
     <div class="tutor-d-flex tutor-align-items-center">
-        <span class="meta-icon tutor-icon-user-filled tutor-color-muted tutor-mr-8"></span>
+        <span class="meta-icon tutor-icon-user-line tutor-color-muted tutor-mr-8"></span>
         <span><?php echo esc_html( $course_students ); ?></span>
     </div>
     <?php endif; ?>

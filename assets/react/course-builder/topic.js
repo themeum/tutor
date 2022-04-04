@@ -108,6 +108,6 @@ window.jQuery(document).ready(function($) {
 			.find('.expand-collapse-wrap')
 			.toggleClass('is-expanded')
 			.find('i')
-			.toggleClass('tutor-icon-angle-down-filled tutor-icon-angle-up-filled');
+			.toggleClass('tutor-icon-angle-down tutor-icon-angle-up');
 	});
 });

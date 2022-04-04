@@ -26,7 +26,7 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
     $notice = __('No video source selected from settings!', 'tutor');
     echo "<div class='tutor-alert tutor-warning'>
         <div class='tutor-alert-text'>
-            <span class='tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12'></span>
+            <span class='tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12'></span>
             <span>{$notice}</span>
         </div>
     </div>";
@@ -55,12 +55,12 @@ function tutor_video_input_state($videoSource, $source){
     <div class="tutor-input-group tutor-mb-16 tutor-mt-12 tutor-d-block">
         <div class="tutor-video-upload-wrap">
             <div class="tutor-dropdown-icon-pack tutor-mt-4" data-video_source="<?php echo empty($videoSource) ? '' : $videoSource; ?>">
-                <i class="tutor-icon-html5-stroke-brand" data-for="html5"></i>
-                <i class="tutor-icon-youtube-stroke-brand" data-for="youtube"></i>
-                <i class="tutor-icon-vimeo-stroke-brand" data-for="vimeo"></i>
-                <i class="tutor-icon-shortcode-filled" data-for="shortcode"></i>
-                <i class="tutor-icon-link-filled" data-for="external_url"></i>
-                <i class="tutor-icon-coding-filled" data-for="embedded"></i>
+                <i class="tutor-icon-brand-html5-bold" data-for="html5"></i>
+                <i class="tutor-icon-brand-youtube-line" data-for="youtube"></i>
+                <i class="tutor-icon-brand-vimeo-line" data-for="vimeo"></i>
+                <i class="tutor-icon-shortcode" data-for="shortcode"></i>
+                <i class="tutor-icon-link" data-for="external_url"></i>
+                <i class="tutor-icon-coding" data-for="embedded"></i>
             </div>
             <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown no-tutor-dropdown">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>

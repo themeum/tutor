@@ -84,8 +84,8 @@ $filters = array(
 		<div class="tutor-card tutor-p-24">
 			<div class="tutor-row tutor-align-items-lg-center">
 				<div class="tutor-col-lg-auto tutor-mb-16 tutor-mb-lg-0">
-					<div class="tutor-round-icon tutor-color-brand-wordpress tutor-fs-2 tutor-p-8">
-						<i class="tutor-icon-speaker-filled" area-hidden="true"></i>
+					<div class="tutor-round-box">
+						<i class="tutor-icon-bullhorn tutor-fs-3" area-hidden="true"></i>
 					</div>
 				</div>
 

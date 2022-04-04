@@ -648,17 +648,17 @@ jQuery(document).ready(function ($) {
 		if (
 			$(this)
 				.find('i')
-				.hasClass('tutor-icon-angle-up-filled')
+				.hasClass('tutor-icon-angle-up')
 		) {
 			$(this)
 				.find('i')
-				.removeClass('tutor-icon-angle-up-filled')
-				.addClass('tutor-icon-angle-down-filled');
+				.removeClass('tutor-icon-angle-up')
+				.addClass('tutor-icon-angle-down');
 		} else {
 			$(this)
 				.find('i')
-				.removeClass('tutor-icon-angle-down-filled')
-				.addClass('tutor-icon-angle-up-filled');
+				.removeClass('tutor-icon-angle-down')
+				.addClass('tutor-icon-angle-up');
 		}
 		$(this)
 			.next('div')

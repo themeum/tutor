@@ -4,7 +4,7 @@
 <?php if(!empty($back_url)): ?>
     <div class="tutor-mb-24">
         <a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
-            <span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
+            <span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
             <?php _e('Back', 'tutor'); ?>
         </a>
     </div>

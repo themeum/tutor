@@ -618,8 +618,8 @@ window.jQuery(document).ready(function($) {
 		$(this)
 			.parent()
 			.toggleClass('tutor-is-active')
-			.find('.tutor-icon-angle-down-filled')
-			.toggleClass('tutor-icon-angle-up-filled');
+			.find('.tutor-icon-angle-down')
+			.toggleClass('tutor-icon-angle-up');
 	});
 
 	// Change background of quiz feedback mode

@@ -36,11 +36,11 @@ ob_start();
         <div class="tutor-topbar-left-item tutor-d-flex"> 
             <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
                 <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-                    <span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+                    <span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-items-center"></span>
                 </a>
             </div>
             <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
-                <span class="tutor-icon-quiz-filled tutor-color-white tutor-mr-4"></span>
+                <span class="tutor-icon-quiz-o tutor-color-white tutor-mr-4"></span>
                 <span class="tutor-fs-7 tutor-fw-normal tutor-color-design-white">
                     <?php 
                         esc_html_e( 'Quiz: ', 'tutor' );
@@ -76,7 +76,7 @@ ob_start();
             <div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
                 <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
                 <a href="<?php echo get_the_permalink($course_id); ?>">
-                    <span class="tutor-icon-line-cross-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+                    <span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-items-center"></span>
                 </a>
             </div>
         </div>
@@ -85,7 +85,7 @@ ob_start();
     <div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
         <div class="tutor-mobile-top-nav tutor-d-grid">
             <a href="<?php echo get_the_permalink($previous_id); ?>">
-                <span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
+                <span class="tutor-top-nav-icon tutor-icon-previous design-lightgrey"></span>
             </a>
             <div class="tutor-top-nav-title tutor-fs-6 tutor-fw-normal tutor-color-black">
                 <?php 

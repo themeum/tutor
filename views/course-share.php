@@ -11,17 +11,17 @@
     );
 ?>
 
-<a data-tutor-modal-target="tutor-course-share-opener" href="#" class="tutor-btn tutor-btn-ghost tutor-course-wishlist-btn">
-    <span class="tutor-icon-share-filled tutor-mr-8"></span> <?php _e('Share', 'tutor'); ?>
+<a data-tutor-modal-target="tutor-course-share-opener" href="#" class="tutor-btn tutor-btn-ghost tutor-course-share-btn">
+    <span class="tutor-icon-share tutor-mr-8"></span> <?php _e('Share', 'tutor'); ?>
 </a>
 <div id="tutor-course-share-opener" class="tutor-modal">
     <span class="tutor-modal-overlay"></span>
-    <div class="tutor-modal-root">
-        <div class="tutor-modal-inner tutor-modal-close-inner">
-            <div class="tutor-modal-body" style="padding:40px">
-				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="tutor-icon-line-cross-line"></span>
-				</button>
+    <div class="tutor-modal-window">
+        <div class="tutor-modal-content tutor-modal-content-white">
+            <button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+                <span class="tutor-icon-times" area-hidden="true"></span>
+            </button>
+            <div class="tutor-modal-body">
                 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16">
                     <?php _e('Share Course', 'tutor'); ?>
                 </div>

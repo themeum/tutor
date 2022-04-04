@@ -24,7 +24,7 @@ if ( ! $is_completed_lesson) {
             <input type="hidden" value="<?php echo get_the_ID(); ?>" name="lesson_id"/>
             <input type="hidden" value="tutor_complete_lesson" name="tutor_action"/>
             <button type="submit" class="tutor-topbar-mark-btn tutor-btn tutor-btn-icon tutor-btn-md" name="complete_lesson_btn" value="complete_lesson">
-                <span class="btn-icon tutor-icon-tick-circle-outline-filled"></span>
+                <span class="btn-icon tutor-icon-circle-mark-line"></span>
                 <span class="tutor-content-responsive tutor-btn-content"><?php _e( 'Mark as ', 'tutor' ); ?></span>
                 <span class="tutor-btn-content"><?php _e( 'Complete', 'tutor' ); ?></span>
             </button>

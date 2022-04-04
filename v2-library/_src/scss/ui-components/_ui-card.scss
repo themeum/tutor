@@ -4,6 +4,10 @@
 		border: 1px solid #CDCFD5;
 		border-radius: 6px;
 
+		&-secondary {
+			border: 2px solid #E0E2EA;
+		}
+
 		&.is-selected {
 			background-color: #F6F8FD;
 			border-color: #D2DBF5;
@@ -12,31 +16,6 @@
 		&.is-active {
 			background-color: #F6F8FD;
 			border-color: $primary;
-		}
-
-		&-icon {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 60px;
-			height: 60px;
-			border-radius: 60px;
-			overflow: hidden;
-			background: #e9edfb;
-
-			i {
-				color: var(--tutor-primary-color);
-				display: inline-block;
-				font-size: 28px;
-			}
-
-			@include media-breakpoint-down(lg) {
-				width: 44px;
-				height: 44px;
-				i {
-					font-size: 20px;
-				}
-			}
 		}
 	}
 }

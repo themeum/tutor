@@ -19,14 +19,14 @@ if ( isset( $data ) && count( $data ) ) : ?>
 						?>
 						<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 							<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
-								<span class="tutor-icon-plus-bold-filled tutor-mr-8"></span>
+								<span class="tutor-icon-plus-o tutor-mr-8"></span>
 								<span><?php echo esc_html( $data['button_title'] ); ?></span>
 							</button>
 						<?php endif; ?>
 					<?php else : ?>
 						<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 							<a href="<?php echo esc_url( $data['button_url'] ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-md">
-								<span class="tutor-icon-plus-bold-filled tutor-mr-8"></span>
+								<span class="tutor-icon-plus-o tutor-mr-8"></span>
 								<span><?php echo esc_html( $data['button_title'] ); ?></span>
 							</a>
 						<?php endif; ?>
@@ -50,8 +50,8 @@ if ( isset( $data ) && count( $data ) ) : ?>
 							</li>
 						<?php endforeach; ?>
 						<li class="tutor-nav-item tutor-nav-more tutor-d-none">
-							<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor"); ?></span> <span class="icon-seemore tutor-icon-line-cross-line"></span></a>
-							<ul class="tutor-nav-more-list"></ul>
+							<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
+							<ul class="tutor-nav-more-list tutor-dropdown"></ul>
 						</li>
 					</ul>
 				<?php endif; ?>

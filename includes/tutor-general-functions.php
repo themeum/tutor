@@ -392,7 +392,7 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		<div class="tutor-course-builder-section">
 			<div class="tutor-course-builder-section-title">
 				<span class="tutor-fs-5 tutor-fw-bold tutor-color-black-70">
-					<i class="tutor-icon-angle-up-filled" area-hidden="true"></i>
+					<i class="tutor-icon-angle-up" area-hidden="true"></i>
 					<span><?php echo $title; ?></span>
 				</span>
 			</div>
@@ -555,7 +555,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 
 		$html = '<div class="asas tutor-alert tutor-' . esc_attr( $type ) . '">
 					<div class="tutor-alert-text">
-						<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12"></span>
+						<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
 						<span>' . wp_kses( $msg, array( 'div', 'span' ) ) . '</span>
 					</div>
 				</div>';

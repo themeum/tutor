@@ -79,11 +79,11 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							</div>
 							<div class="tutor-given-review-action tutor-d-flex tutor-align-items-center">
 								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-btn tutor-btn-ghost" role="button">
-									<i class="tutor-icon-edit-filled tutor-mr-8"></i>
+									<i class="tutor-icon-edit tutor-mr-8"></i>
 									<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 								</span>
 								<span data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" class="tutor-btn tutor-btn-ghost" role="button">
-									<i class="tutor-icon-delete-stroke-filled tutor-mr-8"></i>
+									<i class="tutor-icon-trashcan-line tutor-mr-8"></i>
 									<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 								</span>
 							</div>
@@ -93,123 +93,72 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 						</div>
 					</div>
 
-					<!-- Edit Modal -->
-					<form class="tutor-modal tutor-modal-is-close-inside-inner modal-sticky-header-footer" id="<?php echo esc_html( $update_id ); ?>">
-						<!-- <span class="tutor-modal-overlay"></span>
-						<div class="tutor-modal-root">
-							<div class="tutor-modal-inner">
-								<div class="tutor-modal-header">
-									<h3 class="tutor-modal-title tutor-fs-6 tutor-fw-bold tutor-color-black-70">
-										<?php esc_html_e( 'Update Review' ); ?>
-									</h3>
-									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="tutor-icon-line-cross-line"></span>
-									</button>
-								</div>
-								
-								<div class="tutor-modal-body-alt modal-container">
+					<!-- Edit Review Modal -->
+					<form class="tutor-modal" id="<?php echo esc_html( $update_id ); ?>">
+						<div class="tutor-modal-overlay"></div>
+						<div class="tutor-modal-window">
+							<div class="tutor-modal-content tutor-modal-content-white">
+								<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+									<span class="tutor-icon-times" area-hidden="true"></span>
+								</button>
+
+								<div class="tutor-modal-body tutor-text-center">
+									<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mt-48 tutor-mb-12"><?php _e("How would you rate this course?", "tutor"); ?></div>
+									<div class="tutor-fs-6 tutor-color-muted"><?php _e('Select Rating', 'tutor'); ?></div>
+
 									<input type="hidden" name="course_id" value="<?php echo esc_html( $review->comment_post_ID ); ?>"/>
 									<input type="hidden" name="review_id" value="<?php echo esc_html( $review->comment_ID ); ?>"/>
-									<input type="hidden" name="action" value="tutor_place_rating"/>
+									<input type="hidden" name="action" value="tutor_place_rating" />
 
-									<div class="tutor-star-rating-container">
-										<?php
-											tutor_utils()->star_rating_generator( tutor_utils()->get_rating_value( $review->rating ) );
-										?>
-									</div>
-									<textarea class="tutor-form-control tutor-mt-12" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php
-										esc_html_e( stripslashes( $review->comment_content ) );
-									?></textarea>
-								</div>
-
-								<div class="tutor-modal-footer">
-									<div class="tutor-row">
-										<div class="tutor-col">
-											<div class="tutor-btn-group">
-												<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary">
-													<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-												</button>
+									<!-- @todo: need to update -->
+									<div class="tutor-star-rating-container tutor-mt-16">
+										<div class="tutor-ratings tutor-ratings-modal">
+											<div class="tutor-rating-stars">
+												<?php
+													tutor_utils()->star_rating_generator( tutor_utils()->get_rating_value( $review->rating ) );
+												?>
 											</div>
 										</div>
-										<div class="tutor-col-auto">
-											<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary tutor_submit_review_btn">
-												<?php esc_html_e( 'Update Review', 'tutor' ); ?>
-											</button>
-										</div>
+									</div>
+
+									<textarea class="tutor-form-control tutor-mt-28" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php esc_html_e( stripslashes( $review->comment_content ) ); ?></textarea>
+									
+									<div class="tutor-d-flex tutor-justify-center tutor-my-48">
+										<button type="button" class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close data-action="back">
+											<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+										</button>
+										<button type="submit" class="tutor_submit_review_btn tutor-btn tutor-btn-primary tutor-ml-20" data-action="next">
+											<?php esc_html_e( 'Update Review', 'tutor' ); ?>
+										</button>
 									</div>
 								</div>
 							</div>
-						</div> -->
-						<!-- <div id="tutor_review_edit" class="tutor-modal tutor-is-active"> -->
-							<span class="tutor-modal-overlay"></span>
-							<div class="tutor-modal-root">
-								<div class="tutor-modal-inner">
-									<button data-tutor-modal-close="" class="tutor-modal-close">
-										<span class="tutor-icon-cross-filled"></span>
-									</button>
-									<div class="tutor-modal-body tutor-text-center">
-										<div class="tutor-rating-modal-title tutor-fs-4 tutor-color-black-70 tutor-mb-16">
-											<?php _e("How would you rate this course?", "tutor"); ?>
-										</div>
-										<div class="tutor-modal-text-rating tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-12">
-											<?php _e('Select Rating', 'tutor'); ?>
-										</div>
-										<input type="hidden" name="course_id" value="<?php echo esc_html( $review->comment_post_ID ); ?>"/>
-										<input type="hidden" name="review_id" value="<?php echo esc_html( $review->comment_ID ); ?>"/>
-										<input type="hidden" name="action" value="tutor_place_rating"/>
-
-										<div class="tutor-star-rating-container">
-											<div class="tutor-ratings tutor-ratings-modal">
-												<div class="tutor-rating-stars">
-													<?php
-														tutor_utils()->star_rating_generator( tutor_utils()->get_rating_value( $review->rating ) );
-													?>
-												</div>
-											</div>
-										</div>
-
-										<textarea class="tutor-form-control tutor-mt-28" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php esc_html_e( stripslashes( $review->comment_content ) ); ?></textarea>
-										
-										<div class="tutor-modal-delete-footer tutor-modal-btns tutor-btn-group">
-											<button data-tutor-modal-close type="button" data-action="back" class="tutor-modal-close-btn tutor-btn tutor-btn-outline-primary">
-												<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-											</button>
-											<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary tutor_submit_review_btn">
-												<?php esc_html_e( 'Update Review', 'tutor' ); ?>
-											</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						<!-- </div> -->
+						</div>
 					</form>
 
 					<!-- Delete Modal -->
-					<div id="<?php echo $delete_id; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
-						<span class="tutor-modal-overlay"></span>
-						<div class="tutor-modal-root">
-							<div class="tutor-modal-inner">
-								<button data-tutor-modal-close class="tutor-modal-close">
-									<span class="tutor-icon-cross-filled"></span>
+					<div id="<?php echo $delete_id; ?>" class="tutor-modal">
+						<div class="tutor-modal-overlay"></div>
+						<div class="tutor-modal-window">
+							<div class="tutor-modal-content tutor-modal-content-white">
+								<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+									<span class="tutor-icon-times" area-hidden="true"></span>
 								</button>
+
 								<div class="tutor-modal-body tutor-text-center">
-									<div class="tutor-modal-icon">
-										<img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+									<div class="tutor-mt-48">
+										<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
 									</div>
-									<div class="tutor-modal-text-wrap">
-										<h3 class="tutor-modal-title">
-											<?php esc_html_e( 'Delete This Review?', 'tutor' ); ?>
-										</h3>
-										<p>
-											<?php esc_html_e( 'Are you sure you want to delete this review permanently from the site? Please confirm your choice.', 'tutor' ); ?>
-										</p>
-									</div>
-									<div class="tutor-modal-delete-footer tutor-modal-btns tutor-btn-group">
-										<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-											<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+
+									<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Delete This Review?', 'tutor'); ?></div>
+									<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('Are you sure you want to delete this review permanently from the site? Please confirm your choice.', 'tutor'); ?></div>
+									
+									<div class="tutor-d-flex tutor-justify-center tutor-my-48">
+										<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
+											<?php esc_html_e('Cancel', 'tutor'); ?>
 										</button>
-										<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action" data-request_data='{"review_id":<?php echo $review->comment_ID; ?>,"action":"delete_tutor_review"}' data-delete_element_id="<?php echo $row_id; ?>">
-											<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
+										<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"review_id":<?php echo $review->comment_ID; ?>,"action":"delete_tutor_review"}' data-delete_element_id="<?php echo $row_id; ?>">
+											<?php esc_html_e('Yes, Delete This', 'tutor'); ?>
 										</button>
 									</div>
 								</div>

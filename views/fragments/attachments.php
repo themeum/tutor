@@ -18,7 +18,7 @@
 
                 <div class="tutor-ml-auto">
                     <span class="tutor-delete-attachment tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-lg" role="button">
-                        <span class="tutor-icon-line-cross-line" area-hidden="true"></span>
+                        <span class="tutor-icon-times" area-hidden="true"></span>
                     </span>
                 </div>
             </div>
@@ -30,7 +30,7 @@
 
 <?php if ( isset( $data['add_button'] ) && true === $data['add_button'] ): ?>
     <button type="button" class="tutor-btn tutor-btn-outline-primary tutorUploadAttachmentBtn" data-name="<?php echo isset( $data['name'] ) ? esc_attr( $data['name'] ) : ''; ?>">
-        <span class="tutor-icon-attach-filled tutor-mr-8"></span>
+        <span class="tutor-icon-paperclip tutor-mr-8"></span>
         <span><?php esc_html_e( 'Upload Attachments', 'tutor' ); ?></span>
     </button>
 <?php endif; ?>

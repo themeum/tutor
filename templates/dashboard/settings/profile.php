@@ -62,11 +62,11 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		<input type="hidden" class="upload_max_filesize" value="<?php echo $max_filesize; ?>">
 		<div id="tutor_cover_area" data-fallback="<?php esc_attr_e( $cover_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $cover_photo_src ); ?>)">
 			<span class="tutor_cover_deleter">
-				<span class="dashboard-profile-delete tutor-icon-delete-fill-filled"></span>
+				<span class="dashboard-profile-delete tutor-icon-trashcan-bold"></span>
 			</span>
 			<div class="tutor_overlay">
 				<button class="tutor_cover_uploader tutor-btn tutor-btn-primary">
-					<i class="tutor-icon-camera-filled tutor-mr-12" area-hidden="true"></i>
+					<i class="tutor-icon-camera tutor-mr-12" area-hidden="true"></i>
 					<span><?php echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' ); ?></span>
 				</button>
 			</div>
@@ -79,7 +79,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		</div>
 		<div id="tutor_profile_area" data-fallback="<?php esc_attr_e( $profile_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $profile_photo_src ); ?>)">
 			<div class="tutor_overlay">
-				<i class="tutor-icon-camera-filled"></i>
+				<i class="tutor-icon-camera"></i>
 			</div>
 		</div>
 		<div id="tutor_pp_option">
@@ -88,10 +88,10 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			</div>
 
 			<span class="tutor_pp_uploader profile-uploader">
-				<i class="profile-upload-icon tutor-icon-image-filled"></i> <?php esc_html_e( 'Upload Photo', 'tutor' ); ?>
+				<i class="profile-upload-icon tutor-icon-image-landscape"></i> <?php esc_html_e( 'Upload Photo', 'tutor' ); ?>
 			</span>
 			<span class="tutor_pp_deleter profile-uploader">
-				<i class="profile-upload-icon tutor-icon-delete-fill-filled"></i> <?php esc_html_e( 'Delete', 'tutor' ); ?>
+				<i class="profile-upload-icon tutor-icon-trashcan-bold"></i> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 			</span>
 
 			<div></div>

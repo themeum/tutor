@@ -95,7 +95,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 			}
 			?>
 			<div class="more_button tutor-fs-6">
-				<i class="tutor-icon-plus-filled" area-hidden="true"></i>
+				<i class="tutor-icon-plus" area-hidden="true"></i>
 				<span><?php _e('Show More', 'tutor'); ?></span>
 			</div>
 		</div>

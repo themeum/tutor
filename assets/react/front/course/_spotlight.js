@@ -215,7 +215,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			this.querySelector('input').remove();
 		}
 		const input = copyElement.querySelector('input');
-		const inputValue = input.value;
 		const inputName = input.dataset.name;
 		const newInput = document.createElement('input');
 		newInput.type = 'text';
@@ -282,7 +281,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                                     <div onclick="(() => {
 										this.closest('.tutor-instructor-card').remove();
 									})()" class="tutor-attachment-file-close tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
-                                        <span class="tutor-icon-cross-filled color-design-brand"></span>
+                                        <span class="tutor-icon-times-o tutor-color-brand"></span>
                                     </div>
                                 </div>`;
 				}
