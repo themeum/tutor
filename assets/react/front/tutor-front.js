@@ -412,25 +412,6 @@ jQuery(document).ready(function ($) {
 	 * @since v.1.2.0
 	 */
 
-	$(document).on('click', '.open-withdraw-form-btn, [action-close-withdraw-form]', function (e) {
-		e.preventDefault();
-
-		if ($(this).data('reload') == 'yes') {
-			window.location.reload();
-			return;
-		}
-
-		$('.tutor-earning-withdraw-form-wrap')
-			.toggle()
-			.find('[name="tutor_withdraw_amount"]')
-			.val('');
-		$('.tutor-withdrawal-pop-up-success')
-			.hide()
-			.next()
-			.show();
-		$('html, body').css('overflow', $('.tutor-earning-withdraw-form-wrap').is(':visible') ? 'hidden' : 'auto');
-	});
-
 	$(document).on('submit', '#tutor-earning-withdraw-form', function (e) {
 		e.preventDefault();
 
@@ -451,12 +432,15 @@ jQuery(document).ready(function ($) {
 				var Msg;
 				$('.tutor-earning-withdraw-form-wrap').hide();
 				if (data.success) {
+					console.log(data.data.available_balance);
+					
 					if (data.data.available_balance !== 'undefined') {
 						$('.withdraw-balance-col .available_balance').html(data.data.available_balance);
 					}
+
 					tutor_toast(
 						__('Request Successful', 'tutor'),
-						__('Your request has been submitted. Please wait for the administrator’s response.', 'tutor'),
+						__('Your request has been submitted. Please wait for the administrator\'s response.', 'tutor'),
 						'success'
 					);
 					setTimeout(function () {

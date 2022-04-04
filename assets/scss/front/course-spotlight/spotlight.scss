@@ -36,8 +36,6 @@
 								}
 							}
 						}
-						.tutor-icard-content {
-						}
 						.tutor-avatar {
 							background: $primary-40;
 							span {
@@ -131,10 +129,9 @@
 					.tutor-comments-list {
 						display: grid;
 						grid-template-columns: 70px auto;
-						.comment-avatar {
-						}
 						.tutor-single-comment {
 							.tutor-actual-comment {
+								background-color: #fff;
 								border: 1px solid $stroke-light-30;
 								border-radius: 6px;
 								position: relative;
@@ -146,8 +143,6 @@
 									span:last-child {
 										color: #808993;
 									}
-								}
-								.tutor-comment-text {
 								}
 							}
 							/* tutor-actual-comment */
