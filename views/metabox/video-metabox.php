@@ -62,7 +62,7 @@ function tutor_video_input_state($videoSource, $source){
                 <i class="tutor-icon-link" data-for="external_url"></i>
                 <i class="tutor-icon-coding" data-for="embedded"></i>
             </div>
-            <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown no-tutor-dropdown">
+            <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
                 <?php
                 foreach ($video_sources as $value => $source) {
