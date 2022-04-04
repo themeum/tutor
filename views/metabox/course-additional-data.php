@@ -17,14 +17,14 @@ $material_includes = get_post_meta( $course_id, '_tutor_course_material_includes
     <label class="tutor-fs-6 tutor-fw-medium tutor-color-black">
         <?php _e( 'What Will I Learn?', 'tutor' ); ?>
     </label>
-    <textarea class="tutor-form-control tutor-textarea-auto-height tutor-mt-12" name="course_benefits" rows="2" placeholder="<?php esc_attr_e( 'Write here the course benefits (One per line)', 'tutor' ); ?>"><?php echo $benefits; ?></textarea>
+    <textarea class="tutor-form-control tutor-form-control-auto-height tutor-mt-12" name="course_benefits" rows="2" placeholder="<?php esc_attr_e( 'Write here the course benefits (One per line)', 'tutor' ); ?>"><?php echo $benefits; ?></textarea>
 </div>
 
 <div class="tutor-mb-32">
     <label class="tutor-fs-6 tutor-fw-medium tutor-color-black">
         <?php _e( 'Targeted Audience', 'tutor' ); ?> <br />
     </label>
-    <textarea class="tutor-form-control tutor-textarea-auto-height tutor-mt-12" name="course_target_audience" rows="2" placeholder="<?php esc_attr_e( 'Specify the target audience that will benefit the most from the course. (One line per target audience.)', 'tutor' ); ?>"><?php echo $target_audience; ?></textarea>
+    <textarea class="tutor-form-control tutor-form-control-auto-height tutor-mt-12" name="course_target_audience" rows="2" placeholder="<?php esc_attr_e( 'Specify the target audience that will benefit the most from the course. (One line per target audience.)', 'tutor' ); ?>"><?php echo $target_audience; ?></textarea>
 </div>
 
 <div class="tutor-row tutor-mb-32">
@@ -46,14 +46,14 @@ $material_includes = get_post_meta( $course_id, '_tutor_course_material_includes
     <label class="tutor-fs-6 tutor-fw-medium tutor-color-black">
         <?php _e( 'Materials Included', 'tutor' ); ?> <br />
     </label>
-    <textarea class="tutor-form-control tutor-textarea-auto-height tutor-mt-12" name="course_material_includes" rows="5" placeholder="<?php esc_attr_e( 'A list of assets you will be providing for the students in this course (One per line)', 'tutor' ); ?>"><?php echo $material_includes; ?></textarea>
+    <textarea class="tutor-form-control tutor-form-control-auto-height tutor-mt-12" name="course_material_includes" rows="5" placeholder="<?php esc_attr_e( 'A list of assets you will be providing for the students in this course (One per line)', 'tutor' ); ?>"><?php echo $material_includes; ?></textarea>
 </div>
 
 <div class="tutor-mb-32">
     <label class="tutor-fs-6 tutor-fw-medium tutor-color-black">
         <?php _e( 'Requirements/Instructions', 'tutor' ); ?> <br />
     </label>
-    <textarea class="tutor-form-control tutor-textarea-auto-height tutor-mt-12" name="course_requirements" rows="2" placeholder="<?php esc_attr_e( 'Additional requirements or special instructions for the students (One per line)', 'tutor' ); ?>"><?php echo $requirements; ?></textarea>
+    <textarea class="tutor-form-control tutor-form-control-auto-height tutor-mt-12" name="course_requirements" rows="2" placeholder="<?php esc_attr_e( 'Additional requirements or special instructions for the students (One per line)', 'tutor' ); ?>"><?php echo $requirements; ?></textarea>
 </div>
 
 <?php if(!is_admin()): ?>

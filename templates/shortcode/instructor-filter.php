@@ -102,8 +102,8 @@ if ( $total_categories && $total_categories > $limit ) {
 	</div>
 	<div class="tutor-instructor-filter-result">
 		<div class="filter-pc">
-			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right tutor-mb-24">
-				<span class="las la-search tutor-input-group-icon"></span>
+			<div class="tutor-form-wrap tutor-mb-24">
+				<span class="tutor-icon-search tutor-form-icon tutor-form-icon-reverse" area-hidden="true"></span>
 				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" />
 			</div>
 		</div>

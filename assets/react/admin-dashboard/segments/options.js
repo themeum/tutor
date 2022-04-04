@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				const dataTab = e.target.closest('[data-tab]').dataset.tab;
 				const dataKey = e.target.closest('[data-key]').dataset.key;
 				if (dataTab) {
-					document.title = e.target.innerText + ' ‹ ' + _tutorobject.site_title;
+					document.title = e.target.innerText + ' < ' + _tutorobject.site_title;
 					navTabItems.forEach((item) => {
 						item.classList.remove('active');
 					});

@@ -86,16 +86,6 @@ window.tutor_popup = function($, icon, padding) {
 	return { popup: this.popup };
 };
 
-window.tutorDotLoader = (loaderType) => {
-	return `
-    <div class="tutor-dot-loader ${loaderType ? loaderType : ''}">
-        <span class="dot dot-1"></span>
-        <span class="dot dot-2"></span>
-        <span class="dot dot-3"></span>
-        <span class="dot dot-4"></span>
-    </div>`;
-};
-
 window.tutor_date_picker = () => {
 	if (jQuery.datepicker) {
 		var format = _tutorobject.wp_date_format;
@@ -412,7 +402,6 @@ window.tutor_toast = function(title, description, type) {
 
 	if (!jQuery('.tutor-toast-parent').length) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
-		// jQuery('body').append('<div class="tutor-notification tutor-is-danger tutor-mb-16"></div>');
 	}
 
 	// var icons = {

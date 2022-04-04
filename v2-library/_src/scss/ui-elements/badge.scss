@@ -63,19 +63,3 @@
 	font-weight: 700;
 	z-index: 1;
 }
-
-// @todo: remove btn-circle
-.tutor-btn-circle {
-	.tutor-floating-badge {
-		transform: translateX(-14px) translateY(-2px);
-	}
-	&.tutor-is-xs .tutor-floating-badge {
-		transform: translateX(-10px) translateY(-2px);
-	}
-	&.tutor-is-sm .tutor-floating-badge {
-		transform: translateX(-12px) translateY(-2px);
-	}
-	&.tutor-is-lg .tutor-floating-badge {
-		transform: translateX(-18px) translateY(-2px);
-	}
-}
