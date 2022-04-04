@@ -36,7 +36,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 			<label class="tutor-d-block tutor-form-label">
 				<?php esc_html_e( 'Courses', 'tutor' ); ?>
 			</label>
-			<select class="tutor-form-select tutor-form-control-sm tutor-announcement-course-sorting">
+			<select class="tutor-form-select tutor-announcement-course-sorting">
 
 				<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
 
@@ -53,7 +53,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 		</div>
 		<div class="tutor-col-6 tutor-col-lg-3">
 			<label class="tutor-d-block tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
-			<select class="tutor-form-select tutor-form-control-sm tutor-announcement-order-sorting" data-search="no">
+			<select class="tutor-form-select tutor-announcement-order-sorting" data-search="no">
 				<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 				<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 			</select>
