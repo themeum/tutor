@@ -153,30 +153,15 @@
 
 	.tutor-zoom-meeting-modal-wrap {
 		#tutor-zoom-meeting-modal-form {
-			.tutor_zoom_timepicker,
-			.tutor-dropdown-select-selected {
-				height: 48px !important;
-				padding-right: 25px;
-				font-size: 15px;
-				box-sizing: border-box;
-				padding-top: 0;
-				padding-bottom: 0;
-			}
-			.tutor-dropdown-select-selected {
-				display: flex;
-				align-items: center;
-			}
 			.date-range-input {
 				input {
 					border-radius: 6px !important;
 					border: 1px solid #d7dadf !important;
 				}
 			}
+			
 			input[data-name='meeting_duration'] {
 				font-size: 15px;
-			}
-			.tutor-icon-clock {
-				color: black;
 			}
 		}
 	}
