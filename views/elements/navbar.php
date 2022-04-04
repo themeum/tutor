@@ -36,10 +36,10 @@ if ( isset( $data ) && count( $data ) ) : ?>
 
 			<div class="tutor-col-lg-auto">
 				<?php if ( isset( $data['tabs'] ) ) : ?>
-					<ul class="tutor-nav tutor-nav-admin">
+					<ul class="tutor-nav tutor-nav-admin" tutor-priority-nav>
 						<?php foreach ( $data['tabs'] as $key => $v ) : ?>
-							<li class="tutor-nav-item<?php echo esc_attr( $data['active'] == $v['key'] ? ' is-active' : '' ); ?>">
-								<a data-keypage="<?php echo isset( $v['key'] ) ? esc_attr( $v['key'] ) : ''; ?>" data-keyvalue="<?php echo isset( $v['value'] ) ? esc_attr( $v['value'] ) : ''; ?>" href="<?php echo esc_attr( $v['url'] ); ?>">
+							<li class="tutor-nav-item">
+								<a class="<?php echo esc_attr( $data['active'] == $v['key'] ? 'is-active' : '' ); ?>" data-keypage="<?php echo isset( $v['key'] ) ? esc_attr( $v['key'] ) : ''; ?>" data-keyvalue="<?php echo isset( $v['value'] ) ? esc_attr( $v['value'] ) : ''; ?>" href="<?php echo esc_attr( $v['url'] ); ?>">
 									<span><?php echo isset( $v['title'] ) ? esc_html( $v['title'] ) : ''; ?></span>
 									<?php if ( isset( $v['value'] ) ) : ?>
 										<span class="tutor-ml-4">
