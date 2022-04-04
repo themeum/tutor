@@ -14,6 +14,7 @@
             border-bottom-right-radius: 0px;
             width: 140px;
         }
+        
         input.tutor-form-control {
             border-left: none !important;
             border-top-left-radius: 0px !important;
@@ -21,26 +22,6 @@
             margin-left: -1px;
             &:focus {
                 box-shadow: -1px 0 0 0 $brand-wordpress;
-            }
-        }
-    }
-
-    .tutor-input-group.tutor-form-control-has-icon {
-        .tutor-input-group-icon {
-            font-size: 30px;
-            line-height: unset;
-            height: 100%;
-            width: unset;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            left: 8px;
-            color: $black-50;
-        }
-        input.tutor-form-control {
-            &:focus {
-                box-shadow: 0 0 0 1px $brand-wordpress;
-                border-color: transparent !important;
             }
         }
     }

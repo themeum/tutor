@@ -131,7 +131,7 @@ if ( ! $assignment_submitted_id ) {
 				<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
 			</div>
 			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9 tutor-mb-32">
-				<input class="tutor-form-control" type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0">
+				<input type="number"  class="tutor-form-control" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0" max="<?php echo esc_attr( $max_mark ); ?>" title="<?php esc_attr_e( 'Evaluate mark can not be greater than total mark', 'tutor' )?>">
 				<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), "<code>{$max_mark}</code>" ); ?></p>
 			</div>
 

@@ -74,11 +74,11 @@ window.jQuery(document).ready(function($) {
 	});
 
 	// Textarea auto height
-	$(document).on('input', '.tutor-textarea-auto-height', function() {
+	$(document).on('input', '.tutor-form-control-auto-height', function() {
 		this.style.height = 'auto';
 		this.style.height = this.scrollHeight + 'px';
 	});
-	$('.tutor-textarea-auto-height').trigger('input');
+	$('.tutor-form-control-auto-height').trigger('input');
 
 	// Prevent number input out of range
 	$(document).on(
