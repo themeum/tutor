@@ -171,7 +171,7 @@ class Quiz_Attempts_List {
 					   INNER JOIN {$wpdb->users}
 							   ON quiz_attempts.user_id = {$wpdb->users}.ID
 			   WHERE 	attempt_status != %s
-					   AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
+					   AND ( user_email = %s OR display_name LIKE %s OR post_title LIKE %s )
 			   ",
 			   'attempt_started',
 				$status,
