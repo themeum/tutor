@@ -5351,7 +5351,7 @@ class Utils {
 					INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id
 			WHERE 	quiz_attempts.attempt_ended_at IS NOT NULL
 					AND (
-							users.user_email LIKE %s
+							users.user_email = %s
 							OR users.display_name LIKE %s
 							OR quiz.post_title LIKE %s
 							OR course.post_title LIKE %s
