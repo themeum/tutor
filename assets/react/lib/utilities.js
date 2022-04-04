@@ -23,7 +23,7 @@ window.jQuery(document).ready(function($) {
 	});
 
 	// Ajax action
-	$(document).on('click', '.tutor-list-ajax-action', function (e) {
+	$(document).on('click', '.tutor-list-ajax-action', function(e) {
 		if (!e.detail || e.detail == 1) {
 			e.preventDefault();
 
@@ -43,13 +43,16 @@ window.jQuery(document).ready(function($) {
 				url: _tutorobject.ajaxurl,
 				type: 'POST',
 				data: data,
-				beforeSend: function () {
-					$that.text(__('Deleting...', 'tutor')).attr('disabled', 'disabled').addClass('is-loading');
+				beforeSend: function() {
+					$that
+						.text(__('Deleting...', 'tutor'))
+						.attr('disabled', 'disabled')
+						.addClass('is-loading');
 				},
-				success: function (data) {
+				success: function(data) {
 					if (data.success) {
 						if (del) {
-							$('#' + del).fadeOut(function () {
+							$('#' + del).fadeOut(function() {
 								$(this).remove();
 							});
 						}
@@ -63,11 +66,14 @@ window.jQuery(document).ready(function($) {
 					let { message = __('Something Went Wrong!', 'tutor') } = data.data || {};
 					tutor_toast('Error!', message, 'error');
 				},
-				error: function () {
+				error: function() {
 					tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
 				},
-				complete: function () {
-					$that.html(buttonContent).removeAttr('disabled').removeClass('is-loading');
+				complete: function() {
+					$that
+						.html(buttonContent)
+						.removeAttr('disabled')
+						.removeClass('is-loading');
 				},
 			});
 		}
@@ -100,16 +106,6 @@ window.jQuery(document).ready(function($) {
 			val = parseInt(val || 0);
 
 			$(this).val(Math.abs($(this).val()));
-
-			// Prevent number smaller than min
-			if (!(min === undefined)) {
-				val < parseInt(min) ? $(this).val(min) : 0;
-			}
-
-			// Prevent numbers greater than max
-			if (!(max === undefined)) {
-				val > max ? $(this).val(max) : 0;
-			}
 		},
 	);
 
