@@ -4,6 +4,10 @@ $height-lg: 48px;
 $height-sm: 38px;
 
 .tutor-form {
+	&-group {
+		margin-bottom: 32px;
+	}
+
 	&-wrap {
 		position: relative;
 		display: flex;
@@ -197,6 +201,7 @@ select.tutor-form-control,
 	background-repeat: no-repeat;
 	background-position: right 0.75rem center;
 	background-size: 16px 12px;
+	padding-right: 36px;
 }
 
 .tutor-input-group {
@@ -257,19 +262,17 @@ select.tutor-form-control,
 }
 
 .tutor-input-feedback {
-	font-size: 12px;
-	line-height: 18px;
-	margin: 8px 0 0;
+	font-size: 14px;
+	line-height: 1.4;
+	margin: 16px 0 0;
 	color: var(--tutor-text-subtitle);
 	position: relative;
-
-	&.tutor-has-icon {
-		padding-left: 20px;
-	}
+	display: flex;
 
 	.tutor-input-feedback-icon {
-		position: absolute;
-		left: 0;
+		font-size: 18px;
+		margin-right: 8px;
+		margin-top: -1px;
 	}
 }
 

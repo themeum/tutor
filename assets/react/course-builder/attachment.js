@@ -46,7 +46,7 @@ window.jQuery(document).ready(function($){
                         </div>
                         <div class="tutor-ml-auto">
                             <span class="tutor-delete-attachment tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-lg" role="button">
-                                <span class="tutor-icon-line-cross-line" area-hidden="true"></span>
+                                <span class="tutor-icon-times" area-hidden="true"></span>
                             </span>
                         </div>
                     </div>`;

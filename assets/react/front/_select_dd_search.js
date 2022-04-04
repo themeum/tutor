@@ -63,7 +63,8 @@ window.selectSearchField = (selectElement) => {
 
 							var onChangeEvent = new Event('change');
 							element.dispatchEvent(onChangeEvent);
-							jQuery(selectFieldOptions).trigger('change'); // @todo: why jQuery is here?
+							selectFieldOptions.dispatchEvent(onChangeEvent);
+							// jQuery(selectFieldOptions).trigger('change'); // @todo: why jQuery is here?
 						};
 					});
 				}
@@ -157,7 +158,7 @@ window.selectSearchField = (selectElement) => {
 		});
 
 		let markupDD = `
-        <div class="tutor-form-control tutor-form-select tutor-js-form-select">
+      <div class="tutor-form-control tutor-form-select tutor-js-form-select">
 			<span class="tutor-form-select-label" tutor-dropdown-label>${window.wp.i18n.__('Select One', 'tutor')}</span>
             <div class="tutor-form-select-dropdown">
 				<div class="tutor-form-select-search tutor-pt-8 tutor-px-8">
