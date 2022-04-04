@@ -1,14 +1,8 @@
 @import './players';
 
-.lesson-template-default {
-	.site-content {
-		padding-bottom: 0px;
-	}
-}
 .site-content {
-	padding-bottom: 0px;
+	padding-bottom: 0px !important;
 }
-
 .tutor-mobile-top-navigation {
 	.tutor-mobile-top-nav {
 		grid-template-columns: 30px auto;
