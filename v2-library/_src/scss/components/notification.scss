@@ -23,15 +23,16 @@
 	&.tutor-bg-dark {
 		border-color: var(--tutor-bg-dark);
 	}
+
 	.tutor-notification-icon {
-		// width: 54px;
-		// padding-top: 4px;
 		color: var(--tutor-primary);
+		margin-right: 24px;
 		i,
 		span {
-			font-size: 20px;
+			font-size: 32px;
 		}
 	}
+
 	.tutor-notification-content {
 		font-size: 13px;
 		line-height: 18px;

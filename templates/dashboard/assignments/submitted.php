@@ -53,7 +53,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
     <div class="tutor-dashboard-announcement-sorting-wrap submitted-assignments-sorting-wrap">
         <div class="tutor-dashboard-announcement-sorting-input">
             <label class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Sort By:', 'tutor' ); ?></label>
-            <select class="tutor-announcement-order-sorting tutor-form-select tutor-form-control tutor-form-control-sm no-tutor-dropdown">
+            <select class="tutor-announcement-order-sorting tutor-form-control">
                 <option value="desc" <?php selected( $order_filter, 'desc' ); ?>><?php esc_html_e( 'Latest', 'tutor' ); ?></option>
                 <option value="asc" <?php selected( $order_filter, 'asc' ); ?>><?php esc_html_e( 'Oldest', 'tutor' ); ?></option>
             </select>
