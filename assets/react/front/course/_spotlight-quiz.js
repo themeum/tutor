@@ -26,7 +26,7 @@ window.jQuery(document).ready($=>{
                     var isTrue = quiz_answers.indexOf($input.val()) > -1; // $input.attr('data-is-correct') == '1';
                     if (!isTrue) {
                         if ($input.prop("checked")) {
-                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append(`<span class="wrong-right-text"><i class="tutor-icon-line-cross-line"></i> ${__('Incorrect, Please try again', 'tutor')}</span>`);
+                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append(`<span class="wrong-right-text"><i class="tutor-icon-times"></i> ${__('Incorrect, Please try again', 'tutor')}</span>`);
                         }
                         validatedTrue = false;
                     }

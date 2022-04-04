@@ -65,18 +65,21 @@
 		}
 	}
 
-	p.tutor-input-feedback,
-	div.tutor-input-feedback {
-		font-size: 13px;
-		color: #5b616f;
-		i.tutor-input-feedback-icon {
-			font-size: 20px;
-			color: #b4b7c0;
-		}
-	}
-	.tutor-modal-body {
-		align-items: unset !important;
-	}
+	
+	// p.tutor-input-feedback,
+	// div.tutor-input-feedback {
+	// 	font-size: 13px;
+	// 	color: #5b616f;
+	// 	i.tutor-input-feedback-icon {
+	// 		font-size: 20px;
+	// 		color: #b4b7c0;
+	// 	}
+	// }
+	// .tutor-modal-body {
+	// 	align-items: unset !important;
+	// }
+
+
 	.tutor-course-available-instructors {
 		display: flex;
 		flex-wrap: wrap;
