@@ -199,7 +199,7 @@ if ( is_array( $attempt_info ) ) {
                             <td data-th="<?php echo $column; ?>">
                                 <div class="td-avatar">
                                     <img src="<?php echo esc_url(get_avatar_url($user_id)); ?>" alt="<?php echo esc_attr($user->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
-                                    <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-text-nowrap">
+                                    <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-nowrap-ellipsis">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </div>
                                     <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="tutor-iconic-btn">
@@ -717,7 +717,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     
                                             case 'manual_review' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap">
+                                                <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-nowrap-ellipsis">
                                                     <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-text-success">
                                                         <i class="tutor-icon-mark"></i>
                                                     </a>

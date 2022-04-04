@@ -21,14 +21,6 @@
 		}
 	}
 
-	.tutor-btn.tutor-is-circle {
-		padding: 7px !important;
-		color: $text-muted;
-		&:hover {
-			background: $primary-30;
-			color: $design-brand;
-		}
-	}
 	.tutor-btn {
 		> * {
 			pointer-events: none;

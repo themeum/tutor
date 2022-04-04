@@ -16,8 +16,8 @@
 	if ( in_array( 'search', $supported_filters ) ) {
 		?>
 			<div class="filter-widget-search">
-				<div class="tutor-input-group tutor-form-control-has-icon tutor-from-control">
-					<span class="tutor-icon-search tutor-input-group-icon tutor-color-black-50"></span>
+				<div class="tutor-form-wrap tutor-from-control">
+					<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
 					<input type="Search" class="tutor-form-control" name="keyword" placeholder="<?php _e( 'Search...' ); ?>"/>
 				</div>
 			</div>
