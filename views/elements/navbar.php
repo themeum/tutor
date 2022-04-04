@@ -51,7 +51,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 						<?php endforeach; ?>
 						<li class="tutor-nav-item tutor-nav-more tutor-d-none">
 							<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
-							<ul class="tutor-nav-more-list"></ul>
+							<ul class="tutor-nav-more-list tutor-dropdown"></ul>
 						</li>
 					</ul>
 				<?php endif; ?>

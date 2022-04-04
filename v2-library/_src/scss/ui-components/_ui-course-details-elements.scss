@@ -655,89 +655,30 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 
 // Course Details - Gradebook
 .tutor-gradebook {
-	// max-width: 720px;
-	.tutor-btn-circle {
-		margin: 0;
-	}
-
 	&-finalgrade {
-		padding: 24px 30px;
-		display: grid;
-		@include breakpoint-min(550) {
-			grid-template-columns: auto 1fr auto;
-		}
-		@include breakpoint-max(550) {
-			text-align: center;
-		}
-		align-items: center;
-		grid-gap: 20px;
+		background: #F6F8FD;
+		border: 1px solid #E9EDFB;
+		box-sizing: border-box;
+		border-radius: 6px;
 	}
 
-	&-allgrades {
-		&-head,
-		&-item {
-			display: grid;
-			grid-template-columns: repeat(4, 1fr);
-			@include breakpoint-min(tablet) {
-				grid-template-columns: 1.75fr repeat(3, 1fr);
-			}
-			grid-gap: 15px;
-			align-items: center;
+	&-grade-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 38px;
+		height: 38px;
+		font-size: 16px;
+    	line-height: 1.4px;
+		color: var(--tutor-primary-color);
+		border: 1px solid var(--tutor-primary-color);
+		border-radius: 100px;
 
-			> * {
-				display: block;
-			}
-
-			@include breakpoint-min(550) {
-				> *:last-child {
-					text-align: right;
-				}
-			}
+		&-lg {
+			width: 64px;
+			height: 64px;
+			font-size: 28px;
+			font-weight: 700;
 		}
-
-		&-head {
-			@include breakpoint-max(550) {
-				display: none;
-			}
-		}
-
-		&-item {
-			&:not(:last-child) {
-				margin-bottom: 16px;
-			}
-			> * {
-				&:last-child {
-					padding-right: 5px;
-				}
-			}
-
-			@include breakpoint-max(550) {
-				display: block;
-				padding: 15px;
-
-				> * {
-					position: relative;
-					&:before {
-						position: absolute;
-						content: attr(data-grade-title);
-						top: 0;
-						left: 0;
-						width: 35%;
-						height: 100%;
-						white-space: nowrap;
-						font-size: 16px;
-						font-weight: 400;
-						color: $black-60;
-						display: flex;
-						align-items: center;
-					}
-					padding-left: 40%;
-
-					&:not(:last-child) {
-						margin-bottom: 10px;
-					}
-				}
-			}
-		}
-	} // end /.tutor-gradebook-allgrades
-} // end /.tutor-gradebook
+	}
+}

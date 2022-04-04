@@ -88,7 +88,7 @@ class Assets {
 			'addons_data'                  => tutor_utils()->prepare_free_addons_data(),
 			'current_user'                  => wp_get_current_user(),
 			'content_change_event'         => 'tutor_content_changed_event',
-			'is_tutor_course_edit'		   => isset( $_GET[ 'action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) || isset( $_GET['post_type'] ) && 'courses' === $_GET['post_type'] ? true : false,
+			'is_tutor_course_edit'		   => isset( $_GET[ 'action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) ? true : false,
 			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
 		);
 	}

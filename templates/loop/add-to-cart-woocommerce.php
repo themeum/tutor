@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $product_id = tutor_utils()->get_course_product_id();
 $product = wc_get_product($product_id);
+$course_id = get_the_ID();
+$maximum_students = tutor_utils()->get_course_settings($course_id, 'maximum_students');
 
 if (! $product_id || ! $product){
 	return;
@@ -41,7 +43,7 @@ $defaults = array(
 	'class'      => implode( ' ', array_filter( array(
 		'button',
 		'product_type_' . $product->get_type(),
-		$product->is_purchasable() && $product->is_in_stock() ? 'tutor-btn tutor-btn-outline-primary tutor-btn-md add_to_cart_button' : 'hello',
+		$product->is_purchasable() && $product->is_in_stock() && $maximum_students === '0' ? 'tutor-btn tutor-btn-outline-primary tutor-btn-md add_to_cart_button' : '',
 		$ajax_add_to_cart_class,
 		$required_loggedin_class
 	) ) ),

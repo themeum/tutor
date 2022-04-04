@@ -24,12 +24,12 @@
 		border-color: var(--tutor-bg-dark);
 	}
 	.tutor-notification-icon {
-		width: 54px;
-		padding-top: 4px;
+		// width: 54px;
+		// padding-top: 4px;
 		color: var(--tutor-primary);
 		i,
 		span {
-			font-size: 35px;
+			font-size: 20px;
 		}
 	}
 	.tutor-notification-content {
@@ -65,26 +65,6 @@
 		span {
 			display: block;
 			font-size: 17px;
-		}
-	}
-
-	// styles
-	&.tutor-is-success {
-		.tutor-notification-content h5,
-		.tutor-notification-icon {
-			color: var(--tutor-success);
-		}
-	}
-	&.tutor-is-warning {
-		.tutor-notification-content h5,
-		.tutor-notification-icon {
-			color: var(--tutor-warning);
-		}
-	}
-	&.tutor-is-danger {
-		.tutor-notification-content h5,
-		.tutor-notification-icon {
-			color: var(--tutor-danger);
 		}
 	}
 

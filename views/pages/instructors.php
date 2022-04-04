@@ -225,11 +225,11 @@ $filters = array(
 	</div>
 </div>
 
-<div id="tutor-instructor-add-new" class="tutor-modal modal-sticky-header-footer tutor-modal-is-close-inside-header">
+<div id="tutor-instructor-add-new" class="tutor-modal tutor-modal-scrollable">
   <span class="tutor-modal-overlay"></span>
-  <div class="tutor-modal-root">
-	<div class="tutor-modal-inner">
-	<form action="" method="post" id="tutor-new-instructor-form" autocomplete="off">
+  <div class="tutor-modal-window">
+	<div class="tutor-modal-content">
+	<form method="post" id="tutor-new-instructor-form" autocomplete="off">
 	  <div class="tutor-modal-header">
 		<div class="tutor-modal-title tutor-fs-6 tutor-fw-bold tutor-color-black-70">
 			<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
@@ -293,8 +293,8 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Password', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-16">
-							<span class="tutor-icon-eye-line tutor-input-group-icon-right tutor-password-reveal"></span>
+						<div class="tutor-form-wrap tutor-mb-16">
+							<span class="tutor-icon-eye-line tutor-form-icon tutor-form-icon-reverse tutor-password-reveal"></span>
 							<input type="password" name="password" id="tutor-instructor-pass"  class="tutor-form-control tutor-mb-12" minlength="8" placeholder="*******" autocomplete="new-password" required/>
 						</div>
 					</div>
@@ -302,8 +302,8 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Retype Password', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-16">
-							<span class="tutor-icon-eye-line tutor-input-group-icon-right tutor-password-reveal"></span>
+						<div class="tutor-form-wrap tutor-mb-16">
+							<span class="tutor-icon-eye-line tutor-form-icon tutor-form-icon-reverse tutor-password-reveal"></span>
 							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-12" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.', 'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
 						</div>
 					</div>
@@ -358,11 +358,11 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 	?>
 <div id="tutor-ins-approval-1" class="tutor-modal tutor-modal-is-close-beside tutor-modal-ins-approval tutor-is-active">
 	<span class="tutor-modal-overlay"></span>
-	<div class="tutor-modal-root">
+	<div class="tutor-modal-window">
 		<button data-tutor-modal-close="true" class="tutor-modal-close">
 			<span class="tutor-fs-2 tutor-icon-times"></span>
 		</button>
-		<div class="tutor-modal-inner">
+		<div class="tutor-modal-content">
 		<?php if ( $instructor_data ) : ?>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-text-wrap">

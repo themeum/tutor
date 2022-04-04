@@ -159,8 +159,8 @@
 		</div>
         <h3 class="title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Add-ons', 'tutor' ); ?></h3>
         <div class="tutor-addons-list-select-filter tutor-d-flex tutor-justify-end tutor-align-items-center">
-			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
-				<span class="tutor-icon-search tutor-input-group-icon"></span>
+			<div class="tutor-form-wrap">
+				<span class="tutor-icon-search tutor-form-icon"></span>
 				<input
                     id="free-addons-search"
 					type="search"

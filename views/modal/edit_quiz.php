@@ -38,21 +38,21 @@
                                 echo $type['icon'] . ' ' . $type['name'];
                             ?>
                         </div>
-                        <div class="tutor-popup-opener">
-                            <button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $id_target; ?>">
-                                <span class="toggle-icon"></span>
+                        <div class="tutor-dropdown-parent">
+                            <button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+                                <span class="tutor-icon-kebab-menu" area-hidden="true"></span>
                             </button>
-                            <ul class="popup-menu" id="<?php echo $id_target; ?>">
+                            <ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="tutor-icon-edit tutor-mr-4 tutor-color-design-white"></span>
-                                        <span class="tutor-fs-6 tutor-color-white"><?php _e('Edit', 'tutor'); ?></span>
+                                        <span class="tutor-icon-edit tutor-mr-8" area-hidden="true"></span>
+                                        <span><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="tutor-icon-trashcan-bold tutor-mr-4 tutor-color-design-white"></span>
-                                        <span class="tutor-fs-6 tutor-color-white"><?php _e('Delete', 'tutor'); ?></span>
+                                        <span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
+                                        <span><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>
                             </ul>

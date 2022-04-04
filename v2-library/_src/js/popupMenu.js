@@ -1,58 +1,31 @@
-(function tutorPopupMenu() {
-	/**
-	 * Popup Menu Toggle .tutor-popup-opener
-	 */
-
+// dropdown
+(function tutorDropdownMenu() {
 	document.addEventListener('click', (e) => {
-		const attr = 'data-tutor-popup-target';
+		const attr = 'action-tutor-dropdown';
 
 		if (e.target.hasAttribute(attr)) {
 			e.preventDefault();
-			const id = e.target.hasAttribute(attr)
-				? e.target.getAttribute(attr)
-				: e.target.closest(`[${attr}]`).getAttribute(attr);
 
-			const popupMenu = document.getElementById(id);
+			const dropdownParent = e.target.closest('.tutor-dropdown-parent');
 
-			if (popupMenu.classList.contains('visible')) {
-				popupMenu.classList.remove('visible');
+			if (dropdownParent.classList.contains('is-open')) {
+				dropdownParent.classList.remove('is-open');
 			} else {
-				document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach((popupMenu) => {
-					popupMenu.classList.remove('visible');
+				document.querySelectorAll('.tutor-dropdown-parent').forEach((dropdownParent) => {
+					dropdownParent.classList.remove('is-open');
 				});
-				popupMenu.classList.add('visible');
+				dropdownParent.classList.add('is-open');
 			}
 		} else {
-			document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach((popupMenu) => {
-				popupMenu.classList.remove('visible');
+			document.querySelectorAll('.tutor-dropdown-parent').forEach((dropdownParent) => {
+				dropdownParent.classList.remove('is-open');
 			});
-		}
-
-		/**
-		 * Popupover Menu Toggle .tutor-popover
-		 */
-		const popoverAttr = 'data-tutor-popover-target';
-		if (e.target.hasAttribute(popoverAttr)) {
-			e.preventDefault();
-			const id = e.target.getAttribute(popoverAttr);
-			const popoverMenu = document.getElementById(id);
-			const popoverWrapper = popoverMenu.closest('.tutor-popover-wrapper');
-			popoverMenu.classList.toggle('is-active');
-			popoverWrapper.classList.toggle('is-active');
-		} else {
-			const backdropAttr = 'data-tutor-popover-backdrop';
-			if (e.target.hasAttribute(backdropAttr)) {
-				const activePopover = document.querySelectorAll('.tutor-popover.is-active, .tutor-popover-wrapper.is-active');
-				activePopover.forEach((item) => {
-					item.classList.remove('is-active');
-				});
-			}
 		}
 	});
 })();
 
 /**
- * Popupover - Copy to clipboard
+ * Copy to clipboard
  */
 document.addEventListener('click', async (e) => {
 	const btnTargetAttr = 'data-tutor-copy-target';
