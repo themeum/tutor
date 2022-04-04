@@ -69,14 +69,14 @@
                     </div>
 
                     <div>
-                        <button type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary tutor-mr-12">
+                        <button type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary tutor-mr-12" action-tutor-prev-quiz>
                             <?php _e('Back', 'tutor'); ?>
                         </button>
-                        <button type="button" data-action="next" class="tutor-btn tutor-btn-primary">
+                        <button type="button" data-action="next" class="tutor-btn tutor-btn-primary" action-tutor-next-quiz>
                             <?php _e('Save & Next', 'tutor'); ?>
                         </button>
-                        <button class="tutor-btn tutor-btn-primary quiz-modal-question-save-btn">
-                            <?php _e('Add To Questions', 'tutor'); ?>
+                        <button class="tutor-btn tutor-btn-primary quiz-modal-question-save-btn" action-tutor-save-quiz>
+                            <?php _e('Add to Questions', 'tutor'); ?>
                         </button>
                     </div>
                 </div>

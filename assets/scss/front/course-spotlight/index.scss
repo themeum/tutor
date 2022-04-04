@@ -1,14 +1,8 @@
 @import './players';
 
-.lesson-template-default {
-	.site-content {
-		padding-bottom: 0px;
-	}
-}
 .site-content {
-	padding-bottom: 0px;
+	padding-bottom: 0px !important;
 }
-
 .tutor-mobile-top-navigation {
 	.tutor-mobile-top-nav {
 		grid-template-columns: 30px auto;
@@ -24,6 +18,10 @@
 @import './sidebar';
 
 .tutor-course-single-content-wraper {
+	a {
+		text-decoration: none;
+	}
+
 	display: flex;
 	position: relative;
 	width: 100%;
@@ -44,7 +42,7 @@
 			text-decoration: none;
 		}
 	}
-	
+
 	input.tutor-form-check-input.tutor-form-check-circle {
 		width: 20px;
 		height: 20px;
