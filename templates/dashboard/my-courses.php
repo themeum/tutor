@@ -102,7 +102,14 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                                     <?php esc_html_e('Price:', 'tutor') ?>
                                 </span>
                                 <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
+                                    <?php
+                                        $price = tutor_utils()->get_course_price();
+                                        if ( null === $price ) {
+                                            esc_html_e( 'Free', 'tutor' );
+                                        } else {
+                                            echo tutor_utils()->get_course_price(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                        }
+                                    ?>
                                 </span>
                             </div>
                             <div class="tutor-iconic-btn-group">
@@ -118,29 +125,26 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
 
                     <!-- Delete prompt modal -->
                     <div id="<?php echo $id_string_delete; ?>" class="tutor-modal">
-                        <span class="tutor-modal-overlay"></span>
-                        <button data-tutor-modal-close class="tutor-modal-close">
-                            <span class="tutor-icon-times"></span>
-                        </button>
-                        <div class="tutor-modal-root">
-                            <div class="tutor-modal-inner">
+                        <div class="tutor-modal-overlay"></div>
+                        <div class="tutor-modal-window">
+                            <div class="tutor-modal-content tutor-modal-content-white">
+                                <button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+                                    <span class="tutor-icon-times" area-hidden="true"></span>
+                                </button>
+
                                 <div class="tutor-modal-body tutor-text-center">
-                                    <div class="tutor-modal-icon">
-                                        <img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+                                    <div class="tutor-mt-48">
+                                        <img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
                                     </div>
-                                    <div class="tutor-modal-text-wrap">
-                                        <h3 class="tutor-modal-title">
-                                            <?php esc_html_e('Delete This Course?', 'tutor'); ?>
-                                        </h3>
-                                        <p>
-                                            <?php esc_html_e('Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor'); ?>
-                                        </p>
-                                    </div>
-                                    <div class="tutor-modal-btns tutor-btn-group">
-                                        <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+
+                                    <div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Delete This Course?', 'tutor'); ?></div>
+                                    <div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor'); ?></div>
+                                    
+                                    <div class="tutor-d-flex tutor-justify-center tutor-my-48">
+                                        <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
                                             <?php esc_html_e('Cancel', 'tutor'); ?>
                                         </button>
-                                        <button class="tutor-btn tutor-list-ajax-action" data-request_data='{"course_id":<?php echo $post->ID; ?>,"action":"tutor_delete_dashboard_course"}' data-delete_element_id="<?php echo $row_id; ?>">
+                                        <button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"course_id":<?php echo $post->ID; ?>,"action":"tutor_delete_dashboard_course"}' data-delete_element_id="<?php echo $row_id; ?>">
                                             <?php esc_html_e('Yes, Delete This', 'tutor'); ?>
                                         </button>
                                     </div>

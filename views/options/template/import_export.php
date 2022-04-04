@@ -79,27 +79,23 @@ tutor_alert(
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Restore Settings','tutor'); ?>" data-heading="<?php _e('Restore Previous Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will overwrite all existing settings, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>"><?php _e('Apply','tutor'); ?></button>
-						<div class="tutor-popup-opener tutor-ml-16">
-							<button
-							type="button"
-							class="popup-btn"
-							data-tutor-popup-target="popup-<?php echo esc_attr( $key ); ?>"
-							>
-								<span class="toggle-icon"></span>
+						<div class="tutor-dropdown-parent tutor-ml-16">
+							<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+								<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 							</button>
-							<ul id="popup-<?php echo esc_attr( $key ); ?>" class="popup-menu">
-							<li>
-								<a class="export_single_settings" data-id="<?php echo $key; ?>">
-									<span class="icon tutor-icon-archive tutor-color-design-white"></span>
-									<span class="tutor-fs-6 tutor-color-white"><?php _e('Download','tutor'); ?></span>
-								</a>
-							</li>
-							<li>
-								<a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Delete Settings','tutor'); ?>" data-heading="<?php _e('Delete This Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will remove the settings history data from your system, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>">
-									<span class="icon tutor-icon-trashcan-bold tutor-color-design-white"></span>
-									<span class="tutor-fs-6 tutor-color-white"><?php _e('Delete','tutor'); ?></span>
-								</a>
-							</li>
+							<ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+								<li>
+									<a class="export_single_settings" data-id="<?php echo $key; ?>">
+										<span class="tutor-icon-archive tutor-mr-8" area-hidden="true"></span>
+										<span><?php _e('Download','tutor'); ?></span>
+									</a>
+								</li>
+								<li>
+									<a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Delete Settings','tutor'); ?>" data-heading="<?php _e('Delete This Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will remove the settings history data from your system, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>">
+										<span class="icon tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
+										<span><?php _e('Delete','tutor'); ?></span>
+									</a>
+								</li>
 							</ul>
 						</div>
 					</div>

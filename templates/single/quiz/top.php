@@ -100,6 +100,7 @@ do_action('tutor_quiz/single/before/top');
 				} 
 			?>
 		</div>
+		<!-- @todo: fix modal -->
 		<?php
 			if ($attempt_remaining > 0 || $attempts_allowed == 0) {
 				do_action('tuotr_quiz/start_form/before', $quiz_id);
@@ -126,8 +127,8 @@ do_action('tutor_quiz/single/before/top');
 						<button data-tutor-modal-close class="tutor-modal-close">
 							<span class="tutor-icon-times"></span>
 						</button>
-						<div class="tutor-modal-root">
-							<div class="tutor-modal-inner">
+						<div class="tutor-modal-window">
+							<div class="tutor-modal-content">
 								<div class="tutor-modal-body tutor-text-center">
 									<div class="tutor-modal-icon">
 										<!-- <img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" /> -->
