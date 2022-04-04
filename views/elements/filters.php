@@ -3,20 +3,22 @@
 		<div class="tutor-wp-dashboard-filter tutor-d-flex tutor-align-items-end tutor-justify-<?php echo esc_attr(isset($data['bulk_action']) && true === $data['bulk_action'] ? 'between' : 'end'); ?>">
 			<?php if (isset($data['bulk_action']) && true === $data['bulk_action']) : ?>
 				<div class="tutor-wp-dashboard-filter-items tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap">
-					<form action="" method="post" id="tutor-admin-bulk-action-form">
+					<form id="tutor-admin-bulk-action-form" action method="post">
 						<input type="hidden" name="action" value="<?php esc_html_e($data['ajax_action']); ?>" />
-						<div class="tutor-form-select-with-btn">
-							<select name="bulk-action" title="Please select an action" class="tutor-form-select">
-								<?php foreach ($data['bulk_actions'] as $k => $v) : ?>
-									<option value="<?php echo esc_attr($v['value']); ?>">
-										<?php echo esc_html($v['option']); ?>
-									</option>
-								<?php endforeach; ?>
-							</select>
+						<div class="tutor-d-flex">
+							<div class="tutor-mr-12">
+								<select name="bulk-action" title="Please select an action" class="tutor-form-select">
+									<?php foreach ($data['bulk_actions'] as $k => $v) : ?>
+										<option value="<?php echo esc_attr($v['value']); ?>">
+											<?php echo esc_html($v['option']); ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+							<button class="tutor-btn tutor-btn-outline-primary" id="tutor-admin-bulk-action-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
+								<?php esc_html_e('Apply', 'tutor'); ?>
+							</button>
 						</div>
-						<button class="tutor-btn tutor-btn-outline-primary" id="tutor-admin-bulk-action-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
-							<?php esc_html_e('Apply', 'tutor'); ?>
-						</button>
 					</form>
 				</div>
 			<?php endif; ?>

@@ -6,7 +6,7 @@ window.jQuery(document).ready($=>{
         let val = (original.val() || '').trim();
         let matched = val && $(this).val()===val;
         
-        $(this).next()[matched ? 'show' : 'hide']();
+        $(this).parent().find('.tutor-validation-icon')[matched ? 'show' : 'hide']();
     });
 
     $('.tutor-profile-password-reset').click(function(e){
