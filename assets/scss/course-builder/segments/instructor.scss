@@ -122,14 +122,4 @@ $inst_gap: 30px;
         min-height: 150px;
         margin-bottom: 20px;
     }
-
-    .tutor-instructor-buttons {
-        text-align: left;
-
-        button{
-            &:last-child{
-                float: right;
-            }
-        }
-    }
 }

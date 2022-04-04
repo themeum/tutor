@@ -160,7 +160,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 
 						<div class="tutor-mb-32">
 							<label class="tutor-course-field-label tutor-fs-6 tutor-color-black"><?php _e('About Course', 'tutor'); ?></label>
-							<div class="tutor-input-group tutor-mb-16">
+							<div class="tutor-mb-16">
 								<?php
 								$editor_settings = array(
 									'media_buttons' => false,
@@ -230,7 +230,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 
 						<div class="tutor-mb-32">
 							<label class="tutor-course-field-label tutor-fs-6"><?php _e('Course Thumbnail', 'tutor'); ?></label>
-							<div class="tutor-input-group tutor-mb-16">
+							<div class="tutor-mb-16">
 								<?php
 								tutor_load_template_from_custom_path(
 									tutor()->path . '/views/fragments/thumbnail-uploader.php',
