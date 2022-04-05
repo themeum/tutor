@@ -46,10 +46,10 @@ $paginated_courses_list =  $full_courses_list_array[$active_tab];
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16 tutor-capitalize-text"><?php esc_html_e($page_tabs[$active_tab]); ?></div>
 <div class="tutor-dashboard-content-inner enrolled-courses">
 	<div class="tutor-mb-32">
-		<ul class="tutor-nav">
+		<ul class="tutor-nav" tutor-priority-nav>
 			<?php foreach ($page_tabs as $slug => $tab) : ?>
-				<li class="tutor-nav-item<?php echo $slug == $active_tab ? ' is-active' : ''; ?>">
-					<a href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink($slug)); ?>">
+				<li class="tutor-nav-item">
+					<a class="<?php echo $slug == $active_tab ? 'is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink($slug)); ?>">
 						<?php
 						echo esc_html($tab);
 

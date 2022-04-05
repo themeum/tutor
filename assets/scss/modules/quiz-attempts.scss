@@ -19,7 +19,8 @@
 .correct-answer-wrap {
 	.matching-type {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
+		align-items: flex-start;
 
 		&:not(:last-child) {
 			margin-bottom: 12px;

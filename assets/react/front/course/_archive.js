@@ -19,16 +19,17 @@ window.jQuery(document).ready($=>{
 		})
 		.find('input')
 		.change(function (e) {
-			ajaxFilterArchive(e);
+			ajaxFilterArchive();
 		});
 
 
-	const ajaxFilterArchive = (e = null, page = null) => {
-		var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier, archive_meta);
+	const ajaxFilterArchive = (criteria_object) => {
+		var filter_criteria = criteria_object || Object.assign(filter_container.serializeObject(), filter_modifier, archive_meta);
 		filter_criteria.current_page = 1;
 		filter_criteria.action = 'tutor_course_filter_ajax';
 
 		console.log(filter_criteria);
+		// window.history.pushState({}, '', '#'+JSON.stringify(filter_criteria));
 
 		loop_container.html('<div style="background-color: #fff;" class="loading-spinner"></div>');
 		$(this)
@@ -51,36 +52,19 @@ window.jQuery(document).ready($=>{
 		});
 	}
 
-	// Alter pagination
-	/* loop_container.on('click', '.tutor-pagination-wrap a', function (e) {
-		var url = $(this).data('href') || $(this).attr('href');
+	if(filter_container.length){
+		window.addEventListener('popstate', ()=>{
 
-		if (url) {
-			url = new URL(url);
-			var page = url.searchParams.get('paged');
-
-			if (page) {
-				e.preventDefault();
-				filter_modifier.page = page;
-				filter_container.find('input:first').trigger('change');
-			}
-		}
-	}); */
-
-	// Alter sort filter
-	/* loop_container.on('change', 'select[name="tutor_course_filter"]', function () {
-		filter_modifier.tutor_course_filter = $(this).val();
-		filter_container.find('input:first').trigger('change');
-		ajaxFilterArchive();
-	}); */
+		});
+	}
 
 	// Refresh page after coming back to course archive page from cart
-	var archive_loop = $('.tutor-course-loop');
+	/* var archive_loop = $('.tutor-course-loop');
 	if (archive_loop.length > 0) {
 		window.sessionStorage.getItem('tutor_refresh_archive') === 'yes' ? window.location.reload() : 0;
 		window.sessionStorage.removeItem('tutor_refresh_archive');
 		archive_loop.on('click', '.tutor-loop-cart-btn-wrap', function () {
 			window.sessionStorage.setItem('tutor_refresh_archive', 'yes');
 		});
-	}
+	} */
 });

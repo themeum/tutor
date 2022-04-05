@@ -77,7 +77,7 @@ $args = $this->args;
 												<?php echo $field['label']; ?>
 											</label>
 											<?php if ( isset( $field['desc'] ) && 'Content Drip Type' === $field['label'] ) { ?>
-												<p class="tutor-input-feedback">
+												<p class="tutor-form-feedback">
 													<?php echo $field['desc']; ?>
 												</p>
 											<?php } ?>

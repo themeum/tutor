@@ -268,6 +268,12 @@ $disabled-color: #E9E9EA !default;
 		}
 
 		// size
+		&-md {
+			width: 40px;
+			height: 40px;
+			font-size: 20px;
+		}
+
 		&-lg {
 			width: 48px;
 			height: 48px;
@@ -296,6 +302,10 @@ $disabled-color: #E9E9EA !default;
 			display: none;
 		}
 	}
+}
+
+.tutor-animation-spin {
+	animation: rotateSpinner 0.8s linear infinite;
 }
 
 @keyframes rotateSpinner {

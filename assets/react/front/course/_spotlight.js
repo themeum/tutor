@@ -19,6 +19,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		});
 	}
 
+	/**
+	 * dynamically calcutate sidebarContent height from top
+	 * and decrease sidebar height
+	 */
+	const sidebarTabContent = document.querySelector('.tutor-sidebar-tabs-content');
+	if (sidebarTabContent) {
+		let sidebarTabContentBoundingTop = sidebarTabContent.getBoundingClientRect().top;
+		sidebarTabContent.style.height = `calc(100vh - ${sidebarTabContentBoundingTop}px)`;
+	}
+
 	const sidebarTabeHandler = function(sideBarTabs) {
 		const tabWrapper = document.querySelector('.tutor-desktop-sidebar-area');
 
@@ -32,7 +42,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				clearActiveClass(tabConent);
 				event.currentTarget.classList.add('active');
 				let id = event.currentTarget.getAttribute('data-sidebar-tab');
-				tabConent.querySelector('#' + id).classList.add('active');
+				const activeQnaTabContent = tabConent.querySelector('#' + id);
+				activeQnaTabContent.classList.add('active');
+
+				/**
+				 * dynamically calcutate qnatabcontentrarea height from top
+				 * and decrease it's height from 100vh
+				 */
+				const sidebarTabArea = document.querySelector('.tutor-lessons-tab-area');
+				let sidebarTabAreaHeight = sidebarTabArea.offsetHeight;
+				if (id == 'sideabr-qna-tab-content') {
+					activeQnaTabContent.style.height = `calc(100% - ${sidebarTabAreaHeight}px)`;
+				}
 			});
 		});
 		const clearActiveClass = function(tabConent) {
@@ -234,11 +255,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	}
 	function tutorAssignmentFileHandler() {
 		const uploadedFileSize = [...fileUploadField.files].reduce((sum, file) => sum + file.size, 0); // byte
-		const uploadSizeLimit = parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
+		const uploadSizeLimit =
+			parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
 		let message = '';
 		const maxAllowedFiles = window._tutorobject.assignment_max_file_allowed;
 		let alreadyUploaded = document.querySelectorAll(
-			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card',
+			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card'
 		).length;
 		const allowedToUpload = maxAllowedFiles - alreadyUploaded;
 		if (fileUploadField.files.length > allowedToUpload) {
@@ -249,7 +271,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			tutor_toast(
 				__('Warning', 'tutor'),
 				__(`File size exceeds maximum limit ${Math.floor(uploadSizeLimit / 1000000)} MB.`, 'tutor'),
-				'error',
+				'error'
 			);
 			return;
 		}
@@ -259,7 +281,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				message = 'Select one or more files.';
 			} else {
 				if (fileUploadField.files.length > allowedToUpload) {
-					tutor_toast(__('Warning', 'tutor'), __(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'), 'error');
+					tutor_toast(
+						__('Warning', 'tutor'),
+						__(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'),
+						'error'
+					);
 				}
 				let fileCard = '';
 				const assignmentFilePreview = document.querySelector('.tutor-asisgnment-upload-file-preview');
