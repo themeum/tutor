@@ -73,5 +73,5 @@
 		});
 	};
 
-    $('.tutor-nav').tutorNav();
+    $('[tutor-priority-nav]').tutorNav();
 })(window.jQuery);

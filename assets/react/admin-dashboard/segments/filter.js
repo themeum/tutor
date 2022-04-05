@@ -113,17 +113,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			formData.set('bulk-ids', bulkIds);
 			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 			try {
-				const loadingButton = document.querySelector('#tutor-confirm-bulk-action.tutor-btn-loading');
-				const prevHtml = loadingButton.innerHTML;
-				loadingButton.innerHTML = `<div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>`;
+				const submitButton = document.querySelector('#tutor-confirm-bulk-action[data-tutor-modal-submit]');
+				submitButton.classList.add('is-loading')
 				const post = await fetch(window._tutorobject.ajaxurl, {
 					method: 'POST',
 					body: formData,
 				});
-				loadingButton.innerHTML = prevHtml;
+				submitButton.classList.remove('is-loading')
 				if (post.ok) {
 					const response = await post.json();
 					if (response.success) {

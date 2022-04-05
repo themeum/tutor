@@ -76,14 +76,9 @@
 					color: var(--tutor-primary-color);
 				}
 			}
-			.tutor-lessons-tab {
-			}
-			.tutor-quiz-tab {
-			}
 		}
 
 		.tutor-sidebar-tabs-content {
-			height: calc(100vh - 156px);
 			position: relative;
 			> div {
 				display: none;
@@ -93,7 +88,6 @@
 			}
 			#sideabr-qna-tab-content {
 				overflow: auto;
-				height: calc(100% - 60px);
 			}
 			#tutor-lesson-sidebar-tab-content {
 				overflow: auto;
@@ -158,7 +152,7 @@
 									font-size: 18px;
 								}
 								.lesson_title {
-									max-width: 220px;
+									// max-width: 220px;
 									margin-top: -2px;
 									&:first-letter {
 										text-transform: capitalize;

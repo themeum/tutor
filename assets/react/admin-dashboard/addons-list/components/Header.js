@@ -27,10 +27,10 @@ const Header = () => {
 						{filterBtns.map((btn, index) => {
 							return (
 								<li
-									className={`tutor-nav-item${btn === activeTab ? ' is-active' : ''}`}
+									className={`tutor-nav-item`}
 									key={index}
 								>
-									<a href="#" onClick={() => getTabStatus(btn)}>
+									<a className={`${btn === activeTab ? 'is-active' : ''}`} href="#" onClick={() => getTabStatus(btn)}>
 										{btn}{' '}
 										<span className="tutor-ml-4">
 											(

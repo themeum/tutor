@@ -66,7 +66,7 @@
 						<?php _e('Back', 'tutor'); ?>
 					</a>
 				</div>
-				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-end">
+				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-lg-flex tutor-align-items-center tutor-justify-end">
 					<?php if ( ! $is_user_asker ) : ?>
 						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-circle-mark-line" data-state-class-1="tutor-icon-circle-mark tutor-color-success" role="button">
 							<i class="<?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success active' : 'tutor-icon-circle-mark-line'; ?> tutor-mr-8"></i>
@@ -81,7 +81,7 @@
 						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-archive" data-state-class-1="tutor-icon-archive">
 							<i class="<?php echo $is_archived ? 'tutor-icon-archive active' : 'tutor-icon-archive'; ?> tutor-mr-8"></i>
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
-						</span>
+						</button>
 					<?php endif; ?>
 					<a href="javascript:;" class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo $modal_id; ?>">
 						<i class="tutor-icon-trashcan-bold tutor-mr-8" area-hidden="true"></i>
@@ -91,7 +91,7 @@
 			</div>
 		<?php endif; ?>
 
-		<div class="tutor-qa-reply-wrapper">
+		<div class="tutor-qa-reply-wrapper tutor-mt-20">
 			<div class="tutor-qa-chatlist">
 				<?php
 					$current_user_id = get_current_user_id();

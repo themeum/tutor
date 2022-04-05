@@ -4,21 +4,21 @@ $sidebar_width: 360px;
 	table.tutor-ui-table-data-td-target [data-td-target] {
 		padding: 12px !important;
 	}
-	
+
 	table.tutor-ui-table tr:last-child td:last-child {
 		border-radius: 0;
 	}
-	
+
 	table.tutor-ui-table-data-td-target .is-active:not(.expand-btn) {
 		background-color: #fff !important;
 	}
-	
+
 	td {
 		div.tutor-icon-angle-down-filled {
 			font-size: 20px;
 		}
 	}
-	
+
 	@at-root {
 		body.wp-admin {
 			.tutor-qna-single-wrapper {
@@ -73,51 +73,30 @@ $sidebar_width: 360px;
 	}
 
 	// Badges class
-	// .tutor-qna-badges {
-	// 	& > span {
-	// 		display: inline-flex;
-	// 		align-items: center;
-	// 		margin-left: 15px;
-	// 		font-style: normal;
-	// 		font-weight: normal;
-	// 		font-size: 16px;
-	// 		color: #5b616f;
-	// 		cursor: pointer;
-	// 		&:hover {
-	// 			color: #393a3d;
-	// 		}
-	// 		> *:first-child {
-	// 			width: 20px;
-	// 			height: 20px;
-	// 			margin-top: -4px;
-	// 		}
-	// 		.tutor-loading-spinner,
-	// 		i {
-	// 			margin-right: 6px;
-	// 		}
-	// 	}
-	// }
-
-	// Top Sticky bar for badges
-	.tutor-qa-sticky-bar {
-		display: flex;
-		background: #FFFFFF;
-		position: sticky;
-		top: 32px;
-		z-index: 9;
-
-		& > div {
-			&:last-child {
-				flex: 1;
-				text-align: right;
+	.tutor-qna-badges {
+		.tutor-btn {
+			&:not(:last-child) {
+				margin-right: 18px;
 			}
 		}
 	}
 
+	.tutor-qna-single-wrapper {
+		max-height: calc(100vh - 100px);
+		overflow-y: auto;
+	}
+
+	// Top Sticky bar for badges
+	.tutor-qa-sticky-bar {
+		background: white;
+		padding: 21px 0px 15px 0px;
+		position: sticky;
+		top: 0;
+		z-index: 9;
+	}
+
 	// Regular chatlist style
 	.tutor-qa-chatlist {
-		overflow: auto;
-
 		.tutor-qna-chat {
 			width: auto;
 			max-width: 80%;
@@ -210,13 +189,6 @@ $sidebar_width: 360px;
 				color: $black-100;
 			}
 		}
-
-		.tutor-qa-reply {
-			// border: 1px solid $stroke-light-30;
-			border-radius: 6px;
-			bottom: 20px;
-			overflow: hidden;
-		}
 	}
 
 	.tutor-toggle-reply {
@@ -241,6 +213,10 @@ $sidebar_width: 360px;
 				margin-top: 15px;
 			}
 		}
+	}
+
+	[class*='tutor-icon'] {
+		font-size: 24px;
 	}
 }
 
@@ -435,7 +411,7 @@ table.qna-list-table {
 		max-width: 100%;
 		margin-bottom: 10px;
 	}
-	
+
 	.tutor-qna-single-question .tutor-qa-reply div {
 		padding: 10px 0px 0px 0px;
 	}
