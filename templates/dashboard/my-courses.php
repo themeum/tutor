@@ -117,7 +117,7 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                                     <i class="tutor-icon-edit" area-hidden="true"></i>
                                 </a>
                                 <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-iconic-btn">
-                                    <i class="tutor-icon-trashcan-line" area-hidden="true"></i>
+                                    <i class="tutor-icon-trash-can-line" area-hidden="true"></i>
                                 </a>
                             </div>
                         </div>

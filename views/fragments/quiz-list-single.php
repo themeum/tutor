@@ -12,7 +12,7 @@
                 </a>
             <?php endif; ?>
             <a href="javascript:;" class="tutor-delete-quiz-btn tutor-iconic-btn" data-quiz-id="<?php echo $data['quiz_id']; ?>">
-                <span class="tutor-icon-trashcan-line" area-hidden="true"></span>
+                <span class="tutor-icon-trash-can-line" area-hidden="true"></span>
             </a>
         </div>
     </div>
