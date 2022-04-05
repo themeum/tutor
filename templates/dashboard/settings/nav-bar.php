@@ -30,12 +30,12 @@
 	$setting_menus                = apply_filters( 'tutor_dashboard/nav_items/settings/nav_items', $setting_menus );
 	$GLOBALS['tutor_setting_nav'] = $setting_menus;
 	?>
-<ul class="tutor-nav">
+<ul class="tutor-nav" tutor-priority-nav>
 	<?php foreach ( $setting_menus as $menu_key => $menu ) : ?>
 		<?php $valid = $menu_key == 'profile' || ! $menu['role'] || ( $menu['role'] == 'instructor' && current_user_can( tutor()->instructor_role ) ); ?>
 		<?php if ( $valid ) : ?>
-			<li class="tutor-nav-item<?php echo $active_setting_nav == $menu_key ? ' is-active' : ''; ?>">
-				<a href="<?php echo $menu['url']; ?>"> <?php echo $menu['title']; ?></a>
+			<li class="tutor-nav-item">
+				<a class="<?php echo $active_setting_nav == $menu_key ? 'is-active' : ''; ?>" href="<?php echo $menu['url']; ?>"><?php echo $menu['title']; ?></a>
 			</li>
 		<?php endif; ?>
 	<?php endforeach; ?>

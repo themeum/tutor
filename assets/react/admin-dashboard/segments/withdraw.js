@@ -75,9 +75,7 @@ document.addEventListener("DOMContentLoaded", function(){
         rejectType.onchange = (e) => {
             const type = e.target.value;
             if (type === 'Other') {
-                document.getElementById('tutor-withdraw-reject-other').innerHTML = `<div class="tutor-input-group tutor-form-control-lg tutor-mb-16">
-                <input type="text" name="reject-comment" class="tutor-form-control" placeholder="${__('Withdraw Reject Reason', 'tutor')}" required/>
-              </div>`;
+                document.getElementById('tutor-withdraw-reject-other').innerHTML = `<input type="text" name="reject-comment" class="tutor-form-control" placeholder="${__('Withdraw Reject Reason', 'tutor')}" required/>`;
             } 
         }
     }
@@ -92,27 +90,20 @@ document.addEventListener("DOMContentLoaded", function(){
         formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
         try {
             // select loading button
-            const loadingButton = target.querySelector(".tutor-btn-loading");
-            // keep previous text
-            let prevHtml = loadingButton.innerHTML;
-            // add loading ball
-            loadingButton.innerHTML = `<div class="ball"></div>
-            <div class="ball"></div>
-            <div class="ball"></div>
-            <div class="ball"></div>`;
+            const submitButton = target.querySelector("[data-tutor-modal-submit]");
+            submitButton.classList.add('is-loading');
 
             const post = await fetch(window._tutorobject.ajaxurl, {
                 method: "POST",
                 body: formData,
             });
-            // after network request get previous html
-            loadingButton.innerHTML = prevHtml;
+
+            submitButton.classList.remove('is-loading');
             return post;
         } catch (error) {
             tutor_toast(__("Operation failed", "tutor"), error, "error")
         }
-    }   
-
+    }  
 
 
     /*

@@ -8,12 +8,6 @@
 				border-bottom: 1px solid #e8e8e8;
 			}
 		}
-		/* .tutor-option-field-row.other_color {
-      height: 0;
-      overflow: hidden;
-      opacity: 0;
-      visibility: hidden;
-    } */
 	}
 	position: relative;
 }
@@ -114,6 +108,7 @@
 	}
 
 	input[type='radio'] {
+		display: none;
 		@include appearNone;
 		&:checked {
 			+ .preset-item {

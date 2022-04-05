@@ -21,8 +21,8 @@
 					</span>
 					<span class="instructor-name"> <?php echo esc_attr( $instructor->display_name ) . ' ' . $authorTag; ?> </span>
 					<span class="instructor-control">
-						<a href="javascript:;" class="tutor-instructor-delete-btn tutor-action-icon tutor-btn tutor-is-circle tutor-is-outline tutor-btn-ghost">
-							<i class="tutor-icon-times "></i>
+						<a href="javascript:;" class="tutor-instructor-delete-btn tutor-iconic-btn">
+							<i class="tutor-icon-times" area-hidden="true"></i>
 						</a>
 					</span>
 				</div>
@@ -35,13 +35,6 @@
 	<div class="tutor-add-instructor-button-wrap">
 		<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-add-instructor-btn"> <i class="tutor-icon-add-group tutor-mr-8"></i> <?php _e( 'Add More Instructors', 'tutor' ); ?> </button>
 	</div>
-
-	<?php
-	/*
-	 if ( ! defined('TUTOR_MT_VERSION')){
-		 echo '<p>'. sprintf( __('To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s addon ', 'tutor'), '<a href="https://www.themeum.com/product/tutor-lms" target="_blank">', "</a>" ) .'</p>';
-	 }*/
-	?>
 </div>
 
 
