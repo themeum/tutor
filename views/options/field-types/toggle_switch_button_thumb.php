@@ -20,6 +20,6 @@ $field_id = 'field_' . $field['key'];
 			<span class="tutor-form-toggle-control"></span>
 		</label>
 		<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-btn-sm"><?php _e("Edit", "tutor"); ?></button>
-		<span class="icon-trashcan-line" area-hidden="true"></span>
+		<span class="icon-trash-can-line" area-hidden="true"></span>
 	</div>
 </div>
