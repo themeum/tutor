@@ -60,7 +60,7 @@ jQuery(document).ready(function($) {
 
 				cat_ids.forEach(function(value) {
 					cat_parent.append(
-						'<span>' + values[value] + ' <span class="tutor-icon-line-cross-line" data-cat_id="' + value + '"></span></span>'
+						'<span>' + values[value] + ' <span class="tutor-icon-times" data-cat_id="' + value + '"></span></span>'
 					);
 				});
 

@@ -56,10 +56,6 @@ body.tutor-screen-course-builder {
     
     // LQA Modals
     .tutor-modal {
-        .tutor-input-feedback-icon {
-            font-size: 19px;
-        }
-
         .wp-editor-wrap {
             width: 100%;
         }
@@ -88,7 +84,7 @@ body.tutor-screen-course-builder {
 
     .tutor-dropdown-icon-pack {
         position: absolute;
-        top: 13px;
+        top: 9px;
         left: 10px;
 
         &+select {
