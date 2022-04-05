@@ -83,7 +83,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 									<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 								</span>
 								<span data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" class="tutor-btn tutor-btn-ghost" role="button">
-									<i class="tutor-icon-trashcan-line tutor-mr-8"></i>
+									<i class="tutor-icon-trash-can-line tutor-mr-8"></i>
 									<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 								</span>
 							</div>
