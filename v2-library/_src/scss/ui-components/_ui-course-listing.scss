@@ -101,6 +101,7 @@
 		margin-top: auto;
 		border-top: 1px solid #cdcfd5;
 		display: grid;
+
 		&.has-border {
 			border-top: 1px solid var(--tutor-stroke-light-20, #ccc);
 		}
@@ -118,6 +119,10 @@
 
 		.list-item-price {
 			gap: 10px;
+		}
+
+		.list-item-button {
+			flex-shrink: 0;
 		}
 
 		.list-item-booking {

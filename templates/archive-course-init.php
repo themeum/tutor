@@ -85,25 +85,27 @@
 	}
 ?>
 
-<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
-	<?php if ($course_filter && count($supported_filters)): ?>
-		<div class="tutor-course-listing-filter tutor-filter-course-grid-2 course-archive-page">
-			<div class="tutor-course-filter tutor-course-filter-container">
-				<div class="tutor-course-filter-widget">
-					<?php tutor_load_template('course-filter.filters'); ?>
+<div class="tutor-mb-32">
+	<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page " data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
+		<?php if ($course_filter && count($supported_filters)): ?>
+			<div class="tutor-course-listing-filter tutor-filter-course-grid-3 course-archive-page">
+				<div class="tutor-course-filter tutor-course-filter-container">
+					<div class="tutor-course-filter-widget">
+						<?php tutor_load_template('course-filter.filters'); ?>
+					</div>
+				</div>
+				<div class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container tutor-pagination-wrapper-replacable replace-inner-contents" data-column_per_row="<?php esc_attr_e( $column_per_row ); ?>">
+					<?php 
+						echo $course_loop; 
+					?>
 				</div>
 			</div>
-			<div class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container tutor-pagination-wrapper-replacable replace-inner-contents" data-column_per_row="<?php esc_attr_e( $column_per_row ); ?>">
+		<?php else: ?>
+			<div class="<?php tutor_container_classes(); ?>	tutor-course-filter-loop-container tutor-pagination-wrapper-replacable replace-inner-contents">
 				<?php 
 					echo $course_loop; 
 				?>
 			</div>
-		</div>
-	<?php else: ?>
-		<div class="<?php tutor_container_classes(); ?>	tutor-course-filter-loop-container tutor-pagination-wrapper-replacable replace-inner-contents">
-			<?php 
-				echo $course_loop; 
-			?>
-		</div>
-	<?php endif; ?>
+		<?php endif; ?>
+	</div>
 </div>
