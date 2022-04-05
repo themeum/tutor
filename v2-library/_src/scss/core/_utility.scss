@@ -114,33 +114,6 @@
 	text-overflow: ellipsis;
 }
 
-.tutor-line-clamp-2 {
-	display: block !important;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: normal;
-}
-
-.tutor-line-clamp-3 {
-	display: block !important;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: normal;
-}
-
-.tutor-line-clamp-4 {
-	display: block !important;
-	-webkit-line-clamp: 4;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: normal;
-}
-
 .tutor-text-hover-underline {
 	cursor: pointer;
 
@@ -263,7 +236,6 @@ $border: (
 	}
 }
 
-
 // line height
 .tutor-lh-1 {
 	line-height: 1 !important;
@@ -272,16 +244,16 @@ $border: (
 // ratio
 .tutor-ratio {
 	position: relative;
-    width: 100%;
+	width: 100%;
 
 	&-16x9 {
-		content: " ";
+		content: ' ';
 		display: block;
 		padding-top: 56.25%;
 	}
 
 	&-4x3 {
-		content: " ";
+		content: ' ';
 		display: block;
 		padding-top: 75%;
 	}
@@ -317,8 +289,8 @@ $border: (
 	color: var(--tutor-primary-color);
 	background: var(--tutor-primary-lighter);
 
-	[class^="tutor-icon-"],
-	[class*=" tutor-icon-"],
+	[class^='tutor-icon-'],
+	[class*=' tutor-icon-'],
 	.tutor-svg {
 		display: inline-block;
 	}
