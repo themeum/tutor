@@ -3,6 +3,9 @@
 		.tab-header {
 			.tab-header-item {
 				flex-wrap: wrap;
+				> *:not(:last-child) {
+					margin-right: 10px;
+				}
 				@include breakpoint-max(mobile) {
 					padding-left: 10px;
 					padding-right: 10px;
