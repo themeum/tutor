@@ -5309,13 +5309,22 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $result_state = null, $count_only = false ) {
+	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check=false ) {
 		global $wpdb;
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_filter  = $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '';
+		
+		// Filter by course
+		if($course_filter!=''){
+			!is_array($course_filter) ? $course_filter=array($course_filter) : 0;
+			$course_ids = implode(',', $course_filter);
+			$course_filter = " AND quiz_attempts.course_id IN ($course_ids) ";
+		}
+
+		// Filter by date
 		$date_filter    = $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter    = $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
+
 		$result_clause  = '';
 		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.*, users.*';
 		$limit_offset   = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
@@ -5323,6 +5332,18 @@ class Utils {
 		$pass_mark      = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
 		$pending_count  = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
 
+		// Get attempts by instructor ID
+		$instructor_clause = '';
+		if($instructor_id_check){
+			$current_user_id = get_current_user_id();
+			$instructor_id = $this->has_user_role('administrator', $current_user_id) ? null : $current_user_id;
+
+			if($instructor_id){
+				$instructor_clause = " AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id)";
+			}
+		}
+
+		// Switc hthrough result state and assign meta clause
 		switch ( $result_state ) {
 			case 'pass':
 				// Just check if the earned mark is greater than pass mark
@@ -5349,6 +5370,7 @@ class Utils {
 					INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
 					INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id
+					LEFT JOIN {$wpdb->prefix}usermeta AS instructor_meta ON course.ID = instructor_meta.meta_value
 			WHERE 	quiz_attempts.attempt_ended_at IS NOT NULL
 					AND (
 							users.user_email = %s
@@ -5357,6 +5379,7 @@ class Utils {
 							OR course.post_title LIKE %s
 						)
 					AND quiz_attempts.attempt_ended_at IS NOT NULL
+					{$instructor_clause}
 					{$result_clause}
 					{$course_filter}
 					{$date_filter}
