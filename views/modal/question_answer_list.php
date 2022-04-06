@@ -11,7 +11,6 @@ use TUTOR\Question_Answers_List;
 ?>
 
 <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>"><?php
-    global $wpdb;
     $answers = Question_Answers_List::answer_list_by_question( $question_id, $question_type );
     
     if (is_array($answers) && count($answers)){
