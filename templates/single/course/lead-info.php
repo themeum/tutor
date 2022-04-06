@@ -41,13 +41,13 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
     
     <div class="tutor-d-sm-flex tutor-align-items-center tutor-justify-between tutor-mt-16">
         <div class="tutor-course-details-category tutor-fs-6 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-end">
-            <!-- <?php if (tutor_utils()->get_option('enable_course_author')) : ?>
+            <?php if ( tutor_utils()->get_option('enable_course_author') ) : ?>
                 <div class="tutor-course-author tutor-mr-16">
                     <img src="<?php echo get_avatar_url(get_the_author_meta('ID')); ?>" />
                     <span><?php _e('by', 'tutor'); ?></span>
                     <strong><?php echo get_the_author_meta('display_name'); ?></strong>
                 </div>
-            <?php endif; ?> -->
+            <?php endif; ?>
             <div>
                 <span class="tutor-fs-6 tutor-color-muted">
                     <?php _e('Categories', 'tutor'); ?>:
