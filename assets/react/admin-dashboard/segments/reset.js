@@ -12,8 +12,9 @@ const modalConfirmation = document.getElementById('tutor-modal-bulk-action');
 const modalResetOpen = () => {
 	const modalResetOpen = document.querySelectorAll('.modal-reset-open');
 	let resetButton = modalConfirmation && modalConfirmation.querySelector('.reset_to_default');
-	let modalHeading = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-title');
-	let modalMessage = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-message');
+	let modalHeading = modalConfirmation && modalConfirmation.querySelector('[data-modal-dynamic-title]');
+	let modalMessage = modalConfirmation && modalConfirmation.querySelector('[data-modal-dynamic-content]');
+
 	modalResetOpen.forEach((modalOpen, index) => {
 		modalOpen.disabled = false;
 		modalOpen.onclick = (e) => {
@@ -22,16 +23,8 @@ const modalResetOpen = () => {
 			resetButton.dataset.resetFor = modalOpen.previousElementSibling.innerText;
 			modalMessage.innerText = modalOpen.dataset.message;
 		}
-	})
+	});
 }
-
-/* const titleReseter = document.querySelectorAll('.tutor-option-single-item');
-titleReseter.forEach((item) => {
-	let h4 = item.querySelector('h4');
-	!h4 ? 0 : h4.onclick = (e) => {
-		item.parentElement.querySelector('.modal-reset-open').click()
-	}
-}) */
 
 const resetConfirmation = () => {
 	const resetDefaultBtn = document.querySelectorAll('.reset_to_default');
@@ -193,6 +186,8 @@ const resetConfirmation = () => {
 								document.getElementById('save_tutor_option').disabled = false;
 							}
 						}, 300)
+
+						document.body.classList.remove('tutor-modal-open');
 					}
 
 				};
