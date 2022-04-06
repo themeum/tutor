@@ -190,22 +190,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				commonConfirmForm.elements.action.value = 'tutor_course_delete';
 				commonConfirmForm.elements.id.value = id;
 			}
-
-		// 	if (commonConfirmContent) {
-		// 		commonConfirmContent.innerHTML = `
-        //   <div class="tutor-modal-icon">
-        //   <img src="https://i.imgur.com/Nx6U2u7.png" alt=""/>
-        //   </div>
-        //   <div class="tutor-modal-text-wrap">
-        //   <h3 class="tutor-modal-title">
-        //    ${__('Wait!', 'tutor')}
-        //   </h3>
-        //   <p>
-        //     ${__('Are you sure you would like perform this action? We suggest you proceed with caution.', 'tutor')}
-        //   </p>
-        //   </div>
-        // `;
-		// 	}
 		};
 	}
 	/**

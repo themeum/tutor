@@ -84,7 +84,7 @@
 						</button>
 					<?php endif; ?>
 					<a href="javascript:;" class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo $modal_id; ?>">
-						<i class="tutor-icon-trashcan-bold tutor-mr-8" area-hidden="true"></i>
+						<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
 						<?php _e( 'Delete', 'tutor' ); ?>
 					</a>
 				</div>
