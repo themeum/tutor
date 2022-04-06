@@ -10,14 +10,17 @@ class Course_Filter {
 	private $tag             = 'course-tag';
 	private $current_term_id = null;
 
-	function __construct() {
-		add_action( 'wp_ajax_tutor_course_filter_ajax', array( $this, 'load_listing' ) );
-		add_action( 'wp_ajax_nopriv_tutor_course_filter_ajax', array( $this, 'load_listing' ) );
+	function __construct($register_hook=true) {
+		if(!$register_hook) {
+			return;
+		}
+		add_action( 'wp_ajax_tutor_course_filter_ajax', array( $this, 'load_listing' ), 10, 0 );
+		add_action( 'wp_ajax_nopriv_tutor_course_filter_ajax', array( $this, 'load_listing' ), 10, 0 );
 	}
 
-	public function load_listing() {
-		tutils()->checking_nonce();
-		$_post = tutor_sanitize_data( $_POST );
+	public function load_listing($filters=null, $return_filter=false) {
+		!$return_filter ? tutils()->checking_nonce() : 0;
+		$_post = tutor_sanitize_data($filters==null ? $_POST : $filters);
 
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
@@ -111,9 +114,15 @@ class Course_Filter {
 			}
 		}
 
+		// Return filters
+		$filters = apply_filters( 'tutor_course_filter_args', $args );
+		if($return_filter){
+			return $filters;
+		}
+
 		ob_start();
 
-		query_posts( apply_filters( 'tutor_course_filter_args', $args ) );
+		query_posts( $filters );
 		tutor_load_template( 'archive-course-init', array_merge( array('loop_content_only' => true), $_post ));
 
 		wp_send_json_success( array('html' => ob_get_clean()) );

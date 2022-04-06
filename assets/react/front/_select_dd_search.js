@@ -53,7 +53,6 @@ window.selectSearchField = (selectElement) => {
 									selectLabel.innerText = e.target.innerText;
 									selectLabel.dataset.value = option.value;
 									element.value = option.value;
-									// @todo: identify the id
 									const save_tutor_option = document.getElementById('save_tutor_option');
 									if (save_tutor_option) {
 										save_tutor_option.disabled = false;
@@ -61,10 +60,8 @@ window.selectSearchField = (selectElement) => {
 								}
 							});
 
-							var onChangeEvent = new Event('change');
+							const onChangeEvent = new Event('change', { bubbles: true });
 							element.dispatchEvent(onChangeEvent);
-							selectFieldOptions.dispatchEvent(onChangeEvent);
-							// jQuery(selectFieldOptions).trigger('change'); // @todo: why jQuery is here?
 						};
 					});
 				}
@@ -152,7 +149,7 @@ window.selectSearchField = (selectElement) => {
 		Array.from(options).forEach((item) => {
 			optionsList += `
             <div class="tutor-form-select-option">
-				<span tutor-dropdown-item data-key="${item.value}">${item.text}</span>
+				<span tutor-dropdown-item data-key="${item.value}" class="tutor-nowrap-ellipsis" title="${item.text}">${item.text}</span>
             </div>
             `;
 		});

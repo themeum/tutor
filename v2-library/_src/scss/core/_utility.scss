@@ -114,33 +114,6 @@
 	text-overflow: ellipsis;
 }
 
-.tutor-line-clamp-2 {
-	display: block !important;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: normal;
-}
-
-.tutor-line-clamp-3 {
-	display: block !important;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: normal;
-}
-
-.tutor-line-clamp-4 {
-	display: block !important;
-	-webkit-line-clamp: 4;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: normal;
-}
-
 .tutor-text-hover-underline {
 	cursor: pointer;
 

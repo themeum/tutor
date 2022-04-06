@@ -27,13 +27,13 @@
 			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-7 tutor-mb-32">
 				<div class="tutor-password-strength-checker">
 					<div class="tutor-password-field">
-						<label class="field-label tutor-form-label" for="new-password-1">
+						<label class="field-label tutor-form-label" for="tutor-new-password">
 							<?php esc_html_e( 'New Password', 'tutor' ); ?>
 						</label>
 						<div class="field-group">
 							<input
 								class="password-checker tutor-form-control"
-								id="new-password-1"
+								id="tutor-new-password"
 								type="password"
 								name="new_password"
 								placeholder="Type Password"
@@ -41,6 +41,7 @@
 							<span class="show-hide-btn"></span>
 						</div>
 					</div>
+
 					<div class="tutor-passowrd-strength-hint">
 						<div class="indicator">
 							<span class="weak"></span>
@@ -53,22 +54,21 @@
 			</div>
 		</div>
 
-
 		<div class="tutor-row">
 			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-7 tutor-mb-32">
 				<div class="tutor-password-field tutor-settings-pass-field">
-					<label class="field-label tutor-form-label" for="password-field-icon-1">
+					<label class="field-label tutor-form-label" for="tutor-confirm-password">
 						<?php esc_html_e( 'Re-type New Password', 'tutor' ); ?>
 					</label>
-					<div class="field-group tutor-input-group">
+					<div class="tutor-form-wrap">
+						<span class="tutor-validation-icon tutor-icon-mark tutor-color-success tutor-form-icon tutor-form-icon-reverse" style="display: none;"></span>
 						<input
 							class="tutor-form-control"
-							id="cpassword-field-icon-1"
+							id="tutor-confirm-password"
 							type="password"
 							placeholder="Type Password"
 							name="confirm_new_password"
 						/>
-						<span class="validation-icon valid-btn tutor-icon-mark" style="display:none"></span>
 					</div>
 				</div>
 			</div>

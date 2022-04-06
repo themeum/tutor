@@ -4,52 +4,41 @@
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    border-bottom: 1px solid #CDCFD5;
+
+    a {
+        &,
+        &:focus,
+        &:hover,
+        &:active {
+            color: inherit;
+            background: none;
+            outline: 0;
+            text-decoration: none;
+            box-shadow: none;
+            line-height: 1.6;
+        }
+    }
 
     > li {
         line-height: 1.6;
         position: relative;
+        margin: 0;
+        padding: 0;
 
         > a {
             font-size: 16px;
             font-weight: 500;
-            padding: 12px 20px;
+            padding: 8px 20px;
             display: flex;
             align-items: center;
-            text-decoration: none;
             color: var(--tutor-black-70);
+            cursor: pointer;
 
             &:hover {
-                color: inherit;
-                text-decoration: none;
-            }
-        }
-
-        &:after {
-            content: '';
-            position: absolute;
-            height: 2px;
-            left: 0;
-            right: 0;
-            bottom: -1px;
-            background: var(--tutor-primary-color);
-            transform: scaleY(0);
-            transform-origin: bottom;
-            transition: 200ms ease-in;
-        }
-
-        &.is-active {
-            > a {
                 color: var(--tutor-primary-color);
             }
 
-            &:after {
-                transform: scaleY(1);
-            }
-        }
-
-        &:hover {
-            > a {
+            &.is-active {
                 color: var(--tutor-primary-color);
             }
         }
@@ -85,7 +74,58 @@
         }
     }
 
-    // admin
+    &:not(.tutor-nav-tabs) {
+        border-bottom: 1px solid #CDCFD5;
+        > li {
+            > a {
+                border-bottom: 2px solid transparent;
+                margin-bottom: -1px;
+                &.is-active {
+                    border-bottom-color: var(--tutor-primary-color);
+                }
+            }
+        }
+    }
+
+    // tabs
+    &-tabs {
+        border-bottom: 0;
+        > li {
+            &:not(:last-child) {
+                margin-right: 4px;
+            }
+
+            > a {
+                border-radius: 6px;
+
+                &:hover {
+                    color: var(--tutor-black-70);
+                    background-color: #edf0f9;
+                }
+
+                &.is-active {
+                    background-color: var(--tutor-primary-color);
+                    color: #FFFFFF;
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    // vertical
+    &-v {
+        flex-direction: column;
+        border-bottom: 0;
+
+        > li {
+            margin-right: 0;
+            &:not(:last-child) {
+                margin-bottom: 4px;
+            }
+        }
+    }
+
+    // @todo: to be removed
     &-admin {
         border-bottom: 0;
         > li {

@@ -547,12 +547,6 @@ Instructor customize filters styles
       .tutor-instructor-filters {
         @include flexWithAlignJustify(center, flex-start, 6px);
         i {
-          transform: scale(2);
-          font-weight: 500;
-          -webkit-transform: scale(2);
-          -moz-transform: scale(2);
-          -ms-transform: scale(2);
-          -o-transform: scale(2);
           margin-right: 10px;
 }
       }
