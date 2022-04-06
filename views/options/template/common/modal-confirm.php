@@ -33,10 +33,6 @@
 						<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->icon_dir . 'reset.svg' ); ?>" />
 					</div>
 
-					<div class="tutor-mt-24">
-						<span class="tutor-d-inline-block"><?php echo esc_attr( $icon ); ?></span>
-					</div>
-
 					<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12" data-modal-dynamic-title></div>
 
 					<div class="tutor-alert tutor-warning tutor-mt-32">

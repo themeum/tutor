@@ -295,10 +295,55 @@ class Assets {
 			'tutor_button_success'      => '--tutor-success-button-color',
 			'tutor_button_warning'      => '--tutor-warning-button-color',
 		);
+		
+		// admin colors
+		$admin_colors = [];
+		if (is_admin()) {
+			$admin_color = get_user_option( 'admin_color' );
 
-		$admin_colors = [
-			'--tutor-primary-color' => 'var(--wp-admin-theme-color)',
-		];
+			switch ($admin_color) {
+				case 'light':
+					$admin_color_codes = ['#04a4cc', '#04b0db'];
+				break;
+
+				case 'modern':
+					$admin_color_codes = ['#3858e9', '#4664eb'];
+				break;
+				
+				case 'blue':
+					$admin_color_codes = ['#e1a948', '#e3af55'];
+				break;
+				
+				case 'coffee':
+					$admin_color_codes = ['#c7a589', '#ccad93'];
+				break;
+				
+				case 'ectoplasm':
+					$admin_color_codes = ['#a3b745', '#a9bd4f'];
+				break;
+				
+				case 'midnight':
+					$admin_color_codes = ['#e14d43', '#e35950'];
+				break;
+				
+				case 'ocean':
+					$admin_color_codes = ['#9ebaa0', '#a7c0a9'];
+				break;
+				
+				case 'sunrise':
+					$admin_color_codes = ['#dd823b', '#df8a48'];
+				break;
+				
+				default:
+					$admin_color_codes = ['#007cba', '#006ba1'];
+				break;
+			}
+
+			$admin_colors = [
+				'--tutor-primary-color' => $admin_color_codes[0],
+				'--tutor-primary-hover-color' => $admin_color_codes[1],
+			];
+		}
 
 		$color_string = '';
 		foreach ($colors as $key => $property) {
