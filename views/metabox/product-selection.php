@@ -18,10 +18,10 @@
 			}
 			?>
 		</select>
-		<p class="tutor-form-feedback tutor-has-icon">
+		<div class="tutor-form-feedback">
 			<i class="tutor-icon-circle-info-o tutor-form-feedback-icon tutor-fs-5"></i>
-			<?php echo $info_text; ?>
-		</p>
+			<div><?php echo $info_text; ?></div>
+		</div>
 	</div>
 </div>
 

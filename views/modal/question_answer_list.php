@@ -58,9 +58,9 @@ use TUTOR\Question_Answers_List;
                     ?>
 
                     <?php if ( $question_type !== 'true_false' ): ?>
-                        <span class="tutor-quiz-answer-edit">
-                            <a href="javascript:;">
-                                <i class="tutor-icon-pencil"></i> 
+                        <span class="tutor-quiz-answer-edit tutor-mr-n8">
+                            <a class="tutor-iconic-btn" href="javascript:;">
+                                <i class="tutor-icon-pencil" area-hidden="true"></i> 
                             </a>
                         </span>
                     <?php endif; ?>
