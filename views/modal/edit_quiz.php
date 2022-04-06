@@ -2,13 +2,13 @@
 <div id="quiz-builder-tab-quiz-info">
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Quiz Title', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-16">
+        <div class="tutor-mb-16">
             <input type="text" name="quiz_title" class="tutor-form-control tutor-mb-12" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo $quiz ? htmlspecialchars( stripslashes($quiz->post_title) ) : ''; ?>"/>
         </div>
     </div>
     <div>
         <label class="tutor-form-label"><?php _e('Summary', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-16">
+        <div class="tutor-mb-16">
             <textarea name="quiz_description" class="tutor-form-control tutor-mb-12" rows="5"><?php echo $quiz ? stripslashes($quiz->post_content) : ''; ?></textarea>
         </div>
     </div>
