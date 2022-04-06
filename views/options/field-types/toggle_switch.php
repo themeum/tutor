@@ -6,9 +6,9 @@
  * @since 2.0
  */
 
-$field_key         = esc_attr( $field['key'] );
-$field_id          = esc_attr( 'field_' . $field_key );
-$field_default     = esc_attr( $field['default'] );
+$field_key         = $field['key'];
+$field_id          = 'field_' . $field_key;
+$field_default     = $field['default'];
 $field_label_title = isset( $field['label_title'] ) ? $field['label_title'] : null;
 $label_title       = ( isset( $field_label_title ) && null !== esc_attr( $field_label_title ) ) ? esc_attr( $field_label_title ) : null;
 $default           = isset( $field_default ) ? esc_attr( $field_default ) : esc_attr( 'off' );
