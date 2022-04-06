@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Input {
 
 	/**
-	 * Get input request
+	 * Get input value
 	 *
 	 * @param string  $key request key.
      * @param mixed   $default default value if input key is not exit.
@@ -26,8 +26,6 @@ class Input {
 	 * @return mixed
 	 */
 	public static function get( $key, $default = null, $is_raw = false, $trim = true ) {
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
-		// phpcs:ignore
 		$value = isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default;
 		if( $value === $default ) return $default;
 
