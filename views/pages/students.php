@@ -20,7 +20,7 @@ $students = new Students_List();
 $user_id	= Input::get( 'user_id' , '' );
 $course_id	= Input::get( 'course-id' , '' );
 $order		= Input::get( 'order', 'DESC' );
-$date		= tutor_get_formated_date( 'Y-m-d' , Input::get( 'date' , '' ) );
+$date		= Input::has( 'date' ) ? tutor_get_formated_date( 'Y-m-d' , Input::get( 'date' ) ) : '';
 $search		= Input::get( 'search', '' );
 
 /**
