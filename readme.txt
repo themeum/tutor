@@ -241,6 +241,8 @@ Fix: Course archive filters not working properly when using shortcode
 Fix: Shortcode and line breaks not working in course details
 Fix: Instructor details in single course doesn't support text formatting
 Fix: Non instructor can access frontend course builder
+Fix: Multiple course creating from frontend editor
+Fix: Instructors could see quiz attempts from other instructors courses 
 
 = 2.0.1 - March 23, 2022
 
