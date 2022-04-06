@@ -52,7 +52,7 @@ $close   		= isset( $close ) ? (bool) $close : true;
 						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
 							<?php esc_html_e('Cancel', 'tutor'); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary<?php echo isset($yes['class']) ? ' ' . esc_html( $yes['class'] ) : ''; ?> tutor-ml-20" <?php echo isset($yes['attr']) ? implode($yes['attr'], ' ') : ''; ?>>
+						<button class="tutor-btn tutor-btn-primary<?php echo isset($yes['class']) ? ' ' . esc_html( $yes['class'] ) : ''; ?> tutor-ml-20" <?php echo isset( $yes['attr'] ) && is_array( $yes['attr'] ) ? implode( ' ', $yes['attr'] ) : ''; ?>>
 							<?php esc_html_e( $yes['text'] ); ?>
 						</button>
 					</div>
