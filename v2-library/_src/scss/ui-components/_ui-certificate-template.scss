@@ -1,64 +1,30 @@
-// Tutor Certificate Template Tab
-.tutor-certificate-template-tab {
-	max-width: 735px;
-	margin: auto;
-	display: grid;
+.tutor-course-certificate {
+	&-tabs {
+		&.tutor-nav {
+			display: inline-flex;
+			padding: 4px;
+			background: #f6f8fd;
+			border-radius: 6px;
 
-	.tab-header {
-		justify-self: center;
-		gap: 15px;
-		margin-bottom: 32px;
-		/* color/primary/fill/30 */
-		background: #f6f8fd;
-		border-radius: 5px;
-		padding: 4px;
+			> li {
+				> a {
+					color: $black-40;
 
-		&.d-flex {
-			display: flex;
-		}
-	}
+					&:hover {
+						color: var(--tutor-primary-color);
+						background-color: transparent;
+					}
 
-	.tab-header-item {
-		color: $black-40;
-		font-weight: 500;
-		font-size: 15px;
-		line-height: 160%;
-		/* identical to box height, or 160% */
-		padding: 4px 20px;
-		border-radius: 5px;
-		transition: 200ms linear;
-
-		.item-wrapper {
-			display: flex;
-			align-items: center;
-			gap: 7px;
-
-			.icon {
-				font-size: 24px;
-			}
-		}
-
-		span {
-			color: $black-50;
-		}
-
-		&.is-active {
-			color: var(--tutor-primary-color);
-			background-color: $color-white;
-			box-shadow: 0px 1px 2px rgba(2, 11, 83, 0.2);
-			span {
-				color: var(--tutor-primary-color);
-			}
-		}
-
-		&:not(.is-active) {
-			img {
-				filter: grayscale(100%);
-				opacity: 0.55;
+					&.is-active {
+						color: var(--tutor-primary-color);
+						background-color: $color-white;
+						box-shadow: 0px 1px 2px rgba(2, 11, 83, 0.2);
+					}
+				}
 			}
 		}
 	}
-} // end /.tutor-certificate-template-tab
+}
 
 .tutor-certificate-template {
 	display: grid;
@@ -231,14 +197,3 @@
 		}
 	}
 } // end /.tutor-certificate-template
-
-.tutor-certificate-template-tab {
-	&.tutor-default-tab {
-		.tab-header {
-			border-bottom: none;
-		}
-		.tab-header-item:before {
-			display: none;
-		}
-	}
-}
