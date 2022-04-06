@@ -27,7 +27,6 @@
 					<?php tutor_nonce_field(); ?>
 					<input type="hidden" name="id">
 					<input type="hidden" name="action">
-					<div id="tutor-common-confirmation-modal-content"></div>
 					<div class="tutor-d-flex tutor-justify-center tutor-my-48">
 						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>

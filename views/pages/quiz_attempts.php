@@ -37,8 +37,8 @@ $paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$quiz_attempts_list = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab );
-$total = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab, true );
+$quiz_attempts_list = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab, false, true );
+$total = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab, true, true );
 
 /**
  * Navbar data to make nav menu

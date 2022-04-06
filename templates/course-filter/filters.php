@@ -9,6 +9,7 @@
 	$course_levels     = tutor_utils()->course_levels();
 	$supported_filters = tutor_utils()->get_option( 'supported_course_filters', array() );
 	$supported_filters = array_keys( $supported_filters );
+	$reset_link		   = remove_query_arg( $supported_filters, get_pagenum_link() );
 	?>
 <form>
 	<?php do_action( 'tutor_course_filter/before' ); ?>
@@ -109,7 +110,7 @@
 		<div class="filter-widget-input-wrapper tutor-mt-24">
 			<div class="filter-widget-input">
 				<div class="tutor-clear-all-filter">
-					<a href="#" onclick="window.location.reload()">
+					<a href="#" onclick="window.location.replace('<?php echo $reset_link; ?>')">
 						<i class="tutor-icon-times-o"></i> <?php esc_html_e( 'Clear All Filters', 'tutor' ); ?>
 					</a>
 				</div>

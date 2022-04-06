@@ -141,7 +141,7 @@
 			visibility: hidden;
 			transition: 100ms;
 		}
-		// .tab-header-item-seemore.is-active
+		
 		&.is-active {
 			.tab-header-item-seemore-toggle {
 				.icon-seemore {
@@ -153,5 +153,5 @@
 				visibility: visible;
 			}
 		}
-	} // .tab-header-item-seemore
-} // .tutor-default-tab
+	}
+}

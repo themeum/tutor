@@ -26,7 +26,7 @@
 
 		// Nav
 		const attrNav = 'data-tutor-nav-target';
-		const activeNavItems = document.querySelectorAll('.tutor-nav-item.is-active, .tutor-tab-item.is-active');
+		const activeNavItems = document.querySelectorAll('.tutor-nav-item > a.is-active, .tutor-tab-item.is-active');
 
 		if (e.target.hasAttribute(attrNav)) {
 			e.preventDefault();
@@ -45,7 +45,7 @@
 					e.target.closest('.tutor-nav-more').classList.add('is-active');
 				}
 
-				e.target.parentElement.classList.add('is-active');
+				e.target.classList.add('is-active');
 				navTabBodyItem.classList.add('is-active');
 			}
 		}

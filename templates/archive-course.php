@@ -13,6 +13,9 @@
  */
 tutor_utils()->tutor_custom_header();
 
+$filter = (new \Tutor\Course_Filter(false))->load_listing($_GET, true);
+query_posts( $filter );
+
 // Load the 
 tutor_load_template('archive-course-init', array(
 	'course_filter' => (bool) tutor_utils()->get_option('course_archive_filter', false),

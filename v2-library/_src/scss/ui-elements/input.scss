@@ -4,6 +4,10 @@ $height-lg: 48px;
 $height-sm: 38px;
 
 .tutor-form {
+	&-group {
+		margin-bottom: 32px;
+	}
+
 	&-wrap {
 		position: relative;
 		display: flex;
@@ -197,6 +201,7 @@ select.tutor-form-control,
 	background-repeat: no-repeat;
 	background-position: right 0.75rem center;
 	background-size: 16px 12px;
+	padding-right: 36px;
 }
 
 .tutor-input-group {
@@ -256,20 +261,18 @@ select.tutor-form-control,
 	}
 }
 
-.tutor-input-feedback {
-	font-size: 12px;
-	line-height: 18px;
-	margin: 8px 0 0;
+.tutor-form-feedback {
+	font-size: 14px;
+	line-height: 1.4;
+	margin: 16px 0 0;
 	color: var(--tutor-text-subtitle);
 	position: relative;
+	display: flex;
 
-	&.tutor-has-icon {
-		padding-left: 20px;
-	}
-
-	.tutor-input-feedback-icon {
-		position: absolute;
-		left: 0;
+	.tutor-form-feedback-icon {
+		font-size: 18px;
+		margin-right: 8px;
+		margin-top: -1px;
 	}
 }
 
@@ -437,48 +440,4 @@ $checkSizes: 16, 18, 20, 22, 24;
 		width: #{$size}px;
 		height: #{$size}px;
 	}
-}
-
-// @todo: to be removed
-.btn-switch {
-	display: inline-block;
-	height: 24px;
-	position: relative;
-	width: 40px;
-}
-
-.btn-switch input {
-	display: none;
-}
-
-.btn-slider {
-	background-color: #ccc;
-	bottom: 0;
-	cursor: pointer;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-	transition: 0.4s;
-	border-radius: 48px;
-}
-
-.btn-slider:before {
-	background-color: #fff;
-	bottom: 3px;
-	content: '';
-	height: 18px;
-	width: 18px;
-	left: 4px;
-	position: absolute;
-	transition: 0.4s;
-	border-radius: 48px;
-}
-
-input:checked + .btn-slider {
-	background-color: var(--tutor-primary-color);
-}
-
-input:checked + .btn-slider:before {
-	transform: translateX(14px);
 }

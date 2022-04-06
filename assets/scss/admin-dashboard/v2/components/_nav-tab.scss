@@ -1,69 +1,34 @@
-// @todo: check thoroughly for the unnecessary code
-
 // Navigation Tab
 .tutor-option-nav-page {
-	display: none;
-	&.active {
-		display: block;
+	&:not(.is-active) {
+		display: none;
 	}
 }
 
-// ul.tutor-option-nav {
-// 	position: relative;
-// 	&:not(:last-child) {
-// 		padding-bottom: 20px;
-// 		margin-bottom: 30px;
-// 		&:before {
-// 			content: '';
-// 			position: absolute;
-// 			height: 1px;
-// 			bottom: 0;
-// 			width: calc(100% + 17px);
-// 			border-bottom: 1px solid #dcdbdc;
-// 		}
-// 	}
-// }
+.tutor-nav {
+	&.tutor-option-tabs {
+		> li {
+			> a {
+				color: $black-50;
+				border: 1px solid transparent;
 
-li.tutor-option-nav-item {
-	list-style: none;
-	a {
-		display: flex;
-		align-items: center;
-		font-style: normal;
-		font-weight: 500;
-		font-size: 16px;
-		color: $black-60;
-		text-decoration: none;
-		background: transparent;
-		border: 1px solid transparent;
-		border-radius: 6px;
-		transition: 0.2s linear;
+				&:not(.is-active):not(:hover) {
+					[class^='tutor-icon-'] {
+						color: #9CA0AC;
+					}
+				}
 
-		&.active {
-			background: $color-white;
-			border: 1px solid #e8e8e8;
-			img {
-				filter: sepia(1) hue-rotate(169deg) contrast(2) brightness(0.6);
+				&:hover {
+					background-color: transparent;
+					color: var(--tutor-primary-color);
+				}
+
+				&.is-active {
+					background-color: #FFFFFF;
+					color: var(--tutor-primary-color);
+					border-color: #e8e8e8;
+				}
 			}
 		}
-
-		&.active > *,
-		&:hover > * {
-			color: $brand-wordpress;
-		}
-
-		> * {
-			transition: 0.2s linear;
-		}
-
-		img {
-			max-width: 30px;
-			overflow: hidden;
-		}
-	}
-
-	a,
-	h4 {
-		padding: 8px 12px;
 	}
 }

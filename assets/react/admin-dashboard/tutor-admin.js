@@ -42,27 +42,6 @@ jQuery(document).ready(function($) {
 	}
 
 	/**
-   * Option Settings Nav Tab
-   * /
-  $(".tutor-option-nav-tabs li a").click(function (e) {
-    e.preventDefault();
-    var tab_page_id = $(this).attr("data-tab");
-    $(".option-nav-item").removeClass("current");
-    $(this)
-      .closest("li")
-      .addClass("current");
-    $(".tutor-option-nav-page").hide();
-    $(tab_page_id)
-      .addClass("current-page")
-      .show();
-    window.history.pushState("obj", "", $(this).attr("href"));
-  });
-
-  /**
-   * End Withdraw nav tabs
-   */
-
-	/**
 	 * Open Sidebar Menu
 	 */
 	if (_tutorobject.open_tutor_admin_menu) {

@@ -53,7 +53,6 @@ window.selectSearchField = (selectElement) => {
 									selectLabel.innerText = e.target.innerText;
 									selectLabel.dataset.value = option.value;
 									element.value = option.value;
-									// @todo: identify the id
 									const save_tutor_option = document.getElementById('save_tutor_option');
 									if (save_tutor_option) {
 										save_tutor_option.disabled = false;
@@ -61,9 +60,8 @@ window.selectSearchField = (selectElement) => {
 								}
 							});
 
-							var onChangeEvent = new Event('change');
+							const onChangeEvent = new Event('change', { bubbles: true });
 							element.dispatchEvent(onChangeEvent);
-							jQuery(selectFieldOptions).trigger('change'); // @todo: why jQuery is here?
 						};
 					});
 				}
@@ -151,13 +149,13 @@ window.selectSearchField = (selectElement) => {
 		Array.from(options).forEach((item) => {
 			optionsList += `
             <div class="tutor-form-select-option">
-				<span tutor-dropdown-item data-key="${item.value}">${item.text}</span>
+				<span tutor-dropdown-item data-key="${item.value}" class="tutor-nowrap-ellipsis" title="${item.text}">${item.text}</span>
             </div>
             `;
 		});
 
 		let markupDD = `
-        <div class="tutor-form-control tutor-form-select tutor-js-form-select">
+      <div class="tutor-form-control tutor-form-select tutor-js-form-select">
 			<span class="tutor-form-select-label" tutor-dropdown-label>${window.wp.i18n.__('Select One', 'tutor')}</span>
             <div class="tutor-form-select-dropdown">
 				<div class="tutor-form-select-search tutor-pt-8 tutor-px-8">
