@@ -112,11 +112,11 @@
 		@include appearNone;
 		&:checked {
 			+ .preset-item {
-				border-color: $brand-wordpress;
-				box-shadow: 0 0 0 1px $brand-wordpress;
+				border-color: var(--tutor-primary-color);
+				box-shadow: 0 0 0 1px var(--tutor-primary-color);
 				.check-icon {
-					background-color: $brand-wordpress;
-					border-color: $brand-wordpress;
+					background-color: var(--tutor-primary-color);
+					border-color: var(--tutor-primary-color);
 
 					&:before {
 						transform: scale(1);
