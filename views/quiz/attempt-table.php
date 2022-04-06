@@ -4,12 +4,12 @@
 	$page_key      = 'attempt-table';
 	$table_columns = include __DIR__ . '/contexts.php';
 
-if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) && count( $attempt_list ) ) {
-	// Provide the attempt data from the first attempt
-	// For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
-	$attempt_data = $attempt_list[0];
-	include __DIR__ . '/header.php';
-}
+	if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) && count( $attempt_list ) ) {
+		// Provide the attempt data from the first attempt
+		// For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
+		$attempt_data = $attempt_list[0];
+		include __DIR__ . '/header.php';
+	}
 ?>
 
 <div class="tutor-ui-table-wrapper tutor-my-24">
