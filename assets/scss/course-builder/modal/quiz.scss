@@ -160,27 +160,14 @@
 		}
 
 		.tutor-quiz-answer {
+			display: flex;
 			background-color: #fff;
-			-webkit-box-flex: 1;
-			-ms-flex: 1;
 			flex: 1;
 			padding: 10px 15px;
 			border: 1px solid #dedede;
-			display: -webkit-box;
-			display: -ms-flexbox;
-			display: flex;
 			line-height: 22px;
 			border-radius: 3px;
 
-			.tutor-quiz-answer-edit {
-				a {
-					display: block;
-					// padding: 0px 9px;
-					i {
-						display: flex;
-					}
-				}
-			}
 			.tutor-quiz-answers-mark-correct-wrap {
 				input {
 					cursor: pointer;
