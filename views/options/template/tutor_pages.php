@@ -41,20 +41,6 @@ $tutor_pages = tutor_utils()->tutor_pages();
 						<?php echo $page['page_name']; ?>
 					<?php endif; ?>
 				</div>
-				<?php
-				// 	echo '';
-
-				// 	echo $page['page_name'];
-
-				// if ( $page['page_exists'] ) {
-				// 	$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-				// 	echo "<a class='tutor-btn tutor-btn-ghost' href='{$edit_url}' target='_blank' class='tutor-iconic-btn tutor-ml-8'><span class='tutor-icon-external-link'></span></a>";
-				// 	// echo "<a class='tutor-btn tutor-btn-ghost' href='{$edit_url}' target='_blank' class='tutor-iconic-btn tutor-ml-8'><span class='tutor-icon-external-link'></span></a>";
-				// }
-
-				// // tutor-d-flex tutor-align-items-center
-				// 	echo '';
-				?>
 			</div>
 			<div class="tutor-option-field-label">
 				<?php if($page['page_exists'] && $page['page_visible']) : ?>
