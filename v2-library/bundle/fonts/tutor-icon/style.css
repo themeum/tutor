@@ -91,7 +91,7 @@
 .tutor-icon-gallery:before {
   content: "\e911";
 }
-.tutor-icon-trashcan:before {
+.tutor-icon-trash-can:before {
   content: "\e912";
 }
 .tutor-icon-spectacles:before {
@@ -361,7 +361,7 @@
 .tutor-icon-trash-can-bold:before {
   content: "\e96b";
 }
-.tutor-icon-trashcan-line:before {
+.tutor-icon-trash-can-line:before {
   content: "\e96c";
 }
 .tutor-icon-color-palette:before {
