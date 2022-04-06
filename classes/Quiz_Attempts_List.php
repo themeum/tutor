@@ -48,8 +48,6 @@ class Quiz_Attempts_List {
 	}
 
 	/**
-	 * @param int context $instructor_id 
-	 *
 	 * @return array
 	 *
 	 *
@@ -57,16 +55,15 @@ class Quiz_Attempts_List {
 	 *
 	 * @since 2.0.0
 	 */
-	public function get_quiz_attempts_stat($instructor_id) {
+	public function get_quiz_attempts_stat() {
 		global $wpdb;
 
 		// Get total attempt count. 
 		// Exclude incomplete attempts by checking if attempt_ended_at not null
-		$all = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', null, true );
-
-		$pass = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'pass', true );
-		$fail = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'fail', true );
-		$pending = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'pending', true );
+		$all = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', null, true, true );
+		$pass = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'pass', true, true );
+		$fail = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'fail', true, true );
+		$pending = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'pending', true, true );
 
 		return compact('all', 'pass', 'fail', 'pending');
 	}
@@ -171,7 +168,7 @@ class Quiz_Attempts_List {
 					   INNER JOIN {$wpdb->users}
 							   ON quiz_attempts.user_id = {$wpdb->users}.ID
 			   WHERE 	attempt_status != %s
-					   AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
+					   AND ( user_email = %s OR display_name LIKE %s OR post_title LIKE %s )
 			   ",
 			   'attempt_started',
 				$status,

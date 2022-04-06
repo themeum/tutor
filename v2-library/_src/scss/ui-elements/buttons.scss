@@ -195,6 +195,7 @@ $disabled-color: #E9E9EA !default;
 		justify-content: center;
 		width: 32px;
 		height: 32px;
+		padding: 0;
 		margin-top: -4px;
 		margin-bottom: -4px;
 		font-weight: 400;
@@ -222,6 +223,7 @@ $disabled-color: #E9E9EA !default;
 		&:active {
 			color: var(--tutor-primary-hover-color);
 			background-color: #E0E6FA;
+			border-color: #E0E6FA;
 		}
 
 		&[disabled],
@@ -268,6 +270,12 @@ $disabled-color: #E9E9EA !default;
 		}
 
 		// size
+		&-md {
+			width: 40px;
+			height: 40px;
+			font-size: 20px;
+		}
+
 		&-lg {
 			width: 48px;
 			height: 48px;
@@ -296,6 +304,10 @@ $disabled-color: #E9E9EA !default;
 			display: none;
 		}
 	}
+}
+
+.tutor-animation-spin {
+	animation: rotateSpinner 0.8s linear infinite;
 }
 
 @keyframes rotateSpinner {

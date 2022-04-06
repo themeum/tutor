@@ -83,20 +83,20 @@ for (let task in scss_blueprints) {
 }
 
 // Add task to add tutor prefix to v2 scss
-gulp.task('v2_tutor_prefix', function(resolve) {
-	var exp = path.resolve(__dirname + '/assets/css/tutor.min.css');
-	var min = path.resolve(__dirname + '/assets/css/tutor.min.css');
-	var docz = path.resolve(__dirname + '/v2-library/bundle/main.min.css');
+// gulp.task('v2_tutor_prefix', function(resolve) {
+// 	var exp = path.resolve(__dirname + '/assets/css/tutor.min.css');
+// 	var min = path.resolve(__dirname + '/assets/css/tutor.min.css');
+// 	var docz = path.resolve(__dirname + '/v2-library/bundle/main.min.css');
 
-	[exp, min, docz].forEach((css) => {
-		var string = fs.readFileSync(css).toString();
-		string = string.replace(/\.tutor\-prefix \./g, '.tutor-');
-		fs.writeFileSync(css, string);
-	});
+// 	[exp, min, docz].forEach((css) => {
+// 		var string = fs.readFileSync(css).toString();
+// 		string = string.replace(/\.tutor\-prefix \./g, '.tutor-');
+// 		fs.writeFileSync(css, string);
+// 	});
 
-	resolve();
-});
-task_keys.push('v2_tutor_prefix');
+// 	resolve();
+// });
+// task_keys.push('v2_tutor_prefix');
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/gi;
@@ -161,7 +161,7 @@ function i18n_makepot(callback, target_dir) {
 }
 
 gulp.task('watch', async function() {
-	gulp.watch('./**/*.scss', gulp.series(...task_keys));
+	gulp.watch('./**/*.scss', { interval: 750 }, gulp.parallel(...task_keys));
 });
 
 gulp.task('makepot', function() {
@@ -245,5 +245,5 @@ gulp.task('make-zip', function() {
  * Export tasks
  */
 exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'makepot', i18n_makepot, 'copy', 'make-zip');
-exports.sass = gulp.series(...task_keys);
-exports.default = gulp.series(...task_keys, 'watch');
+exports.sass = gulp.parallel(...task_keys);
+exports.default = gulp.parallel(...task_keys, 'watch');

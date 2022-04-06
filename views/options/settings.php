@@ -36,28 +36,26 @@
 		<input type="hidden" name="action" value="tutor_option_save">
 		<div class="tutor-row tutor-gx-lg-0 tutor-my-24">
 			<div class="tutor-col-auto tutor-col-lg-2">
-				<div class="tutor-option-tabs">
-					<ul class="tutor-option-nav">
-						<?php
-						foreach ( $option_fields as $key => $section ) {
-							$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
-							if ( $active_tab == $key ) {
-								$active_class = ' active';
-							} elseif ( 'general' === $key && !in_array($active_tab,array_keys($option_fields))){
-								$active_class = ' active';
-							}
-							?>
-							<li class="tutor-option-nav-item">
-								<a data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
-									<span class="<?php echo esc_attr( $section['icon'] ); ?> tutor-fs-5 tutor-color-black-40"></span>
-									<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
-								</a>
-							</li>
-							<?php
+				<ul class="tutor-option-tabs tutor-nav tutor-nav-tabs tutor-nav-v" tutor-option-tabs>
+					<?php
+					foreach ( $option_fields as $key => $section ) {
+						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
+						if ( $active_tab == $key ) {
+							$active_class = ' is-active';
+						} elseif ( 'general' === $key && !in_array($active_tab,array_keys($option_fields))){
+							$active_class = ' is-active';
 						}
 						?>
-					</ul>
-				</div>
+						<li>
+							<a data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
+								<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
+								<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
+							</a>
+						</li>
+						<?php
+					}
+					?>
+				</ul>
 			</div>
 
 			<div class="tutor-col-1 tutor-text-center tutor-d-none tutor-d-lg-block">
@@ -68,12 +66,12 @@
 				<div class="tutor-option-tab-pages">
 					<?php
 					foreach ( $option_fields as $key => $section ) {
-						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
+						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
 
 						if ( $active_tab == $key ) {
-							$active_class = ' active';
+							$active_class = ' is-active';
 						} elseif ( 'general' === $key && !in_array($active_tab,array_keys($option_fields))){
-							$active_class = ' active';
+							$active_class = ' is-active';
 						}
 						?>
 						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">

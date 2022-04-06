@@ -2,15 +2,15 @@
 /**
  * Navigation tab
  */
-const navTabLists = document.querySelectorAll('ul.tutor-option-nav');
-const navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
+const navTabLists = document.querySelectorAll('[tutor-option-tabs]');
+const navTabItems = document.querySelectorAll('[tutor-option-tabs] li > a');
 const navPages = document.querySelectorAll('.tutor-option-nav-page');
 
 readyState_complete(() => {
 
-    const loadNavItem = document.querySelector('li.tutor-option-nav-item a.active');
+    const loadNavItem = document.querySelector('[tutor-option-tabs] li > a.is-active');
     if (null !== loadNavItem) {
-        document.title = loadNavItem.querySelector('[tutor-option-label]').innerText + ' ‹ ' + _tutorobject.site_title;
+        document.title = loadNavItem.querySelector('[tutor-option-label]').innerText + ' < ' + _tutorobject.site_title;
     }
 
     navTabLists.forEach((list) => {
@@ -20,25 +20,25 @@ readyState_complete(() => {
 
             if (dataTab) {
                 // Set page title on changing nav tabs
-                document.title = e.target.innerText + ' ‹ ' + _tutorobject.site_title;
+                document.title = e.target.innerText + ' < ' + _tutorobject.site_title;
                 // remove active from other buttons
                 navTabItems.forEach((item) => {
-                    item.classList.remove('active');
+                    item.classList.remove('is-active');
                     document.body.classList.remove(item.dataset.tab);
                     if (e.target.dataset.tab) {
                         document.body.classList.add(e.target.dataset.tab);
-                        e.target.classList.add('active');
+                        e.target.classList.add('is-active');
                     } else {
-                        e.target.parentElement.classList.add('active');
+                        e.target.parentElement.classList.add('is-active');
                     }
                 });
                 // hide other tab contents
                 navPages.forEach((content) => {
-                    content.classList.remove('active');
+                    content.classList.remove('is-active');
                 });
                 // add active to the current content
                 const currentContent = document.querySelector(`#${dataTab}`);
-                currentContent.classList.add('active');
+                currentContent.classList.add('is-active');
 
                 // History push
                 const url = new URL(window.location);
@@ -66,8 +66,6 @@ readyState_complete(() => {
 
         });
     });
-
 });
-
 
 addBodyClass(window.location);

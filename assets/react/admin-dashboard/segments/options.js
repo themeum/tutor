@@ -230,6 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	let wait_for_input;
 	$('#search_settings').on('input', function(e) {
 		e.preventDefault();
+		let $this = $(this);
 
 		if(wait_for_input) {
 			window.clearTimeout(wait_for_input);
@@ -245,6 +246,11 @@ document.addEventListener('DOMContentLoaded', function() {
 						action: 'tutor_option_search',
 						keyword: searchKey,
 					},
+
+					beforeSend: function() {
+						$this.parent().find('.tutor-form-icon').removeClass('tutor-icon-search').addClass('tutor-icon-circle-notch tutor-animation-spin');
+					},
+
 					success: function(data) {
 
 						if(!data.success) {
@@ -284,11 +290,13 @@ document.addEventListener('DOMContentLoaded', function() {
 							}
 						});
 						if (notfound) {
-							output += `<div class="no_item"> ${warning} No Results Found</div>`;
+							output += `<div class="no_item">${warning} No Results Found</div>`;
 						}
-						$('.search_result')
-							.html(output)
-							.addClass('show');
+						
+						$('.search_result').html(output).addClass('show');
+
+						$this.parent().find('.tutor-form-icon').removeClass('tutor-icon-circle-notch tutor-animation-spin').addClass('tutor-icon-search');
+						
 						output = '';
 					},
 					complete: function() {
@@ -308,9 +316,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	 */
 	function navigationTrigger() {
 		const suggestionLinks = document.querySelectorAll('.tutor-options-search .search-popup-opener a');
-		const navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
+		const navTabItems = document.querySelectorAll('[tutor-option-tabs] li > a');
 		const navPages = document.querySelectorAll('.tutor-option-nav-page');
-		console.log(suggestionLinks);
 
 		suggestionLinks.forEach((link) => {
 			link.addEventListener('click', (e) => {
@@ -319,18 +326,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				if (dataTab) {
 					document.title = e.target.innerText + ' < ' + _tutorobject.site_title;
 					navTabItems.forEach((item) => {
-						item.classList.remove('active');
+						item.classList.remove('is-active');
 					});
 
 					// add active to the current nav item
-					document.querySelector(`.tutor-option-tabs [data-tab=${dataTab}]`).classList.add('active');
+					document.querySelector(`.tutor-option-tabs [data-tab=${dataTab}]`).classList.add('is-active');
 
 					// hide other tab contents
 					navPages.forEach((content) => {
-						content.classList.remove('active');
+						content.classList.remove('is-active');
 					});
 					// add active to the current content
-					document.querySelector(`.tutor-option-tab-pages #${dataTab}`).classList.add('active');
+					document.querySelector(`.tutor-option-tab-pages #${dataTab}`).classList.add('is-active');
 
 					// History push
 					const url = new URL(window.location);

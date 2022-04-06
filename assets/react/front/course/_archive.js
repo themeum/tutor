@@ -1,3 +1,62 @@
+
+const pushFilterToState=data=>{
+
+	console.log(data);
+
+	const url = new URL(window.location);
+	const params = getAllUrlParamas();
+
+	for(let k in params){
+		url.searchParams.delete(k);
+	}
+	
+	for(let k in data) {
+		let is_array = Array.isArray(data[k]);
+		let key = is_array ? k+'[]' : k;
+		let values = is_array ? data[k] : [data[k]];
+
+		values.forEach(v=>{
+			url.searchParams.append(key, v);
+		});
+	}
+	
+	window.history.pushState({}, '', url);
+}
+
+const getAllUrlParamas=()=>{
+	let param_array = {};
+
+	new URL(window.location).searchParams.forEach(function (value, key) {
+		if(key.slice(-2)=='[]') {
+			let name = key.slice(0, -2);
+			!param_array[name] ? param_array[name]=[] : 0;
+			!Array.isArray(param_array[name]) ? param_array[name]=[param_array[name]] : 0;
+			param_array[name].push(value);
+		} else {
+			param_array[key]=value;
+		}
+	});
+
+	return param_array;
+}
+
+const renderFilterFromState=(filter_container)=>{
+	let filters = getAllUrlParamas();
+
+	for(let k in filters){
+		let value = filters[k];
+
+		if(Array.isArray(value)) {
+			filter_container.find('[name="'+k+'"]').each(function(){
+				let checked = value.indexOf(window.jQuery(this).attr('value'))>-1;
+				window.jQuery(this).prop('checked', checked);
+			});
+		} else {
+			filter_container.find('[name="'+k+'"]').val(value);
+		}
+	}
+}
+
 window.jQuery(document).ready($=>{
     const {__} = window.wp.i18n;
 
@@ -19,17 +78,26 @@ window.jQuery(document).ready($=>{
 		})
 		.find('input')
 		.change(function (e) {
-			ajaxFilterArchive(e);
+			ajaxFilterArchive();
 		});
 
+	if(filter_container.length){
+		renderFilterFromState(filter_container);
+		window.addEventListener('popstate', ()=>{
+			renderFilterFromState(filter_container);
+			ajaxFilterArchive(false);
+		});
+	}
 
-	const ajaxFilterArchive = (e = null, page = null) => {
+	const ajaxFilterArchive = (push_state=true) => {
 		var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier, archive_meta);
 		filter_criteria.current_page = 1;
 		filter_criteria.action = 'tutor_course_filter_ajax';
 
-		console.log(filter_criteria);
-
+		if(push_state){
+			pushFilterToState(filter_criteria);
+		}
+		
 		loop_container.html('<div style="background-color: #fff;" class="loading-spinner"></div>');
 		$(this)
 			.closest('form')
@@ -50,37 +118,7 @@ window.jQuery(document).ready($=>{
 			}
 		});
 	}
-
-	// Alter pagination
-	/* loop_container.on('click', '.tutor-pagination-wrap a', function (e) {
-		var url = $(this).data('href') || $(this).attr('href');
-
-		if (url) {
-			url = new URL(url);
-			var page = url.searchParams.get('paged');
-
-			if (page) {
-				e.preventDefault();
-				filter_modifier.page = page;
-				filter_container.find('input:first').trigger('change');
-			}
-		}
-	}); */
-
-	// Alter sort filter
-	/* loop_container.on('change', 'select[name="tutor_course_filter"]', function () {
-		filter_modifier.tutor_course_filter = $(this).val();
-		filter_container.find('input:first').trigger('change');
-		ajaxFilterArchive();
-	}); */
-
-	// Refresh page after coming back to course archive page from cart
-	var archive_loop = $('.tutor-course-loop');
-	if (archive_loop.length > 0) {
-		window.sessionStorage.getItem('tutor_refresh_archive') === 'yes' ? window.location.reload() : 0;
-		window.sessionStorage.removeItem('tutor_refresh_archive');
-		archive_loop.on('click', '.tutor-loop-cart-btn-wrap', function () {
-			window.sessionStorage.setItem('tutor_refresh_archive', 'yes');
-		});
-	}
 });
+
+// Reusable for Instructor list filter
+export {pushFilterToState, renderFilterFromState}

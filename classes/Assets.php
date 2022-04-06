@@ -296,9 +296,18 @@ class Assets {
 			'tutor_button_warning'      => '--tutor-warning-button-color',
 		);
 
+		$admin_colors = [
+			'--tutor-primary-color' => 'var(--wp-admin-theme-color)',
+		];
+
 		$color_string = '';
 		foreach ($colors as $key => $property) {
 			$color = tutor_utils()->get_option($key);
+
+			if(is_admin() && isset($admin_colors[$property])){
+				$color = $admin_colors[$property];
+			}
+
 			if ($color) {
 				$color_string .= $property . ':' . $color . ';';
 			}
