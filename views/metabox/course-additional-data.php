@@ -59,7 +59,7 @@ $material_includes = get_post_meta( $course_id, '_tutor_course_material_includes
 <?php if(!is_admin()): ?>
     <div class="tutor-mb-32">
         <label class="tutor-form-label tutor-fs-6 tutor-color-black"><?php _e( 'Course Tag', 'tutor' ); ?></label>
-        <div class="tutor-input-group tutor-mb-16">
+        <div class="tutor-mb-16">
             <?php echo tutor_course_tags_dropdown($course_id, array('classes' => 'tutor_select2')); ?>
         </div>
     </div>

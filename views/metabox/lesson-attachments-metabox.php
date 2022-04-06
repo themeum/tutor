@@ -10,7 +10,7 @@ if (get_the_ID())
 
 <div class="tutor-mb-32">
 	<label class="tutor-form-label"><?php _e('Attachment', 'tutor'); ?></label>
-	<div class="tutor-input-group tutor-mb-16 tutor-attachments-metabox">
+	<div class="tutor-mb-16 tutor-attachments-metabox">
 		<?php 
 			$attachments = tutor_utils()->get_attachments($post->ID);
 			tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/attachments.php', array(
