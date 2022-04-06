@@ -16,16 +16,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Input {
 
+	const TYPE_RAW = 'raw';
+	const TYPE_STRING = 'string';
+	const TYPE_INT = 'int';
+	const TYPE_TEXTAREA = 'textarea';
+
 	/**
 	 * Get input value
 	 *
 	 * @param string  $key request key.
      * @param mixed   $default default value if input key is not exit.
-	 * @param boolean $is_raw request data sanitized or not.
+	 * @param string  $type input type. Default is string.
 	 * @param boolean $trim remove blank splace from start and end.
 	 * @return mixed
 	 */
-	public static function get( $key, $default = null, $is_raw = false, $trim = true ) {
+	public static function get( $key, $default = null, $type = self::TYPE_STRING, $trim = true ) {
 		$value = isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default;
 		if( $value === $default ) return $default;
 
@@ -33,7 +38,11 @@ class Input {
 			$value = trim( $value );
 		}
 
-		return $is_raw ? $value : sanitize_text_field( wp_unslash( $value ) );
+		if( self::TYPE_RAW === $type ) return $value;
+		if( self::TYPE_INT === $type ) return (int) sanitize_text_field( wp_unslash( $value ) );
+		if( self::TYPE_TEXTAREA === $type) return sanitize_textarea_field( wp_unslash( $value ) );
+
+		return sanitize_text_field( wp_unslash( $value ) );
 	}
 
 	/**
