@@ -98,8 +98,8 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             ?>
                                 <td data-th="<?php echo $column; ?>">
                                     <a href="<?php echo add_query_arg(array('question_id' => $qna->comment_ID), tutor()->current_url); ?>">
-                                        <div class="tutor-input-feedback tutor-has-icon tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
-                                            <i class="tutor-icon-bullet-point tutor-input-feedback-icon"></i>
+                                        <div class="tutor-form-feedback tutor-has-icon tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
+                                            <i class="tutor-icon-bullet-point tutor-form-feedback-icon"></i>
                                             <div class="tutor-qna-desc">
                                                 <div class="tutor-qna-content tutor-fs-6 tutor-fw-bold tutor-color-black">
                                                     <?php

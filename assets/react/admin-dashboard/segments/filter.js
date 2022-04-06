@@ -113,17 +113,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			formData.set('bulk-ids', bulkIds);
 			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 			try {
-				const loadingButton = document.querySelector('#tutor-confirm-bulk-action.tutor-btn-loading');
-				const prevHtml = loadingButton.innerHTML;
-				loadingButton.innerHTML = `<div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>`;
+				const submitButton = document.querySelector('#tutor-confirm-bulk-action[data-tutor-modal-submit]');
+				submitButton.classList.add('is-loading')
 				const post = await fetch(window._tutorobject.ajaxurl, {
 					method: 'POST',
 					body: formData,
 				});
-				loadingButton.innerHTML = prevHtml;
+				submitButton.classList.remove('is-loading')
 				if (post.ok) {
 					const response = await post.json();
 					if (response.success) {
@@ -194,22 +190,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				commonConfirmForm.elements.action.value = 'tutor_course_delete';
 				commonConfirmForm.elements.id.value = id;
 			}
-
-		// 	if (commonConfirmContent) {
-		// 		commonConfirmContent.innerHTML = `
-        //   <div class="tutor-modal-icon">
-        //   <img src="https://i.imgur.com/Nx6U2u7.png" alt=""/>
-        //   </div>
-        //   <div class="tutor-modal-text-wrap">
-        //   <h3 class="tutor-modal-title">
-        //    ${__('Wait!', 'tutor')}
-        //   </h3>
-        //   <p>
-        //     ${__('Are you sure you would like perform this action? We suggest you proceed with caution.', 'tutor')}
-        //   </p>
-        //   </div>
-        // `;
-		// 	}
 		};
 	}
 	/**

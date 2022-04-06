@@ -55,7 +55,7 @@
                             <i class="tutor-icon-edit" area-hidden="true"></i>
                         </span>
                         <span class="topic-delete-btn tutor-iconic-btn">
-                            <i class="tutor-icon-trashcan-line" area-hidden="true"></i>
+                            <i class="tutor-icon-trash-can-line" area-hidden="true"></i>
                         </span>
                     <?php endif; ?>
                     <span class="expand-collapse-wrap">
@@ -122,7 +122,7 @@
                                             </a>
                                         <?php endif; ?>
                                         <a href="javascript:;" class="tutor-delete-lesson-btn tutor-iconic-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                            <span class="tutor-icon-trashcan-line" area-hidden="true"></span>
+                                            <span class="tutor-icon-trash-can-line" area-hidden="true"></span>
                                         </a>
                                     </div>
                                 </div>
@@ -144,7 +144,7 @@
                                             </a>
                                         <?php endif; ?>
                                         <a href="javascript:;" class="tutor-delete-lesson-btn tutor-iconic-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                            <span class="tutor-icon-trashcan-line" area-hidden="true"></span>
+                                            <span class="tutor-icon-trash-can-line" area-hidden="true"></span>
                                         </a>
                                     </div>
                                 </div>

@@ -15,25 +15,23 @@
 	<div class="tutor-admin-container">
 		<div class="tutor-row tutor-gx-lg-0 tutor-my-24">
 			<div class="tutor-col-auto tutor-col-lg-2">
-				<div class="tutor-option-tabs">
-					<ul class="tutor-option-nav" data-page="<?php esc_attr_e( $_GET['page'] ); ?>">
-						<?php
-						foreach ( $tools_fields as $key => $section ) {
-							$icon         = tutor()->icon_dir . $key . '.svg';
-							$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
-							$page_url     = add_query_arg( 'sub_page', esc_attr( $section['slug'] ), admin_url( 'admin.php?page=tutor-tools' ) );
-							?>
-								<li class="tutor-option-nav-item">
-									<a href="<?php echo esc_url( $page_url ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
-										<span class="<?php echo esc_attr( $section['icon'] ); ?> tutor-fs-5 tutor-color-black-40"></span>
-										<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block"><?php echo esc_html( $section['label'] ); ?></span>
-									</a>
-								</li>
-							<?php
-						}
+				<ul class="tutor-option-tabs tutor-nav tutor-nav-tabs tutor-nav-v" data-page="<?php esc_attr_e( $_GET['page'] ); ?>">
+					<?php
+					foreach ( $tools_fields as $key => $section ) {
+						$icon         = tutor()->icon_dir . $key . '.svg';
+						$active_class = $active_tab == $key ? esc_attr( 'is-active' ) : '';
+						$page_url     = add_query_arg( 'sub_page', esc_attr( $section['slug'] ), admin_url( 'admin.php?page=tutor-tools' ) );
 						?>
-					</ul>
-				</div>
+							<li>
+								<a href="<?php echo esc_url( $page_url ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
+									<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
+									<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block"><?php echo esc_html( $section['label'] ); ?></span>
+								</a>
+							</li>
+						<?php
+					}
+					?>
+				</ul>
 			</div>
 
 			<div class="tutor-col-1 tutor-text-center tutor-d-none tutor-d-lg-block">
@@ -44,7 +42,7 @@
 				<div class="tutor-option-tab-pages">
 					<?php
 					foreach ( $tools_fields as $key => $section ) {
-						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
+						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
 						?>
 							<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
 							<?php

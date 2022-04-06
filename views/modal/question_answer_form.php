@@ -99,8 +99,8 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             </label>
             <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
-                <p class="tutor-input-feedback tutor-has-icon">
-                    <i class="tutor-icon-circle-info-o tutor-input-feedback-icon"></i>
+                <p class="tutor-form-feedback tutor-has-icon">
+                    <i class="tutor-icon-circle-info-o tutor-form-feedback-icon"></i>
                     <?php _e( 'Please make sure to use the <strong>{dash}</strong> variable in your question title to show the blanks in your question. You can use multiple <strong>{dash}</strong> variables in one question.', 'tutor' ); ?>
                 </p>
             </div>
@@ -112,8 +112,8 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             </label>
             <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_two_gap_match]" value="<?php echo $answer_two_gap_match; ?>"/>
-                <p class="tutor-input-feedback tutor-has-icon">
-                    <i class="tutor-icon-circle-info-o tutor-input-feedback-icon"></i>
+                <p class="tutor-form-feedback tutor-has-icon">
+                    <i class="tutor-icon-circle-info-o tutor-form-feedback-icon"></i>
                     <?php _e( 'Separate multiple answers by a vertical bar <strong>|</strong>. 1 answer per <strong>{dash}</strong> variable is defined in the question. Example: Apple | Banana | Orange', 'tutor' ); ?>
                 </p>
             </div>
@@ -249,8 +249,8 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             </label>
             <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>"/>
-                <p class="tutor-input-feedback tutor-has-icon">
-                    <i class="tutor-icon-circle-info-o tutor-input-feedback-icon"></i>
+                <p class="tutor-form-feedback tutor-has-icon">
+                    <i class="tutor-icon-circle-info-o tutor-form-feedback-icon"></i>
                     <?php _e('The answers that students enter should match with this text. Write in <strong>small caps</strong>','tutor'); ?>
                 </p>
             </div>

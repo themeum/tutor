@@ -240,8 +240,8 @@ export default () => {
                                             <label className="tutor-form-label">Lesson Name</label>
                                             <div className="tutor-input-group tutor-mb-16">
                                                 <input type="text" className="tutor-form-control tutor-mb-12" placeholder="Installing linux on local machine"/>
-                                                <p className="tutor-input-feedback tutor-has-icon">
-                                                    <i className="far fa-question-circle tutor-input-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
+                                                <p className="tutor-form-feedback tutor-has-icon">
+                                                    <i className="far fa-question-circle tutor-form-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
                                                 </p>
                                             </div>
                                         </div>
@@ -249,8 +249,8 @@ export default () => {
                                             <label className="tutor-form-label">Lesson Summary</label>
                                             <div className="tutor-input-group tutor-mb-16">
                                                 <textarea className="tutor-form-control tutor-mb-12" placeholder="Lesson Summary"></textarea>
-                                                <p className="tutor-input-feedback tutor-has-icon">
-                                                    <i className="far fa-question-circle tutor-input-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
+                                                <p className="tutor-form-feedback tutor-has-icon">
+                                                    <i className="far fa-question-circle tutor-form-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
                                                 </p>
                                             </div>
                                         </div>
@@ -260,8 +260,8 @@ export default () => {
                                                 <input id="course_privew_check" type="checkbox" className="tutor-form-check-input" name="course_privew_check" />
                                                 <label htmlFor="course_privew_check">Enable Course Preview</label>
                                             </div>
-                                            <p className="tutor-input-feedback tutor-has-icon">
-                                                <i className="far fa-question-circle tutor-input-feedback-icon"></i> If checked, any users/guest can view this lesson without enroll course
+                                            <p className="tutor-form-feedback tutor-has-icon">
+                                                <i className="far fa-question-circle tutor-form-feedback-icon"></i> If checked, any users/guest can view this lesson without enroll course
                                             </p>
                                         </div>
 
@@ -332,8 +332,8 @@ export default () => {
                                             <label className="tutor-form-label">Lesson Name</label>
                                             <div className="tutor-input-group tutor-mb-16">
                                                 <input type="text" className="tutor-form-control tutor-mb-12" placeholder="Installing linux on local machine"/>
-                                                <p className="tutor-input-feedback tutor-has-icon">
-                                                    <i className="far fa-question-circle tutor-input-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
+                                                <p className="tutor-form-feedback tutor-has-icon">
+                                                    <i className="far fa-question-circle tutor-form-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
                                                 </p>
                                             </div>
                                         </div>
@@ -341,8 +341,8 @@ export default () => {
                                             <label className="tutor-form-label">Lesson Summary</label>
                                             <div className="tutor-input-group tutor-mb-16">
                                                 <textarea className="tutor-form-control tutor-mb-12" placeholder="Lesson Summary"></textarea>
-                                                <p className="tutor-input-feedback tutor-has-icon">
-                                                    <i className="far fa-question-circle tutor-input-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
+                                                <p className="tutor-form-feedback tutor-has-icon">
+                                                    <i className="far fa-question-circle tutor-form-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
                                                 </p>
                                             </div>
                                         </div>
@@ -352,8 +352,8 @@ export default () => {
                                                 <input id="course_privew_check2" type="checkbox" className="tutor-form-check-input" name="course_privew_check2" />
                                                 <label htmlFor="course_privew_check2">Enable Course Preview</label>
                                             </div>
-                                            <p className="tutor-input-feedback tutor-has-icon">
-                                                <i className="far fa-question-circle tutor-input-feedback-icon"></i> If checked, any users/guest can view this lesson without enroll course
+                                            <p className="tutor-form-feedback tutor-has-icon">
+                                                <i className="far fa-question-circle tutor-form-feedback-icon"></i> If checked, any users/guest can view this lesson without enroll course
                                             </p>
                                         </div>
 
@@ -431,8 +431,8 @@ export default () => {
                                             <label className="tutor-form-label">Lesson Name</label>
                                             <div className="tutor-input-group tutor-mb-16">
                                                 <input type="text" className="tutor-form-control tutor-mb-12" placeholder="Installing linux on local machine"/>
-                                                <p className="tutor-input-feedback tutor-has-icon">
-                                                    <i className="far fa-question-circle tutor-input-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
+                                                <p className="tutor-form-feedback tutor-has-icon">
+                                                    <i className="far fa-question-circle tutor-form-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
                                                 </p>
                                             </div>
                                         </div>
@@ -440,8 +440,8 @@ export default () => {
                                             <label className="tutor-form-label">Lesson Summary</label>
                                             <div className="tutor-input-group tutor-mb-16">
                                                 <textarea className="tutor-form-control tutor-mb-12" placeholder="Lesson Summary"></textarea>
-                                                <p className="tutor-input-feedback tutor-has-icon">
-                                                    <i className="far fa-question-circle tutor-input-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
+                                                <p className="tutor-form-feedback tutor-has-icon">
+                                                    <i className="far fa-question-circle tutor-form-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
                                                 </p>
                                             </div>
                                         </div>
@@ -451,8 +451,8 @@ export default () => {
                                                 <input id="course_privew_check3" type="checkbox" className="tutor-form-check-input" name="course_privew_check3" />
                                                 <label htmlFor="course_privew_check3">Enable Course Preview</label>
                                             </div>
-                                            <p className="tutor-input-feedback tutor-has-icon">
-                                                <i className="far fa-question-circle tutor-input-feedback-icon"></i> If checked, any users/guest can view this lesson without enroll course
+                                            <p className="tutor-form-feedback tutor-has-icon">
+                                                <i className="far fa-question-circle tutor-form-feedback-icon"></i> If checked, any users/guest can view this lesson without enroll course
                                             </p>
                                         </div>
 

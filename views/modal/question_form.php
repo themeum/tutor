@@ -15,14 +15,14 @@ $settings = maybe_unserialize($question->question_settings);
 
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Write your question here', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-16">
+        <div class="tutor-mb-16">
             <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" class="tutor-form-control" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars(stripslashes($question->question_title)); ?>">
         </div>
     </div>
 
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Select your question type', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-16">
+        <div class="tutor-mb-16">
             <div class="tutor-w-100">
                 <div class="tutor-row tutor-align-items-center">
                     <div class="tutor-col-12 tutor-col-md-12">

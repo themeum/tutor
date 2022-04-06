@@ -10,6 +10,7 @@
 
 $id				= isset( $id ) ? $id : '';
 $class  		= isset( $class ) ? ' ' . $class : '';
+$image  		= isset( $image ) ? $image : '';
 $icon  			= isset( $icon ) ? $icon : '';
 $title  		= isset( $title ) ? $title : '';
 $content  		= isset( $content ) ? $content : '';
@@ -27,9 +28,15 @@ $close   		= isset( $close ) ? (bool) $close : true;
 			<?php endif; ?>
 			<div class="tutor-modal-body tutor-text-center">
 				<div class="tutor-px-lg-48 tutor-py-lg-24">
+					<?php if ( $image ) : ?>
+						<div class="tutor-mt-24">
+							<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/<?php echo esc_attr( $image ); ?>" />
+						</div>
+					<?php endif; ?>
+
 					<?php if ( $icon ) : ?>
 						<div class="tutor-mt-24">
-							<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/<?php echo esc_attr( $icon ); ?>" />
+							<span class="tutor-d-inline-block"><?php echo esc_attr( $icon ); ?></span>
 						</div>
 					<?php endif; ?>
 
