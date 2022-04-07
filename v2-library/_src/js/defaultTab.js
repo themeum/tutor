@@ -48,7 +48,7 @@
 				});
 
 				if (navTarget.closest('.tutor-nav-more') != undefined) {
-					navTarget.closest('.tutor-nav-more').classList.add('is-active');
+					navTarget.closest('.tutor-nav-more').querySelector('.tutor-nav-more-item').classList.add('is-active');
 				}
 
 				navTarget.classList.add('is-active');

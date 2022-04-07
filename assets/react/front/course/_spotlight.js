@@ -284,37 +284,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 
-	/* Show More Text */
-	const showMoreBtn = document.querySelector('.tutor-show-more-btn button');
-	if (showMoreBtn) {
-		showMoreBtn.addEventListener('click', showMore);
-	}
-
-	function showMore() {
-		let lessText = document.getElementById('short-text');
-		let dots = document.getElementById('dots');
-		let moreText = document.getElementById('full-text');
-		let btnText = document.getElementById('showBtn');
-		let contSect = document.getElementById('content-section');
-		if (dots.style.display === 'none') {
-			lessText.style.display = 'block';
-			dots.style.display = 'inline';
-			btnText.innerHTML =
-				"<span class='btn-icon tutor-icon-plus-filled color-design-brand'></span><span class='tutor-color-black'>" +
-				__('Show More', 'tutor') +
-				'</span>';
-			moreText.style.display = 'none';
-		} else {
-			lessText.style.display = 'none';
-			dots.style.display = 'none';
-			btnText.innerHTML =
-				"<span class='btn-icon tutor-icon-minus-filled color-design-brand'></span><span class='tutor-color-black'>" +
-				__('Show Less', 'tutor') +
-				'</span>';
-			moreText.style.display = 'block';
-			contSect.classList.add('no-before');
-		}
-	}
 	//remove file
 	const removeButton = document.querySelectorAll('.tutor-attachment-file-close a');
 	removeButton.forEach((item) => {
