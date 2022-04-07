@@ -408,19 +408,19 @@ input.tutor-form-check-input {
 	}
 }
 
-.tutor-dashboard-page {
-	input.tutor-form-check-input[type='checkbox'],
-	input.tutor-form-check-input[type='radio'] {
-		&:checked {
-			border-color: $brand-wordpress;
-			background-color: $brand-wordpress;
-		}
+// .tutor-dashboard-page {
+// 	input.tutor-form-check-input[type='checkbox'],
+// 	input.tutor-form-check-input[type='radio'] {
+// 		&:checked {
+// 			border-color: $brand-wordpress;
+// 			background-color: $brand-wordpress;
+// 		}
 
-		&:focus {
-			box-shadow: 0 0 0 2px lighten($color: $brand-wordpress, $amount: 55);
-		}
-	}
-}
+// 		&:focus {
+// 			box-shadow: 0 0 0 2px lighten($color: $brand-wordpress, $amount: 55);
+// 		}
+// 	}
+// }
 
 input.tutor-form-check-input.tutor-wp-admin[type='checkbox'],
 input.tutor-form-check-input.tutor-wp-admin[type='radio'] {

@@ -26,7 +26,7 @@
 
 		// Nav
 		const attrNav = 'data-tutor-nav-target';
-		const activeNavItems = document.querySelectorAll('.tutor-nav-item > a.is-active, .tutor-tab-item.is-active');
+		const activeNavItems = document.querySelectorAll('.tutor-nav-item > .is-active, .tutor-tab-item.is-active');
 
 		if (e.target.hasAttribute(attrNav)) {
 			e.preventDefault();
@@ -45,27 +45,22 @@
 					e.target.closest('.tutor-nav-more').classList.add('is-active');
 				}
 
-				e.target.classList.add('is-active');
+				var activeNavItem = e.target;
+				activeNavItem.classList.add('is-active');
+
+				if(activeNavItem.hasAttribute('data-tutor-query-variable') && activeNavItem.hasAttribute('data-tutor-query-value')) {
+					var queryVariable = activeNavItem.getAttribute('data-tutor-query-variable');
+					var queryValue = activeNavItem.getAttribute('data-tutor-query-value');
+
+					if(queryVariable && queryValue) {
+						let url = new URL(window.location);
+						url.searchParams.set(queryVariable, queryValue);
+						window.history.pushState({}, '', url);
+					}
+				}
+
 				navTabBodyItem.classList.add('is-active');
 			}
-		}
-
-		/**
-		 * Tutor Default Tab - see more
-		 */
-		const seeMoreAttr = 'data-seemore-target';
-		if (e.target.hasAttribute(seeMoreAttr)) {
-			const id = e.target.getAttribute(seeMoreAttr);
-			document
-				.getElementById(`${id}`)
-				.closest('.tab-header-item-seemore')
-				.classList.toggle('is-active');
-		} else {
-			document.querySelectorAll('.tab-header-item-seemore').forEach((item) => {
-				if (item.classList.contains('is-active')) {
-					item.classList.remove('is-active');
-				}
-			});
 		}
 	});
 })();

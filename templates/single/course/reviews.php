@@ -156,7 +156,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 						<textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($my_rating ? $my_rating->comment_content : ''); ?></textarea>
 					</div>
 					<div class="tutor-form-group">
-						<button type="submit" class="tutor_submit_review_btn tutor-btn">
+						<button type="submit" class="tutor_submit_review_btn tutor-btn tutor-btn-primary">
 							<?php _e('Submit Review', 'tutor'); ?>
 						</button>
 					</div>
