@@ -101,21 +101,7 @@
 
 .tutor-dropdown-select-options-container.is-active {
 	+ .tutor-dropdown-select-selected {
-		border-color: $color-brand;
-		&::after {
-			// color: $color-brand;
-		}
-	}
-}
-
-.wp-admin {
-	.tutor-dropdown-select-options-container.is-active {
-		+ .tutor-dropdown-select-selected {
-			border-color: $brand-wordpress;
-			&::after {
-				// color: $brand-wordpress;
-			}
-		}
+		border-color: var(--tutor-primary-color);
 	}
 }
 

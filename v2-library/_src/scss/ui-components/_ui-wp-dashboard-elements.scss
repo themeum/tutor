@@ -67,7 +67,7 @@
 	select.tutor-form-select:focus,
 	input.tutor-form-control:focus,
 	textarea.tutor-form-control:focus {
-		border-color: $brand-wordpress;
+		border-color: var(--tutor-primary-color);
 		box-shadow: unset;
 	}
 
