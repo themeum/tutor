@@ -681,28 +681,26 @@ class Utils {
 			$where_post_status = "AND $wpdb->posts.post_status IN({$statuses}) ";
 		}
 
-		$pageposts = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT $wpdb->posts.*
+		$select_col = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
+		$limit_offst = $count_only ? "" : " LIMIT $offset, $limit ";
+
+		$query = $wpdb->prepare(
+			"SELECT $select_col
 			FROM 	$wpdb->posts
-					INNER JOIN {$wpdb->usermeta}
-							ON $wpdb->usermeta.user_id = %d
-						   AND $wpdb->usermeta.meta_key = %s
-						   AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
+			INNER JOIN {$wpdb->usermeta}
+					ON $wpdb->usermeta.user_id = %d
+					AND $wpdb->usermeta.meta_key = %s
+					AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
 			WHERE	1 = 1 {$where_post_status}
-					AND $wpdb->posts.post_type = %s
-			ORDER BY $wpdb->posts.post_date DESC LIMIT %d, %d;
-			",
-				$instructor_id,
-				'_tutor_instructor_course_id',
-				$course_post_type,
-				$offset,
-				$limit
-			),
-			OBJECT
+				AND $wpdb->posts.post_type = %s
+			ORDER BY $wpdb->posts.post_date DESC $limit_offset",
+
+			$instructor_id,
+			'_tutor_instructor_course_id',
+			$course_post_type
 		);
 
-		return $pageposts;
+		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query, OBJECT);
 	}
 
 	public function get_publish_courses_by_instructor() {
