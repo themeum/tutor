@@ -294,8 +294,9 @@ select.tutor-form-control,
 	}
 }
 
-input.tutor-form-check-input {
-	@extend .align-top;
+.tutor-form-check-input {
+	display: inline-block;
+	vertical-align: top;
 	background-color: var(--tutor-white);
 	width: 24px;
 	height: 24px;
@@ -338,35 +339,33 @@ input.tutor-form-check-input {
 		}
 	}
 
-	&[type='radio'] {
+	&[type='radio'],
+	&-radio {
 		border-radius: 50%;
 		background-size: 100%;
-		&:checked {
+
+		@at-root input:checked + label .tutor-form-check-input-radio, // hack for the paid membership pro pricing
+		&:checked,
+		&.is-active {
 			border-color: var(--tutor-primary-color);
 			background-color: var(--tutor-primary-color);
 			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
 		}
 	}
 
-	&.tutor-form-check-22 {
-		background-size: 11px;
-	}
 	&.tutor-form-check-20 {
 		background-size: 10px;
-	}
-	&.tutor-form-check-18 {
-		background-size: 9px;
 	}
 }
 
 .tutor-form-toggle {
-	@extend .d-inline-flex;
-	@extend .align-items-center;
-	@extend .align-top;
+	display: inline-flex;
+	align-items: center;
+	vertical-align: top;
 	input {
-		@extend .d-none;
+		display: none;
 		~ .tutor-form-toggle-control {
-			@extend .d-inline-block;
+			display: inline-block;
 			width: 40px;
 			height: 24px;
 			background-color: var(--tutor-border-color-alt);
@@ -409,39 +408,5 @@ input.tutor-form-check-input {
 				color: var(--tutor-border-color);
 			}
 		}
-	}
-}
-
-// .tutor-dashboard-page {
-// 	input.tutor-form-check-input[type='checkbox'],
-// 	input.tutor-form-check-input[type='radio'] {
-// 		&:checked {
-// 			border-color: $brand-wordpress;
-// 			background-color: $brand-wordpress;
-// 		}
-
-// 		&:focus {
-// 			box-shadow: 0 0 0 2px lighten($color: $brand-wordpress, $amount: 55);
-// 		}
-// 	}
-// }
-
-input.tutor-form-check-input.tutor-wp-admin[type='checkbox'],
-input.tutor-form-check-input.tutor-wp-admin[type='radio'] {
-	&:checked {
-		border-color: $brand-wordpress;
-		background-color: $brand-wordpress;
-	}
-
-	&:focus {
-		box-shadow: 0 0 0 4px lighten($color: $brand-wordpress, $amount: 55);
-	}
-}
-
-$checkSizes: 16, 18, 20, 22, 24;
-@each $size in $checkSizes {
-	input.tutor-form-check-#{$size} {
-		width: #{$size}px;
-		height: #{$size}px;
 	}
 }

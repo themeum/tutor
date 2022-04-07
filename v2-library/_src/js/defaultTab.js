@@ -27,7 +27,7 @@
 		// Nav
 		const attrNav = 'data-tutor-nav-target';
 		const navTarget = e.target.hasAttribute(attrNav) ? e.target : e.target.closest(`[${attrNav}]`);
-		const activeNavItems = document.querySelectorAll('.tutor-nav-item > .is-active, .tutor-tab-item.is-active');
+		const activeNavItems = document.querySelectorAll('.tutor-nav-item.is-active, .tutor-tab-item.is-active');
 
 		if (navTarget && navTarget.hasAttribute(attrNav)) {
 			e.preventDefault();
