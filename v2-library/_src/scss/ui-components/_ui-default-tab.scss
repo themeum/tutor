@@ -1,5 +1,6 @@
 //Tutor Default Tab
-.tutor-default-tab {
+// @todo: to be removed
+.tutor-default-tab-bak {
 	.tab-header {
 		border-bottom: 1px solid $stroke-light-30;
 		gap: 15px;
@@ -37,6 +38,7 @@
 		}
 	}
 
+	// @todo: unified this
 	.tab-header-item-seemore {
 		.tab-header-item {
 			&:before {

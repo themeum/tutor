@@ -77,6 +77,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 									<div class="tutor-topics-title-inner">
 										<div class="tutor-fs-6 tutor-fw-medium tutor-color-text-brand"><?php the_title(); ?></div>
 										<?php if ( true ): ?>
+											<?php if(trim($topic_summery)) : ?>
 											<div class="tutor-topics-title-info">
 												<div class="tooltip-wrap tutor-d-flex">
 													<i class="tutor-icon-circle-info color-black-40"></i>
@@ -85,6 +86,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 													</span>
 												</div>
 											</div>
+											<?php endif; ?>
 										<?php endif; ?>
 									</div>
 								</div>

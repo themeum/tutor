@@ -249,8 +249,8 @@ const export_single_settings = () => {
 const modalConfirmation = (modalOpener) => {
 	let modalElement = document.getElementById(modalOpener.dataset.tutorModalTarget);
 	let confirmButton = modalElement && modalElement.querySelector('[data-reset]');
-	let modalHeading = modalElement && modalElement.querySelector('.tutor-modal-title');
-	let modalMessage = modalElement && modalElement.querySelector('.tutor-modal-message');
+	let modalHeading = modalElement && modalElement.querySelector('[data-modal-dynamic-title]');
+	let modalMessage = modalElement && modalElement.querySelector('[data-modal-dynamic-content]');
 
 	confirmButton.removeAttribute('data-reset-for');
 	confirmButton.classList.remove('reset_to_default');

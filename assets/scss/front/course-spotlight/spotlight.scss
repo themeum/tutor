@@ -1,232 +1,209 @@
 .tutor-course-spotlight-wrapper {
-	.tutor-default-tab {
-		.tab-header {
-			.tab-header-item {
-				flex-wrap: wrap;
-				> *:not(:last-child) {
-					margin-right: 10px;
-				}
-				@include breakpoint-max(mobile) {
-					padding-left: 10px;
-					padding-right: 10px;
-				}
-				span[class^='tutor-icon-'],
-				span[class*=' tutor-icon-'] {
-					font-size: 20px;
-				}
-			}
-		}
-		.tab-body {
-			@include breakpoint-max(mobile) {
-				padding: 20px 20px;
-			}
-			.tab-body-item {
-				.tutor-exercise-files {
-					display: grid;
-					grid-template-columns: repeat(2, 1fr);
-					gap: 20px;
-					word-break: break-all;
-					@include breakpoint-max(mobile) {
-						grid-template-columns: repeat(1, 1fr);
-					}
-					.tutor-instructor-card {
-						cursor: pointer;
-						&:hover {
-							.tutor-avatar {
-								background: $design-brand;
-								span {
-									color: $design-white;
-								}
-							}
-						}
-						.tutor-avatar {
-							background: $primary-40;
-							span {
-								font-size: 30px;
-							}
-						}
-					}
-				}
-				/* tutor-exercise-files */
-				.tutor-conversation {
-					border-bottom: 1px solid #ddd;
-					padding: 0px 0px 55px 0px;
-					.tutor-no-comments-show {
-						border: 1px solid $stroke-light-30;
-						border-radius: 6px;
-						padding: 47px 33px;
-						@include breakpoint-max(mobile) {
-							flex-direction: column;
-							align-items: center;
-							justify-content: center;
-							padding: 30px 20px;
-							p {
-								text-align: center;
-							}
-						}
-					}
-					.comment-avatar {
-						img {
-							width: 50px;
-							height: 50px;
-							border-radius: 50%;
-						}
-					}
-					.tutor-comment-textarea,
-					.tutor-actual-comment {
-						&:before {
-							content: '';
-							display: block;
-							height: 10px;
-							width: 10px;
-							background-color: #fff;
-							border: 1px solid $stroke-light-30;
-							position: absolute;
-							left: -6px;
-							top: 18px;
-							clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
-							transform: rotate(45deg);
-							border-radius: 0 0 0 3px;
-						}
-						&:after {
-							content: '';
-							display: block;
-							height: 10px;
-							width: 10px;
-							background-color: #fff;
-							border: 1px solid #ffffff;
-							position: absolute;
-							left: -2px;
-							top: 18px;
-							border-radius: 3px 0 0 3px;
-						}
-					}
-					.tutor-comment-box {
-						display: grid;
-						grid-template-columns: 70px auto;
-						.tutor-comment-textarea {
-							position: relative;
-							grid-area: 1/2/1/3;
-							border: 1px solid $stroke-light-30;
-							border-radius: 6px;
-							&.is-focused {
-								border: 1px solid $design-brand;
-								&:before {
-									border: 1px solid $design-brand;
-								}
-							}
+	.tutor-course-spotlight {
+		&-nav {
 
-							textarea {
-								padding: 20px;
-								min-height: 96px;
-								border-color: transparent;
-							}
-						}
-						.tutor-comment-submit-btn {
-							margin-top: 20px;
-							grid-area: 2/2/2/3;
-							justify-self: end;
-						}
-					}
-					/* tutor-comment-box */
-					.tutor-comments-list {
-						display: grid;
-						grid-template-columns: 70px auto;
-						.tutor-single-comment {
-							.tutor-actual-comment {
-								background-color: #fff;
-								border: 1px solid $stroke-light-30;
-								border-radius: 6px;
-								position: relative;
-								padding: 15px 20px;
-								.tutor-comment-author {
-									span:first-child {
-										color: #161d25;
-									}
-									span:last-child {
-										color: #808993;
-									}
-								}
-							}
-							/* tutor-actual-comment */
-							.tutor-comment-actions {
-								span {
-									cursor: pointer;
-									text-transform: capitalize;
-									&:not(:last-child) {
-										margin-right: 23px;
-									}
-								}
-							}
-							.tutor-comment-box.tutor-reply-box {
-								padding: 16px 0px 16px 16px;
-								min-height: 54px;
-								.tutor-comment-textarea {
-									textarea {
-										padding: 15px 20px;
-										min-height: 56px;
-									}
-								}
-							}
-						}
-						/* tutor-single-comment */
-					}
-					.tutor-comments-list.tutor-parent-comment {
-						position: relative;
-						.tutor-comment-line {
-							position: absolute;
-							width: 1px;
-							left: 24px;
-							top: 50px;
-							background: $stroke-light-30;
-						}
-						.tutor-child-comment {
-							position: relative;
-							&:after {
-								content: '';
-								position: absolute;
-								width: 45px;
-								height: 1px;
-								left: -45px;
-								top: 25px;
-								background: $stroke-light-30;
-							}
-							&:before {
-								content: '';
-								position: absolute;
-								width: 45px;
-								height: 1px;
-								left: -68px;
-								top: 3px;
-								background: $stroke-light-30;
-								transform: rotate(90deg);
-								z-index: 9;
-							}
-							.tutor-single-comment {
-								.tutor-actual-comment {
-									.tutor-comment-author {
-										@include breakpoint-max(mobile) {
-											display: flex;
-											flex-direction: column;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				/* tutor-conversation */
-				.tutor-comment-list-footer {
-					span[class^='tutor-icon-'] {
-						font-size: 24px;
+		}
+
+		&-tab {
+			padding-top: 32px;
+		}
+	}
+
+	.tutor-exercise-files {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 20px;
+		word-break: break-all;
+		@include breakpoint-max(mobile) {
+			grid-template-columns: repeat(1, 1fr);
+		}
+		.tutor-instructor-card {
+			cursor: pointer;
+			&:hover {
+				.tutor-avatar {
+					background: $design-brand;
+					span {
+						color: $design-white;
 					}
 				}
 			}
-			/* tab-body-item */
+			.tutor-avatar {
+				background: $primary-40;
+				span {
+					font-size: 30px;
+				}
+			}
 		}
-		/* tab-body */
 	}
-	/* tutor-default-tab */
+
+	/* tutor-exercise-files */
+	.tutor-conversation {
+		border-bottom: 1px solid #ddd;
+		padding: 0px 0px 55px 0px;
+		.tutor-no-comments-show {
+			border: 1px solid $stroke-light-30;
+			border-radius: 6px;
+			padding: 47px 33px;
+			@include breakpoint-max(mobile) {
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 30px 20px;
+				p {
+					text-align: center;
+				}
+			}
+		}
+		.comment-avatar {
+			img {
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+			}
+		}
+		.tutor-comment-textarea,
+		.tutor-actual-comment {
+			&:before {
+				content: '';
+				display: block;
+				height: 10px;
+				width: 10px;
+				background-color: #fff;
+				border: 1px solid $stroke-light-30;
+				position: absolute;
+				left: -6px;
+				top: 18px;
+				clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
+				transform: rotate(45deg);
+				border-radius: 0 0 0 3px;
+			}
+			&:after {
+				content: '';
+				display: block;
+				height: 10px;
+				width: 10px;
+				background-color: #fff;
+				border: 1px solid #ffffff;
+				position: absolute;
+				left: -2px;
+				top: 18px;
+				border-radius: 3px 0 0 3px;
+			}
+		}
+		.tutor-comment-box {
+			display: grid;
+			grid-template-columns: 70px auto;
+			.tutor-comment-textarea {
+				position: relative;
+				grid-area: 1/2/1/3;
+				border: 1px solid $stroke-light-30;
+				border-radius: 6px;
+				&.is-focused {
+					border: 1px solid $design-brand;
+					&:before {
+						border: 1px solid $design-brand;
+					}
+				}
+
+				textarea {
+					padding: 20px;
+					min-height: 96px;
+					border-color: transparent;
+				}
+			}
+			.tutor-comment-submit-btn {
+				margin-top: 20px;
+				grid-area: 2/2/2/3;
+				justify-self: end;
+			}
+		}
+		/* tutor-comment-box */
+		.tutor-comments-list {
+			display: grid;
+			grid-template-columns: 70px auto;
+			.tutor-single-comment {
+				.tutor-actual-comment {
+					background-color: #fff;
+					border: 1px solid $stroke-light-30;
+					border-radius: 6px;
+					position: relative;
+					padding: 15px 20px;
+					.tutor-comment-author {
+						span:first-child {
+							color: #161d25;
+						}
+						span:last-child {
+							color: #808993;
+						}
+					}
+				}
+				/* tutor-actual-comment */
+				.tutor-comment-actions {
+					span {
+						cursor: pointer;
+						text-transform: capitalize;
+						&:not(:last-child) {
+							margin-right: 23px;
+						}
+					}
+				}
+				.tutor-comment-box.tutor-reply-box {
+					padding: 16px 0px 16px 16px;
+					min-height: 54px;
+					.tutor-comment-textarea {
+						textarea {
+							padding: 15px 20px;
+							min-height: 56px;
+						}
+					}
+				}
+			}
+			/* tutor-single-comment */
+		}
+		.tutor-comments-list.tutor-parent-comment {
+			position: relative;
+			.tutor-comment-line {
+				position: absolute;
+				width: 1px;
+				left: 24px;
+				top: 50px;
+				background: $stroke-light-30;
+			}
+			.tutor-child-comment {
+				position: relative;
+				&:after {
+					content: '';
+					position: absolute;
+					width: 45px;
+					height: 1px;
+					left: -45px;
+					top: 25px;
+					background: $stroke-light-30;
+				}
+				&:before {
+					content: '';
+					position: absolute;
+					width: 45px;
+					height: 1px;
+					left: -68px;
+					top: 3px;
+					background: $stroke-light-30;
+					transform: rotate(90deg);
+					z-index: 9;
+				}
+				.tutor-single-comment {
+					.tutor-actual-comment {
+						.tutor-comment-author {
+							@include breakpoint-max(mobile) {
+								display: flex;
+								flex-direction: column;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /* tutor-course-spotlight-wrapper */

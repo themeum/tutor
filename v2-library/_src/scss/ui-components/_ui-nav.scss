@@ -34,6 +34,11 @@
             color: var(--tutor-black-70);
             cursor: pointer;
 
+            // @todo: will remove later
+            * {
+                pointer-events: none;
+            }
+
             &:hover {
                 color: var(--tutor-primary-color);
             }
