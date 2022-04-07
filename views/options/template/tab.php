@@ -26,8 +26,8 @@
             </li>
         <?php endforeach; ?>
 
-        <li class="tutor-nav-item tutor-nav-more tutor-d-none">
-            <a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
+        <li class="tutor-nav-more tutor-d-none">
+            <a class="tutor-nav-item tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
             <ul class="tutor-nav-more-list tutor-dropdown"></ul>
         </li>
     </ul>

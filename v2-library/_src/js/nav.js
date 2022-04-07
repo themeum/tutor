@@ -35,6 +35,7 @@
 						}
 					});
 					
+					// @todo: need to change active class selector
 					if (wrappedElements.length) {
 						var newSet = wrappedElements.clone();
 						wrappedElements.addClass('tutor-d-none');
