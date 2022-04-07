@@ -463,20 +463,6 @@
 	}
 }
 
-// .tutor-hover-*
-.tutor-hover {
-	&-wp {
-		&:hover {
-			color: $brand-wordpress;
-		}
-	}
-	&-fd {
-		&:hover {
-			color: $color-brand;
-		}
-	}
-}
-
 .tutor-ws-nowrap {
 	white-space: nowrap;
 }

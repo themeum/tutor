@@ -444,8 +444,8 @@ table.tutor-ui-table {
 				border-color: $stroke-light-30;
 				margin-top: 5px;
 				&:checked {
-					border-color: $brand-wordpress;
-					background-color: $brand-wordpress;
+					border-color: var(--tutor-primary-color);
+					background-color: var(--tutor-primary-color);
 				}
 			}
 		}

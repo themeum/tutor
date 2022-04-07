@@ -22,6 +22,21 @@ window.jQuery(document).ready(function($) {
 		tutor_toast(__('Copied!', 'tutor'), text, 'success');
 	});
 
+	/**
+	 * Tutor Default Tab - see more
+	 */
+	// const seeMoreAttr = 'data-seemore-target';
+	//  if (e.target.hasAttribute(seeMoreAttr)) {
+	// 	 const id = e.target.getAttribute(seeMoreAttr);
+	// 	 document.getElementById(`${id}`).closest('.tab-header-item-seemore').classList.toggle('is-active');
+	// } else {
+	// 	document.querySelectorAll('.tab-header-item-seemore').forEach((item) => {
+	// 		if (item.classList.contains('is-active')) {
+	// 			item.classList.remove('is-active');
+	// 		}
+	// 	});
+	// }
+
 	// Ajax action
 	$(document).on('click', '.tutor-list-ajax-action', function(e) {
 		if (!e.detail || e.detail == 1) {
