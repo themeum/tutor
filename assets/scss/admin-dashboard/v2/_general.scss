@@ -925,16 +925,6 @@
 	display: none;
 }
 
-.tutor-modal-confirmation {
-	&.tutor-modal .tutor-alert.tutor-warning:before {
-		display: none;
-	}
-
-	&.tutor-modal .tutor-alert.tutor-warning {
-		border-radius: 6px !important;
-	}
-}
-
 // tutor-ui-table-certificate-settings
 .tutor-ui-table-certificate-settings {
 	.tutor-option-field-input {

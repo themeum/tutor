@@ -8,33 +8,48 @@
  */
 
 ?>
+
+<?php
+/**
+ * Template: Modal for confirmation
+ *
+ * @package TutorLMS
+ * @subpackage Settings
+ * @since 2.0.0
+ */
+
+?>
 <div id="tutor-modal-bulk-action" class="tutor-modal tutor-modal-confirmation">
-	<span class="tutor-modal-overlay"></span>
-	<button data-tutor-modal-close class="tutor-modal-close">
-		<span class="tutor-icon-times"></span>
-	</button>
+	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
-		<div class="tutor-modal-content">
+		<div class="tutor-modal-content tutor-modal-content-white">
+			<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+				<span class="tutor-icon-times" area-hidden="true"></span>
+			</button>
+			
 			<div class="tutor-modal-body tutor-text-center">
-				<div class="tutor-modal-icon">
-					<img src="<?php echo esc_url( tutor()->icon_dir . 'reset.svg' ); ?>" alt="reset-icon"/>
-				</div>
-				<div class="tutor-modal-text-wrap">
-					<h3 class="tutor-modal-title">Null</h3>
-				</div>
-				<div class="tutor-alert tutor-warning tutor-mt-32">
-					<div class="tutor-alert-text">
-						<span class="tutor-alert-icon tutor-fs-4 tutor-icon-warning tutor-mr-12"></span>
-						<span class="color-warning-100 tutor-modal-message">Null</span>
+				<div class="tutor-px-lg-48 tutor-py-lg-24">
+					<div class="tutor-mt-24">
+						<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->icon_dir . 'reset.svg' ); ?>" />
 					</div>
-				</div>
-				<div class="tutor-modal-btns tutor-btn-group tutor-mt-40">
-					<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
-					<?php echo esc_attr( 'Cancel' ); ?>
-					</button>
-					<button class="tutor-btn tutor-btn-primary reset_to_default" data-reset-for="Null" data-reset="Null">
-						<?php echo esc_attr( 'Reset' ); ?>
-					</button>
+
+					<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12" data-modal-dynamic-title></div>
+
+					<div class="tutor-alert tutor-warning tutor-mt-32">
+						<div class="tutor-alert-text">
+							<span class="tutor-alert-icon tutor-fs-4 tutor-icon-warning tutor-mr-12"></span>
+							<span class="color-warning-100" data-modal-dynamic-content></span>
+						</div>
+					</div>
+
+					<div class="tutor-d-flex tutor-justify-center tutor-mt-48 tutor-mb-24">
+						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+							<?php esc_html_e('Cancel', 'tutor'); ?>
+						</button>
+						<button class="reset_to_default tutor-btn tutor-btn-primary tutor-ml-20" data-reset-for="Null" data-reset="Null">
+							<?php echo esc_attr( 'Reset' ); ?>
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>

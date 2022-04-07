@@ -10,39 +10,6 @@
 ?>
 <?php if ($blocks['block_type'] == 'uniform') : ?>
 	<div class="tutor-option-single-item tutor-mb-32 <?php echo isset($blocks['class']) ? esc_attr($blocks['class']) : (isset($blocks['slug']) ? esc_attr($blocks['slug']) : null); ?>">
-		<?php
-		/* $check_allowed = array('email_to_students');
-		if (isset($blocks['slug']) && in_array($blocks['slug'], $check_allowed)) {
-		?>
-			<div style="display: flex;justify-content: end;">
-				<label><input type="checkbox" class="check_block_checkbox"> Check all</label>
-				<script>
-					setTimeout(() => {
-						let checkAllElem = document.querySelector('.check_block_checkbox');
-						let allCheckedElem = document.querySelectorAll('#email_notification input[type=checkbox].tutor-form-toggle-input');
-						checkAllElem.onchange = (item) => {
-							if (true === checkAllElem.checked) {
-								allCheckedElem.forEach((item) => {
-									item.change
-									item.checked = true;
-									item.setAttribute('value', 'on');
-									console.log(item.previousElementSibling);
-									item.previousElementSibling.setAttribute('value', 'on');
-								})
-							} else {
-								allCheckedElem.forEach((item) => {
-									item.checked = false;
-									item.removeAttribute("checked");
-									item.setAttribute('value', 'off');
-									item.previousElementSibling.setAttribute('value', 'off');
-								})
-							}
-						}
-					})
-				</script>
-			</div>
-		<?php } */
-		?>
 		<?php if ( isset($blocks['label']) ) : ?>
 			<div class="tutor-option-group-title tutor-mb-16">
 				<div class="tutor-fs-6 tutor-color-muted"><?php echo esc_attr($blocks['label']); ?></div>

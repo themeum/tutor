@@ -9,6 +9,30 @@ $accent-color-hover: var(--wp-admin-theme-color) !default;
 .tutor-admin {
 	&-wrap {
 		margin-left: -20px;
+
+		// reset
+		* {
+			box-sizing: border-box;
+		}
+
+		a {
+			&,
+			&:hover,
+			&:active,
+			&:focus {
+				text-decoration: none;
+			}
+		}
+
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+
+			li {
+				margin: 0;
+			}
+		}
 	}
 
 	&-body {
