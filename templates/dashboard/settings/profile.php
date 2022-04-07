@@ -88,10 +88,10 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			</div>
 
 			<span class="tutor_pp_uploader profile-uploader">
-				<i class="profile-upload-icon tutor-icon-image-landscape"></i> <?php esc_html_e( 'Upload Photo', 'tutor' ); ?>
+				<i class="profile-upload-icon tutor-icon-image-landscape tutor-mr-4"></i> <?php esc_html_e( 'Upload Photo', 'tutor' ); ?>
 			</span>
 			<span class="tutor_pp_deleter profile-uploader">
-				<i class="profile-upload-icon tutor-icon-trash-can-bold"></i> <?php esc_html_e( 'Delete', 'tutor' ); ?>
+				<i class="profile-upload-icon tutor-icon-trash-can-bold tutor-mr-4"></i> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 			</span>
 
 			<div></div>
