@@ -5,21 +5,25 @@
  * @version 1.4.3
  */
 
+// Get the user ID and active tab
 $current_user_id = get_current_user_id();
 !isset($active_tab) ? $active_tab = 'my-courses' : 0;
 
+// Map required course status according to page
 $status_map = array(
     'my-courses' => 'publish',
     'my-courses/draft-courses' => 'draft',
     'my-courses/pending-courses' => 'pending'
 );
 
+// Set currently required course status fo rcurrent tab
 $status = isset( $status_map[$active_tab] ) ? $status_map[$active_tab] : 'publish';
 
+// Get counts for course tabs
 $count_map = array(
-    'publish' => tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page),
-    'pending' => tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page),
-    'draft' => tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page),
+    'publish' => 0, // tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page),
+    'pending' => 0, // tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page),
+    'draft' => 0, // tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page),
 );
 
 $course_archive_arg = isset($GLOBALS['tutor_course_archive_arg']) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
@@ -44,12 +48,12 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
                 </a>
             </li>
             <li>
-                <a class="<?php echo $active_tab == 'my-courses/pending-courses' ? 'is-active' : ''; ?> href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses')); ?>">
+                <a class="<?php echo $active_tab == 'my-courses/pending-courses' ? 'is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses')); ?>">
                     <?php esc_html_e('Pending', 'tutor'); ?> <?php echo "(" . $count_map['pending'] . ")"; ?>
                 </a>
             </li>
             <li>
-                <a class="<?php echo $active_tab == 'my-courses/draft-courses' ? 'is-active' : ''; ?> href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/draft-courses')); ?>">
+                <a class="<?php echo $active_tab == 'my-courses/draft-courses' ? 'is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/draft-courses')); ?>">
                     <?php esc_html_e('Draft', 'tutor'); ?> <?php echo "(" . $count_map['draft'] . ")"; ?>
                 </a>
             </li>
@@ -66,6 +70,7 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
         ?>
         <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
             <?php
+            global $post;
             foreach ($results as $post) :
                 setup_postdata($post);
 
