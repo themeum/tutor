@@ -682,7 +682,7 @@ class Utils {
 		}
 
 		$select_col = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
-		$limit_offst = $count_only ? "" : " LIMIT $offset, $limit ";
+		$limit_offset = $count_only ? "" : " LIMIT $offset, $limit ";
 
 		$query = $wpdb->prepare(
 			"SELECT $select_col
@@ -694,7 +694,6 @@ class Utils {
 			WHERE	1 = 1 {$where_post_status}
 				AND $wpdb->posts.post_type = %s
 			ORDER BY $wpdb->posts.post_date DESC $limit_offset",
-
 			$instructor_id,
 			'_tutor_instructor_course_id',
 			$course_post_type

@@ -21,14 +21,14 @@ $status = isset( $status_map[$active_tab] ) ? $status_map[$active_tab] : 'publis
 
 // Get counts for course tabs
 $count_map = array(
-    'publish' => 0, // tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page),
-    'pending' => 0, // tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page),
-    'draft' => 0, // tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page),
+    'publish' => tutor_utils()->get_courses_by_instructor($current_user_id, 'publish', 0, 0, true),
+    'pending' => tutor_utils()->get_courses_by_instructor($current_user_id, 'pending', 0, 0, true),
+    'draft' => tutor_utils()->get_courses_by_instructor($current_user_id, 'draft', 0, 0, true),
 );
 
 $course_archive_arg = isset($GLOBALS['tutor_course_archive_arg']) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
 $courseCols         = $course_archive_arg === null ? tutor_utils()->get_option('courses_col_per_row', 4) : $course_archive_arg;
-$per_page           = tutor_utils()->get_option( 'pagination_per_page', 10 );
+$per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
 $paged              = (isset($_GET['current_page']) && is_numeric($_GET['current_page']) && $_GET['current_page'] >= 1) ? $_GET['current_page'] : 1;
 $offset             = $per_page * ($paged-1);
 
