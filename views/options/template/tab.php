@@ -18,6 +18,7 @@
     }
 ?>
 
+<!-- @todo: to be removed later -->
 <?php $more_popups = array_slice($tabbed, 4); ?>
 <div class="tutor-default-tab tutor-settings-details-tab">
     <div class="tab-header tutor-d-flex">
@@ -41,7 +42,7 @@
                     <ul>
                         <?php foreach($more_popups as $tab): ?>
                             <li class="tab-header-item" data-tutor-tab-target="tutor-settings-tab-<?php echo $tab['key']; ?>">
-                                <span class="tutor-icon-brand-github  tutor-mr-8"></span>
+                                <span class="tutor-icon-brand-github tutor-mr-8"></span>
                                 <span><?php echo $tab['label']; ?></span>
                             </li>
                         <?php endforeach; ?>

@@ -113,7 +113,7 @@
 			}
 		}
 		.radio-thumbnail input[type='radio']:checked ~ .icon-wrapper img {
-			box-shadow: 0 0 0 1px $brand-wordpress;
+			box-shadow: 0 0 0 1px var(--tutor-primary-color);
 		}
 	}
 

@@ -68,10 +68,7 @@ window.jQuery(document).ready($ => {
                 }
 
                 // Show thank you
-                new window.tutor_popup($, 'icon-rating', 40).popup({
-                    title: review_id ? __('Updated successfully!', 'tutor') : __('Thank You for Rating The Course!', 'tutor'),
-                    description : review_id ?  __('Updated rating will now be visible in the course page', 'tutor') : __('Your rating will now be visible in the course page', 'tutor'),
-                });
+                tutor_toast(review_id ? __('Updated successfully!', 'tutor') : __('Thank You for Rating The Course!', 'tutor'), review_id ?  __('Updated rating will now be visible in the course page', 'tutor') : __('Your rating will now be visible in the course page', 'tutor'), 'success');
 
                 setTimeout(function(){
                     location.reload();

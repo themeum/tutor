@@ -43,14 +43,6 @@ class Template extends Tutor_Base {
 		add_filter( 'the_content', array( $this, 'convert_static_page_to_template' ) );
 
 		/**
-		 * Redirect url before load create-course template to reduce unnecessary
-		 * course creation.
-		 *
-		 * @since v2.0.0
-		 */
-		add_action( 'template_redirect', array( $this, 'redirect_to_url' ) );
-
-		/**
 		 * Dummy template for Spotlight mode design. It will be removed once we adopt the design to core.
 		 */
 		add_action(
@@ -438,31 +430,5 @@ class Template extends Tutor_Base {
 			}
 		}
 		return '';
-	}
-
-	/**
-	 * Before load create-course template create post
-	 * & redirect to URL
-	 *
-	 * @since v2.0.0
-	 */
-	public function redirect_to_url() {
-		global $wp_query;
-		$query_vars = $wp_query->query_vars;
-		if ( isset( $query_vars['tutor_dashboard_page'] ) && 'create-course' === $query_vars['tutor_dashboard_page'] && tutor_utils()->is_instructor(get_current_user_id(), true)) {
-			$post_type = tutor()->course_post_type;
-			if ( isset( $_GET['course_ID'] ) && '' !== $_GET['course_ID'] ) {
-				return;
-			}
-			$post_id = wp_insert_post(
-				array(
-					'post_title'  => __( 'Auto Draft', 'tutor' ),
-					'post_type'   => $post_type,
-					'post_status' => 'draft',
-				)
-			);
-			wp_safe_redirect( tutor_utils()->get_tutor_dashboard_page_permalink( "create-course/?course_ID=$post_id" ) );
-			exit;
-		}
 	}
 }
