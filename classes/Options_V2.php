@@ -336,16 +336,6 @@ class Options_V2
 
 		do_action('tutor_option_save_after');
 
-		// echo $dashboard_update_id . ' - ' . $old_dashboard_id;
-
-		if ($dashboard_update_id !== $old_dashboard_id) {
-			global $wp_rewrite;
-			$wp_rewrite->set_permalink_structure('/%postname%/');
-			update_option("rewrite_rules", false);
-			$wp_rewrite->flush_rules(true);
-			flush_rewrite_rules();
-		}
-
 		wp_send_json_success($option);
 	}
 
@@ -531,14 +521,6 @@ class Options_V2
 								'default'     => 'off',
 								'label_title' => __('', 'tutor'),
 								'desc'        => __('When a user\'s WooCommerce order is auto-completed, they will be redirected to enrolled courses', 'tutor'),
-							),
-							array(
-								'key'         => 'auto_complete_woocommerce_virtual_orders',
-								'type'        => 'toggle_switch',
-								'label'       => __('Auto Complete Woocommerce Virtual Orders', 'tutor'),
-								'default'     => 'off',
-								'label_title' => __('', 'tutor'),
-								'desc'        => __('When a user\'s WooCommerce order is completed, they will be auto enrolled to corresponding courses', 'tutor'),
 							),
 							array(
 								'key'         => 'enable_spotlight_mode',
