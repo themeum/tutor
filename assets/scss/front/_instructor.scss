@@ -539,8 +539,15 @@ Instructor customize filters styles
     padding-top: 33px;
     border-top: 1px solid #E3E6EB;
   }
+
+  .filter-result-container{
+    position: relative;
+  }
+
   .tutor-instructor-filter-sidebar {
     border-right: 1px solid #E3E6EB;
+    padding: 0 7px; // To uncut checkbox highlighting border/background
+    
     .tutor-instructor-customize-wrapper {
       @include flexWithAlignJustify(center, space-between, 0);
       margin-bottom: 48px;
