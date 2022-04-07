@@ -102,7 +102,6 @@ $is_user_admin                = current_user_can( 'administrator' );
 								do_action( 'tutor/lesson_list/before/topic', $topic_id );
 								$lessons = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
 								$is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
-
 								while ( $lessons->have_posts() ) {
 									$lessons->the_post();
 									$show_permalink = !$_is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true );
@@ -160,7 +159,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
 													<a href="<?php echo $show_permalink ? get_permalink( $post->ID ) : '#'; ?>" class="tutor-single-assignment-a tutor-d-flex tutor-justify-between" data-assignment-id="<?php echo $post->ID; ?>">
 														<div class="tutor-single-lesson-items-left tutor-d-flex">
-															<span class="tutor-icon-assignment-filled"></span>
+															<span class="tutor-icon-assignment"></span>
 															<span class="lesson_title tutor-fs-7 tutor-color-black-70">
 																<?php echo $post->post_title; ?>
 															</span>
@@ -187,7 +186,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
 													<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>" class="sidebar-single-zoom-meeting-a tutor-d-flex tutor-justify-between">
 														<div class="tutor-single-lesson-items-left tutor-d-flex">
-															<span class="tutor-icon-brand-zoom"></span>
+															<span class="tutor-icon-brand-zoom-o"></span>
 															<span class="lesson_title tutor-fs-7 tutor-color-black-70">
 																<?php echo esc_html( $post->post_title ); ?>
 															</span>
@@ -223,7 +222,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 													<a href="<?php echo $show_permalink ? get_the_permalink() : '#'; ?>" class="tutor-single-lesson-a tutor-d-flex tutor-justify-between" data-lesson-id="<?php the_ID(); ?>">
 														<div class="tutor-single-lesson-items-left tutor-d-flex">
 															<?php
-																$tutor_lesson_type_icon = $play_time ? 'youtube-brand' : 'document-file';
+																$tutor_lesson_type_icon = $play_time ? 'brand-youtube-bold' : 'file-document';
 																echo "<span class='tutor-icon-$tutor_lesson_type_icon'></span>";
 															?>
 															<span class="lesson_title tutor-fs-7 tutor-color-black-70">
