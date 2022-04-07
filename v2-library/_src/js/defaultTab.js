@@ -4,22 +4,28 @@
 		 * Tutor Default Tab
 		 */
 		const attr = 'data-tutor-tab-target';
-		const activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active');
+		const activeItems = document.querySelectorAll(
+			'.tab-header-item.is-active, .tab-body-item.is-active',
+		);
+		let elementWithAttr = null;
 
 		if (e.target.hasAttribute(attr)) {
-			e.preventDefault();
-			const id = e.target.hasAttribute(attr)
-				? e.target.getAttribute(attr)
-				: e.target.closest(`[${attr}]`).getAttribute(attr);
+			elementWithAttr = e.target;
+		} else if (e.target.closest(`[${attr}]`)?.hasAttribute(attr)) {
+			elementWithAttr = e.target.closest(`[${attr}]`);
+		}
 
+		const id = elementWithAttr ? elementWithAttr.getAttribute(attr) : null;
+
+		if (id) {
+			e.preventDefault();
 			const tabBodyItem = document.getElementById(id);
 
-			if (e.target.hasAttribute(attr) && tabBodyItem) {
+			if (tabBodyItem) {
 				activeItems.forEach((m) => {
 					m.classList.remove('is-active');
 				});
-
-				e.target.classList.add('is-active');
+				elementWithAttr.classList.add('is-active');
 				tabBodyItem.classList.add('is-active');
 			}
 		}
@@ -41,17 +47,22 @@
 					m.classList.remove('is-active');
 				});
 
-				if(navTarget.closest('.tutor-nav-more') != undefined) {
+				if (navTarget.closest('.tutor-nav-more') != undefined) {
 					navTarget.closest('.tutor-nav-more').classList.add('is-active');
 				}
 
 				navTarget.classList.add('is-active');
 
-				if(navTarget.hasAttribute('data-tutor-query-variable') && navTarget.hasAttribute('data-tutor-query-value')) {
-					var queryVariable = navTarget.getAttribute('data-tutor-query-variable');
+				if (
+					navTarget.hasAttribute('data-tutor-query-variable') &&
+					navTarget.hasAttribute('data-tutor-query-value')
+				) {
+					var queryVariable = navTarget.getAttribute(
+						'data-tutor-query-variable',
+					);
 					var queryValue = navTarget.getAttribute('data-tutor-query-value');
 
-					if(queryVariable && queryValue) {
+					if (queryVariable && queryValue) {
 						let url = new URL(window.location);
 						url.searchParams.set(queryVariable, queryValue);
 						window.history.pushState({}, '', url);
