@@ -61,7 +61,7 @@ if ( $total_categories && $total_categories > $limit ) {
 							<input
 								id="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>"
 								type="checkbox"
-								class="tutor-form-check-input tutor-form-check-square"
+								class="tutor-form-check-input"
 								name="category"
 								value="<?php esc_attr_e( $category_id ); ?>"/>
 							<label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>" class="tutor-color-black-70 tutor-fs-7 tutor-fw-medium">
@@ -149,7 +149,7 @@ if ( $total_categories && $total_categories > $limit ) {
 								<input
 									id="tutor-instructor-checkbox-id-<?php esc_attr_e( $category_id ); ?>"
 									type="checkbox"
-									class="tutor-form-check-input tutor-form-check-square"
+									class="tutor-form-check-input"
 									name="category"
 									value="<?php esc_attr_e( $category->term_id ); ?>"/>
 								<label for="tutor-instructor-checkbox-id-<?php esc_attr_e( $category_id ); ?>">

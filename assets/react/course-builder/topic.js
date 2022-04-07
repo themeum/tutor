@@ -58,6 +58,7 @@ window.jQuery(document).ready(function($) {
 			},
 			complete: function() {
 				$button.removeClass('is-loading');
+				$('body').removeClass('tutor-modal-open');
 			},
 		});
 	});
