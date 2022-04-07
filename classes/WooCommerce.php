@@ -92,51 +92,8 @@ class WooCommerce extends Tutor_Base {
 		 */
 		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'tutor_update_product_url' ), 10, 2 );
 		add_filter( 'woocommerce_order_item_permalink', array( $this, 'filter_order_item_permalink_callback' ), 10, 3 );
-		add_filter( 'woocommerce_payment_complete_order_status', array( $this, 'auto_complete_woocommerce_virtual_orders' ), 10, 3 );
 
 	}
-
-	function auto_complete_woocommerce_virtual_orders( $payment_complete_status, $order_id, $order ) {
-
-		$auto_complete_woocommerce_virtual_orders = tutor_utils()->get_option( 'auto_complete_woocommerce_virtual_orders' );
-		if ( 'on' !== $auto_complete_woocommerce_virtual_orders ) {
-			return;
-		}
-
-
-		$current_status = $order->get_status();
-		// We only want to update the status to 'completed' if it's coming from one of the following statuses:
-		$allowed_current_statuses = array( 'on-hold', 'pending', 'failed' );
-
-		if ( 'processing' === $payment_complete_status && in_array( $current_status, $allowed_current_statuses ) ) {
-
-			$order_items = $order->get_items();
-
-			// Create an array of products in the order
-			$order_products = array_filter( array_map( function( $item ) {
-				// Get associated product for each line item
-				return $item->get_product();
-			}, $order_items ), function( $product ) {
-				// Remove non-products
-				return !! $product;
-			} );
-
-			if ( count( $order_products > 0 ) ) {
-				// Check if each product is 'virtual'
-				$is_virtual_order = array_reduce( $order_products, function( $virtual_order_so_far, $product ) {
-					return $virtual_order_so_far && $product->is_virtual();
-				}, true );
-
-				if ( $is_virtual_order ) {
-					$payment_complete_status = 'completed';
-				}
-			}
-		}
-
-		return $payment_complete_status;
-
-	}
-
 
 	function filter_order_item_permalink_callback( $product_permalink, $item, $order ) {
 
@@ -422,6 +379,7 @@ class WooCommerce extends Tutor_Base {
 
 			$course_price_grand_total = $total_price;
 
+			// Deduct predefined amount (percent or fixed)
 			if ( $enable_fees_deducting ) {
 				$fees_name   = tutor_utils()->avalue_dot( 'fees_name', $tutor_earning_fees );
 				$fees_amount = (int) tutor_utils()->avalue_dot( 'fees_amount', $tutor_earning_fees );
@@ -447,20 +405,13 @@ class WooCommerce extends Tutor_Base {
 				);
 			}
 
-			$instructor_rate = tutor_utils()->get_option( 'earning_instructor_commission' );
-			$admin_rate      = tutor_utils()->get_option( 'earning_admin_commission' );
-
-			$instructor_amount = 0;
-			if ( $instructor_rate > 0 ) {
-				$instructor_amount = ( $course_price_grand_total * $instructor_rate ) / 100;
-			}
-
-			$admin_amount = 0;
-			if ( $admin_rate > 0 ) {
-				$admin_amount = ( $course_price_grand_total * $admin_rate ) / 100;
-			}
-
-			$commission_type = 'percent';
+			// Distribute amount between admin and instructor
+			$sharing_enabled 	= tutor_utils()->get_option( 'enable_revenue_sharing' );
+			$instructor_rate 	= $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
+			$admin_rate      	= $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
+			$commission_type 	= 'percent';
+			$instructor_amount 	= $instructor_rate > 0 ? (( $course_price_grand_total * $instructor_rate ) / 100) : 0;
+			$admin_amount 		= $admin_rate > 0 ? (( $course_price_grand_total * $admin_rate ) / 100) : 0;
 
 			// (Use Pro Filter - Start)
 			// The response must be same array structure.
@@ -478,6 +429,7 @@ class WooCommerce extends Tutor_Base {
 			extract( $pro_calculation );
 			// (Use Pro Filter - End)
 
+			// Prepare insertable earning data
 			$earning_data = array(
 				'user_id'                  => $user_id,
 				'course_id'                => $course_id,

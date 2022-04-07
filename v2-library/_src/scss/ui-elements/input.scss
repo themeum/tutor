@@ -288,6 +288,10 @@ select.tutor-form-control,
 	input.tutor-form-check-input {
 		margin-right: 12px;
 	}
+
+	& + & {
+		margin-left: 16px;
+	}
 }
 
 input.tutor-form-check-input {

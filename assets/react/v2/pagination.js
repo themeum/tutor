@@ -29,6 +29,11 @@ window.jQuery(document).ready($=>{
             type: 'POST',
             data: data,
             beforeSend: function () {
+                if(data.loading_container){
+                    $(data.loading_container).html('<div style="background-color: #fff;" class="loading-spinner"></div>');
+                    return;
+                }
+
                 if (innerSpan.hasClass('tutor-icon-angle-right')) {
                     innerSpan.removeClass('tutor-icon-angle-right').addClass('tutor-icon-spinner');
                 } else if (innerSpan.hasClass('tutor-icon-angle-left')) {
