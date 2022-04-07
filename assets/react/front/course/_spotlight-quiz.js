@@ -354,7 +354,7 @@ window.jQuery(document).ready($=>{
                 },
             };
 
-            popup = new window.tutor_popup($, '', 40).popup(data);
+            popup = new window.tutor_popup($, '').popup(data);
         }
     });
 
