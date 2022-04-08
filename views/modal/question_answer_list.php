@@ -1,4 +1,7 @@
-<?php 
+<?php
+
+use TUTOR\Question_Answers_List;
+
     if ($question_type === 'open_ended' || $question_type === 'short_answer'){
         echo '<p class="tutor-px-32 tutor-py-16">'.
                 __('No option is necessary for this answer type', 'tutor').
@@ -8,15 +11,7 @@
 ?>
 
 <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>"><?php
-    global $wpdb;
-    $answers = $wpdb->get_results($wpdb->prepare(
-        "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers 
-        where belongs_question_id = %d 
-            AND belongs_question_type = %s 
-        order by answer_order asc ;", 
-        $question_id, 
-        $question_type
-    ));
+    $answers = Question_Answers_List::answer_list_by_question( $question_id, $question_type );
     
     if (is_array($answers) && count($answers)){
         foreach ($answers as $answer){

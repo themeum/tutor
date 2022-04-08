@@ -757,13 +757,14 @@ if ( ! function_exists( 'tutor_maintenance_mode' ) ) {
 if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 	function tutor_js_date_format_against_wp() {
 		$wp_date_format = get_option( 'date_format' );
-		$default_format = 'yy-mm-dd';
+		$default_format = 'Y-M-d';
 
 		$formats = array(
 			'Y-m-d'  => 'Y-M-d',
 			'm/d/Y'  => 'M-d-Y',
 			'd/m/Y'  => 'd-M-Y',
 			'F j, Y' => 'MMMM d, yyyy',
+			'j F Y' => 'MMMM d, yyyy',
 		);
 		return isset( $formats[ $wp_date_format ] ) ? $formats[ $wp_date_format ] : $default_format;
 	}
