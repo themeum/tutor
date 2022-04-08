@@ -124,6 +124,8 @@ $disabled-color: #E9E9EA !default;
 		// font-weight: 500;
 		position: relative;
 		color: #757C8E; // @todo: to be changed
+		border-radius: 0;
+		outline: 0;
 
 		&.tutor-has-underline {
 			position: relative;
@@ -146,6 +148,9 @@ $disabled-color: #E9E9EA !default;
 			&.tutor-has-underline:after {
 				background-color: var(--tutor-primary-color);
 			}
+
+			outline: 0;
+			box-shadow: none;
 		}
 	}
 

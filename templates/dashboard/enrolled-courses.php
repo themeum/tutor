@@ -48,8 +48,8 @@ $paginated_courses_list =  $full_courses_list_array[$active_tab];
 	<div class="tutor-mb-32">
 		<ul class="tutor-nav" tutor-priority-nav>
 			<?php foreach ($page_tabs as $slug => $tab) : ?>
-				<li class="tutor-nav-item">
-					<a class="<?php echo $slug == $active_tab ? 'is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink($slug)); ?>">
+				<li>
+					<a class="tutor-nav-item<?php echo $slug == $active_tab ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink($slug)); ?>">
 						<?php
 						echo esc_html($tab);
 
@@ -62,8 +62,8 @@ $paginated_courses_list =  $full_courses_list_array[$active_tab];
 				</li>
 			<?php endforeach; ?>
 
-			<li class="tutor-nav-item tutor-nav-more tutor-d-none">
-				<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
+			<li class="tutor-nav-more tutor-d-none">
+				<a class="tutor-nav-item tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
 				<ul class="tutor-nav-more-list tutor-dropdown"></ul>
 			</li>
 		</ul>

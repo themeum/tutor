@@ -8,6 +8,8 @@
 	const colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
 	const colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
 	const pickerView = document.querySelectorAll('.color-picker-wrapper [data-key]');
+
+
 	const moreButton = document.querySelector('.more_button');
 
 	const otherColors = document.querySelector('.other_colors');

@@ -15,29 +15,28 @@
     > li {
         padding: 0;
         margin: 0;
+    }
 
-        > a {
-            display: block;
-            padding: 8px 16px;
-            color: var(--tutor-black-70);
-            font-size: 16px;
-            font-weight: 500;
-            text-decoration: none;
-            white-space: nowrap;
-            background-color: transparent;
-    
-            &:hover,
-            &:focus {
-                color: var(--tutor-primary-color);
-                background-color: #E9EDFB;
-            }
+    &-item,
+    .tutor-nav-item {
+        display: block;
+        padding: 8px 16px;
+        color: var(--tutor-black-70);
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: none;
+        white-space: nowrap;
+        background-color: transparent;
+
+        &:hover,
+        &:focus {
+            color: var(--tutor-primary-color);
+            background-color: #E9EDFB;
         }
 
         &.is-active {
-            > a {
-                color: var(--tutor-primary-color);
-                background-color: #E9EDFB;
-            }
+            color: var(--tutor-primary-color);
+            background-color: #E9EDFB;
         }
     }
 
@@ -45,25 +44,22 @@
         background-color: #212327;
         border: 1px solid #212327;
 
-        > li {
-            > a {
-                &,
-                &:hover,
-                &:focus {
-                    color: #FFFFFF;
-                }
+        .tutor-dropdown-item,
+        .tutor-nav-item {
+            &,
+            &:hover,
+            &:focus {
+                color: #FFFFFF;
+            }
 
-                &:hover,
-                &:focus {
-                    background-color: #41454F;
-                }
+            &:hover,
+            &:focus {
+                background-color: #41454F;
             }
 
             &.is-active {
-                > a {
-                    color: #FFFFFF;
-                    background-color: #41454F;
-                }
+                color: #FFFFFF;
+                background-color: #41454F;
             }
         }
     }
