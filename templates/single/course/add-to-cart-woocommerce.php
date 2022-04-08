@@ -7,6 +7,7 @@
 
 $product_id = tutor_utils()->get_course_product_id();
 $product = wc_get_product( $product_id );
+
 if ($product) {
     if(tutor_utils()->is_course_added_to_cart($product_id, true)){
         ?>
@@ -21,11 +22,11 @@ if ($product) {
         <div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-between">
             <div>
                 <span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
-                    <?php echo tutor_wc_price_currency_format($sale_price ? $sale_price : $regular_price); ?>
+                    <?php echo wc_price( $sale_price ? $sale_price : $regular_price ); ?>
                 </span>
-                <?php if($regular_price && $sale_price && $sale_price!=$regular_price): ?>
+                <?php if( $regular_price && $sale_price && $sale_price!=$regular_price ): ?>
                     <del class="tutor-fs-7 tutor-color-muted tutor-ml-8">
-                        <?php echo tutor_wc_price_currency_format($regular_price); ?>
+                        <?php echo wc_price($regular_price); ?>
                     </del>
                 <?php endif; ?>
             </div>

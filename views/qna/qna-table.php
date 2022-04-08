@@ -71,10 +71,6 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 >
                                                 </i>
                                             </span>
-                                            <!-- <i data-state-class-0="tutor-icon-important-line"
-                                            data-state-class-1="tutor-icon-important-bold"
-                                            class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?>  tutor-cursor-pointer" data-action="important"></i>
-                                             -->
                                             <span class="tooltip-txt tooltip-bottom">
                                                 <?php $is_important ? _e('This conversation is important', 'tutor') : _e('Mark this conversation as important', 'tutor'); ?>
                                             </span>
