@@ -14,7 +14,7 @@ $title  		= isset( $title ) ? $title : 'Do You Want to Delete This?';
 $content  		= isset( $content ) ? $content : '';
 $close   		= isset( $close ) ? (bool) $close : true;
 ?>
-<div id="tutor-modal-<?php echo esc_attr( $id ); ?>" class="tutor-modal<?php echo esc_attr( $class ); ?>">
+<div id="<?php echo esc_attr( $id ); ?>" class="tutor-modal<?php echo esc_attr( $class ); ?>">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window tutor-modal-window-sm">
 		<div class="tutor-modal-content tutor-modal-content-white">
