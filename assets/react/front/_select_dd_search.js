@@ -14,7 +14,7 @@ window.selectSearchField = (selectElement) => {
 				searchInput = searchInputWrap && searchInputWrap.querySelector('input');
 
 				// hide search for less than 10 items
-				if (element.options.length < 4) {
+				if (element.options.length < 10) {
 					searchInputWrap.style.display = 'none';
 				}
 
@@ -86,15 +86,11 @@ window.selectSearchField = (selectElement) => {
 						if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
 							item.style.display = '';
 							noItemFound = 'false';
-							// console.log('found');
 						} else {
 							noItemFound = 'true';
 							item.style.display = 'none';
-							// console.log('not found');
 						}
 					});
-
-					// console.log(countHiddenItems(resultList), noItemFound);
 
 					let noItemText = `
                     <div class="tutor-form-select-option noItem">
@@ -126,7 +122,9 @@ window.selectSearchField = (selectElement) => {
 		const selectDdMarkup = document.querySelectorAll('.tutor-js-form-select');
 		selectDdMarkup.forEach((item) => {
 			if (item.nextElementSibling) {
-				item.nextElementSibling.remove();
+				if (item.nextElementSibling.classList.contains('tutor-js-form-select')) {
+					item.nextElementSibling.remove();
+				}
 			}
 		});
 
@@ -156,7 +154,7 @@ window.selectSearchField = (selectElement) => {
 
 		let markupDD = `
       <div class="tutor-form-control tutor-form-select tutor-js-form-select">
-			<span class="tutor-form-select-label" tutor-dropdown-label>${window.wp.i18n.__('Select One', 'tutor')}</span>
+			<span class="tutor-form-select-label" tutor-dropdown-label>${window.wp.i18n.__('Select', 'tutor')}</span>
             <div class="tutor-form-select-dropdown">
 				<div class="tutor-form-select-search tutor-pt-8 tutor-px-8">
 					<div class="tutor-form-wrap">

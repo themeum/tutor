@@ -656,29 +656,7 @@ class Utils {
 
 		return $count;
 	}
-
-	public function get_courses_by_instructor_wpml($instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX) {
-		$args = array(
-			'posts_per_page'   => $limit,
-			'offset'					 => $offset,
-			'orderby'          => 'menu_order',
-			'order'            => 'DESC',
-			'post_type'        => tutor()->course_post_type,
-			'post_status'      => $post_status,
-			'suppress_filters'  => !$this->is_wpml_active()
-		);
-		$pageposts = get_posts( $args );
-
-		return $pageposts;
-
-	}
-
-	public function is_wpml_active(){
-		$dashboard_id = get_tutor_option('tutor_dashboard_page_id');
-		$is_translated = apply_filters( 'wpml_element_has_translations', NULL, $dashboard_id, 'page' );
-		return $is_translated;
-	}
-
+	
 	/**
 	 * @param $instructor_id
 	 *
@@ -688,93 +666,40 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX ) {
+	public function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only=false ) {
 		global $wpdb;
 		$offset           = sanitize_text_field( $offset );
 		$limit            = sanitize_text_field( $limit );
 		$instructor_id    = $this->get_user_id( $instructor_id );
 		$course_post_type = tutor()->course_post_type;
 
-		if ( $post_status === 'any' ) {
+		if ( empty($post_status) || $post_status == 'any' ) {
 			$where_post_status = '';
 		} else {
-			$post_status       = (array) $post_status;
-			$statuses          = "'" . implode( "','", $post_status ) . "'";
+			!is_array($post_status) ? $post_status=array($post_status) : 0;
+			$statuses  = "'" . implode( "','", $post_status ) . "'";
 			$where_post_status = "AND $wpdb->posts.post_status IN({$statuses}) ";
 		}
 
-		$pageposts = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT $wpdb->posts.*
+		$select_col = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
+		$limit_offset = $count_only ? "" : " LIMIT $offset, $limit ";
+
+		$query = $wpdb->prepare(
+			"SELECT $select_col
 			FROM 	$wpdb->posts
-					INNER JOIN {$wpdb->usermeta}
-							ON $wpdb->usermeta.user_id = %d
-						   AND $wpdb->usermeta.meta_key = %s
-						   AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
+			INNER JOIN {$wpdb->usermeta}
+					ON $wpdb->usermeta.user_id = %d
+					AND $wpdb->usermeta.meta_key = %s
+					AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
 			WHERE	1 = 1 {$where_post_status}
-					AND $wpdb->posts.post_type = %s
-			ORDER BY $wpdb->posts.post_date DESC LIMIT %d, %d;
-			",
-				$instructor_id,
-				'_tutor_instructor_course_id',
-				$course_post_type,
-				$offset,
-				$limit
-			),
-			OBJECT
+				AND $wpdb->posts.post_type = %s
+			ORDER BY $wpdb->posts.post_date DESC $limit_offset",
+			$instructor_id,
+			'_tutor_instructor_course_id',
+			$course_post_type
 		);
 
-		return $pageposts;
-	}
-
-	public function get_pending_courses_by_instructor_wpml( $instructor_id = 0, $post_status = array( 'pending' ), int $offset = 0, int $limit = PHP_INT_MAX ) {
-		$args = array(
-			'orderby'          => 'menu_order',
-			'order'            => 'DESC',
-			'post_type'        => tutor()->course_post_type,
-			'post_status'      => $post_status,
-			'suppress_filters' => !$this->is_wpml_active(),
-			'offset'           => $offset,
-			'posts_per_page'   => $limit,
-		);
-		$pageposts = get_posts( $args );
-
-		return $pageposts;
-	}
-
-	public function get_pending_courses_by_instructor( $instructor_id = 0, $post_status = array( 'pending' ) ) {
-		global $wpdb;
-		$instructor_id    = $this->get_user_id( $instructor_id );
-		$course_post_type = tutor()->course_post_type;
-
-		if ( $post_status === 'any' ) {
-			$where_post_status = '';
-		} else {
-			$post_status       = (array) $post_status;
-			$statuses          = "'" . implode( "','", $post_status ) . "'";
-			$where_post_status = "AND $wpdb->posts.post_status IN({$statuses}) ";
-		}
-
-		$pageposts = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT $wpdb->posts.*
-			FROM 	$wpdb->posts
-					INNER JOIN {$wpdb->usermeta}
-							ON $wpdb->usermeta.user_id = %d
-						   AND $wpdb->usermeta.meta_key = %s
-						   AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
-			WHERE	1 = 1 {$where_post_status}
-					AND $wpdb->posts.post_type = %s
-			ORDER BY $wpdb->posts.post_date DESC;
-			",
-				$instructor_id,
-				'_tutor_instructor_course_id',
-				$course_post_type
-			),
-			OBJECT
-		);
-
-		return $pageposts;
+		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query, OBJECT);
 	}
 
 	public function get_publish_courses_by_instructor() {

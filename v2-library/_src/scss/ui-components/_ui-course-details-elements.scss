@@ -297,63 +297,6 @@
 	}
 } // end of .tutor-course-details-page
 
-.tutor-has-showmore {
-	.tutor-showmore-content {
-		position: relative;
-		&:before {
-			content: '';
-			position: absolute;
-			width: 100%;
-			height: 62px;
-			bottom: 0;
-			background: linear-gradient(
-				180deg,
-				rgba(255, 255, 255, 0.0001) 1.31%,
-				rgba(255, 255, 255, 0.721372) 15.41%,
-				#ffffff 100%
-			);
-		}
-	}
-	.showmore-text {
-		display: none;
-	}
-	.showmore-short-text {
-		display: block;
-	}
-	.btn-showmore {
-		display: flex !important;
-	}
-	.btn-showless {
-		display: none !important;
-	}
-	&.is-active {
-		.showmore-text {
-			display: block;
-		}
-		.showmore-short-text {
-			display: none;
-		}
-		.btn-showmore {
-			display: none !important;
-		}
-		.btn-showless {
-			display: flex !important;
-		}
-		.tutor-showmore-content {
-			position: relative;
-			&:before {
-				display: none;
-			}
-		}
-	}
-	.tutor-showmore-btn {
-		cursor: pointer;
-		> * {
-			pointer-events: none;
-		}
-	}
-}
-
 // Course Details - Accordion
 .tutor-accordion {
 	// .tutor-accordion-item
@@ -430,10 +373,6 @@
 			border-top: 1px solid $stroke-light-30;
 		}
 
-		&:not(:last-child) {
-			// border-bottom: 1px solid $stroke-light-30;
-		}
-
 		padding: 15px;
 
 		> div,
@@ -448,8 +387,6 @@
 	&-single-item {
 		[class^='tutor-icon-'] {
 			margin-top: 1px;
-		}
-		[class^='tutor-text-'] {
 		}
 	}
 }
@@ -589,8 +526,6 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 
 	&-commentlist {
 		list-style: none;
-		.commentlist-meta {
-		}
 		.commentlist-comment {
 			border-radius: 6px;
 			position: relative;

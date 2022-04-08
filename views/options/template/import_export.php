@@ -85,13 +85,13 @@ tutor_alert(
 							</button>
 							<ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 								<li>
-									<a class="export_single_settings" data-id="<?php echo $key; ?>">
+									<a class="tutor-dropdown-item export_single_settings" data-id="<?php echo $key; ?>">
 										<span class="tutor-icon-archive tutor-mr-8" area-hidden="true"></span>
 										<span><?php _e('Download','tutor'); ?></span>
 									</a>
 								</li>
 								<li>
-									<a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Delete Settings','tutor'); ?>" data-heading="<?php _e('Delete This Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will remove the settings history data from your system, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>">
+									<a class="tutor-dropdown-item delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Delete Settings','tutor'); ?>" data-heading="<?php _e('Delete This Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will remove the settings history data from your system, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>">
 										<span class="icon tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
 										<span><?php _e('Delete','tutor'); ?></span>
 									</a>

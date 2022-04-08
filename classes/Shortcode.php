@@ -223,12 +223,13 @@ class Shortcode {
 
 		$layout = sanitize_text_field( tutor_utils()->array_get( 'layout', $atts, '' ) );
 		$layout = in_array( $layout, $this->instructor_layout ) ? $layout : tutor_utils()->get_option( 'instructor_list_layout', $this->instructor_layout[0] );
+		$default_col = (isset($atts['show_filter']) && $atts['show_filter'] && $layout=='pp-left-middle') ? 2 : 3;
 
 		$payload = array(
 			'instructors'   => is_array( $instructors ) ? $instructors : array(),
 			'next_page'     => $next_page,
 			'previous_page' => $previous_page,
-			'column_count'  => sanitize_text_field( tutor_utils()->array_get( 'column_per_row', $atts, 3 ) ),
+			'column_count'  => sanitize_text_field( tutor_utils()->array_get( 'column_per_row', $atts, $default_col ) ),
 			'layout'        => $layout,
 			'limit'         => $limit,
 			'current_page'  => $current_page,
@@ -252,6 +253,7 @@ class Shortcode {
 		$current_page = $current_page >= 1 ? $current_page : 1;
 
 		$show_filter = isset( $atts['filter'] ) ? $atts['filter'] == 'on' : tutor_utils()->get_option( 'instructor_list_show_filter', false );
+		$atts['show_filter'] = $show_filter;
 
 		// Get instructor list to sow
 		$payload                = $this->prepare_instructor_list( $current_page, $atts );
@@ -276,11 +278,10 @@ class Shortcode {
 
 			$all_cats = $wpdb->get_var(
 				$wpdb->prepare(
-					" SElECT COUNT(*) as total FROM {$wpdb->terms} AS term
+					"SELECT COUNT(*) as total FROM {$wpdb->terms} AS term
 					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
 						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
-					ORDER BY term.term_id DESC
-				",
+					ORDER BY term.term_id DESC",
 					$course_taxonomy
 				)
 			);

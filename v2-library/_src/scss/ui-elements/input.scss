@@ -288,10 +288,15 @@ select.tutor-form-control,
 	input.tutor-form-check-input {
 		margin-right: 12px;
 	}
+
+	& + & {
+		margin-left: 16px;
+	}
 }
 
-input.tutor-form-check-input {
-	@extend .align-top;
+.tutor-form-check-input {
+	display: inline-block;
+	vertical-align: top;
 	background-color: var(--tutor-white);
 	width: 24px;
 	height: 24px;
@@ -331,38 +336,38 @@ input.tutor-form-check-input {
 			background-color: var(--tutor-primary-color);
 			background-image: url("data:image/svg+xml,%3Csvg width='14' height='10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M.922 5.7a.627.627 0 01-.127-.194.72.72 0 010-.5.6.6 0 01.127-.195l.905-.867a.562.562 0 01.425-.195.592.592 0 01.25.05.665.665 0 01.207.145l2.73 2.734L11.295.82a.658.658 0 01.202-.145.613.613 0 01.484.002.568.568 0 01.191.143l.905.88a.6.6 0 01.127.195.72.72 0 010 .5.628.628 0 01-.127.194l-7.2 7.163a.575.575 0 01-.195.147.655.655 0 01-.5 0 .575.575 0 01-.195-.147L.922 5.7z' fill='%23fff'/%3E%3C/svg%3E");
 			background-repeat: no-repeat;
+			background-position: 50% 50%;
 		}
 	}
 
-	&[type='radio'] {
+	&[type='radio'],
+	&-radio {
 		border-radius: 50%;
 		background-size: 100%;
-		&:checked {
+
+		@at-root input:checked + label .tutor-form-check-input-radio, // hack for the paid membership pro pricing
+		&:checked,
+		&.is-active {
 			border-color: var(--tutor-primary-color);
 			background-color: var(--tutor-primary-color);
 			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+			background-position: 50% 50%;
 		}
 	}
 
-	&.tutor-form-check-22 {
-		background-size: 11px;
-	}
 	&.tutor-form-check-20 {
 		background-size: 10px;
-	}
-	&.tutor-form-check-18 {
-		background-size: 9px;
 	}
 }
 
 .tutor-form-toggle {
-	@extend .d-inline-flex;
-	@extend .align-items-center;
-	@extend .align-top;
+	display: inline-flex;
+	align-items: center;
+	vertical-align: top;
 	input {
-		@extend .d-none;
+		display: none;
 		~ .tutor-form-toggle-control {
-			@extend .d-inline-block;
+			display: inline-block;
 			width: 40px;
 			height: 24px;
 			background-color: var(--tutor-border-color-alt);
@@ -405,39 +410,5 @@ input.tutor-form-check-input {
 				color: var(--tutor-border-color);
 			}
 		}
-	}
-}
-
-// .tutor-dashboard-page {
-// 	input.tutor-form-check-input[type='checkbox'],
-// 	input.tutor-form-check-input[type='radio'] {
-// 		&:checked {
-// 			border-color: $brand-wordpress;
-// 			background-color: $brand-wordpress;
-// 		}
-
-// 		&:focus {
-// 			box-shadow: 0 0 0 2px lighten($color: $brand-wordpress, $amount: 55);
-// 		}
-// 	}
-// }
-
-input.tutor-form-check-input.tutor-wp-admin[type='checkbox'],
-input.tutor-form-check-input.tutor-wp-admin[type='radio'] {
-	&:checked {
-		border-color: $brand-wordpress;
-		background-color: $brand-wordpress;
-	}
-
-	&:focus {
-		box-shadow: 0 0 0 4px lighten($color: $brand-wordpress, $amount: 55);
-	}
-}
-
-$checkSizes: 16, 18, 20, 22, 24;
-@each $size in $checkSizes {
-	input.tutor-form-check-#{$size} {
-		width: #{$size}px;
-		height: #{$size}px;
 	}
 }

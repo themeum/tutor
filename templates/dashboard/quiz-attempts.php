@@ -33,10 +33,8 @@ $date_filter    = isset( $_GET['date'] ) ? $_GET['date'] : '';
 tutor_load_template_from_custom_path( tutor()->path . 'templates/dashboard/elements/filters.php' );
 
 $course_id           = tutor_utils()->get_assigned_courses_ids_by_instructors();
-// how to pass params $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only = boolean
-$quiz_attempts       = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter );
-
-$quiz_attempts_count = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter, null, true );
+$quiz_attempts       = tutor_utils()->get_quiz_attempts($offset, $item_per_page, '', $course_filter, '', $order_filter, null, false, true );
+$quiz_attempts_count = tutor_utils()->get_quiz_attempts($offset, $item_per_page, '', $course_filter, '', $order_filter, null, true, true );
 
 tutor_load_template_from_custom_path(
 	tutor()->path . '/views/quiz/attempt-table.php',

@@ -10,3 +10,4 @@ import './general';
 import './accordion';
 import './accordionRadioFields';
 import './dropdownSelect';
+import './toggleMore';
