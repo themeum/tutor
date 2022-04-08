@@ -99,8 +99,8 @@ class WooCommerce extends Tutor_Base {
 	function auto_complete_woocommerce_virtual_orders( $payment_complete_status, $order_id, $order ) {
 
 		$auto_complete_woocommerce_virtual_orders = tutor_utils()->get_option( 'auto_complete_woocommerce_virtual_orders' );
-		if ( 'on' !== $auto_complete_woocommerce_virtual_orders ) {
-			return;
+		if ( !$auto_complete_woocommerce_virtual_orders ) {
+			return $payment_complete_status;
 		}
 
 
