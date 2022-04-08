@@ -1,15 +1,17 @@
 <?php
-
 /**
  * @package TutorLMS/Templates
  * @version 1.4.3
  */
 
-global $wpdb;
+if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
+    return;
+}
+use TUTOR_ASSIGNMENTS\Assignments_List;
 
 $order_filter          = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'desc';
 $assignment_id         = sanitize_text_field( $_GET['assignment'] );
-$assignments_submitted = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d ORDER BY comment_ID $order_filter", $assignment_id ) );
+$assignments_submitted = Assignments_List::get_submitted_assignments( $assignment_id, $order_filter );
 
 $max_mark  = tutor_utils()->get_assignment_option( $assignment_id, 'total_mark' );
 $pass_mark = tutor_utils()->get_assignment_option( $assignment_id, 'pass_mark' );

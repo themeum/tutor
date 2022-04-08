@@ -12,42 +12,47 @@ window.tutor_get_nonce_data = function(send_key_value) {
 	return { [nonce_key]: nonce_value };
 };
 
-window.tutor_popup = function($, icon, padding) {
+window.tutor_popup = function($, icon) {
+	const { __ } = wp.i18n;
 	var $this = this;
 	var element;
 
 	this.popup_wrapper = function(wrapper_tag) {
-		var img_tag =
-			icon === ''
-				? ''
-				: '<img class="tutor-pop-icon" src="' + window._tutorobject.tutor_url + 'assets/images/' + icon + '.svg"/>';
+		var html = '<'+ wrapper_tag +' id="tutor-legacy-modal" class="tutor-modal tutor-is-active">';
+			html += '<div class="tutor-modal-overlay"></div>';
+			html += '<div class="tutor-modal-window">';
+				html += '<div class="tutor-modal-content tutor-modal-content-white">';
+					html += '<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close><span class="tutor-icon-times" area-hidden="true"></span></button>';
+					html += '<div class="tutor-modal-body tutor-text-center">';
+						html += '<div class="tutor-px-lg-48 tutor-py-lg-24">';
+						
+							if(icon) {
+								html += '<div class="tutor-mt-24"><img class="tutor-d-inline-block" src="' + window._tutorobject.tutor_url + 'assets/images/' + icon + '.svg" /></div>';
+							}
 
-		return (
-			'<' +
-			wrapper_tag +
-			' class="tutor-component-popup-container">\
-            <div class="tutor-component-popup-' +
-			padding +
-			'">\
-                <div class="tutor-component-content-container">' +
-			img_tag +
-			'</div>\
-                <div class="tutor-component-button-container"></div>\
-            </div>\
-        </' +
-			wrapper_tag +
-			'>'
-		);
+							html += '<div class="tutor-modal-content-container"></div>';
+
+							// Buttons
+							html += '<div class="tutor-d-flex tutor-justify-center tutor-mt-48 tutor-mb-24 tutor-modal-actions"></div>';
+						
+						html += '</div>';
+					html += '</div>';
+				html += '</div>';
+			html += '</div>';
+		html += '</'+ wrapper_tag +'>';
+
+		return html;
 	};
 
 	this.popup = function(data) {
-		var title = data.title ? '<h3>' + data.title + '</h3>' : '';
-		var description = data.description ? '<p>' + data.description + '</p>' : '';
+		var title = data.title ? '<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">'+ data.title +'</div>' : '';
+		var description = data.description ? '<div class="tutor-fs-6 tutor-color-muted">'+ data.description +'</div>' : '';
 
 		var buttons = Object.keys(data.buttons || {}).map(function(key) {
 			var button = data.buttons[key];
 			var button_id = button.id ? 'tutor-popup-' + button.id : '';
-			return $('<button id="' + button_id + '" class="' + button.class + '">' + button.title + '</button>').click(
+			var button_attr = button.attr ? ' ' + button.attr : '';
+			return $('<button id="' + button_id + '" class="' + button.class + '"' + button_attr + '>' + button.title + '</button>').click(
 				function() {
 					button.callback($(this));
 				}
@@ -55,30 +60,17 @@ window.tutor_popup = function($, icon, padding) {
 		});
 
 		element = $($this.popup_wrapper(data.wrapper_tag || 'div'));
-		var content_wrapper = element.find('.tutor-component-content-container');
+		var content_wrapper = element.find('.tutor-modal-content-container');
 
 		content_wrapper.append(title);
-		data.after_title ? content_wrapper.append(data.after_title) : 0;
-
 		content_wrapper.append(description);
-		data.after_description ? content_wrapper.append(data.after_description) : 0;
-
-		// Assign close event on click black overlay
-		element
-			.click(function() {
-				$(this).remove();
-			})
-			.children()
-			.click(function(e) {
-				e.stopPropagation();
-			});
-
-		// Append action button
-		for (var i = 0; i < buttons.length; i++) {
-			element.find('.tutor-component-button-container').append(buttons[i]);
-		}
 
 		$('body').append(element);
+		$('body').addClass('tutor-modal-open');
+
+		for (var i = 0; i < buttons.length; i++) {
+			element.find('.tutor-modal-actions').append(buttons[i]);
+		}
 
 		return element;
 	};
@@ -260,6 +252,7 @@ jQuery(document).ready(function($) {
 		});
 	});
 
+	// @todo: find out the usage
 	$(document).on('click', '.settings-tabs-navs li', function(e) {
 		e.preventDefault();
 
@@ -329,19 +322,6 @@ jQuery(document).ready(function($) {
 			},
 		});
 	});
-
-	//dropdown toggle
-	// $(document).click(function() {
-	// 	$('.tutor-dropdown').removeClass('show');
-	// });
-
-	// $('.tutor-dropdown').click(function(e) {
-	// 	e.stopPropagation();
-	// 	if ($('.tutor-dropdown').hasClass('show')) {
-	// 		$('.tutor-dropdown').removeClass('show');
-	// 	}
-	// 	$(this).addClass('tutor-dropdown-show');
-	// });
 
 	/**
 	 * @since v.1.8.6

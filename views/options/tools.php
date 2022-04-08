@@ -19,11 +19,11 @@
 					<?php
 					foreach ( $tools_fields as $key => $section ) {
 						$icon         = tutor()->icon_dir . $key . '.svg';
-						$active_class = $active_tab == $key ? esc_attr( 'is-active' ) : '';
+						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
 						$page_url     = add_query_arg( 'sub_page', esc_attr( $section['slug'] ), admin_url( 'admin.php?page=tutor-tools' ) );
 						?>
 							<li>
-								<a href="<?php echo esc_url( $page_url ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
+								<a class="tutor-nav-item<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $page_url ); ?>">
 									<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
 									<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block"><?php echo esc_html( $section['label'] ); ?></span>
 								</a>

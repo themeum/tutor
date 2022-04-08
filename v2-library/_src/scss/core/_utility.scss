@@ -267,6 +267,24 @@ $border: (
 	}
 }
 
+// toggle more
+.tutor-toggle-more {
+	&-collapsed {
+		position: relative;
+		overflow: hidden;
+		&:before {
+			content: " ";
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 62px;
+			background: linear-gradient(180deg, rgba(255,255,255,0.0001) 1.31%, rgba(255, 255, 255, 0.721372) 15.41%, #fff 100%);
+			z-index: 5;
+		}
+	}
+}
+
 // icon
 .tutor {
 	&-svg {

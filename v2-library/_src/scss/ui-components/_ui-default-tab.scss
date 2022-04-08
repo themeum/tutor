@@ -1,5 +1,6 @@
 //Tutor Default Tab
-.tutor-default-tab {
+// @todo: to be removed
+.tutor-default-tab-bak {
 	.tab-header {
 		border-bottom: 1px solid $stroke-light-30;
 		gap: 15px;
@@ -37,120 +38,12 @@
 		}
 	}
 
-	.tab-header-item-seemore {
-		.tab-header-item {
-			&:before {
-				display: none !important;
-			}
-			&.is-active {
-				color: $design-brand;
-				&:before {
-					display: none;
-				}
-			}
-		}
-	}
-
 	.tab-body {
 		@extend .tutor-pt-32;
 		&-item {
 			display: none;
 			&.is-active {
 				display: block;
-			}
-		}
-	}
-
-	// Tab Header See More Popup
-	.tab-header-item-seemore {
-		position: relative;
-		display: flex;
-		align-items: center;
-
-		// .tab-header-item-seemore-toggle
-		&-toggle {
-			@extend .text-medium-caption;
-			@extend .tutor-color-black-60;
-			display: flex;
-			align-items: center;
-			cursor: pointer;
-			.icon-seemore {
-				transform: rotate(-45deg);
-				transition: 100ms;
-			}
-			> * {
-				pointer-events: none;
-			}
-		}
-
-		// .tab-header-item-seemore-popup
-		&-popup {
-			position: absolute;
-			background: #ffffff;
-			box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
-			border-radius: 6px;
-			padding: 4px 0;
-			top: calc(100% - 8px);
-			right: -3px;
-			z-index: 10;
-
-			ul {
-				width: 180px;
-				max-height: 190px;
-				overflow-y: auto;
-			}
-
-			&:before {
-				content: '';
-				position: absolute;
-				width: 10px;
-				height: 10px;
-				top: -5px;
-				right: 8px;
-				background: #fff;
-				clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
-				transform: rotate(45deg);
-				border-radius: 3px 0 0 0px;
-			}
-			.tab-header-item {
-				@extend .text-regular-caption;
-				@extend .tutor-color-design-dark;
-				@extend .tutor-px-16;
-				@extend .tutor-py-8;
-				display: flex;
-				align-items: center;
-				transition: 200ms;
-				&.is-active {
-					/* color/primary/fill/40 */
-					background: #e9edfb;
-				}
-				&:hover {
-					/* color/primary/fill/40 */
-					background: #e9edfb;
-				}
-
-				&:not(:last-child) {
-					margin-bottom: 4px;
-				}
-			}
-		}
-
-		// Toggle Popup
-		.tab-header-item-seemore-popup {
-			opacity: 0;
-			visibility: hidden;
-			transition: 100ms;
-		}
-		
-		&.is-active {
-			.tab-header-item-seemore-toggle {
-				.icon-seemore {
-					transform: rotate(0deg);
-				}
-			}
-			.tab-header-item-seemore-popup {
-				opacity: 1;
-				visibility: visible;
 			}
 		}
 	}

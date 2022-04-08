@@ -109,43 +109,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	}
 	commentSideLine();
 	window.addEventListener(_tutorobject.content_change_event, commentSideLine);
-
-	const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
-	const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
-	if (spotlightTabs && spotlightTabContent) {
-		document.addEventListener('click', (event) => {
-			const currentItem = event.target;
-			const isValidCurrentItem = currentItem.classList.contains('tab-header-item');
-			if (isValidCurrentItem) {
-				clearSpotlightTabActiveClass(spotlightTabs, spotlightTabContent);
-				currentItem.classList.add('is-active');
-				let id = currentItem.getAttribute('data-tutor-spotlight-tab-target');
-				let query_string = currentItem.getAttribute('data-tutor-query-string');
-
-				const tabConent = currentItem.parentNode.nextElementSibling;
-				if (null !== tabConent.querySelector('#' + id)) {
-					tabConent.querySelector('#' + id).classList.add('is-active');
-				}
-				if (id === 'tutor-course-spotlight-tab-3') {
-					commentSideLine();
-				}
-				let url = new URL(window.location);
-				url.searchParams.set('page_tab', query_string);
-				window.history.pushState({}, '', url);
-			}
-		});
-		const clearSpotlightTabActiveClass = () => {
-			const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
-			const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
-
-			spotlightTabs.forEach((item) => {
-				item.classList.remove('is-active');
-			});
-			spotlightTabContent.forEach((item) => {
-				item.classList.remove('is-active');
-			});
-		};
-	}
 	/* commenting */
 
 	// quize drag n drop functionality
@@ -306,7 +269,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                                     </div>
                                     <div onclick="(() => {
 										this.closest('.tutor-instructor-card').remove();
-									})()" class="tutor-attachment-file-close tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
+									})()" class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
                                         <span class="tutor-icon-times-o tutor-color-brand"></span>
                                     </div>
                                 </div>`;
@@ -321,37 +284,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 
-	/* Show More Text */
-	const showMoreBtn = document.querySelector('.tutor-show-more-btn button');
-	if (showMoreBtn) {
-		showMoreBtn.addEventListener('click', showMore);
-	}
-
-	function showMore() {
-		let lessText = document.getElementById('short-text');
-		let dots = document.getElementById('dots');
-		let moreText = document.getElementById('full-text');
-		let btnText = document.getElementById('showBtn');
-		let contSect = document.getElementById('content-section');
-		if (dots.style.display === 'none') {
-			lessText.style.display = 'block';
-			dots.style.display = 'inline';
-			btnText.innerHTML =
-				"<span class='btn-icon tutor-icon-plus-filled color-design-brand'></span><span class='tutor-color-black'>" +
-				__('Show More', 'tutor') +
-				'</span>';
-			moreText.style.display = 'none';
-		} else {
-			lessText.style.display = 'none';
-			dots.style.display = 'none';
-			btnText.innerHTML =
-				"<span class='btn-icon tutor-icon-minus-filled color-design-brand'></span><span class='tutor-color-black'>" +
-				__('Show Less', 'tutor') +
-				'</span>';
-			moreText.style.display = 'block';
-			contSect.classList.add('no-before');
-		}
-	}
 	//remove file
 	const removeButton = document.querySelectorAll('.tutor-attachment-file-close a');
 	removeButton.forEach((item) => {

@@ -1,5 +1,5 @@
 .item-wrapper.color-preset-picker {
-	> .tutor-option-field-row {
+	.tutor-option-field-row {
 		border-bottom: none !important;
 	}
 	.color-picker-wrapper {
@@ -11,30 +11,7 @@
 	}
 	position: relative;
 }
-.other_colors {
-	height: 0;
-	overflow: hidden;
-	transition: all 0.3s;
-}
-.more_button {
-	i {
-		margin-right: 6px;
-		font-weight: bolder;
-		color: #3e64de;
-	}
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	background: linear-gradient(180deg, #f4f6f9 1.31%, rgba(244, 246, 249, 0.72) 15.41%, #f4f6f9 100%);
-	cursor: pointer;
-	z-index: 99;
-	height: 90px;
-	text-align: center;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
+
 .tutor-option-field-input.color-preset-grid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
@@ -112,11 +89,11 @@
 		@include appearNone;
 		&:checked {
 			+ .preset-item {
-				border-color: $brand-wordpress;
-				box-shadow: 0 0 0 1px $brand-wordpress;
+				border-color: var(--tutor-primary-color);
+				box-shadow: 0 0 0 1px var(--tutor-primary-color);
 				.check-icon {
-					background-color: $brand-wordpress;
-					border-color: $brand-wordpress;
+					background-color: var(--tutor-primary-color);
+					border-color: var(--tutor-primary-color);
 
 					&:before {
 						transform: scale(1);
@@ -152,20 +129,22 @@
 	}
 }
 
-.item-wrapper > .color-picker-wrapper {
+.item-wrapper .color-picker-wrapper {
 	.tutor-option-field-row:first-child {
 		padding-top: 15px;
 	}
 
 	position: relative;
 	z-index: 1;
-	&:before {
-		content: '';
-		position: absolute;
-		inset: 0px -26px -20px -26px;
-		background: rgba(239, 241, 247, 0.3);
-		z-index: -1;
-	}
+
+	// @todo: to be removed later
+	// &:before {
+	// 	content: '';
+	// 	position: absolute;
+	// 	inset: 0px -26px -20px -26px;
+	// 	background: rgba(239, 241, 247, 0.3);
+	// 	z-index: -1;
+	// }
 
 	label.color-picker-input * {
 		margin: 0;

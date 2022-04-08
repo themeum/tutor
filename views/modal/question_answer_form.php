@@ -46,7 +46,7 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             <label class="tutor-form-label">
                 <?php _e('Answer title', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-16">
+            <div class="tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
             </div>
         </div>
@@ -97,12 +97,12 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             <label class="tutor-form-label">
                 <?php _e('Question Title', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-16">
+            <div class="tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
-                <p class="tutor-form-feedback tutor-has-icon">
+                <div class="tutor-form-feedback">
                     <i class="tutor-icon-circle-info-o tutor-form-feedback-icon"></i>
-                    <?php _e( 'Please make sure to use the <strong>{dash}</strong> variable in your question title to show the blanks in your question. You can use multiple <strong>{dash}</strong> variables in one question.', 'tutor' ); ?>
-                </p>
+                    <div><?php _e( 'Please make sure to use the <strong>{dash}</strong> variable in your question title to show the blanks in your question. You can use multiple <strong>{dash}</strong> variables in one question.', 'tutor' ); ?></div>
+                </div>
             </div>
         </div>
         
@@ -110,12 +110,12 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             <label class="tutor-form-label">
                 <?php _e('Correct Answer(s)', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-16">
+            <div class="tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_two_gap_match]" value="<?php echo $answer_two_gap_match; ?>"/>
-                <p class="tutor-form-feedback tutor-has-icon">
+                <div class="tutor-form-feedback">
                     <i class="tutor-icon-circle-info-o tutor-form-feedback-icon"></i>
-                    <?php _e( 'Separate multiple answers by a vertical bar <strong>|</strong>. 1 answer per <strong>{dash}</strong> variable is defined in the question. Example: Apple | Banana | Orange', 'tutor' ); ?>
-                </p>
+                    <div><?php _e( 'Separate multiple answers by a vertical bar <strong>|</strong>. 1 answer per <strong>{dash}</strong> variable is defined in the question. Example: Apple | Banana | Orange', 'tutor' ); ?></div>
+                </div>
             </div>
         </div>
 		<?php
@@ -148,7 +148,7 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             <label class="tutor-form-label">
                 <?php _e('Answer title', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-16">
+            <div class="tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>"/>
             </div>
         </div>
@@ -157,7 +157,7 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             <label class="tutor-form-label">
                 <?php _e('Matched Answer title', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-16">
+            <div class="tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][matched_answer_title]" value="<?php echo $answer_two_gap_match; ?>"/>
             </div>
         </div>
@@ -221,7 +221,7 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             <label class="tutor-form-label">
                 <?php _e('Image matched text', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-16">
+            <div class="tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]"  value="<?php echo $answer_title; ?>"/>
             </div>
         </div>
@@ -247,12 +247,12 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             <label class="tutor-form-label">
                 <?php _e('Answer input value', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-16">
+            <div class="tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>"/>
-                <p class="tutor-form-feedback tutor-has-icon">
+                <div class="tutor-form-feedback">
                     <i class="tutor-icon-circle-info-o tutor-form-feedback-icon"></i>
-                    <?php _e('The answers that students enter should match with this text. Write in <strong>small caps</strong>','tutor'); ?>
-                </p>
+                    <div><?php _e('The answers that students enter should match with this text. Write in <strong>small caps</strong>','tutor'); ?></div>
+                </div>
             </div>
         </div>
 		<?php

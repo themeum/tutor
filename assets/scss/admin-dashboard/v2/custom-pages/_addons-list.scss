@@ -21,7 +21,7 @@
             border-bottom-left-radius: 0px !important;
             margin-left: -1px;
             &:focus {
-                box-shadow: -1px 0 0 0 $brand-wordpress;
+                box-shadow: -1px 0 0 0 var(--tutor-primary-color);
             }
         }
     }
@@ -135,7 +135,7 @@
                 span {
                     margin-right: 5px;
                     font-size: 24px;
-                    color: $brand-wordpress;
+                    color: var(--tutor-primary-color);
                 }
             }
             .tutor-btn {
@@ -161,7 +161,7 @@
 
 .tutor-addons-loading {
     position: relative;
-    @include spinner($brand-wordpress, $primary-50, 30px);
+    @include spinner(var(--tutor-primary-color), $primary-50, 30px);
     width: 100%;
     height: 300px;
     grid-area: 1/-1;

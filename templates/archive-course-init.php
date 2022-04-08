@@ -67,6 +67,7 @@
 			'per_page'    => $course_per_page,
 			'paged'       => $current_page,
 			'ajax'		  => array_merge($GLOBALS['tutor_course_archive_arg'], array(
+				'loading_container' => '.tutor-course-filter-loop-container',
 				'action' => 'tutor_course_filter_ajax',
 			))
 		);
