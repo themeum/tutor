@@ -35,7 +35,7 @@ tutor_alert(
 	</div>
 	<!-- @todo: fix the upload button -->
 	<div class="item-wrapper">
-		<div class="tutor-option-field-row tutor-d-block d-block">
+		<div class="tutor-option-field-row tutor-d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
 					<span class="tutor-icon-upload tutor-fs-1 tutor-color-brand"></span>

@@ -112,7 +112,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
     </div>
 </div>
 
-<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex justify-content-center tutor-mt-36 tutor-pb-80">
+<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex tutor-justify-center tutor-mt-36 tutor-pb-80">
     <div id="tutor-assignment-wrap" class="tutor-quiz-wrap tutor-course-assignment-details tutor-submit-assignment  tutor-assignment-result-pending">
         <div class="tutor-assignment-title tutor-fs-4 tutor-fw-medium tutor-color-black">
             <?php the_title(); ?>
