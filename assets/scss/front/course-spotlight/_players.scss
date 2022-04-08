@@ -90,47 +90,47 @@
 	}
 
 	// Video players
-	.course-players-parent {
-		background: black;
-		display: block;
+	// .course-players-parent {
+	// 	background: black;
+	// 	display: block;
+	// 	position: relative;
+
+	// .course-players {
+	.tutor-video-player {
+		width: 100%;
+		margin: auto;
+		aspect-ratio: 16 / 9;
+		max-height: 700px;
 		position: relative;
-
-		// .course-players {
-		.tutor-video-player {
-			width: 100%;
-			margin: auto;
+		overflow: hidden;
+		.plyr--html5 {
 			aspect-ratio: 16 / 9;
-			max-height: 700px;
-			position: relative;
-			overflow: hidden;
-			.plyr--html5 {
-				aspect-ratio: 16 / 9;
-			}
-			.loading-spinner {
-				position: absolute;
-				inset: 0;
-				background: $bg-gray-10;
-				border-radius: 3px;
-				z-index: 10;
+		}
+		.loading-spinner {
+			position: absolute;
+			inset: 0;
+			background: $bg-gray-10;
+			border-radius: 3px;
+			z-index: 10;
 
-				@include spinner(#1973aa, #eee);
-			}
+			@include spinner(#1973aa, #eee);
+		}
 
-			.loading-spinner::before {
-				width: 50px;
-				height: 50px;
-				top: calc(50% - 25px);
-			}
+		.loading-spinner::before {
+			width: 50px;
+			height: 50px;
+			top: calc(50% - 25px);
+		}
 
-			.loading-spinner.hide {
-				display: none;
-			}
+		.loading-spinner.hide {
+			display: none;
+		}
 
-			iframe {
-				width: 100%;
-				height: 100%;
-				border: none;
-			}
+		iframe {
+			width: 100%;
+			height: 100%;
+			border: none;
 		}
 	}
+	// }
 }

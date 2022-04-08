@@ -1,25 +1,44 @@
 // dropdown
 (function tutorDropdownMenu() {
 	document.addEventListener('click', (e) => {
-		const attr = 'action-tutor-dropdown';
+		const dropdownAttr = 'action-tutor-dropdown';
+		const dropDownTarget = e.target.hasAttribute(dropdownAttr)
+			? e.target
+			: e.target.closest(`[${dropdownAttr}]`);
 
-		if (e.target.hasAttribute(attr)) {
+		if (dropDownTarget && dropDownTarget.hasAttribute(dropdownAttr)) {
 			e.preventDefault();
 
-			const dropdownParent = e.target.closest('.tutor-dropdown-parent');
+			const dropdownParent = dropDownTarget.closest('.tutor-dropdown-parent');
 
 			if (dropdownParent.classList.contains('is-open')) {
 				dropdownParent.classList.remove('is-open');
 			} else {
-				document.querySelectorAll('.tutor-dropdown-parent').forEach((dropdownParent) => {
-					dropdownParent.classList.remove('is-open');
-				});
+				document
+					.querySelectorAll('.tutor-dropdown-parent')
+					.forEach((dropdownParent) => {
+						dropdownParent.classList.remove('is-open');
+					});
 				dropdownParent.classList.add('is-open');
 			}
 		} else {
-			document.querySelectorAll('.tutor-dropdown-parent').forEach((dropdownParent) => {
-				dropdownParent.classList.remove('is-open');
-			});
+			const restrictedDataAttributes = ['data-tutor-copy-target'];
+			const isRestricted = restrictedDataAttributes.some(
+				(restrictedDataAttribute) => {
+					return (
+						e.target.hasAttribute(restrictedDataAttribute) ||
+						e.target.closest(`[${restrictedDataAttribute}]`)
+					);
+				},
+			);
+
+			if (!isRestricted) {
+				document
+					.querySelectorAll('.tutor-dropdown-parent')
+					.forEach((dropdownParent) => {
+						dropdownParent.classList.remove('is-open');
+					});
+			}
 		}
 	});
 })();
@@ -34,10 +53,7 @@ document.addEventListener('click', async (e) => {
 
 		/* Get the text field */
 		const content = document.getElementById(id).textContent.trim();
-
-		/* Copy the text inside the text field */
-		await navigator.clipboard.writeText(content);
-		const copiedTxt = await navigator.clipboard.readText();
+		await copyToClipboard(content);
 
 		if (content) {
 			showToolTip(e.target, 'Copied');
@@ -46,6 +62,19 @@ document.addEventListener('click', async (e) => {
 		}
 	}
 });
+
+// Copy text to clipboard
+const copyToClipboard = (text) => {
+	return new Promise((resolve) => {
+		const textArea = document.createElement('textarea');
+		textArea.value = text;
+		document.body.appendChild(textArea);
+		textArea.select();
+		document.execCommand('copy');
+		document.body.removeChild(textArea);
+		resolve();
+	});
+};
 
 // Showing tooltip
 const showToolTip = (targetEl, text = 'Copied!') => {

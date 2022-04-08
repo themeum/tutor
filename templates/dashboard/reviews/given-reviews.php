@@ -30,11 +30,11 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 	<?php if ( current_user_can( tutor()->instructor_role ) ) : ?>
 		<div class="tutor-mb-32">
 			<ul class="tutor-nav">
-				<li class="tutor-nav-item">
-					<a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ) ); ?>"> <?php esc_html_e( 'Received', 'tutor' ); ?> (<?php echo $received_count; ?>)</a>
+				<li>
+					<a class="tutor-nav-item" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ) ); ?>"> <?php esc_html_e( 'Received', 'tutor' ); ?> (<?php echo $received_count; ?>)</a>
 				</li>
-				<li class="tutor-nav-item">
-					<a class="is-active" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ) ); ?>"> <?php esc_html_e( 'Given', 'tutor' ); ?> (<?php echo $review_count; ?>)</a>
+				<li>
+					<a class="tutor-nav-item is-active" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ) ); ?>"> <?php esc_html_e( 'Given', 'tutor' ); ?> (<?php echo $review_count; ?>)</a>
 				</li>
 			</ul>
 		</div>
