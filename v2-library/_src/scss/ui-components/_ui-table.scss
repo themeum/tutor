@@ -416,14 +416,6 @@ table.tutor-ui-table {
 		}
 	}
 
-	// .tutor-ui-table-data-td-target progress checkbox
-	&.tutor-ui-table-data-td-target {
-		input.tutor-form-check-input[type='checkbox'] {
-			border-width: 2px;
-			transform: scale(0.75);
-		}
-	}
-
 	.td-list-item {
 		&:not(:last-child) {
 			@extend .tutor-mr-80;
