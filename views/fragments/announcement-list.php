@@ -30,7 +30,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Select Course', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select tutor-form-control no-tutor-dropdown" name="tutor_announcement_course" required>
+						<select class="tutor-form-select tutor-form-control" name="tutor_announcement_course" required>
 							<?php if ( $courses ) : ?>
 								<?php foreach ( $courses as $course ) : ?>
 									<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID ); ?>>
@@ -273,13 +273,13 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										</button>
 										<ul class="tutor-dropdown tutor-dropdown-dark">
 											<li>
-												<a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
+												<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
 													<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
 													<span><?php _e( 'Edit', 'tutor' ); ?></span>
 												</a>
 											</li>
 											<li>
-												<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
+												<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
 													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
 													<span><?php _e( 'Delete', 'tutor' ); ?></span>
 												</a>

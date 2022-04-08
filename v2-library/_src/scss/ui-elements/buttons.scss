@@ -15,6 +15,7 @@ $disabled-color: #E9E9EA !default;
     padding: 8px 16px;
     font-size: 16px;
     border-radius: 6px;
+	box-sizing: border-box;
 	cursor: pointer;
     transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
 
@@ -118,11 +119,13 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-ghost {
-		font-size: inherit;
+		// font-size: inherit;
 		padding: 0px !important;
-		font-weight: 500;
+		// font-weight: 500;
 		position: relative;
 		color: #757C8E; // @todo: to be changed
+		border-radius: 0;
+		outline: 0;
 
 		&.tutor-has-underline {
 			position: relative;
@@ -145,6 +148,9 @@ $disabled-color: #E9E9EA !default;
 			&.tutor-has-underline:after {
 				background-color: var(--tutor-primary-color);
 			}
+
+			outline: 0;
+			box-shadow: none;
 		}
 	}
 
@@ -195,6 +201,7 @@ $disabled-color: #E9E9EA !default;
 		justify-content: center;
 		width: 32px;
 		height: 32px;
+		padding: 0;
 		margin-top: -4px;
 		margin-bottom: -4px;
 		font-weight: 400;
@@ -222,6 +229,7 @@ $disabled-color: #E9E9EA !default;
 		&:active {
 			color: var(--tutor-primary-hover-color);
 			background-color: #E0E6FA;
+			border-color: #E0E6FA;
 		}
 
 		&[disabled],

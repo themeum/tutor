@@ -35,28 +35,29 @@
 						}
 					});
 					
+					// @todo: need to change active class selector
 					if (wrappedElements.length) {
 						var newSet = wrappedElements.clone();
 						wrappedElements.addClass('tutor-d-none');
 						$(nav).find('.tutor-nav-more-list').append(newSet);		
 						$(nav).find('.tutor-nav-more').removeClass('tutor-d-none').addClass('tutor-d-inline-block');
-						if($(nav).find('.tutor-nav-more-list > li.is-active').length) {
-							$(nav).find('.tutor-nav-more').addClass('is-active');
+						if($(nav).find('.tutor-nav-more-list .is-active').length) {
+							$(nav).find('.tutor-nav-more-item').addClass('is-active');
 						}
 					}
 				};
 				
 				this.cleanList = function() {
 					$(nav).find('.tutor-nav-more-list').empty();
-					$(nav).find('.tutor-nav-more').removeClass('tutor-d-inline-block is-active').addClass('tutor-d-none');
+					$(nav).find('.tutor-nav-more').removeClass('tutor-d-inline-block').addClass('tutor-d-none').find('.tutor-nav-more-item').removeClass('is-active');
 					elements.removeClass('tutor-d-none');
 				};
 				
 				this.buildList = function() {
 					$(nav).find('.tutor-nav-more-item').on('click', function(event) {
 						event.preventDefault();
-						if($(nav).find('.tutor-nav-more-list > li.is-active').length) {
-							$(this).parent().addClass('is-active');
+						if($(nav).find('.tutor-nav-more-list .is-active').length) {
+							$(this).addClass('is-active');
 						}
 						$(this).parent().toggleClass('tutor-nav-opened');
 					});

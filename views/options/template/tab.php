@@ -18,42 +18,23 @@
     }
 ?>
 
-<?php $more_popups = array_slice($tabbed, 4); ?>
-<div class="tutor-default-tab tutor-settings-details-tab">
-    <div class="tab-header tutor-d-flex">
+<div class="tutor-settings-certificate-builder">
+    <ul class="tutor-nav" tutor-priority-nav>
         <?php foreach($tabbed as $index => $tab): ?>
-            <?php 
-                if($index>=4) {
-                    break;
-                }
-            ?>
-            <div class="tab-header-item<?php echo $index==0 ? ' is-active' : ''; ?>" data-tutor-tab-target="tutor-settings-tab-<?php echo $tab['slug']; ?>">
-                <span><?php echo $tab['label']; ?></span>
-            </div>
+            <li>
+                <a href="#" class="tutor-nav-item<?php echo $index==0 ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-settings-tab-<?php echo $tab['slug']; ?>"><?php echo $tab['label']; ?></a>
+            </li>
         <?php endforeach; ?>
-                
-        <?php if(count($more_popups)): ?>
-            <div class="tab-header-item-seemore tutor-ml-auto">
-                <div class="tab-header-item-seemore-toggle" data-seemore-target="tutor-settings-tab-seemore-11">
-                    <span class="icon-seemore tutor-icon-times  tutor-color-text-brand"></span>
-                </div>
-                <div id="tutor-settings-tab-seemore-11" class="tab-header-item-seemore-popup">
-                    <ul>
-                        <?php foreach($more_popups as $tab): ?>
-                            <li class="tab-header-item" data-tutor-tab-target="tutor-settings-tab-<?php echo $tab['key']; ?>">
-                                <span class="tutor-icon-brand-github  tutor-mr-8"></span>
-                                <span><?php echo $tab['label']; ?></span>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            </div>
-        <?php endif; ?>
-    </div>
+
+        <li class="tutor-nav-more tutor-d-none">
+            <a class="tutor-nav-item tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
+            <ul class="tutor-nav-more-list tutor-dropdown"></ul>
+        </li>
+    </ul>
     
-    <div class="tab-body">
+    <div class="tutor-tab tutor-mt-32">
         <?php foreach($tabbed as $index => $tab): ?>
-            <div class="tab-body-item<?php echo $index==0 ? ' is-active' : ''; ?>" id="tutor-settings-tab-<?php echo $tab['slug']; ?>">
+            <div id="tutor-settings-tab-<?php echo $tab['slug']; ?>" class="tutor-tab-item<?php echo $index==0 ? ' is-active' : ''; ?>">
                 <?php echo $this->blocks( $tab ); ?>
             </div>
         <?php endforeach; ?>

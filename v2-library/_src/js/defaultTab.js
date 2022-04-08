@@ -4,68 +4,73 @@
 		 * Tutor Default Tab
 		 */
 		const attr = 'data-tutor-tab-target';
-		const activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active');
+		const activeItems = document.querySelectorAll(
+			'.tab-header-item.is-active, .tab-body-item.is-active',
+		);
+		let elementWithAttr = null;
 
 		if (e.target.hasAttribute(attr)) {
-			e.preventDefault();
-			const id = e.target.hasAttribute(attr)
-				? e.target.getAttribute(attr)
-				: e.target.closest(`[${attr}]`).getAttribute(attr);
+			elementWithAttr = e.target;
+		} else if (e.target.closest(`[${attr}]`)?.hasAttribute(attr)) {
+			elementWithAttr = e.target.closest(`[${attr}]`);
+		}
 
+		const id = elementWithAttr ? elementWithAttr.getAttribute(attr) : null;
+
+		if (id) {
+			e.preventDefault();
 			const tabBodyItem = document.getElementById(id);
 
-			if (e.target.hasAttribute(attr) && tabBodyItem) {
+			if (tabBodyItem) {
 				activeItems.forEach((m) => {
 					m.classList.remove('is-active');
 				});
-
-				e.target.classList.add('is-active');
+				elementWithAttr.classList.add('is-active');
 				tabBodyItem.classList.add('is-active');
 			}
 		}
 
 		// Nav
 		const attrNav = 'data-tutor-nav-target';
-		const activeNavItems = document.querySelectorAll('.tutor-nav-item > a.is-active, .tutor-tab-item.is-active');
+		const navTarget = e.target.hasAttribute(attrNav) ? e.target : e.target.closest(`[${attrNav}]`);
+		const activeNavItems = document.querySelectorAll('.tutor-nav-item.is-active, .tutor-tab-item.is-active');
 
-		if (e.target.hasAttribute(attrNav)) {
+		if (navTarget && navTarget.hasAttribute(attrNav)) {
 			e.preventDefault();
-			const id = e.target.hasAttribute(attrNav)
-				? e.target.getAttribute(attrNav)
-				: e.target.closest(`[${attrNav}]`).getAttribute(attrNav);
+
+			const id = navTarget.getAttribute(attrNav);
 
 			const navTabBodyItem = document.getElementById(id);
 
-			if (e.target.hasAttribute(attrNav) && navTabBodyItem) {
+			if (navTabBodyItem) {
 				activeNavItems.forEach((m) => {
 					m.classList.remove('is-active');
 				});
 
-				if(e.target.closest('.tutor-nav-more') != undefined) {
-					e.target.closest('.tutor-nav-more').classList.add('is-active');
+				if (navTarget.closest('.tutor-nav-more') != undefined) {
+					navTarget.closest('.tutor-nav-more').querySelector('.tutor-nav-more-item').classList.add('is-active');
 				}
 
-				e.target.classList.add('is-active');
+				navTarget.classList.add('is-active');
+
+				if (
+					navTarget.hasAttribute('data-tutor-query-variable') &&
+					navTarget.hasAttribute('data-tutor-query-value')
+				) {
+					var queryVariable = navTarget.getAttribute(
+						'data-tutor-query-variable',
+					);
+					var queryValue = navTarget.getAttribute('data-tutor-query-value');
+
+					if (queryVariable && queryValue) {
+						let url = new URL(window.location);
+						url.searchParams.set(queryVariable, queryValue);
+						window.history.pushState({}, '', url);
+					}
+				}
+
 				navTabBodyItem.classList.add('is-active');
 			}
-		}
-
-		/**
-		 * Tutor Default Tab - see more
-		 */
-		const seeMoreAttr = 'data-seemore-target';
-		if (e.target.hasAttribute(seeMoreAttr)) {
-			const id = e.target.getAttribute(seeMoreAttr);
-			document
-				.getElementById(`${id}`)
-				.closest('.tab-header-item-seemore')
-				.classList.toggle('is-active');
-		} else {
-			document.querySelectorAll('.tab-header-item-seemore').forEach((item) => {
-				if (item.classList.contains('is-active')) {
-					item.classList.remove('is-active');
-				}
-			});
 		}
 	});
 })();

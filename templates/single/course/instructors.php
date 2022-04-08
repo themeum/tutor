@@ -21,7 +21,7 @@ if($instructors && count($instructors)) {
 	?>
 	<div class="tutor-mt-32">
 		<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
-			<?php _e( 'About the ' . ( count( (array) $instructors ) > 1 ? 'instructors' : 'instructor' ), 'tutor'); ?>
+			<?php echo _n( 'About the instructor', 'About the instructors', count( $instructors ), 'tutor' ); ?>
 		</h3>
 		<?php foreach($instructors as $instructor): ?>
 			<div class="tutor-instructor-info-card tutor-mb-16 tutor-break-word">

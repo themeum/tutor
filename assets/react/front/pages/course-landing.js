@@ -9,7 +9,6 @@ window.jQuery(document).ready(($) => {
         e.preventDefault();
 		var url = $(this).attr('href');
 		var course_id = $(this).data('course_id');
-        // @todo: check the button class functionality
 		
         var data = {
             title: __('Override Previous Progress', 'tutor'),
@@ -17,10 +16,9 @@ window.jQuery(document).ready(($) => {
             buttons: {
                 reset: {
                     title: __('Reset Data', 'tutor'),
-                    class: 'tutor-btn tutor-is-outline tutor-is-default',
+                    class: 'tutor-btn tutor-btn-primary',
 
                     callback: function (button) {
-
                         $.ajax({
                             url: window._tutorobject.ajaxurl,
                             type: 'POST',
@@ -44,9 +42,11 @@ window.jQuery(document).ready(($) => {
                         });
                     }
                 },
+
                 keep: {
                     title: __('Keep Data', 'tutor'),
-                    class: 'tutor-btn',
+                    class: 'tutor-btn tutor-btn-outline-primary tutor-ml-20',
+                    attr: 'data-tutor-modal-close',
                     callback: function () {
                         window.location.assign(url);
                     }
@@ -54,7 +54,7 @@ window.jQuery(document).ready(($) => {
             }
         };
 
-        new window.tutor_popup($, 'icon-gear', 40).popup(data);
+        new window.tutor_popup($, 'icon-gear').popup(data);
     });
 });
 

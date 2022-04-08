@@ -12,7 +12,10 @@
  * @version 1.4.3
  */
 
-global $wpdb;
+if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
+	return;
+}
+use TUTOR_ASSIGNMENTS\Assignments_List;
 
 $per_page     = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
@@ -93,7 +96,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 					foreach ( $assignments->results as $item ) :
 					$max_mark      = tutor_utils()->get_assignment_option( $item->ID, 'total_mark' );
 					$course_id     = tutor_utils()->get_course_id_by( 'assignment', $item->ID );
-					$comment_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $item->ID ) );
+					$comment_count = Assignments_List::assignment_comment_count( $item->ID );
 					// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish.
 					?>
 						<tr>

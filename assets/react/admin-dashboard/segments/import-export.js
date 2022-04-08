@@ -85,13 +85,13 @@ function tutor_option_history_load(dataset) {
 							</button>
 							<ul class="tutor-dropdown tutor-dropdown-dark">
 								<li>
-									<a class="export_single_settings" data-id="${dataKey}">
+									<a class="tutor-dropdown-item export_single_settings" data-id="${dataKey}">
 										<span class="tutor-icon-archive tutor-mr-8" area-hidden="true"></span>
 										<span>Download</span>
 									</a>
 								</li>
 								<li>
-									<a class="delete_single_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
+									<a class="tutor-dropdown-item delete_single_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
 										<span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
 										<span>Delete</span>
 									</a>
@@ -249,8 +249,8 @@ const export_single_settings = () => {
 const modalConfirmation = (modalOpener) => {
 	let modalElement = document.getElementById(modalOpener.dataset.tutorModalTarget);
 	let confirmButton = modalElement && modalElement.querySelector('[data-reset]');
-	let modalHeading = modalElement && modalElement.querySelector('.tutor-modal-title');
-	let modalMessage = modalElement && modalElement.querySelector('.tutor-modal-message');
+	let modalHeading = modalElement && modalElement.querySelector('[data-modal-dynamic-title]');
+	let modalMessage = modalElement && modalElement.querySelector('[data-modal-dynamic-content]');
 
 	confirmButton.removeAttribute('data-reset-for');
 	confirmButton.classList.remove('reset_to_default');

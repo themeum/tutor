@@ -1,5 +1,3 @@
-$sidebar_width: 360px;
-
 .tutor-qna-single-question {
 	table.tutor-ui-table-data-td-target [data-td-target] {
 		padding: 12px !important;
@@ -13,17 +11,9 @@ $sidebar_width: 360px;
 		background-color: #fff !important;
 	}
 
-	td {
-		div.tutor-icon-angle-down-filled {
-			font-size: 20px;
-		}
-	}
-
 	@at-root {
 		body.wp-admin {
 			.tutor-qna-single-wrapper {
-				width: calc(100% - #{$sidebar_width});
-
 				.tutor-qa-reply {
 					border-top-left-radius: 6px;
 					border-top-right-radius: 6px;
@@ -88,41 +78,35 @@ $sidebar_width: 360px;
 
 	// Top Sticky bar for badges
 	.tutor-qa-sticky-bar {
-		background: white;
-		padding: 21px 0px 15px 0px;
 		position: sticky;
 		top: 0;
+		border-bottom: 1px solid var(--tutor-border-color);
+		margin-bottom: 16px;
 		z-index: 9;
 	}
 
 	// Regular chatlist style
 	.tutor-qa-chatlist {
 		.tutor-qna-chat {
-			width: auto;
-			max-width: 80%;
 			margin-bottom: 30px;
-			clear: both;
+			display: flex;
+    		flex-direction: column;
 
 			.tutor-qna-user {
 				display: flex;
 				align-items: center;
-				margin-bottom: 15px;
+				margin-bottom: 16px;
+				gap: 16px;
 
 				img {
-					width: 50px;
-					height: 50px;
-					overflow: hidden;
+					width: 48px;
+					height: 48px;
 					border-radius: 50%;
-				}
-
-				& > div {
-					flex: 1;
-					padding-left: 15px;
 				}
 			}
 
 			.tutor-qna-text {
-				padding: 8px 15px;
+				padding: 16px 24px;
 				background: white;
 				border-radius: 8px;
 				margin: 0;
@@ -136,9 +120,7 @@ $sidebar_width: 360px;
 					height: 20px;
 					top: -5px;
 					background: inherit;
-					-webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
 					clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
-					-webkit-transform: rotate(45deg);
 					transform: rotate(45deg);
 					border-radius: 3px;
 				}
@@ -153,21 +135,15 @@ $sidebar_width: 360px;
 			}
 
 			&.tutor-qna-right {
-				float: right;
+				align-items: flex-end;
+
+				.tutor-qna-user {
+					flex-direction: row-reverse;
+				}
 
 				.tutor-qna-text {
 					&:before {
 						right: 15px;
-					}
-					margin-left: auto !important;
-				}
-
-				.tutor-qna-user {
-					flex-flow: row-reverse;
-					text-align: right;
-					& > div {
-						padding-left: 0;
-						padding-right: 15px;
 					}
 				}
 			}
@@ -200,7 +176,6 @@ $sidebar_width: 360px;
 				text-decoration: underline;
 				font-style: normal;
 				font-weight: normal;
-				// font-size: 15px;
 				color: #41454f;
 			}
 		}
@@ -209,90 +184,8 @@ $sidebar_width: 360px;
 	@at-root {
 		body.wp-admin {
 			.tutor-qa-chatlist {
-				margin-right: 15px;
-				margin-top: 15px;
-			}
-		}
-	}
-
-	[class*='tutor-icon'] {
-		font-size: 24px;
-	}
-}
-
-.tutor-qna-admin-sidebar {
-	width: $sidebar-width;
-	position: fixed;
-	right: 0;
-	top: 32px;
-	bottom: 0;
-	left: auto;
-	background: white;
-	border-left: 1px solid #c0c3cb;
-	box-sizing: border-box;
-	overflow: auto;
-
-	.tutor-qna-user {
-		padding: 20px;
-
-		img {
-			width: 100px;
-			height: 100px;
-			overflow: hidden;
-			border-radius: 50%;
-		}
-
-		h2 {
-			font-style: normal;
-			font-weight: 500;
-			font-size: 30px;
-			color: #212327;
-		}
-
-		strong {
-			font-style: normal;
-			font-weight: 500;
-			font-size: 16px;
-			color: #5b616f;
-		}
-	}
-
-	.tutor-qna-user-details {
-		label {
-			cursor: pointer;
-			padding: 15px;
-			border-top: 1px solid #c0c3cb;
-			border-bottom: 1px solid #c0c3cb;
-			display: block;
-			background: #f4f6f9;
-			font-style: normal;
-			font-weight: 500;
-			font-size: 16px;
-			color: #212327;
-		}
-
-		& > div {
-			display: none;
-			padding: 15px;
-		}
-
-		input {
-			display: none;
-
-			&:checked {
-				& + div {
-					display: block;
-				}
-			}
-		}
-	}
-
-	.qna-previous-questions {
-		div {
-			display: flex;
-			flex-direction: column;
-			&:not(:last-child) {
-				margin-bottom: 20px;
+				margin-right: 16px;
+				margin-top: 16px;
 			}
 		}
 	}
@@ -450,15 +343,6 @@ body.wp-admin {
 		.tutor-qa-reply {
 			border-radius: 0px;
 		}
-	}
-
-	.tutor-qa-sticky-bar {
-		margin-left: -20px;
-	}
-
-	.tutor-qa-reply-wrapper {
-		max-width: 950px;
-		margin: 0 auto;
 	}
 
 	.tutor-qa-reply {

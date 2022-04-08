@@ -2,13 +2,13 @@
 <div id="quiz-builder-tab-quiz-info">
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Quiz Title', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-16">
+        <div class="tutor-mb-16">
             <input type="text" name="quiz_title" class="tutor-form-control tutor-mb-12" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo $quiz ? htmlspecialchars( stripslashes($quiz->post_title) ) : ''; ?>"/>
         </div>
     </div>
     <div>
         <label class="tutor-form-label"><?php _e('Summary', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-16">
+        <div class="tutor-mb-16">
             <textarea name="quiz_description" class="tutor-form-control tutor-mb-12" rows="5"><?php echo $quiz ? stripslashes($quiz->post_content) : ''; ?></textarea>
         </div>
     </div>
@@ -44,13 +44,13 @@
                             </button>
                             <ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
                                 <li>
-                                    <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
+                                    <a href="#" class="tutor-dropdown-item tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
                                         <span class="tutor-icon-edit tutor-mr-8" area-hidden="true"></span>
                                         <span><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
+                                    <a href="#" class="tutor-dropdown-item tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
                                         <span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
                                         <span><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
@@ -66,8 +66,8 @@
     </div>
 
     <div>
-        <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-            <i class="tutor-icon-plus-square tutor-mr-12"></i>
+        <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-btn-outline-primary tutor-btn-md">
+            <i class="tutor-icon-plus-square tutor-mr-8" area-hidden="true"></i>
             <?php _e('Add Question', 'tutor'); ?>
         </a>
     </div>

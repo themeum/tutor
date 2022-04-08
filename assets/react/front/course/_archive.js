@@ -1,26 +1,37 @@
+const tutor_filters = [
+	'keyword',
+	'tutor-course-filter-level',
+	'course_filter',
+	'supported_filters',
+	'current_page'
+]
 
 const pushFilterToState=data=>{
 
-	console.log(data);
-
-	const url = new URL(window.location);
+	const new_url = new URL(window.location.origin+window.location.pathname);
 	const params = getAllUrlParamas();
 
+	// Include other params except tutors
 	for(let k in params){
-		url.searchParams.delete(k);
+		if(tutor_filters.indexOf(k)==-1){
+			new_url.searchParams.append(k, params[k]);
+		}
 	}
-	
+
+	// Add currently used tutor params to the state
 	for(let k in data) {
 		let is_array = Array.isArray(data[k]);
 		let key = is_array ? k+'[]' : k;
 		let values = is_array ? data[k] : [data[k]];
 
+		console.log(key, values);
+
 		values.forEach(v=>{
-			url.searchParams.append(key, v);
+			new_url.searchParams.append(key, v);
 		});
 	}
 	
-	window.history.pushState({}, '', url);
+	window.history.pushState({}, '', new_url);
 }
 
 const getAllUrlParamas=()=>{
@@ -43,16 +54,22 @@ const getAllUrlParamas=()=>{
 const renderFilterFromState=(filter_container)=>{
 	let filters = getAllUrlParamas();
 
+	filter_container.find('[type="checkbox"]').prop('checked', false);
+	filter_container.find('[type="text"]').val('');
+
+	// Loop through filter params array and change element state like check/uncheck/field value based on the filter
 	for(let k in filters){
 		let value = filters[k];
+		let element = filter_container.find('[name="'+k+'"]');
 
-		if(Array.isArray(value)) {
-			filter_container.find('[name="'+k+'"]').each(function(){
-				let checked = value.indexOf(window.jQuery(this).attr('value'))>-1;
+		if(element.eq(0).attr('type')=='checkbox') {
+			let values = !Array.isArray(value) ? [value] : value;
+			element.each(function(){
+				let checked = values.indexOf(window.jQuery(this).attr('value'))>-1;
 				window.jQuery(this).prop('checked', checked);
 			});
 		} else {
-			filter_container.find('[name="'+k+'"]').val(value);
+			element.val(value);
 		}
 	}
 }

@@ -74,7 +74,7 @@ class Q_and_A {
 		$self     = $asker_id == $user_id;
 		update_comment_meta( $question_id, 'tutor_qna_read' . ( $self ? '' : '_' . $asker_id ), 0 );
 
-		do_action( 'tutor_after_answer_to_question', $question_id );
+		do_action( 'tutor_after_asked_question', $data );
 
 		// Provide the html now.
 		ob_start();

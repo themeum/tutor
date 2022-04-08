@@ -118,6 +118,7 @@ window.jQuery(document).ready($=>{
 
                     // Hide the modal
                     $('#tutor_course_instructor_modal').removeClass('tutor-is-active');
+                    $('body').removeClass('tutor-modal-open');
 
                     // Show the result in course editor
                     $('.tutor-course-instructors-metabox-wrap').parent().html(data.data.output);
