@@ -859,7 +859,7 @@ input[type='checkbox'].input-switchbox {
 
 		&,
 		& + .switchbox-icon:before {
-			background: #24a148;
+			background: var(--tutor-primary-color);
 		}
 	}
 }

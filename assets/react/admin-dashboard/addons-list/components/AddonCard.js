@@ -25,7 +25,7 @@ const AddonCard = ({ addon, addonId }) => {
 				</div>
 
 				<div className="card-footer tutor-px-32 tutor-py-20 tutor-d-flex tutor-justify-between tutor-align-items-center tutor-mt-auto">
-					<div className="tutor-fs-8 tutor-fw-medium tutor-color-muted">
+					<div className="tutor-fs-7 tutor-fw-medium tutor-color-muted">
 						<div className="tutor-color-muted tutor-fs-7 tutor-fw-medium tutor-d-flex">
 							<span>
 								{addon.plugins_required?.length > 0 ?

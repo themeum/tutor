@@ -58,6 +58,7 @@ if($instructors && count($instructors)) {
 								<?php _e('Students', 'tutor'); ?>
 							</span>
 						</div>
+						
 						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center ">
 							<span class="tutor-icon-mortarboard-o tutor-mr-8"></span>
 							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">
