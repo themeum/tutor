@@ -349,7 +349,7 @@ $filters = array(
  */
 $instructor_id       = isset( $_GET['instructor'] ) ? sanitize_text_field( $_GET['instructor'] ) : '';
 $prompt_action       = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-$instructor_data 	= get_userdata( $instructor_id );
+$instructor_data 	 = get_userdata( $instructor_id );
 
 if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $prompt_action ) ) : ?>
 	<?php $instructor_status = tutor_utils()->instructor_status( $instructor_data->ID, false ); ?>

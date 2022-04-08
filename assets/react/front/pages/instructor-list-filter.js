@@ -24,7 +24,9 @@ jQuery(document).ready(function($) {
 
 			// Show loading icon
 			result_container.html(
-				'<div style="text-align:center"><img src="' + window._tutorobject.loading_icon_url + '"/></div>'
+				`<div style="text-align:center">
+					<div style="background-color: #fff;" class="loading-spinner"></div>
+				</div>`
 			);
 
 			$.ajax({

@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="list-item-button tutor-mt-16 booking-available">
-                    <button class="tutor-btn tutor-btn-icon tutor-btn-outline-primary tutor-btn-md tutor-btn-block">'.
+                    <button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">'.
                         apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' 
                     </button>
                 </div>';

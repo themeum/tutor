@@ -1,251 +1,282 @@
 #tutor-assignment-wrap {
-    .tutor-assignment-meta-info {
-        border-top: 1px solid $stroke-light-30;
-        border-bottom: 1px solid $stroke-light-30;
-        @include breakpoint-minmax(576, 1192) {
-            flex-direction: column;
-        }
-        .tutor-assignment-detail-info {
-            >div {
-                &:not(:last-child) {
-                    margin-right: 50px;
-                }
-            }
-            @include breakpoint-minmax(576, 1192) {
-                .tutor-assignment-duration,
-                .tutor-assignmetn-deadline,
-                .tutor-assignment-marks,
-                .tutor-assignmetn-pass-mark {
-                    flex-basis: 50%;
-                }
-            }
-            @include breakpoint-max(575) {
-                .tutor-assignment-duration,
-                .tutor-assignmetn-deadline,
-                .tutor-assignment-marks,
-                .tutor-assignmetn-pass-mark {
-                    display: flex;
-                    flex-direction: column;
-                    flex-basis: 50%;
-                }
-            }
-        }
-        @include breakpoint-max(576) {
-            flex-direction: column;
-        }
-    } // assignment-meta-info
-    .tutor-assignment-border-bottom {
-        border-bottom: 1px solid $stroke-light-30;
-    } //border-bottom
-    //instructor card
-    .tutor-instructor-card {
-        background-color: $color-white;
-        border-radius: 6px;
-        cursor: pointer;
-        min-width: unset;
-        display: grid;
-        grid-template-columns: auto 40px;
-        &:hover {
-            .tutor-avatar {
-                background: $design-brand;
-                transition: 0.2s;
-                span {
-                    color: $design-white;
-                }
-            }
-        }
-        .tutor-icard-content {
-            > div:first-child {
-                margin-right: 10px;
-            }
-            > div {
-                word-break: break-all;
-            }
-        }
-        .tutor-avatar {
-            background: $primary-40;
-            span {
-                font-size: 30px;
-            }
-        }
-    }
-    .tutor-input-files {}
-    // end of instructor card
-    &.tutor-course-assignment-details {
-        /* assignment details page */
-        .tutor-assignment-footer {
-            .tutor-assignment-footer-btn {
-                @include breakpoint-max(768) {
-                    flex-direction: column;
-                }
-            }
-        }
-        .no-before::before {
-            display: none;
-        }
-        #full-text {
-            display: none;
-        }
-    }
-    /* end assignment details page */
-    /*start tutor-time-out-assignment*/
-    &.tutor-time-out-assignment {
-        .quiz-flash-message {
-            .tutor-quiz-warning-box {
-                background-color: $danger-30;
-                border: 1px solid $danger-50;
-            }
-        }
-        .tutor-time-out-assignment-details {
-            .tutor-to-assignment {
-                position: relative;
-                &:before {
-                    content: '';
-                    position: absolute;
-                    width: 100%;
-                    height: 120px;
-                    bottom: 0px;
-                    background: linear-gradient( 180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
-                }
-            }
-        }
-    }
-    /*end tutor-time-out-assignment*/
-    /* start tutor-submit-assignment*/
-    &.tutor-submit-assignment {
-        .tutor-assignment-submission {
-            .tutor-assignment-body {
-                max-width: 730px;
-                .tutor-assignment-attachment {
-                    background-color: $black-05;
-                    border-radius: 6px;
-                    .tutor-input-type-size {
-                        span {
-                            font-weight: 500;
-                        }
-                    }
-                    .tutor-attachment-files {
-                        display: grid;
-                        grid-template-columns: 180px auto;
-                        @include breakpoint-max(tablet) {
-                            grid-template-columns: 1fr;
-                            gap: 10px;
-                        }
-                        .tutor-assignment-upload-btn {
-                            // form {
-                            input,
-                            input#tutor-assignment-file-upload {
-                                display: none;
-                            }
-                            // }
-                        }
-                    }
-                    .tutor-asisgnment-upload-file-preview {
-                        display: grid;
-                        grid-template-columns: repeat(2, 1fr);
-                        @include breakpoint-max(600) {
-                            grid-template-columns: 1fr;
-                        }
-                        // grid-template-columns: repeat(
-                        //  auto-fit,
-                        //  minmax(300px, 1fr)
-                        // );
-                        gap: 20px;
-                    }
-                }
-            }
-        }
-        .tutor-assignment-description-details {
-            .tutor-ad-body {
-                position: relative;
-                &:before {
-                    content: '';
-                    position: absolute;
-                    width: 100%;
-                    height: 120px;
-                    bottom: 0px;
-                    background: linear-gradient( 180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
-                }
-            }
-        }
-    }
-    /* end tutor-submit-assignment*/
-    /* start tutor-assignment-result-pending*/
-    &.tutor-assignment-result-pending {
-        .tutor-assignment-details {
-            .tutor-ar-body {
-                border: 1px solid $stroke-light-30;
-                box-sizing: border-box;
-                border-radius: 6px;
-                .tutor-input-files {
-                    max-width: 330px;
-                }
-            }
-        }
-        .tutor-assignment-description-details {
-            .tutor-ad-body {
-                position: relative;
-                &:before {
-                    content: '';
-                    position: absolute;
-                    width: 100%;
-                    height: 120px;
-                    bottom: 0px;
-                    background: linear-gradient( 180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
-                }
-            }
-        }
-    }
-    /* end tutor-assignment-result-pending*/
-    /* start tutor-assignment-results*/
-    .tutor-instructor-note {
-        background-color: $primary-40;
-        border: 1px solid $primary-70;
-        border-radius: 6px;
-    }
-    &.tutor-assignment-results {
-        .tutor-instructor-note {
-            background-color: $primary-40;
-            border: 1px solid $primary-70;
-            border-radius: 6px;
-        }
-        .tutor-assignment-details {
-            .tutor-ar-body {
-                border: 1px solid $stroke-light-30;
-                box-sizing: border-box;
-                border-radius: 6px;
-                .tutor-input-files {
-                    max-width: 330px;
-                }
-            }
-        }
-        .tutor-assignment-description-details {
-            .tutor-ad-body {
-                position: relative;
-                &:before {
-                    content: '';
-                    position: absolute;
-                    width: 100%;
-                    height: 120px;
-                    bottom: 0px;
-                    background: linear-gradient( 180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
-                }
-            }
-        }
-    }
-    /* end tutor-assignment-results*/
+	.tutor-assignment-attachments {
+	}
+	.tutor-assignment-attachments-list {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 20px;
+		@include breakpoint-max(768) {
+			grid-template-columns: 1fr;
+		}
+	}
+	.tutor-assignment-meta-info {
+		border-top: 1px solid $stroke-light-30;
+		border-bottom: 1px solid $stroke-light-30;
+		@include breakpoint-minmax(576, 1192) {
+			flex-direction: column;
+		}
+		.tutor-assignment-detail-info {
+			> div {
+				&:not(:last-child) {
+					margin-right: 50px;
+				}
+			}
+			@include breakpoint-minmax(576, 1192) {
+				.tutor-assignment-duration,
+				.tutor-assignmetn-deadline,
+				.tutor-assignment-marks,
+				.tutor-assignmetn-pass-mark {
+					flex-basis: 50%;
+				}
+			}
+			@include breakpoint-max(575) {
+				.tutor-assignment-duration,
+				.tutor-assignmetn-deadline,
+				.tutor-assignment-marks,
+				.tutor-assignmetn-pass-mark {
+					display: flex;
+					flex-direction: column;
+					flex-basis: 50%;
+				}
+			}
+		}
+		@include breakpoint-max(576) {
+			flex-direction: column;
+		}
+	} // assignment-meta-info
+	.tutor-assignment-border-bottom {
+		border-bottom: 1px solid $stroke-light-30;
+	} //border-bottom
+	//instructor card
+	.tutor-instructor-card {
+		background-color: $color-white;
+		border-radius: 6px;
+		cursor: pointer;
+		min-width: 100%;
+		display: grid;
+		grid-template-columns: auto 40px;
+		&:hover {
+			.tutor-avatar {
+				background: $design-brand;
+				transition: 0.2s;
+				span {
+					color: $design-white;
+				}
+			}
+		}
+		.tutor-icard-content {
+			> div:first-child {
+				margin-right: 10px;
+			}
+			> div {
+				word-break: break-all;
+			}
+		}
+		.tutor-avatar {
+			background: $primary-40;
+		}
+	}
+	.tutor-input-files {
+	}
+	// end of instructor card
+	&.tutor-course-assignment-details {
+		/* assignment details page */
+		.tutor-assignment-footer {
+			.tutor-assignment-footer-btn {
+				@include breakpoint-max(768) {
+					flex-direction: column;
+					// align-items: flex-start;
+					// .tutor-assignment-skip-button,
+					a,
+					button {
+						width: 100%;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+					}
+				}
+			}
+		}
+		.no-before::before {
+			display: none;
+		}
+		#full-text {
+			display: none;
+		}
+	}
+	/* end assignment details page */
+	/*start tutor-time-out-assignment*/
+	&.tutor-time-out-assignment {
+		.quiz-flash-message {
+			.tutor-quiz-warning-box {
+				background-color: $danger-30;
+				border: 1px solid $danger-50;
+			}
+		}
+		.tutor-time-out-assignment-details {
+			.tutor-to-assignment {
+				position: relative;
+				&:before {
+					content: '';
+					position: absolute;
+					width: 100%;
+					height: 120px;
+					bottom: 0px;
+					background: linear-gradient(
+						180deg,
+						rgba(255, 255, 255, 0) 1.31%,
+						rgba(255, 255, 255, 0) 15.41%,
+						#ffffff 100%
+					);
+				}
+			}
+		}
+	}
+	/*end tutor-time-out-assignment*/
+	/* start tutor-submit-assignment*/
+	&.tutor-submit-assignment {
+		.tutor-assignment-submission {
+			.tutor-assignment-body {
+				max-width: 730px;
+				.tutor-assignment-attachment {
+					background-color: $black-05;
+					border-radius: 6px;
+					.tutor-input-type-size {
+						span {
+							font-weight: 500;
+						}
+					}
+					.tutor-attachment-files {
+						display: grid;
+						grid-template-columns: 180px auto;
+						@include breakpoint-max(tablet) {
+							grid-template-columns: 1fr;
+							gap: 10px;
+						}
+						.tutor-assignment-upload-btn {
+							input,
+							input#tutor-assignment-file-upload {
+								display: none;
+							}
+						}
+					}
+					.tutor-asisgnment-upload-file-preview {
+						display: grid;
+						grid-template-columns: repeat(2, 1fr);
+						@include breakpoint-max(600) {
+							grid-template-columns: 1fr;
+						}
+						gap: 20px;
+					}
+				}
+			}
+		}
+		.tutor-assignment-description-details {
+			.tutor-ad-body {
+				position: relative;
+				&:before {
+					content: '';
+					position: absolute;
+					width: 100%;
+					height: 120px;
+					bottom: 0px;
+					background: linear-gradient(
+						180deg,
+						rgba(255, 255, 255, 0) 1.31%,
+						rgba(255, 255, 255, 0) 15.41%,
+						#ffffff 100%
+					);
+				}
+			}
+		}
+	} /* end tutor-submit-assignment*/
+
+	/* start tutor-assignment-result-pending*/
+	&.tutor-assignment-result-pending {
+		.tutor-assignment-details {
+			.tutor-ar-body {
+				border: 1px solid $stroke-light-30;
+				box-sizing: border-box;
+				border-radius: 6px;
+				.tutor-input-files {
+					max-width: 330px;
+				}
+			}
+		}
+		.tutor-assignment-description-details {
+			.tutor-ad-body {
+				position: relative;
+				&:before {
+					content: '';
+					position: absolute;
+					width: 100%;
+					height: 120px;
+					bottom: 0px;
+					background: linear-gradient(
+						180deg,
+						rgba(255, 255, 255, 0) 1.31%,
+						rgba(255, 255, 255, 0) 15.41%,
+						#ffffff 100%
+					);
+				}
+			}
+		}
+	}
+	/* end tutor-assignment-result-pending*/
+	/* start tutor-assignment-results*/
+	.tutor-instructor-note {
+		background-color: $primary-40;
+		border: 1px solid $primary-70;
+		border-radius: 6px;
+	}
+	&.tutor-assignment-results {
+		.tutor-instructor-note {
+			background-color: $primary-40;
+			border: 1px solid $primary-70;
+			border-radius: 6px;
+		}
+		.tutor-assignment-details {
+			.tutor-ar-body {
+				border: 1px solid $stroke-light-30;
+				box-sizing: border-box;
+				border-radius: 6px;
+				.tutor-input-files {
+					max-width: 330px;
+				}
+			}
+		}
+		.tutor-assignment-description-details {
+			.tutor-ad-body {
+				position: relative;
+				&:before {
+					content: '';
+					position: absolute;
+					width: 100%;
+					height: 120px;
+					bottom: 0px;
+					background: linear-gradient(
+						180deg,
+						rgba(255, 255, 255, 0) 1.31%,
+						rgba(255, 255, 255, 0) 15.41%,
+						#ffffff 100%
+					);
+				}
+			}
+		}
+	}
+	/* end tutor-assignment-results*/
 }
 
 .submited-files {
-    >div {
-        &:not(:last-child) {
-            margin-right: 15px;
-        }
-    }
-    .tutor-instructor-card {
-        width: 100%;
-        .tutor-icard-content {
-            padding-right: 10px;
-        }
-    }
+	> div {
+		&:not(:last-child) {
+			margin-right: 15px;
+		}
+	}
+	.tutor-instructor-card {
+		width: 100%;
+		.tutor-icard-content {
+			padding-right: 10px;
+		}
+	}
 }

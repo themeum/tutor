@@ -47,7 +47,7 @@
 						}
 						?>
 						<li>
-							<a data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
+							<a class="tutor-nav-item<?php echo esc_attr( $active_class ); ?>" data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
 								<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
 								<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
 							</a>

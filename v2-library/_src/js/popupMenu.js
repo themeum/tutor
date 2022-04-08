@@ -1,12 +1,13 @@
 // dropdown
 (function tutorDropdownMenu() {
 	document.addEventListener('click', (e) => {
-		const attr = 'action-tutor-dropdown';
+		const dropdownAttr = 'action-tutor-dropdown';
+		const dropDownTarget = e.target.hasAttribute(dropdownAttr) ? e.target : e.target.closest(`[${dropdownAttr}]`);
 
-		if (e.target.hasAttribute(attr)) {
+		if (dropDownTarget && dropDownTarget.hasAttribute(dropdownAttr)) {
 			e.preventDefault();
 
-			const dropdownParent = e.target.closest('.tutor-dropdown-parent');
+			const dropdownParent = dropDownTarget.closest('.tutor-dropdown-parent');
 
 			if (dropdownParent.classList.contains('is-open')) {
 				dropdownParent.classList.remove('is-open');
