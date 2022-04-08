@@ -59,11 +59,11 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 				</div>
 
 				<div class="tutor-modal-footer">
-					<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary">
-						<?php esc_html_e( 'Publish', 'tutor' ); ?>
-					</button>
 					<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary">
 						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+					</button>
+					<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary">
+						<?php esc_html_e( 'Publish', 'tutor' ); ?>
 					</button>
 				</div>
 			</div>
