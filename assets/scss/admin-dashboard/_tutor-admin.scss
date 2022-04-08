@@ -82,6 +82,11 @@ $accent-color-hover: var(--wp-admin-theme-color) !default;
 				box-shadow: unset !important;
 				outline: none !important;
 			}
+
+			// js select
+			&.tutor-form-select {
+				padding-right: 36px !important;
+			}
 		}
 	}
 }
