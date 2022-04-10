@@ -129,7 +129,7 @@
 				height: var(--w);
 				padding: var(--pd);
 				border-radius: 50%;
-				background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-primary-60) 100%);
+				background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-border-color) 100%);
 
 				&:before {
 					content: '';
@@ -140,7 +140,7 @@
 				}
 
 				&.progress-full {
-					background: conic-gradient(var(--tutor-design-error) var(--pro), 0, var(--tutor-primary-60) 100%);
+					background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-border-color) 100%);
 				}
 			}
 			&.booking-full {
