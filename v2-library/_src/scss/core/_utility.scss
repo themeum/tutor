@@ -365,28 +365,29 @@ $border: (
     z-index: 2;
 }
 
-// loading
-// .is-loading-o {
-// 	position: relative;
-// 	&:before {
-// 		content: '\e9df' !important;
-// 		display: inline-block;
-// 		font-family: 'tutor';
-// 		line-height: 1;
-// 		font-size: 18px;
-// 		margin-top: -2px;
-// 		margin-bottom: -2px;
-// 		animation: rotateSpinner 0.8s linear infinite;
-// 	}
+// spinner
+.tutor-spinner {
+	display: inline-block;
+    width: 32px;
+    height: 32px;
+    vertical-align: -4px;
+    border: 4px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: 800ms linear infinite rotateSpinner;
 
-// 	&:after {
-// 		content: " ";
-// 		background-color: #FFFFFF;
-// 		position: absolute;
-// 		top: 0;
-// 		left: 0;
-// 		right: 0;
-// 		bottom: 0;
-// 		z-index: 12;
-// 	}
-// }
+	&-sm {
+		border-width: 2px;
+		vertical-align: -2px;
+		width: 20px;
+    	height: 20px;
+	}
+
+	&-wrap {
+		position: relative;
+		min-height: 300px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
