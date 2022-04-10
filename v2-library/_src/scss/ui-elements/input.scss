@@ -311,7 +311,7 @@ select.tutor-form-control,
 	background-position: center;
 	background-repeat: no-repeat;
 	transition: 300ms;
-	box-shadow: 0 0 0 0 var(--tutor-primary-lighter);
+	box-shadow: 0 0 0 0 var(--tutor-primary-lighter-color);
 	flex: 0 0 auto;
 
 	&:before,
@@ -320,7 +320,7 @@ select.tutor-form-control,
 	}
 
 	&:focus {
-		box-shadow: 0 0 0 6px var(--tutor-primary-lighter);
+		box-shadow: 0 0 0 6px var(--tutor-primary-lighter-color);
 	}
 
 	&[type='checkbox'] {

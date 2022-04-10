@@ -6,14 +6,14 @@ jQuery(document).ready(function($) {
 	 * @since  v.1.8.4
 	 */
 	// Get values on course category selection
-	$('[tutor-instructors]').each(function() {
+	$('.tutor-instructor-filter').each(function() {
 		var $this = $(this);
 		var filter_args = {};
 		var time_out;
 
 		function run_instructor_filter(name, value, page_number) {
 			// Prepare http payload
-			var result_container = $this.find('[tutor-instructors-content]');
+			var result_container = $this.find('.filter-result-container');
 			var html_cache = result_container.html();
 			var attributes = $this.data();
 			attributes.current_page = page_number || 1;
@@ -44,50 +44,69 @@ jQuery(document).ready(function($) {
 		}
 
 		$this
-			.on('change', '[tutor-instructors-category-filter] [type="checkbox"]', function() {
+			.on('change', '.course-category-filter [type="checkbox"]', function() {
 				var values = {};
 
 				$(this)
-					.closest('[tutor-instructors-category-filter]')
+					.closest('.course-category-filter')
 					.find('input:checked')
 					.each(function() {
 						values[$(this).val()] = $(this).parent().text();
 					});
 
+				// Show selected cat list
+				var cat_parent = $this.find('.selected-cate-list').empty();
 				var cat_ids = Object.keys(values);
+
+				cat_ids.forEach(function(value) {
+					cat_parent.append(
+						'<span>' + values[value] + ' <span class="tutor-icon-times" data-cat_id="' + value + '"></span></span>'
+					);
+				});
+
+				cat_ids.length ? cat_parent.append('<span data-cat_id="0">Clear All</span>') : 0;
+
 				run_instructor_filter($(this).attr('name'), cat_ids);
 			})
-
-			.on('click', '[tutor-instructors-ratings-value]', function(e) {
+			.on('click', '.tutor-instructor-ratings i', function(e) {
 				const rating = e.target.dataset.value;
 				run_instructor_filter('rating_filter', rating);
 			})
-
 			.on('change', '#tutor-instructor-relevant-sort', function(e) {
 				const short_by = e.target.value;
 				run_instructor_filter('short_by', short_by);
 			})
+			.on('click', '.selected-cate-list [data-cat_id]', function() {
+				var id = $(this).data('cat_id');
+				var inputs = $this.find('.mobile-filter-popup [type="checkbox"]');
+				id ? (inputs = inputs.filter('[value="' + id + '"]')) : 0;
 
-			// Get values on search keyword change
+				inputs.prop('checked', false).trigger('change');
+			})
 			.on('input', '.filter-pc [name="keyword"]', function() {
+				// Get values on search keyword change
+
 				var val = $(this).val();
+
 				time_out ? window.clearTimeout(time_out) : 0;
+
 				time_out = window.setTimeout(function() {
 					run_instructor_filter('keyword', val);
 					time_out = null;
 				}, 500);
 			})
-
 			.on('click', '[data-page_number]', function(e) {
 				// On pagination click
 				e.preventDefault();
+
 				run_instructor_filter(null, null, $(this).data('page_number'));
 			})
-
-			// Clear filter
 			.on('click', '.clear-instructor-filter', function() {
+				// Clear filter
 				var $this = $(this).closest('.tutor-instructor-filter');
+
 				$this.find('input[type="checkbox"]').prop('checked', false);
+
 				$this.find('[name="keyword"]').val('');
 				const stars = document.querySelectorAll('.tutor-instructor-ratings i');
 				//remove star selection
@@ -101,7 +120,63 @@ jQuery(document).ready(function($) {
 					}
 				}
 				rating_range.innerHTML = ``;
+
 				run_instructor_filter();
+			})
+			.on('click', '.mobile-filter-popup button', function() {
+				$('.mobile-filter-popup [type="checkbox"]').trigger('change');
+
+				// Close mobile screen filter
+				$(this)
+					.closest('.mobile-filter-popup')
+					.removeClass('is-opened');
+			})
+			.on('input', '.filter-mobile [name="keyword"]', function() {
+				// Sync keyword with two screen
+
+				$this
+					.find('.filter-pc [name="keyword"]')
+					.val($(this).val())
+					.trigger('input');
+			})
+			.on('change', '.mobile-filter-popup [type="checkbox"]', function(e) {
+				if (e.originalEvent) {
+					return;
+				}
+
+				// Sync category with two screen
+				var name = $(this).attr('name');
+				var val = $(this).val();
+				var checked = $(this).prop('checked');
+
+				$this
+					.find('.course-category-filter [name="' + name + '"]')
+					.filter('[value="' + val + '"]')
+					.prop('checked', checked)
+					.trigger('change');
+			})
+			.on('mousedown touchstart', '.expand-instructor-filter', function(e) {
+				var window_height = $(window).height();
+				var el = $this.find('.mobile-filter-popup>div');
+				var el_top = window_height - el.height();
+				var plus = ((e.originalEvent.touches || [])[0] || e).clientY - el_top;
+
+				$this.on('mousemove touchmove', function(e) {
+					var y = ((e.originalEvent.touches || [])[0] || e).clientY;
+
+					var height = window_height - y + plus;
+
+					height > 200 && height <= window_height ? el.css('height', height + 'px') : 0;
+				});
+			})
+			.on('mouseup touchend', function() {
+				$this.off('mousemove touchmove');
+			})
+			.on('click', '.mobile-filter-popup>div', function(e) {
+				e.stopImmediatePropagation();
+			})
+			.on('click', '.mobile-filter-popup', function(e) {
+				$(this).removeClass('is-opened');
 			});
 	});
 
@@ -110,7 +185,7 @@ jQuery(document).ready(function($) {
 	 *
 	 * @since v2.0.0
 	 */
-	const stars = document.querySelectorAll('[tutor-instructors-ratings-value]');
+	const stars = document.querySelectorAll('.tutor-instructor-ratings i');
 	const rating_range = document.querySelector('.tutor-instructor-rating-filter');
 	for (let star of stars) {
 		star.onclick = (e) => {

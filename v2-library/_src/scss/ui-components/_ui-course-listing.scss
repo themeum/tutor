@@ -244,20 +244,10 @@
 	}
 }
 
-@include breakpoint-max(desktop) {
-	.tutor-filter-widget-items-wrap {
-		@include responsiveGrid(250px, 1fr);
-		grid-gap: 30px;
-	}
-}
-
 .tutor-course-listing-filter {
 	display: grid;
 	@include breakpoint-min(desktop) {
 		grid-template-columns: 1fr 3fr;
-		.filter-widget-input-wrapper {
-			margin-top: 42px;
-		}
 	}
 
 	.filter-widget-checkboxes {

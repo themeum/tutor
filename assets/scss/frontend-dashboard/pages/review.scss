@@ -94,29 +94,29 @@
 	.tutor-modal-text-rating {
 		font-weight: 500;
 	}
-	.tutor-ratings {
-		.tutor-rating-stars {
-			.tutor-star-rating-group {
-				i {
-					font-size: 22px;
-					color: var(--tutor-warning);
-				}
-			}
-		}
-		&.tutor-ratings-modal {
-			.tutor-rating-stars {
-				.tutor-star-rating-group {
-					i {
-						font-size: 40px;
-						margin: 4px;
-					}
-				}
-			}
-		}
-		.tutor-rating-text {
-			margin-left: 4px;
-		}
-	}
+	// .tutor-ratings {
+	// 	// .tutor-rating-stars {
+	// 	// 	.tutor-star-rating-group {
+	// 	// 		i {
+	// 	// 			font-size: 22px;
+	// 	// 			color: var(--tutor-warning);
+	// 	// 		}
+	// 	// 	}
+	// 	// }
+	// 	// &.tutor-ratings-modal {
+	// 	// 	.tutor-rating-stars {
+	// 	// 		.tutor-star-rating-group {
+	// 	// 			i {
+	// 	// 				font-size: 40px;
+	// 	// 				margin: 4px;
+	// 	// 			}
+	// 	// 		}
+	// 	// 	}
+	// 	// }
+	// 	.tutor-rating-text {
+	// 		margin-left: 4px;
+	// 	}
+	// }
 	.tutor-modal-inner {
 		textarea.tutor-form-control {
 			min-height: 140px;
