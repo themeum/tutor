@@ -115,7 +115,7 @@ window.jQuery(document).ready($=>{
 			pushFilterToState(filter_criteria);
 		}
 		
-		loop_container.html('<div style="background-color: #fff;" class="loading-spinner"></div>');
+		loop_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
 		$(this).closest('form').find('.tutor-clear-all-filter').show();
 
 		$.ajax({
