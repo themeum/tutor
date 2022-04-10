@@ -110,15 +110,10 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 									<input type="hidden" name="review_id" value="<?php echo esc_html( $review->comment_ID ); ?>"/>
 									<input type="hidden" name="action" value="tutor_place_rating" />
 
-									<!-- @todo: need to update -->
-									<div class="tutor-star-rating-container tutor-mt-16">
-										<div class="tutor-ratings tutor-ratings-modal">
-											<div class="tutor-rating-stars">
-												<?php
-													tutor_utils()->star_rating_generator( tutor_utils()->get_rating_value( $review->rating ) );
-												?>
-											</div>
-										</div>
+									<div class="tutor-ratings tutor-ratings-xl tutor-ratings-selectable tutor-justify-center tutor-mt-16" tutor-ratings-selectable>
+										<?php
+											tutor_utils()->star_rating_generator( tutor_utils()->get_rating_value( $review->rating ) );
+										?>
 									</div>
 
 									<textarea class="tutor-form-control tutor-mt-28" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php esc_html_e( stripslashes( $review->comment_content ) ); ?></textarea>

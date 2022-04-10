@@ -3407,9 +3407,9 @@ class Utils {
 			}
 		}
 
-		$output .= '<div class="tutor-rating-gen-input"><input type="hidden" name="tutor_rating_gen_input" value="' . $current_rating . '" /></div>';
-
 		$output .= '</div>';
+
+		$output .= '<input type="hidden" name="tutor_rating_gen_input" value="' . $current_rating . '" />';
 
 		if ( $echo ) {
 			echo tutor_kses_html( $output );
