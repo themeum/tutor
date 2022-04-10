@@ -41,8 +41,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							</div>
 
 							<div class="tutor-col-auto">
-								<span class="tutor-round-box">
-									<i class="tutor-icon-trophy" area-hidden="true"></i> <!-- @todo: fix this icon -->
+								<span class="tutor-round-box tutor-my-n20">
+									<i class="tutor-icon-trophy" area-hidden="true"></i>
 								</span>
 							</div>
 						</div>
@@ -312,12 +312,13 @@ if ( count( $instructor_course ) ) {
 	);
 
 	?>
-		<div class="popular-courses-heading-dashboard tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24 tutor-mt-md-40 tutor-mt-0">
-			<?php esc_html_e( 'My Courses', 'tutor' ); ?>
-			<a style="float:right" class="tutor-view-all-course" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'my-courses' ) ); ?>">
+		<div class="popular-courses-heading-dashboard tutor-d-flex tutor-justify-between tutor-mb-24 tutor-mt-md-40 tutor-mt-0">
+			<span class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'My Courses', 'tutor' ); ?></span>
+			<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'my-courses' ) ); ?>">
 				<?php esc_html_e( 'View All', 'tutor' ); ?>
 			</a>
 		</div>
+		
 		<div class="tutor-dashboard-content-inner">
 			<table class="tutor-ui-table tutor-ui-table-responsive table-popular-courses">
 				<thead>

@@ -33,7 +33,7 @@
 		// Nav
 		const attrNav = 'data-tutor-nav-target';
 		const navTarget = e.target.hasAttribute(attrNav) ? e.target : e.target.closest(`[${attrNav}]`);
-		const activeNavItems = document.querySelectorAll('.tutor-nav-item.is-active, .tutor-tab-item.is-active');
+		const activeNavItems = document.querySelectorAll('.tutor-nav-link.is-active, .tutor-tab-item.is-active');
 
 		if (navTarget && navTarget.hasAttribute(attrNav)) {
 			e.preventDefault();
@@ -48,7 +48,7 @@
 				});
 
 				if (navTarget.closest('.tutor-nav-more') != undefined) {
-					navTarget.closest('.tutor-nav-more').querySelector('.tutor-nav-more-item').classList.add('is-active');
+					navTarget.closest('.tutor-nav-more').querySelector('.tutor-nav-more-link').classList.add('is-active');
 				}
 
 				navTarget.classList.add('is-active');
