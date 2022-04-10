@@ -304,45 +304,46 @@ class Assets {
 
 			switch ($admin_color) {
 				case 'light':
-					$admin_color_codes = ['#04a4cc', '#04b0db'];
+					$admin_color_codes = ['#04a4cc', '#04b0db', '#d9f7ff'];
 				break;
 
 				case 'modern':
-					$admin_color_codes = ['#3858e9', '#4664eb'];
+					$admin_color_codes = ['#3858e9', '#4664eb', '#e8ecff'];
 				break;
 				
 				case 'blue':
-					$admin_color_codes = ['#e1a948', '#e3af55'];
+					$admin_color_codes = ['#e1a948', '#e3af55', '#fff6e6'];
 				break;
 				
 				case 'coffee':
-					$admin_color_codes = ['#c7a589', '#ccad93'];
+					$admin_color_codes = ['#c7a589', '#ccad93', '#fff3e8'];
 				break;
 				
 				case 'ectoplasm':
-					$admin_color_codes = ['#a3b745', '#a9bd4f'];
+					$admin_color_codes = ['#a3b745', '#a9bd4f', '#ecf2ce'];
 				break;
 				
 				case 'midnight':
-					$admin_color_codes = ['#e14d43', '#e35950'];
+					$admin_color_codes = ['#e14d43', '#e35950', '#ffedec'];
 				break;
 				
 				case 'ocean':
-					$admin_color_codes = ['#9ebaa0', '#a7c0a9'];
+					$admin_color_codes = ['#9ebaa0', '#a7c0a9', '#eaffec'];
 				break;
 				
 				case 'sunrise':
-					$admin_color_codes = ['#dd823b', '#df8a48'];
+					$admin_color_codes = ['#dd823b', '#df8a48', '#fff3ea'];
 				break;
 				
 				default:
-					$admin_color_codes = ['#007cba', '#006ba1'];
+					$admin_color_codes = ['#007cba', '#006ba1', '#e7f7ff'];
 				break;
 			}
 
 			$admin_colors = [
 				'--tutor-primary-color' => $admin_color_codes[0],
 				'--tutor-primary-hover-color' => $admin_color_codes[1],
+				'--tutor-primary-lighter-color' => $admin_color_codes[2],
 			];
 		}
 
