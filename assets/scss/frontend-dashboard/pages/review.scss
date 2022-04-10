@@ -74,91 +74,14 @@
 
 		.tutor-given-review-action {
 			& > span {
-				// font-style: normal;
-				// font-weight: normal;
-				// font-size: 16px;
-				// color: $black-60;
 				cursor: pointer;
 
 				&:first-child {
 					margin-right: 15px;
 				}
-
-				i {
-					// font-size: 22px;
-					// vertical-align: middle;
-				}
 			}
 		}
 	}
-	.tutor-modal-text-rating {
-		font-weight: 500;
-	}
-	// .tutor-ratings {
-	// 	// .tutor-rating-stars {
-	// 	// 	.tutor-star-rating-group {
-	// 	// 		i {
-	// 	// 			font-size: 22px;
-	// 	// 			color: var(--tutor-warning);
-	// 	// 		}
-	// 	// 	}
-	// 	// }
-	// 	// &.tutor-ratings-modal {
-	// 	// 	.tutor-rating-stars {
-	// 	// 		.tutor-star-rating-group {
-	// 	// 			i {
-	// 	// 				font-size: 40px;
-	// 	// 				margin: 4px;
-	// 	// 			}
-	// 	// 		}
-	// 	// 	}
-	// 	// }
-	// 	.tutor-rating-text {
-	// 		margin-left: 4px;
-	// 	}
-	// }
-	.tutor-modal-inner {
-		textarea.tutor-form-control {
-			min-height: 140px;
-			// max-height: 250px;
-			resize: none;
-			background: #ffffff;
-			border: 1px solid #c0c3cb;
-			color: #757c8e;
-			font-weight: normal;
-			font-size: 15px;
-			line-height: 24px;
-		}
-		.tutor-modal-text-wrap {
-			max-width: 420px;
-			margin: 0px !important;
-		}
-		.tutor-modal-delete-footer {
-			margin-top: 39px;
-			button {
-				height: 40px;
-				padding: 10px 20px;
-			}
-			button {
-				&:last-child {
-					margin-left: 15px !important;
-				}
-			}
-		}
-	}
-}
-
-.tutor-edit-review-modal-wrap {
-	// .modal-close-wrap {
-	// 	a {
-	// 		&.modal-close-btn {
-	// 			color: #222222;
-	// 			background: none;
-	// 			font-size: 20px;
-	// 			top: 8px;
-	// 		}
-	// 	}
-	// }
 }
 
 .tutor-ui-table.tutor-ui-table-responsive.table-reviews {

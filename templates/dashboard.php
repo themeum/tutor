@@ -89,9 +89,6 @@ do_action('tutor_dashboard/before/wrap');
 							<div class="tutor-dashboard-header-ratings">
 								<?php tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); ?>
 							</div>
-							<!-- <div class="tutor-dashboard-header-notifications">
-								<?php /*_e('Notification'); */ ?> <span>9</span>
-								</div> -->
 						</div>
 					<?php
 					} else {

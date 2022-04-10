@@ -10,7 +10,7 @@ $category_id      = '';
 $total_categories = isset( $all_cats ) ? $all_cats : 0;
 $categories       = isset( $categories ) ? $categories : array();
 $limit            = 8;
-$show_more        = true;
+$show_more        = false;
 $short_by         = array(
 	'relevant' => __( 'Relevant', 'tutor' ),
 	'new'      => __( 'New', 'tutor' ),
@@ -28,22 +28,20 @@ if ( $total_categories && $total_categories > $limit ) {
 	}
 ?>>
 	<div class="tutor-row">
-		<aside class="tutor-col-lg-3">
-			
-			<!-- <div class="tutor-instructor-customize-wrapper">
-				<div class="tutor-instructor-filters">
-					<i class="tutor-icon-slider-vertical tutor-color-text-brand"></i>
-					<span class="tutor-fs-5 tutor-fw-medium tutor-color-black">
-						<?php esc_html_e( 'Filters', 'tutor' ); ?>
-					</span>
+		<aside class="tutor-col-lg-3 tutor-mb-32 tutor-mb-lg-0" tutor-instructors-filters>
+			<div class="tutor-d-flex tutor-align-items-center">
+				<div>
+					<span class="tutor-icon-slider-vertical tutor-color-brand tutor-mr-8" area-hidden="true"></span>
+					<span class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php _e("Filters", "tutor"); ?></span>
 				</div>
-				<div class="tutor-instructor-customize-clear clear-instructor-filter">
-					<i class="tutor-icon-times design-dark"></i>
-					<span className="tutor-color-muted tutor-fs-6">
-						<?php esc_html_e( 'Clear', 'tutor' ); ?>
-					</span>
+
+				<div class="tutor-ml-32">
+					<a href="#" class="tutor-btn tutor-btn-ghost" tutor-instructors-filter-clear>
+						<span class="tutor-icon-times tutor-mr-8" area-hidden="true"></span>
+						<span class="tutor-fw-medium"><?php _e("Clear", "tutor"); ?></span>
+					</a>
 				</div>
-			</div> -->
+			</div>
 
 			<div class="tutor-widget tutor-widget-course-categories tutor-mt-48">
 				<h3 class="tutor-widget-title">
@@ -52,7 +50,7 @@ if ( $total_categories && $total_categories > $limit ) {
 
 				<div class="tutor-widget-content">
 					<div class="<?php echo $show_more ? 'tutor-toggle-more-content tutor-toggle-more-collapsed' : '' ?>"<?php echo $show_more ? ' data-tutor-toggle-more-content data-toggle-height="200" style="height: 200px;"' : '' ?>>
-						<div class="tutor-list" tutor-instructors-category-filter>
+						<div class="tutor-list" tutor-instructors-filter-category>
 							<?php foreach ( $categories as $category ) : ?>
 								<div class="tutor-list-item">
 									<label>
@@ -82,10 +80,10 @@ if ( $total_categories && $total_categories > $limit ) {
 					<div class="tutor-ratings tutor-ratings-lg">
 						<div class="tutor-ratings-stars">
 							<?php for ( $i = 1; $i < 6; $i++ ) : ?>
-								<i class="tutor-icon-star-line" tutor-instructors-ratings-value data-value="<?php echo $i; ?>" area-hidden="true"></i>
+								<i class="tutor-icon-star-line" tutor-instructors-filter-rating data-value="<?php echo $i; ?>" area-hidden="true"></i>
 							<?php endfor; ?> 
 						</div>
-						<span class="tutor-ratings-count tutor-instructor-rating-filter"></span>  
+						<span class="tutor-ratings-count tutor-instructor-rating-filter" tutor-instructors-filter-rating-count></span>  
 					</div>
 				</div>
 			</div>
@@ -93,22 +91,26 @@ if ( $total_categories && $total_categories > $limit ) {
 
 		<main class="tutor-col-lg-9">
 			<div class="tutor-form-wrap tutor-mb-24">
-				<span class="tutor-icon-search tutor-form-icon tutor-form-icon-reverse" area-hidden="true"></span>
-				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" />
+				<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
+				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" tutor-instructors-filter-search />
 			</div>
-			<div class="tutor-instructor-form-group">
-				<label for="tutor-instructor-relevant-sort" class="tutor-fs-6 tutor-color-muted">
-					<?php _e( 'Short by', 'tutor' ); ?>
-				</label>
-				<select class="tutor-form-control" id="tutor-instructor-relevant-sort">
-					<?php foreach ( $short_by as $k => $v ) : ?>
-						<option value="<?php esc_attr_e( $k ); ?>">
-							<?php esc_html_e( $v ); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
+			<div class="tutor-d-flex tutor-align-items-center tutor-mb-24">
+				<div class="tutor-mr-16">
+					<label for="tutor-instructor-relevant-sort" class="tutor-fs-6 tutor-color-muted">
+						<?php _e( 'Short by', 'tutor' ); ?>
+					</label>
+				</div>
+				<div>
+					<select class="tutor-form-control" id="tutor-instructor-relevant-sort" tutor-instructors-filter-sort>
+						<?php foreach ( $short_by as $k => $v ) : ?>
+							<option value="<?php esc_attr_e( $k ); ?>">
+								<?php esc_html_e( $v ); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
 			</div>
-			<!-- Filter -->
+
 			<div tutor-instructors-content>
 				<?php echo $content; ?>
 			</div>
