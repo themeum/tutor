@@ -42,18 +42,18 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
 <div class="tutor-dashboard-content-inner my-courses">
     <div class="tutor-mb-32">
         <ul class="tutor-nav">
-            <li>
-                <a class="tutor-nav-item<?php echo $active_tab == 'my-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses')); ?>">
+            <li class="tutor-nav-item">
+                <a class="tutor-nav-link<?php echo $active_tab == 'my-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses')); ?>">
                     <?php esc_html_e('Publish', 'tutor'); ?> <?php echo "(" . $count_map['publish'] . ")"; ?>
                 </a>
             </li>
-            <li>
-                <a class="tutor-nav-item<?php echo $active_tab == 'my-courses/pending-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses')); ?>">
+            <li class="tutor-nav-item">
+                <a class="tutor-nav-link<?php echo $active_tab == 'my-courses/pending-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses')); ?>">
                     <?php esc_html_e('Pending', 'tutor'); ?> <?php echo "(" . $count_map['pending'] . ")"; ?>
                 </a>
             </li>
-            <li>
-                <a class="tutor-nav-item<?php echo $active_tab == 'my-courses/draft-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/draft-courses')); ?>">
+            <li class="tutor-nav-item">
+                <a class="tutor-nav-link<?php echo $active_tab == 'my-courses/draft-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/draft-courses')); ?>">
                     <?php esc_html_e('Draft', 'tutor'); ?> <?php echo "(" . $count_map['draft'] . ")"; ?>
                 </a>
             </li>
