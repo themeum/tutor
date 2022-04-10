@@ -39,7 +39,7 @@ if($instructors && count($instructors)) {
 							</div>
 						<?php endif; ?>
 						<div class="tutor-ins-summary tutor-fs-6 tutor-color-black-60 tutor-mt-20">
-							<?php echo preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "",  $instructor->tutor_profile_bio); ?>
+							<?php echo preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "",  $instructor->tutor_profile_bio); // @todo: replace with kses ?>
 						</div>
 					</div>
 				</div>

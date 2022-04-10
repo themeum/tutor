@@ -861,29 +861,29 @@ class Options_V2
 								'type'          => 'group_radio',
 								'label'         => __('Instructor List Layout', 'tutor'),
 								'desc'          => __('Choose a layout for the list of instructors inside a course page. You can change this at any time.', 'tutor'),
-								'default'       => 'pp-top-full',
+								'default'       => 'portrait',
 								'group_options' => array(
 									'vertical'   => array(
-										'pp-top-full' => array(
+										'default' => array(
 											'title' => 'Portrait',
-											'image' => 'instructor-layout/intructor-portrait.svg',
+											'image' => 'instructor-layout/instructor-portrait.svg',
 										),
-										'pp-cp'       => array(
+										'cover'       => array(
 											'title' => 'Cover',
 											'image' => 'instructor-layout/instructor-cover.svg',
 										),
-										'pp-top-left' => array(
+										'minimal' => array(
 											'title' => 'Minimal',
 											'image' => 'instructor-layout/instructor-minimal.svg',
 										),
 									),
 									'horizontal' => array(
-										'pp-left-full'   => array(
-											'title' => 'Horizontal Portrait',
+										'portrait-horizontal'   => array(
+											'title' => 'Portrait Horizontal',
 											'image' => 'instructor-layout/instructor-horizontal-portrait.svg',
 										),
-										'pp-left-middle' => array(
-											'title' => 'Horizontal Minimal',
+										'minimal-horizontal' => array(
+											'title' => 'Minimal Horizontal',
 											'image' => 'instructor-layout/instructor-horizontal-minimal.svg',
 										),
 									),
@@ -1123,6 +1123,11 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
+												'slug'  => 'tutor_primary_lighter_color',
+												'preset_name' => 'primary_lighter',
+												'value' => '#F6F8FD',
+											),
+											array(
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#F6F8FD',
@@ -1177,6 +1182,11 @@ class Options_V2
 												'slug'  => 'tutor_text_color',
 												'preset_name' => 'text',
 												'value' => '#212327',
+											),
+											array(
+												'slug'  => 'tutor_primary_lighter_color',
+												'preset_name' => 'primary_lighter',
+												'value' => '#EFFBF7',
 											),
 											array(
 												'slug'  => 'tutor_background_color',
@@ -1235,6 +1245,11 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
+												'slug'  => 'tutor_primary_lighter_color',
+												'preset_name' => 'primary_lighter',
+												'value' => '#F6F8FD',
+											),
+											array(
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#FAF6FF',
@@ -1291,6 +1306,11 @@ class Options_V2
 												'value' => '#1A1B1E',
 											),
 											array(
+												'slug'  => 'tutor_primary_lighter_color',
+												'preset_name' => 'primary_lighter',
+												'value' => '#F6F8FD',
+											),
+											array(
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#F6F8FD',
@@ -1328,6 +1348,15 @@ class Options_V2
 										'preset_name'  => 'text',
 										'preset_exist' => true,
 										'label'        => __('Text Color', 'tutor'),
+										'default'      => '#212327',
+										'desc'         => __('Choose a text color for your website', 'tutor'),
+									),
+									array(
+										'key'          => 'tutor_primary_lighter_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'text',
+										'preset_exist' => true,
+										'label'        => __('Primary Lighter', 'tutor'),
 										'default'      => '#212327',
 										'desc'         => __('Choose a text color for your website', 'tutor'),
 									),

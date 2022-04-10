@@ -247,10 +247,10 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 					</div>
 					<div class="tutor-course-listing-item-body tutor-px-32 tutor-pt-24 tutor-pb-20">
 						<?php if ( $course_rating ) : ?>
-						<div class="list-item-rating tutor-d-flex">
-							<div class="tutor-ratings tutor-is-sm">
+						<div class="list-item-rating">
+							<div class="tutor-ratings">
 								<?php tutor_utils()->star_rating_generator( $course_rating->rating_avg ); ?>
-								<div class="tutor-rating-text tutor-color-black-60 tutor-fs-6">
+								<div class="tutor-ratings-count">
 									<?php echo esc_html( number_format( $course_rating->rating_avg, 2 ) ); ?>
 								</div>
 							</div>

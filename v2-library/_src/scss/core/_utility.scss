@@ -244,19 +244,25 @@ $border: (
 
 // ratio
 .tutor-ratio {
+	content: " ";
 	position: relative;
     width: 100%;
+	display: block;
 
 	&-16x9 {
-		content: " ";
-		display: block;
 		padding-top: 56.25%;
 	}
 
 	&-4x3 {
-		content: " ";
-		display: block;
 		padding-top: 75%;
+	}
+
+	&-3x2 {
+		padding-top: 66.66%;
+	}
+
+	&-1x1 {
+		padding-top: 100%;
 	}
 
 	> * {
@@ -265,6 +271,11 @@ $border: (
 		left: 0;
 		width: 100%;
 		height: 100%;
+	}
+
+	> img {
+		object-fit: cover;
+		object-position: left;
 	}
 }
 
@@ -307,7 +318,7 @@ $border: (
 	border-radius: 80px;
 	overflow: hidden;
 	color: var(--tutor-primary-color);
-	background: var(--tutor-primary-lighter);
+	background: var(--tutor-primary-lighter-color);
 
 	[class^="tutor-icon-"],
 	[class*=" tutor-icon-"],
@@ -342,3 +353,40 @@ $border: (
 		width: 100%;
 	}
 }
+
+// stretched link
+.tutor-stretched-link:after {
+    content: " ";
+	position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+}
+
+// loading
+// .is-loading-o {
+// 	position: relative;
+// 	&:before {
+// 		content: '\e9df' !important;
+// 		display: inline-block;
+// 		font-family: 'tutor';
+// 		line-height: 1;
+// 		font-size: 18px;
+// 		margin-top: -2px;
+// 		margin-bottom: -2px;
+// 		animation: rotateSpinner 0.8s linear infinite;
+// 	}
+
+// 	&:after {
+// 		content: " ";
+// 		background-color: #FFFFFF;
+// 		position: absolute;
+// 		top: 0;
+// 		left: 0;
+// 		right: 0;
+// 		bottom: 0;
+// 		z-index: 12;
+// 	}
+// }

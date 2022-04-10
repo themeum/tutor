@@ -281,6 +281,7 @@ class Assets {
 			'tutor_primary_hover_color' => '--tutor-primary-hover-color',
 			'tutor_text_color'          => '--tutor-text-color',
 			'tutor_background_color'	=> '--tutor-background-color',
+			'tutor_primary_lighter_color' => '--tutor-primary-lighter-color',
 			'tutor_border_color'		=> '--tutor-border-color',
 			'tutor_success_color'		=> '--tutor-success-color',
 			'tutor_warning_color'		=> '--tutor-warning-color',

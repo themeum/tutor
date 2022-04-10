@@ -1,76 +1,113 @@
 .tutor-ratings {
-	@extend .d-inline-flex;
-	@extend .align-items-center;
-	.tutor-rating-stars {
-		@extend .d-inline-flex;
-		@extend .align-items-center;
-		color: var(--tutor-warning);
-		span:not(:last-child) {
-			// margin-right: 3px;
-		}
-		span,
-		i {
-			font-size: 18px;
-			color: var(--tutor-warning);
-		}
-	}
-	.tutor-rating-text {
+	display: flex;
+	align-items: center;
+
+	&-stars {
+		color: #ED9700;
+		margin: 0 -3px;
 		font-size: 16px;
+
+		> * {
+			margin: 0 3px;
+		}
+	}
+
+	&-average {
+		color: var(--tutor-text-color);
 		font-weight: 500;
-		padding-left: 2px;
-		line-height: 1 !important;
-		margin-top: 2px;
+		margin-left: 12px;
 	}
 
-	&.tutor-is-xs {
-		.tutor-rating-text {
-			font-size: 13px;
-			font-weight: 400;
-		}
-		.tutor-rating-stars {
-			span,
-			i {
-				font-size: 14px;
-				margin-right: 2px;
-			}
+	&-count {
+		color: var(--tutor-color-muted);
+		margin-left: 8px;
+	}
+
+	// sizes
+	&-lg {
+		.tutor-ratings-stars {
+			font-size: 20px;
 		}
 	}
 
-	&.tutor-is-sm {
-		.tutor-rating-stars {
-			span,
-			i {
-				font-size: 18px;
-			}
-		}
-		.tutor-rating-text {
-			font-weight: 400;
-		}
-	}
-
-	&.tutor-is-lg {
-		.tutor-rating-stars {
-			span,
-			i {
-				font-size: 25px;
-			}
-		}
-		.tutor-rating-text {
+	&-xl {
+		.tutor-ratings-stars {
 			font-size: 24px;
-			font-weight: 400;
-		}
-	}
-
-	&.tutor-is-xl {
-		.tutor-rating-stars {
-			span,
-			i {
-				font-size: 28px;
-			}
-		}
-		.tutor-rating-text {
-			font-size: 24px;
-			font-weight: 400;
 		}
 	}
 }
+
+// @todo: will be removed
+// .tutor-ratings-back {
+// 	@extend .d-inline-flex;
+// 	@extend .align-items-center;
+// 	.tutor-rating-stars {
+// 		@extend .d-inline-flex;
+// 		@extend .align-items-center;
+// 		color: var(--tutor-warning);
+// 		span,
+// 		i {
+// 			font-size: 18px;
+// 			color: var(--tutor-warning);
+// 		}
+// 	}
+// 	.tutor-rating-text {
+// 		font-size: 16px;
+// 		font-weight: 500;
+// 		padding-left: 2px;
+// 		line-height: 1 !important;
+// 		margin-top: 2px;
+// 	}
+
+// 	&.tutor-is-xs {
+// 		.tutor-rating-text {
+// 			font-size: 13px;
+// 			font-weight: 400;
+// 		}
+// 		.tutor-rating-stars {
+// 			span,
+// 			i {
+// 				font-size: 14px;
+// 				margin-right: 2px;
+// 			}
+// 		}
+// 	}
+
+// 	&.tutor-is-sm {
+// 		.tutor-rating-stars {
+// 			span,
+// 			i {
+// 				font-size: 18px;
+// 			}
+// 		}
+// 		.tutor-rating-text {
+// 			font-weight: 400;
+// 		}
+// 	}
+
+// 	&.tutor-is-lg {
+// 		.tutor-rating-stars {
+// 			span,
+// 			i {
+// 				font-size: 25px;
+// 			}
+// 		}
+// 		.tutor-rating-text {
+// 			font-size: 24px;
+// 			font-weight: 400;
+// 		}
+// 	}
+
+// 	&.tutor-is-xl {
+// 		.tutor-rating-stars {
+// 			span,
+// 			i {
+// 				font-size: 28px;
+// 			}
+// 		}
+// 		.tutor-rating-text {
+// 			font-size: 24px;
+// 			font-weight: 400;
+// 		}
+// 	}
+// }
