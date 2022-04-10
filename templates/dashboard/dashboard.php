@@ -225,9 +225,9 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 ?>
 
 <?php if ( tutor_utils()->is_instructor() ) : ?>
-	<div class="tutor-frontend-dashboard-course-porgress">
+	<div class="tutor-frontend-dashboard-course-progress">
 		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24">
-			<?php esc_html_e( 'In Progress Course', 'tutor' ); ?>
+			<?php esc_html_e( 'In Progress Courses', 'tutor' ); ?>
 		</div>
 		<?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
 			<?php
@@ -238,55 +238,59 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 				$course_progress  = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
 				$completed_number = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
 				?>
-			<div class="tutor-frontend-dashboard-course-porgress-cards tutor-mb-20">
-				<div class="tutor-frontend-dashboard-course-porgress-card tutor-frontend-dashboard-course-porgress-card-horizontal tutor-course-listing-item tutor-course-listing-item-sm tutor-justify-start">
-					<div class="tutor-course-listing-item-head tutor-d-flex">
-						<a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink">
-							<div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty( esc_url( $tutor_course_img ) ) ? $placeholder_img : esc_url( $tutor_course_img ); ?>)"></div>
-						</a>
+			<div class="tutor-course-progress-item tutor-card tutor-mb-20">
+				<div class="tutor-row tutor-gx-0">
+					<div class="tutor-col-lg-5">
+						<div class="tutor-course-listing-thumbnail tutor-ratio tutor-ratio-16x9">
+							<img src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
+						</div>
 					</div>
-					<div class="tutor-course-listing-item-body tutor-px-32 tutor-pt-24 tutor-pb-20">
-						<?php if ( $course_rating ) : ?>
-						<div class="list-item-rating">
-							<div class="tutor-ratings">
-								<?php tutor_utils()->star_rating_generator( $course_rating->rating_avg ); ?>
-								<div class="tutor-ratings-count">
-									<?php echo esc_html( number_format( $course_rating->rating_avg, 2 ) ); ?>
+
+					<div class="tutor-col-lg-7 tutor-align-self-center">
+						<div class="tutor-m-24">
+							<?php if ( $course_rating ) : ?>
+								<div class="tutor-ratings tutor-mb-4">
+									<?php tutor_utils()->star_rating_generator( $course_rating->rating_avg ); ?>
+									<div class="tutor-ratings-count">
+										<?php echo esc_html( number_format( $course_rating->rating_avg, 2 ) ); ?>
+									</div>
+								</div>
+							<?php endif; ?>
+
+							<div class="tutor-course-progress-item-title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
+								<?php the_title(); ?>
+							</div>
+
+							<div class="tutor-d-flex tutor-fs-7 tutor-mb-32">
+								<span class="tutor-color-muted tutor-mr-4"><?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?></span>
+								<span class="tutor-fw-medium tutor-color-black">
+									<span>
+										<?php echo esc_html( $course_progress['completed_count'] ); ?>
+									</span>
+									<?php esc_html_e( 'of', 'tutor' ); ?>
+									<span>
+										<?php echo esc_html( $course_progress['total_count'] ); ?>
+									</span>
+									<?php echo esc_html( _n( 'lesson', 'lessons', $completed_number, 'tutor' ) ); ?>
+								</span>
+							</div>
+
+							<div class="tutor-row tutor-align-items-center">
+								<div class="tutor-col">
+									<div class="tutor-progress-bar tutor-mr-16" style="--tutor-progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="tutor-progress-value" area-hidden="true"></span></div>
+								</div>
+
+								<div class="tutor-col-auto">
+									<span class="progress-percentage tutor-fs-7 tutor-color-muted">
+										<span class="tutor-fw-medium tutor-color-black ">
+											<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
+										</span><?php esc_html_e( 'Complete', 'tutor' ); ?>
+									</span>
 								</div>
 							</div>
 						</div>
-						<?php endif; ?>
-						<div class="list-item-title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mt-8">
-							<a href="<?php the_permalink(); ?>">
-								<?php the_title(); ?>
-							</a>
-						</div>
-						<div class="list-item-steps tutor-mt-16">
-							<span class="tutor-fs-7 tutor-color-muted">
-								<?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?>
-							</span>
-							<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-								<span>
-									<?php echo esc_html( $course_progress['completed_count'] ); ?>
-								</span>
-								<?php esc_html_e( 'of', 'tutor' ); ?>
-								<span>
-									<?php echo esc_html( $course_progress['total_count'] ); ?>
-								</span>
-								<?php echo esc_html( _n( 'lesson', 'lessons', $completed_number, 'tutor' ) ); ?>
-							</span>
-						</div>
-						<div class="list-item-progress tutor-mt-32">
-							<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-between">
-								<div class="tutor-progress-bar tutor-mr-16" style="--tutor-progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="tutor-progress-value" area-hidden="true"></span></div>
-								<span class="progress-percentage tutor-fs-7 tutor-color-muted">
-									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black ">
-										<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
-									</span><?php esc_html_e( 'Complete', 'tutor' ); ?>
-								</span>
-							</div>
-						</div>
 					</div>
+					<a class="tutor-stretched-link" href="<?php the_permalink(); ?>"></a>
 				</div>
 			</div>
 			<?php endwhile; ?>

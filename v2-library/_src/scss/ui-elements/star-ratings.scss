@@ -23,6 +23,12 @@
 		margin-left: 8px;
 	}
 
+	&-selectable {
+		.tutor-ratings-stars {
+			cursor: pointer;
+		}
+	}
+	
 	// sizes
 	&-lg {
 		.tutor-ratings-stars {
@@ -32,7 +38,7 @@
 
 	&-xl {
 		.tutor-ratings-stars {
-			font-size: 24px;
+			font-size: 40px;
 		}
 	}
 }
