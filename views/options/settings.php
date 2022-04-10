@@ -9,7 +9,7 @@
 
 ?>
 <div class="tutor-admin-wrap">
-	<div class="tutor-admin-header">
+	<div class="tutor-admin-header is-sticky">
 		<div class="tutor-row tutor-align-items-center">
 			<div class="tutor-col-md-3 tutor-col-lg-4 tutor-mb-16 tutor-mb-md-0">
 				<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Settings', 'tutor' ); ?></span>

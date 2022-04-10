@@ -77,7 +77,7 @@ if ( $total_categories && $total_categories > $limit ) {
 				</h3>
 
 				<div class="tutor-widget-content">
-					<div class="tutor-ratings tutor-ratings-lg">
+				<div class="tutor-ratings tutor-ratings-lg tutor-ratings-selectable">
 						<div class="tutor-ratings-stars">
 							<?php for ( $i = 1; $i < 6; $i++ ) : ?>
 								<i class="tutor-icon-star-line" tutor-instructors-filter-rating data-value="<?php echo $i; ?>" area-hidden="true"></i>

@@ -60,6 +60,21 @@ $accent-color-hover: var(--wp-admin-theme-color) !default;
 		background: #ffffff;
 		border-bottom: 1px solid #cdcfd5;
 		padding: 12px 24px;
+
+		&.is-sticky {
+			position: sticky;
+			top: 32px;
+			z-index: 1024;
+
+			// admin bar
+			@media screen and (max-width: 782px) {
+				top: 42px;
+			}
+			
+			@media screen and (max-width: 600px) {
+				top: 0;
+			}
+		}
 	}
 }
 
