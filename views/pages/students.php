@@ -26,7 +26,7 @@ $search		= Input::get( 'search', '' );
 /**
  * Pagination data
  */
-$paged    = Input::get( 'paged', 1, Input::TYPE_INT);
+$paged    = Input::get( 'paged', 1, Input::TYPE_INT );
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
