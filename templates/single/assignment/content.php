@@ -259,8 +259,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                                         <?php echo esc_html( $file_size ? $file_size . 'KB' : '' ); ?>
                                     </div>
                                 </div>
-                                <div class="tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
-                                    <a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank">
+                                <div class="tutor-d-flex tutor-align-items-center">
+                                    <a class="tutor-iconic-btn tutor-iconic-btn-outline" href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank">
                                         <span class="tutor-icon-download" area-hidden="true"></span>
                                     </a>
                                 </div>
@@ -359,11 +359,11 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                                                             <div class="tutor-fs-7">Size: 230KB;</div>
                                                         </div>
                                                         <div
-                                                            class="tutor-attachment-file-close tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
-                                                            <a href="<?php echo esc_url( $attachment->url ); ?>"
+                                                            class="tutor-attachment-file-close tutor-d-flex tutor-align-items-center">
+                                                            <a class="tutor-iconic-btn tutor-iconic-btn-outline" href="<?php echo esc_url( $attachment->url ); ?>"
                                                                 data-id="<?php echo esc_attr( $assignment_comment_id ); ?>"
                                                                 data-name="<?php echo esc_attr( $attachment->name ); ?>" target="_blank">
-                                                                <span class="tutor-icon-times-o color-design-brand"></span>
+                                                                <span class="tutor-icon-times"></span>
                                                             </a>
                                                         </div>
                                                     </div>
@@ -587,11 +587,11 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                                                 <div class="tutor-fs-7">Size:
                                                     <?php echo tutor_utils()->array_get( 'size', $attached_file ); ?></div>
                                             </div>
-                                            <div class="tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
-                                                <a download
+                                            <div class="tutor-d-flex tutor-align-items-center">
+                                                <a class="tutor-iconic-btn tutor-iconic-btn-outline" download
                                                     href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>"
                                                     target="_blank">
-                                                    <span class="tutor-icon-download tutor-color-brand"></span>
+                                                    <span class="tutor-icon-download"></span>
                                                 </a>
                                             </div>
                                         </div>

@@ -269,8 +269,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                                     </div>
                                     <div onclick="(() => {
 										this.closest('.tutor-instructor-card').remove();
-									})()" class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
-                                        <span class="tutor-icon-times-o tutor-color-brand"></span>
+									})()" class="tutor-attachment-file-close tutor-iconic-btn tutor-iconic-btn-outline flex-center">
+                                        <span class="tutor-icon-times"></span>
                                     </div>
                                 </div>`;
 				}
