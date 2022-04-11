@@ -1,15 +1,8 @@
-.tutor-wrap.tutor-courses-wrap.course-archive-page {
-	min-height: 200px;
-	@include breakpoint-min(tablet) {
-		min-height: 400px;
-	}
-}
-
 .tutor-course-listing {
 	// .tutor-course-listing-grid
 	&-grid {
 		@include responsiveGrid(250px, 1fr);
-		grid-gap: 30px;
+		grid-gap: 32px;
 		grid-template-rows: min-content;
 
 		@include breakpoint-min(desktop-lg) {
