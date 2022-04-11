@@ -27,6 +27,21 @@
 	// 	display: block;
 	// }
 
+	&-md {
+		width: 48px;
+		height: 48px;
+	}
+
+	&-sm {
+		width: 32px;
+		height: 32px;
+	}
+
+	&-xs {
+		width: 24px;
+		height: 24px;
+	}
+
 	&.tutor-is-lg {
 		width: 120px;
 		height: 120px;

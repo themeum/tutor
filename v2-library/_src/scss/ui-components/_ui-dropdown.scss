@@ -17,8 +17,7 @@
         margin: 0;
     }
 
-    &-item,
-    .tutor-nav-item {
+    &-item {
         display: block;
         padding: 8px 16px;
         color: var(--tutor-black-70);
@@ -44,8 +43,7 @@
         background-color: #212327;
         border: 1px solid #212327;
 
-        .tutor-dropdown-item,
-        .tutor-nav-item {
+        .tutor-dropdown-item {
             &,
             &:hover,
             &:focus {
