@@ -28,6 +28,7 @@ window.jQuery(document).ready(function($) {
 			e.preventDefault();
 
 			let $that = $(this);
+			let modal = $that.closest('.tutor-modal');
 			let buttonContent = $that.html();
 			let prompt = $(this).data('prompt');
 			let del = $(this).data('delete_element_id');
@@ -74,6 +75,11 @@ window.jQuery(document).ready(function($) {
 						.html(buttonContent)
 						.removeAttr('disabled')
 						.removeClass('is-loading');
+
+					if (modal.length !== 0) {
+						$('body').removeClass('tutor-modal-open');
+						modal.removeClass('tutor-is-active');
+					}
 				},
 			});
 		}

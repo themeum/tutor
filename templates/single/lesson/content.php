@@ -181,23 +181,23 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 
 <div class="tutor-course-spotlight-wrapper">
 	<ul class="tutor-nav tutor-course-spotlight-nav tutor-justify-center">
-        <li>
-            <a href="#" class="tutor-nav-item<?php echo ( ! isset( $page_tab ) || 'overview' == $page_tab ) ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-overview" data-tutor-query-variable="page_tab" data-tutor-query-value="overview">
+        <li class="tutor-nav-item">
+            <a href="#" class="tutor-nav-link<?php echo ( ! isset( $page_tab ) || 'overview' == $page_tab ) ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-overview" data-tutor-query-variable="page_tab" data-tutor-query-value="overview">
 				<span class="tutor-icon-document-text tutor-mr-8" area-hidden="true"></span>
 				<span><?php _e( 'Overview', 'tutor' ); ?></span>
 			</a>
         </li>
 
-        <li>
-            <a href="#" class="tutor-nav-item<?php echo 'files' == $page_tab ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-files" data-tutor-query-variable="page_tab" data-tutor-query-value="files">
+        <li class="tutor-nav-item">
+            <a href="#" class="tutor-nav-link<?php echo 'files' == $page_tab ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-files" data-tutor-query-variable="page_tab" data-tutor-query-value="files">
 				<span class="tutor-icon-paperclip tutor-mr-8" area-hidden="true"></span>
 				<span><?php _e( 'Exercise Files', 'tutor' ); ?></span>
 			</a>
         </li>
 
 		<?php if ( $is_comment_enabled ) : ?>
-		<li>
-            <a href="#" class="tutor-nav-item<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-comments" data-tutor-query-variable="page_tab" data-tutor-query-value="comments">
+		<li class="tutor-nav-item">
+            <a href="#" class="tutor-nav-link<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-comments" data-tutor-query-variable="page_tab" data-tutor-query-value="comments">
 				<span class="tutor-icon-comment tutor-mr-8" area-hidden="true"></span>
 				<span><?php _e( 'Comments', 'tutor' ); ?></span>
 			</a>

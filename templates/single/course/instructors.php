@@ -39,7 +39,7 @@ if($instructors && count($instructors)) {
 							</div>
 						<?php endif; ?>
 						<div class="tutor-ins-summary tutor-fs-6 tutor-color-black-60 tutor-mt-20">
-							<?php echo preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "",  $instructor->tutor_profile_bio); ?>
+							<?php echo preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "",  $instructor->tutor_profile_bio); // @todo: replace with kses ?>
 						</div>
 					</div>
 				</div>
@@ -58,6 +58,7 @@ if($instructors && count($instructors)) {
 								<?php _e('Students', 'tutor'); ?>
 							</span>
 						</div>
+						
 						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center ">
 							<span class="tutor-icon-mortarboard-o tutor-mr-8"></span>
 							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">

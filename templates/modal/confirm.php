@@ -17,7 +17,7 @@ $content  		= isset( $content ) ? $content : '';
 $yes  			= isset( $yes ) ? $yes : array('text' => __('Yes', 'tutor'));
 $close   		= isset( $close ) ? (bool) $close : true;
 ?>
-<div id="tutor-modal-<?php echo esc_attr( $id ); ?>" class="tutor-modal<?php echo esc_attr( $class ); ?>">
+<div id="<?php echo esc_attr( $id ); ?>" class="tutor-modal<?php echo esc_attr( $class ); ?>">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
 		<div class="tutor-modal-content tutor-modal-content-white">
