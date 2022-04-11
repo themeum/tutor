@@ -1,20 +1,5 @@
 @import './variables.scss';
 
-// Color Utility class
-$colorUtils: (
-	// colors
-	'black' var(--tutor-body-color),
-	'white' $color-white,
-	'primary' $color-primary,
-	'success' $color-success,
-	'warning' $color-warning,
-	'danger' $color-danger,
-	'secondary' $color-secondary,
-	'muted' $color-muted,
-	'gray-20' $color-gray-20,
-	'gray-10' $color-gray-10,
-);
-
 :root {
 	// --tutor-disabled-bg: #{$disabled-bg};
 	// --tutor-disabled-color: #{$disabled-color};
@@ -38,6 +23,20 @@ $colorUtils: (
 	--tutor-color-muted: 		#{$color-muted};
 }
 
+// Color Utility class
+$colorUtils: (
+	// colors
+	'black' var(--tutor-body-color),
+	'white' $color-white,
+	'primary' $color-primary,
+	'success' $color-success,
+	'warning' $color-warning,
+	'danger' $color-danger,
+	'secondary' $color-secondary,
+	'muted' $color-muted,
+	'gray-20' $color-gray-20,
+	'gray-10' $color-gray-10,
+);
 
 @each $classSuffix, $value in $colorUtils {
 	.tutor-color-#{$classSuffix} {

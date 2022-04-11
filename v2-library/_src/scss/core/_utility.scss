@@ -299,7 +299,7 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 	border-radius: 80px;
 	overflow: hidden;
 	color: var(--tutor-color-primary);
-	background: var(--tutor-primary-lighter-color);
+	background: rgba(var(--tutor-color-primary-rgb), 0.1);
 
 	[class^="tutor-icon-"],
 	[class*=" tutor-icon-"],

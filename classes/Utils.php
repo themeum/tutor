@@ -9461,7 +9461,7 @@ class Utils {
 	 * @since 2.0.2
 	 */
 
-	public function hex2rgb( $color ) {
+	public function hex2rgb( string $color ) {
 
 		$default = '0, 0, 0';
 

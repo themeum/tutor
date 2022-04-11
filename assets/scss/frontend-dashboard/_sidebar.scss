@@ -17,7 +17,7 @@
 			&:hover {
 				&::before {
 					opacity: 1;
-					color: var(--tutor-primary-hover-color);
+					color: var(--tutor-color-primary-hover);
 				}
 			}
 		}
@@ -27,20 +27,20 @@
 				padding: 8px 20px;
 
 				&:hover {
-					background-color: var(--tutor-primary-lighter-color);
+					background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
 				}
 			}
 
 			&.active a {
 				background-color: var(--tutor-color-primary);
-				color: var(--tutor-primary-text-color);
+				color: var(--tutor-color-white);
 
 				&:hover {
-					background-color: var(--tutor-primary-hover-color);
+					background-color: var(--tutor-color-primary-hover);
 				}
 
 				&::before {
-					color: var(--tutor-primary-text-color);
+					color: var(--tutor-color-white);
 				}
 			}
 		}

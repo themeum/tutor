@@ -388,7 +388,7 @@ Topics tutor-course-title
 
 .tutor-course-enrolled-wrap p i,
 .tutor-course-enrolled-wrap p span {
-	color: var(--tutor-success-button-color);
+	color: var(--tutor-color-success);
 }
 
 /**
@@ -418,7 +418,7 @@ Alert Box Css
 }
 
 .tutor-success-msg {
-	color: var(--tutor-success-button-color);
+	color: var(--tutor-color-success);
 	background-color: #dff2bf;
 }
 
@@ -470,7 +470,7 @@ button.tutor-profile-photo-upload-btn {
 
 a.tutor-profile-photo-upload-btn:hover,
 button.tutor-profile-photo-upload-btn:hover {
-	background-color: var(--tutor-primary-hover-color);
+	background-color: var(--tutor-color-primary-hover);
 	color: #fff;
 }
 
@@ -607,7 +607,7 @@ Instructor
 }
 
 .statement-order-completed {
-	background: var(--tutor-success-button-color);
+	background: var(--tutor-color-success);
 	color: #fff;
 	padding: 2px 5px;
 	border: none;
@@ -1213,18 +1213,8 @@ Instructor
 }
 
 .prerequisites-course-checkmark.is-complete i {
-	background: var(--tutor-success-button-color);
+	background: var(--tutor-color-success);
 	color: #fff;
-}
-
-.rtl .tutor-single-course-meta ul li,
-.rtl .tutor-loop-author > div {
-	float: right;
-}
-
-.rtl .tutor-single-course-meta ul li {
-	margin-right: 0;
-	margin-left: 40px;
 }
 
 .rtl .tutor-progress-bar .tutor-progress-filled:after {
@@ -1350,7 +1340,7 @@ Instructor
 }
 
 .submitted-assignment-grade-pass {
-	color: var(--tutor-success-button-color);
+	color: var(--tutor-color-success);
 }
 
 .submitted-assignment-grade-failed {
