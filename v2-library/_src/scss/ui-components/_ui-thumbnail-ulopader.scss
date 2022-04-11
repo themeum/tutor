@@ -2,19 +2,19 @@
 	width: 100%;
 
 	.thumbnail-wrapper {
-		background: $bg-white;
+		background: var(--tutor-color-white);
 		box-sizing: border-box;
 		border-radius: 6px;
 
 		&:not(.tutor-is-borderless) {
-			border: 1px solid $stroke-gray;
+			border: 1px solid var(--tutor-border-color);
 		}
 	}
 
 	.thumbnail-preview {
 		--width: 235px;
-		background: $black-05;
-		border: 2px solid $black-05;
+		background: $color-gray-10;
+		border: 2px solid $color-gray-10;
 		border-radius: 3px;
 		position: relative;
 		margin-right: 28px;
@@ -33,11 +33,10 @@
 			max-height: 100%;
 			
 			&::before {
-				// content: '⚠️ \2000 Select an image';
 				content: '';
 				position: absolute;
 				inset: 0;
-				background: $black-05;
+				background: $color-gray-10;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -54,7 +53,7 @@
 			height: 24px;
 			border-radius: 50%;
 			@include svg-delete-icon;
-			background-color: $design-danger;
+			background-color: $color-danger;
 			background-repeat: no-repeat;
 			background-position: 50%;
 			cursor: pointer;
@@ -62,7 +61,7 @@
 			right: -12px;
 
 			&:hover {
-				background-color: darken($color: $design-danger, $amount: 6);
+				background-color: darken($color: $color-danger, $amount: 6);
 			}
 		}
 	}

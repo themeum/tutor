@@ -277,22 +277,22 @@ class Assets {
 	private function load_color_palette()
 	{
 		$colors = array(
-			'tutor_primary_color'       => '--tutor-primary-color',
+			'tutor_primary_color'       => '--tutor-color-primary',
 			'tutor_primary_hover_color' => '--tutor-primary-hover-color',
-			'tutor_text_color'          => '--tutor-text-color',
+			'tutor_text_color'          => '--tutor-body-color',
 			'tutor_background_color'	=> '--tutor-background-color',
 			'tutor_primary_lighter_color' => '--tutor-primary-lighter-color',
 			'tutor_border_color'		=> '--tutor-border-color',
-			'tutor_success_color'		=> '--tutor-success-color',
-			'tutor_warning_color'		=> '--tutor-warning-color',
-			'tutor_danger_color'		=> '--tutor-danger-color',
+			// 'tutor_success_color'		=> '--tutor-color-success',
+			// 'tutor_warning_color'		=> '--tutor-warning-color',
+			// 'tutor_danger_color'		=> '--tutor-danger-color-color',
 			'tutor_disable_color'		=> '--tutor-disable-color',
 			'tutor_table_background_color' => '--tutor-table-background-color',
 
 			'tutor_primary_text_color'  => '--tutor-primary-text-color',
 			'tutor_light_color'         => '--tutor-light-color',
 			'tutor_button_primary'      => '--tutor-primary-button-color',
-			'tutor_button_danger'       => '--tutor-danger-button-color',
+			'tutor_button_danger'       => '--tutor-danger-color-button-color',
 			'tutor_button_success'      => '--tutor-success-button-color',
 			'tutor_button_warning'      => '--tutor-warning-button-color',
 		);
@@ -341,7 +341,7 @@ class Assets {
 			}
 
 			$admin_colors = [
-				'--tutor-primary-color' => $admin_color_codes[0],
+				'--tutor-color-primary' => $admin_color_codes[0],
 				'--tutor-primary-hover-color' => $admin_color_codes[1],
 				'--tutor-primary-lighter-color' => $admin_color_codes[2],
 			];
@@ -349,14 +349,20 @@ class Assets {
 
 		$color_string = '';
 		foreach ($colors as $key => $property) {
-			$color = tutor_utils()->get_option($key);
+			$color = tutor_utils()->get_option( $key );
+			$color_rgb = tutor_utils()->hex2rgb( $color );
 
 			if(is_admin() && isset($admin_colors[$property])){
 				$color = $admin_colors[$property];
+				$color_rgb = tutor_utils()->hex2rgb( $admin_colors[$property] );
 			}
 
 			if ($color) {
 				$color_string .= $property . ':' . $color . ';';
+			}
+
+			if ($color_rgb) {
+				$color_string .= $property . '-rgb:' . $color_rgb . ';';
 			}
 		}
 

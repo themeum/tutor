@@ -51,7 +51,7 @@
 				cursor: pointer;
 				font-weight: normal;
 				font-size: 16px;
-				color: $black-70;
+				color: var(--tutor-color-secondary);
 			}
 		}
 
@@ -100,7 +100,7 @@
 
 // Course loop
 .tutor-course-loop-price {
-	color: var(--tutor-text-color);
+	color: var(--tutor-body-color);
 	font-size: 16px;
 	gap: 5px;
 
@@ -115,7 +115,7 @@
 			margin-left: auto;
 
 			a {
-				color: var(--tutor-text-color);
+				color: var(--tutor-body-color);
 				position: relative;
 				line-height: 20px;
 				vertical-align: top;
@@ -129,7 +129,7 @@
 				}
 
 				&:hover {
-					color: var(--tutor-primary-color);
+					color: var(--tutor-color-primary);
 				}
 
 				&::before {
@@ -145,7 +145,7 @@
 					-moz-osx-font-smoothing: grayscale;
 					margin-right: 5px;
 					vertical-align: top;
-					color: var(--tutor-primary-color);
+					color: var(--tutor-color-primary);
 				}
 			}
 

@@ -1125,7 +1125,7 @@ class Options_V2
 											array(
 												'slug'  => 'tutor_primary_lighter_color',
 												'preset_name' => 'primary_lighter',
-												'value' => '#F6F8FD',
+												'value' => '#E9EDFB',
 											),
 											array(
 												'slug'  => 'tutor_background_color',
@@ -1186,7 +1186,7 @@ class Options_V2
 											array(
 												'slug'  => 'tutor_primary_lighter_color',
 												'preset_name' => 'primary_lighter',
-												'value' => '#EFFBF7',
+												'value' => '#ECF7F3',
 											),
 											array(
 												'slug'  => 'tutor_background_color',
@@ -1247,7 +1247,7 @@ class Options_V2
 											array(
 												'slug'  => 'tutor_primary_lighter_color',
 												'preset_name' => 'primary_lighter',
-												'value' => '#F6F8FD',
+												'value' => '#FAF6FF',
 											),
 											array(
 												'slug'  => 'tutor_background_color',
@@ -1306,11 +1306,6 @@ class Options_V2
 												'value' => '#1A1B1E',
 											),
 											array(
-												'slug'  => 'tutor_primary_lighter_color',
-												'preset_name' => 'primary_lighter',
-												'value' => '#F6F8FD',
-											),
-											array(
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#F6F8FD',
@@ -1357,7 +1352,7 @@ class Options_V2
 										'preset_name'  => 'text',
 										'preset_exist' => true,
 										'label'        => __('Primary Lighter', 'tutor'),
-										'default'      => '#212327',
+										'default'      => '#E9EDFB',
 										'desc'         => __('Choose a text color for your website', 'tutor'),
 									),
 									array(

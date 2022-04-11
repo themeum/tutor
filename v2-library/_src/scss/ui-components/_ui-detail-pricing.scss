@@ -52,12 +52,11 @@
 
 .tutor-membership-plans-group {
 	input:checked ~ .tutor-details-pricing-plan {
-		background-color: $primary-30;
-		//border: 2px solid $primary-main;
-		box-shadow: 0px 0px 0px 2px $primary-main;
+		background-color: rgba(var(--tutor-color-primary), 0.15);
+		box-shadow: 0px 0px 0px 2px var(--tutor-color-primary);
 		.tutor-plan-title {
 			.tutor-radio-icon {
-				border: 6px solid $primary-main;
+				border: 6px solid var(--tutor-color-primary);
 			}
 		}
 	}
@@ -98,13 +97,13 @@
 .tutor-dp-plan-switch {
 	input {
 		&:checked ~ .tutor-form-toggle-control {
-			background-color: var(--tutor-success);
-			background-color: var(--tutor-design-brand);
+			background-color: var(--tutor-color-success);
+			background-color: var(--tutor-color-primary);
 		}
 		~ .tutor-form-toggle-label {
 			&.tutor-form-toggle-checked {
 				color: var(--tutor-border-color);
-				color: var(--tutor-design-brand);
+				color: var(--tutor-color-primary);
 			}
 		}
 
@@ -114,7 +113,7 @@
 			}
 			~ .tutor-form-toggle-unchecked {
 				color: var(--tutor-border-color);
-				color: var(--tutor-design-brand);
+				color: var(--tutor-color-primary);
 			}
 		}
 	}

@@ -113,7 +113,7 @@
 			}
 		}
 		.radio-thumbnail input[type='radio']:checked ~ .icon-wrapper img {
-			box-shadow: 0 0 0 1px var(--tutor-primary-color);
+			box-shadow: 0 0 0 1px var(--tutor-color-primary);
 		}
 	}
 
@@ -159,14 +159,14 @@
 				height: 24px;
 				border-radius: 50%;
 				@include svg-delete-icon;
-				background-color: $design-danger;
+				background-color: $color-danger;
 				background-repeat: no-repeat;
 				background-position: 50%;
 				cursor: pointer;
 				top: -12px;
 				right: -12px;
 				&:hover {
-					background-color: darken($color: $design-danger, $amount: 6);
+					background-color: darken($color: $color-danger, $amount: 6);
 				}
 			}
 

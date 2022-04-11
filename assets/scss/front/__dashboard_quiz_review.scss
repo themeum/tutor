@@ -7,7 +7,7 @@
     margin-bottom: 60px;
     i {
         margin-right: 12px; // reduce 3 px for default icon gap
-        color: var(--tutor-primary-color);
+        color: var(--tutor-color-primary);
     }
 }
 
@@ -54,7 +54,7 @@
         h4 a,
         h4 {
             font-weight: 700;
-            color: var(--tutor-text-color);
+            color: var(--tutor-body-color);
             margin-top: 7px;
         }
     }
@@ -99,7 +99,7 @@
             margin-right: 9px;
         }
         &.attempt-review-at > span {
-            color: var(--tutor-primary-color);
+            color: var(--tutor-color-primary);
             margin-right: 7px;
             font-size: 16px;
         }

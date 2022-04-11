@@ -2,13 +2,13 @@
 // @todo: to be removed
 .tutor-default-tab-bak {
 	.tab-header {
-		border-bottom: 1px solid $stroke-light-30;
+		border-bottom: 1px solid var(--tutor-border-color);
 		gap: 15px;
 	}
 
 	.tab-header-item {
 		@extend .text-medium-caption;
-		@extend .tutor-color-black-60;
+		color: var(--tutor-color-secondary);
 		@extend .tutor-px-20;
 		@extend .tutor-py-12;
 		position: relative;
@@ -23,7 +23,7 @@
 			position: absolute;
 			width: 100%;
 			height: 2px;
-			background: $bg-brand;
+			background: var(--tutor-color-primary);
 			left: 0;
 			bottom: -1px;
 			transform: scaleY(0);
@@ -31,7 +31,7 @@
 			transition: 200ms;
 		}
 		&.is-active {
-			color: $design-brand;
+			color: var(--tutor-color-primary);
 			&:before {
 				transform: scaleY(1);
 			}

@@ -27,10 +27,10 @@
 
 	.preset-item {
 		&:hover {
-			box-shadow: 0 0 0 1px $stroke-light-30;
+			box-shadow: 0 0 0 1px var(--tutor-border-color);
 		}
-		background: $color-white;
-		border: 1px solid $stroke-light-30;
+		background: var(--tutor-color-white);
+		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
 		overflow: hidden;
 		transition: $transition;
@@ -65,7 +65,7 @@
 			width: 20px;
 			height: 20px;
 			display: inline-block;
-			border: 2px solid $stroke-gray;
+			border: 2px solid var(--tutor-border-color);
 			border-radius: 4px;
 			transition: $transition;
 			position: relative;
@@ -89,11 +89,11 @@
 		@include appearNone;
 		&:checked {
 			+ .preset-item {
-				border-color: var(--tutor-primary-color);
-				box-shadow: 0 0 0 1px var(--tutor-primary-color);
+				border-color: var(--tutor-color-primary);
+				box-shadow: 0 0 0 1px var(--tutor-color-primary);
 				.check-icon {
-					background-color: var(--tutor-primary-color);
-					border-color: var(--tutor-primary-color);
+					background-color: var(--tutor-color-primary);
+					border-color: var(--tutor-color-primary);
 
 					&:before {
 						transform: scale(1);
@@ -148,8 +148,8 @@
 		display: grid;
 		align-items: center;
 		grid-auto-flow: column;
-		background: $color-white;
-		border: 1px solid $stroke-light-30;
+		background: var(--tutor-color-white);
+		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
 		width: 109px;
 		height: 34px;
@@ -160,7 +160,7 @@
 		.picker-value {
 			text-align: left;
 			@extend .text-regular-small;
-			color: $black-main;
+			color: var(--tutor-color-body);
 			> .color {
 				display: inline-flex;
 				width: 32px;
@@ -168,7 +168,7 @@
 			}
 			> .value {
 				padding: 5px 10px;
-				color: $black-main;
+				color: var(--tutor-color-body);
 			}
 		}
 
@@ -180,7 +180,7 @@
 			border-right: 1px solid #cecfd5;
 			border-radius: 0;
 			&:checked {
-				border-color: $color-brand;
+				border-color: var(--tutor-color-primary);
 			}
 			&::-webkit-color-swatch-wrapper {
 				padding: 0;

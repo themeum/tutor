@@ -112,7 +112,7 @@
 			left: calc(-1 * var(--padding));
 			width: calc(100% + calc(2 * var(--padding)));
 			/* stroke/light30 */
-			border-bottom: 1px solid $stroke-light-30;
+			border-bottom: 1px solid var(--tutor-border-color);
 		}
 		&-item {
 			cursor: pointer;
@@ -175,20 +175,19 @@
 
 // Notification Elements
 $variations: (
-	'primary' $color-brand $primary-40,
-	'success' $color-success $success-40,
-	'warning' $color-warning $warning-40,
-	'danger' $danger-90 $danger-40,
+	'primary' var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15),
+	'success' var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.15),
+	'warning' var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.15),
+	'danger' var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.15),
 	'purple' #9b4ab4 #faebff,
-	// 'default' $design-white $black-30
 );
+
 @each $prefix, $color, $bgColor in $variations {
 	.tutor-notification-element {
 		&:not(.notification-read) {
 			.element-icon {
 				.element-#{$prefix} {
 					color: #{$color};
-					// background: #{$bgColor};
 				}
 			}
 			.element-content .header {
@@ -207,7 +206,7 @@ $variations: (
 	padding-bottom: 15px;
 
 	.element-icon {
-		color: $text-muted;
+		color: var(--tutor-color-muted);
 		[class^='element-'] {
 			width: 24px;
 			height: 24px;
@@ -235,7 +234,7 @@ $variations: (
 					width: 8px;
 					height: 8px;
 					border-radius: 50%;
-					background: var(--tutor-primary-color);
+					background: var(--tutor-color-primary);
 					box-shadow: 0 0 0 2px #e9edfb;
 					position: relative;
 
@@ -260,7 +259,7 @@ $variations: (
 			}
 
 			[class^='element-'] {
-				color: $black-70;
+				color: var(--tutor-color-secondary);
 			}
 		}
 
@@ -280,7 +279,7 @@ $variations: (
 			}
 			.message,
 			.message > * {
-				color: $black-50;
+				color: var(--tutor-color-secondary);
 			}
 		}
 	}

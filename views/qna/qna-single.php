@@ -99,7 +99,7 @@
 										</div>
 
 										<div>
-											<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-70">
+											<div class="tutor-fs-6 tutor-fw-medium tutor-color-secondary">
 												<?php echo $answer->display_name; ?>
 											</div>
 											<div class="tutor-fs-7 tutor-color-muted">

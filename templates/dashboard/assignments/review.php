@@ -44,7 +44,7 @@ if ( ! $assignment_submitted_id ) {
 		<table class="tutor-ui-table-no-border tutor-is-lefty tutor-is-flexible">
 			<tbody>
 				<tr>
-					<td class="tutor-color-black-60"><?php esc_html_e( 'Course', 'tutor' ); ?></td>
+					<td class="tutor-color-secondary"><?php esc_html_e( 'Course', 'tutor' ); ?></td>
 					<td>:
 						<a href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_parent ) ); ?>" target="_blank">
 						<?php esc_html_e( get_the_title( $submitted_assignment->comment_parent ) ); ?>
@@ -52,7 +52,7 @@ if ( ! $assignment_submitted_id ) {
 					</td>
 				</tr>
 				<tr>
-					<td class="tutor-color-black-60"><?php esc_html_e( 'Student', 'tutor' ); ?></td>
+					<td class="tutor-color-secondary"><?php esc_html_e( 'Student', 'tutor' ); ?></td>
 					<td>:
 						<span>
 						<?php echo esc_html( $comment_author->display_name . ' (' . $comment_author->user_email . ')' ); ?>
@@ -60,7 +60,7 @@ if ( ! $assignment_submitted_id ) {
 					</td>
 				</tr>
 				<tr>
-					<td class="tutor-color-black-60"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?></td>
+					<td class="tutor-color-secondary"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?></td>
 					<td>:
 						<span>
 						<?php echo esc_attr( date( 'j M, Y, h:i a', strtotime( $submitted_assignment->comment_date ) ) ); ?>
@@ -76,7 +76,7 @@ if ( ! $assignment_submitted_id ) {
 		<h5 class="tutor-fs-6 tutor-fw-medium tutor-mb-5">
 			<?php esc_html_e( 'Assignment Description:', 'tutor' ); ?>
 		</h5>
-		<p class="tutor-fs-6 tutor-color-black-60 tutor-mb-5">
+		<p class="tutor-fs-6 tutor-color-secondary tutor-mb-5">
 			<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
 		</p>
 		<?php

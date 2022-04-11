@@ -20,7 +20,7 @@
     &-item {
         display: block;
         padding: 8px 16px;
-        color: var(--tutor-black-70);
+        color: var(--tutor-color-secondary);
         font-size: 16px;
         font-weight: 500;
         text-decoration: none;
@@ -29,12 +29,12 @@
 
         &:hover,
         &:focus {
-            color: var(--tutor-primary-color);
+            color: var(--tutor-color-primary);
             background-color: #E9EDFB;
         }
 
         &.is-active {
-            color: var(--tutor-primary-color);
+            color: var(--tutor-color-primary);
             background-color: #E9EDFB;
         }
     }

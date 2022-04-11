@@ -18,7 +18,7 @@
 		max-width: 400px;
 	}
 	background: #fff;
-	border-color: $stroke-light-30;
+	border-color: var(--tutor-border-color);
 	border-width: 1px 0px 0px 0px;
 	border-style: solid;
 	border-bottom: none;
@@ -45,13 +45,13 @@
 				padding: 13px 10px;
 				cursor: pointer;
 				position: relative;
-				background: $bg-gray-10;
+				background: var(--tutor-color-gray-10);
 				border-bottom-right-radius: 10px;
 				border-bottom-left-radius: 10px;
 				&:first-child,
 				&:last-child {
 					border-style: solid;
-					border-color: $stroke-light-30;
+					border-color: var(--tutor-border-color);
 				}
 				&:first-child {
 					border-bottom-left-radius: 0px;
@@ -71,9 +71,9 @@
 			> div.active {
 				// border-width: 0px !important;
 				border-color: transparent;
-				background: $color-white;
+				background: var(--tutor-color-white);
 				span:first-child {
-					color: var(--tutor-primary-color);
+					color: var(--tutor-color-primary);
 				}
 			}
 		}
@@ -129,7 +129,7 @@
 								.tutor-single-lesson-items-left {
 									[class^='tutor-icon-'],
 									[class*=' tutor-icon-'] {
-										color: $design-brand !important;
+										color: var(--tutor-color-primary) !important;
 									}
 								}
 							}
@@ -148,7 +148,7 @@
 								.tutor-icon-zoom,
 								span:first-child {
 									display: flex;
-									color: $black-40;
+									color: var(--tutor-color-muted);
 									font-size: 18px;
 								}
 								.lesson_title {

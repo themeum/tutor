@@ -3422,7 +3422,7 @@ class Utils {
 		$current_rating = number_format( $current_rating, 2, '.', '' );
 		$css_class = isset($screen_size) ? "{$parent_class} tutor-ratings-{$screen_size}" : "{$parent_class}";
 		?>
-		<div class="tutor-ratings <?php echo $css_class; ?>">
+		<div class="tutor-ratings<?php echo $css_class; ?>">
 			<div class="tutor-ratings-stars">
 				<?php
 				for ( $i = 1; $i <= 5; $i++ ) {
@@ -3432,7 +3432,7 @@ class Utils {
 						$class = 'tutor-icon-star-bold';
 					}
 
-					// ToDo: Add half start later. tutor-icon-star-half-bold
+					// @todo: Add half start later. tutor-icon-star-half-bold
 					echo '<span class="' . $class . '"></span>';
 				}
 				?>
@@ -8644,7 +8644,7 @@ class Utils {
 		?>
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%" />
-			<div class="tutor-fs-6 tutor-color-black-60 tutor-text-center">
+			<div class="tutor-fs-6 tutor-color-secondary tutor-text-center">
 				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
 			</div>
 		</div>
@@ -9451,6 +9451,47 @@ class Utils {
 				return $html;
 			}
 		}
+	}
+
+	/**
+	 * Conver Hex to RGB
+	 * 
+	 * @return string
+	 * 
+	 * @since 2.0.2
+	 */
+
+	public function hex2rgb( $color ) {
+
+		$default = '0, 0, 0';
+
+		if ( $color === '' ) {
+			return '';
+		}
+
+		if ( strpos( $color, 'var(--' ) === 0 ) {
+			return preg_replace( '/[^A-Za-z0-9_)(\-,.]/', '', $color );
+		}
+
+		// convert hex to rgb
+		if ($color[0] == '#' ) {
+        	$color = substr( $color, 1 );
+        } else {
+			return $default;
+		}
+ 
+        //Check if color has 6 or 3 characters and get values
+        if ( strlen( $color ) == 6 ) {
+            $hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
+        } elseif ( strlen( $color ) == 3 ) {
+            $hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
+        } else {
+            return $default;
+        }
+
+		$rgb =  array_map('hexdec', $hex);
+
+		return implode(", ", $rgb);
 	}
 
 	public function get_course_builder_screen()

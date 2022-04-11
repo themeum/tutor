@@ -26,18 +26,18 @@ $height-sm: 38px;
 		font-weight: 400;
 		line-height: 1.4;
 		height: auto;
-		border: 1px solid $black-20;
+		border: 1px solid var(--tutor-border-color);
 		box-shadow: none;
 		transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
 	
 		&::placeholder,
 		&.tutor-placeholder {
-			color: var(--tutor-text-hints);
+			color: var(--tutor-color-muted);
 		}
 	
 		&:focus,
 		&.is-active {
-			border-color: var(--tutor-primary-color);
+			border-color: var(--tutor-color-primary);
 			box-shadow: unset;
 		}
 	
@@ -52,11 +52,11 @@ $height-sm: 38px;
 		}
 	
 		&:disabled {
-			background: $bg-gray-20;
-			border-color: $bg-gray-20;
+			background: $color-gray-20;
+			border-color: $color-gray-20;
 			cursor: not-allowed;
 			&::placeholder {
-				color: $text-muted;
+				color: var(--tutor-color-muted);
 			}
 		}
 	
@@ -149,7 +149,7 @@ $height-sm: 38px;
 	&-label {
 		display: block;
 		font-size: 14px;
-		color: var(--tutor-text-title);
+		color: var(--tutor-body-color);
 		line-height: 24px;
 		margin: 0 0 10px;
 		font-weight: 500;
@@ -222,7 +222,7 @@ select.tutor-form-control,
 		text-align: center;
 		white-space: nowrap;
 		background-color: var(--tutor-color-white);
-		border: 1px solid $black-20;
+		border: 1px solid var(--tutor-border-color);
 		border-radius: $radius;
 	}
 
@@ -265,7 +265,7 @@ select.tutor-form-control,
 	font-size: 14px;
 	line-height: 1.4;
 	margin: 16px 0 0;
-	color: var(--tutor-text-subtitle);
+	color: var(--tutor-text-secondary);
 	position: relative;
 	display: flex;
 
@@ -282,7 +282,7 @@ select.tutor-form-control,
 	label {
 		cursor: pointer;
 		font-size: 16px;
-		color: var(--tutor-text-title);
+		color: var(--tutor-body-color);
 		font-weight: 500;
 	}
 	input.tutor-form-check-input {
@@ -297,11 +297,11 @@ select.tutor-form-control,
 .tutor-form-check-input {
 	display: inline-block;
 	vertical-align: top;
-	background-color: var(--tutor-white);
+	background-color: var(--tutor-color-white);
 	width: 24px;
 	height: 24px;
 	margin: 0;
-	border: 2px solid var(--tutor-stroke-gray);
+	border: 2px solid var(--tutor-border-color);
 	border-radius: 4px;
 	cursor: pointer;
 	appearance: none;
@@ -332,8 +332,8 @@ select.tutor-form-control,
 			border-radius: 50%;
 		}
 		&:checked {
-			border-color: var(--tutor-primary-color);
-			background-color: var(--tutor-primary-color);
+			border-color: var(--tutor-color-primary);
+			background-color: var(--tutor-color-primary);
 			background-image: url("data:image/svg+xml,%3Csvg width='14' height='10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M.922 5.7a.627.627 0 01-.127-.194.72.72 0 010-.5.6.6 0 01.127-.195l.905-.867a.562.562 0 01.425-.195.592.592 0 01.25.05.665.665 0 01.207.145l2.73 2.734L11.295.82a.658.658 0 01.202-.145.613.613 0 01.484.002.568.568 0 01.191.143l.905.88a.6.6 0 01.127.195.72.72 0 010 .5.628.628 0 01-.127.194l-7.2 7.163a.575.575 0 01-.195.147.655.655 0 01-.5 0 .575.575 0 01-.195-.147L.922 5.7z' fill='%23fff'/%3E%3C/svg%3E");
 			background-repeat: no-repeat;
 			background-position: 50% 50%;
@@ -348,8 +348,8 @@ select.tutor-form-control,
 		@at-root input:checked + label .tutor-form-check-input-radio, // hack for the paid membership pro pricing
 		&:checked,
 		&.is-active {
-			border-color: var(--tutor-primary-color);
-			background-color: var(--tutor-primary-color);
+			border-color: var(--tutor-color-primary);
+			background-color: var(--tutor-color-primary);
 			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
 			background-position: 50% 50%;
 		}
@@ -370,8 +370,7 @@ select.tutor-form-control,
 			display: inline-block;
 			width: 40px;
 			height: 24px;
-			background-color: var(--tutor-border-color-alt);
-			background-color: $black-10;
+			background-color: var(--tutor-border-color);
 			border-radius: 12px;
 			vertical-align: top;
 			cursor: pointer;
@@ -382,7 +381,7 @@ select.tutor-form-control,
 				position: absolute;
 				height: 18px;
 				width: 18px;
-				background-color: var(--tutor-white);
+				background-color: var(--tutor-color-white);
 				top: 3px;
 				left: 4px;
 				border-radius: 50%;
@@ -390,7 +389,7 @@ select.tutor-form-control,
 			}
 		}
 		&:checked ~ .tutor-form-toggle-control {
-			background-color: var(--tutor-primary-color);
+			background-color: var(--tutor-color-primary);
 			&::before {
 				left: 18px;
 			}

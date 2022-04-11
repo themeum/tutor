@@ -32,7 +32,7 @@
 			}
 
 			&.active a {
-				background-color: var(--tutor-primary-color);
+				background-color: var(--tutor-color-primary);
 				color: var(--tutor-primary-text-color);
 
 				&:hover {
@@ -54,18 +54,18 @@
 			border-top-left-radius: 4px;
 			border-bottom-left-radius: 4px;
 			@extend .tutor-text-regular-body;
-			color: $black-main;
+			color: var(--tutor-color-body);
 		}
 		&-icon {
 			font-size: 24px;
-			color: var(--tutor-primary-color);
+			color: var(--tutor-color-primary);
 		}
 
 		&.active {
 			a {
-				color: $text-white;
+				color:var(--tutor-color-white);
 				.tutor-dashboard-menu-item-icon {
-					color: $text-white;
+					color: var(--tutor-color-white);
 				}
 			}
 		}

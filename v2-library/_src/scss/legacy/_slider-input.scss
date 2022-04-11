@@ -82,14 +82,14 @@
     }
 
     .ui-widget-content {
-        background-color: var(--tutor-primary-color);
+        background-color: var(--tutor-color-primary);
         border: none;
         height: 4px;
         border-radius: 4px;
 
         .ui-state-default {
             background-color: white;
-            border: 4px solid var(--tutor-primary-color);
+            border: 4px solid var(--tutor-color-primary);
             border-radius: 50%;
         }
     }
@@ -97,7 +97,7 @@
     .tutor-field-type-slider-value {
         font-size: 16px;
         font-weight: 600;
-        background: var(--tutor-primary-color);
+        background: var(--tutor-color-primary);
         position: absolute;
         right: 5px;
         top: 50%;
@@ -115,7 +115,7 @@
             position: absolute;
             border: 7px solid transparent;
             top: 50%;
-            border-right-color: var(--tutor-primary-color);
+            border-right-color: var(--tutor-color-primary);
             right: 100%;
             -webkit-transform: translateY(-50%);
             transform: translateY(-50%);

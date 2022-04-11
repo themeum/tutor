@@ -60,10 +60,10 @@
 							</div>
 						</div>
 						<div class="tutor-comment-actions tutor-ml-24">
-							<span class="tutor-fs-6 tutor-color-black-70">reply</span>
-							<!-- <span class="tutor-fs-6 tutor-color-black-70">like</span>
-							<span class="tutor-fs-6 tutor-color-black-70">edit</span>
-							<span class="tutor-fs-6 tutor-color-black-70">delete</span> -->
+							<span class="tutor-fs-6 tutor-color-secondary">reply</span>
+							<!-- <span class="tutor-fs-6 tutor-color-secondary">like</span>
+							<span class="tutor-fs-6 tutor-color-secondary">edit</span>
+							<span class="tutor-fs-6 tutor-color-secondary">delete</span> -->
 						</div>
 
 						<?php

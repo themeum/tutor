@@ -34,7 +34,7 @@
 
 		&.is-active {
 			background-color: #F6F8FD;
-			border-color: $primary;
+			border-color: var(--tutor-color-primary);
 		}
 
 		// list
@@ -54,7 +54,7 @@
 			&-item {
 				position: relative;
 				display: block;
-				color: $black-main;
+				color: var(--tutor-body-color);
 				text-decoration: none;
 				background-color: #fff;
 
