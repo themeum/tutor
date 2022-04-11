@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-
-import DatePicker from 'react-datepicker';
-import { addMonths, getMonth, getYear } from 'date-fns';
+import { getMonth, getYear } from 'date-fns';
 import range from 'lodash.range';
+import React, { useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+
 
 // Formatiing String to Date
 function stringToDate(_date, _format, _delimiter) {
@@ -17,6 +17,26 @@ function stringToDate(_date, _format, _delimiter) {
 	const formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
 	return formatedDate;
 }
+
+const Input = React.forwardRef(({ onChange, placeholder, value, id, onClick }, ref) => {
+	return (
+		<div className='tutor-form-wrap'>
+			<span className='tutor-form-icon tutor-form-icon-reverse'>
+				<span className='tutor-icon-calender' aria-hidden={true}></span>
+			</span>
+			<input
+				ref={ref}
+				className='tutor-form-control'
+					onChange={onChange}
+					placeholder={placeholder}
+					value={value}
+					id={id}
+					onClick={onClick}
+				/>
+		</div>
+	)
+});
+
 
 const TutorDatepicker = (data) => {
 	const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'd-M-Y';
@@ -81,6 +101,7 @@ const TutorDatepicker = (data) => {
 	return (
 		<div className="tutor-react-datepicker">
 			<DatePicker
+				customInput={<Input/>}
 				isClearable={Boolean(data.is_clearable)}
 				placeholderText={dateFormat}
 				selected={startDate}

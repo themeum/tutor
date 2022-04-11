@@ -44,7 +44,12 @@
 
 			if (navTabBodyItem) {
 				activeNavItems.forEach((m) => {
-					m.classList.remove('is-active');
+					const activeTabClasses = ['tutor-tab-item', 'is-active'];
+					const isActiveTabItem = activeTabClasses.every((className) => m.classList.contains(className));
+					
+					if (isActiveTabItem || m.closest(`[${attrNav}]`)) { 
+						m.classList.remove('is-active');
+					}
 				});
 
 				if (navTarget.closest('.tutor-nav-more') != undefined) {
