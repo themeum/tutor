@@ -46,8 +46,8 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	<div class="tutor-card tutor-p-24">
 		<div class="tutor-row tutor-align-items-lg-center">
 			<div class="tutor-col-lg-auto tutor-mb-16 tutor-mb-lg-0">
-				<div class="tutor-svg tutor-round-box tutor-fs-2 tutor-p-8">
-					<?php echo tutor_utils()->get_svg_icon('wallet'); ?>
+				<div class="tutor-round-box tutor-p-8">
+					<i class="tutor-icon-wallet" area-hidden="true"></i>
 				</div>
 			</div>
 

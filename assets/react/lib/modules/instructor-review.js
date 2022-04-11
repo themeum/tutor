@@ -10,18 +10,18 @@ window.jQuery(document).ready($ => {
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
+    $(document).on('mouseover', '[tutor-ratings-selectable] i', function () {
         toggle_star_($(this));
     });
 
-    $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
+    $(document).on('click', '[tutor-ratings-selectable] i', function () {
         var rating = $(this).attr('data-rating-value');
-        $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
+        $(this).closest('[tutor-ratings-selectable]').find('input[name="tutor_rating_gen_input"]').val(rating);
         
         toggle_star_($(this));
     });
 
-    $(document).on('mouseout', '.tutor-star-rating-container .tutor-star-rating-group', function(){
+    $(document).on('mouseout', '[tutor-ratings-selectable]', function(){
         var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
         var rating = parseInt(value);
         
@@ -83,7 +83,7 @@ window.jQuery(document).ready($ => {
     // Show review form on opn (Single course)
     $(document).on('click', '.write-course-review-link-btn', function (e) {
         e.preventDefault();
-        $(this) .closest('.tutor-pagination-wrapper-replacable')
+        $(this).closest('.tutor-pagination-wrapper-replacable')
                 .next()
                 .filter('.tutor-course-enrolled-review-wrap')
                 .find('.tutor-write-review-form').slideToggle();

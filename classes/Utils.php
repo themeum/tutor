@@ -3391,7 +3391,7 @@ class Utils {
 	 */
 	public function star_rating_generator( $current_rating = 0.00, $echo = true ) {
 
-		$output = '<div class="tutor-star-rating-group">';
+		$output = '<div class="tutor-ratings-stars">';
 
 		for ( $i = 1; $i <= 5; $i++ ) {
 			$intRating = (int) $current_rating;
@@ -3407,9 +3407,9 @@ class Utils {
 			}
 		}
 
-		$output .= '<div class="tutor-rating-gen-input"><input type="hidden" name="tutor_rating_gen_input" value="' . $current_rating . '" /></div>';
-
 		$output .= '</div>';
+
+		$output .= '<input type="hidden" name="tutor_rating_gen_input" value="' . $current_rating . '" />';
 
 		if ( $echo ) {
 			echo tutor_kses_html( $output );
@@ -3420,10 +3420,10 @@ class Utils {
 
 	public function star_rating_generator_v2( $current_rating, $total_count = null, $show_avg_rate = false, $parent_class = '', $screen_size = '' ) {
 		$current_rating = number_format( $current_rating, 2, '.', '' );
-		$css_class = isset($screen_size) ? "{$parent_class} tutor-is-{$screen_size}" : "{$parent_class}";
+		$css_class = isset($screen_size) ? "{$parent_class} tutor-ratings-{$screen_size}" : "{$parent_class}";
 		?>
 		<div class="tutor-ratings <?php echo $css_class; ?>">
-			<div class="tutor-rating-stars">
+			<div class="tutor-ratings-stars">
 				<?php
 				for ( $i = 1; $i <= 5; $i++ ) {
 					$class = 'tutor-icon-star-line';
@@ -3437,20 +3437,10 @@ class Utils {
 				}
 				?>
 			</div>
-			<?php
-			if ( $show_avg_rate ) {
-				?>
-				<span class="tutor-rating-text tutor-fs-6 tutor-color-black-60 tutor-pl-0 tutor-ml-0">
-					<?php
-					echo $current_rating;
-					if ( ! ( $total_count === null ) ) {
-						echo '&nbsp;(' . $total_count . ' ' . ( $total_count > 1 ? __( 'Ratings', 'tutor' ) : __( 'Rating', 'tutor' ) ) . ')';
-					}
-					?>
-				</span>
-				<?php
-			}
-			?>
+			<?php if( $show_avg_rate && $total_count > 0 ) : ?>
+				<div class="tutor-ratings-average"><?php echo $current_rating; ?></div>
+				<div class="tutor-ratings-count">(<?php echo $total_count . ' ' . ( $total_count > 1 ? __( 'Ratings', 'tutor' ) : __( 'Rating', 'tutor' ) ); ?>)</div>
+			<?php endif; ?>
 		</div>
 		<?php
 	}

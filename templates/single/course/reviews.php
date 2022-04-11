@@ -73,7 +73,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 						<?php $rating_count_percent = ( $value > 0 ) ? ( $value * 100 ) / $rating->rating_count : 0; ?>
 						<div class="rating-numbers">
 							<div class="rating-progress">
-								<div class="tutor-ratings tutor-is-sm">
+								<div class="tutor-ratings">
 									<div class="tutor-rating-stars">
 										<span class="tutor-icon-star-line"></span>
 									</div>
@@ -140,7 +140,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 </div>
 
 <?php if($is_enrolled): ?>
-	<div class="tutor-course-enrolled-review-wrap tutor-mt-16">
+	<div class="tutor-course-enrolled-review-wrap tutor-pt-16">
 		<div class="tutor-write-review-form" style="display: none;">
 			<form method="post">
 				<div class="tutor-star-rating-container">
@@ -148,9 +148,11 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 					<input type="hidden" name="review_id" value="<?php echo $my_rating ? $my_rating->comment_ID : ''; ?>"/>
 					<input type="hidden" name="action" value="tutor_place_rating"/>
 					<div class="tutor-form-group">
-						<?php
-							tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($my_rating ? $my_rating->rating : 0));
-						?>
+						<div class="tutor-ratings tutor-ratings-lg tutor-ratings-selectable" tutor-ratings-selectable>
+							<?php
+								tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($my_rating ? $my_rating->rating : 0));
+							?>
+						</div>
 					</div>
 					<div class="tutor-form-group">
 						<textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($my_rating ? $my_rating->comment_content : ''); ?></textarea>

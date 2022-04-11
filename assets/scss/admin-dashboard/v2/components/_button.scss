@@ -1,35 +1,35 @@
 // Buttons Override
 // @todo: check thoroughly for the unnecessary code
 
-.tutor-backend-settings-page {
-	.tutor-btn {
-		cursor: pointer;
-		border-radius: 6px;
-		&.tutor-is-sm {
-			@extend .text-btn-medium;
-			padding: 7px 16.65px;
-		}
-		&.tutor-is-xs {
-			@extend .text-btn-small;
-			padding: 8px 14px;
-			.tutor-btn-icon {
-				font-size: 16px;
-			}
-		}
+// .tutor-backend-settings-page {
+// 	.tutor-btn {
+// 		cursor: pointer;
+// 		border-radius: 6px;
+// 		&.tutor-is-sm {
+// 			@extend .text-btn-medium;
+// 			padding: 7px 16.65px;
+// 		}
+// 		&.tutor-is-xs {
+// 			@extend .text-btn-small;
+// 			padding: 8px 14px;
+// 			.tutor-btn-icon {
+// 				font-size: 16px;
+// 			}
+// 		}
 
-		.tutor-btn-icon {
-			font-size: 24px;
-		}
+// 		.tutor-btn-icon {
+// 			font-size: 24px;
+// 		}
 
-		&:disabled {
-			cursor: not-allowed;
-		}
+// 		&:disabled {
+// 			cursor: not-allowed;
+// 		}
 
-		&:disabled,
-		&:disabled:hover {
-			background: #e3e6eb !important;
-			color: #7a7a7a !important;
-			border-color: #e3e6eb !important;
-		}
-	}
-}
+// 		&:disabled,
+// 		&:disabled:hover {
+// 			background: #e3e6eb !important;
+// 			color: #7a7a7a !important;
+// 			border-color: #e3e6eb !important;
+// 		}
+// 	}
+// }

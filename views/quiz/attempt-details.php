@@ -173,7 +173,7 @@ if ( is_array( $attempt_info ) ) {
 
 ?>
 
-<?php echo is_admin() ? '<div class="wrap">' : ''; ?>
+<?php echo is_admin() ? '<div class="tutor-admin-body">' : ''; ?>
 <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts tutor-mb-32">
     <thead>
         <tr>

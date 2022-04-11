@@ -42,18 +42,18 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
 <div class="tutor-dashboard-content-inner my-courses">
     <div class="tutor-mb-32">
         <ul class="tutor-nav">
-            <li>
-                <a class="tutor-nav-item<?php echo $active_tab == 'my-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses')); ?>">
+            <li class="tutor-nav-item">
+                <a class="tutor-nav-link<?php echo $active_tab == 'my-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses')); ?>">
                     <?php esc_html_e('Publish', 'tutor'); ?> <?php echo "(" . $count_map['publish'] . ")"; ?>
                 </a>
             </li>
-            <li>
-                <a class="tutor-nav-item<?php echo $active_tab == 'my-courses/pending-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses')); ?>">
+            <li class="tutor-nav-item">
+                <a class="tutor-nav-link<?php echo $active_tab == 'my-courses/pending-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses')); ?>">
                     <?php esc_html_e('Pending', 'tutor'); ?> <?php echo "(" . $count_map['pending'] . ")"; ?>
                 </a>
             </li>
-            <li>
-                <a class="tutor-nav-item<?php echo $active_tab == 'my-courses/draft-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/draft-courses')); ?>">
+            <li class="tutor-nav-item">
+                <a class="tutor-nav-link<?php echo $active_tab == 'my-courses/draft-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/draft-courses')); ?>">
                     <?php esc_html_e('Draft', 'tutor'); ?> <?php echo "(" . $count_map['draft'] . ")"; ?>
                 </a>
             </li>
@@ -82,8 +82,9 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
 
                 <div id="<?php echo $row_id; ?>" class="tutor-course-listing-item tutor-course-listing-item-sm tutor-mycourses-card tutor-mycourse-<?php the_ID(); ?>">
                     <div class="tutor-course-listing-item-head tutor-d-flex">
-                        <!-- <img src="<?php //echo esc_url($tutor_course_img); ?>" alt="Course Thumbnail"> -->
-                        <div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>)"></div>
+                        <div class="tutor-course-listing-thumbnail tutor-ratio tutor-ratio-16x9">
+                            <img src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
+                        </div>
                     </div>
                     <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-20">
                         <div class="tutor-d-flex tutor-mb-7">

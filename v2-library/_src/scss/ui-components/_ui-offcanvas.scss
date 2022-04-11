@@ -235,9 +235,7 @@ $variations: (
 					width: 8px;
 					height: 8px;
 					border-radius: 50%;
-					/* design/brand */
-					background: #3e64de;
-					/* color/primary/fill/40 */
+					background: var(--tutor-primary-color);
 					box-shadow: 0 0 0 2px #e9edfb;
 					position: relative;
 
