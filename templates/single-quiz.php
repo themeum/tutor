@@ -82,6 +82,7 @@ ob_start();
         </div>
     </div>
 
+    <!-- @todo: remove tutor-d-grid -->
     <div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
         <div class="tutor-mobile-top-nav tutor-d-grid">
             <a href="<?php echo get_the_permalink($previous_id); ?>">

@@ -129,7 +129,7 @@
 				height: var(--w);
 				padding: var(--pd);
 				border-radius: 50%;
-				background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-primary-60) 100%);
+				background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-border-color) 100%);
 
 				&:before {
 					content: '';
@@ -140,7 +140,7 @@
 				}
 
 				&.progress-full {
-					background: conic-gradient(var(--tutor-design-error) var(--pro), 0, var(--tutor-primary-60) 100%);
+					background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-border-color) 100%);
 				}
 			}
 			&.booking-full {
@@ -184,17 +184,6 @@
 		}
 	}
 
-	.tutor-course-listing-thumbnail {
-		width: 100%;
-		height: 200px;
-		// @include breakpoint-min(desktop) {
-		// 	height: 165px;
-		// }
-		background-repeat: no-repeat;
-		background-size: cover;
-		background-position: center;
-	}
-
 	.tutor-course-listing-item-head {
 		a.tutor-course-listing-thumb-permalink {
 			display: block;
@@ -208,13 +197,8 @@
 		border: 1px solid #cdcfd5;
 		border-radius: 6px;
 
-		.tutor-course-listing-thumbnail {
-			height: 160px;
-		}
-
 		.tutor-course-listing-item-head {
 			margin: -1px;
-			// border-radius: unset;
 		}
 
 		.tutor-course-listing-item-body,
@@ -244,20 +228,10 @@
 	}
 }
 
-@include breakpoint-max(desktop) {
-	.tutor-filter-widget-items-wrap {
-		@include responsiveGrid(250px, 1fr);
-		grid-gap: 30px;
-	}
-}
-
 .tutor-course-listing-filter {
 	display: grid;
 	@include breakpoint-min(desktop) {
 		grid-template-columns: 1fr 3fr;
-		.filter-widget-input-wrapper {
-			margin-top: 42px;
-		}
 	}
 
 	.filter-widget-checkboxes {
@@ -313,40 +287,6 @@
 			&:not(:last-child) {
 				margin-bottom: 50px;
 			}
-		}
-	}
-}
-
-// .tutor-frontend-dashboard-course-porgress-*
-.tutor-frontend-dashboard-course-porgress {
-	// .tutor-frontend-dashboard-course-porgress-card
-	&-card {
-		@include breakpoint-min(desktop) {
-			&-horizontal {
-				flex-direction: row;
-			}
-
-			.tutor-course-listing-item-head {
-				border-radius: 0;
-				border-top-left-radius: 6px;
-				border-bottom-right-radius: 6px;
-				overflow: visible;
-			}
-			.tutor-course-listing-thumbnail {
-				max-width: 350px;
-				width: 350px;
-			}
-			.tutor-course-listing-thumbnail {
-				max-width: 250px;
-				width: 250px;
-				height: 100%;
-				border-top-left-radius: 6px;
-				border-bottom-left-radius: 6px;
-			}
-		}
-
-		.list-item-progress .progress-percentage {
-			white-space: nowrap;
 		}
 	}
 }

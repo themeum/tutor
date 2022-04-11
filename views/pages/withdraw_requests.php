@@ -272,18 +272,18 @@ $filters = array(
 									</button>
 								</div>
 								<?php elseif ( 'approved' === $list->status ) : ?>
-									<div class="tutor-fs-8 tutor-fw-medium tutor-color-muted">
+									<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 									</div>
 								<?php elseif ( 'rejected' === $list->status ) : ?>
 									<div class="tutor-d-flex ">
-										<div class="tutor-fs-8 tutor-fw-medium tutor-color-muted">
+										<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 										</div>
 										<div class="tooltip-wrap tutor-ml-lg-20 tutor-ml-0">
-											<span class="tutor-fs-8 tutor-fw-medium tutor-color-black">
+											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 												<i class="tutor-icon-circle-info tutor-color-black-20 "></i>
 											</span>
 											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-left">
@@ -296,7 +296,7 @@ $filters = array(
 										</div>
 									</div>
 								<?php else : ?>
-									<div class="tutor-fs-8 tutor-fw-medium tutor-color-muted">
+									<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
 										<br>
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>

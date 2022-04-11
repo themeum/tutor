@@ -3,13 +3,6 @@ window.jQuery(document).ready(($) => {
 
 	$(document).on('click', '.tutor-course-wishlist-btn', function(e) {
 		e.preventDefault();
-		const userId = Number(e.currentTarget.dataset.userId);
-		if (userId > 0) {
-		} else {
-			$('.tutor-login-modal').addClass('tutor-is-active');
-			return;
-		}
-
 		var $that = $(this);
 		var course_id = $that.attr('data-course-id');
 
@@ -37,7 +30,8 @@ window.jQuery(document).ready(($) => {
 							.removeClass('tutor-icon-bookmark-bold');
 					}
 				} else {
-					window.location = data.data.redirect_to;
+					//window.location = data.data.redirect_to;
+					$('.tutor-login-modal').addClass('tutor-is-active');
 				}
 			},
 			complete: function() {

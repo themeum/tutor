@@ -73,6 +73,9 @@ window.jQuery(document).ready(function($){
 
                     //Close the modal
                     $('.tutor-assignment-modal-wrap').removeClass('tutor-is-active');
+
+                    // Trigger content change event
+                    window.dispatchEvent(new Event(window._tutorobject.content_change_event));
                     
                     tutor_toast(__('Success', 'tutor'), __('Assignment Updated', 'tutor'), 'success');
                 }

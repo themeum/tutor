@@ -21,7 +21,7 @@ if($instructors && count($instructors)) {
 	?>
 	<div class="tutor-mt-60">
 		<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
-			<?php _e( 'About the ' . ( count( (array) $instructors ) > 1 ? 'instructors' : 'instructor' ), 'tutor'); ?>
+			<?php echo _n( 'About the instructor', 'About the instructors', count( $instructors ), 'tutor' ); ?>
 		</h3>
 		<?php foreach($instructors as $instructor): ?>
 			<div class="tutor-instructor-info-card tutor-mb-16 tutor-break-word">
@@ -39,7 +39,7 @@ if($instructors && count($instructors)) {
 							</div>
 						<?php endif; ?>
 						<div class="tutor-ins-summary tutor-fs-6 tutor-color-black-60 tutor-mt-20">
-							<?php echo preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "",  $instructor->tutor_profile_bio); ?>
+							<?php echo preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "",  $instructor->tutor_profile_bio); // @todo: replace with kses ?>
 						</div>
 					</div>
 				</div>
@@ -58,6 +58,7 @@ if($instructors && count($instructors)) {
 								<?php _e('Students', 'tutor'); ?>
 							</span>
 						</div>
+						
 						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center ">
 							<span class="tutor-icon-mortarboard-o tutor-mr-8"></span>
 							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">

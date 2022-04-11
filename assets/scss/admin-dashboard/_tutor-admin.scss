@@ -60,6 +60,21 @@ $accent-color-hover: var(--wp-admin-theme-color) !default;
 		background: #ffffff;
 		border-bottom: 1px solid #cdcfd5;
 		padding: 12px 24px;
+
+		&.is-sticky {
+			position: sticky;
+			top: 32px;
+			z-index: 1024;
+
+			// admin bar
+			@media screen and (max-width: 782px) {
+				top: 42px;
+			}
+			
+			@media screen and (max-width: 600px) {
+				top: 0;
+			}
+		}
 	}
 }
 
@@ -81,6 +96,11 @@ $accent-color-hover: var(--wp-admin-theme-color) !default;
 				border-color: var(--tutor-primary-color) !important;
 				box-shadow: unset !important;
 				outline: none !important;
+			}
+
+			// js select
+			&.tutor-form-select {
+				padding-right: 36px !important;
 			}
 		}
 	}
@@ -1022,54 +1042,6 @@ span.filled_dash_unser {
 	border-color: #faebcc;
 	padding: 20px;
 	margin-bottom: 10px;
-}
-
-/**
-  Withdraw table
-   */
-
-.withdraw-method-data-row {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-}
-
-span.withdraw-method-label {
-	width: 140px;
-}
-
-.withdraw-method-value {
-	margin-left: 3px;
-}
-
-.withdraw-status.withdraw-status-approved {
-	background: var(--tutor-success-button-color);
-	color: #fff;
-	padding: 5px 10px;
-}
-
-.withdraw-status.withdraw-status-pending {
-	background: #f0efef;
-	color: #666666;
-	padding: 5px 10px;
-}
-
-.withdraw-status.withdraw-status-rejected {
-	background: #ff3842;
-	color: #fff;
-	padding: 5px 10px;
-}
-
-.withdraw-list-row-actions {
-	font-weight: bold;
-}
-
-.withdraw-list-row-actions .approved a {
-	color: var(--tutor-success-button-color);
-}
-
-.withdraw-list-row-actions .rejected a {
-	color: #ff3842;
 }
 
 
