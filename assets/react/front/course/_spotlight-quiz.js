@@ -319,7 +319,7 @@ window.jQuery(document).ready($=>{
                     keep: {
                         title: __('Yes, leave quiz', 'tutor'),
                         id: 'leave',
-                        class: 'tutor-btn tutor-is-outline tutor-is-default',
+                        class: 'tutor-btn tutor-btn-outline-primary',
                         callback: function() {
                             var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
                             $.ajax({
@@ -346,7 +346,7 @@ window.jQuery(document).ready($=>{
                     reset: {
                         title: __('Stay here', 'tutor'),
                         id: 'reset',
-                        class: 'tutor-btn',
+                        class: 'tutor-btn tutor-btn-primary tutor-ml-20',
                         callback: function() {
                             popup.remove();
                         },

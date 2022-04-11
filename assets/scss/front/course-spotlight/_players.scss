@@ -97,15 +97,6 @@
 
 	// .course-players {
 	.tutor-video-player {
-		width: 100%;
-		margin: auto;
-		aspect-ratio: 16 / 9;
-		max-height: 700px;
-		position: relative;
-		overflow: hidden;
-		.plyr--html5 {
-			aspect-ratio: 16 / 9;
-		}
 		.loading-spinner {
 			position: absolute;
 			inset: 0;
@@ -113,7 +104,7 @@
 			border-radius: 3px;
 			z-index: 10;
 
-			@include spinner(#1973aa, #eee);
+			@include spinner(var(--tutor-primary-color), #eee);
 		}
 
 		.loading-spinner::before {
