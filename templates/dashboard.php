@@ -140,7 +140,7 @@ do_action('tutor_dashboard/before/wrap');
 						$on = get_user_meta($user->ID, '_is_tutor_instructor', true);
 						$on = date('d F, Y', $on);
 						echo '<span style="' . $info_message_style . '">
-                                    <i class="dashicons dashicons-info color-warning-90" style=" ' . $info_style . '"></i>',
+                                    <i class="dashicons dashicons-info tutor-color-warning" style=" ' . $info_style . '"></i>',
 						__('Your Application is pending as of', 'tutor'), ' <b>', $on, '</b>',
 						'</span>';
 					} elseif ($rejected_on || $instructor_status !== 'blocked') {

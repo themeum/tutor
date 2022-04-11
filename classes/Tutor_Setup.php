@@ -119,7 +119,7 @@ class Tutor_Setup {
 					$html     .= '<div class="step-info">';
 						$html .= '<span class="tutor-fs-7 tutor-color-muted">' . __( 'Step', 'tutor' ) . ':</span> <strong class="tutor-color-black">' . $i . '/' . count( $field_arr ) . ' </strong>';
 					$html     .= '</div>';
-					$html     .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-black-60 tutor-d-flex tutor-align-items-center">' . __( 'Reset Default', 'tutor' ) . '</div>';
+					$html     .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-secondary tutor-d-flex tutor-align-items-center">' . __( 'Reset Default', 'tutor' ) . '</div>';
 				$html         .= '</div>';
 				$html         .= '<div class="tutor-setup-content-heading body">';
 
@@ -142,7 +142,7 @@ class Tutor_Setup {
 						$html .= isset( $field['lable'] ) ? '</div>' : '';
 
 				if ( ! in_array( $field['type'], $down_desc_fields ) ) {
-					$html .= isset( $field['desc'] ) ? '<div class="content tutor-fs-7 tutor-color-black-60">' . $field['desc'] . '</div>' : '';
+					$html .= isset( $field['desc'] ) ? '<div class="content tutor-fs-7 tutor-color-secondary">' . $field['desc'] . '</div>' : '';
 				}
 
 						$html .= '<div class="settings">';
@@ -604,7 +604,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/scalable_lms_solution.jpg'; ?>" alt="<?php _e( 'A Powerful, Smart, and Scalable LMS Solution', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'A Powerful, Smart, and Scalable LMS Solution', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'From individual instructors to vast eLearning platforms, Tutor LMS grows with you to create your ideal vision of an LMS website.', 'tutor' ); ?>
 								</div>
 							</li>
@@ -613,7 +613,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/extensive_course_builder.jpg'; ?>" alt="<?php _e( 'Extensive Course Builder', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'Extensive Course Builder', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'Tutor LMS comes with a state-of-the-art frontend course builder. Construct rich and resourceful courses with ease.', 'tutor' ); ?>
 								</div>
 							</li>
@@ -622,7 +622,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/advanced_quiz_creator.jpg'; ?>" alt="<?php _e( 'Advanced Quiz Creator', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'Advanced Quiz Creator', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'Build interactive quizzes with the vast selection of question types and verify the learning of your students.', 'tutor' ); ?>
 								</div>
 							</li>
@@ -631,7 +631,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/freedom_with_ecommerce.jpg'; ?>" alt="<?php _e( 'Freedom With eCommerce', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'Freedom With eCommerce', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'Select an eCommerce plugin and sell courses any way you like and use any payment gateway you want!', 'tutor' ); ?>
 								</div>
 							</li>
@@ -640,7 +640,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/reports_and_analytics.jpg'; ?>" alt="<?php _e( 'Reports and Analytics', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'Reports and Analytics', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'Track what type of courses sell the most! Gain insights on user purchases, manage reviews and track quiz attempts.', 'tutor' ); ?>
 								</div>
 							</li>

@@ -26,7 +26,7 @@
 .tutor-course-listing-item {
 	display: flex;
 	flex-direction: column;
-	background: var(--tutor-bg-white, #fff);
+	background: var(--tutor-color-white, #fff);
 	border: 1px solid #cdcfd5;
 	border-radius: 7px;
 	overflow: hidden;
@@ -95,7 +95,7 @@
 		border-top: 1px solid #cdcfd5;
 		display: grid;
 		&.has-border {
-			border-top: 1px solid var(--tutor-stroke-light-20, #ccc);
+			border-top: 1px solid var(--tutor-border-color);
 		}
 
 		.list-item-price-with-booking {
@@ -122,7 +122,7 @@
 				height: var(--w);
 				padding: var(--pd);
 				border-radius: 50%;
-				background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-border-color) 100%);
+				background: conic-gradient(var(--tutor-color-primary) var(--pro), 0, var(--tutor-border-color) 100%);
 
 				&:before {
 					content: '';
@@ -133,7 +133,7 @@
 				}
 
 				&.progress-full {
-					background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-border-color) 100%);
+					background: conic-gradient(var(--tutor-color-primary) var(--pro), 0, var(--tutor-border-color) 100%);
 				}
 			}
 			&.booking-full {
@@ -145,7 +145,7 @@
 
 		.list-item-button {
 			.tutor-btn.tutor-btn-ghost {
-				color: var(--tutor-text-primary);
+				color: var(--tutor-body-color);
 				.btn-icon {
 					border-radius: 50%;
 					font-size: 25px;
@@ -162,7 +162,7 @@
 				}
 
 				&:hover .btn-icon {
-					background: var(--tutor-primary-30);
+					background: rgba(var(--tutor-color-primary-rgb), 0.15);
 				}
 			}
 		}
@@ -229,7 +229,7 @@
 
 	.filter-widget-checkboxes {
 		label {
-			@extend .tutor-color-black-70;
+			color: var(--tutor-color-secondary);
 			@extend .text-regular-body;
 		}
 	}

@@ -160,7 +160,7 @@ $available_status = array(
 								</div>
 							</th>
 							<th class="tutor-table-rows-sorting">
-								<div class="tutor-fs-7 tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-secondary">
 									<span class="tutor-fs-7">
 										<?php esc_html_e( 'Date', 'tutor' ); ?>
 									</span>
@@ -168,7 +168,7 @@ $available_status = array(
 								</div>
 							</th>
 							<th class="tutor-table-rows-sorting">
-								<div class="tutor-fs-7 tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-secondary">
 									<span class="tutor-fs-7">
 										<?php esc_html_e( 'Title', 'tutor' ); ?>
 									</span>
@@ -176,7 +176,7 @@ $available_status = array(
 								</div>
 							</th>
 							<th class="tutor-table-rows-sorting">
-								<div class="tutor-color-black-60">
+								<div class="tutor-color-secondary">
 									<span class="tutor-fs-7">
 									<?php esc_html_e( 'Author', 'tutor' ); ?>
 									</span>
@@ -184,17 +184,17 @@ $available_status = array(
 								</div>
 							</th>
 							<th>
-								<div class="tutor-fs-7 tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-secondary">
 									<?php esc_html_e( 'Course Categories', 'tutor' ); ?>
 								</div>
 							</th>
 							<th>
-								<div class="tutor-fs-7 tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-secondary">
 									<?php esc_html_e( 'Students', 'tutor' ); ?>
 								</div>
 							</th>
 							<th>
-								<div class="tutor-fs-7 tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-secondary">
 									<?php esc_html_e( 'Price', 'tutor' ); ?>
 								</div>
 							</th>

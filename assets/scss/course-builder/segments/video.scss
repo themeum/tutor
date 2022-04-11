@@ -2,7 +2,7 @@
 .tutor-video-upload-wrap {
 
     .tutor-dashed-uploader {
-        border: 2px dashed var(--tutor-primary-color);
+        border: 2px dashed var(--tutor-color-primary);
         box-sizing: border-box;
         border-radius: 6px;
         padding: 30px;
@@ -25,7 +25,7 @@
             .video-upload-icon {
                 i {
                     font-size: 67px;
-                    color: var(--tutor-primary-color);
+                    color: var(--tutor-color-primary);
                 }
             }
         

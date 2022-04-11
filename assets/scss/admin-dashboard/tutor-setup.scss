@@ -26,7 +26,7 @@ a:hover,
 a:visited,
 a:active,
 a:focus {
-	color: var(--tutor-primary-color);
+	color: var(--tutor-color-primary);
 }
 
 body {
@@ -196,14 +196,14 @@ ul.tutor-setup-content li.active {
 }
 
 .tutor-setup-title li.active:before {
-	background: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
 }
 
 .tutor-setup-title li.active:before {
 	background-image: url(../images/checkmark.svg);
 	background-repeat: no-repeat;
 	background-position: center;
-	background-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
 	box-shadow: inset 0px 0px 0px 5px transparent;
 }
 
@@ -405,7 +405,7 @@ ul.tutor-setup-content li.active {
 
 .tutor-setting input[type='text'].lesson-permalink:focus,
 .tutor-setting textarea.lesson-message:focus {
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-color-primary);
 }
 
 /* Lesson Message Textarea */
@@ -604,8 +604,8 @@ input[type='radio'].course:checked + .span {
 }
 
 input[type='radio'].course:checked + .span span {
-	background-color: var(--tutor-primary-color);
-	border-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
+	border-color: var(--tutor-color-primary);
 }
 
 /* Course Per Page */
@@ -633,7 +633,7 @@ input[type='radio'].course:checked + .span span {
 	left: calc(50% - 10px);
 	position: absolute;
 	border-radius: 50%;
-	background: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
 	background: #f1f3f7;
 	transform: scale(0);
 	transition: all 0.2s ease-in-out;
@@ -642,8 +642,8 @@ input[type='radio'].course:checked + .span span {
 .course-per-page input[type='radio'].course-p:checked + .radio-icon,
 .course-setting-wrapper .ecommerce .radio-input:checked + .radio-icon,
 .settings .time-expires input[type='radio']:checked + .radio-icon {
-	background: var(--tutor-primary-color);
-	border-color: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
+	border-color: var(--tutor-color-primary);
 }
 
 .course-per-page input[type='radio'].course-p:checked + .radio-icon:before,
@@ -659,7 +659,7 @@ input[type='radio'].course:checked + .span span {
 }
 
 input#attempts-allowed-1:checked ~ .label-text-2 input {
-	border: 1px solid var(--tutor-primary-color);
+	border: 1px solid var(--tutor-color-primary);
 }
 
 .course-per-page input.course-p,
@@ -713,13 +713,13 @@ input#attempts-allowed-1:checked ~ .label-text-2 input {
 }
 
 .course-per-page input[type='number'].attempts:focus {
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-color-primary);
 }
 
 .course-per-page,
 input[type='radio'].course-p:checked,
 input[type='number'].attempts:focus {
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-color-primary);
 }
 
 .tutor-setup-btn-wrapper {
@@ -859,7 +859,7 @@ input[type='checkbox'].input-switchbox {
 
 		&,
 		& + .switchbox-icon:before {
-			background: var(--tutor-primary-color);
+			background: var(--tutor-color-primary);
 		}
 	}
 }
@@ -950,7 +950,7 @@ button.next:hover svg {
 			}
 
 			+ .selected {
-				border-color: var(--tutor-primary-color);
+				border-color: var(--tutor-color-primary);
 			}
 		}
 	}
@@ -1087,7 +1087,7 @@ button.next:hover svg {
 	max-width: 100%;
 	height: 6px;
 	border-radius: 8px;
-	background-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
 	/*background-image: url(../images/slider-dot.png);*/
 	background-repeat: repeat-x;
 	background-size: contain;
@@ -1129,7 +1129,7 @@ input[type='range'].range-input::-moz-range-thumb {
 	border-radius: 50%;
 	cursor: pointer;
 	background-color: #f0f3f6;
-	border: 5px solid var(--tutor-primary-color);
+	border: 5px solid var(--tutor-color-primary);
 }
 
 /* Sider 2nd */
@@ -1145,7 +1145,7 @@ input[type='range'].range-input::-moz-range-thumb {
 	max-width: 100%;
 	height: 6px;
 	border-radius: 8px;
-	background-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
 	box-shadow: inset 0 0 0 1px rgba(47, 87, 213, 0.15);
 }
 
@@ -1319,8 +1319,8 @@ input.checkbox {
 }
 
 .checkbox-wrapper input.checkbox:checked + .check-icon {
-	background: var(--tutor-primary-color);
-	border-color: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
+	border-color: var(--tutor-color-primary);
 }
 
 .checkbox-wrapper input.checkbox:checked + .check-icon:before {
@@ -1394,7 +1394,7 @@ input.checkbox {
 }
 
 .payment-setting input.payment:checked {
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-color-primary);
 }
 
 .checkbox-wrapper .payment-setting h4 {
@@ -1548,7 +1548,7 @@ input.checkbox {
 
 .wizard-boarding-body ul.slick-dots li.slick-active button {
 	transform: scale(1);
-	background: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
 }
 
 .wizard-boarding-footer {
@@ -1564,9 +1564,9 @@ input.checkbox {
 	line-height: 1.69;
 	letter-spacing: normal;
 	text-align: center;
-	color: var(--tutor-primary-color);
+	color: var(--tutor-color-primary);
 	a {
-		color: $black-main;
+		color: var(--tutor-color-body);
 	}
 }
 
@@ -1687,7 +1687,7 @@ input.checkbox {
 
 		input {
 			&:checked ~ label {
-				border-color: var(--tutor-primary-color);
+				border-color: var(--tutor-color-primary);
 			}
 
 			&:not(:checked) ~ label {

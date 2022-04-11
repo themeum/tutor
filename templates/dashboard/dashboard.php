@@ -81,7 +81,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 										<span class="tutor-icon-circle-times-line tutor-color-warning tutor-mr-8"></span>
 									<?php endif; ?>
 
-									<span class="<?php echo $is_set ? 'tutor-color-black-70' : 'tutor-color-muted'; ?>">
+									<span class="<?php echo $is_set ? 'tutor-color-secondary' : 'tutor-color-muted'; ?>">
 										<?php echo $data['label_html']; ?>
 									</span>
 								</div>
@@ -104,10 +104,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							%s
 						</span>
 					</div>
-					<div class="tutor-alert-btns">
-						<div class="alert-btn-group">
-							<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
-						</div>
+					<div class="alert-btn-group">
+						<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
 					</div>
 				</div>',
 				$profile_completion['_tutor_profile_photo']['label_html'],
@@ -148,7 +146,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<i class="tutor-icon-book-open" area-hidden="true"></i>
 				</span>
 				<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( $enrolled_course_count ); ?></div>
-				<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Enrolled Courses', 'tutor' ); ?></div>
+				<div class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Enrolled Courses', 'tutor' ); ?></div>
 				<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo esc_html( $enrolled_course_count ); ?></div>
 			</div>
 		</div>
@@ -159,7 +157,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<i class="tutor-icon-mortarboard-o" area-hidden="true"></i>
 				</span>
 				<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( $active_course_count ); ?></div>
-				<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Active Courses', 'tutor' ); ?></div>
+				<div class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Active Courses', 'tutor' ); ?></div>
 				<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo esc_html( $active_course_count ); ?></div>
 			</div>
 		</div>
@@ -170,7 +168,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<i class="tutor-icon-trophy" area-hidden="true"></i>
 				</span>
 				<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( $completed_course_count ); ?></div>
-				<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Completed Courses', 'tutor' ); ?></div>
+				<div class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Completed Courses', 'tutor' ); ?></div>
 				<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo esc_html( $completed_course_count ); ?></div>
 			</div>
 		</div>
@@ -184,7 +182,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<i class="tutor-icon-user-graduate" area-hidden="true"></i>
 					</span>
 					<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( $total_students ); ?></div>
-					<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Total Students', 'tutor' ); ?></div>
+					<div class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Total Students', 'tutor' ); ?></div>
 					<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo esc_html( $total_students ); ?></div>
 				</div>
 			</div>
@@ -195,7 +193,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<i class="tutor-icon-box-open" area-hidden="true"></i>
 					</span>
 					<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( count( $my_courses ) ); ?></div>
-					<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Total Courses', 'tutor' ); ?></div>
+					<div class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Total Courses', 'tutor' ); ?></div>
 					<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo esc_html( count( $my_courses ) ); ?></div>
 				</div>
 			</div>
@@ -206,7 +204,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<i class="tutor-icon-coins" area-hidden="true"></i>
 					</span>
 					<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo tutor_utils()->tutor_price( $earning_sum->instructor_amount ); ?></div>
-					<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Total Earnings', 'tutor' ); ?></div>
+					<div class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Total Earnings', 'tutor' ); ?></div>
 					<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo tutor_utils()->tutor_price( $earning_sum->instructor_amount ); ?></div>
 				</div>
 			</div>
@@ -324,18 +322,18 @@ if ( count( $instructor_course ) ) {
 				<thead>
 					<tr>
 						<th>
-							<span class="tutor-fs-7 tutor-color-black-60">
+							<span class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Course Name', 'tutor' ); ?>
 							</span>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
+							<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
 								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
+							<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
 								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 							</div>
@@ -366,7 +364,7 @@ if ( count( $instructor_course ) ) {
 									</span>
 								</td>
 								<td data-th="<?php esc_html_e( 'Rating', 'tutor' ); ?>">
-									<div class="td-tutor-rating tutor-fs-6 tutor-color-black-60">
+									<div class="td-tutor-rating tutor-fs-6 tutor-color-secondary">
 										<?php tutor_utils()->star_rating_generator_v2( $course_rating->rating_avg, null, true ); ?>
 									</div>
 								</td>

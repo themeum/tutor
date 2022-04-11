@@ -14,7 +14,7 @@
 		justify-content: space-between;
 		padding: 3px 24px;
 		&:last-child {
-			border-top: 1px solid $stroke-light-30;
+			border-top: 1px solid var(--tutor-border-color);
 			margin-top: 20px;
 			padding-top: 10px;
 			padding-bottom: 6px;

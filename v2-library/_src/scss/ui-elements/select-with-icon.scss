@@ -9,12 +9,13 @@ $danger-color: rgba(198, 40, 40, 0.9);
 $warning-color: rgba(237, 150, 0, 0.9);
 
 $variations: (
-	'primary' $primary-color $primary-40 $primary-60 '\e978',
-	'default' $default-color $black-05 $black-10 '\e9ab',
-	'success' $success-color $success-40 $success-50 '\E982',
-	'danger' $danger-color $danger-40 $danger-50 '\e9a3',
-	'warning' $warning-color $warning-40 $warning-50 '\e966'
+	'primary' var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15) rgba(var(--tutor-color-primary-rgb), 0.3) '\e978',
+	'default' $default-color $color-gray-10 var(--tutor-border-color) '\e9ab',
+	'success' var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.15) rgba(var(--tutor-color-success-rgb), 0.3) '\E982',
+	'danger' var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.15) rgba(var(--tutor-color-danger-rgb), 0.3) '\e9a3',
+	'warning' var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.15) rgba(var(--tutor-color-warning-rgb), 0.3) '\e966'
 );
+
 @each $suffix, $txtColor, $bgColor, $border, $icon in $variations {
 	.tutor-form-select-with-icon {
 		&.select-#{$suffix} {

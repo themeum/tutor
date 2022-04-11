@@ -104,11 +104,11 @@
 		.loading-spinner {
 			position: absolute;
 			inset: 0;
-			background: $bg-gray-10;
+			background: var(--tutor-color-gray-10);
 			border-radius: 3px;
 			z-index: 10;
 
-			@include spinner(var(--tutor-primary-color), #eee);
+			@include spinner(var(--tutor-color-primary), #eee);
 		}
 
 		.loading-spinner::before {

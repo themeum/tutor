@@ -20,7 +20,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
         if(!empty($course_duration)) { 
     ?>
     <div class="tutor-d-flex tutor-align-items-center">
-        <span class="meta-icon tutor-icon-clock-filled tutor-color-muted tutor-mr-8"></span>
+        <span class="meta-icon tutor-icon-clock-line tutor-color-muted tutor-mr-8"></span>
         <span><?php echo wp_kses_post( $course_duration ); ?></span>
     </div>
     <?php } ?>
@@ -36,7 +36,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 	<div class="tutor-avatar">
 		<a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
 	</div>
-	<div class="tutor-course-meta tutor-fs-7 tutor-color-black-60">
+	<div class="tutor-course-meta tutor-fs-7 tutor-color-secondary">
         <span class="tutor-course-meta-name">
             <?php esc_html_e('By', 'tutor') ?>
             <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">

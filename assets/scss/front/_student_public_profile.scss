@@ -56,7 +56,7 @@
 		.profile-name {
 			padding-left: 40px;
 			span {
-				color: $black-60 !important;
+				color: var(--tutor-color-secondary) !important;
 				font-weight: 400;
 			}
 		}
@@ -440,13 +440,13 @@
 			font-size: 24px !important;
 			line-height: 34px;
 			margin-top: 20px;
-			@extend .tutor-color-black;
+			color: var(--tutor-color-body);
 			&:first-child {
 				margin-top: 0;
 			}
 		}
 		p {
-			@extend .tutor-color-black-60;
+			color: var(--tutor-color-secondary);
 			font-size: 16px;
 			line-height: 28px;
 		}

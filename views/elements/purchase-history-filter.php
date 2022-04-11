@@ -9,10 +9,8 @@
 
         <div class="tutor-d-flex tutor-align-items-center tutor-justify-between">
             <?php foreach ( $data['filter_period'] as $key => $value ) : ?>
-                <?php 
-                    $active_class = $active === $value['type'] ? 'tutor-bg-primary tutor-color-white tutor-py-8' : 'tutor-py-4 tutor-border tutor-color-black-60';    
-                ?>
-                <a href="<?php echo esc_url( $value['url'] ); ?>" class="tutor-radius-6 tutor-px-20 tutor-mr-16 <?php esc_attr_e( $active_class ); ?>">
+                <?php $active_class = $active === $value['type'] ? 'primary' : 'outline-primary'; ?>
+                <a href="<?php echo esc_url( $value['url'] ); ?>" class="tutor-btn tutor-btn-<?php esc_attr_e( $active_class ); ?> tutor-mr-16">
                     <?php esc_html_e( $value['title'] ); ?>
                 </a>
             <?php endforeach; ?>

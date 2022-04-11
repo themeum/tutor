@@ -316,7 +316,7 @@
 
 						&:focus-visible {
 							outline: none;
-							border-color: var(--tutor-primary-color);
+							border-color: var(--tutor-color-primary);
 						}
 					}
 				}
@@ -465,7 +465,7 @@
 .tutor-screen-frontend-dashboard {
 	.tutor-react-datepicker .react-datepicker__input-container {
 		input:focus {
-			border-color: var(--tutor-primary-color);
+			border-color: var(--tutor-color-primary);
 		}
 	}
 }
@@ -509,7 +509,7 @@
 	.tutor-react-datepicker .react-datepicker__input-container input {
 		height: 48px;
 		&:focus {
-			border-color: var(--tutor-primary-color);
+			border-color: var(--tutor-color-primary);
 		}
 	}
 }

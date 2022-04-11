@@ -59,7 +59,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 					<div class="tutor-welcome-card">
 						<div class="tutor-px-32 tutor-px-xl-72 tutor-pt-32 tutor-pt-xl-72">
 							<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">More Organized <br class="tutor-d-none tutor-d-lg-block"/>Dashboard</div>
-							<div class="tutor-fs-6 tutor-color-black-60">Get great improvements to the dashboard offering a more intuitive, organized, and modern approach.</div>
+							<div class="tutor-fs-6 tutor-color-secondary">Get great improvements to the dashboard offering a more intuitive, organized, and modern approach.</div>
 						</div>
 						<div>
 							<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/dashboard.png" srcset="<?php echo esc_url($image_url); ?>/dashboard-2x.png 2x" alt="Dashboard" loading="lazy">
@@ -77,7 +77,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 							</div>
 							<div class="tutor-col-lg-6">
 								<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-0">Unified Design <br class="tutor-d-none tutor-d-lg-block"/>System</div>
-								<div class="tutor-fs-6 tutor-color-black-60 tutor-mt-12 tutor-mb-16">Bring an aligned and enhanced user experience with <strong>Appearance, Colors, Accessibility</strong>, and more.</div>
+								<div class="tutor-fs-6 tutor-color-secondary tutor-mt-12 tutor-mb-16">Bring an aligned and enhanced user experience with <strong>Appearance, Colors, Accessibility</strong>, and more.</div>
 							</div>
 						</div>
 					</div>
@@ -92,7 +92,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 							<div class="tutor-col-lg-6">
 								<div class="tutor-px-32 tutor-px-lg-0 tutor-pt-32 tutor-pt-xl-48 tutor-pb-24 tutor-pb-xl-32">
 									<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">Advanced <br class="tutor-d-none tutor-d-lg-block"/>Analytics</div>
-									<div class="tutor-fs-6 tutor-color-black-60 tutor-mb-16">Get detailed insights on courses, students, earnings, statements, and do so much more with advanced analytics.</div>
+									<div class="tutor-fs-6 tutor-color-secondary tutor-mb-16">Get detailed insights on courses, students, earnings, statements, and do so much more with advanced analytics.</div>
 								</div>
 							</div>
 						</div>
@@ -109,7 +109,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 					<div class="tutor-col-lg-5 tutor-col-xl-4">
 						<div class="tutor-pl-32 tutor-pl-xl-48 tutor-pt-32 tutor-pt-xl-48 tutor-pb-24 tutor-pb-xl-32">
 							<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">Customizable <br class="tutor-d-none tutor-d-lg-block"/>Automated Emails</div>
-							<div class="tutor-fs-6 tutor-color-black-60 tutor-mb-32">Edit email template content right from the settings. Get pre designed templates, set emails, see reviews, and do more.</div>
+							<div class="tutor-fs-6 tutor-color-secondary tutor-mb-32">Edit email template content right from the settings. Get pre designed templates, set emails, see reviews, and do more.</div>
 							<div class="tutor-row tutor-gx-xl-5">
 								<div class="tutor-col-6">
 									<div class="tutor-mb-8">
@@ -150,7 +150,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 							<div class="tutor-col-xl-6">
 								<div class="tutor-py-32">
 									<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">Notifications</div>
-									<div class="tutor-fs-6 tutor-color-black-60">
+									<div class="tutor-fs-6 tutor-color-secondary">
 										Enhance the overall LMS experience by informing users of new announcements, comments, questions, and more.
 									</div>
 								</div>
@@ -168,7 +168,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 	
 							<div class="tutor-col-xl-8 tutor-mt-24 tutor-mt-xl-0">
 								<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">And more…</div>
-								<div class="tutor-fs-6 tutor-color-black-60">
+								<div class="tutor-fs-6 tutor-color-secondary">
 									Communication enhanced with more options, new assignments options, course catalog & details revamped, settings restructured, and made changes to many more things.
 								</div>
 							</div>

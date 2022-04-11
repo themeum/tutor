@@ -1,104 +1,43 @@
 @import './variables.scss';
 
-// Color Utiliy class
+// Color Utility class
 $colorUtils: (
-	// Backend Dashboard
-		'brand-wordpress' $brand-wordpress,
-	'brand-wordpress-hover' $brand-wordpress-hover,
-	// Common Colors
-		'white' #ffffff,
-	'brand' $primary-main,
-	'success' $success-main,
-	'warning' $warning-main,
-	'error' $danger-main,
-	// Colors
-		'black' $black-main,
-	'black-70' $black-70,
-	'black-60' $black-60,
-	'muted' $text-muted,
-	'white' $text-white,
-	'brand' $text-brand,
-	'success' $text-success,
-	'warning' $text-warning,
-	'error' $text-error,
-	// Design Colors
-		'design-dark' $black-90,
-	'design-grey' $black-70,
-	'design-white' $color-white,
-	'design-brand' $color-brand,
-	'design-success' $color-success,
-	'design-warning' $color-warning,
-	'design-danger' $color-error,
-	// Strokes
-		'stroke-light-10' $stroke-light-10,
-	'stroke-light-20' $stroke-light-20,
-	'stroke-light-30' $stroke-light-30,
-	'stroke-gray' $stroke-gray,
-	'stroke-blue' $stroke-blue,
-	'stroke-danger' $stroke-danger,
-	'stroke-success' $stroke-success,
-	// Backgrounds
-		'bg-brand' $color-brand,
-	'bg-white' $color-white,
-	'bg-gray-20' $bg-gray-20,
-	'bg-gray-10' $bg-gray-10,
-	'bg-dark-10' $bg-dark-10,
-	'bg-dark-20' $bg-dark-20,
-	'bg-dark-30' $bg-dark-30,
-	// Primary
-		'primary-main' $primary-main,
-	'primary-100' $primary-100,
-	'primary-90' $primary-90,
-	'primary-80' $primary-80,
-	'primary-70' $primary-70,
-	'primary-60' $primary-60,
-	'primary-50' $primary-50,
-	'primary-40' $primary-40,
-	'primary-30' $primary-30,
-	// Black
-		'black-main' $black-main,
-	'black-100' $black-100,
-	'black-90' $black-90,
-	'black-80' $black-80,
-	'black-70' $black-70,
-	'black-60' $black-60,
-	'black-50' $black-50,
-	'black-40' $black-40,
-	'black-30' $black-30,
-	'black-20' $black-20,
-	'black-10' $black-10,
-	'black-05' $black-05,
-	'black-03' $black-03,
-	// Danger
-		'danger-main' $danger-main,
-	'danger-100' $danger-100,
-	'danger-90' $danger-90,
-	'danger-80' $danger-80,
-	'danger-70' $danger-70,
-	'danger-50' $danger-50,
-	'danger-40' $danger-40,
-	'danger-30' $danger-30,
-	// Success
-		'success-main' $success-main,
-	'success-100' $success-100,
-	'success-90' $success-90,
-	'success-80' $success-80,
-	'success-70' $success-70,
-	'success-60' $success-60,
-	'success-50' $success-50,
-	'success-40' $success-40,
-	'success-30' $success-30,
-	// Warning
-		'warning-main' $warning-main,
-	'warning-100' $warning-100,
-	'warning-90' $warning-90,
-	'warning-80' $warning-80,
-	'warning-70' $warning-70,
-	'warning-60' $warning-60,
-	'warning-50' $warning-50,
-	'warning-40' $warning-40,
-	'warning-30' $warning-30
+	// colors
+	'black' var(--tutor-body-color),
+	'white' $color-white,
+	'primary' $color-primary,
+	'success' $color-success,
+	'warning' $color-warning,
+	'danger' $color-danger,
+	'secondary' $color-secondary,
+	'muted' $color-muted,
+	'gray-20' $color-gray-20,
+	'gray-10' $color-gray-10,
 );
+
+:root {
+	// --tutor-disabled-bg: #{$disabled-bg};
+	// --tutor-disabled-color: #{$disabled-color};
+
+	// --tutor-bg-dark-notification: #{$bg-dark-notification};
+	// --tutor-bg-dark: #{$bg-dark};
+	// --tutor-bg-grey: #{$bg-grey};
+	// --tutor-bg-grey-light: #{rgba($bg-grey, 0.3)};
+
+	// // Common Colors
+	--tutor-color-white: 		#{$color-white};
+	--tutor-color-success: 		#{$color-success};
+	--tutor-color-success-rgb: 	#{$color-success-rgb};
+	--tutor-color-warning: 		#{$color-warning};
+	--tutor-color-warning-rgb: 	#{$color-warning-rgb};
+	--tutor-color-danger:		#{$color-danger};
+	--tutor-color-danger-rgb: 	#{$color-danger-rgb};
+
+	// extra colors need to be replaces later
+	--tutor-color-secondary: 	#{$color-secondary};
+	--tutor-color-muted: 		#{$color-muted};
+}
+
 
 @each $classSuffix, $value in $colorUtils {
 	.tutor-color-#{$classSuffix} {

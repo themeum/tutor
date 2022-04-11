@@ -102,7 +102,7 @@
 			font-weight: 500;
 
 			&:hover {
-				border-color: var(--tutor-primary-color);
+				border-color: var(--tutor-color-primary);
 			}
 		}
 	}
@@ -245,7 +245,7 @@
 			&:last-child {
 				padding: 0 16px;
 				font-size: 24px;
-				color: var(--tutor-primary-color);
+				color: var(--tutor-color-primary);
 			}
 		}
 	}

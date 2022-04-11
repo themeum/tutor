@@ -90,10 +90,10 @@ $accent-color-hover: var(--wp-admin-theme-color) !default;
 			height: auto !important;
 			min-height: initial !important;
 			border-radius: 6px !important;
-			border: 1px solid $black-20 !important;
+			border: 1px solid var(--tutor-border-color) !important;
 
 			&:focus {
-				border-color: var(--tutor-primary-color) !important;
+				border-color: var(--tutor-color-primary) !important;
 				box-shadow: unset !important;
 				outline: none !important;
 			}
@@ -499,7 +499,7 @@ table.tutor_status_table th mark.yes {
 }
 
 a.addon-buynow-link {
-	background: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
 	color: #fff;
 	padding: 5px 10px;
 	display: inline-block;
@@ -665,9 +665,9 @@ table.tutor-addons-list-table th {
 }
 
 .tutor-info-msg {
-	color: var(--tutor-primary-color);
+	color: var(--tutor-color-primary);
 	background-color: #bef;
-	border: 1px solid var(--tutor-primary-color);
+	border: 1px solid var(--tutor-color-primary);
 }
 
 .tutor-success-msg {
@@ -779,7 +779,7 @@ table.tutor-addons-list-table th {
 .tutor-quiz-builder-group input[type='email']:focus,
 .tutor-quiz-builder-group input[type='number']:focus,
 .tutor-quiz-builder-group input[type='password']:focus {
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-color-primary);
 }
 
 .tutor-quiz-builder-group textarea {
@@ -1159,7 +1159,7 @@ span.filled_dash_unser {
 
 .attempt-review-title i {
 	margin-right: 12px;
-	color: var(--tutor-primary-color);
+	color: var(--tutor-color-primary);
 }
 
 .tutor-quiz-attempt-info-row {
@@ -1242,7 +1242,7 @@ span.filled_dash_unser {
 			&,
 			a {
 				font-weight: 700;
-				color: var(--tutor-text-color);
+				color: var(--tutor-body-color);
 				margin-top: 7px;
 			}
 		}
@@ -1276,7 +1276,7 @@ span.filled_dash_unser {
 }
 
 .attempt-review-notice-wrap p.attempt-review-at > span {
-	color: var(--tutor-primary-color);
+	color: var(--tutor-color-primary);
 	margin-right: 7px;
 	font-size: 16px;
 }
@@ -1459,28 +1459,6 @@ h2.tutor-page-heading {
 .tutor-report-left-menus ul li.active a {
 	color: #1e55dd;
 	border-bottom: 3px solid #3057d5;
-}
-
-.report-top-sub-menu {
-	margin: 0;
-	-webkit-box-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
-}
-
-.report-top-sub-menu a {
-	text-decoration: none;
-	padding: 10px 15px;
-	border: 1px solid #d7dadf;
-	color: #aaaeb3;
-	border-radius: 3px;
-	display: inline-block;
-}
-
-.report-top-sub-menu a.active {
-	background-color: #3057d5;
-	color: #ffffff;
-	border: 1px solid #3057d5;
 }
 
 .top-course-enrolled {
@@ -1666,13 +1644,6 @@ h2.tutor-page-heading {
 	border: none;
 	line-height: 39px;
 	padding: 0 15px;
-}
-
-.tutor-date-range-filter-wrap {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	margin: 30px 0;
 }
 
 .report-download-csv-icon {
@@ -1980,7 +1951,7 @@ table.tutor-table p {
 .tutor-admin-search-box-container select:focus,
 .tutor-date-range-wrap .date-range-input input:hover,
 .tutor-date-range-wrap .date-range-input input:focus {
-	border-color: var(--tutor-primary-color) !important;
+	border-color: var(--tutor-color-primary) !important;
 	box-shadow: none !important;
 	outline: none !important;
 }

@@ -1,5 +1,5 @@
 <?php
-	// Utillity data
+	// Utility data
 	$is_enrolled           = apply_filters( 'tutor_alter_enroll_status', tutor_utils()->is_enrolled() );
 	$lesson_url            = tutor_utils()->get_course_first_lesson();
 	$is_administrator      = tutor_utils()->has_user_role( 'administrator' );
@@ -17,7 +17,6 @@
 	$is_tutor_login_disabled = ! tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true );
 	$auth_url                = $is_tutor_login_disabled ? ( isset( $_SERVER['REQUEST_SCHEME'] ) ? wp_login_url( $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) : '' ) : '';
 
-
 	$default_meta = array(
 		array(
 			'icon_class' => 'tutor-icon-mortarboard',
@@ -25,7 +24,7 @@
 			'value'      => tutor_utils()->get_option( 'enable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() : null,
 		),
 		array(
-			'icon_class' => 'tutor-icon-clock-filled',
+			'icon_class' => 'tutor-icon-clock-line',
 			'label'      => __( 'Duration', 'tutor' ),
 			'value'      => get_tutor_option( 'enable_course_duration' ) ? get_tutor_course_duration_context() : null,
 		),
@@ -71,7 +70,7 @@
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
 					</h3>
 					<div class="list-item-progress">
-						<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-between">
+						<div class="tutor-fs-6 tutor-color-secondary tutor-d-flex tutor-align-items-center tutor-justify-between">
 							<span class="progress-steps">
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
@@ -120,8 +119,6 @@
 					$start_content = ob_get_clean();
 			}
 			echo apply_filters( 'tutor_course/single/start/button', $start_content, get_the_ID() );
-
-
 
 			// Show Course Completion Button.
 			if ( ! $is_completed_course ) {

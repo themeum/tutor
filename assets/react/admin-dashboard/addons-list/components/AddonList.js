@@ -30,7 +30,7 @@ const AddonList = () => {
 							<div className="tutor-mb-32">
 								<img src={emptyStateImg} alt={__('Empty State Illustration', 'tutor')} />
 							</div>
-							<div className="tutor-fs-6 tutor-color-black-60">{__('No Addons Found!', 'tutor')}</div>
+							<div className="tutor-fs-6 tutor-color-secondary">{__('No Addons Found!', 'tutor')}</div>
 						</div>
 					</div>
 				</div>

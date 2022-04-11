@@ -10,7 +10,7 @@
 if (isset($data['total_items']) && $data['total_items']) : ?>
 	<nav class="tutor-ui-pagination tutor-ui-pagination-<?php echo is_admin() ? 'wp' : 'fd'; ?>">
 		<div classs="tutor-pagination-hints">
-			<div class="tutor-fs-7 tutor-color-black-60">
+			<div class="tutor-fs-7 tutor-color-secondary">
 				<?php esc_html_e('Page', 'tutor'); ?>
 				<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 					<?php echo esc_html($data['paged']); ?>

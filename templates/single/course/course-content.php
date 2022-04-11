@@ -32,7 +32,7 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 				<?php echo apply_filters( 'tutor_course_about_title', __( 'About Course', 'tutor' ) ); ?>
             </h2>
 			
-            <div class="tutor-fs-6 tutor-color-black-60">
+            <div class="tutor-fs-6 tutor-color-secondary">
                 <?php echo apply_filters( 'the_content', $string ); ?>
 			</div>
 		</div>

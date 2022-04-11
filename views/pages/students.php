@@ -76,25 +76,25 @@ $filters = array(
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-black-60">
+						<div class="tutor-color-secondary">
 							<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
 							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-black-60">
+						<div class="tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
 							<span class="tutor-icon-order-down up-down-icon"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-black-60">
+						<div class="tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
 							<span class="tutor-icon-order-down up-down-icon"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-black-60">
+						<div class="tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
 							<span class="tutor-icon-order-down up-down-icon"></span>
 						</div>

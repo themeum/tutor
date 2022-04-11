@@ -10,7 +10,7 @@
     </div>
 <?php endif; ?>
 
-<div class="tutor-fs-7 tutor-color-black-60">
+<div class="tutor-fs-7 tutor-color-secondary">
     <?php _e('Quiz', 'tutor'); ?>
 </div>
 

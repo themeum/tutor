@@ -59,7 +59,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
                 $url_arg['enrol_course_id'] = get_the_ID();
             }
         ?>
-        <div class="tutor-text-center tutor-fs-6 tutor-color-black-60 tutor-mt-20">
+        <div class="tutor-text-center tutor-fs-6 tutor-color-secondary tutor-mt-20">
             <?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>&nbsp;
             <a href="<?php echo esc_url( add_query_arg( $url_arg, tutor_utils()->student_register_url() ) ); ?>" class="tutor-btn tutor-btn-link">
                 <?php esc_html_e( 'Registration Now', 'tutor' ); ?>

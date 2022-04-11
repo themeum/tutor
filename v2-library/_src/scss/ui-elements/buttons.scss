@@ -5,7 +5,7 @@ $disabled-color: #E9E9EA !default;
 	align-items: center;
     font-weight: 400;
     line-height: 1.4;
-    color: var(--tutor-primary-color);
+    color: var(--tutor-color-primary);
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
@@ -38,8 +38,8 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-primary {
-		border-color: var(--tutor-primary-color);
-		background-color: var(--tutor-primary-color);
+		border-color: var(--tutor-color-primary);
+		background-color: var(--tutor-color-primary);
 		color: #FFFFFF;
 
 		&:hover,
@@ -58,7 +58,7 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-outline-primary {
-		border-color: var(--tutor-primary-color);
+		border-color: var(--tutor-color-primary);
 
 		&:hover,
 		&:focus,
@@ -77,7 +77,7 @@ $disabled-color: #E9E9EA !default;
 	&-secondary {
 		border-color: var(--tutor-primary-lighter-color);
 		background-color: var(--tutor-primary-lighter-color);
-		color: var(--tutor-primary-color);
+		color: var(--tutor-color-primary);
 
 		&:hover,
 		&:focus,
@@ -144,9 +144,9 @@ $disabled-color: #E9E9EA !default;
 		&:hover,
 		&:focus,
 		&:active {
-			color: var(--tutor-primary-color);
+			color: var(--tutor-color-primary);
 			&.tutor-has-underline:after {
-				background-color: var(--tutor-primary-color);
+				background-color: var(--tutor-color-primary);
 			}
 
 			outline: 0;
@@ -239,8 +239,8 @@ $disabled-color: #E9E9EA !default;
 
 		// outline
 		&-outline {
-			border-color: var(--tutor-primary-color);
-			color: var(--tutor-primary-color);
+			border-color: var(--tutor-color-primary);
+			color: var(--tutor-color-primary);
 
 			&:hover,
 			&:focus,
@@ -259,7 +259,7 @@ $disabled-color: #E9E9EA !default;
 		// secondary
 		&-secondary {
 			background-color: var(--tutor-primary-lighter-color);
-			color: var(--tutor-primary-color);
+			color: var(--tutor-color-primary);
 
 			&:hover,
 			&:focus,

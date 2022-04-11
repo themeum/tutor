@@ -74,14 +74,10 @@
 		padding: 8px 19px;
 		cursor: pointer;
 		&:hover {
-			background: #dcdfe5;
-			/* color/black/fill/05 */
-			background: #eff1f7;
-			background: $black-05;
+			background: $color-gray-10;
 		}
 
 		&:last-child {
-			/* stroke/light30 */
 			border-top: 1px solid #cdcfd5;
 		}
 	}
@@ -94,14 +90,14 @@
 		cursor: pointer;
 		> div:first-child {
 			@extend .text-medium-body;
-			@extend .tutor-color-black;
+			color: var(--tutor-color-body);
 		}
 	}
 } // .tutor-dropdown-select
 
 .tutor-dropdown-select-options-container.is-active {
 	+ .tutor-dropdown-select-selected {
-		border-color: var(--tutor-primary-color);
+		border-color: var(--tutor-color-primary);
 	}
 }
 

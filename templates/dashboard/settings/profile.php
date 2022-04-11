@@ -114,14 +114,14 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 
 		<div class="tutor-row">
 			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
-				<label class="tutor-form-label tutor-color-black-60">
+				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'First Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="first_name" value="<?php esc_attr_e( $user->first_name ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>">
 			</div>
 
 			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
-				<label class="tutor-form-label tutor-color-black-60">
+				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="last_name" value="<?php esc_attr_e( $user->last_name ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>">
@@ -130,14 +130,14 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 
 		<div class="tutor-row">
 			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
-				<label class="tutor-form-label tutor-color-black-60">
+				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'User Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" disabled="disabled" value="<?php esc_attr_e( $user->user_login ); ?>">
 			</div>
 
 			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
-				<label class="tutor-form-label tutor-color-black-60">
+				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_number" value="<?php esc_html_e( filter_var( get_user_meta( $user->ID, 'phone_number', true ), FILTER_SANITIZE_NUMBER_INT ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
@@ -146,7 +146,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 
 		<div class="tutor-row">
 			<div class="tutor-col-12 tutor-mb-32">
-				<label class="tutor-form-label tutor-color-black-60">
+				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php esc_attr_e( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
@@ -155,7 +155,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 
 		<div class="tutor-row">
 			<div class="tutor-col-12 tutor-mb-32">
-				<label class="tutor-form-label tutor-color-black-60">
+				<label class="tutor-form-label tutor-color-secondary">
 					<?php _e( 'Bio', 'tutor' ); ?>
 				</label>
 				<textarea class="tutor-form-control" name="tutor_profile_bio"><?php echo strip_tags( get_user_meta( $user->ID, '_tutor_profile_bio', true ) ); ?></textarea>
@@ -164,7 +164,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 
 		<div class="tutor-row">
 			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
-				<label class="tutor-form-label tutor-color-black-60">
+				<label class="tutor-form-label tutor-color-secondary">
 					<?php _e( 'Display name publicly as', 'tutor' ); ?>
 
 				</label>
@@ -177,7 +177,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 					}
 					?>
 				</select>
-				<div class="tutor-fs-7 tutor-color-black-60 tutor-mt-12">
+				<div class="tutor-fs-7 tutor-color-secondary tutor-mt-12">
 					<?php esc_html_e( 'The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate.', 'tutor' ); ?>
 				</div>
 			</div>

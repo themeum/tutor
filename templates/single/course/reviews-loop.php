@@ -21,7 +21,7 @@
         
         <div>
             <?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
-            <div class="tutor-fs-7 tutor-color-black-60 tutor-mt-12 tutor-review-comment">
+            <div class="tutor-fs-7 tutor-color-secondary tutor-mt-12 tutor-review-comment">
                 <?php echo htmlspecialchars( $review->comment_content ); ?>
             </div>
         </div>

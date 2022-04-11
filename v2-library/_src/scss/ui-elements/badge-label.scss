@@ -1,37 +1,30 @@
-//Badge label utlity .badge-label-#{$variable}{...}
+//Badge label utility .badge-label-#{$variable}{...}
 $variations: (
-	'primary' $primary-40 $color-brand $primary-50,
-	'primary-wp' $primary-40 $primary-100 $primary-50,
-	'success' $success-40 $success-100 $success-50,
-	'warning' $warning-40 $warning-100 $warning-50,
-	'danger' $danger-40 $danger-100 $danger-50 $design-danger,
+	'primary' rgba(var(--tutor-color-primary-rgb), 0.15) var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.3),
+	'success' rgba(var(--tutor-color-success-rgb), 0.15) var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.3),
+	'warning' rgba(var(--tutor-color-warning-rgb), 0.15) var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.3),
+	'danger' rgba(var(--tutor-color-danger-rgb), 0.15) var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.3),
 	'processing' rgba(111, 12, 196, 0.1) #4b008b rgba(111, 12, 195, 0.1),
 	'refund' rgba(19, 166, 156, 0.1) #008178 rgba(19, 166, 156, 0.1),
 	'onhold' rgba(233, 36, 104, 0.1) #ac0640 rgba(203, 36, 94, 0.2)
 );
-@each $suffix, $bgColor, $txtColor, $border in $variations {
-	.tutor-badge-label {
-		&.label-#{$suffix} {
-			background: #{$bgColor};
-			color: #{$txtColor};
-			border-color: #{$border};
-		}
-	}
-}
 
-// Tutor backend label
+// Tutor badge label
 .tutor-badge-label {
-	@extend .text-medium-small;
-
+	font-size: 12px;
+	line-height: 1.4;
+	font-weight: 500;
 	display: inline-flex;
 	align-items: center;
-	border-radius: 42px;
-	padding: 0 0.49em;
-	background: lighten($color: $black-20, $amount: 20);
-	color: darken($color: $black-20, $amount: 40);
-	border: 1px solid $black-20;
+	padding: 4px 8px;
+	border: 1px solid transparent;
+	border-radius: 50px;
 
-	&.label-uppercase {
-		text-transform: uppercase;
+	@each $suffix, $bg, $color, $border in $variations {
+		&.label-#{$suffix} {
+			background: #{$bg};
+			color: #{$color};
+			border-color: #{$border};
+		}
 	}
 }

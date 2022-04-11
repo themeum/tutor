@@ -40,10 +40,10 @@ $profile_data = array(
 		?>
 			<div class="tutor-row">
 				<div class="tutor-col-12 tutor-col-sm-5 tutor-col-lg-3">
-					<span class="tutor-fs-6 tutor-color-black-60"><?php echo $data[0]; ?></span>
+					<span class="tutor-fs-6 tutor-color-secondary"><?php echo $data[0]; ?></span>
 				</div>
 				<div class="tutor-col-12 tutor-col-sm-7 tutor-col-lg-9">
-					<?php echo $data[0] == 'Biography' ? '<span class="tutor-fs-6 tutor-color-black-60">'.$data[1].'</span>' : '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black ' . $first_name_class . ' ">' . $data[1] . '</span>'; ?>
+					<?php echo $data[0] == 'Biography' ? '<span class="tutor-fs-6 tutor-color-secondary">'.$data[1].'</span>' : '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black ' . $first_name_class . ' ">' . $data[1] . '</span>'; ?>
 				</div>
 			</div>
 		<?php
