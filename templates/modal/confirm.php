@@ -17,7 +17,7 @@ $content  		= isset( $content ) ? $content : '';
 $yes  			= isset( $yes ) ? $yes : array('text' => __('Yes', 'tutor'));
 $close   		= isset( $close ) ? (bool) $close : true;
 ?>
-<div id="tutor-modal-<?php echo esc_attr( $id ); ?>" class="tutor-modal<?php echo esc_attr( $class ); ?>">
+<div id="<?php echo esc_attr( $id ); ?>" class="tutor-modal<?php echo esc_attr( $class ); ?>">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
 		<div class="tutor-modal-content tutor-modal-content-white">
@@ -52,7 +52,7 @@ $close   		= isset( $close ) ? (bool) $close : true;
 						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
 							<?php esc_html_e('Cancel', 'tutor'); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary<?php echo isset($yes['class']) ? ' ' . esc_html( $yes['class'] ) : ''; ?> tutor-ml-20" <?php echo isset($yes['attr']) ? implode( ' ', $yes['attr'] ) : ''; ?>>
+						<button class="tutor-btn tutor-btn-primary<?php echo isset($yes['class']) ? ' ' . esc_html( $yes['class'] ) : ''; ?> tutor-ml-20" <?php echo isset( $yes['attr'] ) && is_array( $yes['attr'] ) ? implode( ' ', $yes['attr'] ) : ''; ?>>
 							<?php esc_html_e( $yes['text'] ); ?>
 						</button>
 					</div>

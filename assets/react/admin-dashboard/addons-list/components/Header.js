@@ -26,8 +26,8 @@ const Header = () => {
 					<ul className="tutor-nav tutor-nav-admin">
 						{filterBtns.map((btn, index) => {
 							return (
-								<li key={index}>
-									<a className={`tutor-nav-item${btn === activeTab ? ' is-active' : ''}`} href="#" onClick={() => getTabStatus(btn)}>
+								<li className="tutor-nav-item" key={index}>
+									<a className={`tutor-nav-link${btn === activeTab ? ' is-active' : ''}`} href="#" onClick={() => getTabStatus(btn)}>
 										{btn}{' '}
 										<span className="tutor-ml-4">
 											(

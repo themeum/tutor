@@ -21,13 +21,13 @@
 <div class="tutor-settings-certificate-builder">
     <ul class="tutor-nav" tutor-priority-nav>
         <?php foreach($tabbed as $index => $tab): ?>
-            <li>
-                <a href="#" class="tutor-nav-item<?php echo $index==0 ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-settings-tab-<?php echo $tab['slug']; ?>"><?php echo $tab['label']; ?></a>
+            <li class="tutor-nav-item">
+                <a href="#" class="tutor-nav-link<?php echo $index==0 ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-settings-tab-<?php echo $tab['slug']; ?>"><?php echo $tab['label']; ?></a>
             </li>
         <?php endforeach; ?>
 
-        <li class="tutor-nav-more tutor-d-none">
-            <a class="tutor-nav-item tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
+        <li class="tutor-nav-item tutor-nav-more tutor-d-none">
+            <a class="tutor-nav-link tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="tutor-nav-more-icon tutor-icon-times"></span></a>
             <ul class="tutor-nav-more-list tutor-dropdown"></ul>
         </li>
     </ul>

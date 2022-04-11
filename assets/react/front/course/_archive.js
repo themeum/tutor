@@ -9,7 +9,7 @@ const tutor_filters = [
 const pushFilterToState=data=>{
 
 	const new_url = new URL(window.location.origin+window.location.pathname);
-	const params = getAllUrlParamas();
+	const params = getAllUrlParams();
 
 	// Include other params except tutors
 	for(let k in params){
@@ -34,7 +34,7 @@ const pushFilterToState=data=>{
 	window.history.pushState({}, '', new_url);
 }
 
-const getAllUrlParamas=()=>{
+const getAllUrlParams=()=>{
 	let param_array = {};
 
 	new URL(window.location).searchParams.forEach(function (value, key) {
@@ -52,7 +52,7 @@ const getAllUrlParamas=()=>{
 }
 
 const renderFilterFromState=(filter_container)=>{
-	let filters = getAllUrlParamas();
+	let filters = getAllUrlParams();
 
 	filter_container.find('[type="checkbox"]').prop('checked', false);
 	filter_container.find('[type="text"]').val('');
@@ -115,11 +115,8 @@ window.jQuery(document).ready($=>{
 			pushFilterToState(filter_criteria);
 		}
 		
-		loop_container.html('<div style="background-color: #fff;" class="loading-spinner"></div>');
-		$(this)
-			.closest('form')
-			.find('.tutor-clear-all-filter')
-			.show();
+		loop_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
+		$(this).closest('form').find('.tutor-clear-all-filter').show();
 
 		$.ajax({
 			url: window._tutorobject.ajaxurl,

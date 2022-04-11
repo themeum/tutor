@@ -26,11 +26,11 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 					<input type="hidden" name="announcement_id" value="<?php echo esc_attr( $announcment_id ); ?>">
 					<input type="hidden" name="action" value="tutor_announcement_create"/>
 					<input type="hidden" name="action_type" value="<?php echo esc_attr( $announcement ? 'update' : 'create' ); ?>"/>
-					<div class="tutor-form-group tutor-mb-20 tutor-form-group-select-md">
+					<div class="tutor-mb-32">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Select Course', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select tutor-form-control no-tutor-dropdown" name="tutor_announcement_course" required>
+						<select class="tutor-form-select" name="tutor_announcement_course" required>
 							<?php if ( $courses ) : ?>
 								<?php foreach ( $courses as $course ) : ?>
 									<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID ); ?>>
@@ -42,13 +42,15 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 							<?php endif; ?>
 						</select>
 					</div>
-					<div class="tutor-form-group">
+
+					<div class="tutor-mb-32">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Announcement Title', 'tutor' ); ?>
 						</label>
 						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php esc_html_e( 'Announcement title', 'tutor' ); ?>" maxlength="255" required>
 					</div>
-					<div class="tutor-form-group">
+
+					<div class="tutor-mb-32">
 						<label class="tutor-form-label" for="tutor_announcement_course">
 							<?php esc_html_e( 'Summary', 'tutor' ); ?>
 						</label>
@@ -59,11 +61,11 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 				</div>
 
 				<div class="tutor-modal-footer">
-					<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary">
-						<?php esc_html_e( 'Publish', 'tutor' ); ?>
-					</button>
 					<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary">
 						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+					</button>
+					<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary">
+						<?php esc_html_e( 'Publish', 'tutor' ); ?>
 					</button>
 				</div>
 			</div>
@@ -273,13 +275,13 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										</button>
 										<ul class="tutor-dropdown tutor-dropdown-dark">
 											<li>
-												<a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
+												<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
 													<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
 													<span><?php _e( 'Edit', 'tutor' ); ?></span>
 												</a>
 											</li>
 											<li>
-												<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
+												<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
 													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
 													<span><?php _e( 'Delete', 'tutor' ); ?></span>
 												</a>

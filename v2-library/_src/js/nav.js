@@ -4,7 +4,7 @@
 		this.each(function() {
 
 			var nav = this;
-			var elements = $(nav).find('> li:not(".tutor-nav-more")');
+			var elements = $(nav).find(">.tutor-nav-item:not('.tutor-nav-more')");
 			
 			var tutorNav = function() {
 				this.init = function() {
@@ -43,19 +43,19 @@
 						$(nav).find('.tutor-nav-more-list').append(dropdownElements);		
 						$(nav).find('.tutor-nav-more').removeClass('tutor-d-none').addClass('tutor-d-inline-block');
 						if($(nav).find('.tutor-nav-more-list .is-active').length) {
-							$(nav).find('.tutor-nav-more-item').addClass('is-active');
+							$(nav).find('.tutor-nav-more-link').addClass('is-active');
 						}
 					}
 				};
 				
 				this.cleanList = function() {
 					$(nav).find('.tutor-nav-more-list').empty();
-					$(nav).find('.tutor-nav-more').removeClass('tutor-d-inline-block').addClass('tutor-d-none').find('.tutor-nav-more-item').removeClass('is-active');
+					$(nav).find('.tutor-nav-more').removeClass('tutor-d-inline-block').addClass('tutor-d-none').find('.tutor-nav-more-link').removeClass('is-active');
 					elements.removeClass('tutor-d-none');
 				};
 				
 				this.buildList = function() {
-					$(nav).find('.tutor-nav-more-item').on('click', function(event) {
+					$(nav).find('.tutor-nav-more-link').on('click', function(event) {
 						event.preventDefault();
 						if($(nav).find('.tutor-nav-more-list .is-active').length) {
 							$(this).addClass('is-active');
@@ -64,7 +64,7 @@
 					});
 
 					$(document).mouseup(e => {
-                        if ($(nav).find('.tutor-nav-more-item').has(e.target).length === 0) {
+                        if ($(nav).find('.tutor-nav-more-link').has(e.target).length === 0) {
 							$(nav).find('.tutor-nav-more').removeClass('tutor-nav-opened');
 						}
 					});

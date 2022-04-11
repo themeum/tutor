@@ -20,15 +20,10 @@
                 <input type="hidden" name="review_id" value="<?php echo isset($review_id) ? $review_id : ''; ?>"/>
                 <input type="hidden" name="action" value="tutor_place_rating" />
 
-                <!-- @todo: need to update -->
-                <div class="tutor-star-rating-container tutor-mt-16">
-                    <div class="tutor-ratings tutor-ratings-modal">
-                        <div class="tutor-rating-stars">
-                            <?php
-                                tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value());
-                            ?>
-                        </div>
-                    </div>
+                <div class="tutor-ratings tutor-ratings-xl tutor-ratings-selectable tutor-justify-center tutor-mt-16" tutor-ratings-selectable>
+                    <?php
+                        tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value());
+                    ?>
                 </div>
 
                 <textarea name="review" class="tutor-form-control tutor-mt-28" placeholder="<?php _e('Tell us about your own personal experience taking this course. Was it a good match for you?', 'tutor'); ?>"></textarea>

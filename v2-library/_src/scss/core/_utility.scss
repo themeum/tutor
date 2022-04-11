@@ -244,27 +244,38 @@ $border: (
 
 // ratio
 .tutor-ratio {
+	content: " ";
 	position: relative;
     width: 100%;
+	display: block;
 
 	&-16x9 {
-		content: " ";
-		display: block;
 		padding-top: 56.25%;
 	}
 
 	&-4x3 {
-		content: " ";
-		display: block;
 		padding-top: 75%;
 	}
 
+	&-3x2 {
+		padding-top: 66.66%;
+	}
+
+	&-1x1 {
+		padding-top: 100%;
+	}
+
 	> * {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
+		position: absolute !important;
+		top: 0 !important;
+		left: 0 !important;
+		width: 100% !important;
+		height: 100% !important;
+	}
+
+	> img {
+		object-fit: cover;
+		object-position: left;
 	}
 }
 
@@ -296,6 +307,7 @@ $border: (
 	}
 }
 
+// round box
 .tutor-round-box {
 	display: inline-flex;
 	align-items: center;
@@ -306,7 +318,7 @@ $border: (
 	border-radius: 80px;
 	overflow: hidden;
 	color: var(--tutor-primary-color);
-	background: var(--tutor-primary-lighter);
+	background: var(--tutor-primary-lighter-color);
 
 	[class^="tutor-icon-"],
 	[class*=" tutor-icon-"],
@@ -339,5 +351,43 @@ $border: (
 		height: 1px;
 		background-color: #dcdbdc;
 		width: 100%;
+	}
+}
+
+// stretched link
+.tutor-stretched-link:after {
+    content: " ";
+	position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+}
+
+// spinner
+.tutor-spinner {
+	display: inline-block;
+    width: 32px;
+    height: 32px;
+    vertical-align: -4px;
+    border: 4px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: 800ms linear infinite rotateSpinner;
+
+	&-sm {
+		border-width: 2px;
+		vertical-align: -2px;
+		width: 20px;
+    	height: 20px;
+	}
+
+	&-wrap {
+		position: relative;
+		min-height: 300px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 }

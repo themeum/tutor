@@ -5,110 +5,148 @@
     display: flex;
     flex-wrap: wrap;
 
-    a {
-        &,
-        &:focus,
-        &:hover,
-        &:active {
-            color: inherit;
-            background: none;
-            outline: 0;
-            text-decoration: none;
-            box-shadow: none;
-            line-height: 1.6;
-        }
-    }
-
     > li {
         line-height: 1.6;
         position: relative;
         margin: 0;
         padding: 0;
+    }
 
-        > a {
-            font-size: 16px;
-            font-weight: 500;
-            padding: 8px 20px;
-            display: flex;
-            align-items: center;
-            color: var(--tutor-black-70);
-            cursor: pointer;
+    &-link {
+        font-size: 16px;
+        font-weight: 400;
+        padding: 8px 20px;
+        display: flex;
+        align-items: center;
+        color: var(--tutor-black-70);
+        cursor: pointer;
 
-            &:hover {
-                color: var(--tutor-primary-color);
-            }
-
-            &.is-active {
-                color: var(--tutor-primary-color);
-            }
+        &,
+        &:focus,
+        &:hover,
+        &:active {
+            background: transparent;
+            text-decoration: none;
+            line-height: 1.6;
+            box-shadow: none;
+            outline: 0;
         }
 
-        .tutor-dropdown {
-            margin: 0;
+        &:hover {
+            color: var(--tutor-primary-color);
         }
 
-        &.tutor-nav-more {
-            margin-left: auto;
-            > a {
-                padding-left: 5px;
-                padding-right: 5px;
+        &.is-active {
+            color: var(--tutor-primary-color);
+        }
+    }
+
+    .tutor-nav-more {
+        margin-left: auto;
+        &-icon {
+            font-size: 12px;
+            margin-left: 4px;
+            color: var(--tutor-primary-color);
+            transform: rotate(-45deg);
+            transition: transform 200ms ease-in;
+        }
+
+        &.tutor-nav-opened {
+            .tutor-dropdown {
+                display: block;
             }
-
-            .icon-seemore {
-                font-size: 12px;
-                margin-left: 4px;
-                color: var(--tutor-primary-color);
-                transform: rotate(-45deg);
-                transition: transform 200ms ease-in;
-            }
-
-            &.tutor-nav-opened {
-                .icon-seemore {
-                    transform: rotate(0deg);
-                }
-
-                .tutor-dropdown {
-                    display: block;
-                }
+            .tutor-nav-more-icon {
+                transform: rotate(0deg);
             }
         }
     }
 
-    &:not(.tutor-nav-tabs) {
+    &:not(.tutor-nav-pills):not(.tutor-nav-tabs) {
         border-bottom: 1px solid #CDCFD5;
-        > li {
-            > a {
-                border-bottom: 2px solid transparent;
-                margin-bottom: -1px;
-                &.is-active {
-                    border-bottom-color: var(--tutor-primary-color);
-                }
+        .tutor-nav-link {
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            &.is-active {
+                border-bottom-color: var(--tutor-primary-color);
+            }
+        }
+    }
+
+    // pills
+    &-pills {
+        border-bottom: 0;
+
+        .tutor-nav-item {
+            &:not(:last-child) {
+                margin-right: 4px;
+            }
+        }
+
+        .tutor-nav-link {
+            border-radius: 6px;
+
+            &:hover {
+                color: var(--tutor-black-70);
+                background-color: #edf0f9;
+            }
+
+            &.is-active {
+                background-color: var(--tutor-primary-color);
+                color: #FFFFFF;
+                margin-bottom: 0;
             }
         }
     }
 
     // tabs
     &-tabs {
-        border-bottom: 0;
-        > li {
-            &:not(:last-child) {
-                margin-right: 4px;
+        background-color: #FAFAFB;
+        border-bottom: 1px solid #cdcfd5;
+        border-radius: 6px 6px 0px 0px;
+
+        .tutor-nav-link {
+            position: relative;
+            border-right: 1px solid var(--tutor-border-color);
+            border-top: 2px solid transparent;
+            border-bottom: 1px solid var(--tutor-border-color);
+            margin-top: -1px;
+            margin-bottom: -1px;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            padding: 16px 32px; // @todo: need to add an option for bigger tab
+
+            &.is-active {
+                background-color: #FFFFFF;
+                border-top-color: var(--tutor-primary-color);
+                border-bottom-color: #FFFFFF;
+            }
+        }
+
+        .tutor-nav-item {
+            align-items: stretch;
+            display: flex;
+            flex: 1 1 auto;
+            
+            &:first-child {
+                .tutor-nav-link {
+                    border-radius: 5px 0 0 0;
+                }
             }
 
-            > a {
-                border-radius: 6px;
-
-                &:hover {
-                    color: var(--tutor-black-70);
-                    background-color: #edf0f9;
-                }
-
-                &.is-active {
-                    background-color: var(--tutor-primary-color);
-                    color: #FFFFFF;
-                    margin-bottom: 0;
+            &:last-child {
+                .tutor-nav-link {
+                    border-radius: 0 5px 0 0;
+                    border-right: 0;
                 }
             }
+        }
+
+        &-container {
+            background-color: #FFFFFF;
+            border: 1px solid var(--tutor-border-color);
+            border-radius: 6px;
         }
     }
 
@@ -117,7 +155,7 @@
         flex-direction: column;
         border-bottom: 0;
 
-        > li {
+        .tutor-nav-item {
             margin-right: 0;
             &:not(:last-child) {
                 margin-bottom: 4px;
@@ -127,12 +165,13 @@
 
     // @todo: to be removed
     &-admin {
-        border-bottom: 0;
-        > li {
+        border-bottom: 0 !important;
+        .tutor-nav-item {
             margin: 0;
-            > a {
-                padding: 20px 16px;
-            }
+        }
+
+        .tutor-nav-link {
+            padding: 20px 16px;
         }
     }
 }
