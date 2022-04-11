@@ -558,7 +558,7 @@
 					color: var(--tutor-color-white);
 				}
 				&:focus {
-					box-shadow: 0 0 0 3px var(--tutor-primary-lighter-color);
+					box-shadow: 0 0 0 3px rgba(var(--tutor-color-primary-rgb), 0.1);
 				}
 			}
 		}

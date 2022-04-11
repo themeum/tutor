@@ -363,7 +363,7 @@ p.course-empty-content {
 .tutor-status-approved-context,
 .tutor-button.button-success,
 .tutor-status-completed {
-	background-color: var(--tutor-success-button-color);
+	background-color: var(--tutor-color-success);
 	color: #ffffff;
 	border-radius: 2px;
 }
@@ -396,7 +396,7 @@ table.tutor_status_table h2 {
 
 table.tutor_status_table td mark.yes,
 table.tutor_status_table th mark.yes {
-	color: var(--tutor-success-button-color);
+	color: var(--tutor-color-success);
 	background-color: transparent;
 }
 
@@ -470,7 +470,7 @@ table.tutor_status_table th mark.yes {
 }
 
 .tutor-label-success {
-	background-color: var(--tutor-success-button-color);
+	background-color: var(--tutor-color-success);
 	color: #ffffff;
 	padding: 3px 7px;
 }
@@ -485,7 +485,7 @@ table.tutor_status_table th mark.yes {
 }
 
 .tutor-addons .addon-current-price {
-	color: var(--tutor-success-button-color);
+	color: var(--tutor-color-success);
 	font-size: 18px;
 	padding: 3px;
 }
@@ -671,9 +671,9 @@ table.tutor-addons-list-table th {
 }
 
 .tutor-success-msg {
-	color: var(--tutor-success-button-color);
+	color: var(--tutor-color-success);
 	background-color: #dff2bf;
-	border: 1px solid var(--tutor-success-button-color);
+	border: 1px solid var(--tutor-color-success);
 }
 
 .tutor-warning-msg {
@@ -935,7 +935,7 @@ p.quiz-search-suggest-text {
 }
 
 span.result-pass {
-	background-color: var(--tutor-success-button-color);
+	background-color: var(--tutor-color-success);
 	color: #fff;
 	padding: 3px 5px;
 	border-radius: 2px;
@@ -1144,24 +1144,6 @@ span.filled_dash_unser {
    * Quiz attempts table
    **************************/
 
-.attempt-review-title {
-	font-size: 18px;
-	color: var(--tutor-text-size);
-	font-weight: 600;
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-align: center;
-	-ms-flex-align: center;
-	align-items: center;
-	margin-bottom: 60px;
-}
-
-.attempt-review-title i {
-	margin-right: 12px;
-	color: var(--tutor-color-primary);
-}
-
 .tutor-quiz-attempt-info-row {
 	.attempt-view-bottom,
 	.attempt-view-top {
@@ -1227,7 +1209,7 @@ span.filled_dash_unser {
 				border-radius: 2px;
 			}
 			&.result-pass {
-				background: var(--tutor-success-button-color);
+				background: var(--tutor-color-success);
 			}
 		}
 		h4,
@@ -1324,8 +1306,8 @@ span.filled_dash_unser {
 
 			&:first-child {
 				&:hover {
-					border: 1px solid var(--tutor-success-button-color);
-					color: var(--tutor-success-button-color);
+					border: 1px solid var(--tutor-color-success);
+					color: var(--tutor-color-success);
 				}
 			}
 
@@ -1349,7 +1331,7 @@ span.filled_dash_unser {
 				width: 20px;
 				text-align: center;
 				line-height: 20px;
-				background: var(--tutor-success-button-color);
+				background: var(--tutor-color-success);
 				color: #fff;
 				display: inline-block;
 				border-radius: 2px;

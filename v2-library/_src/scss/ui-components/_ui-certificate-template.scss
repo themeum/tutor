@@ -137,8 +137,8 @@
 					color: var(--tutor-color-primary);
 
 					&:hover {
-						background-color: var(--tutor-primary-hover-color);
-						border-color: var(--tutor-primary-hover-color);
+						background-color: var(--tutor-color-primary-hover);
+						border-color: var(--tutor-color-primary-hover);
 						color: var(--tutor-color-white);
 					}
 				}

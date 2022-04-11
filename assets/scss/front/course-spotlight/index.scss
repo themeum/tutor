@@ -109,7 +109,7 @@
 				cursor: pointer;
 				z-index: 1;
 				&:hover {
-					background: var(--tutor-primary-hover-color);
+					background: var(--tutor-color-primary-hover);
 				}
 				span[class^='tutor-icon'] {
 					font-size: 20px;

@@ -277,24 +277,14 @@ class Assets {
 	private function load_color_palette()
 	{
 		$colors = array(
-			'tutor_primary_color'       => '--tutor-color-primary',
-			'tutor_primary_hover_color' => '--tutor-primary-hover-color',
-			'tutor_text_color'          => '--tutor-body-color',
-			'tutor_background_color'	=> '--tutor-background-color',
-			'tutor_primary_lighter_color' => '--tutor-primary-lighter-color',
-			'tutor_border_color'		=> '--tutor-border-color',
-			// 'tutor_success_color'		=> '--tutor-color-success',
-			// 'tutor_warning_color'		=> '--tutor-warning-color',
-			// 'tutor_danger_color'		=> '--tutor-danger-color-color',
-			'tutor_disable_color'		=> '--tutor-disable-color',
-			'tutor_table_background_color' => '--tutor-table-background-color',
-
-			'tutor_primary_text_color'  => '--tutor-primary-text-color',
-			'tutor_light_color'         => '--tutor-light-color',
-			'tutor_button_primary'      => '--tutor-primary-button-color',
-			'tutor_button_danger'       => '--tutor-danger-color-button-color',
-			'tutor_button_success'      => '--tutor-success-button-color',
-			'tutor_button_warning'      => '--tutor-warning-button-color',
+			'tutor_primary_color'       	=> '--tutor-color-primary',
+			'tutor_primary_hover_color' 	=> '--tutor-color-primary-hover',
+			'tutor_text_color'          	=> '--tutor-body-color',
+			'tutor_background_color'		=> '--tutor-background-color',
+			'tutor_border_color'			=> '--tutor-border-color',
+			'tutor_disable_color'			=> '--tutor-disable-color',
+			'tutor_table_background_color' 	=> '--tutor-table-background-color',
+			'tutor_light_color'         	=> '--tutor-light-color',
 		);
 		
 		// admin colors
@@ -304,46 +294,45 @@ class Assets {
 
 			switch ($admin_color) {
 				case 'light':
-					$admin_color_codes = ['#04a4cc', '#04b0db', '#d9f7ff'];
+					$admin_color_codes = ['#04a4cc', '#04b0db'];
 				break;
 
 				case 'modern':
-					$admin_color_codes = ['#3858e9', '#4664eb', '#e8ecff'];
+					$admin_color_codes = ['#3858e9', '#4664eb'];
 				break;
 				
 				case 'blue':
-					$admin_color_codes = ['#e1a948', '#e3af55', '#fff6e6'];
+					$admin_color_codes = ['#e1a948', '#e3af55'];
 				break;
 				
 				case 'coffee':
-					$admin_color_codes = ['#c7a589', '#ccad93', '#fff3e8'];
+					$admin_color_codes = ['#c7a589', '#ccad93'];
 				break;
 				
 				case 'ectoplasm':
-					$admin_color_codes = ['#a3b745', '#a9bd4f', '#ecf2ce'];
+					$admin_color_codes = ['#a3b745', '#a9bd4f'];
 				break;
 				
 				case 'midnight':
-					$admin_color_codes = ['#e14d43', '#e35950', '#ffedec'];
+					$admin_color_codes = ['#e14d43', '#e35950'];
 				break;
 				
 				case 'ocean':
-					$admin_color_codes = ['#9ebaa0', '#a7c0a9', '#eaffec'];
+					$admin_color_codes = ['#9ebaa0', '#a7c0a9'];
 				break;
 				
 				case 'sunrise':
-					$admin_color_codes = ['#dd823b', '#df8a48', '#fff3ea'];
+					$admin_color_codes = ['#dd823b', '#df8a48'];
 				break;
 				
 				default:
-					$admin_color_codes = ['#007cba', '#006ba1', '#e7f7ff'];
+					$admin_color_codes = ['#007cba', '#006ba1'];
 				break;
 			}
 
 			$admin_colors = [
 				'--tutor-color-primary' => $admin_color_codes[0],
-				'--tutor-primary-hover-color' => $admin_color_codes[1],
-				'--tutor-primary-lighter-color' => $admin_color_codes[2],
+				'--tutor-color-primary-hover' => $admin_color_codes[1],
 			];
 		}
 

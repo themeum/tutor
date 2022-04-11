@@ -410,7 +410,7 @@ table.tutor-ui-table {
 		border-width: 1px;
 		background-size: 10px;
 		&:focus {
-			box-shadow: 0 0 0 2px var(--tutor-primary-lighter-color);
+			box-shadow: 0 0 0 2px rgba(var(--tutor-color-primary-rgb), 0.1);
 		}
 	}
 

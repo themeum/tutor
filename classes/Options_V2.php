@@ -1123,11 +1123,6 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
-												'slug'  => 'tutor_primary_lighter_color',
-												'preset_name' => 'primary_lighter',
-												'value' => '#E9EDFB',
-											),
-											array(
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#F6F8FD',
@@ -1136,21 +1131,6 @@ class Options_V2
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_success_color',
-												'preset_name' => 'success',
-												'value' => '#24A148',
-											),
-											array(
-												'slug'  => 'tutor_warning_color',
-												'preset_name' => 'warning',
-												'value' => '#ED9700',
-											),
-											array(
-												'slug'  => 'tutor_danger_color',
-												'preset_name' => 'danger',
-												'value' => '#F44337',
 											),
 											array(
 												'slug'  => 'tutor_disable_color',
@@ -1184,11 +1164,6 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
-												'slug'  => 'tutor_primary_lighter_color',
-												'preset_name' => 'primary_lighter',
-												'value' => '#ECF7F3',
-											),
-											array(
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#ECF7F3',
@@ -1197,21 +1172,6 @@ class Options_V2
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_success_color',
-												'preset_name' => 'success',
-												'value' => '#24A148',
-											),
-											array(
-												'slug'  => 'tutor_warning_color',
-												'preset_name' => 'warning',
-												'value' => '#ED9700',
-											),
-											array(
-												'slug'  => 'tutor_danger_color',
-												'preset_name' => 'danger',
-												'value' => '#F44337',
 											),
 											array(
 												'slug'  => 'tutor_disable_color',
@@ -1245,11 +1205,6 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
-												'slug'  => 'tutor_primary_lighter_color',
-												'preset_name' => 'primary_lighter',
-												'value' => '#FAF6FF',
-											),
-											array(
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#FAF6FF',
@@ -1258,21 +1213,6 @@ class Options_V2
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_success_color',
-												'preset_name' => 'success',
-												'value' => '#24A148',
-											),
-											array(
-												'slug'  => 'tutor_warning_color',
-												'preset_name' => 'warning',
-												'value' => '#ED9700',
-											),
-											array(
-												'slug'  => 'tutor_danger_color',
-												'preset_name' => 'danger',
-												'value' => '#F44337',
 											),
 											array(
 												'slug'  => 'tutor_disable_color',
@@ -1347,15 +1287,6 @@ class Options_V2
 										'desc'         => __('Choose a text color for your website', 'tutor'),
 									),
 									array(
-										'key'          => 'tutor_primary_lighter_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'text',
-										'preset_exist' => true,
-										'label'        => __('Primary Lighter', 'tutor'),
-										'default'      => '#E9EDFB',
-										'desc'         => __('Choose a text color for your website', 'tutor'),
-									),
-									array(
 										'key'          => 'tutor_background_color',
 										'type'         => 'color_field',
 										'preset_name'  => 'background',
@@ -1372,33 +1303,6 @@ class Options_V2
 										'label'        => __('Border', 'tutor'),
 										'default'      => '#CDCFD5',
 										'desc'         => __('Choose a border color for your website', 'tutor'),
-									),
-									array(
-										'key'          => 'tutor_success_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'success',
-										'preset_exist' => false,
-										'label'        => __('Success', 'tutor'),
-										'default'      => '#24A148',
-										'desc'         => __('Choose a color for an operation success message', 'tutor'),
-									),
-									array(
-										'key'          => 'tutor_warning_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'warning',
-										'preset_exist' => false,
-										'label'        => __('Warning', 'tutor'),
-										'default'      => '#ED9700',
-										'desc'         => __('Choose a color for an operation pending message ', 'tutor'),
-									),
-									array(
-										'key'          => 'tutor_danger_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'danger',
-										'preset_exist' => false,
-										'label'        => __('Danger', 'tutor'),
-										'default'      => '#d8d8d8',
-										'desc'         => __('Choose a color for an operation error message ', 'tutor'),
 									),
 									array(
 										'key'          => 'tutor_disable_color',
