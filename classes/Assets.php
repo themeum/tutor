@@ -436,7 +436,7 @@ class Assets {
 	public function add_identifier_class_to_body($classes)
 	{
 		$course_builder_screen = tutor_utils()->get_course_builder_screen();
-		$to_add                = array();
+		$to_add                = array('tutor-lms');
 
 		// Add backend course editor identifier class to body
 		if ($course_builder_screen) {
