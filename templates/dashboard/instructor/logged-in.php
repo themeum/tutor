@@ -15,7 +15,7 @@ if ( $is_instructor ) {
             <div class="tutor-app-process-alert">
                 <div style="border:1px solid var(--tutor-color-brand);" class="tutor-primary tutor-py-12 tutor-px-20 tutor-radius-6">
                     <div class="tutor-alert-text tutor-d-flex tutor-align-items-center">
-                    <span class="tutor-icon-circle-info tutor-mr-12 tutor-h4 tutor-color-brand"></span>
+                    <span class="tutor-icon-circle-info tutor-fs-4 tutor-color-brand tutor-mr-12"></span>
                     <span>
                     <?php
                         if ( $instructor_status == 'pending' ) {

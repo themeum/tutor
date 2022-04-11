@@ -8,6 +8,7 @@
 }
 
 // Common Styles
+// email template editor
 .tutor-backend-settings-page {
 	p,
 	h1,
@@ -557,7 +558,7 @@
 					color: var(--tutor-text-white);
 				}
 				&:focus {
-					box-shadow: 0 0 0 3px var(--tutor-primary-lighter);
+					box-shadow: 0 0 0 3px var(--tutor-primary-lighter-color);
 				}
 			}
 		}

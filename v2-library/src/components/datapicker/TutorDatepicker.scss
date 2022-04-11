@@ -209,7 +209,7 @@
 
 			&:focus-visible {
 				outline: none;
-				border-color: #3d64de;
+				border-color: var(--tutor-primary-color);
 			}
 			&:focus {
 				border-color: #1973aa;
@@ -365,7 +365,7 @@
 
 						&:focus-visible {
 							outline: none;
-							border-color: #3d64de;
+							border-color: var(--tutor-primary-color);
 						}
 					}
 				}
@@ -514,7 +514,7 @@
 .tutor-screen-frontend-dashboard {
 	.tutor-react-datepicker .react-datepicker__input-container {
 		input:focus {
-			border-color: #2853da;
+			border-color: var(--tutor-primary-color);
 		}
 	}
 }

@@ -158,14 +158,12 @@ class Course_Filter {
 
 		foreach($terms as $term){
             ?>
-                <div class="tutor-form-check tutor-mb-20">
-
-                <input type="checkbox" class="tutor-form-check-input" id="<?php echo $term->term_id; ?>"  name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>&nbsp;
-
-                    <label for="<?php echo $term->term_id; ?>">
-                        <?php echo $term->name; ?>
+                <li class="tutor-list-item">
+                    <label>
+						<input type="checkbox" class="tutor-form-check-input"  name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>
+						<?php echo $term->name; ?>
                     </label>
-                </div>
+				</li>
                 <?php isset($term->children) ? $this->render_terms_hierarchically($term->children, $taxonomy) : 0; ?>
             <?php
         }

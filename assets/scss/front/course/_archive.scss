@@ -1,5 +1,6 @@
 // Course filter
-.tutor-course-filter-wrapper {
+// @todo: to be removed
+.tutor-course-filter-wrapper-bak {
 	overflow: auto;
 	max-width: 1140px !important;
 	margin: 0 auto !important;
@@ -53,6 +54,7 @@
 				color: $black-70;
 			}
 		}
+
 		&:last-child {
 			width: calc(100% - 250px);
 			float: right;
@@ -66,30 +68,6 @@
 				cursor: pointer;
 			}
 		}
-	}
-
-	/*
-		@ clear all filters button
-	*/
-	.tutor-clear-all-filter {
-		margin-top: 28px;
-		display: none;
-	}
-	.tutor-clear-all-filter > a {
-		height: 21px;
-		background: #e8e8e8;
-		border-radius: 22px;
-		line-height: 21px;
-		text-align: center;
-		/* color: #7A7A7A; */
-		font-size: 13px;
-		font-weight: 500;
-		margin-top: 20px;
-		color: #7a7a7a;
-		padding: 5px 10px;
-	}
-	.tutor-clear-all-filter a > i {
-		font-size: 10px;
 	}
 
 	.tutor-course-filter-container {

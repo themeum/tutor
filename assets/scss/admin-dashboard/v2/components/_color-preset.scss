@@ -137,20 +137,12 @@
 	position: relative;
 	z-index: 1;
 
-	// @todo: to be removed later
-	// &:before {
-	// 	content: '';
-	// 	position: absolute;
-	// 	inset: 0px -26px -20px -26px;
-	// 	background: rgba(239, 241, 247, 0.3);
-	// 	z-index: -1;
-	// }
-
 	label.color-picker-input * {
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
 	}
+	
 	label.color-picker-input {
 		cursor: pointer;
 		display: grid;

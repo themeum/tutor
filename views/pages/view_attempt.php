@@ -24,31 +24,33 @@ $user_id = tutor_utils()->avalue_dot( 'user_id', $attempt );
 $user = get_userdata( $user_id );
 ?>
 
-<div class="tutor-quiz-attempt-details-wrapper">
-	<?php
-		tutor_load_template_from_custom_path(
-			tutor()->path . '/views/quiz/attempt-details.php',
-			array(
-				'attempt_id'   => $attempt_id,
-				'attempt_data' => $attempt_data,
-				'user_id'      => $user_id,
-				'context'      => 'backend-dashboard-students-attempts',
-			)
-		);
-	?>
-</div>
+<div class="tutor-admin-wrap">
+	<div class="tutor-quiz-attempt-details-wrapper">
+		<?php
+			tutor_load_template_from_custom_path(
+				tutor()->path . '/views/quiz/attempt-details.php',
+				array(
+					'attempt_id'   => $attempt_id,
+					'attempt_data' => $attempt_data,
+					'user_id'      => $user_id,
+					'context'      => 'backend-dashboard-students-attempts',
+				)
+			);
+		?>
+	</div>
 
-<div class="wrap">
-	<?php
-		/**
-		 * Load Instructor Feedback template
-		 * pass quiz id
-		 *
-		 * @since v2.0.0
-		 */
-		tutor_load_template_from_custom_path(
-			tutor()->path . 'views/quiz/instructor-feedback.php',
-			array( 'attempt_data' => $attempt_data )
-		);
-	?>
+	<div class="tutor-admin-body">
+		<?php
+			/**
+			 * Load Instructor Feedback template
+			 * pass quiz id
+			 *
+			 * @since v2.0.0
+			 */
+			tutor_load_template_from_custom_path(
+				tutor()->path . 'views/quiz/instructor-feedback.php',
+				array( 'attempt_data' => $attempt_data )
+			);
+		?>
+	</div>
 </div>
