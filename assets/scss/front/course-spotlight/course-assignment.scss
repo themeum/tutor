@@ -55,15 +55,6 @@
 		min-width: 100%;
 		display: grid;
 		grid-template-columns: auto 40px;
-		&:hover {
-			.tutor-avatar {
-				background: $design-brand;
-				transition: 0.2s;
-				span {
-					color: $design-white;
-				}
-			}
-		}
 		.tutor-icard-content {
 			> div:first-child {
 				margin-right: 10px;
@@ -72,11 +63,6 @@
 				word-break: break-all;
 			}
 		}
-		.tutor-avatar {
-			background: $primary-40;
-		}
-	}
-	.tutor-input-files {
 	}
 	// end of instructor card
 	&.tutor-course-assignment-details {
