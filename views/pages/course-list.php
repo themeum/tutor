@@ -326,23 +326,19 @@ $available_status = array(
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
 													<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 												</button>
-												<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+												<div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 													<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
-													<li>
-														<a class="tutor-dropdown-item" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
-															<i class="tutor-icon-eye-bold tutor-mr-8" area-hidden="true"></i>
-															<span><?php esc_html_e( 'View Course', 'tutor' ); ?></span>
-														</a>
-													</li>
+													<a class="tutor-dropdown-item" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
+														<i class="tutor-icon-eye-bold tutor-mr-8" area-hidden="true"></i>
+														<span><?php esc_html_e( 'View Course', 'tutor' ); ?></span>
+													</a>
 													<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
-													<li>
-														<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
-															<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
-															<span><?php esc_html_e( 'Delete Permanently', 'tutor' ); ?></span>
-														</a>
-													</li>
+													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
+														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+														<span><?php esc_html_e( 'Delete Permanently', 'tutor' ); ?></span>
+													</a>
 													<?php do_action( 'tutor_admin_after_course_list_action', $post->ID ); ?>
-												</ul>
+												</div>
 											</div>
 										</div>
 									</td>

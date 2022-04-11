@@ -38,8 +38,8 @@ if ( isset( $data ) && count( $data ) ) : ?>
 				<?php if ( isset( $data['tabs'] ) ) : ?>
 					<ul class="tutor-nav tutor-nav-admin" tutor-priority-nav>
 						<?php foreach ( $data['tabs'] as $key => $v ) : ?>
-							<li>
-								<a class="tutor-nav-item<?php echo esc_attr( $data['active'] == $v['key'] ? ' is-active' : '' ); ?>" data-keypage="<?php echo isset( $v['key'] ) ? esc_attr( $v['key'] ) : ''; ?>" data-keyvalue="<?php echo isset( $v['value'] ) ? esc_attr( $v['value'] ) : ''; ?>" href="<?php echo esc_attr( $v['url'] ); ?>">
+							<li class="tutor-nav-item">
+								<a class="tutor-nav-link<?php echo esc_attr( $data['active'] == $v['key'] ? ' is-active' : '' ); ?>" data-keypage="<?php echo isset( $v['key'] ) ? esc_attr( $v['key'] ) : ''; ?>" data-keyvalue="<?php echo isset( $v['value'] ) ? esc_attr( $v['value'] ) : ''; ?>" href="<?php echo esc_attr( $v['url'] ); ?>">
 									<span><?php echo isset( $v['title'] ) ? esc_html( $v['title'] ) : ''; ?></span>
 									<?php if ( isset( $v['value'] ) ) : ?>
 										<span class="tutor-ml-4">
@@ -49,8 +49,8 @@ if ( isset( $data ) && count( $data ) ) : ?>
 								</a>
 							</li>
 						<?php endforeach; ?>
-						<li class="tutor-nav-more tutor-d-none">
-							<a class="tutor-nav-item tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
+						<li class="tutor-nav-item tutor-nav-more tutor-d-none">
+							<a class="tutor-nav-link tutor-nav-more-link" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor"); ?></span> <span class="tutor-nav-more-icon tutor-icon-times"></span></a>
 							<ul class="tutor-nav-more-list tutor-dropdown"></ul>
 						</li>
 					</ul>

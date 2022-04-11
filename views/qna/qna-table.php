@@ -80,7 +80,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                             <div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
                                                 <?php echo $qna->display_name; ?>
                                             </div>
-                                            <div class="tutor-fs-8 tutor-fw-medium tutor-color-muted" style="margin-top : -2px">
+                                            <div class="tutor-fs-7 tutor-fw-medium tutor-color-muted" style="margin-top : -2px">
                                                 <?php echo human_time_diff(strtotime($qna->comment_date)); ?>
                                             </div>
                                         </div>

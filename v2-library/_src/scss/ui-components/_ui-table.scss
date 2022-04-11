@@ -217,7 +217,6 @@ table.tutor-ui-table {
 		&.table-reviews {
 			th,
 			td {
-				// @extend .v-align-top;
 				vertical-align: top;
 				&:nth-child(1) {
 					width: 26.8%;
@@ -252,7 +251,6 @@ table.tutor-ui-table {
 			th,
 			td {
 				&:first-child {
-					// @extend .v-align-top;
 					vertical-align: top;
 				}
 				&:last-child {
@@ -412,7 +410,7 @@ table.tutor-ui-table {
 		border-width: 1px;
 		background-size: 10px;
 		&:focus {
-			box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
+			box-shadow: 0 0 0 2px var(--tutor-primary-lighter-color);
 		}
 	}
 

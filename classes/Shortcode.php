@@ -16,11 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Shortcode {
 
 	private $instructor_layout = array(
-		'pp-top-full',
-		'pp-cp',
-		'pp-top-left',
-		'pp-left-middle',
-		'pp-left-full',
+		'default',
+		'cover',
+		'minimal',
+		'portrait-horizontal',
+		'minimal-horizontal',
 	);
 
 	public function __construct() {

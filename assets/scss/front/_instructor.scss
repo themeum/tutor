@@ -1,3 +1,40 @@
+.tutor-instructor {
+	&-list-item {
+		.tutor-instructor-cover-photo {
+			border-radius: 5px 5px 0 0;
+		}
+
+		.tutor-avatar {
+			position: relative;
+			z-index: 1;
+			box-shadow: 0 0 0 1px var(--tutor-border-color);
+		}
+
+		&.tutor-instructor-layout {
+			&-cover {
+				.tutor-avatar {
+					margin-top: -69px;
+					box-shadow: 0 0 0 1px var(--tutor-border-color), 0 0 0 6px #FFFFFF;
+				}
+			}
+
+			&-portrait-horizontal {
+				.tutor-instructor-cover-photo {
+					border-radius: 5px 0 0 5px;
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
 @mixin flexWithAlignJustify($align, $justify, $gap) {
   -webkit-display: flex;
   -moz-display: flex;
@@ -13,215 +50,6 @@
   -webkit-column-gap: $gap;
   -moz-column-gap: $gap;
   column-gap: $gap;
-}
-
-.entry-content {
-  .tutor-courses.pp-left-full {
-    .tutor-instructor-profile-photo {
-      height: 100%;
-    }
-  }
-  .tutor-courses.pp-left-middle {
-    .tutor-instructor-left-middle {
-      img {
-        width: 96px;
-        height: 96px;
-      }
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-              align-items: center;
-      -webkit-column-gap: 30px;
-      -moz-column-gap: 30px;
-              column-gap: 30px;
-      border: 1px solid $stroke-light-30;
-      -webkit-box-sizing: border-box;
-              box-sizing: border-box;
-      border-radius: 6px;
-      padding: 30px 20px;
-      h4 {
-        @extend .tutor-color-black;
-        @extend .text-medium-h5;
-        margin: 0;
-      }
-
-    }
-    .tutor-instructor-profile-photo img {
-      border-radius: 100%;
-      -webkit-border-radius: 100%;
-      -moz-border-radius: 100%;
-      -ms-border-radius: 100%;
-      -o-border-radius: 100%;
-    }
-  }
-}
-.tutor-instructor-list {
-  &,
-  &:focus,
-  &:active {
-    outline: none;
-    cursor: pointer;
-    text-decoration: none !important;
-    background: #ffffff;
-    border: 1px solid #dcdbdc;
-    border-radius: 6px;
-  }
-  .tutor-star-rating-group {
-    i {
-      font-size: 16px !important;
-      padding-right: 6px;
-      @extend .tutor-color-design-warning;
-    }
-  }
-  .tutor-instructor-profile-photo,
-  .tutor-instructor-cover-photo {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-  }
-
-  .tutor-instructor-profile-photo {
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-  }
-
-  h4.tutor-instructor-name {
-    @extend .tutor-color-black;
-    @extend .text-medium-h5;
-    margin: 0;
-  }
-  .tutor-instructor-course-count, .tutor-instructor-left-middle .tutor-instructor-content {
-    margin-bottom: 10px;
-    font-size: 15px !important;
-    font-weight: 500;
-    .tutor-ins-course-count {
-      color: $black-main !important
-    }
-    .tutor-ins-course-text {
-      color: #757C8E !important;
-    }
-  }
-
-
-  .tutor-instructor-rating {
-    * {
-      font-size: 16px;
-    }
-
-    .rating-digits {
-      color: #161616;
-    }
-
-    .rating-total-meta {
-      color: #7a7a7a;
-    }
-  }
-
-  // Layout specific styles
-  &.tutor-instructor-list-pp-cp {
-    .tutor-instructor-cover-photo {
-      width: 100%;
-      aspect-ratio: 16/9;
-    }
-
-    .tutor-instructor-profile-photo {
-      border: 4px solid white;
-      margin: -31px 15px 0;
-    }
-
-    .tutor-instructor-name,
-    .tutor-instructor-course-count,
-    .tutor-instructor-rating {
-      padding: 0 15px;
-    }
-  }
-
-  &.tutor-instructor-list-pp-top-full {
-    .tutor-instructor-cover-photo {
-      display: none;
-    }
-
-    .tutor-instructor-profile-photo {
-      border-radius: 0%;
-      width: 100%;
-      aspect-ratio: 16/9;
-      height: auto;
-    }
-
-    .tutor-instructor-name,
-    .tutor-instructor-course-count,
-    .tutor-instructor-rating {
-      padding: 0 15px;
-    }
-
-    .tutor-instructor-name {
-      margin-top: 15px;
-    }
-  }
-
-  &.tutor-instructor-list-pp-top-left {
-    .tutor-instructor-cover-photo {
-      display: none;
-    }
-    padding: 15px;
-    .tutor-instructor-profile-photo {
-      margin-left: 22px;
-    }
-  }
-
-  &.tutor-instructor-list-pp-left-full,
-  &.tutor-instructor-list-pp-left-middle {
-    .tutor-instructor-cover-photo {
-      display: none;
-    }
-
-    .tutor-instructor-profile-photo {
-      border-radius: 0%;
-      height: 102px;
-      width: 102px;
-      top: 0px;
-      position: absolute;
-      
-    }
-
-    .tutor-instructor-name,
-    .tutor-instructor-course-count,
-    .tutor-instructor-rating {
-      margin-left: 118px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: calc(100% - 110px);
-      display: inline-block;
-      position: relative;
-      top: 6px;
-    }
-
-    .tutor-instructor-rating {
-      top: 7px;
-      position: relative;
-    }
-  }
-
-  &.tutor-instructor-list-pp-left-middle {
-    .tutor-instructor-profile-photo {
-      border-radius: 50%;
-      height: 82px;
-      width: 82px;
-      margin: 10px;
-    }
-
-    .tutor-instructor-name {
-      top: 11px;
-    }
-
-    .tutor-instructor-course-count {
-      top: 46px;
-    }
-  }
 }
 
 .tutor-instructor-filter {
@@ -270,219 +98,6 @@
           outline: 0;
         }
       }
-    }
-
-    .mobile-filter-container {
-      & > div {
-        width: calc(100% - 25px);
-        display: inline-block;
-      }
-
-      & > i {
-        vertical-align: middle;
-        display: inline-block;
-        margin-left: 5px;
-        cursor: pointer;
-      }
-    }
-
-    .mobile-filter-popup {
-      z-index: 9999999999;
-
-      &:not(.is-opened) {
-        display: none;
-      }
-
-      @media (min-width: 1024px) {
-        .is-opened {
-          display: none;
-        }
-      }
-      .tutor-instructor-category-show-more {
-        position: absolute;
-        top: 80%;
-        left: 15px;
-      }
-      &,
-      & > div {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        right: 0;
-      }
-
-      & > div > div:first-child {
-        bottom: auto;
-        top: 0;
-      }
-
-      & {
-        top: 0;
-        background: rgba(0, 0, 0, 0.493);
-      }
-
-      & > div {
-        background: white;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-        height: 80%;
-        overflow: hidden;
-
-        & > div {
-          &:first-child {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 18px;
-            background: white;
-          }
-          &:last-child {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            top: 91%;
-            padding: 18px;
-            background: white;
-          }
-          &:first-child {
-            bottom: auto;
-            top: 0;
-          }
-
-          &:nth-child(2) {
-            overflow-x: hidden;
-            overflow-y: auto;
-            height: 100%;
-            padding: 72px 18px;
-          }
-
-          &:last-child {
-            text-align: center;
-
-            button {
-              width: 100%;
-              text-align: center;
-              display: block;
-            }
-          }
-        }
-      }
-
-      & + .selected-cate-list > span {
-        display: inline-block;
-        background: #161616;
-        color: white;
-        border-radius: 50px;
-        padding: 2px 12px;
-        font-size: 13px;
-        margin: 0 7px 7px 0;
-
-        &:last-child {
-          background: transparent;
-          color: #161616;
-          cursor: pointer;
-        }
-
-        & > span {
-          font-size: 10px;
-          margin-left: 5px;
-          cursor: pointer;
-        }
-      }
-
-      .expand-instructor-filter {
-        width: 60px;
-        height: 6px;
-        background: #c4c4c4;
-        border-radius: 50px;
-        margin: 0 auto;
-        cursor: ns-resize;
-      }
-    }
-    .tutor-courses.pp-left-middle {
-      .tutor-instructor-left-middle {
-        img {
-          width: 96px;
-          height: 96px;
-        }
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-                align-items: center;
-        -webkit-column-gap: 30px;
-        -moz-column-gap: 30px;
-                column-gap: 30px;
-        border: 1px solid $stroke-light-30;
-        -webkit-box-sizing: border-box;
-                box-sizing: border-box;
-        border-radius: 6px;
-        padding: 30px 20px;
-        h4 {
-          @extend .tutor-color-black;
-          @extend .text-medium-h5;
-          margin: 0;
-        }
-
-        .tutor-instructor-profile-photo{
-          flex-shrink: 0;
-        }
-      }
-      .tutor-instructor-profile-photo img {
-        border-radius: 100%;
-        -webkit-border-radius: 100%;
-        -moz-border-radius: 100%;
-        -ms-border-radius: 100%;
-        -o-border-radius: 100%;
-      }
-    }
-  }
-
-  .tutor-category-text,
-  .tutor-instructor-rating-title {
-    & > span {
-      &:nth-of-type(1) {
-        font-style: normal;
-        font-weight: bold;
-        font-size: 16px;
-        text-transform: uppercase;
-        color: $black-70;
-      }
-
-      &:nth-of-type(2) {
-        cursor: pointer;
-        float: right;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 16px;
-        line-height: 26px;
-        color: #7a7a7a;
-        i {
-          font-size: 10px;
-          margin-right: 5px;
-        }
-      }
-    }
-  }
-
-  @media (max-width: 1023px) {
-    .tutor-instructor-filter-sidebar,
-    .filter-pc {
-      display: none;
-    }
-  }
-
-  @media (min-width: 1024px) {
-
-    .filter-mobile {
-      display: none;
-    }
-
-    .tutor-instructor-filter-result {
-      width: 100%;
     }
   }
 }
@@ -542,87 +157,6 @@ Instructor customize filters styles
 
   .filter-result-container{
     position: relative;
-  }
-
-  .tutor-instructor-filter-sidebar {
-    border-right: 1px solid #E3E6EB;
-    padding: 0 7px; // To uncut checkbox highlighting border/background
-    
-    .tutor-instructor-customize-wrapper {
-      @include flexWithAlignJustify(center, space-between, 0);
-      margin-bottom: 48px;
-      .tutor-instructor-filters {
-        @include flexWithAlignJustify(center, flex-start, 6px);
-        i {
-          margin-right: 10px;
-}
-      }
-      .tutor-instructor-customize-clear {
-        padding-right: 22px;
-        @include flexWithAlignJustify(center, flex-start, 6px);
-        cursor: pointer;
-        i {
-          font-size: 10px;
-        }
-        span {
-          font-weight: normal;
-          font-size: 16px;
-          line-height: 26px;
-        }
-      }
-    }
-    .tutor-instructor-rating-range-wrapper {
-      @include flexWithAlignJustify(flex-start, space-between , 0);
-      
-      .tutor-instructor-ratings {
-        margin-top: 23px;
-        i {
-            cursor: pointer;
-            font-size: 22px;
-            color: #C0C3CB;
-        }
-        i.active {
-          @extend .tutor-color-design-warning;
-        }
-      }
-      span {
-        margin-top: 23px;
-        padding-right: 21px;
-      }
-    }
-
-    .tutor-instructor-category-show-more {
-      margin: 17px 0 33px 0;
-     
-      .text-medium-caption {
-        @include flexWithAlignJustify(center, flex-start, 6px);
-        cursor: pointer;
-      }
-      i {
-        transform: scale(1.5);
-        -webkit-transform: scale(1.5);
-        -moz-transform: scale(1.5);
-        -ms-transform: scale(1.5);
-        -o-transform: scale(1.5);
-}
-    }
-  }
-  .tutor-instructor-relevant-short-wrapper {
-    & select {
-      border: none !important;
-    }
-  }
-  .tutor-show-more-blur {
-    position: relative;
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 87px;
-      background: linear-gradient(
-        180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #FFFFFF 100%);
-    }
   }
 }
 

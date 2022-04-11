@@ -6,28 +6,27 @@
 }
 
 .tutor-nav {
+	// admin option tabs
 	&.tutor-option-tabs {
-		> li {
-			> a {
-				color: $black-50;
-				border: 1px solid transparent;
+		.tutor-nav-link {
+			color: $black-50;
+			border: 1px solid transparent;
 
-				&:not(.is-active):not(:hover) {
-					[class^='tutor-icon-'] {
-						color: #9CA0AC;
-					}
+			&:not(.is-active):not(:hover) {
+				[class^='tutor-icon-'] {
+					color: #9CA0AC;
 				}
+			}
 
-				&:hover {
-					background-color: transparent;
-					color: var(--tutor-primary-color);
-				}
+			&:hover {
+				background-color: transparent;
+				color: var(--tutor-primary-color);
+			}
 
-				&.is-active {
-					background-color: #FFFFFF;
-					color: var(--tutor-primary-color);
-					border-color: #e8e8e8;
-				}
+			&.is-active {
+				background-color: #FFFFFF;
+				color: var(--tutor-primary-color);
+				border-color: #e8e8e8;
 			}
 		}
 	}

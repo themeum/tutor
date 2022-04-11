@@ -58,7 +58,7 @@
 								<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
 							</span>
 						<?php endif; ?>
-						<span class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="tutor-modal-<?php echo $modal_id; ?>">
+						<span class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo $modal_id; ?>">
 							<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
 							<?php _e( 'Delete', 'tutor' ); ?>
 						</span>

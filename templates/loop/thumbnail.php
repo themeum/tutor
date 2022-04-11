@@ -16,5 +16,7 @@ $placeholder_img = tutor()->url . 'assets/images/placeholder.png';
 ?>
 
 <a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink">
-    <div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>)"></div>
+    <div class="tutor-course-listing-thumbnail tutor-ratio tutor-ratio-16x9">
+        <img src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
+    </div>
 </a>

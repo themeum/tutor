@@ -9,7 +9,7 @@
 
 ?>
 <div class="tutor-admin-wrap">
-	<div class="tutor-admin-header">
+	<div class="tutor-admin-header is-sticky">
 		<div class="tutor-row tutor-align-items-center">
 			<div class="tutor-col-md-3 tutor-col-lg-4 tutor-mb-16 tutor-mb-md-0">
 				<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Settings', 'tutor' ); ?></span>
@@ -36,7 +36,7 @@
 		<input type="hidden" name="action" value="tutor_option_save">
 		<div class="tutor-row tutor-gx-lg-0 tutor-my-24">
 			<div class="tutor-col-auto tutor-col-lg-2">
-				<ul class="tutor-option-tabs tutor-nav tutor-nav-tabs tutor-nav-v" tutor-option-tabs>
+				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" tutor-option-tabs>
 					<?php
 					foreach ( $option_fields as $key => $section ) {
 						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
@@ -46,8 +46,8 @@
 							$active_class = ' is-active';
 						}
 						?>
-						<li>
-							<a class="tutor-nav-item<?php echo esc_attr( $active_class ); ?>" data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
+						<li class="tutor-nav-item">
+							<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
 								<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
 								<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
 							</a>

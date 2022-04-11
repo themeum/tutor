@@ -118,7 +118,7 @@
       background-size: 8px;
     }
     &:focus:before {
-      box-shadow: 0 0 0 6px var(--tutor-primary-lighter);
+      box-shadow: 0 0 0 6px var(--tutor-primary-lighter-color);
     }
   }
   &:nth-child(2) .icon-col {

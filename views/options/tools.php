@@ -15,15 +15,15 @@
 	<div class="tutor-admin-container">
 		<div class="tutor-row tutor-gx-lg-0 tutor-my-24">
 			<div class="tutor-col-auto tutor-col-lg-2">
-				<ul class="tutor-option-tabs tutor-nav tutor-nav-tabs tutor-nav-v" data-page="<?php esc_attr_e( $_GET['page'] ); ?>">
+				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" data-page="<?php esc_attr_e( $_GET['page'] ); ?>">
 					<?php
 					foreach ( $tools_fields as $key => $section ) {
 						$icon         = tutor()->icon_dir . $key . '.svg';
 						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
 						$page_url     = add_query_arg( 'sub_page', esc_attr( $section['slug'] ), admin_url( 'admin.php?page=tutor-tools' ) );
 						?>
-							<li>
-								<a class="tutor-nav-item<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $page_url ); ?>">
+							<li class="tutor-nav-item">
+								<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $page_url ); ?>">
 									<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
 									<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block"><?php echo esc_html( $section['label'] ); ?></span>
 								</a>

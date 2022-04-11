@@ -1,34 +1,4 @@
 .my-courses {
-	.tutor-course-listing-item-footer {
-		.list-item-button {
-			.tutor-btn {
-				&.tutor-btn-ghost {
-					.btn-icon {
-						font-size: 18px !important;
-					}
-				}
-			}
-		}
-	}
-
-	.list-item-price {
-		& > span {
-			// &:first-child {
-			// 	font-style: normal;
-			// 	font-weight: normal;
-			// 	font-size: 15px;
-			// 	color: #757c8e;
-			// }
-
-			// &:last-child {
-			// 	font-style: normal;
-			// 	font-weight: 500;
-			// 	font-size: 15px;
-			// 	color: #212327;
-			// }
-		}
-	}
-
 	.list-item-button {
 		& > a,
 		& > i {
