@@ -9,7 +9,7 @@
 	// admin option tabs
 	&.tutor-option-tabs {
 		.tutor-nav-link {
-			color: $black-50;
+			color: var(--tutor-color-secondary);
 			border: 1px solid transparent;
 
 			&:not(.is-active):not(:hover) {
@@ -20,12 +20,12 @@
 
 			&:hover {
 				background-color: transparent;
-				color: var(--tutor-primary-color);
+				color: var(--tutor-color-primary);
 			}
 
 			&.is-active {
 				background-color: #FFFFFF;
-				color: var(--tutor-primary-color);
+				color: var(--tutor-color-primary);
 				border-color: #e8e8e8;
 			}
 		}

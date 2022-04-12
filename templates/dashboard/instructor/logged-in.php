@@ -13,9 +13,9 @@ if ( $is_instructor ) {
     <div class="tutor-container">
         <div class="tutor-instructor-application-process tutor-pt-48 tutor-pb-48">
             <div class="tutor-app-process-alert">
-                <div style="border:1px solid var(--tutor-color-brand);" class="tutor-primary tutor-py-12 tutor-px-20 tutor-radius-6">
+                <div style="border:1px solid var(--tutor-color-primary);" class="tutor-primary tutor-py-12 tutor-px-20 tutor-radius-6">
                     <div class="tutor-alert-text tutor-d-flex tutor-align-items-center">
-                    <span class="tutor-icon-circle-info tutor-fs-4 tutor-color-brand tutor-mr-12"></span>
+                    <span class="tutor-icon-circle-info tutor-fs-4 tutor-color-primary tutor-mr-12"></span>
                     <span>
                     <?php
                         if ( $instructor_status == 'pending' ) {
@@ -53,7 +53,7 @@ if ( $is_instructor ) {
                     </span>
                 </div>
                 <div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-24 tutor-pb-48">
-                    <span class="tutor-app-process-subtitle tutor-fs-6 tutor-color-black-60">
+                    <span class="tutor-app-process-subtitle tutor-fs-6 tutor-color-secondary">
                     <?php
                         if ( $instructor_status == 'pending' ) {
                             esc_html_e( 'We\'ve received your application, and we will review it soon. Please hang tight!', 'tutor' );

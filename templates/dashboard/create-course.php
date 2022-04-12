@@ -53,7 +53,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 						<button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft">
 							<!-- @TODO: Icon must be chenged -->
 							<i class="tutor-icon-save-line tutor-fs-5 tutor-mr-8"></i>
-							<span class="tutor-color-black-60"><?php _e('Save', 'tutor'); ?></span>
+							<span class="tutor-color-secondary"><?php _e('Save', 'tutor'); ?></span>
 						</button>
 					</div>
 				</div>
@@ -141,7 +141,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 
 				<div class="tutor-course-builder-section tutor-course-builder-info">
 					<div class="tutor-course-builder-section-title">
-						<span class="tutor-fs-5 tutor-fw-bold tutor-color-black-70">
+						<span class="tutor-fs-5 tutor-fw-bold tutor-color-secondary">
 							<i class="color-text-brand tutor-icon-angle-up tutor-fs-5" area-hidden="true"></i>
 							<span><?php esc_html_e('Course Info', 'tutor'); ?></span>
 						</span>
@@ -272,7 +272,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 			<!-- Course builder tips right sidebar -->
 			<div class="tutor-col-12 tutor-col-lg-4 tutor-mb-32 tutor-pl-40">
 				<div class="tutor-course-builder-upload-tips">
-					<h3 class="tutor-fs-5 tutor-fw-medium tutor-color-black-70 tutor-mb-20">
+					<h3 class="tutor-fs-5 tutor-fw-medium tutor-color-secondary tutor-mb-20">
 						<?php _e('Course Upload Tips', 'tutor'); ?>
 					</h3>
 					<ul>

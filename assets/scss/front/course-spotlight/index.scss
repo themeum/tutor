@@ -61,11 +61,11 @@
 		height: 100vh;
 		overflow-x: hidden;
 		overflow-y: auto;
-		border-left: 1px solid $stroke-light-30;
-		border-top: 1px solid $stroke-light-30;
+		border-left: 1px solid var(--tutor-border-color);
+		border-top: 1px solid var(--tutor-border-color);
 		padding-bottom: 100px;
 		.tutor-single-page-top-bar {
-			background: var(--tutor-primary-color);
+			background: var(--tutor-color-primary);
 			position: relative;
 			z-index: 1025;
 
@@ -94,7 +94,7 @@
 				}
 			}
 			.tutor-topbar-sidebar-toggle {
-				background: var(--tutor-primary-color);
+				background: var(--tutor-color-primary);
 				span[class^='tutor-icon'] {
 					font-size: 20px;
 				}
@@ -109,7 +109,7 @@
 				cursor: pointer;
 				z-index: 1;
 				&:hover {
-					background: var(--tutor-primary-hover-color);
+					background: var(--tutor-color-primary-hover);
 				}
 				span[class^='tutor-icon'] {
 					font-size: 20px;
@@ -126,15 +126,15 @@
 					.tutor-topbar-complete-btn {
 						.tutor-topbar-mark-btn {
 							&:hover {
-								background-color: $color-white;
+								background-color: var(--tutor-color-white);
 								span {
-									color: $color-brand;
+									color: var(--tutor-color-primary);
 								}
-								border-color: $design-white;
+								border-color: var(--tutor-color-white);
 							}
 							background-color: transparent;
-							color: $design-white;
-							border-color: $design-white;
+							color: var(--tutor-color-white);
+							border-color: var(--tutor-color-white);
 						}
 					}
 				}
@@ -143,9 +143,9 @@
 		/* tutor-single-page-top-bar */
 		.tutor-mobile-footer-navigation {
 			height: 90px;
-			border: 1px solid $black-05;
+			border: 1px solid $color-gray-10;
 			box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
-			background: $color-white;
+			background: var(--tutor-color-white);
 			position: fixed;
 			bottom: 0;
 			left: 0;
@@ -156,10 +156,6 @@
 			}
 			.tutor-footer-content {
 				flex-basis: 70%;
-				.tutor-footer-progress-bar {
-					// border-bottom: 4px solid $primary-main;
-					// border-radius: 2px;
-				}
 			}
 			.tutor-quiz-skip-button {
 				flex-basis: 50%;

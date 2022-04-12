@@ -28,7 +28,7 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 							<img src="<?php echo esc_url( get_avatar_url( $announcement->post_author ) ); ?>" alt="instructor avatar" />
 						</div>
 						<div class="tutor-fs-7 tutor-fw-medium">
-							<span class="tutor-fs-7 tutor-color-black-60">by</span> <?php echo esc_html( get_userdata( $announcement->post_author )->display_name ); ?>
+							<span class="tutor-fs-7 tutor-color-secondary">by</span> <?php echo esc_html( get_userdata( $announcement->post_author )->display_name ); ?>
 						</div>
 					</div>
 					<div class="tutor-fs-7">
@@ -37,7 +37,7 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 				</div>
 			</div>
 			<div class="tutor-announcement-body tutor-px-28 tutor-py-24">
-				<div class="tutor-fs-6 tutor-color-black-60">
+				<div class="tutor-fs-6 tutor-color-secondary">
 					<?php
 						echo tutor_utils()->announcement_content( wpautop( stripslashes( $announcement->post_content ) ) );
 					?>

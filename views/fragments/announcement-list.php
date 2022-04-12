@@ -98,7 +98,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 					<div class="tutor-py-20 tutor-px-24">
 						<div class="tutor-row tutor-mb-60">
 							<div class="tutor-col-lg-7 tutor-mb-16 tutor-mb-lg-0">
-								<div class="tutor-fs-7 tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-secondary">
 									<?php _e( 'Course', 'tutor' ); ?>
 								</div>
 								<div class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mt-4">
@@ -107,7 +107,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 							</div>
 
 							<div class="tutor-col-lg-5">
-								<div class="tutor-fs-7 tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-secondary">
 									<?php _e( 'Published Date', 'tutor' ); ?>
 								</div>
 								<div class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mt-4">
@@ -191,19 +191,19 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							</div>
 						</th>
 						<th width="17%">
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Date', 'tutor-pro'); ?>
 							</div>
 						</th>
 					<?php else : ?>
 						<th width="17%" class="tutor-shrink">
-							<span class="tutor-fs-7 tutor-color-black-60">
+							<span class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Date', 'tutor'); ?>
 							</span>
 						</th>
 					<?php endif; ?>
 					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-black-60 tutor-fs-7">
+						<div class="tutor-color-secondary tutor-fs-7">
 							<?php esc_html_e( 'Announcements', 'tutor' ); ?>
 						</div>
 					</th>
@@ -256,7 +256,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 									<div class="td-course tutor-color-black tutor-fs-6 tutor-fw-medium">
 										<?php echo esc_html( $announcement->post_title ); ?>
 									</div>
-									<div class="tutor-fs-7 tutor-fw-medium tutor-color-black-60" style="margin-top: 3px;">
+									<div class="tutor-fs-7 tutor-fw-medium tutor-color-secondary" style="margin-top: 3px;">
 										<?php esc_html_e( 'Course', 'tutor' ); ?>: <?php echo esc_html( $course ? $course->post_title : '' ); ?>
 									</div>
 								</div>

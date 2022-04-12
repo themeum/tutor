@@ -72,17 +72,17 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 			<thead>
 				<tr>
 					<th>
-						<span class="tutor-fs-7 tutor-color-black-60">
+						<span class="tutor-fs-7 tutor-color-secondary">
 							<?php esc_html_e( 'Assignment Name', 'tutor' ); ?>
 						</span>
 					</th>
 					<th>
-						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
+						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Marks', 'tutor' ); ?></span>
 						</div>
 					</th>
 					<th>
-						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
+						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Submit', 'tutor' ); ?></span>
 						</div>
 					</th>
@@ -104,7 +104,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 								<div class="tutor-color-black td-course tutor-fs-6 tutor-fw-medium">
 									<a href="#"><?php esc_html_e( $item->post_title ); ?></a>
 									<div class="course-meta">
-										<span class="tutor-color-black-60 tutor-fs-7">
+										<span class="tutor-color-secondary tutor-fs-7">
 											<strong class="tutor-fs-7 tutor-fw-medium"><?php esc_html_e( 'Course', 'tutor' ); ?>: </strong>
 											<a href='<?php echo esc_url( get_the_permalink( $course_id ) ); ?>' target="_blank"><?php echo esc_html_e( get_the_title( $course_id ) ); ?> </a>
 										</span>

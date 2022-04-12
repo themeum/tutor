@@ -9,6 +9,10 @@
 	}
 }
 
+.tutor-video-player-wrapper {
+	position: relative;
+}
+
 .tutor-course-single-content-wraper {
 	.tutor-single-course-content-prev,
 	.tutor-single-course-content-next {
@@ -97,23 +101,14 @@
 
 	// .course-players {
 	.tutor-video-player {
-		width: 100%;
-		margin: auto;
-		aspect-ratio: 16 / 9;
-		max-height: 700px;
-		position: relative;
-		overflow: hidden;
-		.plyr--html5 {
-			aspect-ratio: 16 / 9;
-		}
 		.loading-spinner {
 			position: absolute;
 			inset: 0;
-			background: $bg-gray-10;
+			background: var(--tutor-color-gray-10);
 			border-radius: 3px;
 			z-index: 10;
 
-			@include spinner(#1973aa, #eee);
+			@include spinner(var(--tutor-color-primary), #eee);
 		}
 
 		.loading-spinner::before {

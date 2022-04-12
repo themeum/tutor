@@ -25,7 +25,7 @@
                 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16">
                     <?php _e('Share Course', 'tutor'); ?>
                 </div>
-                <div class="tutor-fs-7 tutor-color-black-60 tutor-mb-12">
+                <div class="tutor-fs-7 tutor-color-secondary tutor-mb-12">
                     <?php _e('Page Link', 'tutor') ?>
                 </div>
                 <div class="tutor-mb-32">

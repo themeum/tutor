@@ -113,12 +113,12 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 
 							<div class="tutor-row tutor-mt-32">
 								<div class="tutor-col">
-									<div class="tutor-fs-6 tutor-color-black-70 tutor-mb-4"><?php esc_html_e( 'Current Balance', 'tutor' ); ?></div>
+									<div class="tutor-fs-6 tutor-color-secondary tutor-mb-4"><?php esc_html_e( 'Current Balance', 'tutor' ); ?></div>
 									<div class="tutor-fs-6 tutor-fw-bold tutor-color-black"><?php echo wp_kses_post( $balance_formatted ); ?></div>
 								</div>
 
 								<div class="tutor-col">
-									<div class="tutor-fs-6 tutor-color-black-70 tutor-mb-4"><?php esc_html_e( 'Selected Payment Method', 'tutor' ); ?></div>
+									<div class="tutor-fs-6 tutor-color-secondary tutor-mb-4"><?php esc_html_e( 'Selected Payment Method', 'tutor' ); ?></div>
 									<div class="tutor-fs-6 tutor-fw-bold tutor-color-black"><?php esc_html_e( $withdraw_method_name ); ?></div>
 								</div>
 							</div>
@@ -181,7 +181,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 			</div>
 
 			<table class="tutor-ui-table tutor-ui-table-responsive">
-				<thead class="tutor-fs-7 tutor-color-black-60">
+				<thead class="tutor-fs-7 tutor-color-secondary">
 					<tr>
 						<th width="40%">
 							<div>

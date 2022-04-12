@@ -24,7 +24,7 @@
 }
 
 .tutor-dashboard-assignment-submitted-table tr td a:hover {
-	color: var(--tutor-primary-color);
+	color: var(--tutor-color-primary);
 }
 
 .tutor-dashboard-assignment-submitted-table tr td,
@@ -47,19 +47,19 @@
 .tutor-assignment-review-header h3 a {
 	font-size: 22px;
 	font-weight: 700;
-	color: var(--tutor-text-color);
+	color: var(--tutor-body-color);
 	display: block;
 }
 
 .tutor-assignment-review-header p {
 	margin: 0;
-	color: var(--tutor-text-color);
+	color: var(--tutor-body-color);
 	font-weight: 400;
 }
 
 .tutor-assignment-review-header p a {
 	font-weight: 400;
-	color: var(--tutor-text-color);
+	color: var(--tutor-body-color);
 }
 
 .tutor-assignment-review-header a {
@@ -67,7 +67,7 @@
 }
 
 .tutor-assignment-review-header a:hover {
-	color: var(--tutor-primary-color);
+	color: var(--tutor-color-primary);
 }
 
 .tutor-option-field-label label br {
@@ -95,7 +95,7 @@
 }
 
 .tutor-dashboard-student-info h4 a {
-	color: var(--tutor-text-color);
+	color: var(--tutor-body-color);
 }
 
 .tutor-dashboard-user-role {
@@ -114,45 +114,6 @@
 }
 
 /** Earning Report */
-
-.tutor-date-range-filter-wrap {
-	margin: 15px 0 20px;
-	font-size: 12px;
-}
-
-.report-top-sub-menu {
-	margin: 0 10px 5px 0;
-	display: inline-block;
-	font-size: 0;
-	a {
-		text-decoration: none;
-		padding: 5px 8px;
-		border: 1px solid #d7dadf;
-		color: #aaaeb3;
-		white-space: nowrap;
-		display: inline-block;
-		font-size: 12px;
-		&:not(:first-child) {
-			margin-left: -1px;
-		}
-		&:hover {
-			background: #edf0f9;
-			color: #333;
-		}
-		&:hover,
-		&:active,
-		&:focus {
-			outline: none;
-		}
-		&.active {
-			background-color: var(--tutor-primary-color);
-			color: #ffffff;
-			border: 1px solid var(--tutor-primary-hover-color);
-		}
-	}
-}
-
-/** Menu divider/separator */
 
 .tutor-dashboard-menu-divider {
 	height: 1px;
@@ -182,13 +143,6 @@
 	width: 100%;
 }
 
-// .date-range-input input {
-// 	border-radius: 0 !important;
-// 	margin: 0 !important;
-// 	border-right: none !important;
-// 	font-size: 14px;
-// }
-
 .date-range-input:last-child {
 	margin-right: 0;
 }
@@ -199,7 +153,6 @@
 
 .date-range-input input,
 .date-range-input input[type='text'] {
-	// border: 1px solid #d7dadf;
 	box-shadow: none;
 	line-height: 29px;
 	margin: 0;
@@ -216,7 +169,7 @@
 }
 
 .date-range-input button {
-	background-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
 	color: #ffffff;
 	border: none;
 	line-height: 30px;
@@ -224,7 +177,7 @@
 }
 
 .date-range-input button:hover {
-	background-color: var(--tutor-primary-hover-color);
+	background-color: var(--tutor-color-primary-hover);
 }
 
 .report-download-csv-icon {
@@ -251,32 +204,10 @@ table.tutor-dashboard-statement-table p.small-text {
 
 /** ENd earning report **/
 
-.tutor-mycourse-thumbnail {
-	flex: 0 0 250px;
-	background-size: cover;
-	background-position: center;
-}
-
 @media (max-width: 580px) {
-	.tutor-mycourse-thumbnail {
-		height: 200px;
-	}
-	.tutor-mycourse-thumbnail {
-		min-width: 100%;
-		width: 100%;
-	}
 	.profile-completion-warning-details li {
 		display: block !important;
 	}
-}
-
-.tutor-mycourse-rating {
-	color: #f8c51c;
-	font-size: 14px;
-}
-
-.tutor-mycourse-rating i {
-	margin-right: 4px;
 }
 
 .tutor-mycourse-view,
@@ -288,10 +219,10 @@ table.tutor-dashboard-statement-table p.small-text {
 		line-height: inherit;
 		display: inline-block;
 		vertical-align: top;
-		color: var(--tutor-primary-color);
+		color: var(--tutor-color-primary);
 	}
 	&:hover {
-		color: var(--tutor-primary-color);
+		color: var(--tutor-color-primary);
 	}
 }
 
@@ -315,26 +246,12 @@ table.tutor-dashboard-statement-table p.small-text {
 	display: none;
 }
 
-.tutor-dashboard-content-inner .tutor-mycourse-wrap .tutor-mycourse-rating {
-	margin-bottom: 3px;
-}
-
-.tutor-dashboard-content-inner .tutor-mycourse-wrap .tutor-mycourse-rating a {
-	font-weight: 400;
-	margin-left: 5px;
-	color: #8c94a8;
-}
-
-.tutor-dashboard-content-inner .tutor-mycourse-wrap .tutor-mycourse-rating a:hover {
-	color: var(--tutor-primary-color);
-}
-
 .tutor-dashboard-content-inner .tutor-mycourse-wrap p:last-child {
 	margin-bottom: 0;
 }
 
 .tutor-dashboard-content-inner h3 a {
-	color: var(--tutor-text-color);
+	color: var(--tutor-body-color);
 	font-size: 22px;
 	line-height: 28px;
 	font-weight: 500;

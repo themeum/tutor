@@ -11,20 +11,6 @@
         bottom: 0;
     }
     .tutor-dashboard-header {
-        // .tutor-star-rating-group {
-        //     margin-right: 3px;
-        // }
-
-        .tutor-dashboard-header-avatar {
-            background-size: cover;
-            width: 80px;
-            height: 80px;
-            background-position: center;
-            border-radius: 50%;
-            -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-        }
-    
         .tutor-dashboard-header-info {
             flex: 1;
             flex-grow: 1;
@@ -38,7 +24,7 @@
                     font-style: normal;
                     font-weight: 500;
                     font-size: 30px;
-                    color: $black-main;
+                    color: var(--tutor-color-body);
                 }
             }
     

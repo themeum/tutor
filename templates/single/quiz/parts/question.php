@@ -73,7 +73,7 @@
 
 						$question_description = nl2br( stripslashes( $question->question_description ) );
 						if ( $question_description ) {
-							echo "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-black-60'>{$question_description}</span></div>";
+							echo "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
 						}
 					?>
 					</div>

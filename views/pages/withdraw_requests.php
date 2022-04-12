@@ -81,40 +81,40 @@ $filters = array(
 				<thead class="tutor-text-sm tutor-text-400">
 					<tr>
 						<th>
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Request Date', 'tutor' ); ?>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<span>
 									<?php esc_html_e( 'Request By', 'tutor' ); ?>
 								</span>
-								<span class="tutor-icon-ordering-a-z  a-to-z-sort-icon tutor-color-black-60"></span>
+								<span class="tutor-icon-ordering-a-z  a-to-z-sort-icon tutor-color-secondary"></span>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Withdraw Method', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Withdraw Details', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Amount', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Update', 'tutor' ); ?>
 							</div>
 						</th>
@@ -151,7 +151,7 @@ $filters = array(
 													<span class="tutor-icon-external-link"></span>
 												</a>
 											</div>
-											<span class="tutor-color-black-70 tutor-fs-7">
+											<span class="tutor-color-secondary tutor-fs-7">
 												<?php echo esc_html( $user_data->user_email ); ?>
 											</span>
 									</div>
@@ -284,7 +284,7 @@ $filters = array(
 										</div>
 										<div class="tooltip-wrap tutor-ml-lg-20 tutor-ml-0">
 											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-												<i class="tutor-icon-circle-info tutor-color-black-20 "></i>
+												<i class="tutor-icon-circle-info tutor-color-muted"></i>
 											</span>
 											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-left">
 												<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-items-center">

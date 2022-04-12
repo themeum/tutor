@@ -37,9 +37,10 @@
 					
 					// @todo: need to change active class selector
 					if (wrappedElements.length) {
-						var newSet = wrappedElements.clone();
+						var dropdownElements = wrappedElements.clone();
+						dropdownElements.find('a.tutor-nav-link').addClass('tutor-dropdown-item').removeClass('tutor-nav-link');
 						wrappedElements.addClass('tutor-d-none');
-						$(nav).find('.tutor-nav-more-list').append(newSet);		
+						$(nav).find('.tutor-nav-more-list').append(dropdownElements);		
 						$(nav).find('.tutor-nav-more').removeClass('tutor-d-none').addClass('tutor-d-inline-block');
 						if($(nav).find('.tutor-nav-more-list .is-active').length) {
 							$(nav).find('.tutor-nav-more-link').addClass('is-active');

@@ -56,7 +56,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 			</div>
 			<div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
 				<span class="tutor-icon-brand-youtube-bold tutor-color-white tutor-mr-8"></span>
-				<span class="tutor-fs-7 tutor-color-design-white">
+				<span class="tutor-fs-7 tutor-color-white">
 					<?php
 						esc_html_e( 'Lesson: ', 'tutor' );
 						the_title();
@@ -69,7 +69,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 				<?php
 					do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' );
 				?>
-				<div class="tutor-fs-7 tutor-color-design-white">
+				<div class="tutor-fs-7 tutor-color-white">
 					<?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
 						<span class="tutor-progress-content tutor-color-primary-60">
 							<?php _e( 'Your Progress:', 'tutor' ); ?>
@@ -126,7 +126,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 		</div>
 		<div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
 			<span class="tutor-icon-brand-youtube-bold tutor-color-white tutor-mr-8"></span>
-			<span class="tutor-fs-7 tutor-color-design-white">
+			<span class="tutor-fs-7 tutor-color-white">
 				<?php
 					esc_html_e( 'Lesson: ', 'tutor' );
 					the_title();
@@ -211,7 +211,7 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 				<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 					<?php _e( 'About Lesson', 'tutor' ); ?>
 				</div>
-				<div class="tutor-fs-6 tutor-color-black-60" style="min-height: 300px;">
+				<div class="tutor-fs-6 tutor-color-secondary" style="min-height: 300px;">
 					<?php the_content(); ?>
 				</div>
 			</div>

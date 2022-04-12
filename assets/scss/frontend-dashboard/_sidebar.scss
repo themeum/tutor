@@ -17,31 +17,30 @@
 			&:hover {
 				&::before {
 					opacity: 1;
-					color: var(--tutor-primary-hover-color);
+					color: var(--tutor-color-primary-hover);
 				}
 			}
 		}
 
 		li {
 			a {
-				// display: block;
-				padding: 7px 20px;
+				padding: 8px 20px;
 
 				&:hover {
-					background-color: #edf0f9;
+					background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
 				}
 			}
 
 			&.active a {
-				background-color: var(--tutor-primary-color);
-				color: var(--tutor-primary-text-color);
+				background-color: var(--tutor-color-primary);
+				color: var(--tutor-color-white);
 
 				&:hover {
-					background-color: var(--tutor-primary-hover-color);
+					background-color: var(--tutor-color-primary-hover);
 				}
 
 				&::before {
-					color: var(--tutor-primary-text-color);
+					color: var(--tutor-color-white);
 				}
 			}
 		}
@@ -55,18 +54,18 @@
 			border-top-left-radius: 4px;
 			border-bottom-left-radius: 4px;
 			@extend .tutor-text-regular-body;
-			color: $black-main;
+			color: var(--tutor-color-body);
 		}
 		&-icon {
 			font-size: 24px;
-			color: var(--tutor-primary-color);
+			color: var(--tutor-color-primary);
 		}
 
 		&.active {
 			a {
-				color: $text-white;
+				color:var(--tutor-color-white);
 				.tutor-dashboard-menu-item-icon {
-					color: $text-white;
+					color: var(--tutor-color-white);
 				}
 			}
 		}
@@ -107,20 +106,6 @@
 			top: 0;
 			border-right: 1px solid #dcdfe5;
 			z-index: 1;
-		}
-	}
-	@include breakpoint-max(desktop-lg) {
-		.tutor-dashboard-menu-item-link {
-			font-size: 14px;
-		}
-
-		.tutor-dashboard-menu-item-icon {
-			font-size: 24px;
-			display: flex;
-			align-items: center;
-		}
-		.tutor-dashboard-menu-item-text {
-			margin-left: 0;
 		}
 	}
 }

@@ -84,27 +84,27 @@ $offset      = ( $per_page * $paged ) - $per_page;
         <?php if ( tutor_utils()->count ( $orders ) ) { ?>
         <thead class="tutor-fs-7 tutor-fw-medium">
             <th>
-                <div class="tutor-fs-7 tutor-color-black-60">
+                <div class="tutor-fs-7 tutor-color-secondary">
                     <?php esc_html_e( 'Order ID', 'tutor' ); ?>
                 </div>
             </th>
             <th>
-                <div class="tutor-fs-7 tutor-color-black-60">
+                <div class="tutor-fs-7 tutor-color-secondary">
                     <?php esc_html_e( 'Course Name', 'tutor' ); ?>
                 </div>
             </th>
             <th>
-                <div class="tutor-fs-7 tutor-color-black-60">
+                <div class="tutor-fs-7 tutor-color-secondary">
                     <?php esc_html_e( 'Date', 'tutor' ); ?>
                 </div>
             </th>
             <th>
-                <div class="tutor-fs-7 tutor-color-black-60">
+                <div class="tutor-fs-7 tutor-color-secondary">
                     <?php esc_html_e( 'Price', 'tutor' ); ?>
                 </div>
             </th>
             <th>
-                <div class="tutor-fs-7 tutor-color-black-60">
+                <div class="tutor-fs-7 tutor-color-secondary">
                     <?php esc_html_e( 'Status', 'tutor' ); ?>
                 </div>
             </th>

@@ -175,7 +175,7 @@
 }
 #tutor-metabox-course-settings-tabs {
 	background-color: #fff;
-	border: 1px solid $stroke-light-30;
+	border: 1px solid var(--tutor-border-color);
 	box-sizing: border-box;
 	border-radius: 6px;
 	width: 100%;
@@ -202,7 +202,7 @@
 
 		.settings-tabs-navs-wrap {
 			flex: 0 0 200px;
-			background: $black-05;
+			background: $color-gray-10;
 			border-top-left-radius: 6px;
 			border-bottom-left-radius: 6px;
 			overflow: hidden;
@@ -258,7 +258,7 @@
 					&.active {
 						a {
 							background-color: white;
-							border-left: 3px solid var(--tutor-primary-color);
+							border-left: 3px solid var(--tutor-color-primary);
 							border-bottom-color: #e5e5e5;
 							border-top-color: #e5e5e5;
 						}

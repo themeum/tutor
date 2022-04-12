@@ -50,15 +50,15 @@
 }
 
 .tutor-text-danger {
-	color: var(--tutor-danger) !important;
+	color: var(--tutor-danger-color) !important;
 }
 
 .tutor-text-dark {
-	color: var(--tutor-text-primary) !important;
+	color: var(--tutor-body-color) !important;
 }
 
 .tutor-text-primary {
-	color: var(--tutor-primary) !important;
+	color: var(--tutor-color-primary) !important;
 }
 
 // bg
@@ -72,7 +72,7 @@
 }
 
 .tutor-bg-primary {
-	background-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
 }
 
 .tutor-bg-success {
@@ -84,7 +84,7 @@
 }
 
 .tutor-bg-danger {
-	background-color: var(--tutor-danger);
+	background-color: var(--tutor-danger-color);
 }
 
 .tutor-bg-white {
@@ -93,10 +93,6 @@
 
 .tutor-bg-light {
 	background-color: #fdfdfd;
-}
-
-.tutor-bg-gray-10 {
-	background-color: $bg-gray-10 !important;
 }
 
 .tutor-bg-transparent {
@@ -222,20 +218,6 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 	}
 }
 
-$border: (
-	'p40' $primary-40,
-	'p50' $primary-50,
-	'p60' $primary-60,
-	'sl10' $stroke-light-10,
-	'sl20' $stroke-light-20,
-	'sl30' $stroke-light-30
-);
-@each $pre, $b in $border {
-	.tutor-border-#{$pre} {
-		border: 1px solid #{$b};
-	}
-}
-
 // line height
 .tutor-lh-1 {
 	line-height: 1 !important;
@@ -321,8 +303,8 @@ $border: (
 	height: 60px;
 	border-radius: 80px;
 	overflow: hidden;
-	color: var(--tutor-primary-color);
-	background: var(--tutor-primary-lighter-color);
+	color: var(--tutor-color-primary);
+	background: rgba(var(--tutor-color-primary-rgb), 0.1);
 
 	[class^='tutor-icon-'],
 	[class*=' tutor-icon-'],

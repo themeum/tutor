@@ -38,7 +38,7 @@
 					<div class="tutor-alert tutor-warning tutor-mt-32">
 						<div class="tutor-alert-text">
 							<span class="tutor-alert-icon tutor-fs-4 tutor-icon-warning tutor-mr-12"></span>
-							<span class="color-warning-100" data-modal-dynamic-content></span>
+							<span class="tutor-color-warning" data-modal-dynamic-content></span>
 						</div>
 					</div>
 

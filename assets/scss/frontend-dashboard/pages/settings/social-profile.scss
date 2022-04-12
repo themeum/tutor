@@ -1,14 +1,14 @@
 .tutor-dashboard-setting-social{
     .tutor-social-field {
-        &>div:first-child {
+        & > div:first-child {
             font-style: normal;
             font-weight: normal;
             font-size: 15px;
-            color: $black-60;
+            color: var(--tutor-color-secondary);
             padding-top: 5px;
             padding-bottom: 5px;
 
-            i{
+            i {
                 color: #1A1B1E;
                 display: inline-block;
                 width: 20px;

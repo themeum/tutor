@@ -13,7 +13,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
             <?php
             foreach ($table_columns as $key => $column) {
                 echo '<th>
-                    <span class="tutor-fs-7 tutor-color-black-60" style="' . ($key == 'action' ? 'visibility:hidden' : '') . '">' .
+                    <span class="tutor-fs-7 tutor-color-secondary" style="' . ($key == 'action' ? 'visibility:hidden' : '') . '">' .
                         $column
                     . '</span>
                 </th>';
@@ -104,7 +104,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                     echo esc_html($content);
                                                     ?>
                                                 </div>
-                                                <div class="tutor-fs-7 tutor-color-black-60">
+                                                <div class="tutor-fs-7 tutor-color-secondary">
                                                     <span class="tutor-fw-medium"><?php _e('Course'); ?>:</span>
                                                     <span><?php echo $qna->post_title; ?></span>
                                                 </div>
@@ -137,7 +137,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             ?>
                                 <td data-th="<?php echo $column; ?>" class="v-align-top">
                                     <div class="tooltip-wrap tooltip-icon-custom" >
-                                        <i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-text-success' : 'tutor-icon-circle-mark-line tutor-color-black-40'; ?>"></i>
+                                        <i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
                                         <span class="tooltip-txt tooltip-bottom">
                                             <?php $is_solved ? _e('Solved', 'tutor') : _e('Unresolved Yet', 'tutor'); ?>
                                         </span>

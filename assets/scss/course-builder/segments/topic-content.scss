@@ -17,10 +17,10 @@
 			border-bottom: 1px solid #f6f8fa;
 			padding-bottom: 0;
 			margin: 0;
-			background: $black-05;
+			background: $color-gray-10;
 			border-radius: 6px;
 			margin-bottom: 15px;
-			border: 1px solid $stroke-light-30;
+			border: 1px solid var(--tutor-border-color);
 			overflow: hidden;
 			.tutor-topic-title {
 				display: flex;
@@ -32,7 +32,7 @@
 					font-style: normal;
 					font-weight: 500;
 					font-size: 16px;
-					color: $black-main;
+					color: var(--tutor-color-body);
 					flex: 1;
 					
 					a {
@@ -46,7 +46,7 @@
 					justify-content: center;
 					height: 48px;
 					padding: 4px 16px;
-					color: var(--tutor-primary-color);
+					color: var(--tutor-color-primary);
 					margin-left: 4px;
 					cursor: pointer;
 
@@ -62,7 +62,7 @@
 
 				.course-content-item {
 					padding: 10px 10px 10px 10px;
-					border: 1px solid $stroke-light-30;
+					border: 1px solid var(--tutor-border-color);
 					box-sizing: border-box;
 					border-radius: 6px;
 					margin-bottom: 16px;

@@ -71,7 +71,7 @@ function tutor_option_history_load(dataset) {
 			let dataKey = value[0];
 			let dataValue = value[1];
 
-			let badgeStatus = dataValue.datatype == 'saved' ? ' label-primary-wp' : ' label-refund';
+			let badgeStatus = dataValue.datatype == 'saved' ? ' label-primary' : ' label-refund';
 			output += `<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
 						<p class="tutor-fs-7 tutor-fw-medium">${dataValue.history_date}

@@ -31,7 +31,7 @@ if ( $total_categories && $total_categories > $limit ) {
 		<aside class="tutor-col-lg-3 tutor-mb-32 tutor-mb-lg-0" tutor-instructors-filters>
 			<div class="tutor-d-flex tutor-align-items-center">
 				<div>
-					<span class="tutor-icon-slider-vertical tutor-color-brand tutor-mr-8" area-hidden="true"></span>
+					<span class="tutor-icon-slider-vertical tutor-color-primary tutor-mr-8" area-hidden="true"></span>
 					<span class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php _e("Filters", "tutor"); ?></span>
 				</div>
 
