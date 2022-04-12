@@ -199,9 +199,11 @@ class Shortcode {
 
 	private function prepare_instructor_list( $current_page, $atts, $cat_ids = array(), $keyword = '' ) {
 
-		$limit         = (int) sanitize_text_field( tutor_utils()->array_get( 'count', $atts, 9 ) );
+		$default_pagination = tutor_utils()->get_option('pagination_per_page', 9);
+		$limit         = (int) sanitize_text_field( tutor_utils()->array_get( 'count', $atts, $default_pagination ) );
 		$page          = $current_page - 1;
 		$rating_filter = isset( $_POST['rating_filter'] ) ? $_POST['rating_filter'] : '';
+
 		/**
 		 * Short by Relevant | New | Popular
 		 *
@@ -216,10 +218,7 @@ class Shortcode {
 			$short_by = 'ASC';
 		}
 		$instructors      = tutor_utils()->get_instructors( $limit * $page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter );
-		$next_instructors = tutor_utils()->get_instructors( $limit * $current_page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter );
-
-		$previous_page = $page > 0 ? $current_page - 1 : null;
-		$next_page     = ( is_array( $next_instructors ) && count( $next_instructors ) > 0 ) ? $current_page + 1 : null;
+		$instructors_count = tutor_utils()->get_instructors( $limit * $page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter, true );
 
 		$layout = sanitize_text_field( tutor_utils()->array_get( 'layout', $atts, '' ) );
 		$layout = in_array( $layout, $this->instructor_layout ) ? $layout : tutor_utils()->get_option( 'instructor_list_layout', $this->instructor_layout[0] );
@@ -227,12 +226,12 @@ class Shortcode {
 
 		$payload = array(
 			'instructors'   => is_array( $instructors ) ? $instructors : array(),
-			'next_page'     => $next_page,
-			'previous_page' => $previous_page,
+			'instructors_count' => $instructors_count,
 			'column_count'  => sanitize_text_field( tutor_utils()->array_get( 'column_per_row', $atts, $default_col ) ),
 			'layout'        => $layout,
 			'limit'         => $limit,
 			'current_page'  => $current_page,
+			'filter'		=> $atts
 		);
 
 		return $payload;
@@ -369,8 +368,7 @@ class Shortcode {
 		tutor_utils()->checking_nonce();
 
 		$_post 		  = tutor_sanitize_data($_POST);
-		$attributes   = (array) tutor_utils()->array_get( 'attributes', $_post, array() );
-		$current_page = (int) sanitize_text_field( tutor_utils()->array_get( 'current_page', $attributes, 1 ) );
+		$current_page = (int) sanitize_text_field( tutor_utils()->array_get( 'current_page', $_post, 1 ) );
 		$keyword      = (string) sanitize_text_field( tutor_utils()->array_get( 'keyword', $_post, '' ) );
 
 		$category = (array) tutor_utils()->array_get( 'category', $_post, array() );
@@ -381,9 +379,11 @@ class Shortcode {
 			}
 		);
 
-		$payload = $this->prepare_instructor_list( $current_page, $attributes, $category, $keyword );
+		$data = $this->prepare_instructor_list( $current_page, $_post, $category, $keyword );
 
-		tutor_load_template( 'shortcode.tutor-instructor', $payload );
+		ob_start();
+		tutor_load_template( 'shortcode.tutor-instructor', $data );
+		wp_send_json_success( array('html' => ob_get_clean() ) );
 		exit;
 	}
 
