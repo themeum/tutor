@@ -2992,33 +2992,34 @@ class Utils {
 						' DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status ';
 
 		$query = $wpdb->prepare(
-				"SELECT {$select_col}
-				FROM {$wpdb->users} user
-					INNER JOIN {$wpdb->usermeta} user_meta
-							ON ( user.ID = user_meta.user_id )
-					INNER JOIN {$wpdb->usermeta} inst_status
-							ON ( user.ID = inst_status.user_id )
-					{$category_join}
-					LEFT JOIN {$wpdb->usermeta} AS umeta
-						ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
-					LEFT JOIN {$wpdb->comments} AS c
-						ON c.comment_post_ID = umeta.meta_value
-					LEFT JOIN {$wpdb->commentmeta} AS cmeta
-						ON cmeta.comment_id = c.comment_ID
-						AND cmeta.meta_key = 'tutor_rating'
-				WHERE 	user_meta.meta_key = '_is_tutor_instructor'
-					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
-					{$status}
-					{$category_where}
-					{$course_filter}
-					{$date_filter}
-				GROUP BY user.ID {$rating_having} {$order_query} {$limit_offset}",
-				
-				$search_filter,
-				$search_filter
-			);
+			"SELECT {$select_col}
+			FROM {$wpdb->users} user
+				INNER JOIN {$wpdb->usermeta} user_meta
+						ON ( user.ID = user_meta.user_id )
+				INNER JOIN {$wpdb->usermeta} inst_status
+						ON ( user.ID = inst_status.user_id )
+				{$category_join}
+				LEFT JOIN {$wpdb->usermeta} AS umeta
+					ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
+				LEFT JOIN {$wpdb->comments} AS c
+					ON c.comment_post_ID = umeta.meta_value
+				LEFT JOIN {$wpdb->commentmeta} AS cmeta
+					ON cmeta.comment_id = c.comment_ID
+					AND cmeta.meta_key = 'tutor_rating'
+			WHERE 	user_meta.meta_key = '_is_tutor_instructor'
+				AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+				{$status}
+				{$category_where}
+				{$course_filter}
+				{$date_filter}
+			GROUP BY user.ID {$rating_having} {$order_query} {$limit_offset}",
+			
+			$search_filter,
+			$search_filter
+		);
 
-		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query);
+		$results = $wpdb->get_results($query);
+		return $count_only ? count($results) : $results;
 	}
 
 	/**
