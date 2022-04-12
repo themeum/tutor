@@ -30,7 +30,7 @@ jQuery(document).ready(function($) {
 				data: filter_args,
 				type: 'POST',
 				success: function(r) {
-					result_container.html(r);
+					result_container.html((r.data || {}).html);
 				},
 				error: function() {
 					result_container.html(html_cache);
