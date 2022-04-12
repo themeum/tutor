@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Course_List;
 
-$courses = new Course_List();
+$courses = \TUTOR\Tutor::instance()->course_list;
 
 /**
  * Short able params
