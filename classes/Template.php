@@ -353,14 +353,22 @@ class Template extends Tutor_Base {
 	 * @return bool|string
 	 *
 	 * @since v.1.0.0
+	 *
+	 * If course public then enrollment not required
+	 *
+	 * @since v2.0.2
 	 */
 	public function load_quiz_template( $template ) {
-		global $wp_query;
+		global $wp_query, $post;
 
 		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === 'tutor_quiz' ) {
 			if ( is_user_logged_in() ) {
 				$has_content_access = tutor_utils()->has_enrolled_content_access( 'quiz' );
-				if ( $has_content_access ) {
+				$course_id 			= tutor_utils()->get_course_id_by_content( $post );
+				$is_public 			= Course_List::is_public( $course_id );
+
+				// if public course don't need to be enrolled.
+				if ( $has_content_access || $is_public ) {
 					$template = tutor_get_template( 'single-quiz' );
 				} else {
 					$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first

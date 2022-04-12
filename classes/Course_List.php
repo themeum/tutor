@@ -492,4 +492,16 @@ class Course_List {
 		);
 		return true;
 	}
+
+	/**
+	 * Check wheather course is public or not
+	 *
+	 * @param integer $course_id  course id to check with.
+	 *
+	 * @return boolean  true if public otherwise false.
+	 */
+	public static function is_public( int $course_id ): bool {
+		$is_public = get_post_meta( $course_id, '_tutor_is_public_course', true );
+		return 'yes' === $is_public ? true : false;
+	}
 }
