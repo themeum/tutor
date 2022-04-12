@@ -9,7 +9,7 @@ $download = new EDD_Download( $product_id );
 if ($download->ID) {
 	if(!is_user_logged_in()) {
 		/**
-		 * Add required loggedin class
+		 * Add required logged in class
 		 * @since v 1.5.5
 		 */
 		$button_behavior = edd_get_download_button_behavior( $download->ID );

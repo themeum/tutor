@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $course_archive_arg = isset($GLOBALS['tutor_course_archive_arg']) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
-$courseCols = $course_archive_arg===null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
+$columns = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
+
 ?>
-<div class="<?php if ($courseCols !== 2) { echo esc_html("tutor-course-listing-item tutor-course-listing-item-sm"); } else{ echo "tutor-course-listing-item"; } ?>">
+<div class="<?php echo tutor_utils()->get_responsive_columns( (int) $columns ); ?> tutor-mb-32">
+	<div class="tutor-course-list-item tutor-card">

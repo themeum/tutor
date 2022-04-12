@@ -3493,7 +3493,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_tutor_avatar( $user_id = null, $size = 'sm' ) {
+	public function get_tutor_avatar( $user_id = null, $size = '' ) {
 		global $wpdb;
 
 		if ( ! $user_id ) {
@@ -3503,8 +3503,9 @@ class Utils {
 		$user = $this->get_tutor_user( $user_id );
 		$name = $user->display_name;
 		$arr  = explode( ' ', trim( $name ) );
+		$class = $size ? ' tutor-avatar-'. $size : '';
 
-		$output = '<div class="tutor-avatar tutor-avatar-'. $size .'">';
+		$output = '<div class="tutor-avatar'. $class .'">';
 		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
 
 		if ( $user->tutor_profile_photo ) {
@@ -9512,5 +9513,37 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get responsive columns based on the column count
+	 * 
+	 * @return string
+	 * 
+	 * @since 2.0.2
+	 * 
+	*/
+
+	public function get_responsive_columns( $count = 2 ) {
+		$columns = 'tutor-col-12';
+
+		switch ($count) {
+			case 4:
+				$columns = 'tutor-col-md-6 tutor-col-lg-4 tutor-col-xl-3';
+			break;
+
+		case 3:
+			$columns = 'tutor-col-md-6 tutor-col-xl-4';
+			break;
+
+		case 2:
+			$columns = 'tutor-col-md-6';
+			break;
+
+		default:
+			$columns = 'tutor-col-12';
+		}
+
+		return $columns;
 	}
 }

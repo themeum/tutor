@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<div class="list-item-rating">
+<div class="tutor-course-list-item-ratings">
     <div class="tutor-ratings">
         <div class="tutor-ratings-stars">
 			<?php

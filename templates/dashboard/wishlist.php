@@ -15,7 +15,7 @@ $total_wishlists_count = count(tutor_utils()->get_wishlist(null));
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php _e('Wishlist', 'tutor'); ?></div>
 <div class="tutor-dashboard-content-inner my-wishlist">
 	<?php if (is_array($wishlists) && count($wishlists)): ?>
-		<div class="tutor-course-listing-grid tutor-course-listing-grid-3">
+		<div class="tutor-row">
 			<?php
 				foreach ($wishlists as $post) {
 					setup_postdata($post);
