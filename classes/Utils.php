@@ -8744,6 +8744,8 @@ class Utils {
 				'badge' => 'warning',
 				'text'  => __( 'Private', 'tutor' ),
 			),
+			'true' 	=> _x( 'True', 'true/false question options', 'tutor' ),
+			'false' => _x( 'False', 'true/false question options', 'tutor' ),
 		);
 
 		if ( $add_badge && isset( $key_value[ $key ] ) ) {
