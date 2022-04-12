@@ -4,9 +4,6 @@ $variations: (
 	'success' rgba(var(--tutor-color-success-rgb), 0.15) var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.3),
 	'warning' rgba(var(--tutor-color-warning-rgb), 0.15) var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.3),
 	'danger' rgba(var(--tutor-color-danger-rgb), 0.15) var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.3),
-	'processing' rgba(111, 12, 196, 0.1) #4b008b rgba(111, 12, 195, 0.1),
-	'refund' rgba(19, 166, 156, 0.1) #008178 rgba(19, 166, 156, 0.1),
-	'onhold' rgba(233, 36, 104, 0.1) #ac0640 rgba(203, 36, 94, 0.2)
 );
 
 // Tutor badge label

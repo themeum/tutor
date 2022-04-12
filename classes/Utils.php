@@ -3493,7 +3493,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_tutor_avatar( $user_id = null, $size = 'thumbnail' ) {
+	public function get_tutor_avatar( $user_id = null, $size = 'sm' ) {
 		global $wpdb;
 
 		if ( ! $user_id ) {
@@ -3501,21 +3501,27 @@ class Utils {
 		}
 
 		$user = $this->get_tutor_user( $user_id );
-		if ( $user->tutor_profile_photo ) {
-			return '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, $size ) . '" class="tutor-image-avatar" alt="" /> ';
-		}
-
 		$name = $user->display_name;
 		$arr  = explode( ' ', trim( $name ) );
 
-		$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
-		$second_char    = ! empty( $arr[1] ) ? $this->str_split( $arr[1] )[0] : '';
-		$initial_avatar = strtoupper( $first_char . $second_char );
+		$output = '<div class="tutor-avatar tutor-avatar-'. $size .'">';
+		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
 
-		$bg_color       = '#' . substr( md5( $initial_avatar ), 0, 6 );
-		$initial_avatar = '<span class="tutor-text-avatar" style="background-color: ' . $bg_color . '; color: #fff8e5">' . $initial_avatar . '</span>';
+		if ( $user->tutor_profile_photo ) {
+			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="'. esc_attr( $name ) .'" /> ';
+		} else {
+			$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
+			$second_char    = ! empty( $arr[1] ) ? $this->str_split( $arr[1] )[0] : '';
+			$initial_avatar = strtoupper( $first_char . $second_char );
+	
+			// $bg_color       = '#' . substr( md5( $initial_avatar ), 0, 6 );
+			$output .= '<span class="tutor-avatar-text">' . $initial_avatar . '</span>';	
+		}
+		
+		$output .= '</div>';
+		$output .= '</div>';
 
-		return $initial_avatar;
+		return $output;
 	}
 
 	/**
