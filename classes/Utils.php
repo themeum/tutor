@@ -9519,12 +9519,12 @@ class Utils {
 		global $wpdb;
 		$course_post_type = tutor()->course_post_type;
 		
-		return $wpdb->get_var(
-			"SELECT COUNT(ID)
-			FROM {$wpdb->posts}
-			WHERE post_type ='{$course_post_type}'
-			AND post_status = 'publish' "
-		);
+		$sql = "SELECT COUNT(ID) 
+		FROM {$wpdb->posts} 
+		WHERE post_type = %s 
+		AND post_status = 'publish'";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, $course_post_type ) );
 	}
 
 	/**
@@ -9535,12 +9535,13 @@ class Utils {
 	 */
 	public function get_total_enrolled_course() {
 		global $wpdb;
-		return $wpdb->get_var(
-			"SELECT COUNT(ID)
-			FROM {$wpdb->posts}
-			WHERE post_type ='tutor_enrolled'
-			AND post_status = 'completed' "
-		);
+		
+		$sql = "SELECT COUNT(ID)
+		FROM {$wpdb->posts}
+		WHERE post_type ='tutor_enrolled'
+		AND post_status = 'completed' ";
+		
+		return $wpdb->get_var( $wpdb->prepare( $sql ) );
 	}
 
 	/**
@@ -9553,16 +9554,16 @@ class Utils {
 		global $wpdb;
 		$lesson_type = tutor()->lesson_post_type;
 
-		return $wpdb->get_var(
-			"SELECT COUNT(lesson.ID)
-			FROM {$wpdb->posts} lesson
-			INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
-			INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID
-			WHERE lesson.post_type ='{$lesson_type}'
-			AND lesson.post_status = 'publish'
-			AND course.post_status = 'publish'
-			AND topic.post_status = 'publish'"
-		);
+		$sql = "SELECT COUNT(lesson.ID)
+		FROM {$wpdb->posts} lesson
+		INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
+		INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID
+		WHERE lesson.post_type = %s
+		AND lesson.post_status = 'publish'
+		AND course.post_status = 'publish'
+		AND topic.post_status = 'publish'";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type ) );
 	}
 
 	/**
@@ -9573,12 +9574,13 @@ class Utils {
 	 */
 	public function get_total_quiz() {
 		global $wpdb;
-		return $wpdb->get_var(
-			"SELECT COUNT(ID)
-			FROM {$wpdb->posts}
-			WHERE post_type ='tutor_quiz'
-			AND post_status = 'publish' "
-		);
+		
+		$sql = "SELECT COUNT(ID)
+		FROM {$wpdb->posts}
+		WHERE post_type ='tutor_quiz'
+		AND post_status = 'publish' ";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql ) );
 	}
 
 	/**
@@ -9589,10 +9591,9 @@ class Utils {
 	 */
 	public function get_total_question() {
 		global $wpdb;
-		return $wpdb->get_var(
-			"SELECT COUNT(question_id)
-			FROM {$wpdb->tutor_quiz_questions} "
-		);
+		
+		$sql = "SELECT COUNT(question_id) FROM {$wpdb->tutor_quiz_questions} ";
+		return $wpdb->get_var( $wpdb->prepare( $sql ));
 	}
 
 	/**
@@ -9603,11 +9604,12 @@ class Utils {
 	 */
 	public function get_total_review() {
 		global $wpdb;
-		return $wpdb->get_var(
-			"SELECT COUNT(comment_ID)
-			FROM {$wpdb->comments}
-			WHERE comment_type ='tutor_course_rating'
-			AND comment_approved = 'approved' "
-		);
+
+		$sql = "SELECT COUNT(comment_ID)
+		FROM {$wpdb->comments}
+		WHERE comment_type ='tutor_course_rating'
+		AND comment_approved = 'approved' ";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql ) );
 	}
 }
