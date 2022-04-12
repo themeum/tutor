@@ -216,10 +216,7 @@ class Shortcode {
 			$short_by = 'ASC';
 		}
 		$instructors      = tutor_utils()->get_instructors( $limit * $page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter );
-		$next_instructors = tutor_utils()->get_instructors( $limit * $current_page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter );
-
-		$previous_page = $page > 0 ? $current_page - 1 : null;
-		$next_page     = ( is_array( $next_instructors ) && count( $next_instructors ) > 0 ) ? $current_page + 1 : null;
+		$instructors_count = tutor_utils()->get_instructors( $limit * $page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter, true );
 
 		$layout = sanitize_text_field( tutor_utils()->array_get( 'layout', $atts, '' ) );
 		$layout = in_array( $layout, $this->instructor_layout ) ? $layout : tutor_utils()->get_option( 'instructor_list_layout', $this->instructor_layout[0] );
@@ -227,8 +224,7 @@ class Shortcode {
 
 		$payload = array(
 			'instructors'   => is_array( $instructors ) ? $instructors : array(),
-			'next_page'     => $next_page,
-			'previous_page' => $previous_page,
+			'instructors_count' => $instructors_count,
 			'column_count'  => sanitize_text_field( tutor_utils()->array_get( 'column_per_row', $atts, $default_col ) ),
 			'layout'        => $layout,
 			'limit'         => $limit,
@@ -381,9 +377,9 @@ class Shortcode {
 			}
 		);
 
-		$payload = $this->prepare_instructor_list( $current_page, $attributes, $category, $keyword );
+		$data = $this->prepare_instructor_list( $current_page, $attributes, $category, $keyword );
 
-		tutor_load_template( 'shortcode.tutor-instructor', $payload );
+		tutor_load_template( 'shortcode.tutor-instructor', $data );
 		exit;
 	}
 
