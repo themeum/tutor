@@ -120,31 +120,31 @@ $offset      = ( $per_page * $paged ) - $per_page;
                             $price      = tutor_utils()->tutor_price( $wc_order->get_total() );
                             $raw_price  = $wc_order->get_total();
                             $status = $order->post_status;
-                            $order_status = '';
+                            $badge_class = 'primary';
                             $order_status_text = '';
                             switch ( $status ) {
                                 case 'wc-completed' ===  $status:
-                                    $order_status = 'success';
+                                    $badge_class = 'success';
                                     $order_status_text = __( 'Completed', 'tutor' );
                                     break;
                                 case 'wc-processing' ===  $status:
-                                    $order_status = 'processing';
+                                    $badge_class = 'warning';
                                     $order_status_text = __( 'Processing', 'tutor' );
                                     break;
                                 case 'wc-on-hold' ===  $status:
-                                    $order_status = 'onhold';
+                                    $badge_class = 'warning';
                                     $order_status_text = __( 'On Hold', 'tutor' );
                                     break;
                                 case 'wc-refunded' ===  $status:
-                                    $order_status = 'refund';
+                                    $badge_class = 'danger';
                                     $order_status_text = __( 'Processing', 'tutor' );
                                     break;
                                 case 'wc-cancelled' ===  $status:
-                                    $order_status = '';
+                                    $badge_class = 'danger';
                                     $order_status_text = __( 'Cancelled', 'tutor' );
                                     break;
                                 case 'wc-pending' ===  $status:
-                                    $order_status = '';
+                                    $badge_class = 'warning';
                                     $order_status_text = __( 'Pending', 'tutor' );
                                     break;
                             }
@@ -153,7 +153,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
                             $price              = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
                             $raw_price          = $edd_order->total;
                             $status             = $edd_order->status_nicename;
-                            $order_status       = '';
+                            $badge_class        = 'primary';
                             $order_status_text  = $status;
                         }
 
@@ -181,7 +181,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
                         <span class="tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo wp_kses_post( $price ); ?></span>
                     </td>
                     <td data-th="Status">
-                        <span class="tutor-badge-label label-<?php esc_attr_e( $order_status ); ?> tutor-m-4"><?php esc_html_e( $order_status_text ); ?></span>
+                        <span class="tutor-badge-label label-<?php esc_attr_e( $badge_class ); ?> tutor-m-4"><?php esc_html_e( $order_status_text ); ?></span>
                     </td>
                     <td data-th="Download">
                         <a href="javascript:;" class="tutor-export-purchase-history tutor-iconic-btn tutor-iconic-btn-secondary" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">

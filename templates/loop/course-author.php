@@ -17,7 +17,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID, true);
 ?>
 
 <div class="list-item-author tutor-d-flex tutor-align-items-center tutor-mt-32">
-	<div class="tutor-avatar">
+	<div>
 		<a href="<?php echo esc_url($profile_url); ?>"> 
             <?php echo wp_kses_post(tutor_utils()->get_tutor_avatar($post->post_author)); ?>
         </a>
