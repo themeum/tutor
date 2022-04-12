@@ -30,7 +30,7 @@ window.jQuery(document).ready($=>{
             data: data,
             beforeSend: function () {
                 if(data.loading_container){
-                    $(data.loading_container).html('<div style="background-color: #fff;" class="loading-spinner"></div>');
+                    $(data.loading_container).html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
                     return;
                 }
 
@@ -43,6 +43,8 @@ window.jQuery(document).ready($=>{
             success: function(resp) {
                 let {success, data={}} = resp || {};
                 let {html} = data;
+
+                console.log(replace_me,);
 
                 if(success) {
                     let append_root = replace_me.find('.tutor-pagination-content-appendable');
