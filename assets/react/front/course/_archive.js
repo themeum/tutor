@@ -24,10 +24,10 @@ const pushFilterToState=data=>{
 		let key = is_array ? k+'[]' : k;
 		let values = is_array ? data[k] : [data[k]];
 
-		console.log(key, values);
-
 		values.forEach(v=>{
-			new_url.searchParams.append(key, v);
+			if(typeof v!='object'){
+				new_url.searchParams.append(key, v);
+			}
 		});
 	}
 	
