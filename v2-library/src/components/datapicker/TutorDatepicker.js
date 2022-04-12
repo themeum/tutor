@@ -78,12 +78,12 @@ const TutorDatepicker = (data) => {
 		if (params.has('date')) {
 			setStartDate(new Date(params.get('date')));
 		}
-	}, []);
-
+	}, [startDate]);
+	
 	return (
 		<div className="tutor-react-datepicker">
 			<DatePicker
-				customInput={<CustomInput/>}
+				customInput={<CustomInput />}
 				isClearable={Boolean(data.is_clearable)}
 				placeholderText={dateFormat}
 				selected={startDate}
