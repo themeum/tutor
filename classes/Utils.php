@@ -9522,9 +9522,9 @@ class Utils {
 		$sql = "SELECT COUNT(ID) 
 		FROM {$wpdb->posts} 
 		WHERE post_type = %s 
-		AND post_status = 'publish'";
+		AND post_status = %s";
 
-		return $wpdb->get_var( $wpdb->prepare( $sql, $course_post_type ) );
+		return $wpdb->get_var( $wpdb->prepare( $sql, $course_post_type, 'publish' ) );
 	}
 
 	/**
@@ -9538,10 +9538,10 @@ class Utils {
 		
 		$sql = "SELECT COUNT(ID)
 		FROM {$wpdb->posts}
-		WHERE post_type ='tutor_enrolled'
-		AND post_status = 'completed' ";
+		WHERE post_type = %s
+		AND post_status = %s";
 		
-		return $wpdb->get_var( $wpdb->prepare( $sql ) );
+		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_enrolled', 'completed' ) );
 	}
 
 	/**
@@ -9559,11 +9559,11 @@ class Utils {
 		INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
 		INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID
 		WHERE lesson.post_type = %s
-		AND lesson.post_status = 'publish'
-		AND course.post_status = 'publish'
-		AND topic.post_status = 'publish'";
+		AND lesson.post_status = %s
+		AND course.post_status = %s
+		AND topic.post_status = %s";
 
-		return $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type ) );
+		return $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type, 'publish', 'publish', 'publish' ) );
 	}
 
 	/**
@@ -9577,10 +9577,10 @@ class Utils {
 		
 		$sql = "SELECT COUNT(ID)
 		FROM {$wpdb->posts}
-		WHERE post_type ='tutor_quiz'
-		AND post_status = 'publish' ";
+		WHERE post_type = %s
+		AND post_status = %s ";
 
-		return $wpdb->get_var( $wpdb->prepare( $sql ) );
+		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_quiz', 'publish' ) );
 	}
 
 	/**
@@ -9593,7 +9593,7 @@ class Utils {
 		global $wpdb;
 		
 		$sql = "SELECT COUNT(question_id) FROM {$wpdb->tutor_quiz_questions} ";
-		return $wpdb->get_var( $wpdb->prepare( $sql ));
+		return $wpdb->get_var( $wpdb->prepare( $sql ) );
 	}
 
 	/**
@@ -9607,9 +9607,9 @@ class Utils {
 
 		$sql = "SELECT COUNT(comment_ID)
 		FROM {$wpdb->comments}
-		WHERE comment_type ='tutor_course_rating'
-		AND comment_approved = 'approved' ";
+		WHERE comment_type = %s
+		AND comment_approved = %s ";
 
-		return $wpdb->get_var( $wpdb->prepare( $sql ) );
+		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_course_rating', 'approved' ) );
 	}
 }
