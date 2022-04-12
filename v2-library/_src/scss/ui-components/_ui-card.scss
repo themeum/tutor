@@ -5,12 +5,41 @@
 		position: relative;
 		border-radius: 6px;
 
-		&-header {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		word-wrap: break-word;
+
+		&-header{
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 24px 32px;
 			border-bottom: 1px solid #CDCFD5;
+			padding: 24px 32px;
+		}
+
+		&-footer {
+			padding: 16px 20px;
+			border-top: 1px solid #CDCFD5;
+		}
+
+		&-image {
+			&-top {
+				border-radius: 5px 5px 0px 0px;
+			}
+
+			&-right {
+				border-radius: 0px 5px 5px 0px;
+			}
+
+			&-bottom {
+				border-radius: 0px 0px 5px 5px;
+			}
+
+			&-left {
+				border-radius: 5px 0px 0px 5px;
+			}
 		}
 
 		&-title {
@@ -20,7 +49,12 @@
 		}
 
 		&-body {
+			flex: 1 1 auto;
 			padding: 24px 32px;
+
+			&-sm {
+				padding: 20px;
+			}
 		}
 
 		&-secondary {

@@ -62,13 +62,13 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
 
     <!-- Course list -->
     <?php
-    $placeholder_img = tutor()->url . 'assets/images/placeholder.png';
+    $placeholder_img = tutor()->url . 'assets/images/placeholder.svg';
 
     if (!is_array($results) || (!count($results) && $paged==1)) {
         tutor_utils()->tutor_empty_state(tutor_utils()->not_found_text());
     } else {
         ?>
-        <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
+        <div class="tutor-row">
             <?php
             global $post;
             foreach ($results as $post) :
@@ -181,7 +181,6 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
         <div class="tutor-mt-20">
             <?php
                 if ($count_map[$status] > $per_page) {
-
                     $pagination_data = array(
                         'total_items' => $count_map[$status],
                         'per_page'    => $per_page,

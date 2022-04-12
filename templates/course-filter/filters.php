@@ -102,13 +102,11 @@
 	</div>
 	<?php endif; ?>
 
-	<div class="tutor-widget tutor-widget-course-filter tutor-mt-32">
+	<div class="tutor-widget tutor-widget-course-filter tutor-mt-32 tutor-d-none">
 		<div class="tutor-widget-content">
-			<div class="tutor-clear-all-filter">
-				<a href="#" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" onclick="window.location.replace('<?php echo $reset_link; ?>')" action-tutor-clear-filter>
-					<i class="tutor-icon-times tutor-mr-8"></i> <?php esc_html_e( 'Clear All Filters', 'tutor' ); ?>
-				</a>
-			</div>
+			<a href="#" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" onclick="window.location.replace('<?php echo $reset_link; ?>')" action-tutor-clear-filter>
+				<i class="tutor-icon-times tutor-mr-8"></i> <?php esc_html_e( 'Clear All Filters', 'tutor' ); ?>
+			</a>
 		</div>
 	</div>
 	<?php do_action( 'tutor_course_filter/after' ); ?>
