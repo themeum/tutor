@@ -6,7 +6,7 @@
     display: flex;
     align-items: center;
     background: white;
-    border: 1px solid $stroke-light-30;
+    border: 1px solid var(--tutor-border-color);
     box-sizing: border-box;
     border-radius: 6px;
     width: 100%;
@@ -33,7 +33,7 @@
         }
 
         &:last-child {
-            border-left: 1px solid $stroke-light-30;
+            border-left: 1px solid var(--tutor-border-color);
             margin-left: 20px;
             display: flex;
             flex-direction: column;
@@ -49,7 +49,7 @@
                 font-weight: 500;
                 font-size: 15px;
                 text-align: center;
-                color: $text-muted;
+                color: var(--tutor-color-muted);
                 display: flex;
                 align-items: center;
 
@@ -70,7 +70,7 @@
                 height: 0;
                 width: 100%;
                 margin: 0;
-                border-top: 1px solid $stroke-light-30;
+                border-top: 1px solid var(--tutor-border-color);
             }
         }
     }

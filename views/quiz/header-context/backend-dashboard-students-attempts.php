@@ -12,7 +12,7 @@
         </a>
     </div>
     
-    <div class="tutor-fs-7 tutor-color-black-60">
+    <div class="tutor-fs-7 tutor-color-secondary">
         <?php echo __('Course', 'tutor').': '.$course_title; ?>
     </div>
     <div class="header-title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mt-12">

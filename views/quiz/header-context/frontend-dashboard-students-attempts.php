@@ -7,7 +7,7 @@
     </div>
 <?php endif; ?>
 
-<div class="tutor-fs-7 tutor-color-black-60">
+<div class="tutor-fs-7 tutor-color-secondary">
     <?php _e('Course', 'tutor'); ?>: <?php echo $course_title; ?>
 </div>
 
@@ -15,7 +15,7 @@
     <?php echo $quiz_title; ?>
 </div>
 
-<div class="tutor-mb-32 tutor-fs-7 tutor-color-black-60">
+<div class="tutor-mb-32 tutor-fs-7 tutor-color-secondary">
     <div class="tutor-d-flex">
         <div class="tutor-mr-16">
             <?php _e('Student', 'tutor'); ?>: <span class="tutor-color-black"><strong><?php echo $student_name; ?></strong></span>

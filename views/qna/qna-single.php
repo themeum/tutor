@@ -69,10 +69,10 @@
 	<?php endif; ?>
 
 	<div class="<?php echo is_admin() ? 'tutor-admin-container' : ''; ?>">
-		<div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32">
+		<!-- <div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32">
 			<?php echo esc_html( $question->post_title ); ?>
 			<div class="tutor-hr tutor-mt-20" area-hidden="true"></div>
-		</div>
+		</div> -->
 		<div class="tutor-qna-single-wrapper">
 			<div class="tutor-qa-reply-wrapper tutor-mt-20">
 				<div class="tutor-qa-chatlist">
@@ -99,7 +99,7 @@
 										</div>
 
 										<div>
-											<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-70">
+											<div class="tutor-fs-6 tutor-fw-medium tutor-color-secondary">
 												<?php echo $answer->display_name; ?>
 											</div>
 											<div class="tutor-fs-7 tutor-color-muted">

@@ -14,7 +14,7 @@
 
 .tutor-dropzone {
 	&.tutor-drop-over {
-		border: 2px dashed var(--tutor-primary-color) !important;
+		border: 2px dashed var(--tutor-color-primary) !important;
 	}
 	input {
 		display: none;
@@ -43,7 +43,7 @@
 		border-radius: 10px;
 		padding: 65px 95px;
 		.tutor-start-quiz-title {
-			border-bottom: 1px solid $black-20;
+			border-bottom: 1px solid var(--tutor-border-color);
 		}
 		.tutor-quiz-info-area {
 			.tutor-quiz-info {
@@ -70,17 +70,11 @@
 						width: 90px;
 						text-align: right;
 					}
-					.tutor-quiz-time-expired {
-						// margin-right: 15px;
-					}
 					.quiz-time-remaining-progress-circle,
 					.quiz-time-remaining-expired-circle {
 						width: 40px;
 						height: 25px;
 						margin-top: 1px;
-						.tutor-quiz-time-expired {
-							// margin-right: 25px;
-						}
 					}
 					.quiz-time-remaining-progress-circle {
 						svg {
@@ -90,14 +84,14 @@
 							circle {
 								transform: translate(17px, 15px);
 								&:first-child {
-									stroke: $black-40;
+									stroke: var(--tutor-color-muted);
 									stroke-width: 13px;
 									stroke-dasharray: 44;
 									stroke-dashoffset: 0;
 								}
 								&:last-child {
 									fill: none;
-									stroke: $design-brand;
+									stroke: var(--tutor-color-primary);
 									stroke-dasharray: 44;
 									stroke-dashoffset: calc(44 - ((44 * var(--quizeProgress)) / 100));
 									stroke-width: 13px;
@@ -127,7 +121,7 @@
 		.tutor-quiz-border-box {
 			cursor: pointer;
 			padding: 10px 18px;
-			border: 1px solid $stroke-gray;
+			border: 1px solid var(--tutor-border-color);
 			border-radius: 6px;
 			display: flex;
 			justify-content: space-between;
@@ -154,7 +148,7 @@
 		.quiz-flash-message {
 			.tutor-quiz-warning-box {
 				&.time-remaining-warning {
-					border: 1px solid $warning-70;
+					border: 1px solid rgba(var(--tutor-color-warning-rgb), 0.30);
 				}
 				padding: 9px;
 				border-radius: 6px;
@@ -168,8 +162,8 @@
 				}
 				.flash-action {
 					button {
-						background: $design-warning;
-						color: $color-white;
+						background: $color-warning;
+						color: var(--tutor-color-white);
 						border: unset;
 						@include breakpoint-max(600) {
 							margin-top: 10px;
@@ -177,28 +171,22 @@
 					}
 				}
 				&.time-over {
-					border: 1px solid $danger-main;
+					border: 1px solid $color-danger;
 				}
 			}
 		}
-		.quiz-question {
-			// max-width: 810px;
-			// questions matching
-			// @include breakpoint-max(600) {
-			//  margin-right: 20px;
-			// }
-			.quiz-question-title {
-			}
-		}
+
 		img {
 			user-select: none;
 			pointer-events: none;
 		}
+
 		.matching-quiz-question-desc {
 			display: grid !important;
 			gap: 20px 20px;
 			grid-template-columns: repeat(auto-fit, minmax(163px, 1fr));
 		}
+
 		#tutor-quiz-image-single-choice {
 			.tutor-image-checkbox {
 				display: grid;
@@ -243,7 +231,6 @@
 								span.tutor-icon-checkbox {
 									background: #ffffff;
 									border: 7px solid #3e64de;
-									// background-color: $design-brand;
 									&:before {
 										opacity: 1;
 									}
@@ -264,7 +251,6 @@
 		#tutor-quiz-image-multiple-choice {
 			.tutor-image-checkbox {
 				display: grid;
-				// grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 				grid-template-columns: repeat(auto-fit, minmax(160px, 210px));
 				gap: 20px;
 				label.tutor-form-check-input {
@@ -289,7 +275,7 @@
 							width: 22px;
 							height: 22px;
 							display: inline-block;
-							border: 2px solid $stroke-light-30;
+							border: 2px solid var(--tutor-border-color);
 							border-radius: 4px;
 							transition: 0.2s linear;
 							position: absolute;
@@ -313,9 +299,9 @@
 					> input {
 						&:checked {
 							& + .tutor-multiple-checkbox {
-								box-shadow: 0px 0px 0px 2px var(--tutor-primary-color);
+								box-shadow: 0px 0px 0px 2px var(--tutor-color-primary);
 								span.tutor-icon-checkbox {
-									background-color: $design-brand;
+									background-color: var(--tutor-color-primary);
 									&:before {
 										opacity: 1;
 									}
@@ -340,7 +326,7 @@
 			.quiz-question-ans-choice {
 				label {
 					min-width: 240px;
-					border: 1px solid $black-20;
+					border: 1px solid var(--tutor-border-color);
 					border-radius: 6px;
 					padding: 9.5px 15px 9.5px 15px;
 					display: inline-block;
@@ -361,7 +347,7 @@
 				flex-wrap: wrap;
 				align-items: flex-end;
 				.fill-blank {
-					border-bottom: 2px dashed $black-90;
+					border-bottom: 2px dashed var(--tutor-color-secondary);
 					margin: 0px 10px 5px 10px;
 					@include breakpoint-max(mobile) {
 						margin: 0px 10px 5px 0px;
@@ -418,12 +404,7 @@
 				content: counter(serial-number);
 			}
 		}
-		// #quiz-image-ordering-ans-area {
-		//     >div {
-		//         &:not(:last-child) {
-		//             margin-bottom: 20px;
-		//         }
-		//     }
+
 		.quiz-image-ordering-ans {
 			display: grid;
 			grid-template-columns: 30px 315px;
@@ -463,40 +444,6 @@
 				display: grid !important;
 				gap: 20px 20px;
 				grid-template-columns: repeat(auto-fit, minmax(163px, 1fr));
-				// @include breakpoint-max(1200) {
-				//  flex-wrap: wrap;
-				// }
-				// @include breakpoint-max(mobile) {
-				//  display: grid;
-				//  grid-template-columns: repeat(2, 1fr);
-				// }
-				// > div:not(:last-child) {
-				//  margin-right: 30px;
-				//  margin-bottom: 30px;
-				//  @include breakpoint-max(600) {
-				//      margin-right: 10px;
-				//      margin-bottom: 10px;
-				//  }
-				// }
-				.quiz-image-box {
-					.quiz-image {
-					}
-					.tutor-quiz-dotted-box {
-						// min-height: 48px;
-						// border: 2px dashed #ddd;
-						// border-radius: 5px;
-						// &.tutor-drop-over {
-						//  border: 2px dashed rgb(160, 42, 42);
-						// }
-						// > input {
-						//  display: none;
-						// }
-						// span[class^='ttr-'],
-						// span[class*=' ttr-'] {
-						//  display: none;
-						// }
-					}
-				}
 			}
 		}
 	}
@@ -559,9 +506,6 @@
 					}
 				}
 			}
-			.quiz-question {
-				// margin-top: 20px;
-			}
 			.quiz-question-ans-choice-area {
 				.quiz-question-ans-choice {
 					label {
@@ -590,6 +534,7 @@
 		}
 	}
 }
+
 .tutor-quiz-time-expired {
 	font-weight: 500;
 	font-size: 16px;

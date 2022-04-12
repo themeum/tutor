@@ -85,7 +85,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 									<span class="tutor-progress-value" area-hidden="true"></span>
 								</div>
 							</div>
-							<div class="rating-num tutor-fs-7 tutor-color-black-60">
+							<div class="rating-num tutor-fs-7 tutor-color-secondary">
 								<?php
 									echo $value . ' ';
 									echo $value > 1 ? __( 'ratings', 'tutor' ) : __( 'rating', 'tutor' );

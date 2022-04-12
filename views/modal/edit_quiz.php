@@ -193,7 +193,7 @@
                     <div class="tutor-col-auto">
                         <span><i class="tutor-icon-gear"></i></span>
                     </div>
-                    <div class="tutor-col tutor-p-0 tutor-fs-6 tutor-fw-medium tutor-color-black-70">
+                    <div class="tutor-col tutor-p-0 tutor-fs-6 tutor-fw-medium tutor-color-secondary">
                         <?php _e('Advance Settings', 'tutor'); ?>
                     </div>
                 </div>

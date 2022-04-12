@@ -1,7 +1,7 @@
 .tutor-wp-dashboard-header {
 	box-sizing: border-box;
 	background: #ffffff;
-	border-bottom: 1px solid $stroke-light-30;
+	border-bottom: 1px solid var(--tutor-border-color);
 
 	ol,
 	ul {
@@ -45,7 +45,7 @@
 
 	.tutor-form-label {
 		@extend .text-medium-caption;
-		@extend .tutor-color-black-70;
+		color: var(--tutor-color-secondary);
 	}
 
 	// select.tutor-form-select,
@@ -67,7 +67,7 @@
 	select.tutor-form-select:focus,
 	input.tutor-form-control:focus,
 	textarea.tutor-form-control:focus {
-		border-color: var(--tutor-primary-color);
+		border-color: var(--tutor-color-primary);
 		box-shadow: unset;
 	}
 
@@ -85,8 +85,8 @@
 	}
 
 	&-body {
-		border-top: 1px solid $stroke-light-30;
-		border-bottom: 1px solid $stroke-light-30;
+		border-top: 1px solid var(--tutor-border-color);
+		border-bottom: 1px solid var(--tutor-border-color);
 		display: grid;
 		@include responsiveGrid(200px, auto);
 		grid-gap: 15px;

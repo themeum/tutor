@@ -41,7 +41,7 @@ ob_start();
             </div>
             <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
                 <span class="tutor-icon-quiz-o tutor-color-white tutor-mr-4"></span>
-                <span class="tutor-fs-7 tutor-fw-normal tutor-color-design-white">
+                <span class="tutor-fs-7 tutor-fw-normal tutor-color-white">
                     <?php 
                         esc_html_e( 'Quiz: ', 'tutor' );
                         the_title();
@@ -54,7 +54,7 @@ ob_start();
                 <?php
                     do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
                 ?>
-                <div class="tutor-fs-7 tutor-fw-normal tutor-color-design-white">
+                <div class="tutor-fs-7 tutor-fw-normal tutor-color-white">
 					<?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
 						<span class="tutor-progress-content tutor-color-primary-60">
 							<?php _e('Your Progress:', 'tutor'); ?>

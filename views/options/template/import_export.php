@@ -18,7 +18,7 @@ tutor_alert(
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
 				<div class="label tutor-fs-6 tutor-color-black"><?php _e('Current Settings','tutor'); ?></div>
-				<div class="desc tutor-fs-8 tutor-fw-medium tutor-color-black-60">
+				<div class="desc tutor-fs-8 tutor-fw-medium tutor-color-secondary">
 					<span style="font-weight: 500"><?php _e('Last Update','tutor'); ?>: </span> <?php echo get_option('tutor_option_update_time'); ?>
 				</div>
 			</div>
@@ -38,7 +38,7 @@ tutor_alert(
 		<div class="tutor-option-field-row tutor-d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
-					<span class="tutor-icon-upload tutor-fs-1 tutor-color-brand"></span>
+					<span class="tutor-icon-upload tutor-fs-1 tutor-color-primary"></span>
 					<div class="title"><?php _e('Drag &amp; Drop your JSON File here','tutor'); ?> </div>
 					<div class="subtitle"><span><?php _e('File Format','tutor'); ?>:</span> .json <br> <?php _e('Or','tutor'); ?></div>
 					<label for="drag-drop-input" class="tutor-btn tutor-btn-primary tutor-btn-sm">
@@ -68,7 +68,7 @@ tutor_alert(
 		<?php if ( $tutor_options = get_option( 'tutor_settings_log', array() ) ) : ?>
 			<?php
 			foreach ( $tutor_options as $key => $option_data ) :
-				$datetypeClass = $option_data['datatype'] == 'saved' ? ' label-primary-wp' : ' label-refund';
+				$datetypeClass = $option_data['datatype'] == 'saved' ? ' label-primary' : ' label-refund';
 				?>
 				<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
@@ -119,7 +119,7 @@ tutor_alert(
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
 				<div class="tutor-fs-6 tutor-color-black"><?php _e( 'Reset Everything to Default', 'tutor' ); ?></div>
-				<div class="tutor-fs-7 tutor-fw-medium tutor-color-black-60">
+				<div class="tutor-fs-7 tutor-fw-medium tutor-color-secondary">
 					<span class="tutor-fw-medium"><?php _e( 'It will revert all settings to initial setup.', 'tutor' ); ?></span>
 				</div>
 			</div>

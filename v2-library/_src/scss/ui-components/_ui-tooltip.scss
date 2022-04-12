@@ -1,13 +1,12 @@
 // Tooltip Icon
-@function svgIconTooltip($color: $black-20) {
+@function svgIconTooltip($color: var(--tutor-border-color)) {
 	$hexColor: '%23' + str-slice('#{$color}', 2, -1);
 
 	@return 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 12.0001C3.5 7.31315 7.3131 3.5 12 3.5C16.6869 3.5 20.5 7.31315 20.5 12.0001C20.5 16.687 16.6869 20.5 12 20.5C7.3131 20.5 3.5 16.687 3.5 12.0001ZM5.04498 12.0004C5.04498 15.8351 8.16474 18.9549 11.9995 18.9549C15.8343 18.9549 18.9541 15.8351 18.9541 12.0004C18.9541 8.16562 15.8343 5.04576 11.9995 5.04576C8.16474 5.04576 5.04498 8.16562 5.04498 12.0004ZM11.9998 7.10617C11.4318 7.10617 10.9697 7.56857 10.9697 8.13694C10.9697 8.70479 11.4318 9.16678 11.9998 9.16678C12.5678 9.16678 13.0299 8.70479 13.0299 8.13694C13.0299 7.56857 12.5678 7.10617 11.9998 7.10617ZM11.227 11.4848C11.227 11.0581 11.573 10.7121 11.9997 10.7121C12.4265 10.7121 12.7724 11.0581 12.7724 11.4848V16.1212C12.7724 16.5479 12.4265 16.8939 11.9997 16.8939C11.573 16.8939 11.227 16.5479 11.227 16.1212V11.4848Z" fill="#{$hexColor}"/></svg>';
 }
 
 // Tooltip
-$tooltip-bg: $bg-dark-10;
-$tooltip-txt: $color-white;
+$tooltip-txt: var(--tutor-color-white);
 $arrow: 5px;
 
 .tooltip-wrap {
@@ -15,7 +14,7 @@ $arrow: 5px;
 		width: 24px;
 		height: 24px;
 		margin-left: 2px;
-		background-image: url(svgIconTooltip($black-20));
+		background-image: url(svgIconTooltip(var(--tutor-border-color)));
 		background-repeat: no-repeat;
 		background-position: center;
 	}
@@ -36,7 +35,7 @@ $arrow: 5px;
 		position: absolute;
 		max-width: 208px;
 		width: max-content;
-		background: $tooltip-bg;
+		background: var(--tutor-body-color);
 		color: $tooltip-txt;
 		padding: 10px 15px;
 		text-align: center;
@@ -69,7 +68,7 @@ $arrow: 5px;
 			top: 100%;
 			left: 50%;
 			margin-left: -$arrow;
-			border-top-color: $tooltip-bg;
+			border-top-color: var(--tutor-body-color);
 		}
 	}
 
@@ -79,7 +78,7 @@ $arrow: 5px;
 			bottom: 100%;
 			left: 50%;
 			margin-left: -$arrow;
-			border-bottom-color: $tooltip-bg;
+			border-bottom-color: var(--tutor-body-color);
 		}
 	}
 
@@ -114,7 +113,7 @@ $arrow: 5px;
 		left: calc(100% + 8px);
 		&::after {
 			right: 100%;
-			border-right-color: $tooltip-bg;
+			border-right-color: var(--tutor-body-color);
 		}
 	}
 
@@ -122,7 +121,7 @@ $arrow: 5px;
 		right: calc(100% + 8px);
 		&::after {
 			left: 100%;
-			border-left-color: $tooltip-bg;
+			border-left-color: var(--tutor-body-color);
 		}
 	}
 }

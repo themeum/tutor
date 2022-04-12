@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-
-import DatePicker, { CalendarContainer } from 'react-datepicker';
-import { addMonths, getMonth, getYear } from 'date-fns';
+import { getMonth, getYear } from 'date-fns';
 import range from 'lodash.range';
-
+import React, { useState } from 'react';
+import DatePicker, { CalendarContainer } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { CustomInput } from '../CustomInput';
+
+
 // import './TutorDatepicker.scss';
 // import '../../../bundle/main.min.css';
 
@@ -71,6 +72,7 @@ const TutorDateTimePicker = () => {
 	return (
 		<div className="tutor-react-datepicker">
 			<DatePicker
+				customInput={<CustomInput />}
 				placeholderText="DD-MM-YYYY"
 				selected={startDate}
 				onChange={(date) => handleCalendarChange(date)}

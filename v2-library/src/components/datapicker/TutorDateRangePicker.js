@@ -1,8 +1,8 @@
+import { differenceInDays } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-
 import DatePicker, { CalendarContainer } from 'react-datepicker';
-import { differenceInDays, differenceInHours } from 'date-fns';
-import { element } from 'prop-types';
+import { CustomInput } from '../CustomInput';
+
 
 const TutorDateRangePicker = () => {
 	const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'Y-M-d';
@@ -84,6 +84,7 @@ const TutorDateRangePicker = () => {
 	return (
 		<div className="tutor-react-datepicker tutor-react-datepicker__selects-range" style={{ width: '100%' }}>
 			<DatePicker
+				customInput={<CustomInput/>}
 				placeholderText={` ${dateFormat} -- ${dateFormat} `}
 				showPopperArrow={false}
 				shouldCloseOnSelect={false}

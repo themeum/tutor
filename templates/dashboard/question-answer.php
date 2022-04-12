@@ -53,7 +53,7 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
         <div class="tutor-row">
             <div class="tutor-col-lg-5">
                 <div class="tutor-qna-filter tutor-d-flex tutor-align-items-center">
-                    <span class="tutor-fs-7 tutor-color-black-60 tutor-mr-20"><?php _e('Sort By', 'tutor'); ?>:</span>
+                    <span class="tutor-fs-7 tutor-color-secondary tutor-mr-20"><?php _e('Sort By', 'tutor'); ?>:</span>
                     <div class="tutor-flex-grow-1">
                         <select class="tutor-form-select tutor-select-redirector">
                             <?php

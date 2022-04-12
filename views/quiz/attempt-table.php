@@ -20,7 +20,7 @@
 				<?php
 					foreach ( $table_columns as $key => $column ) {
 						echo '<th>
-								<div class="tutor-fs-7 tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-secondary">
 									' . $column . '
 								</div>
 							</th>';
@@ -104,7 +104,7 @@
 
 														?>
 																<div>
-																	<span class="tutor-fs-7 tutor-color-black-70">
+																	<span class="tutor-fs-7 tutor-color-secondary">
 																		<?php _e( 'Student', 'tutor' ); ?>
 																	</span>: <span class="tutor-fs-7 tutor-fw-medium"> <?php echo $user_name; ?> </span>
 																</div>
@@ -112,8 +112,8 @@
 														} else {
 														?>
 															<?php if(!empty($user_name) && isset( $attempt->user_email ) ) : ?>
-																<span class="tutor-fs-7 tutor-color-black-70"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
-																<span class="tutor-color-black-70 tutor-fs-8 tutor-fw-medium" title="<?php echo esc_attr( $attempt->user_email ); ?>">
+																<span class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
+																<span class="tutor-color-secondary tutor-fs-8 tutor-fw-medium" title="<?php echo esc_attr( $attempt->user_email ); ?>">
 																	<?php echo esc_attr( isset($attempt->display_name) ? $attempt->display_name : $user_name ); ?>
 																</span>
 

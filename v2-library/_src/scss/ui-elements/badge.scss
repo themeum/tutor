@@ -3,7 +3,7 @@
 	padding: 0 8px;
 	line-height: 21px;
 	font-size: 13px;
-	color: var(--tutor-white);
+	color: var(--tutor-color-white);
 	border-radius: 2px;
 	font-weight: 700;
 	box-sizing: border-box;
@@ -33,13 +33,13 @@
 		font-size: 16px;
 		line-height: 26px;
 		font-weight: 400;
-		color: var(--tutor-text-hints);
+		color: var(--tutor-color-muted);
 		h5 {
 			margin: 0;
 			font-size: 24px;
 			line-height: 34px;
 			font-weight: 400;
-			color: var(--tutor-text-primary);
+			color: var(--tutor-body-color);
 		}
 	}
 }
@@ -48,7 +48,7 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	background-color: $danger;
+	background-color: var(--tutor-color-danger);
 	position: absolute;
 	right: -4px;
 	top: -4px;

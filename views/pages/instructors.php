@@ -102,25 +102,25 @@ $filters = array(
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="tutor-color-black-60">
+							<div class="tutor-color-secondary">
 								<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
 								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="tutor-color-black-60">
+							<div class="tutor-color-secondary">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
 								<span class="tutor-icon-order-down up-down-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class=" tutor-color-black-60">
+							<div class=" tutor-color-secondary">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
 								<span class="tutor-icon-order-down up-down-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class=" tutor-color-black-60">
+							<div class=" tutor-color-secondary">
 								<span class="tutor-fs-7">
 									<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
 								</span>
@@ -128,7 +128,7 @@ $filters = array(
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-black-60">
+						<div class="tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
 							<span class="tutor-icon-order-down up-down-icon"></span>
 						</div>
@@ -385,14 +385,14 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 									?>
 								</div>
 								
-								<div class="tutor-fs-6 tutor-color-black-70 tutor-mb-8">
+								<div class="tutor-fs-6 tutor-color-secondary tutor-mb-8">
 									<?php esc_html_e( 'Username:', 'tutor' ); ?>
 									<span class="tutor-color-black">
 										<?php echo esc_html( $instructor_data->user_login ); ?>
 									</span>
 								</div>
 
-								<div class="tutor-fs-6 tutor-color-black-70">
+								<div class="tutor-fs-6 tutor-color-secondary">
 									<?php esc_html_e( 'Email:', 'tutor' ); ?>
 									<span class="tutor-color-black">
 										<?php echo esc_html( $instructor_data->user_email ); ?>

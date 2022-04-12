@@ -2907,7 +2907,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '' ) {
+	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '', $count_only=false ) {
 		global $wpdb;
 
 		$search_filter = sanitize_text_field( $search_filter );
@@ -2986,41 +2986,40 @@ class Utils {
 			$order_query = " ORDER BY user_meta.meta_value {$order_filter} ";
 		}
 
-		$instructors = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status
-				FROM 	{$wpdb->users} user
-						INNER JOIN {$wpdb->usermeta} user_meta
-								ON ( user.ID = user_meta.user_id )
-						INNER JOIN {$wpdb->usermeta} inst_status
-								ON ( user.ID = inst_status.user_id )
-						{$category_join}
-						LEFT JOIN {$wpdb->usermeta} AS umeta
-							ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
-						LEFT JOIN {$wpdb->comments} AS c
-							ON c.comment_post_ID = umeta.meta_value
-						LEFT JOIN {$wpdb->commentmeta} AS cmeta
-							ON cmeta.comment_id = c.comment_ID
-							AND cmeta.meta_key = 'tutor_rating'
-				WHERE 	user_meta.meta_key = %s
-						AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
-						{$status}
-						{$category_where}
-						{$course_filter}
-						{$date_filter}
-				GROUP BY user.ID
-				{$rating_having}
-				{$order_query}
-				LIMIT 	%d, %d;
-			",
-				'_is_tutor_instructor',
-				$search_filter,
-				$search_filter,
-				$start,
-				$limit
-			)
+		$limit_offset = $count_only ? '' : " LIMIT {$start}, {$limit} ";
+		$select_col = $count_only ? 
+						' COUNT(DISTINCT user.ID) ' :
+						' DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status ';
+
+		$query = $wpdb->prepare(
+			"SELECT {$select_col}
+			FROM {$wpdb->users} user
+				INNER JOIN {$wpdb->usermeta} user_meta
+						ON ( user.ID = user_meta.user_id )
+				INNER JOIN {$wpdb->usermeta} inst_status
+						ON ( user.ID = inst_status.user_id )
+				{$category_join}
+				LEFT JOIN {$wpdb->usermeta} AS umeta
+					ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
+				LEFT JOIN {$wpdb->comments} AS c
+					ON c.comment_post_ID = umeta.meta_value
+				LEFT JOIN {$wpdb->commentmeta} AS cmeta
+					ON cmeta.comment_id = c.comment_ID
+					AND cmeta.meta_key = 'tutor_rating'
+			WHERE 	user_meta.meta_key = '_is_tutor_instructor'
+				AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+				{$status}
+				{$category_where}
+				{$course_filter}
+				{$date_filter}
+			GROUP BY user.ID {$rating_having} {$order_query} {$limit_offset}",
+			
+			$search_filter,
+			$search_filter
 		);
-		return $instructors;
+
+		$results = $wpdb->get_results($query);
+		return $count_only ? count($results) : $results;
 	}
 
 	/**
@@ -3422,7 +3421,7 @@ class Utils {
 		$current_rating = number_format( $current_rating, 2, '.', '' );
 		$css_class = isset($screen_size) ? "{$parent_class} tutor-ratings-{$screen_size}" : "{$parent_class}";
 		?>
-		<div class="tutor-ratings <?php echo $css_class; ?>">
+		<div class="tutor-ratings<?php echo $css_class; ?>">
 			<div class="tutor-ratings-stars">
 				<?php
 				for ( $i = 1; $i <= 5; $i++ ) {
@@ -3432,7 +3431,7 @@ class Utils {
 						$class = 'tutor-icon-star-bold';
 					}
 
-					// ToDo: Add half start later. tutor-icon-star-half-bold
+					// @todo: Add half start later. tutor-icon-star-half-bold
 					echo '<span class="' . $class . '"></span>';
 				}
 				?>
@@ -8644,7 +8643,7 @@ class Utils {
 		?>
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%" />
-			<div class="tutor-fs-6 tutor-color-black-60 tutor-text-center">
+			<div class="tutor-fs-6 tutor-color-secondary tutor-text-center">
 				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
 			</div>
 		</div>
@@ -9451,6 +9450,47 @@ class Utils {
 				return $html;
 			}
 		}
+	}
+
+	/**
+	 * Conver Hex to RGB
+	 * 
+	 * @return string
+	 * 
+	 * @since 2.0.2
+	 */
+
+	public function hex2rgb( string $color ) {
+
+		$default = '0, 0, 0';
+
+		if ( $color === '' ) {
+			return '';
+		}
+
+		if ( strpos( $color, 'var(--' ) === 0 ) {
+			return preg_replace( '/[^A-Za-z0-9_)(\-,.]/', '', $color );
+		}
+
+		// convert hex to rgb
+		if ($color[0] == '#' ) {
+        	$color = substr( $color, 1 );
+        } else {
+			return $default;
+		}
+ 
+        //Check if color has 6 or 3 characters and get values
+        if ( strlen( $color ) == 6 ) {
+            $hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
+        } elseif ( strlen( $color ) == 3 ) {
+            $hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
+        } else {
+            return $default;
+        }
+
+		$rgb =  array_map('hexdec', $hex);
+
+		return implode(", ", $rgb);
 	}
 
 	public function get_course_builder_screen()

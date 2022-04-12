@@ -262,15 +262,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					let editWrapClass = assignmentEditFilePreview ? 'tutor-col-sm-5 tutor-py-16 tutor-mr-16' : '';
 					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
                                     <div class="tutor-icard-content">
-                                        <div class="tutor-fs-6 tutor-color-black-70">
+                                        <div class="tutor-fs-6 tutor-color-secondary">
                                             ${file.name}
                                         </div>
                                         <div class="tutor-fs-7">Size: ${file.size}</div>
                                     </div>
                                     <div onclick="(() => {
 										this.closest('.tutor-instructor-card').remove();
-									})()" class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
-                                        <span class="tutor-icon-times-o tutor-color-brand"></span>
+									})()" class="tutor-attachment-file-close tutor-iconic-btn tutor-iconic-btn-outline flex-center">
+                                        <span class="tutor-icon-times"></span>
                                     </div>
                                 </div>`;
 				}

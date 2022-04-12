@@ -44,7 +44,7 @@
 			width: 100%;
 			border: none;
 			// border-bottom: 1px solid #cdcfd5;
-			border: 1px solid $stroke-light-30;
+			border: 1px solid var(--tutor-border-color);
 			border-radius: 6px;
 			padding: 15px;
 			resize: none;
@@ -155,14 +155,14 @@
 			.tutor-qna-text {
 				min-width: 50px;
 				background: #e3e9f7;
-				color: $black-100;
+				color: var(--tutor-body-color);
 			}
 		}
 
 		.tutor-qna-right {
 			.tutor-qna-text {
 				background: #dbe9eb;
-				color: $black-100;
+				color: var(--tutor-body-color);
 			}
 		}
 	}
@@ -193,7 +193,7 @@
 
 table.qna-list-table {
 	.tutor-icon-msg-important-filled {
-		color: $black-40;
+		color: var(--tutor-color-muted);
 	}
 
 	.tutor-icon-msg-important-fill-filled {
@@ -239,14 +239,14 @@ table.qna-list-table {
 
 		&:not(.is-read) {
 			i {
-				color: #1973aa;
+				color: var(--tutor-color-primary);
 			}
 
 			.tutor-qna-content {
 				font-style: normal;
 				font-weight: bold;
 				font-size: 16px;
-				color: #212327;
+				color: var(--tutor-body-color);
 			}
 		}
 
@@ -329,7 +329,7 @@ table.qna-list-table {
 	.tutor-qa-reply {
 		textarea {
 			&:focus {
-				border: 1px solid var(--tutor-primary) !important;
+				border: 1px solid var(--tutor-color-primary) !important;
 			}
 		}
 	}

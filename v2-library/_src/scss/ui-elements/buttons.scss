@@ -5,7 +5,7 @@ $disabled-color: #E9E9EA !default;
 	align-items: center;
     font-weight: 400;
     line-height: 1.4;
-    color: var(--tutor-primary-color);
+    color: var(--tutor-color-primary);
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
@@ -38,16 +38,16 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-primary {
-		border-color: var(--tutor-primary-color);
-		background-color: var(--tutor-primary-color);
+		border-color: var(--tutor-color-primary);
+		background-color: var(--tutor-color-primary);
 		color: #FFFFFF;
 
 		&:hover,
 		&:focus,
 		&:active {
 			color: #FFFFFF;
-			border-color: var(--tutor-primary-hover-color);
-			background-color: var(--tutor-primary-hover-color);
+			border-color: var(--tutor-color-primary-hover);
+			background-color: var(--tutor-color-primary-hover);
 		}
 
 		&[disabled],
@@ -58,14 +58,14 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-outline-primary {
-		border-color: var(--tutor-primary-color);
+		border-color: var(--tutor-color-primary);
 
 		&:hover,
 		&:focus,
 		&:active {
 			color: #FFFFFF;
-			border-color: var(--tutor-primary-hover-color);
-			background-color: var(--tutor-primary-hover-color);
+			border-color: var(--tutor-color-primary-hover);
+			background-color: var(--tutor-color-primary-hover);
 		}
 
 		&[disabled],
@@ -75,16 +75,16 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-secondary {
-		border-color: var(--tutor-primary-lighter-color);
-		background-color: var(--tutor-primary-lighter-color);
-		color: var(--tutor-primary-color);
+		border-color: rgba(var(--tutor-color-primary-rgb), 0.1);
+		background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
+		color: var(--tutor-color-primary);
 
 		&:hover,
 		&:focus,
 		&:active {
 			color: #FFFFFF;
-			border-color: var(--tutor-primary-hover-color);
-			background-color: var(--tutor-primary-hover-color);
+			border-color: var(--tutor-color-primary-hover);
+			background-color: var(--tutor-color-primary-hover);
 		}
 
 		&[disabled],
@@ -105,7 +105,7 @@ $disabled-color: #E9E9EA !default;
 			left: 0;
 			width: 0;
 			height: 1px;
-			background: var(--tutor-primary-hover-color);
+			background: var(--tutor-color-primary-hover);
 			transition: width 200ms ease-in-out;
 		}
 
@@ -144,9 +144,9 @@ $disabled-color: #E9E9EA !default;
 		&:hover,
 		&:focus,
 		&:active {
-			color: var(--tutor-primary-color);
+			color: var(--tutor-color-primary);
 			&.tutor-has-underline:after {
-				background-color: var(--tutor-primary-color);
+				background-color: var(--tutor-color-primary);
 			}
 
 			outline: 0;
@@ -227,9 +227,9 @@ $disabled-color: #E9E9EA !default;
 		&:hover,
 		&:focus,
 		&:active {
-			color: var(--tutor-primary-hover-color);
-			background-color: var(--tutor-primary-lighter-color);
-			border-color: var(--tutor-primary-lighter-color);
+			color: var(--tutor-color-primary-hover);
+			background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
+			border-color: rgba(var(--tutor-color-primary-rgb), 0.1);
 		}
 
 		&[disabled],
@@ -239,15 +239,15 @@ $disabled-color: #E9E9EA !default;
 
 		// outline
 		&-outline {
-			border-color: var(--tutor-primary-color);
-			color: var(--tutor-primary-color);
+			border-color: var(--tutor-color-primary);
+			color: var(--tutor-color-primary);
 
 			&:hover,
 			&:focus,
 			&:active {
 				color: #FFFFFF;
-				border-color: var(--tutor-primary-hover-color);
-				background-color: var(--tutor-primary-hover-color);
+				border-color: var(--tutor-color-primary-hover);
+				background-color: var(--tutor-color-primary-hover);
 			}
 
 			&[disabled],
@@ -258,14 +258,14 @@ $disabled-color: #E9E9EA !default;
 
 		// secondary
 		&-secondary {
-			background-color: var(--tutor-primary-lighter-color);
-			color: var(--tutor-primary-color);
+			background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
+			color: var(--tutor-color-primary);
 
 			&:hover,
 			&:focus,
 			&:active {
 				color: #FFFFFF;
-				background-color: var(--tutor-primary-hover-color);
+				background-color: var(--tutor-color-primary-hover);
 			}
 
 			&[disabled],

@@ -21,7 +21,7 @@ const AddonCard = ({ addon, addonId }) => {
 					<div className="addon-title tutor-mt-20">
 						<div className="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-4">{addon.name}</div>
 					</div>
-					<div className="addon-des tutor-fs-7 tutor-color-black-60 tutor-mt-20">{addon.description}</div>
+					<div className="addon-des tutor-fs-7 tutor-color-secondary tutor-mt-20">{addon.description}</div>
 				</div>
 
 				<div className="card-footer tutor-px-32 tutor-py-20 tutor-d-flex tutor-justify-between tutor-align-items-center tutor-mt-auto">

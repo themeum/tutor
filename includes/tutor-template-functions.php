@@ -1184,15 +1184,15 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
         if ( $duration ) {
             $output = '';
             if ( $durationHours > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value tutor-color-black-60 tutor-mr-4">' . $hour_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $hour_format . '</span>';
             }
 
             if ( $durationMinutes > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value tutor-color-black-60 tutor-mr-4">' . $minute_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $minute_format . '</span>';
             }
 
             if ( !$durationHours && !$durationMinutes && $durationSeconds > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value tutor-color-black-60 tutor-mr-4">' . $second_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $second_format . '</span>';
             }
 
 			return $output;

@@ -56,11 +56,11 @@
 		transition: all 200ms;
 
 		&::placeholder {
-			color: $text-muted;
+			color: var(--tutor-color-muted);
 		}
 
 		&:focus {
-			color: $black-main;
+			color: var(--tutor-color-body);
 		}
 	}
 
@@ -82,7 +82,7 @@
 			box-shadow: 0 0 10px -7px;
 		}
 		&:focus {
-			border-color: var(--tutor-primary-color);
+			border-color: var(--tutor-color-primary);
 			box-shadow: 0 0 10px -5px;
 		}
 	}

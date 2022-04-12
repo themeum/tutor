@@ -19,7 +19,7 @@
 			<span class="delete-btn" style="<?php echo ! $media_url ? 'display:none' : ''; ?>"></span>
 		</div>
 		<div class="thumbnail-input">
-			<div class="tutor-fs-6 tutor-color-black-60">
+			<div class="tutor-fs-6 tutor-color-secondary">
 			<?php
 				if ( isset($data['desc']['file_size']) ) {
 					printf( __( 'Size: <span class="tutor-fs-7 tutor-fw-medium">%s</span>', 'tutor' ), esc_attr( $data['desc']['file_size'] ) );

@@ -6,12 +6,13 @@ body {
 //common and reset css
 
 .tutor-wrap{
-	color: var(--tutor-text-color);
+	color: var(--tutor-body-color);
 	img{
 		max-width: 100%;
 		height: auto;
 	}
 }
+
 .tutor-custom-list-style{
 	list-style: none;
 	margin: 0;
@@ -27,7 +28,7 @@ body {
 			position: absolute;
 			left: 0;
 			font-family: 'tutor';
-			color: var(--tutor-primary-color);
+			color: var(--tutor-color-primary);
 		}
 	}
 }

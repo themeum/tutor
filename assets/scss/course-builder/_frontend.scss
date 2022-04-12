@@ -48,7 +48,7 @@
 			font-size: 20px;
 			font-style: normal;
 			font-weight: bold;
-			color: var(--tutor-black-70);
+			color: var(--tutor-color-secondary);
 
 			span,
 			i {
@@ -58,7 +58,7 @@
 			}
 
 			i {
-				color: var(--tutor-primary-color);
+				color: var(--tutor-color-primary);
 				font-size: 30px;
 			}
 
@@ -135,7 +135,7 @@
 			border: none;
 			background: transparent;
 			display: inline-flex;
-			color: var(--tutor-text-color);
+			color: var(--tutor-body-color);
 			transition: 300ms;
 			font-weight: 500;
 			white-space: nowrap;
@@ -148,10 +148,10 @@
 			}
 
 			&:hover {
-				color: var(--tutor-primary-color);
+				color: var(--tutor-color-primary);
 				background: transparent;
 				i {
-					color: var(--tutor-primary-color);
+					color: var(--tutor-color-primary);
 				}
 			}
 		}
@@ -169,7 +169,7 @@
 		}
 
 		div.mce-toolbar-grp {
-			background: $black-05;
+			background: $color-gray-10;
 			border-bottom: none;
 		}
 	}
@@ -190,7 +190,7 @@
 }
 
 .tutor-frontend-builder-course-price {
-	color: $black-main;
+	color: var(--tutor-color-body);
 
 	.tutor-form-group input {
 		margin-bottom: 0;
@@ -263,7 +263,7 @@ Content Drip (Pro)
 				height: 8px;
 				width: 8px;
 				border-radius: 50%;
-				background: var(--tutor-primary-color);
+				background: var(--tutor-color-primary);
 				left: -26px;
 				top: 9px;
 			}

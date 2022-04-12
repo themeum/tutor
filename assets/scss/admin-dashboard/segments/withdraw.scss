@@ -31,10 +31,7 @@
 						.withdraw-tutor-copy-to-clipboard {
 							padding: 0px 5px 0px 3px;
 							flex-basis: 100px;
-							background: $black-70;
-							// svg {
-							//     margin-right: 5px;
-							// }
+							background: var(--tutor-color-secondary);
 							span {
 								font-size: 18px;
 								padding: 0px 3px 0px 0px;

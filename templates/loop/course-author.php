@@ -22,7 +22,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID, true);
             <?php echo wp_kses_post(tutor_utils()->get_tutor_avatar($post->post_author)); ?>
         </a>
 	</div>
-	<div class="tutor-fs-7 tutor-color-black-60">
+	<div class="tutor-fs-7 tutor-color-secondary">
 		<?php esc_html_e('By', 'tutor') ?>
 		<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 		<?php esc_html_e(get_the_author()); ?>
