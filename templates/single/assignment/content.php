@@ -219,7 +219,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
         <?php if ( ! $is_submitting && ! $submitted_assignment ) : ?>
             <div class="tutor-time-out-assignment-details tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
-                <div class="tutor-to-assignment tutor-pt-32 tutor-pt-sm-40 has-show-more">
+                <div class="tutor-to-assignment tutor-pt-32 tutor-pt-sm-40">
                     <div class="tutor-to-title tutor-fs-6 tutor-fw-medium tutor-color-black">
                         <?php _e( 'Description', 'tutor' ); ?>
                     </div>
@@ -280,7 +280,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                     <input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
                     <?php $allowed_upload_files = (int) tutor_utils()->get_assignment_option( get_the_ID(), 'upload_files_limit' ); ?>
-                    <div class="tutor-assignment-body tutor-pt-32 tutor-pt-sm-40 has-show-more">
+                    <div class="tutor-assignment-body tutor-pt-32 tutor-pt-sm-40">
                         <div class="tutor-to-title tutor-fs-6 tutor-fw-medium tutor-color-black">
                             <?php _e( 'Assignment Submission', 'tutor' ); ?>
                         </div>

@@ -10,4 +10,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<div class="tutor-course-list-item tutor-card">
+<div class="tutor-card tutor-course-card">
