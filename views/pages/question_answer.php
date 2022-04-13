@@ -4,10 +4,16 @@
 	 * @since v.1.0.0
 	 */
 
-	if (isset($_GET['question_id'])){
+	use TUTOR\Input;
+	
+	if ( ! defined( 'ABSPATH' ) ) {
+		exit;
+	}
+	
+	if ( Input::has( 'question_id' ) ){
 		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
-			'question_id' => $_GET['question_id'],
-			'context' => 'backend-dashboard-qna-single'
+			'question_id' 	=> Input::get( 'question_id' ),
+			'context' 		=> 'backend-dashboard-qna-single'
 		));
 		return;
 	}
@@ -29,7 +35,7 @@
 	 * Determine active tab
 	 */
 
-	$active_tab = isset( $_GET['tab'] ) && $_GET['tab'] !== '' ? esc_html__( $_GET['tab'] ) : 'all';
+	$active_tab =  Input::get( 'tab', 'all' );
 
 	$navbar_data = array(
 		'page_title' => __('Question & Answer', 'tutor'),
