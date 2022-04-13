@@ -10,17 +10,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package Announcement List
  */
 
+use TUTOR\Input;
 use TUTOR\Announcements;
 $announcement_obj = new Announcements();
 
-$limit       = tutor_utils()->get_option( 'pagination_per_page' );
-$page_filter = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
-
-$order_filter  = ( isset( $_GET['order'] ) && strtolower( $_GET['order'] ) == 'asc' ) ? 'ASC' : 'DESC';
-$search_filter = sanitize_text_field( tutor_utils()->array_get( 'search', $_GET, '' ) );
-// announcement's parent
-$course_id   = sanitize_text_field( tutor_utils()->array_get( 'course-id', $_GET, '' ) );
-$date_filter = sanitize_text_field( tutor_utils()->array_get( 'date', $_GET, '' ) );
+$limit			= tutor_utils()->get_option( 'pagination_per_page' );
+$page_filter	= Input::get( 'paged', 1, Input::TYPE_INT );
+$order_filter	= Input::get( 'order', 'DESC' );
+$search_filter	= Input::get( 'search', '');
+$course_id	 	= Input::get( 'course-id', '' );
+$date_filter	= Input::get( 'date', '');
 
 $year  = date( 'Y', strtotime( $date_filter ) );
 $month = date( 'm', strtotime( $date_filter ) );
