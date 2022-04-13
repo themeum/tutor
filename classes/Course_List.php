@@ -59,7 +59,6 @@ class Course_List {
 		 * @since v2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_course_delete', array( __CLASS__, 'tutor_course_delete' ) );
-		add_action( 'wp_ajax_tabs_key_value_all', array( __CLASS__, 'tabs_key_value_all' ) );
 	}
 
 	/**
@@ -88,21 +87,21 @@ class Course_List {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
-	 * @param string $course_id selected course id | optional.
+	 * @param string $category_slug
 	 * @param string $date selected date | optional.
 	 * @param string $search search by user name or email | optional.
 	 * @return array
 	 * @since v2.0.0
 	 */
-	public function tabs_key_value( $course_id, $date, $search ): array {
+	public function tabs_key_value( $category_slug, $course_id, $date, $search ): array {
 		$url = get_pagenum_link();
 
-		$all       = self::count_course( 'all', $course_id, $date, $search );
-		$mine      = self::count_course( 'mine', $course_id, $date, $search );
-		$published = self::count_course( 'publish', $course_id, $date, $search );
-		$draft     = self::count_course( 'draft', $course_id, $date, $search );
-		$pending   = self::count_course( 'pending', $course_id, $date, $search );
-		$trash     = self::count_course( 'trash', $course_id, $date, $search );
+		$all       = self::count_course( 'all', $category_slug, $course_id, $date, $search );
+		$mine      = self::count_course( 'mine', $category_slug, $course_id, $date, $search );
+		$published = self::count_course( 'publish', $category_slug, $course_id, $date, $search );
+		$draft     = self::count_course( 'draft', $category_slug, $course_id, $date, $search );
+		$pending   = self::count_course( 'pending', $category_slug, $course_id, $date, $search );
+		$trash     = self::count_course( 'trash', $category_slug, $course_id, $date, $search );
 
 		$tabs = array(
 			array(
@@ -145,52 +144,6 @@ class Course_List {
 		return apply_filters( 'tutor_course_tabs', $tabs );
 	}
 
-	public function tabs_key_value_all() {
-
-		$all       = self::count_course( 'all' );
-		$mine      = self::count_course( 'mine' );
-		$published = self::count_course( 'publish' );
-		$draft     = self::count_course( 'draft' );
-		$pending   = self::count_course( 'pending' );
-		$trash     = self::count_course( 'trash' );
-
-		$tabs = array(
-			array(
-				'key'   => 'all',
-				'title' => __( 'All', 'tutor' ),
-				'value' => $all,
-			),
-			array(
-				'key'   => 'mine',
-				'title' => __( 'Mine', 'tutor' ),
-				'value' => $mine,
-			),
-			array(
-				'key'   => 'published',
-				'title' => __( 'Published', 'tutor' ),
-				'value' => $published,
-			),
-			array(
-				'key'   => 'draft',
-				'title' => __( 'Draft', 'tutor' ),
-				'value' => $draft,
-			),
-			array(
-				'key'   => 'pending',
-				'title' => __( 'Pending', 'tutor' ),
-				'value' => $pending,
-			),
-			array(
-				'key'   => 'trash',
-				'title' => __( 'Trash', 'tutor' ),
-				'value' => $trash,
-			),
-		);
-
-		return $tabs;
-		// return apply_filters( 'tutor_course_tabs', $tabs );
-	}
-
 	/**
 	 * Count courses by status & filters
 	 * Count all | min | published | pending | draft
@@ -218,7 +171,6 @@ class Course_List {
 		if ( 'all' === $status || 'mine' === $status ) {
 			$args['post_status'] = array( 'publish', 'pending', 'draft', 'private' );
 		} else {
-			$status              = $status === 'published' ? 'publish' : $status;
 			$args['post_status'] = array( $status );
 		}
 
