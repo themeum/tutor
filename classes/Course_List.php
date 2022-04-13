@@ -410,18 +410,49 @@ class Course_List {
 	 *
 	 * @param int $course_id | required.
 	 */
-	public static function get_all_quiz_by_course( int $course_id ): int {
+	public static function get_all_quiz_by_course( $course_id ) {
 		global $wpdb;
-		$quiz_number = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(ID) FROM {$wpdb->posts}
-			WHERE post_parent IN (SELECT ID FROM {$wpdb->posts} WHERE post_type ='topics' AND post_parent = %d AND post_status = 'publish')
-			AND post_type ='tutor_quiz'
-			AND post_status = 'publish'",
-				$course_id
-			)
+
+		// Prepare course IDs to get quiz count based on 
+		$course_ids = is_array($course_id) ? $course_id : array($course_id);
+
+		$course_ids = array_map(function($id){
+			return (int)$id;
+		}, $course_ids);
+
+		$course_ids = implode(',', $course_ids);
+
+		// Get quiz IDs by course IDs
+		$results = $wpdb->get_results(
+			"SELECT ID FROM {$wpdb->posts}
+			WHERE post_parent IN (
+				SELECT ID FROM {$wpdb->posts} 
+				WHERE post_type ='topics' 
+					AND post_parent IN ($course_ids) 
+					AND post_status = 'publish'
+				)
+			AND post_type ='tutor_quiz'"
 		);
-		return $quiz_number ? $quiz_number : 0;
+
+		$results = $wpdb->get_results(
+			"SELECT course.ID, quiz.ID
+			FROM {$wpdb->posts} course
+				INNER JOIN {$wpdb->posts} "
+		);
+
+		// Count quizes by course IDs 
+		$id_count = array();
+		foreach($results as $quiz){
+			!array_key_exists($quiz->ID, $id_count) ? $id_count[$quiz->ID]=0 : 0;
+			$id_count[$quiz->ID]++;
+		}
+		
+		// Return single count if the course id was single
+		if(!is_array($course_id)) {
+			return isset($id_count[$course_id]) ? $id_count[$course_id] : 0;
+		}
+
+		return $id_count;
 	}
 
 	/**
