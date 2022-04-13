@@ -1,6 +1,6 @@
 <?php
 	extract( $data ); // $attempt_list, $context;
-
+	
 	$page_key      = 'attempt-table';
 	$table_columns = include __DIR__ . '/contexts.php';
 
