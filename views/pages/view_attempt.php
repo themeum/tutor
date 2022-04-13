@@ -3,7 +3,13 @@
  * Student's Quiz Review Backend
  */
 
-$attempt_id   = (int) sanitize_text_field( $_GET['view_quiz_attempt_id'] );
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+use TUTOR\Input;
+
+$attempt_id   = Input::get( 'view_quiz_attempt_id', 0, Input::TYPE_INT );
 $attempt      = tutor_utils()->get_attempt( $attempt_id );
 $attempt_data = $attempt;
 $user_id      = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
