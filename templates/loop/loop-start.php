@@ -13,11 +13,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-$supported_filters = tutor_utils()->get_option( 'supported_course_filters', array() );
-$courseCols    	   = isset( $GLOBALS['tutor_course_archive_arg']['column_per_row'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
-$course_filter 	   = isset( $GLOBALS['tutor_course_archive_arg']['course_filter'] ) ? false : true;
-$courseCols        = ( true === $course_filter && $courseCols > 3 ) ? 3 : $courseCols;
-$add_class		   = ($course_filter && count( $supported_filters )) ? ' tutor-course-listing-filter-grid-2 ' : '';
-?>
 
-<div class="tutor-course-listing-grid tutor-course-listing-grid-<?php echo esc_html( $courseCols ); ?> <?php echo $add_class; ?>">
+$course_archive_arg = isset($GLOBALS['tutor_course_archive_arg']) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
+$columns = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
+?>
+<div class="tutor-course-list tutor-grid tutor-grid-<?php echo esc_attr( $columns ); ?>">

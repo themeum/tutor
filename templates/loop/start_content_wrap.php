@@ -5,4 +5,4 @@
  */
 ?>
 
-<div class="tutor-course-listing-item-body tutor-px-20 tutor-py-20">
+<div class="tutor-course-list-item-body tutor-card-body tutor-card-body-sm">

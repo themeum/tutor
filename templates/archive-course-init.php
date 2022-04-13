@@ -59,7 +59,7 @@
 
 	do_action( 'tutor_course/archive/after_loop' );
 
-	if($show_pagination){
+	if($show_pagination) {
 		// Load the pagination now
 		global $wp_query;
 		$pagination_data = array(
@@ -80,25 +80,60 @@
 	
 	$course_loop = ob_get_clean();
 
-	if(isset($loop_content_only) && $loop_content_only==true){
+	if (isset($loop_content_only) && $loop_content_only==true) {
 		echo $course_loop;
 		return;
 	}
+
+	$course_archive_arg = isset($GLOBALS['tutor_course_archive_arg']) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
+	$columns = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
 ?>
 
-<div class="tutor-mb-32">
-	<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page " data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
-		<?php if ($course_filter && count($supported_filters)): ?>
-			<div class="tutor-course-listing-filter tutor-filter-course-grid-3 course-archive-page">
-				<div class="tutor-course-filter tutor-course-filter-container">
-					<div class="tutor-course-filter-widget">
-						<?php tutor_load_template('course-filter.filters'); ?>
-					</div>
-				</div>
-				<div class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container tutor-pagination-wrapper-replacable replace-inner-contents" data-column_per_row="<?php esc_attr_e( $column_per_row ); ?>">
-					<?php 
-						echo $course_loop; 
-					?>
+<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
+	<div class="tutor-row tutor-gx-xl-5">
+	<?php if ($course_filter && count($supported_filters)): ?>
+		<div class="tutor-col-3 tutor-d-none tutor-d-lg-block">
+			<div class="tutor-course-filter" tutor-course-filter>
+				<?php tutor_load_template('course-filter.filters'); ?>
+			</div>
+		</div>
+
+		<?php if ( $columns < 3 ) : ?>
+		<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" area-hidden="true"></div>
+		<?php endif; ?>
+		
+		<div class="tutor-col-lg-9 tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?>" tutor-course-list-container>
+			<?php echo $course_loop; ?>
+		</div>
+	<?php else: ?>
+		<div class="tutor-col-12" tutor-course-list-container>
+			<?php echo $course_loop; ?>
+		</div>
+	<?php endif; ?>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php if(false) : ?>
+<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
+	<?php if ($course_filter && count($supported_filters)): ?>
+		<div class="tutor-course-listing-filter tutor-filter-course-grid-2 course-archive-page">
+			<div class="tutor-course-filter tutor-course-filter-container">
+				<div class="tutor-course-filter-widget">
+					<?php tutor_load_template('course-filter.filters'); ?>
 				</div>
 			</div>
 		<?php else: ?>
@@ -107,6 +142,13 @@
 					echo $course_loop; 
 				?>
 			</div>
-		<?php endif; ?>
-	</div>
+		</div>
+	<?php else: ?>
+		<div class="<?php tutor_container_classes(); ?>	tutor-course-filter-loop-container tutor-pagination-wrapper-replacable replace-inner-contents">
+			<?php 
+				echo $course_loop; 
+			?>
+		</div>
+	<?php endif; ?>
 </div>
+<?php endif; ?>
