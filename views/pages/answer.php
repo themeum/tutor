@@ -42,7 +42,7 @@ $question = tutor_utils()->get_qa_question( $question_id );
 		<div class="tutor_original_question tutor-bg-white ">
 			<div class="question-left">
 				<?php
-				echo tutor_utils()->get_tutor_avatar( $question->user_id );
+					echo tutor_utils()->get_tutor_avatar( $question->user_id );
 				?>
 			</div>
 

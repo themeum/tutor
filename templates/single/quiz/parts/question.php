@@ -151,7 +151,7 @@
 			?>
 				<div class="quiz-answer-footer-bar tutor-mt-60">
 					<div class="quiz-footer-button">
-						<button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-btn">
+						<button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-btn tutor-btn-primary">
 							<?php _e( 'Submit Quiz', 'tutor' ); ?>
 						</button>
 					</div>
