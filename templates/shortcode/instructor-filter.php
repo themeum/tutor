@@ -20,6 +20,8 @@ $short_by         = array(
 if ( $total_categories && $total_categories > $limit ) {
 	$show_more = true;
 }
+
+$columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 ?>
 
 <div class="tutor-instructors" tutor-instructors <?php
@@ -89,7 +91,11 @@ if ( $total_categories && $total_categories > $limit ) {
 			</div>
 		</aside>
 
-		<main class="tutor-col-lg-9">
+		<?php if ( $columns < 3 ) : ?>
+		<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" area-hidden="true"></div>
+		<?php endif; ?>
+
+		<main class="tutor-col-lg-9 tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?>">
 			<div class="tutor-form-wrap tutor-mb-24">
 				<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
 				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" tutor-instructors-filter-search />

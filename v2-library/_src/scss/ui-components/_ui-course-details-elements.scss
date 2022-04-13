@@ -1,17 +1,5 @@
 // Course Details Page
 .tutor-course-details {
-	// .tutor-course-details-page
-	&-page {
-		.tutor-course-details-tab {
-			.tab-item-content {
-				p {
-					@extend .tutor-text-regular-body;
-					color: var(--tutor-color-secondary);
-				}
-			}
-		}
-	}
-
 	// .tutor-course-details-header
 	&-header {
 		a {

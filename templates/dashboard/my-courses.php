@@ -68,7 +68,7 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
         tutor_utils()->tutor_empty_state(tutor_utils()->not_found_text());
     } else {
         ?>
-        <div class="tutor-row">
+        <div class="tutor-grid tutor-grid-3">
             <?php
             global $post;
             foreach ($results as $post) :

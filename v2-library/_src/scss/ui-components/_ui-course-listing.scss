@@ -1,31 +1,3 @@
-.tutor-course-listing {
-	// .tutor-course-listing-grid
-	&-grid {
-		@include responsiveGrid(250px, 1fr);
-		grid-gap: 32px;
-		grid-template-rows: min-content;
-
-		@include breakpoint-min(desktop-lg) {
-			// .tutor-course-listing-grid-*
-			&-1 {
-				grid-template-columns: repeat(1, 1fr);
-			}
-			&-2 {
-				grid-template-columns: repeat(2, 1fr);
-			}
-			&-3 {
-				grid-template-columns: repeat(3, 1fr);
-			}
-			&-4 {
-				grid-template-columns: repeat(4, 1fr);
-			}
-		}
-	}
-}
-
-
-
-
 // course list
 .tutor-course {
     &-list {

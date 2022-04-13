@@ -70,7 +70,7 @@ $paginated_courses_list =  $full_courses_list_array[$active_tab];
 	</div>
 
 	<?php if ($courses_list && $courses_list->have_posts()) : ?>
-		<div class="tutor-row">
+		<div class="tutor-grid tutor-grid-3">
 			<?php
 			while ($courses_list->have_posts()) {
 
