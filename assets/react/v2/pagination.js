@@ -3,17 +3,14 @@ import { get_response_message } from "../helper/response";
 window.jQuery(document).ready($=>{
     const {__} = wp.i18n;
 
-    $('[data-tutor_pagination_ajax]').css('display', 'flex');
-
     $(document).on('click', '[data-tutor_pagination_ajax] a.page-numbers', function(e){
         e.preventDefault();
 
         let link_el = $(this);
-        const innerSpan = link_el.find('span');
-        let replace_me = $(this).closest('.tutor-pagination-wrapper-replacable');
+        let content_container = $(this).closest('[tutor-course-list-container]');
+        let content_container_html = content_container.html();
 
-        if(link_el.find('.is-loading').length) {
-            // Prevent duplicate click
+        if (!content_container.length) {
             return;
         }
 
@@ -22,50 +19,34 @@ window.jQuery(document).ready($=>{
         let page_num = parseInt(url.searchParams.get("current_page"));
 
         let data = $(this).closest('[data-tutor_pagination_ajax]').data('tutor_pagination_ajax');
-        data.current_page = (isNaN(page_num) || page_num<=1) ? 1 : page_num;
+        data.current_page = (isNaN(page_num) || page_num <= 1) ? 1 : page_num;
 
         $.ajax({
             url: window._tutorobject.ajaxurl,
             type: 'POST',
             data: data,
             beforeSend: function () {
-                if(data.loading_container){
-                    $(data.loading_container).html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
-                    return;
-                }
-
-                if (innerSpan.hasClass('tutor-icon-angle-right')) {
-                    innerSpan.removeClass('tutor-icon-angle-right').addClass('tutor-icon-spinner');
-                } else if (innerSpan.hasClass('tutor-icon-angle-left')) {
-                    innerSpan.removeClass('tutor-icon-angle-left').addClass('tutor-icon-spinner');
-                }
+                content_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
+                // move to top
+                $('html, body').animate({ scrollTop: content_container.offset().top }, 'fast');
             },
+
             success: function(resp) {
                 let {success, data={}} = resp || {};
                 let {html} = data;
 
-                console.log(replace_me,);
-
-                if(success) {
-                    let append_root = replace_me.find('.tutor-pagination-content-appendable');
-                    if(append_root.length) {
-
-                        if(!html) {
-                            link_el.remove();
-                            return;
-                        }
-
-                        // Append the conntent
-                        append_root.append(html);
-
-                        // Update pagination data since pagination template is not supposed to be loaded here
-                        url.searchParams.set('current_page', page_num+1);
-                        link_el.attr('href', url.toString());
-                    } else {
-                        replace_me[replace_me.hasClass('replace-inner-contents') ? 'html' : 'replaceWith'](html);
+                if (success) {
+                    if (!html) {
+                        link_el.remove();
+                        return;
                     }
 
-                    $('[data-tutor_pagination_ajax]').css('display', 'flex');
+                    content_container.html(html);
+
+                    // Update pagination data since pagination template is not supposed to be loaded here
+                    url.searchParams.set('current_page', page_num + 1);
+                    link_el.attr('href', url.toString());
+
                     window.dispatchEvent(new Event(_tutorobject.content_change_event));
 
                 } else {
@@ -73,15 +54,9 @@ window.jQuery(document).ready($=>{
                 }
             },
             error: function() {
-                tutor_toast(__('Error', 'tutor'), 'Something went wrong', 'error');
-            },
-            complete: function () {
-                if (innerSpan.hasClass('tutor-icon-angle-right')) {
-                    innerSpan.removeClass('tutor-icon-spinner').addClass('tutor-icon-angle-right');
-                } else if (innerSpan.hasClass('tutor-icon-angle-left')) {
-                    innerSpan.removeClass('tutor-icon-spinner').addClass('tutor-icon-angle-left');
-                }
+                content_container.html(content_container_html);
+                tutor_toast(__('Error', 'tutor'), __('Something went wrong', 'tutor'), 'error');
             }
-        })
+        });
     });
 });

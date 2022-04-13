@@ -3493,7 +3493,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_tutor_avatar( $user_id = null, $size = 'sm' ) {
+	public function get_tutor_avatar( $user_id = null, $size = '' ) {
 		global $wpdb;
 
 		if ( ! $user_id ) {
@@ -3503,8 +3503,9 @@ class Utils {
 		$user = $this->get_tutor_user( $user_id );
 		$name = $user->display_name;
 		$arr  = explode( ' ', trim( $name ) );
+		$class = $size ? ' tutor-avatar-'. $size : '';
 
-		$output = '<div class="tutor-avatar tutor-avatar-'. $size .'">';
+		$output = '<div class="tutor-avatar'. $class .'">';
 		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
 
 		if ( $user->tutor_profile_photo ) {
