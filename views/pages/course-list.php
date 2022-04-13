@@ -9,29 +9,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
+use TUTOR\Input;
 use TUTOR\Course_List;
 
-$courses = new Course_List();
+$courses = \TUTOR\Tutor::instance()->course_list;
 
 /**
  * Short able params
  */
-$course_id     = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';
-$order_filter  = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC';
-$date          = isset( $_GET['date'] ) ? sanitize_text_field( $_GET['date'] ) : '';
-$search_filter = isset( $_GET['search'] ) ? sanitize_text_field( $_GET['search'] ) : '';
-$category_slug = isset( $_GET['category'] ) ? sanitize_text_field( $_GET['category'] ) : '';
+$course_id     = Input::get( 'course-id', '' );
+$order_filter  = Input::get( 'order', 'DESC' );
+$date          = Input::get( 'date', '' );
+$search_filter = Input::get( 'search', '' );
+$category_slug = Input::get( 'category', '' );
 
 /**
  * Determine active tab
  */
-$active_tab = isset( $_GET['data'] ) && $_GET['data'] !== '' ? esc_html__( $_GET['data'] ) : 'all';
+$active_tab = Input::get( 'data', 'all' );
 
 /**
  * Pagination data
  */
-$paged_filter = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
+$paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
 $limit        = tutor_utils()->get_option( 'pagination_per_page' );
 $offset       = ( $limit * $paged_filter ) - $limit;
 

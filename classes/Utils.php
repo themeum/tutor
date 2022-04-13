@@ -3493,7 +3493,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_tutor_avatar( $user_id = null, $size = 'thumbnail' ) {
+	public function get_tutor_avatar( $user_id = null, $size = 'sm' ) {
 		global $wpdb;
 
 		if ( ! $user_id ) {
@@ -3501,21 +3501,27 @@ class Utils {
 		}
 
 		$user = $this->get_tutor_user( $user_id );
-		if ( $user->tutor_profile_photo ) {
-			return '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, $size ) . '" class="tutor-image-avatar" alt="" /> ';
-		}
-
 		$name = $user->display_name;
 		$arr  = explode( ' ', trim( $name ) );
 
-		$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
-		$second_char    = ! empty( $arr[1] ) ? $this->str_split( $arr[1] )[0] : '';
-		$initial_avatar = strtoupper( $first_char . $second_char );
+		$output = '<div class="tutor-avatar tutor-avatar-'. $size .'">';
+		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
 
-		$bg_color       = '#' . substr( md5( $initial_avatar ), 0, 6 );
-		$initial_avatar = '<span class="tutor-text-avatar" style="background-color: ' . $bg_color . '; color: #fff8e5">' . $initial_avatar . '</span>';
+		if ( $user->tutor_profile_photo ) {
+			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="'. esc_attr( $name ) .'" /> ';
+		} else {
+			$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
+			$second_char    = ! empty( $arr[1] ) ? $this->str_split( $arr[1] )[0] : '';
+			$initial_avatar = strtoupper( $first_char . $second_char );
+	
+			// $bg_color       = '#' . substr( md5( $initial_avatar ), 0, 6 );
+			$output .= '<span class="tutor-avatar-text">' . $initial_avatar . '</span>';	
+		}
+		
+		$output .= '</div>';
+		$output .= '</div>';
 
-		return $initial_avatar;
+		return $output;
 	}
 
 	/**
@@ -9506,5 +9512,109 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get total number of course
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_course() {
+		global $wpdb;
+		$course_post_type = tutor()->course_post_type;
+		
+		$sql = "SELECT COUNT(ID) 
+		FROM {$wpdb->posts} 
+		WHERE post_type = %s 
+		AND post_status = %s";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, $course_post_type, 'publish' ) );
+	}
+
+	/**
+	 * Get total number of enrolled course
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_enrolled_course() {
+		global $wpdb;
+		
+		$sql = "SELECT COUNT(ID)
+		FROM {$wpdb->posts}
+		WHERE post_type = %s
+		AND post_status = %s";
+		
+		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_enrolled', 'completed' ) );
+	}
+
+	/**
+	 * Get total number of lesson
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_lesson(){
+		global $wpdb;
+		$lesson_type = tutor()->lesson_post_type;
+
+		$sql = "SELECT COUNT(lesson.ID)
+		FROM {$wpdb->posts} lesson
+		INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
+		INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID
+		WHERE lesson.post_type = %s
+		AND lesson.post_status = %s
+		AND course.post_status = %s
+		AND topic.post_status = %s";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type, 'publish', 'publish', 'publish' ) );
+	}
+
+	/**
+	 * Get total number of quiz
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_quiz() {
+		global $wpdb;
+		
+		$sql = "SELECT COUNT(ID)
+		FROM {$wpdb->posts}
+		WHERE post_type = %s
+		AND post_status = %s ";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_quiz', 'publish' ) );
+	}
+
+	/**
+	 * Get total number of question
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_question() {
+		global $wpdb;
+		
+		$sql = "SELECT COUNT(question_id) FROM {$wpdb->tutor_quiz_questions} ";
+		return $wpdb->get_var( $wpdb->prepare( $sql ) );
+	}
+
+	/**
+	 * Get total number of review
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_review() {
+		global $wpdb;
+
+		$sql = "SELECT COUNT(comment_ID)
+		FROM {$wpdb->comments}
+		WHERE comment_type = %s
+		AND comment_approved = %s ";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_course_rating', 'approved' ) );
 	}
 }

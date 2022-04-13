@@ -29,12 +29,6 @@ class Shortcode {
 		add_shortcode( 'tutor_instructor_registration_form', array( $this, 'instructor_registration_form' ) );
 		add_shortcode( 'tutor_course', array( $this, 'tutor_course' ) );
 
-		// Check if WP version is equal to or greater than 5.9.
-		global $wp_version;
-		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
-			add_shortcode( 'tutor_dashboard_menu', array( $this, 'tutor_dashboard_menu' ) );
-		}
-
 		add_shortcode( 'tutor_instructor_list', array( $this, 'tutor_instructor_list' ) );
 		add_action( 'tutor_options_after_instructors', array( $this, 'tutor_instructor_layout' ) );
 		add_action( 'wp_ajax_load_filtered_instructor', array( $this, 'load_filtered_instructor' ) );
@@ -108,21 +102,6 @@ class Shortcode {
 			tutor_load_template( 'dashboard.instructor.registration' );
 		}
 		return apply_filters( 'tutor_dashboard/student/index', ob_get_clean() );
-	}
-
-	/**
-	 * @return mixed
-	 *
-	 * Dashboard Menu Shortcode
-	 *
-	 * @since v.2.0.0
-	 */
-	public function tutor_dashboard_menu() {
-		ob_start();
-		if ( is_user_logged_in() ) {
-			tutor_load_template( 'dashboard.dashboard-menu' );
-		}
-		return apply_filters( 'tutor_dashboard/header/menu', ob_get_clean() );
 	}
 
 	/**

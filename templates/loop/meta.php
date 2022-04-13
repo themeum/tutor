@@ -33,9 +33,12 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 </div>
 
 <div class="list-item-author tutor-d-flex tutor-align-items-center tutor-mt-auto">
-	<div class="tutor-avatar">
-		<a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
-	</div>
+	<div>
+        <a href="<?php echo $profile_url; ?>">
+            <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?>
+        </a>
+    </div>
+
 	<div class="tutor-course-meta tutor-fs-7 tutor-color-secondary">
         <span class="tutor-course-meta-name">
             <?php esc_html_e('By', 'tutor') ?>
