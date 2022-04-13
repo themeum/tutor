@@ -24,8 +24,11 @@ if ( $total_categories && $total_categories > $limit ) {
 $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 ?>
 
-<div class="tutor-instructors" tutor-instructors <?php
-	foreach ( $attributes as $key => $value ) {
+<div class="tutor-instructors" <?php
+	foreach ( $attributes as $key => $value ) tutor-instructors {
+		if ( is_array( $value ) && count( $value ) ) {
+			continue;
+		}
 		echo 'data-' . $key . '="' . $value . '" ';
 	}
 ?>>
