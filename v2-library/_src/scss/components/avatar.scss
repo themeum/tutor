@@ -1,8 +1,8 @@
 .tutor-avatar {
 	display: inline-flex;
 	flex-shrink: 0;
-	height: 90px;
-	width: 90px;
+	height: 36px;
+	width: 36px;
 	background-color: #FFFFFF;
 	box-shadow: 0px 0px 0px 1px var(--tutor-border-color);
 	border-radius: 100px;
@@ -23,6 +23,11 @@
 			font-size: 24px;
 			font-weight: 500;
 		}
+	}
+
+	&-lg {
+		width: 64px;
+		height: 64px;
 	}
 
 	&-md {

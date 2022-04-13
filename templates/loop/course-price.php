@@ -64,7 +64,6 @@
             echo wp_kses_post($price_html);
             echo wp_kses_post($cart_html);
         }
-
         
     } else {
         echo wp_kses_post($free_html);

@@ -11,6 +11,6 @@ if ( isset( $query_vars[ 'tutor_dashboard_page' ] ) && 'enrolled-courses' === $q
 }
 ?>
 
-<div class="tutor-course-listing-item-footer <?php echo esc_attr( $is_enrolled_page ? 'no-border' : 'has-border' ); ?> tutor-py-16 tutor-px-20">
+<div class="tutor-course-list-item-footer tutor-card-footer <?php echo esc_attr( $is_enrolled_page ? 'no-border' : 'has-border' ); ?>">
     <?php tutor_course_loop_price(); ?>
 </div>
