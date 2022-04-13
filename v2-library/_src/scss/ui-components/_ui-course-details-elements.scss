@@ -1,17 +1,5 @@
 // Course Details Page
 .tutor-course-details {
-	// .tutor-course-details-page
-	&-page {
-		.tutor-course-details-tab {
-			.tab-item-content {
-				p {
-					@extend .tutor-text-regular-body;
-					color: var(--tutor-color-secondary);
-				}
-			}
-		}
-	}
-
 	// .tutor-course-details-header
 	&-header {
 		a {
@@ -106,27 +94,6 @@
 				column-count: 2;
 			}
 		}
-	}
-}
-
-// Course Details - Instructor Cards
-.tutor-instructor-info-card {
-	border: 1px solid var(--tutor-border-color);
-	border-radius: 6px;
-
-	&-footer {
-		border-top: 1px solid var(--tutor-border-color);
-	}
-	.tutor-ins-meta {
-		&-item {
-			&:not(:last-child) {
-				margin-right: 16px;
-			}
-		}
-	}
-
-	a {
-		color: inherit;
 	}
 }
 
