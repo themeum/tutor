@@ -201,7 +201,7 @@ class Shortcode {
 
 		$layout = sanitize_text_field( tutor_utils()->array_get( 'layout', $atts, '' ) );
 		$layout = in_array( $layout, $this->instructor_layout ) ? $layout : tutor_utils()->get_option( 'instructor_list_layout', $this->instructor_layout[0] );
-		$default_col = (isset($atts['show_filter']) && $atts['show_filter'] && $layout=='pp-left-middle') ? 2 : 3;
+		$default_col = (isset($atts['show_filter']) && $atts['show_filter'] && $layout == 'default') ? 2 : tutor_utils()->get_option( 'courses_col_per_row', 3 );
 
 		$payload = array(
 			'instructors'   => is_array( $instructors ) ? $instructors : array(),
