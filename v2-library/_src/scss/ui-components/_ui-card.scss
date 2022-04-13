@@ -16,7 +16,11 @@
 			align-items: center;
 			justify-content: space-between;
 			border-bottom: 1px solid #CDCFD5;
-			padding: 24px 32px;
+			padding: 16px 20px;
+
+			&-md {
+				padding: 24px 32px;
+			}
 		}
 
 		&-footer {
@@ -50,10 +54,10 @@
 
 		&-body {
 			flex: 1 1 auto;
-			padding: 24px 32px;
+			padding: 20px;
 
-			&-sm {
-				padding: 20px;
+			&-md {
+				padding: 24px 32px;
 			}
 		}
 

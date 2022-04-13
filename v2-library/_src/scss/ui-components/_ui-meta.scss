@@ -1,15 +1,12 @@
 .tutor-meta {
     display: flex;
     align-items: center;
+    gap: 16px;
 
     > * {
         font-size: 14px;
         line-height: 1.6;
         color: var(--tutor-color-muted);
-
-        &:not(:first-child) {
-            margin-left: 16px;
-        }
     }
 
     &-value,
