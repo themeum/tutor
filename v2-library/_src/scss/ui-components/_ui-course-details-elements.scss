@@ -97,27 +97,6 @@
 	}
 }
 
-// Course Details - Instructor Cards
-.tutor-instructor-info-card {
-	border: 1px solid var(--tutor-border-color);
-	border-radius: 6px;
-
-	&-footer {
-		border-top: 1px solid var(--tutor-border-color);
-	}
-	.tutor-ins-meta {
-		&-item {
-			&:not(:last-child) {
-				margin-right: 16px;
-			}
-		}
-	}
-
-	a {
-		color: inherit;
-	}
-}
-
 // Course Details - Sidebar Cards
 .tutor-course-sidebar-card {
 	border: 1px solid var(--tutor-border-color);
