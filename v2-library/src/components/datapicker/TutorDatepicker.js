@@ -22,6 +22,19 @@ function stringToDate(_date, _format, _delimiter) {
 	return formatedDate;
 }
 
+const urlPrams = (type, val, date = null) => {
+	const url = new URL(window.location.href);
+	const params = url.searchParams;
+	params.set(type, val);
+	params.set('paged', 1);
+	params.set('current_page', 1);
+
+	if (!date) {
+		params.delete('date');
+	}
+	return url;
+};
+
 const TutorDatepicker = (data) => {
 	const dateFormat = window._tutorobject
 		? window._tutorobject.wp_date_format
@@ -33,7 +46,6 @@ const TutorDatepicker = (data) => {
 	const [startDate, setStartDate] = useState(
 		default_date ? stringToDate(default_date, 'dd-mm-yyyy', '-') : undefined,
 	);
-	//const [startDate, setStartDate] = useState(stringToDate('24-06-2021', 'dd-mm-yyyy', '-'));
 	const [dropdownMonth, setDropdownMonth] = useState(false);
 	const [dropdownYear, setDropdownYear] = useState(false);
 
@@ -43,13 +55,13 @@ const TutorDatepicker = (data) => {
 	};
 
 	const handleCalendarChange = (date) => {
-		setStartDate(date);
-		setDropdownYear(false);
-		setDropdownMonth(false);
-
 		let year = date?.getFullYear();
 		let month = date?.getMonth();
 		let day = date?.getDate();
+
+		setStartDate(date);
+		setDropdownYear(false);
+		setDropdownMonth(false);
 		window.location = urlPrams('date', `${year}-${month + 1}-${day}`, date);
 	};
 
@@ -70,18 +82,6 @@ const TutorDatepicker = (data) => {
 		'December',
 	];
 
-	const urlPrams = (type, val, date = null) => {
-		const url = new URL(window.location.href);
-		const params = url.searchParams;
-		params.set(type, val);
-		params.set('paged', 1);
-		params.set('current_page', 1);
-
-		if (!date) {
-			params.delete('date');
-		}
-		return url;
-	};
 	useEffect(() => {
 		if (params.has('date')) {
 			setStartDate(new Date(params.get('date')));
