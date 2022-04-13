@@ -204,9 +204,13 @@ $available_status = array(
 					<tbody class="tutor-text-500">
 						<?php if ( $the_query->have_posts() ) : ?>
 							<?php
+							$course_ids = array_column($the_query->posts, 'ID');
+							$quiz_counts = $courses->get_all_quiz_by_course( $course_ids );
+							var_dump($quiz_counts);
+							
 							foreach ( $the_query->posts as $key => $post ) :
 								$count_lesson     = tutor_utils()->get_lesson_count_by_course( $post->ID );
-								$count_quiz       = $courses->get_all_quiz_by_course( $post->ID );
+								$count_quiz       = isset($quiz_counts[$post->ID]) ? $quiz_counts[$post->ID] : 0;
 								$topics           = tutor_utils()->get_topics( $post->ID );
 								$count_assignment = tutor_utils()->get_assignments_by_course( $post->ID )->count;
 								$count_topic      = $topics->found_posts;
