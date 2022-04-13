@@ -11,7 +11,7 @@
 
 	// Individual dashboard pages
 	.tutor-dashboard-content {
-		padding-top: 27px;
+		padding-top: 28px;
 		& > h3,
 		& > h4 {
 			font-style: normal;
@@ -30,7 +30,6 @@
 			text-transform: capitalize;
 		}
 
-		@import './pages/my-profile.scss';
 		@import './pages/review.scss';
 		@import './pages/quiz-attempt.scss';
 		@import './pages/setting.scss';

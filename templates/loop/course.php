@@ -11,8 +11,6 @@
  * @version 1.4.3
  */
 
-$hide_meta = ( isset($hide_meta) && $hide_meta ) ? $hide_meta : false;
-
 do_action('tutor_course/loop/before_content');
 
 do_action('tutor_course/loop/badge');
@@ -33,11 +31,9 @@ do_action('tutor_course/loop/before_title');
 do_action('tutor_course/loop/title');
 do_action('tutor_course/loop/after_title');
 
-if( ! $hide_meta ) {
-    do_action('tutor_course/loop/before_meta');
-    do_action('tutor_course/loop/meta');
-    do_action('tutor_course/loop/after_meta');
-}
+do_action('tutor_course/loop/before_meta');
+do_action('tutor_course/loop/meta');
+do_action('tutor_course/loop/after_meta');
 
 do_action('tutor_course/loop/before_excerpt');
 do_action('tutor_course/loop/excerpt');
