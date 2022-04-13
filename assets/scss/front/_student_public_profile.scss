@@ -488,13 +488,6 @@
 	}
 }
 
-.tutor-analytics-statements {
-	.tutor-react-datepicker .react-datepicker__input-container input {
-		margin-bottom: 0;
-		background: #ddd;
-	}
-}
-
 .tutor-analytics-students-wrapper {
 	display: grid;
 	grid-auto-flow: row;
@@ -502,9 +495,6 @@
 	@media (min-width: 992px) {
 		grid-template-columns: repeat(3, 1fr);
 		grid-gap: 30px;
-	}
-	.tutor-react-datepicker .react-datepicker__input-container input {
-		margin-bottom: 0;
 	}
 }
 

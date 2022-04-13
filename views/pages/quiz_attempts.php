@@ -9,7 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if (isset($_GET['view_quiz_attempt_id']) && is_numeric($_GET['view_quiz_attempt_id'])){
+use TUTOR\Input;
+
+if ( is_numeric( Input::get( 'view_quiz_attempt_id' ) ) ) {
     include tutor()->path."views/pages/view_attempt.php";
     return;
 }
@@ -19,21 +21,21 @@ $quiz_attempts = new TUTOR\Quiz_Attempts_List(false);
 /**
  * Short able params
  */
-$user_id   = isset( $_GET['user_id'] ) ? $_GET['user_id'] : '';
-$course_id = isset( $_GET['course-id'] ) ? $_GET['course-id'] : '';
-$order     = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-$date      = isset( $_GET['date'] ) ? tutor_get_formated_date( 'Y-m-d', $_GET['date'] ) : '';
-$search    = isset( $_GET['search'] ) ? $_GET['search'] : '';
+$user_id   = Input::get( 'user_id', '' );
+$course_id = Input::get( 'course-id', '' );
+$order     = Input::get( 'order', 'DESC' );
+$date      = Input::has('date') ? tutor_get_formated_date( 'Y-m-d', Input::get( 'date' ) ) : '';
+$search    = Input::get( 'search', '' );
 
 /**
  * Determine active tab
  */
-$active_tab = isset( $_GET['data'] ) && $_GET['data'] !== '' ? esc_html__( $_GET['data'] ) : 'all';
+$active_tab = Input::get( 'data', 'all' );
 
 /**
  * Pagination data
  */
-$paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
+$paged    = Input::get( 'paged', 1, Input::TYPE_INT );
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 

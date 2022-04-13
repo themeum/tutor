@@ -9,33 +9,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( isset( $_GET['sub_page'] ) ) {
-	$page = sanitize_text_field( $_GET['sub_page'] );
+use TUTOR\Input;
+use TUTOR\Instructors_List;
+
+if ( Input::has( 'sub_page' ) )  {
+	$page = Input::get( 'sub_page' );
 	include_once tutor()->path . "views/pages/{$page}.php";
 	return;
 }
 
-use TUTOR\Instructors_List;
 $instructors = new Instructors_List();
 
 /**
  * Short able params
  */
-$user_id   = isset( $_GET['user_id'] ) ? $_GET['user_id'] : '';
-$course_id = isset( $_GET['course-id'] ) ? $_GET['course-id'] : '';
-$order     = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-$date      = isset( $_GET['date'] ) ? $_GET['date'] : '';
-$search    = isset( $_GET['search'] ) ? $_GET['search'] : '';
+$user_id   = Input::get( 'user_id', '' );
+$course_id = Input::get( 'course-id', '' );
+$order     = Input::get( 'order', 'DESC' );
+$date      = Input::get( 'date', '' );
+$search    = Input::get( 'search', '' );
 
 /**
  * Determine active tab
  */
-$active_tab = isset( $_GET['data'] ) && $_GET['data'] !== '' ? esc_html__( $_GET['data'] ) : 'all';
+$active_tab = Input::get( 'data', 'all' );
 
 /**
  * Pagination data
  */
-$paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
+$paged    = Input::get( 'paged', 1, Input::TYPE_INT );
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 

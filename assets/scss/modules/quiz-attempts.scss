@@ -3,12 +3,15 @@
 	.image-matching-item {
 		display: flex;
 		align-items: center;
+		
 		&:not(:last-child) {
 			margin-bottom: 12px;
 		}
+		
 		img {
 			max-width: 35px;
 		}
+
 		.dragged-caption {
 			font-size: 14px;
 			margin-left: 12px;
@@ -37,8 +40,8 @@
 	}
 
 	img {
-		max-width: 35px;
-		max-height: 35px;
+		max-width: 32px;
+		max-height: 32px;
 	}
 }
 
@@ -115,14 +118,6 @@
 		font-size: 13px;
 		cursor: pointer;
 
-		&.tutor-text-danger {
-			border-color: var(--tutor-danger-color);
-		}
-
-		&.tutor-text-success {
-			border-color: var(--tutor-success);
-		}
-
 		&:not(:hover) {
 			opacity: 0.8;
 		}
@@ -162,22 +157,22 @@
 		}
 		&:not(:hover) {
 			&.tutor-quiz-answer-status-correct {
-				.tutor-icon-rounded.tutor-text-danger {
+				.tutor-icon-rounded.tutor-color-danger {
 					color: #cdcfd5 !important;
 					border-color: #cdcfd5 !important;
 				}
 			}
 
 			&.tutor-quiz-answer-status-wrong {
-				.tutor-icon-rounded.tutor-text-success {
+				.tutor-icon-rounded.tutor-color-success {
 					color: #cdcfd5 !important;
 					border-color: #cdcfd5 !important;
 				}
 			}
 
 			&.tutor-quiz-answer-status-pending {
-				.tutor-icon-rounded.tutor-text-success,
-				.tutor-icon-rounded.tutor-text-danger {
+				.tutor-icon-rounded.tutor-color-success,
+				.tutor-icon-rounded.tutor-color-danger {
 					color: #cdcfd5 !important;
 					border-color: #cdcfd5 !important;
 				}
