@@ -205,18 +205,18 @@ $available_status = array(
 						<?php if ( $the_query->have_posts() ) : ?>
 							<?php
 							$course_ids = array_column($the_query->posts, 'ID');
-							$quiz_counts = $courses->get_all_quiz_by_course( $course_ids );
-							var_dump($quiz_counts);
+							$course_meta_data = $courses->get_course_meta_data($course_ids);
+							$authors = array();
 							
 							foreach ( $the_query->posts as $key => $post ) :
-								$count_lesson     = tutor_utils()->get_lesson_count_by_course( $post->ID );
-								$count_quiz       = isset($quiz_counts[$post->ID]) ? $quiz_counts[$post->ID] : 0;
-								$topics           = tutor_utils()->get_topics( $post->ID );
-								$count_assignment = tutor_utils()->get_assignments_by_course( $post->ID )->count;
-								$count_topic      = $topics->found_posts;
-								$student_details  = $courses->course_enrollments_with_student_details( $post->ID );
-								$total_student    = $student_details['total_enrollments'];
-								$author_details   = get_userdata( $post->post_author );
+								$count_lesson     = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['lesson'] : 0;;
+								$count_quiz       = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_quiz'] : 0;
+								$count_assignment = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_assignments'] : 0;
+								$count_topic      = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['topics'] : 0;
+								$total_student    = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_enrolled'] : 0;
+								
+								!isset($authors[$post->post_author]) ? $authors[$post->post_author]=get_userdata( $post->post_author ) : 0;
+								$author_details = $authors[$post->post_author];
 								?>
 								<tr>
 									<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
@@ -301,9 +301,8 @@ $available_status = array(
 												$price = tutor_utils()->get_course_price( $post->ID );
 												if ( null == $price ) {
 													esc_html_e( 'Free', 'tutor' );
-												} 
-												else {
-													echo $price; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+												} else {
+													echo $price;
 												}
 												// Alert class for course status.
 												$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : ( 'private' === $post->post_status ? 'select-default' : 'select-default' ) ) ) );
