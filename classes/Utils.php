@@ -9513,4 +9513,108 @@ class Utils {
 
 		return null;
 	}
+
+	/**
+	 * Get total number of course
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_course() {
+		global $wpdb;
+		$course_post_type = tutor()->course_post_type;
+		
+		$sql = "SELECT COUNT(ID) 
+		FROM {$wpdb->posts} 
+		WHERE post_type = %s 
+		AND post_status = %s";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, $course_post_type, 'publish' ) );
+	}
+
+	/**
+	 * Get total number of enrolled course
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_enrolled_course() {
+		global $wpdb;
+		
+		$sql = "SELECT COUNT(ID)
+		FROM {$wpdb->posts}
+		WHERE post_type = %s
+		AND post_status = %s";
+		
+		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_enrolled', 'completed' ) );
+	}
+
+	/**
+	 * Get total number of lesson
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_lesson(){
+		global $wpdb;
+		$lesson_type = tutor()->lesson_post_type;
+
+		$sql = "SELECT COUNT(lesson.ID)
+		FROM {$wpdb->posts} lesson
+		INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
+		INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID
+		WHERE lesson.post_type = %s
+		AND lesson.post_status = %s
+		AND course.post_status = %s
+		AND topic.post_status = %s";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type, 'publish', 'publish', 'publish' ) );
+	}
+
+	/**
+	 * Get total number of quiz
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_quiz() {
+		global $wpdb;
+		
+		$sql = "SELECT COUNT(ID)
+		FROM {$wpdb->posts}
+		WHERE post_type = %s
+		AND post_status = %s ";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_quiz', 'publish' ) );
+	}
+
+	/**
+	 * Get total number of question
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_question() {
+		global $wpdb;
+		
+		$sql = "SELECT COUNT(question_id) FROM {$wpdb->tutor_quiz_questions} ";
+		return $wpdb->get_var( $wpdb->prepare( $sql ) );
+	}
+
+	/**
+	 * Get total number of review
+	 *
+	 * @return int
+	 * @since 2.0.2
+	 */
+	public function get_total_review() {
+		global $wpdb;
+
+		$sql = "SELECT COUNT(comment_ID)
+		FROM {$wpdb->comments}
+		WHERE comment_type = %s
+		AND comment_approved = %s ";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_course_rating', 'approved' ) );
+	}
 }
