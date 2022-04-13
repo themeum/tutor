@@ -31,10 +31,9 @@ $profile_data = array(
 );
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-capitalize-text"><?php _e( 'My Profile', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php _e( 'My Profile', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner tutor-dashboard-profile-data">
 	<?php
-
 	foreach ( $profile_data as $key => $data ) {
 		$first_name_class = ( $data[0] == 'First Name' || $data[0] == 'Last Name' ) ? 'tutor-capitalize-text' : '';
 		?>

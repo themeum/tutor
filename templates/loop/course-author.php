@@ -14,33 +14,31 @@
 global $post, $authordata;
 
 $profile_url = tutor_utils()->profile_url($authordata->ID, true);
+$course_categories = get_tutor_course_categories();
 ?>
 
-<div class="list-item-author tutor-d-flex tutor-align-items-center tutor-mt-32">
-	<div>
-		<a href="<?php echo esc_url($profile_url); ?>"> 
-            <?php echo wp_kses_post(tutor_utils()->get_tutor_avatar($post->post_author)); ?>
+<div class="tutor-meta tutor-mt-32">
+    <div>
+        <a href="<?php echo $profile_url; ?>" class="tutor-d-flex">
+            <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?>
         </a>
-	</div>
-	<div class="tutor-fs-7 tutor-color-secondary">
-		<?php esc_html_e('By', 'tutor') ?>
-		<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-		<?php esc_html_e(get_the_author()); ?>
-		</span>
-		<?php
-            $course_categories = get_tutor_course_categories();
-            if(!empty($course_categories) && is_array($course_categories ) && count($course_categories)){
-        ?>
-        <?php esc_html_e('In', 'tutor') ?>
-		<span class="tutor-fs-7 tutor-fw-medium course-category tutor-color-black">
-        <?php
-            foreach ($course_categories as $course_category){
-                $category_name = $course_category->name;
-                $category_link = get_term_link($course_category->term_id);
-                echo wp_kses_post("<a href='$category_link'>$category_name </a>");
-            }
-        }
-        ?>
-		</span>
-	</div>
+    </div>
+
+    <div>
+        <?php esc_html_e('By', 'tutor') ?>
+        <a href="<?php echo $profile_url; ?>"><?php esc_html_e(get_the_author()); ?></a>
+
+        <?php if( !empty( $course_categories ) && is_array( $course_categories ) && count( $course_categories ) ) : ?>
+            <?php esc_html_e('In', 'tutor'); ?>
+            <?php
+                $category_links = array();
+                foreach ( $course_categories as $course_category ) :
+                    $category_name = $course_category->name;
+                    $category_link = get_term_link($course_category->term_id);
+                    $category_links[] = wp_sprintf( '<a href="%1$s">%2$s</a>', esc_url( $category_link ), esc_html( $category_name ) );
+                endforeach;
+                echo implode(', ', $category_links);
+            ?>
+        <?php endif; ?>
+    </div>
 </div>

@@ -14,9 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$class = isset( $class ) ? ' ' . $class : ' tutor-mb-8';
 ?>
 
-<div class="tutor-course-list-item-ratings">
+<div class="tutor-course-ratings<?php echo esc_html( $class ); ?>">
     <div class="tutor-ratings">
         <div class="tutor-ratings-stars">
 			<?php

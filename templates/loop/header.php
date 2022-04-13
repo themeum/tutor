@@ -8,7 +8,7 @@
 
 <?php tutor_course_loop_thumbnail(); ?>
 
-<div class="tutor-course-list-item-bookmark">
+<div class="tutor-course-bookmark">
     <?php
         $course_id = get_the_ID();
         $is_wish_listed = tutor_utils()->is_wishlisted( $course_id );
