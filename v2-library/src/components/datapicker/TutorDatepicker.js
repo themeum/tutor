@@ -2,6 +2,7 @@ import { getMonth, getYear } from 'date-fns';
 import range from 'lodash.range';
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
+import { CustomInput } from '../CustomInput';
 
 
 // Formatiing String to Date
@@ -17,25 +18,6 @@ function stringToDate(_date, _format, _delimiter) {
 	const formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
 	return formatedDate;
 }
-
-const Input = React.forwardRef(({ onChange, placeholder, value, id, onClick }, ref) => {
-	return (
-		<div className='tutor-form-wrap'>
-			<span className='tutor-form-icon tutor-form-icon-reverse'>
-				<span className='tutor-icon-calender' aria-hidden={true}></span>
-			</span>
-			<input
-				ref={ref}
-				className='tutor-form-control'
-					onChange={onChange}
-					placeholder={placeholder}
-					value={value}
-					id={id}
-					onClick={onClick}
-				/>
-		</div>
-	)
-});
 
 
 const TutorDatepicker = (data) => {
@@ -96,12 +78,12 @@ const TutorDatepicker = (data) => {
 		if (params.has('date')) {
 			setStartDate(new Date(params.get('date')));
 		}
-	}, []);
-
+	}, [startDate]);
+	
 	return (
 		<div className="tutor-react-datepicker">
 			<DatePicker
-				customInput={<Input/>}
+				customInput={<CustomInput />}
 				isClearable={Boolean(data.is_clearable)}
 				placeholderText={dateFormat}
 				selected={startDate}

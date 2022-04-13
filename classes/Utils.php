@@ -2907,7 +2907,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '' ) {
+	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '', $count_only=false ) {
 		global $wpdb;
 
 		$search_filter = sanitize_text_field( $search_filter );
@@ -2986,41 +2986,40 @@ class Utils {
 			$order_query = " ORDER BY user_meta.meta_value {$order_filter} ";
 		}
 
-		$instructors = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status
-				FROM 	{$wpdb->users} user
-						INNER JOIN {$wpdb->usermeta} user_meta
-								ON ( user.ID = user_meta.user_id )
-						INNER JOIN {$wpdb->usermeta} inst_status
-								ON ( user.ID = inst_status.user_id )
-						{$category_join}
-						LEFT JOIN {$wpdb->usermeta} AS umeta
-							ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
-						LEFT JOIN {$wpdb->comments} AS c
-							ON c.comment_post_ID = umeta.meta_value
-						LEFT JOIN {$wpdb->commentmeta} AS cmeta
-							ON cmeta.comment_id = c.comment_ID
-							AND cmeta.meta_key = 'tutor_rating'
-				WHERE 	user_meta.meta_key = %s
-						AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
-						{$status}
-						{$category_where}
-						{$course_filter}
-						{$date_filter}
-				GROUP BY user.ID
-				{$rating_having}
-				{$order_query}
-				LIMIT 	%d, %d;
-			",
-				'_is_tutor_instructor',
-				$search_filter,
-				$search_filter,
-				$start,
-				$limit
-			)
+		$limit_offset = $count_only ? '' : " LIMIT {$start}, {$limit} ";
+		$select_col = $count_only ? 
+						' COUNT(DISTINCT user.ID) ' :
+						' DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status ';
+
+		$query = $wpdb->prepare(
+			"SELECT {$select_col}
+			FROM {$wpdb->users} user
+				INNER JOIN {$wpdb->usermeta} user_meta
+						ON ( user.ID = user_meta.user_id )
+				INNER JOIN {$wpdb->usermeta} inst_status
+						ON ( user.ID = inst_status.user_id )
+				{$category_join}
+				LEFT JOIN {$wpdb->usermeta} AS umeta
+					ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
+				LEFT JOIN {$wpdb->comments} AS c
+					ON c.comment_post_ID = umeta.meta_value
+				LEFT JOIN {$wpdb->commentmeta} AS cmeta
+					ON cmeta.comment_id = c.comment_ID
+					AND cmeta.meta_key = 'tutor_rating'
+			WHERE 	user_meta.meta_key = '_is_tutor_instructor'
+				AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+				{$status}
+				{$category_where}
+				{$course_filter}
+				{$date_filter}
+			GROUP BY user.ID {$rating_having} {$order_query} {$limit_offset}",
+			
+			$search_filter,
+			$search_filter
 		);
-		return $instructors;
+
+		$results = $wpdb->get_results($query);
+		return $count_only ? count($results) : $results;
 	}
 
 	/**
@@ -3494,7 +3493,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_tutor_avatar( $user_id = null, $size = 'thumbnail' ) {
+	public function get_tutor_avatar( $user_id = null, $size = 'sm' ) {
 		global $wpdb;
 
 		if ( ! $user_id ) {
@@ -3502,21 +3501,27 @@ class Utils {
 		}
 
 		$user = $this->get_tutor_user( $user_id );
-		if ( $user->tutor_profile_photo ) {
-			return '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, $size ) . '" class="tutor-image-avatar" alt="" /> ';
-		}
-
 		$name = $user->display_name;
 		$arr  = explode( ' ', trim( $name ) );
 
-		$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
-		$second_char    = ! empty( $arr[1] ) ? $this->str_split( $arr[1] )[0] : '';
-		$initial_avatar = strtoupper( $first_char . $second_char );
+		$output = '<div class="tutor-avatar tutor-avatar-'. $size .'">';
+		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
 
-		$bg_color       = '#' . substr( md5( $initial_avatar ), 0, 6 );
-		$initial_avatar = '<span class="tutor-text-avatar" style="background-color: ' . $bg_color . '; color: #fff8e5">' . $initial_avatar . '</span>';
+		if ( $user->tutor_profile_photo ) {
+			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="'. esc_attr( $name ) .'" /> ';
+		} else {
+			$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
+			$second_char    = ! empty( $arr[1] ) ? $this->str_split( $arr[1] )[0] : '';
+			$initial_avatar = strtoupper( $first_char . $second_char );
+	
+			// $bg_color       = '#' . substr( md5( $initial_avatar ), 0, 6 );
+			$output .= '<span class="tutor-avatar-text">' . $initial_avatar . '</span>';	
+		}
+		
+		$output .= '</div>';
+		$output .= '</div>';
 
-		return $initial_avatar;
+		return $output;
 	}
 
 	/**

@@ -10,7 +10,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 
 ?>
 <h2><?php _e( 'Answer', 'tutor' ); ?></h2>
-<div class="tutor-queston-and-answer-wrap">
+<div class="tutor-question-and-answer-wrap">
 	<div class="tutor_question_answer_wrap">
 		<div class="tutor_original_question">
 			<div class="tutor-question-wrap">
