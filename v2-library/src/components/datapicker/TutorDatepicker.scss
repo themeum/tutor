@@ -503,28 +503,3 @@
 		}
 	}
 }
-
-// Focus Styles
-.tutor-v2-date-picker-fd {
-	.tutor-react-datepicker .react-datepicker__input-container input {
-		height: 48px;
-		&:focus {
-			border-color: var(--tutor-color-primary);
-		}
-	}
-}
-
-.tutor-v2-date-picker-wp {
-	.tutor-react-datepicker .react-datepicker__input-container input {
-		&:focus {
-			border-color: #1973aa;
-		}
-	}
-}
-
-// Fix: Zoom Input Fields
-.tutor-zoom-meeting-modal-wrap {
-	.tutor-react-datepicker .react-datepicker__input-container input {
-		height: 48px;
-	}
-}
