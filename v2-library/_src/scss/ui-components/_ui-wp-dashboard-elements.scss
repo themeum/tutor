@@ -46,43 +46,16 @@
 	}
 }
 
-// @todo: can be implemented like this
-// .tutor-course-builder {
-// 	&-zoom-meeting-list {
-// 		&-item {
-// 			border-top: 1px solid var(--tutor-border-color);
-// 			border-bottom: 1px solid var(--tutor-border-color);
-	
-// 			& + & {
-// 				border-top: 0px;
-// 			}
-// 		}
-// 	}
-// }
 
 
-.tutor-zoom-integration-card {
-	.tutor-zoom-no-meetings {
-		margin: 15px;
-	}
+.tutor-course-builder {
+	&-zoom-meeting-list {
+		&-item {
+			padding: 24px 0px;
+			border-bottom: 1px solid var(--tutor-border-color);
 
-	&-body {
-		border-top: 1px solid var(--tutor-border-color);
-		border-bottom: 1px solid var(--tutor-border-color);
-		display: grid;
-		@include responsiveGrid(200px, auto);
-		grid-gap: 15px;
-		align-items: center;
-
-		.list-item.list-item-buttons {
-			display: inline-flex;
-		}
-
-		@include breakpoint-min(desktop-lg) {
-			.list-item {
-				&:last-child {
-					justify-self: flex-end;
-				}
+			&:first-child {
+				padding-top: 0;
 			}
 		}
 	}

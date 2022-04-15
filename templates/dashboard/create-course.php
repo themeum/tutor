@@ -208,10 +208,12 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 									<div class="tutor-form-check tutor-align-items-center">
 										<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> />
 										<label for="tutor_price_paid" class="tutor-amount-field">
-											<span class="tutor-input-prepand">
-												<?php echo $currency_symbol; ?>
-											</span>
-											<input type="number" class="tutor-form-number-verify tutor-pl-12" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="0.1" min="0">
+											<div class="tutor-input-group">
+												<span class="tutor-input-group-addon">
+													<?php echo $currency_symbol; ?>
+												</span>
+												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="0.1" min="0">
+											</div>
 										</label>
 									</div>
 								</div>
