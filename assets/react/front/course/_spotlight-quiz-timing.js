@@ -143,7 +143,6 @@ window.jQuery(document).ready($=>{
 							svgWrapper.setAttribute('class', 'quiz-time-remaining-expired-circle');
 						}
 						svg.setAttribute('style', `stroke-dashoffset: ${StrokeDashOffset};`);
-						// svg.setAttribute('style', `--quizeProgress: ${100 - progress}`);
 					}
 				}
 			}, 1000);

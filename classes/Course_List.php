@@ -392,7 +392,7 @@ class Course_List {
 				INNER JOIN {$wpdb->posts} "
 		);
 
-		// Count quizes by course IDs 
+		// Count quizzes by course IDs 
 		$id_count = array();
 		foreach($results as $quiz){
 			!array_key_exists($quiz->ID, $id_count) ? $id_count[$quiz->ID]=0 : 0;
