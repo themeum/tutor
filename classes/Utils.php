@@ -9601,7 +9601,7 @@ class Utils {
 		global $wpdb;
 		
 		$sql = "SELECT COUNT(question_id) FROM {$wpdb->tutor_quiz_questions} ";
-		return $wpdb->get_var( $wpdb->prepare( $sql ) );
+		return $wpdb->get_var( $sql );
 	}
 
 	/**
