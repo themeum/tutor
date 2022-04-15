@@ -418,23 +418,6 @@ Instructor
 	font-size: 16px;
 }
 
-.tutor-form-group {
-	position: relative;
-	span.tutor-input-prepand {
-		position: absolute;
-		height: calc(100% - 2px);
-		font-size: 21px;
-		line-height: 50px;
-		padding: 0 12px;
-		background: transparent;
-		border-right: 1px solid #dcdfe5;
-		top: 1px;
-		+ input {
-			padding-left: 35px;
-		}
-	}
-}
-
 .tutor-option-field textarea,
 .tutor-form-group textarea {
 	line-height: 26px;
