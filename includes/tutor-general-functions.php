@@ -788,6 +788,24 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	}
 }
 
+/**
+ * Get translated date
+ *
+ * @since v2.0.2
+ *
+ * @param string $format optional date format, default is wp date time format.
+ *
+ * @return string translated date
+ */
+if ( ! function_exists( 'tutor_i18n_get_formated_date' ) ) {
+	function tutor_i18n_get_formated_date( string $date, $format = '' ) {
+		if ( '' === $format ) {
+			$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+		}
+		return date_i18n( $format , strtotime( $date ) );
+	}
+}
+
 if ( ! function_exists( '_tutor_search_by_title_only' ) ) {
 	/**
 	 * Search SQL filter for matching against post title only.
