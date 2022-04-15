@@ -8,6 +8,9 @@ window.jQuery(document).ready($=>{
     });
     $(document).on('adding_to_cart', function (e, $button) {
         $button.addClass('is-loading');
+        setTimeout(() => {
+            $button.removeClass('is-loading');
+        }, 4000);
     });
 
 });
