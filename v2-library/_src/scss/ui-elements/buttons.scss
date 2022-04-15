@@ -193,6 +193,7 @@ $disabled-color: #E9E9EA !default;
 	&-btn-group {
 		display: flex;
 		align-items: center;
+		gap: 4px;
 	}
 
 	&-btn {

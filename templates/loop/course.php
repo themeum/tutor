@@ -35,7 +35,6 @@ do_action('tutor_course/loop/before_meta');
 do_action('tutor_course/loop/meta');
 do_action('tutor_course/loop/after_meta');
 
-
 do_action('tutor_course/loop/before_excerpt');
 do_action('tutor_course/loop/excerpt');
 do_action('tutor_course/loop/after_excerpt');

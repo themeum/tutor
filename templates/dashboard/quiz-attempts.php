@@ -33,8 +33,8 @@ $date_filter    = isset( $_GET['date'] ) ? $_GET['date'] : '';
 tutor_load_template_from_custom_path( tutor()->path . 'templates/dashboard/elements/filters.php' );
 
 $course_id           = tutor_utils()->get_assigned_courses_ids_by_instructors();
-$quiz_attempts       = tutor_utils()->get_quiz_attempts($offset, $item_per_page, '', $course_filter, '', $order_filter, null, false, true );
-$quiz_attempts_count = tutor_utils()->get_quiz_attempts($offset, $item_per_page, '', $course_filter, '', $order_filter, null, true, true );
+$quiz_attempts       = tutor_utils()->get_quiz_attempts($offset, $item_per_page, '', $course_filter, $date_filter, $order_filter, null, false, true );
+$quiz_attempts_count = tutor_utils()->get_quiz_attempts($offset, $item_per_page, '', $course_filter, $date_filter, $order_filter, null, true, true );
 
 tutor_load_template_from_custom_path(
 	tutor()->path . '/views/quiz/attempt-table.php',
@@ -49,6 +49,8 @@ $pagination_data              = array(
 	'per_page'    => $item_per_page,
 	'paged'       => $current_page,
 );
-$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
-tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+if( $quiz_attempts_count > $item_per_page ){
+	$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+	tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+}
 ?>
