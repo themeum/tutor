@@ -238,14 +238,14 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 				?>
 			<div class="tutor-course-progress-item tutor-card tutor-mb-20">
 				<div class="tutor-row tutor-gx-0">
-					<div class="tutor-col-lg-5">
-						<div class="tutor-course-listing-thumbnail tutor-ratio tutor-ratio-16x9">
-							<img src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
+					<div class="tutor-col-lg-4">
+						<div class="tutor-ratio tutor-ratio-3x2">
+							<img class="tutor-card-image-left" src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
 						</div>
 					</div>
 
-					<div class="tutor-col-lg-7 tutor-align-self-center">
-						<div class="tutor-m-24">
+					<div class="tutor-col-lg-8 tutor-align-self-center">
+						<div class="tutor-card-body">
 							<?php if ( $course_rating ) : ?>
 								<div class="tutor-ratings tutor-mb-4">
 									<?php tutor_utils()->star_rating_generator( $course_rating->rating_avg ); ?>

@@ -25,7 +25,9 @@
 
 		&-footer {
 			padding: 16px 20px;
-			border-top: 1px solid #CDCFD5;
+			&:not(.tutor-no-border) {
+				border-top: 1px solid #CDCFD5;
+			}
 		}
 
 		&-image {

@@ -78,46 +78,48 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
                 $tutor_course_img = get_tutor_course_thumbnail_src();
                 $id_string_delete = 'tutor_my_courses_delete_' . $post->ID;
                 $row_id = 'tutor-dashboard-my-course-' . $post->ID;
+                $course_duration = get_tutor_course_duration_context($post->ID, true);
+                $course_students = tutor_utils()->count_enrolled_users_by_course();
                 ?>
 
-                <div id="<?php echo $row_id; ?>" class="tutor-course-listing-item tutor-course-listing-item-sm tutor-mycourses-card tutor-mycourse-<?php the_ID(); ?>">
-                    <div class="tutor-course-listing-item-head tutor-d-flex">
-                        <div class="tutor-course-listing-thumbnail tutor-ratio tutor-ratio-16x9">
-                            <img src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
+                <div id="<?php echo $row_id; ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
+                    <a href="<?php echo get_the_permalink(); ?>" class="tutor-d-block">
+                        <div class="tutor-ratio tutor-ratio-16x9">
+                            <img class="tutor-card-image-top" src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
                         </div>
-                    </div>
-                    <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-20">
-                        <div class="tutor-d-flex tutor-mb-7">
-                            <span class="tutor-fs-6 tutor-color-secondary">
+                    </a>
+
+                    <div class="tutor-card-body">
+                        <div class="tutor-meta tutor-mb-8">
+                            <span>
                                 <?php echo esc_html(get_the_date()); ?> <?php echo esc_html(get_the_time()); ?>
                             </span>
                         </div>
-                        <div class="list-item-title tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mb-16">
+
+                        <div class="tutor-course-name tutor-fs-6 tutor-fw-bold tutor-mb-16">
                             <a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a>
                         </div>
-                        <div class="list-item-meta tutor-fs-7 tutor-fw-medium tutor-color-black tutor-d-flex tutor-mt-12">
-                            <?php
-                            $course_duration = get_tutor_course_duration_context($post->ID, true);
-                            $course_students = tutor_utils()->count_enrolled_users_by_course();
-                            ?>
-                            <?php
-                            if (!empty($course_duration)) { ?>
-                                <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-clock-line tutor-color-muted tutor-mr-8"></span>
-                                    <span class="tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo $course_duration; ?></span>
+
+                        <?php if ( !empty( $course_duration ) || !empty( $course_students ) ) : ?>
+                        <div class="tutor-meta tutor-mt-16">
+                            <?php if ( !empty( $course_duration ) ) : ?>
+                                <div>
+                                    <span class="tutor-icon-clock-line tutor-meta-icon" area-hidden="true"></span>
+                                    <span class="tutor-meta-value"><?php echo $course_duration; ?></span>
                                 </div>
-                            <?php } ?>
-                            <?php if (!empty($course_students)) : ?>
-                                <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-user-line tutor-color-muted tutor-mr-8"></span>
-                                    <span><?php echo $course_students; ?></span>
+                            <?php endif; ?>
+
+                            <?php if ( !empty( $course_students ) ) : ?>
+                                <div>
+                                    <span class="tutor-icon-user-line tutor-meta-icon" area-hidden="true"></span>
+                                    <span class="tutor-meta-value"><?php echo $course_students; ?></span>
                                 </div>
                             <?php endif; ?>
                         </div>
+                        <?php endif; ?>
                     </div>
 
-                    <!-- Card footer -->
-                    <div class="tutor-course-listing-item-footer has-border tutor-py-8 tutor-pl-20 tutor-pr-8">
+                    <div class="tutor-card-footer">
                         <div class="tutor-d-flex tutor-align-items-center tutor-justify-between">
                             <div class="tutor-d-flex tutor-align-items-center">
                                 <span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-4">
@@ -134,7 +136,7 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
                                     ?>
                                 </span>
                             </div>
-                            <div class="tutor-iconic-btn-group">
+                            <div class="tutor-iconic-btn-group tutor-me-n8">
                                 <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-iconic-btn">
                                     <i class="tutor-icon-edit" area-hidden="true"></i>
                                 </a>

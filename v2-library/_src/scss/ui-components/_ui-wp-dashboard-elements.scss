@@ -46,6 +46,20 @@
 	}
 }
 
+// @todo: can be implemented like this
+// .tutor-course-builder {
+// 	&-zoom-meeting-list {
+// 		&-item {
+// 			border-top: 1px solid var(--tutor-border-color);
+// 			border-bottom: 1px solid var(--tutor-border-color);
+	
+// 			& + & {
+// 				border-top: 0px;
+// 			}
+// 		}
+// 	}
+// }
+
 
 .tutor-zoom-integration-card {
 	.tutor-zoom-no-meetings {
