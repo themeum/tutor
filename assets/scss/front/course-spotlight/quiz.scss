@@ -93,7 +93,7 @@
 									fill: none;
 									stroke: var(--tutor-color-primary);
 									stroke-dasharray: 44;
-									stroke-dashoffset: calc(44 - ((44 * var(--quizeProgress)) / 100));
+									stroke-dashoffset: calc(44 - ((44 * var(--quizProgress)) / 100));
 									stroke-width: 13px;
 								}
 							}
@@ -126,14 +126,11 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			span[class^='ttr-'],
-			span[class*=' ttr-'] {
-				font-size: 25px;
+
+			.tutor-icon-hamburger-menu {
+				cursor: move;
 			}
-			span[class^='tutor-icon-'],
-			span[class*=' tutor-icon-'] {
-				font-size: 25px;
-			}
+
 			input {
 				display: none;
 			}

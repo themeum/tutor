@@ -24,9 +24,6 @@
 	&.tutor-bg-danger {
 		border-color: var(--tutor-color-color);
 	}
-	&.tutor-bg-dark {
-		border-color: var(--tutor-color-black);
-	}
 
 	&-icon {
 		color: var(--tutor-color-primary);
@@ -74,41 +71,6 @@
 			font-size: 16px;
 		}
 	}
-
-	&.tutor-bg-dark {
-		background: var(--tutor-bg-dark-notification);
-		.tutor-notification-content {
-			color: var(--tutor-color-white);
-			h5 {
-				color: var(--tutor-color-white);
-			}
-			p {
-				opacity: 0.9;
-			}
-		}
-		.tutor-notification-close {
-			color: var(--tutor-border-color);
-			&:hover {
-				color: var(--tutor-color-white);
-			}
-		}
-	}
-
-	// &.tutor-bg-primary,
-	// &.tutor-bg-success,
-	// &.tutor-bg-warning,
-	// &.tutor-bg-danger {
-	// 	.tutor-notification-content,
-	// 	.tutor-notification-content h5 {
-	// 		color: var(--tutor-color-white);
-	// 	}
-	// 	.tutor-notification-close {
-	// 		color: rgba(#ffffff, 0.7);
-	// 		&:hover {
-	// 			color: var(--tutor-color-white);
-	// 		}
-	// 	}
-	// }
 }
 
 // alert

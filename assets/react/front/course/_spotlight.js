@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	window.addEventListener(_tutorobject.content_change_event, commentSideLine);
 	/* commenting */
 
-	// quize drag n drop functionality
+	// quiz drag n drop functionality
 	const tutorDraggables = document.querySelectorAll('.tutor-draggable > div');
 	const tutorDropzone = document.querySelectorAll('.tutor-dropzone');
 	tutorDraggables.forEach((quizBox) => {
