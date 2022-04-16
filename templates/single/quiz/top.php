@@ -96,7 +96,7 @@ do_action('tutor_quiz/single/before/top');
 		
 		<?php
 			if ($attempt_remaining > 0 || $attempts_allowed == 0) :
-			do_action('tuotr_quiz/start_form/before', $quiz_id);
+			do_action('tutor_quiz/start_form/before', $quiz_id);
 			$skip_url = get_the_permalink($next_id ? $next_id : $course_id);
 		?>
 			<div class="tutor-quiz-btn-group">

@@ -227,17 +227,16 @@
 
 					width: 37px;
 					height: 37px;
-					background: #e9edfb;
+					background: rgba(var(--tutor-color-primary-rgb), 0.15);
 					border-radius: 50%;
 
 					font-style: normal;
 					font-weight: 500;
 					font-size: 20px;
-					color: #000000;
+					color: var(--tutor-body-color);
 
 					i {
-						color: #3e64de;
-						font-size: 25px;
+						color: var(--tutor-color-primary);
 					}
 				}
 			}

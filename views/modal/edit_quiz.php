@@ -143,19 +143,17 @@
         <label class="tutor-form-label">
             <?php _e('Attempts Allowed', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group">
-            <?php
-                $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
-                $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
-            ?>
-            <div class="tutor-field-type-slider tutor-p-0" data-min="0" data-max="20">
-                <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
-                <div class="tutor-field-slider"></div>
-                <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
-            </div>
-            <div class="tutor-form-feedback">
-                <?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?>
-            </div>
+        <?php
+            $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
+            $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
+        ?>
+        <div class="tutor-field-type-slider tutor-p-0" data-min="0" data-max="20">
+            <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
+            <div class="tutor-field-slider"></div>
+            <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
+        </div>
+        <div class="tutor-form-feedback">
+            <?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?>
         </div>
     </div>
 
@@ -163,11 +161,9 @@
         <label class="tutor-form-label">
             <?php _e('Passing Grade (%)', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group">
-            <input type="number" class="tutor-form-control" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10" min="0"/>
-            <div class="tutor-form-feedback">
-                <?php _e('Set the passing percentage for this quiz', 'tutor'); ?>
-            </div>
+        <input type="number" class="tutor-form-control" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10" min="0"/>
+        <div class="tutor-form-feedback">
+            <?php _e('Set the passing percentage for this quiz', 'tutor'); ?>
         </div>
     </div>
 
@@ -175,11 +171,9 @@
         <label class="tutor-form-label">
             <?php _e('Max questions allowed to answer', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group">
-            <input type="number" class="tutor-form-control" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>" min="1"/>
-            <div class="tutor-form-feedback">
-                <?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?>
-            </div>
+        <input type="number" class="tutor-form-control" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>" min="1"/>
+        <div class="tutor-form-feedback">
+            <?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?>
         </div>
     </div>
 

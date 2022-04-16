@@ -30,8 +30,9 @@ tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.
     'context' => 'course-single-previous-attempts'
 ));
 
+// @todo: fix typo
 if ($attempt_remaining > 0 || $attempts_allowed == 0 && $previous_attempts) {
-    do_action('tuotr_quiz/start_form/before', $quiz_id);
+    do_action('tutor_quiz/start_form/before', $quiz_id);
 ?>
 	<div class="tutor-quiz-btn-grp tutor-mt-32">
 		<form id="tutor-start-quiz" method="post">
