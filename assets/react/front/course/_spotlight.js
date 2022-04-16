@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				 */
 				const sidebarTabArea = document.querySelector('.tutor-lessons-tab-area');
 				let sidebarTabAreaHeight = sidebarTabArea.offsetHeight;
-				if (id == 'sideabr-qna-tab-content') {
+				if (id == 'sidebar-qna-tab-content') {
 					activeQnaTabContent.style.height = `calc(100% - ${sidebarTabAreaHeight}px)`;
 				}
 			});
