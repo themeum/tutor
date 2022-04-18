@@ -409,7 +409,13 @@ class Course_List {
 
 	private static function assign_child_count(array $course_meta, $post_type){
 		global $wpdb;
-		$course_ids = implode(',', array_keys($course_meta));
+		$id_array = array_keys($course_meta);
+		
+		if(!count($id_array)){
+			return $course_meta;
+		}
+
+		$course_ids = implode(',', $id_array);
 
 		$results = $wpdb->get_results(
 			"SELECT ID, post_parent AS course_id 
