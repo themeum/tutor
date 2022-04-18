@@ -42,7 +42,7 @@
                             <button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
                                 <span class="tutor-icon-kebab-menu" area-hidden="true"></span>
                             </button>
-                            <ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+                            <ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
                                 <li>
                                     <a href="#" class="tutor-dropdown-item tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
                                         <span class="tutor-icon-edit tutor-mr-8" area-hidden="true"></span>
