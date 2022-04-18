@@ -143,7 +143,7 @@
         <label class="tutor-form-label">
             <?php _e('Attempts Allowed', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group">
+        <div class="">
             <?php
                 $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
                 $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
@@ -163,7 +163,7 @@
         <label class="tutor-form-label">
             <?php _e('Passing Grade (%)', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group">
+        <div class="">
             <input type="number" class="tutor-form-control" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10" min="0"/>
             <div class="tutor-form-feedback">
                 <?php _e('Set the passing percentage for this quiz', 'tutor'); ?>
@@ -175,7 +175,7 @@
         <label class="tutor-form-label">
             <?php _e('Max questions allowed to answer', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group">
+        <div class="">
             <input type="number" class="tutor-form-control" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>" min="1"/>
             <div class="tutor-form-feedback">
                 <?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?>
