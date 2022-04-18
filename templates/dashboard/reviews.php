@@ -123,13 +123,14 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 <?php
 
 
-
-$pagination_data = array(
-	'total_items' => $reviews->count,
-	'per_page'    => $per_page,
-	'paged'       => $current_page,
-);
-$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
-tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+if($reviews->count > $per_page) {
+	$pagination_data = array(
+		'total_items' => $reviews->count,
+		'per_page'    => $per_page,
+		'paged'       => $current_page,
+	);
+	$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+	tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+}
 
 ?>
