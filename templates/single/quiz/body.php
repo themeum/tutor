@@ -24,6 +24,7 @@
 	$quiz_answers      = array();
 if ( $attempted_count !== 0 ) {
 	?>
+		<?php // @todo: need to change the ID ?>
 		<div id="tutor-quiz-image-matching-choice" class="tutor-quiz-wrap tutor-quiz-wrap-<?php the_ID(); ?>">
 		<?php
 			do_action( 'tutor_quiz/body/before', $quiz_id );

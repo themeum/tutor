@@ -53,9 +53,7 @@ window.jQuery(document).ready($=>{
                     } else {
 						// Else if 'auto_abandon' or anything else for now
 						// Add Disable state button class and disable then
-						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn')
-                            .addClass('tutor-btn-disable tutor-no-hover')
-                            .prop('disabled', true);
+						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').prop('disabled', true);
 
 						// add alert text
 						$('.time-remaining span').css('color', '#F44337');
@@ -143,7 +141,6 @@ window.jQuery(document).ready($=>{
 							svgWrapper.setAttribute('class', 'quiz-time-remaining-expired-circle');
 						}
 						svg.setAttribute('style', `stroke-dashoffset: ${StrokeDashOffset};`);
-						// svg.setAttribute('style', `--quizeProgress: ${100 - progress}`);
 					}
 				}
 			}, 1000);

@@ -42,12 +42,13 @@
 			> div {
 				width: 100%;
 				text-align: center;
-				padding: 13px 10px;
-				cursor: pointer;
+				padding: 14.5px 10px;
 				position: relative;
 				background: var(--tutor-color-gray-10);
 				border-bottom-right-radius: 10px;
 				border-bottom-left-radius: 10px;
+				cursor: pointer;
+				
 				&:first-child,
 				&:last-child {
 					border-style: solid;
@@ -86,7 +87,7 @@
 					display: block;
 				}
 			}
-			#sideabr-qna-tab-content {
+			#sidebar-qna-tab-content {
 				overflow: auto;
 			}
 			#tutor-lesson-sidebar-tab-content {
@@ -100,23 +101,25 @@
 						border-bottom: 1px solid #ddd;
 						.tutor-topics-title-left {
 							.tutor-topics-title-inner {
-								display: flex;
 								cursor: pointer;
-								// max-width: 330px;
-								max-width: 290px;
-								> div:first-child {
-									min-width: 75px;
-								}
 							}
+
 							.tutor-topics-title-info {
-								i {
-									margin-top: 1px;
-									margin-left: 5px;
+								position: relative;
+								display: inline-flex;
+								margin-left: 8px;
+								top: 2px;
+								cursor: pointer;
+
+								&-icon {
+									font-size: 14px;
 								}
 							}
 						}
+
 						.tutor-topics-title-right {
-							padding-left: 5px;
+							padding-left: 8px;
+							align-self: center;
 						}
 					}
 					.tutor-lessons-under-topic {
@@ -141,7 +144,7 @@
 						.tutor-single-lesson-items {
 							.tutor-single-lesson-items-left {
 								> *:not(:last-child) {
-									margin-right: 5px;
+									margin-right: 8px;
 								}
 								max-width: 270px;
 								margin-top: 4px;
@@ -173,8 +176,8 @@
 	}
 }
 
-.tutor-single-lesson-items {
-	input.tutor-form-check-input[type='checkbox'].tutor-form-check-circle {
-		background-size: 80%;
-	}
-}
+// .tutor-single-lesson-items {
+// 	input.tutor-form-check-input[type='checkbox'].tutor-form-check-circle {
+// 		background-size: 80%;
+// 	}
+// }

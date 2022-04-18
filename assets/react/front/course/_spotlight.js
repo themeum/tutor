@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				 */
 				const sidebarTabArea = document.querySelector('.tutor-lessons-tab-area');
 				let sidebarTabAreaHeight = sidebarTabArea.offsetHeight;
-				if (id == 'sideabr-qna-tab-content') {
+				if (id == 'sidebar-qna-tab-content') {
 					activeQnaTabContent.style.height = `calc(100% - ${sidebarTabAreaHeight}px)`;
 				}
 			});
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	window.addEventListener(_tutorobject.content_change_event, commentSideLine);
 	/* commenting */
 
-	// quize drag n drop functionality
+	// quiz drag n drop functionality
 	const tutorDraggables = document.querySelectorAll('.tutor-draggable > div');
 	const tutorDropzone = document.querySelectorAll('.tutor-dropzone');
 	tutorDraggables.forEach((quizBox) => {

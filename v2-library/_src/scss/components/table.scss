@@ -4,7 +4,7 @@
   text-align: left;
   border-collapse: collapse;
   th {
-    background: var(--tutor-bg-grey);
+    background: var(--tutor-bg-gray-20);
   }
 
   th, td {
@@ -40,7 +40,7 @@
       border-bottom: 1px solid var(--tutor-border-color);
     }
     &:nth-child(even) td{
-      background-color: var(--tutor-bg-grey-light);
+      background-color: var(--tutor-color-gray-10);
     }
   }
 

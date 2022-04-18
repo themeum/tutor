@@ -82,16 +82,16 @@ window.jQuery(document).ready($=>{
         });
     });
 
-    $(document).on('click', '#sideabr-qna-tab-content .tutor-qa-new a.sidebar-ask-new-qna-btn', function(e) {
+    $(document).on('click', '#sidebar-qna-tab-content .tutor-qa-new a.sidebar-ask-new-qna-btn', function(e) {
         $('.tutor-quesanswer-askquestion').addClass('tutor-quesanswer-askquestion-expand');
-        $('#sideabr-qna-tab-content').css({
+        $('#sidebar-qna-tab-content').css({
             'height' : 'calc(100% - 140px)'
         });
     })
 
-    $(document).on('click', '#sideabr-qna-tab-content .tutor-qa-new .sidebar-ask-new-qna-cancel-btn', function(e) {
+    $(document).on('click', '#sidebar-qna-tab-content .tutor-qa-new .sidebar-ask-new-qna-cancel-btn', function(e) {
         $('.tutor-quesanswer-askquestion').removeClass('tutor-quesanswer-askquestion-expand');
-        $('#sideabr-qna-tab-content').css({
+        $('#sidebar-qna-tab-content').css({
             'height' : 'calc(100% - 60px)'
         });
     })
@@ -137,8 +137,8 @@ window.jQuery(document).ready($=>{
                     $('.tutor-qna-single-question').eq(0).before(resp.data.html);
                 }
                 //on successful reply make the textarea empty
-                if ($("#sideabr-qna-tab-content .tutor-quesanswer-askquestion textarea")) {
-                    $("#sideabr-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
+                if ($("#sidebar-qna-tab-content .tutor-quesanswer-askquestion textarea")) {
+                    $("#sidebar-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
                 }
                 if ($(".tutor-quesanswer-askquestion textarea")) {
                     $(".tutor-quesanswer-askquestion textarea").val('');

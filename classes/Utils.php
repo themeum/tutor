@@ -8750,6 +8750,12 @@ class Utils {
 				'badge' => 'warning',
 				'text'  => __( 'Private', 'tutor' ),
 			),
+			'true' 	=> array(
+				'text' => _x( 'True', 'true/false question options', 'tutor' ),
+			),
+			'false' => array(
+				'text' => _x( 'False', 'true/false question options', 'tutor' ),
+			)
 		);
 
 		if ( $add_badge && isset( $key_value[ $key ] ) ) {
@@ -9599,7 +9605,7 @@ class Utils {
 		global $wpdb;
 		
 		$sql = "SELECT COUNT(question_id) FROM {$wpdb->tutor_quiz_questions} ";
-		return $wpdb->get_var( $wpdb->prepare( $sql ) );
+		return $wpdb->get_var( $sql );
 	}
 
 	/**

@@ -39,26 +39,26 @@ do_action('tutor_quiz/single/before/top');
 				<?php echo get_the_content(); ?>
 			</div>
 		</div>
+
 		<div class="tutor-quiz-info-area tutor-mb-60 tutor-mt-24">
 			<?php
 				// Show total question count
-				$total_questions = tutor_utils()->total_questions_for_student_by_quiz(get_the_ID());
-				if($total_questions){
-					?>
-					<div class="tutor-quiz-info">
-						<span class="tutor-fs-6 tutor-color-muted"><?php _e('Questions', 'tutor'); ?>:</span>
-						<span class="tutor-fs-6 tutor-color-black">
-							<?php echo $total_questions; ?>
-						</span>
-					</div>
-					<?php 
-				}
+				$total_questions = tutor_utils()->total_questions_for_student_by_quiz( get_the_ID() );
+				if ( $total_questions ) :
+			?>
+				<div class="tutor-quiz-info">
+					<span class="tutor-fs-6 tutor-color-muted"><?php _e('Questions', 'tutor'); ?>:</span>
+					<span class="tutor-fs-6 tutor-color-black">
+						<?php echo $total_questions; ?>
+					</span>
+				</div>
+			<?php endif; ?>
 
+			<?php
 				// Show time limit
-				$time_limit = tutor_utils()->get_quiz_option(get_the_ID(), 'time_limit.time_value');
-				if ($time_limit){
-					$time_type 	= tutor_utils()->get_quiz_option(get_the_ID(), 'time_limit.time_type');
-
+				$time_limit = tutor_utils()->get_quiz_option( get_the_ID(), 'time_limit.time_value' );
+				if ( $time_limit ) :
+					$time_type 	= tutor_utils()->get_quiz_option( get_the_ID(), 'time_limit.time_type' );
 					$available_time_type = array(
 						'seconds'	=> $time_limit>1 ? __( 'Seconds', 'tutor' ) : __( 'Second', 'tutor' ),
 						'minutes'	=> $time_limit>1 ? __( 'Minutes', 'tutor' ) : __( 'Minute', 'tutor' ),
@@ -66,17 +66,14 @@ do_action('tutor_quiz/single/before/top');
 						'days'		=> $time_limit>1 ? __( 'Days', 'tutor' ) : __( 'Day', 'tutor' ),
 						'weeks'		=> $time_limit>1 ? __( 'Weeks', 'tutor' ) : __( 'Week', 'tutor' ),
 					);
-
-					?>
-					<div class="tutor-quiz-info">
-						<span class="tutor-fs-6 tutor-color-muted"><?php _e('Quize Time', 'tutor'); ?>:</span>
-						<span class="tutor-fs-6 tutor-color-black">
-							<?php echo $time_limit.' '.sprintf( __( '%s', 'tutor' ), isset( $available_time_type[$time_type] ) ? $available_time_type[$time_type] : $time_type ); ?>
-						</span>
-					</div>
-					<?php 
-				} 
 			?>
+				<div class="tutor-quiz-info">
+					<span class="tutor-fs-6 tutor-color-muted"><?php _e('Quiz Time', 'tutor'); ?>:</span>
+					<span class="tutor-fs-6 tutor-color-black">
+						<?php echo $time_limit.' '.sprintf( __( '%s', 'tutor' ), isset( $available_time_type[$time_type] ) ? $available_time_type[$time_type] : $time_type ); ?>
+					</span>
+				</div>
+			<?php endif; ?>
 
 			<!-- Show Total attempt count -->
 			<div class="tutor-quiz-info">
@@ -88,75 +85,49 @@ do_action('tutor_quiz/single/before/top');
 				</span>
 			</div>
 
-			<?php
-				// Show Passign grade
-				if($passing_grade){
-					?>
-					<div class="tutor-quiz-info">
-						<span class="tutor-fs-6 tutor-color-muted"><?php _e('Passing Grade', 'tutor'); ?></span>
-						<span class="tutor-fs-6 tutor-color-black">(<?php echo $passing_grade . '%'; ?>)</span>
-					</div>
-					<?php 
-				} 
-			?>
-		</div>
-		<!-- @todo: fix modal -->
-		<?php
-			if ($attempt_remaining > 0 || $attempts_allowed == 0) {
-				do_action('tuotr_quiz/start_form/before', $quiz_id);
-				$skip_url = get_the_permalink($next_id ? $next_id : $course_id);
-				?>
-				<div class="tutor-quiz-btn-grp">
-					<form id="tutor-start-quiz" method="post">
-						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-
-						<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
-						<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
-
-						<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn" name="start_quiz_btn" value="start_quiz">
-							<?php _e( 'Start Quiz', 'tutor' ); ?>
-						</button>
-					</form>
-
-					<button class="tutor-btn tutor-btn-outline-primary tutor-no-hover tutor-btn-md skip-quiz-btn" data-tutor-modal-target="tutor-quiz-skip-to-next">
-						<?php _e( 'Skip Quiz', 'tutor' ); ?>
-					</button>
-
-					<div id="tutor-quiz-skip-to-next" class="tutor-modal">
-						<span class="tutor-modal-overlay"></span>
-						<button data-tutor-modal-close class="tutor-modal-close">
-							<span class="tutor-icon-times"></span>
-						</button>
-						<div class="tutor-modal-window">
-							<div class="tutor-modal-content">
-								<div class="tutor-modal-body tutor-text-center">
-									<div class="tutor-modal-icon">
-										<!-- <img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" /> -->
-									</div>
-									<div class="tutor-modal-text-wrap">
-										<h3 class="tutor-modal-title">
-											<?php esc_html_e('Skip This Quiz?', 'tutor'); ?>
-										</h3>
-										<p>
-											<?php esc_html_e('Are you sure you want to skip this quiz? Please confirm your choice.', 'tutor'); ?>
-										</p>
-									</div>
-									<div class="tutor-modal-btns tutor-btn-group">
-										<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-											<?php esc_html_e('Cancel', 'tutor'); ?>
-										</button>
-										<a class="tutor-btn tutor-btn-primary" href="<?php echo $skip_url; ?>">
-											<?php esc_html_e('Yes, Skip This', 'tutor'); ?>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+			<!-- Show Passing grade -->
+			<?php if( $passing_grade ) : ?>
+				<div class="tutor-quiz-info">
+					<span class="tutor-fs-6 tutor-color-muted"><?php _e( 'Passing Grade', 'tutor' ); ?></span>
+					<span class="tutor-fs-6 tutor-color-black">(<?php echo $passing_grade . '%'; ?>)</span>
 				</div>
-				<?php 
-			} 
+			<?php endif; ?>
+		</div>
+		
+		<?php
+			if ($attempt_remaining > 0 || $attempts_allowed == 0) :
+			do_action('tutor_quiz/start_form/before', $quiz_id);
+			$skip_url = get_the_permalink($next_id ? $next_id : $course_id);
 		?>
+			<div class="tutor-quiz-btn-group">
+				<form id="tutor-start-quiz" method="post">
+					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+
+					<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
+					<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
+
+					<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn" name="start_quiz_btn" value="start_quiz">
+						<?php _e( 'Start Quiz', 'tutor' ); ?>
+					</button>
+				</form>
+
+				<button class="tutor-btn tutor-btn-ghost tutor-btn-md skip-quiz-btn tutor-ml-24" data-tutor-modal-target="tutor-quiz-skip-to-next">
+					<?php _e( 'Skip Quiz', 'tutor' ); ?>
+				</button>
+			</div>
+
+			<?php
+				tutor_load_template( 'modal.confirm', array(
+					'id' => 'tutor-quiz-skip-to-next',
+					'title' => __('Do You Want to Skip This Quiz?', 'tutor'),
+					'content' => __('Are you sure you want to skip this quiz? Please confirm your choice.', 'tutor'),
+					'yes' => array(
+						'text' => __('Yes, Skip This', 'tutor'),
+						'attr' => array( 'onclick="window.location=\''. $skip_url .'\';"' )
+					),
+				));
+			?>
+		<?php endif; ?>
 	</div>
 <?php endif; ?>
 <?php do_action('tutor_quiz/single/after/top'); ?>
