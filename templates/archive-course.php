@@ -13,8 +13,10 @@
  */
 tutor_utils()->tutor_custom_header();
 
-$filter = (new \Tutor\Course_Filter(false))->load_listing($_GET, true);
-query_posts( $filter );
+if(isset($_GET['course_filter'])){
+	$filter = (new \Tutor\Course_Filter(false))->load_listing($_GET, true);
+	query_posts( $filter );
+}
 
 // Load the 
 tutor_load_template('archive-course-init', array(

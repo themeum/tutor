@@ -25,7 +25,10 @@ $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 ?>
 
 <div class="tutor-instructors" tutor-instructors <?php
-	foreach ( $attributes as $key => $value ) {
+	foreach ( $attributes as $key => $value )  {
+		if ( is_array( $value ) ) {
+			continue;
+		}
 		echo 'data-' . $key . '="' . $value . '" ';
 	}
 ?>>

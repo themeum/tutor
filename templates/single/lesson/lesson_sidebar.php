@@ -50,7 +50,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 				</span>
 			</div>
 			<?php if ( $enable_q_and_a_on_course && ( $is_enrolled || $is_instructor_of_this_course || $is_user_admin ) ): ?>
-				<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab tutor-d-flex tutor-align-items-center">
+				<div data-sidebar-tab="sidebar-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab tutor-d-flex tutor-align-items-center">
 					<span class="tutor-icon-question"></span>
 					<span class="tutor-fs-7 tutor-fw-medium tutor-color-secondary">
 						<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
@@ -69,28 +69,29 @@ $is_user_admin                = current_user_can( 'administrator' );
 						$topic_id       = get_the_ID();
 						$topic_summery  = get_the_content();
 						$total_contents = tutor_utils()->count_completed_contents_by_topic( $topic_id );
-						?>
+					?>
 
 						<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
-							<div class="tutor-topics-title tutor-d-flex tutor-justify-between">
-								<div class="tutor-topics-title-left">
-									<div class="tutor-topics-title-inner">
-										<div class="tutor-fs-6 tutor-fw-medium tutor-color-text-brand"><?php the_title(); ?></div>
-										<?php if ( true ): ?>
+							<div class="tutor-topics-title tutor-row">
+								<div class="tutor-topics-title-left tutor-col">
+									<div class="tutor-topics-title-inner tutor-fs-6 tutor-fw-medium tutor-color-primary">
+										<?php the_title(); ?>
+										<?php if ( true ) : ?>
 											<?php if(trim($topic_summery)) : ?>
-											<div class="tutor-topics-title-info">
-												<div class="tooltip-wrap tutor-d-flex">
-													<i class="tutor-icon-circle-info color-black-40"></i>
-													<span class="tooltip-txt tooltip-bottom">
-														<?php echo $topic_summery; ?>
-													</span>
+												<div class="tutor-topics-title-info">
+													<div class="tooltip-wrap">
+														<i class="tutor-topics-title-info-icon tutor-icon-circle-info-o tutor-color-muted"></i>
+														<span class="tooltip-txt tooltip-bottom">
+															<?php echo $topic_summery; ?>
+														</span>
+													</div>
 												</div>
-											</div>
 											<?php endif; ?>
 										<?php endif; ?>
 									</div>
 								</div>
-								<div class="tutor-topics-title-right">
+
+								<div class="tutor-topics-title-right tutor-col-auto">
 									<?php if ( isset( $total_contents['contents'] ) && $total_contents['contents'] > 0 ) : ?>
 										<div class="tutor-topic-subtitle tutor-fs-7 tutor-color-secondary">
 											<?php echo esc_html( isset( $total_contents['completed'] ) ? $total_contents['completed'] : 0 ); ?>/<?php echo esc_html( isset( $total_contents['contents'] ) ? $total_contents['contents'] : 0 ); ?>
@@ -98,6 +99,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 									<?php endif; ?>
 								</div>
 							</div>
+
 							<?php
 								do_action( 'tutor/lesson_list/before/topic', $topic_id );
 								$lessons = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
@@ -262,7 +264,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 				?>
 			</div>
 
-			<div id="sideabr-qna-tab-content" class="tutor-lesson-sidebar-tab-item">
+			<div id="sidebar-qna-tab-content" class="tutor-lesson-sidebar-tab-item">
 				<?php
 					tutor_lesson_sidebar_question_and_answer();
 				?>

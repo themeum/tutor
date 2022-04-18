@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Quize class
+ * Quiz class
  *
  * @author: themeum
  * @author_uri: https://themeum.com
