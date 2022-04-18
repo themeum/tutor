@@ -236,14 +236,6 @@ class Tools_V2 {
 
 								),
 								array(
-									'key'     => 'wordpress_debug_mode',
-									'type'    => 'info_col',
-									'label'   => __( 'WordPress debug mode', 'tutor' ),
-									'status'  => 'default',
-									'default' => $this->status( 'wordpress_debug_mode' ),
-
-								),
-								array(
 									'key'     => 'language',
 									'type'    => 'info_col',
 									'label'   => __( 'Language', 'tutor' ),
