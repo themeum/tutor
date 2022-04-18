@@ -50,9 +50,9 @@
 					</div>
 				<?php endif; ?>
 
-				<p class="tutor-fs-6 tutor-color-muted tutor-text-nowrap tutor-mr-12">
+				<div class="tutor-fs-6 tutor-color-muted tutor-text-nowrap tutor-mr-12">
 					<?php esc_html_e( 'Time remaining: ', 'tutor' ); ?>
-				</p>
+				</div>
 				
 				<span id="tutor-quiz-time-update" 
 					class="tutor-fs-6 tutor-fw-medium tutor-text-nowrap <?php  $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
