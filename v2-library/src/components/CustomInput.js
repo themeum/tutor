@@ -1,7 +1,8 @@
 import React from 'react';
 
 export const CustomInput = React.forwardRef(
-	({ onChange, placeholder, value, id, onClick, name }, ref) => {
+	(props, ref) => {
+		const { onChange, placeholder, value, id, onClick, name } = props;
 		return (
 			<div className="tutor-form-wrap">
 				<span className="tutor-form-icon tutor-form-icon-reverse">
