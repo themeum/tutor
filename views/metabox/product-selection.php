@@ -19,7 +19,7 @@
 			?>
 		</select>
 		<div class="tutor-form-feedback">
-			<i class="tutor-icon-circle-info-o tutor-form-feedback-icon tutor-fs-5"></i>
+			<i class="tutor-icon-circle-info-o tutor-form-feedback-icon"></i>
 			<div><?php echo $info_text; ?></div>
 		</div>
 	</div>
