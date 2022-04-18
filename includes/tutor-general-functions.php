@@ -784,7 +784,9 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 */
 if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	function tutor_get_formated_date( string $require_format, string $user_date ) {
-		return date( $require_format, strtotime( $user_date ) );
+		$date	= date_create( str_replace( '/', '-', $user_date ) );
+		$formatted_date = date_format( $date, $require_format );
+		return $formatted_date;
 	}
 }
 
