@@ -16,7 +16,6 @@
 	// Get login url if
 	$is_tutor_login_disabled = ! tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true );
 	$auth_url                = $is_tutor_login_disabled ? ( isset( $_SERVER['REQUEST_SCHEME'] ) ? wp_login_url( $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) : '' ) : '';
-
 	$default_meta = array(
 		array(
 			'icon_class' => 'tutor-icon-mortarboard',
@@ -31,7 +30,7 @@
 		array(
 			'icon_class' => 'tutor-icon-refresh-o',
 			'label'      => __( 'Last Updated', 'tutor' ),
-			'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date('U') ) : null,
+			'value'      => get_tutor_option( 'enable_course_update_date' ) ? date_i18n( get_option( 'date_format' ), strtotime( get_the_modified_date() ) ) : null,
 		),
 	);
 

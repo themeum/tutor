@@ -805,10 +805,16 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
  */
 if ( ! function_exists( 'tutor_i18n_get_formated_date' ) ) {
 	function tutor_i18n_get_formated_date( string $date, $format = '' ) {
+		$date	= date_create( str_replace( '/', '-', $date ) );
 		if ( '' === $format ) {
 			$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		}
-		return date_i18n( $format , strtotime( $date ) );
+		if ( is_a( $date, 'DateTime' ) ) {
+			$formatted_date = date_format( $date, $format );
+		} else {
+			$formatted_date = date( $format, strtotime( $date ) );
+		}
+		return date_i18n( $format, $formatted_date );
 	}
 }
 
