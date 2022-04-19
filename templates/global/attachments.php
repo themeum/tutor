@@ -19,31 +19,31 @@ $open_mode_view = apply_filters( 'tutor_pro_attachment_open_mode', null ) == 'vi
 
 do_action( 'tutor_global/before/attachments' );
 
-if ( is_array( $attachments ) && count( $attachments ) ) {
-	?>
-    <div class="tutor-exercise-files tutor-mt-20">
-        <?php
-            foreach ($attachments as $attachment){
-        ?>
-        <a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo ($open_mode_view ? $open_mode_view : ' download="'.$attachment->name.'" ' ); ?>>
-            <div class="tutor-instructor-card tutor-mb-12">
-                <div class="tutor-icard-content">
-                    <h6 class="tutor-name tutor-fs-6 tutor-color-secondary">
-                        <?php echo esc_html( $attachment->name ); ?>
-                    </h6>
-                    <div class="tutor-fs-7">
-                        <?php echo esc_html( $attachment->size ); ?>
+if ( is_array( $attachments ) && count( $attachments ) ) : ?>
+    <div class="tutor-course-attachments tutor-row">
+        <?php foreach ($attachments as $attachment) : ?>
+            <div class="tutor-col-md-6 tutor-mt-16">
+                <div class="tutor-course-attachment tutor-card">
+                    <div class="tutor-card-body tutor-card-body-sm">
+                        <div class="tutor-row">
+                            <div class="tutor-col tutor-overflow-hidden">
+                                <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-text-ellipsis tutor-mb-4"><?php echo esc_html( $attachment->name ); ?></div>
+                                <div class="tutor-fs-7 tutor-color-muted"><?php _e('Size', 'tutor'); ?>: <?php echo esc_html( $attachment->size ); ?></div>
+                            </div>
+
+                            <div class="tutor-col-auto">
+                                <a href="<?php echo esc_url( $attachment->url ); ?>" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-stretched-link" <?php echo ($open_mode_view ? $open_mode_view : ' download="'.$attachment->name.'" ' ); ?>>
+                                    <span class="tutor-icon-download" area-hidden="true"></span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="tutor-iconic-btn">
-                    <span class="tutor-icon-download" area-hidden="true"></span>
-                </div>
             </div>
-        </a>
-        <?php } ?>
+        <?php endforeach; ?>
     </div>
-<?php } else {
+<?php else :
     tutor_utils()->tutor_empty_state(__('No Attachment Found', 'tutor'));
-}
+endif;
 
 do_action( 'tutor_global/after/attachments' ); ?>
