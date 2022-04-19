@@ -131,7 +131,7 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Registration Date', 'tutor' ); ?>">
 								<span class="tutor-color-black tutor-fs-7">
-								<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ). ', ' . get_option( 'time_format' ), $list->user_registered ) ); ?>
+								<?php echo esc_html( date_i18n( get_option( 'date_format' ). ', ' . get_option( 'time_format' ), strtotime( $list->user_registered ) ) ); ?>
 								</span>
 							</td>
 							<td data-th="<?php esc_html_e( 'Course Taken', 'tutor' ); ?>">
