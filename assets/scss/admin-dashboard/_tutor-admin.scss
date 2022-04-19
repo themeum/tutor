@@ -2,13 +2,10 @@
 @package: Tutor LMS
 @author: Themeum
  */
-
-$accent-color: var(--wp-admin-theme-color) !default;
-$accent-color-hover: var(--wp-admin-theme-color) !default;
-
 .tutor-admin {
 	&-wrap {
 		margin-left: -20px;
+		// background-color: #E9EAED;
 
 		// reset
 		* {

@@ -205,7 +205,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 									<label class="tutor-form-label tutor-fs-6"><?php _e('Course Price', 'tutor'); ?></label>
 								</div>
 								<div class="tutor-col-6 tutor-col-sm-5 tutor-col-lg-4">
-									<div class="tutor-form-check tutor-align-items-center">
+									<div class="tutor-form-check tutor-align-items-center tutor-d-flex">
 										<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> />
 										<label for="tutor_price_paid" class="tutor-amount-field">
 											<div class="tutor-input-group">

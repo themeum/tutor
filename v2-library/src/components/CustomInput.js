@@ -6,7 +6,7 @@ export const CustomInput = React.forwardRef(
 		return (
 			<div className="tutor-form-wrap">
 				<span className="tutor-form-icon tutor-form-icon-reverse">
-					<span className="tutor-icon-calender" aria-hidden={true}></span>
+					<span className="tutor-icon-calender-line" aria-hidden={true}></span>
 				</span>
 				<input
 					ref={ref}
