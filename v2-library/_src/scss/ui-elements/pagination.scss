@@ -134,4 +134,24 @@
 			}
 		}
 	}
+
+	&[data-tutor_pagination_ajax]{
+		position: relative;
+		
+		&:not(.is-ajax-pagination-enabled){
+			&::before{
+				content: '';
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				display: block;
+				z-index: 99;
+				background: black;
+				border-radius: inherit;
+				opacity: 0.03;
+			}
+		}
+	}
 }
