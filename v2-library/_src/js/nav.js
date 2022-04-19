@@ -55,7 +55,7 @@
 				};
 				
 				this.buildList = function() {
-					$(nav).find('.tutor-nav-more-link').on('click', function(event) {
+					$(nav).find('.tutor-nav-more-item').on('click', function (event) {
 						event.preventDefault();
 						if($(nav).find('.tutor-nav-more-list .is-active').length) {
 							$(this).addClass('is-active');
