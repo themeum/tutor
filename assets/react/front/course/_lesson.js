@@ -15,7 +15,7 @@ window.jQuery(document).ready($=>{
             beforeSend: function(){
                 btn.addClass('is-loading').prop('disabled', true);
             },
-            success: function( data, txtRes, xhr ) {
+            success: function(){
                 // Replicate pagination click
                 let replacable = btn.closest('.tutor-pagination-wrapper-replacable');
                 let wrapper = replacable.find('[data-tutor_pagination_ajax]');
@@ -35,14 +35,6 @@ window.jQuery(document).ready($=>{
                     .append('<a class="page-numbers" style="display:none" id="tutor_lesson_load_temp" href="'+_tutorobject.home_url+'?current_page='+page_num+'"></a>')
                     .find('a#tutor_lesson_load_temp')
                     .trigger('click');
-                
-                // TODO temp solution    
-                if( 200 == xhr.status ){
-                    btn.addClass('is-loading').prop('disabled', false);
-                    setTimeout(function(){
-                        window.location.reload()
-                    })
-                }
             },
             error: function(e){
                 alert('Something went wrong!');
