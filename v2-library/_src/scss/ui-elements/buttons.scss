@@ -152,6 +152,23 @@ $disabled-color: #E9E9EA !default;
 			outline: 0;
 			box-shadow: none;
 		}
+
+		// light variants
+		&-light {
+			color: #FFFFFF;
+			&.tutor-has-underline:after {
+				background-color: #FFFFFF;
+			}
+
+			&:hover,
+			&:focus,
+			&:active {
+				color: rgba(255, 255, 255, 0.8);
+				&.tutor-has-underline:after {
+					background-color: rgba(255, 255, 255, 0.8);
+				}
+			}
+		}
 	}
 
 	// sizes
@@ -261,6 +278,24 @@ $disabled-color: #E9E9EA !default;
 		&-secondary {
 			background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
 			color: var(--tutor-color-primary);
+
+			&:hover,
+			&:focus,
+			&:active {
+				color: #FFFFFF;
+				background-color: var(--tutor-color-primary-hover);
+			}
+
+			&[disabled],
+			&.disabled {
+				border-color: #E9E9EA;
+				background-color: #E9E9EA;
+			}
+		}
+
+		// light
+		&-light {
+			color: #FFFFFF;
 
 			&:hover,
 			&:focus,
