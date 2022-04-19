@@ -417,13 +417,9 @@
 			.tutor-modal-body {
 				padding: 50px 57px;
 				align-items: unset;
-				.tutor-modal-title {
-					@extend .tutor-text-regular-h5;
-				}
 
 				.tutor-form-check {
 					label {
-						@extend .tutor-text-regular-caption;
 						color: var(--tutor-color-muted);
 					}
 				}

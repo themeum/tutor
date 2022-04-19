@@ -1,24 +1,6 @@
 // Tutor typography classes
 //Typography utlity .text-#{$variable}{...}
 $typographyUtils: (
-	// Thin 100
-		'thin-h1' 100 80px 101%,
-	'thin-h2' 100 60px 117%,
-	'thin-h3' 100 40px 120%,
-	'thin-h4' 100 30px 133%,
-	'thin-h5' 100 24px 142%,
-	'thin-h6' 100 20px 150%,
-	'thin-body' 100 16px 162%,
-	'thin-caption' 100 15px 160%,
-	'thin-small' 100 13px 138%,
-	'thin-tiny' 100 11px 145%,
-	// Regular 400
-		'regular-h1' 400 80px 101%,
-	'regular-h2' 400 60px 117%,
-	'regular-h3' 400 40px 120%,
-	'regular-h4' 400 30px 133%,
-	'regular-h5' 400 24px 142%,
-	'regular-h6' 400 20px 150%,
 	'regular-body' 400 16px 162%,
 	'regular-caption' 400 15px 160%,
 	'regular-small' 400 13px 138%,

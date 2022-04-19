@@ -49,7 +49,7 @@ $question		= tutor_utils()->get_qa_question( $question_id );
 				<div class="question-top-meta">
 					<p class="review-meta">
 						<?php echo esc_attr( $question->display_name ); ?> -
-						<span class="text-muted">
+						<span class="tutor-color-muted">
 							<?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date ) ) ); ?>
 						</span>
 					</p>
@@ -59,7 +59,7 @@ $question		= tutor_utils()->get_qa_question( $question_id );
 					<p>
 						<strong><?php echo stripslashes( esc_attr( $question->question_title ) ); ?> </strong>
 
-						<span class="text-muted">
+						<span class="tutor-color-muted">
 							<?php _e( 'on', 'tutor' ); ?> <?php echo esc_attr( $question->post_title ); ?>
 						</span>
 					</p>
@@ -89,7 +89,7 @@ $question		= tutor_utils()->get_qa_question( $question_id );
 							<div class="question-top-meta">
 								<p class="review-meta">
 									<?php echo esc_attr( $answer->display_name ); ?> -
-									<span class="text-muted">
+									<span class="tutor-color-muted">
 										<?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
 									</span>
 								</p>
