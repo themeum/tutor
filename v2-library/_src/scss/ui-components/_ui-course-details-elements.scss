@@ -537,11 +537,6 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 	img {
 		max-width: 100%;
 	}
-	@include breakpoint-max(450) {
-		.text-regular-h5 {
-			font-size: 15px !important;
-		}
-	}
 }
 
 // Course Details - Gradebook

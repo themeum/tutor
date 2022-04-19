@@ -97,11 +97,12 @@
 .tutor-frontend-dashboard-maincontent {
 	ul.tutor-dashboard-permalinks {
 		position: relative;
+		height: 100%;
 		&:before {
 			content: '';
 			position: absolute;
 			width: auto;
-			height: 3000%;
+			height: 100%;
 			right: 0;
 			top: 0;
 			border-right: 1px solid #dcdfe5;

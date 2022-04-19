@@ -6,11 +6,11 @@
 	<div class="tutor-col-12 tutor-col-md-5 tutor-col-lg-4">
 		<label class="tutor-fs-6 tutor-fw-medium">
 			<?php _e( 'Select product', 'tutor' ); ?> <br />
-			<p class="text-muted">(<?php _e( 'When selling the course', 'tutor' ); ?>)</p>
+			<p class="tutor-color-muted">(<?php _e( 'When selling the course', 'tutor' ); ?>)</p>
 		</label>
 	</div>
 	<div class="tutor-col-12 tutor-col-md-7 tutor-col-lg-8">
-		<select name="_tutor_course_product_id" class="tutor-form-select tutor_select2 no-tutor-dropdown" required>
+		<select name="_tutor_course_product_id" class="tutor-form-select" required>
 			<option value="-1"><?php _e( 'Select a Product' ); ?></option>
 			<?php
 			foreach ( $products as $product ) {
@@ -19,7 +19,7 @@
 			?>
 		</select>
 		<div class="tutor-form-feedback">
-			<i class="tutor-icon-circle-info-o tutor-form-feedback-icon"></i>
+			<i class="tutor-icon-circle-info-o tutor-form-feedback-icon" area-hidden="true"></i>
 			<div><?php echo $info_text; ?></div>
 		</div>
 	</div>
