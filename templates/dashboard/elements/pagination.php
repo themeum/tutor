@@ -17,7 +17,7 @@ $total_page = isset( $data['total_page'] ) ? $data['total_page'] : ceil( $data['
 if(isset($data['layout']) && $data['layout']['type']=='load_more') {
 	$current_url = tutor()->current_url;
 	
-	echo '<nav '.(isset($data['ajax']) ? ' data-tutor_pagination_ajax="'.esc_attr( json_encode($data['ajax']) ).'" ' : '').'>';
+	echo '<nav '.(isset($data['ajax']) ? ' data-tutor_pagination_ajax="'.esc_attr( json_encode($data['ajax']) ).'" ' : '').' data-tutor_pagination_layout="'.esc_attr( json_encode( $data['layout'] ) ).'">';
 		
 		if ( $paged < $total_page ) {
 			echo '<a class="tutor-btn tutor-btn-outline-primary page-numbers tutor-mr-16" href="'.add_query_arg( array('current_page' => $paged+1), $current_url ).'">'.
