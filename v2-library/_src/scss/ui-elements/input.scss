@@ -264,15 +264,14 @@ select.tutor-form-control,
 .tutor-form-feedback {
 	font-size: 14px;
 	line-height: 1.4;
-	// margin: 16px 0 0;
-	color: var(--tutor-text-secondary);
+	margin: 12px 0 0;
+	color: var(--tutor-color-muted);
 	position: relative;
 	display: flex;
 
 	.tutor-form-feedback-icon {
 		font-size: 18px;
 		margin-right: 8px;
-		margin-top: -1px;
 	}
 }
 
@@ -286,6 +285,7 @@ select.tutor-form-control,
 		font-weight: 500;
 	}
 	input.tutor-form-check-input {
+		margin-top: 0px !important;
 		margin-right: 12px;
 	}
 
