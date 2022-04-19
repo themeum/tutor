@@ -464,19 +464,22 @@ if ( ! function_exists( 'tutor_course_loop_author' ) ) {
 
 if ( ! function_exists('tutor_course_loop_price')) {
     function tutor_course_loop_price() {
+		$course_id = get_the_ID();
+
         ob_start();
 
-        if(tutor_utils()->is_course_added_to_cart(get_the_ID())){
-            tutor_load_template( 'loop.course-in-cart' );
-        }
-        else if(tutor_utils()->is_enrolled(get_the_ID())){
+        if(tutor_utils()->is_enrolled($course_id) || get_post_meta($course_id, '_tutor_is_public_course', true)=='yes'){
             tutor_load_template( 'loop.course-continue' );
-        }
-        else{
+
+        } else if(tutor_utils()->is_course_added_to_cart($course_id)){
+            tutor_load_template( 'loop.course-in-cart' );
+
+        } else {
             $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
+			
             if ($tutor_course_sell_by){
                 tutor_load_template( 'loop.course-price-'.$tutor_course_sell_by );
-            }else{
+            } else {
                 tutor_load_template( 'loop.course-price' );
             }
         }
