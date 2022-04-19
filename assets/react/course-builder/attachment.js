@@ -38,16 +38,23 @@ window.jQuery(document).ready(function($){
                 for (var i=0; i < attachments.length; i++){
                     var attachment = attachments[i];
                         
-                    var inputHtml = `<div class="tutor-card tutor-d-flex tutor-align-items-center tutor-px-20 tutor-py-16 tutor-mb-16" data-attachment_id="${attachment.id}">
-                        <div class="tutor-w-100 tutor-pr-24">
-                            <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-4">${attachment.filename}</div>
-                            <div class="tutor-fs-7 tutor-color-muted">${__('Size', 'tutor')}: ${attachment.filesizeHumanReadable}</div>
-                            <input type="hidden" name="${name}" value="${attachment.id}">
-                        </div>
-                        <div class="tutor-ml-auto">
-                            <span class="tutor-delete-attachment tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-lg" role="button">
-                                <span class="tutor-icon-times" area-hidden="true"></span>
-                            </span>
+                    var inputHtml = `<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16" data-attachment_id="${attachment.id}">
+                        <div class="tutor-card">
+                            <div class="tutor-card-body">
+                                <div class="tutor-row tutor-align-items-center">
+                                    <div class="tutor-col tutor-overflow-hidden">
+                                        <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-text-ellipsis tutor-mb-4">${attachment.filename}</div>
+                                        <div class="tutor-fs-7 tutor-color-muted">${__('Size', 'tutor')}: ${attachment.filesizeHumanReadable}</div>
+                                        <input type="hidden" name="${name}" value="${attachment.id}">
+                                    </div>
+
+                                    <div class="tutor-col-auto">
+                                        <span class="tutor-delete-attachment tutor-iconic-btn tutor-iconic-btn-secondary" role="button">
+                                            <span class="tutor-icon-times" area-hidden="true"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>`;
                     

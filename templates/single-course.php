@@ -53,7 +53,7 @@ do_action('tutor_course/single/before/wrap');
             </main>
 
             <aside class="tutor-col-xl-4">
-                <div class="tutor-single-course-sidebar">
+                <div class="tutor-single-course-sidebar tutor-mt-40 tutor-mt-xl-0">
                     <?php do_action('tutor_course/single/before/sidebar'); ?>
                     <?php tutor_load_template('single.course.course-entry-box'); ?>
                     <?php tutor_course_requirements_html(); ?>
