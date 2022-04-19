@@ -804,11 +804,11 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
  * @return string translated date
  */
 if ( ! function_exists( 'tutor_i18n_get_formated_date' ) ) {
-	function tutor_i18n_get_formated_date( string $date, $format = '' ) {
+	function tutor_i18n_get_formated_date( string $date, string $format = '' ) {
 		if ( '' === $format ) {
 			$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		}
-		return date_i18n( $format , strtotime( $date ) );
+		return date_i18n( $format, strtotime( $date ) );
 	}
 }
 
