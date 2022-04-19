@@ -167,7 +167,8 @@ $height-sm: 38px;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		color: #999;
+		color: var(--tutor-color-muted);
+		pointer-events: none;
 	
 		&-reverse {
 			right: 0;
