@@ -388,8 +388,8 @@ class Course_List {
 
 		$results = $wpdb->get_results(
 			"SELECT course.ID, quiz.ID
-			FROM {$wpdb->posts} course
-				INNER JOIN {$wpdb->posts} "
+			FROM {$wpdb->posts} AS course
+				INNER JOIN {$wpdb->posts} AS quiz"
 		);
 
 		// Count quizzes by course IDs 
