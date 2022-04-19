@@ -234,7 +234,7 @@ $disabled-color: #E9E9EA !default;
 		border: 1px solid transparent;
 		border-radius: 48px;
 		cursor: pointer;
-		position: relative;
+		// position: relative;
 		transition: color 200ms ease-in-out, background-color 200ms ease-in-out;
 
 		[class^='tutor-icon-'],
