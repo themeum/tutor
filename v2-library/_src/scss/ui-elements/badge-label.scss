@@ -1,5 +1,5 @@
-//Badge label utility .badge-label-#{$variable}{...}
 $variations: (
+	'default' var(--tutor-color-gray-10) var(--tutor-color-muted) var(--tutor-border-color),
 	'primary' rgba(var(--tutor-color-primary-rgb), 0.15) var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.3),
 	'success' rgba(var(--tutor-color-success-rgb), 0.15) var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.3),
 	'warning' rgba(var(--tutor-color-warning-rgb), 0.15) var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.3),

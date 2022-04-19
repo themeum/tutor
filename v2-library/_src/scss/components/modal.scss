@@ -187,16 +187,17 @@
 				justify-content: center;
 				color: var(--tutor-color-muted);
 				font-size: 13px;
+				background: var(--tutor-color-gray-20);
 				cursor: pointer;
 				z-index: 1;
-				background: var(--tutor-disabled-bg);
+				
 				&::before {
 					content: '';
 					position: absolute;
 					height: 2px;
 					top: 50%;
 					margin-top: -1px;
-					background-color: var(--tutor-disabled-bg);
+					background-color: var(--tutor-color-gray-20);
 					width: 1000px;
 					right: 100%;
 				}
@@ -248,7 +249,7 @@
 	justify-content: space-between;
 	border-radius: 6px;
 	background: var(--tutor-color-white);
-	color: var(--tutor-text-secondary);
+	color: var(--tutor-color-muted);
 	.tutor-attachment-name {
 		font-size: 16px;
 		line-height: 26px;
@@ -347,7 +348,7 @@
 		padding-left: 12px;
 		font-size: 13px;
 		line-height: 18px;
-		color: var(--tutor-text-secondary);
+		color: var(--tutor-color-muted);
 		.tutor-radio-select-title {
 			font-size: 15px;
 			line-height: 24px;

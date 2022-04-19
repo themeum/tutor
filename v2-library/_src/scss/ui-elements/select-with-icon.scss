@@ -1,12 +1,4 @@
-//.tutor-form-select-with-icon.select-#{variable} {...}
-
-//success -> eye, default -> marks-total, primary -> drop, danger -> lock, warning -> cross-circle, mark-circle
-
-$primary-color: rgba(40, 64, 142, 0.9);
 $default-color: rgba(65, 69, 79, 0.9);
-$success-color: rgba(7, 90, 42, 0.9);
-$danger-color: rgba(198, 40, 40, 0.9);
-$warning-color: rgba(237, 150, 0, 0.9);
 
 $variations: (
 	'primary' var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15) rgba(var(--tutor-color-primary-rgb), 0.3) '\e978',
@@ -40,7 +32,7 @@ $variations: (
 
 .tutor-form-select-with-icon {
 	width: fit-content;
-	min-width: 117px;
+	min-width: 120px;
 	max-width: max-content;
 	position: relative;
 
@@ -54,11 +46,9 @@ $variations: (
 		display: block;
 		width: 100%;
 		margin: 0;
-		padding: 0 25px;
+		padding: 5px 28px;
 		border: none;
 		outline: none;
-		-webkit-appearance: none;
-		-moz-appearance: none;
 		appearance: none;
 		min-height: 24px !important;
 		position: relative;
@@ -78,10 +68,10 @@ $variations: (
 
 	// variation icon
 	.icon1 {
-		left: 6px;
+		left: 8px;
 	}
 	// down arrow icon
 	.icon2 {
-		right: 4px;
+		right: 8px;
 	}
 }
