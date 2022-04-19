@@ -303,7 +303,7 @@ window.jQuery(document).ready($=>{
     $(document).on('click', 'a',  function(event) {
         const href = $(this).attr('href');
         // if user click on ask question then return, no warning.
-        if (event.target.classList.contains('sidebar-ask-new-qna-btn')) {
+        if (event.target.classList.contains('sidebar-ask-new-qna-btn') || event.target.classList.contains('tutor-quiz-question-paginate-item')) {
             return;
         }
 

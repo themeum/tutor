@@ -20,9 +20,8 @@
 	<?php
 		// @todo: convert to pagination
 		if ($current_page > 1 || $instructors_count>$limit) {
-
 			$pagination_data = array(
-				'total_page'  => $instructors_count,
+				'total_items'  => $instructors_count,
 				'per_page'    => $limit,
 				'paged'       => $current_page,
 				'ajax'		  => array_merge($filter, array(
