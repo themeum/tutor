@@ -60,7 +60,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 							<?php esc_html_e( 'Total ', 'tutor' ); ?>
 						</span>
 						<span class="tutor-rating-count-part">
-							<?php echo esc_html( count( $reviews ) ); ?>
+							<?php echo $reviews_total; ?>
 						</span>
 						<span class="tutor-rating-text-part">
 							<?php echo esc_html( _n( ' Rating', ' Ratings', count( $reviews ), 'tutor' ) ); ?>
