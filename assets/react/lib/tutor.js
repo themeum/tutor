@@ -26,7 +26,7 @@ window.tutor_popup = function($, icon) {
 					html += '<div class="tutor-modal-body tutor-text-center">';
 						html += '<div class="tutor-px-lg-48 tutor-py-lg-24">';
 						
-							if(icon) {
+							if (icon) {
 								html += '<div class="tutor-mt-24"><img class="tutor-d-inline-block" src="' + window._tutorobject.tutor_url + 'assets/images/' + icon + '.svg" /></div>';
 							}
 
