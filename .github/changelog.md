@@ -1,8 +1,52 @@
 # TutorLMS Changelog
 
-### 2.0.2 - March 30, 2022
+### 2.0.2 - April 20, 2022
 
-* Fix: To be added later
+* New: Instructor List Page is built using its Shortcode
+* New: Course List Page is redeveloped with SEO friendly URL
+* New: Faster filtering options for course list page
+* New: Now you can drag & drop quizzes to your  liking in Quiz Builder
+* Update: Compatibility with the latest Restrict Content Pro
+* Update: Code Optimization is done for better Page Load Performance
+* Update: Design is now more optimized and improved
+* Update: Course Expiry Date is added to Single Course Page
+* Update: "Pending Course" Tab is added under "My Courses" for Instructor
+* Update: There is now a comma separator on the single course page price
+* Fix: Multiple mobile responsive issues have been resolved
+* Fix: In Add-ons Page the Tab Titles were wrongly shown
+* Fix: The wrong email was being sent on a question submitted by a student
+* Fix: Course Price was not accepting floating value Price
+* Fix: Markups and Shortcodes were not working in some description fields
+* Fix: The course list page, pagination, and filter were not working properly
+* Fix: Deleted Zoom Meeting information was throwing PHP Error
+* Fix: Zoom Meeting was not being created while using Gutenberg Editor
+* Fix: In Evaluation "Your Points" field was accepting random values
+* Fix: Clicking on "Share", "Wishlist", and "Bookmark" was taking the user to Login
+* Fix: "My Courses" page was showing a $0 Price for all displayed courses
+* Fix: Active Status of Tutor Menu was showing wrongly in WP Admin
+* Fix: "Abandon Quiz" Modal was appearing for the wrong action
+* Fix: The announcement could have been created without selecting a course
+* Fix: Deleting a student was deleting their user account too
+* Fix: Bulk Actions was not working in the courses, instructors, students' page
+* Fix: A student was being enrolled in the same course multiple times
+* Fix: The Tutor Free Download link was wrong when only Tutor Pro was active, 
+* Fix: Lesson Page container was being narrow on some Screens
+* Fix: WP Editor was not working while creating a lesson
+* Fix: Admin and Instructor were not being able to access their course content
+* Fix: Trashed Courses were still being shown on the all course list
+* Fix: "BuddyPress Groups" was showing the same options multiple times in Course Builder
+* Fix: Closing an announcement modal didn't remove the data
+* Fix: In Course Journey, the "Overview Tab" was not appearing by default
+* Fix: While creating Zoom Meeting, Date Picker wasn't working
+* Fix: For the "Match Question" type Quiz Design was showing up as broken
+* Fix: WooCommerce "Autocomplete Order" Hook was not working with Tutor LMS
+* Fix: No Income was visible under Instructor's Wallet page
+* Fix: While creating a Course, a duplicate course was being created due to "Auto Save"
+* Fix: Subscribers were able to access the "Create a Course" page
+* Fix: "Preferred Course Filter" options were not working in settings
+* Fix: Admin submitted courses were ending up in the course review section
+* Fix: The Content Drip add-on date picker was showing the wrong date format
+* Fix: Wrong instructor count was showing up on the reports page
 
 
 ### 2.0.1 - March 23, 2022
