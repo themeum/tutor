@@ -9548,12 +9548,13 @@ class Utils {
 	public function get_total_enrolled_course() {
 		global $wpdb;
 		
-		$sql = "SELECT COUNT(ID)
-		FROM {$wpdb->posts}
-		WHERE post_type = %s
-		AND post_status = %s";
+		$sql = "SELECT COUNT(DISTINCT enroll.ID)
+		FROM {$wpdb->posts} enroll INNER JOIN {$wpdb->posts} course ON enroll.post_parent=course.ID
+		WHERE enroll.post_type = 'tutor_enrolled'
+		AND enroll.post_status = 'completed'
+        AND course.post_type=%s";
 		
-		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_enrolled', 'completed' ) );
+		return $wpdb->get_var( $wpdb->prepare( $sql, tutor()->course_post_type ) );
 	}
 
 	/**
@@ -9566,14 +9567,14 @@ class Utils {
 		global $wpdb;
 		$lesson_type = tutor()->lesson_post_type;
 
-		$sql = "SELECT COUNT(lesson.ID)
-		FROM {$wpdb->posts} lesson
-		INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
-		INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID
-		WHERE lesson.post_type = %s
-		AND lesson.post_status = %s
-		AND course.post_status = %s
-		AND topic.post_status = %s";
+		$sql = "SELECT COUNT(DISTINCT lesson.ID)
+				FROM {$wpdb->posts} lesson
+					INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
+					INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID
+				WHERE lesson.post_type = %s
+					AND lesson.post_status = %s
+					AND course.post_status = %s
+					AND topic.post_status = %s";
 
 		return $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type, 'publish', 'publish', 'publish' ) );
 	}
@@ -9587,12 +9588,14 @@ class Utils {
 	public function get_total_quiz() {
 		global $wpdb;
 		
-		$sql = "SELECT COUNT(ID)
-		FROM {$wpdb->posts}
-		WHERE post_type = %s
-		AND post_status = %s ";
+		$sql = "SELECT COUNT(DISTINCT quiz.ID) 
+			FROM {$wpdb->posts} quiz
+				INNER JOIN {$wpdb->posts} topic ON quiz.post_parent=topic.ID 
+				INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID 
+			WHERE course.post_type=%s
+				AND quiz.post_type='tutor_quiz'";
 
-		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_quiz', 'publish' ) );
+		return $wpdb->get_var( $wpdb->prepare( $sql, tutor()->course_post_type ) );
 	}
 
 	/**
@@ -9604,8 +9607,15 @@ class Utils {
 	public function get_total_question() {
 		global $wpdb;
 		
-		$sql = "SELECT COUNT(question_id) FROM {$wpdb->tutor_quiz_questions} ";
-		return $wpdb->get_var( $sql );
+		$sql = "SELECT COUNT(DISTINCT question.question_id) 
+				FROM {$wpdb->prefix}tutor_quiz_questions question 
+					INNER JOIN {$wpdb->posts} quiz ON question.quiz_id=quiz.ID 
+					INNER JOIN {$wpdb->posts} topic ON quiz.post_parent=topic.ID 
+					INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID 
+				WHERE course.post_type=%s
+				 	AND quiz.post_type='tutor_quiz'";
+
+		return $wpdb->get_var( $wpdb->prepare( $sql, tutor()->course_post_type ) );
 	}
 
 	/**
