@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+	const { __, _x, _n, _nx } = wp.i18n;
 	/**
 	 *
 	 * Instructor list filter
@@ -110,6 +111,7 @@ jQuery(document).ready(function($) {
 	const rating_range = document.querySelector('[tutor-instructors-filter-rating-count]');
 	for (let star of stars) {
 		star.onclick = (e) => {
+			const target = e.currentTarget;
 			//remove active if has
 			for (let star of stars) {
 				if (star.classList.contains('is-active')) {
@@ -120,14 +122,21 @@ jQuery(document).ready(function($) {
 					star.classList.add('tutor-icon-star-line');
 				}
 			}
+
 			//show stars active as click
-			const length = e.target.dataset.value;
-			for (let i = 0; i < length; i++) {
-				stars[i].classList.add('is-active');
-				stars[i].classList.remove('tutor-icon-star-line');
-				stars[i].classList.add('tutor-icon-star-bold');
+			const length = Number(e.target.dataset.value);
+			let starText = __('star', 'tutor');
+			if (length > 1) {
+				starText = __('stars', 'tutor');
 			}
-			rating_range.innerHTML = `0.0 - ${length}.0`;
+			if (!target.classList.contains('is-active')) {
+				target.classList.add('is-active');
+			}
+			if (!target.classList.contains('tutor-icon-star-bold')) {
+				target.classList.remove('tutor-icon-star-line');
+				target.classList.add('tutor-icon-star-bold')
+			}
+			rating_range.innerHTML = `${length} ${starText}`;
 		};
 	}
 });

@@ -724,27 +724,30 @@ if ( ! function_exists( 'tutor_maintenance_mode' ) ) {
 	 * @since v.1.6.0
 	 */
 
-	if ( ! function_exists( 'is_single_course' ) ) {
-		function is_single_course($check_spotlight=false) {
-			global $wp_query;
-			$course_post_type = tutor()->course_post_type;
+if ( ! function_exists( 'is_single_course' ) ) {
+	function is_single_course( $check_spotlight = false ) {
+		global $wp_query;
+		$course_post_type = tutor()->course_post_type;
 
-			$post_types = array($course_post_type);
-			if($check_spotlight){
-				$post_types = array_merge($post_types, array(
+		$post_types = array( $course_post_type );
+		if ( $check_spotlight ) {
+			$post_types = array_merge(
+				$post_types,
+				array(
 					'lesson',
 					'tutor_quiz',
 					'tutor_assignments',
-					'tutor_zoom_meeting'
-				));
-			}
-
-			if ( is_single() && ! empty( $wp_query->query['post_type'] ) && in_array($wp_query->query['post_type'], $post_types)  ) {
-				return true;
-			}
-			return false;
+					'tutor_zoom_meeting',
+				)
+			);
 		}
+
+		if ( is_single() && ! empty( $wp_query->query['post_type'] ) && in_array( $wp_query->query['post_type'], $post_types ) ) {
+			return true;
+		}
+		return false;
 	}
+}
 
 	/**
 	 * Require wp_date form return js date format.
@@ -764,7 +767,7 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 			'm/d/Y'  => 'M-d-Y',
 			'd/m/Y'  => 'd-M-Y',
 			'F j, Y' => 'MMMM d, yyyy',
-			'j F Y' => 'MMMM d, yyyy',
+			'j F Y'  => 'MMMM d, yyyy',
 		);
 		return isset( $formats[ $wp_date_format ] ) ? $formats[ $wp_date_format ] : $default_format;
 	}
@@ -784,7 +787,7 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 */
 if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	function tutor_get_formated_date( string $require_format, string $user_date ) {
-		$date	= date_create( str_replace( '/', '-', $user_date ) );
+		$date = date_create( str_replace( '/', '-', $user_date ) );
 		if ( is_a( $date, 'DateTime' ) ) {
 			$formatted_date = date_format( $date, $require_format );
 		} else {
@@ -818,8 +821,8 @@ if ( ! function_exists( '_tutor_search_by_title_only' ) ) {
 	 *
 	 * @link    http://wordpress.stackexchange.com/a/11826/1685
 	 *
-	 * @param   string      $search
-	 * @param   WP_Query    $wp_query
+	 * @param   string   $search
+	 * @param   WP_Query $wp_query
 	 */
 	function _tutor_search_by_title_only( $search, $wp_query ) {
 		if ( ! empty( $search ) && ! empty( $wp_query->query_vars['search_terms'] ) ) {
@@ -830,18 +833,19 @@ if ( ! function_exists( '_tutor_search_by_title_only' ) ) {
 
 			$search = array();
 
-			foreach ( ( array ) $q['search_terms'] as $term )
+			foreach ( (array) $q['search_terms'] as $term ) {
 				$search[] = $wpdb->prepare( "$wpdb->posts.post_title LIKE %s", $n . $wpdb->esc_like( $term ) . $n );
+			}
 
-			if ( ! is_user_logged_in() )
+			if ( ! is_user_logged_in() ) {
 				$search[] = "$wpdb->posts.post_password = ''";
+			}
 
 			$search = ' AND ' . implode( ' AND ', $search );
 		}
 
 		return $search;
 	}
-
 }
 
 if ( ! function_exists( 'pr' ) ) {
@@ -889,26 +893,26 @@ if ( ! function_exists( 'get_request' ) ) {
 	}
 }
 
-if(!function_exists('tutor_kses_allowed_html')) {
-	function tutor_kses_allowed_html($allowed_tags, $context) {
-		$tags = array('input', 'style', 'script', 'select', 'form', 'option', 'optgroup', 'iframe', 'bdi', 'source');
-		$atts = array('min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'role', 'placeholder', 'value', 'data-*', 'src', 'width', 'height', 'frameborder', 'allow', 'fullscreen', 'title', 'multiple' );
+if ( ! function_exists( 'tutor_kses_allowed_html' ) ) {
+	function tutor_kses_allowed_html( $allowed_tags, $context ) {
+		$tags = array( 'input', 'style', 'script', 'select', 'form', 'option', 'optgroup', 'iframe', 'bdi', 'source' );
+		$atts = array( 'min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'role', 'placeholder', 'value', 'data-*', 'src', 'width', 'height', 'frameborder', 'allow', 'fullscreen', 'title', 'multiple' );
 
-		foreach($tags as $tag) {
+		foreach ( $tags as $tag ) {
 			$tag_attrs = array();
 
-			foreach($atts as $att) {
-				$tag_attrs[$att] = true;
+			foreach ( $atts as $att ) {
+				$tag_attrs[ $att ] = true;
 			}
 
-			$allowed_tags[$tag] = $tag_attrs;
+			$allowed_tags[ $tag ] = $tag_attrs;
 		}
 
 		return $allowed_tags;
 	}
 }
 
-if(!function_exists('tutor_kses_allowed_css')) {
+if ( ! function_exists( 'tutor_kses_allowed_css' ) ) {
 	function tutor_kses_allowed_css( $styles ) {
 		$styles[] = 'display';
 		$styles[] = '--progress-value';
@@ -916,16 +920,16 @@ if(!function_exists('tutor_kses_allowed_css')) {
 	}
 }
 
-if(!function_exists('tutor_kses_html')) {
+if ( ! function_exists( 'tutor_kses_html' ) ) {
 	function tutor_kses_html( $content ) {
 
 		return $content;
 		add_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html', 10, 2 );
 		add_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
 
-		$content = preg_replace('/<!--(.|\s)*?-->/', '', $content);
+		$content = preg_replace( '/<!--(.|\s)*?-->/', '', $content );
 		$content = wp_kses_post( $content );
-		$content = str_replace('&amp;', '&', $content);
+		$content = str_replace( '&amp;', '&', $content );
 
 		remove_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
 		remove_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html' );
@@ -941,37 +945,97 @@ if(!function_exists('tutor_kses_html')) {
  *
  * @since v.1.5.7
  */
-if (!function_exists('get_tutor_all_withdrawal_methods')) {
+if ( ! function_exists( 'get_tutor_all_withdrawal_methods' ) ) {
 	function get_tutor_all_withdrawal_methods() {
 		return apply_filters( 'tutor_withdrawal_methods_all', array() );
 	}
 }
 
 
-if(!function_exists('tutor_log')) {
-	function tutor_log($data) {
+if ( ! function_exists( 'tutor_log' ) ) {
+	function tutor_log( $data ) {
 		ob_start();
-		var_dump($data);
-		error_log(ob_get_clean());
+		var_dump( $data );
+		error_log( ob_get_clean() );
 	}
 }
 
-if(!function_exists('tutor_wc_price_currency_format')){
-	function tutor_wc_price_currency_format($amount){
+if ( ! function_exists( 'tutor_wc_price_currency_format' ) ) {
+	function tutor_wc_price_currency_format( $amount ) {
 
-		$symbol = get_woocommerce_currency_symbol();
-		$position = get_option('woocommerce_currency_pos', 'left');
-		
-		switch($position){
-			case 'left' 		: $amount = $symbol . $amount; break;
-			case 'left_space' 	: $amount = $symbol . ' ' . $amount; break;
+		$symbol   = get_woocommerce_currency_symbol();
+		$position = get_option( 'woocommerce_currency_pos', 'left' );
 
-			case 'right' 		: $amount = $amount . $symbol; break;
-			case 'right_space' 	: $amount = $amount . ' ' . $symbol; break;
+		switch ( $position ) {
+			case 'left':
+				$amount = $symbol . $amount;
+				break;
+			case 'left_space':
+				$amount = $symbol . ' ' . $amount;
+				break;
 
-			default 			: $amount = $symbol . $amount; break;
+			case 'right':
+				$amount = $amount . $symbol;
+				break;
+			case 'right_space':
+				$amount = $amount . ' ' . $symbol;
+				break;
+
+			default:
+				$amount = $symbol . $amount;
+				break;
 		}
 
 		return $amount;
 	}
 }
+
+if ( ! function_exists( 'tutor_meta_box_wrapper' ) ) {
+	/**
+	 * Tutor meta box wrapper
+	 *
+	 * @since v2.0.2
+	 *
+	 * @param string $id  id of meta box.
+	 * @param string $title  meta box title.
+	 * @param mixed  $callback callback function that meta box will call.
+	 * @param string $screen  which screen meta box should appear.
+	 * @param string $context optional param. Where meta box should appear.
+	 * @param string $priority optional.
+	 * @param string $custom_class optional. If provide it will add this class along
+	 * with div id.
+	 *
+	 * @return void  if class provided then filter hook will return class.
+	 */
+	function tutor_meta_box_wrapper(
+		$id,
+		$title,
+		$callback,
+		$screen,
+		$context = 'advanced',
+		$priority = 'default',
+		$custom_class = ''
+	) {
+		add_meta_box(
+			$id,
+			$title,
+			$callback,
+			$screen,
+			$context,
+			$priority
+		);
+		if ( '' !== $custom_class ) {
+			$post_type = tutor()->course_post_type;
+			add_filter(
+				"postbox_classes_{$post_type}_{$id}",
+				function( $classes ) use ( $custom_class ) {
+					if ( ! in_array( $custom_class, $classes ) ) {
+						$classes[] = $custom_class;
+					}
+					return $classes;
+				}
+			);
+		}
+	}
+}
+
