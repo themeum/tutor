@@ -1,29 +1,32 @@
-.tutor-quiz-questions-pagination ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    li {
-        display: inline-block;
-        a {
-            border: 1px solid var(--tutor-color-primary);
-            padding: 7px 13px;
-            display: block;
-            border-radius: 50%;
-            margin-right: 10px;
-            color: var(--tutor-color-primary);
-            font-weight: bold;
-            font-size: 15px;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            &:hover,
-            &.active {
-                background-color: var(--tutor-color-primary);
-                color: white;
-                &:hover {
-                    opacity: .8;
+.tutor-quiz-questions-pagination {
+    margin-top: 24px;
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        li {
+            display: inline-block;
+            a {
+                border: 1px solid var(--tutor-color-primary);
+                padding: 7px 13px;
+                display: block;
+                border-radius: 50%;
+                margin-right: 10px;
+                color: var(--tutor-color-primary);
+                font-weight: bold;
+                font-size: 15px;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                &:hover,
+                &.active {
+                    background-color: var(--tutor-color-primary);
+                    color: white;
+                    &:hover {
+                        opacity: .8;
+                    }
                 }
             }
         }
