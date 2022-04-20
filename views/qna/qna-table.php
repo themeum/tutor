@@ -75,8 +75,8 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 <?php $is_important ? _e('This conversation is important', 'tutor') : _e('Mark this conversation as important', 'tutor'); ?>
                                             </span>
                                         </div>
-                                        <img src="<?php echo esc_url(get_avatar_url($qna->user_id)); ?>" alt="<?php echo esc_attr($qna->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>" />
-                                        <div class="">
+                                        <?php echo tutor_utils()->get_tutor_avatar( $qna->user_id ); ?>
+                                        <div>
                                             <div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
                                                 <?php echo $qna->display_name; ?>
                                             </div>

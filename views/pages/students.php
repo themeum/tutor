@@ -77,7 +77,7 @@ $filters = array(
 					</th>
 					<th class="tutor-table-rows-sorting">
 						<div class="tutor-color-secondary">
-							<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
+							<span class="tutor-fs-7"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
 							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 						</div>
 					</th>
@@ -113,8 +113,7 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Avatar', 'tutor' ); ?>" class="column-fullwidth">
 								<div class="td-avatar">
-									<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
-									<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
+									<?php echo tutor_utils()->get_tutor_avatar( $list->ID ); ?>
 									<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-m-0">
 										<?php esc_html_e( $list->display_name ); ?>
 									</span>

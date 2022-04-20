@@ -120,7 +120,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
                                 </td>
                                 <td data-th="<?php esc_html_e('Student', 'tutor'); ?>">
                                     <div class="td-avatar">
-                                        <img src="<?php echo get_avatar_url( $comment_author->ID ); ?>" alt=" - Profile Picture">
+                                        <?php echo tutor_utils()->get_tutor_avatar( $comment_author->ID ); ?>
                                         <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
                                             <?php esc_html_e( $comment_author->display_name ); ?><br/>
                                             <span class="tutor-fs-7">

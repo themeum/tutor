@@ -141,19 +141,19 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Request By', 'tutor' ); ?>">
 								<div class="td-avatar">
-									<?php echo get_avatar( $user_data->ID, 50 ); ?>
+									<?php echo tutor_utils()->get_tutor_avatar( $user_data->ID ); ?>
 									<div class="td-avatar-detials">
-											<div class="td-avatar-name tutor-d-flex tutor-align-items-center">
-												<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
-													<?php echo esc_html( $user_data->display_name ); ?>
-												</span>
-												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
-													<span class="tutor-icon-external-link"></span>
-												</a>
-											</div>
-											<span class="tutor-color-secondary tutor-fs-7">
-												<?php echo esc_html( $user_data->user_email ); ?>
+										<div class="td-avatar-name tutor-d-flex tutor-align-items-center">
+											<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
+												<?php echo esc_html( $user_data->display_name ); ?>
 											</span>
+											<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
+												<span class="tutor-icon-external-link"></span>
+											</a>
+										</div>
+										<span class="tutor-color-secondary tutor-fs-7">
+											<?php echo esc_html( $user_data->user_email ); ?>
+										</span>
 									</div>
 								</div>
 							</td>

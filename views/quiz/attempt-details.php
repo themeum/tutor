@@ -198,7 +198,7 @@ if ( is_array( $attempt_info ) ) {
                             ?>
                             <td data-th="<?php echo $column; ?>">
                                 <div class="td-avatar">
-                                    <img src="<?php echo esc_url(get_avatar_url($user_id)); ?>" alt="<?php echo esc_attr($user->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
+                                    <?php echo tutor_utils()->get_tutor_avatar( $user_id ); ?>
                                     <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-nowrap-ellipsis">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </div>
