@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class MetaboxWrapper {
 
-    protected static $custom_class;
+    protected $custom_class;
 
-    public static function register_meta_box_from_wrapper(
+    public function register_meta_box_from_wrapper(
         string $id,
         string $title,
         $callback,
@@ -26,16 +26,16 @@ class MetaboxWrapper {
         string $priority,
         string $custom_class = ''
     ) {
-        self::$custom_class = $custom_class;
+        $this->custom_class = $custom_class;
         add_meta_box( $id, $title, $callback, $screen, $context, $priority );
         $post_type = tutor()->course_post_type;
-        add_filter( "postbox_classes_{$post_type}_{$id}", array( __CLASS__, 'add_custom_meta_box_class' ) );
+        add_filter( "postbox_classes_{$post_type}_{$id}", array( $this, 'add_custom_meta_box_class' ) );
     }
 
-    public static function add_custom_meta_box_class( $classes ) {
-        if ( '' !== self::$custom_class ) {
-            if ( ! in_array( self::$custom_class, $classes ) ) {
-                $classes[] = self::$custom_class;
+    public function add_custom_meta_box_class( $classes ) {
+        if ( '' !== $this->custom_class ) {
+            if ( ! in_array( $this->custom_class, $classes ) ) {
+                $classes[] = $this->custom_class;
             }
         }
         return $classes;
