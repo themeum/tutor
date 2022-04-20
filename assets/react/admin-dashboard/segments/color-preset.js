@@ -2,21 +2,24 @@
  * Color PRESET and PICKER manipulation
  */
 
-
 (() => {
-
-	const colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
-	const colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
-	const pickerView = document.querySelectorAll('.color-picker-wrapper [data-key]');
-
+	const colorPresetInputs = document.querySelectorAll(
+		"label.color-preset-input input[type='radio']",
+	);
+	const colorPickerInputs = document.querySelectorAll(
+		"label.color-picker-input input[type='color']",
+	);
+	const pickerView = document.querySelectorAll(
+		'.color-picker-wrapper [data-key]',
+	);
 
 	const moreButton = document.querySelector('.more_button');
 
 	const otherColors = document.querySelector('.other_colors');
-	const otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-option-field-row');
+	const otherColorRows =
+		otherColors && otherColors.querySelectorAll('.tutor-option-field-row');
 	const otherColorsExpanded = document.querySelector('.other_colors.expanded');
 	const designNav = document.querySelectorAll('.tutor-option-nav-item');
-
 
 	const otherColorsPreview = () => {
 		let itemsHeight = (initHeight = 0);
@@ -50,7 +53,6 @@
 		}
 	};
 
-
 	if (typeof otherColorsPreview === 'function') {
 		otherColorsPreview();
 	}
@@ -65,17 +67,24 @@
 		};
 	});
 
-	// Color PRESET Slecetion (color inputs)
+	// Color PRESET selection (color inputs)
 	if (colorPresetInputs) {
 		colorPresetInputs.forEach((preset) => {
 			const presetItem = preset.parentElement.querySelector('.preset-item');
 			const presetColors = presetItem.querySelectorAll('.header span');
 			const presetInput = preset.closest('.color-preset-input');
+			const presetInputLabels = presetInput.parentElement.querySelectorAll(
+				'label.color-preset-input',
+			);
+
 			// listening preset input events
-			if (true === preset.checked) {
+			if (preset.checked) {
 				presetInput.classList.add('is-checked');
 			}
 			preset.addEventListener('input', (e) => {
+				presetInputLabels.forEach((presetInputLabel) =>
+					presetInputLabel.classList.remove('is-checked'),
+				);
 				presetInput.classList.add('is-checked');
 				presetColors.forEach((color) => {
 					let presetKey = color.dataset.preset;
@@ -102,12 +111,16 @@
 	}
 	// Updating Custom Color PRESET
 	const updateCustomPreset = (picker) => {
-		const customPresetEl = document.querySelector("label.color-preset-input[for='custom']");
+		const customPresetEl = document.querySelector(
+			"label.color-preset-input[for='tutor_preset_custom']",
+		);
 
 		// listening picker input events
-		picker.addEventListener('input', function (e) {
-			const presetColors = customPresetEl && customPresetEl.querySelectorAll('.header span');
-			const presetItem = customPresetEl && customPresetEl.querySelector('input[type="radio"]');
+		picker.addEventListener('input', function(e) {
+			const presetColors =
+				customPresetEl && customPresetEl.querySelectorAll('.header span');
+			const presetItem =
+				customPresetEl && customPresetEl.querySelector('input[type="radio"]');
 			const pickerCode = picker.nextElementSibling;
 			pickerCode.innerText = picker.value;
 
@@ -129,6 +142,4 @@
 			updateCustomPreset(picker);
 		});
 	}
-
-
 })();
