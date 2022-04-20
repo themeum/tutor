@@ -38,9 +38,9 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 									$preset_colors = tutils()->sanitize_array( $fields['colors'] );
 
 									?>
-									<label for="<?php echo esc_attr( $fields['key'] ); ?>" class="color-preset-input">
+									<label for="tutor_preset_<?php echo esc_attr( $fields['key'] ); ?>" class="color-preset-input">
 										<input type="radio" name="tutor_option[<?php echo esc_attr( $fields_group['key'] ); ?>]"
-															id="<?php echo esc_attr( $fields['key'] ); ?>"
+															id="tutor_preset_<?php echo esc_attr( $fields['key'] ); ?>"
 															value="<?php echo esc_attr( $fields['key'] ); ?>" <?php esc_attr( checked( $option_value, $fields['key'] ) ); ?>>
 										<div class="preset-item">
 											<div class="header">
