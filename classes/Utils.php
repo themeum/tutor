@@ -2968,7 +2968,11 @@ class Utils {
 		$rating        = isset( $_POST['rating_filter'] ) ? $rating : '';
 		$rating_having = '';
 		if ( '' !== $rating ) {
-			$rating_having = " HAVING rating >= 0 AND rating <= {$rating} ";
+			$max_rating = (int) $rating + 1;
+			if ( 5 === (int) $rating ) {
+				$max_rating = 5;
+			}
+			$rating_having = " HAVING rating >= {$rating} AND rating <= {$max_rating} ";
 		}
 
 		/**
