@@ -57,7 +57,7 @@
 		flex-direction: column;
 		width: 100%;
 		pointer-events: auto;
-		background-color: #E3E5EB;
+		background-color: #EFF1F7;
 		background-clip: padding-box;
 		border: 1px solid var(--tutor-border-color);
 		border-radius: 16px;
@@ -417,13 +417,9 @@
 			.tutor-modal-body {
 				padding: 50px 57px;
 				align-items: unset;
-				.tutor-modal-title {
-					@extend .tutor-text-regular-h5;
-				}
 
 				.tutor-form-check {
 					label {
-						@extend .tutor-text-regular-caption;
 						color: var(--tutor-color-muted);
 					}
 				}

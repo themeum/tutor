@@ -106,7 +106,8 @@ $is_user_admin                = current_user_can( 'administrator' );
 								$is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 								while ( $lessons->have_posts() ) {
 									$lessons->the_post();
-									$show_permalink = !$_is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true );
+									$is_public_course 	= \TUTOR\Course_List::is_public( $course_id );
+									$show_permalink 	= !$_is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course;
 									if ( $post->post_type === 'tutor_quiz' ) {
 										$quiz = $post;
 										?>
