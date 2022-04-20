@@ -82,8 +82,6 @@ window.jQuery(document).ready($=>{
                 } else {
                     tutor_toast(__('Error', 'tutor'), get_response_message(data), 'error');
                 }
-
-                $('[data-tutor_pagination_ajax]').addClass('is-ajax-pagination-enabled');
             },
             error: function() {
                 content_container.html(content_container_html);
