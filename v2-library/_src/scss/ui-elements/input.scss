@@ -167,7 +167,8 @@ $height-sm: 38px;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		color: #999;
+		color: var(--tutor-color-muted);
+		pointer-events: none;
 	
 		&-reverse {
 			right: 0;
@@ -277,7 +278,7 @@ select.tutor-form-control,
 
 // checkbox
 .tutor-form-check {
-	display: flex;
+	display: inline-block; // flex was before
 	label {
 		cursor: pointer;
 		font-size: 16px;
@@ -286,7 +287,7 @@ select.tutor-form-control,
 	}
 	input.tutor-form-check-input {
 		margin-top: 0px !important;
-		margin-right: 12px;
+		margin-right: 8px; // 12px was before
 	}
 
 	& + & {

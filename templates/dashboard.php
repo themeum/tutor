@@ -253,17 +253,6 @@ do_action('tutor_dashboard/before/wrap');
 	</div>
 </div>
 
-<style>
-	.site-content {
-		overflow-y: hidden;
-		padding-bottom: 0;
-	}
-
-	.tutor-frontend-dashboard {
-		overflow-y: hidden;
-	}
-</style>
-
 <?php do_action('tutor_dashboard/after/wrap'); ?>
 
 <?php

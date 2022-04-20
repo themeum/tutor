@@ -74,9 +74,6 @@
 
 	&-list {
 		margin-top: 16px;
-		// li [class^='tutor-icon-'] {
-		// 	font-size: 24px;
-		// }
 	}
 
 	&-tags {
@@ -539,11 +536,6 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 .tutor-emptystate {
 	img {
 		max-width: 100%;
-	}
-	@include breakpoint-max(450) {
-		.text-regular-h5 {
-			font-size: 15px !important;
-		}
 	}
 }
 
