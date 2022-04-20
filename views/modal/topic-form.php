@@ -1,4 +1,4 @@
-<div id="<?php echo $data['wrapper_id']; ?>" class="tutor-modal tutor-modal-scrollable <?php echo $data['wrapper_class']; ?>">
+<div id="<?php echo $data['wrapper_id']; ?>" class="tutor-modal tutor-modal-scrollable<?php echo is_admin() ? ' tutor-admin-design-init' : ''; ?> <?php echo $data['wrapper_class']; ?>">
     <div class="tutor-modal-overlay"></div>
     <div class="tutor-modal-window">
         <div class="tutor-modal-content">

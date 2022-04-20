@@ -270,9 +270,8 @@ $available_status = array(
 									</td>
 									<td data-th="<?php esc_html_e( 'Author', 'tutor' ); ?>">
 										<div class="td-avatar">
-											<?php
-												echo get_avatar( $post->post_author, '96' );
-											?>
+											<?php echo tutor_utils()->get_tutor_avatar( $author_details->ID ); ?>
+											
 											<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 												<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 											</div>

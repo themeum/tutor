@@ -316,7 +316,7 @@
 	}
 }
 
-.tutor-courses-lession-list {
+.tutor-courses-lesson-list {
 	list-style: none;
 	margin: 0 -15px;
 	padding: 0;
@@ -332,14 +332,14 @@
 		padding: 15px;
 
 		> div,
-		> .tutor-courses-lession-list-single-item {
+		> .tutor-courses-lesson-list-single-item {
 			display: flex;
 			a {
 				color: inherit;
 			}
 		}
 	}
-	// .tutor-courses-lession-list-single-item
+	// .tutor-courses-lesson-list-single-item
 	&-single-item {
 		[class^='tutor-icon-'] {
 			margin-top: 1px;

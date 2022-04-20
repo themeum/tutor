@@ -181,7 +181,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 
 <!-- Now Load The View -->
 	<div class="tutor-ui-table-wrapper">
-		<table class="tutor-ui-table tutor-ui-table-responsive frontend-dashboard-announcement-table">
+		<table class="tutor-ui-table tutor-ui-table-responsive">
 			<thead>
 				<tr>
 					<?php if ( is_admin() ) : ?>
@@ -202,7 +202,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							</span>
 						</th>
 					<?php endif; ?>
-					<th class="tutor-table-rows-sorting">
+					<th>
 						<div class="tutor-color-secondary tutor-fs-7">
 							<?php esc_html_e( 'Announcements', 'tutor' ); ?>
 						</div>
