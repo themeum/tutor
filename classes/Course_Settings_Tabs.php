@@ -23,14 +23,7 @@ class Course_Settings_Tabs{
     }
 
     public function register_meta_box() {
-		\tutor_meta_box_wrapper( 'course-settings', __( 'Course Settings', 'tutor' ), array( $this, 'display' ), $this->course_post_type, 'advanced', 'high', 'tutor-course-settings-meta-box' );
-    }
-
-    public function add_custom_meta_box_class( $classes ) {
-        if ( ! in_array( 'tutor-admin-post-meta', $classes ) ) {
-            $classes[] = 'tutor-admin-post-meta';
-        }
-        return $classes;
+		\tutor_meta_box_wrapper( 'course-settings', __( 'Course Settings', 'tutor' ), array( $this, 'display' ), $this->course_post_type, 'advanced', 'high', 'tutor-admin-post-meta' );
     }
 
     public function get_default_args(){
