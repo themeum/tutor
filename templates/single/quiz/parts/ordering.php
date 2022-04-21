@@ -8,15 +8,15 @@
 			$answer->is_correct ? $quiz_answers[] = $answer->answer_id : 0;
 			if ( $answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image' ) {
 				?>
-	<div class="quiz-image-ordering-ans tutor-d-flex tutor-align-items-center">
+	<div class="quiz-image-ordering-ans tutor-d-flex tutor-align-center">
 		<div class="tutor-quiz-ans-no  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 			<span class="snum">&nbsp;</span>
 		</div>
 		<div class="quiz-image-ordering-ans-item tutor-d-flex tutor-ml-20">
-			<div class="tutor-quiz-image-ordering-icon tutor-d-flex tutor-align-items-center tutor-justify-center">
+			<div class="tutor-quiz-image-ordering-icon tutor-d-flex tutor-align-center tutor-justify-center">
 				<span class="tutor-icon-hamburger-menu tutor-color-black-fill"></span>
 			</div>
-			<div class="tutor-quiz-image-ordering-item tutor-d-flex tutor-align-items-center tutor-p-12">
+			<div class="tutor-quiz-image-ordering-item tutor-d-flex tutor-align-center tutor-p-12">
 				<img src="<?php echo wp_get_attachment_image_url( $answer->image_id, 'full' ); ?>" />
 				<span class="tutor-fs-6 tutor-color-black tutor-ml-16">
 				<?php echo $answer_title; ?>
@@ -26,7 +26,7 @@
 		</div>
 	</div>
 	<?php } else { ?>
-	<div class="quiz-ordering-ans tutor-d-flex tutor-align-items-center">
+	<div class="quiz-ordering-ans tutor-d-flex tutor-align-center">
 		<div class="tutor-quiz-ans-no  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 			<span class="snum">&nbsp;</span>
 		</div>

@@ -66,7 +66,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					</div>
 
 					<div class="tutor-card-body">
-						<div class="tutor-row tutor-align-items-center tutor-mb-24">
+						<div class="tutor-row tutor-align-center tutor-mb-24">
 							<div class="tutor-col">
 								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?> 
 							</div>

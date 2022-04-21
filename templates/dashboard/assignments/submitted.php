@@ -62,8 +62,8 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
         </div>
     </div>
 
-    <div class="tutor-ui-table-wrapper">
-        <table class="tutor-ui-table tutor-ui-table-responsive">
+    <div class="tutor-table-wrapper">
+        <table class="tutor-table tutor-table-responsive">
             <thead>
                 <tr>
                     <th>
@@ -72,21 +72,21 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
                         </span>
                     </th>
                     <th>
-                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
+                        <div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
                             <span class="tutor-fs-7">
                                 <?php esc_html_e('Student', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
+                        <div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
                             <span class="tutor-fs-7">
                                 <?php esc_html_e('Total Points', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
+                        <div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
                             <span class="tutor-fs-7">
                                 <?php esc_html_e('Result', 'tutor'); ?>
                             </span>
@@ -138,7 +138,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
                                     <?php echo tutor_utils()->translate_dynamic_text($status, true); ?>
                                 </td>
                                 <td data-th="<?php esc_html_e('Details URL', 'tutor'); ?>">
-                                    <div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
+                                    <div class="tutor-d-inline-flex tutor-align-center td-action-btns">
                                         <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
                                             <?php esc_html_e($button_text); ?>
                                         </a>

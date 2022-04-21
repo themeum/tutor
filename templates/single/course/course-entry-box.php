@@ -69,7 +69,7 @@
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
 					</h3>
 					<div class="list-item-progress">
-						<div class="tutor-fs-6 tutor-color-secondary tutor-d-flex tutor-align-items-center tutor-justify-between">
+						<div class="tutor-fs-6 tutor-color-secondary tutor-d-flex tutor-align-center tutor-justify-between">
 							<span class="progress-steps">
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
@@ -232,7 +232,7 @@
 					continue;
 				}
 				?>
-				<li class="tutor-row tutor-align-items-center<?php echo $key > 0 ? ' tutor-mt-12' : ''; ?>">
+				<li class="tutor-row tutor-align-center<?php echo $key > 0 ? ' tutor-mt-12' : ''; ?>">
 					<div class="tutor-col-6">
 						<span class="<?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
 						<span class="tutor-fs-7 tutor-color-muted tutor-ml-8">

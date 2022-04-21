@@ -465,7 +465,7 @@ jQuery(document).ready(function($) {
 	});
 
 	//add checkbox class for style
-	var tutorCheckbox = $('.tutor-ui-table .tutor-form-check-input');
+	var tutorCheckbox = $('.tutor-table .tutor-form-check-input');
 	if (tutorCheckbox) {
 		tutorCheckbox.parent().addClass('tutor-option-field-row');
 	}

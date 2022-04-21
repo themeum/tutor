@@ -19,7 +19,7 @@ if ($product) {
         $sale_price = $product->get_sale_price();
         $regular_price = $product->get_regular_price();
         ?>
-        <div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-between">
+        <div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-end tutor-justify-between">
             <div>
                 <span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
                     <?php echo wc_price( $sale_price ? $sale_price : $regular_price ); ?>

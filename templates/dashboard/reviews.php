@@ -47,7 +47,7 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 		<?php endif; ?>
 
 		<?php if ( $reviews->count ) : ?>
-			<table class="tutor-ui-table tutor-ui-table-responsive table-reviews">
+			<table class="tutor-table tutor-table-responsive table-reviews">
 				<thead>
 					<tr>
 						<th>

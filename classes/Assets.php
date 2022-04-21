@@ -338,7 +338,7 @@ class Assets {
 			$color = tutor_utils()->get_option( $key );
 			$color_rgb = tutor_utils()->hex2rgb( $color );
 
-			if(is_admin() && isset($admin_colors[$property])){
+			if (is_admin() && isset($admin_colors[$property])) {
 				$color = $admin_colors[$property];
 				$color_rgb = tutor_utils()->hex2rgb( $admin_colors[$property] );
 			}

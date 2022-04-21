@@ -44,7 +44,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php echo __( 'Withdrawal', 'tutor' ); ?></div>
 
 	<div class="tutor-card tutor-p-24">
-		<div class="tutor-row tutor-align-items-lg-center">
+		<div class="tutor-row tutor-align-lg-center">
 			<div class="tutor-col-lg-auto tutor-mb-16 tutor-mb-lg-0">
 				<div class="tutor-round-box tutor-p-8">
 					<i class="tutor-icon-wallet" area-hidden="true"></i>
@@ -139,7 +139,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 										<input type="number" class="tutor-form-control" min="<?php echo esc_attr( $min_withdraw ); ?>" name="tutor_withdraw_amount" id="tutor_withdraw_amount" step=".01" required />
 									</div>
 
-									<div class="tutor-form-help tutor-d-flex tutor-align-items-center">
+									<div class="tutor-form-help tutor-d-flex tutor-align-center">
 										<span class="tutor-icon-circle-question-mark tutor-mr-8" area-hidden="true"></span>
 										<span><?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . strip_tags( $formatted_min_withdraw_amount ); ?></span>
 									</div>
@@ -180,7 +180,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 				</div>
 			</div>
 
-			<table class="tutor-ui-table tutor-ui-table-responsive">
+			<table class="tutor-table tutor-table-responsive">
 				<thead class="tutor-fs-7 tutor-color-secondary">
 					<tr>
 						<th width="40%">

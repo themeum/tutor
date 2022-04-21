@@ -174,7 +174,7 @@ if ( is_array( $attempt_info ) ) {
 ?>
 
 <?php echo is_admin() ? '<div class="tutor-admin-body">' : ''; ?>
-<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts tutor-mb-32">
+<table class="tutor-table tutor-table-responsive my-quiz-attempts tutor-mb-32">
     <thead>
         <tr>
             <?php
@@ -365,8 +365,8 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     if (is_array($answers) && count($answers)){
         echo $context!='course-single-previous-attempts' ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">'.__('Quiz Overview', 'tutor').'</div>' : '';
         ?>
-        <div class="tutor-ui-table-wrapper tutor-mt-16">
-            <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-32 td-align-top">
+        <div class="tutor-table-wrapper tutor-mt-16">
+            <table class="tutor-table tutor-table-responsive tutor-quiz-attempt-details tutor-mb-32 td-align-top">
                 <thead>
                     <tr>
                         <?php
@@ -428,7 +428,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                             case 'questions' :
                                                 ?>
                                                 <td class="questions" data-th="<?php echo $column; ?>">
-                                                    <span class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-items-center">
+                                                    <span class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-center">
                                                         <?php echo stripslashes($answer->question_title); ?>
                                                     </span>
                                                 </td>

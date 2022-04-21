@@ -4,8 +4,6 @@
 		border: 1px solid var(--tutor-border-color);
 		position: relative;
 		border-radius: 6px;
-
-		position: relative;
 		display: flex;
 		flex-direction: column;
 		min-width: 0;
@@ -17,6 +15,7 @@
 			justify-content: space-between;
 			border-bottom: 1px solid var(--tutor-border-color);
 			padding: 16px 20px;
+			border-radius: 5px 5px 0 0;
 		}
 
 		&-title {
@@ -32,6 +31,7 @@
 
 		&-footer {
 			padding: 16px 20px;
+			border-radius: 0 0 5px 5px;
 			&:not(.tutor-no-border) {
 				border-top: 1px solid var(--tutor-border-color);
 			}

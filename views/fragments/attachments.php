@@ -10,7 +10,7 @@
             <div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16" data-attachment_id="<?php echo $attachment->id; ?>">
                 <div class="tutor-card">
                     <div class="tutor-card-body">
-                        <div class="tutor-row tutor-align-items-center">
+                        <div class="tutor-row tutor-align-center">
                             <div class="tutor-col tutor-overflow-hidden">
                                 <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-text-ellipsis tutor-mb-4"><?php echo $attachment->title; ?></div>
                                 <div class="tutor-fs-7 tutor-color-muted"><?php _e('Size', 'tutor'); ?>: <?php echo $attachment->size; ?></div>

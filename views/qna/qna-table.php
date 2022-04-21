@@ -6,7 +6,7 @@ $table_columns = include __DIR__ . '/contexts.php';
 $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
 ?>
 
-<table data-qna_context="<?php echo $context; ?>" class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-ui-table tutor-ui-table-responsive qna-list-table">
+<table data-qna_context="<?php echo $context; ?>" class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-table tutor-table-responsive qna-list-table">
 <?php if (is_array($qna_list) && count($qna_list)) { ?>
     <thead>
         <tr>
@@ -48,7 +48,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             case 'checkbox':
                                 ?>
                                 <td data-th="<?php _e('Mark', 'tutor'); ?>" class="tutor-shrink">
-                                    <div class="td-checkbox tutor-d-flex tutor-align-items-center">
+                                    <div class="td-checkbox tutor-d-flex tutor-align-center">
                                         <input id="tutor-admin-list-<?php echo $qna->comment_ID; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $qna->comment_ID; ?>" style="margin-top:0" />
                                     </div>
                                 </td>
@@ -149,7 +149,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             case 'action':
                             ?>
                                 <td data-th="<?php echo $column; ?>" class="tutor-text-right v-align-top">
-                                    <div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
+                                    <div class="tutor-d-inline-flex tutor-align-center td-action-btns">
                                         <a href="<?php echo add_query_arg(array('question_id' => $qna->comment_ID), tutor()->current_url); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
                                             <?php _e('Reply', 'tutor-pro'); ?>
                                         </a>

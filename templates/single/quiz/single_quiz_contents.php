@@ -8,12 +8,12 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
 ?>
 
 <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
-    <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
+    <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-center tutor-d-none tutor-d-xl-flex">
         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-            <span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+            <span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-center"></span>
         </a>
     </div>
-    <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
+    <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-center">
         <?php
             if ($post->post_type === 'tutor_quiz') {
                 echo '<span class="tutor-icon-quiz-o tutor-color-white tutor-mr-4"></span>';
@@ -43,10 +43,10 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
         ?>
     </div>
 
-    <div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
+    <div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-center">
         <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
         <a href="<?php echo get_the_permalink($course_id); ?>">
-            <span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+            <span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-center"></span>
         </a>
     </div>
 </div>

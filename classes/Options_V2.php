@@ -22,8 +22,6 @@ if (!defined('ABSPATH')) {
 
 class Options_V2
 {
-
-
 	private $options;
 	private $setting_fields;
 

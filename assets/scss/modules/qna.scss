@@ -1,13 +1,13 @@
 .tutor-qna-single-question {
-	table.tutor-ui-table-data-td-target [data-td-target] {
+	table.tutor-table-data-td-target [data-td-target] {
 		padding: 12px !important;
 	}
 
-	table.tutor-ui-table tr:last-child td:last-child {
+	table.tutor-table tr:last-child td:last-child {
 		border-radius: 0;
 	}
 
-	table.tutor-ui-table-data-td-target .is-active:not(.expand-btn) {
+	table.tutor-table-data-td-target .is-active:not(.expand-btn) {
 		background-color: #fff !important;
 	}
 

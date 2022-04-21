@@ -28,7 +28,7 @@
         <div class="tutor-modal-window">
             <div class="tutor-modal-content">
                 <div class="tutor-px-32 tutor-py-24 tutor-bg-white">
-                    <div class="tutor-d-flex tutor-align-items-center tutor-justify-between">
+                    <div class="tutor-d-flex tutor-align-center tutor-justify-between">
                         <div class="tutor-modal-title">
                             <?php _e('Quiz', 'tutor'); ?>
                         </div>

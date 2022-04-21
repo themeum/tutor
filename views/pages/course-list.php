@@ -150,8 +150,8 @@ $available_status = array(
 	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-mt-24">
-			<div class="tutor-ui-table-wrapper">
-				<table class="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
+			<div class="tutor-table-wrapper">
+				<table class="tutor-table tutor-table-responsive table-dashboard-course-list td-align-middle">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
 							<th>
@@ -309,7 +309,7 @@ $available_status = array(
 										</div>
 									</td>
 									<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
-										<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
+										<div class="tutor-d-inline-flex tutor-align-center td-action-btns">
 											<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 												<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="tutor_change_course_status">
 													<?php foreach ( $available_status as $key => $value ) : ?>

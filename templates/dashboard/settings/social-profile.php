@@ -26,7 +26,7 @@ $user = wp_get_current_user();
 			$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 			foreach ( $tutor_user_social_icons as $key => $social_icon ) :
 		?>
-			<div class="tutor-row tutor-align-items-center tutor-mb-32 tutor-social-field">
+			<div class="tutor-row tutor-align-center tutor-mb-32 tutor-social-field">
 				<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3">
 					<i class="<?php echo esc_html( $social_icon['icon_classes'] ); ?>"></i>
 					<?php echo esc_html( $social_icon['label'] ); ?>
