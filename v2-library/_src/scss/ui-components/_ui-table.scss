@@ -1,17 +1,17 @@
-.tutor-ui-table-responsive {
+.tutor-table-responsive {
 	position: relative;
 	overflow-x: auto;
 }
 
 @include breakpoint-min(desktop-lg) {
-	.tutor-ui-table-wrapper {
+	.tutor-table-wrapper {
 		background: #fff;
 		border-radius: 6px;
 	}
 }
 
 @include breakpoint-max(1199.999999) {
-	table.tutor-ui-table {
+	table.tutor-table {
 		tr {
 			background: #fff;
 			border-radius: 6px;
@@ -20,7 +20,7 @@
 }
 
 // Table Base Structure
-table.tutor-ui-table {
+table.tutor-table {
 	* {
 		box-sizing: border-box;
 	}
@@ -37,7 +37,7 @@ table.tutor-ui-table {
 	}
 
 	// Table utility classes
-	.tutor-d-inline-flex tutor-align-items-center {
+	.tutor-d-inline-flex tutor-align-center {
 		display: inline-flex;
 		align-items: center;
 		// justify-content: center;
@@ -273,7 +273,7 @@ table.tutor-ui-table {
 } // end Table Base Structure
 
 // Table th/td Content Styles
-table.tutor-ui-table {
+table.tutor-table {
 	&.table-dashboard-course-list {
 		td {
 			&:nth-child(1),
@@ -474,7 +474,7 @@ table.tutor-ui-table {
 }
 
 // Table Custom Styles
-table.tutor-ui-table {
+table.tutor-table {
 	&.table-dashboard-course-list {
 		td {
 			&:nth-child(1),
@@ -511,7 +511,7 @@ table.tutor-ui-table {
 }
 
 // Table Responsive Styles
-table.tutor-ui-table.tutor-ui-table-responsive {
+table.tutor-table.tutor-table-responsive {
 	/*
 	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
 	*/
@@ -612,7 +612,7 @@ table.tutor-ui-table.tutor-ui-table-responsive {
 	}
 } // end Table Responsive Styles
 
-table.tutor-ui-table-no-border {
+table.tutor-table-no-border {
 	&,
 	td,
 	th {
@@ -642,7 +642,7 @@ table.tutor-ui-table-no-border {
 }
 
 // Table toggle collapse td/tr
-table.tutor-ui-table-data-td-target {
+table.tutor-table-data-td-target {
 	[data-td-target] {
 		cursor: pointer;
 		@include breakpoint-min(desktop-lg) {
@@ -701,7 +701,7 @@ table.tutor-ui-table-data-td-target {
 }
 
 // Hot fix
-table.tutor-ui-table {
+table.tutor-table {
 	thead {
 		th {
 			> *,
@@ -717,8 +717,8 @@ table.tutor-ui-table {
 }
 
 // Table specefic styles
-table.tutor-ui-table {
-	&.tutor-ui-table-purchase-history {
+table.tutor-table {
+	&.tutor-table-purchase-history {
 		th {
 			height: 48px;
 		}
@@ -748,7 +748,7 @@ table.tutor-ui-table {
 			}
 		}
 	}
-	&.tutor-ui-table-zoom {
+	&.tutor-table-zoom {
 		@include breakpoint-min(desktop-lg) {
 			th,
 			td {
@@ -766,7 +766,7 @@ table.tutor-ui-table {
 			overflow-x: unset;
 		}
 	}
-	&.tutor-ui-table-analytics-student-details tr {
+	&.tutor-table-analytics-student-details tr {
 		@include breakpoint-min(desktop-lg) {
 			th:first-child,
 			td:first-child {

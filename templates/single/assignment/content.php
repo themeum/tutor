@@ -52,12 +52,12 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
     <div class="tutor-topbar-left-item tutor-d-flex">
-        <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
+        <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-center tutor-d-none tutor-d-xl-flex">
             <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-                <span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+                <span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-center"></span>
             </a>
         </div>
-        <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
+        <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-center">
             <span class="tutor-icon-assignment-filled tutor-color-white tutor-mr-4"></span>
             <span class="tutor-fs-7 tutor-color-white">
                 <?php
@@ -69,7 +69,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
     </div>
 
     <div class="tutor-topbar-right-item tutor-d-flex">
-        <div class="tutor-topbar-assignment-details tutor-d-flex tutor-align-items-center">
+        <div class="tutor-topbar-assignment-details tutor-d-flex tutor-align-center">
             <?php do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' ); ?>
             <div class="tutor-fs-7 tutor-color-white">
                 <?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
@@ -90,10 +90,10 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 				do_action( 'tutor_course/single/enrolled/after/lead_info/progress_bar' );
 			?>
         </div>
-        <div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
+        <div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-center">
             <?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
             <a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>">
-                <span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+                <span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-center"></span>
             </a>
         </div>
     </div>
@@ -206,8 +206,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 		*/
 		if ( ($time_duration['value'] != 0) && ($now > $remaining_time and $is_submitted == false) ) : ?>
             <div class="quiz-flash-message tutor-mt-24 tutor-mt-sm-32">
-                <div class="tutor-quiz-warning-box time-over tutor-d-flex tutor-align-items-center tutor-justify-between">
-                    <div class="flash-info tutor-d-flex tutor-align-items-center">
+                <div class="tutor-quiz-warning-box time-over tutor-d-flex tutor-align-center tutor-justify-between">
+                    <div class="flash-info tutor-d-flex tutor-align-center">
                         <span class="tutor-icon-circle-times-bold tutor-color-danger tutor-mr-8"></span>
                         <span class="tutor-fs-7 tutor-color-danger-100">
                             <?php _e( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor' ); ?>
@@ -259,7 +259,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                                         <?php echo esc_html( $file_size ? $file_size . 'KB' : '' ); ?>
                                     </div>
                                 </div>
-                                <div class="tutor-d-flex tutor-align-items-center">
+                                <div class="tutor-d-flex tutor-align-center">
                                     <a class="tutor-iconic-btn tutor-iconic-btn-outline" href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank">
                                         <span class="tutor-icon-download" area-hidden="true"></span>
                                     </a>
@@ -359,7 +359,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                                                             <div class="tutor-fs-7">Size: 230KB;</div>
                                                         </div>
                                                         <div
-                                                            class="tutor-attachment-file-close tutor-d-flex tutor-align-items-center">
+                                                            class="tutor-attachment-file-close tutor-d-flex tutor-align-center">
                                                             <a class="tutor-iconic-btn tutor-iconic-btn-outline" href="<?php echo esc_url( $attachment->url ); ?>"
                                                                 data-id="<?php echo esc_attr( $assignment_comment_id ); ?>"
                                                                 data-name="<?php echo esc_attr( $attachment->name ); ?>" target="_blank">
@@ -425,8 +425,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                 $given_mark = get_comment_meta( $submitted_assignment->comment_ID, 'assignment_mark', true );
             ?>
             <div class="tutor-assignment-result-table tutor-mt-32 tutor-mb-40">
-                <div class="tutor-ui-table-wrapper">
-                    <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
+                <div class="tutor-table-wrapper">
+                    <table class="tutor-table tutor-table-responsive my-quiz-attempts">
                         <thead class="tutor-fs-7 tutor-color-secondary">
                             <tr>
                                 <th>
@@ -542,7 +542,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
             <div class="tutor-assignment-details tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
                 <div class="tutor-ar-body tutor-pt-24 tutor-pb-40 tutor-px-16 tutor-px-md-32">
-                    <div class="tutor-ar-header tutor-d-flex tutor-justify-between tutor-align-items-center">
+                    <div class="tutor-ar-header tutor-d-flex tutor-justify-between tutor-align-center">
                         <div class="tutor-ar-title tutor-fs-6 tutor-fw-medium tutor-color-black">
                             <?php esc_html_e( 'Your Assignment', 'tutor' ); ?>
                         </div>
@@ -587,7 +587,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                                                 <div class="tutor-fs-7">Size:
                                                     <?php echo tutor_utils()->array_get( 'size', $attached_file ); ?></div>
                                             </div>
-                                            <div class="tutor-d-flex tutor-align-items-center">
+                                            <div class="tutor-d-flex tutor-align-center">
                                                 <a class="tutor-iconic-btn tutor-iconic-btn-outline" download
                                                     href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>"
                                                     target="_blank">

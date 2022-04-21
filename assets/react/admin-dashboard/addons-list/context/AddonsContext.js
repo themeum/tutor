@@ -144,14 +144,6 @@ export const AddonsContextProvider = (props) => {
 		toggleAddonStatus();
 	};
 
-	// setAddonLoading((prevData) => {
-	// 	const updatedData = { ...prevData, [addonBaseName]: !prevData[addonBaseName] };
-	// 	console.log('previous', prevData);
-	// 	console.log('updatedData', updatedData);
-	// 	toggleAddonStatus(updatedData);
-	// 	return updatedData;
-	// });
-
 	const getTabStatus = (btn) => {
 		switch (btn) {
 			case 'active':

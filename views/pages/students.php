@@ -66,8 +66,8 @@ $filters = array(
 	?>
 
 	<div class="tutor-admin-body">
-		<div class="tutor-ui-table-responsive tutor-mt-24">
-			<table class="tutor-ui-table tutor-ui-table-responsive tutor-table-with-checkbox">
+		<div class="tutor-table-responsive tutor-mt-24">
+			<table class="tutor-table tutor-table-responsive tutor-table-with-checkbox">
 				<thead>
 				<tr>
 					<th width="3%">
@@ -139,7 +139,7 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
 								<?php if( tutor()->has_pro ) : ?>
-								<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
+								<div class="tutor-d-inline-flex tutor-align-center td-action-btns">
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
 									class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 									<?php esc_html_e( 'Details', 'tutor' ); ?>

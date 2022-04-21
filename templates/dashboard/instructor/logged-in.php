@@ -14,7 +14,7 @@ if ( $is_instructor ) {
         <div class="tutor-instructor-application-process tutor-pt-48 tutor-pb-48">
             <div class="tutor-app-process-alert">
                 <div style="border:1px solid var(--tutor-color-primary);" class="tutor-primary tutor-py-12 tutor-px-20 tutor-radius-6">
-                    <div class="tutor-alert-text tutor-d-flex tutor-align-items-center">
+                    <div class="tutor-alert-text tutor-d-flex tutor-align-center">
                     <span class="tutor-icon-circle-info tutor-fs-4 tutor-color-primary tutor-mr-12"></span>
                     <span>
                     <?php
@@ -30,7 +30,7 @@ if ( $is_instructor ) {
                     </div>
                 </div>
             </div>
-            <div class="tutor-app-process-image tutor-m-auto tutor-pt-32 tutor-pb-44 tutor-d-flex tutor-justify-center tutor-align-items-center">
+            <div class="tutor-app-process-image tutor-m-auto tutor-pt-32 tutor-pb-44 tutor-d-flex tutor-justify-center tutor-align-center">
                 <span class="tutor-app-process-img">
                     <img
                     src="<?php echo esc_url( tutor()->url . 'assets/images/instructor-thankyou.png' ); ?>"

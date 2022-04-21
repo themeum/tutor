@@ -17,7 +17,7 @@
         </div>
         <?php } ?>
     </div>
-    <div class="quiz-image-matching-ans tutor-d-flex tutor-align-items-start">
+    <div class="quiz-image-matching-ans tutor-d-flex tutor-align-start">
         <?php
             if ( is_array($answers) && count($answers) ) {
                 foreach ($answers as $answer){
@@ -26,7 +26,7 @@
             <div class="quiz-image tutor-d-flex tutor-mb-16">
                 <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
             </div>
-            <div class="tutor-quiz-dotted-box tutor-dropzone tutor-d-flex tutor-align-items-center">
+            <div class="tutor-quiz-dotted-box tutor-dropzone tutor-d-flex tutor-align-center">
                 <span class="tutor-dragging-text-conent tutor-fs-6 tutor-color-black">
                     <?php _e('Drag your answer', 'tutor'); ?>
                 </span>

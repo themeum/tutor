@@ -78,8 +78,7 @@
 // overrides
 .tutor-admin-wrap,
 .tutor-admin-post-meta,
-.tutor-admin-design-init
-{
+.tutor-admin-design-init {
 	.tutor-form {
 		&-control {
 			outline: none !important;
@@ -225,7 +224,6 @@ body.tutor-backend-tutor_settings #wpbody-content {
 	background-color: #fff;
 	border: 1px solid #ddd;
 	border-radius: 3px;
-	-webkit-box-shadow: none;
 	box-shadow: none;
 	color: #333;
 	display: inline-block;
@@ -456,19 +454,10 @@ table.tutor_status_table th mark.yes {
 	margin-bottom: 10px;
 }
 
-#tutor-announcements .submit {
-	margin: 0;
-	padding: 0;
-}
-
 .tutor-label-success {
 	background-color: var(--tutor-color-success);
 	color: #ffffff;
 	padding: 3px 7px;
-}
-
-.tutor-addons .plugin-card-bottom .plugin-version {
-	display: inline-block;
 }
 
 .tutor-addons .addon-regular-price {
@@ -505,22 +494,6 @@ a.addon-buynow-link {
 	background-color: #fff;
 	min-height: 500px;
 	padding: 20px;
-}
-
-h3.addon-list-heading {
-	background-color: #eeeeee;
-	padding: 10px;
-}
-
-table.tutor-addons-list-table {
-	width: 100%;
-}
-
-table.tutor-addons-list-table td,
-table.tutor-addons-list-table th {
-	padding: 10px;
-	border-bottom: 1px solid #eeeeee;
-	text-align: left;
 }
 
 .tutor-addons-list .plugin-icon {
@@ -571,12 +544,7 @@ table.tutor-addons-list-table th {
 
 .quiz-question-flex-wrap,
 .tutor-flex-row {
-	display: -webkit-box;
-	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-orient: horizontal;
-	-webkit-box-direction: normal;
-	-ms-flex-direction: row;
 	flex-direction: row;
 }
 
@@ -598,35 +566,6 @@ table.tutor-addons-list-table th {
 	padding: 10px;
 }
 
-.tutor-add-question-wrap input[type='text'] {
-	border: 1px solid #ddd;
-	border-radius: 0;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-	color: #333;
-	display: inline-block;
-	vertical-align: middle;
-	padding: 7px 12px;
-	margin: 0;
-	width: 300px;
-	min-height: 35px;
-}
-
-.tutor-add-question-wrap select {
-	margin: 0;
-	padding: 0;
-	border-radius: 0;
-	border: none;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-	height: 35px;
-}
-
-.tutor-add-question-wrap .button {
-	height: 35px;
-	margin-left: 10px;
-}
-
 .question-actions-wrap {
 	padding-right: 0 !important;
 }
@@ -641,10 +580,6 @@ table.tutor-addons-list-table th {
 	background-color: transparent;
 	-webkit-box-shadow: none;
 	box-shadow: none;
-}
-
-.tutor-input-text-error {
-	border: 1px solid #ff0000 !important;
 }
 
 .tutor-info-msg,
@@ -684,14 +619,6 @@ table.tutor-addons-list-table th {
 .quiz-modal-btn-back {
 	color: #4b5981;
 	border: 1px solid #d4dadb;
-}
-
-.assignment-modal-form-wrap .tutor-option-field.tutor-assignment-modal-title-wrap {
-	margin: 0;
-}
-
-.advanced-options-tab-item {
-	float: right;
 }
 
 /*end notice*/
@@ -1438,85 +1365,10 @@ h2.tutor-page-heading {
 	padding: 0 15px;
 }
 
-.report-download-csv-icon {
-	float: right;
-}
-
-.report-download-csv-icon a {
-	text-decoration: none;
-}
-
 /** END Report.css */
 
 /**
   *END Alert CSS
-   */
-
-/**
-   * Tutor Table
-   */
-
-table.tutor-table {
-	border-spacing: 0;
-	width: 100%;
-	border-collapse: collapse;
-	border: 1px solid #dcdfe5;
-}
-
-table.tutor-table td,
-table.tutor-table th {
-	padding: 1em 1.41575em;
-	text-align: left;
-	vertical-align: top;
-	border-bottom: 1px solid #dcdfe5;
-}
-
-table.tutor-table td p:last-child,
-table.tutor-table th p:last-child {
-	margin-bottom: 0;
-}
-
-table.tutor-table th {
-	font-weight: 600;
-}
-
-table.tutor-table thead th {
-	padding: 1.41575em;
-	vertical-align: middle;
-}
-
-table.tutor-table tbody h2 {
-	font-size: 1em;
-	letter-spacing: normal;
-	font-weight: normal;
-}
-
-table.tutor-table tbody h2 a {
-	font-weight: normal;
-}
-
-table.tutor-table th {
-	background-color: #fafbfc;
-}
-
-table.tutor-table tbody td {
-	background-color: #ffffff;
-}
-
-table.tutor-table tbody tr:nth-child(2n) td {
-	background-color: #fafbfc;
-}
-
-table.tutor-table a {
-	text-decoration: none;
-}
-
-table.tutor-table p {
-	margin: 0;
-}
-
-/**
-   * END Tutor Table
    */
 
 /**
@@ -1759,127 +1611,10 @@ table.tutor-table p {
 	}
 }
 
-.tutor-list-wrap .tutor-list-table tbody td {
-	padding: 25px 20px;
-	vertical-align: top;
-}
-
-.tutor-list-wrap .tutor-list-table tbody tr:not(:last-child) {
-	border-bottom: 1px solid #dcdce1;
-}
-
-.tutor-list-table td .details-button a,
-.tutor-list-table .link-icon {
-	font-size: 16px;
-	color: #b9bac3;
-	transition: 0.2s;
-}
-
-.tutor-list-table td .details-button a:first-child {
-	font-size: 12px;
-	font-weight: 500;
-	line-height: 1.75;
-	text-align: center;
-	color: #737787;
-	border-radius: 3px;
-	border: solid 1px #dcdce1;
-	padding: 5px 11px;
-	margin-right: 15px;
-	text-decoration: none;
-}
-
-.tutor-list-table td .details-button {
-	text-align: right;
-	display: flex;
-	align-items: center;
-}
-
-.tutor-list-table .course-link a {
-	color: inherit;
-	text-decoration: none;
-}
-
-.tutor-list-table .tutor-icon-detail-link,
-.profile-table .tutor-icon-detail-link {
-	font-size: 14px;
-}
-
 @media (max-width: 991px) {
 	.tutor-list-wrap {
 		overflow-x: scroll;
 	}
-}
-
-/**
-   * Common CSS /.tutor-list-* - end
-  */
-
-/* .report-course-list - start */
-
-.report-course-list-header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
-.report-course-list-wrap .tutor-list-table td {
-	font-size: 16px;
-}
-
-.report-course-list-wrap .tutor-list-table td:nth-child(2) {
-	font-size: 14px;
-	font-weight: 400;
-}
-
-.report-course-list-wrap .tutor-list-table td:last-child {
-	text-align: right;
-}
-
-.report-course-list-wrap .tutor-list-table th:nth-child(2),
-.report-course-list-wrap .tutor-list-table td:nth-child(2) {
-	width: 40%;
-}
-
-.report-course-list-wrap .tutor-list-table .total {
-	color: #9698a5;
-}
-
-.report-course-list-wrap .tutor-list-table [class$='-link'] {
-	color: #b9bac3;
-}
-
-.report-course-list-wrap .tutor-list-table a:hover {
-	color: #3057d5;
-}
-
-.report-course-list-wrap .tutor-list-table .course-link {
-	font-size: 12px;
-	margin-left: 5px;
-}
-
-.tutor-list-table .course-percentage {
-	width: 90px;
-	height: 4px;
-	border-radius: 2px;
-	background-color: #dcdce1;
-	position: relative;
-}
-
-.tutor-list-table .course-percentage::before {
-	content: '';
-	position: absolute;
-	width: var(--percent);
-	height: 4px;
-	border-radius: 2px;
-	background-color: #3e64de;
-}
-
-.report-course-list-wrap > .tutor-list-table tbody td:not(.detail):nth-last-child(3) {
-	vertical-align: middle;
-}
-
-.report-course-list-wrap .tutor-list-table .details-link {
-	font-size: 21px;
 }
 
 /**
@@ -1902,14 +1637,6 @@ table.tutor-table p {
 	flex: 18% !important;
 }
 
-@media (max-width: 991px) {
-	.report-course-list-wrap .tutor-list-table th:nth-child(n + 7),
-	.report-course-list-wrap .tutor-list-table td:nth-child(n + 7) {
-		display: none;
-	}
-}
-
-.report-course-list-header .status span,
 .report-course-list-wrap .detail .status span {
 	font-size: 14px;
 	font-weight: 300;
@@ -1922,7 +1649,6 @@ table.tutor-table p {
 	align-items: center;
 }
 
-.report-course-list-header .status span::before,
 .report-course-list-wrap .detail .status span::before {
 	content: '';
 	position: absolute;
@@ -1943,12 +1669,10 @@ table.tutor-table p {
 	height: 6px;
 }
 
-.report-course-list-header .status .running::before,
 .report-course-list-wrap .detail .status .running::before {
 	background-color: #3e64de;
 }
 
-.report-course-list-header .status .complete::before,
 .report-course-list-wrap .detail .status .complete::before {
 	background-color: #7bbc30;
 }
@@ -1967,21 +1691,12 @@ table.tutor-table p {
 	font-weight: 400 !important;
 }
 
-.report-course-list-wrap .tutor-list-table td > table {
-	width: 100%;
-}
-
 .report-course-list .course-list-details {
 	display: grid;
 	grid-auto-flow: column;
 	grid-auto-columns: 1fr;
 	grid-gap: 20px;
 	grid-template-columns: repeat(3, 1fr);
-}
-
-.tutor-list-wrap .tutor-list-table a:hover,
-.tutor-list-wrap .tutor-list-table a:focus {
-	color: #3e64de;
 }
 
 .tutor-list-wrap .no-data-found {
@@ -1992,10 +1707,6 @@ table.tutor-table p {
 
 .tutor-wp-dashboard-filter-items {
 	display: inherit;
-}
-
-.tutor-list-table.row-actions {
-	left: 0;
 }
 
 //a-to-z-sorting icon

@@ -76,8 +76,8 @@ $filters = array(
 ?>
 <div class="wrap">
 	<div class="tutor-admin-page-content-wrapper tutor-withdraw-wrapper tutor-mt-48">
-		<div class="tutor-ui-table-wrapper">
-			<table class="tutor-ui-table tutor-ui-table-responsive tutor-withdraw-request">
+		<div class="tutor-table-wrapper">
+			<table class="tutor-table tutor-table-responsive tutor-withdraw-request">
 				<thead class="tutor-text-sm tutor-text-400">
 					<tr>
 						<th>
@@ -143,7 +143,7 @@ $filters = array(
 								<div class="td-avatar">
 									<?php echo tutor_utils()->get_tutor_avatar( $user_data->ID ); ?>
 									<div class="td-avatar-detials">
-										<div class="td-avatar-name tutor-d-flex tutor-align-items-center">
+										<div class="td-avatar-name tutor-d-flex tutor-align-center">
 											<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
 												<?php echo esc_html( $user_data->display_name ); ?>
 											</span>
@@ -182,10 +182,10 @@ $filters = array(
 													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['account_number']['value'] ) ); ?>
 												</span>
 												<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-top tutor-d-flex">
-													<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-items-center tutor-mr-12">
+													<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center tutor-mr-12">
 														<?php echo esc_html( $details['account_number']['value'] ); ?>
 													</div>
-													<div data-text-copy="<?php echo esc_attr( $details['account_number']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-items-center">
+													<div data-text-copy="<?php echo esc_attr( $details['account_number']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-center">
 														<span class="icon tutor-icon-copy"></span>
 														<?php esc_html_e( 'Copy', 'tutor' ); ?>
 													</div>
@@ -209,10 +209,10 @@ $filters = array(
 													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['iban']['value'] ) ); ?>
 												</span>
 												<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-top  tutor-d-flex">
-													<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-items-center tutor-mr-12">
+													<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center tutor-mr-12">
 														<?php echo esc_html( $details['iban']['value'] ); ?>
 													</div>
-													<div data-text-copy="<?php echo esc_attr( $details['iban']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-items-center">
+													<div data-text-copy="<?php echo esc_attr( $details['iban']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-center">
 														<span class="icon tutor-icon-copy"></span>
 														<?php esc_html_e( 'Copy', 'tutor' ); ?>
 													</div>
@@ -238,10 +238,10 @@ $filters = array(
 											<?php echo esc_html( '' !== $details['paypal_email']['value'] ? tutor_utils()->asterisks_email( $details['paypal_email']['value'] ) : '' ); ?>
 										</span>
 										<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-top  tutor-d-flex me-auto">
-											<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-items-center tutor-mr-12">
+											<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center tutor-mr-12">
 												<?php echo esc_html( $details['paypal_email']['value'] ); ?>
 											</div>
-											<div data-text-copy="<?php echo esc_attr( $details['paypal_email']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-items-center">
+											<div data-text-copy="<?php echo esc_attr( $details['paypal_email']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-center">
 												<span class="icon tutor-icon-copy"></span>
 												Copy
 											</div>
@@ -287,7 +287,7 @@ $filters = array(
 												<i class="tutor-icon-circle-info tutor-color-muted"></i>
 											</span>
 											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-left">
-												<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-items-center">
+												<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center">
 													<span>
 														<?php echo esc_html( '' !== $details['rejects']['reject_comment'] ? $details['rejects']['reject_comment'] : $details['rejects']['reject_type'] ); ?>
 													</span>
