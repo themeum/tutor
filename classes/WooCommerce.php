@@ -199,7 +199,7 @@ class WooCommerce extends Tutor_Base {
 	}
 
 	public function register_meta_box() {
-		add_meta_box( 'tutor-attach-product', __( 'Add Product', 'tutor' ), array( $this, 'course_add_product_metabox' ), $this->course_post_type, 'advanced', 'high' );
+		tutor_meta_box_wrapper( 'tutor-attach-product', __( 'Add Product', 'tutor' ), array( $this, 'course_add_product_metabox' ), $this->course_post_type, 'advanced', 'high', 'tutor-admin-post-meta' );
 	}
 
 	public function course_add_product_metabox() {

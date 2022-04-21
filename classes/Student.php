@@ -225,7 +225,8 @@ class Student {
 		if ( $user_id ) {
 			$profile_photo = get_user_meta( $user_id, '_tutor_profile_photo', true );
 			if ( $profile_photo ) {
-				$url = wp_get_attachment_image_url( $profile_photo, 'thumbnail' );
+				$size = isset($args['size']) ? $args['size'] : 'thumbnail';
+				$url = wp_get_attachment_image_url( $profile_photo, $size );
 			}
 		}
 		return $url;
