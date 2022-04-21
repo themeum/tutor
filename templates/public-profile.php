@@ -88,7 +88,7 @@ tutor_utils()->tutor_custom_header();
 				<div></div>
 			</div>
 			<div class="pp-area">
-				<div class="profile-pic" style="background-image:url(<?php echo get_avatar_url( $user_id, array( 'size' => 600 ) ); ?>)"></div>
+				<div class="profile-pic" style="background-image:url(<?php echo get_avatar_url( $user_id, array( 'size' => 300 ) ); ?>)"></div>
 				
 				<div class="profile-name tutor-color-white">
 					<div class="profile-rating-media content-for-mobile">
