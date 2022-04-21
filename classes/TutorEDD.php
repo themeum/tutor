@@ -103,7 +103,7 @@ class TutorEDD extends Tutor_Base {
 	}
 
 	public function register_meta_box() {
-		add_meta_box('tutor-attached-edd-product', __('Add Product', 'tutor'), array($this, 'course_add_product_metabox'), $this->course_post_type, 'advanced', 'high');
+		tutor_meta_box_wrapper( 'tutor-attached-edd-product', __('Add Product', 'tutor'), array($this, 'course_add_product_metabox'), $this->course_post_type, 'advanced', 'high', 'tutor-admin-post-meta' );
 	}
 
 	/**
