@@ -23,8 +23,8 @@ if ( is_array( $attachments ) && count( $attachments ) ) : ?>
     <div class="tutor-course-attachments tutor-row">
         <?php foreach ($attachments as $attachment) : ?>
             <div class="tutor-col-md-6 tutor-mt-16">
-                <div class="tutor-course-attachment tutor-card">
-                    <div class="tutor-card-body tutor-card-body-sm">
+                <div class="tutor-course-attachment tutor-card tutor-card-sm">
+                    <div class="tutor-card-body">
                         <div class="tutor-row">
                             <div class="tutor-col tutor-overflow-hidden">
                                 <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-text-ellipsis tutor-mb-4"><?php echo esc_html( $attachment->name ); ?></div>

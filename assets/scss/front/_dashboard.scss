@@ -90,7 +90,7 @@
 
 .tutor-dashboard-student-info h4 {
 	font-size: 18px;
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 	margin-bottom: 0;
 }
 
@@ -130,12 +130,6 @@
 
 .tutor-date-range-wrap {
 	display: inline-block;
-}
-
-.report-date-range-form {
-	display: flex;
-	margin-bottom: 0;
-	max-width: 370px;
 }
 
 .date-range-input {
@@ -213,7 +207,7 @@ table.tutor-dashboard-statement-table p.small-text {
 .tutor-mycourse-view,
 .tutor-mycourse-edit,
 .tutor-mycourse-delete {
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 	transition: 300ms;
 	i {
 		line-height: inherit;
