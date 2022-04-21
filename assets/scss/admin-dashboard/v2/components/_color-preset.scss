@@ -160,7 +160,7 @@
 		.picker-value {
 			text-align: left;
 			@extend .text-regular-small;
-			color: var(--tutor-color-body);
+			color: var(--tutor-body-color);
 			> .color {
 				display: inline-flex;
 				width: 32px;
@@ -168,7 +168,7 @@
 			}
 			> .value {
 				padding: 5px 10px;
-				color: var(--tutor-color-body);
+				color: var(--tutor-body-color);
 			}
 		}
 

@@ -1,43 +1,8 @@
 .tutor-pagination {
 	display: flex;
 	align-items: center;
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	font-size: 15px;
-	font-weight: 500;
-	line-height: 24px;
-	a {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 16px;
-		height: 40px;
-		width: 40px;
-		border: 1px solid var(--tutor-border-color);
-		text-decoration: none;
-		margin: 0 5px;
-		border-radius: 4px;
-		color: var(--tutor-body-color);
-		transition: 200ms;
-		&:hover {
-			color: var(--tutor-color-primary);
-			border-color: var(--tutor-color-primary);
-		}
-	}
-	span {
-		display: block;
-		padding: 0 5px;
-	}
-}
-
-// tutor-dashboard-pagination
-.tutor-ui-pagination {
-	display: flex;
-	align-items: center;
 	justify-content: space-between;
 	flex-direction: column;
-	
 	background: transparent;
 	
 	border: 1px solid var(--tutor-border-color);
@@ -68,7 +33,7 @@
 		
 		.page-numbers {
 			@extend .text-medium-caption;
-			color: var(--tutor-color-body);
+			color: var(--tutor-body-color);
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -91,7 +56,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				background: rgba(239, 241, 247, 0.8);
+				background: rgba(var(--tutor-color-primary-rgb), 0.1);
 				border-radius: 6px;
 				transition: all 150ms linear;
 				
@@ -135,10 +100,10 @@
 		}
 	}
 
-	&[data-tutor_pagination_ajax]{
+	&[data-tutor_pagination_ajax] {
 		position: relative;
 		
-		&:not(.is-ajax-pagination-enabled){
+		&:not(.is-ajax-pagination-enabled) {
 			&::before{
 				content: '';
 				position: absolute;

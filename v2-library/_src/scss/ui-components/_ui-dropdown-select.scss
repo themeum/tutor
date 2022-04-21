@@ -90,7 +90,7 @@
 		cursor: pointer;
 		> div:first-child {
 			@extend .text-medium-body;
-			color: var(--tutor-color-body);
+			color: var(--tutor-body-color);
 		}
 	}
 } // .tutor-dropdown-select

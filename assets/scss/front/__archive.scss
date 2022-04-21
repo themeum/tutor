@@ -14,64 +14,6 @@
 	height: 100%;
 }
 
-.tutor-loop-author,
-.tutor-meta {
-	color: #bac0cf;
-}
-
-.tutor-text-mute {
-	color: #bac0cf;
-	font-weight: 400;
-}
-
-.tutor-loop-author {
-	overflow: hidden;
-	font-size: var(--tutor-text-size);
-}
-
-.tutor-loop-author .tutor-single-course-avatar img {
-	width: 25px;
-	height: 25px;
-	display: block;
-	border-radius: 50%;
-	margin-right: 6px;
-}
-
-.tutor-loop-author .tutor-single-course-avatar .tutor-text-avatar {
-	height: 25px;
-	width: 25px;
-	display: inline-block;
-	border-radius: 50%;
-	text-align: center;
-	line-height: 25px;
-	font-size: 11px;
-	margin-right: 6px;
-}
-
-.tutor-loop-author > div {
-	display: block;
-	float: left;
-}
-
-.tutor-loop-author > div a {
-	color: var(--tutor-body-color);
-	font-weight: 500;
-	-webkit-transition: 300ms;
-	transition: 300ms;
-}
-
-.tutor-loop-author > div a:hover {
-	color: var(--tutor-color-primary);
-}
-
-.tutor-loop-author > div span {
-	display: inline-block;
-	margin: 0 2px 0 2px;
-	color: var(--tutor-light-color);
-	line-height: 25px;
-	font-weight: 400;
-}
-
 .tutor-course-lising-category a:not(:last-child):after {
 	content: ', ';
 	margin-right: 5px;
@@ -236,7 +178,7 @@ Instructor
 
 .single-instructor-wrap .instructor-name h4 {
 	font-weight: 500;
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 }
 
 
@@ -572,7 +514,7 @@ Instructor
 }
 
 .tutor-course-avg-rating-total {
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 }
 
 .tutor-course-avg-rating-total span {
@@ -670,7 +612,7 @@ Instructor
 }
 
 .tutor-review-individual-item .review-meta {
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 }
 
 .individual-review-rating-wrap {
@@ -1650,14 +1592,14 @@ table.course-single-gradebooks a {
 }
 
 @media only screen and (min-width: 1200px) {
-	.tutor-course-list-pagination.tutor-ui-pagination {
+	.tutor-course-list-pagination.tutor-pagination {
 		width: 80%;
 		margin: 50px auto 0px;
 	}
 }
 
 @media only screen and (max-width: 1199px) {
-	.tutor-course-list-pagination.tutor-ui-pagination {
+	.tutor-course-list-pagination.tutor-pagination {
 		width: 90%;
 		margin: 50px auto 0px;
 	}

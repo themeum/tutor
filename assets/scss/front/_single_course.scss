@@ -48,7 +48,7 @@
         font-weight: 500;
     }
     .tutor-single-rating-count i {
-        color: var(--tutor-light-color);
+        color: var(--tutor-color-muted);
         font-style: normal;
         display: inline-block;
         margin-left: 4px;
@@ -165,7 +165,7 @@
     line-height: 22px;
     vertical-align: text-top;
     margin-right: 10px;
-    color: var(--tutor-light-color);
+    color: var(--tutor-color-muted);
     display: block;
 }
 .tutor-course-lesson h5 .lesson-preview-icon i {

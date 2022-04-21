@@ -280,11 +280,8 @@ class Assets {
 			'tutor_primary_color'       	=> '--tutor-color-primary',
 			'tutor_primary_hover_color' 	=> '--tutor-color-primary-hover',
 			'tutor_text_color'          	=> '--tutor-body-color',
-			'tutor_background_color'		=> '--tutor-background-color',
 			'tutor_border_color'			=> '--tutor-border-color',
-			'tutor_disable_color'			=> '--tutor-disable-color',
-			'tutor_table_background_color' 	=> '--tutor-table-background-color',
-			'tutor_light_color'         	=> '--tutor-light-color',
+			'tutor_gray_color'				=> '--tutor-color-gray',
 		);
 		
 		// admin colors

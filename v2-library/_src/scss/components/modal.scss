@@ -98,7 +98,7 @@
 	&-title {
 		margin: 0;
 		font-size: 20px;
-		color: var(--tutor-color-body);
+		color: var(--tutor-body-color);
 		font-weight: 700;
 		line-height: 1.2;
 	}
@@ -187,7 +187,7 @@
 				justify-content: center;
 				color: var(--tutor-color-muted);
 				font-size: 13px;
-				background: var(--tutor-color-gray-20);
+				background: var(--tutor-color-gray);
 				cursor: pointer;
 				z-index: 1;
 				
@@ -197,7 +197,7 @@
 					height: 2px;
 					top: 50%;
 					margin-top: -1px;
-					background-color: var(--tutor-color-gray-20);
+					background-color: var(--tutor-color-gray);
 					width: 1000px;
 					right: 100%;
 				}

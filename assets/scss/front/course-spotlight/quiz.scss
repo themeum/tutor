@@ -97,7 +97,7 @@
 								}
 								&:last-child {
 									fill: none;
-									stroke: var(--tutor-color-gray-20);
+									stroke: var(--tutor-color-gray);
 									stroke-dasharray: 44;
 									stroke-dashoffset: calc(44 - ((44 * var(--quizProgress)) / 100));
 									stroke-width: 13px;

@@ -99,9 +99,11 @@
 	border: 1px solid var(--tutor-border-color);
 	border-radius: 6px;
 	position: relative;
+	
 	&-footer {
 		border-top: 1px solid var(--tutor-border-color);
 	}
+
 	&-meta-list {
 		li {
 			> div {
@@ -123,12 +125,6 @@
 		}
 		.tutor-alert-icon {
 			margin-top: -4px;
-		}
-	}
-
-	&-footer-only {
-		.tutor-course-sidebar-card-footer {
-			border-top: none;
 		}
 	}
 
@@ -310,7 +306,7 @@
 	// .tutor-accordion-item-body-content
 	&-item-body-content {
 		@extend .text-regular-body;
-		color: var(--tutor-color-body);
+		color: var(--tutor-body-color);
 		padding: 0 15px;
 		border-top: 1px solid var(--tutor-border-color);
 	}

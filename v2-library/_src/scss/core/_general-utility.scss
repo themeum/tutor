@@ -37,30 +37,6 @@
 }
 
 // @todo: need to replace on other tutor plugins like certificate builder & elementor addons
-.justify-content-start {
-	justify-content: flex-start;
-}
-
-.justify-content-end {
-	justify-content: flex-end;
-}
-
-.justify-content-center {
-	justify-content: center;
-}
-
-.tutor-justify-conetnt-between {
-	justify-content: space-between;
-}
-
-.justify-content-around {
-	justify-content: space-around;
-}
-
-.justify-content-evenly {
-	justify-content: space-evenly;
-}
-
 .align-items-end {
 	align-items: flex-end;
 }
@@ -170,4 +146,22 @@
 
 .tutor-break-all {
 	word-break: break-all;
+}
+
+// 
+.tutor {
+	&-ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	
+
+	// &-li {
+	// 	&-between {
+	// 		display: flex;
+	// 		align-items: center;
+	// 		justify-content: space-between;
+	// 	}
+	// }
 }
