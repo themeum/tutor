@@ -11,7 +11,11 @@ jQuery(document).ready(function($) {
 		var $this = $(this);
 		var filter_args = {};
 		var time_out;
-
+		const selectedStar = document.querySelector('.tutor-ratings-stars i.is-active');
+		let selectedRating = 0;
+		if (selectedStar) {
+			selectedRating = selectedStar.dataset.value
+		}
 		function run_instructor_filter(name, value, page_number) {
 			// Prepare http payload
 			var result_container = $this.find('[tutor-instructors-content]');
@@ -57,7 +61,10 @@ jQuery(document).ready(function($) {
 
 			.on('click', '[tutor-instructors-filter-rating]', function(e) {
 				var rating = e.target.dataset.value;
-				run_instructor_filter('rating_filter', rating);
+				if (rating != selectedRating) {
+					run_instructor_filter('rating_filter', rating);
+				}
+				selectedRating = rating;
 			})
 
 			.on('change', '[tutor-instructors-filter-sort]', function(e) {
