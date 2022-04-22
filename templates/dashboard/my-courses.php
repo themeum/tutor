@@ -120,8 +120,8 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
                     </div>
 
                     <div class="tutor-card-footer">
-                        <div class="tutor-d-flex tutor-align-items-center tutor-justify-between">
-                            <div class="tutor-d-flex tutor-align-items-center">
+                        <div class="tutor-d-flex tutor-align-center tutor-justify-between">
+                            <div class="tutor-d-flex tutor-align-center">
                                 <span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-4">
                                     <?php esc_html_e('Price:', 'tutor') ?>
                                 </span>

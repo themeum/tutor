@@ -43,14 +43,14 @@ $is_user_admin                = current_user_can( 'administrator' );
 <?php do_action( 'tutor_lesson/single/before/lesson_sidebar' ); ?>
 	<div class="tutor-sidebar-tabs-wrap">
 		<div class="tutor-lessons-tab-area tutor-<?php echo esc_html( isset( $context ) ? $context : 'desktop' ); ?>-sidebar-area">
-			<div data-sidebar-tab="tutor-lesson-sidebar-tab-content" class="tutor-sidebar-tab-item tutor-lessons-tab <?php echo $enable_q_and_a_on_course ? 'active' : ''; ?> tutor-d-flex tutor-align-items-center">
+			<div data-sidebar-tab="tutor-lesson-sidebar-tab-content" class="tutor-sidebar-tab-item tutor-lessons-tab <?php echo $enable_q_and_a_on_course ? 'active' : ''; ?> tutor-d-flex tutor-align-center">
 				<span class="tutor-icon-open-book-o"></span>
 				<span class="tutor-fs-7 tutor-fw-medium tutor-color-secondary">
 					<?php esc_html_e( 'Lesson List', 'tutor' ); ?>
 				</span>
 			</div>
 			<?php if ( $enable_q_and_a_on_course && ( $is_enrolled || $is_instructor_of_this_course || $is_user_admin ) ): ?>
-				<div data-sidebar-tab="sidebar-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab tutor-d-flex tutor-align-items-center">
+				<div data-sidebar-tab="sidebar-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab tutor-d-flex tutor-align-center">
 					<span class="tutor-icon-question"></span>
 					<span class="tutor-fs-7 tutor-fw-medium tutor-color-secondary">
 						<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>

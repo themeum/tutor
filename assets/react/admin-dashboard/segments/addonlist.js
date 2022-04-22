@@ -42,18 +42,20 @@ const displayAddons = (addons) => {
 			const { name, url, description } = addon;
 			return `
             <div class="tutor-col-lg-6 tutor-col-xl-4 tutor-col-xxl-3 tutor-mb-32">
-				<div class="tutor-addons-card">
+				<div class="tutor-card tutor-card-md tutor-addon-card">
 					<div class="tooltip-wrap tutor-lock-tooltip">
 						<span class="tooltip-txt tooltip-top">Available in Pro</span>
 					</div>
-					<div class="card-body tutor-px-32 tutor-py-36">
-						<div class="addon-logo">
-							<img src="${url}" alt="${name}" /> 
+					<div class="tutor-card-body">
+						<div class="tutor-addon-logo tutor-mb-32">
+							<div class="tutor-ratio tutor-ratio-1x1">
+								<img src="${url}" alt="${name}" /> 
+							</div>
 						</div>
-						<div class="addon-title tutor-mt-20">
-							<div class="tutor-fs-6 tutor-fw-medium tutor-mb-4">${name}</div>
+						<div class="tutor-addon-title tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-20">
+							${name}
 						</div>
-						<div class="addon-des tutor-fs-6 tutor-color-secondary tutor-mt-20">
+						<div class="tutor-addon-description tutor-fs-7 tutor-color-secondary">
 							${description}
 						</div>
 					</div>

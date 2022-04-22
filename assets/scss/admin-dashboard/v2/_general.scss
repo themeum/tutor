@@ -606,9 +606,6 @@
 			min-width: 90px;
 			// margin-right: 15px;
 		}
-		&.justify-content-end [class^='tutor-form-']:first-child {
-			margin-right: 15px;
-		}
 	}
 
 	.double-input {
@@ -925,8 +922,8 @@
 	display: none;
 }
 
-// tutor-ui-table-certificate-settings
-.tutor-ui-table-certificate-settings {
+// tutor-table-certificate-settings
+.tutor-table-certificate-settings {
 	.tutor-option-field-input {
 		[class^='tutor-icon-'] {
 			border-radius: 50%;

@@ -60,15 +60,23 @@
 				};
 
 				this.cleanList = function() {
+					if (!$(nav).find('.tutor-nav-more-list .is-active').length) {
+						$(nav)
+							.find('.tutor-nav-more-item')
+							.removeClass('is-active');
+					}
+
 					$(nav)
 						.find('.tutor-nav-more-list')
 						.empty();
+
 					$(nav)
 						.find('.tutor-nav-more')
 						.removeClass('tutor-d-inline-block')
 						.addClass('tutor-d-none')
 						.find('.tutor-dropdown-item')
 						.removeClass('is-active');
+
 					elements.removeClass('tutor-d-none');
 				};
 

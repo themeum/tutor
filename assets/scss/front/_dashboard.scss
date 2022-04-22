@@ -90,7 +90,7 @@
 
 .tutor-dashboard-student-info h4 {
 	font-size: 18px;
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 	margin-bottom: 0;
 }
 
@@ -130,12 +130,6 @@
 
 .tutor-date-range-wrap {
 	display: inline-block;
-}
-
-.report-date-range-form {
-	display: flex;
-	margin-bottom: 0;
-	max-width: 370px;
 }
 
 .date-range-input {
@@ -180,14 +174,6 @@
 	background-color: var(--tutor-color-primary-hover);
 }
 
-.report-download-csv-icon {
-	float: right;
-}
-
-.report-download-csv-icon a {
-	text-decoration: none;
-}
-
 .tutor-dashboard-statement-table-wrap {
 	overflow-x: auto;
 }
@@ -213,7 +199,7 @@ table.tutor-dashboard-statement-table p.small-text {
 .tutor-mycourse-view,
 .tutor-mycourse-edit,
 .tutor-mycourse-delete {
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 	transition: 300ms;
 	i {
 		line-height: inherit;
@@ -250,21 +236,6 @@ table.tutor-dashboard-statement-table p.small-text {
 	margin-bottom: 0;
 }
 
-// @todo: to be removed
-
-// .tutor-dashboard-content-inner h3 a {
-// 	color: var(--tutor-body-color);
-// 	font-size: 22px;
-// 	line-height: 28px;
-// 	font-weight: 500;
-// 	display: block;
-// }
-
-// Table
-.tutor-table {
-	width: 100%;
-}
-
 //applies to small devices (landscape phones, less than 768px)
 @media screen and (max-width: 767.98px) {
 	.tutor-header-right-side {
@@ -277,7 +248,4 @@ table.tutor-dashboard-statement-table p.small-text {
 	.tutor-header-right-side {
 		margin-top: 20px;
 	}
-}
-.tutor-table-rows-sorting {
-	cursor: pointer;
 }

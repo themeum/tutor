@@ -29,7 +29,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
 						</div>
 
-						<div class="tutor-row tutor-align-items-center tutor-mt-12">
+						<div class="tutor-row tutor-align-center tutor-mt-12">
 							<div class="tutor-col">
 								<div class="tutor-row tutor-gx-1">
 									<?php for ( $i = 1; $i <= $total_count; $i++ ) : ?>
@@ -74,7 +74,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						foreach ( $profile_completion as $key => $data ) {
 							$is_set = $data['is_set']; // Whether the step is done or not
 							?>
-								<div class="tutor-d-flex tutor-align-items-center<?php echo $i < (count($profile_completion) - 1) ? ' tutor-mb-8' : ''; ?>">
+								<div class="tutor-d-flex tutor-align-center<?php echo $i < (count($profile_completion) - 1) ? ' tutor-mb-8' : ''; ?>">
 									<?php if ( $is_set ) : ?>
 										<span class="tutor-icon-circle-mark-line tutor-color-success tutor-mr-8"></span>
 									<?php else : ?>
@@ -142,7 +142,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	<div class="tutor-row tutor-gx-lg-4">
 		<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 			<div class="tutor-card">
-				<div class="tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
+				<div class="tutor-d-flex tutor-flex-lg-column tutor-align-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
 					<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
 						<i class="tutor-icon-book-open" area-hidden="true"></i>
 					</span>
@@ -155,7 +155,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 		<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 			<div class="tutor-card">
-				<div class="tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
+				<div class="tutor-d-flex tutor-flex-lg-column tutor-align-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
 					<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
 						<i class="tutor-icon-mortarboard-o" area-hidden="true"></i>
 					</span>
@@ -168,7 +168,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 		<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 			<div class="tutor-card">
-				<div class="tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
+				<div class="tutor-d-flex tutor-flex-lg-column tutor-align-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
 					<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
 						<i class="tutor-icon-trophy" area-hidden="true"></i>
 					</span>
@@ -184,7 +184,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			?>
 			<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 				<div class="tutor-card">
-					<div class="tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
+					<div class="tutor-d-flex tutor-flex-lg-column tutor-align-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
 						<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
 							<i class="tutor-icon-user-graduate" area-hidden="true"></i>
 						</span>
@@ -197,7 +197,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 			<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 				<div class="tutor-card">
-					<div class="tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
+					<div class="tutor-d-flex tutor-flex-lg-column tutor-align-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
 						<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
 							<i class="tutor-icon-box-open" area-hidden="true"></i>
 						</span>
@@ -210,7 +210,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 			<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 				<div class="tutor-card">
-					<div class="tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
+					<div class="tutor-d-flex tutor-flex-lg-column tutor-align-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
 						<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
 							<i class="tutor-icon-coins" area-hidden="true"></i>
 						</span>
@@ -285,7 +285,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 								</span>
 							</div>
 
-							<div class="tutor-row tutor-align-items-center">
+							<div class="tutor-row tutor-align-center">
 								<div class="tutor-col">
 									<div class="tutor-progress-bar tutor-mr-16" style="--tutor-progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="tutor-progress-value" area-hidden="true"></span></div>
 								</div>
@@ -330,7 +330,7 @@ if ( count( $instructor_course ) ) {
 		</div>
 		
 		<div class="tutor-dashboard-content-inner">
-			<table class="tutor-ui-table tutor-ui-table-responsive table-popular-courses">
+			<table class="tutor-table tutor-table-responsive table-popular-courses">
 				<thead>
 					<tr>
 						<th>
@@ -339,13 +339,13 @@ if ( count( $instructor_course ) ) {
 							</span>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
+							<div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
 								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
+							<div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
 								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 							</div>

@@ -42,7 +42,7 @@
 <?php elseif ($blocks['block_type'] == 'notification') : ?>
 
 	<div class="tutor-option-single-item tutor-mb-32">
-		<div class="tutor-option-group-title tutor-d-flex tutor-align-items-center tutor-mb-16">
+		<div class="tutor-option-group-title tutor-d-flex tutor-align-center tutor-mb-16">
 			<div class="tutor-fs-6 tutor-color-muted"><?php echo esc_attr($blocks['label']); ?></div>
 			<div class="tutor-fs-6 tutor-color-muted tutor-ml-auto tutor-mr-lg-32"><?php echo esc_attr($blocks['status_label']); ?></div>
 		</div>

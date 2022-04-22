@@ -47,7 +47,7 @@
             <div class="tutor-topics-top">
                 <div class="tutor-topic-title">
                     <span class="<?php echo $is_topic ? 'tutor-icon-hamburger-menu course-move-handle' : 'tutor-icon-warning'; ?> tutor-px-12"></span>
-                    <span class="topic-inner-title tutor-fs-6 tutor-fw-bold tutor-color-black tutor-d-flex tutor-align-items-center">
+                    <span class="topic-inner-title tutor-fs-6 tutor-fw-bold tutor-color-black tutor-d-flex tutor-align-center">
                         <?php echo stripslashes($topic->post_title); ?>
                     </span>
                     <?php if($is_topic): ?>
@@ -110,7 +110,7 @@
                             $counter['assignment']++;
                             ?>
                             <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-assignmentø-<?php echo $content->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $content->ID; ?>">
-                                <div class="tutor-course-content-top tutor-d-flex tutor-align-items-center">
+                                <div class="tutor-course-content-top tutor-d-flex tutor-align-center">
                                     <span class="tutor-icon-hamburger-menu tutor-cursor-move tutor-px-12"></span>
                                     <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-assignment-modal' : ''; ?>" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?>
@@ -132,7 +132,7 @@
                             $counter['lesson']++;
                             ?>
                             <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
-                                <div class="tutor-course-content-top tutor-d-flex tutor-align-items-center">
+                                <div class="tutor-course-content-top tutor-d-flex tutor-align-center">
                                     <span class="tutor-icon-hamburger-menu tutor-cursor-move tutor-px-12"></span>
                                     <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-lesson-modal' : ''; ?>" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?>

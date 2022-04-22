@@ -280,11 +280,8 @@ class Assets {
 			'tutor_primary_color'       	=> '--tutor-color-primary',
 			'tutor_primary_hover_color' 	=> '--tutor-color-primary-hover',
 			'tutor_text_color'          	=> '--tutor-body-color',
-			'tutor_background_color'		=> '--tutor-background-color',
 			'tutor_border_color'			=> '--tutor-border-color',
-			'tutor_disable_color'			=> '--tutor-disable-color',
-			'tutor_table_background_color' 	=> '--tutor-table-background-color',
-			'tutor_light_color'         	=> '--tutor-light-color',
+			'tutor_gray_color'				=> '--tutor-color-gray',
 		);
 		
 		// admin colors
@@ -341,7 +338,7 @@ class Assets {
 			$color = tutor_utils()->get_option( $key );
 			$color_rgb = tutor_utils()->hex2rgb( $color );
 
-			if(is_admin() && isset($admin_colors[$property])){
+			if (is_admin() && isset($admin_colors[$property])) {
 				$color = $admin_colors[$property];
 				$color_rgb = tutor_utils()->hex2rgb( $admin_colors[$property] );
 			}

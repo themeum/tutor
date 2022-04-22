@@ -22,8 +22,6 @@ if (!defined('ABSPATH')) {
 
 class Options_V2
 {
-
-
 	private $options;
 	private $setting_fields;
 
@@ -1123,24 +1121,14 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
-												'slug'  => 'tutor_background_color',
-												'preset_name' => 'background',
-												'value' => '#F6F8FD',
+												'slug'  => 'tutor_gray_color',
+												'preset_name' => 'gray',
+												'value' => '#E3E5EB',
 											),
 											array(
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_disable_color',
-												'preset_name' => 'disable',
-												'value' => '#E3E6EB',
-											),
-											array(
-												'slug'  => 'tutor_table_background_color',
-												'preset_name' => 'table_background',
-												'value' => '#EFF1F6',
 											),
 										),
 									),
@@ -1164,24 +1152,14 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
-												'slug'  => 'tutor_background_color',
-												'preset_name' => 'background',
-												'value' => '#ECF7F3',
+												'slug'  => 'tutor_gray_color',
+												'preset_name' => 'gray',
+												'value' => '#E3E5EB',
 											),
 											array(
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_disable_color',
-												'preset_name' => 'disable',
-												'value' => '#E3E6EB',
-											),
-											array(
-												'slug'  => 'tutor_table_background_color',
-												'preset_name' => 'table_background',
-												'value' => '#EFF1F6',
 											),
 										),
 									),
@@ -1205,24 +1183,14 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
-												'slug'  => 'tutor_background_color',
-												'preset_name' => 'background',
-												'value' => '#FAF6FF',
+												'slug'  => 'tutor_gray_color',
+												'preset_name' => 'gray',
+												'value' => '#E3E5EB',
 											),
 											array(
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_disable_color',
-												'preset_name' => 'disable',
-												'value' => '#E3E6EB',
-											),
-											array(
-												'slug'  => 'tutor_table_background_color',
-												'preset_name' => 'table_background',
-												'value' => '#EFF1F6',
 											),
 										),
 									),
@@ -1246,9 +1214,9 @@ class Options_V2
 												'value' => '#1A1B1E',
 											),
 											array(
-												'slug'  => 'tutor_background_color',
-												'preset_name' => 'background',
-												'value' => '#F6F8FD',
+												'slug'  => 'tutor_gray_color',
+												'preset_name' => 'gray',
+												'value' => '#E3E5EB',
 											),
 										),
 									),
@@ -1287,13 +1255,13 @@ class Options_V2
 										'desc'         => __('Choose a text color for your website', 'tutor'),
 									),
 									array(
-										'key'          => 'tutor_background_color',
+										'key'          => 'tutor_gray_color',
 										'type'         => 'color_field',
-										'preset_name'  => 'background',
-										'preset_exist' => true,
-										'label'        => __('Background', 'tutor'),
-										'default'      => '#FFFFFF',
-										'desc'         => __('Choose a background color for your website', 'tutor'),
+										'preset_name'  => 'gray',
+										'preset_exist' => false,
+										'label'        => __('Gray', 'tutor'),
+										'default'      => '#E3E5EB',
+										'desc'         => __('Choose a color for elements like table, card etc', 'tutor'),
 									),
 									array(
 										'key'          => 'tutor_border_color',
@@ -1303,24 +1271,6 @@ class Options_V2
 										'label'        => __('Border', 'tutor'),
 										'default'      => '#CDCFD5',
 										'desc'         => __('Choose a border color for your website', 'tutor'),
-									),
-									array(
-										'key'          => 'tutor_disable_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'disable',
-										'preset_exist' => false,
-										'label'        => __('Disable', 'tutor'),
-										'default'      => '#E3E6EB',
-										'desc'         => __('Choose a color for disabled elements ', 'tutor'),
-									),
-									array(
-										'key'          => 'tutor_table_background_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'table_background',
-										'preset_exist' => false,
-										'label'        => __('Table Background', 'tutor'),
-										'default'      => '#EFF1F6',
-										'desc'         => __('Choose a color for the background of table elements ', 'tutor'),
 									),
 								),
 							),

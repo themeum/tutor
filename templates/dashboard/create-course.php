@@ -43,7 +43,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 	<!-- Sticky header with course action buttons -->
 	<header class="tutor-dashboard-builder-header tutor-mb-32">
 		<div class="tutor-container-fluid">
-			<div class="tutor-row tutor-align-items-center">
+			<div class="tutor-row tutor-align-center">
 				<div class="tutor-col-auto">
 					<div class="tutor-dashboard-builder-header-left">
 						<div class="tutor-dashboard-builder-logo">
@@ -58,7 +58,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 					</div>
 				</div>
 				<div class="tutor-col tutor-mt-12 tutor-mb-12">
-					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-items-center tutor-justify-end">
+					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-center tutor-justify-end">
 						<a class="tutor-btn tutor-btn-outline-primary tutor-btn-md" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
 							<?php _e('Preview', 'tutor'); ?>
 						</a>
@@ -200,12 +200,12 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 
 							$_tutor_course_price_type = tutils()->price_type();
 						?>
-							<div class="tutor-row tutor-align-items-center tutor-mb-32">
+							<div class="tutor-row tutor-align-center tutor-mb-32">
 								<div class="tutor-col-12">
 									<label class="tutor-form-label tutor-fs-6"><?php _e('Course Price', 'tutor'); ?></label>
 								</div>
 								<div class="tutor-col-6 tutor-col-sm-5 tutor-col-lg-4">
-									<div class="tutor-form-check tutor-align-items-center tutor-d-flex">
+									<div class="tutor-form-check tutor-align-center tutor-d-flex">
 										<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> />
 										<label for="tutor_price_paid" class="tutor-amount-field">
 											<div class="tutor-input-group">
@@ -218,7 +218,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 									</div>
 								</div>
 								<div class="tutor-col-6 tutor-col-sm-5 tutor-col-lg-4">
-									<div class="tutor-form-check tutor-align-items-center">
+									<div class="tutor-form-check tutor-align-center">
 										<input type="radio" id="tutor_price_free" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> />
 										<label for="tutor_price_free" class="tutor-fs-6">
 											<?php _e('Free', 'tutor'); ?>

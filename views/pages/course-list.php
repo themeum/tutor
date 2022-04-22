@@ -150,8 +150,8 @@ $available_status = array(
 	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-mt-24">
-			<div class="tutor-ui-table-wrapper">
-				<table class="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
+			<div class="tutor-table-wrapper">
+				<table class="tutor-table tutor-table-responsive table-dashboard-course-list td-align-middle">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
 							<th>
@@ -205,7 +205,7 @@ $available_status = array(
 						<?php if ( $the_query->have_posts() ) : ?>
 							<?php
 							$course_ids = array_column($the_query->posts, 'ID');
-							$course_meta_data = $courses->get_course_meta_data($course_ids);
+							$course_meta_data = tutor_utils()->get_course_meta_data($course_ids);
 							$authors = array();
 							
 							foreach ( $the_query->posts as $key => $post ) :
@@ -270,9 +270,8 @@ $available_status = array(
 									</td>
 									<td data-th="<?php esc_html_e( 'Author', 'tutor' ); ?>">
 										<div class="td-avatar">
-											<?php
-												echo get_avatar( $post->post_author, '96' );
-											?>
+											<?php echo tutor_utils()->get_tutor_avatar( $author_details->ID ); ?>
+											
 											<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 												<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 											</div>
@@ -310,7 +309,7 @@ $available_status = array(
 										</div>
 									</td>
 									<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
-										<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
+										<div class="tutor-d-inline-flex tutor-align-center td-action-btns">
 											<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 												<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="tutor_change_course_status">
 													<?php foreach ( $available_status as $key => $value ) : ?>

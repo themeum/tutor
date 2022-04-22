@@ -15,7 +15,7 @@ const Header = () => {
 
 	return (
 		<header className="tutor-wp-dashboard-header tutor-px-24 tutor-mb-24">
-			<div className="tutor-row tutor-align-items-lg-center">
+			<div className="tutor-row tutor-align-lg-center">
 				<div className="tutor-col-lg">
 					<div className="tutor-p-12">
 						<span className="tutor-fs-5 tutor-fw-medium tutor-mr-16">

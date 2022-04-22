@@ -47,7 +47,7 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 		<?php endif; ?>
 
 		<?php if ( $reviews->count ) : ?>
-			<table class="tutor-ui-table tutor-ui-table-responsive table-reviews">
+			<table class="tutor-table tutor-table-responsive table-reviews">
 				<thead>
 					<tr>
 						<th>
@@ -71,14 +71,12 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 				<?php
 				foreach ( $reviews->results as $review ) {
 					$user_data    = get_userdata( $review->user_id );
-					// $profile_url  = tutor_utils()->profile_url( $review->user_id );
-					$avatar_url   = get_avatar_url( $review->user_id );
 					$student_name = $user_data->display_name;
 					?>
 						<tr>
 							<td data-th="<?php esc_html_e( 'Student', 'tutor' ); ?>" class="column-fullwidth">
 								<div class="td-avatar">
-									<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
+									<?php echo tutor_utils()->get_tutor_avatar( $review->user_id ); ?>
 									<span class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 									<?php esc_html_e( $student_name ); ?>
 									</span>

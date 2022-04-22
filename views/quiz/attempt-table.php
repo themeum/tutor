@@ -12,8 +12,8 @@
 	}
 ?>
 
-<div class="tutor-ui-table-wrapper tutor-my-24">
-	<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
+<div class="tutor-table-wrapper tutor-my-24">
+	<table class="tutor-table tutor-table-responsive my-quiz-attempts">
 		<?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) { ?>
 		<thead>
 			<tr>
@@ -208,7 +208,7 @@
 									$url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
 									?>
 										<td data-th="See Details">
-											<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
+											<div class="tutor-d-inline-flex tutor-align-center td-action-btns">
 												<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 													<?php
 														if ( $has_pending && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {

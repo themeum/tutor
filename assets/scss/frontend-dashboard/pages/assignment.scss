@@ -12,7 +12,7 @@
                     font-weight: 500;
                     font-size: 16px;
                     line-height: 26px;
-                    color: var(--tutor-color-body);
+                    color: var(--tutor-body-color);
                 }
             }
         }
@@ -43,7 +43,7 @@
             font-size: 20px;
             margin: 0;
             margin-bottom: 20px;
-            color: var(--tutor-color-body);
+            color: var(--tutor-body-color);
         }
 
         label {
@@ -60,7 +60,7 @@
             font-style: normal;
             font-weight: 500;
             font-size: 20px;
-            color: var(--tutor-color-body);
+            color: var(--tutor-body-color);
             
             &+p {
                 display: inline-block !important;

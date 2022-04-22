@@ -1,17 +1,17 @@
-.tutor-ui-table-responsive {
+.tutor-table-responsive {
 	position: relative;
 	overflow-x: auto;
 }
 
 @include breakpoint-min(desktop-lg) {
-	.tutor-ui-table-wrapper {
+	.tutor-table-wrapper {
 		background: #fff;
 		border-radius: 6px;
 	}
 }
 
 @include breakpoint-max(1199.999999) {
-	table.tutor-ui-table {
+	table.tutor-table {
 		tr {
 			background: #fff;
 			border-radius: 6px;
@@ -20,7 +20,7 @@
 }
 
 // Table Base Structure
-table.tutor-ui-table {
+table.tutor-table {
 	* {
 		box-sizing: border-box;
 	}
@@ -37,10 +37,9 @@ table.tutor-ui-table {
 	}
 
 	// Table utility classes
-	.tutor-d-inline-flex tutor-align-items-center {
+	.tutor-d-inline-flex tutor-align-center {
 		display: inline-flex;
 		align-items: center;
-		// justify-content: center;
 	}
 
 	// table alignment utility table.th-aligh-top
@@ -104,7 +103,6 @@ table.tutor-ui-table {
 	min-width: 300px;
 	width: 100%;
 	border-radius: $radius;
-	// overflow: hidden;
 
 	&.tutor-no-thead {
 		tr:first-child {
@@ -158,8 +156,6 @@ table.tutor-ui-table {
 		td {
 			border-top: 1px solid var(--tutor-border-color);
 			border-top-color: #e0e2ea;
-
-			// min-width: calc(100% / var(--column-count));
 
 			&:first-child {
 				border-left: 1px solid var(--tutor-border-color);
@@ -230,7 +226,6 @@ table.tutor-ui-table {
 		&.table-all-courses {
 			th,
 			td {
-				// @extend .v-align-middle;
 				vertical-align: middle;
 				&:nth-child(1) {
 					width: 50.6%;
@@ -273,7 +268,7 @@ table.tutor-ui-table {
 } // end Table Base Structure
 
 // Table th/td Content Styles
-table.tutor-ui-table {
+table.tutor-table {
 	&.table-dashboard-course-list {
 		td {
 			&:nth-child(1),
@@ -474,7 +469,7 @@ table.tutor-ui-table {
 }
 
 // Table Custom Styles
-table.tutor-ui-table {
+table.tutor-table {
 	&.table-dashboard-course-list {
 		td {
 			&:nth-child(1),
@@ -511,7 +506,7 @@ table.tutor-ui-table {
 }
 
 // Table Responsive Styles
-table.tutor-ui-table.tutor-ui-table-responsive {
+table.tutor-table.tutor-table-responsive {
 	/*
 	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
 	*/
@@ -612,7 +607,7 @@ table.tutor-ui-table.tutor-ui-table-responsive {
 	}
 } // end Table Responsive Styles
 
-table.tutor-ui-table-no-border {
+table.tutor-table-no-border {
 	&,
 	td,
 	th {
@@ -642,7 +637,7 @@ table.tutor-ui-table-no-border {
 }
 
 // Table toggle collapse td/tr
-table.tutor-ui-table-data-td-target {
+table.tutor-table-data-td-target {
 	[data-td-target] {
 		cursor: pointer;
 		@include breakpoint-min(desktop-lg) {
@@ -701,7 +696,7 @@ table.tutor-ui-table-data-td-target {
 }
 
 // Hot fix
-table.tutor-ui-table {
+table.tutor-table {
 	thead {
 		th {
 			> *,
@@ -709,18 +704,16 @@ table.tutor-ui-table {
 				font-size: 14px;
 			}
 			[class*='tutor-icon-'] {
+				margin-top: 4px;
 				margin-left: 8px;
 			}
-		}
-		.tutor-table-rows-sorting > * {
-			display: flex;
 		}
 	}
 }
 
-// Table specefic styles
-table.tutor-ui-table {
-	&.tutor-ui-table-purchase-history {
+// Table specific styles
+table.tutor-table {
+	&.tutor-table-purchase-history {
 		th {
 			height: 48px;
 		}
@@ -750,7 +743,7 @@ table.tutor-ui-table {
 			}
 		}
 	}
-	&.tutor-ui-table-zoom {
+	&.tutor-table-zoom {
 		@include breakpoint-min(desktop-lg) {
 			th,
 			td {
@@ -768,7 +761,7 @@ table.tutor-ui-table {
 			overflow-x: unset;
 		}
 	}
-	&.tutor-ui-table-analytics-student-details tr {
+	&.tutor-table-analytics-student-details tr {
 		@include breakpoint-min(desktop-lg) {
 			th:first-child,
 			td:first-child {

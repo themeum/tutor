@@ -31,7 +31,7 @@
                             <?php echo stripslashes($question->question_title); ?>
                         </h6>
                     </div>
-                    <div class="tutor-quiz-item-action tutor-align-items-center">
+                    <div class="tutor-quiz-item-action tutor-align-center">
                         <div class="tutor-quiz-item-type">
                             <?php
                                 $type = tutor_utils()->get_question_types($question->question_type);
@@ -78,7 +78,7 @@
         <label class="tutor-form-label">
             <?php _e('Time Limit', 'tutor'); ?>
         </label>
-        <div class="tutor-row tutor-align-items-center">
+        <div class="tutor-row tutor-align-center">
             <div class="tutor-col-3">
                 <input type="number" class="tutor-form-control" min="0" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
             </div>
@@ -181,9 +181,9 @@
 
     <div class="tutor-quiz-advance-settings tutor-bg-white tutor-cursor-pointer tutor-mb-32">
         <!-- Header -->
-        <div class="tutor-row tutor-align-items-center tutor-quiz-advance-header tutor-g-0">
+        <div class="tutor-row tutor-align-center tutor-quiz-advance-header tutor-g-0">
             <div class="tutor-col">
-                <div class="tutor-row tutor-align-items-center">
+                <div class="tutor-row tutor-align-center">
                     <div class="tutor-col-auto">
                         <span><i class="tutor-icon-gear"></i></span>
                     </div>

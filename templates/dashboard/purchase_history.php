@@ -79,8 +79,8 @@ $offset      = ( $per_page * $paged ) - $per_page;
 </div>
 
 <!-- Purchase history table -->
-<div class="tutor-ui-table-wrapper">
-    <table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-purchase-history">
+<div class="tutor-table-wrapper">
+    <table class="tutor-table tutor-table-responsive tutor-table-purchase-history">
         <?php if ( tutor_utils()->count ( $orders ) ) { ?>
         <thead class="tutor-fs-7 tutor-fw-medium">
             <th>

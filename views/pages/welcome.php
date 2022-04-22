@@ -69,7 +69,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 	
 				<div class="tutor-col-lg-6">
 					<div class="tutor-welcome-card tutor-px-24 tutor-px-xl-48 tutor-pt-24 tutor-pt-xl-48 tutor-pb-20 tutor-pb-xl-32 tutor-mb-32 tutor-mb-xl-40">
-						<div class="tutor-row tutor-align-items-center">
+						<div class="tutor-row tutor-align-center">
 							<div class="tutor-col-lg-6 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<div>
 									<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/design-system.png" srcset="<?php echo esc_url($image_url); ?>/design-system-2x.png 2x" alt="Unified Design" loading="lazy">
@@ -83,7 +83,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 					</div>
 	
 					<div class="tutor-welcome-card">
-						<div class="tutor-row tutor-align-items-center">
+						<div class="tutor-row tutor-align-center">
 							<div class="tutor-col-lg-6 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<div>
 									<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/analytics.png" srcset="<?php echo esc_url($image_url); ?>/analytics-2x.png 2x" alt="Analytics" loading="lazy">
@@ -105,7 +105,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 	<section class="tutor-mb-32 tutor-mb-xl-40">
 		<div class="tutor-container">
 			<div class="tutor-welcome-card">
-				<div class="tutor-row tutor-align-items-center">
+				<div class="tutor-row tutor-align-center">
 					<div class="tutor-col-lg-5 tutor-col-xl-4">
 						<div class="tutor-pl-32 tutor-pl-xl-48 tutor-pt-32 tutor-pt-xl-48 tutor-pb-24 tutor-pb-xl-32">
 							<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">Customizable <br class="tutor-d-none tutor-d-lg-block"/>Automated Emails</div>
