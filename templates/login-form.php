@@ -34,7 +34,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
         do_action("login_form");
         apply_filters("login_form_middle", '', '');
     ?>
-    <div class="tutor-d-flex tutor-justify-between tutor-align-items-center tutor-mb-40">
+    <div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-mb-40">
         <div class="tutor-form-check">
             <input id="tutor-login-agmnt-1" type="checkbox" class="tutor-form-check-input tutor-bg-black-40" name="rememberme" value="forever" />
             <label for="tutor-login-agmnt-1" class="tutor-fs-7 tutor-color-muted">

@@ -30,9 +30,9 @@
 <div class="tutor-qna-single-question<?php echo is_admin() ? ' tutor-admin-wrap' : ''; ?>" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
 	<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
 		<div class="<?php echo is_admin() ? 'tutor-wp-dashboard-header tutor-px-24 tutor-mb-24' : 'tutor-qa-sticky-bar'; ?>">
-			<div class="tutor-row tutor-align-items-lg-center">
+			<div class="tutor-row tutor-align-lg-center">
 				<div class="tutor-col-lg">
-					<div class="tutor-d-lg-flex tutor-align-items-lg-center tutor-px-12 tutor-py-16">
+					<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-16">
 						<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
 							<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
 							<?php _e('Back', 'tutor'); ?>
@@ -125,7 +125,7 @@
 				</div>
 				<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 					<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
-					<div class="tutor-d-flex tutor-align-items-center">
+					<div class="tutor-d-flex tutor-align-center">
 						<button data-back_url="<?php echo $back_url; ?>" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-sm">
 							<?php esc_html_e( 'Reply', 'tutor' ); ?>
 						</button>

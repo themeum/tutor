@@ -67,8 +67,8 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 		</div>
 	</div>
 	<br/>
-	<div class="tutor-ui-table-wrapper tutor-mb-44">
-		<table class="tutor-ui-table tutor-ui-table-responsive table-assignment">
+	<div class="tutor-table-wrapper tutor-mb-44">
+		<table class="tutor-table tutor-table-responsive table-assignment">
 			<thead>
 				<tr>
 					<th>
@@ -77,12 +77,12 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 						</span>
 					</th>
 					<th>
-						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
+						<div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Marks', 'tutor' ); ?></span>
 						</div>
 					</th>
 					<th>
-						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
+						<div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Submit', 'tutor' ); ?></span>
 						</div>
 					</th>
@@ -122,7 +122,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 								</span>
 							</td>
 							<td data-th="Details URL">
-								<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
+								<div class="tutor-d-inline-flex tutor-align-center td-action-btns">
 									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</a>

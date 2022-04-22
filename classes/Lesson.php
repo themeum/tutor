@@ -65,9 +65,11 @@ class Lesson extends Tutor_Base {
 	public function register_meta_box() {
 		$lesson_post_type = $this->lesson_post_type;
 
-		add_meta_box( 'tutor-course-select', __( 'Select Course', 'tutor' ), array( $this, 'lesson_metabox' ), $lesson_post_type );
-		add_meta_box( 'tutor-lesson-videos', __( 'Lesson Video', 'tutor' ), array( $this, 'lesson_video_metabox' ), $lesson_post_type );
-		add_meta_box( 'tutor-lesson-attachments', __( 'Attachments', 'tutor' ), array( $this, 'lesson_attachments_metabox' ), $lesson_post_type );
+		tutor_meta_box_wrapper( 'tutor-course-select', __( 'Select Course', 'tutor' ), array( $this, 'lesson_metabox' ), $lesson_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
+
+		tutor_meta_box_wrapper( 'tutor-lesson-videos', __( 'Lesson Video', 'tutor' ), array( $this, 'lesson_video_metabox' ), $lesson_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
+
+		tutor_meta_box_wrapper( 'tutor-lesson-attachments', __( 'Attachments', 'tutor' ), array( $this, 'lesson_attachments_metabox' ), $lesson_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
 	}
 
 	public function lesson_metabox() {

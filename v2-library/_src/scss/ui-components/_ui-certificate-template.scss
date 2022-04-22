@@ -33,17 +33,6 @@
 	grid-template-rows: min-content;
 	position: relative;
 	min-height: 580px;
-	// max-height: 944px; Uncomment when use load more button
-
-	// &.template-landscape {
-	// 	min-height: 580px;
-	// 	background: rgba(236, 111, 173, 26%);
-	// }
-
-	// &.template-portrait {
-	// 	min-height: 944px;
-	// 	background: rgba(236, 111, 173, 16%);
-	// }
 
 	.template-item {
 		display: flex;

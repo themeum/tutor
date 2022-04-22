@@ -7,80 +7,10 @@
 	padding: 0;
 }
 
-.tutor-loop-course-bottom {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	height: 100%;
-}
-
-.tutor-loop-author,
-.tutor-meta {
-	color: #bac0cf;
-}
-
-.tutor-text-mute {
-	color: #bac0cf;
-	font-weight: 400;
-}
-
-.tutor-loop-author {
-	overflow: hidden;
-	font-size: var(--tutor-text-size);
-}
-
-.tutor-loop-author .tutor-single-course-avatar img {
-	width: 25px;
-	height: 25px;
-	display: block;
-	border-radius: 50%;
-	margin-right: 6px;
-}
-
-.tutor-loop-author .tutor-single-course-avatar .tutor-text-avatar {
-	height: 25px;
-	width: 25px;
-	display: inline-block;
-	border-radius: 50%;
-	text-align: center;
-	line-height: 25px;
-	font-size: 11px;
-	margin-right: 6px;
-}
-
-.tutor-loop-author > div {
-	display: block;
-	float: left;
-}
-
-.tutor-loop-author > div a {
-	color: var(--tutor-body-color);
-	font-weight: 500;
-	-webkit-transition: 300ms;
-	transition: 300ms;
-}
-
-.tutor-loop-author > div a:hover {
-	color: var(--tutor-color-primary);
-}
-
-.tutor-loop-author > div span {
-	display: inline-block;
-	margin: 0 2px 0 2px;
-	color: var(--tutor-light-color);
-	line-height: 25px;
-	font-weight: 400;
-}
-
-.tutor-course-lising-category a:not(:last-child):after {
+.tutor-course-listing-category a:not(:last-child):after {
 	content: ', ';
 	margin-right: 5px;
 }
-
-/**
-Notice and others message
-Alert Box Css
- */
 
 .tutor-notice-warning {
 	background-color: #fcf8e3;
@@ -236,7 +166,7 @@ Instructor
 
 .single-instructor-wrap .instructor-name h4 {
 	font-weight: 500;
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 }
 
 
@@ -447,7 +377,6 @@ Instructor
 .tutor-form-group input::-webkit-input-placeholder {
 	color: #b0b6c8;
 	opacity: 1;
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
 }
 
 .tutor-option-field textarea::-moz-placeholder,
@@ -456,7 +385,6 @@ Instructor
 .tutor-form-group input::-moz-placeholder {
 	color: #b0b6c8;
 	opacity: 1;
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
 }
 
 .tutor-option-field textarea:-ms-input-placeholder,
@@ -465,7 +393,6 @@ Instructor
 .tutor-form-group input:-ms-input-placeholder {
 	color: #b0b6c8;
 	opacity: 1;
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
 }
 
 .tutor-option-field textarea:-moz-placeholder,
@@ -474,7 +401,6 @@ Instructor
 .tutor-form-group input:-moz-placeholder {
 	color: #b0b6c8;
 	opacity: 1;
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
 }
 
 .tutor-form-group.tutor-reg-form-btn-wrap {
@@ -522,21 +448,6 @@ Instructor
 	margin-bottom: 0;
 }
 
-.tutor-price-box-description h6 {
-	font-size: 23px;
-	margin: 15px 0 5px;
-}
-
-.tutor-price-box-description ul {
-	list-style: none;
-}
-
-.tutor-course-purchase-box a {
-	display: block;
-	text-align: center;
-	margin-top: 6px;
-}
-
 .tutor-price-preview-box .price {
 	font-size: 35px;
 	font-weight: 500;
@@ -572,7 +483,7 @@ Instructor
 }
 
 .tutor-course-avg-rating-total {
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 }
 
 .tutor-course-avg-rating-total span {
@@ -670,7 +581,7 @@ Instructor
 }
 
 .tutor-review-individual-item .review-meta {
-	color: var(--tutor-light-color);
+	color: var(--tutor-color-muted);
 }
 
 .individual-review-rating-wrap {
@@ -723,35 +634,6 @@ Instructor
 
 /* ********************* */
 
-/* Tutor Pagination Wrap */
-
-/* ********************* */
-
-.tutor-pagination,
-.tutor-pagination-wrap {
-	text-align: center;
-	margin: 20px 0;
-}
-
-.tutor-pagination,
-.tutor-pagination-wrap {
-	a,
-	span {
-		padding: 3px;
-		display: inline-block;
-		text-decoration: none;
-	}
-}
-
-.tutor-pagination-wrap,
-.tutor-pagination {
-	a:hover {
-		color: var(--tutor-color-primary);
-	}
-}
-
-/* ********************* */
-
 /* Tutor Course Tags */
 
 /* ********************* */
@@ -773,15 +655,6 @@ Instructor
 
 .tutor-course-tags a:hover {
 	color: #000;
-}
-
-.certificate-download-btn {
-	margin-top: 20px;
-	display: flex !important;
-	text-align: center;
-	text-transform: uppercase !important;
-	align-items: center;
-	justify-content: center;
 }
 
 /* ********************************** */
@@ -1164,14 +1037,6 @@ Lesson Edit Modal
 .quiz-modal-btn-back {
 	color: #4b5981;
 	border: 1px solid #d4dadb;
-}
-
-.assignment-modal-form-wrap .tutor-option-field.tutor-assignment-modal-title-wrap {
-	margin: 0;
-}
-
-.advanced-options-tab-item {
-	float: right;
 }
 
 /* .tutor-quiz-builder-group */
@@ -1650,14 +1515,14 @@ table.course-single-gradebooks a {
 }
 
 @media only screen and (min-width: 1200px) {
-	.tutor-course-list-pagination.tutor-ui-pagination {
+	.tutor-course-list-pagination.tutor-pagination {
 		width: 80%;
 		margin: 50px auto 0px;
 	}
 }
 
 @media only screen and (max-width: 1199px) {
-	.tutor-course-list-pagination.tutor-ui-pagination {
+	.tutor-course-list-pagination.tutor-pagination {
 		width: 90%;
 		margin: 50px auto 0px;
 	}

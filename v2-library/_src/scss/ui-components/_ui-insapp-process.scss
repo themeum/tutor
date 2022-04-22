@@ -1,20 +1,20 @@
 .tutor-app-process-image {
-  max-width: 920px;
-  height: auto;
-  overflow: hidden;
-  img {
-    width: 100%;
-    border-radius: 10px;
-  }
+	max-width: 920px;
+	height: auto;
+	overflow: hidden;
+	img {
+		width: 100%;
+		border-radius: 10px;
+	}
 }
 .tutor-ins-app-title {
-  max-width: 570px;
+	max-width: 570px;
 }
 @include breakpoint-max(767) {
-  span.tutor-app-process-title {
-    font-size: 28px;
-  }
-  span.tutor-app-process-subtitle {
-    font-size: 16px;
-  }
+	span.tutor-app-process-title {
+		font-size: 28px;
+	}
+	span.tutor-app-process-subtitle {
+		font-size: 16px;
+	}
 }

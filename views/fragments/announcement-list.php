@@ -180,8 +180,8 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 ?>
 
 <!-- Now Load The View -->
-	<div class="tutor-ui-table-wrapper">
-		<table class="tutor-ui-table tutor-ui-table-responsive frontend-dashboard-announcement-table">
+	<div class="tutor-table-wrapper">
+		<table class="tutor-table tutor-table-responsive">
 			<thead>
 				<tr>
 					<?php if ( is_admin() ) : ?>
@@ -202,7 +202,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							</span>
 						</th>
 					<?php endif; ?>
-					<th class="tutor-table-rows-sorting">
+					<th>
 						<div class="tutor-color-secondary tutor-fs-7">
 							<?php esc_html_e( 'Announcements', 'tutor' ); ?>
 						</div>
@@ -262,8 +262,8 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
-								<div class="tutor-d-flex tutor-align-items-center tutor-justify-end">
-									<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns tutor-mr-4">
+								<div class="tutor-d-flex tutor-align-center tutor-justify-end">
+									<div class="tutor-d-inline-flex tutor-align-center td-action-btns tutor-mr-4">
 										<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
 											<?php esc_html_e( 'Details', 'tutor' ); ?>
 										</button>

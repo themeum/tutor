@@ -1,9 +1,7 @@
 <div id="tutor-course-content-builder-root">
     <?php $course_id = get_the_ID(); ?>
     <div id="tutor-course-content-wrap">
-        <?php
-        include  tutor()->path.'views/metabox/course-contents.php';
-        ?>
+        <?php include tutor()->path.'views/metabox/course-contents.php'; ?>
     </div>
 
     <div class="new-topic-btn-wrap">
@@ -22,15 +20,15 @@
             'wrapper_class' => '',
             'button_text'   => __('Add Topic', 'tutor'),
             'button_class'     => 'tutor-save-topic-btn'
-        ), false); 
+        ), false);
     ?>
 
-    <div class="tutor-modal tutor-modal-scrollable tutor-quiz-builder-modal-wrap" data-target="quiz-builder-tab-quiz-info">
+    <div class="tutor-modal tutor-modal-scrollable tutor-quiz-builder-modal-wrap<?php echo is_admin() ? ' tutor-admin-design-init' : ''; ?>" data-target="quiz-builder-tab-quiz-info">
         <div class="tutor-modal-overlay"></div>
         <div class="tutor-modal-window">
             <div class="tutor-modal-content">
                 <div class="tutor-px-32 tutor-py-24 tutor-bg-white">
-                    <div class="tutor-d-flex tutor-align-items-center tutor-justify-between">
+                    <div class="tutor-d-flex tutor-align-center tutor-justify-between">
                         <div class="tutor-modal-title">
                             <?php _e('Quiz', 'tutor'); ?>
                         </div>
@@ -84,7 +82,7 @@
         </div>
     </div>
     
-    <div class="tutor-modal tutor-modal-scrollable tutor-lesson-modal-wrap">
+    <div class="tutor-modal tutor-modal-scrollable tutor-lesson-modal-wrap<?php echo is_admin() ? ' tutor-admin-design-init' : ''; ?>">
         <div class="tutor-modal-overlay"></div>
         <div class="tutor-modal-window">
             <div class="tutor-modal-content">
@@ -112,7 +110,7 @@
         </div>
     </div>
     
-    <div class="tutor-modal tutor-modal-scrollable tutor-assignment-modal-wrap">
+    <div class="tutor-modal tutor-modal-scrollable tutor-assignment-modal-wrap<?php echo is_admin() ? ' tutor-admin-design-init' : ''; ?>">
         <div class="tutor-modal-overlay"></div>
         <div class="tutor-modal-window">
             <div class="tutor-modal-content">

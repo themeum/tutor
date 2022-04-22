@@ -99,9 +99,11 @@
 	border: 1px solid var(--tutor-border-color);
 	border-radius: 6px;
 	position: relative;
+	
 	&-footer {
 		border-top: 1px solid var(--tutor-border-color);
 	}
+
 	&-meta-list {
 		li {
 			> div {
@@ -123,12 +125,6 @@
 		}
 		.tutor-alert-icon {
 			margin-top: -4px;
-		}
-	}
-
-	&-footer-only {
-		.tutor-course-sidebar-card-footer {
-			border-top: none;
 		}
 	}
 
@@ -310,13 +306,13 @@
 	// .tutor-accordion-item-body-content
 	&-item-body-content {
 		@extend .text-regular-body;
-		color: var(--tutor-color-body);
+		color: var(--tutor-body-color);
 		padding: 0 15px;
 		border-top: 1px solid var(--tutor-border-color);
 	}
 }
 
-.tutor-courses-lession-list {
+.tutor-courses-lesson-list {
 	list-style: none;
 	margin: 0 -15px;
 	padding: 0;
@@ -332,14 +328,14 @@
 		padding: 15px;
 
 		> div,
-		> .tutor-courses-lession-list-single-item {
+		> .tutor-courses-lesson-list-single-item {
 			display: flex;
 			a {
 				color: inherit;
 			}
 		}
 	}
-	// .tutor-courses-lession-list-single-item
+	// .tutor-courses-lesson-list-single-item
 	&-single-item {
 		[class^='tutor-icon-'] {
 			margin-top: 1px;

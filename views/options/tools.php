@@ -7,7 +7,7 @@
 ?>
 <div class="tutor-admin-wrap">
 	<div class="tutor-wp-dashboard-header tutor-px-24 tutor-mb-24">
-		<div class="tutor-d-lg-flex tutor-align-items-lg-center tutor-px-12 tutor-py-16">
+		<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-16">
 			<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php _e( 'Tools', 'tutor' ); ?></span>
 		</div>
 	</div>

@@ -41,7 +41,7 @@ if ( ! $assignment_submitted_id ) {
 	</div>
 
 	<div class="tutor-assignment-review-header">
-		<table class="tutor-ui-table-no-border tutor-is-lefty tutor-is-flexible">
+		<table class="tutor-table-no-border tutor-is-lefty tutor-is-flexible">
 			<tbody>
 				<tr>
 					<td class="tutor-color-secondary"><?php esc_html_e( 'Course', 'tutor' ); ?></td>
@@ -97,7 +97,7 @@ if ( ! $assignment_submitted_id ) {
 							foreach ( $attached_files as $attached_file ) {
 								?>
 									<div class="tutor-col-lg-6 tutor-mb-16 tutor-mb-lg-0">
-										<div class="tutor-card tutor-d-flex tutor-align-items-center tutor-px-16 tutor-py-12">
+										<div class="tutor-card tutor-d-flex tutor-align-center tutor-px-16 tutor-py-12">
 											<div>
 												<div class="tutor-fs-6 tutor-color-black tutor-mb-4"><?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?></div>
 												<div class="tutor-fs-7 tutor-color-muted"><?php esc_html_e( 'Size', 'tutor' ); ?><?php esc_html_e( ': 2MB', 'tutor' ); ?></div>

@@ -11,7 +11,7 @@
 $instructor				= isset( $instructor ) ? $instructor : array();
 ?>
 <div class="tutor-instructor-list-item tutor-instructor-layout-minimal-horizontal tutor-card tutor-p-16">
-    <div class="tutor-row tutor-align-items-center">
+    <div class="tutor-row tutor-align-center">
         <div class="tutor-col-auto">
             <div class="tutor-avatar tutor-avatar-xl">
                 <div class="tutor-ratio tutor-ratio-1x1">

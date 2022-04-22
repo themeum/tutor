@@ -52,7 +52,7 @@ do_action( 'tutor_course/single/before/topics' );
 					?>
 						<div class="tutor-accordion-item-body">
 							<div class="tutor-accordion-item-body-content">
-								<ul class="tutor-courses-lession-list">
+								<ul class="tutor-courses-lesson-list">
 									<?php while ( $topic_contents->have_posts() ) : ?>
 										<?php
 											$topic_contents->the_post();
@@ -73,7 +73,7 @@ do_action( 'tutor_course/single/before/topics' );
 											$is_locked 			= ! ( $is_enrolled || $is_preview || $is_public_course );
 										?>
 										<li>
-											<div class="tutor-courses-lession-list-single-item">
+											<div class="tutor-courses-lesson-list-single-item">
 												<span class="<?php echo $topic_content_icon; ?> tutor-color-muted tutor-mr-16"></span>
 												<h5 class="tutor-fs-6 tutor-color-black">
 													<?php
