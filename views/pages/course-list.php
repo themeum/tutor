@@ -205,7 +205,7 @@ $available_status = array(
 						<?php if ( $the_query->have_posts() ) : ?>
 							<?php
 							$course_ids = array_column($the_query->posts, 'ID');
-							$course_meta_data = $courses->get_course_meta_data($course_ids);
+							$course_meta_data = tutor_utils()->get_course_meta_data($course_ids);
 							$authors = array();
 							
 							foreach ( $the_query->posts as $key => $post ) :
