@@ -9638,4 +9638,94 @@ class Utils {
 
 		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_course_rating', 'approved' ) );
 	}
+
+	private function assign_child_count(array $course_meta, $post_type){
+		global $wpdb;
+		$id_array = array_keys($course_meta);
+		
+		if(!count($id_array)){
+			return $course_meta;
+		}
+
+		$course_ids = implode(',', $id_array);
+
+		$results = $wpdb->get_results(
+			"SELECT ID, post_parent AS course_id 
+			FROM {$wpdb->posts} 
+			WHERE post_parent IN ({$course_ids}) 
+				AND post_type='{$post_type}' 
+				AND post_status IN ('completed', 'publish', 'approved')"
+		);
+
+		foreach($results as $result){
+			$course_meta[$result->course_id][$post_type]++;
+		}
+
+		return $course_meta;
+	}
+	
+	
+	public function get_course_meta_data( $course_id ) {
+		global $wpdb;
+
+		// Prepare course IDs to get quiz count based on 
+		$course_ids = is_array($course_id) ? $course_id : array($course_id);
+		$course_ids = array_map(function($id){
+			return (int)$id;
+		}, $course_ids);
+		$course_ids = implode(',', $course_ids);
+
+		// Get course meta
+		$results = $wpdb->get_results(
+			"SELECT DISTINCT course.ID AS course_id, 
+					content.ID AS content_id,
+					content.post_type AS content_type
+			FROM {$wpdb->posts} course
+				LEFT JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
+				INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
+				LEFT JOIN {$wpdb->posts} enrollment ON course.ID=enrollment.post_parent
+			WHERE topic.post_parent IN ($course_ids)"
+		);
+
+		// Count contents by course IDs 
+		$course_meta = array();
+		foreach($results as $result){
+			// Create course key
+			if(!array_key_exists($result->course_id, $course_meta)){
+				$course_meta[$result->course_id]=array(
+					'tutor_assignments' => array(),
+					'tutor_quiz' 		=> array(),
+					'lesson' 			=> array(),
+					'topics' 			=> 0,
+					'tutor_enrolled' 	=> 0,
+				);
+			}
+
+			// Create content key
+			if(!array_key_exists($result->content_type, $course_meta[$result->course_id])){
+				$course_meta[$result->course_id][$result->content_type] = array();
+			}
+
+			if($result->content_id){
+				$course_meta[$result->course_id][$result->content_type][] = $result->content_id;
+			}
+		}
+		
+		// Unify counts
+		foreach($course_meta as $index=>$meta){
+			foreach($meta as $key=>$ids){
+				$course_meta[$index][$key] = is_numeric($ids) ? $ids : count(array_unique($ids));
+			}
+		}
+
+		$course_meta = $this->assign_child_count($course_meta, 'tutor_enrolled');
+		$course_meta = $this->assign_child_count($course_meta, 'topics');
+		
+		// Return single count if the course id was single
+		if(!is_array($course_id)) {
+			return isset($course_meta[$course_id]) ? $course_meta[$course_id] : 0;
+		}
+
+		return $course_meta;
+	}
 }
