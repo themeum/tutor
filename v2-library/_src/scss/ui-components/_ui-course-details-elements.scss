@@ -49,22 +49,6 @@
 	}
 }
 
-.tutor-course-details-action-btns {
-	display: flex;
-	gap: 32px;
-	position: relative;
-
-	& > a {
-		display: flex;
-		align-items: center;
-		gap: 2px;
-	}
-
-	.action-btn [class^='tutor-icon-'] {
-		font-size: 20px;
-	}
-}
-
 // Course Details - Widgets
 .tutor-course-details-widget {
 	ul {
@@ -250,95 +234,31 @@
 	}
 } // end of .tutor-course-details-page
 
-// Course Details - Accordion
-.tutor-accordion {
-	// .tutor-accordion-item
-	&-item {
-		background-color: #fff;
-		/* stroke/light30 */
-
-		border: 1px solid var(--tutor-border-color);
-		border-radius: 6px;
-
-		&:not(:last-child) {
-			margin-bottom: 10px;
-			@include breakpoint-min(desktop) {
-				margin-bottom: 20px;
-			}
-		}
-	}
-
-	// .tutor-accordion-item-header
-	&-item-header {
-		padding: 15px 20px;
-		min-height: 58px;
-		display: flex;
-		align-items: center;
-		position: relative;
-		cursor: pointer;
-		transition: 200ms;
-		color: var(--tutor-color-secondary);
-		@include getTypography(600, 18px, 160%);
-		&::after {
-			content: '\e940';
-			font-family: 'tutor' !important;
-			font-size: 16px;
-			font-weight: normal;
-			position: absolute;
-			right: 16px;
-			transition: 150ms;
-		}
-		&.is-active {
-			color: var(--tutor-color-primary);
-			&::after {
-				transform: rotate(-90deg);
-			}
-		}
-	}
-
-	// .tutor-accordion-item-body
-	&-item-body {
-		max-height: 0;
-		overflow: hidden;
-		transition: max-height 0.25s linear;
-	}
-
-	// .tutor-accordion-item-body-content
-	&-item-body-content {
-		@extend .text-regular-body;
-		color: var(--tutor-body-color);
-		padding: 0 15px;
-		border-top: 1px solid var(--tutor-border-color);
-	}
-}
-
-.tutor-courses-lesson-list {
+.tutor-course-content-list {
 	list-style: none;
 	margin: 0 -15px;
 	padding: 0;
 
-	li {
+	&-item {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		&:not(:first-child) {
-			border-top: 1px solid var(--tutor-border-color);
-		}
+		padding: 12px 16px;
 
-		padding: 15px;
+		&-title {
+			font-size: 16px;
+			font-weight: 400;
+			line-height: 1.6;
+			margin: 0;
+			padding: 0;
 
-		> div,
-		> .tutor-courses-lesson-list-single-item {
-			display: flex;
 			a {
 				color: inherit;
 			}
 		}
-	}
-	// .tutor-courses-lesson-list-single-item
-	&-single-item {
-		[class^='tutor-icon-'] {
-			margin-top: 1px;
+
+		&:not(:first-child) {
+			border-top: 1px solid var(--tutor-border-color);
 		}
 	}
 }
