@@ -7,13 +7,13 @@
                     <?php echo tutor_utils()->get_tutor_avatar( $review->user_id, 'md' ); ?>
                 </div>
 
-                <div class="tutor-fs-6 tutor-mb-4">
+                <div class="tutor-reviewer-name tutor-fs-6 tutor-mb-4">
                     <a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-color-black">
                         <?php echo esc_html( $review->display_name ); ?>
                     </a>
                 </div>
 
-                <div class="tutor-fs-7 tutor-color-muted">
+                <div class="tutor-reviewed-on tutor-fs-7 tutor-color-muted">
                     <?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
                 </div>
             </div>
