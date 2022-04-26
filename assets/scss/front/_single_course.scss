@@ -6,18 +6,7 @@
     color: #000;
 }
 
-.tutor-full-width-course-top {
-    h4,
-    h5,
-    h6 {
-        color: #000;
-        font-weight: 500;
-    }
-    h6 {
-        font-size: 14px;
-    }
-}
-
+// @todo: to be removed in 2.0.3
 .tutor-leadinfo-top-meta {
     font-size: 14px;
     margin-bottom: 10px;
@@ -33,33 +22,12 @@
     }
 }
 
-.tutor-course-header-h1 {
-    font-size: 36px;
-    line-height: 46px;
-    color: var(--tutor-body-color);
-    font-weight: 500;
-    margin: 0 0 29px;
-    padding: 0;
-    @media (max-width: 767px) {
-        font-size: 26px;
-        line-height: 36px;
-    }
-}
-
-.tutor-course-summery {
-    margin-bottom: 40px;
-}
-
-/*benefits*/
+// @todo: to be removed in 2.0.3
 .tutor-course-benefits-content ul {
     list-style: none;
     display: block;
     overflow: hidden;
-    -webkit-column-count: 2;
-    -moz-column-count: 2;
     column-count: 2;
-    -webkit-column-gap: 30px;
-    -moz-column-gap: 30px;
     column-gap: 30px;
     margin: 0;
 }

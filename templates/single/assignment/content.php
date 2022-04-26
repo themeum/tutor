@@ -392,7 +392,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                         <?php _e( 'Description', 'tutor' ); ?>
                     </div>
                     <div class="tutor-entry-content tutor-fs-6 tutor-color-secondary tutor-pt-12">
-                        <?php echo wp_kses_post( $s_content ); ?>
+                        <?php echo apply_filters( 'the_content', $s_content ); ?>
                     </div>
                 </div>
 
@@ -610,7 +610,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
                             <?php _e( 'Description', 'tutor' ); ?>
                         </div>
                         <div class="tutor-entry-content tutor-fs-6 tutor-color-secondary tutor-pt-12">
-                            <?php echo wp_kses_post( $s_content ); ?>
+                            <?php echo apply_filters( 'the_content', $s_content ); ?>
                         </div>
 
                         <?php if ( $has_show_more ) : ?>
