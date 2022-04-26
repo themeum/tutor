@@ -4216,15 +4216,9 @@ class Utils {
 			$search_term
 		);
 
-		echo htmlspecialchars($query); 
-
 		if ( $count_only ) {
-			// echo '<br/><br/><br/>';
-			// echo htmlspecialchars($query);
 			return $wpdb->get_var( $query );
 		}
-
-		// echo htmlspecialchars($query);
 
 		$query = $wpdb->get_results( $query );
 
