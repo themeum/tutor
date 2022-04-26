@@ -196,20 +196,6 @@ if ( ! function_exists( 'tutor_course_loop_end' ) ) {
 	}
 }
 
-if ( ! function_exists( 'tutor_course_archive_pagination' ) ) {
-	function tutor_course_archive_pagination( $echo = true ) {
-		ob_start();
-		tutor_load_template( 'loop.tutor-pagination' );
-
-		$output = apply_filters( 'tutor_course_archive_pagination', ob_get_clean() );
-		if ( $echo ) {
-			echo tutor_kses_html( $output );
-		}
-
-		return $output;
-	}
-}
-
 function tutor_course_loop_before_content() {
 	ob_start();
 	tutor_load_template( 'loop.loop-before-content' );
@@ -318,8 +304,8 @@ if ( ! function_exists( 'tutor_course_loop_wrap_classes' ) ) {
 if ( ! function_exists( 'tutor_course_loop_col_classes' ) ) {
 	function tutor_course_loop_col_classes( $echo = true ) {
 		$course_filter = (bool) tutor_utils()->get_option( 'course_archive_filter', false );
-		$shortcode_arg = isset( $GLOBALS['tutor_shortcode_arg'] ) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
-		$course_cols   = $shortcode_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $shortcode_arg;
+		$course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
+		$course_cols   = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
 		$classes       = apply_filters(
 			'tutor_course_loop_col_classes',
 			array(
@@ -376,16 +362,6 @@ if ( ! function_exists( 'tutor_post_class' ) ) {
 	}
 }
 
-if ( ! function_exists( 'tutor_course_archive_filter_bar' ) ) {
-	function tutor_course_archive_filter_bar() {
-		ob_start();
-		tutor_load_template( 'global.course-archive-filter-bar' );
-		$output = apply_filters( 'tutor_course_archive_filter_bar', ob_get_clean() );
-
-		echo $output;
-	}
-}
-
 /**
  *
  * Get classes for widget loop single course wrap
@@ -425,7 +401,7 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
         $post_id           = get_the_ID();
         $size              = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
         $post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
-        $placeHolderUrl    = tutor()->url . 'assets/images/placeholder.png';
+        $placeHolderUrl    = tutor()->url . 'assets/images/placeholder.svg';
         $thumb_url         = $post_thumbnail_id ? wp_get_attachment_image_url($post_thumbnail_id, $size) : $placeHolderUrl;
 
         if($url) {
@@ -449,7 +425,7 @@ if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
             $size = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
             $src = wp_get_attachment_image_url( $post_thumbnail_id, $size, false );
         } else {
-            $src = tutor()->url . 'assets/images/placeholder.png';
+            $src = tutor()->url . 'assets/images/placeholder.svg';
         }
 
 		return $src;
@@ -1208,15 +1184,15 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
         if ( $duration ) {
             $output = '';
             if ( $durationHours > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value tutor-color-black-60 tutor-mr-4">' . $hour_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $hour_format . '</span>';
             }
 
             if ( $durationMinutes > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value tutor-color-black-60 tutor-mr-4">' . $minute_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $minute_format . '</span>';
             }
 
             if ( !$durationHours && !$durationMinutes && $durationSeconds > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value tutor-color-black-60 tutor-mr-4">' . $second_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value tutor-color-secondary tutor-mr-4">' . $second_format . '</span>';
             }
 
 			return $output;

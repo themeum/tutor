@@ -19,8 +19,7 @@ $field_id = 'field_' . $field['key'];
 			<input type="checkbox" class="tutor-form-toggle-input" checked="">
 			<span class="tutor-form-toggle-control"></span>
 		</label>
-		<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Edit</button>
-		<!-- <span class="delete-btn" style="width: 18px; height: 20px"></span> -->
-		<span class="delete-btn tutor-v2-icon-test icon-delete-stroke-filled"></span>
+		<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-btn-sm"><?php _e("Edit", "tutor"); ?></button>
+		<span class="icon-trash-can-line" area-hidden="true"></span>
 	</div>
 </div>

@@ -16,11 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Shortcode {
 
 	private $instructor_layout = array(
-		'pp-top-full',
-		'pp-cp',
-		'pp-top-left',
-		'pp-left-middle',
-		'pp-left-full',
+		'default',
+		'cover',
+		'minimal',
+		'portrait-horizontal',
+		'minimal-horizontal',
 	);
 
 	public function __construct() {
@@ -28,12 +28,6 @@ class Shortcode {
 		add_shortcode( 'tutor_dashboard', array( $this, 'tutor_dashboard' ) );
 		add_shortcode( 'tutor_instructor_registration_form', array( $this, 'instructor_registration_form' ) );
 		add_shortcode( 'tutor_course', array( $this, 'tutor_course' ) );
-
-		// Check if WP version is equal to or greater than 5.9.
-		global $wp_version;
-		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
-			add_shortcode( 'tutor_dashboard_menu', array( $this, 'tutor_dashboard_menu' ) );
-		}
 
 		add_shortcode( 'tutor_instructor_list', array( $this, 'tutor_instructor_list' ) );
 		add_action( 'tutor_options_after_instructors', array( $this, 'tutor_instructor_layout' ) );
@@ -111,21 +105,6 @@ class Shortcode {
 	}
 
 	/**
-	 * @return mixed
-	 *
-	 * Dashboard Menu Shortcode
-	 *
-	 * @since v.2.0.0
-	 */
-	public function tutor_dashboard_menu() {
-		ob_start();
-		if ( is_user_logged_in() ) {
-			tutor_load_template( 'dashboard.dashboard-menu' );
-		}
-		return apply_filters( 'tutor_dashboard/header/menu', ob_get_clean() );
-	}
-
-	/**
 	 * @param $atts
 	 *
 	 * @return string
@@ -177,20 +156,21 @@ class Shortcode {
 
 		wp_reset_query();
 		$the_query = new \WP_Query( $a );
+
+		
+		// Load the renderer now
 		ob_start();
-
-		$GLOBALS['the_custom_query'] = $the_query;
-
-		$GLOBALS['tutor_shortcode_arg'] = array(
-			'shortcode_enabled' => true,
-			'include_course_filter' => isset( $atts['course_filter'] ) ? $atts['course_filter'] === 'on' : null,
-			'column_per_row'        => isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
-			'course_per_page'       => $a['posts_per_page'],
-			'show_pagination'       => isset( $atts['show_pagination'] ) ? $atts['show_pagination'] : 'off',
-		);
-
-		tutor_load_template( 'shortcode.tutor-course' );
+		tutor_load_template('archive-course-init', array(
+			'course_filter' 	=> isset( $atts['course_filter'] ) && $atts['course_filter'] == 'on',
+			'supported_filters' => tutor_utils()->get_option( 'supported_course_filters', array() ),
+			'loop_content_only' => false,
+			'column_per_row' 	=> isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
+			'course_per_page' 	=> $a['posts_per_page'],
+			'show_pagination' 	=> isset( $atts['show_pagination'] ) && $atts['show_pagination']=='on',
+			'the_query'			=> $the_query
+		));
 		$output = ob_get_clean();
+
 		wp_reset_postdata();
 
 		return $output;
@@ -198,9 +178,11 @@ class Shortcode {
 
 	private function prepare_instructor_list( $current_page, $atts, $cat_ids = array(), $keyword = '' ) {
 
-		$limit         = (int) sanitize_text_field( tutor_utils()->array_get( 'count', $atts, 9 ) );
+		$default_pagination = tutor_utils()->get_option('pagination_per_page', 9);
+		$limit         = (int) sanitize_text_field( tutor_utils()->array_get( 'count', $atts, $default_pagination ) );
 		$page          = $current_page - 1;
 		$rating_filter = isset( $_POST['rating_filter'] ) ? $_POST['rating_filter'] : '';
+
 		/**
 		 * Short by Relevant | New | Popular
 		 *
@@ -215,22 +197,20 @@ class Shortcode {
 			$short_by = 'ASC';
 		}
 		$instructors      = tutor_utils()->get_instructors( $limit * $page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter );
-		$next_instructors = tutor_utils()->get_instructors( $limit * $current_page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter );
-
-		$previous_page = $page > 0 ? $current_page - 1 : null;
-		$next_page     = ( is_array( $next_instructors ) && count( $next_instructors ) > 0 ) ? $current_page + 1 : null;
+		$instructors_count = tutor_utils()->get_instructors( $limit * $page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter, true );
 
 		$layout = sanitize_text_field( tutor_utils()->array_get( 'layout', $atts, '' ) );
 		$layout = in_array( $layout, $this->instructor_layout ) ? $layout : tutor_utils()->get_option( 'instructor_list_layout', $this->instructor_layout[0] );
+		$default_col = (isset($atts['show_filter']) && $atts['show_filter'] && $layout == 'default') ? 2 : tutor_utils()->get_option( 'courses_col_per_row', 3 );
 
 		$payload = array(
 			'instructors'   => is_array( $instructors ) ? $instructors : array(),
-			'next_page'     => $next_page,
-			'previous_page' => $previous_page,
-			'column_count'  => sanitize_text_field( tutor_utils()->array_get( 'column_per_row', $atts, 3 ) ),
+			'instructors_count' => $instructors_count,
+			'column_count'  => sanitize_text_field( tutor_utils()->array_get( 'column_per_row', $atts, $default_col ) ),
 			'layout'        => $layout,
 			'limit'         => $limit,
 			'current_page'  => $current_page,
+			'filter'		=> $atts
 		);
 
 		return $payload;
@@ -251,6 +231,7 @@ class Shortcode {
 		$current_page = $current_page >= 1 ? $current_page : 1;
 
 		$show_filter = isset( $atts['filter'] ) ? $atts['filter'] == 'on' : tutor_utils()->get_option( 'instructor_list_show_filter', false );
+		$atts['show_filter'] = $show_filter;
 
 		// Get instructor list to sow
 		$payload                = $this->prepare_instructor_list( $current_page, $atts );
@@ -275,11 +256,10 @@ class Shortcode {
 
 			$all_cats = $wpdb->get_var(
 				$wpdb->prepare(
-					" SElECT COUNT(*) as total FROM {$wpdb->terms} AS term
+					"SELECT COUNT(*) as total FROM {$wpdb->terms} AS term
 					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
 						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
-					ORDER BY term.term_id DESC
-				",
+					ORDER BY term.term_id DESC",
 					$course_taxonomy
 				)
 			);
@@ -367,8 +347,7 @@ class Shortcode {
 		tutor_utils()->checking_nonce();
 
 		$_post 		  = tutor_sanitize_data($_POST);
-		$attributes   = (array) tutor_utils()->array_get( 'attributes', $_post, array() );
-		$current_page = (int) sanitize_text_field( tutor_utils()->array_get( 'current_page', $attributes, 1 ) );
+		$current_page = (int) sanitize_text_field( tutor_utils()->array_get( 'current_page', $_post, 1 ) );
 		$keyword      = (string) sanitize_text_field( tutor_utils()->array_get( 'keyword', $_post, '' ) );
 
 		$category = (array) tutor_utils()->array_get( 'category', $_post, array() );
@@ -379,9 +358,11 @@ class Shortcode {
 			}
 		);
 
-		$payload = $this->prepare_instructor_list( $current_page, $attributes, $category, $keyword );
+		$data = $this->prepare_instructor_list( $current_page, $_post, $category, $keyword );
 
-		tutor_load_template( 'shortcode.tutor-instructor', $payload );
+		ob_start();
+		tutor_load_template( 'shortcode.tutor-instructor', $data );
+		wp_send_json_success( array('html' => ob_get_clean() ) );
 		exit;
 	}
 

@@ -4,7 +4,7 @@
 			width: 38px;
 			height: 22px;
 			background-color: transparent;
-			border: 1px solid var(--tutor-primary-color);
+			border: 1px solid var(--tutor-color-primary);
 			margin: 0px 7px;
 		}
 		.tutor-form-toggle-label {
@@ -17,13 +17,13 @@
 	}
 	&.current-view-instructor {
 		.tutor-form-toggle-label.tutor-form-toggle-checked {
-			color: var(--tutor-primary-color) !important;
+			color: var(--tutor-color-primary) !important;
 		}
 		.tutor-form-toggle-label.tutor-form-toggle-unchecked {
 			color: var(--tutor-border-color) !important;
 		}
 		.tutor-form-toggle-control:before {
-			background: var(--tutor-primary-color);
+			background: var(--tutor-color-primary);
 			top: 2px;
 			left: 17px;
 		}
@@ -33,11 +33,6 @@
 				font-weight: 500;
 				font-size: 16px;
 				color: #41454f;
-			}
-
-			&:nth-of-type(2) {
-				// background: var(--tutor-primary) !important;
-				// background-color: var(--tutor-primary) !important;
 			}
 
 			&:nth-of-type(1) {
@@ -51,13 +46,13 @@
 
 	&.current-view-student {
 		.tutor-form-toggle-label.tutor-form-toggle-checked {
-			color: var(--tutor-primary-color);
+			color: var(--tutor-color-primary);
 		}
 		.tutor-form-toggle-label.tutor-form-toggle-unchecked {
 			color: #c0c3cb;
 		}
 		.tutor-form-toggle-control:before {
-			background: var(--tutor-primary-color);
+			background: var(--tutor-color-primary);
 			top: 2px;
 		}
 		span {
@@ -67,11 +62,6 @@
 				font-size: 16px;
 				color: #41454f;
 			}
-
-			// &:nth-of-type(2) {
-			// 	background: var(--tutor-primary) !important;
-			// 	background-color: var(--tutor-primary) !important;
-			// }
 
 			&:nth-of-type(3) {
 				font-style: normal;
@@ -83,60 +73,12 @@
 	}
 }
 
-.tutor-frontend-dashboard-qna-header {
-	// display: grid;
-	// grid-template-columns: 1fr 1fr;
-	// @include breakpoint-max(991) {
-	// 	grid-template-columns: 1fr;
-	// }
-
-	// .tutor-qna-toggle {
-	// 	display: flex;
-	// 	align-items: center;
-	// 	justify-content: flex-end;
-	// 	@include breakpoint-max(991) {
-	// 		justify-content: flex-start;
-	// 		margin-top: 4px;
-	// 	}
-	// }
-
-	// .tutor-qna-filter {
-	// 	display: grid;
-	// 	grid-template-columns: 70px 227px;
-	// 	align-items: center;
-	// 	gap: 10px;
-	// 	.tutor-form-select.tutor-select-redirector {
-	// 		height: 40px;
-	// 	}
-	// }
-}
-
 table {
 	td[data-th='Question'] {
-		.tutor-input-feedback {
-		}
 		.tutor-qna-desc {
 			padding-right: 20px;
 			.tutor-qna-content:first-letter {
 				text-transform: uppercase;
-			}
-		}
-	}
-	td[data-th='Student'] {
-		.tutor-qna-badges-wrapper {
-			span {
-				> *:first-child {
-					width: 20px;
-					height: 20px;
-				}
-				i {
-					&:before {
-						width: 18px;
-						height: 18px;
-						left: 1px;
-						top: 3px;
-					}
-				}
 			}
 		}
 	}
@@ -148,12 +90,6 @@ table.frontend-dashboard-qna-table-student {
 				padding-left: 21px;
 			}
 		}
-		td[data-th='Question'] {
-		}
-		td[data-th='Reply'] {
-		}
-		td[data-th='Action'] {
-		}
 	}
 }
 table.frontend-dashboard-qna-table-instructor {
@@ -164,18 +100,8 @@ table.frontend-dashboard-qna-table-instructor {
 			}
 		}
 
-		td {
-			vertical-align: top;
-		}
-
 		td[data-th='Student'] {
-			vertical-align: top;
 			width: 30%;
-			i {
-				font-size: 24px;
-				margin-top: 4px;
-				display: inline-block;
-			}
 		}
 
 		td[data-th='Question'] {
@@ -183,31 +109,14 @@ table.frontend-dashboard-qna-table-instructor {
 			i {
 				left: -26px;
 			}
-			.tutor-input-feedback {
+			.tutor-form-feedback {
 				padding-left: 0px;
 				margin: 0px;
-			}
-			.tutor-qna-desc {
-				// padding-right: 20px;
-				// .tutor-qna-content:first-letter {
-				// 	text-transform: uppercase;
-				// }
 			}
 		}
 
 		td[data-th='Reply'] {
 			width: 8%;
-		}
-
-		td[data-th='Reply'],
-		td[data-th='Status'] {
-			div {
-				padding-top: 10px;
-			}
-		}
-
-		td[data-th='Action'] {
-			div {}
 		}
 
 		td[data-th='Action'] {
@@ -221,19 +130,22 @@ table.frontend-dashboard-qna-table-instructor {
 		display: flex;
 		align-items: center;
 	}
-	.tutor-qna-badges {
-		span.tutor-updating-message {
-			i {
-				visibility: hidden;
-			}
-			&:before {
-				position: absolute;
-				margin-left: 5px;
-			}
-		}
-	}
 }
 
-.tutor-input-feedback .tutor-input-feedback-icon {
+.tutor-form-feedback .tutor-form-feedback-icon {
 	margin-top: 2px;
+}
+
+.tutor-ui-table.qna-list-table {
+	.tooltip-wrap.tooltip-icon-custom {
+		width: 24px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		i {
+			display: block;
+		}
+	}
 }

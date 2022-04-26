@@ -138,6 +138,8 @@ if (copyBtn && codeTexarea) {
 		setTimeout(() => {
 			this.innerHTML = btnEl;
 		}, 3000);
+
+		// @todo: remove las icon
 		this.innerHTML = `
 			<span class="tutor-btn-icon las la-clipboard-list"></span>
 			<span>Copied to Clipboard!</span>
@@ -214,4 +216,5 @@ function toolTipOnWindowResize() {
 		}
 	}
 }
+
 window.addEventListener('resize', toolTipOnWindowResize);

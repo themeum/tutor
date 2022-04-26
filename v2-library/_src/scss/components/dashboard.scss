@@ -4,19 +4,19 @@
   .tutor-profile-content {
     padding-left: 20px;
     font-size: 15px;
-    color: var(--tutor-text-hints);
+    color: var(--tutor-color-muted);
   }
   .tutor-profile-subtitle {
     font-size: 24px;
     line-height: 34px;
     font-weight: 400;
-    color: var(--tutor-text-primary);
+    color: var(--tutor-body-color);
   }
   .tutor-profile-name {
     display: block;
     font-size: 30px;
     line-height: 37px;
-    color: var(--tutor-text-primary);
+    color: var(--tutor-body-color);
   }
 }
 
@@ -32,7 +32,7 @@
     @extend .tutor-pl-12;
     font-size: 13px;
     line-height: 18px;
-    color: var(--tutor-text-subtitle);
+    color: var(--tutor-text-secondary);
     flex-grow: 1;
   }
   .tutor-name {
@@ -42,64 +42,11 @@
     font-weight: 500;
     line-height: 28px;
     margin: 0;
-    color: var(--tutor-text-primary);
+    color: var(--tutor-body-color);
     .tutor-icard-icon {
       font-size: 13px;
       padding-left: 6px;
-      color: var(--tutor-primary);
-    }
-  }
-}
-
-.tutor-text-card {
-  @extend .tutor-border;
-  @extend .tutor-radius-6;
-  padding: 25px 30px;
-  width: 100%;
-  box-sizing: border-box;
-  .tutor-card-icon {
-    @extend .tutor-btn-circle;
-    @extend .tutor-is-primary-light;
-    margin-bottom: 13px;
-    height: 60px;
-    width: 60px;
-    font-size: 25px;
-  }
-  .tutor-content {
-    font-weight: 400;
-    font-size: 20px;
-    color: var(--tutor-text-primary);
-    .tutor-subtitle {
-      font-size: 15px;
-      line-height: 24px;
-      color: var(--tutor-text-subtitle);
-      @extend .tutor-m-0;
-      font-weight: 400;
-      display: block;
-    }
-    .tutor-title {
-      @extend .tutor-m-0;
-      font-size: 30px;
-      line-height: 37px;
-      font-weight: 700;
-      color: var(--tutor-text-primary);
-      display: block;
-    }
-    p {
-      margin: 0;
-    }
-  }
-
-
-  &.tutor-is-vertical {
-    @extend .d-flex;
-    @extend .align-items-center;
-    .tutor-card-icon {
-      margin-bottom: 0;
-      flex-shrink: 0;
-    }
-    .tutor-content {
-      margin-left: 20px;
+      color: var(--tutor-color-primary);
     }
   }
 }

@@ -336,16 +336,6 @@ class Options_V2
 
 		do_action('tutor_option_save_after');
 
-		// echo $dashboard_update_id . ' - ' . $old_dashboard_id;
-
-		if ($dashboard_update_id !== $old_dashboard_id) {
-			global $wp_rewrite;
-			$wp_rewrite->set_permalink_structure('/%postname%/');
-			update_option("rewrite_rules", false);
-			$wp_rewrite->flush_rules(true);
-			flush_rewrite_rules();
-		}
-
 		wp_send_json_success($option);
 	}
 
@@ -424,7 +414,7 @@ class Options_V2
 				'slug'     => 'general',
 				'desc'     => __('General Settings', 'tutor'),
 				'template' => 'basic',
-				'icon'     => 'tutor-icon-earth-filled',
+				'icon'     => 'tutor-icon-earth',
 				'blocks'   => array(
 					array(
 						'label'      => false,
@@ -493,7 +483,7 @@ class Options_V2
 				'slug'     => 'course',
 				'desc'     => __('Course Settings', 'tutor'),
 				'template' => 'basic',
-				'icon'     => 'tutor-icon-book-open-filled',
+				'icon'     => 'tutor-icon-book-open',
 				'blocks'   => array(
 					'block_course' => array(
 						'label'      => '',
@@ -531,14 +521,6 @@ class Options_V2
 								'default'     => 'off',
 								'label_title' => __('', 'tutor'),
 								'desc'        => __('When a user\'s WooCommerce order is auto-completed, they will be redirected to enrolled courses', 'tutor'),
-							),
-							array(
-								'key'         => 'auto_complete_woocommerce_virtual_orders',
-								'type'        => 'toggle_switch',
-								'label'       => __('Auto Complete Woocommerce Virtual Orders', 'tutor'),
-								'default'     => 'off',
-								'label_title' => __('', 'tutor'),
-								'desc'        => __('When a user\'s WooCommerce order is completed, they will be auto enrolled to corresponding courses', 'tutor'),
 							),
 							array(
 								'key'         => 'enable_spotlight_mode',
@@ -671,7 +653,7 @@ class Options_V2
 				'slug'     => 'monetization',
 				'desc'     => __('Monitization Settings', 'tutor'),
 				'template' => 'basic',
-				'icon'     => 'tutor-icon-discount-filled-filled',
+				'icon'     => 'tutor-icon-badge-discount',
 				'blocks'   => array(
 					'block_options' => array(
 						'label'      => __('Options', 'tutor'),
@@ -818,7 +800,7 @@ class Options_V2
 				'slug'     => 'design',
 				'desc'     => __('Design Settings', 'tutor'),
 				'template' => 'design',
-				'icon'     => 'tutor-icon-design-filled',
+				'icon'     => 'tutor-icon-color-palette',
 				'blocks'   => array(
 					'block_course'    => array(
 						'label'      => __('Course', 'tutor'),
@@ -851,7 +833,7 @@ class Options_V2
 								'type'    => 'number',
 								'label'   => __('Pagination', 'tutor'),
 								'default' => '12',
-								'desc'    => __('Set the number of items you want to display per page.', 'tutor'),
+								'desc'    => __('Set the number of courses you want to display per page.', 'tutor'),
 							),
 							array(
 								'key'     => 'supported_course_filters',
@@ -879,29 +861,29 @@ class Options_V2
 								'type'          => 'group_radio',
 								'label'         => __('Instructor List Layout', 'tutor'),
 								'desc'          => __('Choose a layout for the list of instructors inside a course page. You can change this at any time.', 'tutor'),
-								'default'       => 'pp-top-full',
+								'default'       => 'portrait',
 								'group_options' => array(
 									'vertical'   => array(
-										'pp-top-full' => array(
+										'default' => array(
 											'title' => 'Portrait',
-											'image' => 'instructor-layout/intructor-portrait.svg',
+											'image' => 'instructor-layout/instructor-portrait.svg',
 										),
-										'pp-cp'       => array(
+										'cover'       => array(
 											'title' => 'Cover',
 											'image' => 'instructor-layout/instructor-cover.svg',
 										),
-										'pp-top-left' => array(
+										'minimal' => array(
 											'title' => 'Minimal',
 											'image' => 'instructor-layout/instructor-minimal.svg',
 										),
 									),
 									'horizontal' => array(
-										'pp-left-full'   => array(
-											'title' => 'Horizontal Portrait',
+										'portrait-horizontal'   => array(
+											'title' => 'Portrait Horizontal',
 											'image' => 'instructor-layout/instructor-horizontal-portrait.svg',
 										),
-										'pp-left-middle' => array(
-											'title' => 'Horizontal Minimal',
+										'minimal-horizontal' => array(
+											'title' => 'Minimal Horizontal',
 											'image' => 'instructor-layout/instructor-horizontal-minimal.svg',
 										),
 									),
@@ -1151,21 +1133,6 @@ class Options_V2
 												'value' => '#CDCFD5',
 											),
 											array(
-												'slug'  => 'tutor_success_color',
-												'preset_name' => 'success',
-												'value' => '#24A148',
-											),
-											array(
-												'slug'  => 'tutor_warning_color',
-												'preset_name' => 'warning',
-												'value' => '#ED9700',
-											),
-											array(
-												'slug'  => 'tutor_danger_color',
-												'preset_name' => 'danger',
-												'value' => '#F44337',
-											),
-											array(
 												'slug'  => 'tutor_disable_color',
 												'preset_name' => 'disable',
 												'value' => '#E3E6EB',
@@ -1207,21 +1174,6 @@ class Options_V2
 												'value' => '#CDCFD5',
 											),
 											array(
-												'slug'  => 'tutor_success_color',
-												'preset_name' => 'success',
-												'value' => '#24A148',
-											),
-											array(
-												'slug'  => 'tutor_warning_color',
-												'preset_name' => 'warning',
-												'value' => '#ED9700',
-											),
-											array(
-												'slug'  => 'tutor_danger_color',
-												'preset_name' => 'danger',
-												'value' => '#F44337',
-											),
-											array(
 												'slug'  => 'tutor_disable_color',
 												'preset_name' => 'disable',
 												'value' => '#E3E6EB',
@@ -1261,21 +1213,6 @@ class Options_V2
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_success_color',
-												'preset_name' => 'success',
-												'value' => '#24A148',
-											),
-											array(
-												'slug'  => 'tutor_warning_color',
-												'preset_name' => 'warning',
-												'value' => '#ED9700',
-											),
-											array(
-												'slug'  => 'tutor_danger_color',
-												'preset_name' => 'danger',
-												'value' => '#F44337',
 											),
 											array(
 												'slug'  => 'tutor_disable_color',
@@ -1368,33 +1305,6 @@ class Options_V2
 										'desc'         => __('Choose a border color for your website', 'tutor'),
 									),
 									array(
-										'key'          => 'tutor_success_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'success',
-										'preset_exist' => false,
-										'label'        => __('Success', 'tutor'),
-										'default'      => '#24A148',
-										'desc'         => __('Choose a color for an operation success message', 'tutor'),
-									),
-									array(
-										'key'          => 'tutor_warning_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'warning',
-										'preset_exist' => false,
-										'label'        => __('Warning', 'tutor'),
-										'default'      => '#ED9700',
-										'desc'         => __('Choose a color for an operation pending message ', 'tutor'),
-									),
-									array(
-										'key'          => 'tutor_danger_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'danger',
-										'preset_exist' => false,
-										'label'        => __('Danger', 'tutor'),
-										'default'      => '#d8d8d8',
-										'desc'         => __('Choose a color for an operation error message ', 'tutor'),
-									),
-									array(
 										'key'          => 'tutor_disable_color',
 										'type'         => 'color_field',
 										'preset_name'  => 'disable',
@@ -1446,7 +1356,7 @@ class Options_V2
 				'slug'     => 'advanced',
 				'desc'     => __('Advanced Settings', 'tutor'),
 				'template' => 'basic',
-				'icon'     => 'tutor-icon-filter-filled',
+				'icon'     => 'tutor-icon-filter',
 				'blocks'   => array(
 					array(
 						'label'      => __('Course', 'tutor'),

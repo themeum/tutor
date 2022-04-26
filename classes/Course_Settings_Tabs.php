@@ -31,7 +31,7 @@ class Course_Settings_Tabs{
             'general' => array(
                 'label' => __('General', 'tutor'),
                 'desc' => __('General Settings', 'tutor'),
-                'icon_class'  => ' tutor-icon-settings-filled',
+                'icon_class'  => ' tutor-icon-gear',
                 'callback'  => '',
                 'fields'    => array(
                     '_tutor_course_settings[maximum_students]' => array(

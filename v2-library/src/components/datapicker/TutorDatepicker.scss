@@ -1,10 +1,3 @@
-// @import url('react-datepicker/dist/react-datepicker.css');
-@function svgDatepickerCalenderIcon($color: #5b616f) {
-	$hexColor: '%23' + str-slice('#{$color}', 2, -1);
-
-	@return "data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M10.9946 5.05121C11.5123 5.05121 11.9321 5.47094 11.9321 5.98871V7.05372H18.0671V5.98871C18.0671 5.47094 18.4868 5.05121 19.0046 5.05121C19.5224 5.05121 19.9421 5.47094 19.9421 5.98871V7.05372H22.0084C22.7881 7.05372 23.5359 7.36347 24.0873 7.91483C24.6386 8.46619 24.9484 9.21399 24.9484 9.99373V22.0088C24.9484 22.7885 24.6386 23.5363 24.0873 24.0877C23.5359 24.639 22.7881 24.9488 22.0084 24.9488H7.99079C7.21105 24.9488 6.46325 24.639 5.91189 24.0877C5.36053 23.5363 5.05078 22.7885 5.05078 22.0088V9.99373C5.05078 9.21399 5.36053 8.46619 5.91189 7.91483C6.46325 7.36347 7.21105 7.05372 7.99079 7.05372H10.0571V5.98871C10.0571 5.47094 10.4768 5.05121 10.9946 5.05121ZM10.0571 8.92872H7.99079C7.70833 8.92872 7.43744 9.04093 7.23772 9.24065C7.03799 9.44038 6.92578 9.71127 6.92578 9.99373V22.0088C6.92578 22.2912 7.03799 22.5621 7.23772 22.7619C7.43744 22.9616 7.70833 23.0738 7.99079 23.0738H22.0084C22.2908 23.0738 22.5617 22.9616 22.7614 22.7619C22.9612 22.5621 23.0734 22.2912 23.0734 22.0088V9.99373C23.0734 9.71127 22.9612 9.44038 22.7614 9.24065C22.5617 9.04093 22.2908 8.92872 22.0084 8.92872H19.9421V9.99373C19.9421 10.5115 19.5224 10.9312 19.0046 10.9312C18.4868 10.9312 18.0671 10.5115 18.0671 9.99373V8.92872H11.9321V9.99373C11.9321 10.5115 11.5123 10.9312 10.9946 10.9312C10.4768 10.9312 10.0571 10.5115 10.0571 9.99373V8.92872ZM9.0558 13.9987C9.0558 13.481 9.47553 13.0612 9.9933 13.0612H20.0059C20.5236 13.0612 20.9434 13.481 20.9434 13.9987C20.9434 14.5165 20.5236 14.9362 20.0059 14.9362H9.9933C9.47553 14.9362 9.0558 14.5165 9.0558 13.9987Z' fill='#{$hexColor}'/%3E%3C/svg%3E%0A";
-}
-
 @import './datepicker-range-nav.scss';
 
 .tutor-react-datepicker {
@@ -108,7 +101,7 @@
 
 		&.dropdown-months {
 			.dropdown-list li {
-				padding: 4px 24px 4px 14px;
+				padding: 4px 14px;
 			}
 		}
 
@@ -181,48 +174,6 @@
 
 		&__month-container {
 			float: unset;
-		}
-		&__input-container input {
-			background: #ffffff;
-			border: 1px solid #c0c3cb;
-			box-sizing: border-box;
-			border-radius: 6px;
-			width: 100%;
-			height: 40px;
-
-			/* text/medium/body-16px */
-
-			// font-family: 'SF Pro Display', sans-serif;
-			// font-style: normal;
-			font-weight: 500;
-			font-size: 15px;
-			line-height: 162%;
-			text-transform: capitalize;
-			color: #212327;
-			background-color: #fff !important;
-			background-image: url(svgDatepickerCalenderIcon()) !important;
-			background-repeat: no-repeat !important;
-			background-position: right 10px center !important;
-			background-size: 26px;
-			padding: 0 35px 0 15px;
-			transition: 200ms ease-out;
-
-			&:focus-visible {
-				outline: none;
-				border-color: #3d64de;
-			}
-			&:focus {
-				border-color: #1973aa;
-				box-shadow: unset;
-				// background-image: url(svgDatepickerCalenderIcon($color-brand)) !important;
-			}
-
-			&::placeholder {
-				text-transform: uppercase;
-			}
-			&:hover {
-				cursor: pointer;
-			}
 		}
 
 		&__header {
@@ -365,7 +316,7 @@
 
 						&:focus-visible {
 							outline: none;
-							border-color: #3d64de;
+							border-color: var(--tutor-color-primary);
 						}
 					}
 				}
@@ -514,7 +465,7 @@
 .tutor-screen-frontend-dashboard {
 	.tutor-react-datepicker .react-datepicker__input-container {
 		input:focus {
-			border-color: #2853da;
+			border-color: var(--tutor-color-primary);
 		}
 	}
 }
@@ -558,7 +509,7 @@
 	.tutor-react-datepicker .react-datepicker__input-container input {
 		height: 48px;
 		&:focus {
-			border-color: var(--tutor-primary-color);
+			border-color: var(--tutor-color-primary);
 		}
 	}
 }
@@ -571,14 +522,7 @@
 	}
 }
 
-.wp-admin {
-	// .tutor-react-datepicker .react-datepicker__input-container input:focus {
-	// 	border-color: $brand-wordpress;
-	// 	background-image: url(svgDatepickerCalenderIcon($brand-wordpress)) !important;
-	// }
-}
-
-// Fix: Zoom Input Fileds
+// Fix: Zoom Input Fields
 .tutor-zoom-meeting-modal-wrap {
 	.tutor-react-datepicker .react-datepicker__input-container input {
 		height: 48px;

@@ -22,7 +22,7 @@ export default function () {
                         </div>
                     </div>
                     <div className="col-auto">
-                        <a href="#" className="tutor-btn tutor-is-sm">View Profile</a>
+                        <a href="#" className="tutor-btn tutor-btn-primary tutor-btn-sm">View Profile</a>
                     </div>
                 </div>
             </div>
@@ -83,7 +83,7 @@ export default function () {
                         </div>
                     </div>
                     <div className="col-auto">
-                        <a href="#" className="tutor-btn tutor-is-sm">View Profile</a>
+                        <a href="#" className="tutor-btn tutor-btn-primary tutor-btn-sm">View Profile</a>
                     </div>
                 </div>
             </div>

@@ -27,227 +27,126 @@
 	update_comment_meta( $question_id, 'tutor_qna_read'.$id_slug, 1 );
 ?>
 
-<div class="tutor-qna-single-question" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
-	<!-- Delete modal -->
-	<div id="<?php echo $modal_id; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
-		<span class="tutor-modal-overlay"></span>
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
-				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="tutor-icon-line-cross-line"></span>
-				</button>
-				<div class="tutor-modal-body tutor-text-center">
-					<div class="tutor-modal-icon">
-						<img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+<div class="tutor-qna-single-question<?php echo is_admin() ? ' tutor-admin-wrap' : ''; ?>" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
+	<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
+		<div class="<?php echo is_admin() ? 'tutor-wp-dashboard-header tutor-px-24 tutor-mb-24' : 'tutor-qa-sticky-bar'; ?>">
+			<div class="tutor-row tutor-align-items-lg-center">
+				<div class="tutor-col-lg">
+					<div class="tutor-d-lg-flex tutor-align-items-lg-center tutor-px-12 tutor-py-16">
+						<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
+							<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
+							<?php _e('Back', 'tutor'); ?>
+						</a>
 					</div>
-					<div class="tutor-modal-text-wrap">
-						<h3 class="tutor-modal-title">
-							<?php esc_html_e( 'Delete This Question?', 'tutor' ); ?>
-						</h3>
-						<p>
-							<?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?>
-						</p>
-					</div>
-					<div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
-						<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
-							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-						</button>
-						<button class="tutor-btn tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
-							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
-						</button>
+				</div>
+
+				<div class="tutor-col-lg-auto">
+					<div class="tutor-qna-badges tutor-qna-badges-wrapper">
+						<?php if ( ! $is_user_asker ) : ?>
+							<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-circle-mark-line" data-state-class-1="tutor-icon-circle-mark tutor-color-success" role="button">
+								<i class="<?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success active' : 'tutor-icon-circle-mark-line'; ?> tutor-mr-8"></i>
+								<span><?php _e( 'Solved', 'tutor' ); ?></span>
+							</span>
+							
+							<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-important-line" data-state-class-1="tutor-icon-important-bold">
+								<i class="<?php echo $is_important ? 'tutor-icon-important-bold active' : 'tutor-icon-important-line'; ?> tutor-mr-8"></i>
+								<span><?php _e( 'Important', 'tutor' ); ?></span>
+							</span>
+	
+							<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-archive" data-state-class-1="tutor-icon-archive">
+								<i class="<?php echo $is_archived ? 'tutor-icon-archive active' : 'tutor-icon-archive'; ?> tutor-mr-8"></i>
+								<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
+							</span>
+						<?php endif; ?>
+						<span class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo $modal_id; ?>">
+							<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+							<?php _e( 'Delete', 'tutor' ); ?>
+						</span>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	<?php endif; ?>
 
-	<div class="tutor-qna-single-wrapper">
+	<div class="<?php echo is_admin() ? 'tutor-admin-container' : ''; ?>">
+		<!-- <div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32">
+			<?php echo esc_html( $question->post_title ); ?>
+			<div class="tutor-hr tutor-mt-20" area-hidden="true"></div>
+		</div> -->
+		<div class="tutor-qna-single-wrapper">
+			<div class="tutor-qa-reply-wrapper tutor-mt-20">
+				<div class="tutor-qa-chatlist">
+					<?php
+						$current_user_id = get_current_user_id();
+						$avatar_url       = array();
+						$is_single       = in_array( $context, array( 'course-single-qna-sidebar', 'course-single-qna-single' ) );
 
-		<!-- Show header action bar if it is single question in backend/frontend dashboard -->
-		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
-			<div class="tutor-qa-sticky-bar">
-				<div class="tutor-color-black">
-					<a class="tutor-back-btn" href="<?php echo $back_url; ?>">
-						<span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-						<span class="text text tutro-tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
-					</a>
-				</div>
-				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-content-end">
+						if ( is_array( $answers ) && count( $answers ) ) {
+						$reply_count = count( $answers ) - 1;
+						foreach ( $answers as $answer ) {
+							if ( ! isset( $avatar_url[ $answer->user_id ] ) ) {
+								// Get avatar url if not already got
+								$avatar_url[ $answer->user_id ] = get_avatar_url( $answer->user_id );
+							}
 
-					<!-- Show meta data actions if it is instructor view -->
-					<?php if ( ! $is_user_asker ) : ?>
-						<span data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-text-success">
-							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success active' : 'tutor-icon-tick-circle-outline-filled'; ?>"></i>
-							<span><?php _e( 'Solved', 'tutor' ); ?></span>
-						</span>
-						<span data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled">
-							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?>"></i>
-							<span><?php _e( 'Important', 'tutor' ); ?></span>
-						</span>
-						<span data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-archive-filled" data-state-class-1="tutor-icon-msg-archive-filled">
-							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?>"></i>
-							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
-						</span>
-					<?php endif; ?>
-					<span data-tutor-modal-target="<?php echo $modal_id; ?>">
-						<i class="tutor-icon-delete-fill-filled"></i>
-						<span><?php _e( 'Delete', 'tutor' ); ?></span>
-					</span>
-				</div>
-			</div>
-		<?php endif; ?>
-
-		<!-- Show  question anaswer. Both the root level question and reply will go in single loop. Just first one will be considered as root questoin. -->
-		<div class="tutor-qa-reply-wrapper">
-			<div class="tutor-qa-chatlist">
-				<?php
-					$current_user_id = get_current_user_id();
-					$avata_url       = array();
-					$is_single       = in_array( $context, array( 'course-single-qna-sidebar', 'course-single-qna-single' ) );
-
-				if ( is_array( $answers ) && count( $answers ) ) {
-					$reply_count = count( $answers ) - 1;
-					foreach ( $answers as $answer ) {
-						if ( ! isset( $avata_url[ $answer->user_id ] ) ) {
-							// Get avatar url if not already got
-							$avata_url[ $answer->user_id ] = get_avatar_url( $answer->user_id );
-						}
-
-						$css_class = ( $current_user_id != $answer->user_id || $answer->comment_parent == 0 ) ? 'tutor-qna-left' : 'tutor-qna-right';
-						$css_style = ( $is_single && $answer->comment_parent != 0 ) ? 'margin-left:14%;' . $reply_hidden : '';
-						?>
-							<div class="tutor-qna-chat <?php echo $css_class; ?> " style="<?php echo $css_style; ?>">
-								<div class="tutor-qna-user">
-									<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
-									<div>
-										<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-70">
-											<?php echo $answer->display_name; ?>
+							$css_class = ( $current_user_id != $answer->user_id || $answer->comment_parent == 0 ) ? 'tutor-qna-left' : 'tutor-qna-right';
+							$css_style = ( $is_single && $answer->comment_parent != 0 ) ? 'margin-left:14%;' . $reply_hidden : '';
+							?>
+								<div class="tutor-qna-chat <?php echo $css_class; ?> " style="<?php echo $css_style; ?>">
+									<div class="tutor-qna-user">
+										<div>
+											<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
 										</div>
-										<div class="tutor-fs-7 tutor-color-muted">
-											<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
-										</div>
-									</div>
-								</div>
 
-								<div class="tutor-qna-text tutor-fs-7">
-									<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
-								</div>
-
-							<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>
-									<div class="tutor-toggle-reply">
-										<span><?php _e( 'Reply', 'tutor' ); ?> <?php echo $reply_count ? '(' . $reply_count . ')' : ''; ?></span>
-									</div>
-								<?php endif; ?>
-							</div>
-							<?php
-					}
-				}
-				?>
-			</div>
-			<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
-				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
-				<div class="tutor-d-flex tutor-align-items-center">
-					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm">
-						<?php esc_html_e( 'Reply', 'tutor' ); ?>
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<?php
-	if ( $context == 'backend-dashboard-qna-single' ) {
-		// Right sidebar should be loaded at backend dashboard only
-		?>
-			<div class="tutor-qna-admin-sidebar">
-				<div class="tutor-qna-user">
-					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
-					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mt-24"><?php echo $question->display_name; ?></div>
-					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-60 tutor-mt-4"><?php echo $question->user_email; ?></div>
-					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 21px;">
-						<?php
-							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
-
-							foreach ( $tutor_user_social_icons as $key => $social_icon ) :
-								$url                                    = get_user_meta( $question->user_id, $key, true );
-								$tutor_user_social_icons[ $key ]['url'] = $url;
-								if ( '' === $url ) {
-									continue;
-								}
-						?>
-							<a href="<?php echo esc_url( $url ); ?>">
-								<i class="tutor-color-muted <?php echo esc_attr( $social_icon['icon_classes'] ); ?> tutor-icon-20 tutor-hover-wp"></i>
-							</a>
-						<?php endforeach;?>
-					</div>
-				</div>
-				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
-					<tr>
-						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
-							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
-								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
-									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
-								</span>
-								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
-							</div>
-
-						</td>
-					</tr>
-					<tr>
-						<td class="data-td-content" id="tutor-asked-under-course">
-							<div class="td-toggle-content">
-								<span class="tutor-color-black tutor-fs-6 tutor-fw-bold">
-									<?php echo esc_html( $question->post_title ); ?>
-								</span>
-							</div>
-						</td>
-					</tr>
-				</table>
-
-				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
-					<tr>
-						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
-							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
-								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
-									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
-								</span>
-								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
-							</div>
-
-						</td>
-					</tr>
-					<tr>
-						<td class="data-td-content" id="tutor-prev-question-history">
-							<div class="td-toggle-content">
-								<?php
-									$own_questions = tutor_utils()->get_qa_questions( 0, 10, '', null, null, $question->user_id );
-								?>
-								<?php if ( count( $own_questions ) ) : ?>
-									<div class="qna-previous-questions">
-										<?php foreach ( $own_questions as $question ) : ?>
-											<div>
-												<span class="tutor-color-black-60 tutor-fs-7">
-													<?php echo esc_html( date_i18n( get_option( 'date_format') , strtotime( $question->comment_date ) ) ); ?>,
-													<?php echo esc_html( date_i18n( get_option( 'time_format') , strtotime( $question->comment_date ) ) ); ?>
-												</span>
-												<span class="tutor-color-black tutor-fs-6 tutor-fw-bold">
-													<?php echo esc_textarea( $question->comment_content ); ?>
-												</span>
-												<span class="tutor-color-black-60">
-													<?php esc_html_e( 'Course', 'tutor' ); ?></strong>: <?php echo esc_html( $question->post_title ); ?>
-												</span>
+										<div>
+											<div class="tutor-fs-6 tutor-fw-medium tutor-color-secondary">
+												<?php echo $answer->display_name; ?>
 											</div>
-										<?php endforeach; ?>
+											<div class="tutor-fs-7 tutor-color-muted">
+												<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
+											</div>
+										</div>
 									</div>
-								<?php else : ?>
-									<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-								<?php endif; ?>
-							</div>
-						</td>
-					</tr>
-				</table>
+
+									<div class="tutor-qna-text tutor-fs-7">
+										<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
+									</div>
+
+								<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>
+										<div class="tutor-toggle-reply">
+											<span><?php _e( 'Reply', 'tutor' ); ?> <?php echo $reply_count ? '(' . $reply_count . ')' : ''; ?></span>
+										</div>
+									<?php endif; ?>
+								</div>
+								<?php
+						}
+					}
+					?>
+				</div>
+				<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
+					<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
+					<div class="tutor-d-flex tutor-align-items-center">
+						<button data-back_url="<?php echo $back_url; ?>" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-sm">
+							<?php esc_html_e( 'Reply', 'tutor' ); ?>
+						</button>
+					</div>
+				</div>
 			</div>
-			<?php
-	}
-	?>
+		</div>
+	</div>
 </div>
+
+<?php
+	// Delete modal
+	tutor_load_template( 'modal.confirm', array(
+		'id' => $modal_id,
+		'image' => 'icon-trash.svg',
+		'title' => __('Do You Want to Delete This Question?', 'tutor'),
+		'content' => __('All the replies also will be deleted.', 'tutor'),
+		'yes' => array(
+			'text' => __('Yes, Delete This', 'tutor'),
+			'class' => 'tutor-list-ajax-action',
+			'attr' => array('data-request_data=\'{"action":"tutor_delete_dashboard_question", "question_id":"' . $question_id . '"}\'', 'data-redirect_to="' . $back_url . '"')
+		),
+	));
+?>

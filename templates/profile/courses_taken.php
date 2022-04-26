@@ -10,7 +10,7 @@ $user_id   = $get_user->ID;
 
 $pageposts = tutor_utils()->get_courses_by_instructor( $user_id );
 ?>
-<div class="tutor-course-listing-grid tutor-course-listing-grid-3">
+<div class="tutor-grid tutor-grid-3">
 	<?php
 	if ( $pageposts ) {
 		global $post;
@@ -25,7 +25,7 @@ $pageposts = tutor_utils()->get_courses_by_instructor( $user_id );
 			 */
 			do_action( 'tutor_course/archive/before_loop_course' );
 
-			tutor_load_template( 'loop.course' );
+			tutor_load_template( 'loop.course' ));
 
 			/**
 			 * @hook tutor_course/archive/after_loop_course

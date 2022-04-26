@@ -23,10 +23,10 @@
 	}
 }
 
-// Warning -> Monitization > Sharing Percentage
+// Warning -> Monetization > Sharing Percentage
 .revenue-percentage {
 	input.warning {
-		border-color: var(--tutor-danger) !important;
+		border-color: var(--tutor-danger-color) !important;
 		box-shadow: 0 0 0 3px lighten(red, 45) !important;
 	}
 }
@@ -42,7 +42,7 @@
 			font-size: 2em;
 			position: absolute;
 			inset: 0;
-			background: $black-05;
+			background: $color-gray-10;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -57,7 +57,7 @@
 			content: '';
 			position: absolute;
 			inset: 0;
-			background: $black-05;
+			background: $color-gray-10;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -106,8 +106,8 @@
 			content: '';
 			position: absolute;
 			inset: 1px -6px;
-			background: $warning-50;
-			border: 1px solid $warning-70;
+			background: rgba(var(--tutor-color-warning-rgb), 0.2);
+			border: 1px solid rgba(var(--tutor-color-warning-rgb), 0.3);
 			box-sizing: border-box;
 			border-radius: 3px;
 			z-index: -1;

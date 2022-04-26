@@ -47,16 +47,16 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 
 <?php do_action( 'tutor_lesson/single/before/content' ); ?>
 <?php if ( $is_enrolled ) : ?>
-	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
 		<div class="tutor-topbar-left-item tutor-d-flex">
 			<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
 				<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-					<span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+					<span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 				</a>
 			</div>
 			<div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
-				<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-white tutor-mr-4"></span>
-				<span class="tutor-fs-7 tutor-color-design-white">
+				<span class="tutor-icon-brand-youtube-bold tutor-color-white tutor-mr-8"></span>
+				<span class="tutor-fs-7 tutor-color-white">
 					<?php
 						esc_html_e( 'Lesson: ', 'tutor' );
 						the_title();
@@ -69,7 +69,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 				<?php
 					do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' );
 				?>
-				<div class="tutor-fs-7 tutor-color-design-white">
+				<div class="tutor-fs-7 tutor-color-white">
 					<?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
 						<span class="tutor-progress-content tutor-color-primary-60">
 							<?php _e( 'Your Progress:', 'tutor' ); ?>
@@ -94,15 +94,15 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 			<div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
 				<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 				<a href="<?php echo get_the_permalink( $course_id ); ?>">
-					<span class="tutor-icon-line-cross-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+					<span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 				</a>
 			</div>
 		</div>
 	</div>
 	<div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
-		<div class="tutor-mobile-top-nav tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+		<div class="tutor-mobile-top-nav tutor-d-flex tutor-align-items-center tutor-justify-between">
 			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
-				<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
+				<span class="tutor-top-nav-icon tutor-icon-previous design-lightgrey"></span>
 			</a>
 			<div class="tutor-top-nav-title tutor-fs-6 tutor-color-black">
 				<?php
@@ -112,21 +112,21 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 			<div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-sm-none tutor-d-flex tutor-d-sm-none">
 				<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 				<a href="<?php echo get_the_permalink( $course_id ); ?>">
-					<span class="tutor-icon-line-cross-line tutor-icon-28 tutor-color-primary tutor-d-flex tutor-align-items-center"></span>
+					<span class="tutor-icon-times tutor-color-primary tutor-d-flex tutor-align-items-center"></span>
 				</a>
 			</div>
 		</div>
 	</div>
 <?php else : ?>
-	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
 		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-				<span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+				<span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 			</a>
 		</div>
 		<div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
-			<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-white tutor-mr-4"></span>
-			<span class="tutor-fs-7 tutor-color-design-white">
+			<span class="tutor-icon-brand-youtube-bold tutor-color-white tutor-mr-8"></span>
+			<span class="tutor-fs-7 tutor-color-white">
 				<?php
 					esc_html_e( 'Lesson: ', 'tutor' );
 					the_title();
@@ -137,7 +137,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 		<div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
 			<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 			<a href="<?php echo get_the_permalink( $course_id ); ?>">
-				<span class="tutor-icon-line-cross-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
+				<span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 			</a>
 		</div>
 	</div>
@@ -150,7 +150,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 	<?php if($previous_id): ?>
 		<div class="tutor-single-course-content-prev tutor-d-flex tutor-align-items-center">
 			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
-				<span class="tutor-icon-angle-left-filled" area-hidden="true"></span>
+				<span class="tutor-icon-angle-left" area-hidden="true"></span>
 			</a>
 		</div>
 	<?php endif; ?>
@@ -158,7 +158,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 	<?php if($next_id): ?>
 		<div class="tutor-single-course-content-next tutor-d-flex tutor-align-items-center">
 			<a href="<?php echo get_the_permalink( $next_id ); ?>">
-				<span class="tutor-icon-angle-right-filled" area-hidden="true"></span>
+				<span class="tutor-icon-angle-right" area-hidden="true"></span>
 			</a>
 		</div>
 	<?php endif; ?>
@@ -180,50 +180,59 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 </style>
 
 <div class="tutor-course-spotlight-wrapper">
-	<div class="tutor-spotlight-tab tutor-default-tab tutor-course-details-tab">
-		<div class="tab-header tutor-d-flex justify-content-center">
-			<div class="tab-header-item tutor-d-flex tutor-align-items-center<?php echo ( ! isset( $page_tab ) || 'overview' == $page_tab ) ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-1" data-tutor-query-string="overview">
-				<span class="tutor-icon-document-alt-filled"></span>
+	<ul class="tutor-nav tutor-course-spotlight-nav tutor-justify-center">
+        <li class="tutor-nav-item">
+            <a href="#" class="tutor-nav-link<?php echo ( ! isset( $page_tab ) || 'overview' == $page_tab ) ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-overview" data-tutor-query-variable="page_tab" data-tutor-query-value="overview">
+				<span class="tutor-icon-document-text tutor-mr-8" area-hidden="true"></span>
 				<span><?php _e( 'Overview', 'tutor' ); ?></span>
-			</div>
-			<div class="tab-header-item tutor-d-flex tutor-align-items-center<?php echo 'files' == $page_tab ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-2" data-tutor-query-string="files">
-				<span class="tutor-icon-attach-filled"></span>
+			</a>
+        </li>
+
+        <li class="tutor-nav-item">
+            <a href="#" class="tutor-nav-link<?php echo 'files' == $page_tab ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-files" data-tutor-query-variable="page_tab" data-tutor-query-value="files">
+				<span class="tutor-icon-paperclip tutor-mr-8" area-hidden="true"></span>
 				<span><?php _e( 'Exercise Files', 'tutor' ); ?></span>
-			</div>
-			<?php if ( $is_comment_enabled ) : ?>
-				<div class="tab-header-item tutor-d-flex tutor-align-items-center<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-3" data-tutor-query-string="comments">
-					<span class="tutor-icon-comment-filled"></span>
-					<span><?php _e( 'Comments', 'tutor' ); ?></span>
+			</a>
+        </li>
+
+		<?php if ( $is_comment_enabled ) : ?>
+		<li class="tutor-nav-item">
+            <a href="#" class="tutor-nav-link<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-comments" data-tutor-query-variable="page_tab" data-tutor-query-value="comments">
+				<span class="tutor-icon-comment tutor-mr-8" area-hidden="true"></span>
+				<span><?php _e( 'Comments', 'tutor' ); ?></span>
+			</a>
+        </li>
+		<?php endif; ?>
+    </ul>
+
+	<div class="tutor-tab tutor-course-spotlight-tab">
+		<div id="tutor-course-spotlight-overview" class="tutor-tab-item<?php echo ( ! isset( $page_tab ) || 'overview' == $page_tab ) ? ' is-active' : ''; ?>">
+			<div class="tutor-container">
+				<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
+					<?php _e( 'About Lesson', 'tutor' ); ?>
 				</div>
-			<?php endif; ?>
+				<div class="tutor-fs-6 tutor-color-secondary" style="min-height: 300px;">
+					<?php the_content(); ?>
+				</div>
+			</div>
 		</div>
-		<div class="tab-body">
-			<div class="tab-body-item<?php echo (!isset($page_tab) || 'overview'==$page_tab) ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-1" data-tutor-query-string-content="overview">
-				<div class="tutor-container tutor-pb-32">
-					<div class="tutor-fs-5 tutor-fw-medium tutor-color-black">
-						<?php _e( 'About Lesson', 'tutor' ); ?>
-					</div>
-					<div class="tutor-fs-6 tutor-color-black-60 tutor-mt-12" style="min-height:293px;">
-						<?php the_content(); ?>
-					</div>
-				</div>
+
+		<div id="tutor-course-spotlight-files" class="tutor-tab-item<?php echo 'files' == $page_tab ? ' is-active' : ''; ?>">
+			<div class="tutor-container">
+				<div class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php _e( 'Exercise Files', 'tutor' ); ?></div>
+				<?php get_tutor_posts_attachments(); ?>
 			</div>
-			<div class="tab-body-item<?php echo 'files'==$page_tab ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-2" data-tutor-query-string-content="files">
-				<div class="tutor-container">
-					<div class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php _e( 'Exercise Files', 'tutor' ); ?></div>
-					<?php get_tutor_posts_attachments(); ?>
-				</div>
-			</div>
-			<?php if ( $is_comment_enabled ) : ?>
-				<div class="tab-body-item<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-3" data-tutor-query-string-content="comments">
-					<div class="tutor-container">
-						<div class="tutor-course-spotlight-comments">
-							<?php require __DIR__ . '/comment.php'; ?>
-						</div>
-					</div>
-				</div>
-			<?php endif; ?>
 		</div>
+		
+		<?php if ( $is_comment_enabled ) : ?>
+		<div id="tutor-course-spotlight-comments" class="tutor-tab-item<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>">
+			<div class="tutor-container">
+				<div class="tutor-course-spotlight-comments">
+					<?php require __DIR__ . '/comment.php'; ?>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
 	</div>
 </div>
 

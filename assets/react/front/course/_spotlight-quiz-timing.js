@@ -87,12 +87,12 @@ window.jQuery(document).ready($=>{
 										$(alertDiv).addClass('time-over');
 									}
 									if (
-										$(`${alertDiv} .flash-info span:first-child`).hasClass('tutor-icon-warning-outline-circle-filled')
+										$(`${alertDiv} .flash-info span:first-child`).hasClass('tutor-icon-circle-info')
 									) {
 										$(`${alertDiv} .flash-info span:first-child`).removeClass(
-											'tutor-icon-warning-outline-circle-filled'
+											'tutor-icon-circle-info'
 										);
-										$(`${alertDiv} .flash-info span:first-child`).addClass('tutor-icon-cross-circle-outline-filled');
+										$(`${alertDiv} .flash-info span:first-child`).addClass('tutor-icon-circle-times-line');
 									}
 									$tutor_quiz_time_update.toggleClass('tutor-quiz-time-expired');
 									$('#tutor-start-quiz').hide();

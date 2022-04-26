@@ -3,9 +3,8 @@
 		list-style: none;
 		margin: 0px 0 20px;
 		padding: 25px 0;
-		// border-right: 1px solid #dcdfe5;
 		margin-right: 15px;
-		// margin-left: -5px;
+		
 		a {
 			&,
 			&:hover,
@@ -15,125 +14,35 @@
 				opacity: 1 !important;
 			}
 
-			// &::before {
-			// 	content: '\e968';
-			// 	font-family: 'tutor' !important;
-			// 	speak: none;
-			// 	font-style: normal;
-			// 	font-weight: normal;
-			// 	font-variant: normal;
-			// 	text-transform: none;
-			// 	line-height: inherit;
-			// 	-webkit-font-smoothing: antialiased;
-			// 	-moz-osx-font-smoothing: grayscale;
-			// 	vertical-align: middle;
-			// 	color: var(--tutor-primary-color);
-			// 	opacity: 1;
-			// 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=60)';
-			// 	font-size: 20px;
-			// 	margin-right: 10px;
-			// }
-
 			&:hover {
 				&::before {
 					opacity: 1;
-					color: var(--tutor-primary-hover-color);
+					color: var(--tutor-color-primary-hover);
 				}
 			}
 		}
 
 		li {
 			a {
-				// display: block;
-				padding: 7px 20px;
+				padding: 8px 20px;
 
 				&:hover {
-					background-color: #edf0f9;
+					background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
 				}
 			}
 
 			&.active a {
-				background-color: var(--tutor-primary-color);
-				color: var(--tutor-primary-text-color);
+				background-color: var(--tutor-color-primary);
+				color: var(--tutor-color-white);
 
 				&:hover {
-					background-color: var(--tutor-primary-hover-color);
+					background-color: var(--tutor-color-primary-hover);
 				}
 
 				&::before {
-					// color: var(--tutor-primary-hover-color);
-					color: var(--tutor-primary-text-color);
+					color: var(--tutor-color-white);
 				}
 			}
-
-			// Icons
-			// &.tutor-dashboard-menu-bio a:before,
-			// &.tutor-dashboard-menu-my-profile a:before {
-			// 	content: '\e963';
-			// }
-
-			// &.tutor-dashboard-menu-enrolled-courses a:before {
-			// 	content: '\e969';
-			// }
-
-			// &.tutor-dashboard-menu-courses_taken a:before,
-			// &.tutor-dashboard-menu-my-courses a:before {
-			// 	content: '\e965';
-			// }
-
-			// &.tutor-dashboard-menu-announcements a:before {
-			// 	content: '\e93f';
-			// }
-
-			// &.tutor-dashboard-menu-wishlist a:before {
-			// 	content: '\e908';
-			// }
-
-			// &.tutor-dashboard-menu-reviews a:before {
-			// 	content: '\e917';
-			// }
-
-			// &.tutor-dashboard-menu-my-quiz-attempts a:before {
-			// 	content: '\e9ab';
-			// }
-
-			// &.tutor-dashboard-menu-quiz-attempts a:before {
-			// 	content: '\e91f';
-			// }
-
-			// &.tutor-dashboard-menu-question-answer a:before {
-			// 	content: '\e948';
-			// }
-
-			// &.tutor-dashboard-menu-earning a:before {
-			// 	content: '\e96b';
-			// }
-
-			// &.tutor-dashboard-menu-withdraw a:before {
-			// 	content: '\e960';
-			// }
-			// &.tutor-dashboard-menu-settings a:before {
-			// 	content: '\e961';
-			// }
-			// &.tutor-dashboard-menu-logout a:before {
-			// 	content: '\e962';
-			// }
-
-			// &.tutor-dashboard-menu-purchase_history a:before {
-			// 	content: '\e964';
-			// }
-			// &.tutor-dashboard-menu-assignments a:before {
-			// 	content: '\e98b';
-			// }
-			// &.tutor-dashboard-menu-zoom a:before {
-			// 	content: '\e9b1';
-			// }
-			// &.tutor-dashboard-menu-analytics a:before {
-			// 	content: '\e9b2';
-			// }
-			// &.tutor-dashboard-menu-calendar a:before {
-			// 	content: '\e9b3';
-			// }
 		}
 	}
 
@@ -145,22 +54,18 @@
 			border-top-left-radius: 4px;
 			border-bottom-left-radius: 4px;
 			@extend .tutor-text-regular-body;
-			color: $black-main;
+			color: var(--tutor-color-body);
 		}
 		&-icon {
-			@extend .tutor-icon-30;
-			color: var(--tutor-primary-color);
-			width: 30px;
-			height: 30px;
-		}
-		&-text {
+			font-size: 24px;
+			color: var(--tutor-color-primary);
 		}
 
 		&.active {
 			a {
-				color: $text-white;
+				color:var(--tutor-color-white);
 				.tutor-dashboard-menu-item-icon {
-					color: $text-white;
+					color: var(--tutor-color-white);
 				}
 			}
 		}
@@ -201,20 +106,6 @@
 			top: 0;
 			border-right: 1px solid #dcdfe5;
 			z-index: 1;
-		}
-	}
-	@include breakpoint-max(desktop-lg) {
-		.tutor-dashboard-menu-item-link {
-			font-size: 14px;
-		}
-
-		.tutor-dashboard-menu-item-icon {
-			font-size: 24px;
-			display: flex;
-			align-items: center;
-		}
-		.tutor-dashboard-menu-item-text {
-			margin-left: 0;
 		}
 	}
 }

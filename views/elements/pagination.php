@@ -10,7 +10,7 @@
 if (isset($data['total_items']) && $data['total_items']) : ?>
 	<nav class="tutor-ui-pagination tutor-ui-pagination-<?php echo is_admin() ? 'wp' : 'fd'; ?>">
 		<div classs="tutor-pagination-hints">
-			<div class="tutor-fs-7 tutor-color-black-60">
+			<div class="tutor-fs-7 tutor-color-secondary">
 				<?php esc_html_e('Page', 'tutor'); ?>
 				<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 					<?php echo esc_html($data['paged']); ?>
@@ -35,8 +35,8 @@ if (isset($data['total_items']) && $data['total_items']) : ?>
 					'format'    => '?paged=%#%',
 					'current'   => $paged,
 					'total'     => $per_page ? ceil($data['total_items'] / $per_page) : 1,
-					'prev_text' => '<span class="tutor-icon-angle-left-filled"></span>',
-					'next_text' => '<span class="tutor-icon-angle-right-filled"></span>',
+					'prev_text' => '<span class="tutor-icon-angle-left"></span>',
+					'next_text' => '<span class="tutor-icon-angle-right"></span>',
 				)
 			);
 			?>

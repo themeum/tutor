@@ -16,10 +16,9 @@ window.jQuery(document).ready(($) => {
             buttons: {
                 reset: {
                     title: __('Reset Data', 'tutor'),
-                    class: 'tutor-btn tutor-is-outline tutor-is-default',
+                    class: 'tutor-btn tutor-btn-primary',
 
                     callback: function (button) {
-
                         $.ajax({
                             url: window._tutorobject.ajaxurl,
                             type: 'POST',
@@ -28,7 +27,7 @@ window.jQuery(document).ready(($) => {
                                 course_id: course_id,
                             },
                             beforeSend: () => {
-                                button.prop('disabled', true).addClass('tutor-updating-message');
+                                button.prop('disabled', true).addClass('is-loading');
                             },
                             success: function (response) {
                                 if (response.success) {
@@ -38,14 +37,16 @@ window.jQuery(document).ready(($) => {
                                 }
                             },
                             complete: function () {
-                                button.prop('disabled', false).removeClass('tutor-updating-message');
+                                button.prop('disabled', false).removeClass('is-loading');
                             }
                         });
                     }
                 },
+
                 keep: {
                     title: __('Keep Data', 'tutor'),
-                    class: 'tutor-btn',
+                    class: 'tutor-btn tutor-btn-outline-primary tutor-ml-20',
+                    attr: 'data-tutor-modal-close',
                     callback: function () {
                         window.location.assign(url);
                     }
@@ -53,7 +54,7 @@ window.jQuery(document).ready(($) => {
             }
         };
 
-        new window.tutor_popup($, 'icon-gear', 40).popup(data);
+        new window.tutor_popup($, 'icon-gear').popup(data);
     });
 });
 

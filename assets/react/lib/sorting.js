@@ -16,23 +16,23 @@ window.addEventListener('DOMContentLoaded', function() {
 			// If a-to-z icon
 			if (icon) {
 				// swap class name to change icon
-				if (icon.classList.contains('tutor-icon-ordering-a-to-z-filled')) {
-					icon.classList.remove('tutor-icon-ordering-a-to-z-filled');
-					icon.classList.add('tutor-icon-ordering-z-to-a-filled');
+				if (icon.classList.contains('tutor-icon-ordering-a-z')) {
+					icon.classList.remove('tutor-icon-ordering-a-z');
+					icon.classList.add('tutor-icon-ordering-z-a');
 				} else {
-					icon.classList.remove('tutor-icon-ordering-z-to-a-filled');
-					icon.classList.add('tutor-icon-ordering-a-to-z-filled');
+					icon.classList.remove('tutor-icon-ordering-z-a');
+					icon.classList.add('tutor-icon-ordering-a-z');
 				}
 			} else {
 				// swap class name to change icon
 				// Order up-down-icon
 				const icon = currentTarget.querySelector('.up-down-icon');
-				if (icon.classList.contains('tutor-icon-order-down-filled')) {
-					icon.classList.remove('tutor-icon-order-down-filled');
-					icon.classList.add('tutor-icon-order-up-filled');
+				if (icon.classList.contains('tutor-icon-order-down')) {
+					icon.classList.remove('tutor-icon-order-down');
+					icon.classList.add('tutor-icon-order-up');
 				} else {
-					icon.classList.remove('tutor-icon-order-up-filled');
-					icon.classList.add('tutor-icon-order-down-filled');
+					icon.classList.remove('tutor-icon-order-up');
+					icon.classList.add('tutor-icon-order-down');
 				}
 			}
 			Array.from(tbody.querySelectorAll('tr:not(.tutor-do-not-sort)'))

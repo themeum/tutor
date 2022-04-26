@@ -1,33 +1,17 @@
 // Variables
 
-$enable-negative-margins:     false !default;
+$enable-negative-margins:     true !default;
 $enable-grid-classes:         true !default;
-$enable-cssgrid:              false !default;
 $variable-prefix:             tutor- !default;
 $enable-important-utilities:  false !default;
 
-// scss-docs-start spacer-variables-maps
-$spacer: 1rem !default;
-$spacers: (
-  0: 0,
-  1: $spacer * .5,
-  2: $spacer,
-  3: $spacer * 1.5,
-  4: $spacer * 2,
-  5: $spacer * 3,
-) !default;
-
-$negative-spacers: if($enable-negative-margins, negativify-map($spacers), null) !default;
-// scss-docs-end spacer-variables-maps
-
-// scss-docs-start grid-breakpoints
 $grid-breakpoints: (
   xs: 0,
   sm: 576px,
   md: 768px,
   lg: 992px,
   xl: 1200px,
-  xxl: 1400px
+  // xxl: 1400px
 ) !default;
 // scss-docs-end grid-breakpoints
 
@@ -45,7 +29,7 @@ $container-max-widths: (
   md: 720px,
   lg: 960px,
   xl: 1140px,
-  xxl: 1320px
+  // xxl: 1320px
 ) !default;
 // scss-docs-end container-max-widths
 
@@ -60,7 +44,15 @@ $grid-columns:                12 !default;
 $grid-gutter-width:           1.5rem !default;
 $grid-row-columns:            6 !default;
 
-$gutters: $spacers !default;
+$gutter: 1rem !default;
+$gutters: (
+  0: 0,
+  1: $gutter * .5,
+  2: $gutter,
+  3: $gutter * 1.5,
+  4: $gutter * 2,
+  5: $gutter * 3,
+) !default;
 
 // Container padding
 
@@ -100,6 +92,8 @@ $utility-spacers: (
   76: $utility-spacer * 19,
   80: $utility-spacer * 20,
 ) !default;
+
+$negative-utility-spacers: negativify-map($utility-spacers);
 
 // scss-docs-start font-sizes
 $font-sizes: (

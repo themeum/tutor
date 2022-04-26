@@ -19,7 +19,7 @@
 			<span class="delete-btn" style="<?php echo ! $media_url ? 'display:none' : ''; ?>"></span>
 		</div>
 		<div class="thumbnail-input">
-			<p class="tutor-fs-6 tutor-color-black-60">
+			<div class="tutor-fs-6 tutor-color-secondary">
 			<?php
 				if ( isset($data['desc']['file_size']) ) {
 					printf( __( 'Size: <span class="tutor-fs-7 tutor-fw-medium">%s</span>', 'tutor' ), esc_attr( $data['desc']['file_size'] ) );
@@ -35,10 +35,10 @@
 					printf( __( 'File Support: <span class="tutor-fs-7 tutor-fw-medium">%s</span>', 'tutor' ), 'jpg, .jpeg,. gif, or .png.' );
 				}
 				?>
-			</p>
+			</div>
 
-			<button type="button" class="tutor-btn tutor-btn-primary tutor-is-sm tutor-mt-16 tutor-thumbnail-upload-button">
-				<span class="tutor-btn-icon tutor-icon-image-filled"></span>
+			<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-mt-16 tutor-thumbnail-upload-button">
+				<span class="tutor-icon-image-landscape tutor-mr-8" area-hidden="true"></span>
 				<span><?php _e( 'Upload Image', 'tutor' ); ?></span>
 			</button>
 		</div>

@@ -30,14 +30,14 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 		<?php if ( current_user_can( tutor()->instructor_role ) ) : ?>
 			<div class="tutor-mb-32">
 				<ul class="tutor-nav">
-					<li class="tutor-nav-item is-active">
-						<a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ); ?>"> 
+					<li class="tutor-nav-item">
+						<a class="tutor-nav-link is-active" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ); ?>"> 
 							<?php _e( 'Received', 'tutor' ); ?> (<?php echo $reviews->count; ?>)
 						</a> 
 					</li>
 					<?php if ( $given_count ) : ?>
 						<li class="tutor-nav-item"> 
-							<a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ); ?>"> 
+							<a class="tutor-nav-link" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ); ?>"> 
 								<?php _e( 'Given', 'tutor' ); ?> (<?php echo $given_count; ?>)
 							</a> 
 						</li>
@@ -51,17 +51,17 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 				<thead>
 					<tr>
 						<th>
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Student', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-fs-7 tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-secondary">
 								<?php esc_html_e( 'Feedback', 'tutor' ); ?>
 							</div>
 						</th>
@@ -94,13 +94,13 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 							</td>
 							<td data-th="<?php esc_html_e( 'Feedback', 'tutor' ); ?>">
 								<div class="td-feedback">
-									<div class="td-tutor-rating tutor-fs-6 tutor-color-black-60">
+									<div class="td-tutor-rating tutor-fs-6 tutor-color-secondary">
 										<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?>
 									</div>
-									<div class="tutor-fs-6 tutor-color-black-60 tutor-mt-12">
+									<div class="tutor-fs-6 tutor-color-secondary tutor-mt-12">
 										<?php echo htmlspecialchars( stripslashes( $review->comment_content ) ); ?>
 									</div>
-									<div class="course-name tutor-fs-7 tutor-color-black-70 tutor-mb-0">
+									<div class="course-name tutor-fs-7 tutor-color-secondary tutor-mb-0">
 										<span class="tutor-fs-8 tutor-fw-medium"><?php esc_html_e( 'Course', 'tutor' ); ?>:</span>&nbsp;
 										<span data-href="<?php echo esc_url( get_the_permalink( $review->comment_post_ID ) ); ?>">
 											<?php esc_html_e( get_the_title( $review->comment_post_ID ) ); ?>

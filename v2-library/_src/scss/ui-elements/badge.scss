@@ -3,7 +3,7 @@
 	padding: 0 8px;
 	line-height: 21px;
 	font-size: 13px;
-	color: var(--tutor-white);
+	color: var(--tutor-color-white);
 	border-radius: 2px;
 	font-weight: 700;
 	box-sizing: border-box;
@@ -33,45 +33,33 @@
 		font-size: 16px;
 		line-height: 26px;
 		font-weight: 400;
-		color: var(--tutor-text-hints);
+		color: var(--tutor-color-muted);
 		h5 {
 			margin: 0;
 			font-size: 24px;
 			line-height: 34px;
 			font-weight: 400;
-			color: var(--tutor-text-primary);
+			color: var(--tutor-body-color);
 		}
 	}
 }
 
 .tutor-floating-badge {
-	@extend .d-inline-block;
-	@extend .tutor-bg-danger;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--tutor-color-danger);
 	position: absolute;
-	left: 100%;
-	top: 0;
-	line-height: 15px;
-	min-width: 16px;
-	font-size: 11px;
-	border-radius: 100px;
-	transform: translateX(-50%) translateY(-50%);
-	padding: 1px 3px 0;
+	right: -4px;
+	top: -4px;
+	line-height: 1;
+	min-width: 20px;
+	min-height: 20px;
+	font-size: 12px;
+	border-radius: 40px;
+	padding: 0px 4px;
 	box-sizing: border-box;
 	color: #ffffff;
 	font-weight: 700;
-	text-align: center;
-}
-.tutor-btn-circle {
-	.tutor-floating-badge {
-		transform: translateX(-14px) translateY(-2px);
-	}
-	&.tutor-is-xs .tutor-floating-badge {
-		transform: translateX(-10px) translateY(-2px);
-	}
-	&.tutor-is-sm .tutor-floating-badge {
-		transform: translateX(-12px) translateY(-2px);
-	}
-	&.tutor-is-lg .tutor-floating-badge {
-		transform: translateX(-18px) translateY(-2px);
-	}
+	z-index: 1;
 }

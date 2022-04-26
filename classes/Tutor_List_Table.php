@@ -1376,7 +1376,7 @@ class Tutor_List_Table {
 					<div class="menu-label"><?php _e( 'Search', 'tutor' ); ?></div>
 					<div style="position:relative;">
 						<input type="text" name="search" class="tutor-report-search tutor-announcement-search-field" value="<?php echo esc_attr( $search_filter ); ?>" autocomplete="off" placeholder="<?php _e( 'Search', 'tutor' ); ?>" />
-						<button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass-1"></i></button>
+						<button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass"></i></button>
 					</div>
 				</div>
 

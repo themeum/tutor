@@ -39,7 +39,7 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
     
         <?php if ($is_instructor) : ?>
             <div class="tutor-col-auto">
-                <label class="tutor-form-toggle tutor-dashboard-qna-vew-as tutor-d-flex tutor-justify-content-end current-view-<?php echo $view_as == 'instructor' ? 'instructor' : 'student'; ?>">
+                <label class="tutor-form-toggle tutor-dashboard-qna-vew-as tutor-d-flex tutor-justify-end current-view-<?php echo $view_as == 'instructor' ? 'instructor' : 'student'; ?>">
                     <input type="checkbox" class="tutor-form-toggle-input" <?php echo $view_as == 'instructor' ? 'checked="checked"' : ''; ?> data-as_instructor_url="<?php echo $as_instructor_url; ?>" data-as_student_url="<?php echo $as_student_url; ?>" disabled="disabled" />
                     <span class="tutor-form-toggle-label tutor-form-toggle-<?php echo $view_as == 'student' ? 'checked' : 'unchecked'; ?>"><?php _e('Student', 'tutor'); ?></span>
                     <span class="tutor-form-toggle-control"></span>
@@ -53,7 +53,7 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
         <div class="tutor-row">
             <div class="tutor-col-lg-5">
                 <div class="tutor-qna-filter tutor-d-flex tutor-align-items-center">
-                    <span class="tutor-fs-7 tutor-color-black-60 tutor-mr-20"><?php _e('Sort By', 'tutor'); ?>:</span>
+                    <span class="tutor-fs-7 tutor-color-secondary tutor-mr-20"><?php _e('Sort By', 'tutor'); ?>:</span>
                     <div class="tutor-flex-grow-1">
                         <select class="tutor-form-select tutor-select-redirector">
                             <?php

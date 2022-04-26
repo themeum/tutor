@@ -173,7 +173,7 @@ if ( is_array( $attempt_info ) ) {
 
 ?>
 
-<?php echo is_admin() ? '<div class="wrap">' : ''; ?>
+<?php echo is_admin() ? '<div class="tutor-admin-body">' : ''; ?>
 <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts tutor-mb-32">
     <thead>
         <tr>
@@ -181,7 +181,7 @@ if ( is_array( $attempt_info ) ) {
                 foreach($table_1_columns as $key => $column) {
                     $class_name = join('-', explode(' ', strtolower($column)));
                     echo '<th class="'. $class_name .'">
-                            <span class="tutor-fs-7 tutor-color-black-60">'.
+                            <span class="tutor-fs-7 tutor-color-secondary">'.
                                 $column.
                             '</span>
                         </th>';
@@ -199,11 +199,11 @@ if ( is_array( $attempt_info ) ) {
                             <td data-th="<?php echo $column; ?>">
                                 <div class="td-avatar">
                                     <img src="<?php echo esc_url(get_avatar_url($user_id)); ?>" alt="<?php echo esc_attr($user->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
-                                    <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-text-nowrap">
+                                    <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-nowrap-ellipsis">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </div>
-                                    <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="btn-text btn-detail-link tutor-color-design-dark">
-                                        <span class="tutor-icon-detail-link-filled"></span>
+                                    <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="tutor-iconic-btn">
+                                        <span class="tutor-icon-external-link"></span>
                                     </a>
                                 </div>
                             </td>
@@ -355,7 +355,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
         <div class="tutor-in-title tutor-fs-6 tutor-fw-medium tutor-color-black">
             <?php esc_html_e( 'Instructor Note', 'tutor' ); ?>					
         </div>
-		<div class="tutor-in-body tutor-fs-6 tutor-color-black-60 tutor-pt-12 tutor-pt-sm-16">
+		<div class="tutor-in-body tutor-fs-6 tutor-color-secondary tutor-pt-12 tutor-pt-sm-16">
 			<?php echo wp_kses_post( $feedback ); ?>					
         </div>
 	</div>
@@ -372,7 +372,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                         <?php
                             foreach($table_2_columns as $key => $column) {
                                 $class_name = join('--', explode(' ', strtolower($column)));
-                                echo '<th class="'. $class_name .'"><span class="tutor-fs-7 tutor-color-black-60">'. $column .'</span></th>';
+                                echo '<th class="'. $class_name .'"><span class="tutor-fs-7 tutor-color-secondary">'. $column .'</span></th>';
                             }
                         ?>
                     </tr>
@@ -717,12 +717,12 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     
                                             case 'manual_review' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap">
-                                                    <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-text-success">
-                                                        <i class="tutor-icon-mark-filled tutor-icon-24"></i>
+                                                <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-nowrap-ellipsis">
+                                                    <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-color-success">
+                                                        <i class="tutor-icon-mark"></i>
                                                     </a>
-                                                    <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" data-context="<?php echo $context; ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-text-danger">
-                                                        <i class="tutor-icon-line-cross-line tutor-icon-24"></i>
+                                                    <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" data-context="<?php echo $context; ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-color-danger">
+                                                        <i class="tutor-icon-times"></i>
                                                     </a>
                                                 </td>
                                                 <?php

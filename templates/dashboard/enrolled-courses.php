@@ -46,10 +46,10 @@ $paginated_courses_list =  $full_courses_list_array[$active_tab];
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16 tutor-capitalize-text"><?php esc_html_e($page_tabs[$active_tab]); ?></div>
 <div class="tutor-dashboard-content-inner enrolled-courses">
 	<div class="tutor-mb-32">
-		<ul class="tutor-nav">
+		<ul class="tutor-nav" tutor-priority-nav>
 			<?php foreach ($page_tabs as $slug => $tab) : ?>
-				<li class="tutor-nav-item<?php echo $slug == $active_tab ? ' is-active' : ''; ?>">
-					<a href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink($slug)); ?>">
+				<li class="tutor-nav-item">
+					<a class="tutor-nav-link<?php echo $slug == $active_tab ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink($slug)); ?>">
 						<?php
 						echo esc_html($tab);
 
@@ -63,14 +63,14 @@ $paginated_courses_list =  $full_courses_list_array[$active_tab];
 			<?php endforeach; ?>
 
 			<li class="tutor-nav-item tutor-nav-more tutor-d-none">
-				<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="icon-seemore tutor-icon-line-cross-line"></span></a>
-				<ul class="tutor-nav-more-list"></ul>
+				<a class="tutor-nav-link tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="tutor-nav-more-icon tutor-icon-times"></span></a>
+				<ul class="tutor-nav-more-list tutor-dropdown"></ul>
 			</li>
 		</ul>
 	</div>
 
 	<?php if ($courses_list && $courses_list->have_posts()) : ?>
-		<div class="tutor-course-listing-grid tutor-course-listing-grid-3">
+		<div class="tutor-grid tutor-grid-3">
 			<?php
 			while ($courses_list->have_posts()) {
 

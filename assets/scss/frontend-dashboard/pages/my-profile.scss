@@ -7,13 +7,13 @@
 		&>div{
 
 			p {
-				color: $black-main;
+				color: var(--tutor-color-body);
 			}
 			&:first-child{
 				font-style: normal;
 				font-weight: normal;
 				font-size: 16px;
-				color: $black-60;
+				color: var(--tutor-color-secondary);
 			}
 
 			&:last-child{
@@ -36,7 +36,7 @@
 	&>div{
 		&:last-child{
 			p {
-				color: $black-60;
+				color: var(--tutor-color-secondary);
 			}
 		}
 	}

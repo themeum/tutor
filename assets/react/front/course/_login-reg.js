@@ -23,7 +23,7 @@ window.jQuery(document).ready(($) => {
 			type: 'POST',
 			data: form_data,
 			beforeSend: () => {
-				button.addClass('tutor-updating-message');
+				button.addClass('is-loading');
 				error_container.empty();
 			},
 			success: function(response) {
@@ -36,7 +36,7 @@ window.jQuery(document).ready(($) => {
 				error_container.html(`
                     <div class="tutor-alert tutor-warning tutor-mt-28">
                         <div class="tutor-alert-text">
-                            <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12"></span>
+                            <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-info tutor-mr-12"></span>
                             <span>
                                 ${error_message}
                             </span>
@@ -48,7 +48,7 @@ window.jQuery(document).ready(($) => {
 				tutor_toast(__('Error!', 'tutor'), get_response_message(), 'error');
 			},
 			complete: () => {
-				button.removeClass('tutor-updating-message');
+				button.removeClass('is-loading');
 			},
 		});
 	});

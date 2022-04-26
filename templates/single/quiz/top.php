@@ -100,6 +100,7 @@ do_action('tutor_quiz/single/before/top');
 				} 
 			?>
 		</div>
+		<!-- @todo: fix modal -->
 		<?php
 			if ($attempt_remaining > 0 || $attempts_allowed == 0) {
 				do_action('tuotr_quiz/start_form/before', $quiz_id);
@@ -117,17 +118,17 @@ do_action('tutor_quiz/single/before/top');
 						</button>
 					</form>
 
-					<button class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md skip-quiz-btn" data-tutor-modal-target="tutor-quiz-skip-to-next">
+					<button class="tutor-btn tutor-btn-outline-primary tutor-no-hover tutor-btn-md skip-quiz-btn" data-tutor-modal-target="tutor-quiz-skip-to-next">
 						<?php _e( 'Skip Quiz', 'tutor' ); ?>
 					</button>
 
 					<div id="tutor-quiz-skip-to-next" class="tutor-modal">
 						<span class="tutor-modal-overlay"></span>
 						<button data-tutor-modal-close class="tutor-modal-close">
-							<span class="tutor-icon-line-cross-line"></span>
+							<span class="tutor-icon-times"></span>
 						</button>
-						<div class="tutor-modal-root">
-							<div class="tutor-modal-inner">
+						<div class="tutor-modal-window">
+							<div class="tutor-modal-content">
 								<div class="tutor-modal-body tutor-text-center">
 									<div class="tutor-modal-icon">
 										<!-- <img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" /> -->
@@ -141,10 +142,10 @@ do_action('tutor_quiz/single/before/top');
 										</p>
 									</div>
 									<div class="tutor-modal-btns tutor-btn-group">
-										<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+										<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 											<?php esc_html_e('Cancel', 'tutor'); ?>
 										</button>
-										<a class="tutor-btn" href="<?php echo $skip_url; ?>">
+										<a class="tutor-btn tutor-btn-primary" href="<?php echo $skip_url; ?>">
 											<?php esc_html_e('Yes, Skip This', 'tutor'); ?>
 										</a>
 									</div>

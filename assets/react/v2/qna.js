@@ -16,6 +16,11 @@ window.jQuery(document).ready($=>{
     $(document).on('click', '.tutor-qna-badges-wrapper [data-action]', function(e){
         e.preventDefault();
         var $that = $(this);
+        
+        if($that.hasClass('is-loading')) {
+            return;
+        }
+
         let row = $(this).closest('tr');
         let qna_action = $(this).data('action');
         let question_id = $(this).closest('[data-question_id]').data('question_id');
@@ -32,7 +37,7 @@ window.jQuery(document).ready($=>{
                 action: 'tutor_qna_single_action'
             },
             beforeSend:() => {
-                $that.find('i').addClass('tutor-loading-spinner');
+                $that.addClass('is-loading');
             },
             success: resp=>{
                 if(!resp.success) {
@@ -41,8 +46,6 @@ window.jQuery(document).ready($=>{
                 }
 
                 const {new_value} = resp.data;
-
-                // Toggle class if togglable defined
                 if(button.data('state-class-0')) {
 
                     // Get toggle class
@@ -55,7 +58,6 @@ window.jQuery(document).ready($=>{
                     class_element[new_value==1 ? 'addClass' : 'removeClass']('active');
                 }
 
-                // Toggle text if togglable text defined
                 if(button.data('state-text-0')) {
 
                     // Get toggle text
@@ -75,7 +77,7 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete:()=>{
-                $that.find('i').removeClass('tutor-loading-spinner');
+                $that.removeClass('is-loading');
             }
         });
     });
@@ -106,8 +108,6 @@ window.jQuery(document).ready($=>{
         let back_url    = $(this).data('back_url');
 
         const btnInnerHtml = button.html().trim();
-        const { width : btnWidth, height : btnHeight } = button.get(0).getBoundingClientRect();
-        const btnStyles =  {width: `${btnWidth}px`, height: `${btnHeight}px`};
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -121,9 +121,7 @@ window.jQuery(document).ready($=>{
                 action: 'tutor_qna_create_update'
             },
             beforeSend: () =>{
-                // button.addClass('tutor-updating-message');
-                button.css(btnStyles);
-                button.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
+                button.addClass('is-loading');
             },
             success: resp => {
                 if(!resp.success) {
@@ -147,8 +145,7 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete: () =>{
-                button.html(btnInnerHtml)
-                // $('.tutor-qna-single-wrapper').find('.tutor-qa-reply').hide();
+                button.removeClass('is-loading');
             }
         })
     });

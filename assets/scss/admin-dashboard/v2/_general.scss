@@ -1,11 +1,14 @@
 // WordPress Notices
-#wpbody-content {
-	.notice.notice-error {
-		margin: 20px 20px 20px 0px !important;
+.tutor-screen-backend-settings {
+	#wpbody-content {
+		.notice.notice-error {
+			margin-bottom: 10px;
+		}
 	}
 }
 
 // Common Styles
+// email template editor
 .tutor-backend-settings-page {
 	p,
 	h1,
@@ -18,7 +21,7 @@
 	}
 
 	@extend .text-body;
-	color: var(--tutor-text-subsued);
+	color: var(--tutor-color-secondary);
 
 	// overflow-x: auto;
 
@@ -110,22 +113,10 @@
 	}
 }
 
-// .tutor-option-header .search-field,
-// .tutor-option-nav-pages {
-// 	max-width: 825px;
-// }
-// .tutor-option-header {
-// 	grid-template-columns: 1fr 2fr 1fr;
-// }
-
-// .tutor-option-form {
-// 	grid-template-columns: 1fr 5fr;
-// }
-
 .tutor-option-header {
 	align-items: center;
 	min-height: 60px;
-	background: var(--tutor-bg-white);
+	background: var(--tutor-color-white);
 	> div {
 		&:nth-child(3) {
 			justify-self: flex-end;
@@ -137,17 +128,13 @@
 		font-weight: 500;
 		font-size: 24px;
 		line-height: 34px;
-		color: var(--tutor-text-primary);
+		color: var(--tutor-body-color);
 	}
 	.tutor-input-group {
 		.tutor-form-control {
 			border: 1px solid #bababa;
 			border-radius: 6px;
 			height: 40px;
-		}
-		.tutor-input-group-icon {
-			height: 40px;
-			line-height: 40px;
 		}
 	}
 	.save-button {
@@ -176,8 +163,6 @@
 
 .tutor-option-body {
 	position: relative;
-	// z-index: 1;
-	// overflow-y: hidden;
 }
 
 .tutor-option-main-title {
@@ -187,24 +172,7 @@
 	margin-bottom: 15px;
 	h2 {
 		@extend .text-medium-h5;
-		color: var(--tutor-text-primary);
-	}
-	a,
-	.modal-reset-open {
-		font-weight: 500;
-		font-size: 15px;
-		line-height: 1.6;
-		color: #a3a3a3;
-		text-decoration: none;
-		display: flex;
-		align-items: center;
-		background: transparent;
-		border: none;
-		outline: none;
-		i {
-			margin-right: 5px;
-			font-size: 17px;
-		}
+		color: var(--tutor-body-color);
 	}
 }
 
@@ -212,9 +180,9 @@
 	h4 {
 		margin-bottom: 12px;
 	}
-	
+
 	.item-wrapper {
-		background: var(--tutor-bg-white);
+		background: var(--tutor-color-white);
 		border: 1px solid #d3d4d9;
 		box-sizing: border-box;
 		border-radius: 6px;
@@ -259,10 +227,10 @@
 					position: absolute;
 					inset: -13px -17px -1px -17px;
 					z-index: -1;
-					background: var(--tutor-black-05);
+					background: var(--tutor-color-gray-10);
 					border-radius: 6px 6px 0 0;
 					opacity: 0.8;
-					border: 1px solid var(--tutor-stroke-light-30);
+					border: 1px solid var(--tutor-border-color);
 				}
 			}
 		}
@@ -292,14 +260,14 @@
 		.tutor-option-field-row {
 			padding-top: 8px;
 			padding-bottom: 8px;
-			border-color: var(--tutor-stroke-light-30);
+			border-color: var(--tutor-border-color);
 			> div:nth-child(2) {
 				font-weight: 600;
 				word-break: break-word;
 			}
 			[class^='tutor-text'] {
 				&.success {
-					color: var(--tutor-text-success);
+					color: var(--tutor-color-success);
 				}
 			}
 		}
@@ -307,22 +275,22 @@
 
 	&.item-variation-dragndrop {
 		.item-wrapper {
-			background: var(--tutor-bg-white);
-			border: 1px solid var(--tutor-stroke-light-30);
+			background: var(--tutor-color-white);
+			border: 1px solid var(--tutor-border-color);
 			padding: 28px;
 			padding-bottom: 25px;
 		}
 		.drag-drop-zone {
-			@include getDashedBorder(2px, 18px, var(--tutor-primary-60));
-			background-color: var(--tutor-bg-white);
+			@include getDashedBorder(2px, 18px, rgba(var(--tutor-color-primary-rgb), 0.3));
+			background-color: var(--tutor-color-white);
 			border-radius: 6px;
 			text-align: center;
 			border-color: #bdcaf1;
-			color: var(--tutor-text-primary);
+			color: var(--tutor-body-color);
 			padding: 25px 30px 38px;
 
 			&.dragover {
-				box-shadow: inset 0 0 0 2px var(--tutor-black-20);
+				box-shadow: inset 0 0 0 2px var(--tutor-border-color);
 				transition: 100ms linear;
 
 				position: relative;
@@ -376,7 +344,7 @@
 				margin-top: 8px;
 				padding-left: 0;
 				> span {
-					color: var(--tutor-text-hints);
+					color: var(--tutor-color-muted);
 				}
 			}
 			label.tutor-btn.tutor-is-sm {
@@ -394,12 +362,6 @@
 					border-color: lighten(#3e64de, 36);
 				}
 			}
-
-			input[type='file']#drag-drop-input {
-				appearance: none;
-				-webkit-appearance: none;
-				display: none;
-			}
 		}
 	}
 } // end of .tutor-option-single-item
@@ -416,20 +378,18 @@
 	display: grid;
 	align-items: center;
 	justify-content: space-between;
-	// grid-template-columns: 2fr 1.1fr;
 	grid-auto-flow: column;
 	grid-gap: 30px;
 
-	&.tutor-d-block{
+	&.tutor-d-block {
 		display: block !important;
 	}
-	
-	&.tutor-d-block{
+
+	&.tutor-d-block {
 		display: block !important;
 	}
 
 	.tutor-option-field-input {
-		// min-width: 200px;
 		&.tutor-d-flex {
 			margin-top: 0px;
 		}
@@ -595,21 +555,21 @@
 				&:hover,
 				&:focus {
 					background: var(--tutor-brand-wordpress);
-					color: var(--tutor-text-white);
+					color: var(--tutor-color-white);
 				}
 				&:focus {
-					box-shadow: 0 0 0 3px var(--tutor-primary-lighter);
+					box-shadow: 0 0 0 3px rgba(var(--tutor-color-primary-rgb), 0.1);
 				}
 			}
 		}
-	} // end of of .row-variation-code
-} // end of ofof .tutor-option-field-row
+	}
+}
 
 .tutor-option-field-label {
 	label,
 	.label {
 		@extend .text-medium-body;
-		color: var(--tutor-text-primary);
+		color: var(--tutor-body-color);
 		display: block;
 	}
 	em {
@@ -702,7 +662,7 @@
 	// .logo-upload (delete icon)
 	.logo-upload {
 		margin-top: 12px;
-		background: var(--tutor-bg-white);
+		background: var(--tutor-color-white);
 		border: 1px solid #bababa;
 		border-radius: 6px;
 		padding: 20px;
@@ -714,21 +674,20 @@
 			height: 24px;
 			border-radius: 50%;
 			@include svg-delete-icon;
-			background-color: var(--tutor-design-danger);
+			background-color: var(--tutor-color-danger);
 			background-repeat: no-repeat;
 			background-position: 50%;
 			cursor: pointer;
 			top: -12px;
 			right: -12px;
 			&:hover {
-				// background-color: darken(var(--tutor-design-danger), 6);
-				background-color: darken($design-danger, 6);
+				background-color: darken($color-danger, 6);
 			}
 		}
 
 		.logo-preview {
-			background: var(--tutor-black-05);
-			border: 2px solid var(--tutor-black-05);
+			background: var(--tutor-color-gray-10);
+			border: 2px solid var(--tutor-color-gray-10);
 			border-radius: 3px;
 			position: relative;
 			margin-right: 38px;
@@ -792,7 +751,7 @@
 
 	.layout-label {
 		@include getTypography(400, 15px, 160%);
-		color: var(--tutor-text-primary);
+		color: var(--tutor-body-color);
 	}
 } // end of .tutor-option-field-input
 
@@ -875,7 +834,7 @@
 			color: grey;
 		}
 	}
-} // end of .tutor-option-field-input (Input field variations)
+}
 
 .tutor-option-nav-page.gradebook {
 	.tutor-option-single-item {
@@ -908,20 +867,20 @@
 			--padding: 13px;
 			&:not(:last-child) {
 				padding-bottom: var(--padding);
-				border-color: var(--tutor-stroke-light-30);
+				border-color: var(--tutor-border-color);
 			}
 			&:not(:first-child) {
 				padding-top: var(--padding);
 
 				.tutor-option-field-label:last-child {
-					color: var(--tutor-text-primary);
+					color: var(--tutor-body-color);
 				}
 			}
 		}
 	}
 
 	.tutor-option-field-label {
-		color: var(--tutor-text-subsued);
+		color: var(--tutor-color-secondary);
 		> p {
 			display: inline-flex;
 			align-items: center;
@@ -929,14 +888,14 @@
 		.icon-link {
 			text-decoration: none;
 			font-size: 16px;
-			color: var(--tutor-black-30);
+			color: var(--tutor-color-muted);
 			font-size: 24px;
 			margin-left: 2px;
 		}
 		.icon-check {
 			font-size: 16px;
 			background: var(--tutor-design-success);
-			color: var(--tutor-text-white);
+			color: var(--tutor-color-white);
 			border-radius: 50%;
 			margin-right: 2px;
 		}
@@ -951,7 +910,7 @@
 .loading-spinner {
 	position: absolute;
 	inset: 0;
-	background: var(--tutor-bg-gray-10);
+	background: var(--tutor-color-gray-10);
 	border-radius: 3px;
 	z-index: 10;
 
@@ -964,16 +923,6 @@
 }
 .loading-spinner.hide {
 	display: none;
-}
-
-.tutor-modal-confirmation {
-	&.tutor-modal .tutor-alert.tutor-warning:before {
-		display: none;
-	}
-
-	&.tutor-modal .tutor-alert.tutor-warning {
-		border-radius: 6px !important;
-	}
 }
 
 // tutor-ui-table-certificate-settings
@@ -989,7 +938,7 @@
 			cursor: pointer;
 			transition: background 0.3s ease;
 			&:hover {
-				background: var(--tutor-black-03);
+				background: var(--tutor-color-gray-10);
 			}
 		}
 	}

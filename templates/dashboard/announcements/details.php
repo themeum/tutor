@@ -2,11 +2,11 @@
 <div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-accouncement-details-modal">
     <div class="tutor-modal-content tutor-announcement-modal-content tutor-announcement-details-modal-content">
         <a href="#" class="tutor-announcement-close-btn">
-            <i class="tutor-icon-line-cross-line"></i>
+            <i class="tutor-icon-times"></i>
         </a>
         <div class="modal-container tutor-announcement-details-container">
             <div class="tutor-announcement-big-icon">
-                <i class="tutor-icon-speaker-filled"></i>
+                <i class="tutor-icon-bullhorn"></i>
             </div>
             <div class="tutor-announcement-detail-content">
             </div>

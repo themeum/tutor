@@ -73,19 +73,19 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 						<?php $rating_count_percent = ( $value > 0 ) ? ( $value * 100 ) / $rating->rating_count : 0; ?>
 						<div class="rating-numbers">
 							<div class="rating-progress">
-								<div class="tutor-ratings tutor-is-sm">
+								<div class="tutor-ratings">
 									<div class="tutor-rating-stars">
-										<span class="tutor-icon-star-line-filled"></span>
+										<span class="tutor-icon-star-line"></span>
 									</div>
 									<div class="tutor-rating-text  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 										<?php echo $key; ?>
 									</div>
 								</div>
-								<div class="progress-bar tutor-mt-12" style="--progress-value: <?php echo $rating_count_percent; ?>%">
-									<span class="progress-value"></span>
+								<div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value: <?php echo $rating_count_percent; ?>%">
+									<span class="tutor-progress-value" area-hidden="true"></span>
 								</div>
 							</div>
-							<div class="rating-num tutor-fs-7 tutor-color-black-60">
+							<div class="rating-num tutor-fs-7 tutor-color-secondary">
 								<?php
 									echo $value . ' ';
 									echo $value > 1 ? __( 'ratings', 'tutor' ) : __( 'rating', 'tutor' );
@@ -107,8 +107,8 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 	<div class="tutor-row tutor-mt-40 tutor-mb-20">
 		<div class="tutor-col">
 			<?php if($is_enrolled): ?>
-				<button class="tutor-btn write-course-review-link-btn">
-					<i class="tutor-icon-star-line-filled tutor-icon-24 tutor-mr-4"></i>
+				<button class="tutor-btn tutor-btn-primary write-course-review-link-btn">
+					<i class="tutor-icon-star-line tutor-mr-8"></i>
 					<?php
 						$is_new = !$my_rating || empty($my_rating->rating) || empty($my_rating->comment_content);
 						$is_new ? _e('Write a review', 'tutor') : _e('Edit review', 'tutor');
@@ -140,7 +140,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 </div>
 
 <?php if($is_enrolled): ?>
-	<div class="tutor-course-enrolled-review-wrap tutor-mt-16">
+	<div class="tutor-course-enrolled-review-wrap tutor-pt-16">
 		<div class="tutor-write-review-form" style="display: none;">
 			<form method="post">
 				<div class="tutor-star-rating-container">
@@ -148,15 +148,17 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 					<input type="hidden" name="review_id" value="<?php echo $my_rating ? $my_rating->comment_ID : ''; ?>"/>
 					<input type="hidden" name="action" value="tutor_place_rating"/>
 					<div class="tutor-form-group">
-						<?php
-							tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($my_rating ? $my_rating->rating : 0));
-						?>
+						<div class="tutor-ratings tutor-ratings-lg tutor-ratings-selectable" tutor-ratings-selectable>
+							<?php
+								tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($my_rating ? $my_rating->rating : 0));
+							?>
+						</div>
 					</div>
 					<div class="tutor-form-group">
 						<textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($my_rating ? $my_rating->comment_content : ''); ?></textarea>
 					</div>
 					<div class="tutor-form-group">
-						<button type="submit" class="tutor_submit_review_btn tutor-btn">
+						<button type="submit" class="tutor_submit_review_btn tutor-btn tutor-btn-primary">
 							<?php _e('Submit Review', 'tutor'); ?>
 						</button>
 					</div>

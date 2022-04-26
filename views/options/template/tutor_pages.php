@@ -14,7 +14,7 @@ $tutor_pages = tutor_utils()->tutor_pages();
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<p><?php _e('ID','tutor'); ?></p>
+				<?php _e('ID','tutor'); ?>
 			</div>
 			<div class="tutor-option-field-label">
 				<?php _e('Page Name','tutor'); ?>
@@ -29,41 +29,42 @@ $tutor_pages = tutor_utils()->tutor_pages();
 			?>
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<p class="tutor-fs-7 tutor-fw-medium"><?php echo $page_id; ?></p>
+				<div class="tutor-fs-7 tutor-fw-medium"><?php echo $page_id; ?></div>
 			</div>
 			<div class="tutor-option-field-label">
-				<?php
-					echo '<div class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-items-center">';
-
-					echo $page['page_name'];
-
-				if ( $page['page_exists'] ) {
-					$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-					echo "<a href='{$edit_url}' target='_blank' class='icon-link tutor-color-stroke-light-30 tutor-d-flex tutor-ml-4'><span class=' tutor-icon-detail-link-filled tutor-icon-24'></span></a>";
-				}
-					echo '</div>';
-				?>
+				<div class="tutor-fs-7 tutor-fw-medium">
+					<?php if ( $page['page_exists'] ) : ?>
+						<a class="tutor-btn tutor-btn-ghost" href="<?php echo admin_url( "post.php?post={$page_id}&action=edit" ); ?>" target='_blank'>
+							<?php echo $page['page_name']; ?>
+						</a>
+					<?php else : ?>
+						<?php echo $page['page_name']; ?>
+					<?php endif; ?>
+				</div>
 			</div>
 			<div class="tutor-option-field-label">
-				<?php
-				if ( $page['page_exists'] && $page['page_visible'] ) {
-					$page = get_post( $page_id );
-					echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='tutor-fs-7 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-center'><span class='icon-check tutor-icon-mark-cricle tutor-icon-20 tutor-color-design-success'></span>/{$page->post_name}</a>";
-				}
-				?>
+				<?php if($page['page_exists'] && $page['page_visible']) : ?>
+					<?php $page = get_post( $page_id ); ?>
+					<div class="tutor-d-flex tutor-align-items-center">
+						<span class='tutor-icon-circle-mark tutor-color-success'></span>
+						<span class='tutor-mx-4'>/</span>
+						<span><?php echo $page->post_name; ?></span>
+						<span class="tutor-ml-8"><a href="<?php echo get_permalink( $page ); ?>" class="tutor-iconic-btn" target="_blank"><i class="tutor-icon-external-link"></i></a></span>
+					</div>
+				<?php else : ?>
+					<span class='tutor-icon-circle-times-line tutor-color-warning'></span>
+				<?php endif; ?>
 			</div>
 		</div>
 		<?php } ?>
 	</div>
 </div>
 <div class="btn-wrap regenerate-pages">
-	<form action="" method="post">
+	<form method="post">
 		<?php
 		tutor_action_field( 'regenerate_tutor_pages' );
 		tutor_nonce_field();
 		?>
-		<p>
-			<button class="tutor-btn tutor-is-sm" type="submit"><?php esc_html_e( 'Re-Generate Tutor Pages', 'tutor' ); ?></button>
-		</p>
+		<button class="tutor-btn tutor-btn-primary" type="submit"><?php esc_html_e( 'Re-Generate Tutor Pages', 'tutor' ); ?></button>
 	</form>
 </div><br>

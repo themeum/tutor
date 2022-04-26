@@ -77,7 +77,7 @@ $args = $this->args;
 												<?php echo $field['label']; ?>
 											</label>
 											<?php if ( isset( $field['desc'] ) && 'Content Drip Type' === $field['label'] ) { ?>
-												<p class="tutor-input-feedback">
+												<p class="tutor-form-feedback">
 													<?php echo $field['desc']; ?>
 												</p>
 											<?php } ?>
@@ -89,14 +89,14 @@ $args = $this->args;
 									<?php
 										switch($field['type']) {
 											case 'number' :
-												echo '<input style="max-width:126px !important;" class="tutor-form-control" type="number" name="' . $field_key . '" value="' . $value . '"  min="0">';
+												echo '<input class="tutor-form-control" type="number" name="' . $field_key . '" value="' . $value . '"  min="0">';
 												break;
 
 												case 'radio' :
 													foreach($field['options'] as $value => $label) {
 														$id_string = 'course_setting_radio_' . (!empty($field['id']) ? $field['id'] : $value);
 														?>
-														<div class="tutor-form-check tutor-mt-20 tutor-mb-20 tutor-align-items-center">
+														<div class="tutor-form-check tutor-my-20 tutor-align-items-center">
 															<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input tutor-flex-shrink-0" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
 															<label for="<?php echo $id_string; ?>" class="tutor-fs-7 tutor-fw-medium tutor-fs-6">
 																<?php echo $label; ?>
@@ -136,10 +136,10 @@ $args = $this->args;
 
 														if(!empty($option['hint'])) {
 															?>
-															<p class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12">
-																<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-fs-5 tutor-mr-4"  style="margin-top: -1px;"></i>
+															<div class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12">
+																<i class="tutor-icon-circle-info-o tutor-mt-4 tutor-mr-8"></i>
 																<?php echo $option['hint']; ?>
-															</p>
+															</div>
 															<?php
 														}
 													}
@@ -167,10 +167,10 @@ $args = $this->args;
 
 										if ( isset( $field['desc'] ) && 'Content Drip Type' !== $field['label'] ) {
 											?>
-												<p class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12" style="margin-top: 14px;">
-													<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-fs-5 tutor-mr-4" style="margin-top: -1px;"></i>
+												<div class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12">
+													<i class="tutor-icon-circle-info-o tutor-mt-4 tutor-mr-8"></i>
 													<?php echo $field['desc']; ?>
-												</p>
+												</div>
 											<?php
 										}
 									?>

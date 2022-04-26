@@ -31,14 +31,14 @@
 		font-style: normal;
 		font-weight: normal;
 		font-size: 13px;
-		color: $text-muted;
+		color: var(--tutor-color-muted);
 
 		&:hover {
-			color: var(--tutor-primary-color);
+			color: var(--tutor-color-primary);
 		}
 
 		&.active {
-			border-bottom: 5px solid var(--tutor-primary-color);
+			border-bottom: 5px solid var(--tutor-color-primary);
 		}
 
 		&,

@@ -6,7 +6,7 @@ window.jQuery(document).ready($=>{
         let val = (original.val() || '').trim();
         let matched = val && $(this).val()===val;
         
-        $(this).next()[matched ? 'show' : 'hide']();
+        $(this).parent().find('.tutor-validation-icon')[matched ? 'show' : 'hide']();
     });
 
     $('.tutor-profile-password-reset').click(function(e){
@@ -22,7 +22,7 @@ window.jQuery(document).ready($=>{
             type: 'POST',
             data,
             beforeSend:()=>{
-                btn.addClass('tutor-updating-message');
+                btn.addClass('is-loading');
             },
             success:resp=>{
                 let {success} = resp;
@@ -35,7 +35,7 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete:()=>{
-                btn.removeClass('tutor-updating-message');
+                btn.removeClass('is-loading');
             }
         })
     });

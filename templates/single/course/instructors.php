@@ -17,62 +17,78 @@ do_action( 'tutor_course/single/enrolled/before/instructors' );
 
 $instructors = tutor_utils()->get_instructors_by_course();
 
-if($instructors && count($instructors)) {
-	?>
+if($instructors && count($instructors)) : ?>
 	<div class="tutor-mt-60">
 		<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
-			<?php _e( 'About the ' . ( count( (array) $instructors ) > 1 ? 'instructors' : 'instructor' ), 'tutor'); ?>
+			<?php echo _n( 'About the instructor', 'About the instructors', count( $instructors ), 'tutor' ); ?>
 		</h3>
+
 		<?php foreach($instructors as $instructor): ?>
-			<div class="tutor-instructor-info-card tutor-mb-16 tutor-break-word">
-				<div class="tutor-instructor-info-card-body tutor-d-sm-flex tutor-align-items-start tutor-px-32 tutor-py-24">
-					<div class="tutor-ins-avatar tutor-flex-shrink-0 tutor-mr-sm-16">
-						<img src="<?php echo get_avatar_url($instructor->ID); ?>" alt="instructor avatar" />
-					</div>
-					<div class="tutor-ins-rest">
-						<div class="tutor-ins-title  tutor-fs-6 tutor-fw-medium  tutor-color-black">
-							<a href="<?php echo tutor_utils()->profile_url($instructor->ID, true); ?>"><?php echo $instructor->display_name; ?></a>
-						</div>
-						<?php if ( ! empty($instructor->tutor_profile_job_title)): ?>
-							<div class="tutor-ins-designation tutor-fs-7 tutor-color-muted tutor-mt-4">
-								<?php echo $instructor->tutor_profile_job_title; ?>
+			<div class="tutor-instructor-info-card tutor-card tutor-mb-32">
+				<div class="tutor-card-body">
+					<div class="tutor-d-flex tutor-align-items-center">
+						<div class="tutor-avatar tutor-avatar-md tutor-mr-sm-16">
+							<div class="tutor-ratio tutor-ratio-1x1">
+								<img src="<?php echo get_avatar_url($instructor->ID); ?>" alt="instructor avatar" />
 							</div>
-						<?php endif; ?>
-						<div class="tutor-ins-summary tutor-fs-6 tutor-color-black-60 tutor-mt-20">
-							<?php echo htmlspecialchars($instructor->tutor_profile_bio); ?>
+						</div>
+
+						<div class="tutor-ml-16">
+							<div class="tutor-instructor-name tutor-fs-6 tutor-fw-medium">
+								<a class="tutor-color-black" href="<?php echo tutor_utils()->profile_url($instructor->ID, true); ?>"><?php echo $instructor->display_name; ?></a>
+							</div>
+							
+							<?php if ( ! empty($instructor->tutor_profile_job_title)): ?>
+								<div class="tutor-instructor-designation tutor-fs-7 tutor-color-muted tutor-break-word tutor-mt-4">
+									<?php echo $instructor->tutor_profile_job_title; ?>
+								</div>
+							<?php endif; ?>
+
+							<?php if (! empty($instructor->tutor_profile_bio) ) : ?>
+								<div class="tutor-instructor-summary tutor-fs-6 tutor-color-secondary tutor-mt-20">
+									<?php echo tutor_utils()->clean_html_content($instructor->tutor_profile_bio); ?>
+								</div>
+							<?php endif; ?>
 						</div>
 					</div>
 				</div>
-				<div class="tutor-instructor-info-card-footer tutor-d-sm-flex tutor-align-items-center tutor-justify-content-between tutor-px-32 tutor-py-16">
-					<?php 
-						$instructor_rating = tutor_utils()->get_instructor_ratings($instructor->ID);
-						tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); 
-					?>
-					<div class="tutor-ins-meta tutor-d-flex">
-						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center">
-							<span class="tutor-icon-30 tutor-icon-user-filled"></span>
-							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">
-								<?php echo tutor_utils()->get_total_students_by_instructor($instructor->ID); ?>
-							</span>
-							<span class="tutor-fs-7 tutor-color-black-60">
-								<?php _e('Students', 'tutor'); ?>
-							</span>
+
+				<div class="tutor-card-footer">
+					<div class="tutor-row">
+						<div class="tutor-col tutor-mb-12 tutor-mb-md-0">
+							<?php 
+								$instructor_rating = tutor_utils()->get_instructor_ratings($instructor->ID);
+								tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); 
+							?>
 						</div>
-						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center ">
-							<span class="tutor-icon-30 tutor-icon-mortarboard-line"></span>
-							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">
-								<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?>
-							</span>
-							<span class="tutor-fs-7 tutor-color-black-60">
-								<?php _e('Courses', 'tutor'); ?>
-							</span>
+						<div class="tutor-col-md-auto">
+							<div class="tutor-meta">
+								<div>
+									<span class="tutor-icon-user-line tutor-meta-icon tutor-color-black" area-hidden="true"></span>
+									<span class="tutor-meta-value">
+										<?php echo tutor_utils()->get_total_students_by_instructor($instructor->ID); ?>
+									</span>
+									<span>
+										<?php _e('Students', 'tutor'); ?>
+									</span>
+								</div>
+								
+								<div>
+									<span class="tutor-icon-mortarboard tutor-meta-icon tutor-color-black" area-hidden="true"></span>
+									<span class="tutor-meta-value">
+										<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?>
+									</span>
+									<span>
+										<?php _e('Courses', 'tutor'); ?>
+									</span>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>
-	<?php
-}
+<?php endif;
 
 do_action( 'tutor_course/single/enrolled/after/instructors' );

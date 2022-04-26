@@ -3,16 +3,14 @@
 @import './switch.scss';
 @import './color.scss';
 @import './toast.scss';
-@import './popup.scss';
 @import './ui-date-picker.scss';
-@import './dot-loader.scss';
 @import './slider-input';
 @import './input-tooltip';
 @import './layout';
 @import './rating.scss';
-@import './loading-spinner';
 @import './select2';
 
+// @todo: to be removed
 .tutorPlayer {
     &, iframe{
         width: 100%;

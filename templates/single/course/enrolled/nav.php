@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php do_action('tutor_course/single/enrolled/nav/before'); ?>
-<ul class="tutor-nav">
+<nav class="tutor-nav" tutor-priority-nav>
 	<?php
 		foreach ( $course_nav_item as $nav_key => $nav_item ) {
 			/**
@@ -27,15 +27,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 			 */
 			$default_active_key = apply_filters( 'tutor_default_topics_active_tab', 'info' );
 			?>
-				<li class="tutor-nav-item<?php echo $nav_key == $default_active_key ? ' is-active' : ''; ?>">
-					<a href="#" data-tutor-nav-target="tutor-course-details-tab-<?php echo $nav_key; ?>"><?php echo $nav_item['title']; ?></a>
+				<li class="tutor-nav-item">
+					<a class="tutor-nav-link<?php echo $nav_key == $default_active_key ? ' is-active' : ''; ?>" href="#" data-tutor-nav-target="tutor-course-details-tab-<?php echo $nav_key; ?>"><?php echo $nav_item['title']; ?></a>
 				</li>
 			<?php
 		}
 	?>
 	<li class="tutor-nav-item tutor-nav-more tutor-d-none">
-		<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4">More</span> <span class="icon-seemore tutor-icon-line-cross-line"></span></a>
-		<ul class="tutor-nav-more-list"></ul>
+		<a class="tutor-nav-link tutor-nav-more-item" href="#"><span class="tutor-mr-4">More</span> <span class="tutor-nav-more-icon tutor-icon-times"></span></a>
+		<ul class="tutor-nav-more-list tutor-dropdown"></ul>
 	</li>
-</ul>
+</nav>
 <?php do_action('tutor_course/single/enrolled/nav/after'); ?>

@@ -8,6 +8,8 @@
 	const colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
 	const colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
 	const pickerView = document.querySelectorAll('.color-picker-wrapper [data-key]');
+
+
 	const moreButton = document.querySelector('.more_button');
 
 	const otherColors = document.querySelector('.other_colors');
@@ -35,13 +37,13 @@
 				otherColors.classList.toggle('expanded');
 				if (otherColors.classList.contains('expanded')) {
 					otherColors.style.height = toggleHeight;
-					moreButton.querySelector('i').classList.remove('tutor-icon-plus-filled');
-					moreButton.querySelector('i').classList.add('tutor-icon-minus-filled');
+					moreButton.querySelector('i').classList.remove('tutor-icon-plus');
+					moreButton.querySelector('i').classList.add('tutor-icon-minus');
 					moreButton.querySelector('span').innerText = 'Show Less';
 				} else {
 					otherColors.style.height = initHeight - 10 + 'px';
-					moreButton.querySelector('i').classList.remove('tutor-icon-minus-filled');
-					moreButton.querySelector('i').classList.add('tutor-icon-plus-filled');
+					moreButton.querySelector('i').classList.remove('tutor-icon-minus');
+					moreButton.querySelector('i').classList.add('tutor-icon-plus');
 					moreButton.querySelector('span').innerText = 'Show More';
 				}
 			};

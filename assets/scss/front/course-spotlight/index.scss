@@ -1,19 +1,13 @@
 @import './players';
 
-.lesson-template-default {
-	.site-content {
-		padding-bottom: 0px;
-	}
-}
 .site-content {
-	padding-bottom: 0px;
+	padding-bottom: 0px !important;
 }
-
 .tutor-mobile-top-navigation {
 	.tutor-mobile-top-nav {
 		grid-template-columns: 30px auto;
 		.tutor-top-nav-icon {
-			font-size: 30px;
+			font-size: 20px;
 		}
 		.tutor-top-nav-title {
 			text-align: center;
@@ -24,38 +18,57 @@
 @import './sidebar';
 
 .tutor-course-single-content-wraper {
+	a {
+		text-decoration: none;
+	}
+
 	display: flex;
 	position: relative;
 	width: 100%;
 	align-items: flex-start;
+
+	// reset
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
 	a {
-		text-decoration: none;
-		color: inherit;
+		&,
+		&:hover,
+		&:active,
+		&:focus {
+			text-decoration: none;
+		}
 	}
-	a:focus,
-	a:hover {
-		opacity: 1;
-	}
+
 	input.tutor-form-check-input.tutor-form-check-circle {
 		width: 20px;
 		height: 20px;
 		margin-top: 1px;
 	}
+
 	.tutor-quiz-btn-grp {
 		button.skip-quiz-btn {
 			border: none;
 		}
 	}
+	
 	#tutor-single-entry-content {
 		position: relative;
 		flex: 100%;
-		height: calc(100vh - 100px);
+		height: 100vh;
 		overflow-x: hidden;
 		overflow-y: auto;
-		// border-left: 1px solid $stroke-light-30;
-		border-top: 1px solid $stroke-light-30;
+		border-left: 1px solid var(--tutor-border-color);
+		border-top: 1px solid var(--tutor-border-color);
+		padding-bottom: 100px;
 		.tutor-single-page-top-bar {
-			background: var(--tutor-primary-color);
+			background: var(--tutor-color-primary);
+			position: relative;
+			z-index: 1025;
+
 			@include breakpoint-max(mobile) {
 				display: none !important;
 			}
@@ -81,10 +94,9 @@
 				}
 			}
 			.tutor-topbar-sidebar-toggle {
-				background: var(--tutor-primary-color);
+				background: var(--tutor-color-primary);
 				span[class^='tutor-icon'] {
-					font-size: 30px;
-					font-weight: 800;
+					font-size: 20px;
 				}
 			}
 			.tutor-topbar-content-title-wrap {
@@ -95,11 +107,12 @@
 			}
 			.tutor-topbar-cross-icon {
 				cursor: pointer;
+				z-index: 1;
 				&:hover {
-					background: var(--tutor-primary-hover-color);
+					background: var(--tutor-color-primary-hover);
 				}
 				span[class^='tutor-icon'] {
-					font-size: 30px;
+					font-size: 20px;
 				}
 			}
 			.tutor-topbar-right-item {
@@ -109,26 +122,19 @@
 							display: none;
 						}
 					}
+
 					.tutor-topbar-complete-btn {
 						.tutor-topbar-mark-btn {
 							&:hover {
-								background-color: $color-white;
+								background-color: var(--tutor-color-white);
 								span {
-									color: $color-brand;
+									color: var(--tutor-color-primary);
 								}
-								border-color: $design-white;
+								border-color: var(--tutor-color-white);
 							}
 							background-color: transparent;
-							color: $design-white;
-							border-color: $design-white;
-							span.tutor-btn-content {
-								line-height: 100%;
-							}
-							@include breakpoint-minmax(576, 991) {
-								span.tutor-content-responsive {
-									display: none;
-								}
-							}
+							color: var(--tutor-color-white);
+							border-color: var(--tutor-color-white);
 						}
 					}
 				}
@@ -137,9 +143,9 @@
 		/* tutor-single-page-top-bar */
 		.tutor-mobile-footer-navigation {
 			height: 90px;
-			border: 1px solid $black-05;
+			border: 1px solid $color-gray-10;
 			box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
-			background: $color-white;
+			background: var(--tutor-color-white);
 			position: fixed;
 			bottom: 0;
 			left: 0;
@@ -150,10 +156,6 @@
 			}
 			.tutor-footer-content {
 				flex-basis: 70%;
-				.tutor-footer-progress-bar {
-					// border-bottom: 4px solid $primary-main;
-					// border-radius: 2px;
-				}
 			}
 			.tutor-quiz-skip-button {
 				flex-basis: 50%;
