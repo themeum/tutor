@@ -23,7 +23,7 @@ if ( empty( $materials ) ) {
 if ( is_array( $materials ) && count( $materials ) ) {
 	?>
 	<div class="tutor-course-details-widget tutor-mt-40">
-		<h3 class="tutor-course-details-widget-title tutor-fs-5 tutor-color-black tutor-fw-bold tutor-mb-16">
+		<h3 class="tutor-course-details-widget-title tutor-fs-5 tutor-mb-16">
 			<?php _e('Material Includes', 'tutor'); ?>
 		</h3>
 		<ul class="tutor-course-details-widget-list tutor-fs-6 tutor-color-black">
