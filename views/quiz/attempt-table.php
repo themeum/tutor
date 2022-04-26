@@ -4,12 +4,12 @@
 	$page_key      = 'attempt-table';
 	$table_columns = include __DIR__ . '/contexts.php';
 
-if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) && count( $attempt_list ) ) {
-	// Provide the attempt data from the first attempt
-	// For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
-	$attempt_data = $attempt_list[0];
-	include __DIR__ . '/header.php';
-}
+	if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) && count( $attempt_list ) ) {
+		// Provide the attempt data from the first attempt
+		// For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
+		$attempt_data = $attempt_list[0];
+		include __DIR__ . '/header.php';
+	}
 ?>
 
 <div class="tutor-ui-table-wrapper tutor-my-24">
@@ -20,7 +20,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 				<?php
 					foreach ( $table_columns as $key => $column ) {
 						echo '<th>
-								<div class="tutor-fs-7 tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-secondary">
 									' . $column . '
 								</div>
 							</th>';
@@ -104,7 +104,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 
 														?>
 																<div>
-																	<span class="tutor-fs-7 tutor-color-black-70">
+																	<span class="tutor-fs-7 tutor-color-secondary">
 																		<?php _e( 'Student', 'tutor' ); ?>
 																	</span>: <span class="tutor-fs-7 tutor-fw-medium"> <?php echo $user_name; ?> </span>
 																</div>
@@ -112,8 +112,8 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 														} else {
 														?>
 															<?php if(!empty($user_name) && isset( $attempt->user_email ) ) : ?>
-																<span class="tutor-fs-7 tutor-color-black-70"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
-																<span class="tutor-color-black-70 tutor-fs-8 tutor-fw-medium" title="<?php echo esc_attr( $attempt->user_email ); ?>">
+																<span class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
+																<span class="tutor-color-secondary tutor-fs-8 tutor-fw-medium" title="<?php echo esc_attr( $attempt->user_email ); ?>">
 																	<?php echo esc_attr( isset($attempt->display_name) ? $attempt->display_name : $user_name ); ?>
 																</span>
 
@@ -209,7 +209,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 									?>
 										<td data-th="See Details">
 											<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
-												<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+												<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 													<?php
 														if ( $has_pending && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
 															esc_html_e( 'Review', 'tutor' );

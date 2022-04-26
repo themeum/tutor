@@ -46,17 +46,17 @@
 		}
 	}
 	//rating style end
-	.tutor-star-rating-group {
-		i {
-			padding-right: 6px;
-			color: #ed9700 !important;
-		}
-	}
+	// .tutor-star-rating-group {
+	// 	i {
+	// 		padding-right: 6px;
+	// 		color: #ed9700 !important;
+	// 	}
+	// }
 	&.tutor-user-public-profile-no-cp {
 		.profile-name {
 			padding-left: 40px;
 			span {
-				color: $black-60 !important;
+				color: var(--tutor-color-secondary) !important;
 				font-weight: 400;
 			}
 		}
@@ -440,13 +440,13 @@
 			font-size: 24px !important;
 			line-height: 34px;
 			margin-top: 20px;
-			@extend .tutor-color-black;
+			color: var(--tutor-color-body);
 			&:first-child {
 				margin-top: 0;
 			}
 		}
 		p {
-			@extend .tutor-color-black-60;
+			color: var(--tutor-color-secondary);
 			font-size: 16px;
 			line-height: 28px;
 		}
@@ -488,13 +488,6 @@
 	}
 }
 
-.tutor-analytics-statements {
-	.tutor-react-datepicker .react-datepicker__input-container input {
-		margin-bottom: 0;
-		background: #ddd;
-	}
-}
-
 .tutor-analytics-students-wrapper {
 	display: grid;
 	grid-auto-flow: row;
@@ -502,9 +495,6 @@
 	@media (min-width: 992px) {
 		grid-template-columns: repeat(3, 1fr);
 		grid-gap: 30px;
-	}
-	.tutor-react-datepicker .react-datepicker__input-container input {
-		margin-bottom: 0;
 	}
 }
 

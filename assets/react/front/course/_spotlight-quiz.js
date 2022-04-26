@@ -26,7 +26,7 @@ window.jQuery(document).ready($=>{
                     var isTrue = quiz_answers.indexOf($input.val()) > -1; // $input.attr('data-is-correct') == '1';
                     if (!isTrue) {
                         if ($input.prop("checked")) {
-                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append(`<span class="wrong-right-text"><i class="tutor-icon-line-cross-line"></i> ${__('Incorrect, Please try again', 'tutor')}</span>`);
+                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append(`<span class="wrong-right-text"><i class="tutor-icon-times"></i> ${__('Incorrect, Please try again', 'tutor')}</span>`);
                         }
                         validatedTrue = false;
                     }
@@ -298,9 +298,14 @@ window.jQuery(document).ready($=>{
 
 	//warn user before leave page if quiz is running
 	var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
+    // @todo: check the button class functionality
 
     $(document).on('click', 'a',  function(event) {
         const href = $(this).attr('href');
+        // if user click on ask question then return, no warning.
+        if (event.target.classList.contains('sidebar-ask-new-qna-btn')) {
+            return;
+        }
 
         if ($tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.text() != 'EXPIRED') {
             event.preventDefault();
@@ -314,7 +319,7 @@ window.jQuery(document).ready($=>{
                     keep: {
                         title: __('Yes, leave quiz', 'tutor'),
                         id: 'leave',
-                        class: 'tutor-btn tutor-is-outline tutor-is-default',
+                        class: 'tutor-btn tutor-btn-outline-primary',
                         callback: function() {
                             var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
                             $.ajax({
@@ -341,7 +346,7 @@ window.jQuery(document).ready($=>{
                     reset: {
                         title: __('Stay here', 'tutor'),
                         id: 'reset',
-                        class: 'tutor-btn',
+                        class: 'tutor-btn tutor-btn-primary tutor-ml-20',
                         callback: function() {
                             popup.remove();
                         },
@@ -349,7 +354,7 @@ window.jQuery(document).ready($=>{
                 },
             };
 
-            popup = new window.tutor_popup($, '', 40).popup(data);
+            popup = new window.tutor_popup($, '').popup(data);
         }
     });
 

@@ -1,10 +1,8 @@
 <?php
-$question_id = 0;
-if ( isset( $_GET['question_id'] ) ) {
-	$question_id = (int) tutor_sanitize_data($_GET['question_id']);
-}
+use TUTOR\Input;
 
-$question = tutor_utils()->get_qa_question( $question_id );
+$question_id	= Input::get( 'question_id', 0, Input::TYPE_INT );
+$question		= tutor_utils()->get_qa_question( $question_id );
 ?>
 
 <div class="wrap">
@@ -42,7 +40,7 @@ $question = tutor_utils()->get_qa_question( $question_id );
 		<div class="tutor_original_question tutor-bg-white ">
 			<div class="question-left">
 				<?php
-				echo tutor_utils()->get_tutor_avatar( $question->user_id );
+					echo tutor_utils()->get_tutor_avatar( $question->user_id );
 				?>
 			</div>
 

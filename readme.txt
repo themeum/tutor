@@ -227,7 +227,22 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = 2.0.2 - March 30, 2022
 
-Fix: To be added later
+Update: Trashed course removed from all tab in admin dashboard
+Update: Setup wizerd finish button redirects to welcome page now
+Fix: Tutor pro showing beta version to download when required free version not found
+Fix: Same user gets enrolled if comes login by clicking enroll button in course page
+Fix: WooCommerce currency position not working for course price
+Fix: Course archive loading slowly
+Fix: Bulk Action option is not Working for Courses, Instructors, Students, Enrollment page in backend dashboard
+Fix: Self user gets deleted if admin deletes self as student from student page in admin dashboard
+Fix: Zoom meeting field not showing in Gutenberg course editor
+Fix: Zoom meeting throwing error for manual deleted meetings
+Fix: Course archive filters not working properly when using shortcode
+Fix: Shortcode and line breaks not working in course details
+Fix: Instructor details in single course doesn't support text formatting
+Fix: Non instructor can access frontend course builder
+Fix: Multiple course creating from frontend editor
+Fix: Instructors could see quiz attempts from other instructors courses 
 
 = 2.0.1 - March 23, 2022
 

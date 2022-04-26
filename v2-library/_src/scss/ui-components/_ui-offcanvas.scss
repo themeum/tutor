@@ -1,24 +1,3 @@
-// Off Canvas
-.btn-offcanvas-open {
-	border: none;
-	background: transparent;
-	outline: none;
-
-	&:focus-visible {
-		box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
-	}
-
-	.icon {
-		font-size: 36px;
-		/* color/primary/fill/90 */
-		color: var(--tutor-primary-color);
-	}
-
-	> * {
-		pointer-events: none;
-	}
-}
-
 .tutor-offcanvas {
 	.tutor-offcanvas-backdrop {
 		position: fixed;
@@ -39,7 +18,6 @@
 		box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
 		padding: 20px 0;
 		transition: 300ms ease-in-out;
-		// transition-delay: 200ms;
 		opacity: 0;
 		visibility: hidden;
 	}
@@ -111,39 +89,6 @@
 		align-items: center;
 		justify-content: space-between;
 		margin: 10px 0;
-
-		button {
-			margin: 0;
-			padding: 0;
-		}
-
-		.action-buttons {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			gap: 20px;
-
-			.popup-btn {
-				transform: rotate(90deg);
-				font-size: 24px;
-			}
-
-			button {
-				font-size: 32px;
-				@extend .tutor-color-design-grey;
-
-				&:focus-visible {
-					box-shadow: 0 0 0 2px var(--tutor-primary);
-				}
-			}
-		}
-
-		.btn-offcanvas-close {
-			background: transparent;
-			border: none;
-			outline: none;
-			display: flex;
-		}
 	}
 
 	.tutor-offcanvas-main {
@@ -167,7 +112,7 @@
 			left: calc(-1 * var(--padding));
 			width: calc(100% + calc(2 * var(--padding)));
 			/* stroke/light30 */
-			border-bottom: 1px solid $stroke-light-30;
+			border-bottom: 1px solid var(--tutor-border-color);
 		}
 		&-item {
 			cursor: pointer;
@@ -230,20 +175,19 @@
 
 // Notification Elements
 $variations: (
-	'primary' $color-brand $primary-40,
-	'success' $color-success $success-40,
-	'warning' $color-warning $warning-40,
-	'danger' $danger-90 $danger-40,
+	'primary' var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15),
+	'success' var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.15),
+	'warning' var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.15),
+	'danger' var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.15),
 	'purple' #9b4ab4 #faebff,
-	// 'default' $design-white $black-30
 );
+
 @each $prefix, $color, $bgColor in $variations {
 	.tutor-notification-element {
 		&:not(.notification-read) {
 			.element-icon {
 				.element-#{$prefix} {
 					color: #{$color};
-					// background: #{$bgColor};
 				}
 			}
 			.element-content .header {
@@ -262,18 +206,15 @@ $variations: (
 	padding-bottom: 15px;
 
 	.element-icon {
-		// color: #fff;
-		color: $text-muted;
-
+		color: var(--tutor-color-muted);
 		[class^='element-'] {
-			width: 26px;
-			height: 26px;
-			font-size: 26px;
+			width: 24px;
+			height: 24px;
+			font-size: 18px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			border-radius: 50%;
-			// background: $black-40;
 			background: transparent;
 		}
 	}
@@ -293,9 +234,7 @@ $variations: (
 					width: 8px;
 					height: 8px;
 					border-radius: 50%;
-					/* design/brand */
-					background: #3e64de;
-					/* color/primary/fill/40 */
+					background: var(--tutor-color-primary);
 					box-shadow: 0 0 0 2px #e9edfb;
 					position: relative;
 
@@ -320,7 +259,7 @@ $variations: (
 			}
 
 			[class^='element-'] {
-				color: $black-70;
+				color: var(--tutor-color-secondary);
 			}
 		}
 
@@ -340,7 +279,7 @@ $variations: (
 			}
 			.message,
 			.message > * {
-				color: $black-50;
+				color: var(--tutor-color-secondary);
 			}
 		}
 	}

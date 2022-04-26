@@ -2,25 +2,9 @@
 .select2-container .select2-search__field {
 	padding: 12px 3px 8px 6px !important;
 }
-.tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover {
-	opacity: 1;
-}
 
 #wpcontent,
 #tutor-frontend-course-builder {
-	.tutor-topic-title {
-		.tutor-updating-message {
-			&:before {
-				vertical-align: unset !important;
-			}
-		}
-	}
-	.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
-		margin-right: 0px !important;
-	}
-	button.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
-		margin-right: 8px !important;
-	}
 	.tutor-certificate-template {
 		.template-item {
 			.template-radio-field {
@@ -29,11 +13,6 @@
 		}
 	}
 	.tutor-modal {
-		.tutor-updating-message:before {
-			vertical-align: unset;
-			line-height: unset;
-			// display: flex;
-		}
 		.tutor-delete-attachment.tutor-icon-line-cross {
 			margin-left: 5px;
 		}
@@ -46,9 +25,6 @@
 			position: absolute;
 			right: 10px;
 			top: 14px;
-		}
-		.tutorUploadAttachmentBtn {
-			margin-top: 0px;
 		}
 		.tutor-quiz-answer {
 			align-items: center;
@@ -64,16 +40,8 @@
 				margin-right: 8px;
 			}
 		}
-		.tutor-attachment-cards {
-			> div {
-				&:last-child {
-					margin-bottom: 25px;
-				}
-			}
-		}
 	}
 	.btn-csv-download {
-		// margin-right: 2px !important;
 		padding: 0px;
 		svg {
 			fill: #757c8e;
@@ -82,26 +50,8 @@
 			height: 16px;
 		}
 	}
-	.tutorUploadAttachmentBtn {
-		margin-top: 15px;
-	}
-	.tutor-course-content-top {
-		.tutor-icon-humnurger-filled {
-			color: rgba(117, 124, 142, 0.63) !important;
-			margin-top: 3px;
-		}
-		> a {
-			margin-top: 1px;
-		}
-	}
-
-	.tutor-btn {
-		font-size: 15px;
-		line-height: 24px;
-	}
 
 	.tutor-add-instructor-btn,
-	.tutorUploadAttachmentBtn,
 	.create_new_topic_btn {
 		padding: 7px 20px;
 	}
@@ -115,25 +65,6 @@
 		}
 	}
 
-	p.tutor-input-feedback,
-	div.tutor-input-feedback {
-		font-size: 13px;
-		color: #5b616f;
-		i.tutor-input-feedback-icon {
-			font-size: 20px;
-			color: #b4b7c0;
-		}
-	}
-	.tutor-modal-body {
-		align-items: unset !important;
-	}
-	// .tutor-attachments-metabox {
-	//     .tutor-attachment-cards {
-	//         .filesize {
-	//             margin-top: -5px;
-	//         }
-	//     }
-	// }
 	.tutor-course-available-instructors {
 		display: flex;
 		flex-wrap: wrap;
@@ -164,29 +95,6 @@
 			}
 		}
 	}
-	.tutor-lesson-modal-wrap {
-		.filesize {
-			margin: 0px !important;
-		}
-	}
-	#tutor_course_instructor_modal {
-		.tutor-modal-body {
-			padding: 40px 40px;
-		}
-		#tutor-course-available-instructors {
-			gap: 10px;
-		}
-		.tutor-search-result {
-			&.tutor-updating-message {
-				min-height: 60px;
-				&:before {
-					top: 50% !important;
-					left: calc(50% - 10px);
-					position: absolute;
-				}
-			}
-		}
-	}
 	.tutor-quiz-advance-settings p.help {
 		line-height: 1.34;
 		margin-top: 10px;
@@ -211,7 +119,6 @@
 			.lead-option {
 				display: flex;
 				align-items: center;
-				margin-top: 2px;
 				span {
 					display: flex;
 					margin-top: -1px;
@@ -245,31 +152,15 @@
 
 	.tutor-zoom-meeting-modal-wrap {
 		#tutor-zoom-meeting-modal-form {
-			// .tutor-react-datepicker .react-datepicker__input-container input,
-			.tutor_zoom_timepicker,
-			.tutor-dropdown-select-selected {
-				height: 48px !important;
-				padding-right: 25px;
-				font-size: 15px;
-				box-sizing: border-box;
-				padding-top: 0;
-				padding-bottom: 0;
-			}
-			.tutor-dropdown-select-selected {
-				display: flex;
-				align-items: center;
-			}
 			.date-range-input {
 				input {
 					border-radius: 6px !important;
 					border: 1px solid #d7dadf !important;
 				}
 			}
+			
 			input[data-name='meeting_duration'] {
 				font-size: 15px;
-			}
-			.tutor-icon-clock {
-				color: black;
 			}
 		}
 	}
@@ -278,37 +169,13 @@
 		.tutor-topics-top {
 			.tutor-topic-title {
 				background: #f4f6f9;
-
-				span.tutor-icon-humnurger-filled {
-					align-self: flex-start;
-				}
-				span.tutor-icon-humnurger-filled.course-move-handle {
-					margin-right: 0 !important;
-				}
-				.topic-inner-title {
-					line-height: 1.3;
-					padding-right: 20px;
-					margin-top: 2px;
-				}
-				span.expand-collapse-wrap {
-					i {
-						margin-top: -2px;
-						margin-right: 6px;
-					}
-					display: block;
-				}
-				.tutor-topic-btn-hover i {
-					&:hover {
-						color: $design-brand;
-					}
-				}
 			}
 		}
 	}
 }
 #tutor-metabox-course-settings-tabs {
 	background-color: #fff;
-	border: 1px solid $stroke-light-30;
+	border: 1px solid var(--tutor-border-color);
 	box-sizing: border-box;
 	border-radius: 6px;
 	width: 100%;
@@ -335,7 +202,7 @@
 
 		.settings-tabs-navs-wrap {
 			flex: 0 0 200px;
-			background: $black-05;
+			background: $color-gray-10;
 			border-top-left-radius: 6px;
 			border-bottom-left-radius: 6px;
 			overflow: hidden;
@@ -379,24 +246,19 @@
 						}
 
 						i {
-							font-size: 26px;
-							margin-right: 3px;
-						}
-						i.dashicons,
-						i.dashicons-before:before {
-							width: 26px;
-							height: 26px;
+							margin-right: 8px;
+							width: 24px;
+							height: 24px;
 							font-size: 20px;
 							display: flex;
 							align-items: center;
-							justify-content: center;
 						}
 					}
 
 					&.active {
 						a {
 							background-color: white;
-							border-left: 3px solid var(--tutor-primary-color);
+							border-left: 3px solid var(--tutor-color-primary);
 							border-bottom-color: #e5e5e5;
 							border-top-color: #e5e5e5;
 						}
@@ -458,14 +320,8 @@
 	p {
 		margin-bottom: 0px;
 	}
-	// .filesize {
-	// 	margin-top: -8px;
-	// }
 }
 #wpcontent {
-	// .filesize {
-	// 	margin-top: -2px;
-	// }
 	.tutor-course-content-top {
 		> a {
 			margin-top: 4px;

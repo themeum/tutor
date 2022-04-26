@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-
-import DatePicker from 'react-datepicker';
-import { addMonths, getMonth, getYear } from 'date-fns';
+import { getMonth, getYear } from 'date-fns';
 import range from 'lodash.range';
+import React, { useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import { CustomInput } from '../CustomInput';
+
 
 // Formatiing String to Date
 function stringToDate(_date, _format, _delimiter) {
@@ -17,6 +18,7 @@ function stringToDate(_date, _format, _delimiter) {
 	const formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
 	return formatedDate;
 }
+
 
 const TutorDatepicker = (data) => {
 	const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'd-M-Y';
@@ -76,11 +78,12 @@ const TutorDatepicker = (data) => {
 		if (params.has('date')) {
 			setStartDate(new Date(params.get('date')));
 		}
-	}, []);
-
+	}, [startDate]);
+	
 	return (
 		<div className="tutor-react-datepicker">
 			<DatePicker
+				customInput={<CustomInput />}
 				isClearable={Boolean(data.is_clearable)}
 				placeholderText={dateFormat}
 				selected={startDate}

@@ -81,7 +81,9 @@ get_tutor_header();
                     <?php echo $course_stats['completed_percent'] . '%'; ?><span>&nbsp;Complete</span>
                 </div>
                 <div class="list-item-progress tutor-my-16">
-                    <div class="progress-bar tutor-mt-12" style="--progress-value:<?php echo $course_stats['completed_percent']; ?>%;"><span class="progress-value"></span></div>
+                    <div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo $course_stats['completed_percent']; ?>%;">
+                        <span class="tutor-progress-value" area-hidden="true"></span>
+                    </div>
                 </div>
             </div>
             

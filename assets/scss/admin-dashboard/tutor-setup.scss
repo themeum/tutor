@@ -26,7 +26,7 @@ a:hover,
 a:visited,
 a:active,
 a:focus {
-	color: var(--tutor-primary-color);
+	color: var(--tutor-color-primary);
 }
 
 body {
@@ -196,14 +196,14 @@ ul.tutor-setup-content li.active {
 }
 
 .tutor-setup-title li.active:before {
-	background: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
 }
 
 .tutor-setup-title li.active:before {
 	background-image: url(../images/checkmark.svg);
 	background-repeat: no-repeat;
 	background-position: center;
-	background-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
 	box-shadow: inset 0px 0px 0px 5px transparent;
 }
 
@@ -405,7 +405,7 @@ ul.tutor-setup-content li.active {
 
 .tutor-setting input[type='text'].lesson-permalink:focus,
 .tutor-setting textarea.lesson-message:focus {
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-color-primary);
 }
 
 /* Lesson Message Textarea */
@@ -604,8 +604,8 @@ input[type='radio'].course:checked + .span {
 }
 
 input[type='radio'].course:checked + .span span {
-	background-color: var(--tutor-primary-color);
-	border-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
+	border-color: var(--tutor-color-primary);
 }
 
 /* Course Per Page */
@@ -633,7 +633,7 @@ input[type='radio'].course:checked + .span span {
 	left: calc(50% - 10px);
 	position: absolute;
 	border-radius: 50%;
-	background: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
 	background: #f1f3f7;
 	transform: scale(0);
 	transition: all 0.2s ease-in-out;
@@ -642,8 +642,8 @@ input[type='radio'].course:checked + .span span {
 .course-per-page input[type='radio'].course-p:checked + .radio-icon,
 .course-setting-wrapper .ecommerce .radio-input:checked + .radio-icon,
 .settings .time-expires input[type='radio']:checked + .radio-icon {
-	background: var(--tutor-primary-color);
-	border-color: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
+	border-color: var(--tutor-color-primary);
 }
 
 .course-per-page input[type='radio'].course-p:checked + .radio-icon:before,
@@ -659,7 +659,7 @@ input[type='radio'].course:checked + .span span {
 }
 
 input#attempts-allowed-1:checked ~ .label-text-2 input {
-	border: 1px solid var(--tutor-primary-color);
+	border: 1px solid var(--tutor-color-primary);
 }
 
 .course-per-page input.course-p,
@@ -713,22 +713,17 @@ input#attempts-allowed-1:checked ~ .label-text-2 input {
 }
 
 .course-per-page input[type='number'].attempts:focus {
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-color-primary);
 }
 
 .course-per-page,
 input[type='radio'].course-p:checked,
 input[type='number'].attempts:focus {
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-color-primary);
 }
 
 .tutor-setup-btn-wrapper {
 	justify-self: left;
-}
-
-button.tutor-setup-previous {
-	display: inline-block;
-	padding: 0 50px;
 }
 
 .tutor-setup-title li {
@@ -740,18 +735,6 @@ button.tutor-setup-previous {
 .tutor-setup-title li.active {
 	font-weight: 600;
 	color: var(--secondary-text);
-}
-
-.tutor-setup-content-heading.heading > div:nth-child(1) {
-	// font-size: 20px;
-	// line-height: 1;
-	// font-weight: 300;
-	// color: var(--secondary-text);
-}
-
-.tutor-setup-content-heading.heading > div {
-	// font-weight: 300;
-	// color: var(--primary-text);
 }
 
 .tutor-setting .content b {
@@ -876,7 +859,7 @@ input[type='checkbox'].input-switchbox {
 
 		&,
 		& + .switchbox-icon:before {
-			background: #24a148;
+			background: var(--tutor-color-primary);
 		}
 	}
 }
@@ -923,41 +906,6 @@ button.next:hover svg {
 	transform: translateX(4px);
 }
 
-button[class^='tutor-setup-'] {
-	cursor: pointer;
-	padding: 10px 20px;
-	font-size: 14px;
-	font-weight: normal;
-	font-stretch: normal;
-	font-style: normal;
-	line-height: 1.43;
-	text-transform: capitalize;
-	text-align: center;
-	color: var(--tertiary-btn);
-	transition: 200ms;
-	outline: none;
-}
-
-button.tutor-setup-next.next {
-	color: var(--initial);
-	text-transform: uppercase;
-}
-
-button.tutor-setup-skip {
-	background: transparent;
-	border: none;
-	padding: 5px;
-	letter-spacing: 0.1px;
-	font-style: normal;
-	font-weight: 500;
-	font-size: 13px;
-	color: #717881;
-
-	&:hover {
-		color: var(--tutor-primary-hover-color);
-	}
-}
-
 .tutor-setting .grade-calculation {
 	display: grid;
 	grid-template-columns: auto;
@@ -1002,7 +950,7 @@ button.tutor-setup-skip {
 			}
 
 			+ .selected {
-				border-color: var(--tutor-primary-color);
+				border-color: var(--tutor-color-primary);
 			}
 		}
 	}
@@ -1139,7 +1087,7 @@ button.tutor-setup-skip {
 	max-width: 100%;
 	height: 6px;
 	border-radius: 8px;
-	background-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
 	/*background-image: url(../images/slider-dot.png);*/
 	background-repeat: repeat-x;
 	background-size: contain;
@@ -1181,7 +1129,7 @@ input[type='range'].range-input::-moz-range-thumb {
 	border-radius: 50%;
 	cursor: pointer;
 	background-color: #f0f3f6;
-	border: 5px solid var(--tutor-primary-color);
+	border: 5px solid var(--tutor-color-primary);
 }
 
 /* Sider 2nd */
@@ -1197,7 +1145,7 @@ input[type='range'].range-input::-moz-range-thumb {
 	max-width: 100%;
 	height: 6px;
 	border-radius: 8px;
-	background-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
 	box-shadow: inset 0 0 0 1px rgba(47, 87, 213, 0.15);
 }
 
@@ -1371,8 +1319,8 @@ input.checkbox {
 }
 
 .checkbox-wrapper input.checkbox:checked + .check-icon {
-	background: var(--tutor-primary-color);
-	border-color: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
+	border-color: var(--tutor-color-primary);
 }
 
 .checkbox-wrapper input.checkbox:checked + .check-icon:before {
@@ -1446,7 +1394,7 @@ input.checkbox {
 }
 
 .payment-setting input.payment:checked {
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-color-primary);
 }
 
 .checkbox-wrapper .payment-setting h4 {
@@ -1600,7 +1548,7 @@ input.checkbox {
 
 .wizard-boarding-body ul.slick-dots li.slick-active button {
 	transform: scale(1);
-	background: var(--tutor-primary-color);
+	background: var(--tutor-color-primary);
 }
 
 .wizard-boarding-footer {
@@ -1616,16 +1564,16 @@ input.checkbox {
 	line-height: 1.69;
 	letter-spacing: normal;
 	text-align: center;
-	color: var(--tutor-primary-color);
+	color: var(--tutor-color-primary);
 	a {
-		color: $black-main;
+		color: var(--tutor-color-body);
 	}
 }
 
 .wizard-boarding-footer:hover,
 .wizard-boarding-footer a:hover,
 .tutor-type-skip:hover {
-	color: var(--tutor-primary-hover-color);
+	color: var(--tutor-color-primary-hover);
 }
 
 .wizard-boarding-footer {
@@ -1739,7 +1687,7 @@ input.checkbox {
 
 		input {
 			&:checked ~ label {
-				border-color: var(--tutor-primary-color);
+				border-color: var(--tutor-color-primary);
 			}
 
 			&:not(:checked) ~ label {
@@ -1949,10 +1897,6 @@ input.checkbox {
 @media (max-width: 575px) {
 	.wizard-type-body {
 		grid-template-columns: auto;
-	}
-
-	.tutor-setup-content-heading.heading > div:nth-child(1) {
-		// font-size: 3.5vw;
 	}
 
 	.course-per-page span.label-text,

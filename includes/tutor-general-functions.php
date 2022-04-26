@@ -63,7 +63,7 @@ if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 
 if ( ! function_exists( 'tutor_placeholder_img_src' ) ) {
 	function tutor_placeholder_img_src() {
-		$src = tutor()->url . 'assets/images/placeholder.png';
+		$src = tutor()->url . 'assets/images/placeholder.svg';
 		return apply_filters( 'tutor_placeholder_img_src', $src );
 	}
 }
@@ -391,8 +391,8 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		?>
 		<div class="tutor-course-builder-section">
 			<div class="tutor-course-builder-section-title">
-				<span class="tutor-fs-5 tutor-fw-bold tutor-color-black-70">
-					<i class="tutor-icon-angle-up-filled" area-hidden="true"></i>
+				<span class="tutor-fs-5 tutor-fw-bold tutor-color-secondary">
+					<i class="tutor-icon-angle-up" area-hidden="true"></i>
 					<span><?php echo $title; ?></span>
 				</span>
 			</div>
@@ -555,7 +555,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 
 		$html = '<div class="asas tutor-alert tutor-' . esc_attr( $type ) . '">
 					<div class="tutor-alert-text">
-						<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12"></span>
+						<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
 						<span>' . wp_kses( $msg, array( 'div', 'span' ) ) . '</span>
 					</div>
 				</div>';
@@ -757,13 +757,14 @@ if ( ! function_exists( 'tutor_maintenance_mode' ) ) {
 if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 	function tutor_js_date_format_against_wp() {
 		$wp_date_format = get_option( 'date_format' );
-		$default_format = 'yy-mm-dd';
+		$default_format = 'Y-M-d';
 
 		$formats = array(
 			'Y-m-d'  => 'Y-M-d',
 			'm/d/Y'  => 'M-d-Y',
 			'd/m/Y'  => 'd-M-Y',
 			'F j, Y' => 'MMMM d, yyyy',
+			'j F Y' => 'MMMM d, yyyy',
 		);
 		return isset( $formats[ $wp_date_format ] ) ? $formats[ $wp_date_format ] : $default_format;
 	}
@@ -928,5 +929,25 @@ if(!function_exists('tutor_log')) {
 		ob_start();
 		var_dump($data);
 		error_log(ob_get_clean());
+	}
+}
+
+if(!function_exists('tutor_wc_price_currency_format')){
+	function tutor_wc_price_currency_format($amount){
+
+		$symbol = get_woocommerce_currency_symbol();
+		$position = get_option('woocommerce_currency_pos', 'left');
+		
+		switch($position){
+			case 'left' 		: $amount = $symbol . $amount; break;
+			case 'left_space' 	: $amount = $symbol . ' ' . $amount; break;
+
+			case 'right' 		: $amount = $amount . $symbol; break;
+			case 'right_space' 	: $amount = $amount . ' ' . $symbol; break;
+
+			default 			: $amount = $symbol . $amount; break;
+		}
+
+		return $amount;
 	}
 }

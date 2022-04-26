@@ -119,7 +119,7 @@ class Tutor_Setup {
 					$html     .= '<div class="step-info">';
 						$html .= '<span class="tutor-fs-7 tutor-color-muted">' . __( 'Step', 'tutor' ) . ':</span> <strong class="tutor-color-black">' . $i . '/' . count( $field_arr ) . ' </strong>';
 					$html     .= '</div>';
-					$html     .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-black-60 tutor-d-flex tutor-align-items-center">' . __( 'Reset Default', 'tutor' ) . '</div>';
+					$html     .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-secondary tutor-d-flex tutor-align-items-center">' . __( 'Reset Default', 'tutor' ) . '</div>';
 				$html         .= '</div>';
 				$html         .= '<div class="tutor-setup-content-heading body">';
 
@@ -142,7 +142,7 @@ class Tutor_Setup {
 						$html .= isset( $field['lable'] ) ? '</div>' : '';
 
 				if ( ! in_array( $field['type'], $down_desc_fields ) ) {
-					$html .= isset( $field['desc'] ) ? '<div class="content tutor-fs-7 tutor-color-black-60">' . $field['desc'] . '</div>' : '';
+					$html .= isset( $field['desc'] ) ? '<div class="content tutor-fs-7 tutor-color-secondary">' . $field['desc'] . '</div>' : '';
 				}
 
 						$html .= '<div class="settings">';
@@ -432,71 +432,21 @@ class Tutor_Setup {
 				),
 			),
 
-			/*
-				'quiz' => array(
-					'lable' => __('Quiz Settings', 'tutor'),
-					'attr' => array(
-						'quiz_when_time_expires' => array(
-							'type' => 'radio',
-							'lable' => __('When Time Expires', 'tutor'),
-							'options' => array(
-								'autosubmit' => __('The current quiz answers are submitted automatically.', 'tutor'),
-								'graceperiod' => __('The current quiz answers are submitted by students.', 'tutor'),
-								'autoabandon' => __('Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor'),
-							),
-							'tooltip' => __('What message to display when the quiz time expires?', 'tutor'),
-						),
-						'quiz_attempts_allowed' => array(
-							'type' => 'attempt',
-							'lable' => __('Attempts Allowed', 'tutor'),
-							'tooltip' => __('How many attempts does a student get to pass a quiz?', 'tutor'),
-						),
-						'quiz_grade_method' => array(
-							'type' => 'dropdown',
-							'lable' => __('Final Grade Calculation', 'tutor'),
-							'options' => array(
-								array(
-									'title' => __('Highest Grade', 'tutor'),
-									'desc' => __('Pick the student’s best grade', 'tutor'),
-									'value' => 'highest_grade',
-								),
-								array(
-									'title' => __('Average Grade', 'tutor'),
-									'desc' => __('Use the average score', 'tutor'),
-									'value' => 'average_grade',
-								),
-								array(
-									'title' => __('First Attempt', 'tutor'),
-									'desc' => __('Pick the first attempt', 'tutor'),
-									'value' => 'first_attempt',
-								),
-								array(
-									'title' => __('Last Attempt', 'tutor'),
-									'desc' => __('Pick the most recent attempt', 'tutor'),
-									'value' => 'last_attempt',
-								),
-							),
-							'tooltip' => __('When you allow multiple quiz attempts, which grade do you want to count?', 'tutor'),
-						)
-					)
-				),
-			*/
-
-				'instructor' => array(
-					'lable' => __( 'Instructor Settings', 'tutor' ),
-					'attr'  => array(
-						'enable_become_instructor_btn'  => array(
-							'type'  => 'switch',
-							'lable' => __( 'New Signup', 'tutor' ),
-							'desc'  => __( 'Choose between open and closed instructor signup. If you’re creating a course marketplace, instructor signup should be open.', 'tutor' ),
-						),
-						'instructor_can_publish_course' => array(
-							'type'  => 'switch',
-							'lable' => __( 'Earning', 'tutor' ),
-							'desc'  => __( 'Enable earning for instructors?', 'tutor' ),
-						),
+			'instructor' => array(
+				'lable' => __( 'Instructor Settings', 'tutor' ),
+				'attr'  => array(
+					'enable_become_instructor_btn'  => array(
+						'type'  => 'switch',
+						'lable' => __( 'New Signup', 'tutor' ),
+						'desc'  => __( 'Choose between open and closed instructor signup. If you’re creating a course marketplace, instructor signup should be open.', 'tutor' ),
+					),
+					'instructor_can_publish_course' => array(
+						'type'  => 'switch',
+						'lable' => __( 'Earning', 'tutor' ),
+						'desc'  => __( 'Enable earning for instructors?', 'tutor' ),
 					),
 				),
+			),
 
 			'payment'        => array(
 				'lable' => __( 'Payment Settings ', 'tutor' ),
@@ -542,9 +492,7 @@ class Tutor_Setup {
 						<ul class="tutor-setup-title">
 							<li data-url="general" class="general active current"><?php _e( 'General', 'tutor' ); ?></li>
 							<li data-url="course" class="course"><?php _e( 'Course', 'tutor' ); ?></li>
-							<!-- <li data-url="quiz" class="quiz"><?php // _e('Quiz', 'tutor'); ?></li> -->
 							<li data-url="instructor" class="instructor"><?php _e( 'Instructor', 'tutor' ); ?></li>
-							<!-- <li data-url="profile" class="profile"><?php // _e('Profile', 'tutor'); ?></li> -->
 							<li data-url="payment" class="payment"><?php _e( 'Payment', 'tutor' ); ?></li>
 							<li data-url="finish" style="display:none" class="finish"><?php _e( 'Finish', 'tutor' ); ?></li>
 						</ul>
@@ -575,11 +523,11 @@ class Tutor_Setup {
 											$addons_url  = admin_url( 'admin.php?page=tutor-addons' );
 											$course_url  = admin_url( 'admin.php?page=tutor' );
 										?>
-											<a class="tutor-btn tutor-btn-primary tutor-btn-md primary-btn" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $course_url ); ?>">
-											<?php _e( 'Create a New Course', 'tutor' ); ?>
+											<a class="tutor-btn tutor-btn-primary" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $course_url ); ?>">
+												<?php _e( 'Create a New Course', 'tutor' ); ?>
 											</a>
-											<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $addons_url ); ?>">
-											<?php _e( 'Explore Addons', 'tutor' ); ?>
+											<a class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $addons_url ); ?>">
+												<?php _e( 'Explore Addons', 'tutor' ); ?>
 											</a>
 										</div>
 									</div>
@@ -595,15 +543,15 @@ class Tutor_Setup {
 	public function tutor_setup_wizard_action() {
 		$html              = '<div class="tutor-setup-content-footer footer">';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-btn tutor-btn-disable-outline tutor-btn-md tutor-setup-previous">';
+				$html     .= '<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-setup-previous">';
 					$html .= '<span>&#8592;</span>&nbsp;<span>' . __( 'Previous', 'tutor' ) . '</span>';
 				$html     .= '</button>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-setup-skip">' . __( 'Skip this step', 'tutor' ) . '</button>';
+				$html     .= '<button class="tutor-setup-skip tutor-btn tutor-btn-ghost">' . __( 'Skip this step', 'tutor' ) . '</button>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-btn tutor-btn-md tutor-setup-next">';
+				$html     .= '<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-setup-next">';
 					$html .= '<span>' . __( 'Next', 'tutor' ) . '</span>&nbsp;<span>&#8594;</span>';
 				$html     .= '</button>';
 			$html         .= '</div>';
@@ -612,19 +560,19 @@ class Tutor_Setup {
 		return $html;
 	}
 	public function tutor_setup_wizard_action_final() {
+		$welcome_url = admin_url( 'admin.php?page=tutor&welcome=1' );
+
 		$html              = '<div class="tutor-setup-content-footer footer">';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-btn tutor-btn-disable-outline tutor-btn-md tutor-setup-previous">';
+				$html     .= '<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-setup-previous">';
 					$html .= '<span>&#8592;</span>&nbsp;<span>' . __( 'Previous', 'tutor' ) . '</span>';
 				$html     .= '</button>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-setup-skip">' . __( 'Skip this step', 'tutor' ) . '</button>';
+				$html     .= '<a href="'.$welcome_url.'" class="tutor-btn tutor-btn-ghost">' . __( 'Skip this step', 'tutor' ) . '</a>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-btn tutor-btn-md tutor-redirect tutor-setup-next">';
-					$html .= '<span>' . __( 'Finish Setup', 'tutor' );
-				$html     .= '</button>';
+				$html     .= '<a href="'.$welcome_url.'" class="tutor-btn tutor-btn-primary tutor-btn-md">' . __( 'Finish Setup', 'tutor' ) . '</a>';
 			$html         .= '</div>';
 		$html             .= '</div>';
 
@@ -656,7 +604,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/scalable_lms_solution.jpg'; ?>" alt="<?php _e( 'A Powerful, Smart, and Scalable LMS Solution', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'A Powerful, Smart, and Scalable LMS Solution', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'From individual instructors to vast eLearning platforms, Tutor LMS grows with you to create your ideal vision of an LMS website.', 'tutor' ); ?>
 								</div>
 							</li>
@@ -665,7 +613,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/extensive_course_builder.jpg'; ?>" alt="<?php _e( 'Extensive Course Builder', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'Extensive Course Builder', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'Tutor LMS comes with a state-of-the-art frontend course builder. Construct rich and resourceful courses with ease.', 'tutor' ); ?>
 								</div>
 							</li>
@@ -674,7 +622,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/advanced_quiz_creator.jpg'; ?>" alt="<?php _e( 'Advanced Quiz Creator', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'Advanced Quiz Creator', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'Build interactive quizzes with the vast selection of question types and verify the learning of your students.', 'tutor' ); ?>
 								</div>
 							</li>
@@ -683,7 +631,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/freedom_with_ecommerce.jpg'; ?>" alt="<?php _e( 'Freedom With eCommerce', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'Freedom With eCommerce', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'Select an eCommerce plugin and sell courses any way you like and use any payment gateway you want!', 'tutor' ); ?>
 								</div>
 							</li>
@@ -692,7 +640,7 @@ class Tutor_Setup {
 									<img src="<?php echo tutor()->url . 'assets/images/reports_and_analytics.jpg'; ?>" alt="<?php _e( 'Reports and Analytics', 'tutor' ); ?>"/>
 								</div>
 								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php _e( 'Reports and Analytics', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-black-60 tutor-mt-16">
+								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
 								<?php _e( 'Track what type of courses sell the most! Gain insights on user purchases, manage reviews and track quiz attempts.', 'tutor' ); ?>
 								</div>
 							</li>

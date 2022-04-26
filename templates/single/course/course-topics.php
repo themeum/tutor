@@ -64,15 +64,15 @@ do_action( 'tutor_course/single/before/topics' );
 											$is_preview = get_post_meta( $post->ID, '_is_preview', true );
 
 											// Determine topic content icon based on lesson, video, quiz etc.
-											$topic_content_icon                                     = $play_time ? 'tutor-icon-youtube-brand' : 'tutor-icon-document-alt-filled';
-											$post->post_type === 'tutor_quiz' ? $topic_content_icon = 'tutor-icon-question-mark-circle-filled' : 0;
-											$post->post_type === 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-document-alt-filled' : 0;
-											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon-zoom' : 0;
+											$topic_content_icon                                     = $play_time ? 'tutor-icon-brand-youtube-bold' : 'tutor-icon-document-text';
+											$post->post_type === 'tutor_quiz' ? $topic_content_icon = 'tutor-icon-circle-question-mark' : 0;
+											$post->post_type === 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-document-text' : 0;
+											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon-brand-zoom' : 0;
 											$is_locked = !($is_enrolled || $is_preview);
 										?>
 										<li>
 											<div class="tutor-courses-lession-list-single-item">
-												<span class="<?php echo $topic_content_icon; ?> tutor-icon-24 tutor-color-black-30 tutor-mr-16"></span>
+												<span class="<?php echo $topic_content_icon; ?> tutor-color-muted tutor-mr-16"></span>
 												<h5 class="tutor-fs-6 tutor-color-black">
 													<?php
 														$lesson_title = '';
@@ -110,7 +110,7 @@ do_action( 'tutor_course/single/before/topics' );
 												<span class="tutor-fs-7 tutor-color-muted">
 													<?php echo $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : ''; ?>
 												</span>
-												<span class="<?php echo $is_locked ? ' tutor-icon-lock-stroke-filled' : 'tutor-icon-eye-filled'; ?> tutor-icon-24 tutor-color-black-20 tutor-ml-20" area-hidden="true"></span>
+												<span class="<?php echo $is_locked ? ' tutor-icon-lock-line' : 'tutor-icon-eye-line'; ?> tutor-color-muted tutor-ml-20" area-hidden="true"></span>
 											</div>
 										</li>
 									<?php endwhile; ?>

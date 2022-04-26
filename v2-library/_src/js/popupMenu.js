@@ -1,58 +1,50 @@
-(function tutorPopupMenu() {
-	/**
-	 * Popup Menu Toggle .tutor-popup-opener
-	 */
-
+// dropdown
+(function tutorDropdownMenu() {
 	document.addEventListener('click', (e) => {
-		const attr = 'data-tutor-popup-target';
+		const dropdownAttr = 'action-tutor-dropdown';
+		const dropDownTarget = e.target.hasAttribute(dropdownAttr)
+			? e.target
+			: e.target.closest(`[${dropdownAttr}]`);
 
-		if (e.target.hasAttribute(attr)) {
+		if (dropDownTarget && dropDownTarget.hasAttribute(dropdownAttr)) {
 			e.preventDefault();
-			const id = e.target.hasAttribute(attr)
-				? e.target.getAttribute(attr)
-				: e.target.closest(`[${attr}]`).getAttribute(attr);
 
-			const popupMenu = document.getElementById(id);
+			const dropdownParent = dropDownTarget.closest('.tutor-dropdown-parent');
 
-			if (popupMenu.classList.contains('visible')) {
-				popupMenu.classList.remove('visible');
+			if (dropdownParent.classList.contains('is-open')) {
+				dropdownParent.classList.remove('is-open');
 			} else {
-				document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach((popupMenu) => {
-					popupMenu.classList.remove('visible');
-				});
-				popupMenu.classList.add('visible');
+				document
+					.querySelectorAll('.tutor-dropdown-parent')
+					.forEach((dropdownParent) => {
+						dropdownParent.classList.remove('is-open');
+					});
+				dropdownParent.classList.add('is-open');
 			}
 		} else {
-			document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach((popupMenu) => {
-				popupMenu.classList.remove('visible');
-			});
-		}
+			const restrictedDataAttributes = ['data-tutor-copy-target'];
+			const isRestricted = restrictedDataAttributes.some(
+				(restrictedDataAttribute) => {
+					return (
+						e.target.hasAttribute(restrictedDataAttribute) ||
+						e.target.closest(`[${restrictedDataAttribute}]`)
+					);
+				},
+			);
 
-		/**
-		 * Popupover Menu Toggle .tutor-popover
-		 */
-		const popoverAttr = 'data-tutor-popover-target';
-		if (e.target.hasAttribute(popoverAttr)) {
-			e.preventDefault();
-			const id = e.target.getAttribute(popoverAttr);
-			const popoverMenu = document.getElementById(id);
-			const popoverWrapper = popoverMenu.closest('.tutor-popover-wrapper');
-			popoverMenu.classList.toggle('is-active');
-			popoverWrapper.classList.toggle('is-active');
-		} else {
-			const backdropAttr = 'data-tutor-popover-backdrop';
-			if (e.target.hasAttribute(backdropAttr)) {
-				const activePopover = document.querySelectorAll('.tutor-popover.is-active, .tutor-popover-wrapper.is-active');
-				activePopover.forEach((item) => {
-					item.classList.remove('is-active');
-				});
+			if (!isRestricted) {
+				document
+					.querySelectorAll('.tutor-dropdown-parent')
+					.forEach((dropdownParent) => {
+						dropdownParent.classList.remove('is-open');
+					});
 			}
 		}
 	});
 })();
 
 /**
- * Popupover - Copy to clipboard
+ * Copy to clipboard
  */
 document.addEventListener('click', async (e) => {
 	const btnTargetAttr = 'data-tutor-copy-target';
@@ -61,10 +53,7 @@ document.addEventListener('click', async (e) => {
 
 		/* Get the text field */
 		const content = document.getElementById(id).textContent.trim();
-
-		/* Copy the text inside the text field */
-		await navigator.clipboard.writeText(content);
-		const copiedTxt = await navigator.clipboard.readText();
+		await copyToClipboard(content);
 
 		if (content) {
 			showToolTip(e.target, 'Copied');
@@ -73,6 +62,19 @@ document.addEventListener('click', async (e) => {
 		}
 	}
 });
+
+// Copy text to clipboard
+const copyToClipboard = (text) => {
+	return new Promise((resolve) => {
+		const textArea = document.createElement('textarea');
+		textArea.value = text;
+		document.body.appendChild(textArea);
+		textArea.select();
+		document.execCommand('copy');
+		document.body.removeChild(textArea);
+		resolve();
+	});
+};
 
 // Showing tooltip
 const showToolTip = (targetEl, text = 'Copied!') => {

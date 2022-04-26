@@ -1,29 +1,19 @@
-$sidebar_width: 360px;
-
 .tutor-qna-single-question {
 	table.tutor-ui-table-data-td-target [data-td-target] {
 		padding: 12px !important;
 	}
+
 	table.tutor-ui-table tr:last-child td:last-child {
 		border-radius: 0;
-		-webkit-border-radius: 0;
-		-moz-border-radius: 0;
-		-ms-border-radius: 0;
-		-o-border-radius: 0;
 	}
+
 	table.tutor-ui-table-data-td-target .is-active:not(.expand-btn) {
 		background-color: #fff !important;
 	}
-	td {
-		div.tutor-icon-angle-down-filled {
-			font-size: 20px;
-		}
-	}
+
 	@at-root {
 		body.wp-admin {
 			.tutor-qna-single-wrapper {
-				width: calc(100% - #{$sidebar_width});
-
 				.tutor-qa-reply {
 					border-top-left-radius: 6px;
 					border-top-right-radius: 6px;
@@ -54,7 +44,7 @@ $sidebar_width: 360px;
 			width: 100%;
 			border: none;
 			// border-bottom: 1px solid #cdcfd5;
-			border: 1px solid $stroke-light-30;
+			border: 1px solid var(--tutor-border-color);
 			border-radius: 6px;
 			padding: 15px;
 			resize: none;
@@ -74,90 +64,49 @@ $sidebar_width: 360px;
 
 	// Badges class
 	.tutor-qna-badges {
-		& > span {
-			display: inline-flex;
-			align-items: center;
-			margin-left: 15px;
-			font-style: normal;
-			font-weight: normal;
-			font-size: 16px;
-			color: #5b616f;
-			cursor: pointer;
-			&:hover {
-				color: #393a3d;
-			}
-			> *:first-child {
-				width: 20px;
-				height: 20px;
-				margin-top: -4px;
-			}
-			.tutor-loading-spinner,
-			i {
-				margin-right: 6px;
-			}
-			i {
-				display: inline-block;
-				&[class^='tutor-icon-'],
-				&[class*=' tutor-icon-'] {
-					font-size: 24px;
-				}
-				&:before {
-					width: 18px;
-					height: 18px;
-					left: 1px;
-					top: 2px;
-				}
+		.tutor-btn {
+			&:not(:last-child) {
+				margin-right: 18px;
 			}
 		}
+	}
+
+	.tutor-qna-single-wrapper {
+		max-height: calc(100vh - 100px);
+		overflow-y: auto;
 	}
 
 	// Top Sticky bar for badges
 	.tutor-qa-sticky-bar {
-		display: flex;
-		background: white;
-		padding: 21px 0px 15px 0px;
 		position: sticky;
-		top: 32px;
+		top: 0;
+		border-bottom: 1px solid var(--tutor-border-color);
+		margin-bottom: 16px;
 		z-index: 9;
-
-		& > div {
-			&:last-child {
-				flex: 1;
-				text-align: right;
-			}
-		}
 	}
 
 	// Regular chatlist style
 	.tutor-qa-chatlist {
-		overflow: auto;
-
 		.tutor-qna-chat {
-			width: auto;
-			max-width: 80%;
 			margin-bottom: 30px;
-			clear: both;
+			display: flex;
+    		flex-direction: column;
 
 			.tutor-qna-user {
 				display: flex;
 				align-items: center;
-				margin-bottom: 15px;
+				margin-bottom: 16px;
+				gap: 16px;
 
 				img {
-					width: 50px;
-					height: 50px;
-					overflow: hidden;
+					width: 48px;
+					height: 48px;
 					border-radius: 50%;
-				}
-
-				& > div {
-					flex: 1;
-					padding-left: 15px;
 				}
 			}
 
 			.tutor-qna-text {
-				padding: 8px 15px;
+				padding: 16px 24px;
 				background: white;
 				border-radius: 8px;
 				margin: 0;
@@ -171,9 +120,7 @@ $sidebar_width: 360px;
 					height: 20px;
 					top: -5px;
 					background: inherit;
-					-webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
 					clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
-					-webkit-transform: rotate(45deg);
 					transform: rotate(45deg);
 					border-radius: 3px;
 				}
@@ -188,21 +135,15 @@ $sidebar_width: 360px;
 			}
 
 			&.tutor-qna-right {
-				float: right;
+				align-items: flex-end;
+
+				.tutor-qna-user {
+					flex-direction: row-reverse;
+				}
 
 				.tutor-qna-text {
 					&:before {
 						right: 15px;
-					}
-					margin-left: auto !important;
-				}
-
-				.tutor-qna-user {
-					flex-flow: row-reverse;
-					text-align: right;
-					& > div {
-						padding-left: 0;
-						padding-right: 15px;
 					}
 				}
 			}
@@ -214,22 +155,15 @@ $sidebar_width: 360px;
 			.tutor-qna-text {
 				min-width: 50px;
 				background: #e3e9f7;
-				color: $black-100;
+				color: var(--tutor-body-color);
 			}
 		}
 
 		.tutor-qna-right {
 			.tutor-qna-text {
 				background: #dbe9eb;
-				color: $black-100;
+				color: var(--tutor-body-color);
 			}
-		}
-
-		.tutor-qa-reply {
-			// border: 1px solid $stroke-light-30;
-			border-radius: 6px;
-			bottom: 20px;
-			overflow: hidden;
 		}
 	}
 
@@ -242,7 +176,6 @@ $sidebar_width: 360px;
 				text-decoration: underline;
 				font-style: normal;
 				font-weight: normal;
-				// font-size: 15px;
 				color: #41454f;
 			}
 		}
@@ -251,86 +184,8 @@ $sidebar_width: 360px;
 	@at-root {
 		body.wp-admin {
 			.tutor-qa-chatlist {
-				margin-right: 15px;
-				margin-top: 15px;
-			}
-		}
-	}
-}
-
-.tutor-qna-admin-sidebar {
-	width: $sidebar-width;
-	position: fixed;
-	right: 0;
-	top: 32px;
-	bottom: 0;
-	left: auto;
-	background: white;
-	border-left: 1px solid #c0c3cb;
-	box-sizing: border-box;
-	overflow: auto;
-
-	.tutor-qna-user {
-		padding: 20px;
-
-		img {
-			width: 100px;
-			height: 100px;
-			overflow: hidden;
-			border-radius: 50%;
-		}
-
-		h2 {
-			font-style: normal;
-			font-weight: 500;
-			font-size: 30px;
-			color: #212327;
-		}
-
-		strong {
-			font-style: normal;
-			font-weight: 500;
-			font-size: 16px;
-			color: #5b616f;
-		}
-	}
-
-	.tutor-qna-user-details {
-		label {
-			cursor: pointer;
-			padding: 15px;
-			border-top: 1px solid #c0c3cb;
-			border-bottom: 1px solid #c0c3cb;
-			display: block;
-			background: #f4f6f9;
-			font-style: normal;
-			font-weight: 500;
-			font-size: 16px;
-			color: #212327;
-		}
-
-		& > div {
-			display: none;
-			padding: 15px;
-		}
-
-		input {
-			display: none;
-
-			&:checked {
-				& + div {
-					display: block;
-				}
-			}
-		}
-	}
-
-	.qna-previous-questions {
-		div {
-			display: flex;
-			flex-direction: column;
-			&:not(:last-child) {
-				margin-bottom: 20px;
+				margin-right: 16px;
+				margin-top: 16px;
 			}
 		}
 	}
@@ -338,7 +193,7 @@ $sidebar_width: 360px;
 
 table.qna-list-table {
 	.tutor-icon-msg-important-filled {
-		color: $black-40;
+		color: var(--tutor-color-muted);
 	}
 
 	.tutor-icon-msg-important-fill-filled {
@@ -384,14 +239,14 @@ table.qna-list-table {
 
 		&:not(.is-read) {
 			i {
-				color: #1973aa;
+				color: var(--tutor-color-primary);
 			}
 
 			.tutor-qna-content {
 				font-style: normal;
 				font-weight: bold;
 				font-size: 16px;
-				color: #212327;
+				color: var(--tutor-body-color);
 			}
 		}
 
@@ -444,81 +299,37 @@ table.qna-list-table {
 	}
 }
 
-.tutor-quesanswer-askquestion {
-	button,
-	a.sidebar-ask-new-qna-btn {
-		text-align: center;
-	}
-	button {
-	}
-}
 #sideabr-qna-tab-content {
 	.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat {
 		max-width: 100%;
 		margin-bottom: 10px;
 	}
+
 	.tutor-qna-single-question .tutor-qa-reply div {
 		padding: 10px 0px 0px 0px;
 	}
+
 	.tutor-qa-new {
-		margin-top: 10px;
-		padding: 16px 15px;
-		.sidebar-ask-new-qna-submit {
-			display: none;
-		}
-		// .tutor-quesanswer-askquestion {
-		// 	a.sidebar-ask-new-qna-btn {
-		// 		// display: none;
-		// 	}
-		// 	textarea {
-		// 		display: none;
-		// 		margin-bottom: 10px !important;
-		// 	}
-		// 	button {
-
-		// 	}
-		// 	a.sidebar-ask-new-qna-btn {
-		// 		width: 100%;
-		// 		margin-top: 0px !important;
-		// 	}
-		// 	a.sidebar-ask-new-qna-btn {
-		// 		display: block;
-		// 	}
-		// 	.sidebar-ask-new-qna-submit {
-		// 		width: 100%;
-		// 		display: grid;
-		// 		grid-template-columns: 1fr 1fr;
-		// 		> button {
-		// 			display: none;
-		// 		}
-		// 	}
-
-		// }
 		.tutor-quesanswer-askquestion {
-			textarea {
-				display: none;
-			}
-			.sidebar-ask-new-qna-submit {
-				grid-template-columns: 1fr 1fr;
-				gap: 15px;
-			}
-			&.tutor-quesanswer-askquestion-expand {
-				.sidebar-ask-new-qna-btn {
+			&:not(.tutor-quesanswer-askquestion-expand) {
+				.sidebar-ask-new-qna-submit,
+				textarea {
 					display: none;
 				}
-				textarea {
-					display: block;
-				}
-				.sidebar-ask-new-qna-submit {
-					display: grid;
+			}
+
+			&.tutor-quesanswer-askquestion-expand {
+				.sidebar-ask-new-qna-btn-wrap {
+					display: none;
 				}
 			}
 		}
 	}
+
 	.tutor-qa-reply {
 		textarea {
 			&:focus {
-				border: 1px solid var(--tutor-primary) !important;
+				border: 1px solid var(--tutor-color-primary) !important;
 			}
 		}
 	}
@@ -532,15 +343,6 @@ body.wp-admin {
 		.tutor-qa-reply {
 			border-radius: 0px;
 		}
-	}
-
-	.tutor-qa-sticky-bar {
-		margin-left: -20px;
-	}
-
-	.tutor-qa-reply-wrapper {
-		max-width: 950px;
-		margin: 0 auto;
 	}
 
 	.tutor-qa-reply {

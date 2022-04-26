@@ -21,12 +21,6 @@
     i.tutor-icon-fav-full-filled {
         margin-top: -3px;
     }
-    .tutor-updating-message {
-        &:before {
-            margin-right: -1px !important;
-            margin-top: -2px;
-        }
-    }
 }
 
 .course-enrolled-nav-wrap {
@@ -56,8 +50,8 @@
                 }
 
                 &.active a {
-                    border-bottom: 2px solid var(--tutor-primary-color);
-                    color: var(--tutor-text-color);
+                    border-bottom: 2px solid var(--tutor-color-primary);
+                    color: var(--tutor-body-color);
                 }
             }
         }
@@ -72,22 +66,4 @@
 .course-players{
     position: relative;
     overflow: hidden;
-
-    .loading-spinner {
-        position: absolute;
-        inset: 0;
-        background: $bg-gray-10;
-        border-radius: 3px;
-        z-index: 10;
-
-        @include spinner(#1973aa, #eee);
-    }
-    .loading-spinner::before {
-        width: 50px;
-        height: 50px;
-        top: calc(50% - 25px);
-    }
-    .loading-spinner.hide {
-        display: none;
-    }
 }

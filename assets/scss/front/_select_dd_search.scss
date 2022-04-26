@@ -1,3 +1,5 @@
+// @todo: can be removed
+
 .tutor-text-ellipsis {
 	white-space: nowrap;
 	overflow: hidden;
@@ -19,12 +21,6 @@
 		}
 		.text-medium-body {
 			padding-right: 20px;
-		}
-	}
-
-	.tutor-form-select-with-btn {
-		.tutor-dropdown-select-selected {
-			margin-bottom: 0;
 		}
 	}
 
@@ -59,20 +55,6 @@
 		display: flex;
 		flex-direction: column;
 		overflow-y: hidden;
-	}
-}
-
-.tutor-backend-settings-page {
-	.tutor-dropdown-select-options-container {
-		right: 0;
-		.tutor-input-search {
-			.tutor-input-group.tutor-form-control-has-icon {
-				.tutor-input-group-icon {
-					line-height: 40px;
-					height: 40px;
-				}
-			}
-		}
 	}
 }
 

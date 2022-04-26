@@ -227,7 +227,7 @@ window.jQuery(document).ready(function($) {
 				action: 'tutor_load_quiz_builder_modal',
 			},
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('is-loading');
 			},
 			success: function(data) {
 				if (!data.success) {
@@ -254,7 +254,7 @@ window.jQuery(document).ready(function($) {
 				enable_quiz_questions_sorting();
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.removeClass('is-loading');
 			},
 		});
 	});
@@ -318,7 +318,7 @@ window.jQuery(document).ready(function($) {
 					action: 'tutor_quiz_save',
 				},
 				beforeSend: function() {
-					btn.addClass('tutor-updating-message');
+					btn.addClass('is-loading');
 				},
 				success: function(data) {
 					console.log(quiz_id, quiz_id != 0);
@@ -347,7 +347,7 @@ window.jQuery(document).ready(function($) {
 					$('[name="quiz_option[feedback_mode]"]').trigger('change');
 				},
 				complete: function() {
-					btn.removeClass('tutor-updating-message');
+					btn.removeClass('is-loading');
 				},
 			});
 		} else if (current_tab == 'quiz-builder-tab-questions') {
@@ -380,7 +380,7 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: params,
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('is-loading');
 			},
 			success: function(data) {
 				// Add the question form in modal
@@ -391,7 +391,7 @@ window.jQuery(document).ready(function($) {
 				enable_quiz_answer_sorting();
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.removeClass('is-loading');
 			},
 		});
 	});
@@ -411,7 +411,7 @@ window.jQuery(document).ready(function($) {
 				action: 'tutor_quiz_builder_question_delete',
 			},
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('is-loading');
 			},
 			success: function() {
 				$that.closest('.quiz-builder-question-wrap').fadeOut(function() {
@@ -419,7 +419,7 @@ window.jQuery(document).ready(function($) {
 				});
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.removeClass('is-loading');
 			},
 		});
 	});
@@ -448,13 +448,13 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: $formInput,
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('is-loading');
 			},
 			success: function(data) {
 				$('#tutor_quiz_builder_answer_wrapper').html(data.data.output);
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.removeClass('is-loading');
 			},
 		});
 	});
@@ -475,7 +475,7 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: $formInput,
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('is-loading');
 			},
 			success: function(data) {
 				if (data.success) {
@@ -485,7 +485,7 @@ window.jQuery(document).ready(function($) {
 				}
 			},
 			complete: function() {
-				setTimeout(() => $that.removeClass('tutor-updating-message'), 2000);
+				setTimeout(() => $that.removeClass('is-loading'), 2000);
 			},
 		});
 	});
@@ -500,7 +500,7 @@ window.jQuery(document).ready(function($) {
 		var answer_wrapper = $('#tutor_quiz_builder_answer_wrapper');
 		answer_wrapper.html(
 			`<div style="text-align:center">
-                <span class="tutor-updating-message"></span>
+                <span class="is-loading"></span>
             </div>`,
 		);
 
@@ -549,7 +549,7 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: $formInput,
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('is-loading');
 			},
 			success: function(data) {
 				if (!data.success) {
@@ -560,7 +560,7 @@ window.jQuery(document).ready(function($) {
 				$('.tutor_select_value_holder').trigger('change');
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.removeClass('is-loading');
 			},
 		});
 	});
@@ -618,8 +618,8 @@ window.jQuery(document).ready(function($) {
 		$(this)
 			.parent()
 			.toggleClass('tutor-is-active')
-			.find('.tutor-icon-angle-down-filled')
-			.toggleClass('tutor-icon-angle-up-filled');
+			.find('.tutor-icon-angle-down')
+			.toggleClass('tutor-icon-angle-up');
 	});
 
 	// Change background of quiz feedback mode

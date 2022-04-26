@@ -29,21 +29,23 @@ if ( '' === $alert_class ) {
 ?>
 <div class="<?php echo esc_attr( $alert_class ); ?>">
 	<div class="tutor-alert-text">
-		<span class="tutor-alert-icon tutor-icon-34 <?php echo esc_attr( $icon ); ?> tutor-mr-12"></span>
+		<span class="tutor-alert-icon tutor-fs-4 <?php echo esc_attr( $icon ); ?> tutor-mr-12"></span>
 		<span>
 		<?php echo esc_html( $message ); ?>
 		</span>
 	</div>
-	<div class="tutor-alert-btns">
+	
+	<?php if ( '' !== $button_text || '' !== $close_icon ) : ?>
+	<div class="alert-btn-group">
 		<?php if ( '' !== $button_text ) : ?>
-		<div class="alert-btn-group">
 			<button class="<?php echo esc_attr( $button_class ); ?>" id="<?php echo esc_attr( $button_id ); ?>">
 				<?php echo esc_html( $button_text ); ?>
 			</button>
-		</div>
 		<?php endif; ?>
+
 		<?php if ( '' !== $close_icon ) : ?>
-			<span class="tutor-alert-close tutor-icon-28 tutor-color-black-40 <?php echo esc_attr( $close_icon ); ?>"></span>
+			<span class="tutor-alert-close tutor-fs-5 tutor-color-secondary <?php echo esc_attr( $close_icon ); ?>"></span>
 		<?php endif; ?>
 	</div>
+	<?php endif; ?>
 </div>

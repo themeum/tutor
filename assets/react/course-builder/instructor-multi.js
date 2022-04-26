@@ -39,14 +39,14 @@ window.jQuery(document).ready($=>{
                     if(!callback){
                         // Don't show if click on add. Then add loading icon should appear
                         search_container.html('');
-                        search_container.addClass('tutor-updating-message');
-                        // search_container.html('<div class="tutor-text-center"><span class="tutor-updating-message"></span></div>');
+                        search_container.addClass('is-loading');
+                        // search_container.html('<div class="tutor-text-center"><span class="is-loading"></span></div>');
                     }
                 },
                 success: function(resp) {
                     const {search_result, shortlisted, shortlisted_count} = resp.data || {};
 
-                    search_container.removeClass('tutor-updating-message');
+                    search_container.removeClass('is-loading');
                     
                     search_container.html(search_result);
                     shortlist_container.html(shortlisted);
@@ -73,7 +73,7 @@ window.jQuery(document).ready($=>{
 
     // Shortlist on plus click
     $(document).on('click', '#tutor_course_instructor_modal .tutor-shortlist-instructor', function() {
-        $(this).addClass('tutor-updating-message');
+        $(this).addClass('is-loading');
         search_method($(this).closest('[data-user_id]').data('user_id'), ()=>{
             search_container.hide();
         });
@@ -107,7 +107,7 @@ window.jQuery(document).ready($=>{
                 action: 'tutor_add_instructors_to_course'
             },
             beforeSend: function () {
-                $that.addClass('tutor-updating-message');
+                $that.addClass('is-loading');
             },
             success: function (data) {
                 if (data.success){
@@ -118,6 +118,7 @@ window.jQuery(document).ready($=>{
 
                     // Hide the modal
                     $('#tutor_course_instructor_modal').removeClass('tutor-is-active');
+                    $('body').removeClass('tutor-modal-open');
 
                     // Show the result in course editor
                     $('.tutor-course-instructors-metabox-wrap').parent().html(data.data.output);
@@ -128,7 +129,7 @@ window.jQuery(document).ready($=>{
                 tutor_toast('Error!', get_response_message(data), 'error');
             },
             complete: function () {
-                $that.removeClass('tutor-updating-message');
+                $that.removeClass('is-loading');
             }
         });
     });
@@ -148,8 +149,8 @@ window.jQuery(document).ready($=>{
                 instructor_id,
                 action : 'detach_instructor_from_course'
             },
-            beforeSend: ()=>$that.addClass('tutor-updating-message'),
-            complete: ()=>$that.removeClass('tutor-updating-message'),
+            beforeSend: ()=>$that.addClass('is-loading'),
+            complete: ()=>$that.removeClass('is-loading'),
             success: function (data) {
                 if (data.success){
                     $that.closest('.added-instructor-item').remove();

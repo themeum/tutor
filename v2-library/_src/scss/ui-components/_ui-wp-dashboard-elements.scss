@@ -1,7 +1,7 @@
 .tutor-wp-dashboard-header {
 	box-sizing: border-box;
 	background: #ffffff;
-	border-bottom: 1px solid $stroke-light-30;
+	border-bottom: 1px solid var(--tutor-border-color);
 
 	ol,
 	ul {
@@ -13,81 +13,6 @@
 	}
 	.header-title {
 		gap: 10px;
-	}
-
-	@include breakpoint-min(1200) {
-		height: 60px;
-	}
-
-	.filter-btns {
-		display: flex;
-		gap: 12px;
-		@include breakpoint-min(992) {
-			gap: 30px;
-		}
-		.filter-btn {
-			text-decoration: none;
-			background: transparent;
-			outline: none;
-			border: none;
-			font: inherit;
-			color: inherit;
-			position: relative;
-			text-transform: capitalize;
-			> * {
-				pointer-events: none;
-			}
-			.item-count {
-				color: $black-60;
-			}
-			&:before {
-				content: '';
-				position: absolute;
-				width: 100%;
-				height: 3px;
-				background: $brand-wordpress;
-				bottom: calc(0% - 18px);
-				transition: transform 200ms linear;
-				transform: scaleY(0);
-				transform-origin: bottom;
-
-				@include breakpoint-max(1199) {
-					bottom: calc(0% - 14px);
-				}
-			}
-
-			&.is-active {
-				.filter-btn-name {
-					color: $brand-wordpress;
-				}
-				&:before {
-					transform: scaleY(1);
-				}
-			}
-		}
-		@include breakpoint-max(mobile) {
-			.filter-btn {
-				font-size: 14px;
-				> {
-					* {
-						display: flex;
-						align-items: center;
-						justify-content: center;
-					}
-				}
-				&:not(:first-child) {
-					margin-left: 5px;
-				}
-			}
-		}
-	}
-
-	.tutor-btn.tutor-btn-wordpress-outline.tutor-btn-sm {
-		padding: 5px 10px 5px 8px;
-	}
-
-	@include breakpoint-max(mobile) {
-		overflow-x: auto;
 	}
 }
 
@@ -102,8 +27,6 @@
 		display: block !important;
 		&-items {
 			display: block !important;
-			select.tutor-form-select,
-			.tutor-react-datepicker .react-datepicker__input-container input,
 			.tutor-input-group {
 				max-width: 100% !important;
 				width: 100% !important;
@@ -111,64 +34,27 @@
 		}
 		&-item {
 			margin-top: 20px;
-			.tutor-admin-page-refresh {
-				margin-top: 20px;
-			}
 		}
 	}
-	.tutor-btn.tutor-btn-wordpress-outline.tutor-btn-sm {
-		padding: 7px 10px;
-	}
-} // .tutor-wp-dashboard-filter
+}
 
 .tutor-wp-dashboard-filter-items {
-	gap: 30px;
-
+	gap: 24px;
 	.tutor-form-label {
 		@extend .text-medium-caption;
-		@extend .tutor-color-black-70;
+		color: var(--tutor-color-secondary);
 	}
+}
 
-	select.tutor-form-select,
-	.tutor-input-group,
-	.tutor-react-datepicker .react-datepicker__input-container input {
-		max-width: 180px;
-		max-width: max-content;
-		line-height: 1;
-	}
 
-	@include breakpoint-min(1600) {
-		select.tutor-form-select,
-		.tutor-input-group {
-			width: 227px;
-			max-width: 227px;
-		}
-	}
-
-	select.tutor-form-select:focus,
-	input.tutor-form-control:focus,
-	textarea.tutor-form-control:focus {
-		border-color: $brand-wordpress;
-		box-shadow: unset;
-	}
-
-	@include breakpoint-min(1500) {
-		> div:not(.item-reset) {
-			width: 228px;
-		}
-	}
-} // .tutor-wp-dashboard-filter-items
-
-// Zoom Integration .tutor-zoom-integration-card
 .tutor-zoom-integration-card {
 	.tutor-zoom-no-meetings {
 		margin: 15px;
 	}
 
-	// .tutor-zoom-integration-card-body max-width: 1367px;
 	&-body {
-		border-top: 1px solid $stroke-light-30;
-		border-bottom: 1px solid $stroke-light-30;
+		border-top: 1px solid var(--tutor-border-color);
+		border-bottom: 1px solid var(--tutor-border-color);
 		display: grid;
 		@include responsiveGrid(200px, auto);
 		grid-gap: 15px;
@@ -186,32 +72,4 @@
 			}
 		}
 	}
-
-	.tutor-btn.update_zoom_meeting_modal_btn,
-	.tutor-btn.create-zoom-meeting-btn {
-		border-color: #2d8cff;
-		background: #2d8cff;
-		&:hover {
-			background: darken(#2d8cff, 5);
-			border-color: darken(#2d8cff, 5);
-		}
-	}
-
-	.tutor-btn.tutor-is-outline {
-		padding: 6px 12px;
-		border-color: #2d8cff;
-		color: #2d8cff;
-		&:hover {
-			border-color: #2d8cff;
-			background: #2d8cff;
-		}
-	}
-
-	.tutor-btn.tutor-is-circle {
-		color: $design-grey;
-		background: transparent;
-		&:hover {
-			background: $black-05;
-		}
-	}
-} //end of .tutor-zoom-integration-card
+}

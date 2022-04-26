@@ -54,43 +54,40 @@ $the_query = new WP_Query( $args );
 // get courses
 $courses    = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
 $image_base = tutor()->url . '/assets/images/';
-
-
 ?>
 
-<div class="tutor-dashboard-content-inner">
-	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php echo __( 'Announcement', 'tutor' ); ?></div>
-	<!--notice-->
-	<div class="tutor-component-three-col-action new-announcement-wrap">
-		<div class="tutor-announcement-big-icon">
-			<i class="tutor-icon-speaker-filled"></i>
-		</div>
-		<div>
-			<span class=" tutor-color-black-60"><?php esc_html_e( 'Create Announcement', 'tutor' ); ?></span>
-			<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
-					<?php esc_html_e( 'Notify all students of your course', 'tutor' ); ?>
+<div class="tutor-card tutor-p-24">
+	<div class="tutor-row tutor-align-items-lg-center">
+		<div class="tutor-col-lg-auto tutor-mb-16 tutor-mb-lg-0">
+			<div class="tutor-round-box tutor-p-8">
+				<i class="tutor-icon-bullhorn tutor-fs-3" area-hidden="true"></i>
 			</div>
 		</div>
-		<div class="new-announcement-button">
-			<button type="button" class="tutor-btn" data-tutor-modal-target="tutor_announcement_new">
+
+		<div class="tutor-col tutor-mb-16 tutor-mb-lg-0">
+			<div class="tutor-fs-6 tutor-color-muted tutor-mb-4">
+				<?php esc_html_e( 'Create Announcement', 'tutor' ); ?>
+			</div>
+			<div class="tutor-fs-5 tutor-color-black">
+				<?php esc_html_e( 'Notify all students of your course', 'tutor' ); ?>
+			</div>
+		</div>
+
+		<div class="tutor-col-lg-auto">
+			<button type="button" class="tutor-btn tutor-btn-primary" data-tutor-modal-target="tutor_announcement_new">
 				<?php esc_html_e( 'Add New Announcement', 'tutor' ); ?>
 			</button>
 		</div>
 	</div>
-	<!--notice end-->
 </div>
 
-
-<!--Filter-->
 <div class="tutor-row tutor-mb-32 tutor-mt-44" style="width: calc(100% + 30px);">
 	<div class="tutor-col-12 tutor-col-lg-6 tutor-mt-12 tutor-mt-lg-0">
 		<label class="tutor-d-block tutor-mb-12 tutor-form-label">
 			<?php esc_html_e( 'Courses', 'tutor' ); ?>
 		</label>
-		<select class="tutor-form-select tutor-form-control-sm tutor-announcement-course-sorting">
-
+		<select class="tutor-form-select tutor-announcement-course-sorting">
 			<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
-
 			<?php if ( $courses ) : ?>
 				<?php foreach ( $courses as $course ) : ?>
 					<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
@@ -116,11 +113,9 @@ $image_base = tutor()->url . '/assets/images/';
 		<div class="tutor-v2-date-picker"></div>
 	</div>
 </div>
-<!--Filter end-->
 
 <?php
 	$announcements = $the_query->have_posts() ? $the_query->posts : array();
-
 	tutor_load_template_from_custom_path(
 		tutor()->path . '/views/fragments/announcement-list.php',
 		array(

@@ -16,7 +16,6 @@ document.addEventListener('click', (e) => {
 	}
 
 	if ((e.target.hasAttribute(attr) || e.target.closest(`[${attr}]`))) {
-		// console.log(enterPressed);
 		e.preventDefault();
 		const id = e.target.hasAttribute(attr)
 			? e.target.getAttribute(attr)
@@ -24,10 +23,9 @@ document.addEventListener('click', (e) => {
 		const modal = document.getElementById(id);
 
 		if (modal) {
-			document
-				.querySelectorAll('.tutor-modal.tutor-is-active')
-				.forEach((item) => item.classList.remove('tutor-is-active'));
+			document.querySelectorAll('.tutor-modal.tutor-is-active').forEach((item) => item.classList.remove('tutor-is-active'));
 			modal.classList.add('tutor-is-active');
+			document.body.classList.add("tutor-modal-open");
 		}
 	}
 
@@ -41,6 +39,6 @@ document.addEventListener('click', (e) => {
 		modal.forEach((m) => {
 			m.classList.remove('tutor-is-active');
 		});
+		document.body.classList.remove("tutor-modal-open");
 	}
-
 });

@@ -14,7 +14,6 @@ window.jQuery(document).ready(function($){
         var $that = $(this);
         var name = $that.data('name');
         var card_wrapper = $that.parent().find('.tutor-attachment-cards');
-        var size_placement_below = !card_wrapper.hasClass('tutor-attachment-size-aside');
         var frame;
 
         // If the media frame already exists, reopen it.
@@ -38,21 +37,17 @@ window.jQuery(document).ready(function($){
             if (attachments.length){
                 for (var i=0; i < attachments.length; i++){
                     var attachment = attachments[i];
-                    var size_info = `<span class="filesize">
-                                ${__('Size', 'tutor')}: ${attachment.filesizeHumanReadable}
-                            </span>`;
                         
-                    var inputHtml = `<div data-attachment_id="${attachment.id}">
-                        <div>
-                            <a href="${attachment.url}" target="_blank">
-                                ${attachment.filename}
-                            </a>
-                            ${size_placement_below ? size_info : ''}
+                    var inputHtml = `<div class="tutor-card tutor-d-flex tutor-align-items-center tutor-px-20 tutor-py-16 tutor-mb-16" data-attachment_id="${attachment.id}">
+                        <div class="tutor-w-100 tutor-pr-24">
+                            <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-4">${attachment.filename}</div>
+                            <div class="tutor-fs-7 tutor-color-muted">${__('Size', 'tutor')}: ${attachment.filesizeHumanReadable}</div>
                             <input type="hidden" name="${name}" value="${attachment.id}">
                         </div>
-                        <div>
-                            ${!size_placement_below ? size_info : ''}
-                            <span class="tutor-delete-attachment tutor-action-icon tutor-icon-line-cross-line tutor-icon-18"></span>
+                        <div class="tutor-ml-auto">
+                            <span class="tutor-delete-attachment tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-lg" role="button">
+                                <span class="tutor-icon-times" area-hidden="true"></span>
+                            </span>
                         </div>
                     </div>`;
                     

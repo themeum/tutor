@@ -1,53 +1,75 @@
-.tutor-wrap.tutor-courses-wrap.course-archive-page {
-	min-height: 200px;
-	@include breakpoint-min(tablet) {
-		min-height: 400px;
-	}
-}
+// course list
+.tutor-course {
+	&-list {
+		&-item {
+			height: 100%;
 
-.tutor-course-listing {
-	// max-width: 1110px;
-	// margin: 0 auto;
+			&-title {
+				@include tutorLineClamp(3);
+				&,
+				a {
+					color: var(--tutor-body-color);
+				}
 
-	// .tutor-course-listing-grid
-	&-grid {
-		@include responsiveGrid(250px, 1fr);
-		grid-gap: 30px;
-		grid-template-rows: min-content;
+				a:hover {
+					color: var(--tutor-color-primary);
+				}
+			}
 
-		@include breakpoint-min(desktop-lg) {
-			// .tutor-course-listing-grid-*
-			&-1 {
-				grid-template-columns: repeat(1, 1fr);
+			&-bookmark {
+				position: absolute;
+				top: 12px;
+				right: 12px;
 			}
-			&-2 {
-				grid-template-columns: repeat(2, 1fr);
-			}
-			&-3 {
-				grid-template-columns: repeat(3, 1fr);
-			}
-			&-4 {
-				grid-template-columns: repeat(4, 1fr);
+
+			&-body {
+				display: flex;
+				flex-direction: column;
+				flex-wrap: nowrap;
 			}
 		}
 	}
+}
 
-	// Course Grid with Filter
-	&-filter-grid-2 {
+.list-item-booking {
+	.circle-progress {
+		--w: 23px;
+		--pd: 3px;
+		position: relative;
+		width: var(--w);
+		height: var(--w);
+		padding: var(--pd);
+		border-radius: 50%;
+		background: conic-gradient(var(--tutor-color-primary) var(--pro), 0, var(--tutor-border-color) 100%);
+
+		&:before {
+			content: '';
+			position: absolute !important;
+			inset: calc(0% + var(--pd));
+			border-radius: 50%;
+			background: #fff;
+		}
+
+		&.progress-full {
+			background: conic-gradient(var(--tutor-color-primary) var(--pro), 0, var(--tutor-border-color) 100%);
+		}
 	}
-	&-filter-grid-3 {
+	&.booking-full {
+		.btn-icon {
+			font-size: 30px;
+		}
 	}
 }
 
 .tutor-course-listing-item {
 	display: flex;
 	flex-direction: column;
-	background: var(--tutor-bg-white, #fff);
+	background: var(--tutor-color-white, #fff);
 	border: 1px solid #cdcfd5;
 	border-radius: 7px;
 	overflow: hidden;
 
-	a {
+	a:not(.btn):not(.tutor-btn):not(.tutor-iconic-btn) {
 		text-decoration: none;
 		color: inherit;
 	}
@@ -61,9 +83,6 @@
 		@include breakpoint-min(desktop-lg) {
 			gap: 36px;
 		}
-		.meta-icon {
-			font-size: 28px;
-		}
 	}
 
 	.course-listing-thumbnail {
@@ -75,37 +94,6 @@
 		@include tutorLineClamp(3);
 	}
 
-	// .tutor-course-listing-item-head
-	&-head {
-		border-top-left-radius: 6px;
-		border-top-right-radius: 6px;
-		overflow: hidden;
-		position: relative;
-		> a {
-			display: flex;
-		}
-		.save-bookmark-btn {
-			position: absolute;
-			top: 12px;
-			right: 21px;
-			width: 38px;
-			height: 38px;
-			background: rgba(33, 35, 39, 0.4);
-			color: var(--tutor-design-white, #fff);
-			border: none;
-			border-radius: 50%;
-			font-size: 20px;
-			transition: 150ms linear;
-			&.bookmark-is-filled {
-				background: rgba(27, 27, 27, 0.4);
-			}
-			&:hover {
-				background: var(--tutor-primary-color, blue);
-				color: var(--tutor-design-white, #fff);
-			}
-		}
-	}
-
 	// .tutor-course-listing-item-body
 	&-body {
 		display: flex;
@@ -115,12 +103,6 @@
 		.list-item-author {
 			gap: 10px;
 		}
-		.tutor-avatar {
-			width: 34px;
-			height: 34px;
-			border-radius: 50%;
-			flex: 0 0 auto;
-		}
 	}
 
 	// .tutor-course-listing-item-footer
@@ -128,8 +110,9 @@
 		margin-top: auto;
 		border-top: 1px solid #cdcfd5;
 		display: grid;
+
 		&.has-border {
-			border-top: 1px solid var(--tutor-stroke-light-20, #ccc);
+			border-top: 1px solid var(--tutor-border-color);
 		}
 
 		.list-item-price-with-booking {
@@ -147,39 +130,9 @@
 			gap: 10px;
 		}
 
-		.list-item-booking {
-			.circle-progress {
-				--w: 23px;
-				--pd: 3px;
-				position: relative;
-				width: var(--w);
-				height: var(--w);
-				padding: var(--pd);
-				border-radius: 50%;
-				background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-primary-60) 100%);
-
-				&:before {
-					content: '';
-					position: absolute !important;
-					inset: calc(0% + var(--pd));
-					border-radius: 50%;
-					background: #fff;
-				}
-
-				&.progress-full {
-					background: conic-gradient(var(--tutor-design-error) var(--pro), 0, var(--tutor-primary-60) 100%);
-				}
-			}
-			&.booking-full {
-				.btn-icon {
-					font-size: 30px;
-				}
-			}
-		}
-
 		.list-item-button {
 			.tutor-btn.tutor-btn-ghost {
-				color: var(--tutor-text-primary);
+				color: var(--tutor-body-color);
 				.btn-icon {
 					border-radius: 50%;
 					font-size: 25px;
@@ -196,7 +149,7 @@
 				}
 
 				&:hover .btn-icon {
-					background: var(--tutor-primary-30);
+					background: rgba(var(--tutor-color-primary-rgb), 0.15);
 				}
 			}
 		}
@@ -204,32 +157,10 @@
 
 	// .tutor-course-listing-item-sm
 	&-sm {
-		.list-item-meta .meta-icon {
-			font-size: 20px;
-		}
 		.tutor-ratings {
 			.tutor-rating-text {
 				@extend .text-medium-small;
 			}
-		}
-	}
-
-	.tutor-course-listing-thumbnail {
-		width: 100%;
-		height: 200px;
-		@include breakpoint-min(desktop) {
-			height: 165px;
-		}
-		background-repeat: no-repeat;
-		background-size: cover;
-		background-position: center;
-	}
-
-	.tutor-course-listing-item-head {
-		a.tutor-course-listing-thumb-permalink {
-			display: block;
-			width: 100%;
-			height: 100%;
 		}
 	}
 
@@ -238,13 +169,8 @@
 		border: 1px solid #cdcfd5;
 		border-radius: 6px;
 
-		.tutor-course-listing-thumbnail {
-			height: 160px;
-		}
-
 		.tutor-course-listing-item-head {
 			margin: -1px;
-			// border-radius: unset;
 		}
 
 		.tutor-course-listing-item-body,
@@ -274,25 +200,15 @@
 	}
 }
 
-@include breakpoint-max(desktop) {
-	.tutor-filter-widget-items-wrap {
-		@include responsiveGrid(250px, 1fr);
-		grid-gap: 30px;
-	}
-}
-
 .tutor-course-listing-filter {
 	display: grid;
 	@include breakpoint-min(desktop) {
 		grid-template-columns: 1fr 3fr;
-		.filter-widget-input-wrapper {
-			margin-top: 42px;
-		}
 	}
 
 	.filter-widget-checkboxes {
 		label {
-			@extend .tutor-color-black-70;
+			color: var(--tutor-color-secondary);
 			@extend .text-regular-body;
 		}
 	}
@@ -347,81 +263,12 @@
 	}
 }
 
-.list-item-progress {
-	.progress-bar {
-		position: relative;
-		width: 100%;
-		height: 4px;
-		background: #e3e5eb;
-		border-radius: 2px;
-		overflow: hidden;
-		.progress-value {
-			background: var(--tutor-primary-color);
-			position: absolute;
-			width: var(--progress-value);
-			height: 100%;
-			border-radius: 2px;
-		}
-	}
-	.progress-text {
-		margin-left: 10px;
-	}
-}
-
-// .tutor-frontend-dashboard-course-porgress-*
-.tutor-frontend-dashboard-course-porgress {
-	// .tutor-frontend-dashboard-course-porgress-card
-	&-card {
-		@include breakpoint-min(desktop) {
-			&-horizontal {
-				flex-direction: row;
-			}
-
-			.tutor-course-listing-item-head {
-				border-radius: 0;
-				border-top-left-radius: 6px;
-				border-bottom-right-radius: 6px;
-				overflow: visible;
-			}
-			.tutor-course-listing-thumbnail {
-				max-width: 350px;
-				width: 350px;
-			}
-			.tutor-course-listing-thumbnail {
-				max-width: 250px;
-				width: 250px;
-				height: 100%;
-				border-top-left-radius: 6px;
-				border-bottom-left-radius: 6px;
-			}
-		}
-
-		.list-item-progress .progress-percentage {
-			white-space: nowrap;
-		}
-	}
-}
-
 // Loading Bookmark spacing fix
 .tutor-course-listing-item {
-	.tutor-updating-message {
-		&:before {
-			margin-right: 0 !important;
-		}
-	}
 	.tutor-ratings {
 		.tutor-rating-text {
 			line-height: 1 !important;
 			margin-top: 2px;
-		}
-	}
-}
-
-.tutor-course-listing-item {
-	.tutor-updating-message {
-		@include spinner($lineColor: #ababab, $lineBgColor: #fdfdfd, $size: 17px);
-		&:before {
-			content: '' !important;
 		}
 	}
 }

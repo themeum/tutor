@@ -1,69 +1,56 @@
-.tutor-quiz-type-icon {
-	padding: 0;
-	color: #fff;
-	border-radius: 3px;
-	margin-right: 5px;
-	display: inline-block;
-	width: 22px;
-	height: 22px;
-	text-align: center;
-	line-height: 22px;
-    font-size: 19px;
-    vertical-align: middle;
-
-    &.tutor-icon-short-ans-filled {
-        background-color: #f37512;
+.tutor-quiz-type {
+    &-icon {
+        padding: 0;
+        color: #fff;
+        border-radius: 4px;
+        margin-right: 8px;
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        font-size: 20px;
+        vertical-align: middle;
+        background-color: var(--tutor-color-primary);
     }
 
-    &.tutor-icon-camera-filled {
-        background-color: #a322f9;
-    }
-
-    &.tutor-icon-yes-no-filled {
+    &-boolean {
         background-color: #3E64DE;
     }
 
-    &.tutor-icon-multiple-choice-filled {
-        background-color: #9034a9;
+    &-single-choice {
+        background-color: #00B890;
     }
-
-    &.tutor-icon-mark-filled {
-        background-color: #00b890;
+    
+    &-multiple-choices {
+        background-color: #9034A9;
     }
-
-    &.tutor-icon-open-ended-filled {
-        background-color: #fe3129;
+    
+    &-open-ended {
+        background-color: #FE3129;
     }
-
-    &.tutor-icon-fill-gaps-filled {
-        background-color: #ffbf00;
+    
+    &-fill-blanks {
+        background-color: #FFBF00;
     }
-
-    &.tutor-icon-answer-shorting {
-        background-color: #f80089;
+    
+    &-short-answer {
+        background-color: #F37512;
     }
-
-    &.tutor-icon-assesment {
-        background-color: #274055;
+    
+    &-matching {
+        background-color: #8A4A1B;
     }
-
-    &.tutor-icon-matching-filled {
-        background-color: #8a4a1b;
+    
+    &-image-matching {
+        background-color: #F37512;
     }
-
-    &.tutor-icon-image-matching-filled {
-        background-color: #f37512;
+    
+    &-image-answering {
+        background-color: #A322F9;
     }
-
-    &.tutor-icon-ordering-z-to-a-filled {
+    
+    &-ordering {
         background-color: #1B52D8;
-    }
-
-    &.tutor-icon-plus-square-filled, &.tutor-icon-plus {
-        background-color: var(--tutor-success-button-color);
-    }
-
-    &.tutor-icon-plus {
-        background-color: var(--tutor-primary-color);
     }
 }

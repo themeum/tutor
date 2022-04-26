@@ -1,7 +1,6 @@
 @import '../../../v2-library/_src/scss/reusables.scss';
 .tutor-dashboard {
 	// Libraries to use in all frontend dashboard pages
-	@import './lib/dropdown-action.scss';
 	@import './lib/phone-number-field.scss';
 	@import './lib/form-fields.scss';
 
@@ -18,7 +17,7 @@
 			font-style: normal;
 			font-weight: 500;
 			font-size: 24px;
-			color: $black-main;
+			color: var(--tutor-color-body);
 			margin: 0 0 25px 0;
 			line-height: 34px;
 		}
@@ -30,11 +29,7 @@
 		.tutor-capitalize-text {
 			text-transform: capitalize;
 		}
-		.tutor-dashboard-title {
-			// margin-top: 40px;
-		}
 
-		@import './pages/dashboard.scss';
 		@import './pages/my-profile.scss';
 		@import './pages/enrolled-courses.scss';
 		@import './pages/wishlist.scss';

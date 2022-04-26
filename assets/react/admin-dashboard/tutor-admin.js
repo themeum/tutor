@@ -42,27 +42,6 @@ jQuery(document).ready(function($) {
 	}
 
 	/**
-   * Option Settings Nav Tab
-   * /
-  $(".tutor-option-nav-tabs li a").click(function (e) {
-    e.preventDefault();
-    var tab_page_id = $(this).attr("data-tab");
-    $(".option-nav-item").removeClass("current");
-    $(this)
-      .closest("li")
-      .addClass("current");
-    $(".tutor-option-nav-page").hide();
-    $(tab_page_id)
-      .addClass("current-page")
-      .show();
-    window.history.pushState("obj", "", $(this).attr("href"));
-  });
-
-  /**
-   * End Withdraw nav tabs
-   */
-
-	/**
 	 * Open Sidebar Menu
 	 */
 	if (_tutorobject.open_tutor_admin_menu) {
@@ -166,11 +145,11 @@ jQuery(document).ready(function($) {
 	 * @since v.1.0.3
 	 */
 	$(document).on('submit', '#tutor-new-instructor-form', function(e) {
+		console.log("Hello");
 		e.preventDefault();
 		var $that = $(this);
 		var formData = $that.serializeObject();
-		var loadingButton = $('#tutor-new-instructor-form .tutor-btn-loading');
-		var prevText = loadingButton.html();
+		var submitButton = $('#tutor-new-instructor-form [data-tutor-modal-submit]');
 		var responseContainer = $('#tutor-new-instructor-form-response');
 		formData.action = 'tutor_add_instructor';
 		$.ajax({
@@ -178,45 +157,41 @@ jQuery(document).ready(function($) {
 			type: 'POST',
 			data: formData,
 			beforeSend: function() {
+				submitButton.attr('disabled', 'disable').addClass('is-loading');
 				responseContainer.html('');
-				loadingButton.html(`<div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>`);
 			},
+
 			success: function success(data) {
 				if (!data.success) {
 					if (data?.data?.errors.errors) {
 						for (let v of Object.values(data.data.errors.errors)) {
-							//responseContainer.append(`<div class='tutor-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
 							responseContainer.append(`
-              <div class='tutor-col'>
-                <div class="tutor-alert tutor-warning">
-                <div class="tutor-alert-text">
-                    <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
-                    <span>
-                      ${v}
-                    </span>
-                </div>
-                </div>
-              </div>
-              `);
+								<div class='tutor-col'>
+									<div class="tutor-alert tutor-warning">
+									<div class="tutor-alert-text">
+										<span class="tutor-alert-icon tutor-icon-circle-info tutor-mr-8"></span>
+										<span>
+											${v}
+										</span>
+									</div>
+									</div>
+								</div>
+              				`);
 						}
 					} else {
 						for (let v of Object.values(data.data.errors)) {
-							//responseContainer.append(`<div class='tutor-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
 							responseContainer.append(`
-              <div class='tutor-col'>
-                <div class="tutor-alert tutor-warning">
-                <div class="tutor-alert-text">
-                    <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
-                    <span>
-                      ${v}
-                    </span>
-                </div>
-                </div>
-              </div>
-              `);
+								<div class='tutor-col'>
+									<div class="tutor-alert tutor-warning">
+									<div class="tutor-alert-text">
+										<span class="tutor-alert-icon tutor-icon-circle-info tutor-mr-8"></span>
+										<span>
+											${v}
+										</span>
+									</div>
+									</div>
+								</div>
+							`);
 						}
 					}
 				} else {
@@ -226,7 +201,7 @@ jQuery(document).ready(function($) {
 				}
 			},
 			complete: function() {
-				loadingButton.html(prevText);
+				submitButton.removeAttr('disabled').removeClass('is-loading');
 			},
 		});
 	});
@@ -244,7 +219,7 @@ jQuery(document).ready(function($) {
 		const loadingButton = e.target;
 		const prevHtml = loadingButton.innerHTML;
 		loadingButton.innerHTML = '';
-		loadingButton.classList.add('tutor-updating-message');
+		loadingButton.classList.add('is-loading');
 
 		// prepare form data
 		const formData = new FormData();
@@ -256,8 +231,8 @@ jQuery(document).ready(function($) {
 		try {
 			const post = await ajaxHandler(formData);
 			const response = await post.json();
-			if (loadingButton.classList.contains('tutor-updating-message')) {
-				loadingButton.classList.remove('tutor-updating-message');
+			if (loadingButton.classList.contains('is-loading')) {
+				loadingButton.classList.remove('is-loading');
 				loadingButton.innerHTML = action.charAt(0).toUpperCase() + action.slice(1);
 			}
 
@@ -343,7 +318,7 @@ jQuery(document).ready(function($) {
 	 */
 	$(document).on('click', '.tutor-password-reveal', function(e) {
 		//toggle icon
-		$(this).toggleClass('tutor-icon-eye-filled tutor-icon-eye-fill-filled');
+		$(this).toggleClass('tutor-icon-eye-line tutor-icon-eye-bold');
 		//toggle attr
 		$(this)
 			.next()
@@ -517,11 +492,11 @@ jQuery(document).ready(function($) {
 				let currentA = item.closest('#toplevel_page_tutor  li.wp-not-current-submenu.menu-top.toplevel_page_tutor > a');
 				if (mainMenu) {
 					mainMenu.className =
-						'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
+					'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
 				}
 				if (currentA) {
 					currentA.className =
-						'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
+					'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
 				}
 			}
 		});

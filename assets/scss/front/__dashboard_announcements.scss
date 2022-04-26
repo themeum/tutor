@@ -24,42 +24,6 @@
 	}
 }
 
-.tutor-dropdown {
-	position: relative;
-	cursor: pointer;
-    margin-left: 20px;
-
-    .tutor-icon-action {
-		padding: 5px 10px;
-		margin-right: -10px;
-
-        &:hover {
-            background: #f3f3f3;
-            border-radius: 50%;
-        }
-    }
-
-	&.tutor-dropdown-show {
-		.tutor-dropdown-menu {
-			display: block !important;
-		}
-	}
-}
-
-.tutor-announcement-big-icon {
-	margin-right: 10px;
-	font-size: 32px;
-	width: 60px;
-	height: 60px;
-	border-radius: 100%;
-	background: #e9edfb;
-	text-align: center;
-	color: #3e64de;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
 table.frontend-dashboard-table {
 	tbody {
 		tr {

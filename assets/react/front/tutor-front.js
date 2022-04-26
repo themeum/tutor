@@ -388,7 +388,7 @@ jQuery(document).ready(function ($) {
 				type: 'POST',
 				data: data,
 				beforeSend: function () {
-					$btn.addClass('tutor-updating-message');
+					$btn.addClass('is-loading');
 				},
 				success: function (data) {
 					if (data.success) {
@@ -396,7 +396,7 @@ jQuery(document).ready(function ($) {
 					}
 				},
 				complete: function () {
-					$btn.removeClass('tutor-updating-message');
+					$btn.removeClass('is-loading');
 					setTimeout(() => {
 						$btn.prop("disabled", false);
 					}, 2000);
@@ -412,25 +412,6 @@ jQuery(document).ready(function ($) {
 	 * @since v.1.2.0
 	 */
 
-	$(document).on('click', '.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
-		e.preventDefault();
-
-		if ($(this).data('reload') == 'yes') {
-			window.location.reload();
-			return;
-		}
-
-		$('.tutor-earning-withdraw-form-wrap')
-			.toggle()
-			.find('[name="tutor_withdraw_amount"]')
-			.val('');
-		$('.tutor-withdrawal-pop-up-success')
-			.hide()
-			.next()
-			.show();
-		$('html, body').css('overflow', $('.tutor-earning-withdraw-form-wrap').is(':visible') ? 'hidden' : 'auto');
-	});
-
 	$(document).on('submit', '#tutor-earning-withdraw-form', function (e) {
 		e.preventDefault();
 
@@ -445,18 +426,21 @@ jQuery(document).ready(function ($) {
 			data: data,
 			beforeSend: function () {
 				$form.find('.tutor-success-msg').remove();
-				$btn.addClass('tutor-updating-message');
+				$btn.attr('disabled', 'disabled').addClass('is-loading');
 			},
 			success: function (data) {
 				var Msg;
 				$('.tutor-earning-withdraw-form-wrap').hide();
 				if (data.success) {
+					console.log(data.data.available_balance);
+					
 					if (data.data.available_balance !== 'undefined') {
 						$('.withdraw-balance-col .available_balance').html(data.data.available_balance);
 					}
+
 					tutor_toast(
 						__('Request Successful', 'tutor'),
-						__('Your request has been submitted. Please wait for the administrator’s response.', 'tutor'),
+						__('Your request has been submitted. Please wait for the administrator\'s response.', 'tutor'),
 						'success'
 					);
 					setTimeout(function () {
@@ -477,7 +461,6 @@ jQuery(document).ready(function ($) {
                             </div>\
                         </div>';
 
-					// $responseDiv.html(Msg);
 					setTimeout(function () {
 						$responseDiv.html('');
 					}, 5000);
@@ -485,7 +468,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete: function () {
-				$btn.removeClass('tutor-updating-message');
+				$btn.removeAttr('disabled').removeClass('is-loading');
 			},
 		});
 	});
@@ -510,7 +493,7 @@ jQuery(document).ready(function ($) {
 			type: 'POST',
 			data: data,
 			beforeSend: function () {
-				$btn.addClass('tutor-updating-message');
+				$btn.addClass('is-loading');
 			},
 			success: function (res) {
 				if (res.success) {
@@ -518,7 +501,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete: function () {
-				$btn.removeClass('tutor-updating-message');
+				$btn.removeClass('is-loading');
 			},
 		});
 	});
@@ -540,7 +523,7 @@ jQuery(document).ready(function ($) {
 			type: 'POST',
 			data: form_data,
 			beforeSend: function () {
-				$('#tutor_assignment_start_btn').addClass('tutor-updating-message');
+				$('#tutor_assignment_start_btn').addClass('is-loading');
 			},
 			success: function (data) {
 				if (data.success) {
@@ -548,7 +531,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete: function () {
-				$('#tutor_assignment_start_btn').removeClass('tutor-updating-message');
+				$('#tutor_assignment_start_btn').removeClass('is-loading');
 			},
 		});
 	});
@@ -649,17 +632,17 @@ jQuery(document).ready(function ($) {
 		if (
 			$(this)
 				.find('i')
-				.hasClass('tutor-icon-angle-up-filled')
+				.hasClass('tutor-icon-angle-up')
 		) {
 			$(this)
 				.find('i')
-				.removeClass('tutor-icon-angle-up-filled')
-				.addClass('tutor-icon-angle-down-filled');
+				.removeClass('tutor-icon-angle-up')
+				.addClass('tutor-icon-angle-down');
 		} else {
 			$(this)
 				.find('i')
-				.removeClass('tutor-icon-angle-down-filled')
-				.addClass('tutor-icon-angle-up-filled');
+				.removeClass('tutor-icon-angle-down')
+				.addClass('tutor-icon-angle-up');
 		}
 		$(this)
 			.next('div')
@@ -853,109 +836,4 @@ jQuery(document).ready(function ($) {
 
 	// Bind event listener to container element
 	jQuery('.tutor-tooltip-inside').tutor_tooltip();
-
-	/**
-	 * Manage course filter
-	 *
-	 * @since  v.1.7.2
-	 */
-	var filter_container = $('.tutor-course-filter-container form');
-	var loop_container = $('.tutor-course-filter-loop-container');
-	var column_per_row = $('.course_template_shortcode').data('column_per_row');
-	var course_per_page = $('.course_template_shortcode').data('course_per_page');
-	var page_shortcode = $('.course_template_shortcode').data('page_shortcode');
-	var filter_modifier = {};
-
-	// Sidebar checkbox value change
-	filter_container
-		.on('submit', function (e) {
-			e.preventDefault();
-			console.log('submitted');
-		})
-		.find('input')
-		.change(function (e) {
-			ajaxFilterArchive(e);
-		});
-
-
-	const ajaxFilterArchive = (e = null, page = null) => {
-		var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier);
-		filter_criteria.page = page;
-		filter_criteria.page_shortcode = page_shortcode;
-		filter_criteria.column_per_row = column_per_row;
-		filter_criteria.course_per_page = course_per_page;
-		filter_criteria.action = 'tutor_course_filter_ajax';
-
-		console.log(filter_criteria);
-
-
-		loop_container.html('<div class="loading-spinner"></div>');
-		$(this)
-			.closest('form')
-			.find('.tutor-clear-all-filter')
-			.show();
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: filter_criteria,
-			success: function (r) {
-				loop_container
-					.html(r)
-					.find('.tutor-pagination-wrap a')
-					.each(function () {
-						$(this)
-							.attr('data-href', $(this).attr('href'))
-							.attr('href', '#');
-					});
-
-			},
-			complete: function (c) {
-
-				selectSearchField('[name=tutor_course_filter]');
-
-				$('.course-archive-page .page-numbers').on('click', function (pe) {
-					pe.preventDefault();
-					ajaxFilterArchive(pe, $(this).data('pagenumber'))
-				})
-			}
-		});
-	}
-
-	if(loop_container.length > 0){
-		ajaxFilterArchive();
-	}
-
-	// Alter pagination
-	loop_container.on('click', '.tutor-pagination-wrap a', function (e) {
-		var url = $(this).data('href') || $(this).attr('href');
-
-		if (url) {
-			url = new URL(url);
-			var page = url.searchParams.get('paged');
-
-			if (page) {
-				e.preventDefault();
-				filter_modifier.page = page;
-				filter_container.find('input:first').trigger('change');
-			}
-		}
-	});
-
-	// Alter sort filter
-	loop_container.on('change', 'select[name="tutor_course_filter"]', function () {
-		filter_modifier.tutor_course_filter = $(this).val();
-		filter_container.find('input:first').trigger('change');
-		ajaxFilterArchive();
-	});
-
-	// Refresh page after coming back to course archive page from cart
-	var archive_loop = $('.tutor-course-loop');
-	if (archive_loop.length > 0) {
-		window.sessionStorage.getItem('tutor_refresh_archive') === 'yes' ? window.location.reload() : 0;
-		window.sessionStorage.removeItem('tutor_refresh_archive');
-		archive_loop.on('click', '.tutor-loop-cart-btn-wrap', function () {
-			window.sessionStorage.setItem('tutor_refresh_archive', 'yes');
-		});
-	}
 });

@@ -24,11 +24,11 @@ if (null !== searchBar) {
 const emptySearch = () => {
 	const nothingFound = `
 			<div class="tutor-addons-card tutor-p-32">
-			<div class="tutor-d-flex tutor-flex-column tutor-justify-content-center tutor-text-center">
+			<div class="tutor-d-flex tutor-flex-column tutor-justify-center tutor-text-center">
 				<div class="tutor-mb-32">
 					<img src=${emptyStateImg} alt="Empty State Illustration" />
 				</div>
-				<div class="tutor-fs-6 tutor-color-black-60">No Addons Found!</div>
+				<div class="tutor-fs-6 tutor-color-secondary">No Addons Found!</div>
 			</div>
 		</div>`;
 	if (null !== addonsList) {
@@ -53,7 +53,7 @@ const displayAddons = (addons) => {
 						<div class="addon-title tutor-mt-20">
 							<div class="tutor-fs-6 tutor-fw-medium tutor-mb-4">${name}</div>
 						</div>
-						<div class="addon-des tutor-fs-6 tutor-color-black-60 tutor-mt-20">
+						<div class="addon-des tutor-fs-6 tutor-color-secondary tutor-mt-20">
 							${description}
 						</div>
 					</div>

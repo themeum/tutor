@@ -3,7 +3,6 @@ window.jQuery(document).ready(($) => {
 
 	$(document).on('click', '.tutor-course-wishlist-btn', function(e) {
 		e.preventDefault();
-
 		var $that = $(this);
 		var course_id = $that.attr('data-course-id');
 
@@ -15,27 +14,28 @@ window.jQuery(document).ready(($) => {
 				action: 'tutor_course_add_to_wishlist',
 			},
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message tutor-m-0');
+				$that.attr('disabled', 'disabled').addClass('is-loading');
 			},
 			success: function(data) {
 				if (data.success) {
 					if (data.data.status === 'added') {
 						$that
 							.find('i')
-							.addClass('tutor-icon-fav-full-filled')
-							.removeClass('tutor-icon-fav-line-filled');
+							.addClass('tutor-icon-bookmark-bold')
+							.removeClass('tutor-icon-bookmark-line');
 					} else {
 						$that
 							.find('i')
-							.addClass('tutor-icon-fav-line-filled')
-							.removeClass('tutor-icon-fav-full-filled');
+							.addClass('tutor-icon-bookmark-line')
+							.removeClass('tutor-icon-bookmark-bold');
 					}
 				} else {
-					window.location = data.data.redirect_to;
+					//window.location = data.data.redirect_to;
+					$('.tutor-login-modal').addClass('tutor-is-active');
 				}
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message tutor-m-0');
+				$that.removeAttr('disabled').removeClass('is-loading');
 			},
 		});
 	});

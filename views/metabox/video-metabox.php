@@ -26,7 +26,7 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
     $notice = __('No video source selected from settings!', 'tutor');
     echo "<div class='tutor-alert tutor-warning'>
         <div class='tutor-alert-text'>
-            <span class='tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12'></span>
+            <span class='tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12'></span>
             <span>{$notice}</span>
         </div>
     </div>";
@@ -41,9 +41,8 @@ function tutor_video_input_state($videoSource, $source){
 }
 ?>
 
-
 <div class="tutor-mb-32">
-    <label class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-pb-10">
+    <label class="tutor-form-label">
         <?php
         if ($post->post_type === tutor()->course_post_type) {
             _e('Course Intro Video', 'tutor');
@@ -52,17 +51,18 @@ function tutor_video_input_state($videoSource, $source){
         }
         ?>
     </label>
+    
     <div class="tutor-input-group tutor-mb-16 tutor-mt-12 tutor-d-block">
-        <div class="tutor-video-upload-wrap g-0">
-            <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo empty($videoSource) ? '' : $videoSource; ?>">
-                <i class="tutor-icon-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
-                <i class="tutor-icon-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
-                <i class="tutor-icon-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
-                <i class="tutor-icon-shortcode-filled tutor-icon-24" data-for="shortcode"></i>
-                <i class="tutor-icon-link-filled tutor-icon-24" data-for="external_url"></i>
-                <i class="tutor-icon-coding-filled tutor-icon-24" data-for="embedded"></i>
+        <div class="tutor-video-upload-wrap">
+            <div class="tutor-dropdown-icon-pack tutor-mt-4" data-video_source="<?php echo empty($videoSource) ? '' : $videoSource; ?>">
+                <i class="tutor-icon-brand-html5-bold" data-for="html5"></i>
+                <i class="tutor-icon-brand-youtube-line" data-for="youtube"></i>
+                <i class="tutor-icon-brand-vimeo-line" data-for="vimeo"></i>
+                <i class="tutor-icon-shortcode" data-for="shortcode"></i>
+                <i class="tutor-icon-link" data-for="external_url"></i>
+                <i class="tutor-icon-coding" data-for="embedded"></i>
             </div>
-            <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown no-tutor-dropdown">
+            <select name="video[source]" class="tutor-form-control tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
                 <?php
                 foreach ($video_sources as $value => $source) {
@@ -99,7 +99,7 @@ function tutor_video_input_state($videoSource, $source){
                         'no_control' => true
                     ), false);
 
-                    echo '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-70 tutor-mb-12" >' . __('Upload Video Poster', 'tutor') . '</div>';
+                    echo '<div class="tutor-fs-6 tutor-fw-medium tutor-color-secondary tutor-mb-12" >' . __('Upload Video Poster', 'tutor') . '</div>';
                     // Load thumbnail segment
                     tutor_load_template_from_custom_path(tutor()->path . '/views/fragments/thumbnail-uploader.php', array(
                         'media_id' => tutor_utils()->avalue_dot('poster', $video),

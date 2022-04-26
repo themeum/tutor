@@ -17,52 +17,41 @@
 			border-bottom: 1px solid #f6f8fa;
 			padding-bottom: 0;
 			margin: 0;
-			background: $black-05;
+			background: $color-gray-10;
 			border-radius: 6px;
 			margin-bottom: 15px;
-			border: 1px solid $stroke-light-30;
+			border: 1px solid var(--tutor-border-color);
 			overflow: hidden;
 			.tutor-topic-title {
 				display: flex;
+				align-items: center;
 				font-size: 16px;
 				font-weight: 300;
-				margin: 0;
-				line-height: 40px;
-				> span {
-					padding: 12px 0px 11px 6px;
-				}
+
 				.topic-inner-title {
 					font-style: normal;
 					font-weight: 500;
 					font-size: 16px;
-					color: $black-main;
+					color: var(--tutor-color-body);
 					flex: 1;
+					
 					a {
 						color: #393c40;
 					}
 				}
 
-				& > span {
+				.expand-collapse-wrap {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					height: 48px;
+					padding: 4px 16px;
+					color: var(--tutor-color-primary);
+					margin-left: 4px;
 					cursor: pointer;
-					&.expand-collapse-wrap {
-						&.is-expanded {
-							background: #fbfbfd;
-						}
-					}
 
-					&:not(.topic-inner-title) {
-						// width: 35px;
-						// text-align: center;
-						width: 35px;
-						text-align: center;
-						display: flex;
-						justify-content: center;
-					}
-
-					&.tutor-icon-garbage {
-						&:hover {
-							color: rgb(167, 19, 19);
-						}
+					&.is-expanded {
+						background: #fbfbfd;
 					}
 				}
 			}
@@ -73,49 +62,11 @@
 
 				.course-content-item {
 					padding: 10px 10px 10px 10px;
-					border: 1px solid $stroke-light-30;
+					border: 1px solid var(--tutor-border-color);
 					box-sizing: border-box;
-					box-shadow: 0px 2px 4px rgba(216, 223, 234, 0.4);
 					border-radius: 6px;
-					margin-bottom: 15px;
+					margin-bottom: 16px;
 					background: white;
-
-					.tutor-course-content-top {
-						display: flex;
-						align-items: flex-start;
-						.tutor-course-content-top-right-action {
-							margin-top: 2px;
-							display: flex;
-							> a {
-								&:not(:last-child) {
-									margin-right: 6px;
-								}
-							}
-						}
-						a {
-							color: #393c40;
-							font-weight: 400;
-							display: inline-flex;
-							align-items: center;
-
-							&:last-child {
-								margin-left: auto;
-							}
-
-							&.open-tutor-lesson-modal {
-								flex-grow: 1;
-							}
-						}
-
-						i {
-							padding-right: 7px;
-							color: #393c40;
-						}
-
-						i.tutor-icon-garbage:hover {
-							color: red;
-						}
-					}
 				}
 			}
 
@@ -143,10 +94,7 @@
 			}
 
 			.course-move-handle {
-				align-self: center;
 				cursor: grab;
-				margin-right: 5px;
-
 				&:active {
 					cursor: grabbing;
 				}

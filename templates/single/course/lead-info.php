@@ -39,15 +39,15 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
         <span><?php the_title(); ?></span>
     </h1>
     
-    <div class="tutor-d-sm-flex tutor-align-items-center tutor-justify-content-between tutor-mt-16">
-        <div class="tutor-course-details-category tutor-fs-6 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-end">
-            <!-- <?php if (tutor_utils()->get_option('enable_course_author')) : ?>
+    <div class="tutor-d-sm-flex tutor-align-items-center tutor-justify-between tutor-mt-16">
+        <div class="tutor-course-details-category tutor-fs-6 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-center">
+            <?php if ( tutor_utils()->get_option('enable_course_author') ) : ?>
                 <div class="tutor-course-author tutor-mr-16">
                     <img src="<?php echo get_avatar_url(get_the_author_meta('ID')); ?>" />
                     <span><?php _e('by', 'tutor'); ?></span>
                     <strong><?php echo get_the_author_meta('display_name'); ?></strong>
                 </div>
-            <?php endif; ?> -->
+            <?php endif; ?>
             <div>
                 <span class="tutor-fs-6 tutor-color-muted">
                     <?php _e('Categories', 'tutor'); ?>:
@@ -72,8 +72,8 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
             </div>
         </div>
         <div class="tutor-course-details-action-btns tutor-mt-12 tutor-mt-sm-0">
-            <a href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-fs-6 tutor-color-black tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
-                <i class="tutor-icon-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
+            <a href="#" class="tutor-btn tutor-btn-ghost tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
+                <i class="tutor-icon-bookmark-line tutor-mr-8"></i> <?php _e('Wishlist', 'tutor'); ?>
             </a>
 
             <?php

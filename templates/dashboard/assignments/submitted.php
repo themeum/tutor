@@ -1,15 +1,17 @@
 <?php
-
 /**
  * @package TutorLMS/Templates
  * @version 1.4.3
  */
 
-global $wpdb;
+if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
+    return;
+}
+use TUTOR_ASSIGNMENTS\Assignments_List;
 
 $order_filter          = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'desc';
 $assignment_id         = sanitize_text_field( $_GET['assignment'] );
-$assignments_submitted = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d ORDER BY comment_ID $order_filter", $assignment_id ) );
+$assignments_submitted = Assignments_List::get_submitted_assignments( $assignment_id, $order_filter );
 
 $max_mark  = tutor_utils()->get_assignment_option( $assignment_id, 'total_mark' );
 $pass_mark = tutor_utils()->get_assignment_option( $assignment_id, 'pass_mark' );
@@ -20,14 +22,14 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
 	<div class="tutor-mb-24">
-		<a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
-			<span class="tutor-color-black assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12"></span>
-            <span class="tutor-color-black-60"><?php esc_html_e( 'Back', 'tutor' ); ?></span>
+		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
+			<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
+            <?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
 
     <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
-        <div class="tutor-fs-7 tutor-color-black-60">
+        <div class="tutor-fs-7 tutor-color-secondary">
             <?php
             esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($comment_parent); ?>
         </div>
@@ -35,15 +37,15 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
             <?php echo get_the_title($assignment_id); ?>
         </div>
         <div class="assignment-info tutor-mt-12 tutor-d-flex">
-            <div class="tutor-fs-7 tutor-color-black-70">
+            <div class="tutor-fs-7 tutor-color-secondary">
                 <?php esc_html_e('Submission Deadline', 'tutor'); ?>:
                 <span class="tutor-fs-7 tutor-fw-medium"><?php echo $deadline; ?></span>
             </div>
-            <div class="tutor-fs-7 tutor-color-black-70 tutor-ml-24">
+            <div class="tutor-fs-7 tutor-color-secondary tutor-ml-24">
                 <?php esc_html_e('Total Points', 'tutor'); ?>:
                 <span class="tutor-fs-7 tutor-fw-medium"><?php echo $max_mark; ?></span>
             </div>
-            <div class="tutor-fs-7 tutor-color-black-70 tutor-ml-24">
+            <div class="tutor-fs-7 tutor-color-secondary tutor-ml-24">
                 <?php esc_html_e('Pass Points', 'tutor'); ?>:
                 <span class="tutor-fs-7 tutor-fw-medium"><?php echo $pass_mark; ?></span>
             </div>
@@ -52,8 +54,8 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
 
     <div class="tutor-dashboard-announcement-sorting-wrap submitted-assignments-sorting-wrap">
         <div class="tutor-dashboard-announcement-sorting-input">
-            <label class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Sort By:', 'tutor' ); ?></label>
-            <select class="tutor-announcement-order-sorting tutor-form-select tutor-form-control tutor-form-control-sm no-tutor-dropdown">
+            <label class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Sort By:', 'tutor' ); ?></label>
+            <select class="tutor-announcement-order-sorting tutor-form-control">
                 <option value="desc" <?php selected( $order_filter, 'desc' ); ?>><?php esc_html_e( 'Latest', 'tutor' ); ?></option>
                 <option value="asc" <?php selected( $order_filter, 'asc' ); ?>><?php esc_html_e( 'Oldest', 'tutor' ); ?></option>
             </select>
@@ -65,26 +67,26 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
             <thead>
                 <tr>
                     <th>
-                        <span class="tutor-fs-7 tutor-color-black-60">
+                        <span class="tutor-fs-7 tutor-color-secondary">
                             <?php esc_html_e('Date', 'tutor'); ?>
                         </span>
                     </th>
                     <th>
-                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
+                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
                             <span class="tutor-fs-7">
                                 <?php esc_html_e('Student', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
+                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
                             <span class="tutor-fs-7">
                                 <?php esc_html_e('Total Points', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
+                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
                             <span class="tutor-fs-7">
                                 <?php esc_html_e('Result', 'tutor'); ?>
                             </span>
@@ -137,7 +139,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
                                 </td>
                                 <td data-th="<?php esc_html_e('Details URL', 'tutor'); ?>">
                                     <div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
-                                        <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+                                        <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
                                             <?php esc_html_e($button_text); ?>
                                         </a>
                                     </div>

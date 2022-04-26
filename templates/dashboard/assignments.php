@@ -12,7 +12,10 @@
  * @version 1.4.3
  */
 
-global $wpdb;
+if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
+	return;
+}
+use TUTOR_ASSIGNMENTS\Assignments_List;
 
 $per_page     = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
@@ -36,7 +39,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 			<label class="tutor-d-block tutor-form-label">
 				<?php esc_html_e( 'Courses', 'tutor' ); ?>
 			</label>
-			<select class="tutor-form-select tutor-form-control-sm tutor-announcement-course-sorting">
+			<select class="tutor-form-select tutor-announcement-course-sorting">
 
 				<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
 
@@ -53,7 +56,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 		</div>
 		<div class="tutor-col-6 tutor-col-lg-3">
 			<label class="tutor-d-block tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
-			<select class="tutor-form-select tutor-form-control-sm tutor-announcement-order-sorting" data-search="no">
+			<select class="tutor-form-select tutor-announcement-order-sorting" data-search="no">
 				<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 				<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 			</select>
@@ -69,17 +72,17 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 			<thead>
 				<tr>
 					<th>
-						<span class="tutor-fs-7 tutor-color-black-60">
+						<span class="tutor-fs-7 tutor-color-secondary">
 							<?php esc_html_e( 'Assignment Name', 'tutor' ); ?>
 						</span>
 					</th>
 					<th>
-						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
+						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Marks', 'tutor' ); ?></span>
 						</div>
 					</th>
 					<th>
-						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
+						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-secondary">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Submit', 'tutor' ); ?></span>
 						</div>
 					</th>
@@ -93,7 +96,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 					foreach ( $assignments->results as $item ) :
 					$max_mark      = tutor_utils()->get_assignment_option( $item->ID, 'total_mark' );
 					$course_id     = tutor_utils()->get_course_id_by( 'assignment', $item->ID );
-					$comment_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $item->ID ) );
+					$comment_count = Assignments_List::assignment_comment_count( $item->ID );
 					// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish.
 					?>
 						<tr>
@@ -101,7 +104,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 								<div class="tutor-color-black td-course tutor-fs-6 tutor-fw-medium">
 									<a href="#"><?php esc_html_e( $item->post_title ); ?></a>
 									<div class="course-meta">
-										<span class="tutor-color-black-60 tutor-fs-7">
+										<span class="tutor-color-secondary tutor-fs-7">
 											<strong class="tutor-fs-7 tutor-fw-medium"><?php esc_html_e( 'Course', 'tutor' ); ?>: </strong>
 											<a href='<?php echo esc_url( get_the_permalink( $course_id ) ); ?>' target="_blank"><?php echo esc_html_e( get_the_title( $course_id ) ); ?> </a>
 										</span>
@@ -120,7 +123,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 							</td>
 							<td data-th="Details URL">
 								<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
-									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</a>
 								</div>

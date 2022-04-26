@@ -1,5 +1,5 @@
 .item-wrapper.color-preset-picker {
-	> .tutor-option-field-row {
+	.tutor-option-field-row {
 		border-bottom: none !important;
 	}
 	.color-picker-wrapper {
@@ -8,39 +8,10 @@
 				border-bottom: 1px solid #e8e8e8;
 			}
 		}
-		/* .tutor-option-field-row.other_color {
-      height: 0;
-      overflow: hidden;
-      opacity: 0;
-      visibility: hidden;
-    } */
 	}
 	position: relative;
 }
-.other_colors {
-	height: 0;
-	overflow: hidden;
-	transition: all 0.3s;
-}
-.more_button {
-	i {
-		margin-right: 6px;
-		font-weight: bolder;
-		color: #3e64de;
-	}
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	background: linear-gradient(180deg, #f4f6f9 1.31%, rgba(244, 246, 249, 0.72) 15.41%, #f4f6f9 100%);
-	cursor: pointer;
-	z-index: 99;
-	height: 90px;
-	text-align: center;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
+
 .tutor-option-field-input.color-preset-grid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
@@ -56,10 +27,10 @@
 
 	.preset-item {
 		&:hover {
-			box-shadow: 0 0 0 1px $stroke-light-30;
+			box-shadow: 0 0 0 1px var(--tutor-border-color);
 		}
-		background: $color-white;
-		border: 1px solid $stroke-light-30;
+		background: var(--tutor-color-white);
+		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
 		overflow: hidden;
 		transition: $transition;
@@ -94,7 +65,7 @@
 			width: 20px;
 			height: 20px;
 			display: inline-block;
-			border: 2px solid $stroke-gray;
+			border: 2px solid var(--tutor-border-color);
 			border-radius: 4px;
 			transition: $transition;
 			position: relative;
@@ -114,14 +85,15 @@
 	}
 
 	input[type='radio'] {
+		display: none;
 		@include appearNone;
 		&:checked {
 			+ .preset-item {
-				border-color: $brand-wordpress;
-				box-shadow: 0 0 0 1px $brand-wordpress;
+				border-color: var(--tutor-color-primary);
+				box-shadow: 0 0 0 1px var(--tutor-color-primary);
 				.check-icon {
-					background-color: $brand-wordpress;
-					border-color: $brand-wordpress;
+					background-color: var(--tutor-color-primary);
+					border-color: var(--tutor-color-primary);
 
 					&:before {
 						transform: scale(1);
@@ -157,33 +129,27 @@
 	}
 }
 
-.item-wrapper > .color-picker-wrapper {
+.item-wrapper .color-picker-wrapper {
 	.tutor-option-field-row:first-child {
 		padding-top: 15px;
 	}
 
 	position: relative;
 	z-index: 1;
-	&:before {
-		content: '';
-		position: absolute;
-		inset: 0px -26px -20px -26px;
-		background: rgba(239, 241, 247, 0.3);
-		z-index: -1;
-	}
 
 	label.color-picker-input * {
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
 	}
+	
 	label.color-picker-input {
 		cursor: pointer;
 		display: grid;
 		align-items: center;
 		grid-auto-flow: column;
-		background: $color-white;
-		border: 1px solid $stroke-light-30;
+		background: var(--tutor-color-white);
+		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
 		width: 109px;
 		height: 34px;
@@ -194,7 +160,7 @@
 		.picker-value {
 			text-align: left;
 			@extend .text-regular-small;
-			color: $black-main;
+			color: var(--tutor-color-body);
 			> .color {
 				display: inline-flex;
 				width: 32px;
@@ -202,7 +168,7 @@
 			}
 			> .value {
 				padding: 5px 10px;
-				color: $black-main;
+				color: var(--tutor-color-body);
 			}
 		}
 
@@ -214,7 +180,7 @@
 			border-right: 1px solid #cecfd5;
 			border-radius: 0;
 			&:checked {
-				border-color: $color-brand;
+				border-color: var(--tutor-color-primary);
 			}
 			&::-webkit-color-swatch-wrapper {
 				padding: 0;

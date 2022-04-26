@@ -11,21 +11,21 @@
     );
 ?>
 
-<a data-tutor-modal-target="tutor-course-share-opener" href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-fs-6 tutor-color-black tutor-course-wishlist-btn">
-    <span class="tutor-icon-share-filled"></span> <?php _e('Share', 'tutor'); ?>
+<a data-tutor-modal-target="tutor-course-share-opener" href="#" class="tutor-btn tutor-btn-ghost tutor-course-share-btn">
+    <span class="tutor-icon-share tutor-mr-8"></span> <?php _e('Share', 'tutor'); ?>
 </a>
 <div id="tutor-course-share-opener" class="tutor-modal">
     <span class="tutor-modal-overlay"></span>
-    <div class="tutor-modal-root">
-        <div class="tutor-modal-inner tutor-modal-close-inner">
-            <div class="tutor-modal-body" style="padding:40px">
-				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="tutor-icon-line-cross-line"></span>
-				</button>
+    <div class="tutor-modal-window">
+        <div class="tutor-modal-content tutor-modal-content-white">
+            <button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+                <span class="tutor-icon-times" area-hidden="true"></span>
+            </button>
+            <div class="tutor-modal-body">
                 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16">
                     <?php _e('Share Course', 'tutor'); ?>
                 </div>
-                <div class="tutor-fs-7 tutor-color-black-60 tutor-mb-12">
+                <div class="tutor-fs-7 tutor-color-secondary tutor-mb-12">
                     <?php _e('Page Link', 'tutor') ?>
                 </div>
                 <div class="tutor-mb-32">

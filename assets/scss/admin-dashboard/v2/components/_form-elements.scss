@@ -1,3 +1,5 @@
+// @todo: can be removed all code
+
 .tutor-option-field-row,
 .tutor-dashboard-page {
 	// Input, Textarea, Select etc.
@@ -6,43 +8,6 @@
 	}
 	input[type='checkbox'] {
 		background-size: 70%;
-	}
-	input[type='checkbox']:checked,
-	input[type='radio']:checked {
-		border-color: $brand-wordpress;
-		background-color: $brand-wordpress;
-	}
-	.tutor-form-check {
-		label {
-			font-size: 15px;
-			font-weight: 500;
-			line-height: 1;
-			text-align: left;
-			color: #353535;
-			white-space: nowrap;
-			> .desc {
-				@include getTypography(400, 13px, 138%);
-				color: $black-60;
-			}
-		}
-		&.has-desc {
-			align-items: flex-start;
-			label {
-				font-size: 15px;
-			}
-			&:not(:last-child) {
-				margin-bottom: 30px;
-			}
-			.desc {
-				margin-top: 5px;
-			}
-		}
-		&:not(.has-desc) label {
-			i {
-				font-size: 20px;
-				margin-right: 3px;
-			}
-		}
 	}
 
 	input.tutor-form-control {
@@ -91,13 +56,11 @@
 		transition: all 200ms;
 
 		&::placeholder {
-			color: $text-muted;
+			color: var(--tutor-color-muted);
 		}
 
 		&:focus {
-			color: $black-main;
-			border-color: $brand-wordpress;
-			// box-shadow: 0 0 10px -5px;
+			color: var(--tutor-color-body);
 		}
 	}
 
@@ -113,36 +76,13 @@
 	}
 }
 
-// Toggle/Switch
-.tutor-form-toggle {
-	span[class^='label-'] {
-		@include getTypography(400, 15px, 160%);
-		color: $black-main;
-		&.label-before {
-			margin-right: 5px;
-		}
-	}
-
-	input {
-		~ .tutor-form-toggle-control {
-			background-color: #cdcfd5;
-			&::before {
-				box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
-			}
-		}
-		&:checked ~ .tutor-form-toggle-control {
-			background-color: $brand-wordpress;
-		}
-	}
-}
-
 .tutor-option-header {
 	input[type='search'] {
 		&:hover {
 			box-shadow: 0 0 10px -7px;
 		}
 		&:focus {
-			border-color: $brand-wordpress;
+			border-color: var(--tutor-color-primary);
 			box-shadow: 0 0 10px -5px;
 		}
 	}

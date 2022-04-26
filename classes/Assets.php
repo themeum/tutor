@@ -88,7 +88,7 @@ class Assets {
 			'addons_data'                  => tutor_utils()->prepare_free_addons_data(),
 			'current_user'                  => wp_get_current_user(),
 			'content_change_event'         => 'tutor_content_changed_event',
-			'is_tutor_course_edit'		   => isset( $_GET[ 'action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) || isset( $_GET['post_type'] ) && 'courses' === $_GET['post_type'] ? true : false,
+			'is_tutor_course_edit'		   => isset( $_GET[ 'action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) ? true : false,
 			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
 		);
 	}
@@ -248,7 +248,7 @@ class Assets {
 		wp_enqueue_style('tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION);
 
 		// Load course builder resources
-		if ($this->get_course_builder_screen()) {
+		if (tutor_utils()->get_course_builder_screen()) {
 			wp_enqueue_script('tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array('jquery', 'wp-i18n'), TUTOR_VERSION, true);
 			wp_enqueue_style('tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION);
 		}
@@ -277,30 +277,81 @@ class Assets {
 	private function load_color_palette()
 	{
 		$colors = array(
-			'tutor_primary_color'       => '--tutor-primary-color',
-			'tutor_primary_hover_color' => '--tutor-primary-hover-color',
-			'tutor_text_color'          => '--tutor-text-color',
-			'tutor_background_color'	=> '--tutor-background-color',
-			'tutor_border_color'		=> '--tutor-border-color',
-			'tutor_success_color'		=> '--tutor-success-color',
-			'tutor_warning_color'		=> '--tutor-warning-color',
-			'tutor_danger_color'		=> '--tutor-danger-color',
-			'tutor_disable_color'		=> '--tutor-disable-color',
-			'tutor_table_background_color' => '--tutor-table-background-color',
-
-			'tutor_primary_text_color'  => '--tutor-primary-text-color',
-			'tutor_light_color'         => '--tutor-light-color',
-			'tutor_button_primary'      => '--tutor-primary-button-color',
-			'tutor_button_danger'       => '--tutor-danger-button-color',
-			'tutor_button_success'      => '--tutor-success-button-color',
-			'tutor_button_warning'      => '--tutor-warning-button-color',
+			'tutor_primary_color'       	=> '--tutor-color-primary',
+			'tutor_primary_hover_color' 	=> '--tutor-color-primary-hover',
+			'tutor_text_color'          	=> '--tutor-body-color',
+			'tutor_background_color'		=> '--tutor-background-color',
+			'tutor_border_color'			=> '--tutor-border-color',
+			'tutor_disable_color'			=> '--tutor-disable-color',
+			'tutor_table_background_color' 	=> '--tutor-table-background-color',
+			'tutor_light_color'         	=> '--tutor-light-color',
 		);
+		
+		// admin colors
+		$admin_colors = [];
+		if (is_admin()) {
+			$admin_color = get_user_option( 'admin_color' );
+
+			switch ($admin_color) {
+				case 'light':
+					$admin_color_codes = ['#04a4cc', '#04b0db'];
+				break;
+
+				case 'modern':
+					$admin_color_codes = ['#3858e9', '#4664eb'];
+				break;
+				
+				case 'blue':
+					$admin_color_codes = ['#e1a948', '#e3af55'];
+				break;
+				
+				case 'coffee':
+					$admin_color_codes = ['#c7a589', '#ccad93'];
+				break;
+				
+				case 'ectoplasm':
+					$admin_color_codes = ['#a3b745', '#a9bd4f'];
+				break;
+				
+				case 'midnight':
+					$admin_color_codes = ['#e14d43', '#e35950'];
+				break;
+				
+				case 'ocean':
+					$admin_color_codes = ['#9ebaa0', '#a7c0a9'];
+				break;
+				
+				case 'sunrise':
+					$admin_color_codes = ['#dd823b', '#df8a48'];
+				break;
+				
+				default:
+					$admin_color_codes = ['#007cba', '#006ba1'];
+				break;
+			}
+
+			$admin_colors = [
+				'--tutor-color-primary' => $admin_color_codes[0],
+				'--tutor-color-primary-hover' => $admin_color_codes[1],
+			];
+		}
 
 		$color_string = '';
 		foreach ($colors as $key => $property) {
-			$color = tutor_utils()->get_option($key);
+			$color = tutor_utils()->get_option( $key );
+			$color_rgb = tutor_utils()->hex2rgb( $color );
+
+			if(is_admin() && isset($admin_colors[$property])){
+				$color = $admin_colors[$property];
+				$color_rgb = tutor_utils()->hex2rgb( $admin_colors[$property] );
+			}
+
 			if ($color) {
 				$color_string .= $property . ':' . $color . ';';
+			}
+
+			if ($color_rgb) {
+				$color_string .= $property . '-rgb:' . $color_rgb . ';';
 			}
 		}
 
@@ -377,26 +428,10 @@ class Assets {
 		return $locales;
 	}
 
-	private function get_course_builder_screen()
-	{
-
-		// Add course editor identifier class
-		if ( is_admin() ) {
-			$screen = get_current_screen();
-			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == 'courses' ) {
-				return $screen->is_block_editor ? 'gutenberg' : 'classic';
-			}
-		} elseif ( tutor_utils()->is_tutor_frontend_dashboard( 'create-course' ) ) {
-			return 'frontend';
-		}
-
-		return null;
-	}
-
 	public function add_identifier_class_to_body($classes)
 	{
-		$course_builder_screen = $this->get_course_builder_screen();
-		$to_add                = array();
+		$course_builder_screen = tutor_utils()->get_course_builder_screen();
+		$to_add                = array('tutor-lms');
 
 		// Add backend course editor identifier class to body
 		if ($course_builder_screen) {

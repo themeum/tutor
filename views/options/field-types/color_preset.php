@@ -43,8 +43,8 @@ $field_id = esc_attr( 'field_' . $field_key );
 
 <div class="tutor-option-field-row tutor-d-block">
 	<div class="tutor-option-field-label">
-		<h5 class="label"><?php esc_attr( $fields_group['label'] ); ?></h5>
-		<p class="desc"><?php esc_attr( $fields_group['desc'] ); ?></p>
+		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php esc_attr( $fields_group['label'] ); ?></div>
+		<div class="tutor-fs-7 tutor-color-muted"><?php esc_attr( $fields_group['desc'] ); ?></div>
 	</div>
 
 	<div class="tutor-option-field-input color-preset-grid">

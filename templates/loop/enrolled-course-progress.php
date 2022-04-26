@@ -12,7 +12,7 @@
 ?>
 
 <div class="list-item-progress tutor-mt-16 tutor-px-20 tutor-mb-16">
-    <div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+    <div class="tutor-fs-6 tutor-color-secondary tutor-d-flex tutor-align-items-center tutor-justify-between">
         <span class="progress-steps">
             <?php echo esc_html( $course_progress['completed_count'] ); ?>/<?php echo esc_html( $course_progress['total_count'] ); ?>
         </span>
@@ -21,7 +21,7 @@
             <?php esc_html_e( 'Complete', 'tutor' ); ?>
         </span>
     </div>
-    <div class="progress-bar tutor-mt-12" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
-        <span class="progress-value"></span>
+    <div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
+        <span class="tutor-progress-value" area-hidden="true"></span>
     </div>
 </div>

@@ -20,7 +20,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 ?>
 
 <?php
-if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
+if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 	$args = array(
 		'headline'    => __('Permission Denied', 'tutor'),
 		'message'     => __('You don\'t have the right to edit this course', 'tutor'),
@@ -52,26 +52,26 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 						</div>
 						<button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft">
 							<!-- @TODO: Icon must be chenged -->
-							<i class="tutor-icon-save-line tutor-icon-28"></i>
-							<span class="tutor-color-black-60"><?php _e('Save', 'tutor'); ?></span>
+							<i class="tutor-icon-save-line tutor-fs-5 tutor-mr-8"></i>
+							<span class="tutor-color-secondary"><?php _e('Save', 'tutor'); ?></span>
 						</button>
 					</div>
 				</div>
 				<div class="tutor-col tutor-mt-12 tutor-mb-12">
-					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-items-center tutor-justify-content-end">
-						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
+					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-items-center tutor-justify-end">
+						<a class="tutor-btn tutor-btn-outline-primary tutor-btn-md" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
 							<?php _e('Preview', 'tutor'); ?>
 						</a>
 						<?php if ($can_publish_course): ?>
-							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-ml-16" type="submit" name="course_submit_btn" value="publish_course">
+							<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-ml-16" type="submit" name="course_submit_btn" value="publish_course">
 								<?php _e('Publish', 'tutor'); ?>
 							</button>
 						<?php else: ?>
-							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-ml-16" type="submit" name="course_submit_btn" value="submit_for_review" title="<?php _e('Submit for Review', 'tutor'); ?>">
+							<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-ml-16" type="submit" name="course_submit_btn" value="submit_for_review" title="<?php _e('Submit for Review', 'tutor'); ?>">
 								<?php _e('Submit', 'tutor'); ?>
 							</button>
 						<?php endif; ?>
-						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="tutor-icon-line-cross-line tutor-ml-16" title="<?php _e('Exit', 'tutor'); ?>" style="font-size: 32px;color: #9CA0AC;"></a>
+						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="tutor-iconic-btn tutor-iconic-btn-md tutor-ml-16" title="<?php _e('Exit', 'tutor'); ?>"><i class="tutor-icon-times" area-hidden="true"></i></a>
 					</div>
 				</div>
 			</div>
@@ -102,20 +102,20 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 							<?php echo $message; ?>
 						</div>
 					<?php } else { ?>
-						<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active tutor-modal-is-close-inside-header">
+						<!-- @todo: move to toast -->
+						<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active">
 							<span class="tutor-modal-overlay"></span>
-							<div class="tutor-modal-root">
-								<div class="tutor-modal-inner tutor-modal-close-inner">
-									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="tutor-icon-line-cross-line tutor-icon-30 tutor-color-black-40"></span>
+							<div class="tutor-modal-window tutor-modal-window-md">
+								<div class="tutor-modal-content tutor-modal-content-white">
+									<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+										<span class="tutor-icon-times" area-hidden="true"></span>
 									</button>
-									<div class="tutor-text-center tutor-mt-80 tutor-px-48 tutor-pb-md-80 tutor-pb-48">
-										<div class="tutor-modal-icon tutor-d-flex tutor-align-items-center">
-											<img src="<?php echo tutor()->url; ?>/assets/images/icon-cup.svg" alt="" />
-										</div>
-										<div class="tutor-modal-text-wrap tutor-mt-24">
-											<div class="tutor-modal-title tutor-fs-4 tutor-color-black"><?php _e('Thank You!', 'tutor'); ?></div>
-											<div class="tutor-fs-6 tutor-black-60 tutor-mt-20"><?php echo $message; ?></div>
+
+									<div class="tutor-modal-body tutor-text-center">
+										<div class="tutor-py-48">
+											<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-cup.svg" />
+											<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php _e('Thank You!', 'tutor'); ?></div>
+											<div class="tutor-fs-6 tutor-color-muted"><?php echo $message; ?></div>
 										</div>
 									</div>
 								</div>
@@ -141,8 +141,8 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
 				<div class="tutor-course-builder-section tutor-course-builder-info">
 					<div class="tutor-course-builder-section-title">
-						<span class="tutor-fs-5 tutor-fw-bold tutor-color-black-70">
-							<i class="color-text-brand tutor-icon-angle-up-filled tutor-icon-26" area-hidden="true"></i>
+						<span class="tutor-fs-5 tutor-fw-bold tutor-color-secondary">
+							<i class="color-text-brand tutor-icon-angle-up tutor-fs-5" area-hidden="true"></i>
 							<span><?php esc_html_e('Course Info', 'tutor'); ?></span>
 						</span>
 					</div>
@@ -160,7 +160,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
 						<div class="tutor-mb-32">
 							<label class="tutor-course-field-label tutor-fs-6 tutor-color-black"><?php _e('About Course', 'tutor'); ?></label>
-							<div class="tutor-input-group tutor-mb-16">
+							<div class="tutor-mb-16">
 								<?php
 								$editor_settings = array(
 									'media_buttons' => false,
@@ -211,7 +211,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 											<span class="tutor-input-prepand">
 												<?php echo $currency_symbol; ?>
 											</span>
-											<input type="number" class="tutor-form-number-verify tutor-pl-12" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" min="0">
+											<input type="number" class="tutor-form-number-verify tutor-pl-12" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="0.1" min="0">
 										</label>
 									</div>
 								</div>
@@ -230,7 +230,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
 						<div class="tutor-mb-32">
 							<label class="tutor-course-field-label tutor-fs-6"><?php _e('Course Thumbnail', 'tutor'); ?></label>
-							<div class="tutor-input-group tutor-mb-16">
+							<div class="tutor-mb-16">
 								<?php
 								tutor_load_template_from_custom_path(
 									tutor()->path . '/views/fragments/thumbnail-uploader.php',
@@ -257,7 +257,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 					<div class="tutor-form-col-12">
 						<div class="tutor-form-group">
 							<div class="tutor-form-field tutor-course-builder-btn-group">
-								<button type="submit" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save as Draft', 'tutor'); ?></button>
+								<button type="submit" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save as Draft', 'tutor'); ?></button>
 								<?php if ($can_publish_course) { ?>
 									<button class="tutor-btn tutor-btn-primary" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
 								<?php } else { ?>
@@ -272,7 +272,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 			<!-- Course builder tips right sidebar -->
 			<div class="tutor-col-12 tutor-col-lg-4 tutor-mb-32 tutor-pl-40">
 				<div class="tutor-course-builder-upload-tips">
-					<h3 class="tutor-fs-5 tutor-fw-medium tutor-color-black-70 tutor-mb-20">
+					<h3 class="tutor-fs-5 tutor-fw-medium tutor-color-secondary tutor-mb-20">
 						<?php _e('Course Upload Tips', 'tutor'); ?>
 					</h3>
 					<ul>

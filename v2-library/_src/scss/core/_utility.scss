@@ -50,15 +50,15 @@
 }
 
 .tutor-text-danger {
-	color: var(--tutor-danger) !important;
+	color: var(--tutor-danger-color) !important;
 }
 
 .tutor-text-dark {
-	color: var(--tutor-text-primary) !important;
+	color: var(--tutor-body-color) !important;
 }
 
 .tutor-text-primary {
-	color: var(--tutor-primary) !important;
+	color: var(--tutor-color-primary) !important;
 }
 
 // bg
@@ -72,7 +72,7 @@
 }
 
 .tutor-bg-primary {
-	background-color: var(--tutor-primary-color);
+	background-color: var(--tutor-color-primary);
 }
 
 .tutor-bg-success {
@@ -84,7 +84,7 @@
 }
 
 .tutor-bg-danger {
-	background-color: var(--tutor-danger);
+	background-color: var(--tutor-danger-color);
 }
 
 .tutor-bg-white {
@@ -95,10 +95,6 @@
 	background-color: #fdfdfd;
 }
 
-.tutor-bg-gray-10 {
-	background-color: $bg-gray-10 !important;
-}
-
 .tutor-bg-transparent {
 	background-color: transparent !important;
 }
@@ -106,43 +102,12 @@
 
 .tutor-text-nowrap {
 	white-space: nowrap;
-	&:not(.tutor-nowrap-nocut) {
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
 }
 
 .tutor-nowrap-ellipsis {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-}
-
-.tutor-line-clamp-2 {
-	display: block !important;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: normal;
-}
-
-.tutor-line-clamp-3 {
-	display: block !important;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: normal;
-}
-
-.tutor-line-clamp-4 {
-	display: block !important;
-	-webkit-line-clamp: 4;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: normal;
 }
 
 .tutor-text-hover-underline {
@@ -253,21 +218,6 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 	}
 }
 
-$border: (
-	'p40' $primary-40,
-	'p50' $primary-50,
-	'p60' $primary-60,
-	'sl10' $stroke-light-10,
-	'sl20' $stroke-light-20,
-	'sl30' $stroke-light-30
-);
-@each $pre, $b in $border {
-	.tutor-border-#{$pre} {
-		border: 1px solid #{$b};
-	}
-}
-
-
 // line height
 .tutor-lh-1 {
 	line-height: 1 !important;
@@ -275,26 +225,155 @@ $border: (
 
 // ratio
 .tutor-ratio {
+	content: ' ';
 	position: relative;
-    width: 100%;
+	width: 100%;
+	display: block;
 
 	&-16x9 {
-		content: " ";
-		display: block;
 		padding-top: 56.25%;
 	}
 
 	&-4x3 {
-		content: " ";
-		display: block;
 		padding-top: 75%;
 	}
 
+	&-3x2 {
+		padding-top: 66.66%;
+	}
+
+	&-1x1 {
+		padding-top: 100%;
+	}
+
 	> * {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
+		position: absolute !important;
+		top: 0 !important;
+		left: 0 !important;
+		width: 100% !important;
+		height: 100% !important;
+	}
+
+	> img {
+		object-fit: cover;
+		object-position: left;
+	}
+}
+
+// toggle more
+.tutor-toggle-more {
+	&-collapsed {
+		position: relative;
+		overflow: hidden;
+		&:before {
+			content: ' ';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 62px;
+			background: linear-gradient(
+				180deg,
+				rgba(255, 255, 255, 0.0001) 1.31%,
+				rgba(255, 255, 255, 0.721372) 15.41%,
+				#fff 100%
+			);
+			z-index: 5;
+		}
+	}
+}
+
+// icon
+.tutor {
+	&-svg {
+		svg {
+			height: 1em;
+			width: 1em;
+		}
+	}
+}
+
+// round box
+.tutor-round-box {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 28px;
+	width: 60px;
+	height: 60px;
+	border-radius: 80px;
+	overflow: hidden;
+	color: var(--tutor-color-primary);
+	background: rgba(var(--tutor-color-primary-rgb), 0.1);
+
+	[class^='tutor-icon-'],
+	[class*=' tutor-icon-'],
+	.tutor-svg {
+		display: inline-block;
+	}
+
+	@include media-breakpoint-down(lg) {
+		width: 44px;
+		height: 44px;
+		font-size: 20px;
+	}
+
+	&-lg {
+		width: 76px;
+		height: 76px;
+		font-size: 36px;
+	}
+}
+
+// border
+.tutor {
+	&-vr {
+		width: 1px;
+		background-color: #dcdbdc;
 		height: 100%;
+	}
+
+	&-hr {
+		height: 1px;
+		background-color: #dcdbdc;
+		width: 100%;
+	}
+}
+
+// stretched link
+.tutor-stretched-link:after {
+	content: ' ';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 2;
+}
+
+// spinner
+.tutor-spinner {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	vertical-align: -4px;
+	border: 4px solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: 800ms linear infinite rotateSpinner;
+
+	&-sm {
+		border-width: 2px;
+		vertical-align: -2px;
+		width: 20px;
+		height: 20px;
+	}
+
+	&-wrap {
+		position: relative;
+		min-height: 300px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 }

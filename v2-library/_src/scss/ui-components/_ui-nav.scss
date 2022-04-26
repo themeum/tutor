@@ -4,121 +4,174 @@
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    border-bottom: 1px solid #CDCFD5;
 
     > li {
         line-height: 1.6;
         position: relative;
+        margin: 0;
+        padding: 0;
+    }
 
-        > a {
-            font-size: 16px;
-            font-weight: 500;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
+    &-link {
+        font-size: 16px;
+        font-weight: 400;
+        padding: 8px 20px;
+        display: flex;
+        align-items: center;
+        color: var(--tutor-color-secondary);
+        cursor: pointer;
+
+        &,
+        &:focus,
+        &:hover,
+        &:active {
+            background: transparent;
             text-decoration: none;
-            color: var(--tutor-black-70);
-
-            &:hover {
-                color: inherit;
-                text-decoration: none;
-            }
-        }
-
-        &:after {
-            content: '';
-            position: absolute;
-            height: 2px;
-            left: 0;
-            right: 0;
-            bottom: -1px;
-            background: var(--tutor-primary-color);
-            transform: scaleY(0);
-            transform-origin: bottom;
-            transition: 200ms ease-in;
-        }
-
-        &.is-active {
-            > a {
-                color: var(--tutor-primary-color);
-            }
-
-            &:after {
-                transform: scaleY(1);
-            }
+            line-height: 1.6;
+            box-shadow: none;
+            outline: 0;
         }
 
         &:hover {
-            > a {
-                color: var(--tutor-primary-color);
+            color: var(--tutor-color-primary);
+        }
+
+        &.is-active {
+            color: var(--tutor-color-primary);
+        }
+    }
+
+    .tutor-nav-more {
+        margin-left: auto !important;
+        &-icon {
+            font-size: 12px;
+            margin-left: 4px;
+            color: var(--tutor-color-primary);
+            transform: rotate(-45deg);
+            transition: transform 200ms ease-in;
+        }
+
+        &.tutor-nav-opened {
+            .tutor-dropdown {
+                display: block;
+            }
+            .tutor-nav-more-icon {
+                transform: rotate(0deg);
+            }
+        }
+    }
+
+    &:not(.tutor-nav-pills):not(.tutor-nav-tabs) {
+        border-bottom: 1px solid #CDCFD5;
+        .tutor-nav-link {
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            &.is-active {
+                border-bottom-color: var(--tutor-color-primary);
+            }
+        }
+    }
+
+    // pills
+    &-pills {
+        border-bottom: 0;
+
+        .tutor-nav-item {
+            &:not(:last-child) {
+                margin-right: 4px;
             }
         }
 
-        > ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            position: absolute;
-            right: 0;
-            top: calc(100% - 4px);
-            background-color: var(--tutor-color-white);
-            padding: 8px 0px;
-            border: 1px solid var(--tutor-border-color);
-            border-radius: 4px;
-            display: none;
-            z-index: 1025;
-        
-            > li {
-                > a {
-                    display: block;
-                    padding: 8px 16px;
-                    color: var(--tutor-black-70);
-                    font-size: 16px;
-                    font-weight: 500;
-                    text-decoration: none;
-                    white-space: nowrap;
-                    background-color: transparent;
+        .tutor-nav-link {
+            border-radius: 6px;
+
+            &:hover {
+                color: var(--tutor-color-secondary);
+                background-color: #edf0f9;
+            }
+
+            &.is-active {
+                background-color: var(--tutor-color-primary);
+                color: #FFFFFF;
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    // tabs
+    &-tabs {
+        background-color: #FAFAFB;
+        border-bottom: 1px solid #cdcfd5;
+        border-radius: 6px 6px 0px 0px;
+
+        .tutor-nav-link {
+            position: relative;
+            border-right: 1px solid var(--tutor-border-color);
+            border-top: 2px solid transparent;
+            border-bottom: 1px solid var(--tutor-border-color);
+            margin-top: -1px;
+            margin-bottom: -1px;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            padding: 16px 32px; // @todo: need to add an option for bigger tab
+
+            &.is-active {
+                background-color: #FFFFFF;
+                border-top-color: var(--tutor-color-primary);
+                border-bottom-color: #FFFFFF;
+            }
+        }
+
+        .tutor-nav-item {
+            align-items: stretch;
+            display: flex;
+            flex: 1 1 auto;
             
-                    &:hover,
-                    &:focus {
-                        color: var(--tutor-primary-color);
-                        background-color: #E9EDFB;
-                    }
+            &:first-child {
+                .tutor-nav-link {
+                    border-radius: 5px 0 0 0;
                 }
+            }
 
-                &.is-active {
-                    > a {
-                        color: var(--tutor-primary-color);
-                        background-color: #E9EDFB;
-                    }
+            &:last-child {
+                .tutor-nav-link {
+                    border-radius: 0 5px 0 0;
+                    border-right: 0;
                 }
             }
         }
 
-        &.tutor-nav-more {
-            margin-left: auto;
-            > a {
-                padding-left: 5px;
-                padding-right: 5px;
-            }
+        &-container {
+            background-color: #FFFFFF;
+            border: 1px solid var(--tutor-border-color);
+            border-radius: 6px;
+        }
+    }
 
-            .icon-seemore {
-                font-size: 18px;
-                font-weight: 700;
-                color: var(--tutor-primary-color);
-                transform: rotate(-45deg);
-                transition: transform 200ms ease-in;
-            }
+    // vertical
+    &-v {
+        flex-direction: column;
+        border-bottom: 0;
 
-            &.tutor-nav-opened {
-                .icon-seemore {
-                    transform: rotate(0deg);
-                }
-
-                > ul {
-                    display: block;
-                }
+        .tutor-nav-item {
+            margin-right: 0;
+            &:not(:last-child) {
+                margin-bottom: 4px;
             }
+        }
+    }
+
+    // @todo: to be removed
+    &-admin {
+        border-bottom: 0 !important;
+        .tutor-nav-item {
+            margin: 0;
+        }
+
+        .tutor-nav-link {
+            padding: 20px 16px;
         }
     }
 }

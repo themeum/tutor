@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	const checkEmailFieldsOnSubmit = (inputFields) => {
 		inputFields.forEach((emailField) => {
 			let pageNeedsValidation = emailField.closest('.tutor-option-nav-page');
-			let invalidLabel = emailField && emailField.parentNode.parentNode.querySelector('h5').innerText;
-			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('h2').innerText;
+			let invalidLabel = emailField && emailField.parentNode.parentNode.querySelector('[tutor-option-name]').innerText;
+			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('[tutor-option-title]').innerText;
 
 			let invalidMessage = '"' + pageTitle + ' > ' + invalidLabel + '" email is invalid!';
 			if (false === validateEmail(emailField.value)) {
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					type: 'POST',
 					data: data,
 					beforeSend: function() {
-						button.addClass('tutor-updating-message');
+						button.addClass('is-loading');
 					},
 					success: function(resp) {
 						const { data = {}, success } = resp || {};
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						tutor_toast('Error!', message, 'error');
 					},
 					complete: function() {
-						button.removeClass('tutor-updating-message');
+						button.removeClass('is-loading');
 					},
 				});
 			}
@@ -230,9 +230,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	let wait_for_input;
 	$('#search_settings').on('input', function(e) {
 		e.preventDefault();
+		let $this = $(this);
 
 		if(wait_for_input) {
-			// Prevent high rate input
 			window.clearTimeout(wait_for_input);
 		}
 
@@ -246,7 +246,11 @@ document.addEventListener('DOMContentLoaded', function() {
 						action: 'tutor_option_search',
 						keyword: searchKey,
 					},
-					// beforeSend: function () {},
+
+					beforeSend: function() {
+						$this.parent().find('.tutor-form-icon').removeClass('tutor-icon-search').addClass('tutor-icon-circle-notch tutor-animation-spin');
+					},
+
 					success: function(data) {
 
 						if(!data.success) {
@@ -254,8 +258,6 @@ document.addEventListener('DOMContentLoaded', function() {
 							return;
 						}
 
-						// console.log(data.data);
-						// return false;
 						var output = '',
 							wrapped_item = '',
 							notfound = true,
@@ -275,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function() {
 							block_label = item.block_label;
 							field_key = item.event ? item.key + '_' + item.event : item.key;
 							searchKeyRegex = new RegExp(searchKey, 'ig');
-							// console.log(item_text.match(searchKeyRegex));
 							matchedText = item_text.match(searchKeyRegex)?.[0];
 
 							if (matchedText) {
@@ -289,16 +290,16 @@ document.addEventListener('DOMContentLoaded', function() {
 							}
 						});
 						if (notfound) {
-							output += `<div class="no_item"> ${warning} No Results Found</div>`;
+							output += `<div class="no_item">${warning} No Results Found</div>`;
 						}
-						$('.search_result')
-							.html(output)
-							.addClass('show');
+						
+						$('.search_result').html(output).addClass('show');
+
+						$this.parent().find('.tutor-form-icon').removeClass('tutor-icon-circle-notch tutor-animation-spin').addClass('tutor-icon-search');
+						
 						output = '';
-						// console.log("working");
 					},
 					complete: function() {
-						// Active navigation element
 						navigationTrigger();
 					},
 				});
@@ -314,31 +315,29 @@ document.addEventListener('DOMContentLoaded', function() {
 	 * Search suggestion, navigation trigger
 	 */
 	function navigationTrigger() {
-		const suggestionLinks = document.querySelectorAll('.search-field .search-popup-opener a');
-		const navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
+		const suggestionLinks = document.querySelectorAll('.tutor-options-search .search-popup-opener a');
+		const navTabItems = document.querySelectorAll('[tutor-option-tabs] li > a');
 		const navPages = document.querySelectorAll('.tutor-option-nav-page');
 
 		suggestionLinks.forEach((link) => {
 			link.addEventListener('click', (e) => {
 				const dataTab = e.target.closest('[data-tab]').dataset.tab;
 				const dataKey = e.target.closest('[data-key]').dataset.key;
-				// console.log('clicked search');
 				if (dataTab) {
-					document.title = e.target.innerText + ' ‹ ' + _tutorobject.site_title;
-					// remove active from other buttons
+					document.title = e.target.innerText + ' < ' + _tutorobject.site_title;
 					navTabItems.forEach((item) => {
-						item.classList.remove('active');
+						item.classList.remove('is-active');
 					});
 
 					// add active to the current nav item
-					document.querySelector(`.tutor-option-tabs [data-tab=${dataTab}]`).classList.add('active');
+					document.querySelector(`.tutor-option-tabs [data-tab=${dataTab}]`).classList.add('is-active');
 
 					// hide other tab contents
 					navPages.forEach((content) => {
-						content.classList.remove('active');
+						content.classList.remove('is-active');
 					});
 					// add active to the current content
-					document.querySelector(`.tutor-option-tab-pages #${dataTab}`).classList.add('active');
+					document.querySelector(`.tutor-option-tab-pages #${dataTab}`).classList.add('is-active');
 
 					// History push
 					const url = new URL(window.location);
@@ -348,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				// Reset + Hide Suggestion box
 				document.querySelector('.search-popup-opener').classList.remove('visible');
-				document.querySelector('.search-field input[type="search"]').value = '';
+				document.querySelector('.tutor-options-search input[type="search"]').value = '';
 				// Highlight selected element
 				highlightSearchedItem(dataKey);
 			});
@@ -360,10 +359,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	 */
 	function highlightSearchedItem(dataKey) {
 		const target = document.querySelector(`#${dataKey}`);
-		const targetEl = target && target.querySelector(`.tutor-option-field-label h5.label`);
+		const targetEl = target && target.querySelector(`[tutor-option-name]`);
 		const scrollTargetEl = target && target.parentNode.querySelector('.tutor-option-field-row');
-
-		// console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
 		if (scrollTargetEl) {
 			targetEl.classList.add('isHighlighted');
@@ -380,36 +377,4 @@ document.addEventListener('DOMContentLoaded', function() {
 			console.warn(`scrollTargetEl Not found!`);
 		}
 	}
-
-	/* var exporter = document.querySelector('#export_settings');
-	!exporter
-		? 0
-		: exporter.addEventListener('click', (e) => {
-				e.preventDefault();
-				fetch(_tutorobject.ajaxurl, {
-					method: 'POST',
-					credentials: 'same-origin',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-						'Cache-Control': 'no-cache',
-					},
-					body: new URLSearchParams({
-						action: 'tutor_export_settings',
-					}),
-				})
-					.then((response) => response.json())
-					.then((response) => {
-						const file = new Blob([JSON.stringify(response)], {
-							type: 'application/json',
-						});
-
-						let url = URL.createObjectURL(file);
-						let element = document.createElement('a');
-						element.setAttribute('href', url);
-						element.setAttribute('download', 'tutor_options');
-						element.click();
-						document.body.removeChild(element);
-					})
-					.catch((err) => console.log(err));
-		  }); */
 });

@@ -7,12 +7,11 @@
  * @package Filter / sorting
  * @since v2.0.0
  */
-const { __, _x, _n, _nx } = wp.i18n;
+ const { __, _x, _n, _nx } = wp.i18n;
 
 document.addEventListener('DOMContentLoaded', function() {
 	const commonConfirmModal = document.getElementById('tutor-common-confirmation-modal');
 	const commonConfirmForm = document.getElementById('tutor-common-confirmation-form');
-	const commonConfirmContent = document.getElementById('tutor-common-confirmation-modal-content');
 
 	const filterCourse = document.getElementById('tutor-backend-filter-course');
 	if (filterCourse) {
@@ -91,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		};
 	}
+
 	/**
 	 * Onsubmit bulk form handle ajax request then reload page
 	 */
@@ -113,17 +113,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			formData.set('bulk-ids', bulkIds);
 			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 			try {
-				const loadingButton = document.querySelector('#tutor-confirm-bulk-action.tutor-btn-loading');
-				const prevHtml = loadingButton.innerHTML;
-				loadingButton.innerHTML = `<div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>`;
+				const submitButton = document.querySelector('#tutor-confirm-bulk-action[data-tutor-modal-submit]');
+				submitButton.classList.add('is-loading')
 				const post = await fetch(window._tutorobject.ajaxurl, {
 					method: 'POST',
 					body: formData,
 				});
-				loadingButton.innerHTML = prevHtml;
+				submitButton.classList.remove('is-loading')
 				if (post.ok) {
 					const response = await post.json();
 					if (response.success) {
@@ -188,24 +184,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	for (let course of deleteCourse) {
 		course.onclick = (e) => {
 			const id = e.currentTarget.dataset.id;
+
 			if (commonConfirmForm) {
+				console.log(commonConfirmForm);
 				commonConfirmForm.elements.action.value = 'tutor_course_delete';
 				commonConfirmForm.elements.id.value = id;
-			}
-			if (commonConfirmContent) {
-				commonConfirmContent.innerHTML = `
-          <div class="tutor-modal-icon">
-          <img src="https://i.imgur.com/Nx6U2u7.png" alt=""/>
-          </div>
-          <div class="tutor-modal-text-wrap">
-          <h3 class="tutor-modal-title">
-           ${__('Wait!', 'tutor')}
-          </h3>
-          <p>
-            ${__('Are you sure you would like perform this action? We suggest you proceed with caution.', 'tutor')}
-          </p>
-          </div>
-        `;
 			}
 		};
 	}
@@ -219,22 +202,17 @@ document.addEventListener('DOMContentLoaded', function() {
 			e.preventDefault();
 			const formData = new FormData(commonConfirmForm);
 			//show loading
-			const loadingButton = commonConfirmForm.querySelector('.tutor-btn-loading');
-			const prevHtml = loadingButton.innerHTML;
-			loadingButton.innerHTML = `<div class="ball"></div>
-      <div class="ball"></div>
-      <div class="ball"></div>
-      <div class="ball"></div>`;
+			const submitButton = commonConfirmForm.querySelector('[data-tutor-modal-submit]');
+			submitButton.classList.add('is-loading');
 
 			const post = await ajaxHandler(formData);
-			//after post back button text
-			loadingButton.innerHTML = prevHtml;
 			//hide modal
 			if (commonConfirmModal.classList.contains('tutor-is-active')) {
 				commonConfirmModal.classList.remove('tutor-is-active');
 			}
 			if (post.ok) {
 				const response = await post.json();
+				submitButton.classList.remove('is-loading');
 				if (response) {
 					tutor_toast(__('Delete', 'tutor'), __('Course has been deleted ', 'tutor'), 'success');
 					location.reload();

@@ -136,31 +136,31 @@
                     </div>
                     <div class="addon-jumbotron-content">
                         <h3 class="title tutor-mt-0 tutor-mb-20"><?php esc_html_e( 'Get All of Our Addons for a Single Price', 'tutor' ); ?></h3>
-                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark"></span>
                         <?php esc_html_e( 'Enjoy all popular add-ons under a single price', 'tutor' ); ?>
                         </p>
-                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark"></span>
                         <?php esc_html_e( 'Easy enable options for the features you need', 'tutor' ); ?>
                         </p>
-                        <p class="tutor-d-flex tutor-py-4"><span class="icon tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="icon tutor-icon-mark"></span>
                         <?php esc_html_e( 'Advanced customization options for each add-on', 'tutor' ); ?>
                         </p>
-                        <button class="tutor-btn tutor-btn-wordpress tutor-mt-20">
-                            <span class="tutor-btn-icon">
+                        <a class="tutor-btn tutor-btn-primary tutor-mt-20" href="<?php echo esc_url( 'https://www.themeum.com/product/tutor-lms/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists' ); ?>">
+                            <span class="tutor-btn-icon tutor-mr-8">
                                 <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10.2379 0.460549C10.1833 0.382886 10.0942 0.33667 9.9993 0.33667C9.90435 0.33667 9.81535 0.382886 9.76073 0.460549L5.36965 6.70411L1.0585 4.51486C0.958254 4.46395 0.83767 4.4752 0.748565 4.54377C0.659461 4.61234 0.617703 4.72602 0.641236 4.83596L2.90945 15.4328C2.93824 15.5673 3.0571 15.6634 3.19466 15.6634H16.8039C16.9415 15.6634 17.0604 15.5673 17.0892 15.4328L19.3574 4.83596C19.3809 4.72602 19.3391 4.61234 19.25 4.54377C19.1609 4.4752 19.0403 4.46395 18.9401 4.51486L14.629 6.70411L10.2379 0.460549Z" fill="white"/>
                                 </svg>
                             </span>
-                            <span><a class="color-text-white" href="<?php echo esc_url( 'https://www.themeum.com/product/tutor-lms/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists' ); ?>"><?php esc_html_e( 'Buy Pro', 'tutor' ); ?></a></span>
-                        </button>
+                            <span><?php esc_html_e( 'Buy Pro', 'tutor' ); ?></span>
+                        </a>
                     </div>
                 </div>
             </div>
 		</div>
         <h3 class="title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Add-ons', 'tutor' ); ?></h3>
-        <div class="tutor-addons-list-select-filter tutor-d-flex tutor-justify-content-end tutor-align-items-center">
-			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
-				<span class="tutor-icon-search-filled tutor-input-group-icon"></span>
+        <div class="tutor-addons-list-select-filter tutor-d-flex tutor-justify-end tutor-align-items-center">
+			<div class="tutor-form-wrap">
+				<span class="tutor-icon-search tutor-form-icon"></span>
 				<input
                     id="free-addons-search"
 					type="search"

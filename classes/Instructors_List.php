@@ -250,13 +250,13 @@ class Instructors_List {
 
 		switch ( $status ) {
 			case 'pending':
-				$actions['approved'] = sprintf( '<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				$actions['approved'] = sprintf( '<a class="tutor-btn tutor-btn-outline-primary instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
+				$actions['blocked'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Block?', 'tutor' ) . '" class="tutor-btn tutor-btn-outline-primary instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Un Block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Unblock', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				$actions['approved'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Un Block?', 'tutor' ) . '" class="tutor-btn tutor-btn-outline-primary instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Unblock', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 		}
 
@@ -287,13 +287,13 @@ class Instructors_List {
 
 		switch ( $status ) {
 			case 'pending':
-				$actions['approved'] = sprintf( '<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				$actions['approved'] = sprintf( '<a class="tutor-btn tutor-btn-outline-primary instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf( '<a data-title="' . ( '' ) . '" data-prompt-message="' . __( 'Are you sure, want to block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
+				$actions['blocked'] = sprintf( '<a data-title="' . ( '' ) . '" data-prompt-message="' . __( 'Are you sure, want to block?', 'tutor' ) . '" class="tutor-btn tutor-btn-outline-primary instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf( '<a data-title="' . ( '' ) . '" data-prompt-message="' . __( 'Are you sure, want to approve?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				$actions['approved'] = sprintf( '<a data-title="' . ( '' ) . '" data-prompt-message="' . __( 'Are you sure, want to approve?', 'tutor' ) . '" class="tutor-btn tutor-btn-outline-primary instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 		}
 

@@ -10,19 +10,22 @@ class Course_Filter {
 	private $tag             = 'course-tag';
 	private $current_term_id = null;
 
-	function __construct() {
-		add_action( 'wp_ajax_tutor_course_filter_ajax', array( $this, 'load_listing' ) );
-		add_action( 'wp_ajax_nopriv_tutor_course_filter_ajax', array( $this, 'load_listing' ) );
+	function __construct($register_hook=true) {
+		if(!$register_hook) {
+			return;
+		}
+		add_action( 'wp_ajax_tutor_course_filter_ajax', array( $this, 'load_listing' ), 10, 0 );
+		add_action( 'wp_ajax_nopriv_tutor_course_filter_ajax', array( $this, 'load_listing' ), 10, 0 );
 	}
 
-	public function load_listing() {
-		tutils()->checking_nonce();
-		$_post = tutor_sanitize_data( $_POST );
+	public function load_listing($filters=null, $return_filter=false) {
+		!$return_filter ? tutils()->checking_nonce() : 0;
+		$_post = tutor_sanitize_data($filters==null ? $_POST : $filters);
 
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
 
-		$page             = ( isset( $_post['page'] ) && is_numeric( $_post['page'] ) && $_post['page'] > 0 ) ? sanitize_text_field( $_post['page'] ) : 1;
+		$page = ( isset( $_post['current_page'] ) && is_numeric( $_post['current_page'] ) && $_post['current_page'] > 0 ) ? sanitize_text_field( $_post['current_page'] ) : 1;
 		$args = array(
 			'post_status'    => 'publish',
 			'post_type'      => 'courses',
@@ -69,6 +72,10 @@ class Course_Filter {
 			$type_array = tutils()->array_get( 'tutor-course-filter-' . $type, $_post, array() );
 			$type_array = array_map( 'sanitize_text_field', ( is_array( $type_array ) ? $type_array : array( $type_array ) ) );
 
+			if($type=='level' && in_array('all_levels', $type_array)) {
+				continue;
+			}
+
 			if ( count( $type_array ) > 0 ) {
 				$level_price[] = array(
 					'key'     => 'level' === $type ? '_tutor_course_level' : '_tutor_course_price_type',
@@ -79,23 +86,27 @@ class Course_Filter {
 		}
 		count( $level_price ) ? $args['meta_query'] = $level_price : 0;
 
-		$search_key              = sanitize_text_field( tutils()->array_get( 'keyword', $_post, null ) );
+		$search_key = sanitize_text_field( tutils()->array_get( 'keyword', $_post, null ) );
 		$search_key ? $args['s'] = $search_key : 0;
 
 		if ( isset( $_post['tutor_course_filter'] ) ) {
 			switch ( $_post['tutor_course_filter'] ) {
+
 				case 'newest_first':
 					$args['orderby'] = 'ID';
 					$args['order']   = 'desc';
 					break;
+
 				case 'oldest_first':
 					$args['orderby'] = 'ID';
 					$args['order']   = 'asc';
 					break;
+
 				case 'course_title_az':
 					$args['orderby'] = 'post_title';
 					$args['order']   = 'asc';
 					break;
+
 				case 'course_title_za':
 					$args['orderby'] = 'post_title';
 					$args['order']   = 'desc';
@@ -103,15 +114,18 @@ class Course_Filter {
 			}
 		}
 
-		query_posts( apply_filters( 'tutor_course_filter_args', $args ) );
-		$col_per_row                    = (int) tutils()->array_get( 'column_per_row', $_post, 3 );
-		$GLOBALS['tutor_shortcode_arg'] = array(
-			'column_per_row'  => $col_per_row <= 0 ? 3 : $col_per_row,
-			'course_per_page' => $courses_per_page,
-			'shortcode_enabled' => isset($_post['page_shortcode'])?true:false,
-		);
+		// Return filters
+		$filters = apply_filters( 'tutor_course_filter_args', $args );
+		if($return_filter){
+			return $filters;
+		}
 
-		tutor_load_template( 'archive-course-init' );
+		ob_start();
+
+		query_posts( $filters );
+		tutor_load_template( 'archive-course-init', array_merge( array('loop_content_only' => true), $_post ));
+
+		wp_send_json_success( array('html' => ob_get_clean()) );
 		exit;
 	}
 
@@ -144,14 +158,12 @@ class Course_Filter {
 
 		foreach($terms as $term){
             ?>
-                <div class="tutor-form-check tutor-mb-20">
-
-                <input type="checkbox" class="tutor-form-check-input" id="<?php echo $term->term_id; ?>"  name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>&nbsp;
-
-                    <label for="<?php echo $term->term_id; ?>">
-                        <?php echo $term->name; ?>
+                <li class="tutor-list-item">
+                    <label>
+						<input type="checkbox" class="tutor-form-check-input"  name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>
+						<?php echo $term->name; ?>
                     </label>
-                </div>
+				</li>
                 <?php isset($term->children) ? $this->render_terms_hierarchically($term->children, $taxonomy) : 0; ?>
             <?php
         }

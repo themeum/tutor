@@ -55,31 +55,9 @@
         }
 
         .tutor_cover_uploader {
-            background: #3e64de;
-            border-radius: 6px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-style: normal;
-            font-weight: 600;
-            font-size: 13px;
-            color: #ffffff;
             position: absolute;
-            padding: 8px 20px;
             right: 22px;
             bottom: 22px;
-
-            &:hover {
-                background: #2f52c4;
-            }
-
-            & > span {
-                margin-left: 6px;
-
-                @media (max-width: 432px) {
-                    display: none;
-                }
-            }
         }
 
         .tutor_cover_deleter {
@@ -97,8 +75,8 @@
             cursor: pointer;
 
             .dashboard-profile-delete {
-                font-size: 24px;
-                line-height: 35px;
+                // font-size: 24px;
+                // line-height: 35px;
             }
 
             &:hover {
@@ -196,7 +174,7 @@
             justify-content: flex-start;
 
             .profile-upload-icon {
-                font-size: 24px;
+                // font-size: 24px;
             }
         }
 
