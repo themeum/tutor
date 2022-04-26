@@ -1,0 +1,71 @@
+.tutor-accordion {
+	&-item {
+		background-color: #fff;
+
+		border: 1px solid var(--tutor-border-color);
+		border-radius: 6px;
+
+		&:not(:last-child) {
+			margin-bottom: 10px;
+			@include breakpoint-min(desktop) {
+				margin-bottom: 20px;
+			}
+		}
+
+        &-header {
+            position: relative;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1.4;
+            padding: 16px 40px 16px 20px;
+            margin: 0;
+            transition: 200ms;
+            color: var(--tutor-color-secondary);
+            user-select: none;
+            cursor: pointer;
+
+            // arrow
+            &::after {
+                content: '\e940';
+                font-family: 'tutor' !important;
+                color: var(--tutor-color-primary);
+                font-size: 16px;
+                font-weight: normal;
+                position: absolute;
+                right: 16px;
+                top: 50%;
+                transform: translateY(-50%) rotate(0deg);
+                transition: 150ms;
+            }
+
+            &.is-active {
+                &::after {
+                    transform: translateY(-50%) rotate(-90deg);
+                }
+            }
+
+            // tooltip
+            .tooltip-wrap {
+                &.tooltip-icon {
+                    position: relative;
+                    font-size: 16px;
+                    top: 1px;
+                    margin-left: 8px;
+                }
+            }
+        }
+
+        &-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 300ms ease-in;
+
+            &-content {
+                // @extend .text-regular-body;
+                // color: var(--tutor-body-color);
+                padding: 0 16px;
+                border-top: 1px solid var(--tutor-border-color);
+            }
+        }
+	}
+}
