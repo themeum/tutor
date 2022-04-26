@@ -3505,14 +3505,14 @@ class Utils {
 		}
 
 		$user = $this->get_tutor_user( $user_id );
-		$name = $user->display_name;
+		$name = is_object($user) ? $user->display_name : '';
 		$arr  = explode( ' ', trim( $name ) );
 		$class = $size ? ' tutor-avatar-'. $size : '';
 
 		$output = '<div class="tutor-avatar'. $class .'">';
 		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
 
-		if ( $user->tutor_profile_photo ) {
+		if ( is_object($user) && $user->tutor_profile_photo ) {
 			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="'. esc_attr( $name ) .'" /> ';
 		} else {
 			$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
@@ -4216,6 +4216,8 @@ class Utils {
 			$search_term
 		);
 
+		echo htmlspecialchars($query); 
+
 		if ( $count_only ) {
 			// echo '<br/><br/><br/>';
 			// echo htmlspecialchars($query);
@@ -4253,17 +4255,6 @@ class Utils {
 				}
 			}
 		}
-
-		// This block causes error in single question if archived. 
-		/* if ( !isset($args['tab']) || isset( $args['no_archive'] ) && 'all' === $args['tab'] ) {
-			$query_all = $query;
-			$query     = array();
-			foreach ( $query_all as $m_query ) {
-				if (!isset( $m_query->meta['tutor_qna_archived'] ) || isset( $m_query->meta['tutor_qna_archived'] ) && 0 == $m_query->meta['tutor_qna_archived']) {
-					$query[] = $m_query;
-				}
-			}
-		} */
 
 		if ( $question_id ) {
 			return isset( $query[0] ) ? $query[0] : null;
