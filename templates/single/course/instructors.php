@@ -26,7 +26,7 @@ if($instructors && count($instructors)) : ?>
 		<?php foreach($instructors as $instructor): ?>
 			<div class="tutor-instructor-info-card tutor-card tutor-mb-32">
 				<div class="tutor-card-body">
-					<div class="tutor-d-flex tutor-align-center">
+					<div class="tutor-d-flex">
 						<?php echo tutor_utils()->get_tutor_avatar($instructor->ID, 'md'); ?>
 
 						<div class="tutor-ml-16">

@@ -343,128 +343,21 @@
 	}
 }
 
-// Course Details - Rating and Review
-.tutor-ratingsreviews {
-	/* stroke/light30 */
-	background: #ffffff;
-	border: 1px solid #cdcfd5;
-	border-radius: 6px;
-
-	// .tutor-ratingsreviews-ratings
-	&-ratings {
-		display: grid;
-		@include breakpoint-min(tablet) {
-			grid-template-columns: auto 1fr;
-			grid-gap: 44px;
+// Reviews
+.tutor-review {
+	&-summary {
+		&-average-rating {
+			font-weight: 500;
+			font-size: 80px;
+			line-height: 81px;
+			color: var(--tutor-body-color);
 		}
-		grid-gap: 20px;
-		align-items: center;
-		padding: 30px;
 
-		&-all {
-			.rating-numbers {
-				display: grid;
-				grid-gap: 5px;
-				@include breakpoint-min(mobile) {
-					grid-gap: 30px;
-					grid-template-columns: 80% 20%;
-				}
-				@include breakpoint-max(mobile) {
-					.rating-num {
-						text-align: center;
-					}
-				}
-
-				.rating-progress {
-					display: flex;
-					grid-gap: 13px;
-				}
-
-				&:not(:first-child) {
-					margin-top: 10px;
-				}
-			}
-			.rating-progress {
-				.tutor-rating-text {
-					padding-left: 2px;
-				}
+		&-rating {
+			&:not(:last-child) {
+				margin-bottom: 8px;
 			}
 		}
-
-		.progress-bar {
-			position: relative;
-			width: 100%;
-			display: block;
-			height: 8px;
-			background: #e3e5eb;
-			border-radius: 4px;
-			overflow: hidden;
-
-			.progress-value {
-				position: absolute;
-				width: var(--progress-value);
-				height: 100%;
-				background: #ed9700;
-				border-radius: 50px;
-			}
-		}
-		.progress-text {
-			margin-left: 10px;
-		}
-	}
-
-	// .tutor-ratingsreviews-reviews
-	&-reviews {
-		.review-list {
-			list-style: none;
-			padding: 0;
-			margin: 0;
-			> li {
-				--col: 22%;
-				display: grid;
-				@include breakpoint-min(450) {
-					grid-template-columns: auto 1fr;
-				}
-				grid-gap: 20px;
-				align-items: center;
-				border-top: 1px solid var(--tutor-border-color);
-				padding: 30px;
-				@include breakpoint-min(desktop) {
-					grid-template-columns: var(--col) calc(100% - var(--col));
-					padding-left: 35px;
-					padding-right: 40px;
-				}
-				a {
-					color: inherit;
-				}
-			}
-			.tutor-rating-text {
-				padding-left: 2px;
-			}
-		}
-	}
-}
-
-// spacing
-$avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
-
-@each $size in $avatarSizes {
-	.tutor-avatar-circle {
-		&.tutor-#{$size} {
-			width: #{$size}px;
-			height: #{$size}px;
-		}
-	}
-}
-.tutor-avatar-circle {
-	border-radius: 50%;
-	overflow: hidden;
-	img {
-		/* display: flex; */
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		flex-shrink: 0;
 	}
 }
 

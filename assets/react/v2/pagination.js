@@ -66,7 +66,7 @@ window.jQuery(document).ready($=>{
                             return;
                         }
 
-                        // Append the conntent
+                        // Append the content
                         append_container.append(html);
 
                         // Update pagination data since pagination template is not supposed to be loaded here
