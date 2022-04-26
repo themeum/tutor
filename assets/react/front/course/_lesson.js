@@ -17,7 +17,7 @@ window.jQuery(document).ready($=>{
             },
             success: function(){
                 // Replicate pagination click
-                let replacable = btn.closest('.tutor-pagination-wrapper-replacable');
+                let replacable = btn.closest('.tutor-pagination-wrapper-replaceable');
                 let wrapper = replacable.find('[data-tutor_pagination_ajax]');
                 let lesson_id = replacable.data('lesson_id');
                 let {current_page_num=1} = wrapper.length ? wrapper.data('tutor_pagination_ajax') : {};
