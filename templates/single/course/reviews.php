@@ -48,58 +48,63 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 	<?php if(! is_array( $reviews ) || ! count( $reviews )): ?>
 		<?php tutor_utils()->tutor_empty_state(__('No Review Yet', 'tutor')); ?>
 	<?php else: ?>
-		<div class="tutor-ratingsreviews">
-			<div class="tutor-ratingsreviews-ratings">
-				<div class="tutor-ratingsreviews-ratings-avg tutor-text-center">
-					<div class="tutor-fs-1 tutor-fw-medium tutor-color-black tutor-mb-20">
-						<?php echo number_format( $rating->rating_avg, 1 ); ?>
-					</div>
-					<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-d-block', 'lg' ); ?>
-					<div class="tutor-total-ratings-text tutor-fs-6 tutor-black-60 tutor-mt-12">
-						<span class="tutor-rating-text-part">
-							<?php esc_html_e( 'Total ', 'tutor' ); ?>
-						</span>
-						<span class="tutor-rating-count-part">
-							<?php echo $reviews_total; ?>
-						</span>
-						<span class="tutor-rating-text-part">
-							<?php echo esc_html( _n( ' Rating', ' Ratings', count( $reviews ), 'tutor' ) ); ?>
-						</span>
-					</div>
-				</div>
+		<div class="tutor-card tutor-review-card">
+			<div class="tutor-review-summary tutor-p-24 tutor-p-lg-40">
+				<div class="tutor-row tutor-gx-xl-5 tutor-align-center">
+					<div class="tutor-col-lg-auto tutor-text-center tutor-mb-16 tutor-mb-lg-0">
+						<div class="tutor-review-summary-average-rating tutor-mb-20">
+							<?php echo number_format( $rating->rating_avg, 1 ); ?>
+						</div>
 
-				<div class="tutor-ratingsreviews-ratings-all">
-					<?php foreach ( $rating->count_by_value as $key => $value ) : ?>
-						<?php $rating_count_percent = ( $value > 0 ) ? ( $value * 100 ) / $rating->rating_count : 0; ?>
-						<div class="rating-numbers">
-							<div class="rating-progress">
-								<div class="tutor-ratings">
-									<div class="tutor-rating-stars">
-										<span class="tutor-icon-star-line"></span>
-									</div>
-									<div class="tutor-rating-text  tutor-fs-6 tutor-fw-medium  tutor-color-black">
-										<?php echo $key; ?>
-									</div>
-								</div>
-								<div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value: <?php echo $rating_count_percent; ?>%">
-									<span class="tutor-progress-value" area-hidden="true"></span>
-								</div>
-							</div>
-							<div class="rating-num tutor-fs-7 tutor-color-secondary">
-								<?php
-									echo $value . ' ';
-									echo $value > 1 ? __( 'ratings', 'tutor' ) : __( 'rating', 'tutor' );
-								?>
+						<div>
+							<div class="tutor-d-inline-block">
+								<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, '', 'lg' ); ?>
 							</div>
 						</div>
-					<?php endforeach; ?>
+
+						<div class="tutor-fs-6 tutor-color-secondary tutor-mt-12">
+							<?php esc_html_e( 'Total ', 'tutor' ); ?>
+							<?php echo $reviews_total; ?>
+							<?php echo esc_html( _n( ' Rating', ' Ratings', count( $reviews ), 'tutor' ) ); ?>
+						</div>
+					</div>
+
+					<div class="tutor-col-lg">
+						<div class="tutor-review-summary-ratings">
+							<?php foreach ( $rating->count_by_value as $key => $value ) : ?>
+								<?php $rating_count_percent = ( $value > 0 ) ? ( $value * 100 ) / $rating->rating_count : 0; ?>
+								<div class="tutor-row tutor-align-center tutor-review-summary-rating">
+									<div class="tutor-col-auto">
+										<div class="tutor-ratings">
+											<div class="tutor-ratings-stars">
+												<span class="tutor-icon-star-line" area-hidden="true"></span>
+											</div>
+											<div class="tutor-ratings-average">
+												<?php echo $key; ?>
+											</div>
+										</div>
+									</div>
+
+									<div class="tutor-col">
+										<div class="tutor-progress-bar tutor-ratings-progress-bar" style="--tutor-progress-value: <?php echo $rating_count_percent; ?>%">
+											<span class="tutor-progress-value" area-hidden="true"></span>
+										</div>
+									</div>
+
+									<div class="tutor-col-3 tutor-col-lg-2">
+										<span class="tutor-fs-6 tutor-color-secondary"><?php echo $value . ' ' . ( $value > 1 ? __( 'Ratings', 'tutor' ) : __( 'Rating', 'tutor' ) ); ?></span>
+									</div>
+								</div>
+							<?php endforeach; ?>
+						</div>
+					</div>
 				</div>
 			</div>
 
-			<div class="tutor-ratingsreviews-reviews">
-				<ul class="review-list tutor-m-0 tutor-pagination-content-appendable">
-					<?php tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews)); ?>
-				</ul>
+			<div class="tutor-hr" area-hidden="true"></div>
+			
+			<div class="tutor-reviews tutor-card-list tutor-pagination-content-appendable">
+				<?php tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews)); ?>
 			</div>
 		</div>
 	<?php endif; ?>
@@ -116,6 +121,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 				</button>
 			<?php endif; ?>
 		</div>
+
 		<div class="tutor-col-auto">
 			<?php
 				$pagination_data = array(
