@@ -19,7 +19,7 @@ window.jQuery(document).ready($=>{
         e.preventDefault();
 
         let link_el = $(this);
-        let content_container = $(this).closest('.tutor-pagination-wrapper-replacable');
+        let content_container = $(this).closest('.tutor-pagination-wrapper-replaceable');
         let content_container_html = content_container.html();
 
         if (!content_container.length) {
