@@ -248,7 +248,8 @@ class Course extends Tutor_Base {
 	 *
 	 * @since v.1.3.4
 	 */
-	public function register_meta_box_in_frontend($post){
+	public function register_meta_box_in_frontend(){
+		global $post;
 
 		do_action('tutor_course_builder_metabox_before', get_the_ID());
 
