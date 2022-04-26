@@ -83,7 +83,7 @@ window.jQuery(document).ready($ => {
     // Show review form on opn (Single course)
     $(document).on('click', '.write-course-review-link-btn', function (e) {
         e.preventDefault();
-        $(this).closest('.tutor-pagination-wrapper-replacable')
+        $(this).closest('.tutor-pagination-wrapper-replaceable')
                 .next()
                 .filter('.tutor-course-enrolled-review-wrap')
                 .find('.tutor-write-review-form').slideToggle();

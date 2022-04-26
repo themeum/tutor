@@ -37,7 +37,7 @@ if(isset($_POST['course_id'])) {
 do_action( 'tutor_course/single/enrolled/before/reviews' );
 ?>
 
-<div class="tutor-pagination-wrapper-replacable">
+<div class="tutor-pagination-wrapper-replaceable">
 	<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
 		<?php
 			$review_title = apply_filters( 'tutor_course_reviews_section_title', 'Student Ratings & Reviews' );
