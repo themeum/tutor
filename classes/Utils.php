@@ -3518,8 +3518,6 @@ class Utils {
 			$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
 			$second_char    = ! empty( $arr[1] ) ? $this->str_split( $arr[1] )[0] : '';
 			$initial_avatar = strtoupper( $first_char . $second_char );
-	
-			// $bg_color       = '#' . substr( md5( $initial_avatar ), 0, 6 );
 			$output .= '<span class="tutor-avatar-text">' . $initial_avatar . '</span>';	
 		}
 		

@@ -1,29 +1,29 @@
 <?php foreach ( $reviews as $review ) : ?>
     <?php $profile_url = tutor_utils()->profile_url( $review->user_id, false ); ?>
-    <li>
-        <div>
-            <div>
-                <img class="tutor-avatar-circle tutor-50" src="<?php echo get_avatar_url( $review->user_id ); ?>" alt="<?php _e( 'Student Avatar', 'tutor' ); ?>" />
-            </div>
+    <div class="tutor-review-list-item tutor-card-list-item tutor-p-24 tutor-p-lg-40">
+        <div class="tutor-row">
+            <div class="tutor-col-lg-3 tutor-mb-16 tutor-mb-lg-0">
+                <div class="tutor-mb-12">
+                    <?php echo tutor_utils()->get_tutor_avatar( $review->user_id, 'md' ); ?>
+                </div>
 
-            <div class="tutor-fs-6 tutor-color-black tutor-mt-16">
-                <a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-reviewer-name">
-                    <?php echo esc_html( $review->display_name ); ?>
-                </a>
-            </div>
+                <div class="tutor-fs-6 tutor-mb-4">
+                    <a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-color-black">
+                        <?php echo esc_html( $review->display_name ); ?>
+                    </a>
+                </div>
 
-            <div class="tutor-fs-7 tutor-color-muted">
-                <span class="tutor-review-time">
+                <div class="tutor-fs-7 tutor-color-muted">
                     <?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
-                </span>
+                </div>
+            </div>
+
+            <div class="tutor-col-lg-9">
+                <?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
+                <div class="tutor-fs-7 tutor-color-secondary tutor-mt-12 tutor-review-comment">
+                    <?php echo htmlspecialchars( $review->comment_content ); ?>
+                </div>
             </div>
         </div>
-        
-        <div>
-            <?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
-            <div class="tutor-fs-7 tutor-color-secondary tutor-mt-12 tutor-review-comment">
-                <?php echo htmlspecialchars( $review->comment_content ); ?>
-            </div>
-        </div>
-    </li>
+    </div>
 <?php endforeach; ?>

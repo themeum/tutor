@@ -24,9 +24,7 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 				</div>
 				<div class="tutor-d-flex tutor-mt-16">
 					<div class="tutor-d-flex tutor-mr-md-32 tutor-mr-12">
-						<div class="tutor-avatar-circle tutor-26 tutor-mr-8">
-							<img src="<?php echo esc_url( get_avatar_url( $announcement->post_author ) ); ?>" alt="instructor avatar" />
-						</div>
+						<?php echo tutor_utils()->get_tutor_avatar( $announcement->post_author ); ?>
 						<div class="tutor-fs-7 tutor-fw-medium">
 							<span class="tutor-fs-7 tutor-color-secondary">by</span> <?php echo esc_html( get_userdata( $announcement->post_author )->display_name ); ?>
 						</div>
