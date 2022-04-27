@@ -1,12 +1,3 @@
-.tutor-courses {
-	clear: both;
-	display: flex;
-	flex-wrap: wrap;
-	margin-left: -15px;
-	margin-right: -15px;
-	padding: 0;
-}
-
 .tutor-course-listing-category a:not(:last-child):after {
 	content: ', ';
 	margin-right: 5px;
@@ -1508,7 +1499,7 @@ table.course-single-gradebooks a {
 	}
 }
 
-.list-item-button {
+.list-item-button, .tutor-course-booking-availability {
 	.ajax_add_to_cart.added {
 		display: none;
 	}

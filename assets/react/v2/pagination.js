@@ -19,7 +19,7 @@ window.jQuery(document).ready($=>{
         e.preventDefault();
 
         let link_el = $(this);
-        let content_container = $(this).closest('.tutor-pagination-wrapper-replacable');
+        let content_container = $(this).closest('.tutor-pagination-wrapper-replaceable');
         let content_container_html = content_container.html();
 
         if (!content_container.length) {
@@ -66,7 +66,7 @@ window.jQuery(document).ready($=>{
                             return;
                         }
 
-                        // Append the conntent
+                        // Append the content
                         append_container.append(html);
 
                         // Update pagination data since pagination template is not supposed to be loaded here

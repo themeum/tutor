@@ -10,8 +10,7 @@
 
 	<?php
 
-    // tutor_utils()->get_topics function doesn't work correctly for multi instructor case. Rather use get_posts.
-    $query_topics = get_posts(array(
+    $query_topics = new WP_Query(array(
         'post_type'      => 'topics',
         'post_parent'    => $course_id,
         'orderby'        => 'menu_order',
@@ -19,6 +18,7 @@
         'posts_per_page' => -1,
     ));
 
+    $query_topics = $query_topics->posts;
 
     // Actually all kind of contents. 
     // This keyword '_tutor_course_id_for_lesson' used just to support backward compatibillity
