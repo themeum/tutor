@@ -42,7 +42,7 @@ class Course_Filter {
 		// Prepare taxonomy
 		foreach ( array( 'category', 'tag' ) as $taxonomy ) {
 
-			$term_array                             = tutils()->array_get( 'tutor-course-filter-' . $taxonomy, $_post, array() );
+			$term_array = tutils()->array_get( 'tutor-course-filter-' . $taxonomy, $_post, array() );
 			! is_array( $term_array ) ? $term_array = array( $term_array ) : 0;
 
 			$term_array = array_filter(
