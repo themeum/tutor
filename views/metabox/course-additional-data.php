@@ -1,5 +1,14 @@
 <?php
-$course_id = get_the_ID();
+$course_id = 0;
+if ( is_admin() ) {
+    $course_id = get_the_ID();
+} else {
+    $course_id = isset( $_GET['course_ID'] ) ? $_GET['course_ID'] : get_the_ID();
+}
+// check if current post is courses
+if ( get_post_type( $course_id ) != tutor()->course_post_type ) {
+    die( __( 'Invalid post type', 'tutor' ) );
+}
 
 // Extract: $duration, $durationHours, $durationMinutes, $durationSeconds
 extract( tutor_utils()->get_course_duration( $course_id, true ) );
