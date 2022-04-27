@@ -26,9 +26,6 @@ class Question_Answers_List {
 		if (isset($args['search'])){
 			$search_term = sanitize_text_field($args['search']);
 		}
-		if(isset($args['tab']) && 'all' === $args['tab']){
-			$args['no_archive'] = false;
-		}
 
 		$current_page 	= isset( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : 1;
 
