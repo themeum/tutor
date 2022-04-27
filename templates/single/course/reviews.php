@@ -91,7 +91,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 										</div>
 									</div>
 
-									<div class="tutor-col-3 tutor-col-lg-2">
+									<div class="tutor-col-4 tutor-col-lg-3">
 										<span class="tutor-fs-6 tutor-color-secondary"><?php echo $value . ' ' . ( $value > 1 ? __( 'Ratings', 'tutor' ) : __( 'Rating', 'tutor' ) ); ?></span>
 									</div>
 								</div>
