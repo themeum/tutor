@@ -105,7 +105,7 @@
 	$columns = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
 ?>
 
-<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
+<div class="tutor-wrap tutor-wrap-parent tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
 	<div class="tutor-row tutor-gx-xl-5">
 	<?php if ($course_filter && count($supported_filters)): ?>
 		<div class="tutor-col-3 tutor-d-none tutor-d-lg-block">
