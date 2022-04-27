@@ -598,7 +598,7 @@ jQuery(document).ready(function ($) {
 	 */
 	var tutor_course_builder = $('input[name="tutor_action"]').val();
 	if (tutor_course_builder === 'tutor_add_course_builder') {
-		setInterval(auto_draft_save_course_builder, 30000);
+		//setInterval(auto_draft_save_course_builder, 30000);
 	}
 
 	function auto_draft_save_course_builder() {
