@@ -1,9 +1,13 @@
 const tutor_filters = [
     'keyword',
     'tutor-course-filter-level',
+    'tutor-course-filter-tag',
+    'tutor-course-filter-category',
+    'tutor-course-filter-price',
     'course_filter',
     'supported_filters',
-    'current_page'
+    'current_page',
+    'action'
 ];
 
 const pushFilterToState = data => {
