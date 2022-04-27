@@ -87,7 +87,7 @@ body.tutor-screen-course-builder {
         left: 10px;
 
         &+select {
-            padding-left: 35px;
+            padding-left: 35px !important;
         }
 
         [data-for] {

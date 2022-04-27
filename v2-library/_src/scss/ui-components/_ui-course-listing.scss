@@ -19,6 +19,13 @@
 				position: absolute;
 				top: 12px;
 				left: 12px;
+				background: var(--tutor-color-primary);
+				color: #FFFFFF;
+				font-size: 12px;
+				line-height: 1.4;
+				font-weight: 500;
+				padding: 4px 8px;
+				border-radius: 50px;
 			}
 
 			&-name {
