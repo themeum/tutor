@@ -17,7 +17,7 @@ $course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()
 tutor_utils()->tutor_custom_header();
 do_action('tutor_course/single/before/wrap');
 ?>
-<div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
+<div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap tutor-wrap-parent'); ?>>
     <div class="tutor-course-details-page tutor-container">
         <?php (isset($is_enrolled) && $is_enrolled) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
         <div class="tutor-row tutor-gx-xl-5">
