@@ -13,8 +13,8 @@
  */
 tutor_utils()->tutor_custom_header();
 
-if(isset($_GET['course_filter'])){
-	$filter = (new \Tutor\Course_Filter(false))->load_listing($_GET, true);
+if ( isset( $_GET['course_filter'] ) ) {
+	$filter = (new \Tutor\Course_Filter(false))->load_listing( $_GET, true );
 	query_posts( $filter );
 }
 

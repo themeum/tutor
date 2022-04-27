@@ -179,10 +179,6 @@ Instructor
 	}
 }
 
-.single-instructor-wrap .instructor-avatar {
-	float: left;
-}
-
 .single-instructor-wrap .instructor-avatar img {
 	max-width: 50px;
 	height: auto;
@@ -830,8 +826,7 @@ Instructor
 	right: 0;
 }
 
-.rtl .single-instructor-wrap .instructor-name,
-.rtl .single-instructor-wrap .instructor-avatar {
+.rtl .single-instructor-wrap .instructor-name {
 	float: right;
 }
 
