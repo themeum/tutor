@@ -62,10 +62,15 @@
 	if($show_pagination) {
 		// Load the pagination now
 		global $wp_query;
+
+		$current_url = wp_doing_ajax() ? $_SERVER['HTTP_REFERER'] : tutor()->current_url;
+		$push_link = add_query_arg( array_merge( $_POST, $GLOBALS['tutor_course_archive_arg'] ), $current_url );
+
 		$pagination_data = array(
 			'total_page'  => isset($the_query) ? $the_query->max_num_pages : $wp_query->max_num_pages,
 			'per_page'    => $course_per_page,
 			'paged'       => $current_page,
+			'data_set'	  => array('push_state_link'=>$push_link),
 			'ajax'		  => array_merge($GLOBALS['tutor_course_archive_arg'], array(
 				'loading_container' => '.tutor-course-filter-loop-container',
 				'action' => 'tutor_course_filter_ajax',
