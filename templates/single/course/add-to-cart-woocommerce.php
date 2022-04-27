@@ -11,7 +11,7 @@ $product = wc_get_product( $product_id );
 if ($product) {
     if(tutor_utils()->is_course_added_to_cart($product_id, true)){
         ?>
-            <a href="<?php echo wc_get_cart_url(); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block">
+            <a href="<?php echo wc_get_cart_url(); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block tutor-woocommerce-view-cart">
                 <?php _e('View Cart', 'tutor'); ?>
             </a>
         <?php
