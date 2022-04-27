@@ -43,9 +43,20 @@ window.jQuery(document).ready($=>{
             data: data,
             beforeSend: function () {
                 let {type} = layout || {};
+
+                // Push state link
+                let push_link = link_el.closest('[data-push_state_link]').attr('data-push_state_link');
+                if(push_link){
+                    const new_url = new URL(push_link);
+                    new_url.searchParams.append('current_page', data.current_page);
+                    window.history.pushState({}, '', new_url);
+                }
+
                 if(type=='load_more') {
+                    // Add loading icon if it's loading button for appendable content
                     link_el.addClass('is-loading');
                 } else {
+                    // Otherwise replace the content container with loading icon
                     content_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
                 }
                 
