@@ -19,10 +19,10 @@ if(isset($_GET['course_filter'])){
 }
 
 // Load the 
-tutor_load_template('archive-course-init', array(
+tutor_load_template('archive-course-init', array_merge( array(
 	'course_filter' => (bool) tutor_utils()->get_option('course_archive_filter', false),
 	'supported_filters' => tutor_utils()->get_option('supported_course_filters', array()),
 	'loop_content_only' => false
-));
+), $_GET));
 
 tutor_utils()->tutor_custom_footer(); 
