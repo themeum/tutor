@@ -73,7 +73,7 @@ do_action( 'tutor_course/single/before/topics' );
 								?>
 								<li class="tutor-course-content-list-item">
 									<div class="tutor-d-flex tutor-align-center">
-										<span class="<?php echo $topic_content_icon; ?> tutor-color-muted tutor-mr-16"></span>
+										<span class="tutor-course-content-list-item-icon <?php echo $topic_content_icon; ?> tutor-color-muted tutor-mr-16"></span>
 										<h5 class="tutor-course-content-list-item-title">
 											<?php
 												$lesson_title = '';
@@ -109,10 +109,10 @@ do_action( 'tutor_course/single/before/topics' );
 									</div>
 									
 									<div>
-										<span class="tutor-fs-7 tutor-color-muted">
+										<span class="tutor-course-content-list-item-duration tutor-fs-7 tutor-color-muted">
 											<?php echo $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : ''; ?>
 										</span>
-										<span class="<?php echo $is_locked ? ' tutor-icon-lock-line' : 'tutor-icon-eye-line'; ?> tutor-color-muted tutor-ml-20" area-hidden="true"></span>
+										<span class="tutor-course-content-list-item-status <?php echo $is_locked ? ' tutor-icon-lock-line' : 'tutor-icon-eye-line'; ?> tutor-color-muted tutor-ml-20" area-hidden="true"></span>
 									</div>
 								</li>
 							<?php endwhile; ?>
