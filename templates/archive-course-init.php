@@ -8,6 +8,16 @@
 	!isset($show_pagination)	? $show_pagination	 = true : 0;
 	!isset($current_page)		? $current_page	 	 = 1 : 0;
 
+	// Hide pagination is there is no page after first one
+	$pages_count = 0;
+	if(isset($the_query)){
+		$pages_count = $the_query->max_num_pages;
+	} else {
+		global $wp_query;
+	 	$pages_count = $wp_query->max_num_pages;
+	}
+	$pages_count<2 ? $show_pagination=false : 0;
+
 	// Set in global variable to avoid too many stack to pass to other templates
 	$GLOBALS['tutor_course_archive_arg'] = compact(
 		'course_filter',
