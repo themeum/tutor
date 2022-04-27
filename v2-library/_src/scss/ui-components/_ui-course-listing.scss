@@ -15,6 +15,12 @@
 				right: 12px;
 			}
 
+			&-difficulty-level {
+				position: absolute;
+				top: 12px;
+				left: 12px;
+			}
+
 			&-name {
 				@include tutorLineClamp(3);
 				&,

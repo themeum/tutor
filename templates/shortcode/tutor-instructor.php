@@ -1,4 +1,4 @@
-<div class="tutor-pagination-wrapper-replacable tutor-instructor-list-wrapper">
+<div class="tutor-pagination-wrapper-replaceable tutor-instructor-list-wrapper">
 	<?php if ( count( $instructors ) ) : ?>
 		<div class="tutor-instructor-list">
 			<div class="tutor-grid tutor-grid-<?php echo esc_attr( $column_count ); ?>">
