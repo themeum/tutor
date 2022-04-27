@@ -28,6 +28,13 @@ $contents    = tutor_utils()->get_course_prev_next_contents_by_id( $content_id )
 $previous_id = $contents->previous_id;
 $next_id     = $contents->next_id;
 
+$prev_is_preview = get_post_meta( $previous_id, '_is_preview', true );
+$next_is_preview = get_post_meta( $next_id, '_is_preview', true );
+$is_enrolled = tutor_utils()->is_enrolled( $course_id );
+
+$prev_is_locked = !($is_enrolled || $prev_is_preview);
+$next_is_locked = !($is_enrolled || $next_is_preview);
+
 // Get total content count
 $course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 
@@ -101,7 +108,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 	</div>
 	<div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
 		<div class="tutor-mobile-top-nav tutor-d-flex tutor-align-center tutor-justify-between">
-			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
+			<a href="<?php echo $prev_is_locked ? '#' : get_the_permalink( $previous_id ); ?>">
 				<span class="tutor-top-nav-icon tutor-icon-previous design-lightgrey"></span>
 			</a>
 			<div class="tutor-top-nav-title tutor-fs-6 tutor-color-black">
@@ -149,7 +156,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 	<?php tutor_lesson_video(); ?>
 	<?php if($previous_id): ?>
 		<div class="tutor-single-course-content-prev tutor-d-flex tutor-align-center">
-			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
+			<a href="<?php echo $prev_is_locked ? '#' : get_the_permalink( $previous_id ); ?>">
 				<span class="tutor-icon-angle-left" area-hidden="true"></span>
 			</a>
 		</div>
@@ -157,7 +164,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 
 	<?php if($next_id): ?>
 		<div class="tutor-single-course-content-next tutor-d-flex tutor-align-center">
-			<a href="<?php echo get_the_permalink( $next_id ); ?>">
+			<a href="<?php echo $next_is_locked ? '#' : get_the_permalink( $next_id ); ?>">
 				<span class="tutor-icon-angle-right" area-hidden="true"></span>
 			</a>
 		</div>

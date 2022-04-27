@@ -102,11 +102,11 @@
 			<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" area-hidden="true"></div>
 		<?php endif; ?>
 		
-		<div class="tutor-col-lg-9 tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?> tutor-pagination-wrapper-replacable" tutor-course-list-container>
+		<div class="tutor-col-lg-9 tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?> tutor-pagination-wrapper-replaceable" tutor-course-list-container>
 			<?php echo $course_loop; ?>
 		</div>
 	<?php else: ?>
-		<div class="tutor-col-12 tutor-pagination-wrapper-replacable" tutor-course-list-container>
+		<div class="tutor-col-12 tutor-pagination-wrapper-replaceable" tutor-course-list-container>
 			<?php echo $course_loop; ?>
 		</div>
 	<?php endif; ?>
