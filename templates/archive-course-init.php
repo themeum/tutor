@@ -8,6 +8,16 @@
 	!isset($show_pagination)	? $show_pagination	 = true : 0;
 	!isset($current_page)		? $current_page	 	 = 1 : 0;
 
+	// Hide pagination is there is no page after first one
+	$pages_count = 0;
+	if(isset($the_query)){
+		$pages_count = $the_query->max_num_pages;
+	} else {
+		global $wp_query;
+	 	$pages_count = $wp_query->max_num_pages;
+	}
+	$pages_count<2 ? $show_pagination=false : 0;
+
 	// Set in global variable to avoid too many stack to pass to other templates
 	$GLOBALS['tutor_course_archive_arg'] = compact(
 		'course_filter',
@@ -95,7 +105,7 @@
 	$columns = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
 ?>
 
-<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
+<div class="tutor-wrap tutor-wrap-parent tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
 	<div class="tutor-row tutor-gx-xl-5">
 	<?php if ($course_filter && count($supported_filters)): ?>
 		<div class="tutor-col-3 tutor-d-none tutor-d-lg-block">
