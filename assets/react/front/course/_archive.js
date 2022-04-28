@@ -1,9 +1,13 @@
 const tutor_filters = [
     'keyword',
     'tutor-course-filter-level',
+    'tutor-course-filter-tag',
+    'tutor-course-filter-category',
+    'tutor-course-filter-price',
     'course_filter',
     'supported_filters',
-    'current_page'
+    'current_page',
+    'action'
 ];
 
 const pushFilterToState = data => {
@@ -102,12 +106,13 @@ window.jQuery(document).ready($ => {
     renderFilterFromState(course_filter_container);
     window.addEventListener('popstate', () => {
         renderFilterFromState(course_filter_container);
-        ajaxFilterArchive(false);
+        ajaxFilterArchive(false, true);
     });
 
-    const ajaxFilterArchive = (push_state = true) => {
+    const ajaxFilterArchive = (push_state = true, use_page_num=false) => {
+        let params = getAllUrlParams();
         var filter_criteria = Object.assign(course_filter_container.serializeObject(), filter_modifier, archive_meta);
-        filter_criteria.current_page = 1;
+        filter_criteria.current_page = (use_page_num && params.current_page) ? params.current_page : 1;
         filter_criteria.action = 'tutor_course_filter_ajax';
 
         if (push_state) {
