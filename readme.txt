@@ -225,7 +225,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.0.2 - April 20, 2022
+= 2.0.2 - April 28, 2022
 
 New: Instructor List Page is built using its Shortcode
 New: Course List Page is redeveloped with SEO friendly URL
@@ -254,7 +254,7 @@ Fix: The announcement could have been created without selecting a course
 Fix: Deleting a student was deleting their user account too
 Fix: Bulk Actions was not working in the courses, instructors, students' page
 Fix: A student was being enrolled in the same course multiple times
-Fix: The Tutor Free Download link was wrong when only Tutor Pro was active, 
+Fix: The Tutor Free Download link was wrong when only Tutor Pro was active
 Fix: Lesson Page container was being narrow on some Screens
 Fix: WP Editor was not working while creating a lesson
 Fix: Admin and Instructor were not being able to access their course content
@@ -265,6 +265,7 @@ Fix: In Course Journey, the "Overview Tab" was not appearing by default
 Fix: While creating Zoom Meeting, Date Picker wasn't working
 Fix: For the "Match Question" type Quiz Design was showing up as broken
 Fix: WooCommerce "Autocomplete Order" Hook was not working with Tutor LMS
+Fix: Payment was not going to the Processing state while using Stripe payment
 Fix: No Income was visible under Instructor's Wallet page
 Fix: While creating a Course, a duplicate course was being created due to "Auto Save"
 Fix: Subscribers were able to access the "Create a Course" page
@@ -272,6 +273,10 @@ Fix: "Preferred Course Filter" options were not working in settings
 Fix: Admin submitted courses were ending up in the course review section
 Fix: The Content Drip add-on date picker was showing the wrong date format
 Fix: Wrong instructor count was showing up on the reports page
+Fix: Report was showing wrong calculation for course enroll, lesson and quiz count
+Fix: Loco Translator was not Translating "True" and "False" Text
+Fix: "Erase upon uninstallation" option of "Settings" was not working before
+Fix: Different profile picture was showing up in different pages
 
 = 2.0.1 - March 23, 2022
 
