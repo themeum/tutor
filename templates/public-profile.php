@@ -81,7 +81,7 @@ tutor_utils()->tutor_custom_header();
 
 <?php do_action( 'tutor_profile/'.$user_type.'/before/wrap' ); ?>
 <?php $user_identifier = $is_instructor ? 'tutor-instructor' : 'tutor-student'; ?>
-	<div <?php tutor_post_class( 'tutor-full-width-student-profile tutor-page-wrap tutor-user-public-profile tutor-user-public-profile-' . $profile_layout . ' ' . $user_identifier ); ?> >
+	<div <?php tutor_post_class( 'tutor-wrap-parent tutor-full-width-student-profile tutor-page-wrap tutor-user-public-profile tutor-user-public-profile-' . $profile_layout . ' ' . $user_identifier ); ?> >
 		<div class="tutor-container photo-area">
 			<div class="cover-area">
 				<div style="background-image:url(<?php echo tutor_utils()->get_cover_photo_url( $user_id ); ?>)"></div>

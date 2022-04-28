@@ -78,7 +78,7 @@ $disable_reviews    = !get_tutor_option('enable_course_review');
 
             <div class="tutor-col-auto">
                 <div class="tutor-course-details-actions tutor-mt-12 tutor-mt-sm-0">
-                    <a href="#" class="tutor-btn tutor-btn-ghost tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
+                    <a href="#" class="tutor-btn tutor-btn-ghost tutor-course-wishlist-btn tutor-mr-16" data-course-id="<?php echo get_the_ID(); ?>">
                         <i class="tutor-icon-bookmark-line tutor-mr-8"></i> <?php _e('Wishlist', 'tutor'); ?>
                     </a>
 
