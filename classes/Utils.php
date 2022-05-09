@@ -9658,6 +9658,10 @@ class Utils {
 		}, $course_ids);
 		$course_ids = implode(',', $course_ids);
 
+		if(empty($course_ids)){
+			return array();
+		}
+
 		// Get course meta
 		$results = $wpdb->get_results(
 			"SELECT DISTINCT course.ID AS course_id, 
