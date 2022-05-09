@@ -31,9 +31,10 @@ $next_id     = $contents->next_id;
 $prev_is_preview = get_post_meta( $previous_id, '_is_preview', true );
 $next_is_preview = get_post_meta( $next_id, '_is_preview', true );
 $is_enrolled = tutor_utils()->is_enrolled( $course_id );
+$is_public = get_post_meta( $course_id, '_tutor_is_public_course', true );
 
-$prev_is_locked = !($is_enrolled || $prev_is_preview);
-$next_is_locked = !($is_enrolled || $next_is_preview);
+$prev_is_locked = !($is_enrolled || $prev_is_preview || $is_public);
+$next_is_locked = !($is_enrolled || $next_is_preview || $is_public);
 
 // Get total content count
 $course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
