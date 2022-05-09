@@ -47,7 +47,7 @@
 							<label for="<?php echo $answer->answer_id; ?>" class="tutor-quiz-question-item">
 								<div class="tutor-card tutor-px-16 tutor-py-12">
 									<div class="tutor-d-flex tutor-align-center">
-										<input class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]<?php echo esc_html( 'multiple_choice' === $question_type ? '[]' : '' ); ?>" type="<?php echo $choice_type; ?>" value="<?php echo $answer->answer_id; ?>">
+										<input class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]<?php echo 'multiple_choice' === $question_type ? '[]' : ''; ?>" type="<?php echo $choice_type; ?>" value="<?php echo $answer->answer_id; ?>">
 										<span class="tutor-fs-6 tutor-color-black tutor-ml-8">
 											<?php echo 'True' === $answer_title || 'False' === $answer_title ? tutor_utils()->translate_dynamic_text( strtolower(  $answer_title ) ) : $answer_title; ?>
 										</span>
@@ -58,7 +58,7 @@
 					<?php else: ?>
 						<div class="tutor-col-6 tutor-col-lg-6 tutor-mb-16">
 							<label for="<?php echo $answer->answer_id; ?>" class="tutor-quiz-question-item tutor-quiz-question-item-has-media">
-								<input type="<?php echo $choice_type; ?>" class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" value="<?php echo $answer->answer_id; ?>" />
+								<input type="<?php echo $choice_type; ?>" class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]<?php echo 'multiple_choice' === $question_type ? '[]' : ''; ?>" value="<?php echo $answer->answer_id; ?>" />
 								<div class="tutor-card">
 									<img class="tutor-card-image<?php echo $answer->answer_view_format == 'text_image' ? '-top' : ''; ?>" src="<?php echo wp_get_attachment_image_url( $answer->image_id, 'full' ); ?>" />
 									<?php if ( $answer->answer_view_format == 'text_image' ) : ?>
