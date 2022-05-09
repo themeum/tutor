@@ -1,0 +1,51 @@
+.tutor-user-profile {
+	display: flex;
+	align-items: center;
+	.tutor-profile-content {
+		padding-left: 20px;
+		font-size: 15px;
+		color: var(--tutor-color-muted);
+	}
+	.tutor-profile-subtitle {
+		font-size: 24px;
+		line-height: 34px;
+		font-weight: 400;
+		color: var(--tutor-body-color);
+	}
+	.tutor-profile-name {
+		display: block;
+		font-size: 30px;
+		line-height: 37px;
+		color: var(--tutor-body-color);
+	}
+}
+
+.tutor-instructor-card {
+	@extend .tutor-border;
+	@extend .d-flex;
+	@extend .align-items-center;
+	padding: 12px 17px;
+	border-radius: 4px;
+	min-width: 320px;
+	.tutor-icard-content {
+		@extend .tutor-pl-12;
+		font-size: 13px;
+		line-height: 18px;
+		color: var(--tutor-color-muted);
+		flex-grow: 1;
+	}
+	.tutor-name {
+		@extend .d-flex;
+		@extend .align-items-center;
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 28px;
+		margin: 0;
+		color: var(--tutor-body-color);
+		.tutor-icard-icon {
+			font-size: 13px;
+			padding-left: 6px;
+			color: var(--tutor-color-primary);
+		}
+	}
+}
