@@ -333,9 +333,18 @@ class Assets {
 			];
 		}
 
+		$fallback_colors = [
+			'tutor_primary_color' => '#3E64DE',
+			'tutor_primary_hover_color' => '#395BCA',
+			'tutor_text_color' => '#212327',
+			'tutor_border_color' => '#E3E5EB',
+			'tutor_gray_color' => '#CDCFD5'
+		];
+
 		$color_string = '';
 		foreach ($colors as $key => $property) {
-			$color = tutor_utils()->get_option( $key );
+			$fallback_color = isset( $fallback_colors[$key] ) ? $fallback_colors[$key] : '#212327';
+			$color = tutor_utils()->get_option( $key, $fallback_color );
 			$color_rgb = tutor_utils()->hex2rgb( $color );
 
 			if (is_admin() && isset($admin_colors[$property])) {
