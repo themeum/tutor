@@ -234,20 +234,19 @@ $placeholder_img     = tutor()->url . 'assets/images/placeholder.svg';
 $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_user_id() );
 ?>
 
-<?php if ( tutor_utils()->is_instructor() ) : ?>
+<?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
 	<div class="tutor-frontend-dashboard-course-progress">
 		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24">
 			<?php esc_html_e( 'In Progress Courses', 'tutor' ); ?>
 		</div>
-		<?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
-			<?php
+		<?php 
 			while ( $courses_in_progress->have_posts() ) :
 				$courses_in_progress->the_post();
 				$tutor_course_img = get_tutor_course_thumbnail_src();
 				$course_rating    = tutor_utils()->get_course_rating( get_the_ID() );
 				$course_progress  = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
 				$completed_number = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
-				?>
+			?>
 			<div class="tutor-course-progress-item tutor-card tutor-mb-20">
 				<div class="tutor-row tutor-gx-0">
 					<div class="tutor-col-lg-4">
@@ -304,10 +303,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 				</div>
 			</div>
 			<?php endwhile; ?>
-			<?php wp_reset_postdata(); ?>
-		<?php else : ?>
-			<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-		<?php endif; ?>
+		<?php wp_reset_postdata(); ?>
 	</div>
 <?php endif; ?>
 

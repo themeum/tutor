@@ -17,44 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Dashboard {
 
 	public function __construct() {
-		add_action( 'template_redirect', array($this, 'create_draft') );
-		add_action('tutor_load_template_before', array($this, 'tutor_load_template_before'), 10, 2);
-		add_action('tutor_load_template_after', array($this, 'tutor_load_template_after'), 10, 2);
-		add_filter('should_tutor_load_template', array($this, 'should_tutor_load_template'), 10, 2);
-	}
-
-	public function create_draft() {
-
-		if(is_admin()) {
-			return;
-		}
-
-		global $wp_query;
-
-		$tutor_dashboard_page = tutor_utils()->array_get( 'query_vars.tutor_dashboard_page', $wp_query );
-		
-		if ( $tutor_dashboard_page === 'create-course' && tutor_utils()->is_instructor(get_current_user_id(), true)) {
-			
-			/**
-			 * Get course which currently in edit, or insert new course
-			 */
-			$course_ID = (int) tutor_utils()->array_get( 'course_ID', $_GET );
-			
-			if ( !$course_ID ) {
-				$post_type = tutor()->course_post_type;
-				$course_id   = wp_insert_post(
-					array(
-						'post_title'  => __( 'Auto Draft', 'tutor' ),
-						'post_type'   => $post_type,
-						'post_status' => 'draft',
-					)
-				);
-
-				$red_url = add_query_arg( array('course_ID' => $course_id ), tutor_utils()->tutor_dashboard_url('create-course') );
-				wp_redirect( $red_url );
-				exit;
-			}
-		}
+		add_action( 'tutor_load_template_before', array( $this, 'tutor_load_template_before' ), 10, 2 );
+		add_action( 'tutor_load_template_after', array( $this, 'tutor_load_template_after' ), 10, 2 );
+		add_filter( 'should_tutor_load_template', array( $this, 'should_tutor_load_template' ), 10, 2 );
 	}
 
 	/**
@@ -65,19 +30,27 @@ class Dashboard {
 		global $wp_query;
 
 		$tutor_dashboard_page = tutor_utils()->array_get( 'query_vars.tutor_dashboard_page', $wp_query );
-		if ( $tutor_dashboard_page === 'create-course' && tutor_utils()->is_instructor(get_current_user_id(), true)) {
+		if ( $tutor_dashboard_page === 'create-course' ) {
 			global $post;
 			wp_reset_query();
 
 			/**
 			 * Get course which currently in edit, or insert new course
 			 */
-			$course_ID = (int) tutor_utils()->array_get( 'course_ID', $_GET );
+			$course_ID = (int) sanitize_text_field( tutor_utils()->array_get( 'course_ID', $_GET ) );
 
 			if ( $course_ID ) {
 				$post_id = $course_ID;
 			} else {
-				exit(__('Course ID not found. Try reloading.', 'tutor'));
+				$post_type = tutor()->course_post_type;
+				$post_id   = wp_insert_post(
+					array(
+						'post_title'  => __( 'Auto Draft', 'tutor' ),
+						'post_type'   => $post_type,
+						'post_status' => 'draft',
+					)
+				);
+				tutor_log( 'tutor' . time() );
 			}
 
 			$post = get_post( $post_id );

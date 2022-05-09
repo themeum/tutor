@@ -1171,7 +1171,9 @@ class Utils {
 					post_date_gmt,
 					post_title
 			FROM 	{$wpdb->posts}
-			WHERE 	post_type = %s
+			WHERE 	post_author>0 
+					AND post_parent>0
+					AND post_type = %s
 					AND post_parent = %d
 					AND post_author = %d
 					AND post_status = %s;
