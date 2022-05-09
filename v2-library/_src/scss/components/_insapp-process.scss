@@ -7,9 +7,11 @@
 		border-radius: 10px;
 	}
 }
+
 .tutor-ins-app-title {
 	max-width: 570px;
 }
+
 @include breakpoint-max(767) {
 	span.tutor-app-process-title {
 		font-size: 28px;

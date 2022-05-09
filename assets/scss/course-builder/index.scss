@@ -58,10 +58,6 @@ body.tutor-screen-course-builder {
         .wp-editor-wrap {
             width: 100%;
         }
-        
-        &.tutor-lesson-modal-wrap {
-            @import './modal/lesson.scss';
-        }
 
         &.tutor-quiz-builder-modal-wrap{
             @import './modal/quiz.scss';
@@ -75,10 +71,6 @@ body.tutor-screen-course-builder {
     /* Screen specific declarations (Frontend editor) */
     &.tutor-screen-course-builder-frontend{
         @import './frontend.scss';
-    }
-
-    &:not(.tutor-screen-course-builder-frontend) {
-        @import './backend.scss';
     }
 
     .tutor-dropdown-icon-pack {
