@@ -872,13 +872,27 @@ class Quiz {
 
 		global $wpdb;
 		$question_data = $_POST['tutor_quiz_question'];
-		$requires_answeres = array('multiple_choice', 'single_choice', 'fill_in_the_blank', 'matching', 'image_matching', 'image_answering', 'ordering');
+		$requires_answeres = array(
+			'multiple_choice', 
+			'single_choice', 
+			'fill_in_the_blank', 
+			'matching', 
+			'image_matching', 
+			'image_answering', 
+			'ordering'
+		);
+
+		$need_correct = array(
+			'multiple_choice',
+			'single_choice'
+		);
 
 		foreach ( $question_data as $question_id => $question ) {
 			
 			// Make sure the quiz has answers
 
-			if(in_array($question['question_type'], $requires_answeres) && empty($this->get_answers_by_q_id($question_id, $question['question_type']))) {
+			$require_correct = in_array($question['question_type'], $need_correct);
+			if(in_array($question['question_type'], $requires_answeres) && empty($this->get_answers_by_q_id($question_id, $question['question_type'], $require_correct))) {
 				wp_send_json_error( array('message' => __('Please make sure the question has answer')) );
 				exit;
 			}
@@ -1130,14 +1144,17 @@ class Quiz {
 		wp_send_json_success();
 	}
 
-	private function get_answers_by_q_id($question_id, $question_type) {
+	private function get_answers_by_q_id($question_id, $question_type, $is_correct=false) {
 		global $wpdb;
+
+		$correct_clause = $is_correct ? ' AND is_correct=1 ' : '';
 		
 		return $wpdb->get_results($wpdb->prepare(
 			"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers
-			where belongs_question_id = %d AND
+			WHERE belongs_question_id = %d AND
 				belongs_question_type = %s
-			order by answer_order asc ;",
+				{$correct_clause}
+			ORDER BY answer_order ASC;",
 			$question_id,
 			esc_sql( $question_type )
 		));
