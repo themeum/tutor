@@ -12,6 +12,7 @@ readyState_complete(() => {
 });
 
 const toggleCertificate = () => {
+	const { __ } = wp.i18n;
 	const moreButton = document.querySelector('.more_button');
 	moreButton.style.display = 'block';
 	const templateAlignment = document.querySelectorAll('[data-alignment]');
@@ -39,7 +40,7 @@ const toggleCertificate = () => {
 				templateItemWrap.style.height = primaryHeight + 'px';
 			}
 			moreButton.onclick = (e) => {
-				moreButton.querySelector('span').innerText = 'Show More';
+				moreButton.querySelector('span').innerText = __("Show More", "tutor");
 				templateItemWrap.classList.toggle('more-loaded');
 				let moreLoaded = templateItemWrap.classList.contains('more-loaded');
 				console.log(moreLoaded);
@@ -47,12 +48,12 @@ const toggleCertificate = () => {
 					templateItemWrap.style.height = primaryHeight + targetHeight + 'px';
 					moreButton.querySelector('i').classList.remove('tutor-icon-plus');
 					moreButton.querySelector('i').classList.add('tutor-icon-minus');
-					moreButton.querySelector('span').innerText = 'Show Less';
+					moreButton.querySelector('span').innerText = __("Show Less", "tutor");
 				} else {
 					templateItemWrap.style.height = primaryHeight + 'px';
 					moreButton.querySelector('i').classList.remove('tutor-icon-minus');
 					moreButton.querySelector('i').classList.add('tutor-icon-plus');
-					moreButton.querySelector('span').innerText = 'Show More';
+					moreButton.querySelector('span').innerText = __("Show More", "tutor");
 				}
 			};
 		}

@@ -1,6 +1,11 @@
 # TutorLMS Changelog
 
-### 2.0.2 - April 20, 2022
+### 2.0.3 - May 18, 2022
+
+* Fix: Course auto draft
+
+
+### 2.0.2 - April 28, 2022
 
 * New: Instructor List Page is built using its Shortcode
 * New: Course List Page is redeveloped with SEO friendly URL
