@@ -54,7 +54,7 @@
                         <span class="tutor-iconic-btn" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>">
                             <i class="tutor-icon-edit" area-hidden="true"></i>
                         </span>
-                        <span class="topic-delete-btn tutor-iconic-btn">
+                        <span class="topic-delete-btn tutor-iconic-btn" action-delete-course-topic>
                             <i class="tutor-icon-trash-can-line" area-hidden="true"></i>
                         </span>
                     <?php endif; ?>
