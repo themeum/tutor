@@ -1,30 +1,30 @@
 .tutor-instructor {
-  &-list-item {
-    .tutor-instructor-cover-photo {
-      border-radius: 5px 5px 0 0;
-    }
-    
-    .tutor-avatar {
-      position: relative;
-      z-index: 1;
-      box-shadow: 0 0 0 1px var(--tutor-border-color);
-    }
-    
-    &.tutor-instructor-layout {
-      &-cover {
-        .tutor-avatar {
-          margin-top: -69px;
-          box-shadow: 0 0 0 1px var(--tutor-border-color), 0 0 0 6px #FFFFFF;
-        }
-      }
-      
-      &-portrait-horizontal {
-        .tutor-instructor-cover-photo {
-          border-radius: 5px 0 0 5px;
-        }
-      }
-    }
-  }
+	&-list-item {
+		.tutor-instructor-cover-photo {
+			border-radius: 5px 5px 0 0;
+		}
+		
+		.tutor-avatar {
+			position: relative;
+			z-index: 1;
+			box-shadow: 0 0 0 1px var(--tutor-border-color);
+		}
+		
+		&.tutor-instructor-layout {
+			&-cover {
+				.tutor-avatar {
+					margin-top: -69px;
+					box-shadow: 0 0 0 1px var(--tutor-border-color), 0 0 0 6px #FFFFFF;
+				}
+			}
+			
+			&-portrait-horizontal {
+				.tutor-instructor-cover-photo {
+					border-radius: 5px 0 0 5px;
+				}
+			}
+		}
+	}
 }
 
 
@@ -43,109 +43,109 @@
 }
 
 .tutor-instructor-filter {
-  overflow: auto;
-  & > div {
-    float: left;
-    &:first-child {
-      width: 230px;
-    }
-    
-    &:last-child {
-      @media (min-width: 1024px) {
-        padding: 0 51px;
-        width: calc(100% - 250px);
-      }
-    }
-  }
-  
-  .tutor-instructor-filter-result {
-    .keyword-field {
-      padding: 5px;
-      border: 1px solid #bababa;
-      box-sizing: border-box;
-      border-radius: 6px;
-      margin-bottom: 30px;
-      
-      i {
-        padding: 0 5px;
-        color: #3e64de;
-      }
-      
-      i,
-      input {
-        font-size: 16px;
-      }
-      
-      input {
-        border: none;
-        background: transparent;
-        padding: 0;
-        width: calc(100% - 40px);
-        
-        &,
-        &:hover,
-        &:active {
-          outline: 0;
-        }
-      }
-    }
-  }
+	overflow: auto;
+	& > div {
+		float: left;
+		&:first-child {
+			width: 230px;
+		}
+		
+		&:last-child {
+			@media (min-width: 1024px) {
+				padding: 0 51px;
+				width: calc(100% - 250px);
+			}
+		}
+	}
+	
+	.tutor-instructor-filter-result {
+		.keyword-field {
+			padding: 5px;
+			border: 1px solid #bababa;
+			box-sizing: border-box;
+			border-radius: 6px;
+			margin-bottom: 30px;
+			
+			i {
+				padding: 0 5px;
+				color: #3e64de;
+			}
+			
+			i,
+			input {
+				font-size: 16px;
+			}
+			
+			input {
+				border: none;
+				background: transparent;
+				padding: 0;
+				width: calc(100% - 40px);
+				
+				&,
+				&:hover,
+				&:active {
+					outline: 0;
+				}
+			}
+		}
+	}
 }
 
 .tutor-instructor-rejection-notice {
-  width: 100%;
-  clear: both;
-  margin: 41px 0 0 0;
-  background: #fff7f7;
-  padding: 16.5px;
-  border-radius: 6px;
-  border: 1px solid #fdd9d7;
-  
-  span {
-    color: #c62828;
-    font-size: 16px;
-    font-weight: 400;
-    
-    i {
-      color: #f44337;
-      font-size: 27px;
-      display: inline-block;
-      margin-right: 14px;
-    }
-  }
-  
-  a {
-    float: right;
-    color: #f44337;
-    cursor: pointer;
-    font-weight: bold;
-    
-    &:hover {
-      color: #e41304;
-    }
-  }
+	width: 100%;
+	clear: both;
+	margin: 41px 0 0 0;
+	background: #fff7f7;
+	padding: 16.5px;
+	border-radius: 6px;
+	border: 1px solid #fdd9d7;
+	
+	span {
+		color: #c62828;
+		font-size: 16px;
+		font-weight: 400;
+		
+		i {
+			color: #f44337;
+			font-size: 27px;
+			display: inline-block;
+			margin-right: 14px;
+		}
+	}
+	
+	a {
+		float: right;
+		color: #f44337;
+		cursor: pointer;
+		font-weight: bold;
+		
+		&:hover {
+			color: #e41304;
+		}
+	}
 }
 
 /*
 Instructor customize filters styles
 */
 .tutor-instructor-filter {
-  * {
-    box-sizing: border-box;
-  }
-  .course-category-filter {
-    .tutor-form-check {
-      label.text-medium-caption {
-        @extend .text-medium-caption;
-      }
-    }
-  }
-  .tutor-instructor-ratings-wrapper {
-    padding-top: 33px;
-    border-top: 1px solid #E3E6EB;
-  }
-  
-  .filter-result-container{
-    position: relative;
-  }
+	* {
+		box-sizing: border-box;
+	}
+	.course-category-filter {
+		.tutor-form-check {
+			label.text-medium-caption {
+				@extend .text-medium-caption;
+			}
+		}
+	}
+	.tutor-instructor-ratings-wrapper {
+		padding-top: 33px;
+		border-top: 1px solid #E3E6EB;
+	}
+	
+	.filter-result-container{
+		position: relative;
+	}
 }

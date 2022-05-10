@@ -11,9 +11,13 @@
 	$supported_filters = array_keys( $supported_filters );
 	$reset_link		   = remove_query_arg( $supported_filters, get_pagenum_link() );
 ?>
-<form class="tutor-form">
-	<?php do_action( 'tutor_course_filter/before' ); ?>
+<form class="tutor-course-filter-form tutor-form">
+	<div class="tutor-mb-16 tutor-d-block tutor-d-lg-none tutor-text-right">
+		<a href="#" class="tutor-iconic-btn tutor-me-n8" tutor-hide-course-filter><span class="tutor-icon-times" area-hidden="true"></span></a>
+	</div>
 
+	<?php do_action( 'tutor_course_filter/before' ); ?>
+	
 	<?php if ( in_array( 'search', $supported_filters ) ) : ?>
 		<div class="tutor-widget tutor-widget-search">
 			<div class="tutor-form-wrap">
