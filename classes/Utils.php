@@ -9717,4 +9717,13 @@ class Utils {
 
 		return $course_meta;
 	}
+
+	public function get_local_time_from_unix($time, $date_format=null){
+		$unix_seconds = is_numeric($time) ? $time : strtotime($time);
+		$utc_timestamp_converted = date( 'Y-m-d H:i:s', $unix_seconds );
+		$output_format = $date_format ? $date_format : get_option( 'date_format' ). ', ' . get_option( 'time_format' );
+		$local_timestamp = get_date_from_gmt( $utc_timestamp_converted, $output_format );
+
+		return date_i18n( $output_format, $local_timestamp, true );
+	}
 }

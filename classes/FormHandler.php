@@ -3,7 +3,7 @@
  * FormHandler class
  *
  * @author: themeum
- * @author_uri: https://themeum.com
+ * @link: https://themeum.com
  * @package Tutor
  * @since v.1.4.3
  */
@@ -144,14 +144,13 @@ class FormHandler {
 	}
 
 	/**
-	 * @param $user_login
-	 * @param $reset_key
-	 *
-	 * Send E-Mail notification
+	 * Send Password Reset E-Mail to user.
 	 * We are sending directly right now, later we will introduce centralised E-Mail notification System...
+	 * 
+	 * @param $user_login login username.
+	 * @param $reset_key password reset key.
 	 */
 	public function sendNotification( $user_login, $reset_key ) {
-		// Send the E-Mail to user
 
 		$user_data = get_user_by( 'login', $user_login );
 
@@ -175,13 +174,26 @@ class FormHandler {
 		remove_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
 	}
 
+	/**
+	 * Get e-mail from address
+	 *
+	 * @return string
+	 */
 	public function get_from_address() {
-		return apply_filters( 'tutor_email_from_address', get_tutor_option( 'email_from_address' ) );
+		$from_address = get_tutor_option( 'email_from_address' );
+		$default = !$from_address ? get_option( 'admin_email' ) : $from_address;
+		return apply_filters( 'tutor_email_from_address', $default );
 	}
 
+	/**
+	 * Get e-mail from name
+	 *
+	 * @return string
+	 */
 	public function get_from_name() {
-		return apply_filters( 'tutor_email_from_name', get_tutor_option( 'email_from_name' ) );
+		$from_name = get_tutor_option( 'email_from_name' );
+		$default = !$from_name ? get_option( 'blogname' ) : $from_name;
+		return apply_filters( 'tutor_email_from_name', $default );
 	}
-
 
 }
