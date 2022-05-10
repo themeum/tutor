@@ -7,11 +7,8 @@
 // Legacy common styles
 @import './legacy/index.scss';
 
-// components
-@import './components/index';
-
 // ui elements
-@import './ui-elements/index';
+@import './elements/index';
 
 // ui components
-@import './ui-components/index';
+@import './components/index';

@@ -8,13 +8,14 @@
     overflow-x: hidden;
     overflow-y: auto;
     outline: 0;
-	z-index: $z-index-modal;
+	z-index: 99999;
 
 	&-open {
 		overflow: hidden;
 	}
 
-	&.tutor-is-active {
+	&.tutor-is-active,
+	&-active {
 		display: block;
 	}
 
@@ -233,58 +234,6 @@
 			&:last-child .tutor-modal-step-btn::after {
 				right: auto;
 				left: 100%;
-			}
-		}
-	}
-}
-
-// modal essentials
-.tutor-attachment {
-	font-size: 13px;
-	line-height: 18px;
-	display: flex;
-	border: 1px solid var(--tutor-border-color);
-	padding: 6px 13px 6px 18px;
-	align-items: center;
-	justify-content: space-between;
-	border-radius: 6px;
-	background: var(--tutor-color-white);
-	color: var(--tutor-color-muted);
-	.tutor-attachment-name {
-		font-size: 16px;
-		line-height: 26px;
-		font-weight: 400;
-		margin: 0;
-		flex-grow: 1;
-		min-width: 0;
-		padding-right: 20px;
-		color: var(--tutor-body-color);
-		span {
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			display: block;
-		}
-	}
-	.tutor-attachment-right {
-		display: inline-flex;
-		align-items: center;
-		.tutor-attachment-delete {
-			border: none;
-			background: none;
-			padding: 0 5px;
-			line-height: 26px;
-			height: 26px;
-			margin-left: 18px;
-			font-size: 12px;
-			color: var(--tutor-color-primary);
-			cursor: pointer;
-			transition: 200ms;
-			&:focus {
-				outline: 1px dotted;
-			}
-			&:hover {
-				color: var(--tutor-danger-color);
 			}
 		}
 	}

@@ -1,13 +1,11 @@
 /* This is a legacy directory pulled from inside the tutor as it is sort of old design library  */
 /* Common libraries. This file will be loaded in both of admin and frontend main scss file once */
+@import './dashboard';
 @import './switch.scss';
-@import './color.scss';
 @import './toast.scss';
 @import './ui-date-picker.scss';
 @import './slider-input';
 @import './input-tooltip';
-@import './layout';
-@import './rating.scss';
 @import './select2';
 
 // @todo: to be removed

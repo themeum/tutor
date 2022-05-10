@@ -152,6 +152,12 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 <?php endif; ?>
 
 <!-- Load Lesson Video -->
+<?php
+	$video_info = tutor_utils()->get_video_info();
+	$source_key = is_object($video_info) && 'html5' !== $video_info->source ? 'source_'.$video_info->source : null;
+	$has_source = (is_object($video_info) && $video_info->source_video_id) || (isset($source_key) ? $video_info->$source_key : null);
+?>
+<?php if ($has_source) : ?>
 <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ) ); ?>">
 <div class="tutor-video-player-wrapper">
 	<?php tutor_lesson_video(); ?>
@@ -171,6 +177,8 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 		</div>
 	<?php endif; ?>
 </div>
+<?php endif; ?>
+
 <?php
 $referer_url        = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '';
 $referer_comment_id = explode( '#', $_SERVER['REQUEST_URI'] );
