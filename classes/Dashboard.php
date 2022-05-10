@@ -13,7 +13,9 @@ namespace TUTOR;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+if ( ! session_id() ) {
+	session_start();
+}
 class Dashboard {
 
 	public function __construct() {
@@ -38,7 +40,9 @@ class Dashboard {
 			 * Get course which currently in edit, or insert new course
 			 */
 			$course_ID = (int) sanitize_text_field( tutor_utils()->array_get( 'course_ID', $_GET ) );
-
+			if ( ! $course_ID ) {
+				$course_ID = isset( $_SESSION['tutor_course_id'] ) ? (int) $_SESSION['tutor_course_id'] : 0;
+			}
 			if ( $course_ID ) {
 				$post_id = $course_ID;
 			} else {
@@ -51,8 +55,9 @@ class Dashboard {
 					)
 				);
 				tutor_log( 'tutor' . time() );
+				$_SESSION['tutor_course_id'] = $post_id;
 			}
-
+			echo $post_id;
 			$post = get_post( $post_id );
 			setup_postdata( $post );
 		}
