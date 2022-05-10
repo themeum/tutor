@@ -136,6 +136,21 @@ window.jQuery(document).ready($ => {
             }
         });
     };
+
+    // Course Filter on Phone
+    $('[tutor-toggle-course-filter]').on('click', function(event) {
+        event.preventDefault();
+        $('body').toggleClass('tutor-course-filter-open');
+
+        if ($('.tutor-course-filter-backdrop').length == 0) {
+            $('body').append($('<div class="tutor-course-filter-backdrop" area-hidden="true"></div>').hide().fadeIn(150));
+        }
+    });
+
+    $('[tutor-hide-course-filter]').on('click', function(event) {
+        event.preventDefault();
+        $('body').removeClass('tutor-course-filter-open');
+    });
 });
 
 // Reusable for Instructor list filter
