@@ -7581,22 +7581,27 @@ class Utils {
 		$settings_url          = tutor_utils()->tutor_dashboard_url( 'settings' );
 		$withdraw_settings_url = tutor_utils()->tutor_dashboard_url( 'settings/withdraw-settings' );
 
-		// List constantly required fields
 		$required_fields = array(
-			'_tutor_profile_photo' => sprintf( __( 'Set Your %1$sProfile Photo%2$s', 'tutor' ), '<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="' . $settings_url . '">', '</a>' ),
-			'_tutor_profile_bio'   => sprintf( __( 'Set Your %1$sBio%2$s', 'tutor' ), '<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="' . $settings_url . '">', '</a>' ),
+			'_tutor_profile_photo' => __( 'Set Your Profile Photo', 'tutor' ),
+			'_tutor_profile_bio'   => __( 'Set Your Bio', 'tutor' ),
 		);
 
 		// Add payment method as a required on if current user is an approved instructor
 		if ( 'approved' == $instructor_status ) {
-			$required_fields['_tutor_withdraw_method_data'] = sprintf( __( 'Set %1$sWithdraw Method%2$s', 'tutor' ), '<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="' . $withdraw_settings_url . '">', '</a>' );
+			$required_fields['_tutor_withdraw_method_data'] = __( 'Set Withdraw Method', 'tutor' );
 		}
 
-		// Now assign identifer whether set or not
+		// url where user should redirect for profile completion.
+		$profile_completion_urls = array(
+			'_tutor_profile_photo' 			=> $settings_url,
+			'_tutor_profile_bio'   			=> $settings_url,
+			'_tutor_withdraw_method_data' 	=> $withdraw_settings_url,
+		);
 		foreach ( $required_fields as $key => $field ) {
 			$required_fields[ $key ] = array(
-				'label_html' => $field,
-				'is_set'     => get_user_meta( $user_id, $key, true ) ? true : false,
+				'text' 		=> $field,
+				'is_set'    => get_user_meta( $user_id, $key, true ) ? true : false,
+				'url'		=> $profile_completion_urls[ $key ],
 			);
 		}
 
