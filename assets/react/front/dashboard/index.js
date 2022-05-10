@@ -13,15 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (createNewCourse) {
         createNewCourse.onclick = async (e) => {
             e.preventDefault();
-            const tag = e.target.tagName;
-            const target = e.target;
-            let href;
-            if (tag === 'A') {
-                href = target.getAttribute('href');
-            }
-            if (tag === 'I') {
-                href = target.closest('#tutor-create-new-course').getAttribute('href');
-            }
+            let href = e.currentTarget.href;
             createNewCourse.classList.add('is-loading');
             const formData = new FormData();
             formData.set('action', 'tutor_unset_session_course_id');

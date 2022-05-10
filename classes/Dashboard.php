@@ -114,6 +114,8 @@ class Dashboard {
 	/**
 	 * Check if course id in session is valid
 	 *
+	 * @since v2.0.3
+	 *
 	 * @param integer $course_id
 	 *
 	 * @return boolean
