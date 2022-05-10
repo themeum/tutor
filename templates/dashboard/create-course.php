@@ -16,11 +16,11 @@ do_action('tutor_load_template_before', 'dashboard.create-course', null);
 
 $course_id	= (int) isset( $_GET['course_ID'] ) ? sanitize_text_field( $_GET['course_ID'] ) : 0;
 if ( ! $course_id ) {	
-	// if session has valid course id	
+	// if session has valid course id.
 	if ( isset( $_SESSION['tutor_course_id'] ) && Dashboard::is_session_course_valid( $_SESSION['tutor_course_id'] ) ) {
 		$course_id = $_SESSION['tutor_course_id'];
 	} else {
-		//remove session in case id exists but not valid
+		//remove session in case id exists but not valid.
 		Dashboard::remove_course_id_from_session();
 	}
 }
