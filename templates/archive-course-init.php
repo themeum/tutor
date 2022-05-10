@@ -103,12 +103,24 @@
 
 	$course_archive_arg = isset($GLOBALS['tutor_course_archive_arg']) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
 	$columns = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
+	$has_course_filters = $course_filter && count($supported_filters);
+
+	$supported_filters_keys = array_keys( $supported_filters );
 ?>
 
 <div class="tutor-wrap tutor-wrap-parent tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
+	<?php if ( $has_course_filters && in_array( 'search', $supported_filters_keys ) ) : ?>
+		<div class="tutor-d-block tutor-d-lg-none tutor-mb-32">
+			<div class="tutor-d-flex tutor-align-center tutor-justify-between">
+				<span class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php _e("Courses", "tutor"); ?></span>
+				<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-md" tutor-toggle-course-filter><span class="tutor-icon-slider-vertical"></span></a>
+			</div>
+		</div>
+	<?php endif; ?>
+
 	<div class="tutor-row tutor-gx-xl-5">
-	<?php if ($course_filter && count($supported_filters)): ?>
-		<div class="tutor-col-3 tutor-d-none tutor-d-lg-block">
+	<?php if ( $has_course_filters ): ?>
+		<div class="tutor-col-3 tutor-course-filter-container">
 			<div class="tutor-course-filter" tutor-course-filter>
 				<?php tutor_load_template('course-filter.filters'); ?>
 			</div>

@@ -309,7 +309,7 @@ if ( ! function_exists( 'tutor_course_loop_col_classes' ) ) {
 		$classes       = apply_filters(
 			'tutor_course_loop_col_classes',
 			array(
-				'tutor-course-col-' . $course_cols,
+				'tutor-col-' . $course_cols,
 			)
 		);
 
