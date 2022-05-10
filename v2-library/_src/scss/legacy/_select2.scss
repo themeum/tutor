@@ -1,9 +1,5 @@
 body.tutor-screen-course-builder{
 
-    .select2-container--open {
-        
-    }
-
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 46px;
     }
@@ -25,7 +21,6 @@ body.tutor-screen-course-builder{
         min-height: 45px;
         border-radius: 6px;
     }
-
     
     // Only for frontend course builder
     // Backend course builder ok somehow

@@ -174,7 +174,10 @@ $filters = array(
 								</td>
 								<td data-th="<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>">
 									<span class="tutor-color-black tutor-fs-7">
-									<?php echo esc_html( tutor_utils()->get_option( 'earning_instructor_commission' ) . '%' ); ?>
+									<?php 
+										$commision_string = tutor_utils()->get_option( 'earning_instructor_commission' ) . '%';
+										echo apply_filters( 'tutor_pro_instructor_commission_string', $commision_string, $list->ID );
+									?>
 									</span>
 								</td>
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">

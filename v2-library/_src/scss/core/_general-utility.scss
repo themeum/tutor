@@ -4,6 +4,12 @@
 	content: '';
 }
 
+.tutor-flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .align-top {
 	vertical-align: top;
 }
@@ -148,7 +154,7 @@
 	word-break: break-all;
 }
 
-// 
+// ul
 .tutor {
 	&-ul {
 		list-style: none;
