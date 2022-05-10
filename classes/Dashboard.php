@@ -22,6 +22,7 @@ class Dashboard {
 		add_action( 'tutor_load_template_before', array( $this, 'tutor_load_template_before' ), 10, 2 );
 		add_action( 'tutor_load_template_after', array( $this, 'tutor_load_template_after' ), 10, 2 );
 		add_filter( 'should_tutor_load_template', array( $this, 'should_tutor_load_template' ), 10, 2 );
+		add_action( 'wp_ajax_tutor_unset_session_course_id', array( __CLASS__, 'unset_session') );
 	}
 
 	/**
@@ -38,10 +39,17 @@ class Dashboard {
 
 			/**
 			 * Get course which currently in edit, or insert new course
+			 * if not in $_GET then get from session
 			 */
 			$course_ID = (int) sanitize_text_field( tutor_utils()->array_get( 'course_ID', $_GET ) );
 			if ( ! $course_ID ) {
-				$course_ID = isset( $_SESSION['tutor_course_id'] ) ? (int) $_SESSION['tutor_course_id'] : 0;
+				
+				if ( isset( $_SESSION['tutor_course_id'] ) && self::is_session_course_valid( $_SESSION['tutor_course_id'] ) ) {
+					$course_ID = (int) $_SESSION['tutor_course_id'];
+				} else {
+					//remove session in case id exists but not valid
+					self::remove_course_id_from_session();
+				}
 			}
 			if ( $course_ID ) {
 				$post_id = $course_ID;
@@ -54,10 +62,8 @@ class Dashboard {
 						'post_status' => 'draft',
 					)
 				);
-				tutor_log( 'tutor' . time() );
 				$_SESSION['tutor_course_id'] = $post_id;
 			}
-			echo $post_id;
 			$post = get_post( $post_id );
 			setup_postdata( $post );
 		}
@@ -77,5 +83,43 @@ class Dashboard {
 			return false;
 		}
 		return $bool;
+	}
+
+	/**
+	 * Destroy course id from session if exists
+	 *
+	 * @since v2.0.3
+	 *
+	 * @return void  send JSON response
+	 */
+	public static function unset_session() {
+		tutor_utils()->checking_nonce();
+		self::remove_course_id_from_session();
+		wp_send_json_success();
+	}
+
+	/**
+	 * Remove course id session token
+	 *
+	 * @since v2.0.3
+	 *
+	 * @return void
+	 */
+	public static function remove_course_id_from_session() {
+		if ( isset( $_SESSION['tutor_course_id'] ) ) {
+			unset( $_SESSION['tutor_course_id'] );
+		}
+	}
+
+	/**
+	 * Check if course id in session is valid
+	 *
+	 * @param integer $course_id
+	 *
+	 * @return boolean
+	 */
+	public static function is_session_course_valid( int $course_id ): bool {
+		$post = get_post( $course_id );
+		return is_a( $post, 'WP_Post' ) && tutor()->course_post_type === $post->post_type;
 	}
 }

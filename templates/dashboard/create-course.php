@@ -5,17 +5,33 @@
  * @version 1.4.3
  */
 
+use TUTOR\Dashboard;
 
 if (!defined('ABSPATH')) {
 	exit;
 }
 
-global $post;
-
 get_tutor_header(true);
 do_action('tutor_load_template_before', 'dashboard.create-course', null);
 
-$course_id          = get_the_ID();
+$course_id	= (int) isset( $_GET['course_ID'] ) ? sanitize_text_field( $_GET['course_ID'] ) : 0;
+if ( ! $course_id ) {	
+	// if session has valid course id	
+	if ( isset( $_SESSION['tutor_course_id'] ) && Dashboard::is_session_course_valid( $_SESSION['tutor_course_id'] ) ) {
+		$course_id = $_SESSION['tutor_course_id'];
+	} else {
+		//remove session in case id exists but not valid
+		Dashboard::remove_course_id_from_session();
+	}
+}
+$post 		= get_post( $course_id );
+
+if ( tutor()->course_post_type != get_post_type( $post) ) {
+	die( __( 'Invalid post type, please reload the page!', 'tutor' ) );
+	Dashboard::remove_course_id_from_session();
+}
+setup_postdata( $post );
+
 $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course') || current_user_can('administrator');
 ?>
 
