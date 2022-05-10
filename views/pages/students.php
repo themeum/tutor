@@ -127,7 +127,6 @@ $filters = array(
 								<?php echo esc_html( $list->user_email ); ?>
 								</span>
 							</td>
-							</td>
 							<td data-th="<?php esc_html_e( 'Registration Date', 'tutor' ); ?>">
 								<span class="tutor-color-black tutor-fs-7">
 								<?php echo esc_html( date_i18n( get_option( 'date_format' ). ', ' . get_option( 'time_format' ), strtotime( $list->user_registered ) ) ); ?>
