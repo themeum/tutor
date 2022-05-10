@@ -2,10 +2,6 @@
 .tutor-dashboard-assignment-review{
     .tutor-assignment-review-header {
         table td{
-            &:first-child {
-
-            }
-
             &:last-child {
                 &, a {
                     font-style: normal;
@@ -17,7 +13,8 @@
             }
         }
     }
-    .tutor-dashboard-assignment-review-area{
+
+    .tutor-dashboard-assignment-review-area {
         background: var(--tutor-color-gray-10);
         padding: 25px;
         font-weight: 400;
