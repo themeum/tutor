@@ -180,7 +180,8 @@ class FormHandler {
 	 * @return string
 	 */
 	public function get_from_address() {
-		$default = false === get_tutor_option( 'email_from_address' ) ? get_option( 'admin_email' ) : get_tutor_option( 'email_from_address' );
+		$from_address = get_tutor_option( 'email_from_address' );
+		$default = !$from_address ? get_option( 'admin_email' ) : $from_address;
 		return apply_filters( 'tutor_email_from_address', $default );
 	}
 
@@ -190,7 +191,8 @@ class FormHandler {
 	 * @return string
 	 */
 	public function get_from_name() {
-		$default = false === get_tutor_option( 'email_from_name' ) ? get_option( 'blogname' ) : get_tutor_option( 'email_from_name' );
+		$from_name = get_tutor_option( 'email_from_name' );
+		$default = !$from_name ? get_option( 'blogname' ) : $from_name;
 		return apply_filters( 'tutor_email_from_name', $default );
 	}
 
