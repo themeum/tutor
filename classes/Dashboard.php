@@ -78,7 +78,7 @@ class Dashboard {
 	 * @return void  send JSON response
 	 */
 	public static function create_new_draft_course() {
-		$can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course') || current_user_can('administrator');
+		$can_publish_course = (bool) current_user_can( 'tutor_instructor' ) || current_user_can('administrator');
 		tutor_utils()->checking_nonce();
 		if ( $can_publish_course ) {
 			$post_type = tutor()->course_post_type;
