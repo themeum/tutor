@@ -836,4 +836,8 @@ jQuery(document).ready(function ($) {
 
 	// Bind event listener to container element
 	jQuery('.tutor-tooltip-inside').tutor_tooltip();
+
+	jQuery('.tutor-static-loader').click(function(){
+		setTimeout( () => { jQuery(this).addClass('is-loading').attr('disabled','disabled') }, 100 )
+	})
 });

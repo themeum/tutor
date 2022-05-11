@@ -447,7 +447,7 @@ class Options_V2
 								'type'    => 'number',
 								'label'   => __('Pagination', 'tutor'),
 								'default' => '20',
-								'desc'    => __('Number of items you would like displayed "per page" in the pagination', 'tutor'),
+								'desc'    => __('Set the number of rows to be displayed per page', 'tutor'),
 							),
 						),
 					),
@@ -829,9 +829,9 @@ class Options_V2
 							array(
 								'key'     => 'courses_per_page',
 								'type'    => 'number',
-								'label'   => __('Pagination', 'tutor'),
+								'label'   => __('Courses Per Page', 'tutor'),
 								'default' => '12',
-								'desc'    => __('Set the number of courses you want to display per page.', 'tutor'),
+								'desc'    => __('Set the number of courses to display per page on the Course List page.', 'tutor'),
 							),
 							array(
 								'key'     => 'supported_course_filters',
