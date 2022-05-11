@@ -17,7 +17,7 @@ $course_id	= (int) isset( $_GET['course_ID'] ) ? sanitize_text_field( $_GET['cou
 $post 		= get_post( $course_id );
 
 if ( ! $course_id || tutor()->course_post_type != get_post_type( $post) ) {
-	die( __( 'Invalid course id, try reloading page', 'tutor' ) );
+	return;
 }
 setup_postdata( $post );
 
