@@ -210,6 +210,18 @@ window.jQuery(document).ready(function($) {
 	$(document).on('click', '.tutor-add-quiz-btn, .open-tutor-quiz-modal, .back-to-quiz-questions-btn', function(e) {
 		e.preventDefault();
 
+		if(e.originalEvent){
+			// Save question before back
+			// So it can check if there is no correct answer selected
+
+			let question_type = $(this).closest('#tutor-quiz-question-wrapper').find('.tutor_select_value_holder').val();
+
+			if(['single_choice', 'multiple_choice'].indexOf(question_type)>-1){
+				$('.quiz-modal-question-save-btn').trigger('click');
+				return;
+			}
+		}
+
 		var $that = $(this);
 		var step_1 = $(this).hasClass('open-tutor-quiz-modal') || $(this).hasClass('tutor-add-quiz-btn');
 		var modal = $('.tutor-modal.tutor-quiz-builder-modal-wrap');
