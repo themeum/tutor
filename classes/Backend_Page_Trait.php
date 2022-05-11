@@ -3,7 +3,7 @@
  * Backend Page Trait to use with existing class
  * contains backend page related reuseable code snippet
  *
- * @package Enrollment List
+ * @package Enrolment List
  * @since v2.0.0
  */
 
