@@ -57,28 +57,31 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 						</div>
 					</div>
 				</div>
+				
 				<div class="tutor-col tutor-mt-12 tutor-mb-12">
 					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-center tutor-justify-end">
 						<?php if ( 'draft' === $post->post_status || 'auto-draft' === $post->post_status ) : ?>
-							<button type="submit" class="tutor-dashboard-builder-draft-btn tutor-btn tutor-btn-outline-primary tutor-btn-md" name="course_submit_btn" value="save_course_as_draft">
-								<!-- @TODO: Icon must be chenged -->
-								<i class="tutor-icon-save-line tutor-fs-5 tutor-mr-8"></i>
-								<span class="tutor-color-secondary"><?php _e('Save as Draft', 'tutor'); ?></span>
-							</button>
+							<a href="#" id="tutor-course-save-draft" class="tutor-btn tutor-btn-ghost tutor-btn-md tutor-mr-20" name="course_submit_btn" value="save_course_as_draft">
+								<i class="tutor-icon-save-line tutor-mr-8" area-hidden="true"></i>
+								<?php _e('Save as Draft', 'tutor'); ?>
+							</a>
 						<?php endif; ?>
-						<a class="tutor-btn tutor-btn-outline-primary tutor-btn-md" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
+
+						<a class="tutor-btn tutor-btn-secondary tutor-btn-md" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
 							<?php _e('Preview', 'tutor'); ?>
 						</a>
+
 						<?php if ($can_publish_course): ?>
-							<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-ml-16" type="submit" name="course_submit_btn" value="publish_course">
+							<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-ml-20" type="submit" name="course_submit_btn" value="publish_course">
 								<?php _e('Publish', 'tutor'); ?>
 							</button>
 						<?php else: ?>
-							<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-ml-16" type="submit" name="course_submit_btn" value="submit_for_review" title="<?php _e('Submit for Review', 'tutor'); ?>">
+							<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-ml-20" type="submit" name="course_submit_btn" value="submit_for_review" title="<?php _e('Submit for Review', 'tutor'); ?>">
 								<?php _e('Submit', 'tutor'); ?>
 							</button>
 						<?php endif; ?>
-						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="tutor-iconic-btn tutor-iconic-btn-md tutor-ml-16" title="<?php _e('Exit', 'tutor'); ?>"><i class="tutor-icon-times" area-hidden="true"></i></a>
+
+						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="tutor-iconic-btn tutor-iconic-btn-md tutor-ml-12" title="<?php _e('Exit', 'tutor'); ?>"><i class="tutor-icon-times" area-hidden="true"></i></a>
 					</div>
 				</div>
 			</div>

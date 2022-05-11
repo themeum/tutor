@@ -118,38 +118,10 @@
 		align-items: center;
 
 		.tutor-dashboard-builder-logo {
-			padding: 0 25px;
+			padding: 0 24px;
 			position: relative;
 			img {
 				max-height: 28px;
-			}
-		}
-
-		button {
-			margin: 0;
-			padding: 0px 15px;
-			line-height: 30px;
-			border: none;
-			background: transparent;
-			display: inline-flex;
-			color: var(--tutor-body-color);
-			transition: 300ms;
-			font-weight: 500;
-			white-space: nowrap;
-
-			.tutor-icon-save {
-				font-size: 24px;
-				line-height: 30px;
-				margin-right: 9px;
-				margin-top: -1px;
-			}
-
-			&:hover {
-				color: var(--tutor-color-primary);
-				background: transparent;
-				i {
-					color: var(--tutor-color-primary);
-				}
 			}
 		}
 	}
