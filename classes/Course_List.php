@@ -223,7 +223,7 @@ class Course_List {
 	}
 
 	/**
-	 * Handle bulk action for enrollment cancel | delete
+	 * Handle bulk action for enrolment cancel | delete
 	 *
 	 * @return string JSON response.
 	 * @since v2.0.0
@@ -306,7 +306,7 @@ class Course_List {
 	}
 
 	/**
-	 * Execute bulk action for enrollments ex: complete | cancel
+	 * Execute bulk action for enrolment list ex: complete | cancel
 	 *
 	 * @param string $bulk_ids ids that need to update.
 	 * @return bool
@@ -359,7 +359,7 @@ class Course_List {
 	}
 	
 	/**
-	 * Get course enrollments with student info
+	 * Get course enrolment list with student info
 	 *
 	 * @param  int $course_id int | required.
 	 * @return array

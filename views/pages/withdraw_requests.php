@@ -52,11 +52,6 @@ $navbar_data = array(
 /**
  * Bulk action & filters
  */
-// $filters = array(
-// 'bulk_action'   => $enrollments->bulk_action,
-// 'bulk_actions'  => $enrollments->prpare_bulk_actions(),
-// 'search_filter' => true,
-// );
 $filters = array(
 	'bulk_action'   => false,
 	'filters'       => true,
