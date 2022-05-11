@@ -54,7 +54,7 @@ class Course_Settings_Tabs{
                 array(
                     'checked' => get_post_meta(get_the_ID(), '_tutor_is_public_course', true)=='yes',
                     'value' => 'yes',
-                    'hint' => __('Make This Course Public. No enrollment required.', 'tutor')
+                    'hint' => __('Make This Course Public. No enrolment required.', 'tutor')
                 )
             )
         );

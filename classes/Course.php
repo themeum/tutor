@@ -1244,7 +1244,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Delete associated enrollment
+	 * Delete associated enrolment
 	 *
 	 * @since v.1.8.2
 	 */
