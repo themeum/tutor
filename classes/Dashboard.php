@@ -43,7 +43,10 @@ class Dashboard {
 			 */
 			$course_ID = (int) sanitize_text_field( tutor_utils()->array_get( 'course_ID', $_GET ) );
 			if ( ! $course_ID ) {
-				die( __( 'Invalid course id, try reloading page', 'tutor' ) );
+				$template = trailingslashit( tutor()->path ) . 'templates/permission-denied.php';
+				tutor_load_template_from_custom_path(
+					$template	
+				);
 			} else {
 				$post = get_post( $course_ID );
 				setup_postdata( $post );
