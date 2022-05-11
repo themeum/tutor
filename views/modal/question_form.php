@@ -3,7 +3,7 @@ global $wpdb;
 $settings = maybe_unserialize($question->question_settings);
 ?>
 
-<div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>">
+<div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>" data-question_type="<?php echo $question->question_type; ?>">
     <div class="question-form-header tutor-mb-12">
         <a href="javascript:;" class="back-to-quiz-questions-btn tutor-btn tutor-btn-ghost" data-quiz-id="<?php echo isset($quiz_id) ? $quiz_id : ''; ?>" data-topic-id="<?php echo isset($topic_id) ? $topic_id : ''; ?>">
             <span class="tutor-icon-previous" area-hidden="true"></span>
