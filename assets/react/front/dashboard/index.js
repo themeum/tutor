@@ -6,10 +6,12 @@
 import ajaxHandler from '../../admin-dashboard/segments/filter';
 const { __, _x, _n, _nx } = wp.i18n;
 document.addEventListener('DOMContentLoaded', function() {
+    // Create new course
     const createNewCourse = document.getElementById('tutor-create-new-course');
     if (createNewCourse) {
         createNewCourse.onclick = async (e) => {
             e.preventDefault();
+            createNewCourse.setAttribute('disabled', 'disabled');
             createNewCourse.classList.add('is-loading');
             const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
             const formData = new FormData();
@@ -33,5 +35,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
             }
         }
+    }
+
+    // Course save draft
+    const tutor_course_save_draft = document.getElementById('tutor-course-save-draft');
+    if (tutor_course_save_draft) {
+        tutor_course_save_draft.onclick = (e) => {
+            e.preventDefault();
+            tutor_course_save_draft.setAttribute('disabled', 'disabled');
+            tutor_course_save_draft.classList.add('is-loading');
+            document.getElementById('tutor-frontend-course-builder').submit();
+        };
     }
 });
