@@ -5,9 +5,7 @@
  * @version 1.4.3
  */
 
-use TUTOR\Dashboard;
-
-if (!defined('ABSPATH')) {
+if ( ! defined('ABSPATH' ) ) {
 	exit;
 }
 
@@ -15,20 +13,11 @@ get_tutor_header(true);
 do_action('tutor_load_template_before', 'dashboard.create-course', null);
 
 $course_id	= (int) isset( $_GET['course_ID'] ) ? sanitize_text_field( $_GET['course_ID'] ) : 0;
-if ( ! $course_id ) {	
-	// if session has valid course id.
-	if ( isset( $_SESSION['tutor_course_id'] ) && Dashboard::is_session_course_valid( $_SESSION['tutor_course_id'] ) ) {
-		$course_id = $_SESSION['tutor_course_id'];
-	} else {
-		//remove session in case id exists but not valid.
-		Dashboard::remove_course_id_from_session();
-	}
-}
+
 $post 		= get_post( $course_id );
 
-if ( tutor()->course_post_type != get_post_type( $post) ) {
-	die( __( 'Invalid post type, please reload the page!', 'tutor' ) );
-	Dashboard::remove_course_id_from_session();
+if ( ! $course_id || tutor()->course_post_type != get_post_type( $post) ) {
+	die( __( 'Invalid course id, try reloading page', 'tutor' ) );
 }
 setup_postdata( $post );
 
@@ -66,15 +55,17 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 							<?php $tutor_course_builder_logo_src = apply_filters('tutor_course_builder_logo_src', tutor()->url . 'assets/images/tutor-logo.png'); ?>
 							<img src="<?php echo esc_url($tutor_course_builder_logo_src); ?>" alt="">
 						</div>
-						<button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft">
-							<!-- @TODO: Icon must be chenged -->
-							<i class="tutor-icon-save-line tutor-fs-5 tutor-mr-8"></i>
-							<span class="tutor-color-secondary"><?php _e('Save', 'tutor'); ?></span>
-						</button>
 					</div>
 				</div>
 				<div class="tutor-col tutor-mt-12 tutor-mb-12">
 					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-center tutor-justify-end">
+						<?php if ( 'draft' === $post->post_status || 'auto-draft' === $post->post_status ) : ?>
+							<button type="submit" class="tutor-dashboard-builder-draft-btn tutor-btn tutor-btn-outline-primary tutor-btn-md" name="course_submit_btn" value="save_course_as_draft">
+								<!-- @TODO: Icon must be chenged -->
+								<i class="tutor-icon-save-line tutor-fs-5 tutor-mr-8"></i>
+								<span class="tutor-color-secondary"><?php _e('Save as Draft', 'tutor'); ?></span>
+							</button>
+						<?php endif; ?>
 						<a class="tutor-btn tutor-btn-outline-primary tutor-btn-md" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
 							<?php _e('Preview', 'tutor'); ?>
 						</a>
@@ -271,20 +262,6 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 
 				<?php do_action('tutor/dashboard_course_builder_form_field_after', $post); ?>
 
-				<div class="tutor-form-row">
-					<div class="tutor-form-col-12">
-						<div class="tutor-form-group">
-							<div class="tutor-form-field tutor-course-builder-btn-group">
-								<button type="submit" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save as Draft', 'tutor'); ?></button>
-								<?php if ($can_publish_course) { ?>
-									<button class="tutor-btn tutor-btn-primary" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
-								<?php } else { ?>
-									<button class="tutor-btn" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
-								<?php } ?>
-							</div>
-						</div>
-					</div>
-				</div>
 			</div>
 
 			<!-- Course builder tips right sidebar -->
