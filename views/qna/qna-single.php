@@ -69,7 +69,7 @@
 	<?php endif; ?>
 
 	<div class="<?php echo is_admin() ? 'tutor-admin-container' : ''; ?>">
-		<div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32">
+		<div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32<?php echo is_single_course(true) ? ' tutor-d-none' : ''; ?>">
 			<?php echo esc_html( $question->post_title ); ?>
 			<div class="tutor-hr tutor-mt-20" area-hidden="true"></div>
 		</div>

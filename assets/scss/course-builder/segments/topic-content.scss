@@ -74,6 +74,7 @@
 				padding: 0;
 				display: flex;
 				flex-wrap: wrap;
+				gap: 12px;
 
 				& > span > button,
 				& > button {
@@ -82,14 +83,6 @@
 					padding: 3px 8px;
 					margin-top: 3px;
 					margin-bottom: 3px;
-
-					& {
-						font-size: 13px;
-					}
-
-					&:not(:last-of-type) {
-						margin-right: 9px;
-					}
 				}
 			}
 

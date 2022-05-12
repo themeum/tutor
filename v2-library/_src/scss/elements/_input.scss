@@ -272,7 +272,11 @@ select.tutor-form-control,
 
 	.tutor-form-feedback-icon {
 		font-size: 18px;
-		margin-right: 8px;
+		@if ($is_rtl == true) {
+			margin-left: 8px;
+		} @else {
+			margin-right: 8px;
+		}
 	}
 }
 
