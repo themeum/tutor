@@ -229,6 +229,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 New: The Course Title is added on the Q&A details page
 New: Course Filter is added to the Mobile View of the Course List page
+Update: Improved RTL Support
 Update: Tutor LMS is now compatible with the latest WooCommerce Subscriptions plugin
 Fix: Password Reset mail was not being sent
 Fix: "Earning Graph" under "Overview" and "Earning" was showing different statistics
