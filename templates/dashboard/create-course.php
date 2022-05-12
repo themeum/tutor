@@ -5,7 +5,9 @@
  * @version 1.4.3
  */
 
-if ( ! defined('ABSPATH' ) ) {
+use TUTOR\Input;
+
+if (!defined('ABSPATH')) {
 	exit;
 }
 
@@ -43,7 +45,13 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 
 <?php do_action('tutor/dashboard_course_builder_before'); ?>
 <form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data">
-	<?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
+	<?php 
+		wp_nonce_field(tutor()->nonce_action, tutor()->nonce); 
+		if ( ! Input::has( 'course_ID' ) ) { 
+	?>
+		<input name="original_publish" type="hidden" id="original_publish" value="Publish">
+	<?php } ?>
+
 
 	<!-- Sticky header with course action buttons -->
 	<header class="tutor-dashboard-builder-header tutor-mb-32">
@@ -72,7 +80,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 						</a>
 
 						<?php if ($can_publish_course): ?>
-							<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-ml-20" type="submit" name="course_submit_btn" value="publish_course">
+							<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-ml-20 tutor-static-loader" type="submit" name="course_submit_btn" value="publish_course">
 								<?php _e('Publish', 'tutor'); ?>
 							</button>
 						<?php else: ?>

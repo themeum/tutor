@@ -145,7 +145,6 @@ jQuery(document).ready(function($) {
 	 * @since v.1.0.3
 	 */
 	$(document).on('submit', '#tutor-new-instructor-form', function(e) {
-		console.log("Hello");
 		e.preventDefault();
 		var $that = $(this);
 		var formData = $that.serializeObject();

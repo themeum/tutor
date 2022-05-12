@@ -15,19 +15,6 @@ window.addBodyClass = (currentUrl) => {
   document.body.classList.add(tabPage + tabPageEdit);
 };
 
-
-window.selectorElement = (selector) => {
-  return document.querySelector(selector);
-};
-
-window.selectorElements = (selector) => {
-  return document.querySelectorAll(selector);
-};
-
-window.selectorsByName = (selector) => {
-  return document.getElementsByName(selector);
-};
-
 window.selectorById = (selector) => {
   return document.getElementById(selector);
 };
