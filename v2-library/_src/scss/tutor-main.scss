@@ -1,2 +1,10 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+$is-rtl:  false !default;
+
 @import './structure/structure.scss';
 @import './main_contents.scss'
