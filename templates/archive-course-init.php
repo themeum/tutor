@@ -140,3 +140,10 @@
 	<?php endif; ?>
 	</div>
 </div>
+
+
+<?php 
+	if ( ! is_user_logged_in() ) {
+		tutor_load_template_from_custom_path( tutor()->path . '/views/modal/login.php' );
+	}
+?>
