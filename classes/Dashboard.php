@@ -13,9 +13,6 @@ namespace TUTOR;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-if ( ! session_id() ) {
-	session_start();
-}
 class Dashboard {
 
 	public function __construct() {
