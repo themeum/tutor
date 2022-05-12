@@ -38,6 +38,7 @@ var scss_blueprints = {
 	},
 
 	tutor_v2: { src: 'v2-library/_src/scss/tutor-main.scss', mode: 'expanded', destination: 'tutor.min.css' },
+	tutor_v2_rtl: { src: 'v2-library/_src/scss/main.rtl.scss', mode: 'expanded', destination: 'tutor.rtl.min.css' },
 	tutor_icon: {
 		src: 'v2-library/bundle/fonts/tutor-icon/tutor-icon.css',
 		mode: 'expanded',
@@ -57,6 +58,7 @@ var scss_blueprints = {
 	},
 
 	v2_scss: { src: 'v2-library/_src/scss/main.scss', destination: 'main.min.css', dest_path: 'v2-library/bundle' },
+	v2_rtl_scss: { src: 'v2-library/_src/scss/main.rtl.scss', destination: 'main.rtl.min.css', dest_path: 'v2-library/bundle' },
 
 	v2_scss_docz: {
 		src: 'v2-library/_src/scss/main.scss',
