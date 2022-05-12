@@ -5,8 +5,6 @@
  * @version 1.4.3
  */
 
-use TUTOR\Input;
-
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -46,8 +44,8 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 <?php do_action('tutor/dashboard_course_builder_before'); ?>
 <form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data">
 	<?php 
-		wp_nonce_field(tutor()->nonce_action, tutor()->nonce); 
-		if ( ! Input::has( 'course_ID' ) ) { 
+		wp_nonce_field(tutor()->nonce_action, tutor()->nonce);
+		if ( $post->post_status === 'draft' ) { 
 	?>
 		<input name="original_publish" type="hidden" id="original_publish" value="Publish">
 	<?php } ?>
