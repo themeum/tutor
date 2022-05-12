@@ -37,7 +37,6 @@
 	.tutor-sidebar-tabs-wrap {
 		.tutor-lessons-tab-area {
 			display: flex;
-
 			max-height: 60px;
 			> div {
 				width: 100%;
@@ -45,8 +44,7 @@
 				padding: 14.5px 10px;
 				position: relative;
 				background: var(--tutor-color-gray-10);
-				border-bottom-right-radius: 10px;
-				border-bottom-left-radius: 10px;
+				border-radius: 0px 0px 10px 10px;
 				cursor: pointer;
 				
 				&:first-child,
@@ -54,6 +52,7 @@
 					border-style: solid;
 					border-color: var(--tutor-border-color);
 				}
+
 				&:first-child {
 					border-bottom-left-radius: 0px;
 					border-width: 0px 1px 1px 0px;
@@ -63,14 +62,9 @@
 					border-bottom-right-radius: 0px;
 					border-width: 0px 0px 1px 1px;
 				}
-				span {
-					&:not(:last-child) {
-						margin-right: 8px;
-					}
-				}
 			}
+
 			> div.active {
-				// border-width: 0px !important;
 				border-color: transparent;
 				background: var(--tutor-color-white);
 				span:first-child {
@@ -143,9 +137,6 @@
 						border-bottom: 1px solid #ddd;
 						.tutor-single-lesson-items {
 							.tutor-single-lesson-items-left {
-								> *:not(:last-child) {
-									margin-right: 8px;
-								}
 								max-width: 270px;
 								margin-top: 4px;
 								.tutor-icon-zoom,
@@ -155,7 +146,6 @@
 									font-size: 18px;
 								}
 								.lesson_title {
-									// max-width: 220px;
 									margin-top: -2px;
 									&:first-letter {
 										text-transform: capitalize;
@@ -163,9 +153,7 @@
 								}
 							}
 							.tutor-single-lesson-items-right {
-								> *:not(:last-child) {
-									margin-right: 10px;
-								}
+								gap: 8px;
 								margin-top: 3px;
 							}
 						}
@@ -176,8 +164,25 @@
 	}
 }
 
-// .tutor-single-lesson-items {
-// 	input.tutor-form-check-input[type='checkbox'].tutor-form-check-circle {
-// 		background-size: 80%;
-// 	}
-// }
+// rtl
+@at-root body.rtl {
+	.tutor-course-single-sidebar-wraper {
+		.tutor-sidebar-tabs-wrap {
+			.tutor-lessons-tab-area {
+				> div {
+					&:first-child {
+						border-bottom-left-radius: 10px;
+						border-bottom-right-radius: 0px;
+						border-width: 0px 0px 1px 1px;
+					}
+	
+					&:last-child {
+						border-bottom-right-radius: 10px;
+						border-bottom-left-radius: 0px;
+						border-width: 0px 1px 1px 0px;
+					}
+				}
+			}
+		}
+	}
+}

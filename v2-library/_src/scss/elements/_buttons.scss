@@ -194,7 +194,11 @@ $disabled-color: #E9E9EA !default;
 	// loading state
 	&.is-loading {
 		&:before {
-			margin-right: 8px;
+			@if ($is_rtl == true) {
+				margin-left: 8px;
+			} @else {
+				margin-right: 8px;
+			}
 		}
 
 		[class^='tutor-icon-'],

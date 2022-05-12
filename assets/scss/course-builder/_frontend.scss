@@ -237,5 +237,17 @@ Content Drip (Pro)
 				top: 9px;
 			}
 		}
+
+		// rtl
+		@at-root .rtl {
+			.tutor-course-builder-upload-tips ul {
+				padding: 0 35px 0 0;
+
+				li:after {
+					left: initial;
+					right: -26px;
+				}
+			}
+		}
 	}
 }
