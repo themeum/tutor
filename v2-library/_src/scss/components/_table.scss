@@ -411,7 +411,7 @@ table.tutor-table {
 
 	.td-list-item {
 		&:not(:last-child) {
-			@extend .tutor-mr-80;
+			margin-right: 80px;
 		}
 		.tutor-form-check {
 			label {

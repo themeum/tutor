@@ -44,14 +44,14 @@ $is_user_admin                = current_user_can( 'administrator' );
 	<div class="tutor-sidebar-tabs-wrap">
 		<div class="tutor-lessons-tab-area tutor-<?php echo esc_html( isset( $context ) ? $context : 'desktop' ); ?>-sidebar-area">
 			<div data-sidebar-tab="tutor-lesson-sidebar-tab-content" class="tutor-sidebar-tab-item tutor-lessons-tab <?php echo $enable_q_and_a_on_course ? 'active' : ''; ?> tutor-d-flex tutor-align-center">
-				<span class="tutor-icon-open-book-o"></span>
+				<span class="tutor-icon-open-book-o tutor-mr-8" area-hidden="true"></span>
 				<span class="tutor-fs-7 tutor-fw-medium tutor-color-secondary">
 					<?php esc_html_e( 'Lesson List', 'tutor' ); ?>
 				</span>
 			</div>
 			<?php if ( $enable_q_and_a_on_course && ( $is_enrolled || $is_instructor_of_this_course || $is_user_admin ) ): ?>
 				<div data-sidebar-tab="sidebar-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab tutor-d-flex tutor-align-center">
-					<span class="tutor-icon-question"></span>
+					<span class="tutor-icon-question tutor-mr-8" area-hidden="true"></span>
 					<span class="tutor-fs-7 tutor-fw-medium tutor-color-secondary">
 						<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
 					</span>
@@ -115,7 +115,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-primary' : ''; ?>">
 													<a href="<?php echo $show_permalink ? get_permalink( $quiz->ID ) : '#'; ?>" class="tutor-single-quiz-a tutor-d-flex tutor-justify-between" data-quiz-id="<?php echo $quiz->ID; ?>">
 														<div class="tutor-single-lesson-items-left tutor-d-flex">
-															<span class="tutor-icon-quiz-o"></span>
+															<span class="tutor-icon-quiz-o tutor-mr-8" area-hidden="true"></span>
 															<span class="lesson_title tutor-fs-7 tutor-color-secondary">
 																<?php echo $quiz->post_title; ?>
 															</span>
@@ -140,9 +140,9 @@ $is_user_admin                = current_user_can( 'administrator' );
 																?>
 
 																<?php if($show_permalink): ?>
-																	<input type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?>/>
+																	<input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?>/>
 																<?php else: ?>
-																	<i class="tutor-icon-lock-line"></i>
+																	<i class="tutor-icon-lock-line" area-hidden="true"></i>
 																<?php endif; ?>
 															</span>
 														</div>
@@ -162,7 +162,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-primary' : ''; ?>">
 													<a href="<?php echo $show_permalink ? get_permalink( $post->ID ) : '#'; ?>" class="tutor-single-assignment-a tutor-d-flex tutor-justify-between" data-assignment-id="<?php echo $post->ID; ?>">
 														<div class="tutor-single-lesson-items-left tutor-d-flex">
-															<span class="tutor-icon-assignment"></span>
+															<span class="tutor-icon-assignment tutor-mr-8" area-hidden="true"></span>
 															<span class="lesson_title tutor-fs-7 tutor-color-secondary">
 																<?php echo $post->post_title; ?>
 															</span>
@@ -189,7 +189,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-primary' : ''; ?>">
 													<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>" class="sidebar-single-zoom-meeting-a tutor-d-flex tutor-justify-between">
 														<div class="tutor-single-lesson-items-left tutor-d-flex">
-															<span class="tutor-icon-brand-zoom-o"></span>
+															<span class="tutor-icon-brand-zoom-o tutor-mr-8" area-hidden="true"></span>
 															<span class="lesson_title tutor-fs-7 tutor-color-secondary">
 																<?php echo esc_html( $post->post_title ); ?>
 															</span>
@@ -226,7 +226,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 														<div class="tutor-single-lesson-items-left tutor-d-flex">
 															<?php
 																$tutor_lesson_type_icon = $play_time ? 'brand-youtube-bold' : 'file-document';
-																echo "<span class='tutor-icon-$tutor_lesson_type_icon'></span>";
+																echo '<span class="tutor-icon-' . $tutor_lesson_type_icon . ' tutor-mr-8" area-hidden="true"></span>';
 															?>
 															<span class="lesson_title tutor-fs-7 tutor-color-secondary">
 																<?php the_title(); ?>

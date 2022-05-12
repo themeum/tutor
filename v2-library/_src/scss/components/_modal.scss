@@ -84,7 +84,11 @@
 		border-top-left-radius: 16px;
 		border-top-right-radius: 16px;
 		.tutor-modal-close {
-			margin-right: -16px;
+			@if ($is_rtl == true) {
+				margin-left: -16px;
+			} @else {
+				margin-right: -16px;
+			}
 		}
 	}
 

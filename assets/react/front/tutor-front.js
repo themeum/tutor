@@ -592,37 +592,6 @@ jQuery(document).ready(function ($) {
 	 *
 	 * @type {jQuery}
 	 *
-	 * Course builder auto draft save
-	 *
-	 * @since v.1.3.4
-	 */
-	var tutor_course_builder = $('input[name="tutor_action"]').val();
-	if (tutor_course_builder === 'tutor_add_course_builder') {
-		//setInterval(auto_draft_save_course_builder, 30000);
-	}
-
-	function auto_draft_save_course_builder() {
-		var form_data = $('form#tutor-frontend-course-builder').serializeObject();
-		form_data.tutor_ajax_action = 'tutor_course_builder_draft_save';
-
-		$.ajax({
-			//url : _tutorobject.ajaxurl,
-			type: 'POST',
-			data: form_data,
-			beforeSend: function () {
-				$('.tutor-dashboard-builder-draft-btn span').text(__('Saving...', 'tutor'));
-			},
-			success: function (data) { },
-			complete: function () {
-				$('.tutor-dashboard-builder-draft-btn span').text(__('Save', 'tutor'));
-			},
-		});
-	}
-
-	/**
-	 *
-	 * @type {jQuery}
-	 *
 	 * Course builder section toggle
 	 *
 	 * @since v.1.3.5
