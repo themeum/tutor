@@ -110,7 +110,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
 					</div>
 				</div>',
-				$profile_completion['_tutor_profile_photo']['label_html'],
+				$profile_completion['_tutor_profile_photo']['text'],
 				tutor_utils()->tutor_dashboard_url( 'settings' )
 			);
 
