@@ -15,12 +15,20 @@
 	&-average {
 		color: var(--tutor-body-color);
 		font-weight: 500;
-		margin-left: 12px;
+		@if ($is-rtl) {
+			margin-right: 12px;
+		} @else {
+			margin-left: 12px;
+		}
 	}
 
 	&-count {
 		color: var(--tutor-color-muted);
-		margin-left: 8px;
+		@if ($is-rtl) {
+			margin-right: 8px;
+		} @else {
+			margin-left: 8px;
+		}
 	}
 
 	&-progress-bar {

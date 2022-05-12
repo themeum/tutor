@@ -1,6 +1,8 @@
 // stylelint-disable indentation
 
 // Utilities
+$left: if($is-rtl == true, right, left);
+$right: if($is-rtl == true, left, right);
 
 $utilities: () !default;
 // stylelint-disable-next-line scss/dollar-variable-default
@@ -19,8 +21,8 @@ $utilities: map-merge(
       property: float,
       class: tutor-float,
       values: (
-        start: left,
-        end: right,
+        start: #{$left},
+        end: #{$right},
         none: none,
       )
     ),
@@ -56,12 +58,12 @@ $utilities: map-merge(
       values: static relative absolute fixed sticky
     ),
     "start": (
-      property: left,
+      property: #{$left},
       class: tutor-start,
       values: $position-values
     ),
     "end": (
-      property: right,
+      property: #{$right},
       class: tutor-end,
       values: $position-values
     ),
@@ -185,7 +187,7 @@ $utilities: map-merge(
         between: space-between,
         around: space-around,
         evenly: space-evenly,
-      )
+      ),
     ),
     "align-items": (
       responsive: true,
@@ -251,7 +253,7 @@ $utilities: map-merge(
     ),
     "margin-x": (
       responsive: true,
-      property: margin-right margin-left,
+      property: margin-#{$right} margin-#{$left},
       class: tutor-mx,
       values: map-merge($utility-spacers, (auto: auto))
     ),
@@ -269,7 +271,7 @@ $utilities: map-merge(
     ),
     "margin-end": (
       responsive: true,
-      property: margin-right,
+      property: margin-#{$right},
       class: tutor-mr,
       values: map-merge($utility-spacers, (auto: auto))
     ),
@@ -281,7 +283,7 @@ $utilities: map-merge(
     ),
     "margin-start": (
       responsive: true,
-      property: margin-left,
+      property: margin-#{$left},
       class: tutor-ml,
       values: map-merge($utility-spacers, (auto: auto))
     ),
@@ -295,7 +297,7 @@ $utilities: map-merge(
     ),
     "negative-margin-x": (
       responsive: true,
-      property: margin-right margin-left,
+      property: margin-#{$right} margin-#{$left},
       class: tutor-mx,
       values: $negative-utility-spacers
     ),
@@ -313,8 +315,8 @@ $utilities: map-merge(
     ),
     "negative-margin-end": (
       responsive: true,
-      property: margin-right,
-      class: tutor-me,
+      property: margin-#{$right},
+      class: tutor-mr,
       values: $negative-utility-spacers
     ),
     "negative-margin-bottom": (
@@ -325,8 +327,8 @@ $utilities: map-merge(
     ),
     "negative-margin-start": (
       responsive: true,
-      property: margin-left,
-      class: tutor-ms,
+      property: margin-#{$left},
+      class: tutor-ml,
       values: $negative-utility-spacers
     ),
 
@@ -339,7 +341,7 @@ $utilities: map-merge(
     ),
     "padding-x": (
       responsive: true,
-      property: padding-right padding-left,
+      property: padding-#{$right} padding-#{$left},
       class: tutor-px,
       values: $utility-spacers
     ),
@@ -357,7 +359,7 @@ $utilities: map-merge(
     ),
     "padding-end": (
       responsive: true,
-      property: padding-right,
+      property: padding-#{$right},
       class: tutor-pr,
       values: $utility-spacers
     ),
@@ -369,7 +371,7 @@ $utilities: map-merge(
     ),
     "padding-start": (
       responsive: true,
-      property: padding-left,
+      property: padding-#{$left},
       class: tutor-pl,
       values: $utility-spacers
     ),

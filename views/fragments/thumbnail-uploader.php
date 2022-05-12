@@ -12,7 +12,7 @@
 ?>
 <div class="tutor-thumbnail-uploader tutor-mt-12" data-media-heading="<?php echo ! empty( $media_heading ) ? $media_heading : __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ); ?>" data-button-text="<?php echo ! empty( $button_text ) ? $button_text : __( 'Use this media', 'tutor' ); ?>">
 	<div class="thumbnail-wrapper tutor-d-flex tutor-align-center <?php echo $is_borderless ? 'tutor-is-borderless' : 'tutor-p-16'; ?>">
-		<div class="thumbnail-preview image-previewer" style="background:<?php echo esc_attr( $background ); ?>; border: 2px solid <?php echo esc_attr( $border_color ); ?>;">
+		<div class="thumbnail-preview image-previewer tutor-mr-28" style="background:<?php echo esc_attr( $background ); ?>; border: 2px solid <?php echo esc_attr( $border_color ); ?>;">
 			<span class="preview-loading"></span>
 			<input type="hidden" class="tutor-tumbnail-id-input" name="<?php echo $input_name; ?>" value="<?php echo ! empty( $media_id ) ? $media_id : ''; ?>">
 			<img src="<?php echo $media_url ? $media_url : $placeholder; ?>" data-placeholder="<?php echo $placeholder; ?>"/>

@@ -131,7 +131,7 @@ do_action('tutor_dashboard/before/wrap');
 					if (current_user_can(tutor()->instructor_role)) {
 						$course_type = tutor()->course_post_type;
 					?>
-						<a class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
+						<a href="#" id="tutor-create-new-course" class="tutor-btn tutor-btn-outline-primary">
 							<i class="tutor-icon-plus-square tutor-my-n4 tutor-mr-8"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
 						</a>
 					<?php

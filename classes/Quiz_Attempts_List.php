@@ -127,7 +127,7 @@ class Quiz_Attempts_List {
 
 	/**
 	 * Count enrolled number by status & filters
-	 * Count all enrollment | approved | cancelled
+	 * Count all enrolment | approved | cancelled
 	 *
 	 * @param string $status | required.
 	 * @param string $user_id selected user id | optional.

@@ -4,7 +4,7 @@
 	box-sizing: border-box;
 }
 
-$is-rtl:  false !default;
+$is-rtl:  true !default;
 
 @import './structure/structure.scss';
 @import './main_contents.scss'

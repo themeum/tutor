@@ -82,7 +82,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 									<?php endif; ?>
 
 									<span class="<?php echo $is_set ? 'tutor-color-secondary' : 'tutor-color-muted'; ?>">
-										<?php echo $data['label_html']; ?>
+										<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="<?php echo esc_url( $data['url'] ); ?>">
+											<?php echo esc_html( $data['text'] ); ?>
+										</a>
 									</span>
 								</div>
 								<?php
@@ -108,7 +110,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
 					</div>
 				</div>',
-				$profile_completion['_tutor_profile_photo']['label_html'],
+				$profile_completion['_tutor_profile_photo']['text'],
 				tutor_utils()->tutor_dashboard_url( 'settings' )
 			);
 

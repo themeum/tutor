@@ -13,13 +13,13 @@ namespace TUTOR;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 class Dashboard {
 
 	public function __construct() {
 		add_action( 'tutor_load_template_before', array( $this, 'tutor_load_template_before' ), 10, 2 );
 		add_action( 'tutor_load_template_after', array( $this, 'tutor_load_template_after' ), 10, 2 );
 		add_filter( 'should_tutor_load_template', array( $this, 'should_tutor_load_template' ), 10, 2 );
+		add_action( 'wp_ajax_tutor_create_new_draft_course', array( __CLASS__, 'create_new_draft_course') );
 	}
 
 	/**
@@ -35,26 +35,19 @@ class Dashboard {
 			wp_reset_query();
 
 			/**
-			 * Get course which currently in edit, or insert new course
+			 * Get course which currently in edit if not then redirect to dashboard
+			 * page to create new one.
 			 */
 			$course_ID = (int) sanitize_text_field( tutor_utils()->array_get( 'course_ID', $_GET ) );
-
-			if ( $course_ID ) {
-				$post_id = $course_ID;
-			} else {
-				$post_type = tutor()->course_post_type;
-				$post_id   = wp_insert_post(
-					array(
-						'post_title'  => __( 'Auto Draft', 'tutor' ),
-						'post_type'   => $post_type,
-						'post_status' => 'draft',
-					)
+			if ( ! $course_ID ) {
+				$template = trailingslashit( tutor()->path ) . 'templates/permission-denied.php';
+				tutor_load_template_from_custom_path(
+					$template	
 				);
-				tutor_log( 'tutor' . time() );
+			} else {
+				$post = get_post( $course_ID );
+				setup_postdata( $post );
 			}
-
-			$post = get_post( $post_id );
-			setup_postdata( $post );
 		}
 	}
 
@@ -72,5 +65,46 @@ class Dashboard {
 			return false;
 		}
 		return $bool;
+	}
+
+	/**
+	 * Create new draft course
+	 *
+	 * @since v2.0.3
+	 *
+	 * @return void  send JSON response
+	 */
+	public static function create_new_draft_course() {
+		$can_publish_course = (bool) current_user_can( 'tutor_instructor' ) || current_user_can('administrator');
+		tutor_utils()->checking_nonce();
+		if ( $can_publish_course ) {
+			$post_type = tutor()->course_post_type;
+			$course_id   = wp_insert_post(
+				array(
+					'post_title'  => __( 'New Course', 'tutor' ),
+					'post_type'   => $post_type,
+					'post_status' => 'draft',
+				)
+			);
+			if ( $course_id ) {
+				$response = array(
+					'course_id' => $course_id,
+					'url'		=> add_query_arg(
+						array(
+							'course_ID' => $course_id
+						),
+						tutor_utils()->tutor_dashboard_url( 'create-course' )
+					)
+				);
+				wp_send_json_success($response);
+			} else {
+				wp_send_json_error();
+			}
+		} else {
+			$response = array(
+				'error_message' => __( 'You are not allowed to publish course', 'tutor' )
+			);
+			wp_send_json_error( $response );
+		}
 	}
 }

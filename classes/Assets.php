@@ -32,7 +32,7 @@ class Assets {
 		add_filter( 'tutor_localize_data', array( $this, 'modify_localize_data' ) );
 
 		/**
-		 * register translateable function to load
+		 * register translatable function to load
 		 * handled script with text domain attached to
 		 *
 		 * @since 1.9.0
@@ -59,7 +59,8 @@ class Assets {
 
 	private function get_default_localized_data()
 	{
-		global $wp_version;
+		global $wp_version, $wp_query;
+
 		$home_url = get_home_url();
 		$parsed   = parse_url($home_url);
 
@@ -68,6 +69,9 @@ class Assets {
 
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
+
+		$query_vars 	= $wp_query->query_vars;
+		$current_page 	= isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
 
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
@@ -90,6 +94,7 @@ class Assets {
 			'content_change_event'         => 'tutor_content_changed_event',
 			'is_tutor_course_edit'		   => isset( $_GET[ 'action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) ? true : false,
 			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
+			'current_page'				   => $current_page
 		);
 	}
 
@@ -241,11 +246,14 @@ class Assets {
 	public function common_scripts() {
 
 		// Fonts
-		wp_enqueue_style('tutor-inter-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), TUTOR_VERSION);
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION);
 
 		// Common css library
-		wp_enqueue_style('tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION);
+		if ( is_rtl() ) {
+			wp_enqueue_style('tutor', tutor()->url . 'assets/css/tutor.rtl.min.css', array(), TUTOR_VERSION);
+		} else {
+			wp_enqueue_style('tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION);
+		}
 
 		// Load course builder resources
 		if (tutor_utils()->get_course_builder_screen()) {

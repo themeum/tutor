@@ -51,9 +51,9 @@
 		&-link {
 			display: flex;
 			align-items: center;
-			border-top-left-radius: 4px;
-			border-bottom-left-radius: 4px;
-			@extend .tutor-text-regular-body;
+			border-radius: 4px 0px 0px 4px;
+			font-size: 16px;
+			font-weight: 400;
 			color: var(--tutor-body-color);
 		}
 		&-icon {
@@ -88,8 +88,7 @@
 	ul.tutor-dashboard-permalinks {
 		border-right: none !important;
 		li.active a {
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
+			border-radius: 0;
 		}
 	}
 }
@@ -109,4 +108,24 @@
 			z-index: 1;
 		}
 	}
+}
+
+// @todo: improve rtl later
+@at-root body.rtl {
+	.tutor-dashboard-left-menu {
+		.tutor-dashboard-menu-item {
+			&-link {
+				border-radius: 0px 4px 4px 0px;
+			}
+		}
+	}
+
+	.tutor-frontend-dashboard-maincontent {
+		ul.tutor-dashboard-permalinks {
+			&:before {
+				right: initial;
+				left: 0;
+			}
+		}
+	}	
 }
