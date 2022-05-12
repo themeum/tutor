@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (bulkForm) {
 		bulkForm.onsubmit = async (e) => {
 			e.preventDefault();
+			e.stopPropagation();
 			const formData = new FormData(bulkForm);
 			const bulkIds = [];
 			const bulkFields = document.querySelectorAll('.tutor-bulk-checkbox');
@@ -130,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 				}
 			} catch (error) {
-				alert(error);
+				console.log(error);
 			}
 		};
 	}
