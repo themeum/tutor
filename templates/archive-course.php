@@ -25,8 +25,4 @@ tutor_load_template('archive-course-init', array_merge($_GET, array(
 	'loop_content_only' => false
 )));
 
-if ( ! is_user_logged_in() ) {
-	tutor_load_template_from_custom_path( tutor()->path . '/views/modal/login.php' );
-}
-
 tutor_utils()->tutor_custom_footer(); 
