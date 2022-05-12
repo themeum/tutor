@@ -9731,4 +9731,47 @@ class Utils {
 
 		return date_i18n( $output_format, $local_timestamp, true );
 	}
+
+	/**
+	 * Execute bulk action for enrolment list ex: complete | cancel
+	 *
+	 * @param string $status hold status for updating.
+	 * @param array $enrollment_ids ids that need to update.
+	 * @return bool
+	 * @since v2.0.3
+	 */
+	public function update_enrollments(string $status, array $enrollment_ids ): bool {
+		global $wpdb;
+		$enrollment_ids_in = implode(',', $enrollment_ids);
+		$status     = 'complete' === $status ? 'completed' : $status;
+		$post_table = $wpdb->posts;
+		$update     = $wpdb->query(
+			$wpdb->prepare(
+				" UPDATE {$post_table}
+				SET post_status = %s
+				WHERE ID IN ($enrollment_ids_in)
+			",
+				$status
+			)
+		);
+
+		// Clear course progress if cancelled
+		if($status=='cancelled' || $status=='cancel') {
+			foreach($enrollment_ids as $id) {
+				$course_id = get_post_field( 'post_parent', $id );
+				$student_id = get_post_field( 'post_author', $id );
+
+				if($course_id && $student_id) {
+					tutor_utils()->delete_course_progress($course_id, $student_id);
+				}
+			}
+		}
+
+		// Run action hook
+		foreach($enrollment_ids as $id) {
+			do_action( 'tutor_enrollment/after/' . $status, $id );
+		}
+
+		return true;
+	}
 }
