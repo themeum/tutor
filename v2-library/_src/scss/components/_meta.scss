@@ -28,6 +28,10 @@
 
     &-icon {
         line-height: 1.6;
-        margin-right: 4px;
+        @if ($is_rtl == true) {
+           margin-left: 4px;
+        } @else {
+           margin-right: 4px;
+        }
     }
 }

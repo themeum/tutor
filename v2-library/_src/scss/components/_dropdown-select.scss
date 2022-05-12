@@ -25,8 +25,7 @@
 		top: calc(100% + 5px);
 		z-index: 10;
 		background: #ffffff;
-		/* stroke/light30 */
-		border: 1px solid #cdcfd5;
+		border: 1px solid var(--tutor-border-color);
 		box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
 		border-radius: 6px;
 
@@ -47,23 +46,18 @@
 		margin-bottom: 12px;
 		position: relative;
 		width: 100%;
-		// min-height: var(--h);
 		background: #fff;
-		/* stroke/gray40 */
-		border: 1px solid #c0c3cb;
+		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
 		order: 0;
 		&::after {
-			-webkit-font-smoothing: antialiased;
+			content: '\e93e';
+			font-family: 'tutor' !important;
 			position: absolute;
 			right: 8px;
 			top: 50%;
 			transition: transform 200ms linear;
 			transform: translateY(-50%);
-
-			content: '\e93e';
-			font-family: 'tutor' !important;
-			// font-size: 30px;
 			color: #7a7a7a;
 		}
 	}
