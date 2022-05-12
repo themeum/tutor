@@ -32,7 +32,7 @@ class Assets {
 		add_filter( 'tutor_localize_data', array( $this, 'modify_localize_data' ) );
 
 		/**
-		 * register translateable function to load
+		 * register translatable function to load
 		 * handled script with text domain attached to
 		 *
 		 * @since 1.9.0
@@ -248,11 +248,14 @@ class Assets {
 	public function common_scripts() {
 
 		// Fonts
-		wp_enqueue_style('tutor-inter-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), TUTOR_VERSION);
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION);
 
 		// Common css library
-		wp_enqueue_style('tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION);
+		if ( is_rtl() ) {
+			wp_enqueue_style('tutor', tutor()->url . 'assets/css/tutor.rtl.min.css', array(), TUTOR_VERSION);
+		} else {
+			wp_enqueue_style('tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION);
+		}
 
 		// Load course builder resources
 		if (tutor_utils()->get_course_builder_screen()) {

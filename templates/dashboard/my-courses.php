@@ -136,7 +136,7 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
                                     ?>
                                 </span>
                             </div>
-                            <div class="tutor-iconic-btn-group tutor-me-n8">
+                            <div class="tutor-iconic-btn-group tutor-mr-n8">
                                 <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-iconic-btn">
                                     <i class="tutor-icon-edit" area-hidden="true"></i>
                                 </a>
