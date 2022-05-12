@@ -7652,14 +7652,14 @@ class Utils {
 		return false;
 	}
 
-	public function get_students_data_by_course_id( $course_id = 0, $field_name = '' ) {
+	public function get_students_data_by_course_id( $course_id = 0, $field_name = '', $all = false ) {
 
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 
 		$student_data = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT student.{$field_name}
+				"SELECT student.{$field_name}, student.display_name as display_name, student.user_login as username, student.user_email
 			FROM   	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->users} student
 						    ON enrol.post_author = student.id
@@ -7672,7 +7672,9 @@ class Utils {
 				'completed'
 			)
 		);
-
+		if ( $all ) {
+			return $student_data;
+		}
 		return array_column( $student_data, $field_name );
 	}
 

@@ -214,6 +214,7 @@ class Lesson extends Tutor_Base {
 			} else {
 				delete_post_meta( $lesson_id, '_thumbnail_id' );
 			}
+			
 			do_action( 'tutor/lesson_update/after', $lesson_id );
 		}
 
