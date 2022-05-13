@@ -129,7 +129,7 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Registration Date', 'tutor' ); ?>">
 								<span class="tutor-color-black tutor-fs-7">
-								<?php echo tutor_utils()->get_local_time_from_unix($list->user_registered); ?>
+								<?php echo tutor_utils()->get_local_time_from_unix( $list->user_registered ); ?>
 								</span>
 							</td>
 							<td data-th="<?php esc_html_e( 'Course Taken', 'tutor' ); ?>">
