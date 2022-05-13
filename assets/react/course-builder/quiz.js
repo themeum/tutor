@@ -645,6 +645,10 @@ window.jQuery(document).ready(function($) {
 				.filter('.tutor-radio-select')
 				.addClass('tutor-bg-transparent')
 				.removeClass('tutor-bg-white');
+
+			// Hide attempt slider if retry
+			let is_retry = $(this).val()=='retry';
+			$('.tutor-attempt-allowed-slider')[!is_retry ? 'hide' : 'show']();
 		}
 	});
 });
