@@ -513,6 +513,13 @@ class Options_V2
 								'desc'        => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
 							),
 							array(
+								'key'         => 'course_content_summary',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Content Summary', 'tutor' ),
+								'default'     => 'on',
+								'desc'        => __( 'Enabling this feature will show a course content summary on the Course Details page.', 'tutor' ),
+							),
+							array(
 								'key'         => 'wc_automatic_order_complete_redirect_to_courses',
 								'type'        => 'toggle_switch',
 								'label'       => __('Auto redirect to courses', 'tutor'),
