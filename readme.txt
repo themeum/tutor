@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.9
 Requires PHP: 7.0
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,22 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.0.4 - May 13, 2022
+
+New: Email will be sent (on Demand) to Students when a new Lesson is Created
+New: Email will be sent (on Demand) to Students when a new Quiz is Created
+New: Email will be sent (on Demand) to Students when a new Assignment is Created
+New: Now if Admin wants he can show Full Description or Collapsed Description of Course Details
+Update: In Quiz once “Retry Mode” is enabled, then Instructor can set the Number of Allowed Attempt
+Update: Double Digit Number Format is introduced in Quiz Times
+Fix: Email Scheduler Cron was not working Properly
+Fix: Certificate List below the Course Builder was showing wrong Height for Certificates
+Fix: Tutor Pro was showing wrong Alert when Tutor Free plugin is inactive
+Fix: In Student’s Individual Report Page the Enroll Date was showing wrong
+Fix: Student’s Enrollment Time was showing wrong Date in Students Details Page in Admin panel
+Fix: The design of “Quiz Completed” email template, and it’s link of Quiz button was wrong
+Fix: Link of “Course Progress Page” button was wrong in the “A Student Completed Course” template
 
 = 2.0.3 - May 12, 2022
 
