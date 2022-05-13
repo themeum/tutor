@@ -232,13 +232,13 @@ New: Email Notification to students when a new Quiz is Created if enabled
 New: Email Notification to students when a new Assignment is Created if enabled
 New: Admin can show Course Description in Full or in Collapsed View on the Course Details page
 New: Quiz Retry Mode revamped to allow instructors to specify Attempts Allowed
-New: The student's Active Topic now remains uncollapsed while the rest remain collapsed 
+New: The student's Active Topic now remains uncollapsed while the rest remain collapsed
+New: In Restrict Mode a student needs to pass all lessons/quizzes/assignments to complete the Course
 Update: A Better Time Format for Lesson and Quiz is introduced
 Fix: Email Scheduler Cron was not working properly
 Fix: Certificate List in the Course Builder displays the height of the Certificates incorrectly
 Fix: Tutor Pro displayed an incorrect Alert Message when the Tutor Free plugin is inactive
-Fix: On Student’s Individual Report Page the Enroll Date displayed was incorrect
-Fix: Student’s Enrollment Time was displaying the incorrect date on the Students Details Page in the Admin panel
+Fix: Student’s Registration Time was displaying the incorrect date on the Students List Page in the Admin panel
 Fix: Design issue of Email to students on Quiz Completed and incorrect link to Quiz Result
 Fix: Link to Course Progress Page button was incorrect on a Student’s Completed Courses page
 
