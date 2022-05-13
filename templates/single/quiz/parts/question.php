@@ -121,6 +121,8 @@
 						require 'short-answer.php';
 					}
 					?>
+
+					<div class="answer-help-block"></div>
 					
 					<?php if ( $question_layout_view !== 'question_below_each_other' ) : ?>
 						<div class="tutor-quiz-btn-group tutor-mt-60 tutor-d-flex">
