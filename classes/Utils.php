@@ -7652,6 +7652,15 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * Get students list based on course id
+	 *
+	 * @param integer $course_id
+	 * @param string $field_name
+	 * @param boolean $all  if all is false it will return only $field_name column
+	 *
+	 * @return array  of objects for student list or array
+	 */
 	public function get_students_data_by_course_id( $course_id = 0, $field_name = '', $all = false ) {
 
 		global $wpdb;
