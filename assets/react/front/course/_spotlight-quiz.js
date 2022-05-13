@@ -44,8 +44,8 @@ window.jQuery(document).ready($=>{
                         $input
                             .closest('.tutor-quiz-answer-single')
                             .addClass('tutor-quiz-answer-single-correct')
-                            .append(`<span class="tutor-quiz-answer-single-info">
-                                        <i class="tutor-icon-mark" area-hidden="true"></i>
+                            .append(`<span class="tutor-quiz-answer-single-info tutor-color-success tutor-mt-8">
+                                        <i class="tutor-icon-mark tutor-color-success" area-hidden="true"></i>
                                         ${__('Correct Answer', 'tutor')}
                                     </span>`)
                             .find('.tutor-quiz-answer-single-info:eq(1)')
@@ -249,8 +249,6 @@ window.jQuery(document).ready($=>{
         var validated = true;
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
-                // !tutor_quiz_validation( $(question) ) ? validated = false : 0;
-                // !feedback_response( $(question) ) ? validated = false : 0;
                 validated = tutor_quiz_validation($(question));
                 validated = feedback_response($(question));
 
