@@ -20,7 +20,8 @@ $course 			= tutor_utils()->get_course_by_quiz(get_the_ID());
 $previous_attempts 	= tutor_utils()->quiz_attempts();
 $attempted_count 	= is_array($previous_attempts) ? count($previous_attempts) : 0;
 
-$attempts_allowed 	= tutor_utils()->get_quiz_option(get_the_ID(), 'attempts_allowed', 0);
+$feedback_mode     	= tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
+$attempts_allowed 	= $feedback_mode!='retry' ? 1 : tutor_utils()->get_quiz_option(get_the_ID(), 'attempts_allowed', 0);
 $passing_grade 		= tutor_utils()->get_quiz_option(get_the_ID(), 'passing_grade', 0);
 $attempt_remaining 	= (int) $attempts_allowed - (int) $attempted_count;
 

@@ -8,6 +8,7 @@ $previous_attempts = tutor_utils()->quiz_attempts();
 $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 $attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
 $attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
+$feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
 
 if(isset($_GET['view_quiz_attempt_id'])) {
     // Load single attempt details if ID provided
@@ -31,7 +32,7 @@ tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.
 ));
 
 // @todo: fix typo
-if ($attempt_remaining > 0 || $attempts_allowed == 0 && $previous_attempts) {
+if ($feedback_mode=='retry' && (($attempt_remaining > 0 || $attempts_allowed == 0) && $previous_attempts)) {
     do_action('tutor_quiz/start_form/before', $quiz_id);
 ?>
 	<div class="tutor-quiz-btn-grp tutor-mt-32">
