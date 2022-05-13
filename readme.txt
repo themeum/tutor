@@ -227,19 +227,20 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = 2.0.4 - May 13, 2022
 
-New: Email will be sent (on Demand) to Students when a new Lesson is Created
-New: Email will be sent (on Demand) to Students when a new Quiz is Created
-New: Email will be sent (on Demand) to Students when a new Assignment is Created
-New: Now if Admin wants he can show Full Description or Collapsed Description of Course Details
-Update: In Quiz once “Retry Mode” is enabled, then Instructor can set the Number of Allowed Attempt
-Update: Double Digit Number Format is introduced in Quiz Times
-Fix: Email Scheduler Cron was not working Properly
-Fix: Certificate List below the Course Builder was showing wrong Height for Certificates
-Fix: Tutor Pro was showing wrong Alert when Tutor Free plugin is inactive
-Fix: In Student’s Individual Report Page the Enroll Date was showing wrong
-Fix: Student’s Enrollment Time was showing wrong Date in Students Details Page in Admin panel
-Fix: The design of “Quiz Completed” email template, and it’s link of Quiz button was wrong
-Fix: Link of “Course Progress Page” button was wrong in the “A Student Completed Course” template
+New: Email Notification to students when a new Lesson is Created if enabled
+New: Email Notification to students when a new Quiz is Created if enabled
+New: Email Notification to students when a new Assignment is Created if enabled
+New: Admin can show Course Description in Full or in Collapsed View on the Course Details page
+New: Quiz Retry Mode revamped to allow instructors to specify Attempts Allowed
+New: The student's Active Topic now remains uncollapsed while the rest remain collapsed
+New: In "Strict Mode" a student needs to pass all lessons/quizzes/assignments to complete the Course
+Update: A Better Time Format for Lesson and Quiz is introduced
+Fix: Email Scheduler Cron was not working properly
+Fix: Certificate List in the Course Builder displays the height of the Certificates incorrectly
+Fix: Tutor Pro displayed an incorrect Alert Message when the Tutor Free plugin is inactive
+Fix: Student’s Registration Time was displaying the incorrect date on the Students List Page in the Admin panel
+Fix: Design issue of Email to students on Quiz Completed and incorrect link to Quiz Result
+Fix: Link to Course Progress Page button was incorrect on a Student’s Completed Courses page
 
 = 2.0.3 - May 12, 2022
 
