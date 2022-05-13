@@ -114,7 +114,7 @@
             </div>
 
             <label class="tutor-radio-select tutor-bg-white tutor-mb-8">
-                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
+                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 'default')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Default', 'tutor'); ?></span>
                     <?php _e('Answers shown after quiz is finished', 'tutor'); ?>
