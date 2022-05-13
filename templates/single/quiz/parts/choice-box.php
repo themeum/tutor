@@ -43,7 +43,7 @@
 					?>
 
 					<?php if ( $answer->answer_view_format !== 'image' && $answer->answer_view_format !== 'text_image' ) : ?>
-						<div class="tutor-col-6 tutor-col-lg-6 tutor-mb-16">
+						<div class="tutor-col-6 tutor-col-lg-6 tutor-mb-16 tutor-quiz-answer-single">
 							<label for="<?php echo $answer->answer_id; ?>" class="tutor-quiz-question-item">
 								<div class="tutor-card tutor-px-16 tutor-py-12">
 									<div class="tutor-d-flex tutor-align-center">
@@ -56,7 +56,7 @@
 							</label>
 						</div>
 					<?php else: ?>
-						<div class="tutor-col-6 tutor-col-lg-6 tutor-mb-16">
+						<div class="tutor-col-6 tutor-col-lg-6 tutor-mb-16 tutor-quiz-answer-single">
 							<label for="<?php echo $answer->answer_id; ?>" class="tutor-quiz-question-item tutor-quiz-question-item-has-media">
 								<input type="<?php echo $choice_type; ?>" class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]<?php echo 'multiple_choice' === $question_type ? '[]' : ''; ?>" value="<?php echo $answer->answer_id; ?>" />
 								<div class="tutor-card">

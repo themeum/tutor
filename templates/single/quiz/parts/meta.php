@@ -66,24 +66,30 @@
 	<?php endif; ?>
 </div>
 
-<div class="quiz-flash-message">
-	<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning tutor-align-center tutor-justify-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
-		<div class="flash-info tutor-d-flex tutor-align-center">
-			<span class="tutor-icon-circle-warning-outline tutor-color-warning tutor-mr-8"></span>
-			<span class="tutor-fs-7 tutor-color-secondary tutor-quiz-alert-text">
-			</span>
-		</div>
-		<div class="flash-action">
-			<form id="tutor-start-quiz" method="post">
-				<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+<?php 
+	$feedback_mode = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
+?>
 
-				<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
-				<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
+<?php if($feedback_mode=='retry'): ?>
+	<div class="quiz-flash-message">
+		<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning tutor-align-center tutor-justify-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
+			<div class="flash-info tutor-d-flex tutor-align-center">
+				<span class="tutor-icon-circle-warning-outline tutor-color-warning tutor-mr-8"></span>
+				<span class="tutor-fs-7 tutor-color-secondary tutor-quiz-alert-text">
+				</span>
+			</div>
+			<div class="flash-action">
+				<form id="tutor-start-quiz" method="post">
+					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-				<button type="submit" class="tutor-btn tutor-btn-md reattempt-btn" name="start_quiz_btn" value="start_quiz">
-					<?php esc_html_e( 'Reattempt', 'tutor' ); ?>
-				</button>
-			</form>
-		</div>
-	</div>	
-</div>
+					<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
+					<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
+
+					<button type="submit" class="tutor-btn tutor-btn-md reattempt-btn" name="start_quiz_btn" value="start_quiz">
+						<?php esc_html_e( 'Reattempt', 'tutor' ); ?>
+					</button>
+				</form>
+			</div>
+		</div>	
+	</div>
+<?php endif; ?>
