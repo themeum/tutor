@@ -133,7 +133,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 																		$time_type=='weeks' ? $time_limit=$time_limit*86400*7 : 0;
 
 																		// To Fix: If time larger than 24 hours, the hour portion starts from 0 again. Fix later.
-																		echo gmdate('H:i:s', $time_limit);
+																		echo tutor_utils()->course_content_time_format( gmdate('H:i:s', $time_limit) );
 																	}
 																	
 																	$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID )
