@@ -122,18 +122,18 @@
             </label>
 
             <label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
-                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
-                <div class="tutor-radio-select-content">
-                    <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
-                    <?php _e('Unlimited attempts on each question.', 'tutor'); ?>
-                </div>
-            </label>
-
-            <label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Reveal Mode', 'tutor'); ?></span>
                     <?php _e('Show result after the attempt.', 'tutor'); ?>
+                </div>
+            </label>
+
+            <label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
+                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
+                <div class="tutor-radio-select-content">
+                    <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
+                    <?php _e('Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor'); ?>
                 </div>
             </label>
         </div>
