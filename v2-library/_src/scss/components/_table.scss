@@ -550,7 +550,6 @@ table.tutor-table.tutor-table-responsive {
 				}
 
 				&:nth-child(even) {
-					// background-color: rgba(239, 241, 247, 0.3);
 					background-color: #fcfcfd;
 				}
 			}
@@ -580,9 +579,7 @@ table.tutor-table.tutor-table-responsive {
 				padding-left: 40%;
 
 				&:before {
-					/* Now like a table header */
 					position: absolute;
-					/* Top/left values mimic padding */
 					top: 0;
 					left: 0;
 					width: 35%;

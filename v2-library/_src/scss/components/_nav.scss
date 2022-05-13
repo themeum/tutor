@@ -45,7 +45,11 @@
         margin-left: auto !important;
         &-icon {
             font-size: 12px;
-            margin-left: 4px;
+            @if ($is_rtl == true) {
+                margin-right: 4px;
+            } @else {
+                margin-left: 4px;
+            }
             color: var(--tutor-color-primary);
             transform: rotate(-45deg);
             transition: transform 200ms ease-in;
@@ -78,7 +82,11 @@
 
         .tutor-nav-item {
             &:not(:last-child) {
-                margin-right: 4px;
+                @if ($is_rtl == true) {
+                    margin-left: 4px;
+                } @else {
+                    margin-right: 4px;
+                }
             }
         }
 

@@ -27,7 +27,11 @@
 	&-icon {
 		color: var(--tutor-color-primary);
 		font-size: 32px;
-		margin-right: 20px;
+		@if ($is_rtl == true) {
+			margin-left: 20px;
+		} @else {
+			margin-right: 20px;
+		}
 	}
 
 	&-content {
@@ -170,7 +174,11 @@ $largeNotificationVariations: (
 
 	&-icon {
 		font-size: 32px;
-		margin-right: 20px;
+		@if ($is_rtl == true) {
+			margin-left: 20px;
+		} @else {
+			margin-right: 20px;
+		}
 	}
 
 	&-btns {
@@ -179,7 +187,11 @@ $largeNotificationVariations: (
 		}
 
 		> *:not(:last-child) {
-			margin-right: 10px;
+			@if ($is_rtl == true) {
+				margin-left: 10px;
+			} @else {
+				margin-right: 10px;
+			}
 		}
 	}
 
