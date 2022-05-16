@@ -1653,7 +1653,6 @@ class Utils {
 	}
 
 	public function get_optimized_duration( $duration ) {
-		tutor_log( 'sss: ' . $duration );
 		/*
 		 if(is_string($duration)){
 			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove Empty hour
@@ -1875,6 +1874,7 @@ class Utils {
 		}
 
 		$order_query = "ORDER BY posts.post_date {$order}";
+		$search_term_raw = $search_term;
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		$students = $wpdb->get_results(
@@ -1886,7 +1886,7 @@ class Utils {
 					AND posts.post_status = %s
 					{$course_query}
 					{$date_query}
-					AND (user.display_name LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s)
+					AND (user.display_name LIKE %s OR user.user_email = %s OR user.user_login LIKE %s)
 				GROUP BY post_author
 				{$order_query}
 				LIMIT %d, %d
@@ -1894,7 +1894,7 @@ class Utils {
 				'tutor_enrolled',
 				'completed',
 				$search_term,
-				$search_term,
+				$search_term_raw,
 				$search_term,
 				$start,
 				$limit
@@ -1930,6 +1930,7 @@ class Utils {
 		if ( '' !== $date ) {
 			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
+		$search_term_raw = $search_term;
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		$students = $wpdb->get_results(
@@ -1941,13 +1942,13 @@ class Utils {
 					AND posts.post_status = %s
 					{$course_query}
 					{$date_query}
-					AND (user.display_name LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s)
+					AND (user.display_name LIKE %s OR user.user_email = %s OR user.user_login LIKE %s)
 				GROUP BY user.ID
 			",
 				'tutor_enrolled',
 				'completed',
 				$search_term,
-				$search_term,
+				$search_term_raw,
 				$search_term
 			)
 		);
@@ -2575,7 +2576,7 @@ class Utils {
 	 *
 	 * WooCommerce specific utils
 	 */
-	public function get_wc_products_db() {
+	public function get_wc_products_db($course_id) {
 		global $wpdb;
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
@@ -2589,6 +2590,22 @@ class Utils {
 				'product'
 			)
 		);
+
+		/* $query = $wpdb->get_results($wpdb->prepare(
+			"SELECT DISTINCT product.ID, product.post_title
+			FROM {$wpdb->posts} product
+			LEFT JOIN {$wpdb->postmeta} course_meta ON course_meta.meta_value=product.ID
+			WHERE 	product.post_status = 'publish'
+				AND product.post_type = 'product'
+				AND (
+					course_meta.meta_key!='_tutor_course_product_id' 
+					OR (
+						course_meta.meta_key='_tutor_course_product_id' 
+						AND course_meta.post_id=%d
+					)
+				)",
+			$course_id
+		)); */
 
 		return $query;
 	}
@@ -2888,6 +2905,7 @@ class Utils {
 		$course_id     = sanitize_text_field( $course_id );
 		$date          = sanitize_text_field( $date );
 
+		$search_term_raw = $search_filter;
 		$search_filter = '%' . $wpdb->esc_like( $search_filter ) . '%';
 
 		$status_query = '';
@@ -2925,14 +2943,14 @@ class Utils {
 								ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
 
 				WHERE 	user_meta.meta_key = %s
-						AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+						AND ( user.display_name LIKE %s OR user.user_email = %s )
 						{$status_query}
 						{$course_query}
 						{$date_query}
 			",
 				'_is_tutor_instructor',
 				$search_filter,
-				$search_filter
+				$search_term_raw
 			)
 		);
 		return $count ? $count : 0;
@@ -2961,6 +2979,7 @@ class Utils {
 		$order_filter  = sanitize_text_field( $order_filter );
 		$rating        = sanitize_text_field( $rating );
 
+		$search_term_raw = $search_filter;
 		$search_filter = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_filter = $course_filter != '' ? " AND umeta.meta_value = $course_filter " : '';
 
@@ -3056,7 +3075,7 @@ class Utils {
 					ON cmeta.comment_id = c.comment_ID
 					AND cmeta.meta_key = 'tutor_rating'
 			WHERE 	user_meta.meta_key = '_is_tutor_instructor'
-				AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+				AND ( user.display_name LIKE %s OR user.user_email = %s )
 				{$status}
 				{$category_where}
 				{$course_filter}
@@ -3064,7 +3083,7 @@ class Utils {
 			GROUP BY user.ID {$rating_having} {$order_query} {$limit_offset}",
 			
 			$search_filter,
-			$search_filter
+			$search_term_raw
 		);
 
 		$results = $wpdb->get_results($query);
@@ -3206,6 +3225,7 @@ class Utils {
 
 		$course_post_type = tutor()->course_post_type;
 
+		$search_term_raw = $search_filter;
 		$search_query = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_query = '';
 		$date_query   = '';
@@ -3242,7 +3262,7 @@ class Utils {
 					{$author_query}
 					{$course_query}
 					{$date_query}
-					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
+					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email = %s OR user.user_login LIKE %s )
 
 				GROUP BY enrollment.post_author
 				ORDER BY {$order_by} {$order}
@@ -3254,7 +3274,7 @@ class Utils {
 				'completed',
 				$search_query,
 				$search_query,
-				$search_query,
+				$search_term_raw,
 				$search_query,
 				$offset,
 				$limit
@@ -3272,7 +3292,7 @@ class Utils {
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
-					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
+					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email = %s OR user.user_login LIKE %s )
 					{$author_query}
 					{$course_query}
 					{$date_query}
@@ -3286,7 +3306,7 @@ class Utils {
 				'completed',
 				$search_query,
 				$search_query,
-				$search_query,
+				$search_term_raw,
 				$search_query
 			)
 		);
@@ -5223,6 +5243,7 @@ class Utils {
 	public function get_total_quiz_attempts( $search_term = '' ) {
 		global $wpdb;
 
+		$search_term_raw = $search_term;
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		$count = $wpdb->get_var(
@@ -5234,10 +5255,10 @@ class Utils {
 					INNER JOIN {$wpdb->users}
 							ON quiz_attempts.user_id = {$wpdb->users}.ID
 			WHERE 	attempt_status != %s
-					AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
+					AND ( user_email = %s OR display_name LIKE %s OR post_title LIKE %s )
 			",
 				'attempt_started',
-				$search_term,
+				$search_term_raw,
 				$search_term,
 				$search_term
 			)
@@ -5265,6 +5286,7 @@ class Utils {
 	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check=false ) {
 		global $wpdb;
 
+		$search_term_raw = $search_filter;
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		
 		// Filter by course
@@ -5337,7 +5359,7 @@ class Utils {
 					{$course_filter}
 					{$date_filter}
 			ORDER 	BY quiz_attempts.attempt_ended_at {$order_filter} {$limit_offset}",
-			$search_filter,
+			$search_term_raw,
 			$search_filter,
 			$search_filter,
 			$search_filter
@@ -5389,7 +5411,8 @@ class Utils {
 		$course_ids_in = count($course_ids) ? ' AND quiz_attempts.course_id IN ('.implode( ', ', $course_ids ).') ' : '';
 
 		$search_filter = $search_filter ? '%' . $wpdb->esc_like( $search_filter ) . '%' : '';
-		$search_filter = $search_filter ? "AND ( users.user_email LIKE {$search_filter} OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
+		$search_term_raw = $search_filter;
+		$search_filter = $search_filter ? "AND ( users.user_email = '{$search_term_raw}' OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
 
 		$course_filter = $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '';
 		$date_filter   = $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
@@ -6276,9 +6299,10 @@ class Utils {
 		}
 
 		// Search query @since v.2.0.0
+		$search_term_raw = empty($search) ? '' : $search;
 		$search_query = '%%';
-		if ( isset( $search ) && '' !== $search ) {
-			$search_query = '%' . $wpdb->esc_like( $search ) . '%';
+		if ( !empty( $search_term_raw ) ) {
+			$search_query = '%' . $wpdb->esc_like( $search_term_raw ) . '%';
 		}
 
 		$count = (int) $wpdb->get_var(
@@ -6287,17 +6311,16 @@ class Utils {
 			FROM 	{$wpdb->prefix}tutor_withdraws  withdraw_tbl
 					INNER JOIN {$wpdb->users} user_tbl
 						ON withdraw_tbl.user_id = user_tbl.ID
-			WHERE 	1 = %d
+			WHERE 	1 = 1
 					{$query_by_user_sql}
 					{$query_by_status_sql}
 					{$date_query}
-					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email LIKE %s)
+					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email = %s)
 			",
-				1,
 				$search_query,
 				$search_query,
 				$search_query,
-				$search_query
+				$search_term_raw
 			)
 		);
 
@@ -6309,20 +6332,19 @@ class Utils {
 				FROM {$wpdb->prefix}tutor_withdraws withdraw_tbl
 					INNER JOIN {$wpdb->users} user_tbl
 							ON withdraw_tbl.user_id = user_tbl.ID
-				WHERE 1 = %d
+				WHERE 1 = 1
 					{$query_by_user_sql}
 					{$query_by_status_sql}
 					{$date_query}
 
-					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email LIKE %s)
+					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email = %s)
 				{$order_query}
 				LIMIT %d, %d
 			",
-				1,
 				$search_query,
 				$search_query,
 				$search_query,
-				$search_query,
+				$search_term_raw,
 				$start,
 				$limit
 			)
@@ -7027,6 +7049,7 @@ class Utils {
 		$date        = sanitize_text_field( $date );
 		$search_term = sanitize_text_field( $search_term );
 
+		$search_term_raw = $search_term;
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		// add course id in where clause.
@@ -7066,12 +7089,12 @@ class Utils {
 					{$status_query}
 					{$course_query}
 					{$date_query}
-					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email LIKE %s OR course.post_title LIKE %s );
+					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s );
 			",
 				'tutor_enrolled',
 				$search_term,
 				$search_term,
-				$search_term,
+				$search_term_raw,
 				$search_term
 			)
 		);
@@ -7086,6 +7109,7 @@ class Utils {
 		$date        = sanitize_text_field( $date );
 		$search_term = sanitize_text_field( $search_term );
 
+		$search_term_raw = $search_term;
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		// add course id in where clause.
@@ -7136,14 +7160,14 @@ class Utils {
 					{$status_query}
 					{$course_query}
 					{$date_query}
-					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email LIKE %s OR course.post_title LIKE %s )
+					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email = %s OR course.post_title LIKE %s )
 			ORDER BY enrol_id {$order}
 			LIMIT 	%d, %d;
 			",
 				'tutor_enrolled',
 				$search_term,
 				$search_term,
-				$search_term,
+				$search_term_raw,
 				$search_term,
 				$start,
 				$limit
@@ -9841,7 +9865,6 @@ class Utils {
 	 * @return string
 	 */
 	public function course_content_time_format( string $time_duration ): string {
-		tutor_log( 'time: ' . $time_duration );
 		$new_formatted_time 	= '';
 		$time_duration_array 	= explode( ':', $time_duration );
 		if ( is_array( $time_duration_array ) && count( $time_duration_array ) ) {

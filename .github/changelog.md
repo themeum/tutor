@@ -1,5 +1,11 @@
 # TutorLMS Changelog
 
+### 2.0.5 - May 24, 2022
+
+* Update: Searching user with email now requires exact address
+* Fix: Course restriction to logged in user not working
+
+
 ### 2.0.4 - May 13, 2022
 
 * New: Email Notification to students when a new Lesson is Created if enabled

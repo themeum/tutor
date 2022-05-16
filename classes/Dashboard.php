@@ -82,6 +82,7 @@ class Dashboard {
 			$course_id   = wp_insert_post(
 				array(
 					'post_title'  => __( 'New Course', 'tutor' ),
+					'post_name'   => 'New Course',
 					'post_type'   => $post_type,
 					'post_status' => 'draft',
 				)
