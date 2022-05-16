@@ -1653,13 +1653,14 @@ class Utils {
 	}
 
 	public function get_optimized_duration( $duration ) {
+		tutor_log( 'sss: ' . $duration );
 		/*
 		 if(is_string($duration)){
 			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove Empty hour
 			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove empty minute
 		} */
 
-		return $duration;
+		return $this->course_content_time_format( $duration );
 	}
 
 	/**
@@ -7694,6 +7695,15 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * Get students list based on course id
+	 *
+	 * @param integer $course_id
+	 * @param string $field_name
+	 * @param boolean $all  if all is false it will return only $field_name column
+	 *
+	 * @return array  of objects for student list or array
+	 */
 	public function get_students_data_by_course_id( $course_id = 0, $field_name = '', $all = false ) {
 
 		global $wpdb;
@@ -9820,5 +9830,31 @@ class Utils {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Format course content time duration
+	 * For ex: lesson video play time, quiz time, assignment time etc.
+	 *
+	 * @param string $time_duration
+	 *
+	 * @return string
+	 */
+	public function course_content_time_format( string $time_duration ): string {
+		tutor_log( 'time: ' . $time_duration );
+		$new_formatted_time 	= '';
+		$time_duration_array 	= explode( ':', $time_duration );
+		if ( is_array( $time_duration_array ) && count( $time_duration_array ) ) {
+			$count_fraction = count( $time_duration_array );
+			$first_fraction = (int) $time_duration_array[0];
+			if ( 3 === $count_fraction && $first_fraction < 1 ) {
+				unset( $time_duration_array[0] );
+			}
+			foreach( $time_duration_array as $key => $value ) {
+				// If exists hour fraction but not 00 then skip it.
+				$new_formatted_time .= sprintf("%02d", $value) . ':';
+			}
+		}
+		return rtrim( $new_formatted_time, ':' );
 	}
 }

@@ -18,11 +18,12 @@ do_action('tutor_course/single/before/content');
 
 if (tutor_utils()->get_option('enable_course_about', true, true)) {
     $string             = apply_filters( 'tutor_course_about_content', get_the_content() );
+    $content_summary 	= (bool) get_tutor_option( 'course_content_summary', true );
     $post_size_in_words = sizeof( explode(" ", $string) );
 	$word_limit         = 100;
 	$has_show_more       = false;
 
-	if ( $post_size_in_words > $word_limit ) {
+	if ( $content_summary && ( $post_size_in_words > $word_limit ) ) {
 		$has_show_more = true;
 	}
 ?>
