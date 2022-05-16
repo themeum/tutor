@@ -1653,7 +1653,6 @@ class Utils {
 	}
 
 	public function get_optimized_duration( $duration ) {
-		tutor_log( 'sss: ' . $duration );
 		/*
 		 if(is_string($duration)){
 			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove Empty hour
@@ -9850,7 +9849,6 @@ class Utils {
 	 * @return string
 	 */
 	public function course_content_time_format( string $time_duration ): string {
-		tutor_log( 'time: ' . $time_duration );
 		$new_formatted_time 	= '';
 		$time_duration_array 	= explode( ':', $time_duration );
 		if ( is_array( $time_duration_array ) && count( $time_duration_array ) ) {
