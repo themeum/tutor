@@ -583,7 +583,7 @@ jQuery(document).ready(function ($) {
 	const activeTopic = $('#tutor-lesson-sidebar-tab-content .tutor-single-lesson-items.active')
 		.parent().siblings('.tutor-topics-title')[0];
 
-		activeTopic.click()
+		activeTopic?.click()
 
 	/**
 	 *
