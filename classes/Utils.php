@@ -2075,6 +2075,48 @@ class Utils {
 	}
 
 	/**
+	 * Get single or list of enrolled course data by a user
+	 *
+	 * @param integer $user_id user id
+	 * @param integer $course_id cousrs id
+	 * @return object | mixed
+	 * 
+	 * @since 2.0.5
+	 */
+	public function get_enrolled_data( $user_id = 0, $course_id = 0 ) {
+		global $wpdb;
+		// If course ID provided, it will return single row data.
+		if( 0 != $course_id ) {
+		 	return	$wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT * FROM 	{$wpdb->posts} 
+						WHERE post_type = %s
+						AND post_parent = %d
+						AND post_status = %s
+						AND post_author = %d;",
+					'tutor_enrolled',
+					$course_id,
+					'completed',
+					$user_id
+				)
+			);
+		} else {
+			// Return all enrolled data by user ID.
+			return	$wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM 	{$wpdb->posts} 
+						WHERE post_type = %s
+						AND post_status = %s
+						AND post_author = %d;",
+					'tutor_enrolled',
+					'completed',
+					$user_id
+				)
+			);
+		}
+	}
+
+	/**
 	 * Get total enrolled students by course id
 	 *
 	 * @param int                                    $course_id
