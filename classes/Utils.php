@@ -2577,7 +2577,7 @@ class Utils {
 	 *
 	 * WooCommerce specific utils
 	 */
-	public function get_wc_products_db() {
+	public function get_wc_products_db($course_id) {
 		global $wpdb;
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
@@ -2591,6 +2591,22 @@ class Utils {
 				'product'
 			)
 		);
+
+		/* $query = $wpdb->get_results($wpdb->prepare(
+			"SELECT DISTINCT product.ID, product.post_title
+			FROM {$wpdb->posts} product
+			LEFT JOIN {$wpdb->postmeta} course_meta ON course_meta.meta_value=product.ID
+			WHERE 	product.post_status = 'publish'
+				AND product.post_type = 'product'
+				AND (
+					course_meta.meta_key!='_tutor_course_product_id' 
+					OR (
+						course_meta.meta_key='_tutor_course_product_id' 
+						AND course_meta.post_id=%d
+					)
+				)",
+			$course_id
+		)); */
 
 		return $query;
 	}
