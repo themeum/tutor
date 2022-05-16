@@ -1653,7 +1653,6 @@ class Utils {
 	}
 
 	public function get_optimized_duration( $duration ) {
-		tutor_log( 'sss: ' . $duration );
 		/*
 		 if(is_string($duration)){
 			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove Empty hour
@@ -2577,7 +2576,7 @@ class Utils {
 	 *
 	 * WooCommerce specific utils
 	 */
-	public function get_wc_products_db() {
+	public function get_wc_products_db($course_id) {
 		global $wpdb;
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
@@ -2591,6 +2590,22 @@ class Utils {
 				'product'
 			)
 		);
+
+		/* $query = $wpdb->get_results($wpdb->prepare(
+			"SELECT DISTINCT product.ID, product.post_title
+			FROM {$wpdb->posts} product
+			LEFT JOIN {$wpdb->postmeta} course_meta ON course_meta.meta_value=product.ID
+			WHERE 	product.post_status = 'publish'
+				AND product.post_type = 'product'
+				AND (
+					course_meta.meta_key!='_tutor_course_product_id' 
+					OR (
+						course_meta.meta_key='_tutor_course_product_id' 
+						AND course_meta.post_id=%d
+					)
+				)",
+			$course_id
+		)); */
 
 		return $query;
 	}
@@ -9850,7 +9865,6 @@ class Utils {
 	 * @return string
 	 */
 	public function course_content_time_format( string $time_duration ): string {
-		tutor_log( 'time: ' . $time_duration );
 		$new_formatted_time 	= '';
 		$time_duration_array 	= explode( ':', $time_duration );
 		if ( is_array( $time_duration_array ) && count( $time_duration_array ) ) {
