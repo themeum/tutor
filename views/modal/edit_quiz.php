@@ -114,18 +114,10 @@
             </div>
 
             <label class="tutor-radio-select tutor-bg-white tutor-mb-8">
-                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
+                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 'default')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Default', 'tutor'); ?></span>
                     <?php _e('Answers shown after quiz is finished', 'tutor'); ?>
-                </div>
-            </label>
-
-            <label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
-                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
-                <div class="tutor-radio-select-content">
-                    <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
-                    <?php _e('Unlimited attempts on each question.', 'tutor'); ?>
                 </div>
             </label>
 
@@ -136,10 +128,18 @@
                     <?php _e('Show result after the attempt.', 'tutor'); ?>
                 </div>
             </label>
+
+            <label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
+                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
+                <div class="tutor-radio-select-content">
+                    <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
+                    <?php _e('Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor'); ?>
+                </div>
+            </label>
         </div>
     </div>
     
-    <div class="tutor-mb-32 tutor-quiz-slider">
+    <div class="tutor-mb-32 tutor-quiz-slider tutor-attempt-allowed-slider">
         <label class="tutor-form-label">
             <?php _e('Attempts Allowed', 'tutor'); ?>
         </label>

@@ -577,16 +577,13 @@ jQuery(document).ready(function ($) {
 			$parent.find('.tutor-lessons-under-topic').slideToggle();
 		}
 	);
+	
+	$('.tutor-lessons-under-topic')
+		.hide();
+	const activeTopic = $('#tutor-lesson-sidebar-tab-content .tutor-single-lesson-items.active')
+		.parent().siblings('.tutor-topics-title')[0];
 
-	$('.tutor-single-lesson-items.active')
-		.closest('.tutor-lessons-under-topic')
-		.show();
-	$('.tutor-single-lesson-items.active')
-		.closest('.tutor-topics-in-single-lesson')
-		.addClass('tutor-topic-active');
-	$('.tutor-course-lesson.active')
-		.closest('.tutor-lessons-under-topic')
-		.show();
+		activeTopic.click()
 
 	/**
 	 *
