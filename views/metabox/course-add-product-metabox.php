@@ -9,7 +9,7 @@
  */
 
 
-$products = tutor_utils()->get_wc_products_db();
+$products = tutor_utils()->get_wc_products_db(get_the_ID());
 $product_id = tutor_utils()->get_course_product_id();
 
 $info_text = __('Sell your product, process by WooCommerce', 'tutor');
