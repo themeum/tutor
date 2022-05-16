@@ -646,9 +646,9 @@ window.jQuery(document).ready(function($) {
 				.addClass('tutor-bg-transparent')
 				.removeClass('tutor-bg-white');
 
-			// Hide attempt slider if retry
-			let is_retry = $(this).val()=='retry';
-			$('.tutor-attempt-allowed-slider')[!is_retry ? 'hide' : 'show']();
+			// Show attempt slider if reveal
+			let is_reveal = $(this).val()=='reveal';
+			$('.tutor-attempt-allowed-slider')[is_reveal ? 'show' : 'hide']();
 		}
 	});
 });
