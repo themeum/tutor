@@ -13,9 +13,9 @@
 		<select name="_tutor_course_product_id" class="tutor-form-select" required>
 			<option value="-1"><?php _e( 'Select a Product' ); ?></option>
 			<?php
-			foreach ( $products as $product ) {
-				echo "<option value='{$product->ID}' " . selected( $product->ID, $product_id ) . " >{$product->post_title}</option>";
-			}
+				foreach ( $products as $product ) {
+					echo "<option value='{$product->ID}' " . selected( $product->ID, $product_id ) . " >{$product->post_title}</option>";
+				}
 			?>
 		</select>
 		<div class="tutor-form-feedback">

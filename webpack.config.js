@@ -82,6 +82,7 @@ module.exports = (env, options) => {
 				'tutor-course-builder.min': './assets/react/course-builder/index.js',
 				'tutor-setup.min': './assets/react/admin-dashboard/tutor-setup.js',
 				'tutor.min': './assets/react/v2/common.js',
+				'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
 			},
 		},
 		{
