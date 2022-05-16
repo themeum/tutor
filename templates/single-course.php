@@ -15,8 +15,19 @@
 $course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), get_the_ID() );
 
 tutor_utils()->tutor_custom_header();
-do_action('tutor_course/single/before/wrap');
+
+$student_must_login_to_view_course = tutor_utils()->get_option('student_must_login_to_view_course');
+if ($student_must_login_to_view_course){
+    if ( ! is_user_logged_in() ) {
+        tutor_load_template('login');
+        tutor_utils()->tutor_custom_footer();
+        return;
+    }
+}
+
 ?>
+
+<?php do_action('tutor_course/single/before/wrap'); ?>
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap tutor-wrap-parent'); ?>>
     <div class="tutor-course-details-page tutor-container">
         <?php (isset($is_enrolled) && $is_enrolled) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
