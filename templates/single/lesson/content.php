@@ -188,7 +188,7 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 ?>
 
 <style>
-	.tutor-actual-comment.viewing{
+	.tutor-actual-comment.viewing {
 		box-shadow: 0 0 10px #cdcfd5;
 		animation: blinkComment 1s infinite;
 	}
@@ -249,6 +249,12 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 			</div>
 		</div>
 		<?php endif; ?>
+	</div>
+</div>
+
+<div class="hello">
+	<div class="tutor-container tutor-container-condensed">
+		Tutor LMS
 	</div>
 </div>
 
