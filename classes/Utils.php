@@ -4223,6 +4223,10 @@ class Utils {
 
 		// Assign read, unread, archived, important identifier
 		switch ( $question_status ) {
+			case null :
+				$qna_types_caluse = ' AND NOT EXISTS (SELECT meta_key FROM '.$wpdb->commentmeta.' WHERE meta_key = \'tutor_qna_archived'.$asker_prefix.'\' AND meta_value=1 AND comment_id = _meta.comment_id) ';
+				break;
+
 			case 'read':
 				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value=1) ';
 				break;
@@ -4268,6 +4272,8 @@ class Utils {
 							ON _question.user_id = _user.ID
 					LEFT JOIN {$wpdb->commentmeta} _meta
 							ON _question.comment_ID = _meta.comment_id
+					LEFT JOIN {$wpdb->commentmeta} _meta_archive
+							ON _question.comment_ID = _meta_archive.comment_id
 			WHERE  	_question.comment_type = 'tutor_q_and_a'
 					AND _question.comment_parent = 0
 					AND _question.comment_content LIKE %s
