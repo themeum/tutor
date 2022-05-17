@@ -1653,7 +1653,6 @@ class Utils {
 	}
 
 	public function get_optimized_duration( $duration ) {
-		tutor_log( 'sss: ' . $duration );
 		/*
 		 if(is_string($duration)){
 			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove Empty hour
@@ -2577,7 +2576,7 @@ class Utils {
 	 *
 	 * WooCommerce specific utils
 	 */
-	public function get_wc_products_db() {
+	public function get_wc_products_db($course_id) {
 		global $wpdb;
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
@@ -2591,6 +2590,22 @@ class Utils {
 				'product'
 			)
 		);
+
+		/* $query = $wpdb->get_results($wpdb->prepare(
+			"SELECT DISTINCT product.ID, product.post_title
+			FROM {$wpdb->posts} product
+			LEFT JOIN {$wpdb->postmeta} course_meta ON course_meta.meta_value=product.ID
+			WHERE 	product.post_status = 'publish'
+				AND product.post_type = 'product'
+				AND (
+					course_meta.meta_key!='_tutor_course_product_id' 
+					OR (
+						course_meta.meta_key='_tutor_course_product_id' 
+						AND course_meta.post_id=%d
+					)
+				)",
+			$course_id
+		)); */
 
 		return $query;
 	}
@@ -4208,6 +4223,10 @@ class Utils {
 
 		// Assign read, unread, archived, important identifier
 		switch ( $question_status ) {
+			case null :
+				$qna_types_caluse = ' AND NOT EXISTS (SELECT meta_key FROM '.$wpdb->commentmeta.' WHERE meta_key = \'tutor_qna_archived'.$asker_prefix.'\' AND meta_value=1 AND comment_id = _meta.comment_id) ';
+				break;
+
 			case 'read':
 				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value=1) ';
 				break;
@@ -4253,6 +4272,8 @@ class Utils {
 							ON _question.user_id = _user.ID
 					LEFT JOIN {$wpdb->commentmeta} _meta
 							ON _question.comment_ID = _meta.comment_id
+					LEFT JOIN {$wpdb->commentmeta} _meta_archive
+							ON _question.comment_ID = _meta_archive.comment_id
 			WHERE  	_question.comment_type = 'tutor_q_and_a'
 					AND _question.comment_parent = 0
 					AND _question.comment_content LIKE %s
@@ -8962,16 +8983,17 @@ class Utils {
 	 * Course nav items
 	 *
 	 * @since v2.0.0
+	 *
+	 * Course curriculum tab removed, content shifted 
+	 * in the Course Info tab
+	 *
+	 * @since v2.0.5
 	 */
 	public function course_nav_items() {
 		$array = array(
 			'info'          => array(
 				'title'  => __( 'Course Info', 'tutor' ),
 				'method' => 'tutor_course_info_tab',
-			),
-			'curriculum'    => array(
-				'title'  => __( 'Curriculum', 'tutor' ),
-				'method' => 'tutor_course_topics',
 			),
 			'reviews'       => array(
 				'title'  => __( 'Reviews', 'tutor' ),
@@ -9850,7 +9872,6 @@ class Utils {
 	 * @return string
 	 */
 	public function course_content_time_format( string $time_duration ): string {
-		tutor_log( 'time: ' . $time_duration );
 		$new_formatted_time 	= '';
 		$time_duration_array 	= explode( ':', $time_duration );
 		if ( is_array( $time_duration_array ) && count( $time_duration_array ) ) {
