@@ -73,7 +73,7 @@ do_action( 'tutor_course/single/before/topics' );
 								?>
 								<li class="tutor-course-content-list-item">
 									<div class="tutor-d-flex tutor-align-center">
-										<span class="tutor-course-content-list-item-icon <?php echo $topic_content_icon; ?> tutor-color-muted tutor-mr-16"></span>
+										<span class="tutor-course-content-list-item-icon <?php echo $topic_content_icon; ?> tutor-mr-12"></span>
 										<h5 class="tutor-course-content-list-item-title">
 											<?php
 												$lesson_title = '';
