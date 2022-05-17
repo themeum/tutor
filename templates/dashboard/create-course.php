@@ -224,7 +224,6 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 						if ($monetize_by === 'wc' || $monetize_by === 'edd') {
 							$course_price    = tutor_utils()->get_raw_course_price(get_the_ID());
 							$currency_symbol = tutor_utils()->currency_symbol();
-
 							$_tutor_course_price_type = tutils()->price_type();
 						?>
 							<div class="tutor-row tutor-align-center tutor-mb-32">
@@ -239,7 +238,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 												<span class="tutor-input-group-addon">
 													<?php echo $currency_symbol; ?>
 												</span>
-												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="0.1" min="0">
+												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="0.1" min="0" pattern="^\d*(\.\d{0,2})?$">
 											</div>
 										</label>
 									</div>
