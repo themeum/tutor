@@ -8996,16 +8996,17 @@ class Utils {
 	 * Course nav items
 	 *
 	 * @since v2.0.0
+	 *
+	 * Course curriculum tab removed, content shifted 
+	 * in the Course Info tab
+	 *
+	 * @since v2.0.5
 	 */
 	public function course_nav_items() {
 		$array = array(
 			'info'          => array(
 				'title'  => __( 'Course Info', 'tutor' ),
 				'method' => 'tutor_course_info_tab',
-			),
-			'curriculum'    => array(
-				'title'  => __( 'Curriculum', 'tutor' ),
-				'method' => 'tutor_course_topics',
 			),
 			'reviews'       => array(
 				'title'  => __( 'Reviews', 'tutor' ),
