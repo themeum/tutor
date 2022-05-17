@@ -23,7 +23,8 @@ setup_postdata( $post );
 
 $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course') || current_user_can('administrator');
 
-$course_slug = 'publish' === $post->post_status ? get_the_permalink() : $post->post_name;
+$course_slug 		= $post->post_name;
+$course_permalink 	= get_the_permalink()
 ?>
 
 <?php
@@ -176,12 +177,18 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 							</div>
 						</div>
 						<div class="tutor-mb-32">
-							<label class="tutor-course-field-label tutor-fs-6 tutor-color-black"><?php _e('Permalink', 'tutor'); ?></label>
+							<label class="tutor-course-field-label tutor-fs-6 tutor-color-black"><?php _e('Course Slug', 'tutor'); ?></label>
 							<div id="tutor-course-create-slug-tooltip-wrapper" class="tooltip-wrap tutor-d-block">
 								<span class="tooltip-txt tooltip-right tutor-mt-12">
 									<?php _e('255', 'tutor'); ?>
 								</span>
-								<input id="tutor-course-slug" type="text" name="post_name" class="tutor-form-control" placeholder="<?php _e( 'Course Permalink', 'tutor' ); ?>" value="<?php echo $course_slug; ?>" maxlength="255" <?php echo 'publish' === $post->post_status ? 'disabled' : ''; ?>>
+								<input id="tutor-course-slug" type="text" name="post_name" class="tutor-form-control" placeholder="<?php _e( 'Course Slug', 'tutor' ); ?>" value="<?php echo esc_html( $course_slug ); ?>" maxlength="255">
+								<div class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-mt-12">
+									<?php esc_html_e( 'Permalink: ', 'tutor'); ?>
+									<a href="<?php echo esc_url( $course_permalink ); ?>" target="_blank">
+										<?php echo esc_url( $course_permalink ); ?>
+									</a>
+								</div>
 							</div>
 						</div>
 
