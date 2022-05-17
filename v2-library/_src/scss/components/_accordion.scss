@@ -1,7 +1,7 @@
 .tutor-accordion {
 	&-item {
 		background-color: #fff;
-		border: 1px solid var(--tutor-border-color);
+		border: 1px solid $border-color-secondary;
 		border-radius: 6px;
 
 		&:not(:last-child) {
@@ -19,8 +19,11 @@
             padding: 16px 40px 16px 20px;
             margin: 0 !important;
             transition: 200ms;
+            background-color: $color-gray-5;
             color: var(--tutor-color-secondary);
             user-select: none;
+            border-radius: 6px;
+            transition: 300ms ease-in;
             cursor: pointer;
 
             // arrow
@@ -37,7 +40,14 @@
                 transition: 150ms;
             }
 
+            &:hover {
+                color: var(--tutor-color-primary);
+            }
+
             &.is-active {
+                color: var(--tutor-color-primary);
+                background-color: $color-gray-10;
+                border-radius: 6px 6px 0 0;
                 &::after {
                     transform: translateY(-50%) rotate(-90deg);
                 }
@@ -61,7 +71,7 @@
             
             &-content {
                 padding: 0 16px;
-                border-top: 1px solid var(--tutor-border-color);
+                border-top: 1px solid $border-color-secondary;
             }
         }
 	}

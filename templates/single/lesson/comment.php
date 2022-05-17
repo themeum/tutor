@@ -60,10 +60,7 @@
 							</div>
 						</div>
 						<div class="tutor-comment-actions tutor-ml-24">
-							<span class="tutor-fs-6 tutor-color-secondary">reply</span>
-							<!-- <span class="tutor-fs-6 tutor-color-secondary">like</span>
-							<span class="tutor-fs-6 tutor-color-secondary">edit</span>
-							<span class="tutor-fs-6 tutor-color-secondary">delete</span> -->
+							<span class="tutor-fs-6 tutor-color-secondary"><?php _e("Reply", "tutor"); ?></span>
 						</div>
 
 						<?php
