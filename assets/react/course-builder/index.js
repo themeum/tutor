@@ -6,6 +6,7 @@ import './lesson';
 import './quiz';
 import './topic';
 import './video-picker';
+import './course-price';
 
 /**
  * Re init required

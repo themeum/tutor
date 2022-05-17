@@ -187,7 +187,6 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public function save_course_meta( $post_ID ) {
 		$product_id = (int) tutor_utils()->avalue_dot( '_tutor_course_product_id', $_POST, 0 );
-
 		if ( $product_id === -1 ) {
 			delete_post_meta( $post_ID, '_tutor_course_product_id' );
 		} elseif ( $product_id ) {
