@@ -149,7 +149,7 @@
 							<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
 							<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
 								<?php
-									echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post_date ) );
+									echo esc_html( tutor_i18n_get_formated_date( $post_date, get_option( 'date_format' ) ) );
 								?>
 							</span>
 						</span>
