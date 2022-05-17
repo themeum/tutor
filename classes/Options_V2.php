@@ -430,6 +430,21 @@ class Options_V2
 						),
 					),
 					array(
+						'label'      => false,
+						'block_type' => 'uniform',
+						'slug'       => 'general-page',
+						'fields'     => array(
+							array(
+								'key'     => 'tutor_toc_page_id',
+								'type'    => 'select',
+								'label'   => __('Terms and Conditions Page', 'tutor'),
+								'default' => '0',
+								'options' => $pages,
+								'desc'    => __('This page will be used as the Terms and Conditions page', 'tutor'),
+							),
+						),
+					),
+					array(
 						'label'      => __('Others', 'tutor'),
 						'slug'       => 'others',
 						'block_type' => 'isolate',
