@@ -1066,11 +1066,16 @@ function tutor_course_question_and_answer( $echo = true ) {
  * @show progress bar about course complete
  *
  * @since v.2.0.0
+ *
+ * Course Curriculum added
+ *
+ * @since v2.0.5
  */
 
 function tutor_course_info_tab() {
     tutor_course_content();
     tutor_course_benefits_html();
+	tutor_course_topics();
     tutor_course_instructors_html();
 }
 
