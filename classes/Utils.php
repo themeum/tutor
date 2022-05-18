@@ -4226,7 +4226,9 @@ class Utils {
 		switch ( $question_status ) {
 			case null :
 			case 'all' :
-				$qna_types_caluse = $exclude_archive;
+				if(!$question_id){
+					$qna_types_caluse = $exclude_archive;
+				}
 				break;
 
 			case 'read':
