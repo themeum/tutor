@@ -366,4 +366,33 @@ document.addEventListener('DOMContentLoaded', function() {
 			console.warn(`scrollTargetEl Not found!`);
 		}
 	}
+
+	/**
+	 * Woocommerce order auto complete
+	 *
+	 * @since v2.0.5
+	 */
+	const monetization_field = document.querySelector("[name='tutor_option[monetize_by]']");
+	if (monetization_field) {
+		const monetize_by = monetization_field.value;
+		monetize_by === 'wc' ? showAutoCompleteOption(true) : showAutoCompleteOption(false);
+		monetization_field.onchange = (e) => {
+			const monetization = e.target.value;
+			monetization === 'wc' ? showAutoCompleteOption(true) : showAutoCompleteOption(false);
+		}
+	}
+
+	/**
+	 * Show or hide woocommerce auto complete option
+	 *
+	 * @param {*} show   if true then show otherwise hide & set value off
+	 */
+	function showAutoCompleteOption(show) {
+		const orderAutoCompleteWrapper = document.getElementById('field_tutor_woocommerce_order_auto_complete');
+		if (show) {
+			orderAutoCompleteWrapper.style.display = 'grid';
+		} else {
+			orderAutoCompleteWrapper.style.display = 'none';
+		}
+	}
 });

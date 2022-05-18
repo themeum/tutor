@@ -687,6 +687,14 @@ class Options_V2
 								'desc'           => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor'),
 							),
 							array(
+								'key'         => 'tutor_woocommerce_order_auto_complete',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Automatically Complete WooCommerce Orders', 'tutor' ),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __( 'If enabled, in the case of Courses, WooCommerce Orders will get the "Completed" status .', 'tutor' ),
+							),
+							array(
 								'key'         => 'enable_revenue_sharing',
 								'type'        => 'toggle_switch',
 								'label'       => __('Enable Revenue Sharing', 'tutor'),
