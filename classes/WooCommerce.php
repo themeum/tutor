@@ -248,7 +248,7 @@ class WooCommerce extends Tutor_Base {
 					 *
 					 * @since v2.0.5
 					 */
-					if ( 'processing' === $status_to && $is_enabled_auto_complete && 'cod' !== $payment_method ) {
+					if ( ! is_admin() && 'processing' === $status_to && $is_enabled_auto_complete && 'cod' !== $payment_method ) {
 						tutor_utils()->course_enrol_status_change( $enrolled_id, 'completed' );
 						// Mark complete only from client side.
 						$mark_completed = self::mark_order_complete( $order_id );
