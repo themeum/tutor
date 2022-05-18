@@ -12,19 +12,18 @@
  */
 
 // Prepare the nav items
-$course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), get_the_ID() );
+$course_id = get_the_ID();
+$course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), $course_id );
+$student_must_login_to_view_course = tutor_utils()->get_option('student_must_login_to_view_course');
+$is_public = \TUTOR\Course_List::is_public($course_id);
 
 tutor_utils()->tutor_custom_header();
 
-$student_must_login_to_view_course = tutor_utils()->get_option('student_must_login_to_view_course');
-if ($student_must_login_to_view_course){
-    if ( ! is_user_logged_in() ) {
-        tutor_load_template('login');
-        tutor_utils()->tutor_custom_footer();
-        return;
-    }
+if (!is_user_logged_in() && !$is_public && $student_must_login_to_view_course){
+    tutor_load_template('login');
+    tutor_utils()->tutor_custom_footer();
+    return;
 }
-
 ?>
 
 <?php do_action('tutor_course/single/before/wrap'); ?>

@@ -4220,15 +4220,23 @@ class Utils {
 		}
 
 		$asker_prefix = $asker_id===null ? '' : '_'.$asker_id;
+		$exclude_archive = ' AND NOT EXISTS (SELECT meta_key FROM '.$wpdb->commentmeta.' WHERE meta_key = \'tutor_qna_archived'.$asker_prefix.'\' AND meta_value=1 AND comment_id = _meta.comment_id) ';
 
 		// Assign read, unread, archived, important identifier
 		switch ( $question_status ) {
+			case null :
+			case 'all' :
+				if(!$question_id){
+					$qna_types_caluse = $exclude_archive;
+				}
+				break;
+
 			case 'read':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value=1) ' . $exclude_archive;
 				break;
 
 			case 'unread':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value!=1) ' . $exclude_archive;
 				break;
 
 			case 'archived':
@@ -4236,7 +4244,7 @@ class Utils {
 				break;
 
 			case 'important':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important'.$asker_prefix.'\' AND _meta.meta_value=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important'.$asker_prefix.'\' AND _meta.meta_value=1) ' . $exclude_archive;
 				break;
 		}
 
@@ -4268,6 +4276,8 @@ class Utils {
 							ON _question.user_id = _user.ID
 					LEFT JOIN {$wpdb->commentmeta} _meta
 							ON _question.comment_ID = _meta.comment_id
+					LEFT JOIN {$wpdb->commentmeta} _meta_archive
+							ON _question.comment_ID = _meta_archive.comment_id
 			WHERE  	_question.comment_type = 'tutor_q_and_a'
 					AND _question.comment_parent = 0
 					AND _question.comment_content LIKE %s
@@ -5453,24 +5463,39 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_quiz_answers_by_attempt_id( $attempt_id ) {
+	public function get_quiz_answers_by_attempt_id( $attempt_id, $add_index=false ) {
 		global $wpdb;
 
+		$ids = is_array($attempt_id) ? $attempt_id : array($attempt_id);
+		$ids_in = implode(',', $ids);
+
+		if(empty($ids_in)){
+			// Prevent empty
+			return array();
+		}
+
 		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT answers.*,
+			"SELECT answers.*,
 					question.question_title,
 					question.question_type
 			FROM 	{$wpdb->prefix}tutor_quiz_attempt_answers answers
 					LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question
 						   ON answers.question_id = question.question_id
-			WHERE 	answers.quiz_attempt_id = %d
-			ORDER BY attempt_answer_id ASC;
-			",
-				$attempt_id
-			)
+			WHERE 	answers.quiz_attempt_id IN ({$ids_in})
+			ORDER BY attempt_answer_id ASC;"
 		);
 
+		if($add_index){
+			$new_array = array();
+
+			foreach($results as $result) {
+				!isset( $new_array[$result->quiz_attempt_id] ) ? $new_array[$result->quiz_attempt_id] = array() : 0;
+				$new_array[$result->quiz_attempt_id][] = $result;
+			}
+
+			return $new_array;
+		}
+		
 		return $results;
 	}
 
@@ -8730,6 +8755,25 @@ class Utils {
 	}
 
 	/**
+	 * Get tutor TOC page link
+	 * Settings > General > Terms and Conditions Page
+	 *
+	 * @return null | string
+	 * 
+	 * @since 2.0.5
+	 */
+	function get_toc_page_link() {
+		$tutor_toc_page_id      = (int) get_tutor_option( 'tutor_toc_page_id' );
+        $tutor_toc_page_link    = null;
+
+		if ( ! in_array( $tutor_toc_page_id, [ 0, -1 ] ) ) {
+			$tutor_toc_page_link = get_page_link( $tutor_toc_page_id );
+		}
+
+		return $tutor_toc_page_link;
+	}
+
+	/**
 	 * Translate dynamic text, dynamic text is not translate while potting
 	 * that's why define key here to make it translate able. It will put text in the pot file while compilling.
 	 *
@@ -8977,16 +9021,17 @@ class Utils {
 	 * Course nav items
 	 *
 	 * @since v2.0.0
+	 *
+	 * Course curriculum tab removed, content shifted 
+	 * in the Course Info tab
+	 *
+	 * @since v2.0.5
 	 */
 	public function course_nav_items() {
 		$array = array(
 			'info'          => array(
 				'title'  => __( 'Course Info', 'tutor' ),
 				'method' => 'tutor_course_info_tab',
-			),
-			'curriculum'    => array(
-				'title'  => __( 'Curriculum', 'tutor' ),
-				'method' => 'tutor_course_topics',
 			),
 			'reviews'       => array(
 				'title'  => __( 'Reviews', 'tutor' ),

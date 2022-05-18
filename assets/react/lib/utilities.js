@@ -97,21 +97,19 @@ window.jQuery(document).ready(function($) {
 		'input',
 		'input.tutor-form-control[type="number"], input.tutor-form-number-verify[type="number"]',
 		function() {
-			if ($(this).val() == '') {
+			var value = $(this).val(); 
+			if (value == '') {
 				$(this).val('');
 				return;
 			}
-
-			let min = $(this).attr('min');
-			let max = $(this).attr('max');
-
-			let val = $(this)
-				.val()
-				.toString();
-			/\D/.test(val) ? (val = '') : 0;
-			val = parseInt(val || 0);
-
-			$(this).val(Math.abs($(this).val()));
+			// Allow only 2 decimal places.
+			if (value.includes('.')) {
+				var decimal = String(value).split('.')[1].length;
+				console.log( decimal);
+				if (decimal > 2) {
+					$(this).val(parseFloat(value).toFixed(2));
+				}
+			}
 		},
 	);
 

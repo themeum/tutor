@@ -118,8 +118,15 @@ class Course_Settings_Tabs{
      */
     public function save_course($post_ID, $post){
         $_tutor_course_settings = tutor_utils()->array_get('_tutor_course_settings', $_POST);
+
         if (tutor_utils()->count($_tutor_course_settings)){
-            update_post_meta($post_ID, '_tutor_course_settings', $_tutor_course_settings);
+
+            $existing = get_post_meta( $post_ID, '_tutor_course_settings', true );
+            !is_array( $existing ) ? $existing = array() : 0;
+
+            $meta = array_merge($existing, $_tutor_course_settings);
+
+            update_post_meta($post_ID, '_tutor_course_settings', $meta);
         }
     }
 }

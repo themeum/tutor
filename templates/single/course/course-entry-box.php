@@ -30,7 +30,7 @@
 		array(
 			'icon_class' => 'tutor-icon-refresh-o',
 			'label'      => __( 'Last Updated', 'tutor' ),
-			'value'      => get_tutor_option( 'enable_course_update_date' ) ? date_i18n( get_option( 'date_format' ), strtotime( get_the_modified_date() ) ) : null,
+			'value'      => get_tutor_option( 'enable_course_update_date' ) ? get_the_modified_date( get_option( 'date_format' ) ) : null,
 		),
 	);
 
@@ -149,7 +149,7 @@
 							<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
 							<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
 								<?php
-									echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post_date ) );
+									echo esc_html( tutor_i18n_get_formated_date( $post_date, get_option( 'date_format' ) ) );
 								?>
 							</span>
 						</span>

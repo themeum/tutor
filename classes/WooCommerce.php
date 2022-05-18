@@ -187,7 +187,6 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public function save_course_meta( $post_ID ) {
 		$product_id = (int) tutor_utils()->avalue_dot( '_tutor_course_product_id', $_POST, 0 );
-
 		if ( $product_id === -1 ) {
 			delete_post_meta( $post_ID, '_tutor_course_product_id' );
 		} elseif ( $product_id ) {
@@ -224,7 +223,15 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 		global $wpdb;
+		// Get order & monetize data for auto complete.
+		$order 			= wc_get_order( $order_id );
+		$order_data 	= is_object( $order ) && method_exists( $order, 'get_data' ) ? $order->get_data() : array();
+		$payment_method = isset( $order_data['payment_method'] ) ? $order_data['payment_method'] : '';
 
+		$monetize_by 			= tutor_utils()->get_option( 'monetize_by' );
+		$should_auto_complete   = tutor_utils()->get_option( 'tutor_woocommerce_order_auto_complete' );
+
+		$is_enabled_auto_complete = 'wc' === $monetize_by && $should_auto_complete ? true : false;
 		$enrolled_ids_with_course = $this->get_course_enrolled_ids_by_order_id( $order_id );
 
 		if ( $enrolled_ids_with_course ) {
@@ -232,9 +239,27 @@ class WooCommerce extends Tutor_Base {
 
 			if ( is_array( $enrolled_ids ) && count( $enrolled_ids ) ) {
 				foreach ( $enrolled_ids as $enrolled_id ) {
-
-					tutor_utils()->course_enrol_status_change( $enrolled_id, $status_to );
-
+					/**
+					 * If order status is processing and payment is not cash on
+					 * delivery then mark enrollment as completed.
+					 *
+					 * Note: Order status processing simply mean customer have done 
+					 * payment.
+					 *
+					 * @since v2.0.5
+					 */
+					if ( ! is_admin() && 'processing' === $status_to && $is_enabled_auto_complete && 'cod' !== $payment_method ) {
+						tutor_utils()->course_enrol_status_change( $enrolled_id, 'completed' );
+						// Mark complete only from client side.
+						$mark_completed = self::mark_order_complete( $order_id );
+						if ( $mark_completed ) {
+							$user_id   		= get_post_field( 'post_author', $enrolled_id );
+							$course_id 		= get_post_field( 'post_parent', $enrolled_id );
+							do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
+						}
+					} else {
+						tutor_utils()->course_enrol_status_change( $enrolled_id, $status_to );
+					}
 					// Invoke enrolled hook
 					if ( $status_to == 'completed' ) {
 						$user_id   = get_post_field( 'post_author', $enrolled_id );
@@ -588,6 +613,29 @@ class WooCommerce extends Tutor_Base {
 				return $data;
 			}
 		}
+	}
+
+	/**
+	 * Mark woocommerce order as complete only from the
+	 * client side.
+	 *
+	 * @since v2.0.5
+	 *
+	 * @param integer $order_id
+	 *
+	 * @return boolean
+	 */
+	public static function mark_order_complete( int $order_id ): bool {
+		if ( is_admin() ) {
+			return false;
+		}
+		global $wpdb;
+		$update = $wpdb->update(
+			$wpdb->posts,
+			array( 'post_status' =>  'wc-completed' ),
+			array( 'ID' => $order_id )
+		);
+		return (bool) $update;
 	}
 }
 
