@@ -953,10 +953,14 @@ if ( ! function_exists( 'get_tutor_all_withdrawal_methods' ) ) {
 
 
 if ( ! function_exists( 'tutor_log' ) ) {
-	function tutor_log( $data ) {
-		ob_start();
-		var_dump( $data );
-		error_log( ob_get_clean() );
+	function tutor_log() {
+		$arg_list = func_get_args();
+
+		foreach ($arg_list as $data) {
+			ob_start();
+			var_dump( $data );
+			error_log( ob_get_clean() );
+		}
 	}
 }
 
