@@ -8738,6 +8738,25 @@ class Utils {
 	}
 
 	/**
+	 * Get tutor TOC page link
+	 * Settings > General > Terms and Conditions Page
+	 *
+	 * @return null | string
+	 * 
+	 * @since 2.0.5
+	 */
+	function get_toc_page_link() {
+		$tutor_toc_page_id      = (int) get_tutor_option( 'tutor_toc_page_id' );
+        $tutor_toc_page_link    = null;
+
+		if ( ! in_array( $tutor_toc_page_id, [ 0, -1 ] ) ) {
+			$tutor_toc_page_link = get_page_link( $tutor_toc_page_id );
+		}
+
+		return $tutor_toc_page_link;
+	}
+
+	/**
 	 * Translate dynamic text, dynamic text is not translate while potting
 	 * that's why define key here to make it translate able. It will put text in the pot file while compilling.
 	 *
