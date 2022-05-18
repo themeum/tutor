@@ -30,7 +30,7 @@
 		array(
 			'icon_class' => 'tutor-icon-refresh-o',
 			'label'      => __( 'Last Updated', 'tutor' ),
-			'value'      => get_tutor_option( 'enable_course_update_date' ) ? date_i18n( get_option( 'date_format' ), strtotime( get_the_modified_date() ) ) : null,
+			'value'      => get_tutor_option( 'enable_course_update_date' ) ? get_the_modified_date( get_option( 'date_format' ) ) : null,
 		),
 	);
 
