@@ -5461,24 +5461,39 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_quiz_answers_by_attempt_id( $attempt_id ) {
+	public function get_quiz_answers_by_attempt_id( $attempt_id, $add_index=false ) {
 		global $wpdb;
 
+		$ids = is_array($attempt_id) ? $attempt_id : array($attempt_id);
+		$ids_in = implode(',', $ids);
+
+		if(empty($ids_in)){
+			// Prevent empty
+			return array();
+		}
+
 		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT answers.*,
+			"SELECT answers.*,
 					question.question_title,
 					question.question_type
 			FROM 	{$wpdb->prefix}tutor_quiz_attempt_answers answers
 					LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question
 						   ON answers.question_id = question.question_id
-			WHERE 	answers.quiz_attempt_id = %d
-			ORDER BY attempt_answer_id ASC;
-			",
-				$attempt_id
-			)
+			WHERE 	answers.quiz_attempt_id IN ({$ids_in})
+			ORDER BY attempt_answer_id ASC;"
 		);
 
+		if($add_index){
+			$new_array = array();
+
+			foreach($results as $result) {
+				!isset( $new_array[$result->quiz_attempt_id] ) ? $new_array[$result->quiz_attempt_id] = array() : 0;
+				$new_array[$result->quiz_attempt_id][] = $result;
+			}
+
+			return $new_array;
+		}
+		
 		return $results;
 	}
 
