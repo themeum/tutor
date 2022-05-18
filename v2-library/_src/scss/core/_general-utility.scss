@@ -22,26 +22,6 @@
 	vertical-align: bottom;
 }
 
-.tutor-flex-grow-0 {
-	flex-grow: 0;
-}
-
-.tutor-flex-grow-1 {
-	flex-grow: 1;
-}
-
-.tutor-flex-shrink-0 {
-	flex-shrink: 0;
-}
-
-.tutor-flex-shrink-1 {
-	flex-shrink: 1;
-}
-
-.tutor-flex-wrap {
-	flex-wrap: wrap;
-}
-
 // @todo: need to replace on other tutor plugins like certificate builder & elementor addons
 .align-items-end {
 	align-items: flex-end;
@@ -152,6 +132,11 @@
 
 .tutor-break-all {
 	word-break: break-all;
+}
+
+// 
+.tutor-user-select-none {
+	user-select: none;
 }
 
 // ul

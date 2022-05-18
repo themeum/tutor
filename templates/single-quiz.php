@@ -27,58 +27,59 @@ $course      = tutor_utils()->get_course_by_quiz( get_the_ID() );
 // Get total content count
 $course_stats          = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
+$course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID());
 
 ob_start();
 ?>
 	<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
-    <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
-        <div class="tutor-topbar-left-item tutor-d-flex"> 
-            <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-center tutor-d-none tutor-d-xl-flex">
-                <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-                    <span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-center"></span>
-                </a>
-            </div>
-            <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-center">
-                <span class="tutor-icon-quiz-o tutor-color-white tutor-mr-4"></span>
-                <span class="tutor-fs-7 tutor-fw-normal tutor-color-white">
-                    <?php 
-                        esc_html_e( 'Quiz: ', 'tutor' );
-                        the_title();
-                    ?>
-                </span>
-            </div>
+    <div class="tutor-course-topic-single-header tutor-d-flex tutor-single-page-top-bar">
+        <a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex" tutor-course-topics-sidebar-toggler>
+            <span class="tutor-icon-left" area-hidden="true"></span>
+        </a>
+
+        <a href="<?php echo get_the_permalink( $course_id ); ?>" class="tutor-iconic-btn tutor-d-flex tutor-d-xl-none">
+            <span class="tutor-icon-previous" area-hidden="true"></span>
+        </a>
+
+        <div class="tutor-course-topic-single-header-title tutor-d-flex tutor-align-center tutor-ml-12 tutor-ml-xl-24">
+            <span class="tutor-course-topic-single-header-icon tutor-icon-quiz-o tutor-mr-12 tutor-d-none tutor-d-xl-block" area-hidden="true"></span>
+            <span class="tutor-fs-6">
+                <?php
+                    esc_html_e( 'Quiz: ', 'tutor' );
+                    the_title();
+                ?>
+            </span>
         </div>
-        <div class="tutor-topbar-right-item tutor-d-flex">
-            <div class="tutor-topbar-assignment-details tutor-d-flex tutor-align-center">
-                <?php
-                    do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
-                ?>
-                <div class="tutor-fs-7 tutor-fw-normal tutor-color-white">
-					<?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
-						<span class="tutor-progress-content tutor-color-primary-60">
-							<?php _e('Your Progress:', 'tutor'); ?>
-						</span>
-						<span class="tutor-fs-7 tutor-fw-bold">
-							<?php echo $course_stats['completed_count']; ?>
-						</span> 
-						<?php _e('of ', 'tutor'); ?>
-						<span class="tutor-fs-7 tutor-fw-bold">
-							<?php echo $course_stats['total_count']; ?>
-						</span>
-						(<?php echo $course_stats['completed_percent'] .'%'; ?>)
-					<?php endif; ?>
-                </div>
-                <?php
-                    do_action('tutor_course/single/enrolled/after/lead_info/progress_bar');
-                ?>
+
+        <div class="tutor-ml-auto tutor-align-center tutor-d-none tutor-d-xl-flex">
+            <?php do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' ); ?>
+            <div class="tutor-fs-7 tutor-mr-20">
+                <?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
+                    <span class="tutor-progress-content tutor-color-primary-60">
+                        <?php _e( 'Your Progress:', 'tutor' ); ?>
+                    </span>
+                    <span class="tutor-fs-7 tutor-fw-bold">
+                        <?php echo $course_stats['completed_count']; ?>
+                    </span>
+                    <?php _e( 'of ', 'tutor' ); ?>
+                    <span class="tutor-fs-7 tutor-fw-bold">
+                        <?php echo $course_stats['total_count']; ?>
+                    </span>
+                    (<?php echo $course_stats['completed_percent'] . '%'; ?>)
+                <?php endif; ?>
             </div>
-            <div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-center">
-                <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
-                <a href="<?php echo get_the_permalink($course_id); ?>">
-                    <span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-center"></span>
-                </a>
-            </div>
+            <?php do_action( 'tutor_course/single/enrolled/after/lead_info/progress_bar' ); ?>
+
+            <a class="tutor-iconic-btn" href="<?php echo get_the_permalink( $course_id ); ?>">
+                <span class="tutor-icon-times" area-hidden="true"></span>
+            </a>
+        </div>
+
+        <div class="tutor-ml-auto tutor-align-center tutor-d-block tutor-d-xl-none">
+            <a class="tutor-iconic-btn" href="#">
+                <span class="tutor-icon-hamburger-menu" area-hidden="true"></span>
+            </a>
         </div>
     </div>
 
