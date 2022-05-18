@@ -245,7 +245,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 												<span class="tutor-input-group-addon">
 													<?php echo $currency_symbol; ?>
 												</span>
-												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="0.1" min="0" pattern="^\d*(\.\d{0,2})?$">
+												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
 											</div>
 										</label>
 									</div>

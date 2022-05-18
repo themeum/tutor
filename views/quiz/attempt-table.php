@@ -14,28 +14,31 @@
 
 <div class="tutor-table-wrapper tutor-my-24">
 	<table class="tutor-table tutor-table-responsive my-quiz-attempts">
-		<?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) { ?>
-		<thead>
-			<tr>
-				<?php
-					foreach ( $table_columns as $key => $column ) {
-						echo '<th>
-								<div class="tutor-fs-7 tutor-color-secondary">
-									' . $column . '
-								</div>
-							</th>';
-					}
-				?>
-			</tr>
-		</thead>
-		<?php } ?>
+		<?php if ( is_array( $attempt_list ) && count( $attempt_list ) ): ?>
+			<thead>
+				<tr>
+					<?php
+						foreach ( $table_columns as $key => $column ) {
+							echo '<th>
+									<div class="tutor-fs-7 tutor-color-secondary">
+										' . $column . '
+									</div>
+								</th>';
+						}
+					?>
+				</tr>
+			</thead>
+		<?php endif; ?>
+
 		<tbody>
 			<?php
 			if ( is_array( $attempt_list ) && count( $attempt_list ) ) {
+				$attempt_ids = array_column($attempt_list, 'attempt_id');
+				$answers_array = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_ids, true);
+
 				foreach ( $attempt_list as $attempt ) {
-					$attempt_action    = tutor_utils()->get_tutor_dashboard_page_permalink( 'my-quiz-attempts/attempts-details/?attempt_id=' . $attempt->attempt_id );
 					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
-					$answers           = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt->attempt_id );
+					$answers           = isset($answers_array[$attempt->attempt_id]) ? $answers_array[$attempt->attempt_id] : array();
 
 					$attempt_info 	   = @unserialize($attempt->attempt_info);
 					$attempt_info	   = !is_array($attempt_info) ? array() : $attempt_info;
