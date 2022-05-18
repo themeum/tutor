@@ -9,6 +9,9 @@
  * @package TutorLMS/Templates
  * @version 1.5.2
  */
+
+// @todo: to be removed
+
 global $post;
 $currentPost = $post;
 

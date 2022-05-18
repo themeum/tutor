@@ -252,83 +252,13 @@ jQuery(document).ready(function ($) {
 	});
 
 	/**
-	 * Check if lesson has classic editor support
-	 * If classic editor support, stop ajax load on the lesson page.
-	 *
-	 * @since v.1.0.0
-	 *
-	 * @updated v.1.4.0
-	 */
-	/* if (!_tutorobject.enable_lesson_classic_editor) {
-		$(document).on('click', '.tutor-single-lesson-a', function(e) {
-			e.preventDefault();
-
-			var $that = $(this);
-			var lesson_id = $that.attr('data-lesson-id');
-			var $wrap = $('#tutor-single-entry-content');
-
-			$.ajax({
-				url: _tutorobject.ajaxurl,
-				type: 'POST',
-				data: { lesson_id: lesson_id, action: 'tutor_render_lesson_content' },
-				beforeSend: function() {
-					var page_title = $that.find('.lesson_title').text();
-					$('head title').text(page_title);
-					window.history.pushState('obj', page_title, $that.attr('href'));
-					$wrap.addClass('loading-lesson');
-					$('.tutor-single-lesson-items').removeClass('active');
-					$that.closest('.tutor-single-lesson-items').addClass('active');
-				},
-				success: function(data) {
-					$wrap.html(data.data.html);
-					videoPlayer.init();
-					$('.tutor-lesson-sidebar').css('display', '');
-					window.dispatchEvent(new window.Event('tutor_ajax_lesson_loaded')); // Some plugins like h5p needs notification on ajax load
-				},
-				complete: function() {
-					$wrap.removeClass('loading-lesson');
-				},
-			});
-		});
-
-		$(document).on('click', '.sidebar-single-quiz-a', function(e) {
-			e.preventDefault();
-
-			var $that = $(this);
-			var quiz_id = $that.attr('data-quiz-id');
-			var page_title = $that.find('.lesson_title').text();
-			var $wrap = $('#tutor-single-entry-content');
-
-			$.ajax({
-				url: _tutorobject.ajaxurl,
-				type: 'POST',
-				data: { quiz_id: quiz_id, action: 'tutor_render_quiz_content' },
-				beforeSend: function() {
-					$('head title').text(page_title);
-					window.history.pushState('obj', page_title, $that.attr('href'));
-					$wrap.addClass('loading-lesson');
-					$('.tutor-single-lesson-items').removeClass('active');
-					$that.closest('.tutor-single-lesson-items').addClass('active');
-				},
-				success: function(data) {
-					$wrap.html(data.data.html);
-					$('.tutor-lesson-sidebar').css('display', '');
-				},
-				complete: function() {
-					$wrap.removeClass('loading-lesson');
-				},
-			});
-		});
-	} */
-
-	/**
 	 * @date 05 Feb, 2019
 	 */
 
-	$(document).on('click', '.tutor-lesson-sidebar-hide-bar', function (e) {
+	$(document).on('click', '[tutor-course-topics-sidebar-toggler]', function (e) {
 		e.preventDefault();
-		$('.tutor-course-single-sidebar-wraper.tutor-desktop-sidebar').toggle();
-		$('#tutor-single-entry-content').toggleClass('sidebar-hidden');
+		$('.tutor-course-single-content-wrapper').toggleClass('tutor-course-single-sidebar-hidden');
+		$('.tutor-course-single-sidebar-wrapper').toggleClass('tutor-d-none'); //@todo: to be removed
 	});
 
 	$('.tutor-tabs-btn-group a').on('click touchstart', function (e) {
@@ -555,35 +485,22 @@ jQuery(document).ready(function ($) {
 		$(this)
 			.siblings('label')
 			.find('span')
-			.html(
-				$(this)
-					.val()
-					.replace(/.*(\/|\\)/, '')
-			);
+			.html($(this).val().replace(/.*(\/|\\)/, ''));
 	});
 
 	/**
 	 * Lesson Sidebar Topic Toggle
 	 * @since v.1.3.4
 	 */
-
-	$(document).on(
-		'click',
-		'.tutor-topics-in-single-lesson .tutor-topics-title, .tutor-single-lesson-topic-toggle',
-		function (e) {
-			var $that = $(this);
-			var $parent = $that.closest('.tutor-topics-in-single-lesson');
-			$parent.toggleClass('tutor-topic-active');
-			$parent.find('.tutor-lessons-under-topic').slideToggle();
-		}
-	);
+	$(document).on( 'click', '[tutor-course-single-topic-toggler]', function (e) {
+		e.preventDefault();
+		var $items = $(this).parent().find('.tutor-course-topic-item');
+		$items.slideToggle();
+	});
 	
-	$('.tutor-lessons-under-topic')
-		.hide();
-	const activeTopic = $('#tutor-lesson-sidebar-tab-content .tutor-single-lesson-items.active')
-		.parent().siblings('.tutor-topics-title')[0];
-
-		activeTopic?.click()
+	$('.tutor-course-topic-item').hide();
+	const activeTopic = $('.tutor-course-single-sidebar-wrapper .tutor-course-topic-item.is-active').siblings('[tutor-course-single-topic-toggler]')[0];
+	activeTopic?.click()
 
 	/**
 	 *

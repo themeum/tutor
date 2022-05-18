@@ -4,51 +4,56 @@
  * @version 1.4.3
  */
 
-$course = tutor_utils()->get_course_by_quiz( get_the_ID() );
+$course     = tutor_utils()->get_course_by_quiz( get_the_ID() );
+$course_id  = tutor_utils()->get_course_id_by('lesson', get_the_ID());
 ?>
 
-<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
-    <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-center tutor-d-none tutor-d-xl-flex">
-        <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-            <span class="tutor-icon-left tutor-color-white tutor-d-flex tutor-align-center"></span>
-        </a>
-    </div>
-    <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-center">
+<div class="tutor-course-topic-single-header tutor-d-flex tutor-single-page-top-bar">
+	<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex" tutor-course-topics-sidebar-toggler>
+		<span class="tutor-icon-left" area-hidden="true"></span>
+	</a>
+
+	<a href="<?php echo get_the_permalink( $course_id ); ?>" class="tutor-iconic-btn tutor-d-flex tutor-d-xl-none">
+		<span class="tutor-icon-previous" area-hidden="true"></span>
+	</a>
+
+	<div class="tutor-course-topic-single-header-title tutor-d-flex tutor-align-center tutor-ml-12 tutor-ml-xl-24">
         <?php
-            if ($post->post_type === 'tutor_quiz') {
-                echo '<span class="tutor-icon-quiz-o tutor-color-white tutor-mr-4"></span>';
-                echo '<span class="tutor-fs-7 tutor-color-white">';
-                    esc_html_e( 'Quiz: ', 'tutor' );
-                    the_title(); 
-                echo '</span>';
-            } elseif ($post->post_type === 'tutor_assignments'){
-                echo '<span class="tutor-icon-assignment-filled tutor-color-white tutor-mr-4"></span>';
-                echo '<span class="tutor-fs-7 tutor-color-white">';
-                    esc_html_e( 'Assignment: ', 'tutor' );
-                    the_title(); 
-                echo '</span>';
-            } elseif ($post->post_type === 'tutor_zoom_meeting'){
-                echo '<span class="tutor-icon-brand-zoom tutor-color-white tutor-mr-4"></span>';
-                echo '<span class="tutor-fs-7 tutor-color-white">';
-                    esc_html_e( 'Zoom Meeting: ', 'tutor' );
-                    the_title(); 
-                echo '</span>';
-            } else{
-                echo '<span class="tutor-icon-brand-youtube-bold tutor-color-white tutor-mr-4"></span>';
-                echo '<span class="tutor-fs-7 tutor-color-white">';
-                    esc_html_e( 'Lesson: ', 'tutor' );
-                    the_title(); 
-                echo '</span>';
+            switch ($post->post_type) {
+                case 'tutor_quiz':
+                    $title = 'Quiz';
+                    $icon = 'tutor-icon-quiz-o';
+                    break;
+                case 'tutor_assignments':
+                    $title = 'Assignment';
+                    $icon = 'tutor-icon-assignment-filled';
+                    break;
+                case 'tutor_zoom_meeting':
+                    $title = 'Zoom Meeting';
+                    $icon = 'tutor-icon-brand-zoom';
+                    break;
+                default:
+                    $title = 'Lesson';
+                    $icon = 'tutor-icon-brand-youtube-bold';
             }
         ?>
-    </div>
+		<span class="tutor-course-topic-single-header-icon <?php echo $icon; ?> tutor-mr-12 tutor-d-none tutor-d-xl-block" area-hidden="true"></span>
+		<span class="tutor-fs-6">
+			<?php esc_html_e( $title . ': ', 'tutor' ); ?>
+		</span>
+	</div>
 
-    <div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-center">
-        <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
-        <a href="<?php echo get_the_permalink($course_id); ?>">
-            <span class="tutor-icon-times tutor-color-white tutor-d-flex tutor-align-center"></span>
-        </a>
-    </div>
+	<div class="tutor-ml-auto tutor-align-center tutor-d-none tutor-d-xl-flex">
+        <a class="tutor-iconic-btn" href="<?php echo get_the_permalink( $course_id ); ?>">
+			<span class="tutor-icon-times" area-hidden="true"></span>
+		</a>
+	</div>
+
+	<div class="tutor-ml-auto tutor-align-center tutor-d-block tutor-d-xl-none">
+		<a class="tutor-iconic-btn" href="#">
+			<span class="tutor-icon-hamburger-menu" area-hidden="true"></span>
+		</a>
+	</div>
 </div>
 
 

@@ -18,7 +18,7 @@ do_action('tutor_lesson/single/before/complete_form');
 $is_completed_lesson = tutor_utils()->is_completed_lesson();
 if ( ! $is_completed_lesson) {
 	?>
-<div class="tutor-topbar-complete-btn tutor-ml-24">
+<div class="tutor-topbar-complete-btn tutor-mr-20">
     <form method="post">
         <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
         <input type="hidden" value="<?php echo get_the_ID(); ?>" name="lesson_id" />

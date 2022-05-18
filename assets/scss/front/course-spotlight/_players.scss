@@ -13,75 +13,7 @@
 	position: relative;
 }
 
-.tutor-course-single-content-wraper {
-	.tutor-single-course-content-prev,
-	.tutor-single-course-content-next {
-		top: 0;
-		width: 28px;
-		height: 100%;
-		position: absolute;
-
-		a {
-			backdrop-filter: blur(94px);
-			margin: auto;
-			display: flex;
-			align-items: center;
-			height: 150px;
-
-			@include breakpoint-max(768) {
-				height: 60px;
-			}
-
-			background: rgba(121, 121, 121, 0.479);
-			position: relative;
-
-			&:hover {
-				background: rgba(70, 70, 70, 0.479);
-			}
-
-			span {
-				font-size: 28px;
-				color: #ffffff8c;
-				margin: auto;
-				display: block;
-			}
-		}
-	}
-
-	.tutor-single-course-content-prev {
-		left: 0;
-
-		a {
-			border-radius: 0px 6px 6px 0px;
-		}
-	}
-
-	.tutor-single-course-content-next {
-		right: 0;
-
-		a {
-			border-radius: 6px 0px 0px 6px;
-		}
-	}
-
-	@include breakpoint-max(768) {
-		.tutor-single-course-content-prev,
-		.tutor-single-course-content-next {
-			width: 31px;
-			height: 400px;
-
-			a {
-				position: relative;
-				top: 50px;
-			}
-
-			span {
-				font-size: 30px;
-				color: #ffffff8c;
-			}
-		}
-	}
-
+.tutor-course-single-content-wrapper {
 	.tutor-lesson-feature-image {
 		img {
 			display: block;

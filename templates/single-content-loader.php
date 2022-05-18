@@ -47,54 +47,50 @@ get_tutor_header();
 ?>
 
 <?php do_action('tutor_'.$context.'/single/before/wrap'); ?>
-    <div class="tutor-course-single-content-wraper <?php echo $enable_spotlight_mode ? "tutor-spotlight-mode" : ""; ?>">
-        <div class="tutor-course-single-sidebar-wraper tutor-<?php echo $context; ?>-sidebar tutor-desktop-sidebar">
-			<?php tutor_course_single_sidebar(); ?>
-        </div>
-        <div id="tutor-single-entry-content" class="tutor-quiz-single-entry-wrap sidebar-hidden">
-		    <?php (isset($method_map[$context]) && is_callable($method_map[$context])) ? $method_map[$context]() : 0; ?>
-            <?php echo isset($html_content) ? $html_content  : '' ; ?>
-
-            <div class="tutor-course-single-sidebar-wraper tutor-mobile-sidebar">
-                <?php tutor_course_single_sidebar(true, 'mobile'); ?>
-            </div> 
-        </div>
+<div class="tutor-course-single-content-wrapper<?php echo $enable_spotlight_mode ? " tutor-spotlight-mode" : ""; ?>">
+    <div class="tutor-course-single-sidebar-wrapper tutor-<?php echo $context; ?>-sidebar">
+        <?php tutor_course_single_sidebar(); ?>
     </div>
+    <div id="tutor-single-entry-content" class="tutor-quiz-single-entry-wrap">
+        <?php (isset($method_map[$context]) && is_callable($method_map[$context])) ? $method_map[$context]() : 0; ?>
+        <?php echo isset($html_content) ? $html_content  : '' ; ?>
+    </div>
+</div>
 
-    <!-- Course Progressbar on sm/mobile  -->
-    <?php 
-        // Get the ID of this content and the corresponding course
-        $course_content_id = get_the_ID();
-        $course_id         = tutor_utils()->get_course_id_by_subcontent( $course_content_id );
+<!-- Course Progressbar on sm/mobile  -->
+<?php 
+    // Get the ID of this content and the corresponding course
+    $course_content_id = get_the_ID();
+    $course_id         = tutor_utils()->get_course_id_by_subcontent( $course_content_id );
 
-        // Get total content count
-        $course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+    // Get total content count
+    $course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 
-        // Is Lesstion Complete
-        $is_completed_lesson = tutor_utils()->is_completed_lesson();
-    ?>
+    // Is Lesstion Complete
+    $is_completed_lesson = tutor_utils()->is_completed_lesson();
+?>
 
-    <div class="tutor-spotlight-mobile-progress-complete tutor-px-20 tutor-py-16 tutor-mt-20 tutor-d-sm-none tutor-d-block">
-        <div class="tutor-row tutor-align-center">
-            <div class="tutor-spotlight-mobile-progress-left <?php echo !$is_completed_lesson ? "tutor-col-6" : "tutor-col-12"?>">
-                <div class="tutor-fs-7 tutor-color-muted">
-                    <?php echo $course_stats['completed_percent'] . '%'; ?><span>&nbsp;Complete</span>
-                </div>
-                <div class="list-item-progress tutor-my-16">
-                    <div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo $course_stats['completed_percent']; ?>%;">
-                        <span class="tutor-progress-value" area-hidden="true"></span>
-                    </div>
+<div class="tutor-spotlight-mobile-progress-complete tutor-px-20 tutor-py-16 tutor-mt-20 tutor-d-sm-none tutor-d-block">
+    <div class="tutor-row tutor-align-center">
+        <div class="tutor-spotlight-mobile-progress-left <?php echo !$is_completed_lesson ? "tutor-col-6" : "tutor-col-12"?>">
+            <div class="tutor-fs-7 tutor-color-muted">
+                <?php echo $course_stats['completed_percent'] . '%'; ?><span>&nbsp;Complete</span>
+            </div>
+            <div class="list-item-progress tutor-my-16">
+                <div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo $course_stats['completed_percent']; ?>%;">
+                    <span class="tutor-progress-value" area-hidden="true"></span>
                 </div>
             </div>
-            
-            <?php if(!$is_completed_lesson): ?>
-                <div class="tutor-spotlight-mobile-progress-right tutor-col-6">
-                    <?php tutor_lesson_mark_complete_html(); ?>
-                </div>
-            <?php endif; ?>
-
         </div>
+        
+        <?php if(!$is_completed_lesson): ?>
+            <div class="tutor-spotlight-mobile-progress-right tutor-col-6">
+                <?php tutor_lesson_mark_complete_html(); ?>
+            </div>
+        <?php endif; ?>
+
     </div>
-    <?php do_action('tutor_'.$context.'/single/after/wrap');
+</div>
+<?php do_action('tutor_'.$context.'/single/after/wrap');
 
 get_tutor_footer();

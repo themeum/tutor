@@ -41,235 +41,181 @@ $is_user_admin                = current_user_can( 'administrator' );
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/lesson_sidebar' ); ?>
-	<div class="tutor-sidebar-tabs-wrap">
-		<div class="tutor-lessons-tab-area tutor-<?php echo esc_html( isset( $context ) ? $context : 'desktop' ); ?>-sidebar-area">
-			<div data-sidebar-tab="tutor-lesson-sidebar-tab-content" class="tutor-sidebar-tab-item tutor-lessons-tab <?php echo $enable_q_and_a_on_course ? 'active' : ''; ?> tutor-d-flex tutor-align-center">
-				<span class="tutor-icon-open-book-o tutor-mr-8" area-hidden="true"></span>
-				<span class="tutor-fs-7 tutor-fw-medium tutor-color-secondary">
-					<?php esc_html_e( 'Lesson List', 'tutor' ); ?>
-				</span>
-			</div>
-			<?php if ( $enable_q_and_a_on_course && ( $is_enrolled || $is_instructor_of_this_course || $is_user_admin ) ): ?>
-				<div data-sidebar-tab="sidebar-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab tutor-d-flex tutor-align-center">
-					<span class="tutor-icon-question tutor-mr-8" area-hidden="true"></span>
-					<span class="tutor-fs-7 tutor-fw-medium tutor-color-secondary">
-						<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
-					</span>
-				</div>
-			<?php endif; ?>
-		</div>
+<div class="tutor-course-single-sidebar-title">
+	<span class="tutor-fs-6 tutor-fw-medium tutor-color-secondary"><?php _e("Course Content", "tutor"); ?></span>
+</div>
 
-		<div class="tutor-sidebar-tabs-content">
-			<div id="tutor-lesson-sidebar-tab-content" class="tutor-lesson-sidebar-tab-item active">
-				<?php
-				$topics = tutor_utils()->get_topics( $course_id );
-				if ( $topics->have_posts() ) {
-					while ( $topics->have_posts() ) {
-						$topics->the_post();
-						$topic_id       = get_the_ID();
-						$topic_summery  = get_the_content();
-						$total_contents = tutor_utils()->count_completed_contents_by_topic( $topic_id );
-					?>
-
-						<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
-							<div class="tutor-topics-title tutor-row">
-								<div class="tutor-topics-title-left tutor-col">
-									<div class="tutor-topics-title-inner tutor-fs-6 tutor-fw-medium tutor-color-primary">
-										<?php the_title(); ?>
-										<?php if ( true ) : ?>
-											<?php if(trim($topic_summery)) : ?>
-												<div class="tutor-topics-title-info">
-													<div class="tooltip-wrap">
-														<i class="tutor-topics-title-info-icon tutor-icon-circle-info-o tutor-color-muted"></i>
-														<span class="tooltip-txt tooltip-bottom">
-															<?php echo $topic_summery; ?>
-														</span>
-													</div>
-												</div>
-											<?php endif; ?>
-										<?php endif; ?>
-									</div>
-								</div>
-
-								<div class="tutor-topics-title-right tutor-col-auto">
-									<?php if ( isset( $total_contents['contents'] ) && $total_contents['contents'] > 0 ) : ?>
-										<div class="tutor-topic-subtitle tutor-fs-7 tutor-color-secondary">
-											<?php echo esc_html( isset( $total_contents['completed'] ) ? $total_contents['completed'] : 0 ); ?>/<?php echo esc_html( isset( $total_contents['contents'] ) ? $total_contents['contents'] : 0 ); ?>
+<?php
+$topics = tutor_utils()->get_topics( $course_id );
+if ( $topics->have_posts() ) {
+	while ( $topics->have_posts() ) {
+		$topics->the_post();
+		$topic_id       = get_the_ID();
+		$topic_summery  = get_the_content();
+		$total_contents = tutor_utils()->count_completed_contents_by_topic( $topic_id );
+		?>
+			<div class="tutor-course-topic tutor-course-topic-<?php echo $topic_id; ?>">
+				<div class="tutor-course-topic-title" tutor-course-single-topic-toggler>
+					<div class="tutor-row">
+						<div class="tutor-col">
+							<div class="tutor-fs-6 tutor-fw-medium tutor-cursor-pointer tutor-user-select-none">
+								<i class="tutor-course-topic-title-arrow tutor-icon-angle-right tutor-mr-8" area-hidden="true"></i>
+								<?php the_title(); ?>
+								<?php if ( true ) : ?>
+									<?php if(trim($topic_summery)) : ?>
+										<div class="tutor-course-topic-title-info">
+											<div class="tooltip-wrap">
+												<i class="tutor-course-topic-title-info-icon tutor-icon-circle-info-o"></i>
+												<span class="tooltip-txt tooltip-bottom">
+													<?php echo $topic_summery; ?>
+												</span>
+											</div>
 										</div>
 									<?php endif; ?>
-								</div>
+								<?php endif; ?>
 							</div>
-
-							<?php
-								do_action( 'tutor/lesson_list/before/topic', $topic_id );
-								$lessons = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
-								$is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
-								while ( $lessons->have_posts() ) {
-									$lessons->the_post();
-									$is_public_course 	= \TUTOR\Course_List::is_public( $course_id );
-									$show_permalink 	= !$_is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course;
-									if ( $post->post_type === 'tutor_quiz' ) {
-										$quiz = $post;
-										?>
-											<div class="tutor-lessons-under-topic" data-quiz-id="<?php echo $quiz->ID; ?>">
-												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-primary' : ''; ?>">
-													<a href="<?php echo $show_permalink ? get_permalink( $quiz->ID ) : '#'; ?>" class="tutor-single-quiz-a tutor-d-flex tutor-justify-between" data-quiz-id="<?php echo $quiz->ID; ?>">
-														<div class="tutor-single-lesson-items-left tutor-d-flex">
-															<span class="tutor-icon-quiz-o tutor-mr-8" area-hidden="true"></span>
-															<span class="lesson_title tutor-fs-7 tutor-color-secondary">
-																<?php echo $quiz->post_title; ?>
-															</span>
-														</div>
-														<div class="tutor-single-lesson-items-right tutor-d-flex tutor-lesson-right-icons">
-															<span class="tutor-fs-7 tutor-color-secondary">
-																<?php
-																	$time_limit = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
-																	if ( $time_limit ) {
-																		$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
-
-																		$time_type=='minutes' ? $time_limit=$time_limit*60 : 0;
-																		$time_type=='hours' ? $time_limit=$time_limit*3660 : 0;
-																		$time_type=='days' ? $time_limit=$time_limit*86400 : 0;
-																		$time_type=='weeks' ? $time_limit=$time_limit*86400*7 : 0;
-
-																		// To Fix: If time larger than 24 hours, the hour portion starts from 0 again. Fix later.
-																		echo tutor_utils()->course_content_time_format( gmdate('H:i:s', $time_limit) );
-																	}
-																	
-																	$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID )
-																?>
-
-																<?php if($show_permalink): ?>
-																	<input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?>/>
-																<?php else: ?>
-																	<i class="tutor-icon-lock-line" area-hidden="true"></i>
-																<?php endif; ?>
-															</span>
-														</div>
-													</a>
-												</div>
-											</div>
-										<?php
-											
-									} elseif ( $post->post_type === 'tutor_assignments' ) {
-										/**
-										 * Assignments
-											 *
-										 * @since this block v.1.3.3
-										 */
-										?>
-											<div class="tutor-lessons-under-topic">
-												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-primary' : ''; ?>">
-													<a href="<?php echo $show_permalink ? get_permalink( $post->ID ) : '#'; ?>" class="tutor-single-assignment-a tutor-d-flex tutor-justify-between" data-assignment-id="<?php echo $post->ID; ?>">
-														<div class="tutor-single-lesson-items-left tutor-d-flex">
-															<span class="tutor-icon-assignment tutor-mr-8" area-hidden="true"></span>
-															<span class="lesson_title tutor-fs-7 tutor-color-secondary">
-																<?php echo $post->post_title; ?>
-															</span>
-														</div>
-														<div class="tutor-single-lesson-items-right tutor-d-flex tutor-lesson-right-icons">
-															<?php if($show_permalink): ?>
-																<?php do_action( 'tutor/assignment/right_icon_area', $post ); ?>
-															<?php else: ?>
-																<i class="tutor-icon-lock-line"></i>
-															<?php endif; ?>
-														</div>
-													</a>
-												</div>
-											</div>
-										<?php
-									} elseif ( $post->post_type === 'tutor_zoom_meeting' ) {
-										/**
-										 * Zoom Meeting
-											 *
-										 * @since this block v.1.7.1
-										 */
-										?>
-											<div class="tutor-lessons-under-topic">
-												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-primary' : ''; ?>">
-													<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>" class="sidebar-single-zoom-meeting-a tutor-d-flex tutor-justify-between">
-														<div class="tutor-single-lesson-items-left tutor-d-flex">
-															<span class="tutor-icon-brand-zoom-o tutor-mr-8" area-hidden="true"></span>
-															<span class="lesson_title tutor-fs-7 tutor-color-secondary">
-																<?php echo esc_html( $post->post_title ); ?>
-															</span>
-														</div>
-														<div class="tutor-single-lesson-items-right tutor-d-flex tutor-lesson-right-icons">
-															<?php if($show_permalink): ?>
-																<?php do_action( 'tutor/zoom/right_icon_area', $post->ID ); ?>
-															<?php else: ?>
-																<i class="tutor-icon-lock-line"></i>
-															<?php endif; ?>
-														</div>
-													</a>
-												</div>
-											</div>
-										<?php
-										
-									} else {
-
-										/**
-										 * Lesson
-										 */
-
-										$video = tutor_utils()->get_video_info();
-
-										$play_time = false;
-										if ( $video ) {
-											$play_time = $video->playtime;
-										}
-										$is_completed_lesson = tutor_utils()->is_completed_lesson();
-										?>
-											<div class="tutor-lessons-under-topic">
-												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-primary' : ''; ?>">
-													<a href="<?php echo $show_permalink ? get_the_permalink() : '#'; ?>" class="tutor-single-lesson-a tutor-d-flex tutor-justify-between" data-lesson-id="<?php the_ID(); ?>">
-														<div class="tutor-single-lesson-items-left tutor-d-flex">
-															<?php
-																$tutor_lesson_type_icon = $play_time ? 'brand-youtube-bold' : 'file-document';
-																echo '<span class="tutor-icon-' . $tutor_lesson_type_icon . ' tutor-mr-8" area-hidden="true"></span>';
-															?>
-															<span class="lesson_title tutor-fs-7 tutor-color-secondary">
-																<?php the_title(); ?>
-															</span>
-														</div>
-														<div class="tutor-single-lesson-items-right tutor-d-flex">
-															<?php
-																do_action( 'tutor/lesson_list/right_icon_area', $post );
-																if ( $play_time ) {
-																	echo "<span class='tutor-fs-7 tutor-color-secondary'>" . tutor_utils()->get_optimized_duration( $play_time ) . '</span>';
-																}
-																$lesson_complete_icon = $is_completed_lesson ? 'checked' : '';
-
-																if($show_permalink) {
-																	echo "<input $lesson_complete_icon type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly />";
-																} else {
-																	echo '<i class="tutor-icon-lock-line"></i>';
-																}
-															?>
-														</div>
-													</a>
-												</div>
-											</div>
-										<?php
-									}
-								}
-								$lessons->reset_postdata();
-								do_action( 'tutor/lesson_list/after/topic', $topic_id );
-							?>
 						</div>
-						<?php
-					}
-					$topics->reset_postdata();
-					wp_reset_postdata();
-				}
-				?>
-			</div>
+	
+						<div class="tutor-col-auto tutor-align-self-center">
+							<?php if ( isset( $total_contents['contents'] ) && $total_contents['contents'] > 0 ) : ?>
+								<div class="tutor-course-topic-summary tutor-fs-7 tutor-color-secondary tutor-pl-8">
+									<?php echo esc_html( isset( $total_contents['completed'] ) ? $total_contents['completed'] : 0 ); ?>/<?php echo esc_html( isset( $total_contents['contents'] ) ? $total_contents['contents'] : 0 ); ?>
+								</div>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
 
-			<div id="sidebar-qna-tab-content" class="tutor-lesson-sidebar-tab-item">
 				<?php
-					tutor_lesson_sidebar_question_and_answer();
+					do_action( 'tutor/lesson_list/before/topic', $topic_id );
+					$lessons = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
+					$is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
+					while ( $lessons->have_posts() ) {
+						$lessons->the_post();
+						$is_public_course 	= \TUTOR\Course_List::is_public( $course_id );
+						$show_permalink 	= !$_is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course;
+						if ( $post->post_type === 'tutor_quiz' ) {
+							$quiz = $post;
+							?>
+								<div class="tutor-course-topic-item tutor-course-topic-item-quiz<?php echo ( $currentPost->ID == get_the_ID() ) ? ' is-active' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
+									<a href="<?php echo $show_permalink ? get_permalink( $quiz->ID ) : '#'; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
+										<div class="tutor-d-flex tutor-mr-32">
+											<span class="tutor-course-topic-item-icon tutor-icon-quiz-o tutor-mr-8" area-hidden="true"></span>
+											<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
+												<?php echo $quiz->post_title; ?>
+											</span>
+										</div>
+										<div class="tutor-d-flex tutor-ml-auto tutor-flex-shrink-0">
+											<?php
+												$time_limit = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
+												$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID );
+												if ( $time_limit ) {
+													$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
+													$time_type == 'minutes' ? $time_limit = $time_limit * 60 : 0;
+													$time_type == 'hours' ? $time_limit = $time_limit * 3660 : 0;
+													$time_type == 'days' ? $time_limit = $time_limit * 86400 : 0;
+													$time_type == 'weeks' ? $time_limit = $time_limit * 86400*7 : 0;
+
+													// To Fix: If time larger than 24 hours, the hour portion starts from 0 again. Fix later.
+													echo '<span class="tutor-course-topic-item-duration tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-8">' .  tutor_utils()->course_content_time_format( gmdate('H:i:s', $time_limit) ) . '</span>';
+												}
+											?>
+
+											<?php if($show_permalink): ?>
+												<input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?>/>
+											<?php else: ?>
+												<i class="tutor-icon-lock-line" area-hidden="true"></i>
+											<?php endif; ?>
+										</div>
+									</a>
+								</div>
+							<?php } elseif ( $post->post_type === 'tutor_assignments' ) { ?>
+								<div class="tutor-course-topic-item tutor-course-topic-item-assignment<?php echo ( $currentPost->ID == get_the_ID() ) ? ' is-active' : ''; ?>">
+									<a href="<?php echo $show_permalink ? get_permalink( $post->ID ) : '#'; ?>" data-assignment-id="<?php echo $post->ID; ?>">
+										<div class="tutor-d-flex tutor-mr-32">
+											<span class="tutor-course-topic-item-icon tutor-icon-assignment tutor-mr-8" area-hidden="true"></span>
+											<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
+												<?php echo $post->post_title; ?>
+											</span>
+										</div>
+										<div class="tutor-d-flex tutor-ml-auto tutor-flex-shrink-0">
+											<?php if($show_permalink): ?>
+												<?php do_action( 'tutor/assignment/right_icon_area', $post ); ?>
+											<?php else: ?>
+												<i class="tutor-icon-lock-line" area-hidden="true"></i>
+											<?php endif; ?>
+										</div>
+									</a>
+								</div>
+							<?php } elseif ( $post->post_type === 'tutor_zoom_meeting' ) { ?>
+								<div class="tutor-course-topic-item tutor-course-topic-item-zoom<?php echo ( $currentPost->ID == get_the_ID() ) ? ' is-active' : ''; ?>">
+									<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>">
+										<div class="tutor-d-flex tutor-mr-32">
+											<span class="tutor-course-topic-item-icon tutor-icon-brand-zoom-o tutor-mr-8" area-hidden="true"></span>
+											<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
+												<?php echo esc_html( $post->post_title ); ?>
+											</span>
+										</div>
+										<div class="tutor-d-flex tutor-ml-auto tutor-flex-shrink-0">
+											<?php if($show_permalink): ?>
+												<?php do_action( 'tutor/zoom/right_icon_area', $post->ID ); ?>
+											<?php else: ?>
+												<i class="tutor-icon-lock-line" area-hidden="true"></i>
+											<?php endif; ?>
+										</div>
+									</a>
+								</div>
+							<?php } else { ?>
+							<?php
+								$video = tutor_utils()->get_video_info();
+								$play_time = false;
+								if ( $video ) {
+									$play_time = $video->playtime;
+								}
+								$is_completed_lesson = tutor_utils()->is_completed_lesson();
+							?>
+								<div class="tutor-course-topic-item tutor-course-topic-item-lesson<?php echo ( $currentPost->ID == get_the_ID() ) ? ' is-active' : ''; ?>">
+									<a href="<?php echo $show_permalink ? get_the_permalink() : '#'; ?>" data-lesson-id="<?php the_ID(); ?>">
+										<div class="tutor-d-flex tutor-mr-32">
+											<?php
+												$tutor_lesson_type_icon = $play_time ? 'brand-youtube-bold' : 'document-text';
+												echo '<span class="tutor-course-topic-item-icon tutor-icon-' . $tutor_lesson_type_icon . ' tutor-mr-8" area-hidden="true"></span>';
+											?>
+											<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
+												<?php the_title(); ?>
+											</span>
+										</div>
+
+										<div class="tutor-d-flex tutor-ml-auto tutor-flex-shrink-0">
+											<?php
+												do_action( 'tutor/lesson_list/right_icon_area', $post );
+
+												if ( $play_time ) {
+													echo "<span class='tutor-course-topic-item-duration tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-8'>" . tutor_utils()->get_optimized_duration( $play_time ) . '</span>';
+												}
+
+												$lesson_complete_icon = $is_completed_lesson ? 'checked' : '';
+
+												if($show_permalink) {
+													echo "<input $lesson_complete_icon type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly />";
+												} else {
+													echo '<i class="tutor-icon-lock-line" area-hidden="true"></i>';
+												}
+											?>
+										</div>
+									</a>
+								</div>
+							<?php
+						}
+					}
+					$lessons->reset_postdata();
+					do_action( 'tutor/lesson_list/after/topic', $topic_id );
 				?>
 			</div>
-		</div>
-	</div>
+		<?php
+	}
+	$topics->reset_postdata();
+	wp_reset_postdata();
+}
+?>
 <?php do_action( 'tutor_lesson/single/after/lesson_sidebar' ); ?>
