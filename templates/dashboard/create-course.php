@@ -23,7 +23,8 @@ setup_postdata( $post );
 
 $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course') || current_user_can('administrator');
 
-$course_slug = 'publish' === $post->post_status ? get_the_permalink() : $post->post_name;
+$course_slug 		= $post->post_name;
+$course_permalink 	= get_the_permalink()
 ?>
 
 <?php
@@ -176,12 +177,18 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 							</div>
 						</div>
 						<div class="tutor-mb-32">
-							<label class="tutor-course-field-label tutor-fs-6 tutor-color-black"><?php _e('Permalink', 'tutor'); ?></label>
+							<label class="tutor-course-field-label tutor-fs-6 tutor-color-black"><?php _e('Course Slug', 'tutor'); ?></label>
 							<div id="tutor-course-create-slug-tooltip-wrapper" class="tooltip-wrap tutor-d-block">
 								<span class="tooltip-txt tooltip-right tutor-mt-12">
 									<?php _e('255', 'tutor'); ?>
 								</span>
-								<input id="tutor-course-slug" type="text" name="post_name" class="tutor-form-control" placeholder="<?php _e( 'Course Permalink', 'tutor' ); ?>" value="<?php echo $course_slug; ?>" maxlength="255" <?php echo 'publish' === $post->post_status ? 'disabled' : ''; ?>>
+								<input id="tutor-course-slug" type="text" name="post_name" class="tutor-form-control" placeholder="<?php _e( 'Course Slug', 'tutor' ); ?>" value="<?php echo esc_html( $course_slug ); ?>" maxlength="255">
+								<div class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-mt-12">
+									<?php esc_html_e( 'Permalink: ', 'tutor'); ?>
+									<a href="<?php echo esc_url( $course_permalink ); ?>" target="_blank">
+										<?php echo esc_url( $course_permalink ); ?>
+									</a>
+								</div>
 							</div>
 						</div>
 
@@ -224,7 +231,6 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 						if ($monetize_by === 'wc' || $monetize_by === 'edd') {
 							$course_price    = tutor_utils()->get_raw_course_price(get_the_ID());
 							$currency_symbol = tutor_utils()->currency_symbol();
-
 							$_tutor_course_price_type = tutils()->price_type();
 						?>
 							<div class="tutor-row tutor-align-center tutor-mb-32">
@@ -239,7 +245,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 												<span class="tutor-input-group-addon">
 													<?php echo $currency_symbol; ?>
 												</span>
-												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="0.1" min="0">
+												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
 											</div>
 										</label>
 									</div>

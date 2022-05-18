@@ -18,9 +18,10 @@ if (!defined('ABSPATH'))
 global $post, $authordata;
 
 $profile_url        = tutor_utils()->profile_url( $authordata->ID, true );
-$show_author        = tutor_utils()->get_option('enable_course_author');
+$show_author        = tutor_utils()->get_option( 'enable_course_author' );
 $course_categories  = get_tutor_course_categories();
-$disable_reviews    = !get_tutor_option('enable_course_review');
+$disable_reviews    = ! get_tutor_option( 'enable_course_review' );
+$is_wish_listed     = tutor_utils()->is_wishlisted( $post->ID, get_current_user_id() );
 ?>
 
 <header class="tutor-course-details-header tutor-mb-44">
@@ -79,11 +80,11 @@ $disable_reviews    = !get_tutor_option('enable_course_review');
             <div class="tutor-col-auto">
                 <div class="tutor-course-details-actions tutor-mt-12 tutor-mt-sm-0">
                     <a href="#" class="tutor-btn tutor-btn-ghost tutor-course-wishlist-btn tutor-mr-16" data-course-id="<?php echo get_the_ID(); ?>">
-                        <i class="tutor-icon-bookmark-line tutor-mr-8"></i> <?php _e('Wishlist', 'tutor'); ?>
+                        <i class="<?php echo $is_wish_listed ? 'tutor-icon-bookmark-bold' : 'tutor-icon-bookmark-line' ?> tutor-mr-8"></i> <?php _e('Wishlist', 'tutor'); ?>
                     </a>
 
                     <?php
-                    if (tutor_utils()->get_option('enable_course_share', false, true, true)) {
+                    if ( tutor_utils()->get_option('enable_course_share', false, true, true) ) {
                         tutor_load_template_from_custom_path(tutor()->path . '/views/course-share.php', array(), false);
                     }
                     ?>

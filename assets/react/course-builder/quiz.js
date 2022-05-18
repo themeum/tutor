@@ -647,8 +647,8 @@ window.jQuery(document).ready(function($) {
 				.removeClass('tutor-bg-white');
 
 			// Show attempt slider if reveal
-			let is_reveal = $(this).val()=='reveal';
-			$('.tutor-attempt-allowed-slider')[is_reveal ? 'show' : 'hide']();
+			let is_retry = $(this).val()=='retry';
+			$('.tutor-attempt-allowed-slider')[is_retry ? 'show' : 'hide']();
 		}
 	});
 });
