@@ -84,7 +84,7 @@ $is_wish_listed     = tutor_utils()->is_wishlisted( $post->ID, get_current_user_
                     </a>
 
                     <?php
-                    if (tutor_utils()->get_option('enable_course_share', false, true, true)) {
+                    if ( tutor_utils()->get_option('enable_course_share', false, true, true) ) {
                         tutor_load_template_from_custom_path(tutor()->path . '/views/course-share.php', array(), false);
                     }
                     ?>
