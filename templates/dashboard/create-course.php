@@ -182,7 +182,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 								<span class="tooltip-txt tooltip-right tutor-mt-12">
 									<?php _e('255', 'tutor'); ?>
 								</span>
-								<input id="tutor-course-slug" type="text" name="post_name" class="tutor-form-control" placeholder="<?php _e( 'Course Slug', 'tutor' ); ?>" value="<?php echo esc_html( $course_slug ); ?>" maxlength="255">
+								<input id="tutor-course-slug" type="text" name="post_name" class="tutor-form-control" placeholder="<?php _e( 'Please enter the course page slug here', 'tutor' ); ?>" value="<?php echo esc_html( $course_slug ); ?>" maxlength="255">
 								<div class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-mt-12">
 									<?php esc_html_e( 'Permalink: ', 'tutor'); ?>
 									<a href="<?php echo esc_url( $course_permalink ); ?>" target="_blank">
