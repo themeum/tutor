@@ -24,7 +24,7 @@ do_action( 'tutor_course/single/before/topics' );
 ?>
 <h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
 	<?php
-		$title = __( 'Course Curriculum', 'tutor' );
+		$title = __( 'Course Content', 'tutor' );
 		echo esc_html( apply_filters( 'tutor_course_topics_title', $title ) );
 	?>
 </h3>
@@ -38,7 +38,7 @@ do_action( 'tutor_course/single/before/topics' );
 			$index++;
 		?>
 		<div class="tutor-accordion-item">
-			<h4 class="tutor-accordion-item-header">
+			<h4 class="tutor-accordion-item-header<?php echo $index == 1 ? ' is-active': ''; ?>">
 				<?php the_title(); ?>
 				<?php if ( ! empty( $topic_summery ) ): ?>
 					<div class="tooltip-wrap tooltip-icon">
@@ -49,7 +49,7 @@ do_action( 'tutor_course/single/before/topics' );
 
 			<?php $topic_contents = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 ); ?>
 			<?php if ( $topic_contents->have_posts() ) : ?>
-				<div class="tutor-accordion-item-body">
+				<div class="tutor-accordion-item-body" style="<?php echo $index == 1 ? 'max-height: initial;': ''; ?>">
 					<div class="tutor-accordion-item-body-content">
 						<ul class="tutor-course-content-list">
 							<?php while ( $topic_contents->have_posts() ) : ?>
@@ -112,7 +112,7 @@ do_action( 'tutor_course/single/before/topics' );
 										<span class="tutor-course-content-list-item-duration tutor-fs-7 tutor-color-muted">
 											<?php echo $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : ''; ?>
 										</span>
-										<span class="tutor-course-content-list-item-status <?php echo $is_locked ? ' tutor-icon-lock-line' : 'tutor-icon-eye-line'; ?> tutor-color-muted tutor-ml-20" area-hidden="true"></span>
+										<span class="tutor-course-content-list-item-status <?php echo $is_locked ? 'tutor-icon-lock-line' : 'tutor-icon-eye-line'; ?> tutor-color-muted tutor-ml-20" area-hidden="true"></span>
 									</div>
 								</li>
 							<?php endwhile; ?>

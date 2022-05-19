@@ -20,17 +20,17 @@
 		array(
 			'icon_class' => 'tutor-icon-mortarboard',
 			'label'      => __( 'Total Enrolled', 'tutor' ),
-			'value'      => tutor_utils()->get_option( 'enable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() : null,
+			'value'      => tutor_utils()->get_option( 'enable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() . ' ' . __("Total Enrolled", "tutor") : null,
 		),
 		array(
 			'icon_class' => 'tutor-icon-clock-line',
 			'label'      => __( 'Duration', 'tutor' ),
-			'value'      => get_tutor_option( 'enable_course_duration' ) ? get_tutor_course_duration_context() : null,
+			'value'      => get_tutor_option( 'enable_course_duration' ) ? ( get_tutor_course_duration_context() ? get_tutor_course_duration_context() . ' ' . __("Duration", "tutor") : false ) : null,
 		),
 		array(
 			'icon_class' => 'tutor-icon-refresh-o',
 			'label'      => __( 'Last Updated', 'tutor' ),
-			'value'      => get_tutor_option( 'enable_course_update_date' ) ? get_the_modified_date( get_option( 'date_format' ) ) : null,
+			'value'      => get_tutor_option( 'enable_course_update_date' ) ? get_the_modified_date( get_option( 'date_format' ) ) . ' ' . __("Last Updated", "tutor") : null,
 		),
 	);
 
@@ -232,18 +232,11 @@
 					continue;
 				}
 				?>
-				<li class="tutor-row tutor-align-center<?php echo $key > 0 ? ' tutor-mt-12' : ''; ?>">
-					<div class="tutor-col-6">
-						<span class="<?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
-						<span class="tutor-fs-7 tutor-color-muted tutor-ml-8">
-							<?php echo esc_html( $meta['label'] ); ?>
-						</span>
-					</div>
-					<div class="tutor-col-6">
-						<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-							<?php echo wp_kses_post( $meta['value'] ); ?>
-						</span>
-					</div>
+				<li class="tutor-d-flex<?php echo $key > 0 ? ' tutor-mt-12' : ''; ?>">
+					<span class="<?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black tutor-mt-4 tutor-mr-12" aria-labelledby="<?php echo esc_html( $meta['label'] ); ?>"></span>
+					<span class="tutor-fs-6 tutor-color-secondary">
+						<?php echo wp_kses_post( $meta['value'] ); ?>
+					</span>
 				</li>
 			<?php endforeach; ?>
 		</ul>

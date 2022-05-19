@@ -86,7 +86,7 @@
 	
 				&.is-active {
 					a {
-						background-color: $color-gray-10;
+						background-color: rgba(var(--tutor-color-gray-rgb), 1);
 					}
 				}
 			}
