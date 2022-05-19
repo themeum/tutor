@@ -1,9 +1,28 @@
 # TutorLMS Changelog
 
-### 2.0.5 - May 24, 2022
+### 2.0.5 - May 19, 2022
 
-* Update: Searching user with email now requires exact address
-* Fix: Course restriction to logged in user not working
+* New: Course Details page design is improved for a better experience
+* New: On the Course Journey page the Lessons List sidebar design is improved for a better experience
+* New: Once a Course is purchased using WooCommerce, the Order Status will become “Completed”, Admin can enable it from Settings
+* New: Certificates created by Admins will be usable (not editable) by Instructors, Admins can enable it from Settings
+* New: Students and Instructors will see “Terms & Conditions” information and link on the Signup page to be compliant with regulatory laws
+* New: Non-Video lessons will show Next and Prev navigation option
+* New: A button to go to Frontend Course Builder has been introduced for the Gutenberg Editor
+* Update: Gradebook delete confirmation alert is now shown on modal
+* Update: Numerous pages optimized for faster loading and better performance 
+* Update: “Students must be logged in to see the Course Contents” option is reintroduced
+* Update: Greater translation compatibility updated 
+* Fix: The Rich Text Editor was not saving any change from the “Text” Mode
+* Fix: "Q&A", "Announcements", and "Resources" were not accessible to Admin and Instructors
+* Fix: “Question & Answer” Page was showing archived Q&As too
+* Fix: The Wishlist icon was not showing the courses on the Wishlist// The wishlist icon was not showing that a course is in wishlist 
+* Fix: In case of Content Drip, the Lesson Name was not being shown on the Learning Window// With Content Drip enabled, the lesson name was not * showing on top of the Learning Window
+* Fix: In a student's individual Report page the Enroll Date was showing wrong
+* Fix: When editing a Quiz, the "Default" option was not staying active by default
+* Fix: In case of any other language except English, on Course Details page, the “Last Updated” time was showing wrong// On Course Details page any * other language than English was causing the “Last Updated” time to show incorrectly
+* Fix: On Enrolled Courses page, under “Completed Courses” tab Course blocks were showing wrong button name
+* Fix: In Content Drip, in “Content available after X days from enrolment" option number field was too narrow
 
 
 ### 2.0.4 - May 13, 2022
