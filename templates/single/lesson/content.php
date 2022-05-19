@@ -36,9 +36,6 @@ $is_public = get_post_meta( $course_id, '_tutor_is_public_course', true );
 $prev_is_locked = !($is_enrolled || $prev_is_preview || $is_public);
 $next_is_locked = !($is_enrolled || $next_is_preview || $is_public);
 
-// Get total content count
-$course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
-
 $jsonData                                 = array();
 $jsonData['post_id']                      = get_the_ID();
 $jsonData['best_watch_time']              = 0;
@@ -50,64 +47,11 @@ if ( $best_watch_time > 0 ) {
 }
 
 $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open();
-$is_enrolled        = tutor_utils()->is_enrolled( $course_id );
-$course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() );
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/content' ); ?>
 
-<div class="tutor-course-topic-single-header tutor-d-flex tutor-single-page-top-bar">
-	<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex" tutor-course-topics-sidebar-toggler>
-		<span class="tutor-icon-left" area-hidden="true"></span>
-	</a>
-
-	<a href="<?php echo get_the_permalink( $course_id ); ?>" class="tutor-iconic-btn tutor-d-flex tutor-d-xl-none">
-		<span class="tutor-icon-previous" area-hidden="true"></span>
-	</a>
-
-	<div class="tutor-course-topic-single-header-title tutor-d-flex tutor-align-center tutor-ml-12 tutor-ml-xl-24">
-		<span class="tutor-course-topic-single-header-icon tutor-icon-brand-youtube-bold tutor-mr-12 tutor-d-none tutor-d-xl-block" area-hidden="true"></span>
-		<span class="tutor-fs-6">
-			<?php
-				esc_html_e( 'Lesson: ', 'tutor' );
-				the_title();
-			?>
-		</span>
-	</div>
-
-	<div class="tutor-ml-auto tutor-align-center tutor-d-none tutor-d-xl-flex">
-		<?php if ( $is_enrolled ) : ?>
-			<?php do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' ); ?>
-			<div class="tutor-fs-7 tutor-mr-20">
-				<?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
-					<span class="tutor-progress-content tutor-color-primary-60">
-						<?php _e( 'Your Progress:', 'tutor' ); ?>
-					</span>
-					<span class="tutor-fs-7 tutor-fw-bold">
-						<?php echo $course_stats['completed_count']; ?>
-					</span>
-					<?php _e( 'of ', 'tutor' ); ?>
-					<span class="tutor-fs-7 tutor-fw-bold">
-						<?php echo $course_stats['total_count']; ?>
-					</span>
-					(<?php echo $course_stats['completed_percent'] . '%'; ?>)
-				<?php endif; ?>
-			</div>
-			<?php do_action( 'tutor_course/single/enrolled/after/lead_info/progress_bar' ); ?>
-			<?php tutor_lesson_mark_complete_html(); ?>
-		<?php endif; ?>
-
-		<a class="tutor-iconic-btn" href="<?php echo get_the_permalink( $course_id ); ?>">
-			<span class="tutor-icon-times" area-hidden="true"></span>
-		</a>
-	</div>
-
-	<div class="tutor-ml-auto tutor-align-center tutor-d-block tutor-d-xl-none">
-		<a class="tutor-iconic-btn" href="#">
-			<span class="tutor-icon-hamburger-menu" area-hidden="true"></span>
-		</a>
-	</div>
-</div>
+<?php tutor_load_template( 'single.common.header', array( 'course_id' => $course_id, 'mark_as_complete' => true ) ); ?>
 
 <div class="tutor-course-topic-single-body">
 	<!-- Load Lesson Video -->
@@ -205,27 +149,6 @@ $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() );
 	</div>
 </div>
 
-
-<?php if( $next_id || $previous_id ): ?>
-<div class="tutor-course-topic-single-footer tutor-px-32 tutor-py-12">
-	<?php
-		$prev_link = $prev_is_locked || !$previous_id ? '#' : get_the_permalink( $previous_id );
-		$next_link = $next_is_locked || !$next_id ? '#' : get_the_permalink( $next_id );
-	?>
-	<div class="tutor-single-course-content-prev">
-		<a class="tutor-btn tutor-btn-secondary tutor-btn-sm" href="<?php echo $prev_link; ?>"<?php echo !$previous_id ? ' disabled="disabled"' : ""; ?>>
-			<span class="tutor-icon-previous" area-hidden="true"></span>
-			<span class="tutor-ml-8"><?php _e("Previous", "tutor"); ?></span>
-		</a>
-	</div>
-
-	<div class="tutor-single-course-content-next">
-		<a class="tutor-btn tutor-btn-secondary tutor-btn-sm" href="<?php echo $next_link; ?>"<?php echo !$next_id ? ' disabled="disabled"' : ""; ?>>
-			<span class="tutor-mr-8"><?php _e("Next", "tutor"); ?></span>
-			<span class="tutor-icon-next" area-hidden="true"></span>
-		</a>
-	</div>
-</div>
-<?php endif; ?>
+<?php tutor_load_template( 'single.common.footer', array( 'course_id' => $course_id )); ?>
 
 <?php do_action( 'tutor_lesson/single/after/content' ); ?>

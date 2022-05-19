@@ -251,16 +251,26 @@ jQuery(document).ready(function ($) {
 		e.stopPropagation();
 	});
 
-	/**
-	 * @date 05 Feb, 2019
-	 */
-
+	// toggle topics sidebar
 	$(document).on('click', '[tutor-course-topics-sidebar-toggler]', function (e) {
 		e.preventDefault();
 		$('.tutor-course-single-content-wrapper').toggleClass('tutor-course-single-sidebar-hidden');
-		$('.tutor-course-single-sidebar-wrapper').toggleClass('tutor-d-none'); //@todo: to be removed
 	});
 
+	$('[tutor-course-topics-sidebar-offcanvas-toggler]').on('click', function(event) {
+        event.preventDefault();
+		$('.tutor-course-single-content-wrapper').toggleClass('tutor-course-single-sidebar-open');
+        $('body').toggleClass('tutor-overflow-hidden');
+    });
+
+    $('[tutor-hide-course-single-sidebar]').on('click', function(event) {
+        event.preventDefault();
+		console.log("Hello");
+		$('.tutor-course-single-content-wrapper').removeClass('tutor-course-single-sidebar-open');
+        $('body').removeClass('tutor-overflow-hidden');
+    });
+
+	//@todo: to be removed
 	$('.tutor-tabs-btn-group a').on('click touchstart', function (e) {
 		e.preventDefault();
 		var $that = $(this);

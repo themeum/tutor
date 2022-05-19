@@ -12,11 +12,13 @@
 		border-right: 1px solid $border-color-secondary;
 
 		@include breakpoint-max(desktop-lg) {
-			flex: 0 0 320px;
-			width: 320px;
+			flex: 0 0 100%;
+			width: 100%;
 			position: absolute;
-			right: -320;
+			right: -100%;
 			top: 0px;
+			opacity: 0;
+			z-index: -1;
 		}
 
 		// topics & content
