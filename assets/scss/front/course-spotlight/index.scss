@@ -31,6 +31,25 @@
 		}
 	}
 
+	// sidebar
+	&.tutor-course-single-sidebar {
+		&-hidden {
+			.tutor-course-single-sidebar-wrapper {
+				display: none;
+			}
+		}
+
+		&-open {
+			@include breakpoint-max(desktop-lg) {
+				.tutor-course-single-sidebar-wrapper {
+					right: 0 !important;
+					opacity: 1;
+					z-index: 1026;
+				}
+			}
+		}
+	}
+
 	input.tutor-form-check-input.tutor-form-check-circle {
 		width: 20px;
 		height: 20px;
@@ -69,23 +88,6 @@
 						border-color: var(--tutor-color-white);
 					}
 				}
-
-				// @todo: to be removed
-				// @include breakpoint-min(desktop-lg) {
-				// 	background: var(--tutor-color-primary);
-				// 	color: var(--tutor-color-white);
-
-				// 	.tutor-topbar-mark-btn {
-				// 		color: var(--tutor-color-white);
-				// 		background-color: transparent;
-				// 		border-color: var(--tutor-color-white);
-				// 		&:hover {
-				// 			color: var(--tutor-color-primary);
-				// 			background-color: var(--tutor-color-white);
-				// 			border-color: var(--tutor-color-white);
-				// 		}
-				// 	}
-				// }
 
 				.tutor-iconic-btn {
 					color: #fff;

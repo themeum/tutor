@@ -41,8 +41,9 @@ $is_user_admin                = current_user_can( 'administrator' );
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/lesson_sidebar' ); ?>
-<div class="tutor-course-single-sidebar-title">
+<div class="tutor-course-single-sidebar-title tutor-d-flex tutor-justify-between">
 	<span class="tutor-fs-6 tutor-fw-medium tutor-color-secondary"><?php _e("Course Content", "tutor"); ?></span>
+	<span class="tutor-d-block tutor-d-xl-none"><a href="#" class="tutor-iconic-btn" tutor-hide-course-single-sidebar><span class="tutor-icon-times" area-hidden="true"></span></a></span>
 </div>
 
 <?php
