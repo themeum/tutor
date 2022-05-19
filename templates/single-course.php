@@ -66,9 +66,16 @@ if (!is_user_logged_in() && !$is_public && $student_must_login_to_view_course){
                 <div class="tutor-single-course-sidebar tutor-mt-40 tutor-mt-xl-0">
                     <?php do_action('tutor_course/single/before/sidebar'); ?>
                     <?php tutor_load_template('single.course.course-entry-box'); ?>
-                    <?php tutor_course_requirements_html(); ?>
-                    <?php tutor_course_tags_html(); ?>
-                    <?php tutor_course_target_audience_html(); ?>
+
+                    <div class="tutor-card tutor-mt-32">
+                        <div class="tutor-card-body">
+                            <?php tutor_course_instructors_html(); ?>
+                            <?php tutor_course_requirements_html(); ?>
+                            <?php tutor_course_tags_html(); ?>
+                            <?php tutor_course_target_audience_html(); ?>
+                        </div>
+                    </div>
+
                     <?php do_action('tutor_course/single/after/sidebar'); ?>
                 </div>
             </aside>

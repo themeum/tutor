@@ -125,7 +125,7 @@ if ( $topics->have_posts() ) {
 											<?php if($show_permalink): ?>
 												<input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?>/>
 											<?php else: ?>
-												<i class="tutor-icon-lock-line" area-hidden="true"></i>
+												<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
 											<?php endif; ?>
 										</div>
 									</a>
@@ -143,7 +143,7 @@ if ( $topics->have_posts() ) {
 											<?php if($show_permalink): ?>
 												<?php do_action( 'tutor/assignment/right_icon_area', $post ); ?>
 											<?php else: ?>
-												<i class="tutor-icon-lock-line" area-hidden="true"></i>
+												<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
 											<?php endif; ?>
 										</div>
 									</a>
@@ -161,7 +161,7 @@ if ( $topics->have_posts() ) {
 											<?php if($show_permalink): ?>
 												<?php do_action( 'tutor/zoom/right_icon_area', $post->ID ); ?>
 											<?php else: ?>
-												<i class="tutor-icon-lock-line" area-hidden="true"></i>
+												<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
 											<?php endif; ?>
 										</div>
 									</a>
@@ -200,7 +200,7 @@ if ( $topics->have_posts() ) {
 												if($show_permalink) {
 													echo "<input $lesson_complete_icon type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly />";
 												} else {
-													echo '<i class="tutor-icon-lock-line" area-hidden="true"></i>';
+													echo '<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>';
 												}
 											?>
 										</div>

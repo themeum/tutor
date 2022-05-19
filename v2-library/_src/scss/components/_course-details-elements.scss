@@ -71,8 +71,13 @@
 
 	&-col-2 {
 		@include breakpoint-min(tablet) {
-			.tutor-course-details-widget-list {
-				column-count: 2;
+			ul {
+				display: flex;
+				flex-flow: row wrap;
+				justify-content: space-between;
+				> li {
+					width: calc(50% - (2.4rem/2));
+				}
 			}
 		}
 	}
