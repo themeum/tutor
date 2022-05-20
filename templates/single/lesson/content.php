@@ -62,10 +62,10 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 	?>
 	<?php if ($has_source) : ?>
 		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ) ); ?>">
-		<div class="tutor-video-player-wrapper">
-			<?php tutor_lesson_video(); ?>
-		</div>
 	<?php endif; ?>
+	<div class="tutor-video-player-wrapper">
+		<?php tutor_lesson_video(); ?>
+	</div>
 
 	<?php
 	$referer_url        = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '';
