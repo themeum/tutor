@@ -36,8 +36,14 @@ document.addEventListener('click', (e) => {
 	) {
 		e.preventDefault();
 		const modal = document.querySelectorAll('.tutor-modal.tutor-is-active');
+		const tutorBtns = document.querySelectorAll('.tutor-btn');
 		modal.forEach((m) => {
 			m.classList.remove('tutor-is-active');
+		});
+		tutorBtns.forEach((btn) => {
+			btn.classList.remove('is-loading');
+			btn.classList.remove('tutor-static-loader');
+			btn.removeAttribute('disabled');
 		});
 		document.body.classList.remove("tutor-modal-open");
 	}
