@@ -52,6 +52,7 @@ window.jQuery(document).ready(function($) {
 					$('#tutor-course-content-wrap').html(course_contents);
 					modal.find('[name="topic_title"]').val('');
 					modal.find('[name="topic_summery"]').val('');
+					enable_sorting_topic_lesson();
 				}
 
 				window.dispatchEvent(new Event(_tutorobject.content_change_event));
