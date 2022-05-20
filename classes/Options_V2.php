@@ -616,9 +616,9 @@ class Options_V2
 							array(
 								'key'     => 'quiz_attempts_allowed',
 								'type'    => 'number',
-								'label'   => __('Quiz Attempts allowed', 'tutor'),
+								'label'   => __('Default Quiz Attempt limit (when Retry Mode is enabled)', 'tutor'),
 								'default' => '10',
-								'desc'    => __('The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor'),
+								'desc'    => __('The highest number of attempts allowed for students to participate a quiz. 0 means unlimited. This will work as the default Quiz Attempt limit in case of Quiz Retry Mode.', 'tutor'),
 							),
 							array(
 								'key'     => 'quiz_previous_button_enabled',
