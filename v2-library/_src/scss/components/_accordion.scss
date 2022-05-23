@@ -65,9 +65,9 @@
         }
 
         &-body {
-            max-height: 0;
             overflow: hidden;
-            transition: max-height 300ms ease-in;
+            display: none;
+            // transition: 3s ease-in;
             
             &-content {
                 padding: 0 16px;
