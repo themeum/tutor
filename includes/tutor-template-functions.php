@@ -468,7 +468,7 @@ if ( ! function_exists('tutor_course_loop_price')) {
 
         ob_start();
 
-        if(tutor_utils()->is_enrolled($course_id) || get_post_meta($course_id, '_tutor_is_public_course', true)=='yes'){
+        if(tutor_utils()->is_enrolled($course_id) || get_post_meta($course_id, '_tutor_is_public_course', true)=='yes' || (bool) get_tutor_option( 'course_content_access_for_ia' )){
             tutor_load_template( 'loop.course-continue' );
 
         } else if(tutor_utils()->is_course_added_to_cart($course_id)){
