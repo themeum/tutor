@@ -49,7 +49,7 @@ do_action( 'tutor_course/single/before/topics' );
 
 			<?php $topic_contents = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 ); ?>
 			<?php if ( $topic_contents->have_posts() ) : ?>
-				<div class="tutor-accordion-item-body">
+				<div class="tutor-accordion-item-body" style="<?php echo $index != 1 ? 'display: none;': ''; ?>">
 					<div class="tutor-accordion-item-body-content">
 						<ul class="tutor-course-content-list">
 							<?php while ( $topic_contents->have_posts() ) : ?>
