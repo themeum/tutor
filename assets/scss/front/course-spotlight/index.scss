@@ -37,14 +37,28 @@
 			.tutor-course-single-sidebar-wrapper {
 				display: none;
 			}
+			.tutor-course-topics-sidebar-toggler {
+				.tutor-icon-left {
+					transform: rotate(180deg);
+				}
+			}
 		}
 
 		&-open {
 			@include breakpoint-max(desktop-lg) {
 				.tutor-course-single-sidebar-wrapper {
+					background-color: #fff;
+					height: 100%;
 					right: 0 !important;
+					overflow-y: auto;
 					opacity: 1;
 					z-index: 1026;
+
+					.tutor-course-single-sidebar-title {
+						position: sticky;
+						top: 0;
+						z-index: 1027;
+					}
 				}
 			}
 		}
@@ -58,12 +72,10 @@
 	
 	#tutor-single-entry-content {
 		position: relative;
+		width: 100%;
+		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
-		height: 100vh;
-		width: 100%;
-		overflow: hidden;
-		background: #fff;
 
 		.tutor-course-topic-single {
 			&-header {
@@ -103,12 +115,6 @@
 				&-icon {
 					font-size: 24px;
 				}
-			}
-
-			&-body {
-				overflow-y: auto;
-				position: relative;
-				flex: 1 1 auto;
 			}
 
 			&-footer {

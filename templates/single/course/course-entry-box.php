@@ -49,7 +49,6 @@
 ?>
 
 <div class="tutor-card tutor-card-md tutor-sidebar-card">
-	<!-- Course Entry -->
 	<div class="tutor-card-body">
 		<?php
 		if ( $is_enrolled || $is_privileged_user) {

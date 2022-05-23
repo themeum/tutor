@@ -1,6 +1,9 @@
 .tutor-course-single-sidebar {
 	&-title {
-		padding: 16px;
+		display: flex;
+		align-items: center;
+		padding: 8px 16px;
+    	height: 60px;
 		background-color: #fff;
 		border-bottom: 1px solid $border-color-secondary;
 	}
@@ -86,7 +89,8 @@
 	
 				&.is-active {
 					a {
-						background-color: rgba(var(--tutor-color-gray-rgb), 1);
+						background-color: #EFF1F6;
+						// background-color: rgba(var(--tutor-color-gray-rgb), 1);
 					}
 				}
 			}
