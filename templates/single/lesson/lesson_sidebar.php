@@ -60,7 +60,7 @@ if ( $topics->have_posts() ) {
 					<div class="tutor-row">
 						<div class="tutor-col">
 							<div class="tutor-fs-6 tutor-fw-medium tutor-cursor-pointer tutor-user-select-none">
-								<i class="tutor-course-topic-title-arrow tutor-icon-angle-right tutor-mr-8" area-hidden="true"></i>
+								<!-- <i class="tutor-course-topic-title-arrow tutor-icon-angle-right tutor-mr-8" area-hidden="true"></i> -->
 								<?php the_title(); ?>
 								<?php if ( true ) : ?>
 									<?php if(trim($topic_summery)) : ?>

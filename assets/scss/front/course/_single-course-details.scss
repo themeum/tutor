@@ -62,3 +62,18 @@
     position: relative;
     overflow: hidden;
 }
+
+// Sidebar
+.tutor-single-course-sidebar {
+    .tutor-sidebar-card {
+        .tutor-card-body {
+            background-color: #F4F6F9;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+    }
+
+    .tutor-course-single-info-card {
+        background-color: #FCFCFD;
+    }
+}

@@ -6,8 +6,8 @@ $course_stats       = tutor_utils()->get_course_completed_percent( $course_id, 0
 // options
 $show_mark_complete = isset( $mark_as_complete ) ? $mark_as_complete : false;
 ?>
-<div class="tutor-course-topic-single-header tutor-d-flex tutor-single-page-top-bar">
-	<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex" tutor-course-topics-sidebar-toggler>
+<div class="tutor-course-topic-single-header tutor-single-page-top-bar">
+	<a href="#" class="tutor-course-topics-sidebar-toggler tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex" tutor-course-topics-sidebar-toggler>
 		<span class="tutor-icon-left" area-hidden="true"></span>
 	</a>
 
