@@ -9,25 +9,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use TUTOR\Input;
 use TUTOR\Withdraw_Requests_List;
 $withdraw = new Withdraw_Requests_List();
 
 /**
  * Short able params
  */
-$order       = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-$date        = isset( $_GET['date'] ) ? tutor_get_formated_date( 'Y-m-d', $_GET['date'] ) : '';
-$search_term = isset( $_GET['search'] ) ? $_GET['search'] : '';
+$order       = Input::get( 'order', 'DESC' );
+$date        = Input::has( 'date' ) ? tutor_get_formated_date( 'Y-m-d' , Input::get( 'date' ) ) : '';
+$search_term = Input::get( 'search', '' );
 
 /**
  * Determine active tab
  */
-$active_tab = isset( $_GET['data'] ) && $_GET['data'] !== '' ? esc_html__( $_GET['data'] ) : 'all';
+$active_tab = Input::get( 'data', 'all' );
 
 /**
  * Pagination data
  */
-$paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
+$paged    = Input::get( 'paged', 1, Input::TYPE_INT );
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
@@ -37,6 +38,7 @@ $args          = array(
 	'order'    => $order,
 	'search'   => $search_term,
 );
+
 $withdraw_list = tutor_utils()->get_withdrawals_history( null, $args, $offset, $per_page);
 $total         = $withdraw_list->count;
 
