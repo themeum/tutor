@@ -3,7 +3,7 @@
  * Addons class
  *
  * @author: themeum
- * @author_uri: https://themeum.com
+ * @link: https://themeum.com
  * @package Tutor
  * @since v.1.0.0
  */
@@ -17,10 +17,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Addons {
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		add_filter( 'tutor_pro_addons_lists_for_display', array( $this, 'tutor_addons_lists_to_show' ) );
 	}
 
+	/**
+	 * Get tutor addons list
+	 *
+	 * @return array
+	 */
 	public function tutor_addons_lists_to_show() {
 		$addons = array(
 			'buddypress'               => array(
@@ -95,13 +103,13 @@ class Addons {
 				'name'        => __( 'Google Classroom Integration', 'tutor' ),
 				'description' => __( 'Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course.', 'tutor' ),
 			),
-			'tutor-calendar' => array(
-				'name'			=> 'Calendar',
-				'description'	=> 'Allow students to see everything in a calendar view in the front dashboard.'
+			'tutor-calendar'           => array(
+				'name'        => 'Calendar',
+				'description' => 'Allow students to see everything in a calendar view in the front dashboard.',
 			),
-			'tutor-notifications' => array(
-				'name'			=> 'Notifications',
-				'description'	=> 'Get On Site and Push Notifications on specified tutor events.'
+			'tutor-notifications'      => array(
+				'name'        => 'Notifications',
+				'description' => 'Get On Site and Push Notifications on specified tutor events.',
 			),
 			'tutor-wpml'               => array(
 				'name'        => __( 'WPML Multilingual CMS', 'tutor' ),
