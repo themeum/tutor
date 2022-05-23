@@ -4,16 +4,7 @@
 (window.tutorAccordion = ($) => {
 
 	const accordionItemHeaders = document.querySelectorAll('.tutor-accordion-item-header');
-	if (accordionItemHeaders.length) {
-		// // initialize
-		accordionItemHeaders.forEach((accordionItemHeader) => { 
-			const accordionItemBody = accordionItemHeader.nextElementSibling;
-			if (accordionItemHeader.classList.contains('is-active')) {
-				$(accordionItemBody).slideDown();
-			}
-		});
-
-		// click to toggle
+	if (accordionItemHeaders.length) {	
 		accordionItemHeaders.forEach((accordionItemHeader) => {
 			accordionItemHeader.addEventListener('click', () => {
 				accordionItemHeader.classList.toggle('is-active');
