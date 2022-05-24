@@ -95,7 +95,7 @@ $filters = array(
 	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-table-responsive tutor-mt-32">
-			<table class="tutor-table tutor-table-responsive table-instructors tutor-table-with-checkbox">
+			<table class="tutor-table table-instructors tutor-table-with-checkbox">
 				<thead>
 					<tr>
 						<th width="3%">

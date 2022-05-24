@@ -180,122 +180,103 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 				</div>
 			</div>
 
-			<table class="tutor-table tutor-table-responsive">
-				<thead class="tutor-fs-7 tutor-color-secondary">
-					<tr>
-						<th width="40%">
-							<div>
-								<?php esc_html_e( 'Withdrawal Method', 'tutor' ); ?>
-							</div>
-						</th>
-						<th width="28%">
-							<div>
-								<?php esc_html_e( 'Requested On', 'tutor' ); ?>
-							</div>
-						</th>
-						<th width="13%">
-							<div>
-								<?php esc_html_e( 'Amount', 'tutor' ); ?>
-							</div>
-						</th>
-						<th width="13%">
-							<div>
-								<?php esc_html_e( 'Status', 'tutor' ); ?>
-							</div>
-						</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					foreach ( $all_histories->results as $withdraw_history ) {
-						?>
+			<div class="tutor-table-responsive">
+				<table class="tutor-table">
+					<thead>
 						<tr>
-							<td>
-								<?php
-								$method_data  = maybe_unserialize( $withdraw_history->method_data );
-								$method_key   = $method_data['withdraw_method_key'];
-								$method_title = '';
-
-								switch ( $method_key ) {
-									case 'bank_transfer_withdraw':
-										$method_title = $method_data['account_number']['value'];
-										$method_title = substr_replace( $method_title, '****', 2, strlen( $method_title ) - 4 );
-										break;
-									case 'paypal_withdraw':
-										$method_title = $method_data['paypal_email']['value'];
-										$email_base   = substr( $method_title, 0, strpos( $method_title, '@' ) );
-										$method_title = substr_replace( $email_base, '****', 2, strlen( $email_base ) - 3 ) . substr( $method_title, strpos( $method_title, '@' ) );
-										break;
-								}
-								?>
-								<div class="tutor-withdrawals-method">
-									<div class="tutor-withdrawals-method-icon">
-										<img src="<?php echo esc_url( isset( $method_icons[ $method_key ] ) ? $method_icons[ $method_key ] : '' ); ?>" />
-									</div>
-									<div class="tutor-withdrawals-method-name">
-										<div class="withdraw-method-name tutor-fs-6 tutor-fw-medium tutor-color-black">
-											<?php echo esc_html( tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ) ); ?>
-										</div>
-										<div class="tutor-fs-7 tutor-color-muted">
-											<?php echo esc_html( $method_title ); ?>
-										</div>
-									</div>
-								</div>
-							</td>
-							<td>
-								<span class="tutor-color-black">
-									<?php
-										echo esc_attr( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $withdraw_history->created_at ) ) );
-									?>
-								</span>
-							</td>
-							<td>
-								<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-									<?php echo tutor_utils()->tutor_price( $withdraw_history->amount ); ?>
-								</div>
-							</td>
-							<td>
-								<span class="inline-image-text is-inline-block">
-									<span class="tutor-badge-label
-									<?php
-									if ( $withdraw_history->status == 'approved' ) {
-										echo 'label-success'; }
-									?>
-									<?php
-									if ( $withdraw_history->status == 'pending' ) {
-										echo 'label-warning'; }
-									?>
-									<?php
-									if ( $withdraw_history->status == 'rejected' ) {
-										echo 'label-danger'; }
-									?>
-									">
-										<?php echo __( ucfirst( $withdraw_history->status ), 'tutor' ); ?>
-									</span>
-								</span>
-							</td>
-							<td>
-								<?php
-								if ( $withdraw_history->status !== 'approved' && isset( $status_message[ $withdraw_history->status ] ) ) {
-									?>
-									<span class="tool-tip-container">
-										<div class="tooltip-wrap tooltip-icon tutor-mt-12">
-											<span class="tooltip-txt tooltip-left">
-												<?php echo esc_html( $status_message[ $withdraw_history->status ] ); ?>
-											</span>
-										</div>
-									</span>
-									<?php
-								}
-								?>
-							</td>
+							<th width="40%">
+								<?php esc_html_e( 'Withdrawal Method', 'tutor' ); ?>
+							</th>
+							<th width="28%">
+								<?php esc_html_e( 'Requested On', 'tutor' ); ?>
+							</th>
+							<th width="13%">
+								<?php esc_html_e( 'Amount', 'tutor' ); ?>
+							</th>
+							<th width="13%">
+								<?php esc_html_e( 'Status', 'tutor' ); ?>
+							</th>
+							<th></th>
 						</tr>
-						<?php
-					}
-					?>
-				</tbody>
-			</table>
+					</thead>
+
+					<tbody>
+						<?php foreach ( $all_histories->results as $withdraw_history ) : ?>
+							<tr>
+								<td>
+									<?php
+									$method_data  = maybe_unserialize( $withdraw_history->method_data );
+									$method_key   = $method_data['withdraw_method_key'];
+									$method_title = '';
+
+									switch ( $method_key ) {
+										case 'bank_transfer_withdraw':
+											$method_title = $method_data['account_number']['value'];
+											$method_title = substr_replace( $method_title, '****', 2, strlen( $method_title ) - 4 );
+											break;
+										case 'paypal_withdraw':
+											$method_title = $method_data['paypal_email']['value'];
+											$email_base   = substr( $method_title, 0, strpos( $method_title, '@' ) );
+											$method_title = substr_replace( $email_base, '****', 2, strlen( $email_base ) - 3 ) . substr( $method_title, strpos( $method_title, '@' ) );
+											break;
+									}
+									?>
+									<div class="tutor-withdrawals-method">
+										<div class="tutor-withdrawals-method-icon">
+											<img src="<?php echo esc_url( isset( $method_icons[ $method_key ] ) ? $method_icons[ $method_key ] : '' ); ?>" />
+										</div>
+										<div class="tutor-withdrawals-method-name">
+											<div class="withdraw-method-name tutor-fs-6 tutor-fw-medium tutor-color-black">
+												<?php echo esc_html( tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ) ); ?>
+											</div>
+											<div class="tutor-fs-7 tutor-color-muted">
+												<?php echo esc_html( $method_title ); ?>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td>
+									<?php echo esc_attr( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $withdraw_history->created_at ) ) ); ?>
+								</td>
+								<td>
+									<?php echo tutor_utils()->tutor_price( $withdraw_history->amount ); ?>
+								</td>
+								<td>
+									<span class="inline-image-text is-inline-block">
+										<span class="tutor-badge-label
+										<?php
+										if ( $withdraw_history->status == 'approved' ) {
+											echo 'label-success'; }
+										?>
+										<?php
+										if ( $withdraw_history->status == 'pending' ) {
+											echo 'label-warning'; }
+										?>
+										<?php
+										if ( $withdraw_history->status == 'rejected' ) {
+											echo 'label-danger'; }
+										?>
+										">
+											<?php echo __( ucfirst( $withdraw_history->status ), 'tutor' ); ?>
+										</span>
+									</span>
+								</td>
+								<td>
+									<?php if ( $withdraw_history->status !== 'approved' && isset( $status_message[ $withdraw_history->status ] ) ) : ?>
+										<span class="tool-tip-container">
+											<div class="tooltip-wrap tooltip-icon tutor-mt-12">
+												<span class="tooltip-txt tooltip-left">
+													<?php echo esc_html( $status_message[ $withdraw_history->status ] ); ?>
+												</span>
+											</div>
+										</span>
+									<?php endif; ?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		<?php
 	} else {
@@ -304,19 +285,17 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	?>
 </div>
 
-<div class="tutor-mt-25">
-	<?php 
-		if($all_histories->count >= $per_page) {
-			$pagination_data = array(
-				'total_items' => $all_histories->count,
-				'per_page'    => $per_page,
-				'paged'       => $current_page,
-			);
+<?php 
+	if ( $all_histories->count >= $per_page ) {
+		$pagination_data = array(
+			'total_items' => $all_histories->count,
+			'per_page'    => $per_page,
+			'paged'       => $current_page,
+		);
 
-			tutor_load_template_from_custom_path(
-				tutor()->path . 'templates/dashboard/elements/pagination.php',
-				$pagination_data
-			);
-		}
-	?>
-</div>
+		tutor_load_template_from_custom_path(
+			tutor()->path . 'templates/dashboard/elements/pagination.php',
+			$pagination_data
+		);
+	}
+?>

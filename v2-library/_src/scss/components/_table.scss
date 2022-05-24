@@ -1,769 +1,143 @@
-.tutor-table-responsive {
-	position: relative;
-	overflow-x: auto;
-}
+.tutor-table {
+	border-collapse: separate;
+	border-spacing: 0;
+	min-width: 600px;
+	width: 100%;
+	margin: 0;
+	--tutor-table-border-radius: 6px;
 
-@include breakpoint-min(desktop-lg) {
-	.tutor-table-wrapper {
-		background: #fff;
-		border-radius: 6px;
+	&-responsive {
+		position: relative;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
 	}
-}
 
-@include breakpoint-max(1199.999999) {
-	table.tutor-table {
-		tr {
-			background: #fff;
-			border-radius: 6px;
-		}
-	}
-}
-
-// Table Base Structure
-table.tutor-table {
-	* {
+	tbody,
+	td,
+	tfoot,
+	th,
+	thead,
+	tr {
+		border-color: inherit;
+		border-style: solid;
+		border-width: 0;
 		box-sizing: border-box;
 	}
 
-	ul:not(.tutor-dropdown) {
-		margin: 0;
-		padding: 0;
-	}
-	&,
-	tr,
-	th,
-	td {
-		border: none;
-	}
-
-	// Table utility classes
-	.tutor-d-inline-flex tutor-align-center {
-		display: inline-flex;
-		align-items: center;
-	}
-
-	// table alignment utility table.th-aligh-top
-	&.th-align-top {
-		th {
-			vertical-align: top;
-		}
-	}
-
-	&.td-align-top {
-		td {
-			vertical-align: top;
-		}
-	}
-
-	&.th-align-middle {
-		th {
-			vertical-align: middle;
-		}
-	}
-
-	&.td-align-middle {
-		td {
-			vertical-align: middle;
-		}
-	}
-
-	&.th-align-bottom {
-		th {
-			vertical-align: bottom;
-		}
-	}
-
-	&.td-align-bottom {
-		td {
-			vertical-align: bottom;
-		}
-	}
-
-	// table alignment utility (individual th/td) table th.v-aligh-top
-	.v-align-top {
-		vertical-align: top;
-		.tutor-form-check input.tutor-form-check-input {
-			margin-top: 4px;
-			margin-right: 0;
-		}
-	}
-
-	.v-align-middle {
-		vertical-align: middle;
-	}
-
-	.v-align-bottom {
+	thead {
 		vertical-align: bottom;
 	}
-
-	// Table Structure
-	$radius: 6px;
-	border-collapse: separate;
-	border-spacing: 0;
-	min-width: 300px;
-	width: 100%;
-	border-radius: $radius;
-
-	&.tutor-no-thead {
-		tr:first-child {
-			td:first-child {
-				border-top-left-radius: $radius;
-			}
-			td:last-child {
-				border-top-right-radius: $radius;
-			}
-		}
+	
+	tbody {
+		vertical-align: inherit;
 	}
 
-	@include breakpoint-min(desktop-lg) {
-		tr:first-child {
-			/* top-left border-radius */
-			th:first-child {
-				border-top-left-radius: $radius;
-			}
-			/* top-right border-radius */
-			th:last-child {
-				border-top-right-radius: $radius;
-			}
-		}
-
-		tr:last-child {
-			/* bottom-left border-radius */
-			td:first-child {
-				border-bottom-left-radius: $radius;
-			}
-			/* bottom-right border-radius */
-			td:last-child {
-				border-bottom-right-radius: $radius;
-			}
-		}
-
-		tr {
-			&:last-child td {
-				border-bottom: 1px solid var(--tutor-border-color);
-				border-bottom-color: #e0e2ea;
-			}
-			&:nth-child(odd) td {
-				background-color: #fff;
-			}
-			&:nth-child(even) td {
-				// background-color: rgba(239, 241, 247, 0.3);
-				background-color: #fcfcfd;
-			}
-		}
-
-		th,
-		td {
+	tr {
+		th {
+			border-bottom: 1px solid var(--tutor-border-color);
+			padding: 9px 16px;
+			background: #F4F6F9;
 			border-top: 1px solid var(--tutor-border-color);
-			border-top-color: #e0e2ea;
+			font-size: 14px;
+			font-weight: 500;
+			color: var(--tutor-color-secondary);
+			
+			&:not(.tutor-text-left):not(.tutor-text-center):not(.tutor-text-right) {
+				text-align: left;
+			}
 
 			&:first-child {
 				border-left: 1px solid var(--tutor-border-color);
-				border-left-color: #e0e2ea;
-				padding-left: 20px;
 			}
 
 			&:last-child {
 				border-right: 1px solid var(--tutor-border-color);
-				border-right-color: #e0e2ea;
-				padding-right: 20px;
 			}
-		}
-
-		th {
-			background: rgba(239, 241, 247, 0.8);
-			text-align: left;
-			padding: 10px;
-			white-space: nowrap;
-			height: 48px;
 		}
 
 		td {
-			padding: 17px 10px;
-		}
+			border-bottom: 1px solid var(--tutor-border-color);
+			padding: 16px;
+			font-size: 16px;
+			background: #FFFFFF;
+			font-weight: 500;
+			color: var(--tutor-body-color);
 
-		.tutor-shrink {
-			width: 1px;
-			white-space: nowrap;
-		}
-
-		// Table Variations
-		&.table-courses {
-			th,
-			td {
-				&:nth-child(1) {
-					width: 53.8%;
+			> a:not(.tutor-btn):not(.tutor-iconic-btn) {
+				text-decoration: none;
+				color: var(--tutor-body-color);
+				font-weight: 500;
+				&:hover {
+					color: var(--tutor-color-primary);
 				}
 			}
-		}
-
-		&.table-popular-courses {
-			th,
-			td {
-				&:nth-child(1) {
-					width: 60.6%;
-				}
+			
+			&:not(.tutor-text-left):not(.tutor-text-center):not(.tutor-text-right) {
+				text-align: left;
 			}
-			.tutor-icon-ordering-a-to-z-filled,
-			.tutor-icon-ordering-z-to-a-filled {
-				cursor: pointer;
-			}
-		}
 
-		&.table-reviews {
-			th,
-			td {
-				vertical-align: top;
-				&:nth-child(1) {
-					width: 26.8%;
-				}
-				&:nth-child(3) {
-					width: 53.3%;
-				}
-			}
-		}
-
-		&.table-all-courses {
-			th,
-			td {
-				vertical-align: middle;
-				&:nth-child(1) {
-					width: 50.6%;
-				}
-			}
-		}
-
-		&.table-students {
-			th,
-			td {
-				&:nth-child(1) {
-					width: 43.6%;
-				}
-			}
-		}
-
-		&.table-course-overview {
-			th,
-			td {
-				&:first-child {
-					vertical-align: top;
-				}
-				&:last-child {
-					width: fit-content;
-					text-align: right;
-				}
-				&:nth-last-child(2) {
-					padding-left: 0px;
-					padding-right: 0px;
-				}
-				&:nth-child(1) {
-					width: 16.2%;
-				}
-				&:nth-child(2) {
-					width: 55%;
-				}
-			}
-		}
-	} // end @include breakpoint-min(desktop) {...}
-} // end Table Base Structure
-
-// Table th/td Content Styles
-table.tutor-table {
-	&.table-dashboard-course-list {
-		td {
-			&:nth-child(1),
-			&:nth-child(2) {
-				vertical-align: top;
-			}
-		}
-
-		.td-checkbox {
-			input[type='checkbox'] {
-				margin-top: 7px;
-			}
-		}
-	}
-
-	&:not(.td-align-middle) {
-		.td-checkbox {
-			input[type='checkbox'] {
-				margin-top: 7px;
-			}
-		}
-	}
-
-	.td-tutor-rating {
-		.tutor-rating-stars {
-			align-items: flex-start;
-			> span {
-				margin-right: 4px;
-				font-size: 18px;
-			}
-		}
-		.tutor-rating-text {
-			@include getTypography(400, 16px, 162%);
-			padding-left: 1px;
-		}
-	}
-
-	.td-course {
-		@media (min-width: 1400px) {
-			padding-right: 13%;
-		}
-		a {
-			color: inherit;
-			text-decoration: none;
-		}
-		.course-meta {
-			margin-top: 5px;
-
-			> span:not(:last-child) {
-				margin-right: 10px;
-			}
-		}
-	}
-
-	.td-action-btns {
-		gap: 10px;
-		.tutor-btn {
-			white-space: nowrap;
-		}
-		.tutor-form-select-with-icon {
-			margin-right: 10px;
-		}
-	}
-
-	.td-feedback {
-		.review-text {
-			@include getTypography(500, 16px, 169%);
-		}
-		.review-text {
-			margin-top: 11px;
-		}
-
-		.course-name {
-			margin-top: 15px;
-		}
-	}
-
-	.td-avatar {
-		display: inline-flex;
-		align-items: center;
-		gap: 10px;
-
-		img {
-			width: 32px;
-			height: 32px;
-			border-radius: 50%;
-			overflow: hidden;
-		}
-	}
-
-	.td-statement-info {
-		.tutor-badge-label {
-			margin-right: 14px;
-		}
-
-		.meta-data-2 {
-			margin-top: 8px;
-		}
-		.meta-data-3 {
-			margin-top: 6px;
-			> span {
-				margin-right: 20px;
-			}
-		}
-	}
-
-	.td-progress {
-		display: flex;
-		align-items: center;
-	}
-
-	.td-datetime {
-		@include breakpoint-max(991) {
-			br {
-				display: none;
-			}
-		}
-	}
-
-	&.table-dashboard-assignments-list {
-		.td-action-btns {
-			gap: 20px;
-		}
-	}
-
-	// Form elements
-	select.tutor-form-select {
-		min-width: min-content;
-	}
-
-	input.tutor-form-check-input[type='checkbox'] {
-		width: 16px;
-		height: 16px;
-		border-width: 1px;
-		background-size: 10px;
-		&:focus {
-			box-shadow: 0 0 0 2px rgba(var(--tutor-color-primary-rgb), 0.1);
-		}
-	}
-
-	.td-list-item {
-		&:not(:last-child) {
-			margin-right: 80px;
-		}
-		.tutor-form-check {
-			label {
-				@extend .text-regular-caption;
-				color: var(--tutor-color-secondary);
-			}
-		}
-
-		.list-item-checklist {
-			input.tutor-form-check-input[type='checkbox'] {
-				width: 12px;
-				height: 12px;
-				background-size: 6px;
-				border-width: 2px;
-				border-color: var(--tutor-border-color);
-				margin-top: 5px;
-				&:checked {
-					border-color: var(--tutor-color-primary);
-					background-color: var(--tutor-color-primary);
-				}
-			}
-		}
-	}
-	.column-empty-state {
-		width: 100% !important;
-		padding: 0 !important;
-		&:before {
-			display: none;
-		}
-		.td-empty-state {
-			text-align: center;
-			// width: 100%;
-			img {
-				max-width: 80%;
-				margin: 0 auto;
-			}
-		}
-	}
-
-	.td-empty-state {
-		img {
-			max-width: 80%;
-			margin: 0 auto;
-		}
-	}
-} // end Table th/td Content Styles
-
-.tutor-empty-state {
-	&.td-empty-state {
-		img {
-			max-width: 80%;
-			margin: 0 auto;
-		}
-	}
-}
-
-// Table Custom Styles
-table.tutor-table {
-	&.table-dashboard-course-list {
-		td {
-			&:nth-child(1),
-			&:nth-child(2) {
-				vertical-align: top;
-			}
-		}
-
-		.td-checkbox {
-			input[type='checkbox'] {
-				margin-top: 7px;
-			}
-		}
-	}
-
-	&.tutor-gradebooks-lists {
-		td {
-			border-color: #e0e2ea;
 			&:first-child {
-				border-left-color: #cdcfd5;
+				border-left: 1px solid var(--tutor-border-color);
 			}
+
 			&:last-child {
-				border-right-color: #cdcfd5;
+				border-right: 1px solid var(--tutor-border-color);
 			}
 		}
-		tbody {
-			tr:first-child {
-				td {
-					border-top-color: #cdcfd5;
-				}
-			}
-		}
-	}
-}
 
-// Table Responsive Styles
-table.tutor-table.tutor-table-responsive {
-	/*
-	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
-	*/
-	@media only screen and (max-width: 1199px), (min-device-width: 1200px) and (max-device-width: 1200px) {
-		/* Force table to not be like tables anymore */
-		table,
-		thead,
-		tbody,
-		th,
-		td,
-		tr {
-			display: block;
-		}
-
-		/* Hide table headers (but not display: none;, for accessibility) */
-		thead tr {
-			position: absolute;
-			top: -9999px;
-			left: -9999px;
-		}
-
-		tr {
-			&:not(:last-child) {
-				margin-bottom: 22px;
-			}
-			td {
-				word-break: break-word;
-				&:last-child {
-					border-bottom: 1px solid var(--tutor-border-color);
-					border-bottom-color: 1px solid E0E2EA;
-					border-bottom-left-radius: 6px;
-					border-bottom-right-radius: 6px;
-				}
+		&:first-child {
+			th {
 				&:first-child {
-					border-top-left-radius: 6px;
-					border-top-right-radius: 6px;
+					border-top-left-radius: var(--tutor-table-border-radius);
 				}
-
-				&:nth-child(odd) {
-					background-color: rgb(255, 255, 255);
-				}
-
-				&:nth-child(even) {
-					background-color: #fcfcfd;
+				&:last-child {
+					border-top-right-radius: var(--tutor-table-border-radius);
 				}
 			}
 		}
 
-		td {
-			/* Behave  like a "row" */
-			border: none;
-			border-radius: 0;
-			position: relative;
-			padding: 10px;
-
-			width: unset;
-			text-align: left;
-
-			border-top: 1px solid var(--tutor-border-color);
-			border-left: 1px solid var(--tutor-border-color);
-			border-right: 1px solid var(--tutor-border-color);
-
-			display: flex;
-
-			&.column-fullwidth {
-				padding: 15px 20px;
-			}
-
-			&:not(.column-fullwidth) {
-				padding-left: 40%;
-
-				&:before {
-					position: absolute;
-					top: 0;
-					left: 0;
-					width: 35%;
-					padding-left: 20px;
-					padding-right: 10px;
-					white-space: nowrap;
-
-					/* Label the data You could also use a data-* attribute and content for this. That way "bloats" the HTML,this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow. */
-
-					content: attr(data-th);
-					height: 100%;
-					display: flex;
-					align-items: center;
-
-					font-weight: 400;
-					font-size: 13px;
-					line-height: 138%;
-					color: var(--tutor-color-secondary);
+		&:last-child {
+			td {
+				&:first-child {
+					border-bottom-left-radius: var(--tutor-table-border-radius);
+				}
+				&:last-child {
+					border-bottom-right-radius: var(--tutor-table-border-radius);
 				}
 			}
 		}
 	}
-} // end Table Responsive Styles
 
-table.tutor-table-no-border {
-	&,
-	td,
-	th {
-		border: none;
-	}
-
-	td,
-	th {
-		padding: 0;
-		padding-top: 5px;
-		padding-bottom: 5px;
-	}
-
-	&.tutor-is-lefty {
-		td:not(:last-child) {
-			padding-right: 15px;
-		}
-	}
-
-	&.tutor-is-flexible {
-		width: auto;
-	}
-
-	&:not(.tutor-is-flexible) {
-		width: 100%;
-	}
-}
-
-// Table toggle collapse td/tr
-table.tutor-table-data-td-target {
-	[data-td-target] {
-		cursor: pointer;
-		@include breakpoint-min(desktop-lg) {
-			padding: 20px !important;
-		}
-		> * {
-			pointer-events: none;
-		}
-	}
-
-	// angle-down icon
-	.is-active {
-		[class^='tutor-icon-']:before {
-			content: '\e941';
-		}
-		box-shadow: -1px 0 0 #e7e8ef;
-		background: $color-gray-10 !important;
-	}
-
-	td.data-td-content {
-		padding: unset !important;
-		border-top-color: transparent;
-		background-color: $color-gray-10 !important;
-
-		@include breakpoint-max(desktop-lg) {
-			border: none !important;
-			&.is-active {
-				box-shadow: 0 0 0 1px var(--tutor-border-color);
-			}
-		}
-
-		> * {
-			display: none;
-		}
-
-		&.is-active {
-			> * {
-				display: block;
-			}
-
-			padding: 20px 30px 30px 30px !important;
-			border-top-color: var(--tutor-border-color);
-			@include breakpoint-min(desktop-lg) {
-				position: relative;
-				border-top-color: transparent !important;
-				box-shadow: 0 2px 0 -1px $color-gray-10, 0 -2px 0 -1px $color-gray-10;
-			}
-		}
-
-		.list-item-checklist {
-			input.tutor-form-check-input {
-				margin-top: 4px;
-			}
-		}
-	}
-}
-
-// Hot fix
-table.tutor-table {
-	thead {
+	&-top {
+		td,
 		th {
-			> *,
-			* > * {
-				font-size: 14px;
-			}
-			[class*='tutor-icon-'] {
-				margin-top: 4px;
-				margin-left: 8px;
-			}
+			vertical-align: top;
 		}
 	}
-}
 
-// Table specific styles
-table.tutor-table {
-	&.tutor-table-purchase-history {
+	&-middle {
+		td,
 		th {
-			height: 48px;
-		}
-		@include breakpoint-min(desktop-lg) {
-			th,
-			td {
-				&:nth-child(2) {
-					width: 360px;
-				}
-			}
-		}
-		@include breakpoint-max(desktop-lg) {
-			td {
-				display: grid;
-				justify-content: flex-start;
-			}
+			vertical-align: middle;
 		}
 	}
 
-	&.table-assignment {
-		@include breakpoint-min(desktop-lg) {
-			th,
-			td {
-				&:nth-child(1) {
-					width: 505px;
-				}
-			}
+	&-bottom {
+		td,
+		th {
+			vertical-align: bottom;
 		}
 	}
-	&.tutor-table-zoom {
-		@include breakpoint-min(desktop-lg) {
-			th,
-			td {
-				&:nth-child(1) {
-					width: 150px;
-				}
-				&:nth-child(2) {
-					width: 410px;
-				}
-			}
-		}
+
+	.tutor-td-top {
+		vertical-align: top;
 	}
-	&.table-dashboard-course-list {
-		@include breakpoint-minmax(1200, 1400) {
-			overflow-x: unset;
-		}
+
+	.tutor-td-middle {
+		vertical-align: middle;
 	}
-	&.tutor-table-analytics-student-details tr {
-		@include breakpoint-min(desktop-lg) {
-			th:first-child,
-			td:first-child {
-				width: 135px;
-			}
-		}
+
+	.tutor-td-bottom {
+		vertical-align: bottom;
 	}
 }

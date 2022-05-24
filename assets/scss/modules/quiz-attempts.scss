@@ -45,57 +45,6 @@
 	}
 }
 
-.tutor-quiz-attempt-details-wrapper {
-	.my-quiz-attempts {
-		thead {
-			@include breakpoint-min(1200) {
-				tr {
-					th.date {
-						width: 20% !important;
-					}
-					th.question {
-						width: 10%;
-					}
-					th.total-marks {
-						width: 10%;
-					}
-					th.pass-marks {
-						width: 10%;
-					}
-					th.correct-answer {
-						width: 10%;
-					}
-					th.incorrect-answer {
-						width: 10%;
-					}
-					th.earned-marks {
-						width: 19%;
-					}
-					th.result {
-						width: 11%;
-					}
-				}
-			}
-			th:last-child {
-				> * {
-					display: block !important;
-				}
-			}
-		}
-		tbody {
-			tr {
-				td {
-					div.tutor-table-date-time {
-						font-size: 13px;
-						font-weight: 500;
-						line-height: 21px;
-					}
-				}
-			}
-		}
-	}
-}
-
 .tutor-quiz-attempt-details {
 	th,
 	td {

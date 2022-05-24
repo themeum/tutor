@@ -41,36 +41,37 @@ if ( ! $assignment_submitted_id ) {
 	</div>
 
 	<div class="tutor-assignment-review-header">
-		<table class="tutor-table-no-border tutor-is-lefty tutor-is-flexible">
-			<tbody>
-				<tr>
-					<td class="tutor-color-secondary"><?php esc_html_e( 'Course', 'tutor' ); ?></td>
-					<td>:
-						<a href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_parent ) ); ?>" target="_blank">
-						<?php esc_html_e( get_the_title( $submitted_assignment->comment_parent ) ); ?>
-						</a>
-					</td>
-				</tr>
-				<tr>
-					<td class="tutor-color-secondary"><?php esc_html_e( 'Student', 'tutor' ); ?></td>
-					<td>:
-						<span>
-						<?php echo esc_html( $comment_author->display_name . ' (' . $comment_author->user_email . ')' ); ?>
-						</span>
-					</td>
-				</tr>
-				<tr>
-					<td class="tutor-color-secondary"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?></td>
-					<td>:
-						<span>
-						<?php echo esc_attr( date( 'j M, Y, h:i a', strtotime( $submitted_assignment->comment_date ) ) ); ?>
-						</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="tutor-row tutor-align-center tutor-mb-16">
+			<div class="tutor-col-lg-3">
+				<span class="tutor-color-secondary"><?php esc_html_e( 'Course', 'tutor' ); ?>:</span>
+			</div>
+			<div class="tutor-col-lg tutor-mt-8 tutor-mt-lg-0">
+				<a class="tutor-fw-medium tutor-color-black" href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_parent ) ); ?>" target="_blank">
+					<?php esc_html_e( get_the_title( $submitted_assignment->comment_parent ) ); ?>
+				</a>
+			</div>
+		</div>
+
+		<div class="tutor-row tutor-align-center tutor-mb-16">
+			<div class="tutor-col-lg-3">
+				<span class="tutor-color-secondary"><?php esc_html_e( 'Student', 'tutor' ); ?>:</span>
+			</div>
+			<div class="tutor-col-lg tutor-mt-8 tutor-mt-lg-0">
+				<span class="tutor-fw-medium tutor-color-black"><?php echo esc_html( $comment_author->display_name . ' (' . $comment_author->user_email . ')' ); ?></span>
+			</div>
+		</div>
+
+		<div class="tutor-row tutor-align-center">
+			<div class="tutor-col-lg-3">
+				<span class="tutor-color-secondary"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?>:</span>
+			</div>
+			<div class="tutor-col-lg tutor-mt-8 tutor-mt-lg-0">
+				<span class="tutor-fw-medium tutor-color-black"><?php echo esc_attr( date( 'j M, Y, h:i a', strtotime( $submitted_assignment->comment_date ) ) ); ?></span>
+			</div>
+		</div>
 	</div>
-	<hr>
+	
+	<div class="tutor-hr"></div>
 
 	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-32 tutor-mb-16">
 		<h5 class="tutor-fs-6 tutor-fw-medium tutor-mb-5">

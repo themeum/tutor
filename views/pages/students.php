@@ -66,98 +66,87 @@ $filters = array(
 	?>
 
 	<div class="tutor-admin-body">
-		<div class="tutor-table-responsive tutor-mt-24">
-			<table class="tutor-table tutor-table-responsive tutor-table-with-checkbox">
-				<thead>
-				<tr>
-					<th width="3%">
-						<div class="tutor-d-flex">
-							<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
-						</div>
-					</th>
-					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-secondary">
-							<span class="tutor-fs-7"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
-							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
-						</div>
-					</th>
-					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-secondary">
-							<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
-							<span class="tutor-icon-order-down up-down-icon"></span>
-						</div>
-					</th>
-					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-secondary">
-							<span class="tutor-fs-7"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
-							<span class="tutor-icon-order-down up-down-icon"></span>
-						</div>
-					</th>
-					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-secondary">
-							<span class="tutor-fs-7"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
-							<span class="tutor-icon-order-down up-down-icon"></span>
-						</div>
-					</th>
-					<th class="tutor-shrink"></th>
-				</tr>
-				</thead>
-				<tbody>
-					<?php if ( is_array( $students_list ) && count( $students_list ) ) : ?>
+		<?php if ( is_array( $students_list ) && count( $students_list ) ) : ?>
+			<div class="tutor-table-responsive tutor-mt-24">
+				<table class="tutor-table tutor-table-middle tutor-table-with-checkbox">
+					<thead>
+						<tr>
+							<th width="3%">
+								<div class="tutor-d-flex">
+									<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
+								</div>
+							</th>
+							<th class="tutor-table-rows-sorting">
+								<?php esc_html_e( 'Students', 'tutor' ); ?>
+								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
+							</th>
+							<th class="tutor-table-rows-sorting">
+								<?php esc_html_e( 'Email', 'tutor' ); ?>
+								<span class="tutor-icon-order-down up-down-icon"></span>
+							</th>
+							<th class="tutor-table-rows-sorting">
+								<?php esc_html_e( 'Registration Date', 'tutor' ); ?>
+								<span class="tutor-icon-order-down up-down-icon"></span>
+							</th>
+							<th class="tutor-table-rows-sorting">
+								<?php esc_html_e( 'Course Taken', 'tutor' ); ?>
+								<span class="tutor-icon-order-down up-down-icon"></span>
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
 						<?php foreach ( $students_list as $list ) : ?>
-						<tr>
-							<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
-								<div class="td-checkbox tutor-d-flex ">
-									<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
-								</div>
-							</td>
-							<td data-th="<?php esc_html_e( 'Avatar', 'tutor' ); ?>" class="column-fullwidth">
-								<div class="td-avatar">
-									<?php echo tutor_utils()->get_tutor_avatar( $list->ID ); ?>
-									<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-m-0">
-										<?php esc_html_e( $list->display_name ); ?>
+							<tr>
+								<td>
+									<div class="tutor-d-flex">
+										<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
+									</div>
+								</td>
+								<td>
+									<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+										<?php echo tutor_utils()->get_tutor_avatar( $list->ID ); ?>
+										<span>
+											<?php esc_html_e( $list->display_name ); ?>
+										</span>
+										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="tutor-iconic-btn" target="_blank">
+											<span class="tutor-icon-external-link" area-hidden="True"></span>
+										</a>
+									</div>
+								</td>
+								<td>
+									<span class="tutor-fs-7">
+										<?php echo esc_html( $list->user_email ); ?>
 									</span>
-									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="tutor-iconic-btn" target="_blank">
-										<span class="tutor-icon-external-link"></span>
-									</a>
-								</div>
-							</td>
-							<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
-								<span class="tutor-color-black tutor-fs-7">
-								<?php echo esc_html( $list->user_email ); ?>
-								</span>
-							</td>
-							<td data-th="<?php esc_html_e( 'Registration Date', 'tutor' ); ?>">
-								<span class="tutor-color-black tutor-fs-7">
-								<?php echo tutor_utils()->get_local_time_from_unix( $list->user_registered ); ?>
-								</span>
-							</td>
-							<td data-th="<?php esc_html_e( 'Course Taken', 'tutor' ); ?>">
-							<?php $course_taken = tutor_utils()->get_enrolled_courses_ids_by_user( $list->ID ); ?>
-								<span class="tutor-color-black tutor-fs-7 tutor-fw-medium"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
-							</td>
-							<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
-								<?php if( tutor()->has_pro ) : ?>
-								<div class="tutor-d-inline-flex tutor-align-center td-action-btns">
-									<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
-									class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-									<?php esc_html_e( 'Details', 'tutor' ); ?>
-									</a>
-								</div>
-								<?php endif; ?>
-							</td>
-						</tr>
+								</td>
+								<td>
+									<span class="tutor-fs-7">
+										<?php echo tutor_utils()->get_local_time_from_unix( $list->user_registered ); ?>
+									</span>
+								</td>
+								<td>
+									<?php $course_taken = tutor_utils()->get_enrolled_courses_ids_by_user( $list->ID ); ?>
+									<span class="tutor-fs-7"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
+								</td>
+								<td>
+									<?php if( tutor()->has_pro ) : ?>
+										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
+											class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+												<?php esc_html_e( 'Details', 'tutor' ); ?>
+											</a>
+										</div>
+									<?php endif; ?>
+								</td>
+							</tr>
 						<?php endforeach; ?>
-					<?php else : ?>
-						<tr>
-							<td colspan="100%">
-								<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-							</td>
-						</tr>
-					<?php endif; ?>	
-				</tbody>
-			</table>
-		</div>
+					</tbody>
+				</table>
+			</div>
+		<?php else : ?>
+			<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+		<?php endif; ?>
 
 		<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
 			<?php
