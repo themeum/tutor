@@ -169,178 +169,92 @@ if ( is_array( $attempt_info ) ) {
 	$seconds                = strtotime( $attempt_data->attempt_ended_at ) - strtotime( $attempt_data->attempt_started_at );
 	$attempt_duration_taken = tutor_utils()->second_to_formated_time( $seconds, $attempt_type );
 }
-
-
 ?>
 
 <?php echo is_admin() ? '<div class="tutor-admin-body">' : ''; ?>
-<table class="tutor-table tutor-table-responsive my-quiz-attempts tutor-mb-32">
-    <thead>
-        <tr>
-            <?php
-                foreach($table_1_columns as $key => $column) {
-                    $class_name = join('-', explode(' ', strtolower($column)));
-                    echo '<th class="'. $class_name .'">
-                            <span class="tutor-fs-7 tutor-color-secondary">'.
-                                $column.
-                            '</span>
-                        </th>';
-                }
-            ?>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <?php
-                foreach($table_1_columns as $key => $column){
-                    switch($key) {
-                        case 'user':
-                            ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <div class="td-avatar">
-                                    <?php echo tutor_utils()->get_tutor_avatar( $user_id ); ?>
-                                    <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-nowrap-ellipsis">
+<div class="tutor-table-responsive tutor-mb-32">
+    <table class="tutor-table my-quiz-attempts">
+        <thead>
+            <tr>
+                <?php foreach($table_1_columns as $key => $column) : ?>
+                    <th><?php echo $column; ?></th>
+                <?php endforeach; ?>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <?php foreach( $table_1_columns as $key => $column ) : ?>
+                    <td>
+                        <?php if ( $key == 'user' ) : ?>
+                            <div class="tutor-d-flex tutor-align-center">
+                                <?php echo tutor_utils()->get_tutor_avatar( $user_id ); ?>
+                                <div class="tutor-ml-16">
+                                    <div>
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </div>
                                     <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="tutor-iconic-btn">
                                         <span class="tutor-icon-external-link"></span>
                                     </a>
                                 </div>
-                            </td>
-                            <?php
-                            break;
+                            </div>
 
-                        case 'date' :
+                        <?php elseif ( $key == 'date' ) : ?>
+                            <div>
+                                <?php echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)); ?>
+                            </div>
+                            <div>
+                                <?php echo date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at)); ?>
+                            </div>
+                        <?php elseif ( $key == 'qeustion_count' ) : ?>
+                            <?php echo $attempt_data->total_questions; ?>
+                        <?php elseif ( $key == 'quiz_time' ) : ?>
+                            <?php echo $attempt_duration; ?>
+                        <?php elseif ( $key == 'attempt_time' ) : ?>
+                            <?php echo $attempt_duration_taken; ?>
+                        <?php elseif ( $key == 'total_marks' ) : ?>
+                            <?php echo $attempt_data->total_marks; ?>
+                        <?php elseif ( $key == 'pass_marks' ) : ?>
+                            <?php
+                                $pass_marks = ($total_marks * $passing_grade) / 100;
+                                echo number_format_i18n($pass_marks, 2);
+
+                                $pass_mark_percent = $passing_grade;
+                                echo ' ('.$pass_mark_percent.'%)';
                             ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <div class="tutor-table-date-time tutor-color-black">
-                                    <?php
-                                        echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at));
-                                    ?>
-                                </div>
-                                <div class="tutor-table-date-time tutor-color-black">
-                                    <?php
-                                        echo date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
-                                    ?>
-                                </div>
-                            </td>
+                        <?php elseif ( $key == 'correct_answer' ) : ?>
+                            <?php echo $correct; ?>
+                        <?php elseif ( $key == 'incorrect_answer' ) : ?>
+                            <?php echo $incorrect; ?>
+                        <?php elseif ( $key == 'earned_marks' ) : ?>
                             <?php
-                            break;
-
-                        case 'qeustion_count' :
+                                echo $attempt_data->earned_marks;
+                                $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
+                                echo ' ('.$earned_percentage.'%)';
                             ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php echo $attempt_data->total_questions; ?>
-                                </span>
-                            </td>
+                        <?php elseif ( $key == 'result' ) : ?>
                             <?php
-                            break;
+                                $ans_array = is_array( $answers ) ? $answers : array();
+                                $has_pending = count( array_filter( $ans_array, function( $ans ) {
+                                    return $ans->is_correct === null;
+                                }));
 
-                        case 'quiz_time':
+                                if ( $has_pending ) {
+                                    echo '<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>';
+                                } else if ( $earned_percentage >= $pass_mark_percent ) {
+                                    echo '<span class="tutor-badge-label label-success">'.__('Pass', 'tutor').'</span>';
+                                } else {
+                                    echo '<span class="tutor-badge-label label-danger">'.__('Fail', 'tutor').'</span>';
+                                }
                             ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <?php echo $attempt_duration; ?>
-                            </td>
-                            <?php
-                            break;
+                        <?php endif; ?>
+                    </td>
+                <?php endforeach; ?>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-                        case 'attempt_time':
-                            ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <?php echo $attempt_duration_taken; ?>
-                            </td>
-                            <?php
-                            break;
-
-                        case 'total_marks' :
-                            ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php echo $attempt_data->total_marks; ?>
-                                </span>
-                            </td>
-                            <?php
-                            break;
-
-                        case 'pass_marks' :
-                            ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php
-                                        $pass_marks = ($total_marks * $passing_grade) / 100;
-                                        echo number_format_i18n($pass_marks, 2);
-
-                                        $pass_mark_percent = $passing_grade; // tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
-                                        echo ' ('.$pass_mark_percent.'%)';
-                                    ?>
-                                </span>
-                            </td>
-                            <?php
-                            break;
-
-                        case 'correct_answer' :
-                            ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php echo $correct; ?>
-                                </span>
-                            </td>
-                            <?php
-                            break;
-
-                        case 'incorrect_answer' :
-                            ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php echo $incorrect; ?>
-                                </span>
-                            </td>
-                            <?php
-                            break;
-
-                        case 'earned_marks' :
-                            ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php
-                                        echo $attempt_data->earned_marks;
-                                        $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
-                                        echo ' ('.$earned_percentage.'%)';
-                                    ?>
-                                </span>
-                            </td>
-                            <?php
-                            break;
-
-                        case 'result':
-                            ?>
-                            <td data-th="<?php echo $column; ?>">
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php
-                                        $ans_array = is_array($answers) ? $answers : array();
-                                        $has_pending = count(array_filter($ans_array, function($ans){
-                                            return $ans->is_correct===null;
-                                        }));
-
-                                        if($has_pending){
-                                            echo '<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>';
-                                        } else if ($earned_percentage >= $pass_mark_percent){
-                                            echo '<span class="tutor-badge-label label-success">'.__('Pass', 'tutor').'</span>';
-                                        }else{
-                                            echo '<span class="tutor-badge-label label-danger">'.__('Fail', 'tutor').'</span>';
-                                        }
-                                    ?>
-                                </span>
-                            </td>
-                            <?php
-                            break;
-                    }
-                }
-            ?>
-        </tr>
-    </tbody>
-</table>
 <?php
 // instructor feedback.
 global $wp_query;
@@ -365,18 +279,16 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     if (is_array($answers) && count($answers)){
         echo $context!='course-single-previous-attempts' ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">'.__('Quiz Overview', 'tutor').'</div>' : '';
         ?>
-        <div class="tutor-table-wrapper tutor-mt-16">
-            <table class="tutor-table tutor-table-responsive tutor-quiz-attempt-details tutor-mb-32 td-align-top">
+        <div class="tutor-table-responsive tutor-mt-16">
+            <table class="tutor-table tutor-quiz-attempt-details tutor-mb-32">
                 <thead>
                     <tr>
-                        <?php
-                            foreach($table_2_columns as $key => $column) {
-                                $class_name = join('--', explode(' ', strtolower($column)));
-                                echo '<th class="'. $class_name .'"><span class="tutor-fs-7 tutor-color-secondary">'. $column .'</span></th>';
-                            }
-                        ?>
+                        <?php foreach($table_2_columns as $key => $column) : ?>
+                            <th><?php echo $column; ?></th>
+                        <?php endforeach; ?>
                     </tr>
                 </thead>
+
                 <tbody>
                     <?php
                         $answer_i = 0;
@@ -387,7 +299,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                             $answer_status = 'wrong';
 
                             // If already correct, then show it
-                            if ((bool)$answer->is_correct) {
+                            if ( (bool)$answer->is_correct ) {
                                 $answer_status = 'correct';
                             } 
                             
@@ -397,7 +309,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                             }
                             ?>
     
-                            <tr class="<?php echo 'tutor-quiz-answer-status-'.$answer_status; ?>">
+                            <tr>
                                 <?php foreach($table_2_columns as $key => $column): ?>
                                     <?php
                                         switch($key) {

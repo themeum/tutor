@@ -5,60 +5,42 @@ $page_key = 'qna-table';
 $table_columns = include __DIR__ . '/contexts.php';
 $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
 ?>
+<?php if (is_array($qna_list) && count($qna_list)) : ?>
+    <div class="tutor-table-responsive">
+        <table data-qna_context="<?php echo $context; ?>" class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-table tutor-table-middle qna-list-table">
+            <thead>
+                <tr>
+                    <?php foreach ($table_columns as $key => $column) : ?>
+                        <th style="<?php echo $key == 'question' ? 'width: 40%;' : ''; ?>"><?php echo $key != 'action' ? $column : ''; ?></th>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
 
-<table data-qna_context="<?php echo $context; ?>" class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-table tutor-table-responsive qna-list-table">
-<?php if (is_array($qna_list) && count($qna_list)) { ?>
-    <thead>
-        <tr>
-            <?php
-            foreach ($table_columns as $key => $column) {
-                echo '<th>
-                    <span class="tutor-fs-7 tutor-color-secondary" style="' . ($key == 'action' ? 'visibility:hidden' : '') . '">' .
-                        $column
-                    . '</span>
-                </th>';
-            }
-            ?>
-        </tr>
-    </thead>
-    <?php } ?>
-    <tbody>
-        <?php
-        $current_user_id = get_current_user_id();
+            <tbody>
+                <?php
+                    $current_user_id = get_current_user_id();
+                    foreach ( $qna_list as $qna ) :
+                        $id_string_delete   = 'tutor_delete_qna_' . $qna->comment_ID;
+                        $row_id             = 'tutor_qna_row_' . $qna->comment_ID;
+                        $menu_id            = 'tutor_qna_menu_id_' . $qna->comment_ID;
+                        $is_self            = $current_user_id == $qna->user_id;
+                        $key_slug           = $context == 'frontend-dashboard-qna-table-student' ? '_' . $current_user_id : '';
 
-        if (is_array($qna_list) && count($qna_list)) {
-            foreach ($qna_list as $qna) {
-                $id_string_delete   = 'tutor_delete_qna_' . $qna->comment_ID;
-                $row_id             = 'tutor_qna_row_' . $qna->comment_ID;
-                $menu_id            = 'tutor_qna_menu_id_' . $qna->comment_ID;
-                $is_self            = $current_user_id == $qna->user_id;
-                $key_slug           = $context == 'frontend-dashboard-qna-table-student' ? '_' . $current_user_id : '';
-
-                $meta               = $qna->meta;
-                $is_solved          = (int)tutor_utils()->array_get('tutor_qna_solved' . $key_slug, $meta, 0);
-                $is_important       = (int)tutor_utils()->array_get('tutor_qna_important' . $key_slug, $meta, 0);
-                $is_archived        = (int)tutor_utils()->array_get('tutor_qna_archived' . $key_slug, $meta, 0);
-                $is_read            = (int)tutor_utils()->array_get('tutor_qna_read' . $key_slug, $meta, 0);
-
+                        $meta               = $qna->meta;
+                        $is_solved          = (int)tutor_utils()->array_get('tutor_qna_solved' . $key_slug, $meta, 0);
+                        $is_important       = (int)tutor_utils()->array_get('tutor_qna_important' . $key_slug, $meta, 0);
+                        $is_archived        = (int)tutor_utils()->array_get('tutor_qna_archived' . $key_slug, $meta, 0);
+                        $is_read            = (int)tutor_utils()->array_get('tutor_qna_read' . $key_slug, $meta, 0);
                 ?>
-                <tr id="<?php echo $row_id; ?>" data-question_id="<?php echo $qna->comment_ID; ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
-                    <?php
-                    foreach ($table_columns as $key => $column) {
-                        switch ($key) {
-                            case 'checkbox':
-                                ?>
-                                <td data-th="<?php _e('Mark', 'tutor'); ?>" class="tutor-shrink">
-                                    <div class="td-checkbox tutor-d-flex tutor-align-center">
-                                        <input id="tutor-admin-list-<?php echo $qna->comment_ID; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $qna->comment_ID; ?>" style="margin-top:0" />
+                    <tr id="<?php echo $row_id; ?>" data-question_id="<?php echo $qna->comment_ID; ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
+                        <?php foreach ($table_columns as $key => $column) : ?>
+                            <td>
+                                <?php if ( $key == 'checkbox' ) : ?>
+                                    <div class="tutor-d-flex tutor-align-center">
+                                        <input id="tutor-admin-list-<?php echo $qna->comment_ID; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $qna->comment_ID; ?>" />
                                     </div>
-                                </td>
-                                <?php
-                                break;
-
-                            case 'student':
-                            ?>
-                                <td data-th="<?php echo $column; ?>" >
-                                    <div class="td-avatar">
+                                <?php elseif ( $key == 'student' ) : ?>
+                                    <div class="tutor-d-flex tutor-align-center tutor-gap-2">
                                         <div class="tooltip-wrap tooltip-icon-custom tutor-qna-badges-wrapper tutor-mt-4">
                                             <span
                                                 data-state-class-0="tutor-icon-important-line"
@@ -66,42 +48,36 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 data-action="important"
                                                 data-state-class-selector="i"
                                             >
-                                                <i
-                                                    class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?>  tutor-cursor-pointer"
-                                                >
-                                                </i>
+                                                <i class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?>  tutor-cursor-pointer" area-hidden="true"></i>
                                             </span>
+
                                             <span class="tooltip-txt tooltip-bottom">
                                                 <?php $is_important ? _e('This conversation is important', 'tutor') : _e('Mark this conversation as important', 'tutor'); ?>
                                             </span>
                                         </div>
+
                                         <?php echo tutor_utils()->get_tutor_avatar( $qna->user_id ); ?>
+
                                         <div>
-                                            <div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+                                            <div>
                                                 <?php echo $qna->display_name; ?>
                                             </div>
-                                            <div class="tutor-fs-7 tutor-fw-medium tutor-color-muted" style="margin-top : -2px">
+                                            <div class="tutor-fs-7 tutor-color-muted tutor-mt-4">
                                                 <?php echo human_time_diff(strtotime($qna->comment_date)); ?>
                                             </div>
                                         </div>
                                     </div>
-                                </td>
-                            <?php
-                                break;
-
-                            case 'question':
-                                $content = (stripslashes($qna->comment_content));
-                            ?>
-                                <td data-th="<?php echo $column; ?>">
+                                <?php elseif ( $key == 'question' ) : ?>
+                                    <?php $content = ( stripslashes( $qna->comment_content ) ); ?>
                                     <a href="<?php echo add_query_arg(array('question_id' => $qna->comment_ID), tutor()->current_url); ?>">
                                         <div class="tutor-form-feedback tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
-                                            <i class="tutor-icon-bullet-point tutor-form-feedback-icon"></i>
+                                            <i class="tutor-icon-bullet-point tutor-form-feedback-icon" area-hidden="true"></i>
                                             <div class="tutor-qna-desc">
                                                 <div class="tutor-qna-content tutor-fs-6 tutor-fw-bold tutor-color-black">
                                                     <?php
-                                                    $limit = 60;
-                                                    $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content;
-                                                    echo esc_html($content);
+                                                        $limit = 60;
+                                                        $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content;
+                                                        echo esc_html($content);
                                                     ?>
                                                 </div>
                                                 <div class="tutor-fs-7 tutor-color-secondary">
@@ -111,45 +87,19 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                             </div>
                                         </div>
                                     </a>
-                                </td>
-                            <?php
-                                break;
-
-                            case 'reply':
-                            ?>
-                                <td data-th="<?php echo $column; ?>" class="v-align-top">
-                                    <div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                        <?php echo $qna->answer_count; ?>
-                                    </div>
-                                </td>
-                            <?php
-                                break;
-
-                            case 'waiting_since':
-                            ?>
-                                <td data-th="<?php echo $column; ?>" class="v-align-top">
+                                <?php elseif ( $key == 'reply' ) : ?>
+                                    <?php echo $qna->answer_count; ?>
+                                <?php elseif ( $key == 'waiting_since' ) : ?>
                                     <?php echo human_time_diff(strtotime($qna->comment_date)); ?>
-                                </td>
-                            <?php
-                                break;
-
-                            case 'status':
-                            ?>
-                                <td data-th="<?php echo $column; ?>" class="v-align-top">
+                                <?php elseif ( $key == 'status' ) : ?>
                                     <div class="tooltip-wrap tooltip-icon-custom" >
                                         <i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
                                         <span class="tooltip-txt tooltip-bottom">
                                             <?php $is_solved ? _e('Solved', 'tutor') : _e('Unresolved Yet', 'tutor'); ?>
                                         </span>
                                     </div>
-                                </td>
-                            <?php
-                                break;
-
-                            case 'action':
-                            ?>
-                                <td data-th="<?php echo $column; ?>" class="tutor-text-right v-align-top">
-                                    <div class="tutor-d-inline-flex tutor-align-center td-action-btns">
+                                <?php elseif ( $key == 'action' ) : ?>
+                                    <div class="tutor-d-inline-flex tutor-align-center tutor-gap-1">
                                         <a href="<?php echo add_query_arg(array('question_id' => $qna->comment_ID), tutor()->current_url); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
                                             <?php _e('Reply', 'tutor-pro'); ?>
                                         </a>
@@ -216,38 +166,29 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                             </div>
                                         </div>
                                     </div>
-                                </td>
-                        <?php
-                                break;
-                        }
-                    }
-                    ?>
-                </tr>
-            <?php
-            }
-        } else {
-            ?>
-            <tr>
-                <td colspan="100%" class="column-empty-state">
-                    <?php tutor_utils()->tutor_empty_state(tutor_utils()->not_found_text()); ?>
-                </td>
-            </tr>
-        <?php
-        }
-        ?>
-    </tbody>
-</table>
+                                <?php endif; ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php else : ?>
+    <?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+<?php endif; ?>
+
 <?php if ($qna_pagination['total_items'] > $qna_pagination['per_page']) : ?>
-    <div class="tutor-mt-48">
+    <div class="tutor-mt-32">
         <?php
-        $pagination_data = array(
-            'base'        => !empty($qna_pagination['base']) ? $qna_pagination['base'] : null,
-            'total_items' => $qna_pagination['total_items'],
-            'per_page'    => $qna_pagination['per_page'],
-            'paged'       => $qna_pagination['paged'],
-        );
-        $pagination_template = tutor()->path . 'views/elements/pagination.php';
-        tutor_load_template_from_custom_path($pagination_template, $pagination_data);
+            $pagination_data = array(
+                'base'        => !empty($qna_pagination['base']) ? $qna_pagination['base'] : null,
+                'total_items' => $qna_pagination['total_items'],
+                'per_page'    => $qna_pagination['per_page'],
+                'paged'       => $qna_pagination['paged'],
+            );
+            $pagination_template = tutor()->path . 'views/elements/pagination.php';
+            tutor_load_template_from_custom_path($pagination_template, $pagination_data);
         ?>
     </div>
 <?php endif; ?>

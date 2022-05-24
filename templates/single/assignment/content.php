@@ -367,57 +367,47 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                     $given_mark = get_comment_meta( $submitted_assignment->comment_ID, 'assignment_mark', true );
                 ?>
                 <div class="tutor-assignment-result-table tutor-mt-32 tutor-mb-40">
-                    <div class="tutor-table-wrapper">
-                        <table class="tutor-table tutor-table-responsive my-quiz-attempts">
-                            <thead class="tutor-fs-7 tutor-color-secondary">
+                    <div class="tutor-table-responsive">
+                        <table class="tutor-table my-quiz-attempts">
+                            <thead>
                                 <tr>
                                     <th>
-                                        <span><?php _e( 'Date', 'tutor' ); ?></span>
+                                        <?php _e( 'Date', 'tutor' ); ?>
                                     </th>
                                     <th>
-                                        <span><?php _e( 'Total Marks', 'tutor' ); ?>/span>
+                                        <?php _e( 'Total Marks', 'tutor' ); ?>
                                     </th>
                                     <th>
-                                        <span><?php _e( 'Pass Marks', 'tutor' ); ?></span>
+                                        <?php _e( 'Pass Marks', 'tutor' ); ?>
                                     </th>
                                     <th>
-                                        <span><?php _e( 'Earned Marks', 'tutor' ); ?></span>
+                                        <?php _e( 'Earned Marks', 'tutor' ); ?>
                                     </th>
                                     <th>
-                                        <span><?php _e( 'Result', 'tutor' ); ?></span>
+                                        <?php _e( 'Result', 'tutor' ); ?>
                                     </th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 <tr>
-                                    <td data-th="Date" class="date">
-                                        <div class="td-statement-info">
-                                            <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                                <?php esc_html_e( tutor_utils()->convert_date_into_wp_timezone( $submitted_assignment->comment_date ) ) ?>
-                                            </span>
-                                        </div>
+                                    <td>
+                                        <?php esc_html_e( tutor_utils()->convert_date_into_wp_timezone( $submitted_assignment->comment_date ) ) ?>
                                     </td>
                                     
-                                    <td data-th="Total Marks" class="total-marks">
-                                        <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                            <?php esc_html_e( $max_mark, 'tutor' ); ?>
-                                        </span>
+                                    <td>
+                                        <?php esc_html_e( $max_mark, 'tutor' ); ?>
                                     </td>
                                     
-                                    <td data-th="Pass Marks" class="pass-marks">
-                                        <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                            <?php esc_html_e( $pass_mark, 'tutor' ); ?>
-                                        </span>
+                                    <td>
+                                        <?php esc_html_e( $pass_mark, 'tutor' ); ?>
                                     </td>
                                     
-                                    <td data-th="Earned Marks" class="earned-marks">
-                                        <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                            <?php esc_html_e( $given_mark, 'tutor' ); ?>
-                                        </span>
+                                    <td>
+                                        <?php esc_html_e( $given_mark, 'tutor' ); ?>
                                     </td>
 
-                                    <td data-th="Result" class="result">
+                                    <td>
                                         <?php if ( $is_reviewed_by_instructor ) : ?>
                                             <?php if ( $given_mark >= $pass_mark ) : ?>
                                                 <span class="tutor-badge-label label-success">

@@ -34,15 +34,13 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'Assignment', 'tutor' ); ?></div>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignments">
-	<div class="tutor-row">
-		<div class="tutor-col-12 tutor-col-lg-6">
-			<label class="tutor-d-block tutor-form-label">
+	<div class="tutor-row tutor-mb-24">
+		<div class="tutor-col-lg-6 tutor-mb-16 tutor-mb-lg-0">
+			<label class="tutor-form-label">
 				<?php esc_html_e( 'Courses', 'tutor' ); ?>
 			</label>
 			<select class="tutor-form-select tutor-announcement-course-sorting">
-
 				<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
-
 				<?php if ( $courses ) : ?>
 					<?php foreach ( $courses as $course ) : ?>
 						<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
@@ -54,103 +52,89 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 				<?php endif; ?>
 			</select>
 		</div>
+
 		<div class="tutor-col-6 tutor-col-lg-3">
-			<label class="tutor-d-block tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
+			<label class="tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
 			<select class="tutor-form-select tutor-announcement-order-sorting" data-search="no">
 				<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 				<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 			</select>
 		</div>
+
 		<div class="tutor-col-6 tutor-col-lg-3">
-			<label class="tutor-d-block tutor-form-label"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
+			<label class="tutor-form-label"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
 			<div class="tutor-v2-date-picker"></div>
 		</div>
 	</div>
-	<br/>
-	<div class="tutor-table-wrapper tutor-mb-44">
-		<table class="tutor-table tutor-table-responsive table-assignment">
-			<thead>
-				<tr>
-					<th>
-						<span class="tutor-fs-7 tutor-color-secondary">
+
+	<?php if ( is_array( $assignments->results ) && count( $assignments->results ) ) : ?>
+		<?php $submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments/submitted' ); ?>
+		<div class="tutor-table-responsive">
+			<table class="tutor-table table-assignment">
+				<thead>
+					<tr>
+						<th>
 							<?php esc_html_e( 'Assignment Name', 'tutor' ); ?>
-						</span>
-					</th>
-					<th>
-						<div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
+						</th>
+						<th>
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Marks', 'tutor' ); ?></span>
-						</div>
-					</th>
-					<th>
-						<div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
+						</th>
+						<th>
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Submit', 'tutor' ); ?></span>
-						</div>
-					</th>
-					<th class="tutor-shrink"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				$submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments/submitted' );
-				if ( is_array( $assignments->results ) && count( $assignments->results ) ) :
-					foreach ( $assignments->results as $item ) :
-					$max_mark      = tutor_utils()->get_assignment_option( $item->ID, 'total_mark' );
-					$course_id     = tutor_utils()->get_course_id_by( 'assignment', $item->ID );
-					$comment_count = Assignments_List::assignment_comment_count( $item->ID );
-					// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish.
+						</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<?php
+						foreach ( $assignments->results as $item ) :
+						$max_mark      = tutor_utils()->get_assignment_option( $item->ID, 'total_mark' );
+						$course_id     = tutor_utils()->get_course_id_by( 'assignment', $item->ID );
+						$comment_count = Assignments_List::assignment_comment_count( $item->ID );
+						// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish.
 					?>
 						<tr>
-							<td data-th="Course Name">
-								<div class="tutor-color-black td-course tutor-fs-6 tutor-fw-medium">
-									<a href="#"><?php esc_html_e( $item->post_title ); ?></a>
-									<div class="course-meta">
-										<span class="tutor-color-secondary tutor-fs-7">
-											<strong class="tutor-fs-7 tutor-fw-medium"><?php esc_html_e( 'Course', 'tutor' ); ?>: </strong>
-											<a href='<?php echo esc_url( get_the_permalink( $course_id ) ); ?>' target="_blank"><?php echo esc_html_e( get_the_title( $course_id ) ); ?> </a>
-										</span>
-									</div>
+							<td>
+								<?php esc_html_e( $item->post_title ); ?>
+								<div class="tutor-fs-7 tutor-mt-8">
+									<span class="tutor-fw-medium"><?php esc_html_e( 'Course', 'tutor' ); ?>: </span>
+									<a target="_blank" href='<?php echo esc_url( get_the_permalink( $course_id ) ); ?>'><?php echo esc_html_e( get_the_title( $course_id ) ); ?> </a>
 								</div>
 							</td>
-							<td data-th="Total Points">
-								<span class="tutor-color-black tutor-fs-7 tutor-fw-medium">
-									<?php echo esc_html_e( $max_mark ); ?>
-								</span>
+
+							<td>
+								<?php echo esc_html_e( $max_mark ); ?>
 							</td>
-							<td data-th="Total SUbmits">
-								<span class="tutor-color-black tutor-fs-7 tutor-fw-medium">
-									<?php echo esc_html_e( $comment_count ); ?>
-								</span>
+							
+							<td>
+								<?php echo esc_html_e( $comment_count ); ?>
 							</td>
-							<td data-th="Details URL">
-								<div class="tutor-d-inline-flex tutor-align-center td-action-btns">
-									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-										<?php esc_html_e( 'Details', 'tutor' ); ?>
-									</a>
-								</div>
+
+							<td>
+								<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+									<?php esc_html_e( 'Details', 'tutor' ); ?>
+								</a>
 							</td>
 						</tr>
 					<?php endforeach; ?>
-				<?php else : ?>
-					<tr>
-						<td colspan="100%">
-							<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-						</td>
-					</tr>
-				<?php endif; ?>
-			</tbody>
-		</table>
-	</div>
+				</tbody>
+			</table>
+		</div>
+	<?php else : ?>
+		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+	<?php endif; ?>
 	<?php
-	if($assignments->count > $per_page) {
-		$pagination_data = array(
-			'total_items' => $assignments->count,
-			'per_page'    => $per_page,
-			'paged'       => $current_page,
-		);
-		tutor_load_template_from_custom_path(
-			tutor()->path . 'templates/dashboard/elements/pagination.php',
-			$pagination_data
-		);
-	}
+		if( $assignments->count > $per_page ) {
+			$pagination_data = array(
+				'total_items' => $assignments->count,
+				'per_page'    => $per_page,
+				'paged'       => $current_page,
+			);
+			tutor_load_template_from_custom_path(
+				tutor()->path . 'templates/dashboard/elements/pagination.php',
+				$pagination_data
+			);
+		}
 	?>
 </div>

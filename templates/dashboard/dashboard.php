@@ -328,67 +328,55 @@ if ( count( $instructor_course ) ) {
 		</div>
 		
 		<div class="tutor-dashboard-content-inner">
-			<table class="tutor-table tutor-table-responsive table-popular-courses">
-				<thead>
-					<tr>
-						<th>
-							<span class="tutor-fs-7 tutor-color-secondary">
+			<div class="tutor-table-responsive">
+				<table class="tutor-table table-popular-courses">
+					<thead>
+						<tr>
+							<th>
 								<?php esc_html_e( 'Course Name', 'tutor' ); ?>
-							</span>
-						</th>
-						<th class="tutor-table-rows-sorting">
-							<div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
-								<span class="tutor-fs-7"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
-								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
-							</div>
-						</th>
-						<th class="tutor-table-rows-sorting">
-							<div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
-								<span class="tutor-fs-7"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
-								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
-							</div>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php if ( is_array( $instructor_course ) && count( $instructor_course ) ) : ?>
-						<?php
-						foreach ( $instructor_course as $course ) :
-							$enrolled      = tutor_utils()->count_enrolled_users_by_course( $course->ID );
-							$course_status = isset( $status_translations[ $course->post_status ] ) ? $status_translations[ $course->post_status ] : __( $course->post_status, 'tutor' );
-							$course_rating = tutor_utils()->get_course_rating( $course->ID );
-							$course_badge  = isset( $course_badges[ $course->post_status ] ) ? $course_badges[ $course->post_status ] : 'dark';
-
+							</th>
+							<th>
+								<?php esc_html_e( 'Enrolled', 'tutor' ); ?>
+							</th>
+							<th>
+								<?php esc_html_e( 'Rating', 'tutor' ); ?>
+							</th>
+						</tr>
+					</thead>
+	
+					<tbody>
+						<?php if ( is_array( $instructor_course ) && count( $instructor_course ) ) : ?>
+							<?php
+							foreach ( $instructor_course as $course ) :
+								$enrolled      = tutor_utils()->count_enrolled_users_by_course( $course->ID );
+								$course_status = isset( $status_translations[ $course->post_status ] ) ? $status_translations[ $course->post_status ] : __( $course->post_status, 'tutor' );
+								$course_rating = tutor_utils()->get_course_rating( $course->ID );
+								$course_badge  = isset( $course_badges[ $course->post_status ] ) ? $course_badges[ $course->post_status ] : 'dark';
 							?>
-							<tr>
-								<td data-th="<?php esc_html_e( 'Course Name', 'tutor' ); ?>" class="column-fullwidth">
-									<div class="td-course  tutor-fs-6 tutor-fw-medium  tutor-color-black">
+								<tr>
+									<td>
 										<a href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>" target="_blank">
 											<?php esc_html_e( $course->post_title ); ?>
 										</a>
-									</div>
-								</td>
-								<td data-th="<?php esc_html_e( 'Enrolled', 'tutor' ); ?>">
-									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+									</td>
+									<td>
 										<?php esc_html_e( $enrolled ); ?>
-									</span>
-								</td>
-								<td data-th="<?php esc_html_e( 'Rating', 'tutor' ); ?>">
-									<div class="td-tutor-rating tutor-fs-6 tutor-color-secondary">
+									</td>
+									<td>
 										<?php tutor_utils()->star_rating_generator_v2( $course_rating->rating_avg, null, true ); ?>
-									</div>
-								</td>
-							</tr>
+									</td>
+								</tr>
 							<?php endforeach; ?>
-						<?php else : ?>
-							<tr>
-								<td colspan="100%" class="column-empty-state">
-									<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-								</td>
-							</tr>
-						<?php endif; ?>
-				</tbody>
-			</table>
+							<?php else : ?>
+								<tr>
+									<td colspan="100%" class="column-empty-state">
+										<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+									</td>
+								</tr>
+							<?php endif; ?>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	<?php
 }

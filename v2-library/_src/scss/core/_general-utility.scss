@@ -79,6 +79,16 @@
 	visibility: hidden;
 }
 
+.tutor-visibility {
+	&-visible {
+		visibility: visible;
+	}
+	
+	&-hidden {
+		visibility: hidden;
+	}
+}
+
 .flex-center {
 	display: flex;
 	justify-content: center;

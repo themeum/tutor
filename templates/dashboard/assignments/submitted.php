@@ -30,8 +30,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
 
     <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
         <div class="tutor-fs-7 tutor-color-secondary">
-            <?php
-            esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($comment_parent); ?>
+            <?php esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($comment_parent); ?>
         </div>
         <div class="tutor-fs-6 tutor-fw-medium tutor-mt-8">
             <?php echo get_the_title($assignment_id); ?>
@@ -62,105 +61,76 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
         </div>
     </div>
 
-    <div class="tutor-table-wrapper">
-        <table class="tutor-table tutor-table-responsive">
-            <thead>
-                <tr>
-                    <th>
-                        <span class="tutor-fs-7 tutor-color-secondary">
+    <?php if (tutor_utils()->count($assignments_submitted)) : ?>
+        <div class="tutor-table-responsive">
+            <table class="tutor-table tutor-table-middle">
+                <thead>
+                    <tr>
+                        <th width="20%">
                             <?php esc_html_e('Date', 'tutor'); ?>
-                        </span>
-                    </th>
-                    <th>
-                        <div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
-                            <span class="tutor-fs-7">
-                                <?php esc_html_e('Student', 'tutor'); ?>
-                            </span>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
-                            <span class="tutor-fs-7">
-                                <?php esc_html_e('Total Points', 'tutor'); ?>
-                            </span>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="tutor-d-inline-flex tutor-align-center tutor-color-secondary">
-                            <span class="tutor-fs-7">
-                                <?php esc_html_e('Result', 'tutor'); ?>
-                            </span>
-                        </div>
-                    </th>
-                    <th class="tutor-shrink"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    if (tutor_utils()->count($assignments_submitted)) {
-                        foreach ($assignments_submitted as $assignment) {
-                            $review_url                = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/review');
-                            $comment_author            = get_user_by('login', $assignment->comment_author); // login=username
-                            $is_reviewed_by_instructor = get_comment_meta($assignment->comment_ID, 'evaluate_time', true);
-                            $given_mark                = get_comment_meta($assignment->comment_ID, 'assignment_mark', true);
-                            $not_evaluated             = $given_mark === '';
-                            $status                    = 'pending';
-                            $button_text               = __('Evaluate', 'tutor');
-    
-                            if (!empty($given_mark) || !$not_evaluated) {
-                                $status = (int)$given_mark >= (int)$pass_mark ? 'pass' : 'fail';
-                                $button_text = __('Details', 'tutor');
-                            }
-                            ?>
-                            <tr>
-                                <td data-th="<?php esc_html_e('Date', 'tutor'); ?>">
-                                    <span class="tutor-color-black tutor-fs-7 tutor-fw-medium">
-                                        <?php echo wp_kses_post( date('j M, Y,<\b\r>h:i a', strtotime($assignment->comment_date))); ?>
-                                    </span>
-                                </td>
-                                <td data-th="<?php esc_html_e('Student', 'tutor'); ?>">
-                                    <div class="td-avatar">
-                                        <?php echo tutor_utils()->get_tutor_avatar( $comment_author->ID ); ?>
-                                        <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
-                                            <?php esc_html_e( $comment_author->display_name ); ?><br/>
-                                            <span class="tutor-fs-7">
-                                                <?php esc_html_e( $comment_author->user_email ); ?>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td data-th="<?php esc_html_e('Total Points', 'tutor'); ?>">
-                                    <span class="tutor-color-black tutor-fs-7 tutor-fw-medium">
-                                        <?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : '&nbsp;'; ?>
-                                    </span>
-                                </td>
-                                <td data-th="<?php esc_html_e('Result', 'tutor'); ?>">
-                                    <?php echo tutor_utils()->translate_dynamic_text($status, true); ?>
-                                </td>
-                                <td data-th="<?php esc_html_e('Details URL', 'tutor'); ?>">
-                                    <div class="tutor-d-inline-flex tutor-align-center td-action-btns">
-                                        <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-                                            <?php esc_html_e($button_text); ?>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php
+                        </th>
+                        <th width="30%">
+                            <?php esc_html_e('Student', 'tutor'); ?>
+                        </th>
+                        <th>
+                            <?php esc_html_e('Total Points', 'tutor'); ?>
+                        </th>
+                        <th>
+                            <?php esc_html_e('Result', 'tutor'); ?>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($assignments_submitted as $assignment) :
+                        $review_url                = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/review');
+                        $comment_author            = get_user_by('login', $assignment->comment_author); // login=username
+                        $is_reviewed_by_instructor = get_comment_meta($assignment->comment_ID, 'evaluate_time', true);
+                        $given_mark                = get_comment_meta($assignment->comment_ID, 'assignment_mark', true);
+                        $not_evaluated             = $given_mark === '';
+                        $status                    = 'pending';
+                        $button_text               = __('Evaluate', 'tutor');
+
+                        if ( !empty( $given_mark ) || !$not_evaluated ) {
+                            $status         = (int)$given_mark >= (int)$pass_mark ? 'pass' : 'fail';
+                            $button_text    = __('Details', 'tutor');
                         }
-                    } else {
-                        ?>
+                    ?>
                         <tr>
-                            <td colspan="100%">
-                                <div class="td-empty-state">
-                                    <?php tutor_utils()->tutor_empty_state( 'No assignment', 'tutor' ); ?>
+                            <td>
+                                <?php echo wp_kses_post( date('j M, Y,<\b\r>h:i a', strtotime($assignment->comment_date))); ?>
+                            </td>
+
+                            <td>
+                                <div class="tutor-d-flex tutor-align-center tutor-gap-2">
+                                    <?php echo tutor_utils()->get_tutor_avatar( $comment_author->ID ); ?>
+                                    <div>
+                                        <?php esc_html_e( $comment_author->display_name ); ?><br/>
+                                        <span class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
+                                            <?php esc_html_e( $comment_author->user_email ); ?>
+                                        </span>
+                                    </div>
                                 </div>
                             </td>
+                            <td>
+                                <span class="tutor-color-black tutor-fs-7 tutor-fw-medium">
+                                    <?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : '&nbsp;'; ?>
+                                </span>
+                            </td>
+                            <td>
+                                <?php echo tutor_utils()->translate_dynamic_text($status, true); ?>
+                            </td>
+                            <td>
+                                <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+                                    <?php esc_html_e($button_text); ?>
+                                </a>
+                            </td>
                         </tr>
-                        <?php
-                    }
-                ?>
-            </tbody>
-        </table>
-    </div>
-
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else : ?>
+        <?php tutor_utils()->tutor_empty_state( 'No assignment', 'tutor' ); ?>
+    <?php endif; ?>
 </div>
