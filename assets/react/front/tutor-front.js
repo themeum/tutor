@@ -561,20 +561,13 @@ jQuery(document).ready(function($) {
 	});
 
 	/**
-	 * Lesson Sidebar Topic Toggle
-	 * @since v.1.3.4
+	 * Open the first lesson if all the lessons are closed
 	 */
-	// $(document).on( 'click', '[tutor-course-single-topic-toggler]', function (e) {
-	// 	e.preventDefault();
-	// 	var $items = $(this).parent().find('.tutor-course-topic-item');
-	// 	$items.slideToggle();
-	// });
-
-	// $('.tutor-course-topic-item').hide();
-	// const activeTopic = $(
-	// 	'.tutor-course-single-sidebar-wrapper .tutor-course-topic-item.is-active',
-	// ).siblings('[tutor-course-single-topic-toggler]')[0];
-	// activeTopic?.click();
+	if ($('.tutor-accordion-item-header.is-active').length === 0) {
+		$('.tutor-accordion-item-header')
+			.first()
+			.trigger('click');
+	}
 
 	/**
 	 *
