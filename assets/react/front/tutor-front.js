@@ -19,7 +19,7 @@ readyState_complete(() => {
 	});
 });
 
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function($) {
 	'use strict';
 	/**
 	 * wp.i18n translateable functions
@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
 	 */
 	if (jQuery().select2) {
 		$('.tutor_select2').select2({
-			escapeMarkup: function (markup) {
+			escapeMarkup: function(markup) {
 				return markup;
 			},
 		});
@@ -49,13 +49,29 @@ jQuery(document).ready(function ($) {
 	 *  jquery.ui.widget.js
 	 *  jquery.ui.mouse.js
 	 */
-	!(function (a) {
+	!(function(a) {
 		function f(a, b) {
 			if (!(a.originalEvent.touches.length > 1)) {
 				a.preventDefault();
 				var c = a.originalEvent.changedTouches[0],
 					d = document.createEvent('MouseEvents');
-				d.initMouseEvent(b, !0, !0, window, 1, c.screenX, c.screenY, c.clientX, c.clientY, !1, !1, !1, !1, 0, null),
+				d.initMouseEvent(
+					b,
+					!0,
+					!0,
+					window,
+					1,
+					c.screenX,
+					c.screenY,
+					c.clientX,
+					c.clientY,
+					!1,
+					!1,
+					!1,
+					!1,
+					0,
+					null,
+				),
 					a.target.dispatchEvent(d);
 			}
 		}
@@ -64,19 +80,27 @@ jQuery(document).ready(function ($) {
 				b = a.ui.mouse.prototype,
 				c = b._mouseInit,
 				d = b._mouseDestroy;
-			(b._touchStart = function (a) {
+			(b._touchStart = function(a) {
 				var b = this;
 				!e &&
 					b._mouseCapture(a.originalEvent.changedTouches[0]) &&
-					((e = !0), (b._touchMoved = !1), f(a, 'mouseover'), f(a, 'mousemove'), f(a, 'mousedown'));
+					((e = !0),
+					(b._touchMoved = !1),
+					f(a, 'mouseover'),
+					f(a, 'mousemove'),
+					f(a, 'mousedown'));
 			}),
-				(b._touchMove = function (a) {
+				(b._touchMove = function(a) {
 					e && ((this._touchMoved = !0), f(a, 'mousemove'));
 				}),
-				(b._touchEnd = function (a) {
-					e && (f(a, 'mouseup'), f(a, 'mouseout'), this._touchMoved || f(a, 'click'), (e = !1));
+				(b._touchEnd = function(a) {
+					e &&
+						(f(a, 'mouseup'),
+						f(a, 'mouseout'),
+						this._touchMoved || f(a, 'click'),
+						(e = !1));
 				}),
-				(b._mouseInit = function () {
+				(b._mouseInit = function() {
 					var b = this;
 					b.element.bind({
 						touchstart: a.proxy(b, '_touchStart'),
@@ -85,7 +109,7 @@ jQuery(document).ready(function ($) {
 					}),
 						c.call(b);
 				}),
-				(b._mouseDestroy = function () {
+				(b._mouseDestroy = function() {
 					var b = this;
 					b.element.unbind({
 						touchstart: a.proxy(b, '_touchStart'),
@@ -105,19 +129,22 @@ jQuery(document).ready(function ($) {
 		ajaxurl: window._tutorobject.ajaxurl,
 		nonce_key: window._tutorobject.nonce_key,
 		played_once: false,
-		video_data: function () {
+		video_data: function() {
 			const video_track_data = $('#tutor_video_tracking_information').val();
 			return video_track_data ? JSON.parse(video_track_data) : {};
 		},
-		track_player: function () {
+		track_player: function() {
 			const that = this;
 			if (typeof Plyr !== 'undefined') {
 				const player = new Plyr(this.player_DOM);
 				const video_data = that.video_data();
-				player.on('ready', function (event) {
+				player.on('ready', function(event) {
 					const instance = event.detail.plyr;
 					const { best_watch_time = 0 } = video_data || {};
-					if (best_watch_time > 0 && instance.duration > Math.round(best_watch_time)) {
+					if (
+						best_watch_time > 0 &&
+						instance.duration > Math.round(best_watch_time)
+					) {
 						instance.media.currentTime = best_watch_time;
 					}
 					that.sync_time(instance);
@@ -125,7 +152,7 @@ jQuery(document).ready(function ($) {
 
 				let tempTimeNow = 0;
 				let intervalSeconds = 30; //Send to tutor backend about video playing time in this interval
-				player.on('timeupdate', function (event) {
+				player.on('timeupdate', function(event) {
 					const instance = event.detail.plyr;
 					const tempTimeNowInSec = tempTimeNow / 4; //timeupdate firing 250ms interval
 					if (tempTimeNowInSec >= intervalSeconds) {
@@ -135,23 +162,26 @@ jQuery(document).ready(function ($) {
 					tempTimeNow++;
 				});
 
-				player.on('play', ()=>{
-					that.played_once=true;
+				player.on('play', () => {
+					that.played_once = true;
 				});
 
-				player.on('ended', function (event) {
+				player.on('ended', function(event) {
 					const video_data = that.video_data();
 					const instance = event.detail.plyr;
 					const data = { is_ended: true };
 					that.sync_time(instance, data);
-					console.log(video_data.autoload_next_course_content, that.played_once);
+					console.log(
+						video_data.autoload_next_course_content,
+						that.played_once,
+					);
 					if (video_data.autoload_next_course_content && that.played_once) {
 						that.autoload_content();
 					}
 				});
 			}
 		},
-		sync_time: function (instance, options) {
+		sync_time: function(instance, options) {
 			const post_id = this.video_data().post_id;
 			//TUTOR is sending about video playback information to server.
 			let data = {
@@ -167,19 +197,19 @@ jQuery(document).ready(function ($) {
 			}
 			$.post(this.ajaxurl, data_send);
 		},
-		autoload_content: function () {
+		autoload_content: function() {
 			console.log('Autoloader called');
 			const post_id = this.video_data().post_id;
 			const data = { action: 'autoload_next_course_content', post_id };
 			data[this.nonce_key] = _tutorobject[this.nonce_key];
-			$.post(this.ajaxurl, data).done(function (response) {
+			$.post(this.ajaxurl, data).done(function(response) {
 				console.log(response);
 				if (response.success && response.data.next_url) {
 					location.href = response.data.next_url;
 				}
 			});
 		},
-		init: function (element) {
+		init: function(element) {
 			this.player_DOM = element;
 			this.track_player();
 		},
@@ -189,11 +219,11 @@ jQuery(document).ready(function ($) {
 	 * Fire TUTOR video
 	 * @since v.1.0.0
 	 */
-	$('.tutorPlayer').each(function () {
+	$('.tutorPlayer').each(function() {
 		videoPlayer.init(this);
 	});
 
-	$(document).on('change keyup paste', '.tutor_user_name', function () {
+	$(document).on('change keyup paste', '.tutor_user_name', function() {
 		$(this).val(tutor_slugify($(this).val()));
 	});
 
@@ -208,13 +238,13 @@ jQuery(document).ready(function ($) {
 			.replace(/-+$/, ''); // Trim - from end of text
 	}
 
-	$(document).on('click', '.tutor_question_cancel', function (e) {
+	$(document).on('click', '.tutor_question_cancel', function(e) {
 		e.preventDefault();
 		$('.tutor-add-question-wrap').toggle();
 	});
 
 	// Quiz Review : Tooltip
-	$('.tooltip-btn').on('hover', function (e) {
+	$('.tooltip-btn').on('hover', function(e) {
 		$(this).toggleClass('active');
 	});
 
@@ -224,7 +254,9 @@ jQuery(document).ready(function ($) {
 	 * Toggle topic summery
 	 * @since v.1.6.9
 	 */
-	$('.tutor-course-title h4 .toggle-information-icon').on('click', function (e) {
+	$('.tutor-course-title h4 .toggle-information-icon').on('click', function(
+		e,
+	) {
 		$(this)
 			.closest('.tutor-topics-in-single-lesson')
 			.find('.tutor-topics-summery')
@@ -235,7 +267,7 @@ jQuery(document).ready(function ($) {
 	$('.tutor-course-topic.tutor-active')
 		.find('.tutor-course-lessons')
 		.slideDown();
-	$('.tutor-course-title').on('click', function () {
+	$('.tutor-course-title').on('click', function() {
 		var lesson = $(this).siblings('.tutor-course-lessons');
 		$(this)
 			.closest('.tutor-course-topic')
@@ -243,35 +275,49 @@ jQuery(document).ready(function ($) {
 		lesson.slideToggle();
 	});
 
-	$(document).on('click', '.tutor-topics-title h3 .toggle-information-icon', function (e) {
-		$(this)
-			.closest('.tutor-topics-in-single-lesson')
-			.find('.tutor-topics-summery')
-			.slideToggle();
-		e.stopPropagation();
-	});
+	$(document).on(
+		'click',
+		'.tutor-topics-title h3 .toggle-information-icon',
+		function(e) {
+			$(this)
+				.closest('.tutor-topics-in-single-lesson')
+				.find('.tutor-topics-summery')
+				.slideToggle();
+			e.stopPropagation();
+		},
+	);
 
 	// toggle topics sidebar
-	$(document).on('click', '[tutor-course-topics-sidebar-toggler]', function (e) {
+	$(document).on('click', '[tutor-course-topics-sidebar-toggler]', function(
+		e,
+	) {
 		e.preventDefault();
-		$('.tutor-course-single-content-wrapper').toggleClass('tutor-course-single-sidebar-hidden');
+		$('.tutor-course-single-content-wrapper').toggleClass(
+			'tutor-course-single-sidebar-hidden',
+		);
 	});
 
-	$('[tutor-course-topics-sidebar-offcanvas-toggler]').on('click', function(event) {
-        event.preventDefault();
-		$('.tutor-course-single-content-wrapper').toggleClass('tutor-course-single-sidebar-open');
-        $('body').toggleClass('tutor-overflow-hidden');
-    });
+	$('[tutor-course-topics-sidebar-offcanvas-toggler]').on('click', function(
+		event,
+	) {
+		event.preventDefault();
+		$('.tutor-course-single-content-wrapper').toggleClass(
+			'tutor-course-single-sidebar-open',
+		);
+		$('body').toggleClass('tutor-overflow-hidden');
+	});
 
-    $('[tutor-hide-course-single-sidebar]').on('click', function(event) {
-        event.preventDefault();
-		console.log("Hello");
-		$('.tutor-course-single-content-wrapper').removeClass('tutor-course-single-sidebar-open');
-        $('body').removeClass('tutor-overflow-hidden');
-    });
+	$('[tutor-hide-course-single-sidebar]').on('click', function(event) {
+		event.preventDefault();
+		console.log('Hello');
+		$('.tutor-course-single-content-wrapper').removeClass(
+			'tutor-course-single-sidebar-open',
+		);
+		$('body').removeClass('tutor-overflow-hidden');
+	});
 
 	//@todo: to be removed
-	$('.tutor-tabs-btn-group a').on('click touchstart', function (e) {
+	$('.tutor-tabs-btn-group a').on('click touchstart', function(e) {
 		e.preventDefault();
 		var $that = $(this);
 		var tabSelector = $that.attr('href');
@@ -293,7 +339,7 @@ jQuery(document).ready(function ($) {
 	 */
 	var countDraggableAnswers = $('.quiz-draggable-rand-answers').length;
 	if (countDraggableAnswers) {
-		$('.quiz-draggable-rand-answers').each(function () {
+		$('.quiz-draggable-rand-answers').each(function() {
 			var $that = $(this);
 			var draggableDivHeight = $that.height();
 
@@ -315,34 +361,33 @@ jQuery(document).ready(function ($) {
 	 *
 	 * @since v.1.2.0
 	 */
-	$(document).on('submit', '#tutor-withdraw-account-set-form', function (e) {
+	$(document).on('submit', '#tutor-withdraw-account-set-form', function(e) {
 		if (!e.detail || e.detail == 1) {
 			e.preventDefault();
 			var $form = $(this);
 			var $btn = $form.find('.tutor_set_withdraw_account_btn');
 			var data = $form.serializeObject();
-			$btn.prop("disabled", true);
+			$btn.prop('disabled', true);
 
 			$.ajax({
 				url: _tutorobject.ajaxurl,
 				type: 'POST',
 				data: data,
-				beforeSend: function () {
+				beforeSend: function() {
 					$btn.addClass('is-loading');
 				},
-				success: function (data) {
+				success: function(data) {
 					if (data.success) {
 						tutor_toast('Success!', data.data.msg, 'success');
 					}
 				},
-				complete: function () {
+				complete: function() {
 					$btn.removeClass('is-loading');
 					setTimeout(() => {
-						$btn.prop("disabled", false);
+						$btn.prop('disabled', false);
 					}, 2000);
 				},
 			});
-
 		}
 	});
 
@@ -352,7 +397,7 @@ jQuery(document).ready(function ($) {
 	 * @since v.1.2.0
 	 */
 
-	$(document).on('submit', '#tutor-earning-withdraw-form', function (e) {
+	$(document).on('submit', '#tutor-earning-withdraw-form', function(e) {
 		e.preventDefault();
 
 		var $form = $(this);
@@ -364,26 +409,31 @@ jQuery(document).ready(function ($) {
 			url: _tutorobject.ajaxurl,
 			type: 'POST',
 			data: data,
-			beforeSend: function () {
+			beforeSend: function() {
 				$form.find('.tutor-success-msg').remove();
 				$btn.attr('disabled', 'disabled').addClass('is-loading');
 			},
-			success: function (data) {
+			success: function(data) {
 				var Msg;
 				$('.tutor-earning-withdraw-form-wrap').hide();
 				if (data.success) {
 					console.log(data.data.available_balance);
-					
+
 					if (data.data.available_balance !== 'undefined') {
-						$('.withdraw-balance-col .available_balance').html(data.data.available_balance);
+						$('.withdraw-balance-col .available_balance').html(
+							data.data.available_balance,
+						);
 					}
 
 					tutor_toast(
 						__('Request Successful', 'tutor'),
-						__('Your request has been submitted. Please wait for the administrator\'s response.', 'tutor'),
-						'success'
+						__(
+							"Your request has been submitted. Please wait for the administrator's response.",
+							'tutor',
+						),
+						'success',
 					);
-					setTimeout(function () {
+					setTimeout(function() {
 						location.reload();
 					}, 500);
 				} else {
@@ -401,13 +451,13 @@ jQuery(document).ready(function ($) {
                             </div>\
                         </div>';
 
-					setTimeout(function () {
+					setTimeout(function() {
 						$responseDiv.html('');
 					}, 5000);
 					return false;
 				}
 			},
-			complete: function () {
+			complete: function() {
 				$btn.removeAttr('disabled').removeClass('is-loading');
 			},
 		});
@@ -416,12 +466,14 @@ jQuery(document).ready(function ($) {
 	/**
 	 * Delete Course
 	 */
-	$(document).on('click', '.tutor-dashboard-element-delete-btn', function (e) {
+	$(document).on('click', '.tutor-dashboard-element-delete-btn', function(e) {
 		e.preventDefault();
 		var element_id = $(this).attr('data-id');
 		$('#tutor-dashboard-delete-element-id').val(element_id);
 	});
-	$(document).on('submit', '#tutor-dashboard-delete-element-form', function (e) {
+	$(document).on('submit', '#tutor-dashboard-delete-element-form', function(
+		e,
+	) {
 		e.preventDefault();
 
 		var element_id = $('#tutor-dashboard-delete-element-id').val();
@@ -432,15 +484,17 @@ jQuery(document).ready(function ($) {
 			url: _tutorobject.ajaxurl,
 			type: 'POST',
 			data: data,
-			beforeSend: function () {
+			beforeSend: function() {
 				$btn.addClass('is-loading');
 			},
-			success: function (res) {
+			success: function(res) {
 				if (res.success) {
-					$('#tutor-dashboard-' + res.data.element + '-' + element_id).remove();
+					$(
+						'#tutor-dashboard-' + res.data.element + '-' + element_id,
+					).remove();
 				}
 			},
-			complete: function () {
+			complete: function() {
 				$btn.removeClass('is-loading');
 			},
 		});
@@ -451,7 +505,7 @@ jQuery(document).ready(function ($) {
 	 *
 	 * @since v.1.3.3
 	 */
-	$(document).on('submit', '#tutor_assignment_start_form', function (e) {
+	$(document).on('submit', '#tutor_assignment_start_form', function(e) {
 		e.preventDefault();
 
 		var $that = $(this);
@@ -462,15 +516,15 @@ jQuery(document).ready(function ($) {
 			url: _tutorobject.ajaxurl,
 			type: 'POST',
 			data: form_data,
-			beforeSend: function () {
+			beforeSend: function() {
 				$('#tutor_assignment_start_btn').addClass('is-loading');
 			},
-			success: function (data) {
+			success: function(data) {
 				if (data.success) {
 					location.reload();
 				}
 			},
-			complete: function () {
+			complete: function() {
 				$('#tutor_assignment_start_btn').removeClass('is-loading');
 			},
 		});
@@ -479,11 +533,15 @@ jQuery(document).ready(function ($) {
 	/**
 	 * Assignment answer validation
 	 */
-	$(document).on('submit', '#tutor_assignment_submit_form', function (e) {
+	$(document).on('submit', '#tutor_assignment_submit_form', function(e) {
 		var assignment_answer = tinymce.activeEditor.getContent();
 		if (assignment_answer.trim().length < 1) {
 			e.preventDefault();
-			tutor_toast(__('Warning', 'tutor'), __('Assignment answer is required.', 'tutor'), 'error');
+			tutor_toast(
+				__('Warning', 'tutor'),
+				__('Assignment answer is required.', 'tutor'),
+				'error',
+			);
 		}
 	});
 
@@ -491,26 +549,32 @@ jQuery(document).ready(function ($) {
 	 * Single Assignment Upload Button
 	 * @since v.1.3.4
 	 */
-	$('form').on('change', '.tutor-assignment-file-upload', function () {
+	$('form').on('change', '.tutor-assignment-file-upload', function() {
 		$(this)
 			.siblings('label')
 			.find('span')
-			.html($(this).val().replace(/.*(\/|\\)/, ''));
+			.html(
+				$(this)
+					.val()
+					.replace(/.*(\/|\\)/, ''),
+			);
 	});
 
 	/**
 	 * Lesson Sidebar Topic Toggle
 	 * @since v.1.3.4
 	 */
-	$(document).on( 'click', '[tutor-course-single-topic-toggler]', function (e) {
-		e.preventDefault();
-		var $items = $(this).parent().find('.tutor-course-topic-item');
-		$items.slideToggle();
-	});
-	
-	$('.tutor-course-topic-item').hide();
-	const activeTopic = $('.tutor-course-single-sidebar-wrapper .tutor-course-topic-item.is-active').siblings('[tutor-course-single-topic-toggler]')[0];
-	activeTopic?.click()
+	// $(document).on( 'click', '[tutor-course-single-topic-toggler]', function (e) {
+	// 	e.preventDefault();
+	// 	var $items = $(this).parent().find('.tutor-course-topic-item');
+	// 	$items.slideToggle();
+	// });
+
+	// $('.tutor-course-topic-item').hide();
+	// const activeTopic = $(
+	// 	'.tutor-course-single-sidebar-wrapper .tutor-course-topic-item.is-active',
+	// ).siblings('[tutor-course-single-topic-toggler]')[0];
+	// activeTopic?.click();
 
 	/**
 	 *
@@ -521,7 +585,7 @@ jQuery(document).ready(function ($) {
 	 * @since v.1.3.5
 	 */
 
-	$('.tutor-course-builder-section-title').on('click', function () {
+	$('.tutor-course-builder-section-title').on('click', function() {
 		if (
 			$(this)
 				.find('i')
@@ -547,19 +611,19 @@ jQuery(document).ready(function ($) {
 	 * @since v.1.4.5
 	 */
 
-	$(document).on('click', '#tutor_profile_photo_button', function (e) {
+	$(document).on('click', '#tutor_profile_photo_button', function(e) {
 		e.preventDefault();
 
 		$('#tutor_profile_photo_file').trigger('click');
 	});
 
-	$(document).on('change', '#tutor_profile_photo_file', function (event) {
+	$(document).on('change', '#tutor_profile_photo_file', function(event) {
 		event.preventDefault();
 
 		var $file = this;
 		if ($file.files && $file.files[0]) {
 			var reader = new FileReader();
-			reader.onload = function (e) {
+			reader.onload = function(e) {
 				$('.tutor-profile-photo-upload-wrap')
 					.find('img')
 					.attr('src', e.target.result);
@@ -575,23 +639,28 @@ jQuery(document).ready(function ($) {
 	 * @since v.1.4.8
 	 */
 
-	$(document).on('click', '.thread-content .subject', function (e) {
+	$(document).on('click', '.thread-content .subject', function(e) {
 		var $btn = $(this);
 
-		var thread_id = parseInt($btn.closest('.thread-content').attr('data-thread-id'));
+		var thread_id = parseInt(
+			$btn.closest('.thread-content').attr('data-thread-id'),
+		);
 
 		var nonce_key = _tutorobject.nonce_key;
-		var json_data = { thread_id: thread_id, action: 'tutor_bp_retrieve_user_records_for_thread' };
+		var json_data = {
+			thread_id: thread_id,
+			action: 'tutor_bp_retrieve_user_records_for_thread',
+		};
 		json_data[nonce_key] = _tutorobject[nonce_key];
 
 		$.ajax({
 			type: 'POST',
 			url: window._tutorobject.ajaxurl,
 			data: json_data,
-			beforeSend: function () {
+			beforeSend: function() {
 				$('#tutor-bp-thread-wrap').html('');
 			},
-			success: function (data) {
+			success: function(data) {
 				if (data.success) {
 					$('#tutor-bp-thread-wrap').html(data.data.thread_head_html);
 					tutor_bp_setting_enrolled_courses_list();
@@ -601,14 +670,14 @@ jQuery(document).ready(function ($) {
 	});
 
 	function tutor_bp_setting_enrolled_courses_list() {
-		$('ul.tutor-bp-enrolled-course-list').each(function () {
+		$('ul.tutor-bp-enrolled-course-list').each(function() {
 			var $that = $(this);
 			var $li = $that.find(' > li');
 			var itemShow = 3;
 
 			if ($li.length > itemShow) {
 				var plusCourseCount = $li.length - itemShow;
-				$li.each(function (liIndex, liItem) {
+				$li.each(function(liIndex, liItem) {
 					var $liItem = $(this);
 
 					if (liIndex >= itemShow) {
@@ -631,7 +700,7 @@ jQuery(document).ready(function ($) {
 	}
 	tutor_bp_setting_enrolled_courses_list();
 
-	$(document).on('click', 'a.tutor_bp_plus_courses', function (e) {
+	$(document).on('click', 'a.tutor_bp_plus_courses', function(e) {
 		e.preventDefault();
 
 		var $btn = $(this);
@@ -649,14 +718,14 @@ jQuery(document).ready(function ($) {
 	 * @since v.1.5.1
 	 */
 	//$(document).on('click', '.tutor-dropbtn', function (e) {
-	$('.tutor-dropbtn').click(function () {
+	$('.tutor-dropbtn').click(function() {
 		var $content = $(this)
 			.parent()
 			.find('.tutor-dropdown-content');
 		$content.slideToggle(100);
 	});
 
-	$(document).on('click', function (e) {
+	$(document).on('click', function(e) {
 		var container = $('.tutor-dropdown');
 		var $content = container.find('.tutor-dropdown-content');
 		// if the target of the click isn't the container nor a descendant of the container
@@ -670,12 +739,14 @@ jQuery(document).ready(function ($) {
 	 *
 	 * @since  v.1.7.2
 	 */
-	var price_type = $('.tutor-frontend-builder-course-price [name="tutor_course_price_type"]');
+	var price_type = $(
+		'.tutor-frontend-builder-course-price [name="tutor_course_price_type"]',
+	);
 	if (price_type.length == 0) {
 		$('#_tutor_is_course_public_meta_checkbox').show();
 	} else {
 		price_type
-			.change(function () {
+			.change(function() {
 				if ($(this).prop('checked')) {
 					var method = $(this).val() == 'paid' ? 'hide' : 'show';
 					$('#_tutor_is_course_public_meta_checkbox')[method]();
@@ -691,17 +762,17 @@ jQuery(document).ready(function ($) {
 	 */
 	// Fully accessible tooltip jQuery plugin with delegation.
 	// Ideal for view containers that may re-render content.
-	(function ($) {
-		$.fn.tutor_tooltip = function () {
+	(function($) {
+		$.fn.tutor_tooltip = function() {
 			this
 
 				// Delegate to tooltip, Hide if tooltip receives mouse or is clicked (tooltip may stick if parent has focus)
-				.on('mouseenter click', '.tooltip', function (e) {
+				.on('mouseenter click', '.tooltip', function(e) {
 					e.stopPropagation();
 					$(this).removeClass('isVisible');
 				})
 				// Delegate to parent of tooltip, Show tooltip if parent receives mouse or focus
-				.on('mouseenter focus', ':has(>.tooltip)', function (e) {
+				.on('mouseenter focus', ':has(>.tooltip)', function(e) {
 					if (!$(this).prop('disabled')) {
 						// IE 8 fix to prevent tooltip on `disabled` elements
 						$(this)
@@ -710,7 +781,7 @@ jQuery(document).ready(function ($) {
 					}
 				})
 				// Delegate to parent of tooltip, Hide tooltip if parent loses mouse or focus
-				.on('mouseleave blur keydown', ':has(>.tooltip)', function (e) {
+				.on('mouseleave blur keydown', ':has(>.tooltip)', function(e) {
 					if (e.type === 'keydown') {
 						if (e.which === 27) {
 							$(this)
@@ -730,7 +801,11 @@ jQuery(document).ready(function ($) {
 	// Bind event listener to container element
 	jQuery('.tutor-tooltip-inside').tutor_tooltip();
 
-	jQuery('.tutor-static-loader').click(function(){
-		setTimeout( () => { jQuery(this).addClass('is-loading').attr('disabled','disabled') }, 100 )
-	})
+	jQuery('.tutor-static-loader').click(function() {
+		setTimeout(() => {
+			jQuery(this)
+				.addClass('is-loading')
+				.attr('disabled', 'disabled');
+		}, 100);
+	});
 });
