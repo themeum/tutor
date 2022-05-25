@@ -2065,7 +2065,8 @@ class Utils {
 			FROM 	{$wpdb->posts}
 			WHERE 	post_type = %s
 					AND post_status = %s
-					AND post_author = %d;
+					AND post_author = %d
+				ORDER BY post_date DESC;
 			",
 				'tutor_enrolled',
 				'completed',
@@ -2174,7 +2175,7 @@ class Utils {
 		global $wpdb;
 
 		$user_id    = $this->get_user_id( $user_id );
-		$course_ids = $this->get_enrolled_courses_ids_by_user( $user_id );
+		$course_ids = array_unique( $this->get_enrolled_courses_ids_by_user( $user_id ) );
 
 		if ( count( $course_ids ) ) {
 			$course_post_type = tutor()->course_post_type;
@@ -2185,7 +2186,24 @@ class Utils {
 				'offset'         => $offset,
 				'posts_per_page' => $posts_per_page,
 			);
-			return new \WP_Query( $course_args );
+
+			$result = new \WP_Query( $course_args );
+
+			if(is_object($result) && is_array($result->posts)){
+
+				// Sort courses according to the id list
+				$new_array = array();
+
+				foreach($course_ids as $id){
+					foreach($result->posts as $post){
+						$post->ID==$id ? $new_array[] = $post : 0;
+					}
+				}
+
+				$result->posts = $new_array;
+			}
+			
+			return $result;
 		}
 
 		return false;
