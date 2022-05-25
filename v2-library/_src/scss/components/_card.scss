@@ -136,6 +136,25 @@
 					border-bottom-right-radius: 6px;
 				}
 			}
+
+			// Horizontal
+			@include media-breakpoint-up(xl) {
+				&-horizontal {
+					flex-direction: row;
+					.tutor-card-list-item {
+						flex-shrink: 0;
+						flex-grow: 1;
+						border-bottom: 0;
+						border-radius: 6px;					
+	
+						&:not(:last-child) {
+							border-right: 1px solid #CDCFD5;
+							border-top-right-radius: 0;
+							border-bottom-right-radius: 0;
+						}
+					}
+				}
+			}
 		}
 	}
 }
