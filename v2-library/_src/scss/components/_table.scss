@@ -65,7 +65,8 @@
 			font-weight: 500;
 			color: var(--tutor-body-color);
 
-			> a:not(.tutor-btn):not(.tutor-iconic-btn) {
+			> a:not(.tutor-btn):not(.tutor-iconic-btn),
+			.tutor-table-link {
 				text-decoration: none;
 				color: var(--tutor-body-color);
 				font-weight: 500;
