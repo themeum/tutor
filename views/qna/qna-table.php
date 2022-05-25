@@ -99,7 +99,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                         </span>
                                     </div>
                                 <?php elseif ( $key == 'action' ) : ?>
-                                    <div class="tutor-d-inline-flex tutor-align-center tutor-gap-1">
+                                    <div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-1">
                                         <a href="<?php echo add_query_arg(array('question_id' => $qna->comment_ID), tutor()->current_url); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
                                             <?php _e('Reply', 'tutor-pro'); ?>
                                         </a>

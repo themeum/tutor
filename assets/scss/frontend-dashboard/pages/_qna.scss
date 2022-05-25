@@ -73,58 +73,6 @@
 	}
 }
 
-table {
-	td[data-th='Question'] {
-		.tutor-qna-desc {
-			padding-right: 20px;
-			.tutor-qna-content:first-letter {
-				text-transform: uppercase;
-			}
-		}
-	}
-}
-table.frontend-dashboard-qna-table-student {
-	@include breakpoint-min(1200) {
-		th:first-child {
-			span {
-				padding-left: 21px;
-			}
-		}
-	}
-}
-table.frontend-dashboard-qna-table-instructor {
-	@include breakpoint-min(1200) {
-		th:first-child {
-			* {
-				margin-left: 32px;
-			}
-		}
-
-		td[data-th='Student'] {
-			width: 30%;
-		}
-
-		td[data-th='Question'] {
-			width: 35%;
-			i {
-				left: -26px;
-			}
-			.tutor-form-feedback {
-				padding-left: 0px;
-				margin: 0px;
-			}
-		}
-
-		td[data-th='Reply'] {
-			width: 8%;
-		}
-
-		td[data-th='Action'] {
-			width: 15%;
-		}
-	}
-}
-
 .tutor-qna-single-wrapper {
 	.qna-back-button {
 		display: flex;
