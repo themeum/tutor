@@ -187,9 +187,8 @@ $available_status = array(
 								$count_quiz       = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_quiz'] : 0;
 								$count_assignment = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_assignments'] : 0;
 								$count_topic      = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['topics'] : 0;
-
-								$tutor_course_img = get_tutor_course_thumbnail_src();
-								$thumbnail 		  = empty( esc_url( $tutor_course_img ) ) ? tutor()->url . 'assets/images/placeholder.svg' : esc_url( $tutor_course_img );
+								$thumbnail_id 	  = (int) get_post_thumbnail_id( $post->ID );
+								$thumbnail 		  = $thumbnail_id ? wp_get_attachment_image_url( $thumbnail_id, 'thumbnail', false ) : tutor()->url . 'assets/images/placeholder.svg';
 								
 								!isset($authors[$post->post_author]) ? $authors[$post->post_author]=get_userdata( $post->post_author ) : 0;
 								$author_details = $authors[$post->post_author];
