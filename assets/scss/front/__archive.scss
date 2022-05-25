@@ -571,44 +571,6 @@ Instructor
 	color: #f8c51c;
 }
 
-.course-rating-meter {
-	display: flex;
-}
-
-.course-rating-meter i.tutor-icon-star-full {
-	color: #f8c51c;
-}
-
-.rating-meter-bar-wrap {
-	flex: 1;
-}
-
-.rating-meter-col {
-	margin: 0 3px;
-}
-
-.course-rating-meter {
-	margin-bottom: 8px;
-}
-
-.rating-meter-bar {
-	height: 5px;
-	width: 100%;
-	background: #e8eff1;
-	margin-top: 11px;
-	border-radius: 15px;
-	overflow: hidden;
-}
-
-.rating-meter-fill-bar {
-	background: #f8c51c;
-	height: 5px;
-}
-
-.rating-meter-col.rating-text-col {
-	flex: 0 0 auto;
-}
-
 /* ********************* */
 
 /* Tutor Course Tags */

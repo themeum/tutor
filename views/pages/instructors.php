@@ -95,47 +95,34 @@ $filters = array(
 	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-table-responsive tutor-mt-32">
-			<table class="tutor-table table-instructors tutor-table-with-checkbox">
+			<table class="tutor-table tutor-table-middle table-instructors tutor-table-with-checkbox">
 				<thead>
 					<tr>
-						<th width="3%">
+						<th width="5%">
 							<div class="tutor-d-flex">
 								<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
 							</div>
 						</th>
-						<th class="tutor-table-rows-sorting">
-							<div class="tutor-color-secondary">
-								<span class="tutor-fs-7"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
-								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
-							</div>
+						<th class="tutor-table-rows-sorting" width="25%">
+							<?php esc_html_e( 'Name', 'tutor' ); ?>
+							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 						</th>
-						<th class="tutor-table-rows-sorting">
-							<div class="tutor-color-secondary">
-								<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
-								<span class="tutor-icon-order-down up-down-icon"></span>
-							</div>
+						<th class="tutor-table-rows-sorting" width="30%">
+							<?php esc_html_e( 'Email', 'tutor' ); ?>
+							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 						</th>
-						<th class="tutor-table-rows-sorting">
-							<div class=" tutor-color-secondary">
-								<span class="tutor-fs-7"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
-								<span class="tutor-icon-order-down up-down-icon"></span>
-							</div>
-						</th>
-						<th class="tutor-table-rows-sorting">
-							<div class=" tutor-color-secondary">
-								<span class="tutor-fs-7">
-									<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
-								</span>
-								<span class="tutor-icon-order-down up-down-icon"></span>
-							</div>
-						</th>
-						<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-secondary">
-							<span class="tutor-fs-7"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
+						<th class="tutor-table-rows-sorting" width="10%">
+							<?php esc_html_e( 'Total Courses', 'tutor' ); ?>
 							<span class="tutor-icon-order-down up-down-icon"></span>
-						</div>
 						</th>
-						<th class="tutor-shrink"></th>
+						<th class="tutor-table-rows-sorting" width="10%">
+							<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
+						</th>
+						<th class="tutor-table-rows-sorting" width="15%">
+							<?php esc_html_e( 'Status', 'tutor' ); ?>
+							<span class="tutor-icon-order-down up-down-icon"></span>
+						</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -145,17 +132,15 @@ $filters = array(
 							$alert = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
 							?>
 							<tr>
-								<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
+								<td>
 									<div class="td-checkbox tutor-d-flex ">
 										<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
 									</div>
 								</td>
-								<td data-th="<?php esc_html_e( 'Avatar', 'tutor' ); ?>" class="column-fullwidth">
-									<div class="td-avatar">
+								<td>
+									<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 										<?php echo tutor_utils()->get_tutor_avatar( $list->ID ); ?>
-										<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
-											<?php echo esc_html( $list->display_name ); ?>
-										</span>
+										<?php echo esc_html( $list->display_name ); ?>
 										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
 											<span class="tutor-icon-external-link"></span>
 										</a>
