@@ -2065,7 +2065,8 @@ class Utils {
 			FROM 	{$wpdb->posts}
 			WHERE 	post_type = %s
 					AND post_status = %s
-					AND post_author = %d;
+					AND post_author = %d
+				ORDER BY post_date DESC;
 			",
 				'tutor_enrolled',
 				'completed',
