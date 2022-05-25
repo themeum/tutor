@@ -106,14 +106,14 @@
 	.tab-header {
 		position: relative;
 		&:before {
-			content: '';
+			content: ' ';
 			bottom: 0;
 			position: absolute;
 			left: calc(-1 * var(--padding));
 			width: calc(100% + calc(2 * var(--padding)));
-			/* stroke/light30 */
 			border-bottom: 1px solid var(--tutor-border-color);
 		}
+
 		&-item {
 			cursor: pointer;
 			position: relative;
