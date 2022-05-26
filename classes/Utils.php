@@ -8086,12 +8086,12 @@ class Utils {
 		$content_type = get_post_field( 'post_type', $content_id );
 		
 		// Differentiate standalone zoom meeting and zoom lesson
-		if($content_type=='tutor_zoom_meeting'){
+		if ( $content_type == 'tutor_zoom_meeting' ) {
 			$parent_id = wp_get_post_parent_id( $content_id );
 			$parent_type = get_post_field( 'post_type', $parent_id );
 
 
-			if($parent_type=='courses'){
+			if ( $parent_type=='courses' ) {
 				$content_type = 'tutor_zoom_meeting';
 			} 
 		}
