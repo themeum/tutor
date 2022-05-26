@@ -132,7 +132,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 	$enrolled_course_count		= $enrolled_course ? $enrolled_course->post_count : 0;
 	$completed_course_count		= count( $completed_courses );
-	$active_course_count		= $active_courses->have_posts() ? $active_courses->post_count : 0;
+	$active_course_count		= is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
 
 	$status_translations = array(
 		'publish' => __( 'Published', 'tutor' ),
