@@ -128,11 +128,11 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$total_students    = tutor_utils()->get_total_students_by_instructor( get_current_user_id() );
 	$my_courses        = tutor_utils()->get_courses_by_instructor( get_current_user_id(), 'publish' );
 	$earning_sum       = tutor_utils()->get_earning_sum();
+	$active_courses	   = tutor_utils()->get_active_courses_by_user( get_current_user_id() );
 
-	$enrolled_course_count                          = $enrolled_course ? $enrolled_course->post_count : 0;
-	$completed_course_count                         = count( $completed_courses );
-	$active_course_count                            = $enrolled_course_count - $completed_course_count;
-	$active_course_count < 0 ? $active_course_count = 0 : 0;
+	$enrolled_course_count		= $enrolled_course ? $enrolled_course->post_count : 0;
+	$completed_course_count		= count( $completed_courses );
+	$active_course_count		= $active_courses->have_posts() ? $active_courses->post_count : 0;
 
 	$status_translations = array(
 		'publish' => __( 'Published', 'tutor' ),
