@@ -61,15 +61,14 @@ if ($topics->have_posts()) {
 		}));
 ?>
 		<div class="tutor-course-topic tutor-course-topic-<?php echo $topic_id; ?>">
-			<div class="tutor-accordion-item-header <?php echo $is_topic_active ? ' is-active' : ''; ?>" tutor-course-single-topic-toggler>
-				<div class="tutor-row">
+			<div class="tutor-accordion-item-header<?php echo $is_topic_active ? ' is-active' : ''; ?>" tutor-course-single-topic-toggler>
+				<div class="tutor-row tutor-gx-1">
 					<div class="tutor-col">
-						<div class="tutor-fs-6 tutor-fw-medium tutor-cursor-pointer tutor-user-select-none">
-							<!-- <i class="tutor-course-topic-title-arrow tutor-icon-angle-right tutor-mr-8" area-hidden="true"></i> -->
+						<div class="tutor-course-topic-title">
 							<?php the_title(); ?>
 							<?php if (true) : ?>
 								<?php if (trim($topic_summery)) : ?>
-									<div class="tutor-course-topic-title-info">
+									<div class="tutor-course-topic-title-info tutor-ml-8">
 										<div class="tooltip-wrap">
 											<i class="tutor-course-topic-title-info-icon tutor-icon-circle-info-o"></i>
 											<span class="tooltip-txt tooltip-bottom">
@@ -84,7 +83,7 @@ if ($topics->have_posts()) {
 
 					<div class="tutor-col-auto tutor-align-self-center">
 						<?php if (isset($total_contents['contents']) && $total_contents['contents'] > 0) : ?>
-							<div class="tutor-course-topic-summary tutor-fs-7 tutor-color-secondary tutor-pl-8">
+							<div class="tutor-course-topic-summary tutor-pl-8">
 								<?php echo esc_html(isset($total_contents['completed']) ? $total_contents['completed'] : 0); ?>/<?php echo esc_html(isset($total_contents['contents']) ? $total_contents['contents'] : 0); ?>
 							</div>
 						<?php endif; ?>

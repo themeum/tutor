@@ -65,7 +65,8 @@
 			font-weight: 500;
 			color: var(--tutor-body-color);
 
-			> a:not(.tutor-btn):not(.tutor-iconic-btn),
+			// @todo: .quiz-manual-review-action remove later
+			> a:not(.tutor-btn):not(.tutor-iconic-btn):not(.quiz-manual-review-action),
 			.tutor-table-link {
 				text-decoration: none;
 				color: var(--tutor-body-color);

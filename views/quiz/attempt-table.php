@@ -13,7 +13,7 @@
 ?>
 
 <?php if ( is_array( $attempt_list ) && count( $attempt_list ) ): ?>
-	<div class="tutor-table-responsive<?php echo is_admin() ? ' tutor-mt-24' : ''; ?>">
+	<div class="tutor-table-responsive tutor-mt-24">
 		<table class="tutor-table tutor-table-quiz-attempts">
 			<thead>
 				<tr>

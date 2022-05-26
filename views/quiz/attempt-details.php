@@ -309,13 +309,13 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                             }
                             ?>
     
-                            <tr>
+                            <tr class="tutor-quiz-answer-status-<?php echo esc_html( $answer_status ); ?>">
                                 <?php foreach($table_2_columns as $key => $column): ?>
                                     <?php
                                         switch($key) {
                                             case 'no' :
                                                 ?>
-                                                <td class="no" data-th="<?php echo $column; ?>">
+                                                <td class="no">
                                                     <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
                                                         <?php echo $answer_i; ?>
                                                     </span>
@@ -325,7 +325,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     
                                             case 'type' :
                                                 ?>
-                                                <td class="type" data-th="<?php echo $column; ?>">
+                                                <td class="type">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
                                                     <div class="tooltip-wrap tooltip-icon tutor-d-flex">
                                                         <?php echo $question_type['icon']; ?>
@@ -339,7 +339,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     
                                             case 'questions' :
                                                 ?>
-                                                <td class="questions" data-th="<?php echo $column; ?>">
+                                                <td class="questions">
                                                     <span class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-center">
                                                         <?php echo stripslashes($answer->question_title); ?>
                                                     </span>
@@ -349,7 +349,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     
                                             case 'given_answer' :
                                                 ?>
-                                                <td class="given-answer" data-th="<?php echo $column; ?>">
+                                                <td class="given-answer">
                                                     <?php
                                                         // Single choice
                                                         if ( $answer->question_type === 'single_choice' ) {
@@ -466,7 +466,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     
                                             case 'correct_answer' :
                                                 ?>
-                                                <td class="correct-answer" data-th="<?php echo $column; ?>">
+                                                <td class="correct-answer">
                                                     <?php
                                                     if (($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
     
@@ -607,7 +607,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     
                                             case 'answer' :
                                                 ?>
-                                                <td class="answer" data-th="<?php echo $column; ?>">
+                                                <td class="answer">
                                                     <?php
                                                         switch($answer_status) {
                                                             case 'correct' :
@@ -629,7 +629,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     
                                             case 'manual_review' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-nowrap-ellipsis">
+                                                <td class="tutor-text-center tutor-nowrap-ellipsis">
                                                     <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-color-success">
                                                         <i class="tutor-icon-mark"></i>
                                                     </a>

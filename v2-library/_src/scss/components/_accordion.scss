@@ -16,10 +16,14 @@
             font-size: 20px;
             font-weight: 500;
             line-height: 1.4;
-            padding: 16px 40px 16px 20px;
+            @if ($is_rtl == true) {
+                padding: 16px 20px 16px 40px;
+            } @else {
+                padding: 16px 40px 16px 20px;
+            }
             margin: 0 !important;
             transition: 200ms;
-            background-color: $color-gray-5;
+            background-color: $color-gray-2;
             color: var(--tutor-color-secondary);
             user-select: none;
             border-radius: 6px;
@@ -34,7 +38,11 @@
                 font-size: 16px;
                 font-weight: normal;
                 position: absolute;
-                right: 16px;
+                @if ($is_rtl == true) {
+                    left: 16px;
+                } @else {
+                    right: 16px;
+                }
                 top: 50%;
                 transform: translateY(-50%) rotate(0deg);
                 transition: 150ms;
@@ -59,7 +67,11 @@
                     position: relative;
                     font-size: 16px;
                     top: 1px;
-                    margin-left: 8px;
+                    @if ($is_rtl == true) {
+                        margin-right: 8px;
+                    } @else {
+                        margin-left: 8px;
+                    }
                 }
             }
         }
