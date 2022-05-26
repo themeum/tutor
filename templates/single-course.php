@@ -67,16 +67,11 @@ if (!is_user_logged_in() && !$is_public && $student_must_login_to_view_course){
                     <?php do_action('tutor_course/single/before/sidebar'); ?>
                     <?php tutor_load_template('single.course.course-entry-box'); ?>
 
-                    <div class="tutor-card tutor-course-single-info-card tutor-mt-24">
-                        <div class="tutor-card-body">
-                            <?php tutor_course_instructors_html(); ?>
-                            <div class="tutor-mx-n20">
-                                <div class="tutor-hr" area-hidden="true"></div>
-                            </div>
-                            <?php tutor_course_requirements_html(); ?>
-                            <?php tutor_course_tags_html(); ?>
-                            <?php tutor_course_target_audience_html(); ?>
-                        </div>
+                    <div class="tutor-single-course-sidebar-more tutor-mt-24">
+                        <?php tutor_course_instructors_html(); ?>
+                        <?php tutor_course_requirements_html(); ?>
+                        <?php tutor_course_tags_html(); ?>
+                        <?php tutor_course_target_audience_html(); ?>
                     </div>
 
                     <?php do_action('tutor_course/single/after/sidebar'); ?>

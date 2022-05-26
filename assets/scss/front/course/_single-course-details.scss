@@ -76,4 +76,36 @@
     .tutor-course-single-info-card {
         background-color: #FCFCFD;
     }
+
+    &-more {
+        > div {
+            padding: 16px 32px;
+            margin: 0;
+            background-color: #FCFCFD;
+            border-left: 1px solid var(--tutor-border-color);
+            border-right: 1px solid var(--tutor-border-color);
+
+            &:first-child {
+                padding-top: 24px;
+                border-top: 1px solid var(--tutor-border-color);
+                border-top-left-radius: 6px;
+                border-top-right-radius: 6px;
+            }
+
+            &:last-child {
+                padding-bottom: 24px;
+                border-bottom: 1px solid var(--tutor-border-color);
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+        }
+
+        .tutor-course-details-instructors {
+            padding-bottom: 24px;
+            & + div {
+                border-top: 1px solid var(--tutor-border-color);
+                padding-top: 24px;
+            }
+        }
+    }
 }
