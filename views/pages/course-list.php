@@ -158,13 +158,13 @@ $available_status = array(
 								<?php esc_html_e( 'Title', 'tutor' ); ?>
 								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
 							</th>
-							<th width="15%">
+							<th width="13%">
 								<?php esc_html_e( 'Categories', 'tutor' ); ?>
 							</th>
-							<th width="15%">
+							<th width="13%">
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 							</th>
-							<th width="8%">
+							<th width="6%">
 								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</th>
 							<th class="tutor-table-rows-sorting" width="10%">
@@ -299,7 +299,7 @@ $available_status = array(
 									</td>
 
 									<td>
-										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-1">
+										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
 											<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 												<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="tutor_change_course_status">
 													<?php foreach ( $available_status as $key => $value ) : ?>
@@ -311,8 +311,8 @@ $available_status = array(
 												<i class="icon1 tutor-icon-eye-bold"></i>
 												<i class="icon2 tutor-icon-angle-down"></i>
 											</div>
-											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-												<?php esc_html_e( 'Edit', 'tutor' ); ?>
+											<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
+												<?php esc_html_e( 'View Course', 'tutor' ); ?>
 											</a>
 											<div class="tutor-dropdown-parent">
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
@@ -320,9 +320,9 @@ $available_status = array(
 												</button>
 												<div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 													<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
-													<a class="tutor-dropdown-item" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
-														<i class="tutor-icon-eye-bold tutor-mr-8" area-hidden="true"></i>
-														<span><?php esc_html_e( 'View Course', 'tutor' ); ?></span>
+													<a class="tutor-dropdown-item" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
+														<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+														<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 													</a>
 													<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
