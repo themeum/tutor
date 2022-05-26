@@ -23,8 +23,8 @@ if($instructors && count($instructors)) : ?>
 		<?php echo _e("A course by", "tutor"); ?>
 	</h3>
 
-	<?php foreach($instructors as $instructor): ?>
-		<div class="tutor-d-flex tutor-align-center tutor-mb-24">
+	<?php foreach($instructors as $key => $instructor): ?>
+		<div class="tutor-d-flex tutor-align-center<?php echo ( $key != count( $instructors ) - 1 ) ? ' tutor-mb-24' : ''; ?>">
 			<div class="tutor-d-flex tutor-mr-16">
 				<?php echo tutor_utils()->get_tutor_avatar($instructor->ID, 'md'); ?>
 			</div>

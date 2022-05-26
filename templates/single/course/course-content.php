@@ -27,21 +27,23 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 		$has_show_more = true;
 	}
 ?>
-<div class="tutor-course-details-content<?php echo $has_show_more ? ' tutor-toggle-more-content tutor-toggle-more-collapsed' : '' ?>"<?php echo $has_show_more ? ' data-tutor-toggle-more-content data-toggle-height="200" style="height: 200px;"' : '' ?>>
-	<h2 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-12">
-		<?php echo apply_filters( 'tutor_course_about_title', __( 'About Course', 'tutor' ) ); ?>
-	</h2>
-	
-	<div class="tutor-fs-6 tutor-color-secondary">
-		<?php echo apply_filters( 'the_content', $string ); ?>
+<?php if ( !empty($string) ) : ?>
+	<div class="tutor-course-details-content<?php echo $has_show_more ? ' tutor-toggle-more-content tutor-toggle-more-collapsed' : '' ?>"<?php echo $has_show_more ? ' data-tutor-toggle-more-content data-toggle-height="200" style="height: 200px;"' : '' ?>>
+		<h2 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-12">
+			<?php echo apply_filters( 'tutor_course_about_title', __( 'About Course', 'tutor' ) ); ?>
+		</h2>
+		
+		<div class="tutor-fs-6 tutor-color-secondary">
+			<?php echo apply_filters( 'the_content', $string ); ?>
+		</div>
 	</div>
-</div>
 
-<?php if ( $has_show_more ) : ?>
-	<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
-		<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
-		<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
-	</a>
+	<?php if ( $has_show_more ) : ?>
+		<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
+			<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
+			<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
+		</a>
+	<?php endif; ?>
 <?php endif; ?>
 <?php
 }
