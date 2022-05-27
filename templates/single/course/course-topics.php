@@ -23,7 +23,7 @@ $index       = 0;
 do_action( 'tutor_course/single/before/topics' );
 ?>
 <div class="tutor-mt-40">
-	<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
+	<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24 tutor-course-content-title">
 		<?php
 			$title = __( 'Course Content', 'tutor' );
 			echo esc_html( apply_filters( 'tutor_course_topics_title', $title ) );
