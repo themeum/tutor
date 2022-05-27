@@ -1,6 +1,11 @@
 # TutorLMS Changelog
 
-### 2.0.5 - May 19, 2022
+### 2.0.6 - June 06, 2022
+
+* Fix: Student page sort by not working
+
+
+### 2.0.5 - May 27, 2022
 
 * New: Course Details page design is improved for a better experience
 * New: On the Course Journey page the Lessons List sidebar design is improved for a better experience
