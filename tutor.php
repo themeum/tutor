@@ -99,6 +99,11 @@ if ( ! class_exists( '\TUTOR\Utils' ) ) {
 }
 
 if ( ! function_exists( 'tutor_utils' ) ) {
+	/**
+	 * Access tutor utils functions
+	 *
+	 * @return \TUTOR\Utils
+	 */
 	function tutor_utils() {
 		if ( ! isset( $GLOBALS['tutor_utils_object'] ) ) {
 			// Use runtime cache
@@ -109,14 +114,15 @@ if ( ! function_exists( 'tutor_utils' ) ) {
 	}
 }
 
-/**
- * Alis of tutor_utils()
- *
- * @return \TUTOR\Utils
- *
- * @since v.1.3.4
- */
+
 if ( ! function_exists( 'tutils' ) ) {
+	/**
+	 * Alis of tutor_utils()
+	 *
+	 * @return \TUTOR\Utils
+	 *
+	 * @since v.1.3.4
+	 */
 	function tutils() {
 		return tutor_utils();
 	}
