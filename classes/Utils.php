@@ -3659,11 +3659,14 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only=false ) {
+	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only=false, $status_in = array('approved', 'approve'), $include_user_id=0 ) {
 		$course_id = $this->get_post_id( $course_id );
 		global $wpdb;
 
 		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		$status_in = '"' . implode('","', $status_in) . '"';
+		$include_user_id = is_array($include_user_id) ? $include_user_id : array($include_user_id);
+		$include_user_id = implode(',', $include_user_id);
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
 			'_reviews.comment_ID,
@@ -3672,6 +3675,7 @@ class Utils {
 			_reviews.comment_author_email,
 			_reviews.comment_date,
 			_reviews.comment_content,
+			_reviews.comment_approved AS comment_status,
 			_reviews.user_id,
 			_rev_meta.meta_value AS rating,
 			_reviewer.display_name';
@@ -3680,11 +3684,13 @@ class Utils {
 			"SELECT {$select_columns}
 			FROM 	{$wpdb->comments} _reviews
 					INNER JOIN {$wpdb->commentmeta} _rev_meta
-					ON _reviews.comment_ID = _rev_meta.comment_id
+						ON _reviews.comment_ID = _rev_meta.comment_id
 					LEFT JOIN {$wpdb->users} _reviewer
-					ON _reviews.user_id = _reviewer.ID
+						ON _reviews.user_id = _reviewer.ID
 			WHERE 	_reviews.comment_post_ID = %d
-					AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating'
+					AND _reviews.comment_type = 'tutor_course_rating' 
+					AND (_reviews.comment_approved IN ({$status_in}) OR _reviews.user_id IN ({$include_user_id}))
+					AND _rev_meta.meta_key = 'tutor_rating'
 			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
 			$course_id
 		);
@@ -3790,7 +3796,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in=array('approved') ) {
+	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in=array('approved', 'approve') ) {
 		global $wpdb;
 
 		if(!$limit) {
