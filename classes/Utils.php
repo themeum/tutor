@@ -3659,11 +3659,14 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only=false ) {
+	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only=false, $status_in = array('approved', 'approve'), $include_user_id=0 ) {
 		$course_id = $this->get_post_id( $course_id );
 		global $wpdb;
 
 		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		$status_in = '"' . implode('","', $status_in) . '"';
+		$include_user_id = is_array($include_user_id) ? $include_user_id : array($include_user_id);
+		$include_user_id = implode(',', $include_user_id);
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
 			'_reviews.comment_ID,
@@ -3672,6 +3675,7 @@ class Utils {
 			_reviews.comment_author_email,
 			_reviews.comment_date,
 			_reviews.comment_content,
+			_reviews.comment_approved AS comment_status,
 			_reviews.user_id,
 			_rev_meta.meta_value AS rating,
 			_reviewer.display_name';
@@ -3680,11 +3684,13 @@ class Utils {
 			"SELECT {$select_columns}
 			FROM 	{$wpdb->comments} _reviews
 					INNER JOIN {$wpdb->commentmeta} _rev_meta
-					ON _reviews.comment_ID = _rev_meta.comment_id
+						ON _reviews.comment_ID = _rev_meta.comment_id
 					LEFT JOIN {$wpdb->users} _reviewer
-					ON _reviews.user_id = _reviewer.ID
+						ON _reviews.user_id = _reviewer.ID
 			WHERE 	_reviews.comment_post_ID = %d
-					AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating'
+					AND _reviews.comment_type = 'tutor_course_rating' 
+					AND (_reviews.comment_approved IN ({$status_in}) OR _reviews.user_id IN ({$include_user_id}))
+					AND _rev_meta.meta_key = 'tutor_rating'
 			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
 			$course_id
 		);
@@ -3790,9 +3796,12 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = 150, $get_object = false, $course_id = null ) {
-		$user_id = $this->get_user_id( $user_id );
+	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in=array('approved', 'approve') ) {
 		global $wpdb;
+
+		if(!$limit) {
+			$limit = tutor_utils()->get_option('pagination_per_page', 10);
+		}
 
 		$course_filter = '';
 		if ( $course_id ) {
@@ -3800,6 +3809,15 @@ class Utils {
 			$course_ids    = implode( ',', $course_ids );
 			$course_filter = " AND _comment.comment_post_ID IN ($course_ids)";
 		}
+
+		$user_filter = '';
+		if(!($user_id===null)) {
+			$user_id = $this->get_user_id( $user_id );
+			$user_filter = ' AND _comment.user_id='.$user_id;
+		}
+
+		$status_in = '"' . implode('","', $status_in) . '"';
+		$status_filter = ' AND _comment.comment_approved IN ('.$status_in.')';
 
 		$reviews = $wpdb->get_results(
 			$wpdb->prepare(
@@ -3809,22 +3827,25 @@ class Utils {
 					_comment.comment_author_email,
 					_comment.comment_date,
 					_comment.comment_content,
+					_comment.comment_approved AS comment_status,
 					_comment.user_id,
 					_meta.meta_value as rating,
-					{$wpdb->users}.display_name
-
+					_course.post_title AS course_title,
+					_student.display_name
 			FROM 	{$wpdb->comments} _comment
 					INNER JOIN {$wpdb->commentmeta} _meta
 							ON _comment.comment_ID = _meta.comment_id
-					INNER  JOIN {$wpdb->users}
-							ON _comment.user_id = {$wpdb->users}.ID
-			WHERE 	_comment.user_id = %d
-					AND _comment.comment_type = %s
+					INNER JOIN {$wpdb->posts} _course
+							ON _comment.comment_post_ID=_course.ID
+					INNER  JOIN {$wpdb->users} _student
+							ON _comment.user_id = _student.ID
+			WHERE 	_comment.comment_type = %s
 					AND _meta.meta_key = %s
+					{$user_filter}
 					{$course_filter}
+					{$status_filter}
 			ORDER BY _comment.comment_ID DESC
 			LIMIT %d, %d;",
-				$user_id,
 				'tutor_course_rating',
 				'tutor_rating',
 				$offset,
