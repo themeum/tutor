@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Reviews {
 
+	const REVIEWS_PAGE = 'course-reviews';
+
 	/**
 	 * Handle actions & dependencies
 	 *
@@ -28,6 +30,7 @@ class Reviews {
 		add_action( 'wp_ajax_tutor_delete_review', array( $this, 'delete_review' ) );
 		add_action( 'wp_ajax_tutor_single_course_reviews_load_more', array($this, 'tutor_single_course_reviews_load_more') );
 		add_action( 'wp_ajax_nopriv_tutor_single_course_reviews_load_more', array($this, 'tutor_single_course_reviews_load_more') );
+		add_action( 'wp_ajax_tutor_change_review_status', array($this, 'tutor_change_review_status') );
 	}
 
 	/**
@@ -71,5 +74,23 @@ class Reviews {
 		$html = ob_get_clean();
 
 		wp_send_json_success( array('html' => $html) );
+	}
+
+	public function tutor_change_review_status(){
+
+		tutor_utils()->checking_nonce();
+
+		if(!current_user_can( 'manage_options' )) {
+			wp_send_json_error( array('message' => __('Only admin can change review status', 'tutor')) );
+			exit;
+		}
+
+		$review_id = (int)$_POST['id'];
+		$status = sanitize_text_field( $_POST['status'] );
+
+		global $wpdb;
+		$wpdb->update($wpdb->comments, array('comment_approved'=>$status), array('comment_ID'=>$review_id));
+
+		wp_send_json_success();
 	}
 }
