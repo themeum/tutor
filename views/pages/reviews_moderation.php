@@ -10,10 +10,18 @@ $available_status = array(
 	'hold' => array(__( 'Unpublished', 'tutor' ), 'select-warning'),
 );
 
+$navbar_data = array(
+	'page_title' => __('Reviews', 'tutor'),
+);
+
 ?>
 
 
 <div class="tutor-admin-wrap">
+    <?php
+		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
+    ?>
 	<div class="tutor-admin-body">
 		<div class="tutor-mt-24">
 			<div class="tutor-table-responsive">
@@ -58,7 +66,7 @@ $available_status = array(
                                 </td>
 
                                 <td>
-                                    <a class="tutor-table-link" href="#">
+                                    <a class="tutor-table-link" href="<?php echo get_permalink( $review->comment_post_ID ); ?>" target="_blank">
                                         <?php echo esc_html( $review->course_title ); ?>
                                     </a>
                                 </td>
