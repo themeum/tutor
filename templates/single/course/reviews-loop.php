@@ -19,7 +19,16 @@
             </div>
 
             <div class="tutor-col-lg-9">
+                <?php if($review->comment_status=='hold') : ?>
+                    <div style="position:absolute; right:15px">
+                        <span class="tutor-badge-label label-warning">
+                            <?php echo __('Pending', 'tutor'); ?>
+                        </span>
+                    </div>
+                <?php endif; ?>
+
                 <?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
+                
                 <div class="tutor-fs-7 tutor-color-secondary tutor-mt-12 tutor-review-comment">
                     <?php echo htmlspecialchars( $review->comment_content ); ?>
                 </div>

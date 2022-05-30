@@ -77,6 +77,9 @@ class Reviews {
 	}
 
 	public function tutor_change_review_status(){
+
+		tutor_utils()->checking_nonce();
+
 		if(!current_user_can( 'manage_options' )) {
 			wp_send_json_error( array('message' => __('Only admin can change review status', 'tutor')) );
 			exit;
@@ -85,7 +88,8 @@ class Reviews {
 		$review_id = (int)$_POST['id'];
 		$status = sanitize_text_field( $_POST['status'] );
 
-		wp_set_comment_status($review_id, $status);
+		global $wpdb;
+		$wpdb->update($wpdb->comments, array('comment_approved'=>$status), array('comment_ID'=>$review_id));
 
 		wp_send_json_success();
 	}

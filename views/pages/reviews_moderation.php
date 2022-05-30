@@ -64,7 +64,12 @@ $available_status = array(
                                 </td>
 
                                 <td>
-                                    <?php echo $review->comment_content; ?>
+                                    <?php 
+                                    	tutor_utils()->star_rating_generator_v2( $review->rating, null, true );
+                                    ?>
+                                    <div class="tutor-fs-6 tutor-color-muted">
+                                        <?php echo $review->comment_content; ?>
+                                    </div>
                                 </td>
 
                                 <td>
@@ -85,11 +90,11 @@ $available_status = array(
                                                 <span class="tutor-icon-kebab-menu" area-hidden="true"></span>
                                             </button>
                                             <div id="table-dashboard-review-list-<?php echo esc_attr( $review->comment_ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-                                                <a class="tutor-dropdown-item" href="<?php echo esc_url( get_permalink( $review->comment_post_ID ) ); ?>">
+                                                <a class="tutor-dropdown-item" href="<?php echo esc_url( get_permalink( $review->comment_post_ID ) ); ?>" target="_blank">
                                                     <i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
                                                     <span><?php esc_html_e( 'Preview', 'tutor' ); ?></span>
                                                 </a>
-                                                <a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $review->comment_ID ); ?>">
+                                                <a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-review-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $review->comment_ID ); ?>">
                                                     <i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
                                                     <span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
                                                 </a>
@@ -105,3 +110,5 @@ $available_status = array(
         </div>
     </div>
 </div>
+
+<?php tutor_load_template_from_custom_path( tutor()->path . 'views/elements/common-confirm-popup.php' );
