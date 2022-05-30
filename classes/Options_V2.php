@@ -562,6 +562,14 @@ class Options_V2
 								'label_title' => __('', 'tutor'),
 								'desc'        => __('Enabling this feature will allow students to reset course progress and start over.', 'tutor'),
 							),
+							array(
+								'key'         => 'enable_course_review_moderation',
+								'type'        => 'toggle_switch',
+								'label'       => __('Course Review Moderation', 'tutor'),
+								'default'     => 'on',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('Enabling this feature will allow admins to moderate course reviews.', 'tutor'),
+							),
 						),
 					),
 					array(

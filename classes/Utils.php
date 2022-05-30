@@ -3790,9 +3790,12 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = 150, $get_object = false, $course_id = null ) {
-		$user_id = $this->get_user_id( $user_id );
+	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in=array('approved') ) {
 		global $wpdb;
+
+		if(!$limit) {
+			$limit = tutor_utils()->get_option('pagination_per_page', 10);
+		}
 
 		$course_filter = '';
 		if ( $course_id ) {
@@ -3800,6 +3803,15 @@ class Utils {
 			$course_ids    = implode( ',', $course_ids );
 			$course_filter = " AND _comment.comment_post_ID IN ($course_ids)";
 		}
+
+		$user_filter = '';
+		if(!($user_id===null)) {
+			$user_id = $this->get_user_id( $user_id );
+			$user_filter = ' AND _comment.user_id='.$user_id;
+		}
+
+		$status_in = '"' . implode('","', $status_in) . '"';
+		$status_filter = ' AND _comment.comment_approved IN ('.$status_in.')';
 
 		$reviews = $wpdb->get_results(
 			$wpdb->prepare(
@@ -3809,22 +3821,25 @@ class Utils {
 					_comment.comment_author_email,
 					_comment.comment_date,
 					_comment.comment_content,
+					_comment.comment_approved AS comment_status,
 					_comment.user_id,
 					_meta.meta_value as rating,
-					{$wpdb->users}.display_name
-
+					_course.post_title AS course_title,
+					_student.display_name
 			FROM 	{$wpdb->comments} _comment
 					INNER JOIN {$wpdb->commentmeta} _meta
 							ON _comment.comment_ID = _meta.comment_id
-					INNER  JOIN {$wpdb->users}
-							ON _comment.user_id = {$wpdb->users}.ID
-			WHERE 	_comment.user_id = %d
-					AND _comment.comment_type = %s
+					INNER JOIN {$wpdb->posts} _course
+							ON _comment.comment_post_ID=_course.ID
+					INNER  JOIN {$wpdb->users} _student
+							ON _comment.user_id = _student.ID
+			WHERE 	_comment.comment_type = %s
 					AND _meta.meta_key = %s
+					{$user_filter}
 					{$course_filter}
+					{$status_filter}
 			ORDER BY _comment.comment_ID DESC
 			LIMIT %d, %d;",
-				$user_id,
 				'tutor_course_rating',
 				'tutor_rating',
 				$offset,
