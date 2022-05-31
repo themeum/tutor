@@ -507,7 +507,7 @@ class Options_V2
 							 	'key'         => 'student_must_login_to_view_course',
 							 	'type'        => 'toggle_switch',
 							 	'label'       => __( 'Course Visibility', 'tutor' ),
-							 	'label_title' => __( 'Logged Only', 'tutor' ),
+							 	'label_title' => '',
 							 	'default'     => 'off',
 							 	'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
 							 ),
