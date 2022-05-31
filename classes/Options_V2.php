@@ -396,7 +396,9 @@ class Options_V2
 		$pages       = tutor_utils()->get_pages();
 
 		$lesson_key  = $this->get('lesson_permalink_base', 'lessons');
-		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
+		$course_base = tutor_utils()->get_option('course_permalink_base', tutor()->course_post_type);
+		$course_url  = site_url() . '/<code>' . $course_base . '</code>/sample-course';
+		$lesson_url  = site_url() . '/' . $course_base . '/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
 		$student_url = tutor_utils()->profile_url(0, false);
 
 		$methods_array     = array();
@@ -1380,6 +1382,13 @@ class Options_V2
 								'default' => '0',
 								'options' => $pages,
 								'desc'    => __('Choose the page for student registration.', 'tutor'),
+							),
+							array(
+								'key'     => 'course_permalink_base',
+								'type'    => 'text',
+								'label'   => __('Course Permalink Base', 'tutor'),
+								'default' => tutor()->course_post_type,
+								'desc'    => $course_url,
 							),
 							array(
 								'key'     => 'lesson_permalink_base',
