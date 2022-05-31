@@ -16,8 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Reviews {
 
-	const REVIEWS_PAGE = 'course-reviews';
-
 	/**
 	 * Handle actions & dependencies
 	 *
@@ -42,7 +40,12 @@ class Reviews {
 		tutor_utils()->checking_nonce();
 		$review_id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
 		$delete    = self::delete( $review_id );
-		wp_send_json( $delete );
+		
+		if($delete) {
+			wp_send_json_success();
+		} else {
+			wp_send_json_error(array('message' => __('Something went wrong!', 'tutor')));
+		}
 		exit;
 	}
 
