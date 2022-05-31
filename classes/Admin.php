@@ -100,15 +100,6 @@ class Admin {
 
 		add_submenu_page( 'tutor', __( 'Quiz Attempts', 'tutor' ), __( 'Quiz Attempts', 'tutor' ), 'manage_tutor_instructor', Quiz_Attempts_List::QUIZ_ATTEMPT_PAGE, array( $this, 'quiz_attempts' ) );
 		
-		/**
-		 * @since v2.0.6
-		 * 
-		 * Enable course review moderation
-		 */
-		if(tutor_utils()->get_option('enable_course_review_moderation', false, true, true)) {
-			add_submenu_page( 'tutor', __( 'Reviews', 'tutor' ), __( 'Reviews', 'tutor' ), 'manage_tutor_instructor', Reviews::REVIEWS_PAGE, array( $this, 'reviews_moderation' ) );
-		}
-
 		if ( $enable_course_marketplace ) {
 			add_submenu_page( 'tutor', __( 'Withdraw Requests', 'tutor' ), __( 'Withdraw Requests', 'tutor' ), 'manage_tutor', Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE, array( $this, 'withdraw_requests' ) );
 		}
@@ -144,10 +135,6 @@ class Admin {
 
 	public function quiz_attempts() {
 		include tutor()->path . 'views/pages/quiz_attempts.php';
-	}
-
-	public function reviews_moderation() {
-		include tutor()->path . 'views/pages/reviews_moderation.php';
 	}
 
 	/**
