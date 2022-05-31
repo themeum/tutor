@@ -565,10 +565,10 @@ class Options_V2
 							array(
 								'key'         => 'enable_course_review_moderation',
 								'type'        => 'toggle_switch',
-								'label'       => __('Course Review Moderation', 'tutor'),
-								'default'     => 'on',
+								'label'       => __("Publish Course Review on Admin's Approval", 'tutor'),
+								'default'     => 'off',
 								'label_title' => __('', 'tutor'),
-								'desc'        => __('Enabling this feature will allow admins to moderate course reviews.', 'tutor'),
+								'desc'        => __('Enable to publish/re-publish Course Review after the approval of Site Admin', 'tutor'),
 							),
 						),
 					),
