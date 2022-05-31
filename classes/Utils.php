@@ -5816,7 +5816,7 @@ class Utils {
 			",
 				'tutor_enrolled',
 				'completed',
-				'courses',
+				tutor()->course_post_type,
 				$limit
 			)
 		);
@@ -8112,7 +8112,7 @@ class Utils {
 			$parent_type = get_post_field( 'post_type', $parent_id );
 
 
-			if ( $parent_type=='courses' ) {
+			if ( $parent_type==tutor()->course_post_type ) {
 				$content_type = 'tutor_zoom_meeting';
 			} 
 		}
@@ -9679,7 +9679,7 @@ class Utils {
 		// Add course editor identifier class
 		if ( is_admin() ) {
 			$screen = get_current_screen();
-			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == 'courses' ) {
+			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == tutor()->course_post_type ) {
 				return $screen->is_block_editor ? 'gutenberg' : 'classic';
 			}
 		} elseif ( $this->is_tutor_frontend_dashboard( 'create-course' ) ) {
