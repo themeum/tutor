@@ -31,7 +31,7 @@ class Course_Filter {
 		
 		$args = array(
 			'post_status'    => 'publish',
-			'post_type'      => 'courses',
+			'post_type'      => tutor()->course_post_type,
 			'posts_per_page' => $courses_per_page,
 			'paged'          => (int)$page,
 			'tax_query'      => array(
