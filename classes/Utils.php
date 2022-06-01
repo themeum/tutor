@@ -37,6 +37,18 @@ class Utils {
 		}
 	}
 
+	/**
+	 * Check null safety
+	 *
+	 * @param mixed $var 		variable, array key etc.
+	 * @param mixed $default	default value when variable is not set.
+	 * @return mixed
+	 * 
+	 * @since 2.0.6
+	 */
+	public function null_safe( &$var, $default = null ) {
+		return isset( $var ) ? $var : $default;
+	}
 
 	private function option_recursive( $array, $key ) {
 		foreach ( $array as $option ) {
