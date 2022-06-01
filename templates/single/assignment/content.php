@@ -318,7 +318,7 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                             <?php endif; ?>
 
                             <div class="tutor-assignment-submit-btn tutor-mt-60">
-                                <button type="submit" id="tutor_assignment_submit_btn" class="tutor-btn tutor-btn-primary tutor-btn-lg">
+                                <button type="submit" id="tutor_assignment_submit_btn" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-static-loader">
                                     <?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
                                 </button>
                             </div>
@@ -556,7 +556,7 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
 
                     <?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
                         <div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
-                            <a class="tutor-btn tutor-btn-primary"
+                            <a class="tutor-btn tutor-btn-primary tutor-static-loader"
                                 href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
                                 <?php esc_html_e( 'Continue Lesson', 'tutor' ); ?>
                             </a>

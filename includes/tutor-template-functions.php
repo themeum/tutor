@@ -472,10 +472,7 @@ if ( ! function_exists('tutor_course_loop_price')) {
 		
 		// Check for further access type like course content access settings
 		if(!$can_continue){
-			$is_administrator      = tutor_utils()->has_user_role( 'administrator' );
-			$is_instructor         = tutor_utils()->is_instructor_of_this_course();
-			$course_content_access = (bool) get_tutor_option( 'course_content_access_for_ia' );
-			$can_continue    	   = $course_content_access && ( $is_administrator || $is_instructor );;
+			$can_continue = tutor_utils()->has_user_course_content_access(get_current_user_id(), $course_id);
 		}
 		
         if( $can_continue ){

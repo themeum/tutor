@@ -2,10 +2,7 @@
 	// Utility data
 	$is_enrolled           = apply_filters( 'tutor_alter_enroll_status', tutor_utils()->is_enrolled() );
 	$lesson_url            = tutor_utils()->get_course_first_lesson();
-	$is_administrator      = tutor_utils()->has_user_role( 'administrator' );
-	$is_instructor         = tutor_utils()->is_instructor_of_this_course();
-	$course_content_access = (bool) get_tutor_option( 'course_content_access_for_ia' );
-	$is_privileged_user    = $course_content_access && ( $is_administrator || $is_instructor );
+	$is_privileged_user    = tutor_utils()->has_user_course_content_access();
 	$tutor_course_sell_by  = apply_filters( 'tutor_course_sell_by', null );
 	$is_public             = get_post_meta( get_the_ID(), '_tutor_is_public_course', true ) == 'yes';
 

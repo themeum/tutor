@@ -38,7 +38,7 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 /**
  * Navbar data to make nav menu
  */
-$add_course_url = esc_url( admin_url( 'post-new.php?post_type=courses' ) );
+$add_course_url = esc_url( admin_url( 'post-new.php?post_type='.tutor()->course_post_type ) );
 $navbar_data    = array(
 	'page_title'   => $courses->page_title,
 	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),

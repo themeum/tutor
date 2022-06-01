@@ -142,15 +142,39 @@ class Shortcode {
 		}
 		if ( ! empty( $a['category'] ) ) {
 			$category = (array) explode( ',', $a['category'] );
+			
+			$a['tax_query'] = array();
 
-			$a['tax_query'] = array(
-				array(
-					'taxonomy' => 'course-category',
-					'field'    => 'term_id',
-					'terms'    => $category,
-					'operator' => 'IN',
-				),
-			);
+			$category_ids = array_filter($category, function($id){
+				return is_numeric($id);
+			});
+
+			$category_names = array_filter($category, function($id){
+				return !is_numeric($id);
+			});
+
+			if(!empty($category_ids)) {
+				$a['tax_query'] = array(
+					array(
+						'taxonomy' => 'course-category',
+						'field'    => 'term_id',
+						'terms'    => $category_ids,
+						'operator' => 'IN',
+					),
+				);
+			}
+
+			if(!empty($category_names)) {
+				$a['tax_query'] = array(
+					array(
+						'taxonomy' => 'course-category',
+						'field'    => 'name',
+						'terms'    => $category_names,
+						'operator' => 'IN',
+					),
+				);
+			}
+
 		}
 		$a['posts_per_page'] = (int) $a['count'];
 
@@ -160,15 +184,21 @@ class Shortcode {
 		
 		// Load the renderer now
 		ob_start();
-		tutor_load_template('archive-course-init', array(
-			'course_filter' 	=> isset( $atts['course_filter'] ) && $atts['course_filter'] == 'on',
-			'supported_filters' => tutor_utils()->get_option( 'supported_course_filters', array() ),
-			'loop_content_only' => false,
-			'column_per_row' 	=> isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
-			'course_per_page' 	=> $a['posts_per_page'],
-			'show_pagination' 	=> isset( $atts['show_pagination'] ) && $atts['show_pagination']=='on',
-			'the_query'			=> $the_query
-		));
+
+		if ( $the_query->have_posts() ) {
+			tutor_load_template('archive-course-init', array(
+				'course_filter' 	=> isset( $atts['course_filter'] ) && $atts['course_filter'] == 'on',
+				'supported_filters' => tutor_utils()->get_option( 'supported_course_filters', array() ),
+				'loop_content_only' => false,
+				'column_per_row' 	=> isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
+				'course_per_page' 	=> $a['posts_per_page'],
+				'show_pagination' 	=> isset( $atts['show_pagination'] ) && $atts['show_pagination']=='on',
+				'the_query'			=> $the_query
+			));
+		} else {
+			tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() );
+		}
+
 		$output = ob_get_clean();
 
 		wp_reset_postdata();
