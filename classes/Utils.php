@@ -16,6 +16,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Utils {
 
+	/**
+	 * Compatibility for splitting utils functions to specific model
+	 *
+	 * @param string $method
+	 * @param array $args
+	 * @return void
+	 * 
+	 * @since 2.0.6
+	 */
+	public function __call( $method, $args ) {
+		$classes = array(
+			'Tutor\Models\Course'
+		);
+
+		foreach( $classes as $class ) {
+			if( method_exists( $obj = new $class, $method ) ) {
+				return $obj->$method( ...$args );
+			}
+		}
+	}
 
 
 	private function option_recursive( $array, $key ) {

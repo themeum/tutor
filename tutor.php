@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once "vendor/autoload.php";
+
 /**
  * Defined the tutor main file
  */
