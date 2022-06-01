@@ -235,7 +235,7 @@ class Admin {
 
 	public function posts_clauses_request( $clauses ) {
 
-		if ( ! is_admin() || ( ! Input::has( 'post_type' ) || Input::get( 'post_type' ) != 'courses' ) || tutor_utils()->has_user_role( array( 'administrator', 'editor' ) ) ) {
+		if ( ! is_admin() || ( ! Input::has( 'post_type' ) || Input::get( 'post_type' ) != tutor()->course_post_type ) || tutor_utils()->has_user_role( array( 'administrator', 'editor' ) ) ) {
 			return $clauses;
 		}
 
@@ -250,7 +250,8 @@ class Admin {
 		$in_query_pre   = count( $own_courses ) ? implode( ',', $own_courses ) : null;
 		$in_query_where = $in_query_pre ? " OR {$wpdb->posts}.ID IN({$in_query_pre})" : '';
 
-		$custom_author_query = "  AND ({$wpdb->posts}.post_type!='courses' OR {$wpdb->posts}.post_author = {$user_id}) {$in_query_where}";
+		$course_post_type = tutor()->course_post_type;
+		$custom_author_query = "  AND ({$wpdb->posts}.post_type!='{$course_post_type}' OR {$wpdb->posts}.post_author = {$user_id}) {$in_query_where}";
 
 		$clauses['where'] .= $custom_author_query;
 

@@ -27,7 +27,8 @@ class Private_Course_Access {
             }
 
             // Get using raw query to speed up
-            $private_query = "SELECT ID, post_parent FROM {$wpdb->posts} WHERE post_type='courses' AND post_name='{$p_name}' AND post_status='private'";
+            $course_post_type = tutor()->course_post_type;
+            $private_query = "SELECT ID, post_parent FROM {$wpdb->posts} WHERE post_type='{$course_post_type}' AND post_name='{$p_name}' AND post_status='private'";
             $result = $wpdb->get_results($private_query);
             $private_course_id = (is_array($result) && isset($result[0])) ? $result[0]->ID : 0;
             
