@@ -16,7 +16,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Utils {
 
+	/**
+	 * Compatibility for splitting utils functions to specific model
+	 *
+	 * @param string $method
+	 * @param array $args
+	 * @return void
+	 * 
+	 * @since 2.0.6
+	 */
+	public function __call( $method, $args ) {
+		$classes = array(
+			'Tutor\Models\Course'
+		);
 
+		foreach( $classes as $class ) {
+			if( method_exists( $obj = new $class, $method ) ) {
+				return $obj->$method( ...$args );
+			}
+		}
+	}
+
+	/**
+	 * Check null safety
+	 *
+	 * @param mixed $var 		variable, array key etc.
+	 * @param mixed $default	default value when variable is not set.
+	 * @return mixed
+	 * 
+	 * @since 2.0.6
+	 */
+	public function null_safe( &$var, $default = null ) {
+		return isset( $var ) ? $var : $default;
+	}
 
 	private function option_recursive( $array, $key ) {
 		foreach ( $array as $option ) {
