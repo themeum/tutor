@@ -401,7 +401,7 @@ class Tutor_Setup {
 						'type'  => 'text',
 						'max'   => 50,
 						'lable' => __( 'Lesson permalink', 'tutor' ),
-						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/courses/sample-course/<strong>' . ( tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ) ) . '</strong>/sample-lesson/' ),
+						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/'.tutor()->course_post_type.'/sample-course/<strong>' . ( tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ) ) . '</strong>/sample-lesson/' ),
 					),
 				),
 			),
