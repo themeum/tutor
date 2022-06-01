@@ -148,24 +148,30 @@ $filters = array(
 								</td>
 								<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
 									<span class="tutor-color-black tutor-fs-7">
-								<?php echo esc_html( $list->user_email ); ?>
+										<?php echo esc_html( $list->user_email ); ?>
 									</span>
 								</td>
 								</td>
 								<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">
 									<span class="tutor-color-black tutor-fs-7">
-								<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
+										<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
 									</span>
 								</td>
 								<td data-th="<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>">
 									<span class="tutor-color-black tutor-fs-7">
-									<?php 
-										$commision_string = tutor_utils()->get_option( 'earning_instructor_commission' ) . '%';
-										echo apply_filters( 'tutor_pro_instructor_commission_string', $commision_string, $list->ID );
-									?>
+										<?php 
+											$commision_string = tutor_utils()->get_option( 'earning_instructor_commission' ) . '%';
+											echo apply_filters( 'tutor_pro_instructor_commission_string', $commision_string, $list->ID );
+										?>
 									</span>
 								</td>
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+									<span style="display:block; width:0; height:0; overflow:hidden;">
+										<?php 
+											// Render for frontend sorting 
+											echo $available_status[$list->status][0]; 
+										?>
+									</span>
 									<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
 										<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
 											<?php foreach ( $available_status as $key => $status ) : ?>
@@ -200,15 +206,15 @@ $filters = array(
 				/**
 				 * Prepare pagination data & load template
 				 */
-			if ( $total > $per_page ) {
-				$pagination_data     = array(
-					'total_items' => $total,
-					'per_page'    => $per_page,
-					'paged'       => $paged,
-				);
-				$pagination_template = tutor()->path . 'views/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			}
+				if ( $total > $per_page ) {
+					$pagination_data     = array(
+						'total_items' => $total,
+						'per_page'    => $per_page,
+						'paged'       => $paged,
+					);
+					$pagination_template = tutor()->path . 'views/elements/pagination.php';
+					tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+				}
 			?>
 		</div>
 	</div>
