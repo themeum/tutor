@@ -16,7 +16,7 @@ if ( $disable ) {
 	return;
 }
 
-$per_page = 1;//tutor_utils()->get_option( 'pagination_per_page', 10 );
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max(1, (int)tutor_utils()->avalue_dot('current_page', $_POST));
 $offset = ($current_page - 1) * $per_page;
 

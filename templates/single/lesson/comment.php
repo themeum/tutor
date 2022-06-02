@@ -26,7 +26,6 @@ $comments_count = Lesson::get_comments( $comment_count_args );
 $action 		= $_POST['action'] ?? '';
 $load_more_btn  = '';
 $max_page = (int) ceil( $comments_count / $per_page );
-
 // Prepare load more button.
 $data = array(
 	'layout' => array(
@@ -45,6 +44,11 @@ if ( file_exists( $template ) ) {
 	ob_start();
 	tutor_load_template_from_custom_path( $template, $data );
 	$load_more_btn = apply_filters( 'tutor_lesson_comment_load_more_button', ob_get_clean() );
+	?>
+	<?php if ( $current_page >= $max_page ) : ?>
+		<input type="hidden" id="tutor-hide-comment-load-more-btn">
+	<?php endif; ?>
+	<?php
 }
 
 if ( 'tutor_single_course_lesson_load_more' === $action ) {

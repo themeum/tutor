@@ -76,7 +76,12 @@ window.jQuery(document).ready($=>{
                             link_el.remove();
                             return;
                         }
-
+                        // Element will be mounted only when it should hide.
+                        var hide = document.getElementById('tutor-hide-comment-load-more');
+                        if (hide) {
+                            var loadMoreBtn = document.querySelector('.tutor-btn.page-numbers');
+                            loadMoreBtn.remove();
+                        }
                         // Append the content
                         append_container.append(html);
 
