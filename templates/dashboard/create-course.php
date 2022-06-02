@@ -24,7 +24,7 @@ setup_postdata( $post );
 $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course') || current_user_can('administrator');
 
 $course_slug 		= $post->post_name;
-$course_permalink 	= get_the_permalink()
+$course_permalink 	= get_the_permalink();
 ?>
 
 <?php

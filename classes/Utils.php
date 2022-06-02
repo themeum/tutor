@@ -16,7 +16,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Utils {
 
+	/**
+	 * Compatibility for splitting utils functions to specific model
+	 *
+	 * @param string $method
+	 * @param array $args
+	 * @return void
+	 * 
+	 * @since 2.0.6
+	 */
+	public function __call( $method, $args ) {
+		$classes = array(
+			'Tutor\Models\Course'
+		);
 
+		foreach( $classes as $class ) {
+			if( method_exists( $obj = new $class, $method ) ) {
+				return $obj->$method( ...$args );
+			}
+		}
+	}
+
+	/**
+	 * Check null safety
+	 *
+	 * @param mixed $var 		variable, array key etc.
+	 * @param mixed $default	default value when variable is not set.
+	 * @return mixed
+	 * 
+	 * @since 2.0.6
+	 */
+	public function null_safe( &$var, $default = null ) {
+		return isset( $var ) ? $var : $default;
+	}
 
 	private function option_recursive( $array, $key ) {
 		foreach ( $array as $option ) {
@@ -928,8 +960,16 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_next_topic_order_id( $course_ID ) {
+	public function get_next_topic_order_id( $course_ID, $content_id=null ) {
 		global $wpdb;
+
+		if($content_id) {
+			$existing_order = get_post_field( 'menu_order', $content_id);
+
+			if($existing_order>=0) {
+				return $existing_order;
+			}
+		}
 
 		$last_order = (int) $wpdb->get_var(
 			$wpdb->prepare(
@@ -955,8 +995,16 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_next_course_content_order_id( $topic_ID ) {
+	public function get_next_course_content_order_id( $topic_ID, $content_id=null ) {
 		global $wpdb;
+
+		if($content_id) {
+			$existing_order = get_post_field( 'menu_order', $content_id);
+
+			if($existing_order>=0) {
+				return $existing_order;
+			}
+		}
 
 		$last_order = (int) $wpdb->get_var(
 			$wpdb->prepare(
@@ -1977,9 +2025,14 @@ class Utils {
 			WHERE 	comment_agent = %s
 					AND comment_type = %s
 					AND user_id = %d
+					AND comment_post_ID IN (
+						select post_parent AS course_id from {$wpdb->posts} where post_type=%s AND post_author = %d
+					)
 			",
 				'TutorLMSPlugin',
 				'course_completed',
+				$user_id,
+				'tutor_enrolled',
 				$user_id
 			)
 		);
