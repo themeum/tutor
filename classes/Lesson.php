@@ -404,6 +404,22 @@ class Lesson extends Tutor_Base {
 		die();
 	}
 
+	/**
+	 * Get comments
+	 *
+	 * @since v2.0.6
+	 *
+	 * @param array $args
+	 *
+	 * ?Checkout arguments details:
+	 * ?https://developer.wordpress.org/reference/classes/wp_comment_query/__construct/
+	 *
+	 * @return mixed  based on arguments
+	 */
+	public static function get_comments( array $args ) {
+		$comments = get_comments( $args );
+		return $comments;
+	}
 }
 
 
