@@ -1059,8 +1059,8 @@ class Utils {
 	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10 ) {
 		$topics_id        = $this->get_post_id( $topics_id );
 		$lesson_post_type = tutor()->lesson_post_type;
-		$post_type        = apply_filters( 'tutor_course_contents_post_types', array( $lesson_post_type, 'tutor_quiz' ) );
-
+		$post_type        = array_unique( apply_filters( 'tutor_course_contents_post_types', array( $lesson_post_type, 'tutor_quiz' ) ) );
+		
 		$args = array(
 			'post_type'      => $post_type,
 			'post_parent'    => $topics_id,
@@ -1069,9 +1069,7 @@ class Utils {
 			'order'          => 'ASC',
 		);
 
-		$query = new \WP_Query( $args );
-
-		return $query;
+		return new \WP_Query( $args );
 	}
 
 	/**
@@ -7393,33 +7391,26 @@ class Utils {
 	 *
 	 * Get previous ID
 	 */
-	public function get_course_previous_content_id( $post = null ) {
-		$current_item = get_post( $post );
-		$course_id    = $this->get_course_id_by_content( $current_item );
-		$topics       = $this->get_topics( $course_id );
+	public function get_course_previous_content_id( $current_id ) {
+		$course_id = $this->get_course_id_by_content( $current_id );
+		$topics = $this->get_topics( $course_id );
 
-		$contents = array();
-		if ( $topics->have_posts() ) {
-			while ( $topics->have_posts() ) {
-				$topics->the_post();
-				$topic_id = get_the_ID();
-				$lessons  = $this->get_course_contents_by_topic( $topic_id, -1 );
-				if ( $lessons->have_posts() ) {
-					while ( $lessons->have_posts() ) {
-						$lessons->the_post();
-						global $post;
-						$contents[] = $post;
-					}
-				}
+		$content_ids = array();
+
+		foreach($topics->posts as $topic) {
+			$contents  = $this->get_course_contents_by_topic( $topic->ID, -1 );
+			
+			foreach($contents->posts as $content) {
+				$content_ids[] = $content->ID;
 			}
 		}
 
-		if ( $this->count( $contents ) ) {
-			foreach ( $contents as $key => $content ) {
-				if ( $current_item->ID == $content->ID ) {
-					if ( ! empty( $contents[ $key - 1 ]->ID ) ) {
-						return $contents[ $key - 1 ]->ID;
-					}
+		tutor_log($content_ids);
+		
+		foreach ( $content_ids as $key => $content_id ) {
+			if ( $current_id == $content_id ) {
+				if ( ! empty( $content_ids[ $key - 1 ] ) ) {
+					return $content_ids[ $key - 1 ];
 				}
 			}
 		}
@@ -7434,23 +7425,8 @@ class Utils {
 	 *
 	 * Get Course iD by any course content
 	 */
-	public function get_course_id_by_content( $post = null ) {
-		global $wpdb;
-		$post = get_post( $post );
-
-		$course_id = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT post_parent
-			FROM 	{$wpdb->posts}
-			WHERE 	ID = %d
-					AND post_type = %s
-			",
-				$post->post_parent,
-				'topics'
-			)
-		);
-
-		return (int) $course_id;
+	public function get_course_id_by_content( $post ) {
+		return $this->get_course_id_by_subcontent( is_numeric($post) ? $post : $post->ID );
 	}
 
 	/**
