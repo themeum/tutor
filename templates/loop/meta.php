@@ -38,7 +38,7 @@ $course_students    = tutor_utils()->count_enrolled_users_by_course( $course_id 
     </div>
 
     <div>
-        <?php esc_html_e('By', 'tutor') ?> <?php echo $course_id; ?>
+        <?php esc_html_e('By', 'tutor') ?>
         <a href="<?php echo $profile_url; ?>"><?php esc_html_e(get_the_author()); ?></a>
 
         <?php if( !empty( $course_categories ) && is_array( $course_categories ) && count( $course_categories ) ) : ?>
