@@ -441,7 +441,7 @@ class Course extends Tutor_Base {
 		$topic_id = (int) tutor_utils()->avalue_dot('topic_id', $_POST);
 		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
 		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
-		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id);
+		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id, $topic_id);
 
 		// Validate if user can manage the topic
 		if(!tutor_utils()->can_user_manage('course', $course_id) || ($topic_id && !tutor_utils()->can_user_manage('topic', $topic_id))) {
