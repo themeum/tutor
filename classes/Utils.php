@@ -960,8 +960,16 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_next_topic_order_id( $course_ID ) {
+	public function get_next_topic_order_id( $course_ID, $content_id=null ) {
 		global $wpdb;
+
+		if($content_id) {
+			$existing_order = get_post_field( 'menu_order', $content_id);
+
+			if($existing_order>=0) {
+				return $existing_order;
+			}
+		}
 
 		$last_order = (int) $wpdb->get_var(
 			$wpdb->prepare(
@@ -987,8 +995,16 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_next_course_content_order_id( $topic_ID ) {
+	public function get_next_course_content_order_id( $topic_ID, $content_id=null ) {
 		global $wpdb;
+
+		if($content_id) {
+			$existing_order = get_post_field( 'menu_order', $content_id);
+
+			if($existing_order>=0) {
+				return $existing_order;
+			}
+		}
 
 		$last_order = (int) $wpdb->get_var(
 			$wpdb->prepare(

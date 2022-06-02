@@ -677,7 +677,7 @@ class Quiz {
 		$ex_quiz_id         = isset($_POST['quiz_id']) ? sanitize_text_field($_POST['quiz_id']) : 0;
 		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
 		$quiz_description   = wp_kses( $_POST['quiz_description'], $this->allowed_html );
-		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id);
+		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id, $ex_quiz_id);
 
 		// Check edit privilege
 		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
