@@ -8149,7 +8149,8 @@ class Utils {
 			'tutor_quiz'         => 'quiz',
 			'lesson'             => 'lesson',
 			'tutor_zoom_meeting' => 'zoom_meeting',
-			'tutor_zoom_lesson' => 'zoom_lesson',
+			'tutor_zoom_lesson'  => 'zoom_lesson',
+			'topics'			 => 'topic',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -8158,7 +8159,6 @@ class Utils {
 		if ( $content_type == 'tutor_zoom_meeting' ) {
 			$parent_id = wp_get_post_parent_id( $content_id );
 			$parent_type = get_post_field( 'post_type', $parent_id );
-
 
 			if ( $parent_type==tutor()->course_post_type ) {
 				$content_type = 'tutor_zoom_meeting';

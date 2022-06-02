@@ -22,17 +22,8 @@ if (!empty($_POST['lesson_id'])) {
 }
 $currentPost = $post;
 $_is_preview = get_post_meta($post_id, '_is_preview', true);
-$course_id   = 0;
-if ($post->post_type === 'tutor_quiz') {
-	$course    = tutor_utils()->get_course_by_quiz(get_the_ID());
-	$course_id = $course->ID;
-} elseif ($post->post_type === 'tutor_assignments') {
-	$course_id = tutor_utils()->get_course_id_by('assignment', $post->ID);
-} elseif ($post->post_type === 'tutor_zoom_meeting') {
-	$course_id = get_post_meta($post->ID, '_tutor_zm_for_course', true);
-} else {
-	$course_id = tutor_utils()->get_course_id_by('lesson', $post->ID);
-}
+$course_id   = tutor_utils()->get_course_id_by_subcontent($post->ID);
+
 $user_id                      = get_current_user_id();
 $enable_qa_for_this_course    = get_post_meta($course_id, '_tutor_enable_qa', true) == 'yes';
 $enable_q_and_a_on_course     = tutor_utils()->get_option('enable_q_and_a_on_course') && $enable_qa_for_this_course;
@@ -44,7 +35,11 @@ $is_user_admin                = current_user_can('administrator');
 <?php do_action('tutor_lesson/single/before/lesson_sidebar'); ?>
 <div class="tutor-course-single-sidebar-title tutor-d-flex tutor-justify-between">
 	<span class="tutor-fs-6 tutor-fw-medium tutor-color-secondary"><?php _e("Course Content", "tutor"); ?></span>
-	<span class="tutor-d-block tutor-d-xl-none"><a href="#" class="tutor-iconic-btn" tutor-hide-course-single-sidebar><span class="tutor-icon-times" area-hidden="true"></span></a></span>
+	<span class="tutor-d-block tutor-d-xl-none">
+		<a href="#" class="tutor-iconic-btn" tutor-hide-course-single-sidebar>
+			<span class="tutor-icon-times" area-hidden="true"></span>
+		</a>
+	</span>
 </div>
 
 <?php
