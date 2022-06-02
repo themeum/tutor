@@ -167,7 +167,6 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 					</div>
 					<!--.tutor-course-builder-section-title-->
 					<div class="tutor-course-builder-section-content">
-						<?php echo tutor_utils()->hello(); ?>
 						<div class="tutor-mb-32">
 							<label class="tutor-course-field-label tutor-fs-6 tutor-color-black"><?php _e('Course Title', 'tutor'); ?></label>
 							<div id="tutor-course-create-title-tooltip-wrapper" class="tooltip-wrap tutor-d-block">
