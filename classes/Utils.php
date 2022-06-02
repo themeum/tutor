@@ -2025,9 +2025,14 @@ class Utils {
 			WHERE 	comment_agent = %s
 					AND comment_type = %s
 					AND user_id = %d
+					AND comment_post_ID IN (
+						select post_parent AS course_id from {$wpdb->posts} where post_type=%s AND post_author = %d
+					)
 			",
 				'TutorLMSPlugin',
 				'course_completed',
+				$user_id,
+				'tutor_enrolled',
 				$user_id
 			)
 		);
