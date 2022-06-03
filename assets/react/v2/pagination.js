@@ -76,18 +76,18 @@ window.jQuery(document).ready($=>{
                             link_el.remove();
                             return;
                         }
-                        // Element will be mounted only when it should hide.
-                        var hide = content_container.find('#tutor-hide-comment-load-more-btn');
-                        if (hide.length) {
-                            var loadMoreBtn = document.querySelector('.tutor-btn.page-numbers');
-                            loadMoreBtn.remove();
-                        }
                         // Append the content
                         append_container.append(html);
 
                         // Update pagination data since pagination template is not supposed to be loaded here
                         url.searchParams.set('current_page', page_num+1);
                         link_el.attr('href', url.toString());
+                        // Element will be mounted only when it should hide.
+                        var hide = content_container.find('#tutor-hide-comment-load-more-btn');
+                        if (hide.length) {
+                            var loadMoreBtn = document.querySelector('.tutor-btn.page-numbers');
+                            loadMoreBtn.remove();
+                        }
 
                     } else {
                         content_container.html(html);

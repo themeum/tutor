@@ -40,15 +40,15 @@ $data = array(
 	)
 );
 $template = tutor()->path . 'templates/dashboard/elements/load-more.php';
-if ( file_exists( $template ) ) {
+if ( file_exists( $template ) && $max_page > $current_page ) {
 	ob_start();
 	tutor_load_template_from_custom_path( $template, $data );
 	$load_more_btn = apply_filters( 'tutor_lesson_comment_load_more_button', ob_get_clean() );
 	?>
-	<?php if ( $current_page >= $max_page ) : ?>
-		<input type="hidden" id="tutor-hide-comment-load-more-btn">
-	<?php endif; ?>
 	<?php
+}
+if ( $current_page >= $max_page ) {
+	echo '<input type="hidden" id="tutor-hide-comment-load-more-btn">';
 }
 
 if ( 'tutor_single_course_lesson_load_more' === $action ) {
