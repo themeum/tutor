@@ -96,5 +96,7 @@ if ( 'tutor_single_course_lesson_load_more' === $action ) {
 			?>
 		</div>
 	</div>
-	<?php echo $load_more_btn;?>
+	<div class="tutor-button-wrapper tutor-mt-12 tutor-d-flex tutor-justify-end">
+		<?php echo $load_more_btn;?>
+	</div>
 </div>
