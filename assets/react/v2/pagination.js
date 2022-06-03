@@ -78,7 +78,6 @@ window.jQuery(document).ready($=>{
                         }
                         // Element will be mounted only when it should hide.
                         var hide = content_container.find('#tutor-hide-comment-load-more-btn');
-                        console.log(hide.length)
                         if (hide.length) {
                             var loadMoreBtn = document.querySelector('.tutor-btn.page-numbers');
                             loadMoreBtn.remove();

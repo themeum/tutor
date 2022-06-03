@@ -1,7 +1,7 @@
 <?php
 /**
  * Load more ajax button template
- * ?for usage checkout: tutor/templates/single/lesson/comment.php:132
+ * ?for usage checkout: tutor/templates/single/lesson/comment.php:30
  *
  * @since v2.0.6
  *
