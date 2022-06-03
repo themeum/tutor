@@ -26,14 +26,45 @@ class Course_Filter {
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
 
+		// Pagination arg
 		$page = ( isset( $_post['current_page'] ) && is_numeric( $_post['current_page'] ) && $_post['current_page'] > 0 ) ? $_post['current_page'] : 1;
 		$_post['current_page'] = $page;
+
+		// Order arg
+		$order_by = 'ID';
+		$order = 'DESC';
+
+		if(isset($_post['course_order'])) {
+			switch($_post['course_order']) {
+				case 'newest_first' : 
+					$order_by = 'ID';
+					$order = 'DESC';
+					break;
+
+				case 'oldest_first' : 
+					$order_by = 'ID';
+					$order = 'ASC';
+					break;
+				
+				case 'course_title_az' : 
+					$order_by = 'post_title';
+					$order = 'ASC';
+					break;
+				
+				case 'course_title_za' : 
+					$order_by = 'post_title';
+					$order = 'DESC';
+					break;
+			}
+		}
 		
 		$args = array(
 			'post_status'    => 'publish',
 			'post_type'      => tutor()->course_post_type,
 			'posts_per_page' => $courses_per_page,
 			'paged'          => (int)$page,
+			'orderby'		 => $order_by,
+			'order'			 => $order,
 			'tax_query'      => array(
 				'relation' => 'OR',
 			),

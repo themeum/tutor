@@ -16,8 +16,6 @@ class Template extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'pre_get_posts', array( $this, 'limit_course_query_archive' ), 99 );
-
 		/**
 		 * Should Load Template Override
 		 * Integration for specially oxygen builder
@@ -79,69 +77,6 @@ class Template extends Tutor_Base {
 		}
 
 		return $template;
-	}
-
-	/**
-	 * @param $query
-	 *
-	 * limit for course archive listing
-	 *
-	 * Make a page to archive listing for courses
-	 */
-	public function limit_course_query_archive( $query ) {
-		$courses_per_page = (int) tutor_utils()->get_option( 'courses_per_page', 12 );
-
-		if ( $query->is_main_query() && ! $query->is_feed() && ! is_admin() && is_page() ) {
-			$queried_object = get_queried_object();
-			if ( $queried_object instanceof \WP_Post ) {
-				$page_id               = $queried_object->ID;
-				$selected_archive_page = (int) tutor_utils()->get_option( 'course_archive_page' );
-
-				if ( $page_id === $selected_archive_page ) {
-					$paged        = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
-					$search_query = get_search_query();
-					query_posts(
-						array(
-							'post_type'      => $this->course_post_type,
-							'paged'          => $paged,
-							's'              => $search_query,
-							'posts_per_page' => $courses_per_page,
-						)
-					);
-				}
-			}
-		}
-
-		if ( $query->is_archive && $query->is_main_query() && ! $query->is_feed() && ! is_admin() ) {
-			$post_type       = get_query_var( 'post_type' );
-			$course_category = get_query_var( 'course-category' );
-			if ( ( $post_type === $this->course_post_type || ! empty( $course_category ) ) ) {
-				$query->set( 'posts_per_page', $courses_per_page );
-
-				$course_filter = 'newest_first';
-				if ( ! empty( $_GET['tutor_course_filter'] ) ) {
-					$course_filter = sanitize_text_field( $_GET['tutor_course_filter'] );
-				}
-				switch ( $course_filter ) {
-					case 'newest_first':
-						$query->set( 'orderby', 'ID' );
-						$query->set( 'order', 'desc' );
-						break;
-					case 'oldest_first':
-						$query->set( 'orderby', 'ID' );
-						$query->set( 'order', 'asc' );
-						break;
-					case 'course_title_az':
-						$query->set( 'orderby', 'post_title' );
-						$query->set( 'order', 'asc' );
-						break;
-					case 'course_title_za':
-						$query->set( 'orderby', 'post_title' );
-						$query->set( 'order', 'desc' );
-						break;
-				}
-			}
-		}
 	}
 
 	/**
