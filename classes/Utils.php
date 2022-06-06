@@ -3109,7 +3109,7 @@ class Utils {
 		}
 
 		/**
-		 * Handle Short by Relevant | New | Popular & Order Shorting
+		 * Handle Sort by Relevant | New | Popular & Order Shorting
 		 * from instructor list backend
 		 *
 		 * @since v2.0.0
