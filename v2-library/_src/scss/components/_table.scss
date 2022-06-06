@@ -8,10 +8,7 @@
 
 	&-responsive {
 		position: relative;
-		@include breakpoint-max(tablet) {
-			// added media query to fix the dropdown menu not showing properly issue.
-			overflow-x: auto;
-		}
+		overflow-x: auto;
 		-webkit-overflow-scrolling: touch;
 	}
 
