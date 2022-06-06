@@ -106,7 +106,7 @@ $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 			<div class="tutor-d-flex tutor-align-center tutor-mb-24">
 				<div class="tutor-mr-16">
 					<label for="tutor-instructor-relevant-sort" class="tutor-fs-6 tutor-color-muted">
-						<?php _e( 'Short by', 'tutor' ); ?>
+						<?php _e( 'Sort by', 'tutor' ); ?>
 					</label>
 				</div>
 				<div>

@@ -214,7 +214,7 @@ class Shortcode {
 		$rating_filter = isset( $_POST['rating_filter'] ) ? $_POST['rating_filter'] : '';
 
 		/**
-		 * Short by Relevant | New | Popular
+		 * Sort by Relevant | New | Popular
 		 *
 		 * @since v2.0.0
 		 */

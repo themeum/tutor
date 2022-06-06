@@ -3109,7 +3109,7 @@ class Utils {
 		}
 
 		/**
-		 * Handle Short by Relevant | New | Popular & Order Shorting
+		 * Handle Sort by Relevant | New | Popular & Order Shorting
 		 * from instructor list backend
 		 *
 		 * @since v2.0.0
@@ -4380,7 +4380,6 @@ class Utils {
 			{$limit_offset}",
 			$search_term
 		);
-
 		if ( $count_only ) {
 			return $wpdb->get_var( $query );
 		}
@@ -9105,6 +9104,13 @@ class Utils {
 	 * @since v2.0.5
 	 */
 	public function course_nav_items() {
+		/**
+		 * If current user has course content then enrollment is not
+		 * required
+		 *
+		 * @since v2.0.6
+		 */
+		$is_require_enrollment = ! $this->has_user_course_content_access();
 		$array = array(
 			'info'          => array(
 				'title'  => __( 'Course Info', 'tutor' ),
@@ -9117,12 +9123,12 @@ class Utils {
 			'questions'     => array(
 				'title'             => __( 'Q&A', 'tutor' ),
 				'method'            => 'tutor_course_question_and_answer',
-				'require_enrolment' => true,
+				'require_enrolment' => $is_require_enrollment,
 			),
 			'announcements' => array(
 				'title'             => __( 'Announcements', 'tutor' ),
 				'method'            => 'tutor_course_announcements',
-				'require_enrolment' => true,
+				'require_enrolment' => $is_require_enrollment,
 			),
 		);
 		return $array;

@@ -79,6 +79,13 @@ if ( ! function_exists( 'tutor' ) ) {
 			'instructor_role_name' => apply_filters( 'tutor_instructor_role_name', __( 'Tutor Instructor', 'tutor' ) ),
 			'template_path'        => apply_filters( 'tutor_template_path', 'tutor/' ),
 			'has_pro'              => apply_filters( 'tutor_has_pro', $has_pro ),
+			// @since v2.0.6.
+			'topics_post_type'	   	 => apply_filters( 'tutor_topics_post_type', 'topics' ),
+			'announcement_post_type' => apply_filters( 'tutor_announcement_post_type', 'tutor_announcements' ),
+			'assignment_post_type'	 => apply_filters( 'tutor_assignment_post_type', 'tutor_assignments' ),
+			'enrollment_post_type'   => apply_filters( 'tutor_enrollment_post_type', 'tutor_enrolled' ),
+			'quiz_post_type'   		 => apply_filters( 'tutor_quiz_post_type', 'tutor_quiz' ),
+			'zoom_post_type'   		 => apply_filters( 'tutor_zoom_meeting_post_type', 'tutor_zoom_meeting' ),
 		);
 
 		$GLOBALS['tutor_plugin_info'] = (object) $info;
