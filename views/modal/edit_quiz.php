@@ -139,7 +139,7 @@
         </div>
     </div>
     
-    <div class="tutor-mb-32 tutor-quiz-slider tutor-attempt-allowed-slider">
+    <div class="tutor-mb-32 tutor-quiz-slider tutor-attempt-allowed-slider" style="display: none;">
         <label class="tutor-form-label">
             <?php _e('Attempts Allowed', 'tutor'); ?>
         </label>
