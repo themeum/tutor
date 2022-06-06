@@ -107,7 +107,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						</span>
 					</div>
 					<div class="alert-btn-group">
-						<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
+						<a href="%s" class="tutor-btn tutor-btn-sm">'.__('Click Here', 'tutor').'</a>
 					</div>
 				</div>',
 				$profile_completion['_tutor_profile_photo']['text'],
