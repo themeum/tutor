@@ -161,6 +161,7 @@ class Assets {
 		 * Enabling Sorting, draggable, droppable...
 		 */
 		wp_enqueue_script( 'jquery-ui-sortable' );
+		wp_enqueue_script( 'jquery-touch-punch', array('jquery-ui-sortable') );
 		
 		// Plyr
 		if(is_single_course(true)) {
