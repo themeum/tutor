@@ -11,7 +11,7 @@ window.jQuery(document).ready($=>{
     const {__} = wp.i18n;
 
     // Enable pagination click
-    // Users are not supposed to click ajax based pagination before JS evenets assigned.
+    // Users are not supposed to click ajax based pagination before JS events assigned.
     // Because normal URL click will load unwanted page contents.
     $('[data-tutor_pagination_ajax]').addClass('is-ajax-pagination-enabled');
 
@@ -21,7 +21,6 @@ window.jQuery(document).ready($=>{
         let link_el = $(this);
         let content_container = $(this).closest('.tutor-pagination-wrapper-replaceable');
         let content_container_html = content_container.html();
-
         if (!content_container.length) {
             return;
         }

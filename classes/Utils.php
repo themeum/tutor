@@ -4380,7 +4380,6 @@ class Utils {
 			{$limit_offset}",
 			$search_term
 		);
-
 		if ( $count_only ) {
 			return $wpdb->get_var( $query );
 		}
