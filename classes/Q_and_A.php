@@ -25,6 +25,12 @@ class Q_and_A {
 		 */
 		add_action( 'wp_ajax_tutor_qna_single_action', array( $this, 'tutor_qna_single_action' ) );
 		add_action( 'wp_ajax_tutor_qna_bulk_action', array( $this, 'process_bulk_action' ) );
+		/**
+		 * Q & A load more
+		 *
+		 * @since v2.0.6
+		 */
+		add_action( 'wp_ajax_tutor_q_and_a_load_more', __CLASS__ . '::load_more' );
 	}
 
 	public function tutor_qna_create_update() {
@@ -220,5 +226,20 @@ class Q_and_A {
 		);
 
 		return $tabs;
+	}
+
+	/**
+	 * Load more q & a
+	 *
+	 * @since v2.0.6
+	 *
+	 * @return void
+	 */
+	public static function load_more() {
+		tutor_utils()->checking_nonce();
+		ob_start();
+		tutor_load_template( 'single.course.enrolled.question_and_answer' );
+		$html = ob_get_clean();
+		wp_send_json_success( array('html' => $html) );
 	}
 }

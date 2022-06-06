@@ -7,7 +7,7 @@
 
 use TUTOR\Lesson;
 
-$per_page = 1;//tutor_utils()->get_option('pagination_per_page', 10);
+$per_page = tutor_utils()->get_option('pagination_per_page', 10);
 $current_page = max(1, (int)tutor_utils()->avalue_dot('current_page', $_POST));
 $lesson_id = isset($_POST['lesson_id']) ? (int)$_POST['lesson_id'] : get_the_ID();
 $comments_list_args = array(
@@ -29,7 +29,6 @@ $max_page = (int) ceil( $comments_count / $per_page );
 // Prepare load more button.
 $data = array(
 	'layout' => array(
-		'should_show'    => $max_page > $current_page ? true : false,
 		'type' 			 => 'load_more',
 		'load_more_text' => __('Load More', 'tutor')
 	),
@@ -97,6 +96,8 @@ if ( 'tutor_single_course_lesson_load_more' === $action ) {
 		</div>
 	</div>
 	<div class="tutor-button-wrapper tutor-mt-12 tutor-d-flex tutor-justify-end">
-		<?php echo $load_more_btn;?>
+		<?php
+			echo $load_more_btn; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
 	</div>
 </div>
