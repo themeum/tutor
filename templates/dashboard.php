@@ -174,13 +174,13 @@ do_action('tutor_dashboard/before/wrap');
 
 						if (is_array($dashboard_page)) {
 							$menu_title     = tutor_utils()->array_get('title', $dashboard_page);
-							$menu_icon_name = tutor_utils()->array_get('icon', $dashboard_page);
+							$menu_icon_name = tutor_utils()->array_get('icon', $dashboard_page, (isset($dashboard_page['icon']) ? $dashboard_page['icon'] : ''));
 							if ($menu_icon_name) {
 								$menu_icon = "<span class='{$menu_icon_name} tutor-dashboard-menu-item-icon'></span>";
 							}
 							// Add new menu item property "url" for custom link
 							if (isset($dashboard_page['url'])) {
-								echo $menu_link = $dashboard_page['url'];
+								$menu_link = $dashboard_page['url'];
 							}
 							if (isset($dashboard_page['type']) && $dashboard_page['type'] == 'separator') {
 								$separator = true;
