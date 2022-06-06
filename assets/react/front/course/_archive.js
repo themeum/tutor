@@ -1,5 +1,6 @@
 const tutor_filters = [
     'keyword',
+    'course_order',
     'tutor-course-filter-level',
     'tutor-course-filter-tag',
     'tutor-course-filter-category',
@@ -58,7 +59,7 @@ const renderFilterFromState = (filter_container) => {
     let filters = getAllUrlParams();
 
     filter_container.find('[type="checkbox"]').prop('checked', false);
-    filter_container.find('[type="text"]').val('');
+    filter_container.find('[type="text"], select').val('');
 
     // Loop through filter params array and change element state like check/uncheck/field value based on the filter
     for (let k in filters) {
@@ -99,7 +100,7 @@ window.jQuery(document).ready($ => {
     // Sidebar checkbox value change
     course_filter_container.on('submit', function(e) {
         e.preventDefault();
-    }).find('input').on('change', function(e) {
+    }).find('input,select').on('change', function(e) {
         ajaxFilterArchive();
     });
 

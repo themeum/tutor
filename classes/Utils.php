@@ -3109,7 +3109,7 @@ class Utils {
 		}
 
 		/**
-		 * Handle Short by Relevant | New | Popular & Order Shorting
+		 * Handle Sort by Relevant | New | Popular & Order Shorting
 		 * from instructor list backend
 		 *
 		 * @since v2.0.0
@@ -7395,7 +7395,7 @@ class Utils {
 	 *
 	 * Get previous ID
 	 */
-	public function get_course_previous_content_id( $current_id ) {
+	public function get_course_previous_content_id( $current_id, $exclude_type=array() ) {
 		$course_id = $this->get_course_id_by_content( $current_id );
 		$topics = $this->get_topics( $course_id );
 
@@ -7405,12 +7405,12 @@ class Utils {
 			$contents  = $this->get_course_contents_by_topic( $topic->ID, -1 );
 			
 			foreach($contents->posts as $content) {
-				$content_ids[] = $content->ID;
+				if(!in_array($content->post_type, $exclude_type)) {
+					$content_ids[] = $content->ID;
+				}
 			}
 		}
 
-		tutor_log($content_ids);
-		
 		foreach ( $content_ids as $key => $content_id ) {
 			if ( $current_id == $content_id ) {
 				if ( ! empty( $content_ids[ $key - 1 ] ) ) {

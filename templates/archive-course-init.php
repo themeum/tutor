@@ -119,28 +119,37 @@
 	<?php endif; ?>
 
 	<div class="tutor-row tutor-gx-xl-5">
-	<?php if ( $has_course_filters ): ?>
-		<div class="tutor-col-3 tutor-course-filter-container">
-			<div class="tutor-course-filter" tutor-course-filter>
-				<?php tutor_load_template('course-filter.filters'); ?>
+		<?php if ( $has_course_filters ): ?>
+			<div class="tutor-col-3 tutor-course-filter-container">
+				<div class="tutor-course-filter" tutor-course-filter>
+					<?php tutor_load_template('course-filter.filters'); ?>
+				</div>
 			</div>
-		</div>
 
-		<?php if ( $columns < 3 ) : ?>
-			<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" area-hidden="true"></div>
+			<?php if ( $columns < 3 ) : ?>
+				<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" area-hidden="true"></div>
+			<?php endif; ?>
+			
+			<div class="tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?> ">
+				<div>
+					<?php tutor_load_template('course-filter.course-archive-filter-bar'); ?>
+				</div>
+				<div class="tutor-pagination-wrapper-replaceable" tutor-course-list-container>
+					<?php echo $course_loop; ?>
+				</div>
+			</div>
+		<?php else: ?>
+			<div class="tutor-col-12">
+				<div class="">
+					<?php tutor_load_template('course-filter.course-archive-filter-bar'); ?>
+				</div>
+				<div class="tutor-pagination-wrapper-replaceable" tutor-course-list-container>
+					<?php echo $course_loop; ?>
+				</div>
+			</div>
 		<?php endif; ?>
-		
-		<div class="tutor-col-lg-9 tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?> tutor-pagination-wrapper-replaceable" tutor-course-list-container>
-			<?php echo $course_loop; ?>
-		</div>
-	<?php else: ?>
-		<div class="tutor-col-12 tutor-pagination-wrapper-replaceable" tutor-course-list-container>
-			<?php echo $course_loop; ?>
-		</div>
-	<?php endif; ?>
 	</div>
 </div>
-
 
 <?php 
 	if ( ! is_user_logged_in() ) {
