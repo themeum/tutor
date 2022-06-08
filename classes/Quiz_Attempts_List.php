@@ -60,10 +60,10 @@ class Quiz_Attempts_List {
 
 		// Get total attempt count. 
 		// Exclude incomplete attempts by checking if attempt_ended_at not null
-		$all = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', null, true, true );
-		$pass = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'pass', true, true );
-		$fail = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'fail', true, true );
-		$pending = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'pending', true, true );
+		$all 	 = tutor_utils()->get_total_quiz_attempts();
+		$pass 	 = tutor_utils()->get_total_quiz_attempts( '', 0, 'pass' );
+		$fail 	 = tutor_utils()->get_total_quiz_attempts( '', 0, 'fail'  );
+		$pending = tutor_utils()->get_total_quiz_attempts( '', 0, 'pending' );
 
 		return compact('all', 'pass', 'fail', 'pending');
 	}
