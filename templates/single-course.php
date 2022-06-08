@@ -35,9 +35,11 @@ if (!is_user_logged_in() && !$is_public && $student_must_login_to_view_course){
                 <?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
                 <div class="tutor-course-details-tab tutor-mt-32">
-                    <div class="tutor-is-sticky">
-                        <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
-                    </div>
+                    <?php if ( is_array( $course_nav_item ) && count( $course_nav_item ) > 1 ) : ?>
+                        <div class="tutor-is-sticky">
+                            <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="tutor-tab tutor-pt-24">
                         <?php foreach( $course_nav_item as $key => $subpage ) : ?>
                             <div id="tutor-course-details-tab-<?php echo $key; ?>" class="tutor-tab-item<?php echo $key == 'info' ? ' is-active' : ''; ?>">
