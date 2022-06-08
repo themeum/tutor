@@ -1,6 +1,8 @@
 <?php
 namespace TUTOR;
 
+use Tutor\Cache\QuizAttempts;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -71,48 +73,60 @@ class Quiz_Attempts_List {
 		$count 			= array();
 		$is_ajax_action = isset( $_POST['action'] ) && 'tutor_quiz_attempts_count' === $_POST['action'];
 		if ( $is_ajax_action ) {
-			$count = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT COUNT( DISTINCT attempt_id)
-						 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-								INNER JOIN {$wpdb->posts} quiz
-									ON quiz_attempts.quiz_id = quiz.ID
-								INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
-									ON quiz_attempts.attempt_id = ans.quiz_attempt_id		
-	
-						WHERE 	attempt_status != %s
-							{$pass_clause}
-	
-						UNION 
-	
-						SELECT COUNT( DISTINCT attempt_id)
+			$attempt_cache = new QuizAttempts();
+			if ( $attempt_cache->has_cache() ) {
+				$count = $attempt_cache->get_cache();
+			} else {
+				$count = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT COUNT( DISTINCT attempt_id)
 							 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
 									INNER JOIN {$wpdb->posts} quiz
 										ON quiz_attempts.quiz_id = quiz.ID
 									INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
 										ON quiz_attempts.attempt_id = ans.quiz_attempt_id		
-	
+		
 							WHERE 	attempt_status != %s
-								{$fail_clause}
-	
-						UNION
-	
-						SELECT COUNT( DISTINCT attempt_id)
-							 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-									INNER JOIN {$wpdb->posts} quiz
-										ON quiz_attempts.quiz_id = quiz.ID
-									INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
-										ON quiz_attempts.attempt_id = ans.quiz_attempt_id		
-	
-							WHERE 	attempt_status != %s
-								{$pending_clause}
-	
-				",
-					'attempt_started',
-					'attempt_started',
-					'attempt_started'
-				)
-			);
+								{$pass_clause}
+		
+							UNION 
+		
+							SELECT COUNT( DISTINCT attempt_id)
+								 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+										INNER JOIN {$wpdb->posts} quiz
+											ON quiz_attempts.quiz_id = quiz.ID
+										INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
+											ON quiz_attempts.attempt_id = ans.quiz_attempt_id		
+		
+								WHERE 	attempt_status != %s
+									{$fail_clause}
+		
+							UNION
+		
+							SELECT COUNT( DISTINCT attempt_id)
+								 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+										INNER JOIN {$wpdb->posts} quiz
+											ON quiz_attempts.quiz_id = quiz.ID
+										INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
+											ON quiz_attempts.attempt_id = ans.quiz_attempt_id		
+		
+								WHERE 	attempt_status != %s
+									{$pending_clause}
+		
+					",
+						'attempt_started',
+						'attempt_started',
+						'attempt_started'
+					)
+				);
+				$attempt_cache->data = array(
+					$count[0] ?? 0, //pass
+					$count[1] ?? 0, //fail
+					$count[2] ?? 0, //pending
+				);
+				$attempt_cache->set_cache();
+			}
+
 		}
 
 		$count_pass 	= $count[0] ?? 0;
