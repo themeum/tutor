@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle user cache data
+ * Handle quiz attempt cache data
  *
  * @package  Tutor\Cache
  *
@@ -20,11 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * User data caching
  * Get Set & check
- *
- * @package  PluginStarter\Cache
- *
- * @author   Shewa <shewa12kpi@gmail.com>
- *
+ * 
  * @since    v2.0.6
  */
 class QuizAttempts extends AbstractCache {
