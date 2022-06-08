@@ -5498,7 +5498,6 @@ class Utils {
 					INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
 					INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id
-					LEFT JOIN {$wpdb->prefix}usermeta AS instructor_meta ON course.ID = instructor_meta.meta_value
 			WHERE 	quiz_attempts.attempt_ended_at IS NOT NULL
 					AND (
 							users.user_email = %s
@@ -5507,7 +5506,6 @@ class Utils {
 							OR course.post_title LIKE %s
 						)
 					AND quiz_attempts.attempt_ended_at IS NOT NULL
-					{$instructor_clause}
 					{$result_clause}
 					{$course_filter}
 					{$date_filter}
