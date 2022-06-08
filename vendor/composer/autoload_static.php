@@ -10,6 +10,7 @@ class ComposerStaticInit0e757438aef5d8116f473fde21a552e8
         'T' => 
         array (
             'Tutor\\Models\\' => 13,
+            'Tutor\\Cache\\' => 12,
         ),
     );
 
@@ -17,6 +18,10 @@ class ComposerStaticInit0e757438aef5d8116f473fde21a552e8
         'Tutor\\Models\\' => 
         array (
             0 => __DIR__ . '/../..' . '/models',
+        ),
+        'Tutor\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/cache',
         ),
     );
 
