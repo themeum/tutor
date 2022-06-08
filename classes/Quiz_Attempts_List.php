@@ -45,6 +45,7 @@ class Quiz_Attempts_List {
 		 * @since v2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_quiz_attempts_bulk_action', array( $this, 'quiz_attempts_bulk_action' ) );
+		add_action( 'wp_ajax_tutor_quiz_attempts_count', array( $this, 'get_quiz_attempts_stat' ) );
 	}
 
 	/**
@@ -57,15 +58,73 @@ class Quiz_Attempts_List {
 	 */
 	public function get_quiz_attempts_stat() {
 		global $wpdb;
+		// Set query based on action tab.
+		$pass_mark      = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
+		$pending_count  = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
 
-		// Get total attempt count. 
-		// Exclude incomplete attempts by checking if attempt_ended_at not null
-		$all 	 = tutor_utils()->get_total_quiz_attempts();
-		$pass 	 = tutor_utils()->get_total_quiz_attempts( '', 0, 'pass' );
-		$fail 	 = tutor_utils()->get_total_quiz_attempts( '', 0, 'fail'  );
-		$pending = tutor_utils()->get_total_quiz_attempts( '', 0, 'pending' );
+		$pass_clause = " AND quiz_attempts.earned_marks >= {$pass_mark}  ";
 
-		return compact('all', 'pass', 'fail', 'pending');
+		$fail_clause = " AND quiz_attempts.earned_marks < {$pass_mark} ";
+
+		$pending_clause = " AND {$pending_count} > 0 ";
+
+		$count 			= array();
+		$is_ajax_action = isset( $_POST['action'] ) && 'tutor_quiz_attempts_count' === $_POST['action'];
+		if ( $is_ajax_action ) {
+			$count = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT COUNT( DISTINCT attempt_id)
+						 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+								INNER JOIN {$wpdb->posts} quiz
+									ON quiz_attempts.quiz_id = quiz.ID
+								INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
+									ON quiz_attempts.attempt_id = ans.quiz_attempt_id		
+	
+						WHERE 	attempt_status != %s
+							{$pass_clause}
+	
+						UNION 
+	
+						SELECT COUNT( DISTINCT attempt_id)
+							 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+									INNER JOIN {$wpdb->posts} quiz
+										ON quiz_attempts.quiz_id = quiz.ID
+									INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
+										ON quiz_attempts.attempt_id = ans.quiz_attempt_id		
+	
+							WHERE 	attempt_status != %s
+								{$fail_clause}
+	
+						UNION
+	
+						SELECT COUNT( DISTINCT attempt_id)
+							 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+									INNER JOIN {$wpdb->posts} quiz
+										ON quiz_attempts.quiz_id = quiz.ID
+									INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
+										ON quiz_attempts.attempt_id = ans.quiz_attempt_id		
+	
+							WHERE 	attempt_status != %s
+								{$pending_clause}
+	
+				",
+					'attempt_started',
+					'attempt_started',
+					'attempt_started'
+				)
+			);
+		}
+
+		$count_pass 	= $count[0] ?? 0;
+		$count_fail 	= $count[1] ?? 0;
+		$count_pending  = $count[2] ?? 0;
+
+		$all 	 = $count_pass + $count_fail + $count_pending;
+		$pass 	 = $count_pass;
+		$fail 	 = $count_fail;
+		$pending = $count_pending;
+		$response = compact('all', 'pass', 'fail', 'pending');
+		return $is_ajax_action ? wp_send_json_success( $response ) : $response;
 	}
 
 	/**
