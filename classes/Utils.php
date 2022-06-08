@@ -5339,27 +5339,81 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_total_quiz_attempts( $search_term = '' ) {
+	public function get_total_quiz_attempts( $search_term = '', int $course_id = 0, string $tab = '', $date_filter = '' ) {
 		global $wpdb;
 
-		$search_term_raw = $search_term;
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		if ( '' !== $search_term ) {
+			$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		}
+
+		// Set query based on action tab.
+		$pass_mark      = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
+		$pending_count  = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
+
+		$tab_join   = '';
+		$tab_clause = '';
+		if ( '' !== $tab ) {
+			$tab_join = "INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id";
+		}
+		switch ( $tab ) {
+			case 'pass':
+				// Just check if the earned mark is greater than pass mark.
+				// It doesn't matter if there is any pending or failed question.
+				$tab_clause = " AND quiz_attempts.earned_marks >= {$pass_mark}  ";
+				break;
+
+			case 'fail':
+				// Check if earned marks is less than pass mark and there is no pending question.
+				$tab_clause = " AND quiz_attempts.earned_marks < {$pass_mark}
+									AND {$pending_count} = 0 ";
+				break;
+			case 'pending':
+				$tab_clause = " AND {$pending_count} > 0 ";
+				break;
+		}
+
+		$course_join 	= '';
+		$course_clause  = '';
+		if ( $course_id || '' !== $search_term ) {
+			$course_join 	= "INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id";
+		}
+		if ( $course_id ) {
+			$course_clause  = " AND quiz_attempts.course_id = $course_id";
+		}
+
+		$user_join 			= '';
+		$user_clause 		= '';
+		$search_term1  		= sanitize_text_field( $search_term );
+		$search_term2  		= sanitize_text_field( $search_term );
+		$search_term3  		= sanitize_text_field( $search_term );
+		if ( '' !== $search_term ) {
+			$user_join = "INNER JOIN {$wpdb->users}
+			ON quiz_attempts.user_id = {$wpdb->users}.ID";
+
+			$user_clause  = "AND ( user_email LIKE '%$search_term1%' OR display_name LIKE '%$search_term2%' OR course.post_title LIKE '%$search_term3%' )";
+		}
+
+		if ( '' !== $date_filter ) {
+			$date_filter    = $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
+			$date_filter    = $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
+		}
 
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(attempt_id)
+				"SELECT COUNT( DISTINCT attempt_id)
 		 	FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
 					INNER JOIN {$wpdb->posts} quiz
 							ON quiz_attempts.quiz_id = quiz.ID
-					INNER JOIN {$wpdb->users}
-							ON quiz_attempts.user_id = {$wpdb->users}.ID
+					{$user_join}
+					{$course_join}
+					{$tab_join}
 			WHERE 	attempt_status != %s
-					AND ( user_email = %s OR display_name LIKE %s OR post_title LIKE %s )
+				{$user_clause}
+				{$course_clause}
+				{$tab_clause}
+				{$date_filter}
 			",
 				'attempt_started',
-				$search_term_raw,
-				$search_term,
-				$search_term
 			)
 		);
 
@@ -5400,7 +5454,7 @@ class Utils {
 		$date_filter    = $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
 
 		$result_clause  = '';
-		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.*, users.*';
+		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name';
 		$limit_offset   = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
 
 		$pass_mark      = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
