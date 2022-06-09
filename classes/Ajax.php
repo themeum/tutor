@@ -138,11 +138,19 @@ class Ajax {
 				array( 
 					'comment_content' => $review,
 					'comment_approved' => $moderation ? 'hold' : 'approved',
+					'comment_date'     => $date,
+					'comment_date_gmt' => get_gmt_from_date( $date ),
 				),
 				array( 'comment_ID' => $previous_rating_id )
 			);
 
-			$rating_info = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->commentmeta} WHERE comment_id = %d AND meta_key = 'tutor_rating'; ", $previous_rating_id ) );
+			$rating_info = $wpdb->get_row( $wpdb->prepare( 
+				"SELECT * FROM {$wpdb->commentmeta} 
+				WHERE comment_id = %d 
+					AND meta_key = 'tutor_rating'; ", 
+				$previous_rating_id 
+			) );
+
 			if ( $rating_info ) {
 				$wpdb->update(
 					$wpdb->commentmeta,
