@@ -11,8 +11,6 @@
  * @version 1.4.3
  */
 
-get_tutor_header();
-
 global $previous_id;
 
 // Get the ID of this content and the corresponding course
