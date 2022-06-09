@@ -24,10 +24,10 @@ $current_user_id = get_current_user_id();
 $course_id = isset($_POST['course_id']) ? (int)$_POST['course_id'] : get_the_ID();
 $is_enrolled = tutor_utils()->is_enrolled($course_id, $current_user_id);
 
-$reviews = tutor_utils()->get_course_reviews($course_id, $offset, $per_page, false, array('approved', 'approve'), $current_user_id);
-$reviews_total = tutor_utils()->get_course_reviews($course_id, null, null, true, array('approved', 'approve'), $current_user_id);
+$reviews = tutor_utils()->get_course_reviews($course_id, $offset, $per_page, false, array('approved'), $current_user_id);
+$reviews_total = tutor_utils()->get_course_reviews($course_id, null, null, true, array('approved'), $current_user_id);
 $rating = tutor_utils()->get_course_rating($course_id);
-$my_rating = tutor_utils()->get_reviews_by_user(0, 0, 150, false, $course_id);
+$my_rating = tutor_utils()->get_reviews_by_user(0, 0, 150, false, $course_id, array('approved', 'hold'));
 
 if(isset($_POST['course_id'])) {
 	// It's load more
