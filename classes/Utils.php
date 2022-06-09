@@ -3710,7 +3710,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only=false, $status_in = array('approved', 'approve'), $include_user_id=0 ) {
+	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only=false, $status_in = array('approved'), $include_user_id=0 ) {
 		$course_id = $this->get_post_id( $course_id );
 		global $wpdb;
 
@@ -3847,7 +3847,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in=array('approved', 'approve') ) {
+	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in=array('approved') ) {
 		global $wpdb;
 
 		if(!$limit) {
@@ -5462,12 +5462,14 @@ class Utils {
 
 		// Get attempts by instructor ID
 		$instructor_clause = '';
+		$instructor_join   = '';
 		if($instructor_id_check){
 			$current_user_id = get_current_user_id();
 			$instructor_id = $this->has_user_role('administrator', $current_user_id) ? null : $current_user_id;
 
 			if($instructor_id){
-				$instructor_clause = " AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id)";
+				//$instructor_clause = " AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id)";
+				$instructor_clause = " INNER JOIN {$wpdb->prefix}usermeta AS instructor_meta ON course.ID = instructor_meta.meta_value AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id) ";
 			}
 		}
 
@@ -5498,6 +5500,7 @@ class Utils {
 					INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
 					INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id
+					{$instructor_clause}
 			WHERE 	quiz_attempts.attempt_ended_at IS NOT NULL
 					AND (
 							users.user_email = %s
