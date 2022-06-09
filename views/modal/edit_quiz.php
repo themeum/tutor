@@ -139,7 +139,7 @@
         </div>
     </div>
     
-    <div class="tutor-mb-32 tutor-quiz-slider tutor-attempt-allowed-slider" style="display: none;">
+    <div class="tutor-mb-32 tutor-quiz-slider tutor-attempt-allowed-slider" style="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 'default') === 'retry' ? 'display: block' : 'display: none'?>">
         <label class="tutor-form-label">
             <?php _e('Attempts Allowed', 'tutor'); ?>
         </label>

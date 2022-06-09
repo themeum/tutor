@@ -109,7 +109,7 @@ window.jQuery(document).ready(function($) {
 				action: 'tutor_load_edit_lesson_modal',
 			},
 			beforeSend: function() {
-				$that.addClass('is-loading');
+				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function(data) {
 				if (!data.success) {
@@ -153,7 +153,7 @@ window.jQuery(document).ready(function($) {
 			},
 			complete: function() {
 				console.log('ajax completed');
-				$that.removeClass('is-loading');
+				$that.removeClass('is-loading').attr('disabled', false);
 				quicktags({ id: 'tutor_lesson_modal_editor' });
 			},
 		});
@@ -204,7 +204,7 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: form_data,
 			beforeSend: function() {
-				$that.addClass('is-loading');
+				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function(data) {
 				if (data.success) {
@@ -224,7 +224,7 @@ window.jQuery(document).ready(function($) {
 				}
 			},
 			complete: function() {
-				$that.removeClass('is-loading');
+				$that.removeClass('is-loading').attr('disabled', false);
 			},
 		});
 	});

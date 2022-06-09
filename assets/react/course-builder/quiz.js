@@ -239,7 +239,7 @@ window.jQuery(document).ready(function($) {
 				action: 'tutor_load_quiz_builder_modal',
 			},
 			beforeSend: function() {
-				$that.addClass('is-loading');
+				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function(data) {
 				if (!data.success) {
@@ -266,7 +266,7 @@ window.jQuery(document).ready(function($) {
 				enable_quiz_questions_sorting();
 			},
 			complete: function() {
-				$that.removeClass('is-loading');
+				$that.removeClass('is-loading').attr('disabled', false);
 			},
 		});
 	});
@@ -330,7 +330,7 @@ window.jQuery(document).ready(function($) {
 					action: 'tutor_quiz_save',
 				},
 				beforeSend: function() {
-					btn.addClass('is-loading');
+					btn.addClass('is-loading').attr('disabled', true);
 				},
 				success: function(data) {
 					console.log(quiz_id, quiz_id != 0);
@@ -359,7 +359,7 @@ window.jQuery(document).ready(function($) {
 					$('[name="quiz_option[feedback_mode]"]').trigger('change');
 				},
 				complete: function() {
-					btn.removeClass('is-loading');
+					btn.removeClass('is-loading').attr('disabled', false);
 				},
 			});
 		} else if (current_tab == 'quiz-builder-tab-questions') {
@@ -392,7 +392,7 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: params,
 			beforeSend: function() {
-				$that.addClass('is-loading');
+				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function(data) {
 				// Add the question form in modal
@@ -403,7 +403,7 @@ window.jQuery(document).ready(function($) {
 				enable_quiz_answer_sorting();
 			},
 			complete: function() {
-				$that.removeClass('is-loading');
+				$that.removeClass('is-loading').attr('disabled', false);
 			},
 		});
 	});
@@ -423,7 +423,7 @@ window.jQuery(document).ready(function($) {
 				action: 'tutor_quiz_builder_question_delete',
 			},
 			beforeSend: function() {
-				$that.addClass('is-loading');
+				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function() {
 				$that.closest('.quiz-builder-question-wrap').fadeOut(function() {
@@ -431,7 +431,7 @@ window.jQuery(document).ready(function($) {
 				});
 			},
 			complete: function() {
-				$that.removeClass('is-loading');
+				$that.removeClass('is-loading').attr('disabled', false);
 			},
 		});
 	});
@@ -460,13 +460,13 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: $formInput,
 			beforeSend: function() {
-				$that.addClass('is-loading');
+				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function(data) {
 				$('#tutor_quiz_builder_answer_wrapper').html(data.data.output);
 			},
 			complete: function() {
-				$that.removeClass('is-loading');
+				$that.removeClass('is-loading').attr('disabled', false);
 			},
 		});
 	});
@@ -487,7 +487,7 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: $formInput,
 			beforeSend: function() {
-				$that.addClass('is-loading');
+				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function(data) {
 				if (data.success) {
@@ -497,7 +497,7 @@ window.jQuery(document).ready(function($) {
 				}
 			},
 			complete: function() {
-				setTimeout(() => $that.removeClass('is-loading'), 2000);
+				setTimeout(() => $that.removeClass('is-loading').attr('disabled', false), 2000);
 			},
 		});
 	});
@@ -535,6 +535,7 @@ window.jQuery(document).ready(function($) {
 				if (data.success) {
 					$('#tutor_quiz_builder_answer_wrapper').html(data.data.output);
 					answer_wrapper.get(0).scrollIntoView({ block: 'center', behavior: 'smooth' });
+					enable_quiz_answer_sorting();
 				} else {
 					tutor_toast('Error', get_response_message(data), 'error');
 				}
@@ -561,7 +562,7 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: $formInput,
 			beforeSend: function() {
-				$that.addClass('is-loading');
+				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function(data) {
 				if (!data.success) {
@@ -572,7 +573,7 @@ window.jQuery(document).ready(function($) {
 				$('.tutor_select_value_holder').trigger('change');
 			},
 			complete: function() {
-				$that.removeClass('is-loading');
+				$that.removeClass('is-loading').attr('disabled', false);
 			},
 		});
 	});
