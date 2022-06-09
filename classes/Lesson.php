@@ -1,6 +1,8 @@
 <?php
 namespace TUTOR;
 
+use SebastianBergmann\Environment\Console;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -46,12 +48,34 @@ class Lesson extends Tutor_Base {
 		 */
 		add_action( 'tutor_lesson_completed_after', array( $this, 'tutor_lesson_completed_after' ), 999 );
 
-		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array($this, 'tutor_single_course_lesson_load_more') );
+		/**
+		 * Lesson comment & reply ajax handler
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'tutor_single_course_lesson_load_more' ) );
+		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'tutor_single_course_lesson_load_more' ) );
+		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
 	}
 
+	/**
+	 * Manage load more & comment create
+	 *
+	 * @since v2.0.6
+	 *
+	 * @return void  send wp json data
+	 */
 	public function tutor_single_course_lesson_load_more() {
 		tutor_utils()->checking_nonce();
-
+		$action = $_POST['action'] ?? '';
+		if ( 'tutor_create_lesson_comment' === $action ) {
+			$comment_data = array(
+				'comment_content'      => $_POST['comment'],
+				'comment_post_ID'      => $_POST['comment_post_ID'],
+				'comment_parent'  	   => $_POST['comment_parent'],
+			);
+			self::create_comment( $comment_data);
+		}
 		ob_start();
 		tutor_load_template('single.lesson.comment');
 		$html = ob_get_clean();
@@ -404,6 +428,47 @@ class Lesson extends Tutor_Base {
 		die();
 	}
 
+	public function reply_lesson_comment() {
+		tutor_utils()->checking_nonce();
+		$comment_data = array(
+			'comment_content'      => $_POST['comment'],
+			'comment_post_ID'      => $_POST['comment_post_ID'],
+			'comment_parent'  	   => $_POST['comment_parent'],
+		);
+		$comment_id = self::create_comment( $comment_data);
+		tutor_log( 'bac: ' . $comment_id );
+		if ( false === $comment_id ) {
+			wp_send_json_error();
+			return;
+		}
+		$reply = get_comment( $comment_id );
+		ob_start();
+		?>
+		<div class="tutor-comments-list tutor-child-comment tutor-mt-32" id="lesson-comment-<?php echo esc_attr($reply->comment_ID) ?>">
+			<div class="comment-avatar">
+				<img src="<?php echo get_avatar_url($reply->user_id); ?>" alt="">
+			</div>
+			<div class="tutor-single-comment">
+				<div class="tutor-actual-comment tutor-mb-12">
+					<div class="tutor-comment-author">
+						<span class="tutor-fs-6 tutor-fw-bold">
+							<?php echo $reply->comment_author; ?>
+						</span>
+						<span class="tutor-fs-7 tutor-ml-0 tutor-ml-sm-10">
+							<?php echo human_time_diff(strtotime($reply->comment_date), tutor_time()) . __(' ago', 'tutor'); ?>
+						</span>
+					</div>
+					<div class="tutor-comment-text tutor-fs-6 tutor-mt-4">
+						<?php echo $reply->comment_content; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+		$html = ob_get_clean();
+		wp_send_json_success( array('html' => $html) );
+	}
+
 	/**
 	 * Get comments
 	 *
@@ -420,6 +485,30 @@ class Lesson extends Tutor_Base {
 		$comments = get_comments( $args );
 		return $comments;
 	}
+
+	/**
+	 * Create comment
+	 *
+	 * @param array $post
+	 *
+	 * @return mixed   comment id on success, false on failure
+	 */
+	public static function create_comment( array $request ) {
+		$current_user = wp_get_current_user();
+		$default_data = array(
+			'comment_content'      => '',
+			'comment_post_ID'      => '',
+			'comment_parent'  	   => '',
+			'user_id'              => $current_user->ID,
+			'comment_author'       => $current_user->user_login,
+			'comment_author_email' => $current_user->user_email,
+			'comment_author_url'   => $current_user->user_url,
+			'comment_agent'		   => 'Tutor',
+		);
+		$comment_data = wp_parse_args( $request, $default_data );
+		return wp_insert_comment( $comment_data );
+	}
+
 }
 
 

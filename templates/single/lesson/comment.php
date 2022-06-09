@@ -67,7 +67,9 @@ if ( 'tutor_single_course_lesson_load_more' === $action ) {
 			<?php _e('Join the conversation', 'tutor'); ?>
 		</div>
 		<div class="tutor-conversation tutor-pb-20 tutor-pb-sm-48">
-		<form class="tutor-comment-box" action="<?php echo get_home_url(); ?>/wp-comments-post.php" method="post">
+		<form class="tutor-comment-box" method="post">
+			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+			<input type="hidden" name="action" value="tutor_create_lesson_comment">
 			<input type="hidden" name="is_lesson_comment" value="true">
 			<div class="comment-avatar">
 				<img src="<?php echo get_avatar_url(get_current_user_id()); ?>" alt="">
