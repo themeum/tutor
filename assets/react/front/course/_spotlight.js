@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				copiedDragElement.remove();
 				const evt = typeof e.originalEvent === 'undefined' ? e : e.originalEvent;
 				const touch = evt.touches[0] || evt.changedTouches[0];
-				let [x, y] = [touch.pageX, touch.pageY];
+				let [x, y] = [touch.clientX, touch.clientY];
 				let dropZone = document.elementFromPoint(x, y);
 				if (dropZone.classList.contains('tutor-dropzone') || dropZone.closest('.tutor-dropzone')) {
 					if (!dropZone.classList.contains('tutor-dropzone')) {
