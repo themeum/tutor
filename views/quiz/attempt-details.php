@@ -328,9 +328,9 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                                 <td class="type">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
                                                     <div class="tooltip-wrap tooltip-icon tutor-d-flex">
-                                                        <?php echo $question_type['icon']; ?>
+                                                        <?php echo $question_type['icon'] ?? ''; ?>
                                                         <span class="tooltip-txt tooltip-top">
-                                                            <?php echo $type['name']; ?>
+                                                            <?php echo $type['name'] ?? ''; ?>
                                                         </span>
                                                     </div>
                                                 </td>
