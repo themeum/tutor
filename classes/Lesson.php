@@ -436,7 +436,6 @@ class Lesson extends Tutor_Base {
 			'comment_parent'  	   => $_POST['comment_parent'],
 		);
 		$comment_id = self::create_comment( $comment_data);
-		tutor_log( 'bac: ' . $comment_id );
 		if ( false === $comment_id ) {
 			wp_send_json_error();
 			return;

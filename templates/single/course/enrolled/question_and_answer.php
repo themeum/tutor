@@ -80,41 +80,44 @@ if ( $current_page >= $max_page ) {
 }
 
 do_action('tutor_course/question_and_answer/before');
-?>
-<?php if ( ! $is_load_more ) : ?>
-    <h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-20">
-        <?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
-    </h3>
-<?php endif; ?>
-<?php
-    /**
-     * Skip loading new comment add area if load more action
-     * triggered
-     * 
-     * @since v2.0.6
-     */
-    if ( ! $is_load_more ) {
-        tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-new.php', array(
-            'course_id' => get_the_ID(),
-            'context' => 'course-single-qna-single'
+if ( $is_load_more ) {
+    foreach ( $questions as $question ) {
+        tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
+            'question_id'       => $question->comment_ID,
+            'context'           => 'course-single-qna-single',
+            'is_qna_load_more'  => true
         ), false);
     }
+    return;
+}
+?>
+<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-20">
+    <?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
+</h3>
+<?php
+// Load new question textarea.
+tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-new.php', array(
+    'course_id' => get_the_ID(),
+    'context' => 'course-single-qna-single'
+), false);
 ?>
 <div class="tutor-pagination-wrapper-replaceable">
-    <?php
-        foreach ( $questions as $question ) {
-            tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
-                'question_id'       => $question->comment_ID,
-                'context'           => 'course-single-qna-single',
-                'is_qna_load_more'  => $is_load_more
-            ), false);
-        }
-    ?>
+    <div class="tutor-pagination-content-appendable">
+        <?php
+            foreach ( $questions as $question ) {
+                tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
+                    'question_id'       => $question->comment_ID,
+                    'context'           => 'course-single-qna-single',
+                    'is_qna_load_more'  => $is_load_more
+                ), false);
+            }
+        ?>
+    </div>
     <div class="tutor-button-wrapper tutor-mt-12 tutor-mb-24 tutor-d-flex tutor-justify-end">
         <?php
             echo $load_more_btn; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         ?>
-    </div>
+    </div> 
 </div>
 
 <?php do_action('tutor_course/question_and_answer/after'); ?>
