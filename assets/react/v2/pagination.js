@@ -87,7 +87,6 @@ window.jQuery(document).ready($=>{
                             var loadMoreBtn = document.querySelector('.tutor-btn.page-numbers');
                             loadMoreBtn.remove();
                         }
-
                     } else {
                         content_container.html(html);
                     }
