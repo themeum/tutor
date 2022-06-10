@@ -84,6 +84,7 @@ class Dashboard {
 					'post_title'  => __( 'New Course', 'tutor' ),
 					'post_type'   => $post_type,
 					'post_status' => 'draft',
+					'post_name'   => 'new-course',
 				)
 			);
 			if ( $course_id ) {
