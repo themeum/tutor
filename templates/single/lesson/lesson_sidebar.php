@@ -28,7 +28,7 @@ $user_id                      = get_current_user_id();
 $enable_qa_for_this_course    = get_post_meta($course_id, '_tutor_enable_qa', true) == 'yes';
 $enable_q_and_a_on_course     = tutor_utils()->get_option('enable_q_and_a_on_course') && $enable_qa_for_this_course;
 $is_enrolled                  = tutor_utils()->is_enrolled($course_id);
-$is_instructor_of_this_course = tutor_utils()->is_instructor_of_this_course($user_id, $course_id);
+$is_instructor_of_this_course = tutor_utils()->has_user_course_content_access($user_id, $course_id);
 $is_user_admin                = current_user_can('administrator');
 ?>
 
@@ -98,7 +98,7 @@ if ($topics->have_posts()) {
 					$lessons->the_post();
 					$is_public_course 	= \TUTOR\Course_List::is_public($course_id);
 					
-					$show_permalink = !$_is_preview || $is_enrolled || get_post_meta($post->ID, '_is_preview', true) || $is_public_course;
+					$show_permalink = !$_is_preview || $is_enrolled || get_post_meta($post->ID, '_is_preview', true) || $is_public_course || $is_instructor_of_this_course;
 					$show_permalink = apply_filters( 'tutor_course/single/content/show_permalink', $show_permalink, get_the_ID() );
 
 					$lock_icon = !$show_permalink;
