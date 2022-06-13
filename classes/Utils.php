@@ -3909,14 +3909,16 @@ class Utils {
 			$count = (int) $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT({$wpdb->comments}.comment_ID)
-				FROM 	{$wpdb->comments}
-						INNER JOIN {$wpdb->commentmeta}
-								ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-						INNER  JOIN {$wpdb->users}
-								ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-				WHERE 	{$wpdb->comments}.user_id = %d
-						AND comment_type = %s
-						AND meta_key = %s",
+						FROM 	{$wpdb->comments}
+								INNER JOIN {$wpdb->commentmeta}
+										ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+								INNER  JOIN {$wpdb->users}
+										ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+						WHERE 	{$wpdb->comments}.user_id = %d
+								AND comment_type = %s
+								AND meta_key = %s
+								AND comment_approved = 'approved'
+					",
 					$user_id,
 					'tutor_course_rating',
 					'tutor_rating'
