@@ -7,9 +7,9 @@
 
 use TUTOR\Lesson;
 
-$per_page = tutor_utils()->get_option('pagination_per_page', 10);
-$current_page = max(1, (int)tutor_utils()->avalue_dot('current_page', $_POST));
-$lesson_id = isset($_POST['lesson_id']) ? (int)$_POST['lesson_id'] : get_the_ID();
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
+$current_page = max( 1, (int)tutor_utils()->avalue_dot( 'current_page', $_POST ) );
+$lesson_id = isset( $_POST['comment_post_ID'] ) ? (int)$_POST['comment_post_ID'] : get_the_ID();
 $comments_list_args = array(
 	'post_id' => $lesson_id,
 	'parent' => 0,
