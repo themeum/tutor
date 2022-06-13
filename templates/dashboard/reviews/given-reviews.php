@@ -19,7 +19,7 @@ $current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', $_GET ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
 
-$all_reviews        = tutor_utils()->get_reviews_by_user( 0, $offset, $per_page, true );
+$all_reviews    = tutor_utils()->get_reviews_by_user( 0, $offset, $per_page, true );
 $review_count   = $all_reviews->count;
 $reviews        = $all_reviews->results;
 $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
