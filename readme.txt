@@ -233,7 +233,7 @@ New: "Load More" option is added for "Q&A" Tab on the Course Details page
 New: "Load More" option is added for the "Comments" Tab in the Lesson' page
 New: Admin will be able to change "courses" slug for their Website
 New: Instructor will be redirected to "My Courses" page while clicking on the course "Publish" button, Admin can enable it from Settings
-New: Admin will be able to do Manual Enrollmenet of students in both single and bulk mode
+New: Admin will be able to do Enroll multiple students to a Course on a newly designed Manual Enrollment page
 Update: The "Quiz Attempts" page is now more optimized to load faster
 Update: In "Content Drip" when there is a pre-requisite course, Student will see the Alert page with new design
 Update: More strings are now translatable in other languages than English
