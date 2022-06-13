@@ -11,7 +11,7 @@
 ?>
 
 <div style="text-align: right;" tutor-course-filter>
-    <form style="max-width: 392px; width: 100%; display: inline-block;">
+    <form style="display: inline-block;">
         <select class="tutor-form-select" name="course_order">
             <option value="newest_first" <?php selected("newest_first", $sort_by); ?> >
                 <?php esc_html_e("Release Date (newest first)", "tutor"); ?>
