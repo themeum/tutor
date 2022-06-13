@@ -37,11 +37,10 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
 /**
  * On course create
  * From video source list first item will be selected, When only one video source selected from settings
- * $post->post_status value in backend 'auto-draft' and frontend 'draft'
+ * 
  * @since 2.0.6
  */
-$status_list = array( 'draft', 'auto-draft' );
-if( is_array( $supported_sources ) && 1 === count( $supported_sources ) && in_array( $post->post_status, $status_list ) ) {
+if( is_array( $supported_sources ) && 1 === count( $supported_sources ) && false === $video ) {
     $videoSource = $supported_sources[0];
 }
 
