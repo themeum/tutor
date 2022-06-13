@@ -6,7 +6,7 @@
  * Author: Themeum
  * Version: 2.0.6
  * Author URI: https://themeum.com
- * Requires at least: 4.5
+ * Requires at least: 5.3
  * Tested up to: 6.0
  * License: GPLv2 or later
  * Text Domain: tutor
