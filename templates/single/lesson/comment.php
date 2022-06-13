@@ -34,7 +34,7 @@ $data = array(
 	),
 	'ajax' => array(
 		'action' 			=> 'tutor_single_course_lesson_load_more',
-		'lesson_id' 		=> $lesson_id,
+		'comment_post_ID' 	=> $lesson_id,
 		'current_page_num' 	=> $current_page
 	)
 );
