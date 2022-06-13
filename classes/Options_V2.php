@@ -1383,13 +1383,14 @@ class Options_V2
 								'options' => $pages,
 								'desc'    => __('Choose the page for student registration.', 'tutor'),
 							),
-							array(
-								'key'     => 'course_permalink_base',
-								'type'    => 'text',
-								'label'   => __('Course Permalink Base', 'tutor'),
-								'default' => tutor()->course_post_type,
-								'desc'    => $course_url,
-							),
+							// TODO
+							// array(
+							// 	'key'     => 'course_permalink_base',
+							// 	'type'    => 'text',
+							// 	'label'   => __('Course Permalink Base', 'tutor'),
+							// 	'default' => tutor()->course_post_type,
+							// 	'desc'    => $course_url,
+							// ),
 							array(
 								'key'     => 'lesson_permalink_base',
 								'type'    => 'text',
