@@ -5415,7 +5415,7 @@ class Utils {
 				{$tab_clause}
 				{$date_filter}
 			",
-				'attempt_started',
+				'attempt_started'
 			)
 		);
 
