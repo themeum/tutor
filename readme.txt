@@ -231,7 +231,6 @@ New: Admin will be able to moderate Course Review submitted by Students, Admin c
 New: Order Filter option by Date and by Course Name is introduced on the Course List page
 New: "Load More" option is added for "Q&A" Tab on the Course Details page
 New: "Load More" option is added for the "Comments" Tab in the Lesson' page
-New: Admin will be able to change "courses" slug for their Website
 New: Instructor will be redirected to "My Courses" page while clicking on the course "Publish" button, Admin can enable it from Settings
 New: Admin will be able to do Enroll multiple students to a Course on a newly designed Manual Enrollment page
 Update: The "Quiz Attempts" page is now more optimized to load faster
