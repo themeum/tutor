@@ -4,6 +4,10 @@
      * @version 1.4.3
      */
 
+    if(!tutor_utils()->get_option('course_archive_filter_sorting', true, true, true)) {
+        return;
+    }
+
 	$sort_by = '';
 	if(isset( $_GET['course_order'] )) {
         $sort_by = tutor_sanitize_data( $_GET['course_order'] );
