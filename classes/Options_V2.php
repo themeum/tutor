@@ -879,6 +879,14 @@ class Options_V2
 								),
 								'desc'    => __('Choose preferred filter options you\'d like to show on the course archive page.', 'tutor'),
 							),
+							array(
+								'key'         => 'course_archive_filter_sorting',
+								'type'        => 'toggle_switch',
+								'label'       => __('Course Sorting', 'tutor'),
+								'label_title' => __('', 'tutor'),
+								'default'     => 'on',
+								'desc'        => __('If enabled, the courses will be sortable by Course Name or Creation Date in either Ascending or Descending order', 'tutor'),
+							),
 						),
 					),
 					'layout'          => array(
