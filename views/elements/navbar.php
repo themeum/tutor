@@ -9,9 +9,17 @@ if ( isset( $data ) && count( $data ) ) : ?>
 		<div class="tutor-row tutor-align-lg-center">
 			<div class="tutor-col-lg">
 				<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-16">
-					<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16">
+					<span class="tutor-fs-5 tutor-fw-medium <?php echo !isset($data['sub_page_title']) ? 'tutor-mr-16' : ''; ?>">
 						<?php echo esc_html( $data['page_title'] ); ?>
 					</span>
+
+					<?php if(isset($data['sub_page_title'])): ?>
+						<span class="tutor-mx-8" area-hidden="true">/</span>
+						
+						<span class="tutor-fs-7 tutor-color-muted">
+							<?php echo esc_html( $data['sub_page_title'] ); ?>
+						</span>
+					<?php endif; ?>
 					
 					<?php
 					// If modal target set then button will be set as modal button otherwise url button.
