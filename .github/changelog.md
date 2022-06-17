@@ -1,8 +1,31 @@
 # TutorLMS Changelog
 
-### 2.0.6 - June 06, 2022
+### 2.0.7 - June 30, 2022
 
-* Fix: Student page sort by not working
+* New: Google Meet integration
+
+
+### 2.0.6 - June 13, 2022
+
+* New: Admin will be able to moderate Course Review submitted by Students, Admin can enable it from Settings
+* New: Order Filter option by Date and by Course Name is introduced on the Course List page
+* New: "Load More" option is added for "Q&A" Tab on the Course Details page
+* New: "Load More" option is added for the "Comments" Tab in the Lesson' page
+* New: Instructor will be redirected to "My Courses" page while clicking on the course "Publish" button, Admin can enable it from Settings
+* New: Admin will be able to do Enroll multiple students to a Course on a newly designed Manual Enrollment page
+* Update: The "Quiz Attempts" page is now more optimized to load faster
+* Update: In "Content Drip" when there is a pre-requisite course, Student will see the Alert page with new design
+* Update: More strings are now translatable in other languages than English
+* Fix: In case of "Content Drip" the "Course content available sequentially" option was not working
+* Fix: Content Drip is not working as expected for Instructors/Admins when "Course Content Access" is enabled
+* Fix: Lock icon was not appearing when content is restricted by Content Drip
+* Fix: Some stats were showing wrong count information in the Reports page
+* Fix: In the WP Admin, the "Instructor" page the "Status sort" option was not working
+* Fix: In some cases, Admin was not being able to see "Q&A" Tab even though "Course Content Access" is enabled
+* Fix: In Mobile View the Quizzes were not Sortable and Draggable
+* Fix: Quiz Ordering used to get changed after updating any specific Quiz
+* Fix: After adding a Custom Link to Tutor Dashboard Menu (with custom code), the design would appear broken
+* Fix: Adding multiple instructor feature was not working
 
 
 ### 2.0.5 - May 27, 2022
