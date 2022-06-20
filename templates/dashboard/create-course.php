@@ -233,46 +233,52 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 							$currency_symbol = tutor_utils()->currency_symbol();
 							$_tutor_course_price_type = tutils()->price_type();
 						?>
-							<div class="tutor-row tutor-align-center tutor-mb-32">
-								<div class="tutor-col-12">
-									<label class="tutor-form-label tutor-fs-6"><?php _e('Course Price', 'tutor'); ?></label>
-								</div>
-								<div class="tutor-col-6 tutor-col-sm-6 tutor-col-lg-4">
-									<div class="tutor-form-check tutor-align-center tutor-d-flex">
-										<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> />
-										<label for="tutor_price_paid" class="tutor-amount-field">
-											<div class="tutor-input-group">
-												<span class="tutor-input-group-addon">
-													<?php echo $currency_symbol; ?>
-												</span>
-												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
-											</div>
-										</label>
+							<div class="tutor-course-price-wrapper tutor-row tutor-align-center">
+								<div class="tutor-mb-20">
+									<div class="tutor-course-field-label tutor-fs-6 tutor-mb-3"><?php _e('Course Price', 'tutor'); ?></div>
+									<div class="tutor-d-flex tutor-mt-20 tutor-course-price-toggle">
+										<div class="tutor-form-check tutor-align-center">
+											<input type="radio" id="tutor_input_price_free" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> />
+											<label for="tutor_input_price_free" class="tutor-fs-6">
+												<?php _e('Free', 'tutor'); ?>
+											</label>
+										</div>
+										<div class="tutor-form-check tutor-align-center">
+											<input type="radio" id="tutor_input_price_paid" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> />
+											<label for="tutor_input_price_paid" class="tutor-fs-6">
+												<?php _e('Paid', 'tutor'); ?>
+											</label>
+										</div>
 									</div>
 								</div>
-
-								<div class="tutor-col-6 tutor-col-sm-6 tutor-col-lg-6">
-									<div class="tutor-form-check tutor-align-center tutor-d-flex">
-										<p><?php _e('Discount Price', 'tutor'); ?></p>
-										<label class="tutor-amount-field">
-											<div class="tutor-input-group tutor-ml-12">
-												<span class="tutor-input-group-addon">
-													<?php echo $currency_symbol; ?>
-												</span>
-												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_sale_price" value="<?php echo $course_price->sale_price; ?>" placeholder="<?php _e('Set course sale price', 'tutor'); ?>" step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
+								<div class="tutor-mb-12">
+									<div class="tutor-course-price-row tutor-row <?php echo $_tutor_course_price_type === 'paid' ? 'is-paid tutor-mb-20': null ?>">
+										<div class="tutor-col-6 tutor-col-sm-6 tutor-col-lg-4 tutor-course-price-row-regular">
+											<div class="tutor-form-label">Regular Price</div>
+											<div class="tutor-form-check tutor-align-center tutor-d-flex">
+												<label for="tutor_price_paid" class="tutor-amount-field">
+													<div class="tutor-input-group">
+														<span class="tutor-input-group-addon">
+															<?php echo $currency_symbol; ?>
+														</span>
+														<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
+													</div>
+												</label>
 											</div>
-										</label>
-									</div>
-								</div>
-							</div>
-
-							<div class="tutor-row tutor-align-center tutor-mb-32">
-								<div class="tutor-col-6 tutor-col-sm-5 tutor-col-lg-4">
-									<div class="tutor-form-check tutor-align-center">
-										<input type="radio" id="tutor_price_free" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> />
-										<label for="tutor_price_free" class="tutor-fs-6">
-											<?php _e('Free', 'tutor'); ?>
-										</label>
+										</div>
+										<div class="tutor-col-6 tutor-col-sm-6 tutor-col-lg-6 tutor-course-price-paid">
+											<div class="tutor-form-label">Discounted Price</div>
+											<div class="tutor-form-check tutor-align-center tutor-d-flex">
+												<label class="tutor-amount-field">
+													<div class="tutor-input-group">
+														<span class="tutor-input-group-addon">
+															<?php echo $currency_symbol; ?>
+														</span>
+														<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_sale_price" value="<?php echo $course_price->sale_price; ?>" placeholder="<?php _e('Set course sale price', 'tutor'); ?>" step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
+													</div>
+												</label>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>

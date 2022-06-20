@@ -30,4 +30,23 @@ document.addEventListener('DOMContentLoaded', function() {
              }
          }
      });
+
+
+    /**
+     * Course price free/paid toggle 
+     * 
+     * @since v2.0.7
+     */
+    const priceToggleRadios = document.querySelectorAll(".tutor-course-price-toggle input[type='radio']");
+    const priceRow = document.querySelector(".tutor-course-price-row");
+    priceToggleRadios.forEach((radio)=>{
+        radio.addEventListener('change', (e)=>{
+            if(e.target.value === 'paid' && !priceRow.classList.contains('is-paid')){
+                priceRow.classList.add('is-paid');
+            }else{
+                priceRow.classList.remove('is-paid');
+            }
+        })
+    })
+
 });

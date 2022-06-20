@@ -251,3 +251,12 @@ Content Drip (Pro)
 		}
 	}
 }
+
+
+.tutor-course-price-row{
+	display: none;
+	
+	&.is-paid{
+		display: flex;
+	}
+}
