@@ -66,8 +66,14 @@ window.jQuery(document).ready($=>{
             success: function(resp) {
                 let {success, data={}} = resp || {};
                 let {html} = data;
+                let {type} = layout || {};
 
                 if (success) {
+                    if( 'load_more' === type ) {
+                        // remain collapsed reply boxes when load more
+                       setTimeout(()=> jQuery('.tutor-qa-reply').css('display','none'))
+                    }
+
                     let append_container = content_container.find('.tutor-pagination-content-appendable');
                     if(append_container.length) {
 
