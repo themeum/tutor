@@ -237,7 +237,7 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 								<div class="tutor-col-12">
 									<label class="tutor-form-label tutor-fs-6"><?php _e('Course Price', 'tutor'); ?></label>
 								</div>
-								<div class="tutor-col-6 tutor-col-sm-5 tutor-col-lg-4">
+								<div class="tutor-col-6 tutor-col-sm-6 tutor-col-lg-4">
 									<div class="tutor-form-check tutor-align-center tutor-d-flex">
 										<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> />
 										<label for="tutor_price_paid" class="tutor-amount-field">
@@ -250,6 +250,23 @@ if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()
 										</label>
 									</div>
 								</div>
+
+								<div class="tutor-col-6 tutor-col-sm-6 tutor-col-lg-6">
+									<div class="tutor-form-check tutor-align-center tutor-d-flex">
+										<p><?php _e('Discount Price', 'tutor'); ?></p>
+										<label class="tutor-amount-field">
+											<div class="tutor-input-group tutor-ml-12">
+												<span class="tutor-input-group-addon">
+													<?php echo $currency_symbol; ?>
+												</span>
+												<input type="number" class="tutor-form-number-verify tutor-form-control" name="course_sale_price" value="<?php echo $course_price->sale_price; ?>" placeholder="<?php _e('Set course sale price', 'tutor'); ?>" step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
+											</div>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="tutor-row tutor-align-center tutor-mb-32">
 								<div class="tutor-col-6 tutor-col-sm-5 tutor-col-lg-4">
 									<div class="tutor-form-check tutor-align-center">
 										<input type="radio" id="tutor_price_free" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> />

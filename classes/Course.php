@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use TUTOR\Input;
+
 class Course extends Tutor_Base {
 
 	private $additional_meta=array(
@@ -740,7 +742,8 @@ class Course extends Tutor_Base {
 	 */
 	public function attach_product_with_course( $post_ID, $postData ) {
 		$attached_product_id = tutor_utils()->get_course_product_id( $post_ID );
-		$course_price        = sanitize_text_field( tutor_utils()->array_get( 'course_price', $_POST ) );
+		$course_price        = Input::post( 'course_price', 0, Input::TYPE_INT );
+		$sale_price			 = Input::post( 'course_sale_price', 0, Input::TYPE_INT );
 
 		if ( ! $course_price){
 			// Return if price not set or 0
@@ -764,6 +767,11 @@ class Course extends Tutor_Base {
 				$productObj = wc_get_product( $attached_product_id );
 				$productObj->set_price( $course_price ); // set product price
 				$productObj->set_regular_price( $course_price ); // set product regular price
+				
+				if ( $sale_price > 0 ) {
+					$productObj->set_sale_price( $sale_price );
+				}
+				
 				$productObj->set_sold_individually( true );
 				$product_id = $productObj->save();
 				if ( $productObj->is_type( 'subscription' ) ) {
@@ -775,6 +783,11 @@ class Course extends Tutor_Base {
 				$productObj->set_status( 'publish' );
 				$productObj->set_price( $course_price ); // set product price
 				$productObj->set_regular_price( $course_price ); // set product regular price
+				
+				if ( $sale_price > 0 ) {
+					$productObj->set_sale_price( $sale_price );
+				}
+
 				$productObj->set_sold_individually( true );
 
 				$product_id = $productObj->save();
@@ -1111,6 +1124,7 @@ class Course extends Tutor_Base {
         }
 
         $quizzes = array();
+		$assignments = array();
 
         $course_contents = tutor_utils()->get_course_contents_by_id();
         if (tutor_utils()->count($course_contents)){
@@ -1118,11 +1132,37 @@ class Course extends Tutor_Base {
                 if ($content->post_type === 'tutor_quiz'){
                     $quizzes[] = $content;
                 }
+				if ($content->post_type === 'tutor_assignments'){
+                    $assignments[] = $content;
+                }
             }
         }
 
-        $is_pass = true;
-        $required_quiz_pass = 0;
+		$required_assignment_pass = 0;
+
+		foreach( $assignments as $row ) {
+
+			$submitted_assignment		= tutor_utils()->is_assignment_submitted( $row->ID );
+			$is_reviewed_by_instructor	= get_comment_meta( $submitted_assignment->comment_ID, 'evaluate_time', true );
+
+			if ( $submitted_assignment && $is_reviewed_by_instructor ) 
+			{
+				$pass_mark  = tutor_utils()->get_assignment_option( $submitted_assignment->comment_post_ID, 'pass_mark' );
+				$given_mark = get_comment_meta( $submitted_assignment->comment_ID, 'assignment_mark', true );
+	
+				if ( $given_mark < $pass_mark ) {
+					$required_assignment_pass++;
+				}
+			} 
+			else 
+			{
+				$required_assignment_pass++;
+			}
+		}
+
+
+        $is_quiz_pass		= true;
+        $required_quiz_pass	= 0;
 
         if (tutor_utils()->count($quizzes)){
             foreach ($quizzes as $quiz){
@@ -1134,20 +1174,31 @@ class Course extends Tutor_Base {
 
                     if ($earned_percentage < $passing_grade) {
                         $required_quiz_pass++;
-                        $is_pass = false;
+                        $is_quiz_pass = false;
                     }
                 }else{
                     $required_quiz_pass++;
-                    $is_pass = false;
+                    $is_quiz_pass = false;
                 }
             }
         }
 
-        if ( ! $is_pass){
+        if ( ! $is_quiz_pass || $required_assignment_pass > 0 ) {
+			$_msg = '';
+			if ( ! $is_quiz_pass && $required_assignment_pass == 0 ) {
+				$_msg = sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass);
+			}
+			if ( $is_quiz_pass && $required_assignment_pass > 0 ) {
+				$_msg = sprintf(__('You have to pass %s assignments to complete this course.', 'tutor'), $required_assignment_pass);
+			}
+			if ( ! $is_quiz_pass && $required_assignment_pass > 0 ) {
+				$_msg = sprintf(__('You have to pass %s quizzes and %s assignments to complete this course.', 'tutor'), $required_quiz_pass, $required_assignment_pass );
+			}
+			
 			return '<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
 							<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
-							<span>'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</span>
+							<span>'.$_msg.'</span>
 						</div>
 					</div>';
         }
