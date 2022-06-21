@@ -608,9 +608,12 @@ class Course extends Tutor_Base {
 	 * @since v.1.0.0
 	 */
 	public function mark_course_complete() {
-		if ( ! isset( $_POST['tutor_action'] ) || $_POST['tutor_action'] !== 'tutor_complete_course' ) {
+		$tutor_action	= Input::post( 'tutor_action' );
+		$course_id		= Input::post( 'course_id', 0, Input::TYPE_INT );
+		if ( $tutor_action !== 'tutor_complete_course' || ! $course_id ) {
 			return;
 		}
+		
 		// Checking nonce
 		tutor_utils()->checking_nonce();
 
@@ -621,45 +624,7 @@ class Course extends Tutor_Base {
 			die( __( 'Please Sign-In', 'tutor' ) );
 		}
 
-		$course_id = (int) $_POST['course_id'];
-
-		do_action( 'tutor_course_complete_before', $course_id );
-		/**
-		 * Marking course completed at Comment
-		 */
-
-		global $wpdb;
-
-		$date = date( 'Y-m-d H:i:s', tutor_time() );
-
-		// Making sure that, hash is unique
-		do {
-			$hash    = substr( md5( wp_generate_password( 32 ) . $date . $course_id . $user_id ), 0, 16 );
-			$hasHash = (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT(comment_ID) from {$wpdb->comments}
-				WHERE comment_agent = 'TutorLMSPlugin' AND comment_type = 'course_completed' AND comment_content = %s ",
-					$hash
-				)
-			);
-
-		} while ( $hasHash > 0 );
-
-		$data = array(
-			'comment_post_ID'  => $course_id,
-			'comment_author'   => $user_id,
-			'comment_date'     => $date,
-			'comment_date_gmt' => get_gmt_from_date( $date ),
-			'comment_content'  => $hash, // Identification Hash
-			'comment_approved' => 'approved',
-			'comment_agent'    => 'TutorLMSPlugin',
-			'comment_type'     => 'course_completed',
-			'user_id'          => $user_id,
-		);
-
-		$wpdb->insert( $wpdb->comments, $data );
-
-		do_action( 'tutor_course_complete_after', $course_id, $user_id );
+		\Tutor\Models\Course::mark_course_as_completed( $course_id, $user_id );
 
 		$permalink = get_the_permalink( $course_id );
 
