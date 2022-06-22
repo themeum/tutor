@@ -545,6 +545,14 @@ class Options_V2
 								'desc'        => __('This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.', 'tutor'),
 							),
 							array(
+								'key'         => 'auto_course_complete_on_all_lesson_completion',
+								'type'        => 'toggle_switch',
+								'label'       => __('Auto Course Complete on all Lesson Completion', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('If enabled, an Enrolled Course will be automatically completed if all its Lessions, Quizzes, and Assignments are already completed by the Student', 'tutor'),
+							),
+							array(
 								'key'            => 'course_completion_process',
 								'type'           => 'radio_vertical',
 								'label'          => __('Course Completion Process', 'tutor'),
