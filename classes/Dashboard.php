@@ -38,7 +38,7 @@ class Dashboard {
 			 * Get course which currently in edit if not then redirect to dashboard
 			 * page to create new one.
 			 */
-			$course_ID = (int) sanitize_text_field( tutor_utils()->array_get( 'course_ID', $_GET ) );
+			$course_ID = (int) isset( $_GET['course_ID'] ) ? sanitize_text_field( $_GET['course_ID'] ) : 0;
 			if ( ! $course_ID ) {
 				$template = trailingslashit( tutor()->path ) . 'templates/permission-denied.php';
 				tutor_load_template_from_custom_path(
