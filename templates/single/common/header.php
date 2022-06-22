@@ -5,6 +5,20 @@ $course_stats       = tutor_utils()->get_course_completed_percent( $course_id, 0
 
 // options
 $show_mark_complete = isset( $mark_as_complete ) ? $mark_as_complete : false;
+
+/**
+ * Auto course complete on all lesson, quiz, assignment complete
+ * @since 2.0.7
+ */
+$auto_course_complete_option	= tutor_utils()->get_option( 'auto_course_complete_on_all_lesson_completion' );
+$is_course_completed			= tutor_utils()->is_completed_course( $course_id, get_current_user_id() );
+if ( true === $auto_course_complete_option && false === $is_course_completed ) {
+	if ( $course_stats['completed_count'] === $course_stats['total_count'] ) {
+		// complete the course
+		\Tutor\Models\Course::mark_course_as_completed( $course_id,  get_current_user_id() );
+	}
+}
+
 ?>
 <div class="tutor-course-topic-single-header tutor-single-page-top-bar">
 	<a href="#" class="tutor-course-topics-sidebar-toggler tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex" tutor-course-topics-sidebar-toggler>
