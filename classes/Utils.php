@@ -27,7 +27,8 @@ class Utils {
 	 */
 	public function __call( $method, $args ) {
 		$classes = array(
-			'Tutor\Models\Course'
+			'Tutor\Models\Course',
+			'Tutor\Models\Withdraw'
 		);
 
 		foreach( $classes as $class ) {
@@ -6407,126 +6408,6 @@ class Utils {
 		}
 
 		return apply_filters( 'get_tutor_currency_symbol', $symbol );
-	}
-
-	/**
-	 * @param int $user_id
-	 *
-	 * @return bool|mixed
-	 *
-	 * Get withdraw method for a specific
-	 */
-	public function get_user_withdraw_method( $user_id = 0 ) {
-		$user_id = $this->get_user_id( $user_id );
-		$account = get_user_meta( $user_id, '_tutor_withdraw_method_data', true );
-
-		if ( $account ) {
-			return maybe_unserialize( $account );
-		}
-
-		return false;
-	}
-
-	/**
-	 * @param int   $user_id | optional.
-	 * @param array $filter | ex:
-	 * array('status' => '','date' => '', 'order' => '', 'start' => 10, 'per_page' => 10,'search' => '')
-	 * get withdrawal history
-	 *
-	 * @return object
-	 */
-	public function get_withdrawals_history( $user_id = 0, $filter = array(), $start=0, $limit=20 ) {
-		global $wpdb;
-
-		$filter = (array) $filter;
-		extract( $filter );
-
-		$query_by_status_sql = '';
-		$query_by_user_sql   = '';
-
-		if ( ! empty( $status ) ) {
-			$status = (array) $status;
-			$status = "'" . implode( "','", $status ) . "'";
-
-			$query_by_status_sql = " AND status IN({$status}) ";
-		}
-
-		if ( $user_id ) {
-			$query_by_user_sql = " AND user_id = {$user_id} ";
-		}
-
-		// Order query @since v2.0.0
-		$order_query = '';
-		if ( isset( $order ) && '' !== $order ) {
-			$order_query = "ORDER BY  	created_at {$order}";
-		} else {
-			$order_query = 'ORDER BY  	created_at DESC';
-		}
-
-		// Date query @since v.2.0.0
-		$date_query = '';
-		if ( isset( $date ) && '' !== $date ) {
-			$date_query = "AND DATE(created_at) = CAST( '$date' AS DATE )";
-		}
-
-		// Search query @since v.2.0.0
-		$search_term_raw = empty($search) ? '' : $search;
-		$search_query = '%%';
-		if ( !empty( $search_term_raw ) ) {
-			$search_query = '%' . $wpdb->esc_like( $search_term_raw ) . '%';
-		}
-
-		$count = (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(withdraw_id)
-			FROM 	{$wpdb->prefix}tutor_withdraws  withdraw_tbl
-					INNER JOIN {$wpdb->users} user_tbl
-						ON withdraw_tbl.user_id = user_tbl.ID
-			WHERE 	1 = 1
-					{$query_by_user_sql}
-					{$query_by_status_sql}
-					{$date_query}
-					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email = %s)
-			",
-				$search_query,
-				$search_query,
-				$search_query,
-				$search_term_raw
-			)
-		);
-
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 	withdraw_tbl.*,
-					user_tbl.display_name AS user_name,
-					user_tbl.user_email
-				FROM {$wpdb->prefix}tutor_withdraws withdraw_tbl
-					INNER JOIN {$wpdb->users} user_tbl
-							ON withdraw_tbl.user_id = user_tbl.ID
-				WHERE 1 = 1
-					{$query_by_user_sql}
-					{$query_by_status_sql}
-					{$date_query}
-
-					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email = %s)
-				{$order_query}
-				LIMIT %d, %d
-			",
-				$search_query,
-				$search_query,
-				$search_query,
-				$search_term_raw,
-				$start,
-				$limit
-			)
-		);
-
-		$withdraw_history = array(
-			'count'   => $count ? $count : 0,
-			'results' => is_array($results) ? $results : array(),
-		);
-
-		return (object) $withdraw_history;
 	}
 
 	/**
