@@ -39,7 +39,7 @@ $args          = array(
 	'search'   => $search_term,
 );
 
-$withdraw_list = tutor_utils()->get_withdrawals_history( null, $args, $offset, $per_page);
+$withdraw_list = \Tutor\Models\Withdraw::get_withdrawals_history( null, $args, $offset, $per_page);
 $total         = $withdraw_list->count;
 
 /**
