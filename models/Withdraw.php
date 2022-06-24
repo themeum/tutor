@@ -35,10 +35,10 @@ class Withdraw {
                 
                 FROM (
                         SELECT ID,display_name, 
-                    COALESCE((select SUM(instructor_amount) from wp_tutor_earnings group by user_id having user_id=u.ID),0) total_income,
+                    COALESCE((select SUM(instructor_amount) from {$wpdb->prefix}tutor_earnings group by user_id having user_id=u.ID),0) total_income,
                     
                         COALESCE((
-                        select sum(amount) total_withdraw from wp_tutor_withdraws 
+                        select sum(amount) total_withdraw from {$wpdb->prefix}tutor_withdraws 
                         where status='%s'
                         group by user_id
                         having user_id=u.ID
@@ -46,14 +46,14 @@ class Withdraw {
                 
                     COALESCE((
                         SELECT SUM(instructor_amount) from(
-                            SELECT user_id, instructor_amount, created_at, DATEDIFF(NOW(),created_at) AS days_old FROM wp_tutor_earnings
+                            SELECT user_id, instructor_amount, created_at, DATEDIFF(NOW(),created_at) AS days_old FROM {$wpdb->prefix}tutor_earnings
                         ) a
                         WHERE days_old >= %d
                         GROUP BY user_id
                         HAVING user_id = u.ID
                     ),0) total_matured
                     
-                FROM wp_users u WHERE u.ID=%d
+                FROM {$wpdb->prefix}users u WHERE u.ID=%d
                 
                 ) a",
                 self::STATUS_APPROVED,
