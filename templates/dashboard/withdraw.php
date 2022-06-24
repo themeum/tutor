@@ -5,22 +5,24 @@
  * @version 1.4.3
  */
 
-$per_page     = tutor_utils()->get_option('statement_show_per_page', 20);
-$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
-$offset       = ( $current_page - 1 ) * $per_page;
+use TUTOR\Input;
+use Tutor\Models\Withdraw;
 
-$earning_sum                   = tutor_utils()->get_earning_sum();
+$per_page     = tutor_utils()->get_option('statement_show_per_page', 20);
+$current_page = Input::get( 'current_page', 1, Input::TYPE_INT );
+$offset       = ( abs($current_page) - 1 ) * $per_page;
+
 $min_withdraw                  = tutor_utils()->get_option( 'min_withdraw_amount' );
 $formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 
-$saved_account        = tutor_utils()->get_user_withdraw_method();
+$saved_account        = Withdraw::get_user_withdraw_method();
 $withdraw_method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $saved_account );
 
-$user_id               = get_current_user_id();
-$balance_formatted     = tutor_utils()->tutor_price( $earning_sum->balance );
-$is_balance_sufficient = true; // $earning_sum->balance >= $min_withdraw;
-$all_histories         = tutor_utils()->get_withdrawals_history( $user_id, array( 'status' => array( 'pending', 'approved', 'rejected' ) ), $offset, $per_page );
-$image_base   = tutor()->url . '/assets/images/';
+$user_id			= get_current_user_id();
+$withdraw_status	= array( Withdraw::STATUS_PENDING, Withdraw::STATUS_APPROVED, Withdraw::STATUS_REJECTED );
+$all_histories		= Withdraw::get_withdrawals_history( $user_id, array( 'status' => $withdraw_status ), $offset, $per_page );
+$image_base			= tutor()->url . '/assets/images/';
+
 $method_icons = array(
 	'bank_transfer_withdraw' => $image_base . 'icon-bank.svg',
 	'echeck_withdraw'        => $image_base . 'icon-echeck.svg',
@@ -38,6 +40,11 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 } elseif ( function_exists( 'edd_currency_symbol' ) ) {
 	$currency_symbol = edd_currency_symbol();
 }
+
+$summary_data 						= Withdraw::get_withdraw_summary( $user_id );
+$is_balance_sufficient				= $summary_data->available_for_withdraw >= $min_withdraw;
+$available_for_withdraw_formatted	= tutor_utils()->tutor_price( $summary_data->available_for_withdraw );
+$current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->current_balance );
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal tutor-color-black">
@@ -52,13 +59,13 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 			</div>
 
 			<div class="tutor-col tutor-mb-16 tutor-mb-lg-0">
-				<div class="tutor-fs-6 tutor-color-muted tutor-mb-4"><?php esc_html_e( 'Current Balance', 'tutor' ); ?></div>
+				<div class="tutor-fs-6 tutor-color-muted tutor-mb-4"><?php echo sprintf( 'Current Balance is %s', $current_balance_formated ); ?></div>
 				<div class="tutor-fs-5 tutor-color-black">
 					<?php
 					if ( $is_balance_sufficient ) {
-						echo sprintf( __( 'You currently have %1$s %2$s %3$s ready to withdraw', 'tutor' ), "<strong class='available_balance'>", $balance_formatted, '</strong>' );
+						echo sprintf( __( 'You have %1$s %2$s %3$s ready to withdraw now', 'tutor' ), "<strong class='available_balance'>", $available_for_withdraw_formatted, '</strong>' );
 					} else {
-						echo sprintf( __( 'You currently have %1$s %2$s %3$s and this is insufficient balance to withdraw', 'tutor' ), "<strong class='available_balance'>", $balance_formatted, '</strong>' );
+						echo sprintf( __( 'You have %1$s %2$s %3$s and this is insufficient balance to withdraw', 'tutor' ), "<strong class='available_balance'>", $available_for_withdraw_formatted, '</strong>' );
 					}
 					?>
 				</div>
@@ -113,8 +120,8 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 
 							<div class="tutor-row tutor-mt-32">
 								<div class="tutor-col">
-									<div class="tutor-fs-6 tutor-color-secondary tutor-mb-4"><?php esc_html_e( 'Current Balance', 'tutor' ); ?></div>
-									<div class="tutor-fs-6 tutor-fw-bold tutor-color-black"><?php echo wp_kses_post( $balance_formatted ); ?></div>
+									<div class="tutor-fs-6 tutor-color-secondary tutor-mb-4"><?php esc_html_e( 'Withdrawable Balance', 'tutor' ); ?></div>
+									<div class="tutor-fs-6 tutor-fw-bold tutor-color-black"><?php echo wp_kses_post( $available_for_withdraw_formatted ); ?></div>
 								</div>
 
 								<div class="tutor-col">

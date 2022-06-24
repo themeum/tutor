@@ -5,6 +5,9 @@
  * @version 1.4.3
  */
 
+use Tutor\Models\Course;
+use Tutor\Models\Withdraw;
+
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
 	$is_instructor      = tutor_utils()->is_instructor(null, true);
@@ -123,12 +126,13 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24 tutor-dashboard-title"><?php _e( 'Dashboard', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner">
 	<?php
+	$user_id		   = get_current_user_id();
 	$enrolled_course   = tutor_utils()->get_enrolled_courses_by_user();
 	$completed_courses = tutor_utils()->get_completed_courses_ids_by_user();
-	$total_students    = tutor_utils()->get_total_students_by_instructor( get_current_user_id() );
-	$my_courses        = tutor_utils()->get_courses_by_instructor( get_current_user_id(), 'publish' );
-	$earning_sum       = tutor_utils()->get_earning_sum();
-	$active_courses	   = tutor_utils()->get_active_courses_by_user( get_current_user_id() );
+	$total_students    = tutor_utils()->get_total_students_by_instructor( $user_id );
+	$my_courses        = tutor_utils()->get_courses_by_instructor( $user_id, Course::STATUS_PUBLISH );
+	$earning_sum       = Withdraw::get_withdraw_summary( $user_id );
+	$active_courses	   = tutor_utils()->get_active_courses_by_user( $user_id );
 
 	$enrolled_course_count		= $enrolled_course ? $enrolled_course->post_count : 0;
 	$completed_course_count		= count( $completed_courses );
@@ -216,9 +220,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
 							<i class="tutor-icon-coins" area-hidden="true"></i>
 						</span>
-						<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo tutor_utils()->tutor_price( $earning_sum->instructor_amount ); ?></div>
+						<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo tutor_utils()->tutor_price( $earning_sum->total_income ); ?></div>
 						<div class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Total Earnings', 'tutor' ); ?></div>
-						<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo tutor_utils()->tutor_price( $earning_sum->instructor_amount ); ?></div>
+						<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo tutor_utils()->tutor_price( $earning_sum->total_income ); ?></div>
 					</div>
 				</div>
 			</div>
