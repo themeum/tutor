@@ -146,9 +146,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		e.preventDefault();
 		$('#tutor-option-form').submit();
 	});
-
+	
 	$('#tutor-option-form').submit(function(e) {
 		e.preventDefault();
+		if (tinyMCE) {
+			tinyMCE.triggerSave();
+		}
 		var button = $('#save_tutor_option');
 		var $form = $(this);
 		var data = $form.serializeObject();
@@ -172,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					data: data,
 					beforeSend: function() {
 						button.addClass('is-loading');
+						button.attr('disabled', true);
 					},
 					success: function(resp) {
 						const { data = {}, success } = resp || {};
@@ -190,6 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					},
 					complete: function() {
 						button.removeClass('is-loading');
+						button.removeAttr('disabled');
 					},
 				});
 			}
