@@ -148,6 +148,32 @@ class Course extends Tutor_Base {
 		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 2 );
 	
 		add_action( 'wp_ajax_tutor_update_course_content_order', array($this, 'tutor_update_course_content_order') );
+
+		add_action( 'wp_ajax_tutor_get_wc_product', array( $this, 'tutor_get_wc_product' ) );
+	}
+
+	/**
+	 * Get course associate WC product info by Ajax request
+	 *
+	 * @return void
+	 * 
+	 * @since 2.0.7
+	 */
+	public function tutor_get_wc_product() {
+		tutor_utils()->checking_nonce();
+		$product_id	= Input::post( 'product_id' );
+		$product    = wc_get_product( $product_id );
+
+		if ( $product ) {
+			$data = array(
+				'name' => $product->get_name(),
+				'regular_price'=> $product->get_regular_price(),
+				'sale_price' => $product->get_sale_price()
+			);
+			wp_send_json_success( $data );
+		}else{
+			wp_send_json_error( __( 'Product not found', 'tutor' ) );
+		}
 	}
 
 	public function tutor_update_course_content_order() {
@@ -333,8 +359,8 @@ class Course extends Tutor_Base {
 		/**
 		 * Save course price type
 		 */
-		$price_type = tutor_utils()->array_get('tutor_course_price_type', $_POST);
-		if ($price_type){
+		$price_type = Input::post( 'tutor_course_price_type' );
+		if ( $price_type ) {
 			update_post_meta($post_ID, '_tutor_course_price_type', $price_type);
 		}
 
@@ -696,22 +722,34 @@ class Course extends Tutor_Base {
 
 
 	/**
-	 * @param $post_ID
-	 * @param $postData
+	 * Attach product with course when course save from frontend or backend.
+	 * 
+	 * @param $post_ID		course ID
+	 * @param $postData		cretaed course post details
 	 *
-	 * Attach product during save course from the frontend course dashboard.
-	 *
-	 * @return string
+	 * @return void
 	 *
 	 * @since v.1.3.4
 	 */
 	public function attach_product_with_course( $post_ID, $postData ) {
 		$attached_product_id = tutor_utils()->get_course_product_id( $post_ID );
-		$course_price        = Input::post( 'course_price', 0, Input::TYPE_INT );
-		$sale_price			 = Input::post( 'course_sale_price', 0, Input::TYPE_INT );
+		$course_price        = Input::post( 'course_price', 0, Input::TYPE_NUMERIC );
+		$sale_price			 = Input::post( 'course_sale_price', 0, Input::TYPE_NUMERIC );
+		
+		/**
+		 * The function is_admin will check only loaded page from WP admin.
+		 * It does not check any role
+		 */
+		$is_admin_panel		 = is_admin();
+		// From backend course select box
+		$product_id			 = Input::post( '_tutor_course_product_id', 0, Input::TYPE_INT );
 
-		if ( ! $course_price){
+		if ( ! $course_price ) {
 			// Return if price not set or 0
+			return;
+		}
+
+		if ( $sale_price > $course_price ) {
 			return;
 		}
 
@@ -728,13 +766,24 @@ class Course extends Tutor_Base {
 				}
 			}
 
-			if ( $is_update ) {
+			if ( $is_update || ( $product_id > 0 && $is_admin_panel ) ) {
+				/**
+				 * @since 2.0.7
+				 */
+				if ( $product_id && $is_admin_panel ) {
+					$attached_product_id = $product_id;
+					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+				}
+
 				$productObj = wc_get_product( $attached_product_id );
 				$productObj->set_price( $course_price ); // set product price
 				$productObj->set_regular_price( $course_price ); // set product regular price
 				
 				if ( $sale_price > 0 ) {
 					$productObj->set_sale_price( $sale_price );
+				} else {
+					//When use remove sale price ( discounted price )
+					$productObj->set_sale_price( null );
 				}
 				
 				$productObj->set_sold_individually( true );
