@@ -658,13 +658,6 @@ class Options_V2
 									'last_attempt'  => __('Last Attempt', 'tutor'),
 								),
 							),
-							array(
-								'key'     => 'hide_quiz_details',
-								'type'    => 'toggle_switch',
-								'label'   => __('Hide Quiz Details from the Students', 'tutor'),
-								'default' => 'off',
-								'desc'    => __('If enabled, the students will not be able to see their quiz attempts details', 'tutor'),
-							),
 						),
 					),
 					array(

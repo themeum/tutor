@@ -5,8 +5,8 @@ if ( ! defined( 'ABSPATH' ) ){
 }
 
 $enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
-if ( true === $enabled_hide_quiz_details ) {
-   return;
+if ( ! is_admin() && true === $enabled_hide_quiz_details ) {
+   exit;
 }
 
 extract($data); // $user_id, $attempt_id, $attempt_data(nullable), $context(nullable)
