@@ -29,25 +29,47 @@ class Frontend {
 	}
 
 	/**
+	 * Check current user has admin area access for tutor
+	 *
+	 * @return boolean
+	 * 
+	 * @since 2.0.7
+	 */
+	private function has_admin_area_access() {
+		$has_access 	= true;
+		$user 			= new \WP_User( get_current_user_id() );
+		$roles			= $user->roles;
+
+		if ( ! in_array( 'administrator', $roles ) && ( in_array( 'subscriber', $roles ) || in_array( tutor()->instructor_role, $roles ) ) ) 
+		{
+			$has_access = false;
+		}
+
+		return $has_access;
+	}
+
+	/**
 	 * Remove admin bar based on option
 	 */
 	function remove_admin_bar() {
-		$hide_admin_bar_for_users = (bool) get_tutor_option( 'hide_admin_bar_for_users' );
-		if ( ! current_user_can( 'administrator' ) && ! is_admin() && $hide_admin_bar_for_users ) {
+		$hide_admin_bar_for_users	= (bool) get_tutor_option( 'hide_admin_bar_for_users' );
+		$has_access					= $this->has_admin_area_access();
+
+		if ( ! $has_access && $hide_admin_bar_for_users ) {
 			show_admin_bar( false );
 		}
 	}
 
 	/**
-	 * Restrict the WP admin area for non-admin users like student, instructor
+	 * Restrict the WP admin area for student, instructor
 	 *
 	 * @return void
 	 */
 	public function restrict_wp_admin_area() {
 		$hide_admin_bar_for_users	= (bool) get_tutor_option( 'hide_admin_bar_for_users' );
-		$is_administrator			= current_user_can( 'administrator' );
-		
-		if ( $hide_admin_bar_for_users && ! $is_administrator && ! wp_doing_ajax() ) {
+		$has_access					= $this->has_admin_area_access();
+
+		if ( $hide_admin_bar_for_users && ! $has_access && ! wp_doing_ajax() ) {
 			wp_die( __( 'Access Denied!', 'tutor' ) );
 		}
 	}
