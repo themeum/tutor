@@ -128,12 +128,23 @@ do_action('tutor_dashboard/before/wrap');
 					}
 					$become_button = ob_get_clean();
 
-					if (current_user_can(tutor()->instructor_role)) {
+					if ( current_user_can( tutor()->instructor_role ) ) {
 						$course_type = tutor()->course_post_type;
 					?>
-						<a href="#" id="tutor-create-new-course" class="tutor-btn tutor-btn-outline-primary">
-							<i class="tutor-icon-plus-square tutor-my-n4 tutor-mr-8"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
-						</a>
+					<?php
+					/**
+					 * Render create course button based on free & pro
+					 *
+					 * @since v2.0.7
+					 */
+					if ( function_exists( 'tutor_pro' ) ) : ?>
+						<?php do_action( 'tutor_course_create_button' ); ?>
+						<?php else : ?>
+							<a href="<?php echo esc_url( admin_url( "post-new.php?post_type=$course_type" ) ); ?>" class="tutor-btn tutor-btn-outline-primary">
+								<i class="tutor-icon-plus-square tutor-my-n4 tutor-mr-8"></i>
+								<?php esc_html_e( 'Create a New Course', 'tutor' ); ?>
+							</a>
+					<?php endif; ?>
 					<?php
 					} elseif ($instructor_status == 'pending') {
 						$on = get_user_meta($user->ID, '_is_tutor_instructor', true);
