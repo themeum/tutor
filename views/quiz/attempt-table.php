@@ -19,8 +19,12 @@
 			<thead>
 				<tr>
 					<?php foreach ( $table_columns as $key => $column ) : ?>
-						<?php 
-						if ( $key === 'details' && true === $enabled_hide_quiz_details ) {
+						<?php
+						/**
+						 * Pro feature: Only for frontend
+						 * @since 2.07
+						 */
+						if ( $key === 'details' && ! is_admin() && true === $enabled_hide_quiz_details ) {
 							continue;
 						}
 						?>
@@ -64,8 +68,12 @@
 					?>
 					<tr>
 						<?php foreach ( $table_columns as $key => $column ) : ?>
-							<?php 
-							if ( $key === 'details' && true === $enabled_hide_quiz_details ) {
+							<?php
+							/**
+							 * Pro feature: Only for frontend
+							 * @since 2.07
+							 */
+							if (  $key === 'details' && ! is_admin() && true === $enabled_hide_quiz_details ) {
 								continue;
 							}
 							?>
@@ -82,7 +90,23 @@
 											<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
 										</div>
 										<div class="tutor-mt-8">
-											<?php echo get_the_title( $attempt->course_id ); ?>
+											<?php
+												// For admin panel
+												if ( is_admin() ) {
+													echo get_the_title( $attempt->quiz_id );
+												} else {
+													// For frontend
+													echo get_the_title( $attempt->quiz_id );
+													?>
+													<div class="tooltip-wrap tooltip-icon-custom" >
+														<i class="tutor-icon-circle-info-o tutor-color-muted"></i>
+														<span class="tooltip-txt tooltip-top">
+															<?php echo get_the_title( $attempt->course_id ) ?>
+														</span>
+													</div>
+													<?php
+												}
+											?>
 										</div>
 										<div class="tutor-fs-7 tutor-mt-8">
 											<?php
