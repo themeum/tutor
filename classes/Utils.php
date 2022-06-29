@@ -9326,7 +9326,7 @@ class Utils {
 		$category = isset( $_GET['category'] ) ? true : false;
 		$text     = array(
 			'normal' => __( 'No Data Available in this Section', 'tutor' ),
-			'filter' => __( 'No Data Found from your Search/Filter' ),
+			'filter' => __( 'No Data Found from your Search/Filter', 'tutor' ),
 		);
 
 		if ( $course || $date || $search || $category ) {
