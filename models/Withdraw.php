@@ -3,7 +3,7 @@ namespace Tutor\Models;
 
 /**
  * Class Withdraw
- * @since 2.0.8
+ * @since 2.0.7
  */
 class Withdraw {
     /**
@@ -19,7 +19,7 @@ class Withdraw {
      * @param  int $instructor_id
      * @return array|object|null|void
      * 
-     * @since 2.0.8
+     * @since 2.0.7
      */
     public static function get_withdraw_summary( $instructor_id ) {
         global $wpdb;
