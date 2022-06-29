@@ -1,9 +1,10 @@
 <?php
-	$tutor_course_price_type = tutils()->price_type();
+	$tutor_course_price_type	= tutils()->price_type();
+	$course_price    			= tutor_utils()->get_raw_course_price( get_the_ID() );
 ?>
 <div class="tutor-row tutor-mt-16 tutor-mb-16 tutor-course-price-fields">
 	<div class="tutor-col-12 tutor-col-sm-5 tutor-col-lg-4">
-		<label for="">
+		<label for="tutor_course_price_type" class="tutor-fs-6 tutor-fw-medium">
 			<?php _e( 'Course Type', 'tutor' ); ?> <br />
 		</label>
 	</div>
@@ -22,7 +23,7 @@
 	<div class="tutor-col-12 tutor-col-md-5 tutor-col-lg-4">
 		<label class="tutor-fs-6 tutor-fw-medium">
 			<?php _e( 'Select product', 'tutor' ); ?> <br />
-			<p class="tutor-color-muted">(<?php _e( 'When selling the course', 'tutor' ); ?>)</p>
+			<p class="tutor-color-muted">(<?php echo $label_info ?>)</p>
 		</label>
 	</div>
 	<div class="tutor-col-12 tutor-col-md-7 tutor-col-lg-8">
@@ -39,5 +40,26 @@
 			<div><?php echo $info_text; ?></div>
 		</div>
 	</div>
+
+	<div class="tutor-col-12 tutor-col-md-5 tutor-col-lg-4 tutor-mt-12">
+		<label class="tutor-fs-6 tutor-fw-medium">
+			<?php _e( 'Regular Price', 'tutor' ); ?>
+		</label>
+	</div>
+
+	<div class="tutor-col-12 tutor-col-md-7 tutor-col-lg-8 tutor-mt-12">
+		<input type="number" class="tutor-form-control" style="width:170px" name="course_price" value="<?php echo $course_price->regular_price === 0 ? null : $course_price->regular_price; ?>"  step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
+	</div>
+
+	<div class="tutor-col-12 tutor-col-md-5 tutor-col-lg-4 tutor-mt-12">
+		<label class="tutor-fs-6 tutor-fw-medium">
+			<?php _e( 'Sale Price (Discounted Price)', 'tutor' ); ?>
+		</label>
+	</div>
+
+	<div class="tutor-col-12 tutor-col-md-7 tutor-col-lg-8 tutor-mt-12">
+		<input type="number" class="tutor-form-control" style="width:170px" name="course_sale_price" value="<?php echo $course_price->sale_price === 0 ? null: $course_price->sale_price; ?>" step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
+	</div>
+
 </div>
 

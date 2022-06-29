@@ -38,7 +38,7 @@ class WooCommerce extends Tutor_Base {
 		add_filter( 'product_type_options', array( $this, 'add_tutor_type_in_wc_product' ) );
 
 		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
-		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ) );
+		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ), 10, 2 );
 		add_action( 'save_post_product', array( $this, 'save_wc_product_meta' ) );
 
 		add_action( 'tutor_course/single/before/enroll', 'wc_print_notices' );
@@ -181,20 +181,15 @@ class WooCommerce extends Tutor_Base {
 	}
 
 	/**
-	 * @param $post_ID
-	 *
-	 * Save course meta for attaching product
+	 * Save course meta for attaching WC product
+	 * 
+	 * @param int $post_ID		this is course ID
+	 * @param mixed $post		course details
+	 * 
+	 * @return void
 	 */
-	public function save_course_meta( $post_ID ) {
-		$product_id = (int) tutor_utils()->avalue_dot( '_tutor_course_product_id', $_POST, 0 );
-		if ( $product_id === -1 ) {
-			delete_post_meta( $post_ID, '_tutor_course_product_id' );
-		} elseif ( $product_id ) {
-			update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
-			// Mark product for woocommerce
-			update_post_meta( $product_id, '_virtual', 'yes' );
-			update_post_meta( $product_id, '_tutor_product', 'yes' );
-		}
+	public function save_course_meta( $post_ID, $post ) {
+		do_action( 'save_tutor_course', $post_ID, $post );
 	}
 
 	public function register_meta_box() {
