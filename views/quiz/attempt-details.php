@@ -3,6 +3,12 @@
 if ( ! defined( 'ABSPATH' ) ){
     exit;
 }
+
+$enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
+if ( true === $enabled_hide_quiz_details ) {
+   return;
+}
+
 extract($data); // $user_id, $attempt_id, $attempt_data(nullable), $context(nullable)
 
 !isset($attempt_data) ? $attempt_data = tutor_utils()->get_attempt($attempt_id) : 0;
