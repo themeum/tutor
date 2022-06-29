@@ -225,9 +225,9 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.0.7 - June 30, 2022
+= 2.0.7 - June 22, 2022
 
-New: Google Meet integration
+Change log coming soon...
 
 = 2.0.6 - June 13, 2022
 
