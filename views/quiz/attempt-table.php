@@ -3,6 +3,7 @@
 	
 	$page_key      = 'attempt-table';
 	$table_columns = include __DIR__ . '/contexts.php';
+	$enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
 
 	if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) && count( $attempt_list ) ) {
 		// Provide the attempt data from the first attempt
@@ -18,6 +19,12 @@
 			<thead>
 				<tr>
 					<?php foreach ( $table_columns as $key => $column ) : ?>
+						<?php 
+						if ( $key === 'details' && true === $enabled_hide_quiz_details ) {
+							continue;
+						}
+						?>
+							
 						<th style="<?php echo $key == 'quiz_info' ? 'width: 30%;' : ''; ?>"><?php echo $column; ?></th>
 					<?php endforeach; ?>
 				</tr>
@@ -57,6 +64,11 @@
 					?>
 					<tr>
 						<?php foreach ( $table_columns as $key => $column ) : ?>
+							<?php 
+							if ( $key === 'details' && true === $enabled_hide_quiz_details ) {
+								continue;
+							}
+							?>
 							<td>
 								<?php if ( $key == "checkbox" ) : ?>
 									<div class="tutor-d-flex">
