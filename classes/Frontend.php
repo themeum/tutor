@@ -36,20 +36,13 @@ class Frontend {
 	 * @since 2.0.7
 	 */
 	private function has_admin_area_access() {
-		$has_access 	= false;
+		$has_access 	= true;
 		$user 			= new \WP_User( get_current_user_id() );
 		$roles			= $user->roles;
 
-		if ( in_array( 'administrator', $roles ) ) {
-			$has_access = true;
-		}
-		else {
-			if ( in_array( 'subscriber', $roles ) || in_array( tutor()->instructor_role, $roles ) ) {
-				$has_access = false;
-			}
-			else {
-				$has_access = true;
-			}
+		if ( ! in_array( 'administrator', $roles ) && ( in_array( 'subscriber', $roles ) || in_array( tutor()->instructor_role, $roles ) ) ) 
+		{
+			$has_access = false;
 		}
 
 		return $has_access;
