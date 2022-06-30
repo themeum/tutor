@@ -93,6 +93,30 @@ class WooCommerce extends Tutor_Base {
 		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'tutor_update_product_url' ), 10, 2 );
 		add_filter( 'woocommerce_order_item_permalink', array( $this, 'filter_order_item_permalink_callback' ), 10, 3 );
 
+		/**
+		 * on WC product delete clear course linked product
+		 * 
+		 * @since 2.0.7
+		 */
+		add_action( 'delete_post', array( $this, 'clear_course_linked_product' ) );
+
+	}
+
+	/**
+	 * On WC product delete, clear course linked product 
+	 *
+	 * @param int $post_id
+	 * @return void
+	 * 
+	 * @since 2.0.7
+	 */
+	public function clear_course_linked_product( $post_id ) {
+		if ( get_post_type( $post_id ) === 'product' ) {
+			global $wpdb;
+			$wpdb->query(
+				$wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key=%s AND meta_value=%d", '_tutor_course_product_id', $post_id )
+			);			
+		}
 	}
 
 	function filter_order_item_permalink_callback( $product_permalink, $item, $order ) {

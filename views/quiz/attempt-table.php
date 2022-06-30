@@ -93,15 +93,15 @@
 											<?php
 												// For admin panel
 												if ( is_admin() ) {
-													echo get_the_title( $attempt->quiz_id );
+													esc_html_e( get_the_title( $attempt->quiz_id ) );
 												} else {
 													// For frontend
-													echo get_the_title( $attempt->quiz_id );
+													esc_html_e( get_the_title( $attempt->quiz_id ) );
 													?>
 													<div class="tooltip-wrap tooltip-icon-custom" >
 														<i class="tutor-icon-circle-info-o tutor-color-muted"></i>
 														<span class="tooltip-txt tooltip-top">
-															<?php echo get_the_title( $attempt->course_id ) ?>
+															<?php esc_html_e( get_the_title( $attempt->course_id ) ) ?>
 														</span>
 													</div>
 													<?php
@@ -119,7 +119,7 @@
 										<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
 									</div>
 								<?php elseif ( $key == "course" ) : ?>
-									<?php echo get_the_title( $attempt->course_id ); ?>
+									<?php esc_html_e( get_the_title( $attempt->course_id ) ); ?>
 								<?php elseif ( $key == "question" ) : ?>
 									<?php echo count( $answers ); ?>
 								<?php elseif ( $key == "total_marks" ) : ?>
