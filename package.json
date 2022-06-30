@@ -3,9 +3,9 @@
 	"version": "2.0.7",
 	"description": "<img src='.github/tutor-github.png' alt='TutorLMS' width='100%'>",
 	"main": "index.js",
-	"engines" : { 
-		"npm" : ">=6.14.14",
-		"node" : ">=14.17.5"
+	"engines": {
+		"npm": ">=6.14.14",
+		"node": ">=14.17.5"
 	},
 	"scripts": {
 		"build": "webpack --env=build --mode=production && npm run gulp-build",
