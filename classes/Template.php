@@ -3,7 +3,10 @@
  * Template Class
  *
  * @since: v.1.0.0
+ *
+ * @package Tutor\Template
  */
+
 namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) ) {
