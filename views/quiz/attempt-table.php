@@ -14,7 +14,7 @@
 ?>
 
 <?php if ( is_array( $attempt_list ) && count( $attempt_list ) ): ?>
-	<div class="tutor-table-responsive tutor-mt-24">
+	<div class="tutor-table-responsive tutor-my-24">
 		<table class="tutor-table tutor-table-quiz-attempts">
 			<thead>
 				<tr>
@@ -161,6 +161,7 @@
 			</tbody>
 		</table>
 	</div>
+<?php tutor_load_template( 'single.common.footer'); ?>
 <?php else : ?>
 	<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 <?php endif; ?>
