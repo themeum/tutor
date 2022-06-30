@@ -1166,8 +1166,11 @@ class Utils {
 		$product_id = $this->get_course_product_id( $course_id );
 		if ( $product_id ) {
 			if ( $monetize_by === 'wc' && $this->has_wc() ) {
-				$prices['regular_price'] = get_post_meta( $product_id, '_regular_price', true );
-				$prices['sale_price']    = get_post_meta( $product_id, '_sale_price', true );
+				$product  = wc_get_product( $product_id );
+				if ( $product ) {
+					$prices['regular_price'] = $product->get_regular_price();
+					$prices['sale_price']    = $product->get_sale_price();
+				}
 			} elseif ( $monetize_by === 'edd' && $this->has_edd() ) {
 				$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
 				$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
