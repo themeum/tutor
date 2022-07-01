@@ -161,7 +161,6 @@
 			</tbody>
 		</table>
 	</div>
-<?php tutor_load_template( 'single.common.footer'); ?>
 <?php else : ?>
 	<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 <?php endif; ?>
