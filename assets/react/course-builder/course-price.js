@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
             dataType: 'json',
             data: data,
             success: function (res) {
-                console.log(res);
+                // console.log(res);
                 if (res.success) {
                     jQuery('input[name="course_price"]').val(res.data.regular_price)
                     jQuery('input[name="course_sale_price"]').val(res.data.sale_price)
