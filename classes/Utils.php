@@ -579,83 +579,6 @@ class Utils {
 	}
 
 	/**
-	 * @param array $excludes
-	 *
-	 * @return array|null|object
-	 *
-	 * Get courses
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_courses( $excludes = array(), $post_status = array( 'publish' ) ) {
-		global $wpdb;
-
-		$excludes      = (array) $excludes;
-		$exclude_query = '';
-
-		if ( count( $excludes ) ) {
-			$exclude_query = implode( "','", $excludes );
-		}
-
-		$post_status = array_map(
-			function ( $element ) {
-				return "'" . $element . "'";
-			},
-			$post_status
-		);
-
-		$post_status      = implode( ',', $post_status );
-		$course_post_type = tutor()->course_post_type;
-
-		$query = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT ID,
-					post_author,
-					post_title,
-					post_name,
-					post_status,
-					menu_order
-			FROM 	{$wpdb->posts}
-			WHERE 	post_status IN ({$post_status})
-					AND ID NOT IN('$exclude_query')
-					AND post_type = %s;
-			",
-				$course_post_type
-			)
-		);
-
-		return $query;
-	}
-
-	/**
-	 * @param int $instructor_id
-	 *
-	 * @return array|null|object
-	 *
-	 * Get courses for instructors
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_courses_for_instructors( $instructor_id = 0 ) {
-		global $wpdb;
-
-		$instructor_id    = $this->get_user_id( $instructor_id );
-		$course_post_type = tutor()->course_post_type;
-
-		global $current_user;
-		$courses = get_posts(
-			array(
-				'post_type'      => $course_post_type,
-				'author'         => $instructor_id,
-				'post_status'    => array( 'publish', 'pending' ),
-				'posts_per_page' => 5,
-			)
-		);
-
-		return $courses;
-	}
-
-	/**
 	 * @param $instructor_id
 	 *
 	 * @return null|string
@@ -1166,8 +1089,11 @@ class Utils {
 		$product_id = $this->get_course_product_id( $course_id );
 		if ( $product_id ) {
 			if ( $monetize_by === 'wc' && $this->has_wc() ) {
-				$prices['regular_price'] = get_post_meta( $product_id, '_regular_price', true );
-				$prices['sale_price']    = get_post_meta( $product_id, '_sale_price', true );
+				$product  = wc_get_product( $product_id );
+				if ( $product ) {
+					$prices['regular_price'] = $product->get_regular_price();
+					$prices['sale_price']    = $product->get_sale_price();
+				}
 			} elseif ( $monetize_by === 'edd' && $this->has_edd() ) {
 				$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
 				$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );

@@ -732,9 +732,8 @@ class Course extends Tutor_Base {
 	 * @since v.1.3.4
 	 */
 	public function attach_product_with_course( $post_ID, $postData ) {
-		$attached_product_id = tutor_utils()->get_course_product_id( $post_ID );
-		$course_price        = Input::post( 'course_price', 0, Input::TYPE_NUMERIC );
-		$sale_price			 = Input::post( 'course_sale_price', 0, Input::TYPE_NUMERIC );
+		
+		$monetize_by 		= tutor_utils()->get_option( 'monetize_by' );
 		
 		/**
 		 * The function is_admin will check only loaded page from WP admin.
@@ -744,16 +743,28 @@ class Course extends Tutor_Base {
 		// From backend course select box
 		$product_id			 = Input::post( '_tutor_course_product_id', 0, Input::TYPE_INT );
 
-		if ( ! $course_price ) {
-			// Return if price not set or 0
+		/**
+		 * From Admin Panel, Free user can only select product from dropdown
+		 */
+		if ( $is_admin_panel && 'wc' === $monetize_by && tutor()->has_pro === false ) {
+			if ( $product_id > 0 ) {
+				update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+			} 
+			else if( $product_id === -1 ) {
+				delete_post_meta( $post_ID, '_tutor_course_product_id' );
+			}
+			
 			return;
 		}
 
-		if ( $sale_price > $course_price ) {
+		$attached_product_id = tutor_utils()->get_course_product_id( $post_ID );
+		$course_price        = Input::post( 'course_price', 0, Input::TYPE_NUMERIC );
+		$sale_price			 = Input::post( 'course_sale_price', 0, Input::TYPE_NUMERIC );
+
+		if ( ! $course_price ||  $sale_price >= $course_price ) {
 			return;
 		}
 
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		$course      = get_post( $post_ID );
 
 		if ( $monetize_by === 'wc' ) {
@@ -770,7 +781,7 @@ class Course extends Tutor_Base {
 				/**
 				 * @since 2.0.7
 				 */
-				if ( $product_id && $is_admin_panel ) {
+				if ( $product_id > 0 && $is_admin_panel ) {
 					$attached_product_id = $product_id;
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 				}

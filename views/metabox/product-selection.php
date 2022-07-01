@@ -40,7 +40,7 @@
 			<div><?php echo $info_text; ?></div>
 		</div>
 	</div>
-
+<?php if( tutor()->has_pro ): ?>
 	<div class="tutor-col-12 tutor-col-md-5 tutor-col-lg-4 tutor-mt-12">
 		<label class="tutor-fs-6 tutor-fw-medium">
 			<?php _e( 'Regular Price', 'tutor' ); ?>
@@ -60,6 +60,6 @@
 	<div class="tutor-col-12 tutor-col-md-7 tutor-col-lg-8 tutor-mt-12">
 		<input type="number" class="tutor-form-control" style="width:170px" name="course_sale_price" value="<?php echo $course_price->sale_price === 0 ? null: $course_price->sale_price; ?>" step="any" min="0" pattern="^\d*(\.\d{0,2})?$">
 	</div>
-
+<?php endif; ?>
 </div>
 
