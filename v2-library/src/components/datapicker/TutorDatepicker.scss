@@ -58,7 +58,7 @@
 			transition: 200ms ease-out;
 			opacity: 0;
 			visibility: hidden;
-			
+
 			--scrollbarBG: rgba(205, 207, 213, 0);
 			--thumbBG: #d2dbf5;
 			scrollbar-width: thin;
@@ -224,9 +224,8 @@
 			margin: 0;
 			margin-top: 26px;
 		}
-		&__day--outside-month {
-			/* color/black/fill/30 */
-
+		&__day--outside-month,
+		&__day--disabled {
 			color: #b4b7c0;
 		}
 

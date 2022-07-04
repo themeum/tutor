@@ -36,6 +36,7 @@ const urlPrams = (type, val, date = null) => {
 };
 
 const TutorDatepicker = (data) => {
+	const isPreviousDateAllowed = data?.input_name !== 'meeting_date';
 	const dateFormat = window._tutorobject
 		? window._tutorobject.wp_date_format
 		: 'd-M-Y';
@@ -65,9 +66,9 @@ const TutorDatepicker = (data) => {
 		window.location = urlPrams('date', `${year}-${month + 1}-${day}`, date);
 	};
 
-	const years = range(2000, getYear(new Date()) + 5, 1);
+	let years = range(2000, getYear(new Date()) + 5, 1);
 
-	const months = [
+	let months = [
 		'January',
 		'February',
 		'March',
@@ -92,6 +93,7 @@ const TutorDatepicker = (data) => {
 		<div className="tutor-react-datepicker">
 			<DatePicker
 				customInput={<CustomInput />}
+				minDate={isPreviousDateAllowed ? null : new Date()}
 				isClearable={Boolean(data.is_clearable)}
 				placeholderText={dateFormat}
 				selected={startDate}
