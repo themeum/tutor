@@ -27,7 +27,7 @@ ob_start();
 <?php tutor_load_template( 'single.common.header', array( 'course_id' => $course_id )); ?>
 
 <?php ob_start(); ?>
-<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex tutor-justify-center tutor-mt-80 tutor-pb-80">
+<div class="tutor-quiz-wrapper tutor-d-flex tutor-justify-center tutor-mt-80 tutor-pb-80">
     <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
     <?php
@@ -40,6 +40,7 @@ ob_start();
     ?>
 </div>
 <?php
+tutor_load_template( 'single.common.footer', array( 'course_id' => $course_id ));
 echo apply_filters( 'tutor_quiz/single/wrapper', ob_get_clean() );
 tutor_load_template_from_custom_path(
     __DIR__ . '/single-content-loader.php',

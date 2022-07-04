@@ -1,7 +1,16 @@
 window.jQuery(document).ready($=>{
 
     const {__} = window.wp.i18n;
-    
+
+	/**
+	 * Remove course-topic footer from quiz pages
+	 */
+	if ($('.tutor-quiz-wrap').length) {
+		if (!$('.tutor-table-quiz-attempts').length && !$('.tutor-quiz-attempt-details').length) {
+			$('.tutor-course-topic-single-footer').remove();
+		}
+	}
+
 	/**
 	 * Quiz attempt
 	 */

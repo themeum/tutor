@@ -54,7 +54,7 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
 <?php tutor_load_template( 'single.common.header', array( 'course_id' => $course_id )); ?>
 
 <div class="tutor-course-topic-single-body">
-    <div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex tutor-justify-center tutor-mt-36 tutor-pb-80">
+    <div class="tutor-quiz-wrapper tutor-d-flex tutor-justify-center tutor-mt-36 tutor-pb-80">
         <div id="tutor-assignment-wrap" class="tutor-quiz-wrap tutor-course-assignment-details tutor-submit-assignment  tutor-assignment-result-pending">
             <div class="tutor-assignment-title tutor-fs-4 tutor-fw-medium tutor-color-black">
                 <?php the_title(); ?>
