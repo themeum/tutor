@@ -14,6 +14,24 @@ class Course {
 
     const STATUS_PUBLISH    = 'publish';
     const STATUS_DRAFT      = 'draft';
+    const STATUS_AUTO_DRAFT = 'auto-draft';
+    const STATUS_PENDING    = 'pending';
+
+	/**
+	 * Course record count
+	 *
+	 * @return int
+	 * 
+	 * @since 2.0.7
+	 */
+	public static function count( $status = self::STATUS_PUBLISH ) {
+		$count_obj = wp_count_posts( self::POST_TYPE );
+		if ( 'all' === $status ) {
+			return array_sum( (array) $count_obj );
+		}
+		
+		return (int) $count_obj->{$status};
+	}
 
 	/**
 	 * Get courses
