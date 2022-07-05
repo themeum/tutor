@@ -658,56 +658,6 @@ class Utils {
 		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query, OBJECT);
 	}
 
-	public function get_publish_courses_by_instructor() {
-		global $wp_query;
-		return $wp_query->post_count;
-	}
-
-	public function get_pending_course_by_instructor() {
-		global $wp_query;
-		return $wp_query->post_count;
-	}
-
-
-	/**
-	 * @return mixed
-	 *
-	 * Get archive page course count
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_archive_page_course_count() {
-		global $wp_query;
-		return $wp_query->post_count;
-	}
-
-	/**
-	 * @return null|string
-	 *
-	 * Get course count
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_course_count() {
-		global $wpdb;
-
-		$course_post_type = tutor()->course_post_type;
-
-		$count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(ID)
-			FROM 	{$wpdb->posts}
-			WHERE	post_status = %s
-					AND post_type = %s;
-			",
-				'publish',
-				$course_post_type
-			)
-		);
-
-		return $count;
-	}
-
 	/**
 	 * @return null|string
 	 *
