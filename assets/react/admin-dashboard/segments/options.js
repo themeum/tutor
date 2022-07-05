@@ -1,4 +1,4 @@
-import {get_response_message} from '../../helper/response';
+import { get_response_message } from '../../helper/response';
 
 // SVG Icons Totor V2
 const tutorIconsV2 = {
@@ -15,7 +15,7 @@ const tutorIconsV2 = {
 // Tutor v2 icons
 const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	var $ = window.jQuery;
 	const { __ } = wp.i18n;
 
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		// );
 		let image_delete = image_upload_wrap.querySelector('.delete-btn');
 
-		image_uploader[i].onclick = function(e) {
+		image_uploader[i].onclick = function (e) {
 			e.preventDefault();
 
 			var image_frame = wp.media({
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				upload_previewer.src = image_input.value = image_url;
 			}); */
 
-			image_frame.on('insert', function(selection) {
+			image_frame.on('insert', function (selection) {
 				var state = image_frame.state();
 				selection = selection || state.get('selection');
 				if (!selection) return;
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		};
 
-		image_delete.onclick = function() {
+		image_delete.onclick = function () {
 			input_file.value = '';
 			email_title_logo.src = '';
 		};
@@ -87,11 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		return re.test(String(email).toLowerCase());
 	};
 
-	$(window).on('click', function(e) {
+	$(window).on('click', function (e) {
 		$('.tutor-notification, .search_result').removeClass('show');
 	});
 
-	$('.tutor-notification-close').click(function(e) {
+	$('.tutor-notification-close').click(function (e) {
 		$('.tutor-notification').removeClass('show');
 	});
 
@@ -142,12 +142,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		formSubmit = true;
 	}
 
-	$('#save_tutor_option').click(function(e) {
+	$('#save_tutor_option').click(function (e) {
 		e.preventDefault();
 		$('#tutor-option-form').submit();
 	});
-	
-	$('#tutor-option-form').submit(function(e) {
+
+	$('#tutor-option-form').submit(function (e) {
 		e.preventDefault();
 		if (tinyMCE) {
 			tinyMCE.triggerSave();
@@ -173,11 +173,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					url: window._tutorobject.ajaxurl,
 					type: 'POST',
 					data: data,
-					beforeSend: function() {
+					beforeSend: function () {
 						button.addClass('is-loading');
 						button.attr('disabled', true);
 					},
-					success: function(resp) {
+					success: function (resp) {
 						const { data = {}, success } = resp || {};
 						const { message = __('Something Went Wrong!', 'tutor') } = data;
 
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						tutor_toast('Error!', message, 'error');
 					},
-					complete: function() {
+					complete: function () {
 						button.removeClass('is-loading');
 						button.removeAttr('disabled');
 					},
@@ -222,15 +222,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	let wait_for_input;
-	$('#search_settings').on('input', function(e) {
+	$('#search_settings').on('input', function (e) {
 		e.preventDefault();
 		let $this = $(this);
 
-		if(wait_for_input) {
+		if (wait_for_input) {
 			window.clearTimeout(wait_for_input);
 		}
 
-		wait_for_input = window.setTimeout(()=>{
+		wait_for_input = window.setTimeout(() => {
 			if (e.target.value) {
 				var searchKey = this.value;
 				$.ajax({
@@ -241,13 +241,13 @@ document.addEventListener('DOMContentLoaded', function() {
 						keyword: searchKey,
 					},
 
-					beforeSend: function() {
+					beforeSend: function () {
 						$this.parent().find('.tutor-form-icon').removeClass('tutor-icon-search').addClass('tutor-icon-circle-notch tutor-animation-spin');
 					},
 
-					success: function(data) {
+					success: function (data) {
 
-						if(!data.success) {
+						if (!data.success) {
 							tutor_toast(__('Error', 'tutor'), get_response_message(data), 'error');
 							return;
 						}
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							field_key = '',
 							result = data.data.fields;
 
-						Object.values(result).forEach(function(item, index, arr) {
+						Object.values(result).forEach(function (item, index, arr) {
 							item_text = item.label;
 							section_slug = item.section_slug;
 							section_label = item.section_label;
@@ -286,14 +286,14 @@ document.addEventListener('DOMContentLoaded', function() {
 						if (notfound) {
 							output += `<div class="no_item">${warning} No Results Found</div>`;
 						}
-						
+
 						$('.search_result').html(output).addClass('show');
 
 						$this.parent().find('.tutor-form-icon').removeClass('tutor-icon-circle-notch tutor-animation-spin').addClass('tutor-icon-search');
-						
+
 						output = '';
 					},
-					complete: function() {
+					complete: function () {
 						navigationTrigger();
 					},
 				});
@@ -373,31 +373,65 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	/**
+	 * Show/Hide setting option
+	 * @param object element			Dom object
+	 * @param string value 				change value
+	 * @param string required_value		Required value for match the conditon for show, else it will hide
+	 * @return void
+	 * 
+	 * @since 2.0.7
+	 */
+	function showHideOption(element, value, required_value) {
+		if (element.style === undefined) return;
+
+		value === (required_value !== undefined ? required_value : 'on')
+			? element.style.display = 'grid'
+			: element.style.display = 'none'
+	}
+
+	/**
+	 * Input value change detector (Normal/Hidden input)
+	 * 
+	 * @param object	element 
+	 * @param function	callback 
+	 * @return void
+	 * 
+	 * @since 2.0.7
+	 */
+	function changeListener(element, callback) {
+		MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+		let observer = new MutationObserver(function (mutations, observer) {
+			if (mutations[0].attributeName == "value") {
+				if (typeof callback === 'function') {
+					callback(element.value)
+				}
+			}
+		});
+		observer.observe(element, {
+			attributes: true
+		});
+	}
+
+	/**
 	 * Woocommerce order auto complete
 	 *
 	 * @since v2.0.5
 	 */
 	const monetization_field = document.querySelector("[name='tutor_option[monetize_by]']");
+	const order_autocomplete_wrapper = document.getElementById('field_tutor_woocommerce_order_auto_complete');
 	if (monetization_field) {
-		const monetize_by = monetization_field.value;
-		monetize_by === 'wc' ? showAutoCompleteOption(true) : showAutoCompleteOption(false);
-		monetization_field.onchange = (e) => {
-			const monetization = e.target.value;
-			monetization === 'wc' ? showAutoCompleteOption(true) : showAutoCompleteOption(false);
-		}
+		showHideOption(order_autocomplete_wrapper, monetization_field.value, 'wc')
+		monetization_field.onchange = (e) => showHideOption(order_autocomplete_wrapper, e.target.value, 'wc')
 	}
 
 	/**
-	 * Show or hide woocommerce auto complete option
-	 *
-	 * @param {*} show   if true then show otherwise hide & set value off
+	 * Option (sharing_percentage) toggle on enable_revenue_sharing option change
+	 * @since 2.0.7
 	 */
-	function showAutoCompleteOption(show) {
-		const orderAutoCompleteWrapper = document.getElementById('field_tutor_woocommerce_order_auto_complete');
-		if (show) {
-			orderAutoCompleteWrapper.style.display = 'grid';
-		} else {
-			orderAutoCompleteWrapper.style.display = 'none';
-		}
+	const revenue_sharing_field = document.querySelector("[name='tutor_option[enable_revenue_sharing]']");
+	const sharing_percent_wrapper = document.getElementById("field_sharing_percentage");
+	if (revenue_sharing_field) {
+		showHideOption(sharing_percent_wrapper, revenue_sharing_field.value)
+		changeListener(revenue_sharing_field, (value) => showHideOption(sharing_percent_wrapper, value));
 	}
 });
