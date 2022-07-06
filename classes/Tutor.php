@@ -611,6 +611,7 @@ final class Tutor {
 			'earning_admin_commission'          => '20',
 			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
+			'color_preset_type'                 => 'default',
 		);
 		return $options;
 	}
