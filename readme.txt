@@ -225,9 +225,33 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.0.7 - June 22, 2022
+= 2.0.7 - July 15, 2022
 
-Change log coming soon...
+New: Admin will be able to change the Main Instructor for a Course
+New: Next and Previous button is introduced for the Quiz page once a Quiz is Completed
+New: Instructor/Admin will be able to set "Sale Price" (Discounted Price) in the Course Builder
+New: Once a Course is created from WP Admin, it will create an associated WooCommerce Product as well
+New: "Minimum Days Before Balance is Available" settings is introduced for Balance Withdrawal time management
+New: Admin will be able to hide Quiz Details from "My Quiz Attempts" page
+New: On all lesson completion, the course will be Completed automatically, Admin can enable it from Settings
+New: Tutor Calendar will now highlight the Zoom Meeting Event Days
+Fix: In WP Dashboard, the Quiz Attempts page was showing Course information under the "Quiz Info" column
+Fix: Zoom Meeting page was showing an error if Meeting Title or Description would contain Single Quote
+Fix: Admin was not being able to Enable/Disable the Course Sorting option from WP Admin or Shortcode
+Fix: Email Footer Customization was not working
+Fix: The "Reply" boxes were remaining uncollapsed when the "Load More" button is clicked on a Single Course page under the "Q/A" Tab
+Fix: On the "Completed A Course" email the Certificate Download link was appearing outside the Email Body
+Fix: An unnecessary alert message was appearing on the "Become an Instructor" page
+Fix: When strict mode is on, it was showing Wrong Alert Text
+Fix: The Empty Data Alert Message on the Course Analytics page was not translatable
+Fix: The "Assignment Submitted" date-time was showing as per GMT but not Site's Time on the Assignment Details page of WP Admin
+Fix: Enrolled users were able to see all the plans when Paid Membership Pro is Enable
+Fix: Course Content Access option for Admin and Instructor was not working with Paid Membership Pro
+Fix: Other roles except Admin (like Editor) were not being able to access WP Admin when Hide Admin Bar is enabled
+Fix: Copied Course Assignments were not deletable from the Assignments page on the Front-site
+Fix: In a Course, the General Zoom Meeting List was not appearing on the Course Edit page for Admin and Instructors
+Fix: On the new Tutor LMS installations, the Preset Color default setting was being "Custom" instead of "Default"
+Fix: Share Percentage setting was appearing even when Revenue Sharing is disabled
 
 = 2.0.6 - June 13, 2022
 
