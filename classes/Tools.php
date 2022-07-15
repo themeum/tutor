@@ -9,18 +9,11 @@ if ( ! defined( 'ABSPATH' ) )
 class Tools {
 
 	public function __construct() {
-		//add_action('tutor_once_in_day_run_schedule', array($this, 'delete_auto_draft_posts'));
 		add_action('tutor_action_regenerate_tutor_pages', array($this, 'regenerate_tutor_pages'));
-
 
 		add_action('tutor_option_save_after', array($this, 'tutor_option_save_after'));
 		add_action('init', array($this, 'check_if_maintenance'));
 
-        /**
-         * Add setup wizard link in the tools menu
-         * @since v.1.5.7
-         */
-		// add_filter('tutor_tool_pages', array($this, 'tutor_tool_pages_add_wizard'));
 		add_action('admin_init', array($this, 'redirect_to_wizard_page'));
 	}
 
@@ -76,20 +69,6 @@ class Tools {
 		$ABSPATH_MY = str_replace(array('\\','/'), DIRECTORY_SEPARATOR, ABSPATH);
 		return ((in_array($ABSPATH_MY.'wp-login.php', get_included_files()) || in_array($ABSPATH_MY.'wp-register.php', get_included_files()) ) || (isset($_GLOBALS['pagenow']) && $GLOBALS['pagenow'] === 'wp-login.php') || $_SERVER['PHP_SELF']== '/wp-login.php');
 	}
-
-    /**
-     * @param $pages
-     * @return mixed
-     *
-     * Add Setup wizard menu
-     *
-     * @since v.1.5.7
-     */
-
-	public function tutor_tool_pages_add_wizard($pages){
-        $pages['tutor-setup'] = __('Setup Wizard', 'tutor');
-        return $pages;
-    }
 
     /**
      * Redirect to setup wizard page if any one click on the menu from tools page
