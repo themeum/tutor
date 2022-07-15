@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Tutor\\QueryHelper\\' => array($baseDir . '/query-helper'),
     'Tutor\\Models\\' => array($baseDir . '/models'),
+    'Tutor\\Helpers\\' => array($baseDir . '/helpers'),
     'Tutor\\Cache\\' => array($baseDir . '/cache'),
 );
