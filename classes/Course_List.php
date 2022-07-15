@@ -278,7 +278,11 @@ class Course_List {
 		$status = sanitize_text_field( $_POST['status'] );
 		$id     = sanitize_text_field( $_POST['id'] );
 
-		self::update_course_status( $status, $id );
+		$args = array(
+			'ID' 		  => $id,
+			'post_status' => $status
+		);
+		wp_update_post( $args );
 
 		wp_send_json_success();
 		exit;
