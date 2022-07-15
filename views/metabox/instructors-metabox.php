@@ -1,3 +1,11 @@
+<?php
+/**
+ * Multi instructors view
+ *
+ * @package TutorPro\MultiInstructor\Template
+ */
+
+?>
 <div class="tutor-course-instructors-metabox-wrap">
 	<?php
 	$instructors = tutor_utils()->get_instructors_by_course();
@@ -10,14 +18,14 @@
 		$instructor_crown_src = tutor()->url . 'assets/images/crown.svg';
 		if ( is_array( $instructors ) && count( $instructors ) ) {
 			foreach ( $instructors as $instructor ) {
-				$authorTag = '';
+				$author_tag = '';
 				if ( $post->post_author == $instructor->ID ) {
-					$authorTag = '<img src="' . esc_url( $instructor_crown_src ) . '"><i class="instructor-name-tooltip" title="' . __( 'Author', 'tutor' ) . '">' . __( 'Author', 'tutor' ) . '</i>';
+					$author_tag = '<img src="' . esc_url( $instructor_crown_src ) . '"><i class="instructor-name-tooltip" title="' . __( 'Author', 'tutor' ) . '">' . __( 'Author', 'tutor' ) . '</i>';
 				}
 				?>
 				<div id="added-instructor-id-<?php echo esc_attr( $instructor->ID ); ?>" class="added-instructor-item added-instructor-item-<?php echo esc_attr( $instructor->ID ); ?>" data-instructor-id="<?php echo esc_attr( $instructor->ID ); ?>">
-					<?php echo tutor_utils()->get_tutor_avatar($instructor->ID, 'md'); ?>
-					<span class="instructor-name tutor-ml-12"> <?php echo esc_attr( $instructor->display_name ) . ' ' . $authorTag; ?> </span>
+					<?php echo tutor_utils()->get_tutor_avatar( $instructor->ID, 'md' ); ?>
+					<span class="instructor-name tutor-ml-12"> <?php echo esc_attr( $instructor->display_name ) . ' ' . $author_tag; ?> </span>
 					<span class="instructor-control">
 						<a href="javascript:;" class="tutor-instructor-delete-btn tutor-iconic-btn">
 							<i class="tutor-icon-times" area-hidden="true"></i>
@@ -31,7 +39,7 @@
 	</div>
 
 	<div class="tutor-add-instructor-button-wrap">
-		<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-add-instructor-btn"> <i class="tutor-icon-add-group tutor-mr-8"></i> <?php _e( 'Add More Instructors', 'tutor' ); ?> </button>
+		<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-add-instructor-btn"> <i class="tutor-icon-add-group tutor-mr-8"></i> <?php esc_html_e( 'Add More Instructors', 'tutor' ); ?> </button>
 	</div>
 </div>
 
@@ -40,7 +48,7 @@
 	<div class="tutor-modal-content">
 		<div class="modal-header">
 			<div class="modal-title">
-				<h1><?php _e( 'Add instructors', 'tutor' ); ?></h1>
+				<h1><?php esc_html_e( 'Add instructors', 'tutor' ); ?></h1>
 			</div>
 			<div class="lesson-modal-close-wrap">
 				<a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-times"></i></a>
