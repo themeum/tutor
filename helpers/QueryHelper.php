@@ -7,7 +7,7 @@
  * @since v2.0.7
  */
 
-namespace Tutor\QueryHelper;
+namespace Tutor\Helpers;
 
 /**
  * Do the common db operations through helper

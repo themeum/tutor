@@ -6,7 +6,7 @@
         "psr-4": {
             "Tutor\\Cache\\":"cache/",
             "Tutor\\Models\\":"models/",
-            "Tutor\\QueryHelper\\":"query-helper/"
+            "Tutor\\Helpers\\":"helpers/"
         }
     }
 }
