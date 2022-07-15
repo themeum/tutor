@@ -252,6 +252,9 @@ Fix: Copied Course Assignments were not deletable from the Assignments page on t
 Fix: In a Course, the General Zoom Meeting List was not appearing on the Course Edit page for Admin and Instructors
 Fix: On the new Tutor LMS installations, the Preset Color default setting was being "Custom" instead of "Default"
 Fix: Share Percentage setting was appearing even when Revenue Sharing is disabled
+Fix: Unwanted link was appearing in the WP Dashboard Page
+Fix: Search was not working while manually enrolling someone from the Modal
+Fix: The "Reply" boxes were remaining uncollapsed when the "Load More" button is clicked on a Single Course page under the "Q/A" Tab
 
 = 2.0.6 - June 13, 2022
 
