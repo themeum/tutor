@@ -3,7 +3,7 @@
  * Query helper class contains static helper methods to perform basic
  * operations
  *
- * @package Tutor\QueryHelper
+ * @package Tutor\Helper
  * @since v2.0.7
  */
 
