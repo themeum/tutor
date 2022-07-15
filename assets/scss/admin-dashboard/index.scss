@@ -15,3 +15,9 @@ table.tutor-table.tutor-table-with-checkbox {
 		margin: 0;
 	}
 }
+// Hide empty text link from dashboard menu.
+#adminmenu {
+	& li a[href=tutor-setup] {
+		display: none;
+	}
+}
