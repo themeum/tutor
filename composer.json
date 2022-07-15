@@ -5,7 +5,8 @@
     "autoload": {
         "psr-4": {
             "Tutor\\Cache\\":"cache/",
-            "Tutor\\Models\\":"models/"
+            "Tutor\\Models\\":"models/",
+            "Tutor\\QueryHelper\\":"query-helper/"
         }
     }
 }
