@@ -27,8 +27,8 @@ class Utils {
 	 */
 	public function __call( $method, $args ) {
 		$classes = array(
-			'Tutor\Models\Course',
-			'Tutor\Models\Withdraw'
+			'Tutor\Models\CourseModel',
+			'Tutor\Models\WithdrawModel'
 		);
 
 		foreach( $classes as $class ) {

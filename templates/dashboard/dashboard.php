@@ -5,8 +5,8 @@
  * @version 1.4.3
  */
 
-use Tutor\Models\Course;
-use Tutor\Models\Withdraw;
+use Tutor\Models\CourseModel;
+use Tutor\Models\WithdrawModel;
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
@@ -130,8 +130,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$enrolled_course   = tutor_utils()->get_enrolled_courses_by_user();
 	$completed_courses = tutor_utils()->get_completed_courses_ids_by_user();
 	$total_students    = tutor_utils()->get_total_students_by_instructor( $user_id );
-	$my_courses        = tutor_utils()->get_courses_by_instructor( $user_id, Course::STATUS_PUBLISH );
-	$earning_sum       = Withdraw::get_withdraw_summary( $user_id );
+	$my_courses        = tutor_utils()->get_courses_by_instructor( $user_id, CourseModel::STATUS_PUBLISH );
+	$earning_sum       = WithdrawModel::get_withdraw_summary( $user_id );
 	$active_courses	   = tutor_utils()->get_active_courses_by_user( $user_id );
 
 	$enrolled_course_count		= $enrolled_course ? $enrolled_course->post_count : 0;

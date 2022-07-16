@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\WithdrawModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -193,10 +195,10 @@ class Withdraw {
 		$user_id = get_current_user_id();
 		$withdraw_amount = Input::post( 'tutor_withdraw_amount' );
 
-		$earning_summary	= \Tutor\Models\Withdraw::get_withdraw_summary( $user_id );
+		$earning_summary	= WithdrawModel::get_withdraw_summary( $user_id );
 		$min_withdraw		= tutor_utils()->get_option( 'min_withdraw_amount' );
 
-		$saved_withdraw_account = \Tutor\Models\Withdraw::get_user_withdraw_method();
+		$saved_withdraw_account = WithdrawModel::get_user_withdraw_method();
 		$formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 
 		if ( ! tutor_utils()->count( $saved_withdraw_account ) ) {
@@ -249,7 +251,7 @@ class Withdraw {
 		/**
 		 * Getting earning and balance data again
 		 */
-		$earning = \Tutor\Models\Withdraw::get_withdraw_summary( $user_id );
+		$earning = WithdrawModel::get_withdraw_summary( $user_id );
 		$new_available_balance = tutor_utils()->tutor_price( $earning->available_for_withdraw );
 
 		do_action( 'tutor_withdraw_after' );
