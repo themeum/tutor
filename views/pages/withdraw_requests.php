@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use TUTOR\Input;
+use Tutor\Models\WithdrawModel;
 use TUTOR\Withdraw_Requests_List;
 $withdraw = new Withdraw_Requests_List();
 
@@ -39,7 +40,7 @@ $args          = array(
 	'search'   => $search_term,
 );
 
-$withdraw_list = \Tutor\Models\Withdraw::get_withdrawals_history( null, $args, $offset, $per_page);
+$withdraw_list = WithdrawModel::get_withdrawals_history( null, $args, $offset, $per_page);
 $total         = $withdraw_list->count;
 
 /**

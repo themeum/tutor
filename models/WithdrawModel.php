@@ -2,10 +2,10 @@
 namespace Tutor\Models;
 
 /**
- * Class Withdraw
+ * Class WithdrawModel
  * @since 2.0.7
  */
-class Withdraw {
+class WithdrawModel {
     /**
      * All withdraw status
      */

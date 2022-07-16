@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 
 class Course extends Tutor_Base {
 
@@ -650,7 +651,7 @@ class Course extends Tutor_Base {
 			die( __( 'Please Sign-In', 'tutor' ) );
 		}
 
-		\Tutor\Models\Course::mark_course_as_completed( $course_id, $user_id );
+		CourseModel::mark_course_as_completed( $course_id, $user_id );
 
 		$permalink = get_the_permalink( $course_id );
 

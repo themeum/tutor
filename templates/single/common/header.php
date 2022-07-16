@@ -15,7 +15,7 @@ $is_course_completed			= tutor_utils()->is_completed_course( $course_id, get_cur
 if ( true === $auto_course_complete_option && false === $is_course_completed ) {
 	if ( $course_stats['completed_count'] === $course_stats['total_count'] ) {
 		// complete the course
-		\Tutor\Models\Course::mark_course_as_completed( $course_id,  get_current_user_id() );
+		\Tutor\Models\CourseModel::mark_course_as_completed( $course_id,  get_current_user_id() );
 	}
 }
 
