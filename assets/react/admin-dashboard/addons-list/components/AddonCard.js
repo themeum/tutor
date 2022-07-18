@@ -40,36 +40,32 @@ const AddonCard = ({ addon, addonId }) => {
 									__('No extra plugin required', 'tutor')
 								}
 							</span>
-							{addon.ext_required && addon.ext_required ?
-								<>
-									<div className="tooltip-wrap tooltip-icon">
-										<span className="tooltip-txt tooltip-top">
-											{addon.ext_required.map((extension, index) => {
+							{addon.ext_required ?
+								<div className="tooltip-wrap tooltip-icon">
+									<span className="tooltip-txt tooltip-top">
+										{addon.ext_required.map((extension, index) => {
+											return (
+												<div key={index}>
+													<span dangerouslySetInnerHTML={{ __html: extension }} />
+												</div>
+											);
+										})}
+									</span>
+								</div>
+							: addon.depend_plugins && addon.plugins_required.length ?
+								<div className="tooltip-wrap tooltip-icon">
+									<span className="tooltip-txt tooltip-top">
+										{
+											addon.plugins_required.map((plugin, index) => {
 												return (
 													<div key={index}>
-														<span dangerouslySetInnerHTML={{ __html: extension }} />
+														<span>{plugin}</span>
 													</div>
 												);
-											})}
-										</span>
-									</div>
-								</>
-							: addon.depend_plugins ?
-									<>
-										<div className="tooltip-wrap tooltip-icon">
-											<span className="tooltip-txt tooltip-top">
-												{
-													addon.plugins_required.map((plugin, index) => {
-														return (
-															<div key={index}>
-																<span>{plugin}</span>
-															</div>
-														);
-													})
-												}
-											</span>
-										</div>
-									</>
+											})
+										}
+									</span>
+								</div>
 								: ''
 							}
 						</div>
