@@ -6,7 +6,7 @@
  */
 
 use TUTOR\Input;
-use Tutor\Models\Withdraw;
+use Tutor\Models\WithdrawModel;
 
 $per_page     = tutor_utils()->get_option('statement_show_per_page', 20);
 $current_page = Input::get( 'current_page', 1, Input::TYPE_INT );
@@ -15,12 +15,12 @@ $offset       = ( abs($current_page) - 1 ) * $per_page;
 $min_withdraw                  = tutor_utils()->get_option( 'min_withdraw_amount' );
 $formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 
-$saved_account        = Withdraw::get_user_withdraw_method();
+$saved_account        = WithdrawModel::get_user_withdraw_method();
 $withdraw_method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $saved_account );
 
 $user_id			= get_current_user_id();
-$withdraw_status	= array( Withdraw::STATUS_PENDING, Withdraw::STATUS_APPROVED, Withdraw::STATUS_REJECTED );
-$all_histories		= Withdraw::get_withdrawals_history( $user_id, array( 'status' => $withdraw_status ), $offset, $per_page );
+$withdraw_status	= array( WithdrawModel::STATUS_PENDING, WithdrawModel::STATUS_APPROVED, WithdrawModel::STATUS_REJECTED );
+$all_histories		= WithdrawModel::get_withdrawals_history( $user_id, array( 'status' => $withdraw_status ), $offset, $per_page );
 $image_base			= tutor()->url . '/assets/images/';
 
 $method_icons = array(
@@ -41,7 +41,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	$currency_symbol = edd_currency_symbol();
 }
 
-$summary_data 						= Withdraw::get_withdraw_summary( $user_id );
+$summary_data 						= WithdrawModel::get_withdraw_summary( $user_id );
 $is_balance_sufficient				= $summary_data->available_for_withdraw >= $min_withdraw;
 $available_for_withdraw_formatted	= tutor_utils()->tutor_price( $summary_data->available_for_withdraw );
 $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->current_balance );

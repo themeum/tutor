@@ -4,7 +4,7 @@
  * @version 1.4.3
  */
 
-use Tutor\Models\Withdraw;
+use Tutor\Models\WithdrawModel;
 
 $col_classes = array(
     1 => 'tutor-col-12',
@@ -26,7 +26,7 @@ $col_classes = array(
         $tutor_withdrawal_methods = apply_filters( 'tutor_withdrawal_methods_available', array() );
         
         if ( tutor_utils()->count( $tutor_withdrawal_methods ) ) {
-            $saved_account       = Withdraw::get_user_withdraw_method();
+            $saved_account       = WithdrawModel::get_user_withdraw_method();
             $old_method_key      = tutor_utils()->avalue_dot( 'withdraw_method_key', $saved_account );
             $min_withdraw_amount = tutor_utils()->get_option( 'min_withdraw_amount' );
             ?>

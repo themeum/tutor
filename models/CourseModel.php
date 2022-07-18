@@ -2,10 +2,10 @@
 namespace Tutor\Models;
 
 /**
- * Class Course
+ * Class CourseModel
  * @since 2.0.6
  */
-class Course {
+class CourseModel {
     /**
      * WordPress course type name
      * @var string
