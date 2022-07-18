@@ -1169,7 +1169,9 @@ class Course extends Tutor_Base {
 		foreach( $assignments as $row ) {
 
 			$submitted_assignment		= tutor_utils()->is_assignment_submitted( $row->ID );
-			$is_reviewed_by_instructor	= get_comment_meta( $submitted_assignment->comment_ID, 'evaluate_time', true );
+			$is_reviewed_by_instructor	= null === $submitted_assignment
+											? false
+											: get_comment_meta( $submitted_assignment->comment_ID, 'evaluate_time', true );
 
 			if ( $submitted_assignment && $is_reviewed_by_instructor ) 
 			{
