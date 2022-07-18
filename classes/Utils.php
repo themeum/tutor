@@ -3091,7 +3091,7 @@ class Utils {
 					tutor_job_title.meta_value AS tutor_profile_job_title,
 					tutor_bio.meta_value AS tutor_profile_bio,
 					tutor_photo.meta_value AS tutor_profile_photo
-			FROM	{$wpdb->users} _user
+				FROM {$wpdb->users} _user
 					INNER JOIN {$wpdb->usermeta} get_course
 							ON ID = get_course.user_id
 						   AND get_course.meta_key = %s
@@ -3113,11 +3113,48 @@ class Utils {
 				'_tutor_profile_photo'
 			)
 		);
-
-		if ( is_array( $instructors ) && count( $instructors ) ) {
-			return $instructors;
+		// Get main instructor.
+		$main_instructor = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT _user.ID,
+					display_name,
+					_user.user_email,
+					course.ID AS taught_course_id,
+					tutor_job_title.meta_value AS tutor_profile_job_title,
+					tutor_bio.meta_value AS tutor_profile_bio,
+					tutor_photo.meta_value AS tutor_profile_photo
+				FROM {$wpdb->users} _user
+					INNER JOIN {$wpdb->posts} course
+							ON _user.ID = course.post_author
+						   AND course.ID = %d
+					LEFT  JOIN {$wpdb->usermeta} tutor_job_title
+						    ON _user.ID = tutor_job_title.user_id
+						   AND tutor_job_title.meta_key = %s
+					LEFT  JOIN {$wpdb->usermeta} tutor_bio
+						    ON _user.ID = tutor_bio.user_id
+						   AND tutor_bio.meta_key = %s
+					LEFT  JOIN {$wpdb->usermeta} tutor_photo
+						    ON _user.ID = tutor_photo.user_id
+						   AND tutor_photo.meta_key = %s
+			",
+				$course_id,
+				'_tutor_profile_job_title',
+				'_tutor_profile_bio',
+				'_tutor_profile_photo'
+			)
+		);
+		if ( ! $main_instructor ) {
+			return false;
 		}
-
+		if ( is_array( $instructors ) && count( $instructors ) ) {
+			// Exclude instructor if already in main instructor.
+			$instructors = array_filter( $instructors , function($instructor) use( $main_instructor ) {
+				if ( $instructor->ID !== $main_instructor[0]->ID ) {
+					return true;
+				}
+			});
+			return array_merge( $main_instructor, $instructors );
+		}
 		return false;
 	}
 

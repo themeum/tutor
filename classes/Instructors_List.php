@@ -428,38 +428,4 @@ class Instructors_List {
 		do_action( 'tutor_after_blocked_instructor', $instructor_id );
 	}
 
-	/**
-	 * Sort instructors so that main instructor stay
-	 * on the top of the list
-	 *
-	 * @since v2.0.7
-	 *
-	 * @param array $instructors   instructors list.
-	 *
-	 * @return array  sorted list of instructors
-	 */
-	public static function sort_instructors( array $instructors ): array {
-		$sorted_instructors = array();
-
-		// If more than one instructor.
-		if ( count( $instructors ) > 1 ) {
-			$main_instructor = array_filter(
-				$instructors,
-				function( $instructor ) {
-					$course = get_post();
-					if ( is_a( $course, 'WP_Post' ) ) {
-						$author = $course->post_author;
-						if ( $author === $instructor->ID ) {
-							return true;
-						}
-					}
-				}
-			);
-			if ( is_array( $main_instructor ) ) {
-				unset( $instructors[ array_key_first( $main_instructor ) ] );
-				$sorted_instructors = array_merge( $main_instructor, $instructors );
-			}
-		}
-		return apply_filters( 'tutor_sorted_instructors', $sorted_instructors );
-	}
 }
