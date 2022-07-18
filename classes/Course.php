@@ -1210,15 +1210,18 @@ class Course extends Tutor_Base {
         }
 
         if ( ! $is_quiz_pass || $required_assignment_pass > 0 ) {
-			$_msg = '';
+			$_msg			= '';
+			$quiz_str		= _n( 'quiz', 'quizzes', $required_quiz_pass, 'tutor' );
+			$assignment_str = _n( 'assignment', 'assignments', $required_assignment_pass, 'tutor' );
+
 			if ( ! $is_quiz_pass && $required_assignment_pass == 0 ) {
-				$_msg = sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass);
+				$_msg = sprintf(__('You have to pass %s %s to complete this course.', 'tutor'), $required_quiz_pass, $quiz_str );
 			}
 			if ( $is_quiz_pass && $required_assignment_pass > 0 ) {
-				$_msg = sprintf(__('You have to pass %s assignments to complete this course.', 'tutor'), $required_assignment_pass);
+				$_msg = sprintf(__('You have to pass %s %s to complete this course.', 'tutor'), $required_assignment_pass, $assignment_str );
 			}
 			if ( ! $is_quiz_pass && $required_assignment_pass > 0 ) {
-				$_msg = sprintf(__('You have to pass %s quizzes and %s assignments to complete this course.', 'tutor'), $required_quiz_pass, $required_assignment_pass );
+				$_msg = sprintf(__('You have to pass %s %s and %s %s to complete this course.', 'tutor'), $required_quiz_pass, $quiz_str, $required_assignment_pass, $assignment_str );
 			}
 			
 			return '<div class="tutor-alert tutor-warning tutor-mt-28">
