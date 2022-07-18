@@ -436,9 +436,9 @@ class Course extends Tutor_Base {
 			)
 		);
 
-		if ( ! $attached ) {
-			add_user_meta( $author_id, '_tutor_instructor_course_id', $post_ID );
-		}
+		// if ( ! $attached ) {
+		// 	add_user_meta( $author_id, '_tutor_instructor_course_id', $post_ID );
+		// }
 
 		/**
 		 * Disable question and answer for this course

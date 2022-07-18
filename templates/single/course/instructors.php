@@ -16,7 +16,6 @@ use TUTOR\Instructors_List;
 do_action( 'tutor_course/single/enrolled/before/instructors' );
 
 $instructors = tutor_utils()->get_instructors_by_course();
-$instructors = is_array( $instructors ) ? Instructors_List::sort_instructors( $instructors ) : $instructors;
 
 if ( $instructors && count( $instructors ) ) : ?>
 <div class="tutor-course-details-instructors">
