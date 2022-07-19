@@ -3143,9 +3143,6 @@ class Utils {
 				'_tutor_profile_photo'
 			)
 		);
-		if ( ! $main_instructor ) {
-			return false;
-		}
 		if ( is_array( $instructors ) && count( $instructors ) ) {
 			// Exclude instructor if already in main instructor.
 			$instructors = array_filter( $instructors , function($instructor) use( $main_instructor ) {
@@ -3155,7 +3152,7 @@ class Utils {
 			});
 			return array_merge( $main_instructor, $instructors );
 		}
-		return false;
+		return $main_instructor;
 	}
 
 	/**
