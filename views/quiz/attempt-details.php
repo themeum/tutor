@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ){
 }
 
 $enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
-if ( ! is_admin() && true === $enabled_hide_quiz_details ) {
+if ( ! is_admin() && ! current_user_can( 'tutor_instructor') && true === $enabled_hide_quiz_details ) {
    exit;
 }
 
