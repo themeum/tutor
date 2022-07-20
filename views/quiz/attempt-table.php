@@ -24,7 +24,7 @@
 						 * Pro feature: Only for frontend
 						 * @since 2.07
 						 */
-						if ( $key === 'details' && ! is_admin() && true === $enabled_hide_quiz_details ) {
+						if ( $key === 'details' && ! is_admin() && ! current_user_can( 'tutor_instructor') && true === $enabled_hide_quiz_details ) {
 							continue;
 						}
 						?>
@@ -73,7 +73,7 @@
 							 * Pro feature: Only for frontend
 							 * @since 2.07
 							 */
-							if (  $key === 'details' && ! is_admin() && true === $enabled_hide_quiz_details ) {
+							if (  $key === 'details' && ! is_admin() && ! current_user_can( 'tutor_instructor') && true === $enabled_hide_quiz_details ) {
 								continue;
 							}
 							?>
