@@ -89,10 +89,11 @@
 								$avatar_url[ $answer->user_id ] = get_avatar_url( $answer->user_id );
 							}
 
-							$css_class = ( $current_user_id != $answer->user_id || $answer->comment_parent == 0 ) ? 'tutor-qna-left' : 'tutor-qna-right';
-							$css_style = ( $is_single && $answer->comment_parent != 0 ) ? 'margin-left:14%;' . $reply_hidden : '';
+							$css_class		= ( $current_user_id != $answer->user_id || $answer->comment_parent == 0 ) ? 'tutor-qna-left' : 'tutor-qna-right';
+							$css_style		= ( $is_single && $answer->comment_parent != 0 ) ? 'margin-left:14%;' . $reply_hidden : '';
+							$reply_class	= ( $is_single && $answer->comment_parent != 0 ) ? 'tutor-reply-msg' : '';
 							?>
-								<div class="tutor-qna-chat <?php echo $css_class; ?> " style="<?php echo $css_style; ?>">
+								<div class="tutor-qna-chat <?php echo $css_class .' '. $reply_class; ?>" style="<?php echo $css_style; ?>">
 									<div class="tutor-qna-user">
 										<div>
 											<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
