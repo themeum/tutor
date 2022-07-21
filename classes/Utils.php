@@ -643,16 +643,19 @@ class Utils {
 		$query = $wpdb->prepare(
 			"SELECT $select_col
 			FROM 	$wpdb->posts
-			INNER JOIN {$wpdb->usermeta}
+			LEFT JOIN {$wpdb->usermeta}
 					ON $wpdb->usermeta.user_id = %d
 					AND $wpdb->usermeta.meta_key = %s
 					AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
 			WHERE	1 = 1 {$where_post_status}
 				AND $wpdb->posts.post_type = %s
+				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
 			ORDER BY $wpdb->posts.post_date DESC $limit_offset",
 			$instructor_id,
 			'_tutor_instructor_course_id',
-			$course_post_type
+			$course_post_type,
+			$instructor_id,
+			$instructor_id
 		);
 
 		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query, OBJECT);
@@ -3143,9 +3146,6 @@ class Utils {
 				'_tutor_profile_photo'
 			)
 		);
-		if ( ! $main_instructor ) {
-			return false;
-		}
 		if ( is_array( $instructors ) && count( $instructors ) ) {
 			// Exclude instructor if already in main instructor.
 			$instructors = array_filter( $instructors , function($instructor) use( $main_instructor ) {
@@ -3155,7 +3155,7 @@ class Utils {
 			});
 			return array_merge( $main_instructor, $instructors );
 		}
-		return false;
+		return $main_instructor;
 	}
 
 	/**

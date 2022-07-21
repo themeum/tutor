@@ -426,19 +426,22 @@ class Course extends Tutor_Base {
 		 * Adding author to instructor automatically
 		 */
 
-		$author_id = $post->post_author;
+		// Override post author id.
+		$author_id = isset( $_POST['post_author_override'] ) ? $_POST['post_author_override'] : $post->post_author; //phpcs:ignore
 		$attached  = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(umeta_id) FROM {$wpdb->usermeta}
-			WHERE user_id = %d AND meta_key = '_tutor_instructor_course_id' AND meta_value = %d ",
+					WHERE user_id = %d
+						AND meta_key = '_tutor_instructor_course_id'
+						AND meta_value = %d ",
 				$author_id,
 				$post_ID
 			)
 		);
 
-		// if ( ! $attached ) {
-		// 	add_user_meta( $author_id, '_tutor_instructor_course_id', $post_ID );
-		// }
+		if ( ! $attached ) {
+			add_user_meta( $author_id, '_tutor_instructor_course_id', $post_ID );
+		}
 
 		/**
 		 * Disable question and answer for this course
