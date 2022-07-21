@@ -225,7 +225,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.0.7 - July 15, 2022
+= 2.0.7 - July 21, 2022
 
 New: Admin will be able to change the Main Instructor for a Course
 New: Next and Previous button is introduced for the Quiz page once a Quiz is Completed
