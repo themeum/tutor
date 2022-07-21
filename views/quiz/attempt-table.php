@@ -99,8 +99,8 @@
 													esc_html_e( get_the_title( $attempt->quiz_id ) );
 													?>
 													<div class="tooltip-wrap tooltip-icon-custom" >
-														<i class="tutor-icon-circle-info-o tutor-color-muted"></i>
-														<span class="tooltip-txt tooltip-top">
+														<i class="tutor-icon-circle-info-o tutor-color-muted tutor-ml-4 tutor-fs-7"></i>
+														<span class="tooltip-txt tooltip-right">
 															<?php esc_html_e( get_the_title( $attempt->course_id ) ) ?>
 														</span>
 													</div>
