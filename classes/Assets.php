@@ -263,11 +263,11 @@ class Assets {
 		 * @since v2.0.8
 		 */
 		$baseurl      = includes_url( 'js/tinymce' );
-		$current_page = Input::get( 'page', '', Input::TYPE_STRING );
+		$current_page = Input::get( 'page' );
 
 		// If it is settings page & tutor pro not activated.
 		if ( 'tutor_settings' === $current_page && ! wp_script_is( 'wp-tinymce-root' ) ) {
-			wp_enqueue_script( 'tutor-tiny', $baseurl . '/tinymce.min.js', array( 'jquery' ), time(), true );
+			wp_enqueue_script( 'tutor-tiny', $baseurl . '/tinymce.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		}
 
 		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION );
