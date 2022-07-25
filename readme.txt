@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.0.1
 Requires PHP: 7.0
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,12 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.0.8 - July 25, 2022
+
+Fix: Settings was not being saved in some specific cases
+Fix: Settings was throwing a console error regarding TinyMCE
+Fix: Settings was being saved in other cases,  but the "Save" button was not being marked as saved
 
 = 2.0.7 - July 21, 2022
 
