@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					},
 					complete: function () {
 						button.removeClass('is-loading');
-						button.removeAttr('disabled');
+						button.attr('disabled', 'disabled');
 					},
 				});
 			}
