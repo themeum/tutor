@@ -8743,6 +8743,21 @@ class Utils {
 		$key     = trim( strtolower( $key ) );
 
 		$key_value = array(
+			'all'    => array(
+				'text'  => __( 'All', 'tutor' ),
+			),
+			'read'    => array(
+				'text'  => __( 'Read', 'tutor' ),
+			),
+			'unread'    => array(
+				'text'  => __( 'Unread', 'tutor' ),
+			),
+			'important'    => array(
+				'text'  => __( 'Important', 'tutor' ),
+			),
+			'archived'    => array(
+				'text'  => __( 'Archived', 'tutor' ),
+			),
 			'pending'    => array(
 				'badge' => 'warning',
 				'text'  => __( 'Pending', 'tutor' ),
