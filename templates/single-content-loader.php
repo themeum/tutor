@@ -75,7 +75,7 @@ get_tutor_header();
         <div class="tutor-row tutor-align-center">
             <div class="tutor-spotlight-mobile-progress-left <?php echo !$is_completed_lesson ? "tutor-col-6" : "tutor-col-12"?>">
                 <div class="tutor-fs-7 tutor-color-muted">
-                    <?php echo $course_stats['completed_percent'] . '%'; ?><span>&nbsp;Complete</span>
+                    <?php echo $course_stats['completed_percent'] . '% '; ?><span><?php echo __( 'Complete', 'tutor' ) ?></span>
                 </div>
                 <div class="list-item-progress tutor-my-16">
                     <div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo $course_stats['completed_percent']; ?>%;">
