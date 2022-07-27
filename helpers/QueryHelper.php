@@ -165,4 +165,105 @@ class QueryHelper {
 		}
 		return $wpdb->query( $sql );
 	}
+
+	/**
+	 * Build where clause string
+	 *
+	 * @param	array $where assoc array with field and value
+	 * @return	string
+	 * 
+	 * @since 2.0.9
+	 */
+	private function build_where_clause( array $where ) {
+		$arr = [];
+		foreach( $where as $field => $value ) {
+			$value = is_numeric( $value ) ? ( $value + 0 ) : "'".$value."'";
+			$arr[] = "{$field}={$value}";
+		}
+
+		return implode( ' AND ', $arr );
+	}
+
+	/**
+	 * Sanitize assoc array
+	 *
+	 * @param array $array an assoc array
+	 * @return array
+	 * 
+	 * @since 2.0.9
+	 */
+	private function sanitize_assoc_array( array $array ) {
+		return array_map(
+			function( $value ) {
+				return sanitize_text_field( $value );
+			},
+			$array
+		);
+	}
+
+	/**
+	 * Delete comment with associate meta data
+	 *
+	 * @param array $where associative array with field and value. 
+	 * 				Example: array( 'comment_type' => 'comment', 'comment_id' => 1 )
+	 * @return bool
+	 * 
+	 * @since 2.0.9
+	 */
+	public static function delete_comment_with_meta( array $where ) {
+		if ( count( $where ) === 0 || ! tutor_utils()->is_assoc( $where) ) {
+			return false;
+		}
+
+		$obj	= new self();
+		$where	= $obj->build_where_clause( $obj->sanitize_assoc_array ( $where ) );
+		
+		global $wpdb;
+		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );
+		
+		if ( is_array( $ids ) && count( $ids ) ) {
+			$ids_str = "'" . implode( "','", $ids ) . "'";
+			// delete comment metas
+			$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN({$ids_str}) " );
+			// delete comment
+			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$where}" );
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Delete post with associate meta data
+	 *
+	 * @param array $where associative array with field and value.
+	 * 				Example: array( 'post_type' => 'post', 'id' => 1 )
+	 * @return bool
+	 * 
+	 * @since 2.0.9
+	 */
+	public static function delete_post_with_meta( array $where ) {
+		if ( count( $where ) === 0 || ! tutor_utils()->is_assoc( $where) ) {
+			return false;
+		}
+
+		$obj	= new self();
+		$where	= $obj->build_where_clause( $obj->sanitize_assoc_array ( $where ) );
+		
+		global $wpdb;
+		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );
+		
+		if ( is_array( $ids ) && count( $ids ) ) {
+			$ids_str = "'" . implode( "','", $ids ) . "'";
+			// delete post metas
+			$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE post_id IN({$ids_str}) " );
+			// delete post
+			$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE {$where}" );
+
+			return true;
+		}
+
+		return false;
+	}
 }
