@@ -8,6 +8,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -74,7 +76,9 @@ class Course_List {
 			$this->bulk_action_pending(),
 			$this->bulk_action_draft(),
 		);
-		$active_tab = isset( $_GET['data'] ) ? $_GET['data'] : '';
+		
+		$active_tab = Input::get( 'data', '' );
+		
 		if ( 'trash' === $active_tab ) {
 			array_push( $actions, $this->bulk_action_delete() );
 		}
@@ -229,13 +233,14 @@ class Course_List {
 	 * @since v2.0.0
 	 */
 	public function course_list_bulk_action() {
-		// check nonce.
+
 		tutor_utils()->checking_nonce();
-		$action   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
-		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
+
+		$action   = Input::post( 'bulk-action', '');
+		$bulk_ids = Input::post( 'bulk-ids', '');
 
 		if ( '' === $action || '' === $bulk_ids ) {
-			wp_send_json_error(array('message' => __('Please select appropriate action', 'tutor')));
+			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
 			exit;
 		}
 
@@ -243,10 +248,10 @@ class Course_List {
 			// Do action before delete.
 			do_action( 'before_tutor_course_bulk_action_delete', $bulk_ids );
 
-			$delete_courses = self::delete_course( $bulk_ids );
+			$delete_courses = self::bulk_delete_course( $bulk_ids );
 
 			do_action( 'after_tutor_course_bulk_action_delete', $bulk_ids );
-			$delete_courses ? wp_send_json_success() : wp_send_json_error(array('message' => __('Could not delete selected courses', 'tutor')));
+			$delete_courses ? wp_send_json_success() : wp_send_json_error( array( 'message' => __( 'Could not delete selected courses', 'tutor' ) ) );
 			exit;
 		}
 
@@ -296,44 +301,29 @@ class Course_List {
 	 */
 	public static function tutor_course_delete() {
 		tutor_utils()->checking_nonce();
-		$id     = sanitize_text_field( $_POST['id'] );
-		$announcements = get_posts(array('post_type'=>'tutor_announcements','post_parent'=>$id));
-		foreach ($announcements as $announcement) {
-			wp_delete_post( $announcement->ID, true );
-		}
-		$delete = self::delete_course( $id );
 
+		$id		= Input::post( 'id', 0, Input::TYPE_INT );
+		$delete = CourseModel::delete_course( $id );
 
-		// $delete = Announcements::delete_announcements( $action, $bulk_ids )( $id );
 		return wp_send_json( $delete );
 		exit;
 	}
 
 	/**
-	 * Execute bulk action for enrolment list ex: complete | cancel
+	 * Execute bulk delete action
 	 *
 	 * @param string $bulk_ids ids that need to update.
 	 * @return bool
 	 * @since v2.0.0
 	 */
-	public static function delete_course( $bulk_ids ): bool {
-		global $wpdb;
-		$post_table = $wpdb->posts;
-		$bulk_ids   = sanitize_text_field( $bulk_ids );
-		$delete     = $wpdb->query(
-			$wpdb->prepare(
-				" DELETE FROM {$post_table}
-				WHERE ID IN ($bulk_ids)
-					AND 1 = %d
-			",
-				1
-			)
-		);
-
-		// Delete course meta.
-		$delete ? self::permanently_delete_course_meta( $bulk_ids ) : 0;
-
-		return false === $delete ? false : true;
+	public static function bulk_delete_course( $bulk_ids ): bool {
+		$bulk_ids   = explode( ',', sanitize_text_field( $bulk_ids ) );
+	
+		foreach( $bulk_ids as $post_id ) {
+			CourseModel::delete_course( $post_id );
+		}
+		
+		return true;
 	}
 
 	/**
@@ -406,29 +396,6 @@ class Course_List {
 			'total_inprogress'  => $course_inprogress,
 			'total_enrollments' => count( $enrollments ),
 		);
-	}
-
-	/**
-	 * Delete post meta permanently
-	 *
-	 * @param string $bulk_ids | comma separated ids.
-	 *
-	 * @return bool
-	 *
-	 * @since v2.0.0
-	 */
-	public static function permanently_delete_course_meta( $bulk_ids ): bool {
-		global $wpdb;
-		$wpdb->query(
-			$wpdb->prepare(
-				" DELETE FROM {$wpdb->postmeta}
-				WHERE post_id IN ($bulk_ids)
-					AND 1 = %d
-			",
-				1
-			)
-		);
-		return true;
 	}
 
 	/**
