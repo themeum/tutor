@@ -217,7 +217,7 @@ class Q_and_A {
 			function( $tab ) use ( $stats ) {
 				return array(
 					'key'   => $tab,
-					'title' => __( ucwords( $tab ), 'tutor' ),
+					'title' => tutor_utils()->translate_dynamic_text( $tab ),
 					'value' => $stats[ $tab ],
 					'url'   => add_query_arg( array( 'tab' => $tab ), remove_query_arg( 'tab' ) ),
 				);
