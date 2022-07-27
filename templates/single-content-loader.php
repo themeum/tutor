@@ -73,7 +73,7 @@ get_tutor_header();
 <?php if(!\TUTOR\Course_List::is_public($course_id)): ?>
     <div class="tutor-spotlight-mobile-progress-complete tutor-px-20 tutor-py-16 tutor-mt-20 tutor-d-xl-none tutor-d-block">
         <div class="tutor-row tutor-align-center">
-            <div class="tutor-spotlight-mobile-progress-left <?php echo !$is_completed_lesson ? "tutor-col-6" : "tutor-col-12"?>">
+            <div class="tutor-spotlight-mobile-progress-left <?php echo !$is_completed_lesson ? "tutor-col-sm-8 tutor-col-6" : "tutor-col-12"?>">
                 <div class="tutor-fs-7 tutor-color-muted">
                     <?php echo $course_stats['completed_percent'] . '% '; ?><span><?php echo __( 'Complete', 'tutor' ) ?></span>
                 </div>
@@ -85,7 +85,7 @@ get_tutor_header();
             </div>
             
             <?php if(!$is_completed_lesson): ?>
-                <div class="tutor-spotlight-mobile-progress-right tutor-col-6">
+                <div class="tutor-spotlight-mobile-progress-right tutor-col-sm-4 tutor-col-6">
                     <?php tutor_lesson_mark_complete_html(); ?>
                 </div>
             <?php endif; ?>
