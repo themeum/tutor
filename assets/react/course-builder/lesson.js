@@ -150,7 +150,7 @@ window.jQuery(document).ready(function($) {
 					// tinymceConfig.codesample_dialog_height = '400';
 					tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
 				}
-				console.log(tinymceConfig);
+
 				tinymce.init(tinymceConfig);
 				tinymce.execCommand(
 					'mceRemoveEditor',
