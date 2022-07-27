@@ -20,8 +20,8 @@
 					<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
 				</div>
 
-				<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Do You Want to Delete This?', 'tutor'); ?></div>
-				<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('Are you sure you want to delete this permanently from the site? Please confirm your choice.', 'tutor'); ?></div>
+				<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php echo isset( $data['title'] ) ? esc_html( $data['title'] ) : esc_html__( 'Do You Want to Delete This?', 'tutor'); ?></div>
+				<div class="tutor-fs-6 tutor-color-muted"><?php echo isset( $data['message'] ) ? esc_html( $data['message'] ) : esc_html__( 'Are you sure you want to delete this permanently from the site? Please confirm your choice.', 'tutor'); ?></div>
 
 				<form id="tutor-common-confirmation-form" class="tutor-m-0" method="POST">
 					<?php tutor_nonce_field(); ?>
