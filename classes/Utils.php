@@ -46,7 +46,7 @@ class Utils {
 	 * 
 	 * @since 2.0.9
 	 */
-	public static function is_assoc( array $array ) {
+	public function is_assoc( array $array ) {
 		return array_keys( $array ) !== range( 0, count( $array ) - 1 );
 	}
 
