@@ -71,7 +71,7 @@ get_tutor_header();
 ?>
 
 <?php if(!\TUTOR\Course_List::is_public($course_id)): ?>
-    <div class="tutor-spotlight-mobile-progress-complete tutor-px-20 tutor-py-16 tutor-mt-20 tutor-d-sm-none tutor-d-block">
+    <div class="tutor-spotlight-mobile-progress-complete tutor-px-20 tutor-py-16 tutor-mt-20 tutor-d-xl-none tutor-d-block">
         <div class="tutor-row tutor-align-center">
             <div class="tutor-spotlight-mobile-progress-left <?php echo !$is_completed_lesson ? "tutor-col-6" : "tutor-col-12"?>">
                 <div class="tutor-fs-7 tutor-color-muted">
