@@ -23,7 +23,7 @@ if ( ! $is_completed_lesson) {
         <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
         <input type="hidden" value="<?php echo get_the_ID(); ?>" name="lesson_id" />
         <input type="hidden" value="tutor_complete_lesson" name="tutor_action" />
-        <button type="submit" class="tutor-topbar-mark-btn tutor-btn tutor-btn-primary"
+        <button type="submit" class="tutor-topbar-mark-btn tutor-btn tutor-btn-primary tutor-ws-nowrap"
             name="complete_lesson_btn" value="complete_lesson">
             <span class="tutor-icon-circle-mark-line tutor-mr-8" area-hidden="true"></span>
             <span><?php _e( 'Mark as Complete', 'tutor' ); ?></span>
