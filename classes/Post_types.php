@@ -68,7 +68,7 @@ class Post_types{
 			//'show_ui'                   => true,
 			//'show_in_menu'              => 'tutor',
 			'query_var'                 => true,
-			'rewrite'                   => array( 'slug' => $courses_base_slug, 'with_front' => false ),
+			'rewrite'                   => array( 'slug' => tutor_utils()->get_option('course_permalink_base', tutor()->course_post_type), 'with_front' => false ),
 			'menu_icon'                 => 'dashicons-book-alt',
 			'capability_type'           => 'post',
 			'has_archive'               => true,
@@ -89,7 +89,6 @@ class Post_types{
 				'read_private_posts'    => 'read_private_tutor_courses',
 				'create_posts'          => 'edit_tutor_courses',
 			),
-
 		);
 
 		register_post_type($course_post_type, $args);
@@ -413,6 +412,6 @@ class Post_types{
 	 * @since v2.0.0
 	 */
 	public function remove_course_post_menu() {
-		remove_menu_page( 'edit.php?post_type=courses' );
+		remove_menu_page( 'edit.php?post_type='.tutor()->course_post_type );
 	}
 }

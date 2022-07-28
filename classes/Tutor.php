@@ -313,7 +313,7 @@ final class Tutor {
 			global $wpdb;
 
 			if ( ! get_option( 'is_course_post_type_updated' ) ) {
-				$wpdb->update( $wpdb->posts, array( 'post_type' => 'courses' ), array( 'post_type' => 'course' ) );
+				$wpdb->update( $wpdb->posts, array( 'post_type' => tutor()->course_post_type ), array( 'post_type' => 'course' ) );
 				update_option( 'is_course_post_type_updated', true );
 				update_option( 'tutor_version', '1.3.1' );
 				flush_rewrite_rules();
@@ -611,6 +611,7 @@ final class Tutor {
 			'earning_admin_commission'          => '20',
 			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
+			'color_preset_type'                 => 'default',
 		);
 		return $options;
 	}

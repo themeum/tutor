@@ -19,9 +19,11 @@ if ( ! empty( $field['options'] ) ) {
 			<div class="type-check tutor-d-block">
 				<?php foreach ( $field['options'] as $option_key => $option ) : ?>
 					<?php $_checked = in_array( $option_key, $saved_data ) ? 'checked="checked"' : ''; ?>
-					<div class="tutor-form-check">
-						<input type="checkbox" id="check_<?php echo esc_attr( $option_key ); ?>_<?php echo esc_attr( $field_key ); ?>" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php echo wp_kses_post( $_checked ); ?> class="tutor-form-check-input" />
-						<label for="check_<?php echo esc_attr( $option_key ); ?>_<?php echo esc_attr( $field_key ); ?>"> <?php echo esc_attr( $option ); ?> </label>
+					<div class="tutor-mb-16">
+						<div class="tutor-form-check">
+							<input type="checkbox" id="check_<?php echo esc_attr( $option_key ); ?>_<?php echo esc_attr( $field_key ); ?>" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php echo wp_kses_post( $_checked ); ?> class="tutor-form-check-input" />
+							<label for="check_<?php echo esc_attr( $option_key ); ?>_<?php echo esc_attr( $field_key ); ?>"> <?php echo esc_attr( $option ); ?> </label>
+						</div>
 					</div>
 				<?php endforeach; ?>
 			</div>

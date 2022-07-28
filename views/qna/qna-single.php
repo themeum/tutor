@@ -30,9 +30,9 @@
 <div class="tutor-qna-single-question<?php echo is_admin() ? ' tutor-admin-wrap' : ''; ?>" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
 	<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
 		<div class="<?php echo is_admin() ? 'tutor-wp-dashboard-header tutor-px-24 tutor-mb-24' : 'tutor-qa-sticky-bar'; ?>">
-			<div class="tutor-row tutor-align-items-lg-center">
+			<div class="tutor-row tutor-align-lg-center">
 				<div class="tutor-col-lg">
-					<div class="tutor-d-lg-flex tutor-align-items-lg-center tutor-px-12 tutor-py-16">
+					<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-16">
 						<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
 							<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
 							<?php _e('Back', 'tutor'); ?>
@@ -69,10 +69,10 @@
 	<?php endif; ?>
 
 	<div class="<?php echo is_admin() ? 'tutor-admin-container' : ''; ?>">
-		<!-- <div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32">
+		<div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32<?php echo is_single_course(true) || ( isset( $_POST['action'] ) ) ? ' tutor-d-none' : ''; ?>">
 			<?php echo esc_html( $question->post_title ); ?>
 			<div class="tutor-hr tutor-mt-20" area-hidden="true"></div>
-		</div> -->
+		</div>
 		<div class="tutor-qna-single-wrapper">
 			<div class="tutor-qa-reply-wrapper tutor-mt-20">
 				<div class="tutor-qa-chatlist">
@@ -89,10 +89,11 @@
 								$avatar_url[ $answer->user_id ] = get_avatar_url( $answer->user_id );
 							}
 
-							$css_class = ( $current_user_id != $answer->user_id || $answer->comment_parent == 0 ) ? 'tutor-qna-left' : 'tutor-qna-right';
-							$css_style = ( $is_single && $answer->comment_parent != 0 ) ? 'margin-left:14%;' . $reply_hidden : '';
+							$css_class		= ( $current_user_id != $answer->user_id || $answer->comment_parent == 0 ) ? 'tutor-qna-left' : 'tutor-qna-right';
+							$css_style		= ( $is_single && $answer->comment_parent != 0 ) ? 'margin-left:14%;' . $reply_hidden : '';
+							$reply_class	= ( $is_single && $answer->comment_parent != 0 ) ? 'tutor-reply-msg' : '';
 							?>
-								<div class="tutor-qna-chat <?php echo $css_class; ?> " style="<?php echo $css_style; ?>">
+								<div class="tutor-qna-chat <?php echo $css_class .' '. $reply_class; ?>" style="<?php echo $css_style; ?>">
 									<div class="tutor-qna-user">
 										<div>
 											<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
@@ -125,7 +126,7 @@
 				</div>
 				<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 					<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
-					<div class="tutor-d-flex tutor-align-items-center">
+					<div class="tutor-d-flex tutor-align-center">
 						<button data-back_url="<?php echo $back_url; ?>" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-sm">
 							<?php esc_html_e( 'Reply', 'tutor' ); ?>
 						</button>

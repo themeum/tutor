@@ -2,7 +2,9 @@ import React from 'react';
 import { useAddons, useAddonsUpdate } from '../context/AddonsContext';
 
 const { __ } = wp.i18n;
-
+const capitalize = ( string ) => {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
 const Header = () => {
 	const filterBtns = ['all', 'active', 'deactive', 'required'];
 	const { addonList } = useAddons();
@@ -13,7 +15,7 @@ const Header = () => {
 
 	return (
 		<header className="tutor-wp-dashboard-header tutor-px-24 tutor-mb-24">
-			<div className="tutor-row tutor-align-items-lg-center">
+			<div className="tutor-row tutor-align-lg-center">
 				<div className="tutor-col-lg">
 					<div className="tutor-p-12">
 						<span className="tutor-fs-5 tutor-fw-medium tutor-mr-16">
@@ -28,7 +30,7 @@ const Header = () => {
 							return (
 								<li className="tutor-nav-item" key={index}>
 									<a className={`tutor-nav-link${btn === activeTab ? ' is-active' : ''}`} href="#" onClick={() => getTabStatus(btn)}>
-										{btn}{' '}
+										{ capitalize(btn) }{' '}
 										<span className="tutor-ml-4">
 											(
 											{'active' === btn

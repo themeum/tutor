@@ -1,36 +1,38 @@
-table.my-quiz-attempts {
-	thead {
-		th {
-			@include breakpoint-min(desktop-lg) {
-				&:last-child {
-					> * {
-						display: none;
-					}
-				}
-			}
-		}
-	}
-	tr {
-		th {
-			white-space: unset;
-			padding-top: 16px;
-			padding-bottom: 16px;
-			&:first-child {
-				width: 30%;
-			}
-			span {
-				line-height: 131%;
-				display: inline-block;
-			}
-		}
-	}
-	tbody {
-		tr {
-			td {
-				.td-statement-info {
-					padding-right: 20px;
-				}
-			}
-		}
-	}
-}
+// @todo: to be removed
+
+// table.my-quiz-attempts {
+// 	thead {
+// 		th {
+// 			@include breakpoint-min(desktop-lg) {
+// 				&:last-child {
+// 					> * {
+// 						display: none;
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// 	tr {
+// 		th {
+// 			white-space: unset;
+// 			padding-top: 16px;
+// 			padding-bottom: 16px;
+// 			&:first-child {
+// 				width: 30%;
+// 			}
+// 			span {
+// 				line-height: 131%;
+// 				display: inline-block;
+// 			}
+// 		}
+// 	}
+// 	tbody {
+// 		tr {
+// 			td {
+// 				.td-statement-info {
+// 					padding-right: 20px;
+// 				}
+// 			}
+// 		}
+// 	}
+// }

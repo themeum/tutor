@@ -1566,7 +1566,7 @@ input.checkbox {
 	text-align: center;
 	color: var(--tutor-color-primary);
 	a {
-		color: var(--tutor-color-body);
+		color: var(--tutor-body-color);
 	}
 }
 
@@ -1861,17 +1861,6 @@ input.checkbox {
 		left: 50%;
 		transform: translateX(-50%);
 		bottom: -28px;
-	}
-
-	.wizard-boarding-body .slide-title,
-	.wizard-boarding-footer,
-	.wizard-boarding-footer a,
-	.tutor-type-skip {
-		// font-size: 3vw;
-	}
-
-	.wizard-boarding-body .slide-subtitle {
-		// font-size: 2.6vw;
 	}
 }
 

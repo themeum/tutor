@@ -21,12 +21,11 @@ $source_key = is_object($video_info) && 'html5' !== $video_info->source ? 'sourc
 
 $has_source = (is_object($video_info) && $video_info->source_video_id) || (isset($source_key) ? $video_info->$source_key : null);
 
-if ($has_source){
+if ($has_source) {
     tutor_load_template('single.video.'.$video_info->source);
 } else {
     $feature_image = get_post_meta( get_the_ID(  ), '_thumbnail_id', true );
     $url = $feature_image ? wp_get_attachment_url( $feature_image ) : null;
-
     if($url) {
         echo '<div class="tutor-lesson-feature-image">
                 <img src="'.$url.'" />

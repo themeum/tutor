@@ -11,9 +11,13 @@
 	$supported_filters = array_keys( $supported_filters );
 	$reset_link		   = remove_query_arg( $supported_filters, get_pagenum_link() );
 ?>
-<form class="tutor-form">
-	<?php do_action( 'tutor_course_filter/before' ); ?>
+<form class="tutor-course-filter-form tutor-form">
+	<div class="tutor-mb-16 tutor-d-block tutor-d-lg-none tutor-text-right">
+		<a href="#" class="tutor-iconic-btn tutor-mr-n8" tutor-hide-course-filter><span class="tutor-icon-times" area-hidden="true"></span></a>
+	</div>
 
+	<?php do_action( 'tutor_course_filter/before' ); ?>
+	
 	<?php if ( in_array( 'search', $supported_filters ) ) : ?>
 		<div class="tutor-widget tutor-widget-search">
 			<div class="tutor-form-wrap">
@@ -102,7 +106,7 @@
 	</div>
 	<?php endif; ?>
 
-	<div class="tutor-widget tutor-widget-course-filter tutor-mt-32 tutor-d-none">
+	<div class="tutor-widget tutor-widget-course-filter tutor-mt-32">
 		<div class="tutor-widget-content">
 			<a href="#" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" onclick="window.location.replace('<?php echo $reset_link; ?>')" action-tutor-clear-filter>
 				<i class="tutor-icon-times tutor-mr-8"></i> <?php esc_html_e( 'Clear All Filters', 'tutor' ); ?>

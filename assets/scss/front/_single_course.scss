@@ -1,10 +1,3 @@
-/*
-.tutor-course-content-content{
-  font-size: 14px;
-  line-height: 21px;
-}
-*/
-
 .tutor-segment-title {
     font-size: 18px;
     line-height: 23px;
@@ -13,86 +6,14 @@
     color: #000;
 }
 
-.tutor-full-width-course-top {
-    h4,
-    h5,
-    h6 {
-        color: #000;
-        font-weight: 500;
-    }
-    h6 {
-        font-size: 14px;
-    }
-}
-
-.tutor-leadinfo-top-meta {
-    font-size: 14px;
-    margin-bottom: 10px;
-    span {
-        display: inline-block;
-        margin-right: 10px;
-        i::before {
-            margin-left: 0;
-        }
-    }
-    i {
-        margin-right: 4px;
-    }
-}
-
-.tutor-single-course-rating {
-    color: #f8c51c;
-    font-size: 16px;
-    .tutor-single-rating-count {
-        color: var(--tutor-body-color);
-        font-weight: 500;
-    }
-    .tutor-single-rating-count i {
-        color: var(--tutor-light-color);
-        font-style: normal;
-        display: inline-block;
-        margin-left: 4px;
-    }
-}
-
-.tutor-course-header-h1 {
-    font-size: 36px;
-    line-height: 46px;
-    color: var(--tutor-body-color);
-    font-weight: 500;
-    margin: 0 0 29px;
-    padding: 0;
-    @media (max-width: 767px) {
-        font-size: 26px;
-        line-height: 36px;
-    }
-}
-.tutor-course-summery {
-    margin-bottom: 40px;
-}
-
-/*benefits*/
-.tutor-course-benefits-content ul {
-    list-style: none;
-    display: block;
-    overflow: hidden;
-    -webkit-column-count: 2;
-    -moz-column-count: 2;
-    column-count: 2;
-    -webkit-column-gap: 30px;
-    -moz-column-gap: 30px;
-    column-gap: 30px;
-    margin: 0;
-}
-
 /*.tutor-course-topics-wrap*/
-
 .tutor-course-topics-header {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 8px;
 }
+
 .tutor-course-topics-header
     .tutor-course-topics-header-right
     span:not(:first-child) {
@@ -165,7 +86,7 @@
     line-height: 22px;
     vertical-align: text-top;
     margin-right: 10px;
-    color: var(--tutor-light-color);
+    color: var(--tutor-color-muted);
     display: block;
 }
 .tutor-course-lesson h5 .lesson-preview-icon i {

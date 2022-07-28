@@ -20,7 +20,6 @@
 		if (id) {
 			e.preventDefault();
 			const tabBodyItem = document.getElementById(id);
-
 			if (tabBodyItem) {
 				activeItems.forEach((m) => {
 					m.classList.remove('is-active');
@@ -32,8 +31,12 @@
 
 		// Nav
 		const attrNav = 'data-tutor-nav-target';
-		const navTarget = e.target.hasAttribute(attrNav) ? e.target : e.target.closest(`[${attrNav}]`);
-		const activeNavItems = document.querySelectorAll('.tutor-nav-link.is-active, .tutor-tab-item.is-active');
+		const navTarget = e.target.hasAttribute(attrNav)
+			? e.target
+			: e.target.closest(`[${attrNav}]`);
+		const activeNavItems = document.querySelectorAll(
+			'.tutor-nav-link.is-active, .tutor-tab-item.is-active, .tutor-dropdown-item.is-active, .tutor-nav-more-item.is-active',
+		);
 
 		if (navTarget && navTarget.hasAttribute(attrNav)) {
 			e.preventDefault();
@@ -44,19 +47,42 @@
 
 			if (navTabBodyItem) {
 				activeNavItems.forEach((m) => {
-					const activeTabClasses = ['tutor-tab-item', 'is-active'];
-					const isActiveTabItem = activeTabClasses.every((className) => m.classList.contains(className));
-					
-					if (isActiveTabItem || m.closest(`[${attrNav}]`)) { 
+					const isActiveTabItem = [
+						'tutor-tab-item',
+						'is-active',
+					].every((className) => m.classList.contains(className));
+
+					const isActiveMoreBtn = [
+						'tutor-nav-more-item',
+						'is-active',
+					].every((className) => m.classList.contains(className));
+
+					if (
+						isActiveTabItem ||
+						isActiveMoreBtn ||
+						m.closest(`[${attrNav}]`)
+					) {
 						m.classList.remove('is-active');
 					}
 				});
 
 				if (navTarget.closest('.tutor-nav-more') != undefined) {
-					navTarget.closest('.tutor-nav-more').querySelector('.tutor-nav-more-link').classList.add('is-active');
+					navTarget
+						.closest('.tutor-nav-more')
+						.querySelector('.tutor-nav-more-item')
+						.classList.add('is-active');
 				}
 
 				navTarget.classList.add('is-active');
+				if (navTarget.classList.contains('tutor-dropdown-item')) {
+					const selectedNavAttr = navTarget?.getAttribute(attrNav);
+					const navLinks = document.querySelectorAll('.tutor-nav-link');
+					navLinks?.forEach((navLink) => {
+						if (navLink?.getAttribute(attrNav) === selectedNavAttr) {
+							navLink?.classList?.add('is-active');
+						}
+					});
+				}
 
 				if (
 					navTarget.hasAttribute('data-tutor-query-variable') &&

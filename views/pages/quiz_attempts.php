@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Cache\QuizAttempts;
 use TUTOR\Input;
 
 if ( is_numeric( Input::get( 'view_quiz_attempt_id' ) ) ) {
@@ -59,14 +60,6 @@ $filters = array(
 	'course_filter' => true,
 );
 
-?>
-
-<?php
-	/**
-	 * Load Templates with data.
-	 */
-	
-	
 ?>
 
 <div class="tutor-admin-wrap">

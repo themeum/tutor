@@ -1,27 +1,20 @@
-// Assignments list
-
-// Assignment submission list
-
 // Review Assignment Page
 .tutor-dashboard-assignment-review{
     .tutor-assignment-review-header {
         table td{
-            &:first-child {
-
-            }
-
             &:last-child {
                 &, a {
                     font-style: normal;
                     font-weight: 500;
                     font-size: 16px;
                     line-height: 26px;
-                    color: var(--tutor-color-body);
+                    color: var(--tutor-body-color);
                 }
             }
         }
     }
-    .tutor-dashboard-assignment-review-area{
+
+    .tutor-dashboard-assignment-review-area {
         background: var(--tutor-color-gray-10);
         padding: 25px;
         font-weight: 400;
@@ -47,7 +40,7 @@
             font-size: 20px;
             margin: 0;
             margin-bottom: 20px;
-            color: var(--tutor-color-body);
+            color: var(--tutor-body-color);
         }
 
         label {
@@ -64,7 +57,7 @@
             font-style: normal;
             font-weight: 500;
             font-size: 20px;
-            color: var(--tutor-color-body);
+            color: var(--tutor-body-color);
             
             &+p {
                 display: inline-block !important;

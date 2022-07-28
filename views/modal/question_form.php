@@ -3,7 +3,7 @@ global $wpdb;
 $settings = maybe_unserialize($question->question_settings);
 ?>
 
-<div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>">
+<div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>" data-question_type="<?php echo $question->question_type; ?>">
     <div class="question-form-header tutor-mb-12">
         <a href="javascript:;" class="back-to-quiz-questions-btn tutor-btn tutor-btn-ghost" data-quiz-id="<?php echo isset($quiz_id) ? $quiz_id : ''; ?>" data-topic-id="<?php echo isset($topic_id) ? $topic_id : ''; ?>">
             <span class="tutor-icon-previous" area-hidden="true"></span>
@@ -24,7 +24,7 @@ $settings = maybe_unserialize($question->question_settings);
         <label class="tutor-form-label"><?php _e('Select your question type', 'tutor'); ?></label>
         <div class="tutor-mb-16">
             <div class="tutor-w-100">
-                <div class="tutor-row tutor-align-items-center">
+                <div class="tutor-row tutor-align-center">
                     <div class="tutor-col-12 tutor-col-md-12">
                         <div class="question-type-select">
                             <?php
@@ -66,7 +66,7 @@ $settings = maybe_unserialize($question->question_settings);
                         </div>
                     </div>
                     <div class="tutor-col-12 tutor-col-md-12 tutor-mt-20">
-                        <div class="tutor-row tutor-align-items-center">
+                        <div class="tutor-row tutor-align-center">
                             <div class="tutor-col-sm-4 tutor-col-md-4 tutor-mt-4 tutor-mb-4">
                                 <label class="tutor-form-toggle tutor-nowrap-ellipsis">
                                     <input type="checkbox" class="tutor-form-toggle-input" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][answer_required]" <?php checked('1', tutor_utils()->avalue_dot('answer_required', $settings)); ?> />
@@ -89,7 +89,7 @@ $settings = maybe_unserialize($question->question_settings);
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Point(s) for this answer', 'tutor'); ?></label>
         <div class="tutor-mb-16">
-            <div class="tutor-row tutor-align-items-center">
+            <div class="tutor-row tutor-align-center">
                 <div class="tutor-col-sm-6 tutor-col-md-4">
                     <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" class="tutor-form-control" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php echo $question->question_mark; ?>">
                 </div>

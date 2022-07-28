@@ -7,14 +7,8 @@
 // Legacy common styles
 @import './legacy/index.scss';
 
-// components
-@import './components/index';
-
 // ui elements
-@import './ui-elements/index';
+@import './elements/index';
 
 // ui components
-@import './ui-components/index';
-
-// Following codes probably can be put somewhere else relavant.
-// For now just removed from the mixins file since that's gonna be loaded at many places
+@import './components/index';

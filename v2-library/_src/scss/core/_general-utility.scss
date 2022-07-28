@@ -4,6 +4,12 @@
 	content: '';
 }
 
+.tutor-flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .align-top {
 	vertical-align: top;
 }
@@ -16,51 +22,7 @@
 	vertical-align: bottom;
 }
 
-.tutor-flex-grow-0 {
-	flex-grow: 0;
-}
-
-.tutor-flex-grow-1 {
-	flex-grow: 1;
-}
-
-.tutor-flex-shrink-0 {
-	flex-shrink: 0;
-}
-
-.tutor-flex-shrink-1 {
-	flex-shrink: 1;
-}
-
-.tutor-flex-wrap {
-	flex-wrap: wrap;
-}
-
 // @todo: need to replace on other tutor plugins like certificate builder & elementor addons
-.justify-content-start {
-	justify-content: flex-start;
-}
-
-.justify-content-end {
-	justify-content: flex-end;
-}
-
-.justify-content-center {
-	justify-content: center;
-}
-
-.tutor-justify-conetnt-between {
-	justify-content: space-between;
-}
-
-.justify-content-around {
-	justify-content: space-around;
-}
-
-.justify-content-evenly {
-	justify-content: space-evenly;
-}
-
 .align-items-end {
 	align-items: flex-end;
 }
@@ -117,6 +79,16 @@
 	visibility: hidden;
 }
 
+.tutor-visibility {
+	&-visible {
+		visibility: visible;
+	}
+	
+	&-hidden {
+		visibility: hidden;
+	}
+}
+
 .flex-center {
 	display: flex;
 	justify-content: center;
@@ -170,4 +142,18 @@
 
 .tutor-break-all {
 	word-break: break-all;
+}
+
+// 
+.tutor-user-select-none {
+	user-select: none;
+}
+
+// ul
+.tutor {
+	&-ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
 }

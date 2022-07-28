@@ -119,7 +119,7 @@ class Tutor_Setup {
 					$html     .= '<div class="step-info">';
 						$html .= '<span class="tutor-fs-7 tutor-color-muted">' . __( 'Step', 'tutor' ) . ':</span> <strong class="tutor-color-black">' . $i . '/' . count( $field_arr ) . ' </strong>';
 					$html     .= '</div>';
-					$html     .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-secondary tutor-d-flex tutor-align-items-center">' . __( 'Reset Default', 'tutor' ) . '</div>';
+					$html     .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-secondary tutor-d-flex tutor-align-center">' . __( 'Reset Default', 'tutor' ) . '</div>';
 				$html         .= '</div>';
 				$html         .= '<div class="tutor-setup-content-heading body">';
 
@@ -401,7 +401,7 @@ class Tutor_Setup {
 						'type'  => 'text',
 						'max'   => 50,
 						'lable' => __( 'Lesson permalink', 'tutor' ),
-						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/courses/sample-course/<strong>' . ( tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ) ) . '</strong>/sample-lesson/' ),
+						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/'.tutor()->course_post_type.'/sample-course/<strong>' . ( tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ) ) . '</strong>/sample-lesson/' ),
 					),
 				),
 			),

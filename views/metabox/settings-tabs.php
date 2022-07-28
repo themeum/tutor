@@ -96,11 +96,13 @@ $args = $this->args;
 													foreach($field['options'] as $value => $label) {
 														$id_string = 'course_setting_radio_' . (!empty($field['id']) ? $field['id'] : $value);
 														?>
-														<div class="tutor-form-check tutor-my-20 tutor-align-items-center">
-															<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input tutor-flex-shrink-0" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
-															<label for="<?php echo $id_string; ?>" class="tutor-fs-7 tutor-fw-medium tutor-fs-6">
-																<?php echo $label; ?>
-															</label>
+														<div class="tutor-my-20 tutor-align-center">
+															<div class="tutor-form-check">
+																<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input tutor-flex-shrink-0" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
+																<label for="<?php echo $id_string; ?>" class="tutor-fs-7 tutor-fw-medium tutor-fs-6">
+																	<?php echo $label; ?>
+																</label>
+															</div>
 														</div>
 														<?php
 													}

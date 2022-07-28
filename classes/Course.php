@@ -5,6 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use TUTOR\Input;
+use Tutor\Models\CourseModel;
+
 class Course extends Tutor_Base {
 
 	private $additional_meta=array(
@@ -101,7 +104,7 @@ class Course extends Tutor_Base {
          * Delete course data after deleted course
          * @since v.1.6.6
          */
-		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
+		add_action( 'deleted_post', array( new CourseModel, 'delete_course_data' ) );
 
 		/**
 		 * Delete course data after deleted course
@@ -146,6 +149,32 @@ class Course extends Tutor_Base {
 		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 2 );
 	
 		add_action( 'wp_ajax_tutor_update_course_content_order', array($this, 'tutor_update_course_content_order') );
+
+		add_action( 'wp_ajax_tutor_get_wc_product', array( $this, 'tutor_get_wc_product' ) );
+	}
+
+	/**
+	 * Get course associate WC product info by Ajax request
+	 *
+	 * @return void
+	 * 
+	 * @since 2.0.7
+	 */
+	public function tutor_get_wc_product() {
+		tutor_utils()->checking_nonce();
+		$product_id	= Input::post( 'product_id' );
+		$product    = wc_get_product( $product_id );
+
+		if ( $product ) {
+			$data = array(
+				'name' => $product->get_name(),
+				'regular_price'=> $product->get_regular_price(),
+				'sale_price' => $product->get_sale_price()
+			);
+			wp_send_json_success( $data );
+		}else{
+			wp_send_json_error( __( 'Product not found', 'tutor' ) );
+		}
 	}
 
 	public function tutor_update_course_content_order() {
@@ -178,7 +207,7 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 
-		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-items-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">Fully Booked</div></div>';
+		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">Fully Booked</div></div>';
 	}
 
 	function restrict_media( $where ) {
@@ -198,9 +227,11 @@ class Course extends Tutor_Base {
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
 
-		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
-		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
-		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
+		tutor_meta_box_wrapper( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType, 'advanced', 'default', 'tutor-admin-post-meta' );
+
+		tutor_meta_box_wrapper( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType, 'advanced', 'default', 'tutor-admin-post-meta' );
+
+		tutor_meta_box_wrapper( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType, 'advanced', 'default', 'tutor-admin-post-meta' );
 	}
 
 	public function course_meta_box( $echo = true ) {
@@ -329,8 +360,8 @@ class Course extends Tutor_Base {
 		/**
 		 * Save course price type
 		 */
-		$price_type = tutor_utils()->array_get('tutor_course_price_type', $_POST);
-		if ($price_type){
+		$price_type = Input::post( 'tutor_course_price_type' );
+		if ( $price_type ) {
 			update_post_meta($post_ID, '_tutor_course_price_type', $price_type);
 		}
 
@@ -395,11 +426,14 @@ class Course extends Tutor_Base {
 		 * Adding author to instructor automatically
 		 */
 
-		$author_id = $post->post_author;
+		// Override post author id.
+		$author_id = isset( $_POST['post_author_override'] ) ? $_POST['post_author_override'] : $post->post_author; //phpcs:ignore
 		$attached  = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(umeta_id) FROM {$wpdb->usermeta}
-			WHERE user_id = %d AND meta_key = '_tutor_instructor_course_id' AND meta_value = %d ",
+					WHERE user_id = %d
+						AND meta_key = '_tutor_instructor_course_id'
+						AND meta_value = %d ",
 				$author_id,
 				$post_ID
 			)
@@ -439,7 +473,7 @@ class Course extends Tutor_Base {
 		$topic_id = (int) tutor_utils()->avalue_dot('topic_id', $_POST);
 		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
 		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
-		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id);
+		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id, $topic_id);
 
 		// Validate if user can manage the topic
 		if(!tutor_utils()->can_user_manage('course', $course_id) || ($topic_id && !tutor_utils()->can_user_manage('topic', $topic_id))) {
@@ -604,9 +638,12 @@ class Course extends Tutor_Base {
 	 * @since v.1.0.0
 	 */
 	public function mark_course_complete() {
-		if ( ! isset( $_POST['tutor_action'] ) || $_POST['tutor_action'] !== 'tutor_complete_course' ) {
+		$tutor_action	= Input::post( 'tutor_action' );
+		$course_id		= Input::post( 'course_id', 0, Input::TYPE_INT );
+		if ( $tutor_action !== 'tutor_complete_course' || ! $course_id ) {
 			return;
 		}
+		
 		// Checking nonce
 		tutor_utils()->checking_nonce();
 
@@ -617,45 +654,7 @@ class Course extends Tutor_Base {
 			die( __( 'Please Sign-In', 'tutor' ) );
 		}
 
-		$course_id = (int) $_POST['course_id'];
-
-		do_action( 'tutor_course_complete_before', $course_id );
-		/**
-		 * Marking course completed at Comment
-		 */
-
-		global $wpdb;
-
-		$date = date( 'Y-m-d H:i:s', tutor_time() );
-
-		// Making sure that, hash is unique
-		do {
-			$hash    = substr( md5( wp_generate_password( 32 ) . $date . $course_id . $user_id ), 0, 16 );
-			$hasHash = (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT(comment_ID) from {$wpdb->comments}
-				WHERE comment_agent = 'TutorLMSPlugin' AND comment_type = 'course_completed' AND comment_content = %s ",
-					$hash
-				)
-			);
-
-		} while ( $hasHash > 0 );
-
-		$data = array(
-			'comment_post_ID'  => $course_id,
-			'comment_author'   => $user_id,
-			'comment_date'     => $date,
-			'comment_date_gmt' => get_gmt_from_date( $date ),
-			'comment_content'  => $hash, // Identification Hash
-			'comment_approved' => 'approved',
-			'comment_agent'    => 'TutorLMSPlugin',
-			'comment_type'     => 'course_completed',
-			'user_id'          => $user_id,
-		);
-
-		$wpdb->insert( $wpdb->comments, $data );
-
-		do_action( 'tutor_course_complete_after', $course_id, $user_id );
+		CourseModel::mark_course_as_completed( $course_id, $user_id );
 
 		$permalink = get_the_permalink( $course_id );
 
@@ -727,25 +726,49 @@ class Course extends Tutor_Base {
 
 
 	/**
-	 * @param $post_ID
-	 * @param $postData
+	 * Attach product with course when course save from frontend or backend.
+	 * 
+	 * @param $post_ID		course ID
+	 * @param $postData		cretaed course post details
 	 *
-	 * Attach product during save course from the frontend course dashboard.
-	 *
-	 * @return string
+	 * @return void
 	 *
 	 * @since v.1.3.4
 	 */
 	public function attach_product_with_course( $post_ID, $postData ) {
-		$attached_product_id = tutor_utils()->get_course_product_id( $post_ID );
-		$course_price        = sanitize_text_field( tutor_utils()->array_get( 'course_price', $_POST ) );
+		
+		$monetize_by 		= tutor_utils()->get_option( 'monetize_by' );
+		
+		/**
+		 * The function is_admin will check only loaded page from WP admin.
+		 * It does not check any role
+		 */
+		$is_admin_panel		 = is_admin();
+		// From backend course select box
+		$product_id			 = Input::post( '_tutor_course_product_id', 0, Input::TYPE_INT );
 
-		if ( ! $course_price){
-			// Return if price not set or 0
+		/**
+		 * From Admin Panel, Free user can only select product from dropdown
+		 */
+		if ( $is_admin_panel && 'wc' === $monetize_by && tutor()->has_pro === false ) {
+			if ( $product_id > 0 ) {
+				update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+			} 
+			else if( $product_id === -1 ) {
+				delete_post_meta( $post_ID, '_tutor_course_product_id' );
+			}
+			
 			return;
 		}
 
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+		$attached_product_id = tutor_utils()->get_course_product_id( $post_ID );
+		$course_price        = Input::post( 'course_price', 0, Input::TYPE_NUMERIC );
+		$sale_price			 = Input::post( 'course_sale_price', 0, Input::TYPE_NUMERIC );
+
+		if ( ! $course_price ||  $sale_price >= $course_price ) {
+			return;
+		}
+
 		$course      = get_post( $post_ID );
 
 		if ( $monetize_by === 'wc' ) {
@@ -758,10 +781,26 @@ class Course extends Tutor_Base {
 				}
 			}
 
-			if ( $is_update ) {
+			if ( $is_update || ( $product_id > 0 && $is_admin_panel ) ) {
+				/**
+				 * @since 2.0.7
+				 */
+				if ( $product_id > 0 && $is_admin_panel ) {
+					$attached_product_id = $product_id;
+					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+				}
+
 				$productObj = wc_get_product( $attached_product_id );
 				$productObj->set_price( $course_price ); // set product price
 				$productObj->set_regular_price( $course_price ); // set product regular price
+				
+				if ( $sale_price > 0 ) {
+					$productObj->set_sale_price( $sale_price );
+				} else {
+					//When use remove sale price ( discounted price )
+					$productObj->set_sale_price( null );
+				}
+				
 				$productObj->set_sold_individually( true );
 				$product_id = $productObj->save();
 				if ( $productObj->is_type( 'subscription' ) ) {
@@ -773,6 +812,11 @@ class Course extends Tutor_Base {
 				$productObj->set_status( 'publish' );
 				$productObj->set_price( $course_price ); // set product price
 				$productObj->set_regular_price( $course_price ); // set product regular price
+				
+				if ( $sale_price > 0 ) {
+					$productObj->set_sale_price( $sale_price );
+				}
+
 				$productObj->set_sold_individually( true );
 
 				$product_id = $productObj->save();
@@ -1109,6 +1153,7 @@ class Course extends Tutor_Base {
         }
 
         $quizzes = array();
+		$assignments = array();
 
         $course_contents = tutor_utils()->get_course_contents_by_id();
         if (tutor_utils()->count($course_contents)){
@@ -1116,11 +1161,39 @@ class Course extends Tutor_Base {
                 if ($content->post_type === 'tutor_quiz'){
                     $quizzes[] = $content;
                 }
+				if ($content->post_type === 'tutor_assignments'){
+                    $assignments[] = $content;
+                }
             }
         }
 
-        $is_pass = true;
-        $required_quiz_pass = 0;
+		$required_assignment_pass = 0;
+
+		foreach( $assignments as $row ) {
+
+			$submitted_assignment		= tutor_utils()->is_assignment_submitted( $row->ID );
+			$is_reviewed_by_instructor	= null === $submitted_assignment
+											? false
+											: get_comment_meta( $submitted_assignment->comment_ID, 'evaluate_time', true );
+
+			if ( $submitted_assignment && $is_reviewed_by_instructor ) 
+			{
+				$pass_mark  = tutor_utils()->get_assignment_option( $submitted_assignment->comment_post_ID, 'pass_mark' );
+				$given_mark = get_comment_meta( $submitted_assignment->comment_ID, 'assignment_mark', true );
+	
+				if ( $given_mark < $pass_mark ) {
+					$required_assignment_pass++;
+				}
+			} 
+			else 
+			{
+				$required_assignment_pass++;
+			}
+		}
+
+
+        $is_quiz_pass		= true;
+        $required_quiz_pass	= 0;
 
         if (tutor_utils()->count($quizzes)){
             foreach ($quizzes as $quiz){
@@ -1132,20 +1205,34 @@ class Course extends Tutor_Base {
 
                     if ($earned_percentage < $passing_grade) {
                         $required_quiz_pass++;
-                        $is_pass = false;
+                        $is_quiz_pass = false;
                     }
                 }else{
                     $required_quiz_pass++;
-                    $is_pass = false;
+                    $is_quiz_pass = false;
                 }
             }
         }
 
-        if ( ! $is_pass){
+        if ( ! $is_quiz_pass || $required_assignment_pass > 0 ) {
+			$_msg			= '';
+			$quiz_str		= _n( 'quiz', 'quizzes', $required_quiz_pass, 'tutor' );
+			$assignment_str = _n( 'assignment', 'assignments', $required_assignment_pass, 'tutor' );
+
+			if ( ! $is_quiz_pass && $required_assignment_pass == 0 ) {
+				$_msg = sprintf(__('You have to pass %s %s to complete this course.', 'tutor'), $required_quiz_pass, $quiz_str );
+			}
+			if ( $is_quiz_pass && $required_assignment_pass > 0 ) {
+				$_msg = sprintf(__('You have to pass %s %s to complete this course.', 'tutor'), $required_assignment_pass, $assignment_str );
+			}
+			if ( ! $is_quiz_pass && $required_assignment_pass > 0 ) {
+				$_msg = sprintf(__('You have to pass %s %s and %s %s to complete this course.', 'tutor'), $required_quiz_pass, $quiz_str, $required_assignment_pass, $assignment_str );
+			}
+			
 			return '<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
 							<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
-							<span>'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</span>
+							<span>'.$_msg.'</span>
 						</div>
 					</div>';
         }
@@ -1183,66 +1270,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Get posts by type and parent
-	 *
-	 * @since v.1.6.6
-	 */
-	public function tutor_get_post_ids( $post_type, $post_parent ) {
-		$args = array(
-			'fields'         => 'ids',
-			'post_type'      => $post_type,
-			'post_parent'    => $post_parent,
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-		);
-		return get_posts( $args );
-	}
-
-	/**
-	 * Delete course data when permanently deleting a course.
-	 *
-	 * @since v.1.6.6
-	 */
-	function delete_tutor_course_data( $post_id ) {
-		$course_post_type = tutor()->course_post_type;
-		$lesson_post_type = tutor()->lesson_post_type;
-
-		if ( get_post_type( $post_id ) == $course_post_type ) {
-			global $wpdb;
-			$topic_ids = $this->tutor_get_post_ids( 'topics', $post_id );
-			if ( ! empty( $topic_ids ) ) {
-				foreach ( $topic_ids as $topic_id ) {
-					$content_post_type = apply_filters( 'tutor_course_contents_post_types', array( $lesson_post_type, 'tutor_quiz' ) );
-					$topic_content_ids = $this->tutor_get_post_ids( $content_post_type, $topic_id );
-
-					foreach ( $topic_content_ids as $content_id ) {
-						if ( get_post_type( $content_id ) == 'tutor_quiz' ) {
-							$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ) );
-							$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $content_id ) );
-
-							$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
-							if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
-								$in_question_ids = "'" . implode( "','", $questions_ids ) . "'";
-								$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) " );
-							}
-							$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $content_id ) );
-						}
-						wp_delete_post( $content_id, true );
-					}
-					wp_delete_post( $topic_id, true );
-				}
-			}
-			$child_post_ids = $this->tutor_get_post_ids( array( 'tutor_announcements', 'tutor_enrolled' ), $post_id );
-			if ( ! empty( $child_post_ids ) ) {
-				foreach ( $child_post_ids as $child_post_id ) {
-					wp_delete_post( $child_post_id, true );
-				}
-			}
-		}
-	}
-
-	/**
-	 * Delete associated enrollment
+	 * Delete associated enrolment
 	 *
 	 * @since v.1.8.2
 	 */

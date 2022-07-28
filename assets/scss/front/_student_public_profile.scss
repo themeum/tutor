@@ -3,12 +3,7 @@
 	&.tutor-user-public-profile-pp-circle,
 	&.tutor-user-public-profile-pp-rectangle {
 		.profile-rating-media.content-for-desktop {
-			display: -webkit-box;
-			display: -ms-flexbox;
 			display: flex;
-			-webkit-box-orient: vertical;
-			-webkit-box-direction: normal;
-			-ms-flex-direction: column;
 			flex-direction: column;
 		}
 		.tutor-rating-container {
@@ -16,11 +11,7 @@
 			align-self: flex-end;
 		}
 		.ratings {
-			display: -webkit-box;
-			display: -ms-flexbox;
 			display: flex;
-			-webkit-box-align: end;
-			-ms-flex-align: end;
 			align-items: flex-end;
 			.text-regular-caption {
 				color: #c0c3cb !important;
@@ -45,13 +36,7 @@
 			margin-bottom: 15px;
 		}
 	}
-	//rating style end
-	// .tutor-star-rating-group {
-	// 	i {
-	// 		padding-right: 6px;
-	// 		color: #ed9700 !important;
-	// 	}
-	// }
+
 	&.tutor-user-public-profile-no-cp {
 		.profile-name {
 			padding-left: 40px;
@@ -78,13 +63,6 @@
 		}
 	}
 	&.tutor-user-public-profile-pp-circle {
-		.profile-name {
-			// padding-left: 63px;
-			// padding-bottom: 50px;
-			// span {
-			// 	font-weight: 300;
-			// }
-		}
 		.profile-pic {
 			border-radius: 50%;
 			height: 160px;
@@ -117,7 +95,6 @@
 		overflow: hidden;
 		height: 414px;
 		margin-top: 30px;
-		// margin-bottom: -100px;
 
 		.cover-area {
 			position: relative;
@@ -168,18 +145,6 @@
 					color: #ffffff;
 					margin: 0;
 				}
-
-				// & > span {
-				// 	font-style: normal;
-				// 	font-size: 15px;
-				// 	color: #fff;
-				// 	margin-right: 10px;
-
-				// 	& > span {
-				// 		color: white;
-				// 		font-weight: 500;
-				// 	}
-				// }
 			}
 
 			.profile-rating-media {
@@ -440,7 +405,7 @@
 			font-size: 24px !important;
 			line-height: 34px;
 			margin-top: 20px;
-			color: var(--tutor-color-body);
+			color: var(--tutor-body-color);
 			&:first-child {
 				margin-top: 0;
 			}
@@ -485,16 +450,6 @@
 		@include breakpoint-max(992) {
 			margin-top: 40px;
 		}
-	}
-}
-
-.tutor-analytics-students-wrapper {
-	display: grid;
-	grid-auto-flow: row;
-	grid-gap: 10px;
-	@media (min-width: 992px) {
-		grid-template-columns: repeat(3, 1fr);
-		grid-gap: 30px;
 	}
 }
 

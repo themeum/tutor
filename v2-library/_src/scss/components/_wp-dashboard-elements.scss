@@ -1,0 +1,50 @@
+.tutor-wp-dashboard-header {
+	box-sizing: border-box;
+	background: #ffffff;
+	border-bottom: 1px solid var(--tutor-border-color);
+}
+
+.tutor-wp-dashboard-filter {
+	gap: 30px;
+	@include breakpoint-max(1300) {
+		flex-wrap: wrap;
+		margin-top: 40px;
+	}
+	@include breakpoint-max(mobile) {
+		flex-direction: row;
+		display: block !important;
+		&-items {
+			display: block !important;
+			.tutor-input-group {
+				max-width: 100% !important;
+				width: 100% !important;
+			}
+		}
+		&-item {
+			margin-top: 20px;
+		}
+	}
+}
+
+.tutor-wp-dashboard-filter-items {
+	gap: 24px;
+	.tutor-form-label {
+		@extend .text-medium-caption;
+		color: var(--tutor-color-secondary);
+	}
+}
+
+
+
+.tutor-course-builder {
+	&-zoom-meeting-list {
+		&-item {
+			padding: 24px 0px;
+			border-bottom: 1px solid var(--tutor-border-color);
+
+			&:first-child {
+				padding-top: 0;
+			}
+		}
+	}
+}

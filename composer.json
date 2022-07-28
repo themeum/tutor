@@ -1,0 +1,12 @@
+{
+    "name": "themeum/tutor",
+    "type": "library",
+    "description": "Tutor plugin for WordPress",
+    "autoload": {
+        "psr-4": {
+            "Tutor\\Cache\\":"cache/",
+            "Tutor\\Models\\":"models/",
+            "Tutor\\Helpers\\":"helpers/"
+        }
+    }
+}

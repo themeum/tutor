@@ -34,13 +34,7 @@ const Search = () => {
 		<div className="tutor-addons-list-select-filter">
 			<div className="tutor-form-wrap">
 				<span className="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
-				<input
-					type="search"
-					className="tutor-form-control tutor-form-control-lg"
-					placeholder={__('Search…', 'tutor')}
-					value={search}
-					onChange={handleChange}
-				/>
+				<input type="search" className="tutor-form-control" placeholder={__('Search…', 'tutor')} value={search} onChange={handleChange} />
 			</div>
 		</div>
 	);

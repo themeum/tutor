@@ -4,10 +4,8 @@
 	// --tutor-disabled-bg: #{$disabled-bg};
 	// --tutor-disabled-color: #{$disabled-color};
 
-	// --tutor-bg-dark-notification: #{$bg-dark-notification};
-	// --tutor-bg-dark: #{$bg-dark};
-	// --tutor-bg-grey: #{$bg-grey};
-	// --tutor-bg-grey-light: #{rgba($bg-grey, 0.3)};
+	// @todo: move
+	--tutor-text-size: 16px;
 
 	// // Common Colors
 	--tutor-color-white: 		#{$color-white};
@@ -21,6 +19,10 @@
 	// extra colors need to be replaces later
 	--tutor-color-secondary: 	#{$color-secondary};
 	--tutor-color-muted: 		#{$color-muted};
+
+	// gray colors
+	--tutor-color-gray: 		#{$color-gray-20};
+	--tutor-color-gray-10: 		#{$color-gray-10};
 }
 
 // Color Utility class

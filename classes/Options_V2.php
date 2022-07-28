@@ -22,8 +22,6 @@ if (!defined('ABSPATH')) {
 
 class Options_V2
 {
-
-
 	private $options;
 	private $setting_fields;
 
@@ -398,7 +396,9 @@ class Options_V2
 		$pages       = tutor_utils()->get_pages();
 
 		$lesson_key  = $this->get('lesson_permalink_base', 'lessons');
-		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
+		$course_base = tutor_utils()->get_option('course_permalink_base', tutor()->course_post_type);
+		$course_url  = site_url() . '/<code>' . $course_base . '</code>/sample-course';
+		$lesson_url  = site_url() . '/' . $course_base . '/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
 		$student_url = tutor_utils()->profile_url(0, false);
 
 		$methods_array     = array();
@@ -432,6 +432,21 @@ class Options_V2
 						),
 					),
 					array(
+						'label'      => false,
+						'block_type' => 'uniform',
+						'slug'       => 'general-page',
+						'fields'     => array(
+							array(
+								'key'     => 'tutor_toc_page_id',
+								'type'    => 'select',
+								'label'   => __('Terms and Conditions Page', 'tutor'),
+								'default' => '0',
+								'options' => $pages,
+								'desc'    => __('This page will be used as the Terms and Conditions page', 'tutor'),
+							),
+						),
+					),
+					array(
 						'label'      => __('Others', 'tutor'),
 						'slug'       => 'others',
 						'block_type' => 'isolate',
@@ -449,7 +464,7 @@ class Options_V2
 								'type'    => 'number',
 								'label'   => __('Pagination', 'tutor'),
 								'default' => '20',
-								'desc'    => __('Number of items you would like displayed "per page" in the pagination', 'tutor'),
+								'desc'    => __('Set the number of rows to be displayed per page', 'tutor'),
 							),
 						),
 					),
@@ -490,22 +505,14 @@ class Options_V2
 						'slug'       => 'course',
 						'block_type' => 'uniform',
 						'fields'     => array(
-							/**
-							 * TODO
-							 *
-							 * This option will be implemented on future
-							 * release
-							 *
-							 * @since v2.0.0
-							 */
-							// array(
-							// 	'key'         => 'student_must_login_to_view_course',
-							// 	'type'        => 'toggle_switch',
-							// 	'label'       => __( 'Course Visibility', 'tutor' ),
-							// 	'label_title' => __( 'Logged Only', 'tutor' ),
-							// 	'default'     => 'off',
-							// 	'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-							// ),
+							array(
+							 	'key'         => 'student_must_login_to_view_course',
+							 	'type'        => 'toggle_switch',
+							 	'label'       => __( 'Course Visibility', 'tutor' ),
+							 	'label_title' => '',
+							 	'default'     => 'off',
+							 	'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
+							 ),
 							array(
 								'key'         => 'course_content_access_for_ia',
 								'type'        => 'toggle_switch',
@@ -513,6 +520,13 @@ class Options_V2
 								'default'     => 'off',
 								'label_title' => __('', 'tutor'),
 								'desc'        => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
+							),
+							array(
+								'key'         => 'course_content_summary',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Content Summary', 'tutor' ),
+								'default'     => 'on',
+								'desc'        => __( 'Enabling this feature will show a course content summary on the Course Details page.', 'tutor' ),
 							),
 							array(
 								'key'         => 'wc_automatic_order_complete_redirect_to_courses',
@@ -529,6 +543,14 @@ class Options_V2
 								'default'     => 'off',
 								'label_title' => __('', 'tutor'),
 								'desc'        => __('This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.', 'tutor'),
+							),
+							array(
+								'key'         => 'auto_course_complete_on_all_lesson_completion',
+								'type'        => 'toggle_switch',
+								'label'       => __('Auto Course Complete on all Lesson Completion', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('If enabled, an Enrolled Course will be automatically completed if all its Lessions, Quizzes, and Assignments are already completed by the Student', 'tutor'),
 							),
 							array(
 								'key'            => 'course_completion_process',
@@ -549,6 +571,14 @@ class Options_V2
 								'default'     => 'off',
 								'label_title' => __('', 'tutor'),
 								'desc'        => __('Enabling this feature will allow students to reset course progress and start over.', 'tutor'),
+							),
+							array(
+								'key'         => 'enable_course_review_moderation',
+								'type'        => 'toggle_switch',
+								'label'       => __("Publish Course Review on Admin's Approval", 'tutor'),
+								'default'     => 'off',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('Enable to publish/re-publish Course Review after the approval of Site Admin', 'tutor'),
 							),
 						),
 					),
@@ -604,9 +634,9 @@ class Options_V2
 							array(
 								'key'     => 'quiz_attempts_allowed',
 								'type'    => 'number',
-								'label'   => __('Quiz Attempts allowed', 'tutor'),
+								'label'   => __('Default Quiz Attempt limit (when Retry Mode is enabled)', 'tutor'),
 								'default' => '10',
-								'desc'    => __('The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor'),
+								'desc'    => __('The highest number of attempts allowed for students to participate a quiz. 0 means unlimited. This will work as the default Quiz Attempt limit in case of Quiz Retry Mode.', 'tutor'),
 							),
 							array(
 								'key'     => 'quiz_previous_button_enabled',
@@ -673,6 +703,14 @@ class Options_V2
 								),
 								'default'        => 'free',
 								'desc'           => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor'),
+							),
+							array(
+								'key'         => 'tutor_woocommerce_order_auto_complete',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Automatically Complete WooCommerce Orders', 'tutor' ),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __( 'If enabled, in the case of Courses, WooCommerce Orders will get the "Completed" status .', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_revenue_sharing',
@@ -831,9 +869,9 @@ class Options_V2
 							array(
 								'key'     => 'courses_per_page',
 								'type'    => 'number',
-								'label'   => __('Pagination', 'tutor'),
+								'label'   => __('Courses Per Page', 'tutor'),
 								'default' => '12',
-								'desc'    => __('Set the number of courses you want to display per page.', 'tutor'),
+								'desc'    => __('Set the number of courses to display per page on the Course List page.', 'tutor'),
 							),
 							array(
 								'key'     => 'supported_course_filters',
@@ -848,6 +886,14 @@ class Options_V2
 									'price_type'       => __('Price Type', 'tutor'),
 								),
 								'desc'    => __('Choose preferred filter options you\'d like to show on the course archive page.', 'tutor'),
+							),
+							array(
+								'key'         => 'course_archive_filter_sorting',
+								'type'        => 'toggle_switch',
+								'label'       => __('Course Sorting', 'tutor'),
+								'label_title' => __('', 'tutor'),
+								'default'     => 'on',
+								'desc'        => __('If enabled, the courses will be sortable by Course Name or Creation Date in either Ascending or Descending order', 'tutor'),
 							),
 						),
 					),
@@ -1123,24 +1169,14 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
-												'slug'  => 'tutor_background_color',
-												'preset_name' => 'background',
-												'value' => '#F6F8FD',
+												'slug'  => 'tutor_gray_color',
+												'preset_name' => 'gray',
+												'value' => '#E3E5EB',
 											),
 											array(
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_disable_color',
-												'preset_name' => 'disable',
-												'value' => '#E3E6EB',
-											),
-											array(
-												'slug'  => 'tutor_table_background_color',
-												'preset_name' => 'table_background',
-												'value' => '#EFF1F6',
 											),
 										),
 									),
@@ -1164,24 +1200,14 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
-												'slug'  => 'tutor_background_color',
-												'preset_name' => 'background',
-												'value' => '#ECF7F3',
+												'slug'  => 'tutor_gray_color',
+												'preset_name' => 'gray',
+												'value' => '#E3E5EB',
 											),
 											array(
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_disable_color',
-												'preset_name' => 'disable',
-												'value' => '#E3E6EB',
-											),
-											array(
-												'slug'  => 'tutor_table_background_color',
-												'preset_name' => 'table_background',
-												'value' => '#EFF1F6',
 											),
 										),
 									),
@@ -1205,24 +1231,14 @@ class Options_V2
 												'value' => '#212327',
 											),
 											array(
-												'slug'  => 'tutor_background_color',
-												'preset_name' => 'background',
-												'value' => '#FAF6FF',
+												'slug'  => 'tutor_gray_color',
+												'preset_name' => 'gray',
+												'value' => '#E3E5EB',
 											),
 											array(
 												'slug'  => 'tutor_border_color',
 												'preset_name' => 'border',
 												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_disable_color',
-												'preset_name' => 'disable',
-												'value' => '#E3E6EB',
-											),
-											array(
-												'slug'  => 'tutor_table_background_color',
-												'preset_name' => 'table_background',
-												'value' => '#EFF1F6',
 											),
 										),
 									),
@@ -1246,9 +1262,9 @@ class Options_V2
 												'value' => '#1A1B1E',
 											),
 											array(
-												'slug'  => 'tutor_background_color',
-												'preset_name' => 'background',
-												'value' => '#F6F8FD',
+												'slug'  => 'tutor_gray_color',
+												'preset_name' => 'gray',
+												'value' => '#E3E5EB',
 											),
 										),
 									),
@@ -1287,13 +1303,13 @@ class Options_V2
 										'desc'         => __('Choose a text color for your website', 'tutor'),
 									),
 									array(
-										'key'          => 'tutor_background_color',
+										'key'          => 'tutor_gray_color',
 										'type'         => 'color_field',
-										'preset_name'  => 'background',
-										'preset_exist' => true,
-										'label'        => __('Background', 'tutor'),
-										'default'      => '#FFFFFF',
-										'desc'         => __('Choose a background color for your website', 'tutor'),
+										'preset_name'  => 'gray',
+										'preset_exist' => false,
+										'label'        => __('Gray', 'tutor'),
+										'default'      => '#E3E5EB',
+										'desc'         => __('Choose a color for elements like table, card etc', 'tutor'),
 									),
 									array(
 										'key'          => 'tutor_border_color',
@@ -1303,24 +1319,6 @@ class Options_V2
 										'label'        => __('Border', 'tutor'),
 										'default'      => '#CDCFD5',
 										'desc'         => __('Choose a border color for your website', 'tutor'),
-									),
-									array(
-										'key'          => 'tutor_disable_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'disable',
-										'preset_exist' => false,
-										'label'        => __('Disable', 'tutor'),
-										'default'      => '#E3E6EB',
-										'desc'         => __('Choose a color for disabled elements ', 'tutor'),
-									),
-									array(
-										'key'          => 'tutor_table_background_color',
-										'type'         => 'color_field',
-										'preset_name'  => 'table_background',
-										'preset_exist' => false,
-										'label'        => __('Table Background', 'tutor'),
-										'default'      => '#EFF1F6',
-										'desc'         => __('Choose a color for the background of table elements ', 'tutor'),
 									),
 								),
 							),
@@ -1401,6 +1399,14 @@ class Options_V2
 								'options' => $pages,
 								'desc'    => __('Choose the page for student registration.', 'tutor'),
 							),
+							// TODO
+							// array(
+							// 	'key'     => 'course_permalink_base',
+							// 	'type'    => 'text',
+							// 	'label'   => __('Course Permalink Base', 'tutor'),
+							// 	'default' => tutor()->course_post_type,
+							// 	'desc'    => $course_url,
+							// ),
 							array(
 								'key'     => 'lesson_permalink_base',
 								'type'    => 'text',
@@ -1441,10 +1447,10 @@ class Options_V2
 							array(
 								'key'         => 'hide_admin_bar_for_users',
 								'type'        => 'toggle_switch',
-								'label'       => __('Hide Frontend Admin Bar', 'tutor'),
+								'label'       => __('Hide Admin Bar and Restrict Access to WP Admin for Instructors', 'tutor'),
 								'label_title' => __('', 'tutor'),
 								'default'     => 'off',
-								'desc'        => __('Enable this to hide the WordPress admin bar from the frontend. It will still be visible to admins.', 'tutor'),
+								'desc'        => __('Enable this to hide the WordPress Admin Bar from Frontend site, and restrict access to the WP Admin panel.', 'tutor'),
 							),
 							array(
 								'key'         => 'delete_on_uninstall',

@@ -1,0 +1,52 @@
+@media (max-width: 991.98px) {
+    .tutor-course-filter {
+        &-container {
+            width: 340px;
+            background-color: #fff;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 999999;
+            padding: 32px;
+            transition: 300ms ease-in;
+        }
+
+        &-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0;
+            background-color: rgba(22, 22, 22, 0.5);
+            mix-blend-mode: normal;
+            backdrop-filter: blur(20px);
+            transition: 300ms ease-in;
+        }
+    }
+
+    // is open
+    body {
+        &.tutor-course-filter-open {
+            .tutor-course-filter {
+                &-container {
+                    right: 0;
+                }
+
+                &-backdrop {
+                    opacity: 1;
+                    z-index: 999998;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    .tutor-course-filter-backdrop {
+        display: none;
+    }
+}

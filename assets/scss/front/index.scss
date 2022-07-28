@@ -8,20 +8,16 @@
 @import "./select_dd_search";
 //dashboard
 @import "dashboard";
-@import "_dashboard_delete_popup";
-@import "_dashboard_withdraw_method";
 @import "_dashboard_assignment";
 @import "_dashboard_announcements"; //since 1.7.9
 @import "_dashboard_quiz_review";
 @import "_student_public_profile";
 //frontend-builder
-@import "_instructor_registration";
 @import "_frontend_withdrawal";
 @import "_tooltip";
-@import "./review.scss";
 // Instructor list short code
 @import "_instructor";
-//Any kind of denied (permission, unathurized, not found)
+//Any kind of denied (permission, unauthorized, not found)
 @import "_denied";
 @import "./course-spotlight/index.scss";
 @import "../modules/qna.scss";

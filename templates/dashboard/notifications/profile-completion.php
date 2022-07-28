@@ -1,7 +1,5 @@
 <?php
-
 $profile_completion = tutils()->user_profile_completion();
-
 if ( $profile_completion->progress < 100 ) { ?>
 	<div class="tutor-col-12">
 		<div class="tutor-profile-completion-warning">

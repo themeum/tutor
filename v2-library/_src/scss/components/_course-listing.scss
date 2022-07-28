@@ -1,0 +1,44 @@
+// Course List
+.tutor-course {
+    &-card {
+		height: 100%;
+		.tutor-card-body {
+			display: flex;
+			flex-direction: column;
+			flex-wrap: nowrap;
+		}
+		
+		.tutor-course {
+			&-bookmark {
+				position: absolute;
+				top: 12px;
+				right: 12px;
+			}
+
+			&-difficulty-level {
+				position: absolute;
+				top: 12px;
+				left: 12px;
+				background: var(--tutor-color-primary);
+				color: #FFFFFF;
+				font-size: 12px;
+				line-height: 1.4;
+				font-weight: 500;
+				padding: 4px 8px;
+				border-radius: 50px;
+			}
+
+			&-name {
+				@include tutorLineClamp(3);
+				&,
+				a {
+					color: var(--tutor-body-color);
+				}
+
+				a:hover {
+					color: var(--tutor-color-primary);
+				}
+			}
+		}
+    }
+}

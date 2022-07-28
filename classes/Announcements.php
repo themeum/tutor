@@ -64,7 +64,7 @@ class Announcements {
 	}
 
 	/**
-	 * Handle bulk action for enrollment cancel | delete
+	 * Handle bulk action for enrolment cancel | delete
 	 *
 	 * @return string JSON response.
 	 * @since v2.0.0
@@ -80,7 +80,7 @@ class Announcements {
 	}
 
 	/**
-	 * Execute bulk action for enrollments ex: complete | cancel
+	 * Execute bulk action for enrolments ex: complete | cancel
 	 *
 	 * @param string $action hold action.
 	 * @param string $bulk_ids ids that need to update.

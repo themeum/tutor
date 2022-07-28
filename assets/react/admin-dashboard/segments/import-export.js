@@ -106,7 +106,7 @@ function tutor_option_history_load(dataset) {
 	}
 	const heading = `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p>Date</p></div></div>`;
 
-	const historyData = selectorElement('.history_data');
+	const historyData = document.querySelector('.history_data');
 	null !== historyData ? (historyData.innerHTML = heading + output) : '';
 	export_single_settings();
 	// popupToggle();
@@ -115,7 +115,7 @@ function tutor_option_history_load(dataset) {
 /* import and list dom */
 
 const export_settings_all = () => {
-	const export_settings = selectorElement('#export_settings'); //document.querySelector("#export_settings");
+	const export_settings = document.querySelector('#export_settings'); //document.querySelector("#export_settings");
 	if (export_settings) {
 		export_settings.onclick = (e) => {
 			var formData = new FormData();
@@ -145,7 +145,7 @@ const time_now = () => {
 };
 
 const reset_default_options = () => {
-	const reset_options = selectorElement('#reset_options');
+	const reset_options = document.querySelector('#reset_options');
 	if (reset_options) {
 		reset_options.onclick = function() {
 			modalConfirmation(reset_options);
@@ -171,7 +171,7 @@ const reset_all_settings_xhttp = (modalOpener, modalElement) => {
 };
 
 const import_history_data = () => {
-	const import_options = selectorElement('#import_options');
+	const import_options = document.querySelector('#import_options');
 	if (import_options) {
 		import_options.onclick = (e) => {
 			modalConfirmation(import_options);
@@ -180,7 +180,7 @@ const import_history_data = () => {
 };
 
 const import_history_data_xhttp = (modalOpener, modalElement) => {
-	var fileElem = selectorElement('#drag-drop-input');
+	var fileElem = document.querySelector('#drag-drop-input');
 	var files = fileElem.files;
 	if (files.length <= 0) {
 		tutor_toast('Failed', 'Please add a correctly formated json file', 'error');
@@ -217,7 +217,7 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
 };
 
 const export_single_settings = () => {
-	const single_settings = selectorElements('.export_single_settings');
+	const single_settings = document.querySelectorAll('.export_single_settings');
 	if (single_settings) {
 		for (let i = 0; i < single_settings.length; i++) {
 			single_settings[i].onclick = function(e) {
@@ -279,7 +279,7 @@ const modalConfirmation = (modalOpener) => {
 };
 
 const modal_opener_single_settings = () => {
-	const apply_settings = selectorElements('.apply_settings');
+	const apply_settings = document.querySelectorAll('.apply_settings');
 	if (apply_settings) {
 		apply_settings.forEach((applyButton) => {
 			applyButton.onclick = () => {
@@ -310,7 +310,7 @@ const apply_settings_xhttp_request = (modelOpener, modalElement) => {
 };
 
 const delete_history_data = () => {
-	const delete_settings = selectorElements('.delete_single_settings');
+	const delete_settings = document.querySelectorAll('.delete_single_settings');
 	if (delete_settings) {
 		delete_settings.forEach((deleteButton) => {
 			deleteButton.onclick = () => {

@@ -9,7 +9,7 @@ if (get_the_ID())
 ?>
 
 <div class="tutor-mb-32">
-	<label class="tutor-form-label"><?php _e('Attachment', 'tutor'); ?></label>
+	<label class="tutor-form-label"><?php _e('Upload exercise files to the Lesson', 'tutor'); ?></label>
 	<div class="tutor-mb-16 tutor-attachments-metabox">
 		<?php 
 			$attachments = tutor_utils()->get_attachments($post->ID);

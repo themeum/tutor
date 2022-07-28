@@ -13,9 +13,6 @@
 .tutor-course-builder-section {
 	margin-bottom: 60px;
 
-	input[type='text'],
-	input[type='number'],
-	textarea,
 	.wp-editor-wrap {
 		width: 100%;
 	}
@@ -121,38 +118,10 @@
 		align-items: center;
 
 		.tutor-dashboard-builder-logo {
-			padding: 0 25px;
+			padding: 0 24px;
 			position: relative;
 			img {
 				max-height: 28px;
-			}
-		}
-
-		button {
-			margin: 0;
-			padding: 0px 15px;
-			line-height: 30px;
-			border: none;
-			background: transparent;
-			display: inline-flex;
-			color: var(--tutor-body-color);
-			transition: 300ms;
-			font-weight: 500;
-			white-space: nowrap;
-
-			.tutor-icon-save {
-				font-size: 24px;
-				line-height: 30px;
-				margin-right: 9px;
-				margin-top: -1px;
-			}
-
-			&:hover {
-				color: var(--tutor-color-primary);
-				background: transparent;
-				i {
-					color: var(--tutor-color-primary);
-				}
 			}
 		}
 	}
@@ -190,7 +159,7 @@
 }
 
 .tutor-frontend-builder-course-price {
-	color: var(--tutor-color-body);
+	color: var(--tutor-body-color);
 
 	.tutor-form-group input {
 		margin-bottom: 0;
@@ -268,5 +237,26 @@ Content Drip (Pro)
 				top: 9px;
 			}
 		}
+
+		// rtl
+		@at-root .rtl {
+			.tutor-course-builder-upload-tips ul {
+				padding: 0 35px 0 0;
+
+				li:after {
+					left: initial;
+					right: -26px;
+				}
+			}
+		}
+	}
+}
+
+
+.tutor-course-price-row{
+	display: none;
+	
+	&.is-paid{
+		display: flex;
 	}
 }

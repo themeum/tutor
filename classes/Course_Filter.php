@@ -21,16 +21,50 @@ class Course_Filter {
 	public function load_listing($filters=null, $return_filter=false) {
 		!$return_filter ? tutils()->checking_nonce() : 0;
 		$_post = tutor_sanitize_data($filters==null ? $_POST : $filters);
+		!is_array( $_post ) ? $_post=array() : 0;
 
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
 
-		$page = ( isset( $_post['current_page'] ) && is_numeric( $_post['current_page'] ) && $_post['current_page'] > 0 ) ? sanitize_text_field( $_post['current_page'] ) : 1;
+		// Pagination arg
+		$page = ( isset( $_post['current_page'] ) && is_numeric( $_post['current_page'] ) && $_post['current_page'] > 0 ) ? $_post['current_page'] : 1;
+		$_post['current_page'] = $page;
+
+		// Order arg
+		$order_by = 'ID';
+		$order = 'DESC';
+
+		if(isset($_post['course_order'])) {
+			switch($_post['course_order']) {
+				case 'newest_first' : 
+					$order_by = 'ID';
+					$order = 'DESC';
+					break;
+
+				case 'oldest_first' : 
+					$order_by = 'ID';
+					$order = 'ASC';
+					break;
+				
+				case 'course_title_az' : 
+					$order_by = 'post_title';
+					$order = 'ASC';
+					break;
+				
+				case 'course_title_za' : 
+					$order_by = 'post_title';
+					$order = 'DESC';
+					break;
+			}
+		}
+		
 		$args = array(
 			'post_status'    => 'publish',
-			'post_type'      => 'courses',
+			'post_type'      => tutor()->course_post_type,
 			'posts_per_page' => $courses_per_page,
-			'paged'          => $page,
+			'paged'          => (int)$page,
+			'orderby'		 => $order_by,
+			'order'			 => $order,
 			'tax_query'      => array(
 				'relation' => 'OR',
 			),
@@ -39,7 +73,7 @@ class Course_Filter {
 		// Prepare taxonomy
 		foreach ( array( 'category', 'tag' ) as $taxonomy ) {
 
-			$term_array                             = tutils()->array_get( 'tutor-course-filter-' . $taxonomy, $_post, array() );
+			$term_array = tutils()->array_get( 'tutor-course-filter-' . $taxonomy, $_post, array() );
 			! is_array( $term_array ) ? $term_array = array( $term_array ) : 0;
 
 			$term_array = array_filter(

@@ -4,6 +4,8 @@
  * @version 1.4.3
  */
 
+use Tutor\Models\WithdrawModel;
+
 $col_classes = array(
     1 => 'tutor-col-12',
     2 => 'tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6',
@@ -24,7 +26,7 @@ $col_classes = array(
         $tutor_withdrawal_methods = apply_filters( 'tutor_withdrawal_methods_available', array() );
         
         if ( tutor_utils()->count( $tutor_withdrawal_methods ) ) {
-            $saved_account       = tutor_utils()->get_user_withdraw_method();
+            $saved_account       = WithdrawModel::get_user_withdraw_method();
             $old_method_key      = tutor_utils()->avalue_dot( 'withdraw_method_key', $saved_account );
             $min_withdraw_amount = tutor_utils()->get_option( 'min_withdraw_amount' );
             ?>
@@ -34,7 +36,7 @@ $col_classes = array(
                 foreach ( $tutor_withdrawal_methods as $method_id => $method ) {
                     ?>
                     <div class="<?php echo esc_attr( $col_classes[ $method_count ] ); ?>" data-withdraw-method="<?php echo esc_attr( $method_id ); ?>">
-                        <label class="tutor-radio-select tutor-align-items-center tutor-mb-12">
+                        <label class="tutor-radio-select tutor-align-center tutor-mb-12">
                             <input class="tutor-form-check-input" type="radio" name="tutor_selected_withdraw_method" value="<?php echo esc_attr( $method_id ); ?>" <?php checked( $method_id, $old_method_key ) ?>/>
                             <div class="tutor-radio-select-content">
                                 <span class="tutor-radio-select-title">

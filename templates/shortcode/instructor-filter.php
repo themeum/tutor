@@ -24,14 +24,17 @@ if ( $total_categories && $total_categories > $limit ) {
 $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 ?>
 
-<div class="tutor-instructors" tutor-instructors <?php
-	foreach ( $attributes as $key => $value ) {
+<div class="tutor-wrap tutor-wrap-parent tutor-instructors" tutor-instructors <?php
+	foreach ( $attributes as $key => $value )  {
+		if ( is_array( $value ) ) {
+			continue;
+		}
 		echo 'data-' . $key . '="' . $value . '" ';
 	}
 ?>>
 	<div class="tutor-row">
 		<aside class="tutor-col-lg-3 tutor-mb-32 tutor-mb-lg-0" tutor-instructors-filters>
-			<div class="tutor-d-flex tutor-align-items-center">
+			<div class="tutor-d-flex tutor-align-center">
 				<div>
 					<span class="tutor-icon-slider-vertical tutor-color-primary tutor-mr-8" area-hidden="true"></span>
 					<span class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php _e("Filters", "tutor"); ?></span>
@@ -100,10 +103,10 @@ $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 				<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
 				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" tutor-instructors-filter-search />
 			</div>
-			<div class="tutor-d-flex tutor-align-items-center tutor-mb-24">
+			<div class="tutor-d-flex tutor-align-center tutor-mb-24">
 				<div class="tutor-mr-16">
 					<label for="tutor-instructor-relevant-sort" class="tutor-fs-6 tutor-color-muted">
-						<?php _e( 'Short by', 'tutor' ); ?>
+						<?php _e( 'Sort by', 'tutor' ); ?>
 					</label>
 				</div>
 				<div>

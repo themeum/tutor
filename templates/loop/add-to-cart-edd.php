@@ -17,7 +17,7 @@ if ($download->ID) {
 			'text'        => $button_behavior == 'direct' ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) ),
 			'style'       => edd_get_option( 'button_style', 'button' ),
 			'color'       => edd_get_option( 'checkout_color', 'blue' ),
-			'class'       => 'edd-submit cart-required-login'
+			'class'       => 'edd-submit tutor-open-login-modal'
 		) );
 		$button_text = edd_currency_filter( edd_format_amount( $download->price ) ) .'&nbsp;&ndash;&nbsp;'. $args['text'];
 		$button_class = implode( ' ', array( $args['style'], $args['color'], $args['class'] ) );
