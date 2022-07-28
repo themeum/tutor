@@ -21,7 +21,7 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
 
 ?>
 <div class="tutor-course-topic-single-header tutor-single-page-top-bar">
-	<a href="#" class="tutor-course-topics-sidebar-toggler tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex" tutor-course-topics-sidebar-toggler>
+	<a href="#" class="tutor-course-topics-sidebar-toggler tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex tutor-flex-shrink-0" tutor-course-topics-sidebar-toggler>
 		<span class="tutor-icon-left" area-hidden="true"></span>
 	</a>
 
