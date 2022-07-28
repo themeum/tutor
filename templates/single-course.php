@@ -15,7 +15,7 @@
 $course_id          = get_the_ID();
 $course_nav_item    = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), $course_id );
 $is_public          = \TUTOR\Course_List::is_public( $course_id );
-$is_mobile          = tutor_utils()->is_mobile();
+$is_mobile          = wp_is_mobile();
 
 $enrollment_box_position            = tutor_utils()->get_option( 'enrollment_box_position_in_mobile', 'bottom' );
 $student_must_login_to_view_course  = tutor_utils()->get_option( 'student_must_login_to_view_course' );
