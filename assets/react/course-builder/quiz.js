@@ -1,4 +1,5 @@
 import { get_response_message } from '../helper/response';
+import initTinyMCE from '../lib/tinymce';
 
 window.jQuery(document).ready(function($) {
 	const { __ } = wp.i18n;
@@ -401,6 +402,7 @@ window.jQuery(document).ready(function($) {
 
 				// Enable quiz answer sorting for multi/radio select
 				enable_quiz_answer_sorting();
+				initTinyMCE('textarea#tutor-quiz-question-desc', 'codesample image', 'codesample image');
 			},
 			complete: function() {
 				$that.removeClass('is-loading').attr('disabled', false);
