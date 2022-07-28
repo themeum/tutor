@@ -1,0 +1,121 @@
+.tutor-pagination {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: column;
+	background: transparent;
+	border: 1px solid var(--tutor-border-color);
+	border-radius: 6px;
+	padding: 7px 18px;
+	
+	@include breakpoint-min(tablet) {
+		flex-direction: row;
+	}
+	
+	ul.tutor-pagination-numbers {
+		list-style: none;
+		display: flex;
+		align-items: center;
+		gap: 11px;
+		padding: 0;
+		margin: 0;
+		
+		@include breakpoint-max(tablet) {
+			margin-top: 10px;
+			gap: 10px;
+		}
+		
+		a {
+			text-decoration: none;
+			color: inherit;
+		}
+		
+		.page-numbers {
+			@extend .text-medium-caption;
+			color: var(--tutor-body-color);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+			padding: 0 5px;
+			
+			&:hover {
+				color: var(--tutor-color-primary);
+			}
+			
+			a {
+				padding: 1px 6px;
+			}
+			
+			&.prev,
+			&.next {
+				padding: 0;
+				width: 32px;
+				height: 32px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: rgba(var(--tutor-color-primary-rgb), 0.1);
+				border-radius: 6px;
+				transition: all 150ms linear;
+				
+				&:hover {
+					color: var(--tutor-color-white);
+					background: var(--tutor-color-primary);
+				}
+			}
+			
+			@include breakpoint-min(desktop-lg) {
+				--margin: 32px;
+				&.prev {
+					margin-right: var(--margin);
+				}
+				
+				&.next {
+					margin-left: var(--margin);
+				}
+			}
+			
+			&:before {
+				content: '';
+				position: absolute;
+				width: 100%;
+				height: 2px;
+				background: var(--tutor-color-primary);
+				bottom: calc(0% - 12px);
+				left: 0;
+				transform: scaleY(0);
+				transform-origin: bottom;
+				transition: transform 100ms linear;
+			}
+			
+			&.current {
+				@extend .text-bold-caption;
+				color: var(--tutor-color-primary);
+				&:before {
+					transform: scaleY(1);
+				}
+			}
+		}
+	}
+
+	&[data-tutor_pagination_ajax] {
+		position: relative;
+		
+		&:not(.is-ajax-pagination-enabled) {
+			&::before{
+				content: '';
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				display: block;
+				z-index: 99;
+				background: black;
+				border-radius: inherit;
+				opacity: 0.03;
+			}
+		}
+	}
+}

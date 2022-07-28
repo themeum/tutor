@@ -70,10 +70,10 @@ $footer_links = array(
 do_action('tutor_dashboard/before/wrap');
 ?>
 
-<div class="tutor-wrap tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-80">
+<div class="tutor-wrap tutor-wrap-parent tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-80">
 	<div class="tutor-container">
 		<div class="tutor-row tutor-d-flex tutor-justify-between tutor-frontend-dashboard-header">
-			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-items-center" style="border: none;">
+			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar">
 					<?php echo tutor_utils()->get_tutor_avatar($user_id, 'xl'); ?>
 				</div>
@@ -97,7 +97,7 @@ do_action('tutor_dashboard/before/wrap');
 					?>
 						<div class="tutor-dashboard-header-display-name tutor-color-black">
 							<div class="tutor-fs-5 tutor-dashboard-header-greetings">
-								Hello,
+								<?php _e('Hello', 'tutor'); ?>,
 							</div>
 							<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
 								<?php echo esc_html($user->display_name); ?>
@@ -109,7 +109,7 @@ do_action('tutor_dashboard/before/wrap');
 				</div>
 			</div>
 			<div class="tutor-header-right-side tutor-col-md-6 tutor-d-flex tutor-justify-end tutor-mt-20 tutor-mt-md-0">
-				<div class="tutor-d-flex tutor-align-items-center">
+				<div class="tutor-d-flex tutor-align-center">
 					<?php
 					do_action('tutor_dashboard/before_header_button');
 					$instructor_status  = tutor_utils()->instructor_status();
@@ -128,12 +128,23 @@ do_action('tutor_dashboard/before/wrap');
 					}
 					$become_button = ob_get_clean();
 
-					if (current_user_can(tutor()->instructor_role)) {
+					if ( current_user_can( tutor()->instructor_role ) ) {
 						$course_type = tutor()->course_post_type;
 					?>
-						<a class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
-							<i class="tutor-icon-plus-square tutor-my-n4 tutor-mr-8"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
-						</a>
+					<?php
+					/**
+					 * Render create course button based on free & pro
+					 *
+					 * @since v2.0.7
+					 */
+					if ( function_exists( 'tutor_pro' ) ) : ?>
+						<?php do_action( 'tutor_course_create_button' ); ?>
+						<?php else : ?>
+							<a href="<?php echo esc_url( admin_url( "post-new.php?post_type=$course_type" ) ); ?>" class="tutor-btn tutor-btn-outline-primary">
+								<i class="tutor-icon-plus-square tutor-my-n4 tutor-mr-8"></i>
+								<?php esc_html_e( 'Create a New Course', 'tutor' ); ?>
+							</a>
+					<?php endif; ?>
 					<?php
 					} elseif ($instructor_status == 'pending') {
 						$on = get_user_meta($user->ID, '_is_tutor_instructor', true);
@@ -174,13 +185,13 @@ do_action('tutor_dashboard/before/wrap');
 
 						if (is_array($dashboard_page)) {
 							$menu_title     = tutor_utils()->array_get('title', $dashboard_page);
-							$menu_icon_name = tutor_utils()->array_get('icon', $dashboard_page);
+							$menu_icon_name = tutor_utils()->array_get('icon', $dashboard_page, (isset($dashboard_page['icon']) ? $dashboard_page['icon'] : ''));
 							if ($menu_icon_name) {
 								$menu_icon = "<span class='{$menu_icon_name} tutor-dashboard-menu-item-icon'></span>";
 							}
 							// Add new menu item property "url" for custom link
 							if (isset($dashboard_page['url'])) {
-								echo $menu_link = $dashboard_page['url'];
+								$menu_link = $dashboard_page['url'];
 							}
 							if (isset($dashboard_page['type']) && $dashboard_page['type'] == 'separator') {
 								$separator = true;
@@ -252,17 +263,6 @@ do_action('tutor_dashboard/before/wrap');
 		</div>
 	</div>
 </div>
-
-<style>
-	.site-content {
-		overflow-y: hidden;
-		padding-bottom: 0;
-	}
-
-	.tutor-frontend-dashboard {
-		overflow-y: hidden;
-	}
-</style>
 
 <?php do_action('tutor_dashboard/after/wrap'); ?>
 

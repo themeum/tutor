@@ -198,7 +198,7 @@ export default () => {
                                                 <input type="password" className="tutor-form-control" placeholder="Password"/>
                                                 {/*<span className="las la-calendar-alt tutor-input-group-icon-right"></span>*/}
                                             </div>
-                                            <div className="row tutor-align-items-center tutor-mb-32">
+                                            <div className="row tutor-align-center tutor-mb-32">
                                                 <div className="col">
                                                     <div className="tutor-form-check">
                                                         <input id="login-agmnt-1" type="checkbox" className="tutor-form-check-input" name="login-agmnt-1" />

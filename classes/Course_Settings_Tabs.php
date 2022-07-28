@@ -22,8 +22,8 @@ class Course_Settings_Tabs{
         add_action('tutor_save_course_settings', array($this, 'save_course'), 10, 2);
     }
 
-    public function register_meta_box(){
-        add_meta_box( 'course-settings', __( 'Course Settings', 'tutor' ), array($this, 'display'), $this->course_post_type, 'advanced', 'high' );
+    public function register_meta_box() {
+		\tutor_meta_box_wrapper( 'course-settings', __( 'Course Settings', 'tutor' ), array( $this, 'display' ), $this->course_post_type, 'advanced', 'high', 'tutor-admin-post-meta' );
     }
 
     public function get_default_args(){
@@ -54,7 +54,7 @@ class Course_Settings_Tabs{
                 array(
                     'checked' => get_post_meta(get_the_ID(), '_tutor_is_public_course', true)=='yes',
                     'value' => 'yes',
-                    'hint' => __('Make This Course Public. No enrollment required.', 'tutor')
+                    'hint' => __('Make This Course Public. No enrolment required.', 'tutor')
                 )
             )
         );
@@ -118,8 +118,15 @@ class Course_Settings_Tabs{
      */
     public function save_course($post_ID, $post){
         $_tutor_course_settings = tutor_utils()->array_get('_tutor_course_settings', $_POST);
+
         if (tutor_utils()->count($_tutor_course_settings)){
-            update_post_meta($post_ID, '_tutor_course_settings', $_tutor_course_settings);
+
+            $existing = get_post_meta( $post_ID, '_tutor_course_settings', true );
+            !is_array( $existing ) ? $existing = array() : 0;
+
+            $meta = array_merge($existing, $_tutor_course_settings);
+
+            update_post_meta($post_ID, '_tutor_course_settings', $meta);
         }
     }
 }

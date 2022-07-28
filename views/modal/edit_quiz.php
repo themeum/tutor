@@ -31,7 +31,7 @@
                             <?php echo stripslashes($question->question_title); ?>
                         </h6>
                     </div>
-                    <div class="tutor-quiz-item-action tutor-align-items-center">
+                    <div class="tutor-quiz-item-action tutor-align-center">
                         <div class="tutor-quiz-item-type">
                             <?php
                                 $type = tutor_utils()->get_question_types($question->question_type);
@@ -42,7 +42,7 @@
                             <button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
                                 <span class="tutor-icon-kebab-menu" area-hidden="true"></span>
                             </button>
-                            <ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+                            <ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
                                 <li>
                                     <a href="#" class="tutor-dropdown-item tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
                                         <span class="tutor-icon-edit tutor-mr-8" area-hidden="true"></span>
@@ -78,7 +78,7 @@
         <label class="tutor-form-label">
             <?php _e('Time Limit', 'tutor'); ?>
         </label>
-        <div class="tutor-row tutor-align-items-center">
+        <div class="tutor-row tutor-align-center">
             <div class="tutor-col-3">
                 <input type="number" class="tutor-form-control" min="0" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
             </div>
@@ -114,18 +114,10 @@
             </div>
 
             <label class="tutor-radio-select tutor-bg-white tutor-mb-8">
-                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
+                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 'default')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Default', 'tutor'); ?></span>
                     <?php _e('Answers shown after quiz is finished', 'tutor'); ?>
-                </div>
-            </label>
-
-            <label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
-                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
-                <div class="tutor-radio-select-content">
-                    <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
-                    <?php _e('Unlimited attempts on each question.', 'tutor'); ?>
                 </div>
             </label>
 
@@ -136,26 +128,32 @@
                     <?php _e('Show result after the attempt.', 'tutor'); ?>
                 </div>
             </label>
+
+            <label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
+                <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
+                <div class="tutor-radio-select-content">
+                    <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
+                    <?php _e('Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor'); ?>
+                </div>
+            </label>
         </div>
     </div>
     
-    <div class="tutor-mb-32 tutor-quiz-slider">
+    <div class="tutor-mb-32 tutor-quiz-slider tutor-attempt-allowed-slider" style="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 'default') === 'retry' ? 'display: block' : 'display: none'?>">
         <label class="tutor-form-label">
             <?php _e('Attempts Allowed', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group">
-            <?php
-                $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
-                $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
-            ?>
-            <div class="tutor-field-type-slider tutor-p-0" data-min="0" data-max="20">
-                <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
-                <div class="tutor-field-slider"></div>
-                <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
-            </div>
-            <div class="tutor-form-feedback">
-                <?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?>
-            </div>
+        <?php
+            $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
+            $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
+        ?>
+        <div class="tutor-field-type-slider tutor-p-0" data-min="0" data-max="20">
+            <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
+            <div class="tutor-field-slider"></div>
+            <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
+        </div>
+        <div class="tutor-form-feedback">
+            <?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?>
         </div>
     </div>
 
@@ -163,11 +161,9 @@
         <label class="tutor-form-label">
             <?php _e('Passing Grade (%)', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group">
-            <input type="number" class="tutor-form-control" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10" min="0"/>
-            <div class="tutor-form-feedback">
-                <?php _e('Set the passing percentage for this quiz', 'tutor'); ?>
-            </div>
+        <input type="number" class="tutor-form-control" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10" min="0"/>
+        <div class="tutor-form-feedback">
+            <?php _e('Set the passing percentage for this quiz', 'tutor'); ?>
         </div>
     </div>
 
@@ -175,11 +171,9 @@
         <label class="tutor-form-label">
             <?php _e('Max questions allowed to answer', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group">
-            <input type="number" class="tutor-form-control" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>" min="1"/>
-            <div class="tutor-form-feedback">
-                <?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?>
-            </div>
+        <input type="number" class="tutor-form-control" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>" min="1"/>
+        <div class="tutor-form-feedback">
+            <?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?>
         </div>
     </div>
 
@@ -187,9 +181,9 @@
 
     <div class="tutor-quiz-advance-settings tutor-bg-white tutor-cursor-pointer tutor-mb-32">
         <!-- Header -->
-        <div class="tutor-row tutor-align-items-center tutor-quiz-advance-header tutor-g-0">
+        <div class="tutor-row tutor-align-center tutor-quiz-advance-header tutor-g-0">
             <div class="tutor-col">
-                <div class="tutor-row tutor-align-items-center">
+                <div class="tutor-row tutor-align-center">
                     <div class="tutor-col-auto">
                         <span><i class="tutor-icon-gear"></i></span>
                     </div>

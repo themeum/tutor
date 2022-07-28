@@ -128,12 +128,18 @@
 
         <?php do_action('tutor_instructor_reg_form_end');?>
 
-        <div class="tutor-form-row">
-            <div class="tutor-form-col-12">
-                <div class="tutor-form-group tutor-reg-form-btn-wrap">
-                    <button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-btn"><?php esc_html_e('Register as instructor', 'tutor'); ?></button>
-                </div>
+        <?php
+            $tutor_toc_page_link = tutor_utils()->get_toc_page_link();
+        ?>
+        
+        <?php if( null !== $tutor_toc_page_link ) : ?>
+            <div class="tutor-mb-24">
+                <?php _e( 'By signing up, I agree with the website\'s', 'tutor' ) ?> <a target="_blank" href="<?php echo $tutor_toc_page_link?>" title="<?php _e('Terms and Conditions', 'tutor'); ?>"><?php _e('Terms and Conditions', 'tutor'); ?></a>
             </div>
+        <?php endif; ?>
+
+        <div>
+            <button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-btn tutor-btn-primary"><?php esc_html_e('Register as instructor', 'tutor'); ?></button>
         </div>
 
     </form>

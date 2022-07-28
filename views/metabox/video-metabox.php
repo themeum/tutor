@@ -34,6 +34,15 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
     return;
 }
 
+/**
+ * On course create
+ * From video source list first item will be selected, When only one video source selected from settings
+ * 
+ * @since 2.0.6
+ */
+if( is_array( $supported_sources ) && 1 === count( $supported_sources ) && false === $video ) {
+    $videoSource = $supported_sources[0];
+}
 
 function tutor_video_input_state($videoSource, $source){
     $value = ($videoSource == $source && in_array($source, $GLOBALS['supported_sources'])) ? 'block' : 'none';
@@ -65,11 +74,10 @@ function tutor_video_input_state($videoSource, $source){
             <select name="video[source]" class="tutor-form-control tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
                 <?php
-                foreach ($video_sources as $value => $source) {
-                    if (in_array($value, $supported_sources)) {
-                        echo '<option value="' . $value . '" ' . selected($value, $videoSource) . '  data-icon="' . $source['icon'] . '">
-                                    ' . $source['title'] . '
-                                </option>';
+                foreach ( $video_sources as $value => $source ) {
+                    if ( in_array( $value, $supported_sources ) ) {
+                        $selected = selected( $value, $videoSource );
+                        echo sprintf('<option value="%s" %s data-icon="%s">%s</option>', $value, $selected, $source['icon'], $source['title'] );
                     }
                 }
                 ?>

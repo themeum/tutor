@@ -1,0 +1,84 @@
+.tutor-thumbnail-uploader {
+	width: 100%;
+
+	.thumbnail-wrapper {
+		background: var(--tutor-color-white);
+		box-sizing: border-box;
+		border-radius: 6px;
+
+		&:not(.tutor-is-borderless) {
+			border: 1px solid var(--tutor-border-color);
+		}
+	}
+
+	.thumbnail-preview {
+		--width: 235px;
+		background: $color-gray-10;
+		border: 2px solid $color-gray-10;
+		border-radius: 3px;
+		position: relative;
+		width: 268px;
+		height: 98px;
+		width: var(--width);
+		height: calc(var(--width) / 1.775);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		img {
+			width: auto;
+			height: auto;
+			max-width: 100%;
+			max-height: 100%;
+			
+			&::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: $color-gray-10;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				@include svg-image-uppoad;
+				background-repeat: no-repeat;
+				background-position: center;
+			}
+		}
+
+		span.delete-btn {
+			display: inline-block;
+			position: absolute;
+			width: 24px;
+			height: 24px;
+			border-radius: 50%;
+			@include svg-delete-icon;
+			background-color: $color-danger;
+			background-repeat: no-repeat;
+			background-position: 50%;
+			cursor: pointer;
+			top: -12px;
+			right: -12px;
+
+			&:hover {
+				background-color: darken($color: $color-danger, $amount: 6);
+			}
+		}
+	}
+
+	.thumbnail-input {
+		input[type='file'] {
+			@include appearNone;
+			display: none;
+		}
+
+		.tutor-btn {
+			cursor: pointer;
+			border-radius: 6px;
+			padding: 6px 14px;
+
+			> .tutor-btn-icon {
+				font-size: 24px;
+			}
+		}
+	}
+}

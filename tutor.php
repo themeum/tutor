@@ -1,25 +1,27 @@
 <?php
-/*
-Plugin Name: Tutor LMS
-Plugin URI: https://www.themeum.com/product/tutor-lms/
-Description: Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create small to large scale online education site very conveniently. Power features like report, certificate, course preview, private file sharing make Tutor a robust plugin for any educational institutes.
-Author: Themeum
-Version: 2.0.2
-Author URI: https://themeum.com
-Requires at least: 4.5
-Tested up to: 5.9
-License: GPLv2 or later
-Text Domain: tutor
-*/
+/**
+ * Plugin Name: Tutor LMS
+ * Plugin URI: https://www.themeum.com/product/tutor-lms/
+ * Description: Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create small to large scale online education site very conveniently. Power features like report, certificate, course preview, private file sharing make Tutor a robust plugin for any educational institutes.
+ * Author: Themeum
+ * Version: 2.0.9
+ * Author URI: https://themeum.com
+ * Requires at least: 5.3
+ * Tested up to: 6.0.1
+ * License: GPLv2 or later
+ * Text Domain: tutor
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once "vendor/autoload.php";
+
 /**
  * Defined the tutor main file
  */
-define( 'TUTOR_VERSION', '2.0.2' );
+define( 'TUTOR_VERSION', '2.0.9' );
 define( 'TUTOR_FILE', __FILE__ );
 
 /**
@@ -77,6 +79,13 @@ if ( ! function_exists( 'tutor' ) ) {
 			'instructor_role_name' => apply_filters( 'tutor_instructor_role_name', __( 'Tutor Instructor', 'tutor' ) ),
 			'template_path'        => apply_filters( 'tutor_template_path', 'tutor/' ),
 			'has_pro'              => apply_filters( 'tutor_has_pro', $has_pro ),
+			// @since v2.0.6.
+			'topics_post_type'	   	 => apply_filters( 'tutor_topics_post_type', 'topics' ),
+			'announcement_post_type' => apply_filters( 'tutor_announcement_post_type', 'tutor_announcements' ),
+			'assignment_post_type'	 => apply_filters( 'tutor_assignment_post_type', 'tutor_assignments' ),
+			'enrollment_post_type'   => apply_filters( 'tutor_enrollment_post_type', 'tutor_enrolled' ),
+			'quiz_post_type'   		 => apply_filters( 'tutor_quiz_post_type', 'tutor_quiz' ),
+			'zoom_post_type'   		 => apply_filters( 'tutor_zoom_meeting_post_type', 'tutor_zoom_meeting' ),
 		);
 
 		$GLOBALS['tutor_plugin_info'] = (object) $info;
@@ -99,6 +108,11 @@ if ( ! class_exists( '\TUTOR\Utils' ) ) {
 }
 
 if ( ! function_exists( 'tutor_utils' ) ) {
+	/**
+	 * Access tutor utils functions
+	 *
+	 * @return \TUTOR\Utils
+	 */
 	function tutor_utils() {
 		if ( ! isset( $GLOBALS['tutor_utils_object'] ) ) {
 			// Use runtime cache
@@ -109,14 +123,15 @@ if ( ! function_exists( 'tutor_utils' ) ) {
 	}
 }
 
-/**
- * Alis of tutor_utils()
- *
- * @return \TUTOR\Utils
- *
- * @since v.1.3.4
- */
+
 if ( ! function_exists( 'tutils' ) ) {
+	/**
+	 * Alis of tutor_utils()
+	 *
+	 * @return \TUTOR\Utils
+	 *
+	 * @since v.1.3.4
+	 */
 	function tutils() {
 		return tutor_utils();
 	}

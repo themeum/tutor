@@ -39,13 +39,13 @@ add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
                 $total_booked = 100 / $maximum_students * $total_enrolled;
                 $b_total = $total_booked;
                 // @codingStandardsIgnoreStart
-                echo '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-between">
-                        <div class="list-item-price tutor-d-flex tutor-align-items-center"> 
+                echo '<div class="list-item-price-with-booking tutor-d-flex tutor-align-center tutor-justify-between">
+                        <div class="list-item-price tutor-d-flex tutor-align-center"> 
                             <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.
                                 $edd_price . ' 
                             </span>
                         </div>
-                        <div class="list-item-booking tutor-d-flex tutor-align-items-center">
+                        <div class="list-item-booking tutor-d-flex tutor-align-center">
                             <div class="booking-progress tutor-d-flex">
                                 <div class="circle-progress progress-full" style="--pro:'.$b_total .'%;">
                                 </div>
@@ -62,14 +62,14 @@ add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
             }
 
             if ( $maximum_students == $total_enrolled && $maximum_students != 0) {
-                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-between">
-                                    <div class="list-item-price tutor-d-flex tutor-align-items-center"> 
+                $price_html = '<div class="tutor-d-flex tutor-align-center tutor-justify-between">
+                                    <div class="list-item-price tutor-d-flex tutor-align-center"> 
                                         <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.
                                             $edd_price . ' 
                                         </span>
                                     </div>';
 
-                $restrict = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-items-center">
+                $restrict = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center">
                                 <div class="booking-progress tutor-d-flex">
                                     <span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span>
                                 </div>

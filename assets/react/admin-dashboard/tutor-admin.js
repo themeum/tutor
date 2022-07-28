@@ -14,6 +14,7 @@ import './segments/reset';
 import './segments/withdraw';
 import './segments/column-filter';
 import './segments/multiple_email_input';
+import './quiz-attempts';
 
 const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
 toggleChange.forEach((element) => {
@@ -145,7 +146,6 @@ jQuery(document).ready(function($) {
 	 * @since v.1.0.3
 	 */
 	$(document).on('submit', '#tutor-new-instructor-form', function(e) {
-		console.log("Hello");
 		e.preventDefault();
 		var $that = $(this);
 		var formData = $that.serializeObject();
@@ -465,7 +465,7 @@ jQuery(document).ready(function($) {
 	});
 
 	//add checkbox class for style
-	var tutorCheckbox = $('.tutor-ui-table .tutor-form-check-input');
+	var tutorCheckbox = $('.tutor-table .tutor-form-check-input');
 	if (tutorCheckbox) {
 		tutorCheckbox.parent().addClass('tutor-option-field-row');
 	}

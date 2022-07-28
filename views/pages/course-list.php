@@ -38,7 +38,7 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 /**
  * Navbar data to make nav menu
  */
-$add_course_url = esc_url( admin_url( 'post-new.php?post_type=courses' ) );
+$add_course_url = esc_url( admin_url( 'post-new.php?post_type='.tutor()->course_post_type ) );
 $navbar_data    = array(
 	'page_title'   => $courses->page_title,
 	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
@@ -51,11 +51,6 @@ $navbar_data    = array(
 /**
  * Bulk action & filters
  */
-// $filters = array(
-// 'bulk_action'   => $enrollments->bulk_action,
-// 'bulk_actions'  => $enrollments->prpare_bulk_actions(),
-// 'search_filter' => true,
-// );
 $filters = array(
 	'bulk_action'     => $courses->bulk_action,
 	'bulk_actions'    => $courses->prepare_bulk_actions(),
@@ -150,8 +145,8 @@ $available_status = array(
 	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-mt-24">
-			<div class="tutor-ui-table-wrapper">
-				<table class="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
+			<div class="tutor-table-responsive">
+				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
 							<th>
@@ -159,53 +154,32 @@ $available_status = array(
 									<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
 								</div>
 							</th>
-							<th class="tutor-table-rows-sorting">
-								<div class="tutor-fs-7 tutor-color-secondary">
-									<span class="tutor-fs-7">
-										<?php esc_html_e( 'Date', 'tutor' ); ?>
-									</span>
-									<span class="a-to-z-sort-icon tutor-icon-ordering-a-z  "></span>
-								</div>
+							<th class="tutor-table-rows-sorting" width="30%">
+								<?php esc_html_e( 'Title', 'tutor' ); ?>
+								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
 							</th>
-							<th class="tutor-table-rows-sorting">
-								<div class="tutor-fs-7 tutor-color-secondary">
-									<span class="tutor-fs-7">
-										<?php esc_html_e( 'Title', 'tutor' ); ?>
-									</span>
-									<span class="a-to-z-sort-icon tutor-icon-ordering-a-z  "></span>
-								</div>
+							<th width="13%">
+								<?php esc_html_e( 'Categories', 'tutor' ); ?>
 							</th>
-							<th class="tutor-table-rows-sorting">
-								<div class="tutor-color-secondary">
-									<span class="tutor-fs-7">
-									<?php esc_html_e( 'Author', 'tutor' ); ?>
-									</span>
-									<span class="a-to-z-sort-icon tutor-icon-ordering-a-z  "></span>
-								</div>
+							<th width="13%">
+								<?php esc_html_e( 'Author', 'tutor' ); ?>
 							</th>
-							<th>
-								<div class="tutor-fs-7 tutor-color-secondary">
-									<?php esc_html_e( 'Course Categories', 'tutor' ); ?>
-								</div>
+							<th width="6%">
+								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</th>
-							<th>
-								<div class="tutor-fs-7 tutor-color-secondary">
-									<?php esc_html_e( 'Students', 'tutor' ); ?>
-								</div>
+							<th class="tutor-table-rows-sorting" width="10%">
+								<?php esc_html_e( 'Date', 'tutor' ); ?>
+								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
 							</th>
-							<th>
-								<div class="tutor-fs-7 tutor-color-secondary">
-									<?php esc_html_e( 'Price', 'tutor' ); ?>
-								</div>
-							</th>
-							<th class="tutor-shrink"></th>
+							<th></th>
 						</tr>
 					</thead>
-					<tbody class="tutor-text-500">
+
+					<tbody>
 						<?php if ( $the_query->have_posts() ) : ?>
 							<?php
 							$course_ids = array_column($the_query->posts, 'ID');
-							$course_meta_data = $courses->get_course_meta_data($course_ids);
+							$course_meta_data = tutor_utils()->get_course_meta_data($course_ids);
 							$authors = array();
 							
 							foreach ( $the_query->posts as $key => $post ) :
@@ -213,90 +187,93 @@ $available_status = array(
 								$count_quiz       = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_quiz'] : 0;
 								$count_assignment = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_assignments'] : 0;
 								$count_topic      = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['topics'] : 0;
-								$total_student    = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_enrolled'] : 0;
+								$thumbnail_id 	  = (int) get_post_thumbnail_id( $post->ID );
+								$thumbnail 		  = $thumbnail_id ? wp_get_attachment_image_url( $thumbnail_id, 'thumbnail', false ) : tutor()->url . 'assets/images/placeholder.svg';
 								
 								!isset($authors[$post->post_author]) ? $authors[$post->post_author]=get_userdata( $post->post_author ) : 0;
 								$author_details = $authors[$post->post_author];
 								?>
 								<tr>
-									<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
+									<td>
 										<div class="td-checkbox tutor-d-flex ">
 											<input type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $post->ID ); ?>" />
 										</div>
 									</td>
-									<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
-										<div class="td-datetime">
-											<div class="tutor-fs-7 tutor-color-black tutor-fw-medium tutor-d-block tutor-mb-8">
-												<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>
-											</div>
-											<div class="tutor-fs-8 tutor-color-muted tutor-fw-medium tutor-d-block">
-												<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
+
+									<td>
+										<div class="tutor-d-flex tutor-align-center tutor-gap-2">
+											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-d-block">
+												<div style="width: 76px;">
+													<div class="tutor-ratio tutor-ratio-16x9">
+														<img class="tutor-radius-6" src="<?php echo $thumbnail; ?>" alt="<?php the_title(); ?>" loading="lazy">
+													</div>
+												</div>
+											</a>
+	
+											<div>
+												<a class="tutor-table-link" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
+													<?php echo esc_html( $post->post_title ); ?>
+												</a>
+		
+												<div class="tutor-meta tutor-mt-4">
+													<span>
+														<?php esc_html_e( 'Topic:', 'tutor' ); ?>
+														<span class="tutor-meta-value">
+															<?php echo esc_html( $count_topic ); ?>
+														</span>
+													</span>
+		
+													<span>
+														<?php esc_html_e( 'Lesson:', 'tutor' ); ?>
+														<span class="tutor-meta-value">
+															<?php echo esc_html( $count_lesson ); ?>
+														</span>
+													</span>
+		
+													<span>
+														<?php esc_html_e( 'Quiz:', 'tutor' ); ?>
+														<span class="tutor-meta-value">
+															<?php echo esc_html( $count_quiz ); ?>
+														</span>
+													</span>
+		
+													<span>
+														<?php esc_html_e( 'Assignment:', 'tutor' ); ?>
+														<span class="tutor-meta-value">
+															<?php echo esc_html( $count_assignment ); ?>
+														</span>
+													</span>
+												</div>
 											</div>
 										</div>
 									</td>
 
-									<td data-th="<?php esc_html_e( 'Course Name', 'tutor' ); ?>" class="column-fullwidth">
-										<div class="td-course tutor-color-black tutor-fs-6 tutor-fw-medium tutor-line-clamp-2">
-											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
-												<?php echo esc_html( $post->post_title ); ?>
-											</a>
-											<div class="course-meta">
-											<span class="tutor-color-muted tutor-fs-7 tutor-fw-medium">
-												<?php esc_html_e( 'Topic:', 'tutor' ); ?>
-												<strong class="tutor-color-black">
-													<?php echo esc_html( $count_topic ); ?>
-												</strong>
-											</span>
-											<span class="tutor-color-muted tutor-fs-7 tutor-fw-medium">
-												<?php esc_html_e( 'Lesson:', 'tutor' ); ?>
-												<strong class="tutor-color-black">
-													<?php echo esc_html( $count_lesson ); ?>
-												</strong>
-											</span>
-											<span class="tutor-color-muted tutor-fs-7 tutor-fw-medium">
-												<?php esc_html_e( 'Quiz:', 'tutor' ); ?>
-												<strong class="tutor-color-black">
-													<?php echo esc_html( $count_quiz ); ?>
-												</strong>
-											</span>
-											<span class="tutor-color-muted tutor-fs-7 tutor-fw-medium">
-												<?php esc_html_e( 'Assignment:', 'tutor' ); ?>
-												<strong class="tutor-color-black">
-													<?php echo esc_html( $count_assignment ); ?>
-												</strong>
-											</span>
-											</div>
-										</div>
-									</td>
-									<td data-th="<?php esc_html_e( 'Author', 'tutor' ); ?>">
-										<div class="td-avatar">
+									<td>
+										<span class="tutor-fw-normal tutor-fs-7">
 											<?php
-												echo get_avatar( $post->post_author, '96' );
+												$terms = wp_get_post_terms( $post->ID, 'course-category' );
+												if ( count( $terms ) ) {
+													echo implode(', ', array_column($terms, 'name')) . '&nbsp;';
+												} else {
+													echo '...';
+												}
 											?>
-											<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
-												<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
+										</span>
+									</td>
+
+									<td>
+										<div class="tutor-d-flex tutor-align-center">
+											<?php echo tutor_utils()->get_tutor_avatar( $author_details->ID, 'sm' ); ?>
+											<div class="tutor-ml-12">
+												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>">
+													<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
+												</a>
 											</div>
-											<a
-												href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>"
-												class="tutor-iconic-btn" target="_blank"
-											>
-												<span class="tutor-icon-external-link"></span>
-											</a>
 										</div>
 									</td>
-									<td data-th="<?php esc_html_e( 'Course Category', 'tutor' ); ?>">
-										<?php
-											$terms = wp_get_post_terms( $post->ID, 'course-category' );
-											echo implode(', ', array_column($terms, 'name')) . '&nbsp;';
-										?>
-									</td>
-									<td data-th="<?php esc_html_e( 'Student', 'tutor' ); ?>">
-											<div class="tutor-fs-7 tutor-color-black">
-											<?php echo esc_html( $total_student ); ?>
-										</div>
-									</td>
-									<td data-th="<?php esc_html_e( 'Price', 'tutor' ); ?>">
-										<div class="tutor-fs-7 tutor-color-black">
+
+									<td>
+										<div class="tutor-fs-7">
 											<?php
 												$price = tutor_utils()->get_course_price( $post->ID );
 												if ( null == $price ) {
@@ -309,8 +286,20 @@ $available_status = array(
 											?>
 										</div>
 									</td>
-									<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
-										<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
+
+									<td>
+										<div class="tutor-fw-normal">
+											<div class="tutor-fs-7 tutor-mb-4">
+												<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>
+											</div>
+											<div class="tutor-fs-8 tutor-color-muted">
+												<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
+											</div>
+										</div>
+									</td>
+
+									<td>
+										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
 											<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 												<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="tutor_change_course_status">
 													<?php foreach ( $available_status as $key => $value ) : ?>
@@ -322,8 +311,8 @@ $available_status = array(
 												<i class="icon1 tutor-icon-eye-bold"></i>
 												<i class="icon2 tutor-icon-angle-down"></i>
 											</div>
-											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-												<?php esc_html_e( 'Edit', 'tutor' ); ?>
+											<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
+												<?php esc_html_e( 'View Course', 'tutor' ); ?>
 											</a>
 											<div class="tutor-dropdown-parent">
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
@@ -331,9 +320,9 @@ $available_status = array(
 												</button>
 												<div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 													<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
-													<a class="tutor-dropdown-item" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
-														<i class="tutor-icon-eye-bold tutor-mr-8" area-hidden="true"></i>
-														<span><?php esc_html_e( 'View Course', 'tutor' ); ?></span>
+													<a class="tutor-dropdown-item" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
+														<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+														<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 													</a>
 													<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
@@ -377,4 +366,7 @@ $available_status = array(
 	</div>
 </div>
 
-<?php tutor_load_template_from_custom_path( tutor()->path . 'views/elements/common-confirm-popup.php' );
+<?php 
+tutor_load_template_from_custom_path( tutor()->path . 'views/elements/common-confirm-popup.php', array( 
+	'message' => __( 'Deletion of the course will erase all its topics, lessons, quizzes, events, and other information. Please confirm your choice.', 'tutor' )
+));

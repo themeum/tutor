@@ -146,7 +146,7 @@ class Instructors_List {
 	}
 
 	/**
-	 * Execute bulk action for enrollments ex: complete | cancel
+	 * Execute bulk action for enrolment list ex: complete | cancel
 	 *
 	 * @param string $status hold status for updating.
 	 * @param string $users_ids ids that need to update.
@@ -427,4 +427,5 @@ class Instructors_List {
 		$instructor->remove_role( tutor()->instructor_role );
 		do_action( 'tutor_after_blocked_instructor', $instructor_id );
 	}
+
 }

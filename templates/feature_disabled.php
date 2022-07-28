@@ -22,7 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 <div class="tutor-disabled-wrapper">
-
 	<div class="tutor-disabled-content-wrapper">
 		<?php if ( isset( $image_path ) && $image_path !== '' ) : ?>
 			<div>
@@ -53,9 +52,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</a>
 			<?php endif; ?>
 		</div>
-
 	</div>
-
 </div>
-
-

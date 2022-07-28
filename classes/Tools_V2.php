@@ -236,27 +236,11 @@ class Tools_V2 {
 
 								),
 								array(
-									'key'     => 'wordpress_debug_mode',
-									'type'    => 'info_col',
-									'label'   => __( 'WordPress debug mode', 'tutor' ),
-									'status'  => 'default',
-									'default' => $this->status( 'wordpress_debug_mode' ),
-
-								),
-								array(
 									'key'     => 'language',
 									'type'    => 'info_col',
 									'label'   => __( 'Language', 'tutor' ),
 									'status'  => 'default',
 									'default' => $this->status( 'language' ),
-
-								),
-								array(
-									'key'     => 'wordpress_debug_mode',
-									'type'    => 'info_col',
-									'label'   => __( 'WordPress debug mode', 'tutor' ),
-									'status'  => 'default',
-									'default' => $this->status( 'wordpress_debug_mode' ),
 
 								),
 							),
@@ -413,6 +397,9 @@ class Tools_V2 {
 
 		$latest_version = get_transient( 'tutor_system_status_wp_version_check' );
 
+		// WordPress already has efficient update notification mechanism. 
+		// We don't need to slow down the page for no reason. 
+		/* 
 		if ( false === $latest_version ) {
 			$version_check = wp_remote_get( 'https://api.wordpress.org/core/version-check/1.7/' );
 			$api_response  = json_decode( wp_remote_retrieve_body( $version_check ), true );
@@ -425,7 +412,9 @@ class Tools_V2 {
 
 		$data['wordpress_version'] = ( version_compare( $environment['wp_version'], $latest_version, '<' ) )
 			? sprintf( esc_html__( '%1$s - There is a newer version of WordPress available (%2$s)', 'tutor' ), esc_html( $environment['wp_version'] ), esc_html( $latest_version ) )
-			: esc_html( $environment['wp_version'] );
+			: esc_html( $environment['wp_version'] ); */
+
+		$data['wordpress_version'] = esc_html( $environment['wp_version'] );
 
 		$data['tutor_version'] = esc_html( $environment['version'] );
 

@@ -6,7 +6,29 @@ const navTabLists = document.querySelectorAll('[tutor-option-tabs]');
 const navTabItems = document.querySelectorAll('[tutor-option-tabs] li > a');
 const navPages = document.querySelectorAll('.tutor-option-nav-page');
 
+function enableSaveButton() {
+    if (document.getElementById('save_tutor_option')) {
+        document.getElementById('save_tutor_option').disabled = false;
+    }
+}
+
+function handleTinyMceChange() {
+        const searchParams = new URLSearchParams(window.location.search);
+        if (typeof (tinyMCE) != "undefined") {
+            if (searchParams.get('tab_page') === 'email_notification') {
+                if (!tinyMCE.activeEditor) {
+                    const tmceVisualBtn = document.getElementById('editor_field_email_footer_text-tmce');
+                    tmceVisualBtn.click();
+                }
+                tinyMCE.activeEditor.on("change", function (e) {
+                    enableSaveButton();
+                });
+            }
+        }
+}
+
 readyState_complete(() => {
+    handleTinyMceChange();
 
     const loadNavItem = document.querySelector('[tutor-option-tabs] li > a.is-active');
     if (null !== loadNavItem) {
@@ -54,14 +76,9 @@ readyState_complete(() => {
                     document.getElementById(dataTab).querySelector('.loading-spinner').remove();
                 }
 
-                //enable if tinymce content changed
-                if (typeof(tinyMCE) != "undefined") {
-                    tinyMCE.activeEditor.on("change", function (e) {
-                        if (document.getElementById('save_tutor_option')) {
-                            document.getElementById('save_tutor_option').disabled = false;
-                        }
-                    });
-                }
+                // enable if tinymce content changed
+                handleTinyMceChange();
+            
             }
 
         });

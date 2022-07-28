@@ -58,7 +58,7 @@ use TUTOR\Question_Answers_List;
                     ?>
 
                     <?php if ( $question_type !== 'true_false' ): ?>
-                        <span class="tutor-quiz-answer-edit tutor-me-n8">
+                        <span class="tutor-quiz-answer-edit tutor-mr-4">
                             <a class="tutor-iconic-btn" href="javascript:;">
                                 <i class="tutor-icon-pencil" area-hidden="true"></i> 
                             </a>
@@ -74,7 +74,7 @@ use TUTOR\Question_Answers_List;
 
                 <?php if ( $question_type !== 'true_false' && $question_type !== 'fill_in_the_blank' ): ?>
                     <div class="tutor-quiz-answer-trash-wrap tutor-d-flex">
-                        <a href="javascript:;" class="answer-trash-btn answer-trash-btn tutor-d-flex tutor-align-items-center" data-answer-id="<?php echo $answer->answer_id; ?>">
+                        <a href="javascript:;" class="answer-trash-btn answer-trash-btn tutor-d-flex tutor-align-center" data-answer-id="<?php echo $answer->answer_id; ?>">
                             <i class="tutor-icon-trash-can"></i>
                         </a>
                     </div>
@@ -87,7 +87,7 @@ use TUTOR\Question_Answers_List;
 </div>
 
 <?php if($question_type!='true_false' && ($question_type!='fill_in_the_blank' || empty($answers))): ?>
-    <a href="javascript:;" class="add_question_answers_option tutor-d-flex tutor-align-items-center" data-question-id="<?php echo $question_id; ?>">
+    <a href="javascript:;" class="add_question_answers_option tutor-d-flex tutor-align-center" data-question-id="<?php echo $question_id; ?>">
         <i class="tutor-icon-plus-o "></i>
         <?php _e('Add An Option', 'tutor'); ?>
     </a>

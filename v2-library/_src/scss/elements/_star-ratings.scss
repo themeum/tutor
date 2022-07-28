@@ -1,0 +1,59 @@
+.tutor-ratings {
+	display: flex;
+	align-items: center;
+
+	&-stars {
+		color: #ED9700;
+		margin: 0 -3px;
+		font-size: 16px;
+
+		> * {
+			margin: 0 3px;
+		}
+	}
+
+	&-average {
+		color: var(--tutor-body-color);
+		font-weight: 500;
+		@if ($is-rtl) {
+			margin-right: 12px;
+		} @else {
+			margin-left: 12px;
+		}
+	}
+
+	&-count {
+		color: var(--tutor-color-muted);
+		@if ($is-rtl) {
+			margin-right: 8px;
+		} @else {
+			margin-left: 8px;
+		}
+	}
+
+	&-progress-bar {
+		height: 8px !important;
+		.tutor-progress-value {
+			background-color: #ED9700;
+		}
+	}
+
+	&-selectable {
+		.tutor-ratings-stars {
+			cursor: pointer;
+		}
+	}
+	
+	// sizes
+	&-lg {
+		.tutor-ratings-stars {
+			font-size: 20px;
+		}
+	}
+
+	&-xl {
+		.tutor-ratings-stars {
+			font-size: 40px;
+		}
+	}
+}

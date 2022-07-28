@@ -99,6 +99,7 @@ class Ajax {
 
 		tutor_utils()->checking_nonce();
 
+		$moderation= tutor_utils()->get_option('enable_course_review_moderation', false, true, true);
 		$rating    = sanitize_text_field( tutor_utils()->avalue_dot( 'tutor_rating_gen_input', $_POST ) );
 		$course_id = sanitize_text_field( tutor_utils()->avalue_dot( 'course_id', $_POST ) );
 		$review    = sanitize_textarea_field( tutor_utils()->avalue_dot( 'review', $_POST ) );
@@ -134,11 +135,22 @@ class Ajax {
 		if ( $previous_rating_id ) {
 			$wpdb->update(
 				$wpdb->comments,
-				array( 'comment_content' => $review ),
+				array( 
+					'comment_content' => $review,
+					'comment_approved' => $moderation ? 'hold' : 'approved',
+					'comment_date'     => $date,
+					'comment_date_gmt' => get_gmt_from_date( $date ),
+				),
 				array( 'comment_ID' => $previous_rating_id )
 			);
 
-			$rating_info = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->commentmeta} WHERE comment_id = %d AND meta_key = 'tutor_rating'; ", $previous_rating_id ) );
+			$rating_info = $wpdb->get_row( $wpdb->prepare( 
+				"SELECT * FROM {$wpdb->commentmeta} 
+				WHERE comment_id = %d 
+					AND meta_key = 'tutor_rating'; ", 
+				$previous_rating_id 
+			) );
+
 			if ( $rating_info ) {
 				$wpdb->update(
 					$wpdb->commentmeta,
@@ -161,7 +173,7 @@ class Ajax {
 		} else {
 			$data = array(
 				'comment_post_ID'  => esc_sql( $course_id ),
-				'comment_approved' => 'approved',
+				'comment_approved' => $moderation ? 'hold' : 'approved',
 				'comment_type'     => 'tutor_course_rating',
 				'comment_date'     => $date,
 				'comment_date_gmt' => get_gmt_from_date( $date ),

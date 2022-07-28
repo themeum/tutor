@@ -11,7 +11,7 @@
 $instructor				= isset( $instructor ) ? $instructor : array();
 ?>
 <div class="tutor-instructor-list-item tutor-instructor-layout-portrait-horizontal tutor-card">
-    <div class="tutor-row tutor-align-items-center">
+    <div class="tutor-row tutor-align-center">
         <div class="tutor-col-5">
             <div class="tutor-instructor-cover tutor-ratio tutor-ratio-1x1">
                 <img class="tutor-instructor-cover-photo" src="<?php echo esc_url( get_avatar_url( $instructor->ID, array( 'size' => 96 ) ) ); ?>" alt="<?php esc_html_e( $instructor->display_name ); ?>" loading="lazy">

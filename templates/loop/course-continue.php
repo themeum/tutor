@@ -14,7 +14,7 @@
 ?>
 
     
-<div  class="list-item-button">
+<div class="list-item-button">
 <?php
     
     $course_id = get_the_ID();

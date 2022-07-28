@@ -121,14 +121,16 @@
 						require 'short-answer.php';
 					}
 					?>
+
+					<div class="answer-help-block"></div>
 					
 					<?php if ( $question_layout_view !== 'question_below_each_other' ) : ?>
-						<div class="tutor-quiz-btn-grp tutor-mt-60 tutor-d-flex">
+						<div class="tutor-quiz-btn-group tutor-mt-60 tutor-d-flex">
 							<?php
 								if ( $show_previous_button && $previous_question ) {
 									?>
 										<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-quiz-answer-previous-btn tutor-mr-20">
-											<?php esc_html_e( 'Back', 'tutor' ); ?>
+											<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span> <?php esc_html_e( 'Back', 'tutor' ); ?>
 										</button>
 									<?php
 								}
@@ -137,7 +139,7 @@
 								<?php $next_question ? esc_html_e( 'Submit &amp; Next', 'tutor' ) : esc_html_e( 'Submit Quiz', 'tutor' ); ?>
 							</button>
 							<?php if ( ! isset( $question_settings['answer_required'] ) ) : ?>
-								<span class="tutor-ml-32 tutor-btn tutor-btn-outline-primary tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> " style="border: 0px; padding: 0px; margin-left: auto;">
+								<span class="tutor-ml-32 tutor-btn tutor-btn-ghost tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> tutor-ml-auto">
 									<?php esc_html_e( 'Skip Question', 'tutor' ); ?>
 								</span>
 							<?php endif; ?>

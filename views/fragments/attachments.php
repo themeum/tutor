@@ -1,31 +1,33 @@
 <?php 
     $attachments = $data['attachments'];
-    $size_below = isset($data['size_below']) && $data['size_below']==true;
+    $size_below = isset( $data['size_below'] ) && $data['size_below'] == true;
 ?>
 
-<div class="tutor-attachment-cards tutor-attachment-size-<?php echo $size_below ? 'below' : 'aside'; ?> tutor-course-builder-attachments <?php echo (isset($data['no_control']) && $data['no_control']) ? 'tutor-no-control' : ''; ?>">
-    <?php 
-    if ( is_array($attachments) && count($attachments)) {
-        foreach ( $attachments as $attachment ) {
-            if(!is_object($attachment) || !property_exists($attachment, 'id')){ continue; }
-            ?>
-            <div class="tutor-card tutor-d-flex tutor-align-items-center tutor-px-20 tutor-py-16 tutor-mb-16" data-attachment_id="<?php echo $attachment->id; ?>">
-                <div class="tutor-w-100 tutor-pr-24">
-                    <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-4"><?php echo $attachment->title; ?></div>
-                    <div class="tutor-fs-7 tutor-color-muted"><?php _e('Size', 'tutor'); ?>: <?php echo $attachment->size; ?></div>
-                    <input type="hidden" name="<?php echo isset($data['name']) ? $data['name'] : ''; ?>" value="<?php echo $attachment->id; ?>">
-                </div>
+<div class="tutor-attachment-cards tutor-row tutor-attachment-size-<?php echo $size_below ? 'below' : 'aside'; ?> tutor-course-builder-attachments <?php echo (isset($data['no_control']) && $data['no_control']) ? 'tutor-no-control' : ''; ?>">
+    <?php if ( is_array($attachments) && count($attachments)) : ?>
+        <?php foreach ( $attachments as $attachment ) : ?>
+            <?php if ( !is_object( $attachment ) || !property_exists( $attachment, 'id' ) ) { continue; } ?>
+            <div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16" data-attachment_id="<?php echo $attachment->id; ?>">
+                <div class="tutor-card">
+                    <div class="tutor-card-body">
+                        <div class="tutor-row tutor-align-center">
+                            <div class="tutor-col tutor-overflow-hidden">
+                                <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-text-ellipsis tutor-mb-4"><?php echo $attachment->title; ?></div>
+                                <div class="tutor-fs-7 tutor-color-muted"><?php _e('Size', 'tutor'); ?>: <?php echo $attachment->size; ?></div>
+                                <input type="hidden" name="<?php echo isset($data['name']) ? $data['name'] : ''; ?>" value="<?php echo $attachment->id; ?>">
+                            </div>
 
-                <div class="tutor-ml-auto">
-                    <span class="tutor-delete-attachment tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-lg" role="button">
-                        <span class="tutor-icon-times" area-hidden="true"></span>
-                    </span>
+                            <div class="tutor-col-auto">
+                                <span class="tutor-delete-attachment tutor-iconic-btn tutor-iconic-btn-secondary" role="button">
+                                    <span class="tutor-icon-times" area-hidden="true"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <?php 
-        }
-    }
-    ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>
 
 <?php if ( isset( $data['add_button'] ) && true === $data['add_button'] ): ?>

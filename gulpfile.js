@@ -38,6 +38,7 @@ var scss_blueprints = {
 	},
 
 	tutor_v2: { src: 'v2-library/_src/scss/tutor-main.scss', mode: 'expanded', destination: 'tutor.min.css' },
+	tutor_v2_rtl: { src: 'v2-library/_src/scss/main.rtl.scss', mode: 'expanded', destination: 'tutor.rtl.min.css' },
 	tutor_icon: {
 		src: 'v2-library/bundle/fonts/tutor-icon/tutor-icon.css',
 		mode: 'expanded',
@@ -57,6 +58,7 @@ var scss_blueprints = {
 	},
 
 	v2_scss: { src: 'v2-library/_src/scss/main.scss', destination: 'main.min.css', dest_path: 'v2-library/bundle' },
+	v2_rtl_scss: { src: 'v2-library/_src/scss/main.rtl.scss', destination: 'main.rtl.min.css', dest_path: 'v2-library/bundle' },
 
 	v2_scss_docz: {
 		src: 'v2-library/_src/scss/main.scss',
@@ -213,11 +215,6 @@ gulp.task('copy', function() {
 			'!./assets/.sass-cache',
 			'!./node_modules/**',
 			'!./v2-library/**',
-			// '!./v2-library/bundle/*.*',
-			// '!./v2-library/bundle/fonts/tutor-icon/demo-files/**',
-			// '!./v2-library/bundle/fonts/tutor-icon/*.html',
-			// '!./v2-library/bundle/fonts/lineawesome@1.3.0/**',
-			// '!./v2-library/src/**',
 			'!./test/**',
 			'!./.docz/**',
 			'!./**/*.zip',
@@ -244,6 +241,6 @@ gulp.task('make-zip', function() {
 /**
  * Export tasks
  */
-exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'makepot', i18n_makepot, 'copy', 'make-zip');
+exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'makepot', i18n_makepot, 'copy', 'make-zip', 'clean-build');
 exports.sass = gulp.parallel(...task_keys);
 exports.default = gulp.parallel(...task_keys, 'watch');

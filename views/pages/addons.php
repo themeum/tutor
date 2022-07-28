@@ -76,13 +76,9 @@ $page_name    = $current_page ? $current_page : 'addons';
 								<div class="plugin-card-bottom">
 									<?php
 										if ( $addon->version ) {
-											echo '<div class="plugin-version"> ' . __( 'Version', 'tutor' ) . ' : ' . esc_attr( $addon->version ) . '</div>';
+											echo '<div class="plugin-version tutor-d-inline-block"> ' . __( 'Version', 'tutor' ) . ' : ' . esc_attr( $addon->version ) . '</div>';
 										}
 									?>
-									<!--
-									<div class="column-updated">
-										<strong>Last Updated:</strong> 4 months ago
-									</div>-->
 								</div>
 							</div>
 							<?php

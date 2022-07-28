@@ -23,6 +23,7 @@ class Input {
 	const TYPE_RAW      = 'raw';
 	const TYPE_STRING   = 'string';
 	const TYPE_INT      = 'int';
+	const TYPE_NUMERIC	= 'numeric';
 	const TYPE_TEXTAREA = 'textarea';
 
 	/**
@@ -48,6 +49,10 @@ class Input {
 		}
 		if ( self::TYPE_INT === $type ) {
 			return (int) sanitize_text_field( wp_unslash( $value ) );
+		}
+		if ( self::TYPE_NUMERIC === $type ) {
+			$val = sanitize_text_field( wp_unslash( $value ) );
+			return is_numeric( $val ) ? $val + 0 : 0;
 		}
 		if ( self::TYPE_TEXTAREA === $type ) {
 			return sanitize_textarea_field( wp_unslash( $value ) );

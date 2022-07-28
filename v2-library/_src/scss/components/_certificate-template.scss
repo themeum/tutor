@@ -1,0 +1,136 @@
+.tutor-course-certificate {
+	&-tabs {
+		&.tutor-nav {
+			display: inline-flex;
+			padding: 4px;
+			background: #f6f8fd;
+			border-radius: 6px;
+
+			> li {
+				> a {
+					color: var(--tutor-color-muted);
+
+					&:hover {
+						color: var(--tutor-color-primary);
+						background-color: transparent;
+					}
+
+					&.is-active {
+						color: var(--tutor-color-primary);
+						background-color: var(--tutor-color-white);
+						box-shadow: 0px 1px 2px rgba(2, 11, 83, 0.2);
+					}
+				}
+			}
+		}
+	}
+}
+
+// List
+.tutor-certificate {
+	&-templates {
+		display: grid;
+		gap: 25px;
+		grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+		grid-template-rows: min-content;
+		position: relative;
+		min-height: 580px;
+	}
+
+	&-template {
+		display: flex;
+		align-items: flex-start;
+		flex-direction: column;
+
+		label {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			cursor: pointer;
+		}
+
+		img {
+			display: inline-block;
+			max-width: 100%;
+			height: auto;
+			border-radius: 6px;
+		}
+
+		&-inner {
+			position: relative;
+			box-shadow: 0 0 0 1px var(--tutor-color-gray-10);
+			background-color: #fff;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			border-radius: 6px;
+			z-index: 1;
+
+			&::after {
+				content: '';
+				position: absolute;
+				width: 28px;
+				height: 28px;
+				background-size: 25px;
+				background-repeat: no-repeat;
+				background-position: left 2px center;
+				background-image: url("data:image/svg+xml,%3Csvg width='25' height='25' viewBox='0 0 25 25' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.42318 12.9161C6.3686 12.8593 6.32513 12.7929 6.29503 12.7201C6.23499 12.558 6.23499 12.3797 6.29503 12.2175C6.32453 12.1445 6.36807 12.0779 6.42318 12.0215L7.33283 11.1496C7.38636 11.0869 7.45336 11.0371 7.52883 11.0038C7.60148 10.971 7.68026 10.9538 7.76001 10.9536C7.84642 10.9519 7.93217 10.9691 8.01129 11.0038C8.0895 11.0386 8.16031 11.0881 8.21985 11.1496L10.9639 13.8986L16.8539 8.00855C16.9119 7.94744 16.981 7.89797 17.0575 7.8628C17.1368 7.82861 17.2224 7.81149 17.3088 7.81255C17.3898 7.813 17.4698 7.83071 17.5435 7.8645C17.6171 7.8983 17.6827 7.94741 17.7359 8.00855L18.6456 8.89306C18.7007 8.9494 18.7442 9.01598 18.7737 9.08906C18.8338 9.25121 18.8338 9.42949 18.7737 9.59163C18.7436 9.66439 18.7002 9.73087 18.6456 9.78763L11.4061 16.9894C11.3522 17.0523 11.2853 17.1029 11.2101 17.1377C11.0492 17.2041 10.8685 17.2041 10.7076 17.1377C10.6323 17.1029 10.5655 17.0523 10.5116 16.9894L6.42318 12.9161Z' fill='white'/%3E%3C/svg%3E%0A");
+				background-color: var(--tutor-color-primary);
+				border-radius: 50%;
+				right: -15px;
+				top: -15px;
+				z-index: 1;
+				opacity: 0;
+				transition: 200ms ease-in;
+			}
+		}
+
+		input[type='radio'] {
+			display: none;
+			appearance: none;
+			&:checked + .tutor-certificate-template-inner {
+				box-shadow: 0 0 0 2px var(--tutor-color-primary);
+				&::after {
+					opacity: 1;
+				}
+			}
+		}
+
+		&-icon {
+			position: absolute;
+			right: -12px;
+			top: -20px;
+			z-index: 10;
+			opacity: 0;
+			transition: 200ms ease-in;
+		}
+
+		&-overlay {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			gap: 16px;
+			position: absolute;
+			inset: 0;
+			background: rgba(255, 255, 255, 0.6);
+			backdrop-filter: blur(30px);
+			border-radius: 6px;
+			visibility: hidden;
+			opacity: 0;
+			transition: 200ms ease-in;
+		}
+
+		&:hover {
+			.tutor-certificate-template-overlay {
+				visibility: visible;
+				opacity: 1;
+			}
+		}
+	}
+}

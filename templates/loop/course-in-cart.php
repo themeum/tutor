@@ -25,7 +25,7 @@
 	    $product    = wc_get_product( $product_id );
 
         if ( $product ) {
-		    $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.$product->get_price_html() . ' </span></div>';
+		    $price_html = '<div class="tutor-d-flex tutor-align-center tutor-justify-between"><div class="list-item-price tutor-d-flex tutor-align-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.$product->get_price_html() . ' </span></div>';
 		    $cart_html = '<div class="list-item-button"> '.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
 	    }
     }

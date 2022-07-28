@@ -45,64 +45,7 @@
 	}
 }
 
-.tutor-quiz-attempt-details-wrapper {
-	.my-quiz-attempts {
-		thead {
-			@include breakpoint-min(1200) {
-				tr {
-					th.date {
-						width: 20% !important;
-					}
-					th.question {
-						width: 10%;
-					}
-					th.total-marks {
-						width: 10%;
-					}
-					th.pass-marks {
-						width: 10%;
-					}
-					th.correct-answer {
-						width: 10%;
-					}
-					th.incorrect-answer {
-						width: 10%;
-					}
-					th.earned-marks {
-						width: 19%;
-					}
-					th.result {
-						width: 11%;
-					}
-				}
-			}
-			th:last-child {
-				> * {
-					display: block !important;
-				}
-			}
-		}
-		tbody {
-			tr {
-				td {
-					div.tutor-table-date-time {
-						font-size: 13px;
-						font-weight: 500;
-						line-height: 21px;
-					}
-				}
-			}
-		}
-	}
-}
-
 .tutor-quiz-attempt-details {
-	th,
-	td {
-		* {
-			word-break: break-word;
-		}
-	}
 	.tutor-icon-rounded {
 		display: inline-flex;
 		align-items: center;
@@ -111,50 +54,18 @@
 		height: 26px;
 		overflow: hidden;
 		border-radius: 3px;
-		-webkit-box-sizing: border-box;
 		box-sizing: border-box;
 		border-width: 1px;
 		border-style: solid;
-		font-size: 13px;
+		font-size: 14px;
 		cursor: pointer;
 
 		&:not(:hover) {
 			opacity: 0.8;
 		}
 	}
-
-	tbody {
-		@include breakpoint-min(1200) {
-			tr {
-				td.no {
-					width: 8%;
-				}
-				td.type {
-					width: 7%;
-				}
-				td.questions {
-					width: 20%;
-				}
-				td.given-answer {
-					width: 20%;
-				}
-				td.correct-answer {
-					width: 30%;
-				}
-				td.answer {
-					width: 15%;
-				}
-			}
-		}
-	}
+	
 	tr {
-		td[data-th='Type'] {
-			.tooltip-wrap.tooltip-icon- {
-				span:first-child {
-					display: flex;
-				}
-			}
-		}
 		&:not(:hover) {
 			&.tutor-quiz-answer-status-correct {
 				.tutor-icon-rounded.tutor-color-danger {
@@ -177,11 +88,6 @@
 					border-color: #cdcfd5 !important;
 				}
 			}
-		}
-	}
-	thead {
-		th:last-child {
-			text-align: center;
 		}
 	}
 }

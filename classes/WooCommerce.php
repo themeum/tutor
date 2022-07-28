@@ -38,7 +38,7 @@ class WooCommerce extends Tutor_Base {
 		add_filter( 'product_type_options', array( $this, 'add_tutor_type_in_wc_product' ) );
 
 		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
-		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ) );
+		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ), 10, 2 );
 		add_action( 'save_post_product', array( $this, 'save_wc_product_meta' ) );
 
 		add_action( 'tutor_course/single/before/enroll', 'wc_print_notices' );
@@ -81,7 +81,7 @@ class WooCommerce extends Tutor_Base {
 		register_deactivation_hook( $woocommerce_path, array( $this, 'disable_tutor_monetization' ) );
 		/**
 		 * Redirect student on enrolled courses after course
-		 * enrollment complete
+		 * enrolment complete
 		 *
 		 * @since 1.9.0
 		*/
@@ -93,6 +93,30 @@ class WooCommerce extends Tutor_Base {
 		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'tutor_update_product_url' ), 10, 2 );
 		add_filter( 'woocommerce_order_item_permalink', array( $this, 'filter_order_item_permalink_callback' ), 10, 3 );
 
+		/**
+		 * on WC product delete clear course linked product
+		 * 
+		 * @since 2.0.7
+		 */
+		add_action( 'delete_post', array( $this, 'clear_course_linked_product' ) );
+
+	}
+
+	/**
+	 * On WC product delete, clear course linked product 
+	 *
+	 * @param int $post_id
+	 * @return void
+	 * 
+	 * @since 2.0.7
+	 */
+	public function clear_course_linked_product( $post_id ) {
+		if ( get_post_type( $post_id ) === 'product' ) {
+			global $wpdb;
+			$wpdb->query(
+				$wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key=%s AND meta_value=%d", '_tutor_course_product_id', $post_id )
+			);			
+		}
 	}
 
 	function filter_order_item_permalink_callback( $product_permalink, $item, $order ) {
@@ -181,25 +205,19 @@ class WooCommerce extends Tutor_Base {
 	}
 
 	/**
-	 * @param $post_ID
-	 *
-	 * Save course meta for attaching product
+	 * Save course meta for attaching WC product
+	 * 
+	 * @param int $post_ID		this is course ID
+	 * @param mixed $post		course details
+	 * 
+	 * @return void
 	 */
-	public function save_course_meta( $post_ID ) {
-		$product_id = (int) tutor_utils()->avalue_dot( '_tutor_course_product_id', $_POST, 0 );
-
-		if ( $product_id === -1 ) {
-			delete_post_meta( $post_ID, '_tutor_course_product_id' );
-		} elseif ( $product_id ) {
-			update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
-			// Mark product for woocommerce
-			update_post_meta( $product_id, '_virtual', 'yes' );
-			update_post_meta( $product_id, '_tutor_product', 'yes' );
-		}
+	public function save_course_meta( $post_ID, $post ) {
+		do_action( 'save_tutor_course', $post_ID, $post );
 	}
 
 	public function register_meta_box() {
-		add_meta_box( 'tutor-attach-product', __( 'Add Product', 'tutor' ), array( $this, 'course_add_product_metabox' ), $this->course_post_type, 'advanced', 'high' );
+		tutor_meta_box_wrapper( 'tutor-attach-product', __( 'Add Product', 'tutor' ), array( $this, 'course_add_product_metabox' ), $this->course_post_type, 'advanced', 'high', 'tutor-admin-post-meta' );
 	}
 
 	public function course_add_product_metabox() {
@@ -224,7 +242,15 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 		global $wpdb;
+		// Get order & monetize data for auto complete.
+		$order 			= wc_get_order( $order_id );
+		$order_data 	= is_object( $order ) && method_exists( $order, 'get_data' ) ? $order->get_data() : array();
+		$payment_method = isset( $order_data['payment_method'] ) ? $order_data['payment_method'] : '';
 
+		$monetize_by 			= tutor_utils()->get_option( 'monetize_by' );
+		$should_auto_complete   = tutor_utils()->get_option( 'tutor_woocommerce_order_auto_complete' );
+
+		$is_enabled_auto_complete = 'wc' === $monetize_by && $should_auto_complete ? true : false;
 		$enrolled_ids_with_course = $this->get_course_enrolled_ids_by_order_id( $order_id );
 
 		if ( $enrolled_ids_with_course ) {
@@ -232,9 +258,27 @@ class WooCommerce extends Tutor_Base {
 
 			if ( is_array( $enrolled_ids ) && count( $enrolled_ids ) ) {
 				foreach ( $enrolled_ids as $enrolled_id ) {
-
-					tutor_utils()->course_enrol_status_change( $enrolled_id, $status_to );
-
+					/**
+					 * If order status is processing and payment is not cash on
+					 * delivery then mark enrollment as completed.
+					 *
+					 * Note: Order status processing simply mean customer have done 
+					 * payment.
+					 *
+					 * @since v2.0.5
+					 */
+					if ( ! is_admin() && 'processing' === $status_to && $is_enabled_auto_complete && 'cod' !== $payment_method ) {
+						tutor_utils()->course_enrol_status_change( $enrolled_id, 'completed' );
+						// Mark complete only from client side.
+						$mark_completed = self::mark_order_complete( $order_id );
+						if ( $mark_completed ) {
+							$user_id   		= get_post_field( 'post_author', $enrolled_id );
+							$course_id 		= get_post_field( 'post_parent', $enrolled_id );
+							do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
+						}
+					} else {
+						tutor_utils()->course_enrol_status_change( $enrolled_id, $status_to );
+					}
 					// Invoke enrolled hook
 					if ( $status_to == 'completed' ) {
 						$user_id   = get_post_field( 'post_author', $enrolled_id );
@@ -374,14 +418,14 @@ class WooCommerce extends Tutor_Base {
 			$total_price = $item->get_total();
 
 			$fees_deduct_data      = array();
-			$tutor_earning_fees    = tutor_utils()->get_option( 'tutor_earning_fees' );
-			$enable_fees_deducting = tutor_utils()->avalue_dot( 'enable_fees_deducting', $tutor_earning_fees );
+			$tutor_earning_fees    = tutor_utils()->get_option( 'fee_amount_type' );
+			$enable_fees_deducting = tutor_utils()->get_option( 'enable_fees_deducting' );
 
 			$course_price_grand_total = $total_price;
 
 			// Deduct predefined amount (percent or fixed)
 			if ( $enable_fees_deducting ) {
-				$fees_name   = tutor_utils()->avalue_dot( 'fees_name', $tutor_earning_fees );
+				$fees_name   = tutor_utils()->get_option( 'fees_name', '' );
 				$fees_amount = (int) tutor_utils()->avalue_dot( 'fees_amount', $tutor_earning_fees );
 				$fees_type   = tutor_utils()->avalue_dot( 'fees_type', $tutor_earning_fees );
 
@@ -389,11 +433,6 @@ class WooCommerce extends Tutor_Base {
 					if ( $fees_type === 'percent' ) {
 						$fees_amount = ( $total_price * $fees_amount ) / 100;
 					}
-
-					/*
-					if ( $fees_type === 'fixed' ) {
-						$course_price_grand_total = $total_price - $fees_amount;
-					}*/
 
 					$course_price_grand_total = $total_price - $fees_amount;
 				}
@@ -540,7 +579,7 @@ class WooCommerce extends Tutor_Base {
 
 	/**
 	 * Redirect student on enrolled courses after course
-	 * enrollment complete if course is purchasable
+	 * enrolment complete if course is purchasable
 	 *
 	 * @param $order_id | int
 	 * @since 1.9.0
@@ -593,6 +632,29 @@ class WooCommerce extends Tutor_Base {
 				return $data;
 			}
 		}
+	}
+
+	/**
+	 * Mark woocommerce order as complete only from the
+	 * client side.
+	 *
+	 * @since v2.0.5
+	 *
+	 * @param integer $order_id
+	 *
+	 * @return boolean
+	 */
+	public static function mark_order_complete( int $order_id ): bool {
+		if ( is_admin() ) {
+			return false;
+		}
+		global $wpdb;
+		$update = $wpdb->update(
+			$wpdb->posts,
+			array( 'post_status' =>  'wc-completed' ),
+			array( 'ID' => $order_id )
+		);
+		return (bool) $update;
 	}
 }
 

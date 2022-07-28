@@ -1,0 +1,168 @@
+// Tooltip
+$tooltip-txt: var(--tutor-color-white);
+$arrow: 5px;
+
+.tooltip-wrap {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+
+	&.tooltip-icon {
+		margin-left: 4px;
+		color: var(--tutor-color-muted);
+		&:after {
+			content: "\e99a";
+			font-family: "tutor";
+		}
+	}
+
+	&.tutor-d-block {
+		display: block !important;
+	}
+
+	&.tutor-d-flex {
+		display: flex !important;
+	}
+
+	.tooltip-txt {
+		position: absolute;
+		max-width: 208px;
+		width: max-content;
+		background: var(--tutor-body-color);
+		color: $tooltip-txt;
+		padding: 10px 15px;
+		text-align: center;
+		border-radius: 10px;
+		z-index: 100;
+
+		opacity: 0;
+		visibility: hidden;
+		// filter: blur(2px);
+		transition: 200ms ease-in;
+
+		&::after {
+			content: '';
+			position: absolute;
+			border: $arrow solid transparent;
+		}
+
+		@extend .text-regular-small;
+	}
+
+	&:hover .tooltip-txt {
+		opacity: 1;
+		visibility: visible;
+		filter: blur(0px);
+	}
+
+	.tooltip-top {
+		bottom: calc(100% + 8px);
+		&::after {
+			top: 100%;
+			left: 50%;
+			margin-left: -$arrow;
+			border-top-color: var(--tutor-body-color);
+		}
+	}
+
+	.tooltip-bottom {
+		top: calc(100% + 8px);
+		&::after {
+			bottom: 100%;
+			left: 50%;
+			margin-left: -$arrow;
+			border-bottom-color: var(--tutor-body-color);
+		}
+	}
+
+	.tooltip-top,
+	.tooltip-bottom {
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.tooltip-left,
+	.tooltip-right {
+		// -> arrow on top
+		top: -$arrow;
+		&::after {
+			top: 18px;
+			margin-top: -$arrow;
+		}
+
+		// -> arrow on center
+		&.arrow-center {
+			top: 50%;
+			transform: translateY(-50%);
+			&::after {
+				top: 50%;
+				transform: translateY(-50%);
+				margin-top: unset;
+			}
+		}
+	}
+
+	.tooltip-right {
+		left: calc(100% + 8px);
+		&::after {
+			right: 100%;
+			border-right-color: var(--tutor-body-color);
+		}
+	}
+
+	.tooltip-left {
+		right: calc(100% + 8px);
+		&::after {
+			left: 100%;
+			border-left-color: var(--tutor-body-color);
+		}
+	}
+}
+
+// Animation
+.tooltip-wrap {
+	.tooltip-top {
+		transform: translateX(-50%) translateY(-2px);
+	}
+	.tooltip-bottom {
+		transform: translateX(-50%) translateY(2px);
+	}
+	.tooltip-right {
+		transform: translateX(2px);
+	}
+	.tooltip-left {
+		transform: translateX(-2px);
+	}
+	&:hover {
+		.tooltip-top {
+			transform: translateX(-50%) translateY(0);
+		}
+		.tooltip-bottom {
+			transform: translateX(-50%) translateY(0);
+		}
+		.tooltip-right {
+			transform: translateX(0);
+		}
+		.tooltip-left {
+			transform: translateX(0);
+		}
+		// -> arrow on center
+		.arrow-center {
+			&.tooltip-right {
+				transform: translateY(-50%) translateX(0px);
+			}
+			&.tooltip-left {
+				transform: translateY(-50%) translateX(0px);
+			}
+		}
+	}
+	// -> arrow on center
+	.arrow-center {
+		&.tooltip-right {
+			transform: translateY(-50%) translateX(2px);
+		}
+		&.tooltip-left {
+			transform: translateY(-50%) translateX(-2px);
+		}
+	}
+}

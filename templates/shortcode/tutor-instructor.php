@@ -1,4 +1,4 @@
-<div class="tutor-pagination-wrapper-replacable tutor-instructor-list-wrapper">
+<div class="tutor-pagination-wrapper-replaceable tutor-instructor-list-wrapper">
 	<?php if ( count( $instructors ) ) : ?>
 		<div class="tutor-instructor-list">
 			<div class="tutor-grid tutor-grid-<?php echo esc_attr( $column_count ); ?>">
@@ -20,9 +20,8 @@
 	<?php
 		// @todo: convert to pagination
 		if ($current_page > 1 || $instructors_count>$limit) {
-
 			$pagination_data = array(
-				'total_page'  => $instructors_count,
+				'total_items'  => $instructors_count,
 				'per_page'    => $limit,
 				'paged'       => $current_page,
 				'ajax'		  => array_merge($filter, array(

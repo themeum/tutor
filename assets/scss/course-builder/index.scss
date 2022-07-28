@@ -51,17 +51,12 @@ body.tutor-screen-course-builder {
     @import './segments/instructor.scss';
     @import './segments/attachment.scss';
     @import './segments/topic-content.scss';
-    @import './segments/price-field.scss';
     @import './segments/content-drip.scss';
     
     // LQA Modals
     .tutor-modal {
         .wp-editor-wrap {
             width: 100%;
-        }
-        
-        &.tutor-lesson-modal-wrap {
-            @import './modal/lesson.scss';
         }
 
         &.tutor-quiz-builder-modal-wrap{
@@ -78,17 +73,13 @@ body.tutor-screen-course-builder {
         @import './frontend.scss';
     }
 
-    &:not(.tutor-screen-course-builder-frontend) {
-        @import './backend.scss';
-    }
-
     .tutor-dropdown-icon-pack {
         position: absolute;
         top: 9px;
         left: 10px;
 
         &+select {
-            padding-left: 35px;
+            padding-left: 35px !important;
         }
 
         [data-for] {

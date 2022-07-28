@@ -3,12 +3,14 @@
  * Withdraw class
  *
  * @author: themeum
- * @author_uri: https://themeum.com
+ * @link: https://themeum.com
  * @package Tutor
  * @since v.1.0.0
  */
 
 namespace TUTOR;
+
+use Tutor\Models\WithdrawModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -180,24 +182,23 @@ class Withdraw {
 		wp_send_json_success(array( 'msg' => $msg ) );
 	}
 
+	/**
+	 * Handle withdraw request form submit
+	 *
+	 * @return void
+	 */
 	public function tutor_make_an_withdraw() {
 		global $wpdb;
 
-		// Checking nonce
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
-		$withdraw_amount = sanitize_text_field( tutor_utils()->avalue_dot( 'tutor_withdraw_amount', $_POST ) );
+		$withdraw_amount = Input::post( 'tutor_withdraw_amount' );
 
-		$earning_sum = tutor_utils()->get_earning_sum();
-		$min_withdraw = tutor_utils()->get_option( 'min_withdraw_amount' );
+		$earning_summary	= WithdrawModel::get_withdraw_summary( $user_id );
+		$min_withdraw		= tutor_utils()->get_option( 'min_withdraw_amount' );
 
-		$saved_withdraw_account = tutor_utils()->get_user_withdraw_method();
-		$formatted_balance = tutor_utils()->tutor_price( $earning_sum->balance );
-		$formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
-
-		$saved_withdraw_account        = tutor_utils()->get_user_withdraw_method();
-		$formatted_balance             = tutor_utils()->tutor_price( $earning_sum->balance );
+		$saved_withdraw_account = WithdrawModel::get_user_withdraw_method();
 		$formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 
 		if ( ! tutor_utils()->count( $saved_withdraw_account ) ) {
@@ -210,7 +211,7 @@ class Withdraw {
 			wp_send_json_error( array( 'msg' => $required_min_withdraw ) );
 		}
 
-		if ( $earning_sum->balance < $withdraw_amount ) {
+		if ( $earning_summary->available_for_withdraw < $withdraw_amount ) {
 			$insufficient_balence = apply_filters( 'tutor_withdraw_insufficient_balance_msg', __( 'Insufficient balance.', 'tutor' ) );
 
 			wp_send_json_error( array( 'msg' => $insufficient_balence ) );
@@ -250,8 +251,8 @@ class Withdraw {
 		/**
 		 * Getting earning and balance data again
 		 */
-		$earning = tutor_utils()->get_earning_sum();
-		$new_available_balance = tutor_utils()->tutor_price( $earning->balance );
+		$earning = WithdrawModel::get_withdraw_summary( $user_id );
+		$new_available_balance = tutor_utils()->tutor_price( $earning->available_for_withdraw );
 
 		do_action( 'tutor_withdraw_after' );
 

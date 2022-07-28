@@ -20,8 +20,8 @@ const AddonList = () => {
 					return <AddonCard addon={addon} key={index} addonId={index} />;
 				})
 			) : loading ? (
-				<div className="tutor-col-12">
-					<div className="tutor-addons-loading" area-hidden="true"></div>
+				<div className="tutor-col-12 tutor-text-center tutor-py-60">
+					<div className="tutor-spinner" area-hidden="true"></div>
 				</div>	
 			) : (
 				<div className="tutor-col-12">

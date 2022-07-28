@@ -45,7 +45,7 @@ $tutor_pages = tutor_utils()->tutor_pages();
 			<div class="tutor-option-field-label">
 				<?php if($page['page_exists'] && $page['page_visible']) : ?>
 					<?php $page = get_post( $page_id ); ?>
-					<div class="tutor-d-flex tutor-align-items-center">
+					<div class="tutor-d-flex tutor-align-center">
 						<span class='tutor-icon-circle-mark tutor-color-success'></span>
 						<span class='tutor-mx-4'>/</span>
 						<span><?php echo $page->post_name; ?></span>

@@ -1,11 +1,8 @@
 .tutor-course-spotlight-wrapper {
 	.tutor-course-spotlight {
-		&-nav {
-
-		}
-
 		&-tab {
 			padding-top: 32px;
+			padding-bottom: 32px;
 		}
 	}
 
@@ -244,4 +241,57 @@
 .tutor-course-spotlight-comments {
 	max-width: 670px;
 	margin: auto;
+}
+
+// rtl
+@at-root body.rtl {
+	.tutor-course-spotlight-wrapper {
+		.tutor-conversation {
+			.tutor-comment-textarea,
+			.tutor-actual-comment {
+				&:before {
+					left: initial;
+					right: -6px;
+					transform: rotate(220deg);
+					border-radius: 0 3px 0 0px;
+				}
+				&:after {
+					left: initial;
+					right: -2px;
+				}
+			}
+
+			.tutor-comments-list {
+				.tutor-single-comment {
+					.tutor-comment-actions {
+						span {
+							&:not(:last-child) {
+								margin-right: initial;
+								margin-left: 23px;
+							}
+						}
+					}
+				}
+			}
+
+			.tutor-comments-list.tutor-parent-comment {
+				.tutor-comment-line {
+					left: initial;
+					right: 24px;
+				}
+
+				.tutor-child-comment {
+					&:after {
+						left: initial;
+						right: -45px;
+					}
+					&:before {
+						left: initial;
+						right: -68px;
+						transform: rotate(90deg);
+					}
+				}
+			}
+		}
+	}
 }

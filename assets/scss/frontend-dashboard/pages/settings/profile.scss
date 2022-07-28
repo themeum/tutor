@@ -74,11 +74,6 @@
             top: 22px;
             cursor: pointer;
 
-            .dashboard-profile-delete {
-                // font-size: 24px;
-                // line-height: 35px;
-            }
-
             &:hover {
                 background: rgba(0, 0, 0, 0.438);
             }
@@ -128,7 +123,7 @@
 
     #tutor_pp_option {
         position: absolute;
-        background: $bg-dark-notification;
+        background: #353535;
         width: 157px;
         top: 294px;
         left: 27px;
@@ -172,10 +167,6 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
-
-            .profile-upload-icon {
-                // font-size: 24px;
-            }
         }
 
         .up-arrow {

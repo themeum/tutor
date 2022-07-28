@@ -9,9 +9,9 @@
 	$course          = tutor_utils()->get_course_by_quiz( get_the_ID() );
 	$quiz_id         = get_the_ID();
 	$quiz_details    = tutor_utils()->get_quiz_option( $quiz_id );
-	$quiz_time_limit = $quiz_details['time_limit'];
-	$quiz_time_value = $quiz_time_limit['time_value'];
-	$quiz_time_type  = $quiz_time_limit['time_type'];
+	$quiz_time_limit = ( isset( $quiz_details['time_limit'] ) && is_array( $quiz_details['time_limit'] ) ) ? $quiz_details['time_limit'] : array();
+	$quiz_time_value = isset( $quiz_time_limit['time_value'] ) ? $quiz_time_limit['time_value'] : 0;
+	$quiz_time_type  = isset( $quiz_time_limit['time_type'] ) ? $quiz_time_limit['time_type'] : 'minutes';
 	$is_started_quiz = tutor_utils()->is_started_quiz();
 	$previous_attempts = tutor_utils()->quiz_attempts();
 	$attempted_count   = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
@@ -24,6 +24,7 @@
 	$quiz_answers      = array();
 if ( $attempted_count !== 0 ) {
 	?>
+		<?php // @todo: need to change the ID ?>
 		<div id="tutor-quiz-image-matching-choice" class="tutor-quiz-wrap tutor-quiz-wrap-<?php the_ID(); ?>">
 		<?php
 			do_action( 'tutor_quiz/body/before', $quiz_id );

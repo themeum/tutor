@@ -2,10 +2,7 @@
 	// Utility data
 	$is_enrolled           = apply_filters( 'tutor_alter_enroll_status', tutor_utils()->is_enrolled() );
 	$lesson_url            = tutor_utils()->get_course_first_lesson();
-	$is_administrator      = tutor_utils()->has_user_role( 'administrator' );
-	$is_instructor         = tutor_utils()->is_instructor_of_this_course();
-	$course_content_access = (bool) get_tutor_option( 'course_content_access_for_ia' );
-	$is_privileged_user    = $course_content_access && ( $is_administrator || $is_instructor );
+	$is_privileged_user    = tutor_utils()->has_user_course_content_access();
 	$tutor_course_sell_by  = apply_filters( 'tutor_course_sell_by', null );
 	$is_public             = get_post_meta( get_the_ID(), '_tutor_is_public_course', true ) == 'yes';
 
@@ -16,22 +13,21 @@
 	// Get login url if
 	$is_tutor_login_disabled = ! tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true );
 	$auth_url                = $is_tutor_login_disabled ? ( isset( $_SERVER['REQUEST_SCHEME'] ) ? wp_login_url( $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) : '' ) : '';
-
 	$default_meta = array(
 		array(
 			'icon_class' => 'tutor-icon-mortarboard',
 			'label'      => __( 'Total Enrolled', 'tutor' ),
-			'value'      => tutor_utils()->get_option( 'enable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() : null,
+			'value'      => tutor_utils()->get_option( 'enable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() . ' ' . __("Total Enrolled", "tutor") : null,
 		),
 		array(
 			'icon_class' => 'tutor-icon-clock-line',
 			'label'      => __( 'Duration', 'tutor' ),
-			'value'      => get_tutor_option( 'enable_course_duration' ) ? get_tutor_course_duration_context() : null,
+			'value'      => get_tutor_option( 'enable_course_duration' ) ? ( get_tutor_course_duration_context() ? get_tutor_course_duration_context() . ' ' . __("Duration", "tutor") : false ) : null,
 		),
 		array(
 			'icon_class' => 'tutor-icon-refresh-o',
 			'label'      => __( 'Last Updated', 'tutor' ),
-			'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date('U') ) : null,
+			'value'      => get_tutor_option( 'enable_course_update_date' ) ? get_the_modified_date( get_option( 'date_format' ) ) . ' ' . __("Last Updated", "tutor") : null,
 		),
 	);
 
@@ -49,9 +45,8 @@
 	$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
 ?>
 
-<div class="tutor-course-sidebar-card">
-	<!-- Course Entry -->
-	<div class="tutor-course-sidebar-card-body tutor-p-32">
+<div class="tutor-card tutor-card-md tutor-sidebar-card">
+	<div class="tutor-card-body">
 		<?php
 		if ( $is_enrolled || $is_privileged_user) {
 			ob_start();
@@ -70,7 +65,7 @@
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
 					</h3>
 					<div class="list-item-progress">
-						<div class="tutor-fs-6 tutor-color-secondary tutor-d-flex tutor-align-items-center tutor-justify-between">
+						<div class="tutor-fs-6 tutor-color-secondary tutor-d-flex tutor-align-center tutor-justify-between">
 							<span class="progress-steps">
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
@@ -150,7 +145,7 @@
 							<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
 							<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
 								<?php
-									echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post_date ) );
+									echo esc_html( tutor_i18n_get_formated_date( $post_date, get_option( 'date_format' ) ) );
 								?>
 							</span>
 						</span>
@@ -179,9 +174,9 @@
 				?>
 					<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
-							<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
+							<span class="tutor-icon-circle-info tutor-alert-icon tutor-mr-12" area-hidden="true"></span>
 							<span>
-							<?php esc_html_e( 'This course is full right now. We limit the number of students to create an optimized and productive group dynamic.', 'tutor' ); ?>
+								<?php esc_html_e( 'This course is full right now. We limit the number of students to create an optimized and productive group dynamic.', 'tutor' ); ?>
 							</span>
 						</div>
 					</div>
@@ -195,23 +190,23 @@
 			} else {
 				ob_start();
 				?>
-					<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-between">
-						<div>
-							<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
-								<?php esc_html_e( 'Free', 'tutor' ); ?>
-							</span>
-						</div>
+					<div class="tutor-course-single-pricing">
+						<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
+							<?php esc_html_e( 'Free', 'tutor' ); ?>
+						</span>
 					</div>
-					<div class="tutor-course-sidebar-card-btns <?php echo is_user_logged_in() ? '' : 'tutor-course-entry-box-login'; ?>" data-login_url="<?php echo $login_url; ?>">
+
+					<div class="tutor-course-single-btn-group <?php echo is_user_logged_in() ? '' : 'tutor-course-entry-box-login'; ?>" data-login_url="<?php echo $login_url; ?>">
 						<form class="tutor-enrol-course-form" method="post">
 							<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 							<input type="hidden" name="tutor_course_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
 							<input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">
-							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-enroll-course-button">
-								<?php esc_html_e( 'Enroll Course', 'tutor' ); ?>
+							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-enroll-course-button tutor-static-loader">
+								<?php esc_html_e( 'Enroll now', 'tutor' ); ?>
 							</button>
 						</form>
 					</div>
+
 					<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-text-center">
 						<?php esc_html_e( 'Free access this course', 'tutor' ); ?>
 					</div>
@@ -225,25 +220,19 @@
 	</div>
 
 	<!-- Course Info -->
-	<div class="tutor-course-sidebar-card-footer tutor-p-32">
-		<ul class="tutor-course-sidebar-card-meta-list tutor-m-0 tutor-pl-0">
-			<?php foreach ( $sidebar_meta as $meta ) : ?>
+	<div class="tutor-card-footer">
+		<ul class="tutor-ul">
+			<?php foreach ( $sidebar_meta as $key => $meta ) : ?>
 				<?php
 				if ( ! $meta['value'] ) {
-					continue;}
+					continue;
+				}
 				?>
-				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-justify-between">
-					<div class="tutor-d-flex tutor-align-items-center">
-						<span class="<?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
-						<span class="tutor-fs-7 tutor-color-muted tutor-ml-8">
-							<?php echo esc_html( $meta['label'] ); ?>
-						</span>
-					</div>
-					<div>
-						<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-							<?php echo wp_kses_post( $meta['value'] ); ?>
-						</span>
-					</div>
+				<li class="tutor-d-flex<?php echo $key > 0 ? ' tutor-mt-12' : ''; ?>">
+					<span class="<?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black tutor-mt-4 tutor-mr-12" aria-labelledby="<?php echo esc_html( $meta['label'] ); ?>"></span>
+					<span class="tutor-fs-6 tutor-color-secondary">
+						<?php echo wp_kses_post( $meta['value'] ); ?>
+					</span>
 				</li>
 			<?php endforeach; ?>
 		</ul>

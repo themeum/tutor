@@ -22,7 +22,9 @@
     <ul class="tutor-nav" tutor-priority-nav>
         <?php foreach($tabbed as $index => $tab): ?>
             <li class="tutor-nav-item">
-                <a href="#" class="tutor-nav-link<?php echo $index==0 ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-settings-tab-<?php echo $tab['slug']; ?>"><?php echo $tab['label']; ?></a>
+                <a href="#" class="tutor-nav-link<?php echo $index==0 ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-settings-tab-<?php echo $tab['slug']; ?>">
+                    <?php echo $tab['label']; ?>
+                </a>
             </li>
         <?php endforeach; ?>
 
@@ -35,7 +37,15 @@
     <div class="tutor-tab tutor-mt-32">
         <?php foreach($tabbed as $index => $tab): ?>
             <div id="tutor-settings-tab-<?php echo $tab['slug']; ?>" class="tutor-tab-item<?php echo $index==0 ? ' is-active' : ''; ?>">
-                <?php echo $this->blocks( $tab ); ?>
+                <?php
+                    if(isset($tab['segments'])) {
+                        foreach($tab['segments'] as $segment){
+                            echo $this->blocks( $segment ); 
+                        }
+                    } else {
+                        echo $this->blocks( $tab ); 
+                    }
+                ?>
             </div>
         <?php endforeach; ?>
     </div>

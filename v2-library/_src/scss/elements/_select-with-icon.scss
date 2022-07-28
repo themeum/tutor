@@ -1,0 +1,77 @@
+$default-color: rgba(65, 69, 79, 0.9);
+
+$variations: (
+	'primary' var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15) rgba(var(--tutor-color-primary-rgb), 0.3) '\e978',
+	'default' $default-color $color-gray-10 var(--tutor-border-color) '\e9ab',
+	'success' var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.15) rgba(var(--tutor-color-success-rgb), 0.3) '\E982',
+	'danger' var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.15) rgba(var(--tutor-color-danger-rgb), 0.3) '\e9a3',
+	'warning' var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.15) rgba(var(--tutor-color-warning-rgb), 0.3) '\e966'
+);
+
+@each $suffix, $txtColor, $bgColor, $border, $icon in $variations {
+	.tutor-form-select-with-icon {
+		&.select-#{$suffix} {
+			color: #{$txtColor};
+			background: #{$bgColor};
+			border: 1px solid #{$border};
+
+			select {
+				color: #{$txtColor};
+			}
+
+			&:focus {
+				border-color: #{$txtColor};
+			}
+
+			.icon1:before {
+				content: '#{$icon}';
+			}
+		}
+	}
+}
+
+.tutor-form-select-with-icon {
+	width: fit-content;
+	min-width: 120px;
+	max-width: max-content;
+	position: relative;
+
+	border-radius: 42px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	select {
+		@extend .text-medium-small;
+		display: block;
+		width: 100%;
+		margin: 0;
+		padding: 5px 28px;
+		border: none;
+		outline: none;
+		appearance: none;
+		min-height: 24px !important;
+		position: relative;
+		z-index: 1;
+		background: transparent;
+		cursor: pointer;
+
+		&:focus {
+			box-shadow: none;
+		}
+	}
+
+	> i {
+		position: absolute;
+		font-size: 14px;
+	}
+
+	// variation icon
+	.icon1 {
+		left: 8px;
+	}
+	// down arrow icon
+	.icon2 {
+		right: 8px;
+	}
+}

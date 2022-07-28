@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Quize class
+ * Quiz class
  *
  * @author: themeum
  * @author_uri: https://themeum.com
@@ -677,7 +677,7 @@ class Quiz {
 		$ex_quiz_id         = isset($_POST['quiz_id']) ? sanitize_text_field($_POST['quiz_id']) : 0;
 		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
 		$quiz_description   = wp_kses( $_POST['quiz_description'], $this->allowed_html );
-		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id);
+		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id, $ex_quiz_id);
 
 		// Check edit privilege
 		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
@@ -872,15 +872,35 @@ class Quiz {
 
 		global $wpdb;
 		$question_data = $_POST['tutor_quiz_question'];
-		$requires_answeres = array('multiple_choice', 'single_choice', 'fill_in_the_blank', 'matching', 'image_matching', 'image_answering', 'ordering');
+		$requires_answeres = array(
+			'multiple_choice', 
+			'single_choice', 
+			'true_false',
+			'fill_in_the_blank', 
+			'matching', 
+			'image_matching', 
+			'image_answering', 
+			'ordering'
+		);
+
+		$need_correct = array(
+			'multiple_choice',
+			'single_choice',
+			'true_false'
+		);
 
 		foreach ( $question_data as $question_id => $question ) {
 			
 			// Make sure the quiz has answers
+			if(in_array($question['question_type'], $requires_answeres)) {
+				$require_correct = in_array($question['question_type'], $need_correct);
+				$all_answers = $this->get_answers_by_q_id($question_id, $question['question_type']);
+				$correct_answers = $this->get_answers_by_q_id($question_id, $question['question_type'], $require_correct);
 
-			if(in_array($question['question_type'], $requires_answeres) && empty($this->get_answers_by_q_id($question_id, $question['question_type']))) {
-				wp_send_json_error( array('message' => __('Please make sure the question has answer')) );
-				exit;
+				if(!empty($all_answers) && empty($correct_answers)) {
+					wp_send_json_error( array('message' => __('Please make sure the question has answer')) );
+					exit;
+				}
 			}
 
 			if(!tutor_utils()->can_user_manage('question', $question_id)) {
@@ -904,27 +924,6 @@ class Quiz {
 			);
 
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_questions', $data, array( 'question_id' => $question_id ) );
-
-			/**
-			 * Validation
-			 */
-			if ($question_type === 'true_false' || $question_type === 'single_choice'){
-			    $question_options = tutor_utils()->get_answers_by_quiz_question($question_id);
-			    if (tutor_utils()->count($question_options)){
-			        $required_validate = true;
-			        foreach ($question_options as $question_option){
-			            if ($question_option->is_correct){
-				            $required_validate = false;
-                        }
-                    }
-
-                    if ($required_validate){
-	                    wp_send_json_error(array('message' => __('Please select the correct answer', 'tutor') ));
-                    }
-                }else{
-				    wp_send_json_error(array('message' => __('Please make sure you have added more than one option and saved them', 'tutor') ));
-			    }
-            }
 		}
 
 		wp_send_json_success();
@@ -1130,14 +1129,17 @@ class Quiz {
 		wp_send_json_success();
 	}
 
-	private function get_answers_by_q_id($question_id, $question_type) {
+	private function get_answers_by_q_id($question_id, $question_type, $is_correct=false) {
 		global $wpdb;
+
+		$correct_clause = $is_correct ? ' AND is_correct=1 ' : '';
 		
 		return $wpdb->get_results($wpdb->prepare(
 			"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers
-			where belongs_question_id = %d AND
+			WHERE belongs_question_id = %d AND
 				belongs_question_type = %s
-			order by answer_order asc ;",
+				{$correct_clause}
+			ORDER BY answer_order ASC;",
 			$question_id,
 			esc_sql( $question_type )
 		));

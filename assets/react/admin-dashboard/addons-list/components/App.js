@@ -7,13 +7,17 @@ import { AddonsContextProvider } from '../context/AddonsContext';
 const App = () => {
 	return (
 		<AddonsContextProvider>
-			<main className="tutor-backend-settings-addons-list tutor-dashboard-page">
-				<Header/>
-				<div className="tutor-addons-list-body tutor-p-32">
-					<Search/>
-					<AddonList />
+			<div className="tutor-backend-settings-addons-list tutor-dashboard-page">
+				<div className="tutor-admin-wrap">
+					<Header/>
+					<div className="tutor-admin-body">
+						<div className="tutor-addons-list-body">
+							<Search/>
+							<AddonList />
+						</div>
+					</div>
 				</div>
-			</main>
+			</div>
 		</AddonsContextProvider>
 	);
 };

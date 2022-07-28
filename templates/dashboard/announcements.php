@@ -57,7 +57,7 @@ $image_base = tutor()->url . '/assets/images/';
 ?>
 
 <div class="tutor-card tutor-p-24">
-	<div class="tutor-row tutor-align-items-lg-center">
+	<div class="tutor-row tutor-align-lg-center">
 		<div class="tutor-col-lg-auto tutor-mb-16 tutor-mb-lg-0">
 			<div class="tutor-round-box tutor-p-8">
 				<i class="tutor-icon-bullhorn tutor-fs-3" area-hidden="true"></i>

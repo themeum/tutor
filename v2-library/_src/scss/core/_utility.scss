@@ -8,17 +8,20 @@
 		cursor: move;
 	}
 }
-.tutor-valign-top {
-	vertical-align: top;
-}
-// width 100%
+// width & height
 .tutor-w-100 {
 	width: 100%;
 }
-// min-width 100%
 .tutor-mw-100 {
 	min-width: 100%;
 }
+.tutor-h-100 {
+	height: 100%;
+}
+.tutor-mh-100 {
+	min-height: 100%;
+}
+
 // display
 .d-inline {
 	display: inline;
@@ -39,58 +42,7 @@
 	align-items: center;
 }
 
-.justify-content-center {
-	justify-content: center;
-}
-
 // color
-
-.tutor-text-success {
-	color: var(--tutor-success) !important;
-}
-
-.tutor-text-danger {
-	color: var(--tutor-danger-color) !important;
-}
-
-.tutor-text-dark {
-	color: var(--tutor-body-color) !important;
-}
-
-.tutor-text-primary {
-	color: var(--tutor-color-primary) !important;
-}
-
-// bg
-
-.tutor-bg-dark {
-	background-color: var(--tutor-bg-dark);
-}
-
-.tutor-bg-grey {
-	background-color: var(--tutor-bg-grey);
-}
-
-.tutor-bg-primary {
-	background-color: var(--tutor-color-primary);
-}
-
-.tutor-bg-success {
-	background-color: var(--tutor-success);
-}
-
-.tutor-bg-warning {
-	background-color: var(--tutor-warning);
-}
-
-.tutor-bg-danger {
-	background-color: var(--tutor-danger-color);
-}
-
-.tutor-bg-white {
-	background-color: white !important;
-}
-
 .tutor-bg-light {
 	background-color: #fdfdfd;
 }
@@ -100,6 +52,47 @@
 }
 // text/typography
 
+// image
+.tutor-img-responsive {
+	max-width: 100%;
+	height: auto;
+}
+
+// plain code
+.tutor-plain-code {
+	padding: 8px 16px;
+	background: #212327;
+	color: #fff;
+	border-radius: 6px;
+
+	.tutor-color-muted {
+		color: #757C8E;
+	}
+}
+
+// position
+.tutor-position {
+	&-relative {
+		position: relative;
+	}
+
+	&-absolute {
+		position: absolute;
+	}
+
+	&-sticky {
+		position: sticky;
+	}
+}
+
+// overflow
+.tutor-overflow {
+	&-hidden {
+		overflow: hidden;
+	}
+}
+
+// text
 .tutor-text-nowrap {
 	white-space: nowrap;
 }
@@ -139,19 +132,8 @@
 	font-weight: 300;
 }
 
-.tutor-text-400,
 .tutor-text-regular {
 	font-weight: 400;
-}
-
-.tutor-text-500,
-.tutor-text-medium {
-	font-weight: 500;
-}
-
-.tutor-text-600,
-.tutor-text-semi-bold {
-	font-weight: 600;
 }
 
 .tutor-text-700,
@@ -242,6 +224,10 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 		padding-top: 66.66%;
 	}
 
+	&-3x1 {
+		padding-top: 33.33%;
+	}
+
 	&-1x1 {
 		padding-top: 100%;
 	}
@@ -256,7 +242,7 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 
 	> img {
 		object-fit: cover;
-		object-position: left;
+		object-position: center;
 	}
 }
 
@@ -329,13 +315,13 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 .tutor {
 	&-vr {
 		width: 1px;
-		background-color: #dcdbdc;
+		background-color: var(--tutor-border-color);
 		height: 100%;
 	}
 
 	&-hr {
 		height: 1px;
-		background-color: #dcdbdc;
+		background-color: var(--tutor-border-color);
 		width: 100%;
 	}
 }

@@ -15,7 +15,7 @@ do_action( 'tutor_course/single/before/tags' );
 
 $course_tags = get_tutor_course_tags();
 if(is_array($course_tags) && count($course_tags)){ ?>
-    <div class="tutor-course-details-widget tutor-mt-40">
+    <div class="tutor-course-details-widget">
         <h3 class="tutor-course-details-widget-title tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-16">
             <?php _e('Tags', 'tutor'); ?>
 		</h3>

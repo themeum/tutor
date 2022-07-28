@@ -12,22 +12,34 @@
  */
 
 // Prepare the nav items
-$course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), get_the_ID() );
+$course_id = get_the_ID();
+$course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), $course_id );
+$student_must_login_to_view_course = tutor_utils()->get_option('student_must_login_to_view_course');
+$is_public = \TUTOR\Course_List::is_public($course_id);
 
 tutor_utils()->tutor_custom_header();
-do_action('tutor_course/single/before/wrap');
+
+if (!is_user_logged_in() && !$is_public && $student_must_login_to_view_course){
+    tutor_load_template('login');
+    tutor_utils()->tutor_custom_footer();
+    return;
+}
 ?>
-<div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
+
+<?php do_action('tutor_course/single/before/wrap'); ?>
+<div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap tutor-wrap-parent'); ?>>
     <div class="tutor-course-details-page tutor-container">
         <?php (isset($is_enrolled) && $is_enrolled) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
         <div class="tutor-row tutor-gx-xl-5">
             <main class="tutor-col-xl-8">
                 <?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
-                <div class="tutor-course-details-tab tutor-tab-has-seemore tutor-mt-32">
-                    <div class="tutor-is-sticky">
-                        <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
-                    </div>
+                <div class="tutor-course-details-tab tutor-mt-32">
+                    <?php if ( is_array( $course_nav_item ) && count( $course_nav_item ) > 1 ) : ?>
+                        <div class="tutor-is-sticky">
+                            <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="tutor-tab tutor-pt-24">
                         <?php foreach( $course_nav_item as $key => $subpage ) : ?>
                             <div id="tutor-course-details-tab-<?php echo $key; ?>" class="tutor-tab-item<?php echo $key == 'info' ? ' is-active' : ''; ?>">
@@ -53,12 +65,17 @@ do_action('tutor_course/single/before/wrap');
             </main>
 
             <aside class="tutor-col-xl-4">
-                <div class="tutor-single-course-sidebar tutor-mb-lg-0 tutor-mb-60">
+                <div class="tutor-single-course-sidebar tutor-mt-40 tutor-mt-xl-0">
                     <?php do_action('tutor_course/single/before/sidebar'); ?>
                     <?php tutor_load_template('single.course.course-entry-box'); ?>
-                    <?php tutor_course_requirements_html(); ?>
-                    <?php tutor_course_tags_html(); ?>
-                    <?php tutor_course_target_audience_html(); ?>
+
+                    <div class="tutor-single-course-sidebar-more tutor-mt-24">
+                        <?php tutor_course_instructors_html(); ?>
+                        <?php tutor_course_requirements_html(); ?>
+                        <?php tutor_course_tags_html(); ?>
+                        <?php tutor_course_target_audience_html(); ?>
+                    </div>
+
                     <?php do_action('tutor_course/single/after/sidebar'); ?>
                 </div>
             </aside>

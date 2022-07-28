@@ -1,0 +1,87 @@
+.tutor-accordion {
+	&-item {
+		background-color: #fff;
+		border: 1px solid $border-color-secondary;
+		border-radius: 6px;
+
+		&:not(:last-child) {
+			margin-bottom: 10px;
+			@include breakpoint-min(desktop) {
+				margin-bottom: 20px;
+			}
+		}
+
+        &-header {
+            position: relative;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1.4;
+            @if ($is_rtl == true) {
+                padding: 16px 20px 16px 40px;
+            } @else {
+                padding: 16px 40px 16px 20px;
+            }
+            margin: 0 !important;
+            transition: 200ms;
+            background-color: $color-gray-2;
+            color: var(--tutor-color-secondary);
+            user-select: none;
+            border-radius: 6px;
+            transition: 300ms ease-in;
+            cursor: pointer;
+
+            // arrow
+            &::after {
+                content: '\e940';
+                font-family: 'tutor' !important;
+                color: var(--tutor-color-primary);
+                font-size: 16px;
+                font-weight: normal;
+                position: absolute;
+                @if ($is_rtl == true) {
+                    left: 16px;
+                } @else {
+                    right: 16px;
+                }
+                top: 50%;
+                transform: translateY(-50%) rotate(0deg);
+                transition: 150ms;
+            }
+
+            &:hover {
+                color: var(--tutor-color-primary);
+            }
+
+            &.is-active {
+                color: var(--tutor-color-primary);
+                background-color: $color-gray-10;
+                border-radius: 6px 6px 0 0;
+                &::after {
+                    transform: translateY(-50%) rotate(-90deg);
+                }
+            }
+
+            // tooltip
+            .tooltip-wrap {
+                &.tooltip-icon {
+                    position: relative;
+                    font-size: 16px;
+                    top: 1px;
+                    @if ($is_rtl == true) {
+                        margin-right: 8px;
+                    } @else {
+                        margin-left: 8px;
+                    }
+                }
+            }
+        }
+
+        &-body {
+            overflow: hidden;
+            &-content {
+                padding: 0 16px;
+                border-top: 1px solid $border-color-secondary;
+            }
+        }
+	}
+}
