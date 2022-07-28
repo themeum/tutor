@@ -995,7 +995,8 @@ class Options_V2
 							array(
 								'key'           => 'course_details_adjustments',
 								'type'          => 'checkgroup',
-								'label'         => __('Course Details Adjustments', 'tutor'),
+								'label'         => __( 'Page Features', 'tutor' ),
+								'desc'    		=> __( 'You can keep the following features active or inactive as per the need of your business model', 'tutor' ),
 								'group_options' => array(
 									array(
 										'key'     => 'display_course_instructors',
@@ -1132,7 +1133,6 @@ class Options_V2
 										'desc'        => __('Enable to show course review section', 'tutor'),
 									),
 								),
-								'desc'          => __('Content Needed Here...', 'tutor'),
 							),
 						),
 					),
