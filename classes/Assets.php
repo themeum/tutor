@@ -269,7 +269,6 @@ class Assets {
 		if ( 'tutor_settings' === $current_page && ! wp_script_is( 'wp-tinymce-root' ) ) {
 			wp_enqueue_script( 'tutor-tiny', $baseurl . '/tinymce.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		}
-
 		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION );
 
 		// Common css library.
