@@ -50,6 +50,17 @@ class Utils {
 		return array_keys( $array ) !== range( 0, count( $array ) - 1 );
 	}
 
+	/**
+	 * Check device is mobile or not
+	 *
+	 * @return boolean
+	 * 
+	 * @since 2.0.9
+	 */
+	public function is_mobile() {
+		return preg_match( "/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"] );
+	}
+
 	private function option_recursive( $array, $key ) {
 		foreach ( $array as $option ) {
 			$is_array = is_array( $option );
