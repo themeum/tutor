@@ -9345,9 +9345,9 @@ class Utils {
 	public function text_editor_config() {
 		$args = array(
 			'textarea_name'    => 'tutor-global-text-editor',
-			'plugins' 	 	   => 'code,image',
+			'plugins' 	 	   => 'image',
 			'tinymce'          => array(
-				'toolbar1' => 'bold,italic,underline,forecolor,alignleft,aligncenter,alignright,link,unlink,removeformat,code,image',
+				'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image',
 				'toolbar2' => '',
 				'toolbar3' => '',
 			),

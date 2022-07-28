@@ -11,7 +11,7 @@
  * @param {*} setContent default content
  */
 function initTinyMCE(selector, plugins = '', tools = '') {
-    let defaultTools = `bold italic underline alignleft aligncenter alignright bullist numlist link unlink ${tools}`;
+    let defaultTools = `bold italic underline  link unlink ${tools}`;
     tinymce.init({
         selector: selector,
         height: 250,
