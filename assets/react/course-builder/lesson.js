@@ -147,7 +147,6 @@ window.jQuery(document).ready(function($) {
 					tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
 					tinymceConfig.codesample_languages = codeSampleLang;
 					// tinymceConfig.codesample_dialog_width = '440';
-					// tinymceConfig.codesample_dialog_height = '400';
 					tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
 				}
 
@@ -165,7 +164,6 @@ window.jQuery(document).ready(function($) {
 				window.dispatchEvent(new Event(_tutorobject.content_change_event));
 			},
 			complete: function() {
-				console.log('ajax completed');
 				$that.removeClass('is-loading').attr('disabled', false);
 				quicktags({ id: 'tutor_lesson_modal_editor' });
 			},

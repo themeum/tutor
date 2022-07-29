@@ -892,7 +892,7 @@ class Quiz {
 		foreach ( $question_data as $question_id => $question ) {
 			
 			// Make sure the quiz has answers
-			if(in_array($question['question_type'], $requires_answeres)) {
+			if( isset( $question['question_type'] ) && in_array($question['question_type'], $requires_answeres ) ) {
 				$require_correct = in_array($question['question_type'], $need_correct);
 				$all_answers = $this->get_answers_by_q_id($question_id, $question['question_type']);
 				$correct_answers = $this->get_answers_by_q_id($question_id, $question['question_type'], $require_correct);
@@ -907,10 +907,10 @@ class Quiz {
 				continue;
 			}
 
-			$question_title       = sanitize_text_field( $question['question_title'] );
-			$question_description = wp_kses( $question['question_description'], $this->allowed_html ); // sanitize_text_field($question['question_description']);
-			$question_type        = sanitize_text_field( $question['question_type'] );
-			$question_mark        = sanitize_text_field( $question['question_mark'] );
+			$question_title       = sanitize_text_field( $question['question_title'] ?? '' );
+			$question_description = wp_kses( $question['question_description'] ?? '', $this->allowed_html ); // sanitize_text_field($question['question_description']);
+			$question_type        = sanitize_text_field( $question['question_type'] ?? '' );
+			$question_mark        = sanitize_text_field( $question['question_mark'] ?? '' );
 
 			unset( $question['question_title'] );
 			unset( $question['question_description'] );
