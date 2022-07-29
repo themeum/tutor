@@ -312,8 +312,6 @@ window.jQuery(document).ready(function($) {
 
 			for (let k in quiz_info_required) {
 				if (!quiz_info_required[k]) {
-					console.log(quiz_info_required);
-
 					if (k == 'quiz_title') {
 						tutor_toast('Error!', __('Quiz title required', 'tutor'), 'error');
 					}
@@ -334,16 +332,12 @@ window.jQuery(document).ready(function($) {
 					btn.addClass('is-loading').attr('disabled', true);
 				},
 				success: function(data) {
-					console.log(quiz_id, quiz_id != 0);
-
 					if (quiz_id && quiz_id != 0) {
 						// Update if exists already
 						$('#tutor-quiz-' + quiz_id).replaceWith(data.data.output_quiz_row);
-						console.log($('#tutor-quiz-' + quiz_id));
 					} else {
 						// Otherwise create new row
 						$('#tutor-topics-' + topic_id + ' .tutor-lessons').append(data.data.output_quiz_row);
-						console.log($('#tutor-topics-' + topic_id + ' .tutor-lessons'));
 					}
 
 					// Update modal content
@@ -402,7 +396,17 @@ window.jQuery(document).ready(function($) {
 
 				// Enable quiz answer sorting for multi/radio select
 				enable_quiz_answer_sorting();
-				initTinyMCE('textarea#tutor-quiz-question-desc', 'codesample image', 'codesample image');
+				/**
+				 * If tutor pro active show rich text editor
+				 *
+				 * @since v2.0.9
+				 */
+				if (_tutorobject.tutor_pro_url) {
+					if (data.data.output) {
+						tinyMCE.remove('textarea#tutor_quiz_desc_text_editor');
+						initTinyMCE('textarea#tutor_quiz_desc_text_editor', 'codesample image', 'codesample image');
+					}
+				}
 			},
 			complete: function() {
 				$that.removeClass('is-loading').attr('disabled', false);
@@ -483,6 +487,15 @@ window.jQuery(document).ready(function($) {
 		var modal = $that.closest('.tutor-modal');
 		var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
 		$formInput.action = 'tutor_quiz_modal_update_question';
+		// If pro active then get desc text from tinyMCE editor
+		
+		if (_tutorobject.tutor_pro_url) {
+			const questionId = $formInput.tutor_quiz_question_id;
+			const eidtorId = 'tutor_quiz_desc_text_editor';
+			if (tinyMCE.get(eidtorId)) {
+				$formInput["tutor_quiz_question["+questionId+"][question_description]"] = tinyMCE.activeEditor.getContent({format: 'raw'})
+			}
+		}
 
 		$.ajax({
 			url: window._tutorobject.ajaxurl,

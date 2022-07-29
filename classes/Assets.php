@@ -203,8 +203,10 @@ class Assets {
 			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', TUTOR_VERSION );
 		}
 
-		// Load date picker for announcement at frontend
+		// Load date picker for announcement at frontend.
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		$css = ".mce-notification.mce-notification-error{display: none !important;}";
+		wp_add_inline_style( 'tutor-frontend', $css );
 	}
 
 	public function modify_localize_data( $localize_data ) {
