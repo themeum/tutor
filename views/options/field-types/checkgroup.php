@@ -10,6 +10,11 @@ if ( ! empty( $field['group_options'] ) ) {
 	$field_key = esc_attr( $field['key'] );
 	$field_id  = esc_attr( 'field_' . $field_key );
 	?>
+<div class="tutor-option-field-row tutor-d-block">
+	<div class="tutor-option-field-label">
+		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php echo esc_attr( $field['label'] ); ?></div>
+		<div class="tutor-fs-7 tutor-color-muted"><?php echo $field['desc']; ?></div>
+	</div>
 	<div class="tutor-option-field-input" id="<?php echo esc_attr( $field_id ); ?>">
 		<div class="type-toggle-grid">
 			<?php
@@ -32,4 +37,5 @@ if ( ! empty( $field['group_options'] ) ) {
 			<?php endforeach; ?>
 		</div>
 	</div>
+</div>
 <?php } ?>

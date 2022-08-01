@@ -126,9 +126,9 @@
 				</div>
 			</div>
 
-			<?php if ( $columns < 3 ) : ?>
+			<!-- <?php if ( $columns < 3 ) : ?>
 				<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" area-hidden="true"></div>
-			<?php endif; ?>
+			<?php endif; ?> -->
 			
 			<div class="tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?> ">
 				<div>
