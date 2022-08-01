@@ -26,12 +26,12 @@ if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 if ( tutor_utils()->is_course_purchasable() ) {
 	$enroll_btn = tutor_course_loop_add_to_cart( false );
 
-	$product_id = tutor_utils()->get_course_product_id( $course_id );
-	$product    = wc_get_product( $product_id );
-	$price_html = '';
+	$product_id    = tutor_utils()->get_course_product_id( $course_id );
+	$product       = wc_get_product( $product_id );
+	$wc_price_html = '';
 
 	if ( is_a( $product, 'WC_Product' ) ) {
-		$price_html = apply_filters( 'tutor_wc_price_html', $product->get_price_html(), $product );
+		$wc_price_html = apply_filters( 'tutor_wc_price_html', $product->get_price_html(), $product );
 	}
 
 	$total_enrolled   = tutor_utils()->count_enrolled_users_by_course( $course_id );
@@ -47,7 +47,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 		echo '<div class="tutor-d-flex tutor-align-center tutor-justify-between">
                     <div> 
                         <span class="tutor-course-price tutor-fs-6 tutor-fw-bold tutor-color-black">' .
-						$price_html . ' 
+						$wc_price_html . ' 
                         </span>
                     </div>
 
@@ -67,14 +67,14 @@ if ( tutor_utils()->is_course_purchasable() ) {
 	}
 
 	if ( $product && $maximum_students == $total_enrolled && $maximum_students != 0 ) {
-		$price_html = '<div class="tutor-d-flex tutor-align-center tutor-justify-between"><div class="list-item-price tutor-d-flex tutor-align-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">' . $price_html . ' </span></div>';
+		$price_html = '<div class="tutor-d-flex tutor-align-center tutor-justify-between"><div class="list-item-price tutor-d-flex tutor-align-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">' . $wc_price_html . ' </span></div>';
 		$restrict   = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium tutor-color-black">' . __( 'Fully Booked', 'tutor' ) . '</div></div></div>';
 		echo tutor_kses_html( $price_html ); //phpcs:ignore
 		echo tutor_kses_html( $restrict ); //phpcs:ignore
 	}
 
 	if ( $product && $maximum_students == 0 ) {
-		$price_html = '<div class="tutor-d-flex tutor-align-center tutor-justify-between"><div class="list-item-price tutor-d-flex tutor-align-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">' . $price_html . ' </span></div>';
+		$price_html = '<div class="tutor-d-flex tutor-align-center tutor-justify-between"><div class="list-item-price tutor-d-flex tutor-align-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">' . $wc_price_html . ' </span></div>';
 		$cart_html  = '<div class="list-item-button"> ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
 		echo tutor_kses_html( $price_html ); //phpcs:ignore
 		echo tutor_kses_html( $cart_html ); //phpcs:ignore
