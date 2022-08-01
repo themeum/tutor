@@ -9360,11 +9360,13 @@ class Utils {
 	public function text_editor_config() {
 		$args = array(
 			'textarea_name'    => 'tutor-global-text-editor',
+			'plugins' 	 	   => 'image',
 			'tinymce'          => array(
-				'toolbar1' => 'bold,italic,underline,forecolor,fontselect,fontsizeselect,formatselect,alignleft,aligncenter,alignright,bullist,numlist,link,unlink,removeformat',
+				'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image',
 				'toolbar2' => '',
 				'toolbar3' => '',
 			),
+			'file_picker_types' =>  'image',
 			'media_buttons'    => false,
 			'drag_drop_upload' => false,
 			'quicktags'        => false,

@@ -23,7 +23,7 @@
         ), false);
     ?>
 
-    <div class="tutor-modal tutor-modal-scrollable tutor-quiz-builder-modal-wrap<?php echo is_admin() ? ' tutor-admin-design-init' : ''; ?>" data-target="quiz-builder-tab-quiz-info">
+    <div class="tutor-modal tutor-modal-scrollable tutor-quiz-builder-modal-wrap<?php echo is_admin() ? ' tutor-admin-design-init' : ''; ?>" data-target="quiz-builder-tab-quiz-info" style="z-index:999;">
         <div class="tutor-modal-overlay"></div>
         <div class="tutor-modal-window">
             <div class="tutor-modal-content">

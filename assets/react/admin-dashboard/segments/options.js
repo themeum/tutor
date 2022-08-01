@@ -134,8 +134,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
-	const inputEmailFields = document.querySelectorAll('[type="email"]');
-	const inputNumberFields = document.querySelectorAll('[type="number"]');
+	const inputEmailFields = document.querySelectorAll('.tutor-form-control[type="email"]');
+	// const inputEmailFields = document.querySelectorAll('[type="email"]');
+	const inputNumberFields = document.querySelectorAll('.tutor-form-control[type="number"]');
+	// const inputNumberFields = document.querySelectorAll('[type="number"]');
 	if (0 !== inputEmailFields.length) {
 		checkEmailFields(inputEmailFields);
 	} else {

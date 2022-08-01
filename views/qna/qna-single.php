@@ -110,7 +110,7 @@
 									</div>
 
 									<div class="tutor-qna-text tutor-fs-7">
-										<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
+										<?php echo wp_kses_post( stripslashes( $answer->comment_content ) ); ?>
 									</div>
 
 								<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>

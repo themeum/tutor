@@ -1,4 +1,5 @@
 import { get_response_message } from '../helper/response';
+import codeSampleLang from '../lib/codesample-lang';
 
 (function($) {
 	window.enable_sorting_topic_lesson = function() {
@@ -144,9 +145,11 @@ window.jQuery(document).ready(function($) {
 				 */
 				if (tinymceConfig && _tutorobject.tutor_pro_url) {
 					tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
+					tinymceConfig.codesample_languages = codeSampleLang;
+					// tinymceConfig.codesample_dialog_width = '440';
 					tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
 				}
-	
+
 				tinymce.init(tinymceConfig);
 				tinymce.execCommand(
 					'mceRemoveEditor',
@@ -161,7 +164,6 @@ window.jQuery(document).ready(function($) {
 				window.dispatchEvent(new Event(_tutorobject.content_change_event));
 			},
 			complete: function() {
-				console.log('ajax completed');
 				$that.removeClass('is-loading').attr('disabled', false);
 				quicktags({ id: 'tutor_lesson_modal_editor' });
 			},
