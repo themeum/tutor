@@ -34,7 +34,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 	if ( is_a( $product, 'WC_Product' ) ) {
 		$wc_price_html = apply_filters( 'tutor_loop_wc_price_html', $product->get_price_html(), $product );
 		$product_type  = $product->get_type();
-		if ( '' !== $product_type ) {
+		if ( 'subscription' === $product_type || 'variable-subscription' === $product_type ) {
 			$utility_classes = $utility_classes . ' tutor-flex-column';
 		}
 	}
