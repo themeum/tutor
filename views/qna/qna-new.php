@@ -5,7 +5,7 @@ extract( $data ); // $course_id, $context.
 	<div class="tutor-quesanswer-askquestion">
 
 		<?php
-			$placeholder = __( 'Do you have any question?', 'tutor' );
+			$placeholder = __( 'Do you have any questions?', 'tutor' );
 			$text_editor = '<textarea placeholder="' . $placeholder . '" class="tutor-form-control"></textarea>';
             //phpcs:ignore
 			echo apply_filters(
