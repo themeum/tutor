@@ -125,7 +125,6 @@ window.jQuery(document).ready($=>{
                 button.addClass('is-loading');
             },
             success: resp => {
-                console.log('success');
                 if(!resp.success) {
                     tutor_toast('Error!', get_response_message(resp), 'error');
                     return;
@@ -143,7 +142,6 @@ window.jQuery(document).ready($=>{
                     $("#sidebar-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
                 }
                 if (_tutorobject.tutor_pro_url && tinymce) {
-                    console.log('hello');
                     tinymce.activeEditor.setContent('');
                 } else {
                     if ($(".tutor-quesanswer-askquestion textarea")) {
