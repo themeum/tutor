@@ -1,5 +1,4 @@
 <?php
-
 /**
  * A single course loop
  *
