@@ -203,8 +203,10 @@ class Assets {
 			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', TUTOR_VERSION );
 		}
 
-		// Load date picker for announcement at frontend
+		// Load date picker for announcement at frontend.
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		$css = ".mce-notification.mce-notification-error{display: none !important;}";
+		wp_add_inline_style( 'tutor-frontend', $css );
 	}
 
 	public function modify_localize_data( $localize_data ) {
@@ -269,7 +271,6 @@ class Assets {
 		if ( 'tutor_settings' === $current_page && ! wp_script_is( 'wp-tinymce-root' ) ) {
 			wp_enqueue_script( 'tutor-tiny', $baseurl . '/tinymce.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		}
-
 		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION );
 
 		// Common css library.
