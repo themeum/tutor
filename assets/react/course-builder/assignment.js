@@ -1,3 +1,5 @@
+import codeSampleLang from "../lib/codesample-lang";
+
 window.jQuery(document).ready(function($){
 
     const { __, _x, _n, _nx } = wp.i18n;
@@ -27,7 +29,19 @@ window.jQuery(document).ready(function($){
                 $('.tutor-assignment-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-assignment-modal-wrap').addClass('tutor-is-active');
                 
-                tinymce.init(tinyMCEPreInit.mceInit.tutor_assignment_editor_config);
+                /**
+				 * Add codesample plugin to support code snippet
+				 *
+				 * @since v2.0.9
+				 */
+                var tinymceConfig = tinyMCEPreInit.mceInit.tutor_assignment_editor_config;
+				if (tinymceConfig && _tutorobject.tutor_pro_url) {
+					tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
+					tinymceConfig.codesample_languages = codeSampleLang;
+					tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
+				}
+
+                tinymce.init(tinymceConfig);
                 tinymce.execCommand('mceRemoveEditor', false, 'tutor_assignments_modal_editor');
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
 
@@ -51,7 +65,7 @@ window.jQuery(document).ready(function($){
         var inputid = 'tutor_assignments_modal_editor';
         var editor = tinyMCE.get(inputid);
         if (editor) {
-            content = editor.getContent();
+            content = editor.getContent({format: 'raw'});
         } else {
             content = $('#'+inputid).val();
         }
