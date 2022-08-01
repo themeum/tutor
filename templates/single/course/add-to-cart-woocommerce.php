@@ -28,7 +28,8 @@ if ( $product ) {
 		$regular_price = $product->get_regular_price();
 		?>
 		<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-end tutor-justify-between">
-			<div>
+            <?php ob_start(); ?>
+                <div>
 				<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
 					<?php echo wc_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
 				</span>
@@ -37,7 +38,8 @@ if ( $product ) {
 						<?php echo wc_price( $regular_price ); //phpcs:ignore?>
 					</del>
 				<?php endif; ?>
-			</div>
+			    </div>
+            <?php echo apply_filters( 'tutor_course_details_wc_add_to_cart_price', ob_get_clean(), $product ); //phpcs:ignore ?>
 		</div>
 		<form action="<?php echo esc_url( apply_filters( 'tutor_course_add_to_cart_form_action', get_permalink( get_the_ID() ) ) ); ?>" method="post" enctype="multipart/form-data">
 			<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>"  class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-add-to-cart-button <?php echo esc_attr( $required_loggedin_class ); ?>">
