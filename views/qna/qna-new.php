@@ -3,7 +3,7 @@ extract($data); // $course_id, $context
 ?>
 <div class="tutor-qa-new tutor-quesanswer" data-course_id="<?php echo $course_id; ?>" data-question_id="0" data-context="<?php echo $context; ?>">
     <div class="tutor-quesanswer-askquestion">
-        <textarea placeholder="<?php _e('Do you have any question?', 'tutor'); ?>" class="tutor-form-control"></textarea>
+        <textarea placeholder="<?php _e('Do you have any questions?', 'tutor'); ?>" class="tutor-form-control"></textarea>
         <?php if ('course-single-qna-sidebar' == $data['context']) : ?>
             <div class="sidebar-ask-new-qna-submit tutor-row tutor-mt-16">
                 <div class="tutor-col">
