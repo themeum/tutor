@@ -28,7 +28,7 @@ $attempt_remaining 	= (int) $attempts_allowed - (int) $attempted_count;
 do_action('tutor_quiz/single/before/top');
 ?>
 <?php if (!$is_started_quiz && $attempted_count == 0): ?>
-	<div class="tutor-start-quiz-wrapper tutor-p-48">
+	<div class="tutor-start-quiz-wrapper tutor-p-md-48 tutor-p-28">
 		<div class="tutor-start-quiz-title tutor-pb-28">
 			<div class="tutor-fs-6 tutor-color-black tutor-pb-8">
 				<?php _e('Quiz', 'tutor'); ?>
