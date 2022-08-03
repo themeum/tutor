@@ -111,6 +111,20 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
+	const checkNumberFields = (inputFields) => {
+		inputFields.forEach((numberField) => {
+			numberField.oninput = (e) => {
+				const { target } = e;
+				const min = Number(target.getAttribute('min') || -Infinity);
+				const max = Number(target.getAttribute('max') || Infinity);
+				const value = Number(target.value);
+				
+				if (min !== -Infinity && value <= min) e.target.value = min;
+				if (max !== Infinity && value >= max) e.target.value = max;
+			};
+		});
+	};
+
 	const checkEmailFieldsOnSubmit = (inputFields) => {
 		inputFields.forEach((emailField) => {
 			let pageNeedsValidation = emailField.closest('.tutor-option-nav-page');
@@ -138,6 +152,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	// const inputEmailFields = document.querySelectorAll('[type="email"]');
 	const inputNumberFields = document.querySelectorAll('.tutor-form-control[type="number"]');
 	// const inputNumberFields = document.querySelectorAll('[type="number"]');
+
+	if(inputNumberFields.length) checkNumberFields(inputNumberFields);
+
 	if (0 !== inputEmailFields.length) {
 		checkEmailFields(inputEmailFields);
 	} else {
