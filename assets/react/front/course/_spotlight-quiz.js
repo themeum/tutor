@@ -180,12 +180,13 @@ window.jQuery(document).ready($=>{
                  */
 
                 var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
+                const answerDisplayTime = Number(_tutorobject.quiz_answer_display_time);
                 if (feedBackMode === 'reveal') {
                     setTimeout(() => {
                         $('.quiz-attempt-single-question').hide();
                         $nextQuestion.show();
                     },
-                        2000);
+                        answerDisplayTime);
                 } else {
                     $('.quiz-attempt-single-question').hide();
                     $nextQuestion.show();
