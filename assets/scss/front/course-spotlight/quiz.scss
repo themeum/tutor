@@ -47,7 +47,9 @@
 		width: 560px;
 		border: 1px solid #c0c3cb;
 		border-radius: 10px;
-		padding: 65px 95px;
+		@include breakpoint-min(desktop-lg){
+			padding: 65px 95px;
+		}
 		.tutor-start-quiz-title {
 			border-bottom: 1px solid var(--tutor-border-color);
 		}
