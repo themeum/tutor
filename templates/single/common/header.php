@@ -59,7 +59,7 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
             ?>
             <?php endif; ?>
 
-		<a class="tutor-iconic-btn" href="<?php echo get_the_permalink( $course_id ); ?>">
+		<a class="tutor-iconic-btn tutor-flex-shrink-0" href="<?php echo get_the_permalink( $course_id ); ?>">
 			<span class="tutor-icon-times" area-hidden="true"></span>
 		</a>
 	</div>
