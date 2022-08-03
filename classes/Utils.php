@@ -9436,7 +9436,7 @@ class Utils {
 	/**
 	 * Convert date to wp timezone compatible date. Timezone will be get from settings
 	 *
-	 * @param string $date | string date time to conver.
+	 * @param string $date | string date time to convert.
 	 *
 	 * @return string | date time
 	 *
