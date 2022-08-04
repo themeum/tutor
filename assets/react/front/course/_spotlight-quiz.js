@@ -269,30 +269,29 @@ window.jQuery(document).ready($=>{
         event.preventDefault();
     
         const question = event.target.closest('.quiz-attempt-single-question');
-        if (question && question.hasAttribute('data-quiz-feedback-mode')) {
-            const mode = question.getAttribute('data-quiz-feedback-mode');
-            const answerDisplayTime = Number(_tutorobject.quiz_answer_display_time);
-            if (mode === 'reveal') {
-                var $questions_wrap = $('.quiz-attempt-single-question');
-                var validated = true;
-                if ($questions_wrap.length) {
-                    $questions_wrap.each(function (index, question) {
-                        validated = tutor_quiz_validation($(question));
-                        validated = feedback_response($(question));
-        
-                    });
-                }
-                $(this).attr('disabled', 'disabled')
-                setTimeout(() => {
-                    $(this).addClass('is-loading');
-                    $("#tutor-answering-quiz").submit();
-                }
-                , answerDisplayTime);
+        const mode = question.getAttribute('data-quiz-feedback-mode');
+        const answerDisplayTime = Number(_tutorobject.quiz_answer_display_time);
+        if (mode === 'reveal') {
+            var $questions_wrap = $('.quiz-attempt-single-question');
+            var validated = true;
+            if ($questions_wrap.length) {
+                $questions_wrap.each(function (index, question) {
+                    validated = tutor_quiz_validation($(question));
+                    validated = feedback_response($(question));
+    
+                });
             }
+            $(this).attr('disabled', 'disabled')
+            setTimeout(() => {
+                $(this).addClass('is-loading');
+                $("#tutor-answering-quiz").submit();
+            }
+            , answerDisplayTime);
         } else {
             $(this).attr('disabled', 'disabled').addClass('is-loading');
             $("#tutor-answering-quiz").submit();
         }
+
     });
 	//warn user before leave page if quiz is running
 	var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
