@@ -76,7 +76,8 @@ $arrow: 5px;
 	.tooltip-left,
 	.tooltip-right {
 		// -> arrow on top
-		top: -$arrow;
+		// top: -$arrow;
+		top: -8px;
 		&::after {
 			top: 18px;
 			margin-top: -$arrow;
