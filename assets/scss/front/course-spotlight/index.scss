@@ -15,11 +15,8 @@
 	position: relative;
 	width: 100%;
 
-	// reset
-	ul {
-		list-style: none;
-		padding: 0;
-		margin: 0;
+	ul, ol, li > ul, li > ol {
+		padding-left: 1em;
 	}
 
 	a {
