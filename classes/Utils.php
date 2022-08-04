@@ -3860,6 +3860,8 @@ class Utils {
 										ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
 								INNER  JOIN {$wpdb->users}
 										ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+								INNER JOIN {$wpdb->posts} AS course
+									ON course.ID = comment_post_ID
 						WHERE 	{$wpdb->comments}.user_id = %d
 								AND comment_type = %s
 								AND meta_key = %s
