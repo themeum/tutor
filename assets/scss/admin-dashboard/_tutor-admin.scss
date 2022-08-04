@@ -124,6 +124,12 @@
 
 body.tutor-backend-tutor_settings #wpbody-content {
 	min-height: 100vh;
+
+	@include breakpoint-min(1400){
+		.tutor-admin-container{
+			overflow-x: unset;
+		}
+	}
 }
 
 .ui-widget-content {
