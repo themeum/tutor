@@ -58,7 +58,12 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
                 }
             ?>
             <?php endif; ?>
-
+		<?php
+			if ( $course_id === 0 && get_post_type( get_the_ID() ) === 'tutor_zoom_meeting' ) {
+				// Zoom General Meeting
+				$course_id = wp_get_post_parent_id( get_the_ID() );
+			}
+		?>
 		<a class="tutor-iconic-btn tutor-flex-shrink-0" href="<?php echo get_the_permalink( $course_id ); ?>">
 			<span class="tutor-icon-times" area-hidden="true"></span>
 		</a>
