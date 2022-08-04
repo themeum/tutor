@@ -27,8 +27,8 @@ window.jQuery(document).ready($=>{
 		if (attempt_meta.time_limit.time_limit_seconds > 0) {
 
 			// Get the timeout timestamp
-			var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + attempt_meta.time_limit.time_limit_seconds * 1000;
-			var time_now = new Date(attempt_meta.date_time_now).getTime();
+			var countDownDate = new Date(attempt_settings.attempt_started_at?.replaceAll('-', '/')).getTime() + attempt_meta.time_limit.time_limit_seconds * 1000;
+			var time_now = new Date(attempt_meta.date_time_now?.replaceAll('-', '/')).getTime();
 
             // Set the time interval to show countdown
 			var tutor_quiz_interval = setInterval(function() {
