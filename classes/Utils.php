@@ -2252,6 +2252,29 @@ class Utils {
 	}
 
 	/**
+	 * Get user name for e-mail salutation
+	 *
+	 * @param \WP_User $user
+	 * @return string
+	 * @since 2.0.9
+	 */
+	public function get_user_name( \WP_User $user ) {
+		$name = '';
+		
+		if ( empty( trim( $user->first_name ) ) ) {
+			$name = $user->user_login;
+		} 
+		else {
+			$name = $user->first_name;
+			if ( ! empty( trim( $user->last_name ) ) ) {
+				$name .= " {$user->last_name}";
+			}
+		}
+
+		return $name;
+	}
+
+	/**
 	 * @param int    $lesson_id
 	 * @param int    $user_id
 	 * @param string $key
