@@ -77,7 +77,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                     <?php
                                                         $limit = 60;
                                                         $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content;
-                                                        echo esc_html($content);
+                                                        echo wp_kses_post( $content );
                                                     ?>
                                                 </div>
                                                 <div class="tutor-fs-7 tutor-color-secondary">
