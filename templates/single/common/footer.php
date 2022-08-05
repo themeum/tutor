@@ -18,14 +18,14 @@ $next_link          = $next_is_locked || !$next_id ? '#' : get_the_permalink( $n
 <?php if( $next_id || $previous_id ): ?>
 <div class="tutor-course-topic-single-footer tutor-px-32 tutor-py-12 tutor-mt-auto">
 	<div class="tutor-single-course-content-prev">
-		<a class="tutor-btn tutor-btn-secondary tutor-btn-sm" href="<?php echo $prev_link; ?>"<?php echo !$previous_id ? ' disabled="disabled"' : ""; ?>>
+		<a class="tutor-btn tutor-btn-secondary tutor-btn-sm" href="<?php echo esc_url( $prev_link ); ?>"<?php echo !$previous_id ? ' disabled="disabled"' : ""; ?>>
 			<span class="tutor-icon-<?php echo is_rtl() ? 'next' : 'previous'; ?>" area-hidden="true"></span>
 			<span class="tutor-ml-8"><?php _e("Previous", "tutor"); ?></span>
 		</a>
 	</div>
 
 	<div class="tutor-single-course-content-next">
-		<a class="tutor-btn tutor-btn-secondary tutor-btn-sm" href="<?php echo $next_link; ?>"<?php echo !$next_id ? ' disabled="disabled"' : ""; ?>>
+		<a class="tutor-btn tutor-btn-secondary tutor-btn-sm" href="<?php echo esc_url( $next_link ); ?>"<?php echo !$next_id ? ' disabled="disabled"' : ""; ?>>
 			<span class="tutor-mr-8"><?php _e("Next", "tutor"); ?></span>
 			<span class="tutor-icon-<?php echo is_rtl() ? 'previous' : 'next'; ?>" area-hidden="true"></span>
 		</a>

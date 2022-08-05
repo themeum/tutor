@@ -35,7 +35,7 @@
 		<?php $valid = $menu_key == 'profile' || ! $menu['role'] || ( $menu['role'] == 'instructor' && current_user_can( tutor()->instructor_role ) ); ?>
 		<?php if ( $valid ) : ?>
 			<li class="tutor-nav-item">
-				<a class="tutor-nav-link<?php echo $active_setting_nav == $menu_key ? ' is-active' : ''; ?>" href="<?php echo $menu['url']; ?>"><?php echo $menu['title']; ?></a>
+				<a class="tutor-nav-link<?php echo $active_setting_nav == $menu_key ? ' is-active' : ''; ?>" href="<?php echo esc_url( $menu['url'] ); ?>"><?php echo $menu['title']; ?></a>
 			</li>
 		<?php endif; ?>
 	<?php endforeach; ?>
