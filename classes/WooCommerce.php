@@ -239,23 +239,21 @@ class WooCommerce extends Tutor_Base {
 	}
 
 	/**
-	 *
 	 * Take enrolled course action based on order status change
+	 *
+	 * Order auto complete
+	 *
+	 * @param int    $order_id  wc order id.
+	 * @param string $status_from  from status.
+	 * @param string $status_to  to status.
+	 *
+	 * @return void
 	 */
 	public function enrolled_courses_status_change( $order_id, $status_from, $status_to ) {
 		if ( ! tutor_utils()->is_tutor_order( $order_id ) ) {
 			return;
 		}
-		global $wpdb;
-		// Get order & monetize data for auto complete.
-		$order          = wc_get_order( $order_id );
-		$order_data     = is_object( $order ) && method_exists( $order, 'get_data' ) ? $order->get_data() : array();
-		$payment_method = isset( $order_data['payment_method'] ) ? $order_data['payment_method'] : '';
 
-		$monetize_by          = tutor_utils()->get_option( 'monetize_by' );
-		$should_auto_complete = tutor_utils()->get_option( 'tutor_woocommerce_order_auto_complete' );
-
-		$is_enabled_auto_complete = 'wc' === $monetize_by && $should_auto_complete ? true : false;
 		$enrolled_ids_with_course = $this->get_course_enrolled_ids_by_order_id( $order_id );
 
 		if ( $enrolled_ids_with_course ) {
@@ -272,7 +270,7 @@ class WooCommerce extends Tutor_Base {
 					 *
 					 * @since v2.0.5
 					 */
-					if ( ! is_admin() && 'processing' === $status_to && $is_enabled_auto_complete && 'cod' !== $payment_method ) {
+					if ( self::should_order_auto_complete( $order_id ) ) {
 						tutor_utils()->course_enrol_status_change( $enrolled_id, 'completed' );
 						// Mark complete only from client side.
 						$mark_completed = self::mark_order_complete( $order_id );
@@ -280,22 +278,12 @@ class WooCommerce extends Tutor_Base {
 							$user_id   = get_post_field( 'post_author', $enrolled_id );
 							$course_id = get_post_field( 'post_parent', $enrolled_id );
 							do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
-
-							/**
-							 * Add earning data for each item
-							 *
-							 * @since v2.0.9
-							 */
-							foreach ( $order->get_items() as $item_id => $item ) {
-								do_action( 'tutor_before_add_earning_data', $item, $order );
-								$this->add_earning_data( $item_id, $item, $order_id );
-							}
 						}
 					} else {
 						tutor_utils()->course_enrol_status_change( $enrolled_id, $status_to );
 					}
 					// Invoke enrolled hook.
-					if ( $status_to == 'completed' ) {
+					if ( 'completed' === $status_to ) {
 						$user_id   = get_post_field( 'post_author', $enrolled_id );
 						$course_id = get_post_field( 'post_parent', $enrolled_id );
 						do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
@@ -517,9 +505,20 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public function add_earning_data_status_change( $order_id, $status_from, $status_to ) {
 		if ( ! tutor_utils()->is_tutor_order( $order_id ) ) {
+			tutor_log( 'not tutor order' );
 			return;
 		}
 		global $wpdb;
+
+		/**
+		 * If it is auto complete order then make earning status complete
+		 * to reflect earning for admin & instructor
+		 *
+		 * @since v2.0.9
+		 */
+		if ( self::should_order_auto_complete( $order_id ) ) {
+			$status_to = 'completed';
+		}
 
 		$is_earning_data = (int) $wpdb->get_var(
 			$wpdb->prepare(
@@ -531,11 +530,13 @@ class WooCommerce extends Tutor_Base {
 		);
 
 		if ( $is_earning_data ) {
-			$wpdb->update(
+			$update_earning_status = $wpdb->update(
 				$wpdb->prefix . 'tutor_earnings',
 				array( 'order_status' => $status_to ),
 				array( 'order_id' => $order_id )
 			);
+			tutor_log( $update_earning_status . $status_to );
+			do_action( 'tutor_after_earning_status_change', $update_earning_status );
 		}
 	}
 
@@ -671,6 +672,32 @@ class WooCommerce extends Tutor_Base {
 			array( 'ID' => $order_id )
 		);
 		return (bool) $update;
+	}
+
+	/**
+	 * Check if order should auto complete
+	 *
+	 * @since v2.0.9
+	 *
+	 * @param int $order_id  wc order id.
+	 *
+	 * @return boolean  return true if it should auto complete, otherwise false
+	 */
+	public static function should_order_auto_complete( int $order_id ): bool {
+		$auto_complete = false;
+		$order         = wc_get_order( $order_id );
+		$order_data    = is_object( $order ) && method_exists( $order, 'get_data' ) ? $order->get_data() : array();
+
+		$payment_method = isset( $order_data['payment_method'] ) ? $order_data['payment_method'] : '';
+		$monetize_by    = tutor_utils()->get_option( 'monetize_by' );
+
+		$should_auto_complete     = tutor_utils()->get_option( 'tutor_woocommerce_order_auto_complete' );
+		$is_enabled_auto_complete = 'wc' === $monetize_by && $should_auto_complete ? true : false;
+
+		if ( ! is_admin() && $is_enabled_auto_complete && 'cod' !== $payment_method ) {
+			$auto_complete = true;
+		}
+		return $auto_complete;
 	}
 }
 
