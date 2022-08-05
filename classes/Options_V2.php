@@ -1452,14 +1452,6 @@ class Options_V2
 								'desc'        => __('Enable to use the tutor login modal instead of the default WordPress login page', 'tutor'),
 							),
 							array(
-								'key'         => 'hide_admin_bar_for_users',
-								'type'        => 'toggle_switch',
-								'label'       => __('Hide Admin Bar and Restrict Access to WP Admin for Instructors', 'tutor'),
-								'label_title' => __('', 'tutor'),
-								'default'     => 'off',
-								'desc'        => __('Enable this to hide the WordPress Admin Bar from Frontend site, and restrict access to the WP Admin panel.', 'tutor'),
-							),
-							array(
 								'key'         => 'delete_on_uninstall',
 								'type'        => 'toggle_switch',
 								'label'       => __('Erase upon uninstallation', 'tutor'),

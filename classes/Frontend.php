@@ -3,7 +3,7 @@
  * Frontend class
  *
  * @author: themeum
- * @author_uri: https://themeum.com
+ * @link: https://themeum.com
  * @package Tutor
  * @since v.1.5.2
  */
@@ -49,19 +49,19 @@ class Frontend {
 	}
 
 	/**
-	 * Remove admin bar based on option
+	 * PRO - Remove admin bar based on option
 	 */
 	function remove_admin_bar() {
 		$hide_admin_bar_for_users	= (bool) get_tutor_option( 'hide_admin_bar_for_users' );
 		$has_access					= $this->has_admin_area_access();
 
-		if ( ! $has_access && $hide_admin_bar_for_users ) {
+		if ( tutor()->has_pro && ! $has_access && $hide_admin_bar_for_users ) {
 			show_admin_bar( false );
 		}
 	}
 
 	/**
-	 * Restrict the WP admin area for student, instructor
+	 * PRO - Restrict the WP admin area for student, instructor
 	 *
 	 * @return void
 	 */
@@ -69,7 +69,7 @@ class Frontend {
 		$hide_admin_bar_for_users	= (bool) get_tutor_option( 'hide_admin_bar_for_users' );
 		$has_access					= $this->has_admin_area_access();
 
-		if ( $hide_admin_bar_for_users && ! $has_access && ! wp_doing_ajax() ) {
+		if ( tutor()->has_pro && $hide_admin_bar_for_users && ! $has_access && ! wp_doing_ajax() ) {
 			wp_die( __( 'Access Denied!', 'tutor' ) );
 		}
 	}
