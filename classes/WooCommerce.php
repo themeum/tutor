@@ -104,7 +104,6 @@ class WooCommerce extends Tutor_Base {
 		 * @since 2.0.7
 		 */
 		add_action( 'delete_post', array( $this, 'clear_course_linked_product' ) );
-
 	}
 
 	/**
