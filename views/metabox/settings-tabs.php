@@ -30,10 +30,10 @@ $args = $this->args;
 					}
 					?>
 					<li class="<?php echo esc_attr( $active ); ?>">
-						<a href="<?php echo esc_url( $url ); ?>" data-target="#settings-tab-<?php echo esc_url( $key ); ?>">
-							<i class="<?php echo esc_attr( $icon ); ?>"></i> <?php esc_html( $label ); ?>
+						<a href="<?php echo esc_url( $url ); ?>" data-target="#settings-tab-<?php echo esc_attr( $key ); ?>">
+							<i class="<?php echo esc_attr( $icon ); ?>"></i> <?php echo esc_html( $label ); ?>
 						</a>
-					</li>";
+					</li>
 					<?php
 				}
 				?>
@@ -58,7 +58,7 @@ $args = $this->args;
 				?>
 
 				
-				<div id="settings-tab-<?php echo esc_url( $key ); ?>" class="settings-tab-wrap <?php echo esc_attr( $active ); ?>" style="display: <?php echo esc_attr( $display ); ?>;">
+				<div id="settings-tab-<?php echo esc_attr( $key ); ?>" class="settings-tab-wrap <?php echo esc_attr( $active ); ?>" style="display: <?php echo esc_attr( $display ); ?>;">
 				<?php
 					do_action( 'tutor_course/settings_tab_content/before', $key, $tab );
 					do_action( "tutor_course/settings_tab_content/before/{$key}", $tab );
