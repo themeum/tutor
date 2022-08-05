@@ -45,7 +45,7 @@ $is_wish_listed     = tutor_utils()->is_wishlisted( $post->ID, get_current_user_
                 <div class="tutor-meta tutor-course-details-info"> 
                     <?php if ( $show_author ) : ?>
                     <div>
-                        <a href="<?php echo $profile_url; ?>" class="tutor-d-flex">
+                        <a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-d-flex">
                             <?php echo tutor_utils()->get_tutor_avatar( get_the_author_meta('ID') ); ?>
                         </a>
                     </div>
@@ -55,7 +55,7 @@ $is_wish_listed     = tutor_utils()->is_wishlisted( $post->ID, get_current_user_
                         <?php if ( $show_author ) : ?>
                             <span class="tutor-mr-16">
                                 <?php esc_html_e('By', 'tutor') ?>
-                                <a href="<?php echo $profile_url; ?>"><?php echo get_the_author_meta('display_name'); ?></a>
+                                <a href="<?php echo esc_url( $profile_url ); ?>"><?php echo get_the_author_meta('display_name'); ?></a>
                             </span>
                         <?php endif; ?>
 

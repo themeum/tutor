@@ -143,7 +143,7 @@
 								<?php elseif ( $key == "details" ) : ?>
 									<?php $url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url ); ?>
 									<div class="tutor-d-inline-flex tutor-align-center td-action-btns">
-										<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 											<?php
 												if ( $has_pending && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
 													esc_html_e( 'Review', 'tutor' );
