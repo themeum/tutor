@@ -283,6 +283,14 @@ class CourseModel {
 		 */
 		QueryHelper::delete_comment_with_meta( array( 'comment_type' => 'tutor_q_and_a', 'comment_post_ID' => $post_id ) );
 		
+		/**
+		 * Delete caches
+		 */
+		$attempt_cache = new \Tutor\Cache\QuizAttempts();
+		if ( $attempt_cache->has_cache() ) {
+			$attempt_cache->delete_cache();
+		}
+
 		return true;
 	}
 }
