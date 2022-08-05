@@ -2261,7 +2261,7 @@ class Utils {
 	public function get_user_name( \WP_User $user ) {
 		$name = '';
 		
-		if ( empty( trim( $user->first_name ) )) {
+		if ( empty( trim( $user->first_name ) ) ) {
 			$name = $user->user_login;
 		} 
 		else {
