@@ -18,6 +18,9 @@ $is_public          = \TUTOR\Course_List::is_public( $course_id );
 $is_mobile          = wp_is_mobile();
 
 $enrollment_box_position            = tutor_utils()->get_option( 'enrollment_box_position_in_mobile', 'bottom' );
+if ( '-1' === $enrollment_box_position ) {
+    $enrollment_box_position = 'bottom';
+}
 $student_must_login_to_view_course  = tutor_utils()->get_option( 'student_must_login_to_view_course' );
 
 tutor_utils()->tutor_custom_header();
