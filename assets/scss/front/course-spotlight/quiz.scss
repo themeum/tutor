@@ -63,6 +63,15 @@
 	}
 	.tutor-quiz-wrap {
 		width: 980px;
+		.tutor-table-quiz-attempts.tutor-table {
+			tr {
+				td {
+					@include breakpoint-max(mobile) {
+						white-space: nowrap;
+					}
+				}
+			}
+		}
 		.quiz-meta-info {
 			.quiz-meta-info-left {
 				> * {
