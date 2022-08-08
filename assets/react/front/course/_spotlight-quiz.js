@@ -163,13 +163,24 @@ window.jQuery(document).ready($=>{
         }
 
         var feedBackNext = feedback_response($question_wrap);
-        if (!feedBackNext) {
-            return;
+        /**
+         * If not reveal mode then check feedback response
+         * 
+         * Since validation already checked above, now user's ans is correct 
+         * or not they should move forward. In reveal mode if feedback response is false
+         * then it was freezing the process.
+         * 
+         * @since v2.0.9
+         */
+        if (!feedBackMode === 'reveal') {
+            if (!feedBackNext) {
+                return;
+            }
         }
 
         var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
         var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
-
+        console.log(`next question ${next_question_id}`);
         if (next_question_id) {
             var $nextQuestion = $(next_question_id);
             if ($nextQuestion && $nextQuestion.length) {
