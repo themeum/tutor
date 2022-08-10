@@ -81,6 +81,7 @@ class Quiz_Attempts_List {
 		$is_ajax_action = isset( $_POST['action'] ) && 'tutor_quiz_attempts_count' === $_POST['action'];
 		if ( $is_ajax_action ) {
 			$attempt_cache = new QuizAttempts();
+
 			if ( $attempt_cache->has_cache() ) {
 				$count = $attempt_cache->get_cache();
 			} else {
@@ -163,7 +164,7 @@ class Quiz_Attempts_List {
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
 		$url     = get_pagenum_link();
-		$stats 	 = $this->get_quiz_attempts_stat(get_current_user_id());
+		$stats 	 = $this->get_quiz_attempts_stat();
 		
 		$tabs 	 = array(
 			array(
