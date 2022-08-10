@@ -143,11 +143,13 @@ window.jQuery(document).ready(function($) {
 				 *
 				 * @since v2.0.9
 				 */
-				if (tinymceConfig && _tutorobject.tutor_pro_url) {
-					tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
-					tinymceConfig.codesample_languages = codeSampleLang;
-					// tinymceConfig.codesample_dialog_width = '440';
-					tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
+				if (!tinymceConfig.plugins.includes('codesample')) {
+					if (tinymceConfig && _tutorobject.tutor_pro_url) {
+						tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
+						tinymceConfig.codesample_languages = codeSampleLang;
+						// tinymceConfig.codesample_dialog_width = '440';
+						tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
+					}
 				}
 
 				tinymce.init(tinymceConfig);
