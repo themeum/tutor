@@ -88,7 +88,7 @@ $contexts =  array(
             'questions'       => __('Questions', 'tutor'),
             'given_answer'    => __('Given Answer', 'tutor'),
             'correct_answer'  => __('Correct Answer', 'tutor'),
-            'answer'          => __('Answer', 'tutor'),
+            'result'          => __('Result', 'tutor'),
             'manual_review'   => __('Review', 'tutor')
         ),
         'contexts' => array(
@@ -98,7 +98,7 @@ $contexts =  array(
                 'questions',
                 'given_answer',
                 'correct_answer',
-                'answer',
+                'result',
             ),
             'frontend-dashboard-students-attempts' => array(
                 'no',
@@ -106,7 +106,7 @@ $contexts =  array(
                 'questions',
                 'given_answer',
                 'correct_answer',
-                'answer',
+                'result',
                 'manual_review'
             ),
             'backend-dashboard-students-attempts' => 'frontend-dashboard-students-attempts',

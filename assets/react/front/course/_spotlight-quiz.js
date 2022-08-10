@@ -163,13 +163,24 @@ window.jQuery(document).ready($=>{
         }
 
         var feedBackNext = feedback_response($question_wrap);
-        if (!feedBackNext) {
-            return;
+        /**
+         * If not reveal mode then check feedback response
+         * 
+         * Since validation already checked above, now user's ans is correct 
+         * or not they should move forward. In reveal mode if feedback response is false
+         * then it was freezing the process.
+         * 
+         * @since v2.0.9
+         */
+        if (!feedBackMode === 'reveal') {
+            if (!feedBackNext) {
+                return;
+            }
         }
 
         var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
         var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
-
+        console.log(`next question ${next_question_id}`);
         if (next_question_id) {
             var $nextQuestion = $(next_question_id);
             if ($nextQuestion && $nextQuestion.length) {
@@ -180,12 +191,13 @@ window.jQuery(document).ready($=>{
                  */
 
                 var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
+                const answerDisplayTime = Number(_tutorobject.quiz_answer_display_time);
                 if (feedBackMode === 'reveal') {
                     setTimeout(() => {
                         $('.quiz-attempt-single-question').hide();
                         $nextQuestion.show();
                     },
-                        2000);
+                        answerDisplayTime);
                 } else {
                     $('.quiz-attempt-single-question').hide();
                     $nextQuestion.show();
@@ -266,10 +278,32 @@ window.jQuery(document).ready($=>{
     
     $(".tutor-quiz-submit-btn").click(function(event) {
         event.preventDefault();
-        $(this).attr('disabled', 'disabled').addClass('is-loading');
-        $("#tutor-answering-quiz").submit();
-    });
+    
+        const question = event.target.closest('.quiz-attempt-single-question');
+        const mode = question.getAttribute('data-quiz-feedback-mode');
+        const answerDisplayTime = Number(_tutorobject.quiz_answer_display_time);
+        if (mode === 'reveal') {
+            var $questions_wrap = $('.quiz-attempt-single-question');
+            var validated = true;
+            if ($questions_wrap.length) {
+                $questions_wrap.each(function (index, question) {
+                    validated = tutor_quiz_validation($(question));
+                    validated = feedback_response($(question));
+    
+                });
+            }
+            $(this).attr('disabled', 'disabled')
+            setTimeout(() => {
+                $(this).addClass('is-loading');
+                $("#tutor-answering-quiz").submit();
+            }
+            , answerDisplayTime);
+        } else {
+            $(this).attr('disabled', 'disabled').addClass('is-loading');
+            $("#tutor-answering-quiz").submit();
+        }
 
+    });
 	//warn user before leave page if quiz is running
 	var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     // @todo: check the button class functionality

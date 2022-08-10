@@ -10,7 +10,7 @@ $user = get_userdata( $uid );
 
 $profile_settings_link = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings' );
 
-$rdate = tutor_utils()->convert_date_into_wp_timezone( date( 'D d M Y, h:i:s a', strtotime( $user->user_registered ) ) );
+$rdate = $user->user_registered;
 $fname = $user->first_name;
 $lname = $user->last_name;
 $uname = $user->user_login;
@@ -20,7 +20,7 @@ $job   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile_job_title', tru
 $bio   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile_bio', true ) ) );
 
 $profile_data = array(
-	array( __( 'Registration Date', 'tutor' ), ( $rdate ? date_i18n( 'D d M Y, h:i:s a', $rdate ) : esc_html( '-' ) ) ),
+	array( __( 'Registration Date', 'tutor' ), ( $rdate ? tutor_i18n_get_formated_date( $rdate ) : '' ) ),
 	array( __( 'First Name', 'tutor' ), ( $fname ? $fname : esc_html( '-' ) ) ),
 	array( __( 'Last Name', 'tutor' ), ( $lname ? $lname : __( '-' ) ) ),
 	array( __( 'Username', 'tutor' ), $uname ),

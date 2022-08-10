@@ -802,6 +802,7 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
  *
  * @since v2.0.2
  *
+ * @param string $date  date in string from to translate & format.
  * @param string $format optional date format, default is wp date time format.
  *
  * @return string translated date

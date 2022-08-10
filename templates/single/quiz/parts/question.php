@@ -71,7 +71,7 @@
 							echo '<p class="question-marks"> ' . __( 'Marks : ', 'tutor' ) . $question->question_mark . ' </p>';
 						}
 
-						$question_description = nl2br( stripslashes( $question->question_description ) );
+						$question_description = wp_kses_post( stripslashes( $question->question_description ) );
 						if ( $question_description ) {
 							echo "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
 						}

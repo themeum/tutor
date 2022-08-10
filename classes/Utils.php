@@ -2252,6 +2252,29 @@ class Utils {
 	}
 
 	/**
+	 * Get user name for e-mail salutation
+	 *
+	 * @param \WP_User $user
+	 * @return string
+	 * @since 2.0.9
+	 */
+	public function get_user_name( \WP_User $user ) {
+		$name = '';
+		
+		if ( empty( trim( $user->first_name ) ) ) {
+			$name = $user->user_login;
+		} 
+		else {
+			$name = $user->first_name;
+			if ( ! empty( trim( $user->last_name ) ) ) {
+				$name .= " {$user->last_name}";
+			}
+		}
+
+		return $name;
+	}
+
+	/**
 	 * @param int    $lesson_id
 	 * @param int    $user_id
 	 * @param string $key
@@ -3860,6 +3883,8 @@ class Utils {
 										ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
 								INNER  JOIN {$wpdb->users}
 										ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+								INNER JOIN {$wpdb->posts} AS course
+									ON course.ID = comment_post_ID
 						WHERE 	{$wpdb->comments}.user_id = %d
 								AND comment_type = %s
 								AND meta_key = %s
@@ -9436,7 +9461,7 @@ class Utils {
 	/**
 	 * Convert date to wp timezone compatible date. Timezone will be get from settings
 	 *
-	 * @param string $date | string date time to conver.
+	 * @param string $date | string date time to convert.
 	 *
 	 * @return string | date time
 	 *
