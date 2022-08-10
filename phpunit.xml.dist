@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<phpunit
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	testdox="true"
+	>
+	<testsuites>
+		<testsuite name="utils-test">
+			<directory suffix=".php">tests/unit/UtilsTest</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
