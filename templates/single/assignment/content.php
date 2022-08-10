@@ -521,7 +521,7 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                                                 </div>
                                                 <div class="tutor-d-flex tutor-align-center">
                                                     <a class="tutor-iconic-btn tutor-iconic-btn-outline" download
-                                                        href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>"
+                                                        href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>"
                                                         target="_blank">
                                                         <span class="tutor-icon-download"></span>
                                                     </a>

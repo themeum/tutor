@@ -41,6 +41,7 @@
 			font-size: 14px;
 			line-height: 1.8;
 			font-weight: 500;
+			white-space: nowrap;
 			color: var(--tutor-color-secondary);
 
 			&:not(.tutor-text-left):not(.tutor-text-center):not(.tutor-text-right) {

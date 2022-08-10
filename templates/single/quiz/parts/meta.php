@@ -17,7 +17,8 @@
 			}
 		?>
 		<div class="quiz-total-attempt tutor-d-flex d-xs-none">
-			<span class="tutor-fs-6 tutor-color-muted tutor-mr-12">Total <?php esc_html_e( 'Attempted', 'tutor' ); ?>:</span>
+		<?php if ( $feedback_mode === 'retry' ): ?>
+			<span class="tutor-fs-6 tutor-color-muted tutor-mr-12"><?php esc_html_e( 'Total Attempted', 'tutor' ); ?>:</span>
 			<span class="tutor-fs-6 tutor-fw-bold tutor-color-secondary">
 			<?php
 				if ( 0 != $attempts_allowed ) {
@@ -28,6 +29,10 @@
 				echo 0 == $attempts_allowed ? esc_html__( 'No limit', 'tutor' ) : esc_html( $attempts_allowed );
 			?>
 			</span>
+		<?php else: ?>
+			<span class="tutor-fs-6 tutor-color-muted tutor-mr-12"><?php esc_html_e( 'Attempts Allowed', 'tutor' ); ?>:</span>
+			<span class="tutor-fs-6 tutor-fw-bold tutor-color-secondary">1</span>
+		<?php endif; ?>
 		</div>
 	</div>
 	<?php if ( ! $hide_quiz_time_display ) : ?>

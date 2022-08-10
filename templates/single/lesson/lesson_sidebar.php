@@ -108,7 +108,7 @@ if ($topics->have_posts()) {
 						$quiz = $post;
 				?>
 						<div class="tutor-course-topic-item tutor-course-topic-item-quiz<?php echo ($currentPost->ID == get_the_ID()) ? ' is-active' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
-							<a href="<?php echo $show_permalink ? get_permalink($quiz->ID) : '#'; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
+							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $quiz->ID ) ) : '#'; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<span class="tutor-course-topic-item-icon tutor-icon-quiz-o tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
@@ -141,7 +141,7 @@ if ($topics->have_posts()) {
 						</div>
 					<?php } elseif ($post->post_type === 'tutor_assignments') { ?>
 						<div class="tutor-course-topic-item tutor-course-topic-item-assignment<?php echo ($currentPost->ID == get_the_ID()) ? ' is-active' : ''; ?>">
-							<a href="<?php echo $show_permalink ? get_permalink($post->ID) : '#'; ?>" data-assignment-id="<?php echo $post->ID; ?>">
+							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>" data-assignment-id="<?php echo $post->ID; ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<span class="tutor-course-topic-item-icon tutor-icon-assignment tutor-mr-8" area-hidden="true"></span>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
@@ -159,7 +159,7 @@ if ($topics->have_posts()) {
 						</div>
 					<?php } elseif ($post->post_type === 'tutor_zoom_meeting') { ?>
 						<div class="tutor-course-topic-item tutor-course-topic-item-zoom<?php echo ($currentPost->ID == get_the_ID()) ? ' is-active' : ''; ?>">
-							<a href="<?php echo $show_permalink ? esc_url(get_permalink($post->ID)) : '#'; ?>">
+							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<span class="tutor-course-topic-item-icon tutor-icon-brand-zoom-o tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
@@ -185,7 +185,7 @@ if ($topics->have_posts()) {
 						$is_completed_lesson = tutor_utils()->is_completed_lesson();
 						?>
 						<div class="tutor-course-topic-item tutor-course-topic-item-lesson<?php echo ($currentPost->ID == get_the_ID()) ? ' is-active' : ''; ?>">
-							<a href="<?php echo $show_permalink ? get_the_permalink() : '#'; ?>" data-lesson-id="<?php the_ID(); ?>">
+							<a href="<?php echo $show_permalink ? esc_url( get_the_permalink() ) : '#'; ?>" data-lesson-id="<?php the_ID(); ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<?php
 									$tutor_lesson_type_icon = $play_time ? 'brand-youtube-bold' : 'document-text';

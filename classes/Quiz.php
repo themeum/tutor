@@ -908,7 +908,8 @@ class Quiz {
 			}
 
 			$question_title       = sanitize_text_field( $question['question_title'] ?? '' );
-			$question_description = wp_kses( $question['question_description'] ?? '', $this->allowed_html ); // sanitize_text_field($question['question_description']);
+			//$question_description = wp_kses( $question['question_description'] ?? '', $this->allowed_html ); // sanitize_text_field($question['question_description']);
+			$question_description = sanitize_post( $question['question_description'] );
 			$question_type        = sanitize_text_field( $question['question_type'] ?? '' );
 			$question_mark        = sanitize_text_field( $question['question_mark'] ?? '' );
 

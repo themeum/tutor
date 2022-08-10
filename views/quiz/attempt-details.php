@@ -611,9 +611,9 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                                 <?php
                                                 break;
     
-                                            case 'answer' :
+                                            case 'result' :
                                                 ?>
-                                                <td class="answer">
+                                                <td class="result">
                                                     <?php
                                                         switch($answer_status) {
                                                             case 'correct' :

@@ -569,10 +569,10 @@ class Tutor_Setup {
 				$html     .= '</button>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<a href="'.$welcome_url.'" class="tutor-btn tutor-btn-ghost">' . __( 'Skip this step', 'tutor' ) . '</a>';
+				$html     .= '<a href="' . esc_url( $welcome_url ) . '" class="tutor-btn tutor-btn-ghost">' . __( 'Skip this step', 'tutor' ) . '</a>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<a href="'.$welcome_url.'" class="tutor-btn tutor-btn-primary tutor-btn-md">' . __( 'Finish Setup', 'tutor' ) . '</a>';
+				$html     .= '<a href="' . esc_url( $welcome_url ) . '" class="tutor-btn tutor-btn-primary tutor-btn-md">' . __( 'Finish Setup', 'tutor' ) . '</a>';
 			$html         .= '</div>';
 		$html             .= '</div>';
 

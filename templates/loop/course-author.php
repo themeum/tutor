@@ -19,14 +19,14 @@ $course_categories = get_tutor_course_categories();
 
 <div class="tutor-meta tutor-mt-32">
     <div>
-        <a href="<?php echo $profile_url; ?>" class="tutor-d-flex">
+        <a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-d-flex">
             <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?>
         </a>
     </div>
 
     <div>
         <?php esc_html_e('By', 'tutor') ?>
-        <a href="<?php echo $profile_url; ?>"><?php esc_html_e(get_the_author()); ?></a>
+        <a href="<?php echo esc_url( $profile_url ); ?>"><?php esc_html_e(get_the_author()); ?></a>
 
         <?php if( !empty( $course_categories ) && is_array( $course_categories ) && count( $course_categories ) ) : ?>
             <?php esc_html_e('In', 'tutor'); ?>
