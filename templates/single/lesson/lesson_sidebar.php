@@ -110,7 +110,7 @@ if ($topics->have_posts()) {
 						<div class="tutor-course-topic-item tutor-course-topic-item-quiz<?php echo ($currentPost->ID == get_the_ID()) ? ' is-active' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
 							<a href="<?php echo $show_permalink ? get_permalink($quiz->ID) : '#'; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
 								<div class="tutor-d-flex tutor-mr-32">
-									<span class="tutor-course-topic-item-icon tutor-icon-quiz-o tutor-mr-8" area-hidden="true"></span>
+									<span class="tutor-course-topic-item-icon tutor-icon-quiz-o tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
 										<?php echo $quiz->post_title; ?>
 									</span>
@@ -161,7 +161,7 @@ if ($topics->have_posts()) {
 						<div class="tutor-course-topic-item tutor-course-topic-item-zoom<?php echo ($currentPost->ID == get_the_ID()) ? ' is-active' : ''; ?>">
 							<a href="<?php echo $show_permalink ? esc_url(get_permalink($post->ID)) : '#'; ?>">
 								<div class="tutor-d-flex tutor-mr-32">
-									<span class="tutor-course-topic-item-icon tutor-icon-brand-zoom-o tutor-mr-8" area-hidden="true"></span>
+									<span class="tutor-course-topic-item-icon tutor-icon-brand-zoom-o tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
 										<?php echo esc_html($post->post_title); ?>
 									</span>
@@ -189,7 +189,7 @@ if ($topics->have_posts()) {
 								<div class="tutor-d-flex tutor-mr-32">
 									<?php
 									$tutor_lesson_type_icon = $play_time ? 'brand-youtube-bold' : 'document-text';
-									echo '<span class="tutor-course-topic-item-icon tutor-icon-' . $tutor_lesson_type_icon . ' tutor-mr-8" area-hidden="true"></span>';
+									echo '<span class="tutor-course-topic-item-icon tutor-icon-' . $tutor_lesson_type_icon . ' tutor-mr-8 tutor-mt-2" area-hidden="true"></span>';
 									?>
 									<span class="tutor-course-topic-item-title tutor-fs-7 tutor-fw-medium">
 										<?php the_title(); ?>
