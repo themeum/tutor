@@ -83,6 +83,6 @@ abstract class AbstractCache {
 	 * @since v2.0.6
 	 */
 	public function delete_cache(): void {
-		delete_transient( $this->key );
+		delete_transient( $this->key() );
 	}
 }
