@@ -225,7 +225,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.0.9 - August 10, 2022
+= 2.0.9 - August 11, 2022
 
 New: Custom Time setting for showing Answer in the Quiz Reveal mode is introduced
 New: Admin/Instructor will be able to add Code Blocks inside a Lesson/Assignment/Quiz

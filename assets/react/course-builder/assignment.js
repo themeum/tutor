@@ -35,10 +35,13 @@ window.jQuery(document).ready(function($){
 				 * @since v2.0.9
 				 */
                 var tinymceConfig = tinyMCEPreInit.mceInit.tutor_assignment_editor_config;
+
 				if (tinymceConfig && _tutorobject.tutor_pro_url) {
-					tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
-					tinymceConfig.codesample_languages = codeSampleLang;
-					tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
+                    if (!tinymceConfig.plugins.includes('codesample')) {
+                        tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
+                        tinymceConfig.codesample_languages = codeSampleLang;
+                        tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
+                    }
 				}
 
                 tinymce.init(tinymceConfig);
