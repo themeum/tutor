@@ -70,7 +70,9 @@
 	#tutor-single-entry-content {
 		position: relative;
 		width: 100%;
-		min-height: 100vh;
+		@include breakpoint-min(desktop-lg){
+			min-height: 100vh;
+		}
 		display: flex;
 		flex-direction: column;
 
