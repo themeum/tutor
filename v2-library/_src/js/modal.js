@@ -26,6 +26,9 @@ document.addEventListener('click', (e) => {
 			document.querySelectorAll('.tutor-modal.tutor-is-active').forEach((item) => item.classList.remove('tutor-is-active'));
 			modal.classList.add('tutor-is-active');
 			document.body.classList.add("tutor-modal-open");
+
+			const customEvent = new CustomEvent('tutor_modal_shown', {detail: e.target});
+			window.dispatchEvent(customEvent);
 		}
 	}
 

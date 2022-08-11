@@ -441,3 +441,9 @@ window.tutor_toast = function(title, description, type) {
 		}
 	}, 5000);
 };
+
+
+// enable custom selector when modal opens
+window.addEventListener('tutor_modal_shown', (e) => {
+	selectSearchField('.tutor-form-select');
+})
