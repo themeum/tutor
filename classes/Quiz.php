@@ -474,10 +474,10 @@ class Quiz {
 						*/
 					if ( in_array($question_type, array('open_ended', 'short_answer', 'image_answering'))) {
 						$answers_data['is_correct'] = null;
+						$review_required = true;
 					}
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
-					$review_required = true;
 				}
 			}
 
