@@ -65,7 +65,7 @@ class ComposerStaticInit0e757438aef5d8116f473fde21a552e8
         ),
         'TutorTest\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/tests/unit',
+            0 => __DIR__ . '/../..' . '/tests/phpunit',
         ),
         'Prophecy\\' => 
         array (
