@@ -60,6 +60,8 @@ class Quiz_Attempts_List {
 	 */
 	public function get_quiz_attempts_stat() {
 		global $wpdb;
+
+		$user_id = get_current_user_id();
 		// Set query based on action tab.
 		$pass_mark      = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
 		$pending_count  = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
@@ -70,13 +72,20 @@ class Quiz_Attempts_List {
 
 		$pending_clause = " AND {$pending_count} > 0 ";
 
+		$user_clause = '';
+		if ( ! current_user_can( 'administrator' ) ) {
+			$user_clause = "AND quiz.post_author = {$user_id}";
+		}
+
 		$count 			= array();
 		$is_ajax_action = isset( $_POST['action'] ) && 'tutor_quiz_attempts_count' === $_POST['action'];
 		if ( $is_ajax_action ) {
 			$attempt_cache = new QuizAttempts();
+
 			if ( $attempt_cache->has_cache() ) {
 				$count = $attempt_cache->get_cache();
 			} else {
+
 				$count = $wpdb->get_col(
 					$wpdb->prepare(
 						"SELECT COUNT( DISTINCT attempt_id)
@@ -88,6 +97,7 @@ class Quiz_Attempts_List {
 		
 							WHERE 	attempt_status != %s
 								{$pass_clause}
+								{$user_clause}
 		
 							UNION 
 		
@@ -100,6 +110,7 @@ class Quiz_Attempts_List {
 		
 								WHERE 	attempt_status != %s
 									{$fail_clause}
+									{$user_clause}
 		
 							UNION
 		
@@ -112,6 +123,7 @@ class Quiz_Attempts_List {
 		
 								WHERE 	attempt_status != %s
 									{$pending_clause}
+									{$user_clause}
 		
 					",
 						'attempt_started',
@@ -120,9 +132,9 @@ class Quiz_Attempts_List {
 					)
 				);
 				$attempt_cache->data = array(
-					$count[0] ?? 0, //pass
-					$count[1] ?? 0, //fail
-					$count[2] ?? 0, //pending
+					$count[0] ?? 0, // Pass.
+					$count[1] ?? 0, // Fail.
+					$count[2] ?? 0, // Pending.
 				);
 				$attempt_cache->set_cache();
 			}
@@ -152,7 +164,7 @@ class Quiz_Attempts_List {
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
 		$url     = get_pagenum_link();
-		$stats 	 = $this->get_quiz_attempts_stat(get_current_user_id());
+		$stats 	 = $this->get_quiz_attempts_stat();
 		
 		$tabs 	 = array(
 			array(

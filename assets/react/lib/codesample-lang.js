@@ -10,7 +10,7 @@ const codeSampleLang = [
     { text: 'C', value: 'c' },
     { text: 'C#', value: 'csharp' },
     { text: 'C++', value: 'cpp' },
-    { text: 'GoLang', value: 'golang' },
-    { text: 'Ruby', value: 'ruby' },
+    { text: 'Go', value: 'go' },
+
   ];
   export default codeSampleLang;
