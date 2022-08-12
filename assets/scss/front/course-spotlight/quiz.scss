@@ -63,7 +63,7 @@
 	}
 	.tutor-quiz-wrap {
 		width: 980px;
-		.tutor-table-quiz-attempts.tutor-table {
+		.tutor-table-quiz-attempts.tutor-table, .my-quiz-attempts.tutor-table {
 			tr {
 				td {
 					@include breakpoint-max(mobile) {
