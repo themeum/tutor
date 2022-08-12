@@ -18,7 +18,6 @@ php-errors.log
 ehthumbs.db
 Thumbs.db
 .npm
-package-lock.json
 .sass-cache
 assets/**/*.map
 .prettierignore
@@ -39,7 +38,6 @@ v2-library/bundle/main.min.js.map
 v2-library/bundle/main.rtl.min.css
 v2-library/bundle/main.rtl.min.css.map
 vendor/
-bin/
-tests/
+.phpunit.result.cache
 composer.json
 package.json

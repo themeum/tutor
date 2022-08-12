@@ -11,7 +11,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "TutorTest\\":"tests/unit/"
+            "TutorTest\\":"tests/phpunit/"
         }
     },
     "require-dev": {

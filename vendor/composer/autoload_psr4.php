@@ -11,7 +11,7 @@ return array(
     'Tutor\\Models\\' => array($baseDir . '/models'),
     'Tutor\\Helpers\\' => array($baseDir . '/helpers'),
     'Tutor\\Cache\\' => array($baseDir . '/cache'),
-    'TutorTest\\' => array($baseDir . '/tests/unit'),
+    'TutorTest\\' => array($baseDir . '/tests/phpunit'),
     'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src/Prophecy'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
