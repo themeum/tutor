@@ -542,6 +542,10 @@ jQuery(document).ready(function($) {
 				__('Assignment answer is required.', 'tutor'),
 				'error',
 			);
+
+			setTimeout(() => {
+				jQuery('button#tutor_assignment_submit_btn').removeClass('is-loading').removeAttr('disabled')
+			}, 500)
 		}
 	});
 
