@@ -12,5 +12,8 @@
 		<testsuite name="utils-test">
 			<directory>tests/phpunit/UtilsTest.php</directory>
 		</testsuite>
+		<testsuite name="gradebook-test">
+			<directory>tests/phpunit/GradebookTest.php</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>
