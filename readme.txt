@@ -225,7 +225,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.0.9 - August 11, 2022
+= 2.0.9 - August 18, 2022
 
 New: Custom Time setting for showing Answer in the Quiz Reveal mode is introduced
 New: Admin/Instructor will be able to add Code Blocks inside a Lesson/Assignment/Quiz
@@ -261,6 +261,7 @@ Fix: The Course List Filter had CSS issue
 Fix: In Tutor Settings, Tooltip was overlapping the Panel border
 Fix: The "Quiz Attempts" frontend page design was broken in the Mobile View
 Fix: Hide Admin Bar and Restrict Access to WP Admin for Instructor was conflicting for Free Users
+Fix: After a revised Assignment Submission student was not being redirected to the Assignment Overview page
 
 = 2.0.8 - July 25, 2022
 
