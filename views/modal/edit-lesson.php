@@ -31,7 +31,12 @@
         </label>
 
         <?php
-            wp_editor(stripslashes($post->post_content), 'tutor_lesson_modal_editor', array( 'editor_height' => 150));
+            $args  = array(
+                'plugins' => 'codesample',
+                'toolbar1' => 'codesample',
+                'editor_height' => 150,
+            );
+            wp_editor( stripslashes( $post->post_content ), 'tutor_lesson_modal_editor', array( 'editor_height' => 150 ) );
         ?>
 
         <div class="tutor-form-feedback">

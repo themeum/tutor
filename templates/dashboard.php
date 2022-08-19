@@ -254,7 +254,7 @@ do_action('tutor_dashboard/before/wrap');
 		<div class="tutor-container">
 			<div class="tutor-row">
 				<?php foreach ($footer_links as $link) : ?>
-					<a class="tutor-col-4 <?php echo $link['is_active'] ? 'active' : ''; ?>" href="<?php echo $link['url']; ?>">
+					<a class="tutor-col-4 <?php echo $link['is_active'] ? 'active' : ''; ?>" href="<?php echo esc_url( $link['url'] ); ?>">
 						<i class="<?php echo $link['icon_class']; ?>"></i>
 						<span><?php echo $link['title']; ?></span>
 					</a>

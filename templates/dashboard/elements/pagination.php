@@ -28,7 +28,7 @@ if(isset($data['layout']) && $data['layout']['type']=='load_more') {
 	echo '<nav '.(isset($data['ajax']) ? ' data-tutor_pagination_ajax="'.esc_attr( json_encode($data['ajax']) ).'" ' : '').' data-tutor_pagination_layout="'.esc_attr( json_encode( $data['layout'] ) ).'" class="'.$pagination_enabled_class.'" ' . $dataset_attr . '>';
 		
 		if ( $paged < $total_page ) {
-			echo '<a class="tutor-btn tutor-btn-outline-primary page-numbers tutor-mr-16" href="'.add_query_arg( array('current_page' => $paged+1), $current_url ).'">'.
+			echo '<a class="tutor-btn tutor-btn-outline-primary page-numbers tutor-mr-16" href="' . esc_url( add_query_arg( array( 'current_page' => $paged + 1 ), $current_url ) ) . '">' .
 					$data['layout']['load_more_text']
 				.'</a>';
 		}

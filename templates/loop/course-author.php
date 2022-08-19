@@ -17,16 +17,16 @@ $profile_url = tutor_utils()->profile_url($authordata->ID, true);
 $course_categories = get_tutor_course_categories();
 ?>
 
-<div class="tutor-meta tutor-mt-32">
-    <div>
-        <a href="<?php echo $profile_url; ?>" class="tutor-d-flex">
+<div class="tutor-meta-course-by-cat tutor-meta tutor-mt-32">
+    <div class="tutor-meta-course-by">
+        <a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-d-flex">
             <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?>
         </a>
     </div>
 
-    <div>
+    <div class="tutor-meta-course-cat tutor-line-clamp-3">
         <?php esc_html_e('By', 'tutor') ?>
-        <a href="<?php echo $profile_url; ?>"><?php esc_html_e(get_the_author()); ?></a>
+        <a href="<?php echo esc_url( $profile_url ); ?>"><?php esc_html_e(get_the_author()); ?></a>
 
         <?php if( !empty( $course_categories ) && is_array( $course_categories ) && count( $course_categories ) ) : ?>
             <?php esc_html_e('In', 'tutor'); ?>

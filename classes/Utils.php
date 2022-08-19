@@ -39,16 +39,15 @@ class Utils {
 	}
 
 	/**
-	 * Check null safety
+	 * Check an array is sequential or associative
 	 *
-	 * @param mixed $var 		variable, array key etc.
-	 * @param mixed $default	default value when variable is not set.
-	 * @return mixed
+	 * @param	array  $array The array to check.
+	 * @return	bool   true if the array is associative, false if it's sequential.
 	 * 
-	 * @since 2.0.6
+	 * @since 2.0.9
 	 */
-	public function null_safe( &$var, $default = null ) {
-		return isset( $var ) ? $var : $default;
+	public function is_assoc( array $array ) {
+		return array_keys( $array ) !== range( 0, count( $array ) - 1 );
 	}
 
 	private function option_recursive( $array, $key ) {
@@ -2253,6 +2252,29 @@ class Utils {
 	}
 
 	/**
+	 * Get user name for e-mail salutation
+	 *
+	 * @param \WP_User $user
+	 * @return string
+	 * @since 2.0.9
+	 */
+	public function get_user_name( \WP_User $user ) {
+		$name = '';
+		
+		if ( empty( trim( $user->first_name ) ) ) {
+			$name = $user->user_login;
+		} 
+		else {
+			$name = $user->first_name;
+			if ( ! empty( trim( $user->last_name ) ) ) {
+				$name .= " {$user->last_name}";
+			}
+		}
+
+		return $name;
+	}
+
+	/**
 	 * @param int    $lesson_id
 	 * @param int    $user_id
 	 * @param string $key
@@ -3861,6 +3883,8 @@ class Utils {
 										ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
 								INNER  JOIN {$wpdb->users}
 										ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+								INNER JOIN {$wpdb->posts} AS course
+									ON course.ID = comment_post_ID
 						WHERE 	{$wpdb->comments}.user_id = %d
 								AND comment_type = %s
 								AND meta_key = %s
@@ -8744,6 +8768,21 @@ class Utils {
 		$key     = trim( strtolower( $key ) );
 
 		$key_value = array(
+			'all'    => array(
+				'text'  => __( 'All', 'tutor' ),
+			),
+			'read'    => array(
+				'text'  => __( 'Read', 'tutor' ),
+			),
+			'unread'    => array(
+				'text'  => __( 'Unread', 'tutor' ),
+			),
+			'important'    => array(
+				'text'  => __( 'Important', 'tutor' ),
+			),
+			'archived'    => array(
+				'text'  => __( 'Archived', 'tutor' ),
+			),
 			'pending'    => array(
 				'badge' => 'warning',
 				'text'  => __( 'Pending', 'tutor' ),
@@ -9346,11 +9385,13 @@ class Utils {
 	public function text_editor_config() {
 		$args = array(
 			'textarea_name'    => 'tutor-global-text-editor',
+			'plugins' 	 	   => 'image',
 			'tinymce'          => array(
-				'toolbar1' => 'bold,italic,underline,forecolor,fontselect,fontsizeselect,formatselect,alignleft,aligncenter,alignright,bullist,numlist,link,unlink,removeformat',
+				'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image',
 				'toolbar2' => '',
 				'toolbar3' => '',
 			),
+			'file_picker_types' =>  'image',
 			'media_buttons'    => false,
 			'drag_drop_upload' => false,
 			'quicktags'        => false,
@@ -9420,7 +9461,7 @@ class Utils {
 	/**
 	 * Convert date to wp timezone compatible date. Timezone will be get from settings
 	 *
-	 * @param string $date | string date time to conver.
+	 * @param string $date | string date time to convert.
 	 *
 	 * @return string | date time
 	 *

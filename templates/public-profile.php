@@ -74,7 +74,7 @@ tutor_utils()->tutor_custom_header();
 	ob_start();
 	foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 		$url = $social_icon['url'];
-		echo ! empty( $url ) ? '<a href="' . $url . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' : '';
+		echo ! empty( $url ) ? '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer nofollow" class="' . esc_attr( $social_icon['icon_classes'] ) . '" title="' . esc_attr( $social_icon['label'] ) . '"></a>' : '';
 	}
 	$social_media = ob_get_clean();
 ?>
@@ -147,7 +147,7 @@ tutor_utils()->tutor_custom_header();
 						<?php
 						foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 							$url = $social_icon['url'];
-							echo ! empty( $url ) ? '<a href="' . $url . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' : '';
+							echo ! empty( $url ) ? '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' : '';
 						}
 						?>
 					</div>

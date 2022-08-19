@@ -103,6 +103,7 @@ class Assets {
 			'is_tutor_course_edit'         => isset( $_GET['action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) ? true : false,
 			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
 			'current_page'                 => $current_page,
+			'quiz_answer_display_time'	   => 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' ),
 		);
 	}
 
@@ -203,8 +204,10 @@ class Assets {
 			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', TUTOR_VERSION );
 		}
 
-		// Load date picker for announcement at frontend
+		// Load date picker for announcement at frontend.
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		$css = ".mce-notification.mce-notification-error{display: none !important;}";
+		wp_add_inline_style( 'tutor-frontend', $css );
 	}
 
 	public function modify_localize_data( $localize_data ) {
@@ -269,7 +272,6 @@ class Assets {
 		if ( 'tutor_settings' === $current_page && ! wp_script_is( 'wp-tinymce-root' ) ) {
 			wp_enqueue_script( 'tutor-tiny', $baseurl . '/tinymce.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		}
-
 		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION );
 
 		// Common css library.

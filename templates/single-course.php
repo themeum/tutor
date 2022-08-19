@@ -12,15 +12,21 @@
  */
 
 // Prepare the nav items
-$course_id = get_the_ID();
-$course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), $course_id );
-$student_must_login_to_view_course = tutor_utils()->get_option('student_must_login_to_view_course');
-$is_public = \TUTOR\Course_List::is_public($course_id);
+$course_id          = get_the_ID();
+$course_nav_item    = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), $course_id );
+$is_public          = \TUTOR\Course_List::is_public( $course_id );
+$is_mobile          = wp_is_mobile();
+
+$enrollment_box_position            = tutor_utils()->get_option( 'enrollment_box_position_in_mobile', 'bottom' );
+if ( '-1' === $enrollment_box_position ) {
+    $enrollment_box_position = 'bottom';
+}
+$student_must_login_to_view_course  = tutor_utils()->get_option( 'student_must_login_to_view_course' );
 
 tutor_utils()->tutor_custom_header();
 
-if (!is_user_logged_in() && !$is_public && $student_must_login_to_view_course){
-    tutor_load_template('login');
+if ( ! is_user_logged_in() && ! $is_public && $student_must_login_to_view_course ) {
+    tutor_load_template( 'login' );
     tutor_utils()->tutor_custom_footer();
     return;
 }
@@ -34,6 +40,13 @@ if (!is_user_logged_in() && !$is_public && $student_must_login_to_view_course){
             <main class="tutor-col-xl-8">
                 <?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
+                
+                <?php if ( $is_mobile && 'top' === $enrollment_box_position ): ?>
+                    <div class="tutor-mt-32">
+                        <?php tutor_load_template( 'single.course.course-entry-box' ); ?>
+                    </div>
+                <?php endif; ?>
+
                 <div class="tutor-course-details-tab tutor-mt-32">
                     <?php if ( is_array( $course_nav_item ) && count( $course_nav_item ) > 1 ) : ?>
                         <div class="tutor-is-sticky">
@@ -67,7 +80,10 @@ if (!is_user_logged_in() && !$is_public && $student_must_login_to_view_course){
             <aside class="tutor-col-xl-4">
                 <div class="tutor-single-course-sidebar tutor-mt-40 tutor-mt-xl-0">
                     <?php do_action('tutor_course/single/before/sidebar'); ?>
-                    <?php tutor_load_template('single.course.course-entry-box'); ?>
+                    
+                    <?php if ( ( $is_mobile && 'bottom' === $enrollment_box_position ) || ! $is_mobile ): ?>
+                        <?php tutor_load_template( 'single.course.course-entry-box' ); ?>
+                    <?php endif ?>
 
                     <div class="tutor-single-course-sidebar-more tutor-mt-24">
                         <?php tutor_course_instructors_html(); ?>

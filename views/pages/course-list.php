@@ -366,4 +366,7 @@ $available_status = array(
 	</div>
 </div>
 
-<?php tutor_load_template_from_custom_path( tutor()->path . 'views/elements/common-confirm-popup.php' );
+<?php 
+tutor_load_template_from_custom_path( tutor()->path . 'views/elements/common-confirm-popup.php', array( 
+	'message' => __( 'Deletion of the course will erase all its topics, lessons, quizzes, events, and other information. Please confirm your choice.', 'tutor' )
+));

@@ -207,9 +207,9 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 
 // ratio
 .tutor-ratio {
-	content: " ";
+	content: ' ';
 	position: relative;
-    width: 100%;
+	width: 100%;
 	display: block;
 
 	&-16x9 {
@@ -252,13 +252,18 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 		position: relative;
 		overflow: hidden;
 		&:before {
-			content: " ";
+			content: ' ';
 			position: absolute;
 			bottom: 0;
 			left: 0;
 			width: 100%;
 			height: 62px;
-			background: linear-gradient(180deg, rgba(255,255,255,0.0001) 1.31%, rgba(255, 255, 255, 0.721372) 15.41%, #fff 100%);
+			background: linear-gradient(
+				180deg,
+				rgba(255, 255, 255, 0.0001) 1.31%,
+				rgba(255, 255, 255, 0.721372) 15.41%,
+				#fff 100%
+			);
 			z-index: 5;
 		}
 	}
@@ -287,8 +292,8 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 	color: var(--tutor-color-primary);
 	background: rgba(var(--tutor-color-primary-rgb), 0.1);
 
-	[class^="tutor-icon-"],
-	[class*=" tutor-icon-"],
+	[class^='tutor-icon-'],
+	[class*=' tutor-icon-'],
 	.tutor-svg {
 		display: inline-block;
 	}
@@ -323,31 +328,31 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 
 // stretched link
 .tutor-stretched-link:after {
-    content: " ";
+	content: ' ';
 	position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 2;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 2;
 }
 
 // spinner
 .tutor-spinner {
 	display: inline-block;
-    width: 32px;
-    height: 32px;
-    vertical-align: -4px;
-    border: 4px solid currentColor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    animation: 800ms linear infinite rotateSpinner;
+	width: 32px;
+	height: 32px;
+	vertical-align: -4px;
+	border: 4px solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: 800ms linear infinite rotateSpinner;
 
 	&-sm {
 		border-width: 2px;
 		vertical-align: -2px;
 		width: 20px;
-    	height: 20px;
+		height: 20px;
 	}
 
 	&-wrap {

@@ -21,7 +21,7 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
 
 ?>
 <div class="tutor-course-topic-single-header tutor-single-page-top-bar">
-	<a href="#" class="tutor-course-topics-sidebar-toggler tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex" tutor-course-topics-sidebar-toggler>
+	<a href="#" class="tutor-course-topics-sidebar-toggler tutor-iconic-btn tutor-iconic-btn-secondary tutor-d-none tutor-d-xl-inline-flex tutor-flex-shrink-0" tutor-course-topics-sidebar-toggler>
 		<span class="tutor-icon-left" area-hidden="true"></span>
 	</a>
 
@@ -58,8 +58,13 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
                 }
             ?>
             <?php endif; ?>
-
-		<a class="tutor-iconic-btn" href="<?php echo get_the_permalink( $course_id ); ?>">
+		<?php
+			if ( $course_id === 0 && get_post_type( get_the_ID() ) === 'tutor_zoom_meeting' ) {
+				// Zoom General Meeting
+				$course_id = wp_get_post_parent_id( get_the_ID() );
+			}
+		?>
+		<a class="tutor-iconic-btn tutor-flex-shrink-0" href="<?php echo get_the_permalink( $course_id ); ?>">
 			<span class="tutor-icon-times" area-hidden="true"></span>
 		</a>
 	</div>

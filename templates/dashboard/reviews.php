@@ -31,13 +31,13 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 		<div class="tutor-mb-32">
 			<ul class="tutor-nav">
 				<li class="tutor-nav-item">
-					<a class="tutor-nav-link is-active" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ); ?>"> 
+					<a class="tutor-nav-link is-active" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ) ); ?>"> 
 						<?php _e( 'Received', 'tutor' ); ?> (<?php echo $reviews->count; ?>)
 					</a> 
 				</li>
 				<?php if ( $given_count ) : ?>
 					<li class="tutor-nav-item"> 
-						<a class="tutor-nav-link" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ); ?>"> 
+						<a class="tutor-nav-link" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ) ); ?>"> 
 							<?php _e( 'Given', 'tutor' ); ?> (<?php echo $given_count; ?>)
 						</a> 
 					</li>

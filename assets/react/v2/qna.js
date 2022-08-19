@@ -98,13 +98,14 @@ window.jQuery(document).ready($=>{
 
     // Save/update question/reply
     $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button.sidebar-ask-new-qna-submit-btn', function(){
+        const qnaEditor = document.getElementById('wp-tutor_qna_text_editor-wrap');
         let button      = $(this);
         let form        = button.closest('[data-question_id]');
 
         let question_id = button.closest('[data-question_id]').data('question_id');
         let course_id   = button.closest('[data-course_id]').data('course_id');
         let context     = button.closest('[data-context]').data('context');
-        let answer      = form.find('textarea').val();
+        let answer      = $(this).hasClass('sidebar-ask-new-qna-submit-btn') && qnaEditor ? tinymce.activeEditor.getContent({format: 'raw'}) : form.find('textarea').val();
         let back_url    = $(this).data('back_url');
 
         const btnInnerHtml = button.html().trim();
@@ -140,6 +141,14 @@ window.jQuery(document).ready($=>{
                 if ($("#sidebar-qna-tab-content .tutor-quesanswer-askquestion textarea")) {
                     $("#sidebar-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
                 }
+                // @TODO will be implemented later
+                // if (_tutorobject.tutor_pro_url && tinymce) {
+                //     tinymce.activeEditor.setContent('');
+                // } else {
+                //     if ($(".tutor-quesanswer-askquestion textarea")) {
+                //         $(".tutor-quesanswer-askquestion textarea").val('');
+                //     }
+                // }
                 if ($(".tutor-quesanswer-askquestion textarea")) {
                     $(".tutor-quesanswer-askquestion textarea").val('');
                 }

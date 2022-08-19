@@ -218,7 +218,7 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                     <form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
                         <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                         <input type="hidden" value="tutor_assignment_submit" name="tutor_action" />
-                        <input type="hidden" value="<?php echo tutor()->current_url; ?>" name="_wp_http_referer" />
+                        <input type="hidden" value="<?php echo strtok( tutor()->current_url, '?' ); ?>" name="_wp_http_referer" />
                         <input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
                         <?php $allowed_upload_files = (int) tutor_utils()->get_assignment_option( get_the_ID(), 'upload_files_limit' ); ?>
@@ -521,7 +521,7 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                                                 </div>
                                                 <div class="tutor-d-flex tutor-align-center">
                                                     <a class="tutor-iconic-btn tutor-iconic-btn-outline" download
-                                                        href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>"
+                                                        href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>"
                                                         target="_blank">
                                                         <span class="tutor-icon-download"></span>
                                                     </a>

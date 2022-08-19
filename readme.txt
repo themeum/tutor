@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.0.1
 Requires PHP: 7.0
-Stable tag: 2.0.8
+Stable tag: 2.0.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,44 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.0.9 - August 18, 2022
+
+New: Custom Time setting for showing Answer in the Quiz Reveal mode is introduced
+New: Admin/Instructor will be able to add Code Blocks inside a Lesson/Assignment/Quiz
+New: "Enrollment Box" widget can be placed at the top of the Course Details page in Mobile View, Admin can manage it from Settings
+Update: Introduced more security improvements
+Update: Timezone Name List is now searchable on Zoom Meeting Add/Edit modal
+Update: The Course Details page will now show WooCommerce Subscription Details information
+Fix: The "Feedback submitted for Quiz Attempt" email template was sending wrong Dashboard link
+Fix: Ordered/Unordered List tags were not supported in the Lesson pages
+Fix: Zoom Meeting page was showing wrong spacing between the meeting details
+Fix: Multiple answers-based questions were having trouble in case of quiz Reveal Mode
+Fix: Wrong event date was being highlighted on the Tutor Calendar
+Fix: Instructor Earning was not being updated when Autocomplete Order is Enabled
+Fix: On the Course List page, the Course Price was showing twice, and the Booking percentage was showing a long fractional value when using EDD
+Fix: On the "My Profile" page the Registration Date was showing wrong
+Fix: Wrong count was appearing on the first Question after starting a Quiz
+Fix: Quiz Time Counter was not working on Safari Browser
+Fix: Users were unable to click the Cross button to leave a Zoom Meeting in the Course Journey
+Fix: Column Title in "My Quiz Attempts" was showing wrong
+Fix: The settings page input fields were accepting negative value
+Fix: Profile Edit related Tutor LMS Hooks were not working
+Fix: Gradebook was showing "F" to unattempted Quizzes and Pending Assignments
+Fix: On the Question & Answer page the Sort By dropdown options were not Translatable
+Fix: The "More" option's text on the Course Details page was not translatable
+Fix: "Mark as Complete" button was not appearing in Mobile View for Tutor Starter 
+Fix: A huge gap was appearing around the Course List when 2 Column Layout Design was selected
+Fix: In the Course Builder, the Price fields of WooCommerce were conflicting with EDD
+Fix: When a course was permanently deleted, the course-related data were not being deleted
+Fix: The Course Journey pages (Quiz/Assignment) were not mobile responsive
+Fix: Course "% Complete" text was not translatable on the Lesson page in Mobile View
+Fix: The "Student Ratings & Reviews" text on the Course Details page was not translatable
+Fix: The Course List Filter had CSS issue
+Fix: In Tutor Settings, Tooltip was overlapping the Panel border
+Fix: The "Quiz Attempts" frontend page design was broken in the Mobile View
+Fix: Hide Admin Bar and Restrict Access to WP Admin for Instructor was conflicting for Free Users
+Fix: After a revised Assignment Submission student was not being redirected to the Assignment Overview page
 
 = 2.0.8 - July 25, 2022
 
