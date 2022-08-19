@@ -3,7 +3,7 @@
  * Utils test class
  */
 
-namespace TutorTest;
+namespace TutorProTest;
 
 class GradebookTest extends \WP_UnitTestCase {
 
