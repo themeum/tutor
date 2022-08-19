@@ -250,13 +250,23 @@ class CourseModel {
 					}
 
 					wp_delete_post( $content_id, true );
+
+
 				}
 
 				wp_delete_post( $topic_id, true );
+				// Delete zoom meeting.
+				$wpdb->delete(
+					$wpdb->posts,
+					array(
+						'post_parent' => $topic_id,
+						'post_type'   => 'tutor_zoom_meeting'
+					)
+				);
 			}
 		}
 
-		$child_post_ids = $this->get_post_ids( array( 'tutor_announcements', 'tutor_enrolled' ), $post_id );
+		$child_post_ids = $this->get_post_ids( array( 'tutor_announcements', 'tutor_enrolled', 'tutor_zoom_meeting' ), $post_id );
 		if ( ! empty( $child_post_ids ) ) {
 			foreach ( $child_post_ids as $child_post_id ) {
 				wp_delete_post( $child_post_id, true );
@@ -265,6 +275,7 @@ class CourseModel {
 
 		/**
 		 * Delete earning, gradebook result, course complete data
+		 *
 		 * @since 2.0.9
 		 */
 		$wpdb->delete( $wpdb->prefix . 'tutor_earnings', array( 'course_id' => $post_id ) );
