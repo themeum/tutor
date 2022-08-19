@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<phpunit
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	testdox="true"
+	>
+	<testsuites>
+		<testsuite name="all-test">
+			<directory>tests/phpunit/</directory>
+		</testsuite>
+		<testsuite name="utils-test">
+			<directory>tests/phpunit/UtilsTest.php</directory>
+		</testsuite>
+		<testsuite name="gradebook-test">
+			<directory>tests/phpunit/tutor-pro/GradebookTest.php</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
