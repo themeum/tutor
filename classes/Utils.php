@@ -28,6 +28,7 @@ class Utils {
 	public function __call( $method, $args ) {
 		$classes = array(
 			'Tutor\Models\CourseModel',
+			'Tutor\Models\LessonModel',
 			'Tutor\Models\WithdrawModel'
 		);
 
@@ -661,47 +662,6 @@ class Utils {
 	}
 
 	/**
-	 * @return null|string
-	 *
-	 * Get lesson count
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_lesson_count() {
-		global $wpdb;
-
-		$lesson_post_type = tutor()->lesson_post_type;
-
-		$count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(ID)
-			FROM 	{$wpdb->posts}
-			WHERE	post_status = %s
-					AND post_type = %s;
-			",
-				'publish',
-				$lesson_post_type
-			)
-		);
-
-		return $count;
-	}
-
-	/**
-	 * @param int $course_id
-	 *
-	 * @return int
-	 *
-	 * Get total lesson count by a course
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_lesson_count_by_course( $course_id = 0 ) {
-		$course_id = $this->get_post_id( $course_id );
-		return count( $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id ) );
-	}
-
-	/**
 	 * @param int $course_id
 	 * @param int $user_id
 	 *
@@ -893,33 +853,6 @@ class Utils {
 		);
 
 		return is_numeric( $last_order ) ? $last_order + 1 : 0;
-	}
-
-	/**
-	 * @param int $topics_id
-	 * @param int $limit
-	 *
-	 * @return \WP_Query
-	 *
-	 * Get lesson by topic
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_lessons_by_topic( $topics_id = 0, $limit = 10 ) {
-		$topics_id        = $this->get_post_id( $topics_id );
-		$lesson_post_type = tutor()->lesson_post_type;
-
-		$args = array(
-			'post_type'      => $lesson_post_type,
-			'post_parent'    => $topics_id,
-			'posts_per_page' => $limit,
-			'orderby'        => 'menu_order',
-			'order'          => 'ASC',
-		);
-
-		$query = new \WP_Query( $args );
-
-		return $query;
 	}
 
 	/**
@@ -1643,40 +1576,6 @@ class Utils {
 	}
 
 	/**
-	 *
-	 * return lesson type icon
-	 *
-	 * @param int  $lesson_id
-	 * @param bool $html
-	 * @param bool $echo
-	 *
-	 * @return string
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_lesson_type_icon( $lesson_id = 0, $html = false, $echo = false ) {
-		$post_id = $this->get_post_id( $lesson_id );
-		$video   = $this->get_video_info( $post_id );
-
-		$play_time = false;
-		if ( $video ) {
-			$play_time = $video->playtime;
-		}
-
-		$tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
-
-		if ( $html ) {
-			$tutor_lesson_type_icon = "<i class='tutor-icon-$tutor_lesson_type_icon'></i> ";
-		}
-
-		if ( $echo ) {
-			echo tutor_kses_html( $tutor_lesson_type_icon );
-		}
-
-		return $tutor_lesson_type_icon;
-	}
-
-	/**
 	 * @param int $lesson_id
 	 * @param int $user_id
 	 *
@@ -2194,24 +2093,6 @@ class Utils {
 	}
 
 	/**
-	 * @param int $lesson_id
-	 * @param int $user_id
-	 *
-	 * @return array|bool|mixed
-	 *
-	 * Get student lesson reading current info
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_lesson_reading_info_full( $lesson_id = 0, $user_id = 0 ) {
-		$lesson_id = $this->get_post_id( $lesson_id );
-		$user_id   = $this->get_user_id( $user_id );
-
-		$lesson_info = (array) maybe_unserialize( get_user_meta( $user_id, '_lesson_reading_info', true ) );
-		return $this->avalue_dot( $lesson_id, $lesson_info );
-	}
-
-	/**
 	 * @param int $post_id
 	 *
 	 * @return bool|false|int
@@ -2272,25 +2153,6 @@ class Utils {
 		}
 
 		return $name;
-	}
-
-	/**
-	 * @param int    $lesson_id
-	 * @param int    $user_id
-	 * @param string $key
-	 *
-	 * @return array|bool|mixed
-	 *
-	 * Get lesson reading info by key
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_lesson_reading_info( $lesson_id = 0, $user_id = 0, $key = '' ) {
-		$lesson_id   = $this->get_post_id( $lesson_id );
-		$user_id     = $this->get_user_id( $user_id );
-		$lesson_info = $this->get_lesson_reading_info_full( $lesson_id, $user_id );
-
-		return $this->avalue_dot( $key, $lesson_info );
 	}
 
 	/**
@@ -9678,28 +9540,6 @@ class Utils {
         AND course.post_type=%s";
 		
 		return $wpdb->get_var( $wpdb->prepare( $sql, tutor()->course_post_type ) );
-	}
-
-	/**
-	 * Get total number of lesson
-	 *
-	 * @return int
-	 * @since 2.0.2
-	 */
-	public function get_total_lesson(){
-		global $wpdb;
-		$lesson_type = tutor()->lesson_post_type;
-
-		$sql = "SELECT COUNT(DISTINCT lesson.ID)
-				FROM {$wpdb->posts} lesson
-					INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
-					INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID
-				WHERE lesson.post_type = %s
-					AND lesson.post_status = %s
-					AND course.post_status = %s
-					AND topic.post_status = %s";
-
-		return $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type, 'publish', 'publish', 'publish' ) );
 	}
 
 	/**
