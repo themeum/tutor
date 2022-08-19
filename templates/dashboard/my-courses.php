@@ -83,7 +83,7 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
                 ?>
 
                 <div id="<?php echo $row_id; ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
-                    <a href="<?php echo get_the_permalink(); ?>" class="tutor-d-block">
+                    <a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-d-block">
                         <div class="tutor-ratio tutor-ratio-16x9">
                             <img class="tutor-card-image-top" src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
                         </div>
@@ -97,7 +97,7 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
                         </div>
 
                         <div class="tutor-course-name tutor-fs-6 tutor-fw-bold tutor-mb-16">
-                            <a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a>
+                            <a href="<?php echo esc_url( get_the_permalink() ); ?>"><?php the_title(); ?></a>
                         </div>
 
                         <?php if ( !empty( $course_duration ) || !empty( $course_students ) ) : ?>
@@ -137,7 +137,7 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
                                 </span>
                             </div>
                             <div class="tutor-iconic-btn-group tutor-mr-n8">
-                                <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-iconic-btn">
+                                <a href="<?php echo esc_url( tutor_utils()->course_edit_link($post->ID) ); ?>" class="tutor-iconic-btn">
                                     <i class="tutor-icon-edit" area-hidden="true"></i>
                                 </a>
                                 <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-iconic-btn">

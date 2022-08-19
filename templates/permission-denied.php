@@ -43,8 +43,8 @@ tutor_utils()->tutor_custom_header();
                                 );
                             }
                         ?>
-                        <a href="<?php echo $button['url']; ?>" class="tutor-btn tutor-btn-primary">
-                            <?php echo $button['text']; ?>
+                        <a href="<?php echo esc_url( $button['url'] ); ?>" class="tutor-btn tutor-btn-primary">
+                            <?php echo esc_html( $button['text'] ); ?>
                         </a>
                     </div>
                 </div>

@@ -465,6 +465,7 @@ class Ajax {
 					)
 				);
 			} else {
+				do_action( 'tutor_after_login_success', $user->ID );
 				// since 1.9.8 do enroll if guest attempt to enroll
 				if ( ! empty( $_POST['tutor_course_enroll_attempt'] ) && is_a( $user, 'WP_User' ) ) {
 					do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'], $user->ID );

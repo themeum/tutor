@@ -11,27 +11,29 @@
  * @version 1.4.5
  */
 
+use TUTOR\Input;
+
 $disable = ! get_tutor_option( 'enable_course_review' );
 if ( $disable ) {
 	return;
 }
 
-$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
-$current_page = max(1, (int)tutor_utils()->avalue_dot('current_page', $_POST));
-$offset = ($current_page - 1) * $per_page;
+$per_page		= tutor_utils()->get_option( 'pagination_per_page', 10 );
+$current_page	= max( 1, Input::post( 'current_page', 0, Input::TYPE_INT ) );
+$offset			= ( $current_page - 1 ) * $per_page;
 
-$current_user_id = get_current_user_id();
-$course_id = isset($_POST['course_id']) ? (int)$_POST['course_id'] : get_the_ID();
-$is_enrolled = tutor_utils()->is_enrolled($course_id, $current_user_id);
+$current_user_id	= get_current_user_id();
+$course_id			= Input::post( 'course_id', get_the_ID(), Input::TYPE_INT );
+$is_enrolled		= tutor_utils()->is_enrolled( $course_id, $current_user_id );
 
-$reviews = tutor_utils()->get_course_reviews($course_id, $offset, $per_page, false, array('approved'), $current_user_id);
-$reviews_total = tutor_utils()->get_course_reviews($course_id, null, null, true, array('approved'), $current_user_id);
-$rating = tutor_utils()->get_course_rating($course_id);
-$my_rating = tutor_utils()->get_reviews_by_user(0, 0, 150, false, $course_id, array('approved', 'hold'));
+$reviews		= tutor_utils()->get_course_reviews( $course_id, $offset, $per_page, false, array( 'approved' ), $current_user_id );
+$reviews_total	= tutor_utils()->get_course_reviews( $course_id, null, null, true, array( 'approved' ), $current_user_id );
+$rating			= tutor_utils()->get_course_rating( $course_id );
+$my_rating		= tutor_utils()->get_reviews_by_user( 0, 0, 150, false, $course_id, array( 'approved', 'hold' ) );
 
-if(isset($_POST['course_id'])) {
+if ( Input::has( 'course_id' ) ) {
 	// It's load more
-	tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews));
+	tutor_load_template( 'single.course.reviews-loop', array( 'reviews' => $reviews ) );
 	return;
 }
 
@@ -41,13 +43,13 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 <div class="tutor-pagination-wrapper-replaceable">
 	<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
 		<?php
-			$review_title = apply_filters( 'tutor_course_reviews_section_title', 'Student Ratings & Reviews' );
+			$review_title = apply_filters( 'tutor_course_reviews_section_title', __( 'Student Ratings & Reviews', 'tutor' ) );
 			echo esc_html( $review_title, 'tutor' );
 		?>
 	</h3>
 
-	<?php if(! is_array( $reviews ) || ! count( $reviews )): ?>
-		<?php tutor_utils()->tutor_empty_state(__('No Review Yet', 'tutor')); ?>
+	<?php if ( ! is_array( $reviews ) || ! count( $reviews ) ): ?>
+		<?php tutor_utils()->tutor_empty_state( __( 'No Review Yet', 'tutor' ) ); ?>
 	<?php else: ?>
 		<div class="tutor-card tutor-review-card">
 			<div class="tutor-review-summary tutor-p-24 tutor-p-lg-40">

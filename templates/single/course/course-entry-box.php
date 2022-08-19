@@ -140,7 +140,7 @@
 					if ( '' !== $post_date ) :
 					?>
 					<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-d-flex">
-						<span class="tutor-fs-5 tutor-color-success tutor-icon-purchase-mark tutor-mr-8"></span>
+						<span class="tutor-fs-6 tutor-color-success tutor-icon-purchase-mark tutor-mr-8"></span>
 						<span class="tutor-enrolled-info-text">
 							<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
 							<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">

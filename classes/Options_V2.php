@@ -632,6 +632,13 @@ class Options_V2
 								'desc'           => __('Choose which action to follow when the quiz time expires.', 'tutor'),
 							),
 							array(
+								'key'     => 'quiz_answer_display_time',
+								'type'    => 'number',
+								'label'   => __( 'Correct Answer Display Time (when Reveal Mode is enabled)', 'tutor' ),
+								'default' => '2',
+								'desc'    => __( 'Put the answer display time in seconds', 'tutor' ),
+							),
+							array(
 								'key'     => 'quiz_attempts_allowed',
 								'type'    => 'number',
 								'label'   => __('Default Quiz Attempt limit (when Retry Mode is enabled)', 'tutor'),
@@ -995,7 +1002,8 @@ class Options_V2
 							array(
 								'key'           => 'course_details_adjustments',
 								'type'          => 'checkgroup',
-								'label'         => __('Course Details Adjustments', 'tutor'),
+								'label'         => __( 'Page Features', 'tutor' ),
+								'desc'    		=> __( 'You can keep the following features active or inactive as per the need of your business model', 'tutor' ),
 								'group_options' => array(
 									array(
 										'key'     => 'display_course_instructors',
@@ -1132,7 +1140,6 @@ class Options_V2
 										'desc'        => __('Enable to show course review section', 'tutor'),
 									),
 								),
-								'desc'          => __('Content Needed Here...', 'tutor'),
 							),
 						),
 					),
@@ -1443,14 +1450,6 @@ class Options_V2
 								'label_title' => __('', 'tutor'),
 								'default'     => 'on',
 								'desc'        => __('Enable to use the tutor login modal instead of the default WordPress login page', 'tutor'),
-							),
-							array(
-								'key'         => 'hide_admin_bar_for_users',
-								'type'        => 'toggle_switch',
-								'label'       => __('Hide Admin Bar and Restrict Access to WP Admin for Instructors', 'tutor'),
-								'label_title' => __('', 'tutor'),
-								'default'     => 'off',
-								'desc'        => __('Enable this to hide the WordPress Admin Bar from Frontend site, and restrict access to the WP Admin panel.', 'tutor'),
 							),
 							array(
 								'key'         => 'delete_on_uninstall',

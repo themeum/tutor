@@ -15,11 +15,8 @@
 	position: relative;
 	width: 100%;
 
-	// reset
-	ul {
-		list-style: none;
-		padding: 0;
-		margin: 0;
+	ul, ol, li > ul, li > ol {
+		padding-left: 1em;
 	}
 
 	a {
@@ -73,7 +70,9 @@
 	#tutor-single-entry-content {
 		position: relative;
 		width: 100%;
-		min-height: 100vh;
+		@include breakpoint-min(desktop-lg){
+			min-height: 100vh;
+		}
 		display: flex;
 		flex-direction: column;
 
@@ -83,9 +82,9 @@
 				flex-shrink: 0;
 				align-items: center;
 				padding: 8px 16px;
-				height: 60px;
+				min-height: 60px;
 				position: relative;
-				z-index: 1025;
+				// z-index: 1025;
 
 				background: var(--tutor-color-primary);
 				color: var(--tutor-color-white);

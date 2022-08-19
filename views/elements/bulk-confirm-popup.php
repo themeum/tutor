@@ -8,8 +8,8 @@
 
 			<div class="tutor-modal-body tutor-text-center">
 				<div class="tutor-my-44">
-					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Are You Sure?', 'tutor'); ?></div>
-					<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('Are you sure you would like perform this action? We suggest you proceed with caution.', 'tutor'); ?></div>
+					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Before You Proceed!', 'tutor' ); ?></div>
+					<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Are you sure you would like to perform this action? We suggest you proceed with caution.', 'tutor' ); ?></div>
 
 					<form id="tutor-common-confirmation-form-2" class="tutor-mt-40 tutor-mb-0" method="POST">
 						<?php tutor_nonce_field(); ?>

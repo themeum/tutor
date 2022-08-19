@@ -27,7 +27,7 @@ $total_wishlists_count = count(tutor_utils()->get_wishlist(null));
 					<?php tutor_load_template( 'loop.rating' ); ?>
 
 					<div class="tutor-course-name tutor-fs-6 tutor-fw-bold">
-						<a href="<?php echo get_the_permalink(); ?>">
+						<a href="<?php echo esc_url( get_the_permalink() ); ?>">
 							<?php the_title(); ?>
 						</a>
 					</div>

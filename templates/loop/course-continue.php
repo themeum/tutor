@@ -18,7 +18,7 @@
 <?php
     
     $course_id = get_the_ID();
-    $enroll_btn = '<a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">
+    $enroll_btn = '<a href="' . esc_url( get_the_permalink() ) . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">
                         ' . __( 'Start Learning', 'tutor' ) . '
                     </a>
                 ';
@@ -32,7 +32,7 @@
     if ( $lesson_url && ! $is_completed_course ) { 
         ob_start();
         ?>
-        <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
+        <a href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
             <?php
                 if ( ! $is_completed_course && $completed_percent != 0 ) {
                     esc_html_e( 'Continue Learning', 'tutor' );
