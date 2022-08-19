@@ -41,4 +41,41 @@ class LessonModel {
 		$course_id = tutor_utils()->get_post_id( $course_id );
 		return count( tutor_utils()->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id ) );
 	}
+
+    /**
+     * Get lesson reading info by key
+     * 
+	 * @param int    $lesson_id
+	 * @param int    $user_id
+	 * @param string $key
+	 *
+	 * @return array|bool|mixed
+	 *
+	 * @since 1.0.0
+	 */
+	public function get_lesson_reading_info( $lesson_id = 0, $user_id = 0, $key = '' ) {
+		$lesson_id   = tutor_utils()->get_post_id( $lesson_id );
+		$user_id     = tutor_utils()->get_user_id( $user_id );
+		$lesson_info = $this->get_lesson_reading_info_full( $lesson_id, $user_id );
+
+		return tutor_utils()->avalue_dot( $key, $lesson_info );
+	}
+
+    /**
+     * Get student lesson reading current info
+     * 
+	 * @param int $lesson_id
+	 * @param int $user_id
+	 *
+	 * @return array|bool|mixed
+	 *
+	 * @since 1.0.0
+	 */
+	public function get_lesson_reading_info_full( $lesson_id = 0, $user_id = 0 ) {
+		$lesson_id = tutor_utils()->get_post_id( $lesson_id );
+		$user_id   = tutor_utils()->get_user_id( $user_id );
+
+		$lesson_info = (array) maybe_unserialize( get_user_meta( $user_id, '_lesson_reading_info', true ) );
+		return tutor_utils()->avalue_dot( $lesson_id, $lesson_info );
+	}
 }
