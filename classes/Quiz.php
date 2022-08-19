@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Models\QuizModel;
 class Quiz {
 
 	private $allowed_attributes = array(
@@ -342,7 +343,7 @@ class Quiz {
 			if ( tutor_utils()->count($quiz_answers)) {
 
 				foreach ( $quiz_answers as $question_id => $answers ) {
-					$question      = tutor_utils()->get_quiz_question_by_id( $question_id );
+					$question      = QuizModel::get_quiz_question_by_id( $question_id );
 					$question_type = $question->question_type;
 
 					$is_answer_was_correct = false;
@@ -599,7 +600,7 @@ class Quiz {
 		);
 
 		$attempt = tutor_utils()->get_attempt($attempt_id);
-		$question = tutor_utils()->get_quiz_question_by_id($attempt_answer->question_id);
+		$question = QuizModel::get_quiz_question_by_id($attempt_answer->question_id);
 		$course_id = $attempt->course_id;
 		$student_id = $attempt->user_id;
 		$previous_ans =  $attempt_answer->is_correct;
@@ -814,8 +815,8 @@ class Quiz {
 
 		// If question ID not provided, then create new before rendering the form
 		if ( ! $question_id){
-			$next_question_id = tutor_utils()->quiz_next_question_id();
-			$next_question_order = tutor_utils()->quiz_next_question_order_id($quiz_id);
+			$next_question_id = QuizModel::quiz_next_question_id();
+			$next_question_order = QuizModel::quiz_next_question_order_id( $quiz_id );
 			$question_title = __('Question', 'tutor').' '.$next_question_id;
 
 			$new_question_data = array(
