@@ -13,7 +13,7 @@
 			<directory>tests/phpunit/UtilsTest.php</directory>
 		</testsuite>
 		<testsuite name="gradebook-test">
-			<directory>tests/phpunit/GradebookTest.php</directory>
+			<directory>tests/phpunit/tutor-pro/GradebookTest.php</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
