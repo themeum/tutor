@@ -18,7 +18,6 @@ php-errors.log
 ehthumbs.db
 Thumbs.db
 .npm
-package-lock.json
 .sass-cache
 assets/**/*.map
 .prettierignore
@@ -27,7 +26,6 @@ assets/**/*.map
 *.po~
 *.mo
 .history
-*.lock
 *.log
 *.map
 assets/js/tutor-front.js
@@ -39,3 +37,5 @@ v2-library/bundle/main.min.js
 v2-library/bundle/main.min.js.map
 v2-library/bundle/main.rtl.min.css
 v2-library/bundle/main.rtl.min.css.map
+vendor/
+.phpunit.result.cache
