@@ -9,6 +9,9 @@
 	testdox="true"
 	>
 	<testsuites>
+		<testsuite name="all-test">
+			<directory>tests/phpunit/</directory>
+		</testsuite>
 		<testsuite name="utils-test">
 			<directory>tests/phpunit/UtilsTest.php</directory>
 		</testsuite>
