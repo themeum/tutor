@@ -2156,28 +2156,6 @@ class Utils {
 	}
 
 	/**
-	 * @param int   $lesson_id
-	 * @param int   $user_id
-	 * @param array $data
-	 *
-	 * @return bool
-	 *
-	 * Update student lesson reading info
-	 *
-	 * @since v.1.0.0
-	 */
-	public function update_lesson_reading_info( $lesson_id = 0, $user_id = 0, $key = '', $value = '' ) {
-		$lesson_id = $this->get_post_id( $lesson_id );
-		$user_id   = $this->get_user_id( $user_id );
-
-		if ( $key && $value ) {
-			$lesson_info                       = (array) maybe_unserialize( get_user_meta( $user_id, '_lesson_reading_info', true ) );
-			$lesson_info[ $lesson_id ][ $key ] = $value;
-			update_user_meta( $user_id, '_lesson_reading_info', $lesson_info );
-		}
-	}
-
-	/**
 	 * @param string $url
 	 *
 	 * @return bool
@@ -2199,22 +2177,6 @@ class Utils {
 		}
 
 		return false;
-	}
-
-	/**
-	 * @param int $post_id
-	 *
-	 * Mark lesson complete
-	 *
-	 * @since v.1.0.0
-	 */
-	public function mark_lesson_complete( $post_id = 0, $user_id = 0 ) {
-		$post_id = $this->get_post_id( $post_id );
-		$user_id = $this->get_user_id( $user_id );
-
-		do_action( 'tutor_mark_lesson_complete_before', $post_id, $user_id );
-		update_user_meta( $user_id, '_tutor_completed_lesson_id_' . $post_id, tutor_time() );
-		do_action( 'tutor_mark_lesson_complete_after', $post_id, $user_id );
 	}
 
 	/**
