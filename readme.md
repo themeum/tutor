@@ -15,6 +15,17 @@ Follow along the next few steps to find out how you can get about installing the
 Requirements
 Before getting started with installing Tutor LMS beta on your WordPress site, please make sure you have the following requirements. 
 
+## Testing
+To run PHP unit testing in the development environment follow the below steps:
+
+Go to the terminal then hit commands:
+
+1) composer install
+2) bash bin/install-wp-tests.sh db_name user_name password host latest ( [checkout details](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) )
+3) vendor/bin/phpunit --info
+
+If everything goes well then you should see the PHP unit info
+
 ## System Requirements
 1. PHP – 7.0 (or later)
 2. Database – MariaDB – 10.1 or later / MySQL – 5.7 or later
