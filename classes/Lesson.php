@@ -2,6 +2,7 @@
 namespace TUTOR;
 
 use SebastianBergmann\Environment\Console;
+use Tutor\Models\LessonModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -350,7 +351,7 @@ class Lesson extends Tutor_Base {
 		/**
 		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = tutor_time();
 		 */
-		tutor_utils()->mark_lesson_complete( $lesson_id );
+		LessonModel::mark_lesson_complete( $lesson_id );
 
 		do_action( 'tutor_lesson_completed_email_after', $lesson_id, $user_id );
 		do_action( 'tutor_lesson_completed_after', $lesson_id, $user_id );

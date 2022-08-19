@@ -5,6 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Models\LessonModel;
+/**
+ * Class Ajax
+ * @since 1.0.0
+ */
 class Ajax {
 	public function __construct() {
 
@@ -80,11 +85,11 @@ class Ajax {
 
 		$best_watch_time = tutor_utils()->get_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time' );
 		if ( $best_watch_time < $currentTime ) {
-			tutor_utils()->update_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time', $currentTime );
+			LessonModel::update_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time', $currentTime );
 		}
 
 		if ( tutor_utils()->avalue_dot( 'is_ended', $_POST ) ) {
-			tutor_utils()->mark_lesson_complete( $post_id );
+			LessonModel::mark_lesson_complete( $post_id );
 		}
 		exit();
 	}

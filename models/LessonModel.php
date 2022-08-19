@@ -42,9 +42,9 @@ class LessonModel {
 		return count( tutor_utils()->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id ) );
 	}
 
-    /**
-     * Get lesson reading info by key
-     * 
+	/**
+	 * Get lesson reading info by key
+	 *
 	 * @param int    $lesson_id
 	 * @param int    $user_id
 	 * @param string $key
@@ -61,9 +61,9 @@ class LessonModel {
 		return tutor_utils()->avalue_dot( $key, $lesson_info );
 	}
 
-    /**
-     * Get student lesson reading current info
-     * 
+	/**
+	 * Get student lesson reading current info
+	 *
 	 * @param int $lesson_id
 	 * @param int $user_id
 	 *
@@ -77,5 +77,43 @@ class LessonModel {
 
 		$lesson_info = (array) maybe_unserialize( get_user_meta( $user_id, '_lesson_reading_info', true ) );
 		return tutor_utils()->avalue_dot( $lesson_id, $lesson_info );
+	}
+
+	/**
+	 * Update student lesson reading info
+	 *
+	 * @param int   $lesson_id
+	 * @param int   $user_id
+	 * @param array $data
+	 *
+	 * @return void
+	 *
+	 * @since 1.0.0
+	 */
+	public static function update_lesson_reading_info( $lesson_id = 0, $user_id = 0, $key = '', $value = '' ) {
+		$lesson_id = tutor_utils()->get_post_id( $lesson_id );
+		$user_id   = tutor_utils()->get_user_id( $user_id );
+
+		if ( $key && $value ) {
+			$lesson_info                       = (array) maybe_unserialize( get_user_meta( $user_id, '_lesson_reading_info', true ) );
+			$lesson_info[ $lesson_id ][ $key ] = $value;
+			update_user_meta( $user_id, '_lesson_reading_info', $lesson_info );
+		}
+	}
+
+	/**
+	 * Mark lesson complete
+	 *
+	 * @param int $post_id
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public static function mark_lesson_complete( $post_id = 0, $user_id = 0 ) {
+		$post_id = tutor_utils()->get_post_id( $post_id );
+		$user_id = tutor_utils()->get_user_id( $user_id );
+
+		do_action( 'tutor_mark_lesson_complete_before', $post_id, $user_id );
+		update_user_meta( $user_id, '_tutor_completed_lesson_id_' . $post_id, tutor_time() );
+		do_action( 'tutor_mark_lesson_complete_after', $post_id, $user_id );
 	}
 }
