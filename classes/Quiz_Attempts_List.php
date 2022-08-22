@@ -1,6 +1,7 @@
 <?php
 namespace TUTOR;
 
+use Tutor\Models\QuizModel;
 use Tutor\Cache\QuizAttempts;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -283,7 +284,7 @@ class Quiz_Attempts_List {
 		
 		switch($bulk_action) {
 			case 'delete' :
-				tutor_utils()->delete_quiz_attempt( $bulk_ids );
+				QuizModel::delete_quiz_attempt( $bulk_ids );
 				break;
 		}
 		

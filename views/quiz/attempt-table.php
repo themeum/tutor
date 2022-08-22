@@ -35,8 +35,8 @@
 			</thead>
 
 			<?php
-				$attempt_ids = array_column($attempt_list, 'attempt_id');
-				$answers_array = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_ids, true);
+				$attempt_ids	= array_column($attempt_list, 'attempt_id');
+				$answers_array	= \Tutor\Models\QuizModel::get_quiz_answers_by_attempt_id($attempt_ids, true);
 			?>
 
 			<tbody>

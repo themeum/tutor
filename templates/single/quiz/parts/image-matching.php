@@ -1,7 +1,8 @@
-<div id="quiz-image-matching-ans-area" class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> "">
+<div id="quiz-image-matching-ans-area" class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php
+ echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> "">
     <div class="matching-quiz-question-desc tutor-draggable tutor-mb-44">
         <?php
-            $rand_answers = tutor_utils()->get_answers_by_quiz_question($question->question_id, true);
+            $rand_answers = \Tutor\Models\QuizModel::get_answers_by_quiz_question($question->question_id, true);
             foreach ($rand_answers as $rand_answer){
         ?>
         <div class="tutor-quiz-border-box" draggable="true">
