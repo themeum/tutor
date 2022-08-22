@@ -7,7 +7,7 @@
  */
 
 $value = $this->get( $field['key'] );
-if ( isset( $field['default'] ) && empty( $value ) ) {
+if ( isset( $field['default'] ) && trim( $value ) === '' ) {
 	$value = $field['default'];
 }
 
