@@ -4,6 +4,8 @@ if ( ! defined( 'ABSPATH' ) ){
     exit;
 }
 
+use Tutor\Models\QuizModel;
+
 $enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
 if ( ! is_admin() && ! current_user_can( 'tutor_instructor') && true === $enabled_hide_quiz_details ) {
    exit;
@@ -124,10 +126,10 @@ if(!isset($user_data)) {
 }
 
 // Prepare atttempt meta info
-extract(tutor_utils()->get_quiz_attempt_timing($attempt_data)); // $attempt_duration, $attempt_duration_taken;
+extract( QuizModel::get_quiz_attempt_timing( $attempt_data ) ); // $attempt_duration, $attempt_duration_taken;
 
 // Prepare the correct/incorrect answer count for the first summary table
-$answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
+$answers = QuizModel::get_quiz_answers_by_attempt_id($attempt_id);
 $correct = 0;
 $incorrect = 0;
 if(is_array($answers) && count($answers) > 0) {
@@ -384,7 +386,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                                         // Fill in the blank
                                                         elseif ($answer->question_type === 'fill_in_the_blank'){
                                                             $answer_titles = maybe_unserialize($answer->given_answer);
-                                                            $get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+                                                            $get_db_answers_by_question = QuizModel::get_answers_by_quiz_question($answer->question_id);
     
                                                             echo tutor_render_fill_in_the_blank_answer($get_db_answers_by_question, $answer_titles);
                                                         }
@@ -409,7 +411,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                                         elseif ($answer->question_type === 'matching'){
     
                                                             $ordering_ids = maybe_unserialize($answer->given_answer);
-                                                            $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+                                                            $original_saved_answers = QuizModel::get_answers_by_quiz_question($answer->question_id);
     
                                                             $answers = array();
 
@@ -429,7 +431,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                                         elseif ($answer->question_type === 'image_matching'){
         
                                                             $ordering_ids = maybe_unserialize($answer->given_answer);
-                                                            $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+                                                            $original_saved_answers = QuizModel::get_answers_by_quiz_question($answer->question_id);
         
                                                             $answers = array();
 
@@ -531,7 +533,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                                             ) );
     
                                                             $answer_titles = explode('|', stripslashes($correct_answer));
-                                                            $get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+                                                            $get_db_answers_by_question = QuizModel::get_answers_by_quiz_question($answer->question_id);
     
                                                             echo tutor_render_fill_in_the_blank_answer($get_db_answers_by_question, $answer_titles);
                                                         }
