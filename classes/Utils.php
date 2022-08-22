@@ -8625,7 +8625,7 @@ class Utils {
 			'textarea_name'    => 'tutor-global-text-editor',
 			'plugins' 	 	   => 'image',
 			'tinymce'          => array(
-				'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image',
+				'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image,bullist',
 				'toolbar2' => '',
 				'toolbar3' => '',
 			),
@@ -8636,7 +8636,7 @@ class Utils {
 			'elementpath'      => false,
 			'wpautop'          => false,
 			'statusbar'        => false,
-			'editor_height'    => 240,
+			'editor_height'    => 112,
 			'editor_css'       => '<style>
 				#wp-tutor-global-text-editor-wrap div.mce-toolbar-grp {
 					background-color: #fff;
