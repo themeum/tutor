@@ -12,7 +12,7 @@ if ( $context && file_exists( $file_path = __DIR__ . '/header-context/' . $conte
 	$student_name = $user_data->display_name;
 	$student_url  = '#';
 
-	extract( tutor_utils()->get_quiz_attempt_timing( $attempt_data ) ); // $attempt_duration, $attempt_duration_taken;
+	extract( \Tutor\Models\QuizModel::get_quiz_attempt_timing( $attempt_data ) ); // $attempt_duration, $attempt_duration_taken;
 
 	$quiz_time    = $attempt_duration;
 	$attempt_time = $attempt_duration_taken;

@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Tutor\Cache\QuizAttempts;
 use TUTOR\Input;
+use Tutor\Models\QuizModel;
 
 if ( is_numeric( Input::get( 'view_quiz_attempt_id' ) ) ) {
     include tutor()->path."views/pages/view_attempt.php";
@@ -40,8 +41,8 @@ $paged    = Input::get( 'paged', 1, Input::TYPE_INT );
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$quiz_attempts_list = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab, false, true );
-$total = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab, true, true );
+$quiz_attempts_list = QuizModel::get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab, false, true );
+$total				= QuizModel::get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab, true, true );
 
 /**
  * Navbar data to make nav menu

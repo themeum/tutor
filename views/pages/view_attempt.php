@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use TUTOR\Input;
+use Tutor\Models\QuizModel;
 
 $attempt_id   = Input::get( 'view_quiz_attempt_id', 0, Input::TYPE_INT );
 $attempt      = tutor_utils()->get_attempt( $attempt_id );
@@ -24,7 +25,7 @@ if ( 0 === $quiz_id ) {
 }
 
 $quiz_attempt_info = tutor_utils()->quiz_attempt_info( $attempt->attempt_info );
-$answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt->attempt_id );
+$answers = QuizModel::get_quiz_answers_by_attempt_id( $attempt->attempt_id );
 
 $user_id = tutor_utils()->avalue_dot( 'user_id', $attempt );
 $user = get_userdata( $user_id );
