@@ -819,6 +819,7 @@ class Options_V2
 								'type'    => 'number',
 								'label'   => __('Minimum Days Before Balance is Available', 'tutor'),
 								'default' => '7',
+								'min'	  => 1,
 								'desc'    => __('Any income has to remain this many days in the platform before it is available for withdrawal.', 'tutor'),
 							),
 							array(
