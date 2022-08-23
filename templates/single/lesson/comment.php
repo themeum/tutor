@@ -99,7 +99,7 @@ if ( 'tutor_single_course_lesson_load_more' === $action ) {
 	</div>
 	<div class="tutor-button-wrapper tutor-mt-12 tutor-d-flex tutor-justify-end">
 		<?php
-			echo $load_more_btn; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $load_more_btn; // phpcs:ignore
 		?>
 	</div>
 </div>
