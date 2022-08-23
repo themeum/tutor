@@ -124,12 +124,12 @@ if ( property_exists( $question, 'user_id' ) ) {
 					}
 					?>
 				</div>
-				<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
+				<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24 tutor-qna-reply-editor" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 					<?php if ( function_exists( 'tutor_pro' ) ) : ?>
 						<?php
 							wp_editor(
 								'',
-								'tutor-qna-reply-editor-' . $question_id,
+								'tutor_qna_reply_editor_' . $question_id,
 								tutor_utils()->text_editor_config(
 									array(
 										'plugins' => 'codesample',

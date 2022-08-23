@@ -97,19 +97,23 @@ window.jQuery(document).ready($=>{
     })
 
     // Save/update question/reply
-    $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button.sidebar-ask-new-qna-submit-btn', function(){
-        const qnaEditor = document.getElementById('wp-tutor_qna_text_editor-wrap');
+    $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button.sidebar-ask-new-qna-submit-btn', function(e){
         let button      = $(this);
+        let currentEditor = '';
+        const closestWrapper = e.target.closest('.tutor-qna-reply-editor');
+        if (_tutorobject.tutor_pro_url) {
+            // Current editor id
+            currentEditor = closestWrapper.querySelector('.tmce-active').getAttribute('id').split('-')[1];
+        }
         let form        = button.closest('[data-question_id]');
 
         let question_id = button.closest('[data-question_id]').data('question_id');
         let course_id   = button.closest('[data-course_id]').data('course_id');
         let context     = button.closest('[data-context]').data('context');
-        let answer      = $(this).hasClass('sidebar-ask-new-qna-submit-btn') && qnaEditor ? tinymce.activeEditor.getContent({format: 'raw'}) : form.find('textarea').val();
+        let answer      = '' !== currentEditor ? tinymce.get(currentEditor).getContent({format: 'raw'}) : form.find('textarea').val();
         let back_url    = $(this).data('back_url');
 
         const btnInnerHtml = button.html().trim();
-
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
@@ -142,8 +146,8 @@ window.jQuery(document).ready($=>{
                     $("#sidebar-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
                 }
                 
-                if (_tutorobject.tutor_pro_url && tinymce) {
-                    tinymce.activeEditor.setContent('');
+                if (_tutorobject.tutor_pro_url && tinymce && '' !== currentEditor) {
+                    tinymce.get(currentEditor).setContent('');
                 } else {
                     if ($(".tutor-quesanswer-askquestion textarea")) {
                         $(".tutor-quesanswer-askquestion textarea").val('');
