@@ -488,7 +488,6 @@ window.jQuery(document).ready(function($) {
 		var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
 		$formInput.action = 'tutor_quiz_modal_update_question';
 		// If pro active then get desc text from tinyMCE editor
-		
 		if (_tutorobject.tutor_pro_url) {
 			const questionId = $formInput.tutor_quiz_question_id;
 			const eidtorId = 'tutor_quiz_desc_text_editor';
