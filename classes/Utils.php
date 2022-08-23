@@ -8618,10 +8618,12 @@ class Utils {
 	 *
 	 * Modify default param from here and pass to render_text_editor() method
 	 *
+	 * @param $args array  array of arguments.
+	 *
 	 * @return array | default config
 	 */
-	public function text_editor_config() {
-		$args = array(
+	public function text_editor_config( $args = array() ) {
+		$default_args = array(
 			'textarea_name'    => 'tutor-global-text-editor',
 			'plugins' 	 	   => 'image',
 			'tinymce'          => array(
@@ -8643,7 +8645,7 @@ class Utils {
 				}
 			</style>',
 		);
-		return $args;
+		return wp_parse_args( $args, $default_args );
 	}
 
 	/**
