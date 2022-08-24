@@ -28,6 +28,7 @@ class Shortcode {
 		add_shortcode( 'tutor_dashboard', array( $this, 'tutor_dashboard' ) );
 		add_shortcode( 'tutor_instructor_registration_form', array( $this, 'instructor_registration_form' ) );
 		add_shortcode( 'tutor_course', array( $this, 'tutor_course' ) );
+		add_shortcode( 'tutor_login', array( $this, 'tutor_login' ) );
 
 		add_shortcode( 'tutor_instructor_list', array( $this, 'tutor_instructor_list' ) );
 		add_action( 'tutor_options_after_instructors', array( $this, 'tutor_instructor_layout' ) );
@@ -41,6 +42,18 @@ class Shortcode {
 		 */
 		add_action( 'wp_ajax_show_more', array( $this, 'show_more' ) );
 		add_action( 'wp_ajax_nopriv_show_more', array( $this, 'show_more' ) );
+	}
+
+	/**
+	 * Callback for tutor_login shortcode
+	 * 
+	 * @since 2.0.10
+	 * @return mixed
+	 */
+	public function tutor_login(){
+		ob_start();
+		tutor_load_template( 'shortcode.tutor-login' );
+		return ob_get_clean();
 	}
 
 	/**
