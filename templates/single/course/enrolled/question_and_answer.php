@@ -60,6 +60,7 @@ $data          = array(
 	'layout' => array(
 		'type'           => 'load_more',
 		'load_more_text' => __( 'Load More', 'tutor' ),
+        'class'          => 'tutor-qna-load-more',
 	),
 	'ajax'   => array(
 		'action'           => 'tutor_q_and_a_load_more',
@@ -81,6 +82,14 @@ if ( $current_page >= $max_page ) {
 
 do_action( 'tutor_course/question_and_answer/before' );
 if ( $is_load_more ) {
+	$loaded_ids = '';
+
+	if ( is_array( $questions ) && count( $questions ) ) {
+		$loaded_ids_arr = array_column( $questions, 'comment_ID' );
+		$loaded_ids     = implode( ',', $loaded_ids_arr );
+	}
+
+	echo "<input type='hidden' class='tutor-load-more-qna-ids' value='" . esc_attr( $loaded_ids ) . "'>";
 	foreach ( $questions as $question ) {
 		tutor_load_template_from_custom_path(
 			tutor()->path . '/views/qna/qna-single.php',
