@@ -59,7 +59,7 @@ $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->curren
 			</div>
 
 			<div class="tutor-col tutor-mb-16 tutor-mb-lg-0">
-				<div class="tutor-fs-6 tutor-color-muted tutor-mb-4"><?php echo sprintf( 'Current Balance is %s', $current_balance_formated ); ?></div>
+				<div class="tutor-fs-6 tutor-color-muted tutor-mb-4"><?php echo sprintf( esc_html__( 'Current Balance is %s', 'tutor' ), $current_balance_formated ); ?></div>
 				<div class="tutor-fs-5 tutor-color-black">
 					<?php
 					if ( $is_balance_sufficient ) {
