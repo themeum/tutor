@@ -31,9 +31,6 @@ class Q_and_A {
 		 * @since v2.0.6
 		 */
 		add_action( 'wp_ajax_tutor_q_and_a_load_more', __CLASS__ . '::load_more' );
-
-		// Filter MCE buttons.
-		add_filter( 'mce_external_plugins', __CLASS__ . '::filter_external_plugins' );
 	}
 
 	public function tutor_qna_create_update() {
@@ -243,23 +240,5 @@ class Q_and_A {
 		tutor_load_template( 'single.course.enrolled.question_and_answer' );
 		$html = ob_get_clean();
 		wp_send_json_success( array( 'html' => $html ) );
-	}
-
-	/**
-	 * Load codesample external TinyMCE plugin
-	 *
-	 * It will load on the single_course page only
-	 *
-	 * @since v2.0.10
-	 *
-	 * @param array $plugins  available plugins.
-	 *
-	 * @return return  associative array (key => plugin url)
-	 */
-	public static function filter_external_plugins( array $plugins ) {
-		if ( is_single_course() ) {
-			$plugins['codesample'] = 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.2/plugins/codesample/plugin.min.js';
-		}
-		return $plugins;
 	}
 }

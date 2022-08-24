@@ -111,9 +111,28 @@ window.jQuery(document).ready($=>{
         let course_id   = button.closest('[data-course_id]').data('course_id');
         let context     = button.closest('[data-context]').data('context');
         let answer      = '' !== currentEditor ? tinymce.get(currentEditor).getContent({format: 'raw'}) : form.find('textarea').val();
+ 
         let back_url    = $(this).data('back_url');
 
         const btnInnerHtml = button.html().trim();
+
+        /**
+         * Warning alert
+         * 
+         * @since v2.1.0
+         */
+        if (_tutorobject.tutor_pro_url && currentEditor !== '') {
+            let tinyMCEContent = tinymce.get(currentEditor).getContent();
+            if (tinyMCEContent === '') {
+                tutor_toast('Warning!', __( 'Empty Content not Allowed', 'tutor'), 'error');
+                return;
+            }
+        } else {
+            if (answer === '') {
+                tutor_toast('Warning!', __( 'Empty Content not Allowed', 'tutor'), 'error');
+                return;
+            }
+        }
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
@@ -148,6 +167,9 @@ window.jQuery(document).ready($=>{
                 
                 if (_tutorobject.tutor_pro_url && tinymce && '' !== currentEditor) {
                     tinymce.get(currentEditor).setContent('');
+                    // Reinitialize editor
+                    tinymce.execCommand('mceRemoveEditor', false, currentEditor);
+                    tinymce.execCommand('mceAddEditor', false, currentEditor);
                 } else {
                     if ($(".tutor-quesanswer-askquestion textarea")) {
                         $(".tutor-quesanswer-askquestion textarea").val('');
