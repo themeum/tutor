@@ -52,6 +52,28 @@ class Utils {
 		return array_keys( $array ) !== range( 0, count( $array ) - 1 );
 	}
 
+	/**
+	 * Redirect to URL
+	 *
+	 * @param string $url
+	 * @return void
+	 * 
+	 * @since 2.0.10
+	 */
+	public function redirect_to( string $url ) {
+		if ( filter_var( $url, FILTER_VALIDATE_URL ) === FALSE ) {
+			wp_die( 'Not a valid URL for redirect' );
+		}
+
+		if ( ! headers_sent() ) {
+			wp_safe_redirect( $url );
+		} else {
+			echo "<script>window.location.href = " . "'" . esc_url( $url ) . "';" . "</script>";
+		}
+
+		exit;
+	}
+
 	private function option_recursive( $array, $key ) {
 		foreach ( $array as $option ) {
 			$is_array = is_array( $option );
@@ -6754,6 +6776,7 @@ class Utils {
 		$pages = apply_filters(
 			'tutor_pages',
 			array(
+				'tutor_login_page'		   => __( 'Login Page', 'tutor' ),
 				'tutor_dashboard_page_id'  => __( 'Dashboard Page', 'tutor' ),
 				'instructor_register_page' => __( 'Instructor Registration Page', 'tutor' ),
 				'student_register_page'    => __( 'Student Registration Page', 'tutor' ),
@@ -6772,6 +6795,8 @@ class Utils {
 			if ( $wp_page ) {
 				$wp_page_name = $wp_page->post_title;
 				$page_visible = $wp_page->post_status === 'publish';
+			} else {
+				$page_id = 0;
 			}
 
 			$new_pages[] = array(
