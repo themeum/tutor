@@ -8293,7 +8293,7 @@ class Utils {
 				'title'  => __( 'Course Info', 'tutor' ),
 				'method' => 'tutor_course_info_tab',
 			),
-			'reviews'       => array(
+			'reviews'    => array(
 				'title'  => __( 'Reviews', 'tutor' ),
 				'method' => 'tutor_course_target_reviews_html',
 			),
