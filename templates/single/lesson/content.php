@@ -93,7 +93,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 		<ul class="tutor-nav tutor-course-spotlight-nav tutor-justify-center">
 			<?php if ( $has_lesson_content && ( $has_lesson_attachment || $is_comment_enabled ) ) : ?>
 			<li class="tutor-nav-item">
-				<a href="#" class="tutor-nav-link<?php echo 'overview' == $page_tab ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-overview" data-tutor-query-variable="page_tab" data-tutor-query-value="overview">
+				<a href="#" class="tutor-nav-link<?php echo 'overview' == $page_tab ? esc_attr( ' is-active' ) : esc_attr( '' ); ?>" data-tutor-nav-target="tutor-course-spotlight-overview" data-tutor-query-variable="page_tab" data-tutor-query-value="overview">
 					<span class="tutor-icon-document-text tutor-mr-8" area-hidden="true"></span>
 					<span><?php _e( 'Overview', 'tutor' ); ?></span>
 				</a>
@@ -102,7 +102,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 			
 			<?php if ( $has_lesson_attachment && ( $has_lesson_content || $is_comment_enabled ) ) : ?>
 			<li class="tutor-nav-item">
-				<a href="#" class="tutor-nav-link<?php echo ( 'files' == $page_tab || false === $has_lesson_content ) ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-files" data-tutor-query-variable="page_tab" data-tutor-query-value="files">
+				<a href="#" class="tutor-nav-link<?php echo ( 'files' == $page_tab || false === $has_lesson_content ) ? esc_attr( ' is-active' ) : esc_attr( '' ); ?>" data-tutor-nav-target="tutor-course-spotlight-files" data-tutor-query-variable="page_tab" data-tutor-query-value="files">
 					<span class="tutor-icon-paperclip tutor-mr-8" area-hidden="true"></span>
 					<span><?php _e( 'Exercise Files', 'tutor' ); ?></span>
 				</a>
@@ -111,7 +111,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 
 			<?php if ( $is_comment_enabled &&  ( $has_lesson_content || $has_lesson_attachment ) ) : ?>
 			<li class="tutor-nav-item">
-				<a href="#" class="tutor-nav-link<?php echo ('comments' == $page_tab || ( false === $has_lesson_content && false === $has_lesson_attachment ) ) ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-comments" data-tutor-query-variable="page_tab" data-tutor-query-value="comments">
+				<a href="#" class="tutor-nav-link<?php echo ('comments' == $page_tab || ( false === $has_lesson_content && false === $has_lesson_attachment ) ) ? esc_attr( ' is-active' ) : esc_attr( '' ); ?>" data-tutor-nav-target="tutor-course-spotlight-comments" data-tutor-query-variable="page_tab" data-tutor-query-value="comments">
 					<span class="tutor-icon-comment tutor-mr-8" area-hidden="true"></span>
 					<span><?php _e( 'Comments', 'tutor' ); ?></span>
 				</a>
@@ -121,7 +121,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 
 		<div class="tutor-tab tutor-course-spotlight-tab">
 			<?php if ( $has_lesson_content ) : ?>
-			<div id="tutor-course-spotlight-overview" class="tutor-tab-item<?php echo 'overview' == $page_tab ? ' is-active' : ''; ?>">
+			<div id="tutor-course-spotlight-overview" class="tutor-tab-item<?php echo 'overview' == $page_tab ? esc_attr( ' is-active' ) : esc_attr( '' ); ?>">
 				<div class="tutor-container">
 					<div class="tutor-row tutor-justify-center">
 						<div class="tutor-col-xl-8">
@@ -138,7 +138,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 			<?php endif; ?>
 
 			<?php if ( $has_lesson_attachment ) : ?>
-			<div id="tutor-course-spotlight-files" class="tutor-tab-item<?php echo ( 'files' == $page_tab || false === $has_lesson_content ) ? ' is-active' : ''; ?>">
+			<div id="tutor-course-spotlight-files" class="tutor-tab-item<?php echo ( 'files' == $page_tab || false === $has_lesson_content ) ? esc_attr( ' is-active' ) : esc_attr( '' ); ?>">
 				<div class="tutor-container">
 					<div class="tutor-row tutor-justify-center">
 						<div class="tutor-col-xl-8">
@@ -151,7 +151,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 			<?php endif; ?>
 			
 			<?php if ( $is_comment_enabled ) : ?>
-			<div id="tutor-course-spotlight-comments" class="tutor-tab-item<?php echo ('comments' == $page_tab || ( false === $has_lesson_content && false === $has_lesson_attachment ) ) ? ' is-active' : ''; ?>">
+			<div id="tutor-course-spotlight-comments" class="tutor-tab-item<?php echo ('comments' == $page_tab || ( false === $has_lesson_content && false === $has_lesson_attachment ) ) ? esc_attr( ' is-active' ) : esc_attr( '' ); ?>">
 				<div class="tutor-container">
 					<div class="tutor-course-spotlight-comments">
 						<?php require __DIR__ . '/comment.php'; ?>
