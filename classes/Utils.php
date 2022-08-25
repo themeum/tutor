@@ -1330,9 +1330,12 @@ class Utils {
 	}
 
 	/**
+	 * Get tutor attachment
+	 * 
 	 * @param int $post_id
-	 *
-	 * @return bool|mixed
+	 * @param string $meta_key
+	 * 
+	 * @return array
 	 *
 	 * @since v.1.0.0
 	 */
@@ -1505,9 +1508,10 @@ class Utils {
     }
 
 	/**
+	 * Get video info
+	 * 
 	 * @param int $lesson_id
-	 *
-	 * @return bool|object
+	 * @return mixed bool return if video does not exits otherwise object return.
 	 *
 	 * @since v.1.0.0
 	 */
