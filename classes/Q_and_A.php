@@ -45,9 +45,9 @@ class Q_and_A {
 		}
 
 		// Prepare course, question info
-		$course_id   = (int) sanitize_text_field( $_POST['course_id'] );
-		$question_id = (int) sanitize_text_field( $_POST['question_id'] );
-		$context     = sanitize_text_field( $_POST['context'] );
+		$course_id   = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
+		$context     = Input::post( 'context' );
 
 		// Prepare user info
 		$user_id = get_current_user_id();
@@ -82,6 +82,13 @@ class Q_and_A {
 
 		do_action( 'tutor_after_asked_question', $data );
 
+		// question_id != 0 means it's a reply
+		$reply_id	= Input::post( 'question_id', 0, Input::TYPE_INT );
+		$answer_id	= (int) $wpdb->insert_id;
+		if ( $reply_id != 0 && tutor_utils()->is_instructor_of_this_course( $user_id, $course_id ) ) {
+			do_action( 'tutor_after_answer_to_question', $answer_id );
+		}
+		
 		// Provide the html now.
 		ob_start();
 		tutor_load_template_from_custom_path(
