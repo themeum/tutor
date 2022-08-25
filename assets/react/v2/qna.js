@@ -101,7 +101,7 @@ window.jQuery(document).ready($=>{
         let button      = $(this);
         let currentEditor = '';
         const closestWrapper = e.target.closest('.tutor-qna-reply-editor');
-        if (_tutorobject.tutor_pro_url) {
+        if (_tutorobject.tutor_pro_url && tinymce) {
             // Current editor id
             currentEditor = closestWrapper.querySelector('.tmce-active').getAttribute('id').split('-')[1];
         }
