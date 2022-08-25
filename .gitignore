@@ -40,3 +40,4 @@ v2-library/bundle/main.rtl.min.css.map
 vendor/
 !v2-library/_src/scss/structure/vendor
 .phpunit.result.cache
+yarn.lock
