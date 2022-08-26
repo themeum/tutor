@@ -4,7 +4,7 @@
 	// QNA data
 	$question = tutor_utils()->get_qa_question( $question_id );
 	if ( ! $question ) {
-		esc_html_e( 'No data found! ', 'tutor' );
+		tutor_utils()->tutor_empty_state();
 		return;
 	}
 
