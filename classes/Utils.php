@@ -4292,13 +4292,13 @@ class Utils {
 	}
 
 	/**
+	 * Get question and asnwer by answer_id
+	 * 
 	 * @param $answer_id
 	 *
 	 * @return array|null|object
 	 *
 	 * @since v1.6.9
-	 *
-	 * Get question and asnwer by answer_id
 	 */
 	public function get_qa_answer_by_answer_id( $answer_id ) {
 		global $wpdb;
@@ -4309,15 +4309,12 @@ class Utils {
 					users.display_name,
 					question.user_id AS question_by,
 					question.comment_content AS question,
-					question_meta.meta_value AS question_title
+					question.comment_ID AS question_id
 			FROM   {$wpdb->comments} answer
 					INNER JOIN {$wpdb->users} users
 							ON answer.user_id = users.id
 					INNER JOIN {$wpdb->comments} question
 							ON answer.comment_parent = question.comment_ID
-					INNER JOIN {$wpdb->commentmeta} question_meta
-							ON answer.comment_parent = question_meta.comment_id
-							AND question_meta.meta_key = 'tutor_question_title'
 			WHERE  	answer.comment_ID = %d
 					AND answer.comment_type = %s;
 			",
