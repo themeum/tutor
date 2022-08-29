@@ -674,17 +674,17 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		// Prepare args
-		$topic_id           = sanitize_text_field($_POST['topic_id']);
-		$ex_quiz_id         = isset($_POST['quiz_id']) ? sanitize_text_field($_POST['quiz_id']) : 0;
-		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
+		$topic_id           = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$ex_quiz_id         = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		$quiz_title         = Input::post( 'quiz_title' );
 		$quiz_description   = wp_kses( $_POST['quiz_description'], $this->allowed_html );
 		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id, $ex_quiz_id);
 
 		// Check edit privilege
-		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
+		if( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
 			wp_send_json_error( array(
-				'message'=>__('Access Denied', 'tutor'),
-				'data'=>$_POST
+				'message'	=> __( 'Access Denied', 'tutor' ),
+				'data'		=> $_POST
 			));
 		}
 
@@ -702,7 +702,7 @@ class Quiz {
 
 		// Insert quiz and run hook
 		$quiz_id = wp_insert_post( $post_arr );
-		do_action(($ex_quiz_id ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created'), $quiz_id);
+		do_action(( $ex_quiz_id ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
 
 		// Now save quiz settings
 		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] );
