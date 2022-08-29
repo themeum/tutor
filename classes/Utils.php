@@ -2256,6 +2256,7 @@ class Utils {
 				'post_status' => $enrolment_status,
 				'post_author' => $user_id,
 				'post_parent' => $course_id,
+				'post_date_gmt' => current_time( 'mysql', true )
 			)
 		);
 
