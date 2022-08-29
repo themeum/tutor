@@ -186,20 +186,21 @@ class Lesson extends Tutor_Base {
 
 		global $wpdb;
 
-		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
-		$topic_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('current_topic_id', $_POST));
-		$current_topic_id = $topic_id;
-		$course_id = tutor_utils()->get_course_id_by('topic', $topic_id);
-		$_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
-		$is_html_active = Input::post('is_html_active') === 'true' ? true : false;
-		$raw_html_content = wp_kses_post( $_POST['tutor_lesson_modal_editor'] );
-		$tmce_content = wp_kses_post( $_POST['lesson_content'] );
+		$lesson_id			= Input::post( 'lesson_id', 0, Input::TYPE_INT );
+		$topic_id			= Input::post( 'current_topic_id', 0, Input::TYPE_INT );
+		$current_topic_id	= $topic_id;
+		$course_id			= tutor_utils()->get_course_id_by( 'topic', $topic_id );
 
-		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		$_lesson_thumbnail_id	= Input::post( '_lesson_thumbnail_id', 0, Input::TYPE_INT );
+		$is_html_active			= Input::post('is_html_active') === 'true' ? true : false;
+		$raw_html_content		= wp_kses_post( $_POST['tutor_lesson_modal_editor'] );
+		$tmce_content			= wp_kses_post( $_POST['lesson_content'] );
+
+		if( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		$title          = sanitize_text_field( $_POST['lesson_title'] );
+		$title          = Input::post( 'lesson_title' );
 		$lesson_content = $is_html_active ? $raw_html_content : $tmce_content;
 
 		$lesson_data = array(
