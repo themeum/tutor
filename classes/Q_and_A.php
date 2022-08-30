@@ -85,7 +85,7 @@ class Q_and_A {
 		// question_id != 0 means it's a reply
 		$reply_id	= Input::post( 'question_id', 0, Input::TYPE_INT );
 		$answer_id	= (int) $wpdb->insert_id;
-		if ( $reply_id != 0 && tutor_utils()->is_instructor_of_this_course( $user_id, $course_id ) ) {
+		if ( $reply_id != 0 && ( current_user_can( 'administrator' ) || tutor_utils()->is_instructor_of_this_course( $user_id, $course_id ) ) ) {
 			do_action( 'tutor_after_answer_to_question', $answer_id );
 		}
 		
