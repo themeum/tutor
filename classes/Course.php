@@ -464,20 +464,20 @@ class Course extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		// Check required fields
-		if (empty($_POST['topic_title']) ) {
-			wp_send_json_error(array('message' => __('Topic title is required!', 'tutor')));
+		if ( empty( Input::post( 'topic_title' ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Topic title is required!', 'tutor' ) ) );
 		}
 
 		// Gather parameters
-		$course_id = (int) tutor_utils()->avalue_dot('topic_course_id', $_POST);
-		$topic_id = (int) tutor_utils()->avalue_dot('topic_id', $_POST);
-		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
-		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
+		$course_id			 = Input::post( 'topic_course_id', 0, Input::TYPE_INT );
+		$topic_id			 = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$topic_title   		 = Input::post( 'topic_title' );
+		$topic_summery 		 = wp_kses_post( $_POST['topic_summery'] );
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id, $topic_id);
 
 		// Validate if user can manage the topic
-		if(!tutor_utils()->can_user_manage('course', $course_id) || ($topic_id && !tutor_utils()->can_user_manage('topic', $topic_id))) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) || ( $topic_id && !tutor_utils()->can_user_manage('topic', $topic_id ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
 		// Create payload to create/update the topic
@@ -496,7 +496,7 @@ class Course extends Tutor_Base {
 		ob_start();
 		include  tutor()->path.'views/metabox/course-contents.php';
 
-		wp_send_json_success(array(
+		wp_send_json_success( array(
 			'topic_title' => $topic_title,
 			'course_contents' => ob_get_clean()
 		));
