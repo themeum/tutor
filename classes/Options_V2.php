@@ -1392,6 +1392,14 @@ class Options_V2
 								'desc'    => __('This page will be used to list all the published courses.', 'tutor'),
 							),
 							array(
+								'key'     => 'tutor_login_page',
+								'type'    => 'select',
+								'label'   => __( 'Login Page', 'tutor' ),
+								'default' => '0',
+								'options' => $pages,
+								'desc'    => __( 'This page will be used as the login page for both the students and the instructors.', 'tutor' ),
+							),
+							array(
 								'key'     => 'instructor_register_page',
 								'type'    => 'select',
 								'label'   => __('Instructor Registration Page', 'tutor'),
