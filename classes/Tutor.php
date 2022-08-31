@@ -549,9 +549,26 @@ final class Tutor {
 	}
 
 	/**
-	 * Save data like page
+	 * On plugin activate save initial data
+	 * Like: generate tutor pages
+	 * 
+	 * @since 1.0.0
+	 * @return void
 	 */
 	public static function save_data() {
+		/**
+		 * Generate login page
+		 * @since 2.1.0
+		 */
+		$login_page_args    = array(
+			'post_title'   => __( 'Login Page', 'tutor' ),
+			'post_content' => '[tutor_login]',
+			'post_type'    => 'page',
+			'post_status'  => 'publish',
+		);
+		$login_page_id = wp_insert_post( $login_page_args );
+		tutor_utils()->update_option( 'tutor_login_page', $login_page_id );
+
 		$student_dashboard_args    = array(
 			'post_title'   => __( 'Dashboard', 'tutor' ),
 			'post_content' => '',
