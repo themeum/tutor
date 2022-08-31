@@ -17,7 +17,7 @@ extract($data); // $user_id, $attempt_id, $attempt_data(nullable), $context(null
 !isset($context) ? $context=null : 0;
 
 if (!$attempt_id || !$attempt_data || $user_id!=$attempt_data->user_id){
-    echo '<p>'.__('Attempt not found or access permission denied', 'tutor').'</p>';
+    tutor_utils()->tutor_empty_state( __( 'Attempt not found or access permission denied', 'tutor' ));
 	return;
 }
 
