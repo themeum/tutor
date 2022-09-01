@@ -35,169 +35,191 @@ $offset             = $per_page * ($paged-1);
 $results            = tutor_utils()->get_courses_by_instructor($current_user_id, $status, $offset, $per_page);
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16">
-    <?php esc_html_e('My Courses', 'tutor'); ?>
-</div>
-
-<div class="tutor-dashboard-content-inner my-courses">
-    <div class="tutor-mb-32">
-        <ul class="tutor-nav">
-            <li class="tutor-nav-item">
-                <a class="tutor-nav-link<?php echo $active_tab == 'my-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses')); ?>">
-                    <?php esc_html_e('Publish', 'tutor'); ?> <?php echo "(" . $count_map['publish'] . ")"; ?>
-                </a>
-            </li>
-            <li class="tutor-nav-item">
-                <a class="tutor-nav-link<?php echo $active_tab == 'my-courses/pending-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses')); ?>">
-                    <?php esc_html_e('Pending', 'tutor'); ?> <?php echo "(" . $count_map['pending'] . ")"; ?>
-                </a>
-            </li>
-            <li class="tutor-nav-item">
-                <a class="tutor-nav-link<?php echo $active_tab == 'my-courses/draft-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/draft-courses')); ?>">
-                    <?php esc_html_e('Draft', 'tutor'); ?> <?php echo "(" . $count_map['draft'] . ")"; ?>
-                </a>
-            </li>
-        </ul>
+<div class="tutor-dashboard-my-courses">
+    <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16">
+        <?php esc_html_e('My Courses', 'tutor'); ?>
     </div>
-
-    <!-- Course list -->
-    <?php
-    $placeholder_img = tutor()->url . 'assets/images/placeholder.svg';
-
-    if (!is_array($results) || (!count($results) && $paged==1)) {
-        tutor_utils()->tutor_empty_state(tutor_utils()->not_found_text());
-    } else {
-        ?>
-        <div class="tutor-grid tutor-grid-3">
-            <?php
-            global $post;
-            foreach ($results as $post) :
-                setup_postdata($post);
-
-                $avg_rating = tutor_utils()->get_course_rating()->rating_avg;
-                $tutor_course_img = get_tutor_course_thumbnail_src();
-                $id_string_delete = 'tutor_my_courses_delete_' . $post->ID;
-                $row_id = 'tutor-dashboard-my-course-' . $post->ID;
-                $course_duration = get_tutor_course_duration_context($post->ID, true);
-                $course_students = tutor_utils()->count_enrolled_users_by_course();
-                ?>
-
-                <div id="<?php echo $row_id; ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
-                    <a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-d-block">
-                        <div class="tutor-ratio tutor-ratio-16x9">
-                            <img class="tutor-card-image-top" src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
-                        </div>
+    
+    <div class="tutor-dashboard-content-inner">
+        <div class="tutor-mb-32">
+            <ul class="tutor-nav">
+                <li class="tutor-nav-item">
+                    <a class="tutor-nav-link<?php echo $active_tab == 'my-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses')); ?>">
+                        <?php esc_html_e('Publish', 'tutor'); ?> <?php echo "(" . $count_map['publish'] . ")"; ?>
                     </a>
-
-                    <div class="tutor-card-body">
-                        <div class="tutor-meta tutor-mb-8">
-                            <span>
-                                <?php echo esc_html(get_the_date()); ?> <?php echo esc_html(get_the_time()); ?>
-                            </span>
-                        </div>
-
-                        <div class="tutor-course-name tutor-fs-6 tutor-fw-bold tutor-mb-16">
-                            <a href="<?php echo esc_url( get_the_permalink() ); ?>"><?php the_title(); ?></a>
-                        </div>
-
-                        <?php if ( !empty( $course_duration ) || !empty( $course_students ) ) : ?>
-                        <div class="tutor-meta tutor-mt-16">
-                            <?php if ( !empty( $course_duration ) ) : ?>
-                                <div>
-                                    <span class="tutor-icon-clock-line tutor-meta-icon" area-hidden="true"></span>
-                                    <span class="tutor-meta-value"><?php echo $course_duration; ?></span>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ( !empty( $course_students ) ) : ?>
-                                <div>
-                                    <span class="tutor-icon-user-line tutor-meta-icon" area-hidden="true"></span>
-                                    <span class="tutor-meta-value"><?php echo $course_students; ?></span>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-
-                    <div class="tutor-card-footer">
-                        <div class="tutor-d-flex tutor-align-center tutor-justify-between">
-                            <div class="tutor-d-flex tutor-align-center">
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-4">
-                                    <?php esc_html_e('Price:', 'tutor') ?>
-                                </span>
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php
-                                        $price = tutor_utils()->get_course_price();
-                                        if ( null === $price ) {
-                                            esc_html_e( 'Free', 'tutor' );
-                                        } else {
-                                            echo tutor_utils()->get_course_price();
-                                        }
-                                    ?>
-                                </span>
-                            </div>
-                            <div class="tutor-iconic-btn-group tutor-mr-n8">
-                                <a href="<?php echo esc_url( tutor_utils()->course_edit_link($post->ID) ); ?>" class="tutor-iconic-btn">
-                                    <i class="tutor-icon-edit" area-hidden="true"></i>
-                                </a>
-                                <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-iconic-btn">
-                                    <i class="tutor-icon-trash-can-line" area-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Delete prompt modal -->
-                    <div id="<?php echo $id_string_delete; ?>" class="tutor-modal">
-                        <div class="tutor-modal-overlay"></div>
-                        <div class="tutor-modal-window">
-                            <div class="tutor-modal-content tutor-modal-content-white">
-                                <button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
-                                    <span class="tutor-icon-times" area-hidden="true"></span>
-                                </button>
-
-                                <div class="tutor-modal-body tutor-text-center">
-                                    <div class="tutor-mt-48">
-                                        <img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
-                                    </div>
-
-                                    <div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Delete This Course?', 'tutor'); ?></div>
-                                    <div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor'); ?></div>
-                                    
-                                    <div class="tutor-d-flex tutor-justify-center tutor-my-48">
-                                        <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
-                                            <?php esc_html_e('Cancel', 'tutor'); ?>
-                                        </button>
-                                        <button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"course_id":<?php echo $post->ID; ?>,"action":"tutor_delete_dashboard_course"}' data-delete_element_id="<?php echo $row_id; ?>">
-                                            <?php esc_html_e('Yes, Delete This', 'tutor'); ?>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach;
-            wp_reset_postdata(); ?>
+                </li>
+                <li class="tutor-nav-item">
+                    <a class="tutor-nav-link<?php echo $active_tab == 'my-courses/pending-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses')); ?>">
+                        <?php esc_html_e('Pending', 'tutor'); ?> <?php echo "(" . $count_map['pending'] . ")"; ?>
+                    </a>
+                </li>
+                <li class="tutor-nav-item">
+                    <a class="tutor-nav-link<?php echo $active_tab == 'my-courses/draft-courses' ? ' is-active' : ''; ?>" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/draft-courses')); ?>">
+                        <?php esc_html_e('Draft', 'tutor'); ?> <?php echo "(" . $count_map['draft'] . ")"; ?>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <div class="tutor-mt-20">
-            <?php
-                if ($count_map[$status] > $per_page) {
-                    $pagination_data = array(
-                        'total_items' => $count_map[$status],
-                        'per_page'    => $per_page,
-                        'paged'       => $paged,
-                    );
-
-                    tutor_load_template_from_custom_path(
-                        tutor()->path . 'templates/dashboard/elements/pagination.php',
-                        $pagination_data
-                    );
-                }
-            ?>
-
-        </div>
+    
+        <!-- Course list -->
         <?php
-    } 
-    ?>
+        $placeholder_img = tutor()->url . 'assets/images/placeholder.svg';
+    
+        if (!is_array($results) || (!count($results) && $paged==1)) {
+            tutor_utils()->tutor_empty_state(tutor_utils()->not_found_text());
+        } else {
+            ?>
+            <div class="tutor-grid tutor-grid-3">
+                <?php
+                global $post;
+                foreach ($results as $post) :
+                    setup_postdata($post);
+    
+                    $avg_rating = tutor_utils()->get_course_rating()->rating_avg;
+                    $tutor_course_img = get_tutor_course_thumbnail_src();
+                    $id_string_delete = 'tutor_my_courses_delete_' . $post->ID;
+                    $row_id = 'tutor-dashboard-my-course-' . $post->ID;
+                    $course_duration = get_tutor_course_duration_context($post->ID, true);
+                    $course_students = tutor_utils()->count_enrolled_users_by_course();
+                    ?>
+    
+                    <div id="<?php echo $row_id; ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
+                        <a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-d-block">
+                            <div class="tutor-ratio tutor-ratio-16x9">
+                                <img class="tutor-card-image-top" src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
+                            </div>
+                        </a>
+    
+                        <div class="tutor-card-body">
+                            <div class="tutor-meta tutor-mb-8">
+                                <span>
+                                    <?php echo esc_html(get_the_date()); ?> <?php echo esc_html(get_the_time()); ?>
+                                </span>
+                            </div>
+    
+                            <div class="tutor-course-name tutor-fs-6 tutor-fw-bold tutor-mb-16">
+                                <a href="<?php echo esc_url( get_the_permalink() ); ?>"><?php the_title(); ?></a>
+                            </div>
+    
+                            <?php if ( !empty( $course_duration ) || !empty( $course_students ) ) : ?>
+                            <div class="tutor-meta tutor-mt-16">
+                                <?php if ( !empty( $course_duration ) ) : ?>
+                                    <div>
+                                        <span class="tutor-icon-clock-line tutor-meta-icon" area-hidden="true"></span>
+                                        <span class="tutor-meta-value"><?php echo $course_duration; ?></span>
+                                    </div>
+                                <?php endif; ?>
+    
+                                <?php if ( !empty( $course_students ) ) : ?>
+                                    <div>
+                                        <span class="tutor-icon-user-line tutor-meta-icon" area-hidden="true"></span>
+                                        <span class="tutor-meta-value"><?php echo $course_students; ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+    
+                        <div class="tutor-card-footer">
+                            <div class="tutor-d-flex tutor-align-center tutor-justify-between">
+                                <div class="tutor-d-flex tutor-align-center">
+                                    <span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-4">
+                                        <?php esc_html_e('Price:', 'tutor') ?>
+                                    </span>
+                                    <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+                                        <?php
+                                            $price = tutor_utils()->get_course_price();
+                                            if ( null === $price ) {
+                                                esc_html_e( 'Free', 'tutor' );
+                                            } else {
+                                                echo tutor_utils()->get_course_price();
+                                            }
+                                        ?>
+                                    </span>
+                                </div>
+                                <div class="tutor-iconic-btn-group tutor-mr-n8">
+                                    <a href="<?php echo esc_url( tutor_utils()->course_edit_link($post->ID) ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
+                                        <i class="tutor-icon-edit" area-hidden="true"></i>
+                                    </a>
+                                    <div class="tutor-dropdown-parent">
+                                        <button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+                                            <span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+                                        </button>
+                                        <div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+                                            <a class="tutor-dropdown-item" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
+                                                <i class="tutor-icon-copy-text tutor-mr-8" area-hidden="true"></i>
+                                                <span><?php esc_html_e( 'Duplicate', 'tutor' ); ?></span>
+                                            </a>
+                                            <a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                <i class="tutor-icon-archive tutor-mr-8" area-hidden="true"></i>
+                                                <span><?php esc_html_e( 'Move to Draft', 'tutor' ); ?></span>
+                                            </a>
+                                            <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dropdown-item tutor-admin-course-delete">
+                                                <i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+                                                <span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
+                                            </a>
+                                            <a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
+                                                <i class="tutor-icon-times tutor-mr-8" area-hidden="true"></i>
+                                                <span><?php esc_html_e( 'Cancel Submission', 'tutor' ); ?></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Delete prompt modal -->
+                        <div id="<?php echo $id_string_delete; ?>" class="tutor-modal">
+                            <div class="tutor-modal-overlay"></div>
+                            <div class="tutor-modal-window">
+                                <div class="tutor-modal-content tutor-modal-content-white">
+                                    <button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+                                        <span class="tutor-icon-times" area-hidden="true"></span>
+                                    </button>
+    
+                                    <div class="tutor-modal-body tutor-text-center">
+                                        <div class="tutor-mt-48">
+                                            <img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+                                        </div>
+    
+                                        <div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Delete This Course?', 'tutor'); ?></div>
+                                        <div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor'); ?></div>
+                                        
+                                        <div class="tutor-d-flex tutor-justify-center tutor-my-48">
+                                            <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
+                                                <?php esc_html_e('Cancel', 'tutor'); ?>
+                                            </button>
+                                            <button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"course_id":<?php echo $post->ID; ?>,"action":"tutor_delete_dashboard_course"}' data-delete_element_id="<?php echo $row_id; ?>">
+                                                <?php esc_html_e('Yes, Delete This', 'tutor'); ?>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach;
+                wp_reset_postdata(); ?>
+            </div>
+            <div class="tutor-mt-20">
+                <?php
+                    if ($count_map[$status] > $per_page) {
+                        $pagination_data = array(
+                            'total_items' => $count_map[$status],
+                            'per_page'    => $per_page,
+                            'paged'       => $paged,
+                        );
+    
+                        tutor_load_template_from_custom_path(
+                            tutor()->path . 'templates/dashboard/elements/pagination.php',
+                            $pagination_data
+                        );
+                    }
+                ?>
+    
+            </div>
+            <?php
+        } 
+        ?>
+    </div>
 </div>
