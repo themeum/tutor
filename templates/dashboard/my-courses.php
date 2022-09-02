@@ -106,14 +106,14 @@ $results            = tutor_utils()->get_courses_by_instructor($current_user_id,
                                 <?php if (!empty($course_duration) ) : ?>
                                     <div>
                                         <span class="tutor-icon-clock-line tutor-meta-icon" area-hidden="true"></span>
-                                        <span class="tutor-meta-value"><?php echo esc_html($course_duration); ?></span>
+                                        <span class="tutor-meta-value"><?php echo stripslashes($course_duration); ?></span>
                                     </div>
                                 <?php endif; ?>
     
                                 <?php if (!empty($course_students) ) : ?>
                                     <div>
                                         <span class="tutor-icon-user-line tutor-meta-icon" area-hidden="true"></span>
-                                        <span class="tutor-meta-value"><?php echo esc_html($course_students); ?></span>
+                                        <span class="tutor-meta-value"><?php echo stripslashes($course_students); ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
