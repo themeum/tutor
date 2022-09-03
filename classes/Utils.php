@@ -7011,7 +7011,7 @@ class Utils {
 	 *
 	 * @return array  of objects for student list or array
 	 */
-	public function get_students_data_by_course_id( $course_id = 0, $field_name = '', $all = false ) {
+	public function get_students_data_by_course_id( $course_id = 0, $field_name = 'ID', $all = false ) {
 
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
