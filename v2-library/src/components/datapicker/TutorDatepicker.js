@@ -36,7 +36,6 @@ const urlPrams = (type, val, date = null) => {
 };
 
 const TutorDatepicker = (data) => {
-	console.log(data);
 	let isPreviousDateAllowed = data?.input_name !== 'meeting_date';
 	if (data.disablePastDate) {
 		isPreviousDateAllowed = false;
