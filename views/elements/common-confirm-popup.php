@@ -20,13 +20,28 @@
 					<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
 				</div>
 
-				<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php echo isset( $data['title'] ) ? esc_html( $data['title'] ) : esc_html__( 'Do You Want to Delete This?', 'tutor'); ?></div>
-				<div class="tutor-fs-6 tutor-color-muted"><?php echo isset( $data['message'] ) ? esc_html( $data['message'] ) : esc_html__( 'Are you sure you want to delete this permanently from the site? Please confirm your choice.', 'tutor'); ?></div>
+				<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php echo isset( $data['title'] ) ? esc_html( $data['title'] ) : esc_html__( 'Do You Want to Delete This?', 'tutor' ); ?></div>
+				<div class="tutor-fs-6 tutor-color-muted"><?php echo isset( $data['message'] ) ? esc_html( $data['message'] ) : esc_html__( 'Are you sure you want to delete this permanently from the site? Please confirm your choice.', 'tutor' ); ?></div>
 
 				<form id="tutor-common-confirmation-form" class="tutor-m-0" method="POST">
 					<?php tutor_nonce_field(); ?>
 					<input type="hidden" name="id">
 					<input type="hidden" name="action">
+					
+					<?php
+					/**
+					 * Additional fields support
+					 *
+					 * Pass additional fields array, ex: [field1, field2]
+					 *
+					 * @since v2.1.0
+					 */
+					if ( isset( $data['additional_fields'] ) ) :
+						?>
+						<?php foreach ( $data['additional_fields'] as $field ) : ?>
+							<input type="hidden" name="<?php echo esc_attr( $field ); ?>">
+						<?php endforeach; ?>
+					<?php endif; ?>
 					<div class="tutor-d-flex tutor-justify-center tutor-my-48">
 						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
