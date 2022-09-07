@@ -11,7 +11,10 @@ if ( ! tutor_utils()->get_option( 'course_archive_filter_sorting', true, true, t
 $sort_by = \TUTOR\Input::get( 'course_order', '' );
 ?>
 
-<div style="text-align: right;" class="tutor-course-filter">
+<!--
+	Note Do not remove tutor-course-filter attr. It required by _archive.js for filter function.
+!-->
+<div style="text-align: right;" class="tutor-course-filter" tutor-course-filter>
 	<form style="display: inline-block;">
 		<select class="tutor-form-select" name="course_order">
 			<option value="newest_first" <?php selected( 'newest_first', $sort_by ); ?> >
