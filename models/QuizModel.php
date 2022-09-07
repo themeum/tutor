@@ -578,4 +578,31 @@ class QuizModel {
 
 		return compact( 'attempt_duration', 'attempt_duration_taken' );
 	}
+
+	/**
+	 * Check student is passed in a quiz or not.
+	 * Quiz retry mode: student required at least one quiz passed in attempts
+	 * 
+	 * @param int $quiz_id
+	 * @param int $user_id
+	 * @return boolean
+	 * 
+	 * @since 2.1.0
+	 */
+	public static function is_quiz_passed( $quiz_id, $user_id = 0 ) {
+		global $wpdb;
+		
+		$user_id				= tutor_utils()->get_user_id( $user_id );
+		$attempts				= $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id=%d AND quiz_id=%d", $user_id, $quiz_id ) );
+		$required_percentage	= tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
+		
+		foreach ( $attempts as $attempt ) {
+			$earned_percentage = $attempt->earned_marks > 0 ? ( ( $attempt->earned_marks * 100 )  / $attempt->total_marks ) : 0;
+			if ( $earned_percentage >= $required_percentage ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

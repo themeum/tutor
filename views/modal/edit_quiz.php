@@ -1,41 +1,41 @@
-<input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>"/>
+<input type="hidden" name="quiz_id" value="<?php echo esc_attr( $quiz_id ); ?>"/>
 <div id="quiz-builder-tab-quiz-info">
     <div class="tutor-mb-32">
-        <label class="tutor-form-label"><?php _e('Quiz Title', 'tutor'); ?></label>
+        <label class="tutor-form-label"><?php _e( 'Quiz Title' , 'tutor' ); ?></label>
         <div class="tutor-mb-16">
-            <input type="text" name="quiz_title" class="tutor-form-control tutor-mb-12" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo $quiz ? htmlspecialchars( stripslashes($quiz->post_title) ) : ''; ?>"/>
+            <input type="text" name="quiz_title" class="tutor-form-control tutor-mb-12" placeholder="<?php _e( 'Type your quiz title here', 'tutor' ); ?>" value="<?php echo $quiz ? htmlspecialchars( stripslashes( $quiz->post_title ) ) : ''; ?>"/>
         </div>
     </div>
     <div>
-        <label class="tutor-form-label"><?php _e('Summary', 'tutor'); ?></label>
+        <label class="tutor-form-label"><?php _e( 'Summary', 'tutor' ); ?></label>
         <div class="tutor-mb-16">
-            <textarea name="quiz_description" class="tutor-form-control tutor-mb-12" rows="5"><?php echo $quiz ? stripslashes($quiz->post_content) : ''; ?></textarea>
+            <textarea name="quiz_description" class="tutor-form-control tutor-mb-12" rows="5"><?php echo stripslashes( $quiz ? $quiz->post_content : '' ); ?></textarea>
         </div>
     </div>
-    <?php do_action('tutor_quiz_edit_modal_info_tab_after', $quiz) ?>
+    <?php do_action( 'tutor_quiz_edit_modal_info_tab_after', $quiz ) ?>
 </div>
 
 <div id="quiz-builder-tab-questions" class="quiz-builder-tab-container tutor-mb-32">
     <div class="quiz-builder-questions-wrap">
         <?php
-        $questions = ($quiz_id && $quiz_id>0) ? tutor_utils()->get_questions_by_quiz($quiz_id) : array();
+        $questions = ( $quiz_id && $quiz_id > 0 ) ? tutor_utils()->get_questions_by_quiz( $quiz_id ) : array();
 
-        if ($questions) {
-            foreach ($questions as $question) {
+        if ( $questions ) {
+            foreach ( $questions as $question ) {
                 $id_target = 'quiz-popup-menu-' . $question->question_id;
                 ?>
-                <div class="tutor-quiz-item quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
+                <div class="tutor-quiz-item quiz-builder-question-wrap" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
                     <div class="tutor-quiz-item-label">
                         <span class="tutor-quiz-item-draggable tutor-icon-drag question-sorting"></span>
                         <h6 class="tutor-quiz-item-name">
-                            <?php echo stripslashes($question->question_title); ?>
+                            <?php echo esc_html( $question->question_title ); ?>
                         </h6>
                     </div>
                     <div class="tutor-quiz-item-action tutor-align-center">
                         <div class="tutor-quiz-item-type">
                             <?php
-                                $type = tutor_utils()->get_question_types($question->question_type);
-                                echo $type['icon'] . ' ' . $type['name'];
+                                $type = tutor_utils()->get_question_types( $question->question_type );
+                                echo stripslashes( $type['icon'] ) . ' ' . esc_html( $type['name'] );
                             ?>
                         </div>
                         <div class="tutor-dropdown-parent">
@@ -44,13 +44,13 @@
                             </button>
                             <ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
                                 <li>
-                                    <a href="#" class="tutor-dropdown-item tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
+                                    <a href="#" class="tutor-dropdown-item tutor-quiz-open-question-form" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
                                         <span class="tutor-icon-edit tutor-mr-8" area-hidden="true"></span>
                                         <span><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="tutor-dropdown-item tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
+                                    <a href="#" class="tutor-dropdown-item tutor-quiz-question-trash" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
                                         <span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
                                         <span><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
@@ -80,7 +80,7 @@
         </label>
         <div class="tutor-row tutor-align-center">
             <div class="tutor-col-3">
-                <input type="number" class="tutor-form-control" min="0" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
+                <input type="number" class="tutor-form-control" min="0" name="quiz_option[time_limit][time_value]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ) ?>">
             </div>
             <div class="tutor-col-3">
                 <?php $limit_time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type', 'minutes') ?>
@@ -103,6 +103,8 @@
             <?php _e('Time limit for this quiz. 0 means no time limit.', 'tutor'); ?>
         </div>
     </div>
+
+    <?php do_action( 'tutor_quiz_builder_settings_tab_time_limit_after', $course_id, $quiz_id ) ?>
 
     <div class="tutor-mb-32">
         <label class="tutor-form-label">
@@ -139,7 +141,7 @@
         </div>
     </div>
     
-    <div class="tutor-mb-32 tutor-quiz-slider tutor-attempt-allowed-slider" style="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 'default') === 'retry' ? 'display: block' : 'display: none'?>">
+    <div class="tutor-mb-32 tutor-quiz-slider tutor-attempt-allowed-slider" style="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 'default' ) === 'retry' ? 'display: block' : 'display: none' ); ?>">
         <label class="tutor-form-label">
             <?php _e('Attempts Allowed', 'tutor'); ?>
         </label>
@@ -148,9 +150,9 @@
             $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
         ?>
         <div class="tutor-field-type-slider tutor-p-0" data-min="0" data-max="20">
-            <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
+            <p class="tutor-field-type-slider-value"><?php echo esc_html( $attempts_allowed ); ?></p>
             <div class="tutor-field-slider"></div>
-            <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
+            <input type="hidden" value="<?php echo esc_attr( $attempts_allowed ); ?>" name="quiz_option[attempts_allowed]" />
         </div>
         <div class="tutor-form-feedback">
             <?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?>
@@ -161,7 +163,7 @@
         <label class="tutor-form-label">
             <?php _e('Passing Grade (%)', 'tutor'); ?>
         </label>
-        <input type="number" class="tutor-form-control" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10" min="0"/>
+        <input type="number" class="tutor-form-control" name="quiz_option[passing_grade]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 80 ) ); ?>" size="10" min="0"/>
         <div class="tutor-form-feedback">
             <?php _e('Set the passing percentage for this quiz', 'tutor'); ?>
         </div>
@@ -171,7 +173,7 @@
         <label class="tutor-form-label">
             <?php _e('Max questions allowed to answer', 'tutor'); ?>
         </label>
-        <input type="number" class="tutor-form-control" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>" min="1"/>
+        <input type="number" class="tutor-form-control" name="quiz_option[max_questions_for_answer]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'max_questions_for_answer', 10 ) ) ?>" min="1"/>
         <div class="tutor-form-feedback">
             <?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?>
         </div>
@@ -250,7 +252,7 @@
                     </label>
                     <div class="tutor-row">
                         <div class="tutor-col-auto">
-                            <input class="tutor-form-control" type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>" min="0">
+                            <input class="tutor-form-control" type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'short_answer_characters_limit', 200 ) ); ?>" min="0">
                         </div>
                     </div>
                     <div class="tutor-form-feedback">
@@ -262,7 +264,7 @@
                     <label class="tutor-form-label">
                         <?php _e('Open-Ended/Essay questions answer character limit', 'tutor'); ?>
                     </label>
-                    <input style="max-width: 135px;" class="tutor-form-control" type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>" min="0">
+                    <input style="max-width: 135px;" class="tutor-form-control" type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'open_ended_answer_characters_limit', 500) ); ?>" min="0">
                     <div class="tutor-form-feedback">
                         <?php _e('Students will place the answer in the Open-Ended/Essay question type within this character limit.', 'tutor'); ?>
                     </div>
