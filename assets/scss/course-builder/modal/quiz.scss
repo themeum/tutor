@@ -1,4 +1,13 @@
 &:not(.tutor-has-question-from) {
+	.tutor-pass-required-toggle{
+		font-size: 14px;
+		color: var(--tutor-body-color);
+		line-height: 24px;
+		margin: 0 0 10px;
+		font-weight: 500;
+		margin-bottom: 0;
+	}
+
 	&[data-target='quiz-builder-tab-quiz-info'] {
 		[action-tutor-prev-quiz],
 		[action-tutor-save-quiz] {
