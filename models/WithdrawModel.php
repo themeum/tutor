@@ -3,31 +3,33 @@ namespace Tutor\Models;
 
 /**
  * Class WithdrawModel
+ *
  * @since 2.0.7
  */
 class WithdrawModel {
-    /**
-     * All withdraw status
-     */
-    const STATUS_PENDING    = 'pending';
-    const STATUS_APPROVED   = 'approved';
-    const STATUS_REJECTED   = 'rejected';
+	/**
+	 * All withdraw status
+	 */
+	const STATUS_PENDING  = 'pending';
+	const STATUS_APPROVED = 'approved';
+	const STATUS_REJECTED = 'rejected';
 
-    /**
-     * Get withdraw summary info for an user
-     *
-     * @param  int $instructor_id
-     * @return array|object|null|void
-     * 
-     * @since 2.0.7
-     */
-    public static function get_withdraw_summary( $instructor_id ) {
-        global $wpdb;
-        
-        $maturity_days = tutor_utils()->get_option( 'minimum_days_for_balance_to_be_available' );
+	/**
+	 * Get withdraw summary info for an user
+	 *
+	 * @param  int $instructor_id
+	 * @return array|object|null|void
+	 *
+	 * @since 2.0.7
+	 */
+	public static function get_withdraw_summary( $instructor_id ) {
+		global $wpdb;
 
-        $data = $wpdb->get_row(
-            $wpdb->prepare("SELECT ID, display_name, 
+		$maturity_days = tutor_utils()->get_option( 'minimum_days_for_balance_to_be_available' );
+
+		$data = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT ID, display_name, 
                     total_income,total_withdraw, 
                     (total_income-total_withdraw) current_balance, 
                     total_matured,
@@ -35,18 +37,18 @@ class WithdrawModel {
                 
                 FROM (
                         SELECT ID,display_name, 
-                    COALESCE((select SUM(instructor_amount) from {$wpdb->prefix}tutor_earnings group by user_id having user_id=u.ID),0) total_income,
+                    COALESCE((SELECT SUM(instructor_amount) FROM {$wpdb->prefix}tutor_earnings WHERE order_status='%s' GROUP BY user_id HAVING user_id=u.ID),0) total_income,
                     
                         COALESCE((
-                        select sum(amount) total_withdraw from {$wpdb->prefix}tutor_withdraws 
-                        where status='%s'
-                        group by user_id
-                        having user_id=u.ID
+                        SELECT sum(amount) total_withdraw FROM {$wpdb->prefix}tutor_withdraws 
+                        WHERE status='%s'
+                        GROUP BY user_id
+                        HAVING user_id=u.ID
                     ),0) total_withdraw,
                 
                     COALESCE((
-                        SELECT SUM(instructor_amount) from(
-                            SELECT user_id, instructor_amount, created_at, DATEDIFF(NOW(),created_at) AS days_old FROM {$wpdb->prefix}tutor_earnings
+                        SELECT SUM(instructor_amount) FROM(
+                            SELECT user_id, instructor_amount, created_at, DATEDIFF(NOW(),created_at) AS days_old FROM {$wpdb->prefix}tutor_earnings WHERE order_status='%s'
                         ) a
                         WHERE days_old >= %d
                         GROUP BY user_id
@@ -56,25 +58,27 @@ class WithdrawModel {
                 FROM {$wpdb->prefix}users u WHERE u.ID=%d
                 
                 ) a",
-                self::STATUS_APPROVED,
-                $maturity_days,
-                $instructor_id
-            )
-        );
+				'completed',
+				self::STATUS_APPROVED,
+				'completed',
+				$maturity_days,
+				$instructor_id
+			)
+		);
 
-        return $data;
-    }
+		return $data;
+	}
 
-    /**
-     * Get withdrawal history
-     * 
+	/**
+	 * Get withdrawal history
+	 *
 	 * @param int   $user_id | optional.
 	 * @param array $filter | ex:
 	 * array('status' => '','date' => '', 'order' => '', 'start' => 10, 'per_page' => 10,'search' => '')
 	 *
 	 * @return object
 	 */
-	public static function get_withdrawals_history( $user_id = 0, $filter = array(), $start=0, $limit=20 ) {
+	public static function get_withdrawals_history( $user_id = 0, $filter = array(), $start = 0, $limit = 20 ) {
 		global $wpdb;
 
 		$filter = (array) $filter;
@@ -109,9 +113,9 @@ class WithdrawModel {
 		}
 
 		// Search query @since v.2.0.0
-		$search_term_raw = empty($search) ? '' : $search;
-		$search_query = '%%';
-		if ( !empty( $search_term_raw ) ) {
+		$search_term_raw = empty( $search ) ? '' : $search;
+		$search_query    = '%%';
+		if ( ! empty( $search_term_raw ) ) {
 			$search_query = '%' . $wpdb->esc_like( $search_term_raw ) . '%';
 		}
 
@@ -162,16 +166,16 @@ class WithdrawModel {
 
 		$withdraw_history = array(
 			'count'   => $count ? $count : 0,
-			'results' => is_array($results) ? $results : array(),
+			'results' => is_array( $results ) ? $results : array(),
 		);
 
 		return (object) $withdraw_history;
 	}
 
-    /**
+	/**
 	 * Get withdraw method for a specific
-     * 
-     * @param int $user_id
+	 *
+	 * @param int $user_id
 	 *
 	 * @return bool|mixed
 	 */
