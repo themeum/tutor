@@ -33,6 +33,7 @@ class Gutenberg {
 	 *
 	 * @param array $prepared_args
 	 * @param WP_REST_Request $request
+	 * 
 	 * @return void
 	 * 
 	 * @since 2.1.0
