@@ -36,7 +36,10 @@ const urlPrams = (type, val, date = null) => {
 };
 
 const TutorDatepicker = (data) => {
-	const isPreviousDateAllowed = data?.input_name !== 'meeting_date';
+	let isPreviousDateAllowed = data?.input_name !== 'meeting_date';
+	if (data.disablePastDate) {
+		isPreviousDateAllowed = false;
+	}
 	const dateFormat = window._tutorobject
 		? window._tutorobject.wp_date_format
 		: 'd-M-Y';
