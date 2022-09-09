@@ -703,14 +703,29 @@ class Course extends Tutor_Base {
 		wp_send_json_success();
 	}
 
-
+	/**
+	 * Main author change from gutenberg editor
+	 *
+	 * @param array $data
+	 * @param array $postarr
+	 * @return void
+	 * 
+	 * @since 2.0.0
+	 */
 	public function tutor_add_gutenberg_author( $data, $postarr ) {
-		global $wpdb;
+		$gutenberg_enabled	= tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
+		$post_type			= $postarr['post_type'];
+		$courses_post_type	= tutor()->course_post_type;
+		
+		if ( false === $gutenberg_enabled && $post_type !== $courses_post_type ) {
+			return $data;
+		}
 
-		$courses_post_type = tutor()->course_post_type;
-		$post_type = tutor_utils()->array_get('post_type', $postarr);
-
-		if ( $courses_post_type === $post_type ) {
+		/**
+		 * Only admin can change main author
+		 */
+		if ( $courses_post_type === $post_type && ! current_user_can( 'administrator' ) ) {
+			global $wpdb;
 			$post_ID     = (int) tutor_utils()->avalue_dot( 'ID', $postarr );
 			$post_author = (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $post_ID ) );
 
