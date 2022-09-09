@@ -765,14 +765,18 @@ class Quiz {
 	/**
 	 * Load quiz Modal on add/edit click
 	 *
-	 * @since v.1.0.0
+	 * @param array $params
+	 * @param boolean $ret
+	 * @return void
+	 * 
+	 * @since 1.0.0
 	 */
-	public function tutor_load_quiz_builder_modal( $params=array(), $ret = false ) {
+	public function tutor_load_quiz_builder_modal( $params = array(), $ret = false ) {
 		tutor_utils()->checking_nonce();
 		
 		$data 		= array_merge( $_POST, $params );
-		$quiz_id 	= Input::post( 'quiz_id', 0, Input::TYPE_INT );
-		$topic_id 	= Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$quiz_id 	= isset( $data['quiz_id'] ) ? sanitize_text_field( $data['quiz_id'] ) : 0;
+		$topic_id 	= isset( $data['topic_id'] ) ? sanitize_text_field( $data['topic_id'] ) : 0;
 		$quiz 		= $quiz_id ? get_post( $quiz_id ) : null;
 		$course_id	= Input::post( 'course_id', 0, Input::TYPE_INT );
 
