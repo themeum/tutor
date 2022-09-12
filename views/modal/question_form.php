@@ -49,8 +49,18 @@ echo esc_attr( $question_id );
 							<div class="select-header">
 								<span class="lead-option">
 									<?php
-									echo $question_types[ $current_type ]['icon']; //phpcs:ignore
-									echo $question_types[ $current_type ]['name']; //phpcs:ignore
+									echo tutor_utils()->clean_html_content(
+										$question_types[ $current_type ]['icon'],
+										array(
+											'span' => array(
+												'class' => array(),
+											),
+											'i' => array(
+												'class' => array(),
+											),
+										)
+									);
+									echo esc_html( $question_types[ $current_type ]['name'] );
 									?>
 								</span>
 								<span class="select-dropdown">
