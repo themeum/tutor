@@ -78,8 +78,8 @@ const copyToClipboard = (text) => {
 
 // Showing tooltip
 const showToolTip = (targetEl, text = 'Copied!') => {
-	const toolTip = `<span class="tutor-tooltip">${text}</span>`;
-	targetEl.insertAdjacentHTML('beforebegin', toolTip);
+	const toolTip = `<span class="tutor-tooltip tooltip-wrap"><span class="tooltip-txt tooltip-top">${text}</span></span>`;
+	targetEl.insertAdjacentHTML('afterbegin', toolTip);
 
 	setTimeout(() => {
 		document.querySelector('.tutor-tooltip').remove();
@@ -118,3 +118,14 @@ document.addEventListener('click', async (e) => {
 		}
 	}
 });
+
+/**
+ * Toggle disabled .tutor-clipboard-input-field .tutor-btn
+ * .tutor-clipboard-input-field .tutor-btn
+ */
+const copyBtn = document.querySelector('.tutor-clipboard-input-field .tutor-btn');
+if (copyBtn) {
+	document.querySelector('.tutor-clipboard-input-field .tutor-form-control').addEventListener('input', (e) => {
+		e.target.value ? copyBtn.removeAttribute('disabled') : copyBtn.setAttribute('disabled', '');
+	});
+}
