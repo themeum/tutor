@@ -504,14 +504,14 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                                 $attached_files = json_decode( $attached_files, true );
                                 if ( tutor_utils()->count( $attached_files ) ) :
                             ?>
-                                    <div class="tutor-attachment-files submited-files tutor-d-flex tutor-mt-20 tutor-mt-sm-40">
+                                    <div class="tutor-attachment-files submited-files tutor-d-flex tutor-flex-column tutor-mt-20 tutor-mt-sm-40">
                                         <?php
                                             $upload_dir     = wp_get_upload_dir();
                                             $upload_baseurl = trailingslashit( tutor_utils()->array_get( 'baseurl', $upload_dir ) );
 
                                             foreach ( $attached_files as $attached_file ) :
                                         ?>
-                                            <div class="tutor-instructor-card">
+                                            <div class="tutor-instructor-card tutor-mt-12">
                                                 <div class="tutor-icard-content">
                                                     <div class="tutor-fs-6 tutor-color-secondary">
                                                         <?php echo tutor_utils()->array_get( 'name', $attached_file ); ?>
