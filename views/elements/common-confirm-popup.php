@@ -26,8 +26,18 @@
 				<form id="tutor-common-confirmation-form" class="tutor-m-0" method="POST">
 					<?php tutor_nonce_field(); ?>
 					<input type="hidden" name="id">
-					<input type="hidden" name="action">
-					
+					<?php
+					/**
+					 * On the post meta box action field is prohibited
+					 *
+					 * If we don't need action field then we can pass
+					 * third arguments as disable_action_field
+					 *
+					 * @since v2.1.0
+					 */
+					if ( ! isset( $data['disable_action_field'] ) ) : ?>
+						<input type="hidden" name="action">
+					<?php endif; ?>
 					<?php
 					/**
 					 * Additional fields support
