@@ -3,9 +3,13 @@
  * Tutor confirm modal
  * a common modal for confirmation
  *
+ * Supported arguments:
+ * [ message => '', additional_fields => '', disable_action_field => '' ]
+ *
  * @package Tutor confirm modal
  * @since v2.0.0
  */
+
 ?>
 <div class="tutor-modal" id="tutor-common-confirmation-modal">
 	<div class="tutor-modal-overlay"></div>
