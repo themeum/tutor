@@ -605,4 +605,44 @@ class QuizModel {
 		
 		return false;
 	}
+
+	/**
+	 * Get all question type for a quiz
+	 *
+	 * @param integer $quiz_id
+	 * @return array
+	 * 
+	 * @since 2.1.0
+	 */
+	public static function get_quiz_question_types( int $quiz_id ) {
+		global $wpdb;
+		$types = $wpdb->get_col(
+			$wpdb->prepare( "SELECT DISTINCT question_type FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id=%d", $quiz_id )
+		);
+
+		return $types;
+	}
+
+	/**
+	 * Check a quiz attempt need manual review or not
+	 *
+	 * @param int $quiz_id
+	 * @return boolean
+	 * 
+	 * @since 2.1.0
+	 */
+	public static function is_manual_review_required( $quiz_id ) {
+		$required = false;
+		$review_question_types = array( 'open_ended', 'short_answer' );
+		$question_types = self::get_quiz_question_types( $quiz_id );
+
+		foreach( $review_question_types as $type ) {
+			if ( in_array( $type, $question_types, true ) ) {
+				$required = true;
+				break;
+			}
+		}
+
+		return $required;
+	}
 }
