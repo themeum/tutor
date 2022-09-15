@@ -104,8 +104,6 @@
         </div>
     </div>
 
-    <?php do_action( 'tutor_quiz_builder_settings_tab_time_limit_after', $course_id, $quiz_id ) ?>
-
     <div class="tutor-mb-32">
         <label class="tutor-form-label">
             <?php _e('Quiz Feedback Mode', 'tutor'); ?>
@@ -158,6 +156,8 @@
             <?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?>
         </div>
     </div>
+
+    <?php do_action( 'tutor_quiz_builder_settings_tab_passing_grade_before', $course_id, $quiz_id ) ?>
 
     <div class="tutor-mb-32">
         <label class="tutor-form-label">
