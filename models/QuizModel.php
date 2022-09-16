@@ -356,6 +356,8 @@ class QuizModel {
 			// Deleting attempt (comment), child attempt and attempt meta (comment meta)
 			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
 			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
+			
+			do_action( 'tutor_quiz/attempt_deleted', $attempt_ids );
 		}
 	}
 
