@@ -76,6 +76,15 @@ final class Tutor {
 	private $Course_List;
 
 	/**
+	 * Course Embed
+	 * 
+	 * @var $course_embed
+	 * 
+	 * @since v2.1.0
+	 */
+	private $course_embed;
+
+	/**
 	 * @return null|Tutor
 	 *
 	 * Run the TUTOR
@@ -178,6 +187,7 @@ final class Tutor {
 		$this->withdraw_list   = new Withdraw_Requests_List();
 		$this->student_list    = new Students_List();
 		$this->instructor_list = new Instructors_List();
+		$this->course_embed    = new Course_Embed();
 
 		/**
 		 * Run Method
