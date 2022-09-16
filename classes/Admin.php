@@ -36,6 +36,9 @@ class Admin {
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		// Register Course Widget
 		add_action( 'widgets_init', array( $this, 'register_course_widget' ) );
+
+		// Handle flash toast message for redirect_to util helper
+		add_action( 'admin_head', array( new Utils, 'handle_flash_message' ), 999 );
 	}
 
 	/**
