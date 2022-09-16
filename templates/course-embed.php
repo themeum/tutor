@@ -70,14 +70,14 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 
 		<div class="tutor-meta tutor-mt-auto">
 			<div>
-				<a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-d-flex">
+				<a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-d-flex" target="_parent">
 					<?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?>
 				</a>
 			</div>
 
 			<div>
 				<?php esc_html_e( 'By', 'tutor' ); ?>
-				<a href="<?php echo esc_url( $profile_url ); ?>"><?php esc_html_e( get_the_author() ); ?></a>
+				<a href="<?php echo esc_url( $profile_url ); ?>" target="_parent"><?php esc_html_e( get_the_author() ); ?></a>
 
 				<?php if ( ! empty( $course_categories ) && is_array( $course_categories ) && count( $course_categories ) ) : ?>
 					<?php esc_html_e( 'In', 'tutor' ); ?>
@@ -86,7 +86,7 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 					foreach ( $course_categories as $course_category ) :
 						$category_name    = $course_category->name;
 						$category_link    = get_term_link( $course_category->term_id );
-						$category_links[] = wp_sprintf( '<a href="%1$s">%2$s</a>', esc_url( $category_link ), esc_html( $category_name ) );
+						$category_links[] = wp_sprintf( '<a href="%1$s" target="_parent">%2$s</a>', esc_url( $category_link ), esc_html( $category_name ) );
 						endforeach;
 						echo implode( ', ', $category_links );
 					?>
