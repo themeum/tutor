@@ -42,14 +42,11 @@ class Course_Embed {
 		if ( strpos( $html, '<iframe' ) !== false ) {
 			$html = str_replace(
 				'<iframe class="wp-embedded-content" sandbox="allow-scripts" security="restricted" style="position: absolute; clip: rect(1px, 1px, 1px, 1px);"',
-				'<iframe class="wp-embedded-content" sandbox="allow-forms allow-popups allow-scripts allow-same-origin allow-top-navigation" security="restricted"',
+				'<iframe class="wp-embedded-content" sandbox="allow-forms allow-popups allow-scripts allow-same-origin allow-top-navigation" security="restricted" ',
 				$html
 			);
-			$html = str_replace(
-				'height="338"',
-				'height="620"',
-				$html
-			);
+
+            $html = preg_replace( '/( height=".*")/i', ' height="620" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" ', $html );
 
 			$html = str_replace(
 				'<blockquote class="wp-embedded-content"',
