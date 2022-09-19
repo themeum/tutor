@@ -691,15 +691,21 @@ class Course extends Tutor_Base {
 		}
 	}
 
+	/**
+	 * Delete course delete from frontend dashboard
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
 	public function tutor_delete_dashboard_course(){
 		tutor_utils()->checking_nonce();
 
-		$course_id = intval(sanitize_text_field($_POST['course_id']));
-		if(!tutor_utils()->can_user_manage('course', $course_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) ) {
+			wp_send_json_error( array( 'message'=> __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		wp_delete_post($course_id, true);
+		CourseModel::delete_course( $course_id );
 		wp_send_json_success();
 	}
 

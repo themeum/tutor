@@ -58,13 +58,20 @@ class Utils {
 	 * @param string $url
 	 * @return void
 	 * 
-	 * @since 2.0.10
+	 * @since 2.1.0
 	 */
-	public function redirect_to( string $url ) {
+	public function redirect_to( string $url, $flash_message = null, $flash_type = 'success' ) {
+		$url = trim( $url );
 		if ( filter_var( $url, FILTER_VALIDATE_URL ) === FALSE ) {
 			wp_die( 'Not a valid URL for redirect' );
 		}
 
+		$available_types = array( 'success', 'error' );
+		if ( ! empty( $flash_message ) && in_array( $flash_type, $available_types ) ) {
+			set_transient( 'tutor_flash_type', $flash_type );
+			set_transient( 'tutor_flash_message', $flash_message );
+		}
+		
 		if ( ! headers_sent() ) {
 			wp_safe_redirect( $url );
 		} else {
@@ -72,6 +79,43 @@ class Utils {
 		}
 
 		exit;
+	}
+
+	/**
+	 * Handle flash message for redirect_to util helper
+	 *
+	 * @return void
+	 * @since 2.1.0
+	 */
+	public function handle_flash_message() {
+		if ( false !== get_transient( 'tutor_flash_type' ) && false !== get_transient( 'tutor_flash_message' )) {
+			$type = get_transient( 'tutor_flash_type' );
+			$message = get_transient( 'tutor_flash_message' );
+			if ( 'success' === $type && ! empty( $message ) ) {
+				?>
+				<script type="text/javascript">
+					window.onload = function(){
+						const { __ } = wp.i18n;
+						tutor_toast( __( 'Success!', 'tutor' ), '<?php echo esc_html( $message ); ?>', 'success' )
+					};
+				</script>
+				<?php
+			}
+			if ( 'error' === $type && ! empty( $message ) ) {
+				?>
+				<script type="text/javascript">
+					window.onload = function(){
+						const { __ } = wp.i18n;
+						tutor_toast( __( 'Error!', 'tutor' ), '<?php echo esc_html( $message ); ?>', 'error' )
+					};
+				</script>
+				<?php
+			}
+
+			// delete flash message
+			delete_transient( 'tutor_flash_type' );
+			delete_transient( 'tutor_flash_message' );
+		}
 	}
 
 	private function option_recursive( $array, $key ) {
