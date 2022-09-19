@@ -118,6 +118,36 @@ class Utils {
 		}
 	}
 
+	/**
+	 * Add setting's option after a setting key
+	 *
+	 * @param string $target_key	setting's key name like 'tutor_login_page'
+	 * @param array $arr			an multi-dimentional settings option array
+	 * @param array $new_item 		new setting array. a 'key' needed
+	 * @return void
+	 * 
+	 * @since 2.1.0
+	 */
+	public function add_option_after( $target_key, &$arr, $new_item ) {
+		if (! is_array( $arr) || ! is_array( $new_item ) ) {
+			return;
+		}
+
+		$found_index = null;
+		foreach( $arr as $index => $inner_arr ) {
+			if( is_array( $inner_arr ) && array_key_exists( 'key', $inner_arr ) ) {
+				if ( $inner_arr['key'] == $target_key ) {
+					$found_index = $index;
+					break;
+				}
+			}
+		}
+
+		if ( $found_index !== null && array_key_exists( 'key', $new_item ) ) {
+			array_splice( $arr, $found_index+1, 0, [ $new_item ] );
+		}
+	}
+
 	private function option_recursive( $array, $key ) {
 		foreach ( $array as $option ) {
 			$is_array = is_array( $option );
@@ -6822,7 +6852,6 @@ class Utils {
 		$pages = apply_filters(
 			'tutor_pages',
 			array(
-				'tutor_login_page'		   => __( 'Login Page', 'tutor' ),
 				'tutor_dashboard_page_id'  => __( 'Dashboard Page', 'tutor' ),
 				'instructor_register_page' => __( 'Instructor Registration Page', 'tutor' ),
 				'student_register_page'    => __( 'Student Registration Page', 'tutor' ),
