@@ -5,13 +5,13 @@
 
 namespace TutorTest;
 
-use Tutor\Utils; 
+use Tutor\Utils;
 
 class UtilsTest extends \WP_UnitTestCase {
 
 	public function test_total_review() {
-        $utils = new Utils();
-        $result = $utils->get_total_review();
+		$utils  = new Utils();
+		$result = $utils->get_total_review();
 		$this->assertIsNumeric( $result );
 	}
 
@@ -35,5 +35,24 @@ class UtilsTest extends \WP_UnitTestCase {
 		// If someone only set last name
 		unset( $user->first_name );
 		$this->assertEquals( $username, tutor_utils()->get_user_name( $user ) );
+	}
+
+	public function test_add_option_after_an_option_key() {
+		$utils = new Utils();
+
+		$arr   = array( 'a' => 'b' );
+		$index = $utils->add_option_after( 'foo', $arr, array() );
+		$this->assertEquals( null, $index );
+
+		$arr1   = array( array( 'key' => 'a' ), array( 'key' => 'b' ), array( 'key' => 'c' ) );
+		$index1 = $utils->add_option_after( 'b', $arr1, array() );
+		$this->assertEquals( null, $index1 );
+
+		$arr3     = array( array( 'key' => 'a' ), array( 'key' => 'b' ), array( 'key' => 'd' ) );
+		$new_item = array( 'key' => 'c' );
+		$index3   = $utils->add_option_after( 'b', $arr3, array( 'key' => 'c' ) );
+
+		$this->assertEquals( 2, $index3 );
+		$this->assertEquals( $arr3[ $index3 ]['key'], $new_item['key'] );
 	}
 }
