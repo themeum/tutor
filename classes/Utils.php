@@ -136,11 +136,9 @@ class Utils {
 
 		$found_index = null;
 		foreach ( $arr as $index => $inner_arr ) {
-			if ( is_array( $inner_arr ) && array_key_exists( 'key', $inner_arr ) ) {
-				if ( $inner_arr['key'] == $target_key ) {
-					$found_index = $index;
-					break;
-				}
+			if ( is_array( $inner_arr ) && array_key_exists( 'key', $inner_arr ) && $inner_arr['key'] == $target_key ) {
+				$found_index = $index;
+				break;
 			}
 		}
 
