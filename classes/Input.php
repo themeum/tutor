@@ -23,7 +23,7 @@ class Input {
 	const TYPE_RAW      = 'raw';
 	const TYPE_STRING   = 'string';
 	const TYPE_INT      = 'int';
-	const TYPE_NUMERIC	= 'numeric';
+	const TYPE_NUMERIC  = 'numeric';
 	const TYPE_TEXTAREA = 'textarea';
 
 	/**
@@ -100,5 +100,23 @@ class Input {
 	public static function has( $key ) {
 		//phpcs:ignore
 		return isset( $_REQUEST[ $key ] );
+	}
+
+	/**
+	 * Sanitize assoc array
+	 *
+	 * @since v2.1.0
+	 *
+	 * @param array $array an assoc array.
+	 *
+	 * @return array
+	 */
+	public static function sanitize_assoc_array( array $array ) {
+		return array_map(
+			function( $value ) {
+				return sanitize_text_field( $value );
+			},
+			$array
+		);
 	}
 }
