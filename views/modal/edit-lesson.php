@@ -34,7 +34,8 @@
 
 			if ( get_tutor_option( 'enable_lesson_classic_editor' ) ) {
 				?>
-						<a class="tutor-btn tutor-btn-link tutor-ml-12" target="_blank" href="<?php echo esc_url( get_admin_url() ); ?>post.php?post=<?php echo esc_attr( $post->ID ); ?>&action=edit" >
+						<a	class="tutor-btn tutor-btn-link tutor-ml-12" target="_blank" 
+							href="<?php echo esc_url( get_admin_url() . 'post.php?post=' . esc_attr( $post->ID ) . '&action=edit' ); ?>" >
 							<i class="tutor-icon-edit tutor-mr-8"></i> <?php echo esc_html_e( 'WP Editor', 'tutor' ); ?>
 						</a>
 					<?php
