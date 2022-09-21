@@ -7390,12 +7390,14 @@ class Utils {
 	 */
 	public function get_course_id_by_subcontent( $content_id ) {
 		$mapping = array(
-			'tutor_assignments'  => 'assignment',
-			'tutor_quiz'         => 'quiz',
-			'lesson'             => 'lesson',
-			'tutor_zoom_meeting' => 'zoom_meeting',
-			'tutor_zoom_lesson'  => 'zoom_lesson',
-			'topics'			 => 'topic',
+			'tutor_assignments'        => 'assignment',
+			'tutor_quiz'               => 'quiz',
+			'lesson'                   => 'lesson',
+			'tutor_zoom_meeting'       => 'zoom_meeting',
+			'tutor_zoom_lesson'        => 'zoom_lesson',
+			'tutor-google-meet'        => 'google_meeting',
+			'tutor-google-meet-lesson' => 'google_meet_lesson',
+			'topics'			       => 'topic',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -7407,7 +7409,6 @@ class Utils {
 
 			$content_type = $parent_type==tutor()->course_post_type ? 'tutor_zoom_meeting' : 'tutor_zoom_lesson';
 		}
-
 		return $this->get_course_id_by( $mapping[ $content_type ], $content_id );
 	}
 
