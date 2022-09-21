@@ -7234,6 +7234,7 @@ class Utils {
 				break;
 
 			case 'zoom_meeting':
+			case 'tutor_gm_course':
 			case 'topic':
 			case 'announcement':
 				$course_id = $wpdb->get_var(
@@ -7248,6 +7249,7 @@ class Utils {
 				break;
 
 			case 'zoom_lesson':
+			case 'tutor_gm_topic':
 			case 'lesson':
 			case 'quiz':
 			case 'assignment':
@@ -7395,8 +7397,8 @@ class Utils {
 			'lesson'                   => 'lesson',
 			'tutor_zoom_meeting'       => 'zoom_meeting',
 			'tutor_zoom_lesson'        => 'zoom_lesson',
-			'tutor-google-meet'        => 'google_meeting',
-			'tutor-google-meet-lesson' => 'google_meet_lesson',
+			'tutor_gm_course'          => 'tutor_gm_course',
+			'tutor_gm_topic'           => 'tutor_gm_topic',
 			'topics'			       => 'topic',
 		);
 
@@ -7408,6 +7410,12 @@ class Utils {
 			$parent_type = get_post_field( 'post_type', $parent_id );
 
 			$content_type = $parent_type==tutor()->course_post_type ? 'tutor_zoom_meeting' : 'tutor_zoom_lesson';
+		}
+		if ( $content_type == 'tutor-google-meet' ) {
+			$parent_id   = wp_get_post_parent_id( $content_id );
+			$parent_type = get_post_field( 'post_type', $parent_id );
+
+			$content_type = $parent_type == tutor()->course_post_type ? 'tutor_gm_course' : 'tutor_gm_topic';
 		}
 		return $this->get_course_id_by( $mapping[ $content_type ], $content_id );
 	}
