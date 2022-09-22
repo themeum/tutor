@@ -3,7 +3,7 @@
  * Input class
  *
  * @author: themeum
- * @author_uri: https://themeum.com
+ * @link: https://themeum.com
  * @package Tutor
  * @since 2.0.2
  */
@@ -20,11 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Input {
 
-	const TYPE_RAW      = 'raw';
-	const TYPE_STRING   = 'string';
-	const TYPE_INT      = 'int';
-	const TYPE_NUMERIC	= 'numeric';
-	const TYPE_TEXTAREA = 'textarea';
+	const TYPE_RAW       = 'raw';
+	const TYPE_STRING    = 'string';
+	const TYPE_INT       = 'int';
+	const TYPE_NUMERIC   = 'numeric';
+	const TYPE_TEXTAREA  = 'textarea';
+	const TYPE_KSES_POST = 'kses-post';
 
 	/**
 	 * Common data sanitize method
@@ -35,7 +36,7 @@ class Input {
 	 * @param boolean $trim       remove blank splace from start and end.
 	 * @return mixed
 	 */
-	private static function sanitize( $value, $default = null, $type = self::TYPE_STRING, $trim = true ) {
+	public static function sanitize( $value, $default = null, $type = self::TYPE_STRING, $trim = true ) {
 		if ( $value === $default ) {
 			return $default;
 		}
@@ -56,6 +57,9 @@ class Input {
 		}
 		if ( self::TYPE_TEXTAREA === $type ) {
 			return sanitize_textarea_field( wp_unslash( $value ) );
+		}
+		if ( self::TYPE_KSES_POST === $type ) {
+			return wp_kses_post( $value );
 		}
 
 		return sanitize_text_field( wp_unslash( $value ) );
