@@ -739,7 +739,12 @@ class Tutor_Setup {
 				<meta name="viewport" content="width=device-width" />
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 				<title><?php esc_html_e( 'Tutor &rsaquo; Setup Wizard', 'tutor' ); ?></title>
-			<?php do_action( 'admin_enqueue_scripts' ); ?>
+			<?php
+				try {
+					do_action( 'admin_enqueue_scripts' );
+				} catch (\Throwable $th) {
+				}
+			?>
 			<?php wp_print_scripts( 'tutor-plyr' ); ?>
 			<?php wp_print_scripts( 'tutor-slick' ); ?>
 			<?php wp_print_scripts( 'tutor-setup' ); ?>

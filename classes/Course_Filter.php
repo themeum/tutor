@@ -32,18 +32,18 @@ class Course_Filter {
 		$_post['current_page'] = $page;
 
 		// Order arg
-		$order_by = 'ID';
+		$order_by = 'post_date';
 		$order    = 'DESC';
 
 		if ( isset( $_post['course_order'] ) ) {
 			switch ( $_post['course_order'] ) {
 				case 'newest_first':
-					$order_by = 'ID';
+					$order_by = 'post_date';
 					$order    = 'DESC';
 					break;
 
 				case 'oldest_first':
-					$order_by = 'ID';
+					$order_by = 'post_date';
 					$order    = 'ASC';
 					break;
 
@@ -128,12 +128,12 @@ class Course_Filter {
 			switch ( $_post['tutor_course_filter'] ) {
 
 				case 'newest_first':
-					$args['orderby'] = 'ID';
+					$args['orderby'] = 'post_date';
 					$args['order']   = 'desc';
 					break;
 
 				case 'oldest_first':
-					$args['orderby'] = 'ID';
+					$args['orderby'] = 'post_date';
 					$args['order']   = 'asc';
 					break;
 
