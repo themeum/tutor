@@ -776,7 +776,6 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 
 		$lesson_ids = $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id );
-
 		$count = 0;
 		if ( count( $lesson_ids ) ) {
 			$completed_lesson_meta_ids = array();
@@ -836,6 +835,16 @@ class Utils {
 					 * @since v2.0.0
 					 */
 					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
+					if ( $is_completed ) {
+						$completedCount++;
+					}
+				} elseif ( $content->post_type === 'tutor-google-meet' ) {
+					/**
+					 * count zoom lesson completion for course progress
+					 *
+					 * @since v2.0.0
+					 */
+					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
 						$completedCount++;
 					}
