@@ -58,13 +58,20 @@ class Utils {
 	 * @param string $url
 	 * @return void
 	 * 
-	 * @since 2.0.10
+	 * @since 2.1.0
 	 */
-	public function redirect_to( string $url ) {
+	public function redirect_to( string $url, $flash_message = null, $flash_type = 'success' ) {
+		$url = trim( $url );
 		if ( filter_var( $url, FILTER_VALIDATE_URL ) === FALSE ) {
 			wp_die( 'Not a valid URL for redirect' );
 		}
 
+		$available_types = array( 'success', 'error' );
+		if ( ! empty( $flash_message ) && in_array( $flash_type, $available_types ) ) {
+			set_transient( 'tutor_flash_type', $flash_type );
+			set_transient( 'tutor_flash_message', $flash_message );
+		}
+		
 		if ( ! headers_sent() ) {
 			wp_safe_redirect( $url );
 		} else {
@@ -72,6 +79,74 @@ class Utils {
 		}
 
 		exit;
+	}
+
+	/**
+	 * Handle flash message for redirect_to util helper
+	 *
+	 * @return void
+	 * @since 2.1.0
+	 */
+	public function handle_flash_message() {
+		if ( false !== get_transient( 'tutor_flash_type' ) && false !== get_transient( 'tutor_flash_message' )) {
+			$type = get_transient( 'tutor_flash_type' );
+			$message = get_transient( 'tutor_flash_message' );
+			if ( 'success' === $type && ! empty( $message ) ) {
+				?>
+				<script type="text/javascript">
+					window.onload = function(){
+						const { __ } = wp.i18n;
+						tutor_toast( __( 'Success!', 'tutor' ), '<?php echo esc_html( $message ); ?>', 'success' )
+					};
+				</script>
+				<?php
+			}
+			if ( 'error' === $type && ! empty( $message ) ) {
+				?>
+				<script type="text/javascript">
+					window.onload = function(){
+						const { __ } = wp.i18n;
+						tutor_toast( __( 'Error!', 'tutor' ), '<?php echo esc_html( $message ); ?>', 'error' )
+					};
+				</script>
+				<?php
+			}
+
+			// delete flash message
+			delete_transient( 'tutor_flash_type' );
+			delete_transient( 'tutor_flash_message' );
+		}
+	}
+
+	/**
+	 * Add setting's option after a setting key
+	 *
+	 * @param string $target_key	setting's key name like 'tutor_version'
+	 * @param array  $arr			an multi-dimentional settings option array
+	 * @param array  $new_item 		new setting array. a 'key' needed
+	 * 
+	 * @return int|null				inserted index number or null
+	 * 
+	 * @since 2.1.0
+	 */
+	public function add_option_after( string $target_key, array &$arr, array $new_item ) {
+		if ( ! is_array( $arr ) || ! is_array( $new_item ) ) {
+			return;
+		}
+
+		$found_index = null;
+		foreach ( $arr as $index => $inner_arr ) {
+			if ( is_array( $inner_arr ) && array_key_exists( 'key', $inner_arr ) && $inner_arr['key'] == $target_key ) {
+				$found_index = $index;
+				break;
+			}
+		}
+
+		if ( $found_index !== null && array_key_exists( 'key', $new_item ) ) {
+			$target_index = $found_index + 1;
+			array_splice( $arr, $target_index, 0, array( $new_item ) );
+			return $target_index;
+		}
 	}
 
 	private function option_recursive( $array, $key ) {
@@ -6778,7 +6853,6 @@ class Utils {
 		$pages = apply_filters(
 			'tutor_pages',
 			array(
-				'tutor_login_page'		   => __( 'Login Page', 'tutor' ),
 				'tutor_dashboard_page_id'  => __( 'Dashboard Page', 'tutor' ),
 				'instructor_register_page' => __( 'Instructor Registration Page', 'tutor' ),
 				'student_register_page'    => __( 'Student Registration Page', 'tutor' ),
@@ -7160,6 +7234,7 @@ class Utils {
 				break;
 
 			case 'zoom_meeting':
+			case 'tutor_gm_course':
 			case 'topic':
 			case 'announcement':
 				$course_id = $wpdb->get_var(
@@ -7174,6 +7249,7 @@ class Utils {
 				break;
 
 			case 'zoom_lesson':
+			case 'tutor_gm_topic':
 			case 'lesson':
 			case 'quiz':
 			case 'assignment':
@@ -7316,12 +7392,14 @@ class Utils {
 	 */
 	public function get_course_id_by_subcontent( $content_id ) {
 		$mapping = array(
-			'tutor_assignments'  => 'assignment',
-			'tutor_quiz'         => 'quiz',
-			'lesson'             => 'lesson',
-			'tutor_zoom_meeting' => 'zoom_meeting',
-			'tutor_zoom_lesson'  => 'zoom_lesson',
-			'topics'			 => 'topic',
+			'tutor_assignments'        => 'assignment',
+			'tutor_quiz'               => 'quiz',
+			'lesson'                   => 'lesson',
+			'tutor_zoom_meeting'       => 'zoom_meeting',
+			'tutor_zoom_lesson'        => 'zoom_lesson',
+			'tutor_gm_course'          => 'tutor_gm_course',
+			'tutor_gm_topic'           => 'tutor_gm_topic',
+			'topics'			       => 'topic',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -7333,7 +7411,12 @@ class Utils {
 
 			$content_type = $parent_type==tutor()->course_post_type ? 'tutor_zoom_meeting' : 'tutor_zoom_lesson';
 		}
+		if ( $content_type == 'tutor-google-meet' ) {
+			$parent_id   = wp_get_post_parent_id( $content_id );
+			$parent_type = get_post_field( 'post_type', $parent_id );
 
+			$content_type = $parent_type == tutor()->course_post_type ? 'tutor_gm_course' : 'tutor_gm_topic';
+		}
 		return $this->get_course_id_by( $mapping[ $content_type ], $content_id );
 	}
 
