@@ -1,4 +1,12 @@
 <?php
+/**
+ * Attempt details page
+ *
+ * @author themeum
+ * @link https://themeum.com
+ * @package Tutor\Quiz
+ * @since 1.0.0
+ */
 
 if ( ! defined( 'ABSPATH' ) ){
     exit;
@@ -81,13 +89,12 @@ function tutor_render_answer_list( $answers= array(), $dump_data=false ){
                 }
                 
 
-                if (isset($ans->answer_two_gap_match)) {
-                        // echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
-                        echo '<div class="image-match">'.stripslashes($ans->answer_two_gap_match).'</div>';
+                if ( isset( $ans->answer_two_gap_match ) ) {
+                        echo '<div class="image-match">' . stripslashes( $ans->answer_two_gap_match  ) . '</div>';
                     echo '</div>';
                 }
             }
-            echo count($multi_texts) ? implode(', ', $multi_texts) : '';
+            echo count( $multi_texts ) ? implode( ', ', wp_unslash( $multi_texts ) ) : '';
 
 		echo '</div>';
     }
