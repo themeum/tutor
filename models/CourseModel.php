@@ -251,10 +251,8 @@ class CourseModel {
 
 					wp_delete_post( $content_id, true );
 
-
 				}
 
-				wp_delete_post( $topic_id, true );
 				// Delete zoom meeting.
 				$wpdb->delete(
 					$wpdb->posts,
@@ -263,6 +261,8 @@ class CourseModel {
 						'post_type'   => 'tutor_zoom_meeting'
 					)
 				);
+
+				wp_delete_post( $topic_id, true );
 			}
 		}
 
@@ -281,6 +281,13 @@ class CourseModel {
 		$wpdb->delete( $wpdb->prefix . 'tutor_earnings', array( 'course_id' => $post_id ) );
 		$wpdb->delete( $wpdb->prefix . 'tutor_gradebooks_results', array( 'course_id' => $post_id ) );
 		$wpdb->delete( $wpdb->comments, array( 'comment_type' => 'course_completed', 'comment_post_ID' => $post_id ) );
+		
+		/**
+		 * Delete onsite notification record & _tutor_instructor_course_id user meta
+		 * @since 2.1.0
+		 */
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_notifications WHERE post_id=%d AND type IN ('Announcements','Q&A','Enrollments')", $post_id ) );
+		$wpdb->delete( $wpdb->usermeta, array( 'meta_key' => '_tutor_instructor_course_id', 'meta_value' => $post_id ) );
 
 		/**
 		 * Delete Course rating and review

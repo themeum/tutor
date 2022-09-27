@@ -356,6 +356,8 @@ class QuizModel {
 			// Deleting attempt (comment), child attempt and attempt meta (comment meta)
 			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
 			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
+			
+			do_action( 'tutor_quiz/attempt_deleted', $attempt_ids );
 		}
 	}
 
@@ -577,5 +579,72 @@ class QuizModel {
 		}
 
 		return compact( 'attempt_duration', 'attempt_duration_taken' );
+	}
+
+	/**
+	 * Check student is passed in a quiz or not.
+	 * Quiz retry mode: student required at least one quiz passed in attempts
+	 * 
+	 * @param int $quiz_id
+	 * @param int $user_id
+	 * @return boolean
+	 * 
+	 * @since 2.1.0
+	 */
+	public static function is_quiz_passed( $quiz_id, $user_id = 0 ) {
+		global $wpdb;
+		
+		$user_id				= tutor_utils()->get_user_id( $user_id );
+		$attempts				= $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id=%d AND quiz_id=%d", $user_id, $quiz_id ) );
+		$required_percentage	= tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
+		
+		foreach ( $attempts as $attempt ) {
+			$earned_percentage = $attempt->earned_marks > 0 ? ( ( $attempt->earned_marks * 100 )  / $attempt->total_marks ) : 0;
+			if ( $earned_percentage >= $required_percentage ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Get all question type for a quiz
+	 *
+	 * @param integer $quiz_id
+	 * @return array
+	 * 
+	 * @since 2.1.0
+	 */
+	public static function get_quiz_question_types( int $quiz_id ) {
+		global $wpdb;
+		$types = $wpdb->get_col(
+			$wpdb->prepare( "SELECT DISTINCT question_type FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id=%d", $quiz_id )
+		);
+
+		return $types;
+	}
+
+	/**
+	 * Check a quiz attempt need manual review or not
+	 *
+	 * @param int $quiz_id
+	 * @return boolean
+	 * 
+	 * @since 2.1.0
+	 */
+	public static function is_manual_review_required( $quiz_id ) {
+		$required = false;
+		$review_question_types = array( 'open_ended', 'short_answer' );
+		$question_types = self::get_quiz_question_types( $quiz_id );
+
+		foreach( $review_question_types as $type ) {
+			if ( in_array( $type, $question_types, true ) ) {
+				$required = true;
+				break;
+			}
+		}
+
+		return $required;
 	}
 }

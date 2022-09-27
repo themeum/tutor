@@ -7,6 +7,7 @@
 	@import './header.scss';
 	@import './sidebar.scss';
 	@import './footer';
+	@import './my-courses';
 
 	// Individual dashboard pages
 	.tutor-dashboard-content {
@@ -34,6 +35,7 @@
 		@import './pages/setting.scss';
 		@import './pages/assignment.scss';
 		@import './pages/qna';
+		@import './pages/order-history.scss';
 		@import '../modules/certificate-list.scss';
 	}
 }

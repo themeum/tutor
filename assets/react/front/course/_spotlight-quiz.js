@@ -255,25 +255,26 @@ window.jQuery(document).ready($=>{
 	});
 
     $(document).on('submit', '#tutor-answering-quiz', function (e) {
-        var $questions_wrap = $('.quiz-attempt-single-question');
-        const quizSubmitBtn = document.querySelector('.tutor-quiz-submit-btn');
-        quizSubmitBtn.disabled = true;
-        var validated = true;
+        let $questions_wrap = $('.quiz-attempt-single-question');
+        let quizSubmitBtn = document.querySelector('.tutor-quiz-submit-btn');
+        
+        let quiz_validated      = true;
+        let feedback_validated  = true;
+
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
-                validated = tutor_quiz_validation($(question));
-                validated = feedback_response($(question));
-
+                quiz_validated      = tutor_quiz_validation($(question));
+                feedback_validated  = feedback_response($(question));
             });
         }
 
-        if (!validated) {
+        if (quiz_validated && feedback_validated) {
+            setTimeout(() => { quizSubmitBtn.disabled = true; }, 500);
+        } else {
             e.preventDefault();
+            quizSubmitBtn.classList.remove('is-loading')
+            quizSubmitBtn.disabled = false;
         }
-
-        setTimeout(() => {
-            quizSubmitBtn.disabled = true;
-        }, 500);
     });
     
     $(".tutor-quiz-submit-btn").click(function(event) {
