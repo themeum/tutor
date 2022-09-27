@@ -97,7 +97,7 @@ window.jQuery(document).ready($=>{
     })
 
     // Save/update question/reply
-    $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button.sidebar-ask-new-qna-submit-btn', function(e){
+    $(document).on('click', '.tutor-qa-reply button.tutor-btn, .tutor-qa-new button.sidebar-ask-new-qna-submit-btn', function(e){
         let button      = $(this);
         let currentEditor = '';
         const closestWrapper = e.target.closest('.tutor-qna-reply-editor');
@@ -148,6 +148,7 @@ window.jQuery(document).ready($=>{
                 button.addClass('is-loading');
             },
             success: resp => {
+                const {editor_id} = resp.data;
                 if(!resp.success) {
                     tutor_toast('Error!', get_response_message(resp), 'error');
                     return;
@@ -165,11 +166,11 @@ window.jQuery(document).ready($=>{
                     $("#sidebar-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
                 }
                 
-                if (_tutorobject.tutor_pro_url && tinymce && '' !== currentEditor) {
+                if (_tutorobject.tutor_pro_url && tinymce && undefined !== editor_id) {
                     tinymce.get(currentEditor).setContent('');
-                    // Reinitialize editor
-                    tinymce.execCommand('mceRemoveEditor', false, currentEditor);
-                    tinymce.execCommand('mceAddEditor', false, currentEditor);
+                    // Reinitialize new added question/reply editor.
+                    tinymce.execCommand('mceRemoveEditor', false, editor_id);
+                    tinymce.execCommand('mceAddEditor', false, editor_id);
                 } else {
                     if ($(".tutor-quesanswer-askquestion textarea")) {
                         $(".tutor-quesanswer-askquestion textarea").val('');
