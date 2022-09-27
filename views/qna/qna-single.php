@@ -110,7 +110,7 @@ if ( property_exists( $question, 'user_id' ) ) {
 												<?php echo $answer->display_name; ?>
 											</div>
 											<div class="tutor-fs-7 tutor-color-muted">
-												<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
+												<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ); ?>
 											</div>
 										</div>
 									</div>

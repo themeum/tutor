@@ -167,17 +167,20 @@ window.jQuery(document).ready($=>{
                 }
                 
                 if (_tutorobject.tutor_pro_url && tinymce && undefined !== editor_id) {
+                    // Clear editor content.
                     tinymce.get(currentEditor).setContent('');
+                    
                     // Reinitialize new added question/reply editor.
                     tinymce.execCommand('mceRemoveEditor', false, editor_id);
                     tinymce.execCommand('mceAddEditor', false, editor_id);
                 } else {
+                    // Clear question & reply textarea.
                     if ($(".tutor-quesanswer-askquestion textarea")) {
                         $(".tutor-quesanswer-askquestion textarea").val('');
                     }
-                }
-                if ($(".tutor-quesanswer-askquestion textarea")) {
-                    $(".tutor-quesanswer-askquestion textarea").val('');
+                    if (closestWrapper.find('textarea').length) {
+                        closestWrapper.find('textarea').val();
+                    }
                 }
             },
             complete: () =>{
