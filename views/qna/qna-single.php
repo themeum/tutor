@@ -3,9 +3,15 @@
 
 	// QNA data
 	$question = tutor_utils()->get_qa_question( $question_id );
-if ( property_exists( $question, 'meta' ) ) {
-	$meta = $question->meta;
-}
+	if ( ! $question ) {
+		tutor_utils()->tutor_empty_state();
+		return;
+	}
+
+	if ( property_exists( $question, 'meta' ) ) {
+		$meta     = $question->meta;
+	}
+	
 	$answers  = tutor_utils()->get_qa_answer_by_question( $question_id );
 	$back_url = isset( $back_url ) ? $back_url : remove_query_arg( 'question_id', tutor()->current_url );
 

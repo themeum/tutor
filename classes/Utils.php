@@ -58,13 +58,20 @@ class Utils {
 	 * @param string $url
 	 * @return void
 	 * 
-	 * @since 2.0.10
+	 * @since 2.1.0
 	 */
-	public function redirect_to( string $url ) {
+	public function redirect_to( string $url, $flash_message = null, $flash_type = 'success' ) {
+		$url = trim( $url );
 		if ( filter_var( $url, FILTER_VALIDATE_URL ) === FALSE ) {
 			wp_die( 'Not a valid URL for redirect' );
 		}
 
+		$available_types = array( 'success', 'error' );
+		if ( ! empty( $flash_message ) && in_array( $flash_type, $available_types ) ) {
+			set_transient( 'tutor_flash_type', $flash_type );
+			set_transient( 'tutor_flash_message', $flash_message );
+		}
+		
 		if ( ! headers_sent() ) {
 			wp_safe_redirect( $url );
 		} else {
@@ -72,6 +79,74 @@ class Utils {
 		}
 
 		exit;
+	}
+
+	/**
+	 * Handle flash message for redirect_to util helper
+	 *
+	 * @return void
+	 * @since 2.1.0
+	 */
+	public function handle_flash_message() {
+		if ( false !== get_transient( 'tutor_flash_type' ) && false !== get_transient( 'tutor_flash_message' )) {
+			$type = get_transient( 'tutor_flash_type' );
+			$message = get_transient( 'tutor_flash_message' );
+			if ( 'success' === $type && ! empty( $message ) ) {
+				?>
+				<script type="text/javascript">
+					window.onload = function(){
+						const { __ } = wp.i18n;
+						tutor_toast( __( 'Success!', 'tutor' ), '<?php echo esc_html( $message ); ?>', 'success' )
+					};
+				</script>
+				<?php
+			}
+			if ( 'error' === $type && ! empty( $message ) ) {
+				?>
+				<script type="text/javascript">
+					window.onload = function(){
+						const { __ } = wp.i18n;
+						tutor_toast( __( 'Error!', 'tutor' ), '<?php echo esc_html( $message ); ?>', 'error' )
+					};
+				</script>
+				<?php
+			}
+
+			// delete flash message
+			delete_transient( 'tutor_flash_type' );
+			delete_transient( 'tutor_flash_message' );
+		}
+	}
+
+	/**
+	 * Add setting's option after a setting key
+	 *
+	 * @param string $target_key	setting's key name like 'tutor_version'
+	 * @param array  $arr			an multi-dimentional settings option array
+	 * @param array  $new_item 		new setting array. a 'key' needed
+	 * 
+	 * @return int|null				inserted index number or null
+	 * 
+	 * @since 2.1.0
+	 */
+	public function add_option_after( string $target_key, array &$arr, array $new_item ) {
+		if ( ! is_array( $arr ) || ! is_array( $new_item ) ) {
+			return;
+		}
+
+		$found_index = null;
+		foreach ( $arr as $index => $inner_arr ) {
+			if ( is_array( $inner_arr ) && array_key_exists( 'key', $inner_arr ) && $inner_arr['key'] == $target_key ) {
+				$found_index = $index;
+				break;
+			}
+		}
+
+		if ( $found_index !== null && array_key_exists( 'key', $new_item ) ) {
+			$target_index = $found_index + 1;
+			array_splice( $arr, $target_index, 0, array( $new_item ) );
+			return $target_index;
+		}
 	}
 
 	private function option_recursive( $array, $key ) {
@@ -701,7 +776,6 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 
 		$lesson_ids = $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id );
-
 		$count = 0;
 		if ( count( $lesson_ids ) ) {
 			$completed_lesson_meta_ids = array();
@@ -761,6 +835,16 @@ class Utils {
 					 * @since v2.0.0
 					 */
 					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
+					if ( $is_completed ) {
+						$completedCount++;
+					}
+				} elseif ( $content->post_type === 'tutor-google-meet' ) {
+					/**
+					 * count zoom lesson completion for course progress
+					 *
+					 * @since v2.0.0
+					 */
+					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
 						$completedCount++;
 					}
@@ -1330,9 +1414,12 @@ class Utils {
 	}
 
 	/**
+	 * Get tutor attachment
+	 * 
 	 * @param int $post_id
-	 *
-	 * @return bool|mixed
+	 * @param string $meta_key
+	 * 
+	 * @return array
 	 *
 	 * @since v.1.0.0
 	 */
@@ -1505,9 +1592,10 @@ class Utils {
     }
 
 	/**
+	 * Get video info
+	 * 
 	 * @param int $lesson_id
-	 *
-	 * @return bool|object
+	 * @return mixed bool return if video does not exits otherwise object return.
 	 *
 	 * @since v.1.0.0
 	 */
@@ -2252,6 +2340,7 @@ class Utils {
 				'post_status' => $enrolment_status,
 				'post_author' => $user_id,
 				'post_parent' => $course_id,
+				'post_date_gmt' => current_time( 'mysql', true )
 			)
 		);
 
@@ -4288,13 +4377,13 @@ class Utils {
 	}
 
 	/**
+	 * Get question and asnwer by answer_id
+	 * 
 	 * @param $answer_id
 	 *
 	 * @return array|null|object
 	 *
 	 * @since v1.6.9
-	 *
-	 * Get question and asnwer by answer_id
 	 */
 	public function get_qa_answer_by_answer_id( $answer_id ) {
 		global $wpdb;
@@ -4305,15 +4394,12 @@ class Utils {
 					users.display_name,
 					question.user_id AS question_by,
 					question.comment_content AS question,
-					question_meta.meta_value AS question_title
+					question.comment_ID AS question_id
 			FROM   {$wpdb->comments} answer
 					INNER JOIN {$wpdb->users} users
 							ON answer.user_id = users.id
 					INNER JOIN {$wpdb->comments} question
 							ON answer.comment_parent = question.comment_ID
-					INNER JOIN {$wpdb->commentmeta} question_meta
-							ON answer.comment_parent = question_meta.comment_id
-							AND question_meta.meta_key = 'tutor_question_title'
 			WHERE  	answer.comment_ID = %d
 					AND answer.comment_type = %s;
 			",
@@ -6776,7 +6862,6 @@ class Utils {
 		$pages = apply_filters(
 			'tutor_pages',
 			array(
-				'tutor_login_page'		   => __( 'Login Page', 'tutor' ),
 				'tutor_dashboard_page_id'  => __( 'Dashboard Page', 'tutor' ),
 				'instructor_register_page' => __( 'Instructor Registration Page', 'tutor' ),
 				'student_register_page'    => __( 'Student Registration Page', 'tutor' ),
@@ -7009,7 +7094,7 @@ class Utils {
 	 *
 	 * @return array  of objects for student list or array
 	 */
-	public function get_students_data_by_course_id( $course_id = 0, $field_name = '', $all = false ) {
+	public function get_students_data_by_course_id( $course_id = 0, $field_name = 'ID', $all = false ) {
 
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
@@ -7158,6 +7243,7 @@ class Utils {
 				break;
 
 			case 'zoom_meeting':
+			case 'tutor_gm_course':
 			case 'topic':
 			case 'announcement':
 				$course_id = $wpdb->get_var(
@@ -7172,6 +7258,7 @@ class Utils {
 				break;
 
 			case 'zoom_lesson':
+			case 'tutor_gm_topic':
 			case 'lesson':
 			case 'quiz':
 			case 'assignment':
@@ -7314,12 +7401,14 @@ class Utils {
 	 */
 	public function get_course_id_by_subcontent( $content_id ) {
 		$mapping = array(
-			'tutor_assignments'  => 'assignment',
-			'tutor_quiz'         => 'quiz',
-			'lesson'             => 'lesson',
-			'tutor_zoom_meeting' => 'zoom_meeting',
-			'tutor_zoom_lesson'  => 'zoom_lesson',
-			'topics'			 => 'topic',
+			'tutor_assignments'        => 'assignment',
+			'tutor_quiz'               => 'quiz',
+			'lesson'                   => 'lesson',
+			'tutor_zoom_meeting'       => 'zoom_meeting',
+			'tutor_zoom_lesson'        => 'zoom_lesson',
+			'tutor_gm_course'          => 'tutor_gm_course',
+			'tutor_gm_topic'           => 'tutor_gm_topic',
+			'topics'			       => 'topic',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -7331,7 +7420,12 @@ class Utils {
 
 			$content_type = $parent_type==tutor()->course_post_type ? 'tutor_zoom_meeting' : 'tutor_zoom_lesson';
 		}
+		if ( $content_type == 'tutor-google-meet' ) {
+			$parent_id   = wp_get_post_parent_id( $content_id );
+			$parent_type = get_post_field( 'post_type', $parent_id );
 
+			$content_type = $parent_type == tutor()->course_post_type ? 'tutor_gm_course' : 'tutor_gm_topic';
+		}
 		return $this->get_course_id_by( $mapping[ $content_type ], $content_id );
 	}
 

@@ -664,6 +664,7 @@ window.jQuery(document).ready(function($) {
 			// Show attempt slider if reveal
 			let is_retry = $(this).val()=='retry';
 			$('.tutor-attempt-allowed-slider')[is_retry ? 'show' : 'hide']();
+			$('.tutor-pass-required-field')[is_retry ? 'show' : 'hide']();
 		}
 	});
 });

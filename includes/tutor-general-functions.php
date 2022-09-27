@@ -15,7 +15,7 @@ if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 	 *
 	 * @param  string $input.
 	 * @param  string $type.
-	 * @return string
+	 * @return string|array|object
 	 */
 	function tutor_sanitize_data( $input = null, $type = null ) {
 		$array  = array();
@@ -672,18 +672,16 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 	}
 }
 
-	/**
-	 * @return int|string
-	 *
-	 * Return current Time from WordPress time
-	 *
-	 * @since v.1.4.3
-	 */
 
 if ( ! function_exists( 'tutor_time' ) ) {
+	/**
+	 * Return current Time from WordPress time
+	 * @return int|string
+	 * @since v.1.4.3
+	 */
 	function tutor_time() {
-		// return current_time( 'timestamp' );
-		return time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+		$gmt_offset = get_option( 'gmt_offset' );
+		return time() + ( $gmt_offset * HOUR_IN_SECONDS );
 	}
 }
 
@@ -863,23 +861,6 @@ if ( ! function_exists( 'pr' ) ) {
 		return $var;
 	}
 }
-
-if ( ! function_exists( 'tutor_vd' ) ) {
-	/**
-	 * Function to var_dump
-	 *
-	 * @param  array $var .
-	 * @return array
-	 */
-	function tutor_vd( $var ) {
-		$template = PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg' ? '<pre class="pr">%s</pre>' : "\n%s\n\n";
-		printf( $template, trim( var_dump( $var, true ) ) );
-
-		return $var;
-	}
-}
-
-
 
 if ( ! function_exists( 'get_request' ) ) {
 	/**
