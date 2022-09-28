@@ -149,6 +149,18 @@ class Utils {
 		}
 	}
 
+	/**
+	 * Get human readable file size from file path
+	 *
+	 * @param string $file_path
+	 * @return string
+	 * 
+	 * @since 2.1.0
+	 */
+	public function get_readable_filesize( string $file_path ) {
+		return  size_format( file_exists( $file_path ) ? filesize( $file_path ) : 0 );
+	}
+
 	private function option_recursive( $array, $key ) {
 		foreach ( $array as $option ) {
 			$is_array = is_array( $option );
@@ -8765,18 +8777,6 @@ class Utils {
 			</style>',
 		);
 		return wp_parse_args( $args, $default_args );
-	}
-
-	/**
-	 * Get the file size in kb
-	 *
-	 * @param int $attachment_id, attachment id to get size
-	 *
-	 * @return int attachment file size in kb
-	 */
-	public function get_attachment_file_size( int $attachment_id ): int {
-		$size = size_format( filesize( get_attached_file( $attachment_id ) ), 2 );
-		return (int) $size;
 	}
 
 	public function get_video_sources( bool $key_title_only ) {
