@@ -5,33 +5,38 @@
  * @since v.1.3.4
  *
  * @author Themeum
- * @url https://themeum.com
+ * @link https://themeum.com
  *
  * @package TutorLMS/Templates
  * @version 1.4.3
  */
 
-$assignment_id           = (int) tutor_utils()->array_get( 'assignment', $_GET );
-$assignment_submitted_id = (int) tutor_utils()->array_get( 'view_assignment', $_GET );
+use TUTOR\Input;
+
+$assignment_id           = Input::get( 'assignment', 0, Input::TYPE_INT );
+$assignment_submitted_id = Input::get( 'view_assignment', 0, Input::TYPE_INT );
 $submitted_url           = tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments/submitted' );
 
 if ( ! $assignment_submitted_id ) {
-	esc_html_e( "Sorry, but you are looking for something that isn't here.", 'tutor' );
+	tutor_utils()->tutor_empty_state( __( "Sorry, but you are looking for something that isn't here.", 'tutor' ) );
+	return;
+}
+
+$submitted_assignment = tutor_utils()->get_assignment_submit_info( $assignment_submitted_id );
+if ( ! $submitted_assignment ) {
+	tutor_utils()->tutor_empty_state( __( 'Assignments submission not found or not completed', 'tutor' ) );
 	return;
 }
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-review">
 	<?php
-		$submitted_assignment = tutor_utils()->get_assignment_submit_info( $assignment_submitted_id );
-	if ( $submitted_assignment ) {
-
 		$max_mark = tutor_utils()->get_assignment_option( $submitted_assignment->comment_post_ID, 'total_mark' );
 
 		$given_mark      = get_comment_meta( $assignment_submitted_id, 'assignment_mark', true );
 		$instructor_note = get_comment_meta( $assignment_submitted_id, 'instructor_note', true );
 		$comment_author  = get_user_by( 'login', $submitted_assignment->comment_author )
-		?>
+	?>
 
 	<div class="submitted-assignment-title tutor-mb-16">
 		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
@@ -74,12 +79,14 @@ if ( ! $assignment_submitted_id ) {
 	<div class="tutor-hr"></div>
 
 	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-32 tutor-mb-16">
-		<h5 class="tutor-fs-6 tutor-fw-medium tutor-mb-5">
+		<h5 class="tutor-fs-6 tutor-fw-medium tutor-mb-4">
 			<?php esc_html_e( 'Assignment Description:', 'tutor' ); ?>
 		</h5>
-		<p class="tutor-fs-6 tutor-color-secondary tutor-mb-5">
-			<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
-		</p>
+		<div class="tutor-mb-16">
+			<p class="tutor-fs-6 tutor-color-secondary tutor-mb-4">
+				<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
+			</p>
+		</div>
 		<?php
 		$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
 		if ( $attached_files && is_array( json_decode( $attached_files ) ) ) :
@@ -95,13 +102,14 @@ if ( ! $assignment_submitted_id ) {
 						if ( tutor_utils()->count( $attached_files ) ) {
 							$upload_dir     = wp_get_upload_dir();
 							$upload_baseurl = trailingslashit( tutor_utils()->array_get( 'baseurl', $upload_dir ) );
+							$upload_basedir = trailingslashit( tutor_utils()->array_get( 'basedir', $upload_dir ) );
 							foreach ( $attached_files as $attached_file ) {
 								?>
 									<div class="tutor-col-lg-6 tutor-mb-16 tutor-mb-lg-0">
-										<div class="tutor-card tutor-d-flex tutor-align-center tutor-px-16 tutor-py-12">
+										<div class="tutor-card tutor-d-flex tutor-align-center tutor-px-16 tutor-py-12 tutor-mb-12 tutor-flex-row">
 											<div>
 												<div class="tutor-fs-6 tutor-color-black tutor-mb-4"><?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?></div>
-												<div class="tutor-fs-7 tutor-color-muted"><?php esc_html_e( 'Size', 'tutor' ); ?><?php esc_html_e( ': 2MB', 'tutor' ); ?></div>
+												<div class="tutor-fs-7 tutor-color-muted"><?php esc_html_e( 'Size', 'tutor' ); ?>: <?php echo esc_html( tutor_utils()->get_readable_filesize( $upload_basedir . $attached_file['uploaded_path'] ?? '' ) ); ?></div>
 											</div>
 
 											<div class="tutor-ml-auto">
@@ -132,7 +140,7 @@ if ( ! $assignment_submitted_id ) {
 				<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
 			</div>
 			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9 tutor-mb-32">
-				<input type="number"  class="tutor-form-control" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0" max="<?php echo esc_attr( $max_mark ); ?>" title="<?php esc_attr_e( 'Evaluate mark can not be greater than total mark', 'tutor' )?>">
+				<input type="number"  class="tutor-form-control" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0" max="<?php echo esc_attr( $max_mark ); ?>" title="<?php esc_attr_e( 'Evaluate mark can not be greater than total mark', 'tutor' ); ?>">
 				<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), "<code>{$max_mark}</code>" ); ?></p>
 			</div>
 
@@ -151,10 +159,4 @@ if ( ! $assignment_submitted_id ) {
 			</div>
 		</form>
 	</div>
-
-		<?php
-	} else {
-		esc_html_e( 'Assignments submission not found or not completed', 'tutor' );
-	}
-	?>
 </div>

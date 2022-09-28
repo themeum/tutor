@@ -47,6 +47,10 @@ $content              = get_the_content();
 $s_content            = $content;
 $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' );
 $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() );
+
+$upload_dir     = wp_get_upload_dir();
+$upload_baseurl = trailingslashit( $upload_dir['baseurl'] ?? '' );
+$upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 ?>
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
@@ -186,7 +190,7 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                                 <?php
                                     $attachment_name = get_post_meta( $attachment_id, '_wp_attached_file', true );
                                     $attachment_name = substr( $attachment_name, strrpos( $attachment_name, '/' ) + 1 );
-                                    $file_size       = tutor_utils()->get_attachment_file_size( $attachment_id );
+                                    $file_size       = tutor_utils()->get_readable_filesize( get_attached_file( $attachment_id ) );
                                 ?>
                                 <div class="tutor-instructor-card tutor-col-sm-5 tutor-py-16 tutor-mr-12 tutor-ml-3">
                                     <div class="tutor-icard-content">
@@ -198,7 +202,7 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                                         </div>
                                         <div class="tutor-fs-7">
                                             <?php esc_html_e( 'Size: ', 'tutor' ); ?>
-                                            <?php echo esc_html( $file_size ? $file_size . 'KB' : '' ); ?>
+                                            <?php echo esc_html( $file_size ); ?>
                                         </div>
                                     </div>
                                     <div class="tutor-d-flex tutor-align-center">
@@ -298,7 +302,9 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                                                                 <div class="tutor-fs-6 tutor-color-secondary">
                                                                     <?php echo esc_html( $attachment->name ); ?>
                                                                 </div>
-                                                                <div class="tutor-fs-7">Size: 230KB;</div>
+                                                                <div class="tutor-fs-7">
+                                                                    <?php echo esc_html( tutor_utils()->get_readable_filesize( $upload_basedir . $attachment->uploaded_path ) ); ?>
+                                                                </div>
                                                             </div>
                                                             <div
                                                                 class="tutor-attachment-file-close tutor-d-flex tutor-align-center">
@@ -506,9 +512,6 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                             ?>
                                     <div class="tutor-attachment-files submited-files tutor-d-flex tutor-flex-column tutor-mt-20 tutor-mt-sm-40">
                                         <?php
-                                            $upload_dir     = wp_get_upload_dir();
-                                            $upload_baseurl = trailingslashit( tutor_utils()->array_get( 'baseurl', $upload_dir ) );
-
                                             foreach ( $attached_files as $attached_file ) :
                                         ?>
                                             <div class="tutor-instructor-card tutor-mt-12">
@@ -516,8 +519,13 @@ $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() 
                                                     <div class="tutor-fs-6 tutor-color-secondary">
                                                         <?php echo tutor_utils()->array_get( 'name', $attached_file ); ?>
                                                     </div>
-                                                    <div class="tutor-fs-7">Size:
-                                                        <?php echo tutor_utils()->array_get( 'size', $attached_file ); ?></div>
+                                                    <div class="tutor-fs-7"><?php esc_html_e( 'Size', 'tutor' ) ?>:
+                                                        <?php
+                                                            echo esc_html( 
+                                                                tutor_utils()->get_readable_filesize( $upload_basedir . $attached_file['uploaded_path'] ) 
+                                                            ); 
+                                                        ?>
+                                                    </div>
                                                 </div>
                                                 <div class="tutor-d-flex tutor-align-center">
                                                     <a class="tutor-iconic-btn tutor-iconic-btn-outline" download
