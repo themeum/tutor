@@ -492,7 +492,7 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 		} else {
 			$tutor_course_sell_by = apply_filters( 'tutor_course_sell_by', null );
 
-			if ( $tutor_course_sell_by && tutor_utils()->is_course_purchasable( $course_id ) ) {
+			if ( ( $tutor_course_sell_by && tutor_utils()->is_course_purchasable( $course_id ) || ! is_user_logged_in() ) ) {
 				tutor_load_template( 'loop.course-price-' . $tutor_course_sell_by );
 			} else {
 				tutor_load_template( 'loop.course-price' );
