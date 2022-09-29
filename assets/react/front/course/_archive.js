@@ -1,3 +1,7 @@
+import ajaxHandler from "../../admin-dashboard/segments/filter";
+import tutorFormData from "../../helper/tutor-formdata";
+
+const {__} = wp.i18n;
 const tutor_filters = [
     'keyword',
     'course_order',
@@ -151,6 +155,57 @@ window.jQuery(document).ready($ => {
     $('[tutor-hide-course-filter]').on('click', function(event) {
         event.preventDefault();
         $('body').removeClass('tutor-course-filter-open');
+    });
+
+    /**
+     * Enroll student if user click on enroll course button
+     * 
+     * @since v2.1.0
+     */
+    const enrollButtons = document.querySelectorAll('.tutor-course-list-enroll');
+    enrollButtons.forEach((enrollBtn) => {
+        enrollBtn.onclick = async(e) => {
+            e.preventDefault();
+            const defaultErrorMsg = __('Something went wrong, please try again!', 'tutor');
+            const target = e.target;
+            const formFields = [
+                {action: 'tutor_course_enrollment'},
+                {course_id: target.dataset.courseId}
+            ];
+            const formData = tutorFormData(formFields);
+
+            target.classList.add('is-loading');
+            target.setAttribute('disabled', true);
+
+            const post = await ajaxHandler(formData);
+            if (post.ok) {
+                const response = await post.json();
+                console.log(response);
+                const {success, data} = response;
+                if (success) {
+                    tutor_toast(
+                        __('Success', 'tutor-pro'),
+                        data,
+                        'success',
+                    );
+                    window.location.href = target.href;
+                } else {
+                    tutor_toast(
+                        __('Failed', 'tutor-pro'),
+                        data ? data : defaultErrorMsg,
+                        'error',
+                    );
+                }
+            } else {
+                tutor_toast(
+                    __('Error', 'tutor-pro'),
+                    __(defaultErrorMsg),
+                    'error',
+                );
+            }
+            target.classList.remove('is-loading');
+            target.removeAttribute('disabled');
+        }
     });
 });
 
