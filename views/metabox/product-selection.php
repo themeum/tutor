@@ -5,9 +5,15 @@
  * @package Tutor\Metabox
  */
 
+use TUTOR\Input;
+
 	$tutor_course_price_type = tutils()->price_type();
 	$course_price            = tutor_utils()->get_raw_course_price( get_the_ID() );
 	$monetization            = tutor_utils()->get_option( 'monetize_by' );
+	$course_id               = Input::get( 'course_ID', 0, Input::TYPE_INT );
+	if ( ! $course_id ) {
+		$course_id = get_the_ID();
+	}
 ?>
 <div class="tutor-row tutor-mt-16 tutor-mb-16 tutor-course-price-fields">
 	<div class="tutor-col-12 tutor-col-sm-5 tutor-col-lg-4">
@@ -34,13 +40,14 @@
 		</label>
 	</div>
 	<div class="tutor-col-12 tutor-col-md-7 tutor-col-lg-8">
-		<select name="_tutor_course_product_id" class="tutor-form-select" required>
+		<select name="_tutor_course_product_id" id="tutor-wc-product-select" data-product-id="<?php echo esc_attr( $product_id ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" class="tutor-form-select" required>
 			<option value="-1"><?php esc_html_e( 'Select a Product' ); ?></option>
-			<?php
-			foreach ( $products as $product ) {
-				echo "<option value='{$product->ID}' " . selected( $product->ID, $product_id ) . " >{$product->post_title}</option>";
-			}
-			?>
+			<?php foreach ( $products as $product ) : ?>
+				<option value="<?php echo esc_attr( $product->ID ); ?>" <?php selected( $product->ID, $product_id ); ?>
+				>
+					<?php echo esc_html( $product->post_title ); ?>
+				</option>
+			<?php endforeach; ?>
 		</select>
 		<div class="tutor-form-feedback">
 			<i class="tutor-icon-circle-info-o tutor-form-feedback-icon" area-hidden="true"></i>

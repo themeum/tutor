@@ -164,6 +164,21 @@ class Course extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 		$product_id	= Input::post( 'product_id' );
 		$product    = wc_get_product( $product_id );
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+		/**
+		 * If selected product is already linked with
+		 * a course & it is not the current course the
+		 * return error
+		 *
+		 * @since v2.1.0
+		 */
+		if ( is_object( $is_linked_with_course ) && $is_linked_with_course->post_id != $course_id ) {
+			wp_send_json_error(
+				__( 'One product can not be added to multiple course!', 'tutor' )
+			);
+		}
 
 		if ( $product ) {
 			$data = array(
