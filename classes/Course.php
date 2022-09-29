@@ -151,6 +151,8 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_update_course_content_order', array($this, 'tutor_update_course_content_order') );
 
 		add_action( 'wp_ajax_tutor_get_wc_product', array( $this, 'tutor_get_wc_product' ) );
+
+		add_action( 'wp_ajax_tutor_course_enrollment', array( $this, 'course_enrollment' ) );
 	}
 
 	/**
@@ -1364,6 +1366,34 @@ class Course extends Tutor_Base {
 				tutor_utils()->do_enroll( $course_id, $order_id = 0, $user_id );
 				do_action( 'guest_attempt_after_enrollment', $course_id );
 			}
+		}
+	}
+
+	/**
+	 * Course enrollment
+	 * 
+	 * On the course list page if user hit enroll course
+	 * button then do enrollment
+	 * 
+	 * @since v.2.1.0
+	 * 
+	 * @return void  wp_json response
+	 */
+	public function course_enrollment() {
+		tutor_utils()->checking_nonce();
+
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$user_id   = get_current_user_id();
+
+		if ( $course_id ) {
+			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
+			if ( $enroll ) {
+				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
+			} else {
+				wp_send_json_error( __( 'Enrollment failed, please try again!', 'tutor' ) );
+			}
+		} else {
+			wp_send_json_error( __( 'Invalid course ID', 'tutor' ) );
 		}
 	}
 }
