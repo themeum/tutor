@@ -249,7 +249,7 @@ window.jQuery(document).ready(function($) {
 				}
 
 				$('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
-				$('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
+				$('.tutor-quiz-builder-modal-wrap .tutor-modal-container').html(data.data.output);
 				$('.tutor-quiz-builder-modal-wrap')
 					.attr('data-quiz-id', quiz_id)
 					.attr('data-topic-id-of-quiz', topic_id);
@@ -341,7 +341,7 @@ window.jQuery(document).ready(function($) {
 					}
 
 					// Update modal content
-					$('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
+					$('.tutor-quiz-builder-modal-wrap .tutor-modal-container').html(data.data.output);
 
 					window.dispatchEvent(new Event(_tutorobject.content_change_event));
 
@@ -391,7 +391,7 @@ window.jQuery(document).ready(function($) {
 			},
 			success: function(data) {
 				// Add the question form in modal
-				modal.find('.modal-container').html(data.data.output);
+				modal.find('.tutor-modal-container').html(data.data.output);
 				modal.addClass('tutor-has-question-from');
 
 				// Enable quiz answer sorting for multi/radio select
