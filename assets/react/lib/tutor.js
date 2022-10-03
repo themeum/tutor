@@ -376,50 +376,38 @@ jQuery.fn.serializeObject = function() {
 	return values;
 };
 
-window.tutor_toast = function(title, description, type) {
-	var tutor_ob = window._tutorobject || {};
-	var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
-
-	if (!jQuery('.tutor-toast-parent').length) {
+/**
+ * Show toast message
+ * 
+ * @param {string} title 
+ * @param {string} description 
+ * @param {'success' | 'warning' | 'error'} type
+ * @return {void}
+ * 
+ * @since 1.0.0
+ */
+window.tutor_toast = function( title, description, type ) {
+	if ( ! jQuery('.tutor-toast-parent').length ) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
 	}
 
-	// var icons = {
-	//     success: asset + 'icon-check.svg',
-	//     error: asset + 'icon-cross.svg'
-	// }
-	var alert = type == 'success' ? 'success' : type == 'error' ? 'danger' : 'primary';
-	var icon =
-		type == 'success'
-			? 'tutor-icon-mark'
-			: type == 'error'
-			? 'tutor-icon-times'
-			: 'tutor-icon-circle-info-o';
-	var contentS = jQuery(`
-        <div class="tutor-large-notification tutor-large-notification-${alert}">
-            <div class="tutor-large-notification-icon">
-                <span class="tutor-icon-48 ${icon} tutor-mr-12"></span>
-            </div>
-            <div class="tutor-large-notification-content tutor-ml-5">
-                <div class="tutor-large-notification-title tutor-fs-6 tutor-fw-bold tutor-mt-12">
-                    ${title}
-                </div>
-                <div class="tutor-fs-7 tutor-mt-8">
-                    ${description}
-                </div>
-            </div>
-            <span class="tutor-toast-close tutor-noti-close tutor-icon-20 color-black-40 tutor-icon-times"></span>
-        </div>
-    `);
+	let alert = type == 'success' ? 'success' 
+				: type == 'error' ? 'danger'
+				: type == 'warning' ? 'warning' : 'primary';
+	
+	let icon = 	type == 'success' ? 'tutor-icon-mark'
+				: type == 'error' ? 'tutor-icon-times' : 'tutor-icon-circle-info-o';
+	
+	let hasDescription = ( description !== undefined && description !== null && description.trim() !== '' )
 
-	var content = jQuery(`
+	let content = jQuery(`
 		<div class="tutor-notification tutor-is-${alert} tutor-mb-16">
 			<div class="tutor-notification-icon">
 				<i class="${icon}"></i>
 			</div>
 			<div class="tutor-notification-content">
 			<h5>${title}</h5>
-			<p>${description}</p>
+			<p class="${ ! hasDescription ? 'tutor-d-none' : '' }">${description}</p>
 			</div>
 			<button class="tutor-notification-close">
 				<i class="fas fa-times"></i>
