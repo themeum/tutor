@@ -8814,7 +8814,7 @@ class Utils {
 			}
 		}
 
-		return $video_sources;
+		return apply_filters( 'tutor_preferred_video_sources', $video_sources);
 	}
 
 	/**
