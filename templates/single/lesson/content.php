@@ -65,7 +65,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ) ); ?>">
 	<?php endif; ?>
 	<div class="tutor-video-player-wrapper">
-		<?php tutor_lesson_video(); ?>
+		<?php echo apply_filters( 'tutor_single_lesson_video', tutor_lesson_video( false ), $video_info, $source_key ); ?>
 	</div>
 
 	<?php

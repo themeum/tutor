@@ -136,6 +136,7 @@ function tutor_video_input_state($videoSource, $source){
             <div class="tutor-mt-16 video-metabox-source-item video_source_wrap_embedded tutor-dashed-uploader" style="<?php tutor_video_input_state($videoSource, 'embedded'); ?>">
                 <textarea class="tutor-form-control" name="video[source_embedded]" placeholder="<?php _e('Place your embedded code here', 'tutor'); ?>"><?php echo tutor_utils()->avalue_dot('source_embedded', $video); ?></textarea>
             </div>
+            <?php do_action( 'tutor_after_video_meta_box_item' ); ?>
         </div>
     </div>
 </div>
