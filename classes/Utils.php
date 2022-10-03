@@ -8807,14 +8807,14 @@ class Utils {
 				'icon'  => 'code',
 			),
 		);
-
+		$video_sources = apply_filters( 'tutor_preferred_video_sources', $video_sources );
+		
 		if ( $key_title_only ) {
 			foreach ( $video_sources as $key => $data ) {
 				$video_sources[ $key ] = $data['title'];
 			}
 		}
-
-		return apply_filters( 'tutor_preferred_video_sources', $video_sources);
+		return $video_sources;
 	}
 
 	/**
