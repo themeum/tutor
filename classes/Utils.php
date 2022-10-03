@@ -198,13 +198,13 @@ class Utils {
 	}
 
 	/**
-	 * @param null $key
+	 * Get option data
+	 * 
+	 * @param string $key
 	 * @param bool $default
 	 * @param bool $type if false return string
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * Get option data
 	 *
 	 * @since v.1.0.0
 	 */
@@ -2236,20 +2236,18 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
+	 * Get current user ID or given user ID
 	 *
-	 * @return bool|int
+	 * @param int $user_id user ID.
 	 *
-	 * Get current user or given user ID
+	 * @return int  when $user_id = 0, return 0 or current user ID
+	 *              otherwise return given ID
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
 	 */
-	public function get_user_id( $user_id = 0 ) {
+	public function get_user_id( int $user_id = 0 ) {
 		if ( ! $user_id ) {
-			$user_id = get_current_user_id();
-			if ( ! $user_id ) {
-				return false;
-			}
+			return get_current_user_id();
 		}
 
 		return $user_id;
@@ -3767,8 +3765,8 @@ class Utils {
 	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in=array('approved') ) {
 		global $wpdb;
 
-		if(!$limit) {
-			$limit = $this->get_option('pagination_per_page', 10);
+		if ( ! $limit ) {
+			$limit = $this->get_option( 'pagination_per_page', 10 );
 		}
 
 		$course_filter = '';
@@ -3779,7 +3777,7 @@ class Utils {
 		}
 
 		$user_filter = '';
-		if(!($user_id===null)) {
+		if ( $user_id !== null ) {
 			$user_id = $this->get_user_id( $user_id );
 			$user_filter = ' AND _comment.user_id='.$user_id;
 		}
