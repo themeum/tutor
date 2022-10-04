@@ -1073,7 +1073,7 @@ class Course extends Tutor_Base {
 			unset($items['reviews']);
 		}
 
-		// Whether enrolment require
+		// Whether enrollment require
 		$is_enrolled = tutor_utils()->is_enrolled();
 
 		return array_filter($items, function($item) use($is_enrolled) {
@@ -1308,7 +1308,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Delete associated enrolment
+	 * Delete associated enrollment
 	 *
 	 * @since v.1.8.2
 	 */

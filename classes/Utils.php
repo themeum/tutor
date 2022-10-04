@@ -2238,14 +2238,14 @@ class Utils {
 	/**
 	 * Get current user ID or given user ID
 	 *
-	 * @param int $user_id user ID.
+	 * @param mixed $user_id user ID.
 	 *
 	 * @return int  when $user_id = 0, return 0 or current user ID
 	 *              otherwise return given ID
 	 *
 	 * @since 1.0.0
 	 */
-	public function get_user_id( int $user_id = 0 ) {
+	public function get_user_id( $user_id = 0 ) {
 		if ( ! $user_id ) {
 			return get_current_user_id();
 		}
@@ -2337,7 +2337,7 @@ class Utils {
 
 		if ( $this->is_course_purchasable( $course_id ) ) {
 			/**
-			 * We need to verify this enrolment, we will change the status later after payment confirmation
+			 * We need to verify this enrollment, we will change the status later after payment confirmation
 			 */
 			$enrolment_status = 'pending';
 		}
@@ -2358,10 +2358,10 @@ class Utils {
 		$isEnrolled = wp_insert_post( $enroll_data );
 		if ( $isEnrolled ) {
 
-			// Run this hook for both of pending and completed enrolment
+			// Run this hook for both of pending and completed enrollment
 			do_action( 'tutor_after_enroll', $course_id, $isEnrolled );
 
-			// Run this hook for completed enrolment regardless of payment provider and free/paid mode
+			// Run this hook for completed enrollment regardless of payment provider and free/paid mode
 			if ( $enroll_data['post_status'] == 'completed' ) {
 				do_action( 'tutor_after_enrolled', $course_id, $user_id, $isEnrolled );
 			}
@@ -2455,7 +2455,7 @@ class Utils {
 	/**
 	 * @param $order_id
 	 *
-	 * Complete course enrolment and do some task
+	 * Complete course enrollment and do some task
 	 *
 	 * @since v.1.0.0
 	 */
@@ -3130,7 +3130,7 @@ class Utils {
 	 * @param $instructor_id
 	 *
 	 * Get total Students by instructor
-	 * 1 enrolment = 1 student, so total enrolled for a equivalent total students (Tricks)
+	 * 1 enrollment = 1 student, so total enrolled for a equivalent total students (Tricks)
 	 *
 	 * @return int
 	 *
@@ -7057,7 +7057,7 @@ class Utils {
 	 *
 	 * @return array|object
 	 *
-	 * Get enrolment by enrol_id
+	 * Get enrollment by enrol_id
 	 *
 	 * @since v1.6.9
 	 */
@@ -9200,7 +9200,7 @@ class Utils {
 	}
 
 	/**
-	 * Execute bulk action for enrolment list ex: complete | cancel
+	 * Execute bulk action for enrollment list ex: complete | cancel
 	 *
 	 * @param string $status hold status for updating.
 	 * @param array $enrollment_ids ids that need to update.
