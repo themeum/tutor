@@ -86,7 +86,7 @@ class WooCommerce extends Tutor_Base {
 		register_deactivation_hook( $woocommerce_path, array( $this, 'disable_tutor_monetization' ) );
 		/**
 		 * Redirect student on enrolled courses after course
-		 * enrolment complete
+		 * Enrollment complete
 		 *
 		 * @since 1.9.0
 		*/
@@ -595,7 +595,7 @@ class WooCommerce extends Tutor_Base {
 
 	/**
 	 * Redirect student on enrolled courses after course
-	 * enrolment complete if course is purchasable
+	 * enrollment complete if course is purchasable
 	 *
 	 * @param $order_id | int
 	 * @since 1.9.0
