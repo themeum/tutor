@@ -8380,14 +8380,14 @@ class Utils {
 	 * @param string $quiz_id | quiz id that need to check wheather attempted or not.
 	 * @return bool | true if attempted otherwise false.
 	 */
-	public function has_attempted_quiz( $user_id, $quiz_id ): bool {
+	public function has_attempted_quiz( $user_id, $quiz_id, $row = false ) {
 		global $wpdb;
 		// Sanitize data
 		$user_id   = sanitize_text_field( $user_id );
 		$quiz_id   = sanitize_text_field( $quiz_id );
-		$attempted = $wpdb->get_var(
+		$attempted = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT quiz_id
+				"SELECT quiz_id, attempt_status, is_manually_reviewed
 				FROM {$wpdb->tutor_quiz_attempts}
 				WHERE user_id = %d
 					AND quiz_id = %d
@@ -8396,7 +8396,7 @@ class Utils {
 				$quiz_id
 			)
 		);
-		return $attempted ? true : false;
+		return $attempted;
 	}
 
 	/**

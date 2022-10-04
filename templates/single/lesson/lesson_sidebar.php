@@ -123,6 +123,8 @@ if ( $topics->have_posts() ) {
 									<?php
 									$time_limit  = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
 									$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID );
+									$attempt_ended = is_object( $has_attempt ) && ! is_null( $has_attempt->attempt_status ) ? true : false;
+							
 									if ( $time_limit ) {
 										$time_type                            = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
 										$time_type == 'minutes' ? $time_limit = $time_limit * 60 : 0;
@@ -136,7 +138,7 @@ if ( $topics->have_posts() ) {
 									?>
 
 									<?php if ( ! $lock_icon ) : ?>
-										<input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?> />
+										<input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled="disabled" readonly="readonly" <?php echo esc_attr( $attempt_ended ? 'checked="checked"' : '' ); ?> />
 									<?php else : ?>
 										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
 									<?php endif; ?>
