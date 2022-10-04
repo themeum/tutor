@@ -166,7 +166,7 @@
 			<?php
 			echo apply_filters( 'tutor/course/single/entry-box/is_public', ob_get_clean(), get_the_ID() );
 		} else {
-			// The course enroll options like purchase or free enrolment
+			// The course enroll options like purchase or free enrollment
 			$price = apply_filters( 'get_tutor_course_price', null, get_the_ID() );
 
 			if ( tutor_utils()->is_course_fully_booked( null ) ) {

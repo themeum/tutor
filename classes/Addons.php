@@ -44,8 +44,8 @@ class Addons {
 				'description' => 'Unlock lessons by schedule or when the student meets specific condition.',
 			),
 			'enrollments'              => array(
-				'name'        => __( 'Enrolment', 'tutor' ),
-				'description' => 'Take advanced control on enrolment. Enroll the student manually.',
+				'name'        => __( 'Enrollment', 'tutor' ),
+				'description' => 'Take advanced control on enrollment. Enroll the student manually.',
 			),
 			'wc-subscriptions'         => array(
 				'name'        => __( 'WooCommerce Subscriptions', 'tutor' ),
@@ -73,7 +73,7 @@ class Addons {
 			),
 			'tutor-course-preview'     => array(
 				'name'        => __( 'Tutor Course Preview', 'tutor' ),
-				'description' => 'Unlock some lessons for students before enrolment.',
+				'description' => 'Unlock some lessons for students before enrollment.',
 			),
 			'tutor-email'              => array(
 				'name'        => __( 'Tutor E-Mail', 'tutor' ),
