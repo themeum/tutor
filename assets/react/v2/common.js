@@ -4,3 +4,4 @@ import '../lib/common';
 import './qna';
 import './pagination';
 import './table-status';
+import './quiz-attempt';
