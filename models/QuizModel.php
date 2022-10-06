@@ -1,12 +1,26 @@
 <?php
 namespace Tutor\Models;
 
+use Tutor\Helpers\QueryHelper;
+
 /**
  * Class QuizModel
  *
  * @since 2.0.10
  */
 class QuizModel {
+
+	/**
+	 * Get quiz table name
+	 *
+	 * @since v2.1.0
+	 *
+	 * @return string
+	 */
+	public function get_table(): string {
+		global $wpdb;
+		return $wpdb->prefix . 'tutor_quiz_attempts';
+	}
 
 	/**
 	 * Get all of the attempts by an user of a quiz
@@ -646,5 +660,24 @@ class QuizModel {
 		}
 
 		return $required;
+	}
+
+	/**
+	 * Get last or first quiz attempt
+	 *
+	 * @param integer $quiz_id  quiz id to get attempt of.
+	 * @param string  $order  ASC or DESC, default is DESC
+	 *                pass ASC to get first attempt.
+	 *
+	 * @return mixed object on success, null on failure
+	 */
+	public function get_first_or_last_attempt( int $quiz_id, string $order = 'DESC' ) {
+		$attempt = QueryHelper::get_row(
+			$this->get_table(),
+			array( 'quiz_id' => $quiz_id ),
+			'attempt_id',
+			$order
+		);
+		return $attempt;
 	}
 }
