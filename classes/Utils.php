@@ -8387,7 +8387,7 @@ class Utils {
 		$quiz_id   = sanitize_text_field( $quiz_id );
 		$attempted = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT quiz_id, attempt_status, is_manually_reviewed
+				"SELECT quiz_id
 				FROM {$wpdb->tutor_quiz_attempts}
 				WHERE user_id = %d
 					AND quiz_id = %d
@@ -8396,7 +8396,7 @@ class Utils {
 				$quiz_id
 			)
 		);
-		return $attempted;
+		return $attempted ? true : false;
 	}
 
 	/**

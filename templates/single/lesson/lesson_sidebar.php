@@ -10,6 +10,8 @@
  * @version 1.4.3
  */
 
+use Tutor\Models\QuizModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -121,10 +123,10 @@ if ( $topics->have_posts() ) {
 								</div>
 								<div class="tutor-d-flex tutor-ml-auto tutor-flex-shrink-0">
 									<?php
-									$time_limit  = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
-									$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID );
-									$attempt_ended = is_object( $has_attempt ) && ! is_null( $has_attempt->attempt_status ) ? true : false;
-							
+									$time_limit    = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
+									$last_attempt  = ( new QuizModel() )->get_first_or_last_attempt( $quiz->ID );
+									$attempt_ended = is_object( $last_attempt ) && 'attempt_ended' === ( $last_attempt->attempt_status ) ? true : false;
+
 									if ( $time_limit ) {
 										$time_type                            = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
 										$time_type == 'minutes' ? $time_limit = $time_limit * 60 : 0;
