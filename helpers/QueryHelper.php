@@ -283,7 +283,7 @@ class QueryHelper {
 		global $wpdb;
 		$obj          = new self();
 		$where_clause = $obj->build_where_clause( $where );
-		$query = $wpdb->prepare(
+		$query        = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
 				WHERE {$where_clause}
@@ -296,5 +296,63 @@ class QueryHelper {
 			$query,
 			$output
 		);
+	}
+
+
+	/**
+	 * Update multiple rows by using where in
+	 * clause
+	 *
+	 * @since v2.1.0
+	 *
+	 * @param string $table  table name.
+	 * @param array  $data assoc_array data to update
+	 *                ex: [id => 2, name => 'john' ].
+	 * @param string $where_in comma separated values, ex: 1,2,3.
+	 * @param string $where_col default is ID but could be other.
+	 *
+	 * @return bool true on success, false on failure
+	 */
+	public static function update_where_in( string $table, array $data, string $where_in, string $where_col = 'ID' ) {
+		global $wpdb;
+		if ( empty( $where_in ) || empty( $where_col ) ) {
+			return false;
+		}
+		$set_clause = self::prepare_set_clause( $data );
+		if ( '' === $set_clause ) {
+			return false;
+		}
+		// @codingStandardsIgnoreStart
+		$query      = $wpdb->prepare(
+			"UPDATE {$table}
+				{$set_clause}
+				WHERE $where_col IN ( $where_in )
+				AND 1 = %d
+			",
+			1
+		);
+		return $wpdb->query( $query ) ? true : false;
+	}
+
+	/**
+	 * Prepare MySQL SET clause for update query
+	 *
+	 * @since v2.1.0
+	 *
+	 * @param array $data  single dimension assoc_array.
+	 *
+	 * @return string
+	 */
+	private static function prepare_set_clause( array $data ) {
+		$set = '';
+		foreach ( $data as $key => $value ) {
+			// Multi dimension not allowed.
+			if ( is_array( $value ) ) {
+				continue;
+			}
+			$value = sanitize_text_field( $value );
+			$set  .= is_numeric( $value ) ? "SET $key = $value " : "SET $key = ' " . $value . " ' ";
+		}
+		return $set;
 	}
 }
