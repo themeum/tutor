@@ -2,9 +2,10 @@
 /**
  * Course embed template
  *
+ * @author Themeum
+ * @link https://themeum.com
+ * @package TutorLMS/Templates
  * @since v2.1.0
- *
- * @package Tutor\CourseEmbed
  */
 
 wp_head();

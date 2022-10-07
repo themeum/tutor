@@ -1,4 +1,13 @@
 <?php
+/**
+ * Template for Instructor Settings
+ *
+ * @author themeum
+ * @link https://themeum.com
+ * @package TutorLMS/Templates
+ * @since 1.0.0
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -11,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="tutor-option-field">
 		<div class="instructor-layout-templates-fields">
 			<?php
-				$url_base = tutor()->url . 'assets/images/instructor-layout/';
+			$url_base = tutor()->url . 'assets/images/instructor-layout/';
 
 			foreach ( $templates as $template ) {
 				$img               = $url_base . $template . '.jpg';

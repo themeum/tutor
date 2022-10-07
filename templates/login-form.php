@@ -2,12 +2,10 @@
 /**
  * Tutor login form template
  *
- * This form template is for using on login template and on
- * modal.
- *
- * @package TutorLoginTemplate
- *
- * @since v2.0.1
+ * @author themeum
+ * @link https://themeum.com
+ * @package TutorLMS/Templates
+ * @since 2.0.1
  */
 
 $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
@@ -18,7 +16,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
 	<?php endif; ?>
 	
 	<input type="hidden" name="tutor_action" value="tutor_user_login" />
-	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ) ?>" />
+	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ); ?>" />
 
 	<div class="tutor-mb-20">
 		<input type="text" class="tutor-form-control" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" />
@@ -41,7 +39,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
 				<?php esc_html_e( 'Keep me signed in', 'tutor' ); ?>
 			</label>
 		</div>
-		<a href="<?php echo esc_url( $lost_pass ) ?>" class="tutor-btn tutor-btn-ghost">
+		<a href="<?php echo esc_url( $lost_pass ); ?>" class="tutor-btn tutor-btn-ghost">
 			<?php esc_html_e( 'Forgot?', 'tutor' ); ?>
 		</a>
 	</div>
