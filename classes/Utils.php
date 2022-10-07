@@ -7823,6 +7823,15 @@ class Utils {
 		return $this->get_unique_slug( $new_slug, $post_type, true );
 	}
 
+	/**
+	 * Get post content ids
+	 *
+	 * @param string  $content_type like: lesson, quiz.
+	 * @param string  $ancestor_type like: course, topics
+	 * @param string  $ancestor_ids ancestor like course or topic
+	 *
+	 * @return array of ID cols
+	 */
 	public function get_course_content_ids_by( $content_type, $ancestor_type, $ancestor_ids ) {
 		global $wpdb;
 		$ids = array();
