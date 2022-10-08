@@ -60,7 +60,7 @@
 				<input type="text" class="tutor-modal-search-input" placeholder="<?php _e( 'Search instructors...', 'tutor' ); ?>">
 			</div>
 		</div>
-		<div class="modal-container"></div>
+		<div class="tutor-modal-container"></div>
 		<div class="modal-footer has-padding">
 			<button type="button" class="tutor-btn add_instructor_to_course_btn"><?php _e( 'Add Instructors', 'tutor' ); ?></button>
 		</div>

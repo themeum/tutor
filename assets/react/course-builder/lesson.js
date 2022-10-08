@@ -122,7 +122,7 @@ window.jQuery(document).ready(function($) {
 					return;
 				}
 
-				$('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
+				$('.tutor-lesson-modal-wrap .tutor-modal-container').html(data.data.output);
 				$('.tutor-lesson-modal-wrap').attr({
 					'data-lesson-id': lesson_id,
 					'data-topic-id': topic_id,
