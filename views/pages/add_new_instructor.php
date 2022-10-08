@@ -9,18 +9,20 @@
 
 
 		<div id="form-response"></div>
-
 		<?php
-			$errors = apply_filters( 'tutor_instructor_register_validation_errors', array() );
-			if ( is_array( $errors ) && count( $errors ) ) {
-				echo '<div class="tutor-alert-warning"><ul class="tutor-required-fields">';
-				foreach ( $errors as $error_key => $error_value ) {
-					echo '<li>' . $error_value . '</li>';
-				}
-				echo '</ul></div>';
-			}
-		?>
-
+		$validation_errors = apply_filters( 'tutor_instructor_register_validation_errors', array() );
+		if ( is_array( $validation_errors ) && count( $validation_errors ) ) :
+			?>
+			<div class="tutor-alert tutor-warning tutor-mb-12">
+				<ul class="tutor-required-fields">
+					<?php foreach ( $validation_errors as $validation_error ) : ?>
+						<li>
+							<?php echo esc_html( $validation_error ); ?>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		<?php endif; ?>
 		<?php do_action( 'tutor_add_new_instructor_form_fields_before' ); ?>
 
 		<div class="tutor-option-field-row">

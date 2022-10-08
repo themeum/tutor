@@ -15,15 +15,17 @@
 if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 	return;
 }
+
+use TUTOR\Input;
 use TUTOR_ASSIGNMENTS\Assignments_List;
 
 $per_page     = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
-$course_id    = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';
-$order_filter = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-$date_filter  = isset( $_GET['date'] ) ? $_GET['date'] : '';
+$course_id    = isset( $_GET['course-id'] ) ? Input::wp_unslash_with_sanitize( $_GET['course-id'] ) : '';
+$order_filter = isset( $_GET['order'] ) ? Input::wp_unslash_with_sanitize( $_GET['order'] ) : 'DESC';
+$date_filter  = isset( $_GET['date'] ) ? Input::wp_unslash_with_sanitize( $_GET['date'] ) : '';
 
 $current_user = get_current_user_id();
 $assignments  = tutor_utils()->get_assignments_by_instructor( null, compact( 'course_id', 'order_filter', 'date_filter', 'per_page', 'offset' ) );

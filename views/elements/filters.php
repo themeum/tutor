@@ -8,7 +8,7 @@ if ( isset( $data ) ) : ?>
 			<?php if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) : ?>
 				<div class="tutor-wp-dashboard-filter-items tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap">
 					<form id="tutor-admin-bulk-action-form" action method="post">
-						<input type="hidden" name="action" value="<?php esc_html_e( $data['ajax_action'] ); ?>" />
+						<input type="hidden" name="action" value="<?php echo esc_html( $data['ajax_action'] ); ?>" />
 						<div class="tutor-d-flex">
 							<div class="tutor-mr-12">
 								<select name="bulk-action" title="Please select an action" class="tutor-form-select">
@@ -68,11 +68,11 @@ if ( isset( $data ) ) : ?>
 						</a>
 					</div>
 					<?php
-					$course_id     = isset( $_GET['course-id'] ) ? esc_html__( $_GET['course-id'] ) : '';
-					$order         = isset( $_GET['order'] ) ? esc_html__( $_GET['order'] ) : '';
-					$date          = isset( $_GET['date'] ) ? esc_html__( $_GET['date'] ) : '';
-					$search        = isset( $_GET['search'] ) ? esc_html__( $_GET['search'] ) : '';
-					$category_slug = isset( $_GET['category'] ) ? esc_html__( $_GET['category'] ) : '';
+					$course_id     = isset( $_GET['course-id'] ) ? Input::wp_unslash_with_sanitize( $_GET['course-id'] ) : '';
+					$order         = isset( $_GET['order'] ) ? Input::wp_unslash_with_sanitize( $_GET['order'] ) : '';
+					$date          = isset( $_GET['date'] ) ? Input::wp_unslash_with_sanitize( $_GET['date'] ) : '';
+					$search        = isset( $_GET['search'] ) ? Input::wp_unslash_with_sanitize( $_GET['search'] ) : '';
+					$category_slug = isset( $_GET['category'] ) ? Input::wp_unslash_with_sanitize( $_GET['category'] ) : '';
 					?>
 					<?php if ( isset( $data['course_filter'] ) && true === $data['course_filter'] ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
@@ -86,7 +86,7 @@ if ( isset( $data ) ) : ?>
 									</option>
 									<?php foreach ( $courses as $course ) : ?>
 										<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
-											<?php echo $course->post_title; ?>
+											<?php echo esc_html( $course->post_title ); ?>
 										</option>
 									<?php endforeach; ?>
 								<?php else : ?>
@@ -145,7 +145,7 @@ if ( isset( $data ) ) : ?>
 							</label>
 							<div class="tutor-form-wrap">
 								<span class="tutor-form-icon"><span class="tutor-icon-search" area-hidden="true"></span></span>
-								<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...' ); ?>" value="<?php esc_html_e( wp_unslash( $search ) ); ?>" />
+								<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...' ); ?>" value="<?php echo esc_html( wp_unslash( $search ) ); ?>" />
 							</div>
 						</form>
 					</div>
