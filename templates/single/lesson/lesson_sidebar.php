@@ -10,6 +10,8 @@
  * @version 1.4.3
  */
 
+use Tutor\Models\QuizModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -121,8 +123,10 @@ if ( $topics->have_posts() ) {
 								</div>
 								<div class="tutor-d-flex tutor-ml-auto tutor-flex-shrink-0">
 									<?php
-									$time_limit  = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
-									$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID );
+									$time_limit    = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
+									$last_attempt  = ( new QuizModel() )->get_first_or_last_attempt( $quiz->ID );
+									$attempt_ended = is_object( $last_attempt ) && 'attempt_ended' === ( $last_attempt->attempt_status ) ? true : false;
+
 									if ( $time_limit ) {
 										$time_type                            = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
 										$time_type == 'minutes' ? $time_limit = $time_limit * 60 : 0;
@@ -136,7 +140,7 @@ if ( $topics->have_posts() ) {
 									?>
 
 									<?php if ( ! $lock_icon ) : ?>
-										<input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?> />
+										<input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled="disabled" readonly="readonly" <?php echo esc_attr( $attempt_ended ? 'checked="checked"' : '' ); ?> />
 									<?php else : ?>
 										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
 									<?php endif; ?>

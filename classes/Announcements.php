@@ -64,7 +64,7 @@ class Announcements {
 	}
 
 	/**
-	 * Handle bulk action for enrolment cancel | delete
+	 * Handle bulk action for enrollment cancel | delete
 	 *
 	 * @return string JSON response.
 	 * @since v2.0.0

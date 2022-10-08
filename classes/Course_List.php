@@ -227,7 +227,7 @@ class Course_List {
 	}
 
 	/**
-	 * Handle bulk action for enrolment cancel | delete
+	 * Handle bulk action for enrollment cancel | delete
 	 *
 	 * @return string JSON response.
 	 * @since v2.0.0
@@ -353,7 +353,7 @@ class Course_List {
 	}
 	
 	/**
-	 * Get course enrolment list with student info
+	 * Get course enrollment list with student info
 	 *
 	 * @param  int $course_id int | required.
 	 * @return array
