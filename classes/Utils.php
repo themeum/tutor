@@ -198,13 +198,13 @@ class Utils {
 	}
 
 	/**
-	 * @param null $key
+	 * Get option data
+	 * 
+	 * @param string $key
 	 * @param bool $default
 	 * @param bool $type if false return string
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * Get option data
 	 *
 	 * @since v.1.0.0
 	 */
@@ -2236,20 +2236,18 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
+	 * Get current user ID or given user ID
 	 *
-	 * @return bool|int
+	 * @param mixed $user_id user ID.
 	 *
-	 * Get current user or given user ID
+	 * @return int  when $user_id = 0, return 0 or current user ID
+	 *              otherwise return given ID
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
 	 */
 	public function get_user_id( $user_id = 0 ) {
 		if ( ! $user_id ) {
-			$user_id = get_current_user_id();
-			if ( ! $user_id ) {
-				return false;
-			}
+			return get_current_user_id();
 		}
 
 		return $user_id;
@@ -2339,7 +2337,7 @@ class Utils {
 
 		if ( $this->is_course_purchasable( $course_id ) ) {
 			/**
-			 * We need to verify this enrolment, we will change the status later after payment confirmation
+			 * We need to verify this enrollment, we will change the status later after payment confirmation
 			 */
 			$enrolment_status = 'pending';
 		}
@@ -2360,10 +2358,10 @@ class Utils {
 		$isEnrolled = wp_insert_post( $enroll_data );
 		if ( $isEnrolled ) {
 
-			// Run this hook for both of pending and completed enrolment
+			// Run this hook for both of pending and completed enrollment
 			do_action( 'tutor_after_enroll', $course_id, $isEnrolled );
 
-			// Run this hook for completed enrolment regardless of payment provider and free/paid mode
+			// Run this hook for completed enrollment regardless of payment provider and free/paid mode
 			if ( $enroll_data['post_status'] == 'completed' ) {
 				do_action( 'tutor_after_enrolled', $course_id, $user_id, $isEnrolled );
 			}
@@ -2457,7 +2455,7 @@ class Utils {
 	/**
 	 * @param $order_id
 	 *
-	 * Complete course enrolment and do some task
+	 * Complete course enrollment and do some task
 	 *
 	 * @since v.1.0.0
 	 */
@@ -3132,7 +3130,7 @@ class Utils {
 	 * @param $instructor_id
 	 *
 	 * Get total Students by instructor
-	 * 1 enrolment = 1 student, so total enrolled for a equivalent total students (Tricks)
+	 * 1 enrollment = 1 student, so total enrolled for a equivalent total students (Tricks)
 	 *
 	 * @return int
 	 *
@@ -3767,8 +3765,8 @@ class Utils {
 	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in=array('approved') ) {
 		global $wpdb;
 
-		if(!$limit) {
-			$limit = $this->get_option('pagination_per_page', 10);
+		if ( ! $limit ) {
+			$limit = $this->get_option( 'pagination_per_page', 10 );
 		}
 
 		$course_filter = '';
@@ -3779,7 +3777,7 @@ class Utils {
 		}
 
 		$user_filter = '';
-		if(!($user_id===null)) {
+		if ( $user_id !== null ) {
 			$user_id = $this->get_user_id( $user_id );
 			$user_filter = ' AND _comment.user_id='.$user_id;
 		}
@@ -7059,7 +7057,7 @@ class Utils {
 	 *
 	 * @return array|object
 	 *
-	 * Get enrolment by enrol_id
+	 * Get enrollment by enrol_id
 	 *
 	 * @since v1.6.9
 	 */
@@ -7825,6 +7823,15 @@ class Utils {
 		return $this->get_unique_slug( $new_slug, $post_type, true );
 	}
 
+	/**
+	 * Get post content ids
+	 *
+	 * @param string  $content_type like: lesson, quiz.
+	 * @param string  $ancestor_type like: course, topics
+	 * @param string  $ancestor_ids ancestor like course or topic
+	 *
+	 * @return array of ID cols
+	 */
 	public function get_course_content_ids_by( $content_type, $ancestor_type, $ancestor_ids ) {
 		global $wpdb;
 		$ids = array();
@@ -8382,12 +8389,12 @@ class Utils {
 	 * @param string $quiz_id | quiz id that need to check wheather attempted or not.
 	 * @return bool | true if attempted otherwise false.
 	 */
-	public function has_attempted_quiz( $user_id, $quiz_id ): bool {
+	public function has_attempted_quiz( $user_id, $quiz_id, $row = false ) {
 		global $wpdb;
 		// Sanitize data
 		$user_id   = sanitize_text_field( $user_id );
 		$quiz_id   = sanitize_text_field( $quiz_id );
-		$attempted = $wpdb->get_var(
+		$attempted = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT quiz_id
 				FROM {$wpdb->tutor_quiz_attempts}
@@ -8807,13 +8814,13 @@ class Utils {
 				'icon'  => 'code',
 			),
 		);
-
+		$video_sources = apply_filters( 'tutor_preferred_video_sources', $video_sources );
+		
 		if ( $key_title_only ) {
 			foreach ( $video_sources as $key => $data ) {
 				$video_sources[ $key ] = $data['title'];
 			}
 		}
-
 		return $video_sources;
 	}
 
@@ -9202,7 +9209,7 @@ class Utils {
 	}
 
 	/**
-	 * Execute bulk action for enrolment list ex: complete | cancel
+	 * Execute bulk action for enrollment list ex: complete | cancel
 	 *
 	 * @param string $status hold status for updating.
 	 * @param array $enrollment_ids ids that need to update.

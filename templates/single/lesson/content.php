@@ -2,12 +2,10 @@
 /**
  * Display the content
  *
- * @since v.1.0.0
  * @author themeum
  * @link https://themeum.com
- *
  * @package TutorLMS/Templates
- * @version 1.4.3
+ * @since 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -65,7 +63,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ) ); ?>">
 	<?php endif; ?>
 	<div class="tutor-video-player-wrapper">
-		<?php tutor_lesson_video(); ?>
+		<?php echo apply_filters( 'tutor_single_lesson_video', tutor_lesson_video( false ), $video_info, $source_key ); ?>
 	</div>
 
 	<?php
@@ -129,7 +127,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 								<?php _e( 'About Lesson', 'tutor' ); ?>
 							</div>
 							<div class="tutor-fs-6 tutor-color-secondary">
-								<?php the_content(); ?>
+								<?php echo wp_kses_post( str_replace( 'data-mce-style', 'style', get_the_content() ) ); ?>
 							</div>
 						</div>
 					</div>

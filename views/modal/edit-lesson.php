@@ -2,11 +2,10 @@
 /**
  * Lesson Modal Form
  *
- * @since 1.0.0
  * @author themeum
  * @link https://themeum.com
- *
  * @package TutorLMS/Templates
+ * @since 1.0.0
  */
 
 ?>
@@ -44,13 +43,9 @@
 		</label>
 
 		<?php
-			$args = array(
-				'plugins'       => 'codesample',
-				'toolbar1'      => 'codesample',
-				'editor_height' => 150,
-			);
-			wp_editor( stripslashes( $post->post_content ), 'tutor_lesson_modal_editor', array( 'editor_height' => 150 ) );
-			?>
+			$sanitized_content = wp_kses_post( wp_unslash( str_replace( 'data-mce-style', 'style', $post->post_content ) ) );
+			wp_editor( $sanitized_content, 'tutor_lesson_modal_editor', array( 'editor_height' => 150 ) );
+		?>
 
 		<div class="tutor-form-feedback">
 			<i class="tutor-icon-circle-info-o tutor-form-feedback-icon"></i>

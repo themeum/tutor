@@ -550,7 +550,7 @@ class Options_V2
 								'label'       => __('Auto Course Complete on all Lesson Completion', 'tutor'),
 								'default'     => 'off',
 								'label_title' => __('', 'tutor'),
-								'desc'        => __('If enabled, an Enrolled Course will be automatically completed if all its Lessions, Quizzes, and Assignments are already completed by the Student', 'tutor'),
+								'desc'        => __('If enabled, an Enrolled Course will be automatically completed if all its Lessons, Quizzes, and Assignments are already completed by the Student', 'tutor'),
 							),
 							array(
 								'key'            => 'course_completion_process',

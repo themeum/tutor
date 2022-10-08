@@ -86,6 +86,13 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_quiz_abandon', array( $this, 'tutor_quiz_abandon' ) );
 
 		$this->prepare_allowed_html();
+
+		/**
+		 * Delete quiz attempt
+		 *
+		 * @since v2.1.0
+		 */
+		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 	}
 
 	private function prepare_allowed_html() {
@@ -1347,6 +1354,28 @@ class Quiz {
 			array( 'attempt_id' => $attempt_id )
 		);
 		return $update_info ? true : false;
+	}
+
+	/**
+	 * Attempt delete ajax request handler
+	 *
+	 * @since v2.1.0
+	 *
+	 * @return void  wp_json response
+	 */
+	public function attempt_delete() {
+		tutor_utils()->checking_nonce();
+		if ( current_user_can( 'administrator') ||  current_user_can( tutor()->instructor_role ) ) {
+			$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
+			if ( $attempt_id ) {
+				QuizModel::delete_quiz_attempt( $attempt_id );
+				wp_send_json_success( __( 'Attempt deleted successfully!', 'tutor' ) );
+			} else {
+				wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
+			}
+		} else {
+			wp_send_json_error( __( 'You are not authorized to perform this action!', 'tutor' ) );
+		}
 	}
 
 }
