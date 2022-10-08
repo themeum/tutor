@@ -11,7 +11,7 @@
                 </a>
             </div>
         </div>
-        <div class="modal-container">
+        <div class="tutor-modal-container">
             <form action="" class="tutor-announcements-update-form">
                 <?php tutor_nonce_field(); ?>
                 <input type="hidden" name="announcement_id" id="announcement_id">
