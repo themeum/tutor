@@ -68,11 +68,11 @@ if ( isset( $data ) ) : ?>
 						</a>
 					</div>
 					<?php
-					$course_id     = isset( $_GET['course-id'] ) ? Input::wp_unslash_with_sanitize( $_GET['course-id'] ) : '';
-					$order         = isset( $_GET['order'] ) ? Input::wp_unslash_with_sanitize( $_GET['order'] ) : '';
-					$date          = isset( $_GET['date'] ) ? Input::wp_unslash_with_sanitize( $_GET['date'] ) : '';
-					$search        = isset( $_GET['search'] ) ? Input::wp_unslash_with_sanitize( $_GET['search'] ) : '';
-					$category_slug = isset( $_GET['category'] ) ? Input::wp_unslash_with_sanitize( $_GET['category'] ) : '';
+					$course_id     = Input::get( 'course-id', 0, Input::TYPE_INT );
+					$order         = Input::get( 'order', 'DESC' );
+					$date          = Input::get( 'date', '' );
+					$search        = Input::get( 'search', '' );
+					$category_slug = Input::get( 'category', '' );
 					?>
 					<?php if ( isset( $data['course_filter'] ) && true === $data['course_filter'] ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">

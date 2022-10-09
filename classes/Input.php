@@ -123,17 +123,4 @@ class Input {
 			$array
 		);
 	}
-
-	/**
-	 * A wrapper function for wp_unslash & sanitize
-	 *
-	 * @since v2.1.0
-	 *
-	 * @param string $input  a string text.
-	 *
-	 * @return string unslash & sanitized text
-	 */
-	public static function wp_unslash_with_sanitize( $input ) {
-		return sanitize_text_field( wp_unslash( $input ) );
-	}
 }
