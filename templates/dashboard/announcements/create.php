@@ -11,7 +11,7 @@
                 </a>
             </div>
         </div>
-        <div class="modal-container">
+        <div class="tutor-modal-container">
             <form action="" class="tutor-announcements-form">
                 <?php tutor_nonce_field(); ?>
                 <div class="tutor-form-group">

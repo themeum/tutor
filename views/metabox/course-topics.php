@@ -57,7 +57,7 @@
                     </div>
                 </div>
 
-                <div class="tutor-modal-body modal-container"></div>
+                <div class="tutor-modal-body tutor-modal-container"></div>
 
                 <div class="tutor-modal-footer">
                     <div>
@@ -95,7 +95,7 @@
                     </button>
                 </div>
 
-                <div class="tutor-modal-body modal-container"></div>
+                <div class="tutor-modal-body tutor-modal-container"></div>
                 
                 <div class="tutor-modal-footer">
                     <button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
@@ -123,7 +123,7 @@
                     </button>
                 </div>
                 
-                <div class="tutor-modal-body modal-container"></div>
+                <div class="tutor-modal-body tutor-modal-container"></div>
 
                 <div class="tutor-modal-footer">
                     <button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>

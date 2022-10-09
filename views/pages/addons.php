@@ -1,17 +1,30 @@
 <?php
-$current_page = tutor_utils()->avalue_dot( 'tab', tutor_sanitize_data($_GET) );
+/**
+ * Tutor available addons
+ *
+ * @package Tutor\Views
+ */
+
+$current_page = tutor_utils()->avalue_dot( 'tab', tutor_sanitize_data( $_GET ) );
 $page_name    = $current_page ? $current_page : 'addons';
 ?>
 
 <div class="wrap plugin-install-tab-featured tutor-addons">
-	<h1 class="wp-heading-inline"><?php _e( 'Tutor Add-ons' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Tutor Add-ons' ); ?></h1>
 
 	<hr class="wp-header-end">
 
 	<div class="wp-filter">
 		<ul class="filter-links">
-			<li class="tutor-available-addons <?php echo esc_attr( $page_name === 'addons' ? 'current' : '' ); ?> "><a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-addons' ) ); ?>" aria-current="page"><?php _e( 'Plugins', 'tutor' ); ?></a> </li>
-			<li class="tutor-available-themes <?php echo esc_attr( $page_name === 'themes' ? 'current' : '' ); ?>"><a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-addons&tab=themes' ) ); ?>"><?php _e( 'Themes', 'tutor' ); ?></a> </li>
+			<li class="tutor-available-addons <?php echo esc_attr( 'addons' === $page_name ? 'current' : '' ); ?> ">
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-addons' ) ); ?>" aria-current="page"><?php esc_html_e( 'Plugins', 'tutor' ); ?>
+				</a>
+			</li>
+			<li class="tutor-available-themes <?php echo esc_attr( $page_name === 'themes' ? 'current' : '' ); ?>">
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-addons&tab=themes' ) ); ?>">
+					<?php esc_html_e( 'Themes', 'tutor' ); ?>
+				</a>
+			</li>
 		</ul>
 	</div>
 
@@ -33,7 +46,17 @@ $page_name    = $current_page ? $current_page : 'addons';
 				?>
 
 				<p class="tutor-addons-last-checked-time">
-					<?php echo wp_sprintf( __( 'Last checked %1$s ago, It will check again after %2$s from now' ), human_time_diff( $last_checked_time ), human_time_diff( tutor_time(), $last_checked_time + 6 * HOUR_IN_SECONDS ) ); ?>
+					<?php
+						$last_checked_human_time_diff       = human_time_diff( $last_checked_time );
+						$last_checked_human_time_diff_hours = human_time_diff( tutor_time(), $last_checked_time + 6 * HOUR_IN_SECONDS );
+
+						$text  = _x( 'Last checked', 'addon-last-checked', 'tutor' );
+						$text .= $last_checked_human_time_diff;
+						$text .= _x( 'ago, It will check again after', 'addon-last-checked', 'tutor' );
+						$text .= $last_checked_human_time_diff_hours;
+						$text .= _x( 'from now', 'addon-last-checked', 'tutor' );
+						echo esc_html( $text );
+					?>
 				</p>
 
 				<div id="the-list">
@@ -56,13 +79,17 @@ $page_name    = $current_page ? $current_page : 'addons';
 									<div class="action-links">
 										<ul class="plugin-action-buttons">
 											<li><a href="<?php echo esc_url( $addon->product_url ); ?>" class="button button-primary activate-now"
-												target="_blank">  <?php _e( 'Buy Now', 'tutor' ); ?></a></li>
+												target="_blank">  <?php esc_html_e( 'Buy Now', 'tutor' ); ?></a></li>
 
 											<li>
-												<?php
-												echo '<span class="addon-regular-price"><del>' . $addon->regular_price . '</del></span>';
-												echo '<span class="addon-current-price">' . $addon->price . '</span>';
-												?>
+												<span class="addon-regular-price">
+													<del>
+														<?php echo esc_html( $addon->regular_price ); ?>
+													</del>
+												</span>
+												<span class="addon-current-price">
+													<?php echo esc_html( $addon->price ); ?>
+												</span>
 											</li>
 
 										</ul>
@@ -74,23 +101,25 @@ $page_name    = $current_page ? $current_page : 'addons';
 									</div>
 								</div>
 								<div class="plugin-card-bottom">
-									<?php
-										if ( $addon->version ) {
-											echo '<div class="plugin-version tutor-d-inline-block"> ' . __( 'Version', 'tutor' ) . ' : ' . esc_attr( $addon->version ) . '</div>';
-										}
-									?>
+									<?php if ( $addon->version ) : ?>
+										<div class="plugin-version tutor-d-inline-block">
+											<?php
+												echo esc_html__( 'Version:', 'tutor' ) . esc_html( $addon->version );
+											?>
+										</div>
+									<?php endif; ?>
 								</div>
 							</div>
 							<?php
 						}
 					} else {
-						echo sprintf( __( 'No %s currently avaialable', 'tutor' ), $page_name );
+						echo esc_html( "No {$page_name} currently available" );
 					}
 					?>
 				</div>
 				<?php
 			} else {
-				echo sprintf( __( 'No %s currently avaialable', 'tutor' ), $page_name );
+				echo esc_html( "No {$page_name} currently available" );
 			}
 			?>
 
