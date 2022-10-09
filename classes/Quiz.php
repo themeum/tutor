@@ -663,7 +663,7 @@ class Quiz {
             'attempt_id'	=> $attempt_id,
             'user_id'		=> $student_id,
 			'context'		=> $context,
-			'back_url'		=> esc_url( Input::post( 'back_url' ) )
+			'back_url'		=> Input::post( 'back_url' )
         ));
 		wp_send_json_success( array( 'html' => ob_get_clean() ) );
 	}
