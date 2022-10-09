@@ -24,6 +24,7 @@ class Input {
 	const TYPE_STRING    = 'string';
 	const TYPE_INT       = 'int';
 	const TYPE_NUMERIC   = 'numeric';
+	const TYPE_BOOL      = 'bool';
 	const TYPE_TEXTAREA  = 'textarea';
 	const TYPE_KSES_POST = 'kses-post';
 
@@ -60,6 +61,9 @@ class Input {
 		}
 		if ( self::TYPE_KSES_POST === $type ) {
 			return wp_kses_post( $value );
+		}
+		if ( self::TYPE_BOOL === $type ) {
+			return in_array( strtolower( $value ), array( '1', 'true', 'on' ) );
 		}
 
 		return sanitize_text_field( wp_unslash( $value ) );
