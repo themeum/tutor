@@ -26,7 +26,7 @@ window.jQuery(document).ready(function($){
                 $that.addClass('is-loading');
             },
             success: function (data) {
-                $('.tutor-assignment-modal-wrap .modal-container').html(data.data.output);
+                $('.tutor-assignment-modal-wrap .tutor-modal-container').html(data.data.output);
                 $('.tutor-assignment-modal-wrap').addClass('tutor-is-active');
                 
                 /**

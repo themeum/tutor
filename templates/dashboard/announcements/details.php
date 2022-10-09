@@ -4,7 +4,7 @@
         <a href="#" class="tutor-announcement-close-btn">
             <i class="tutor-icon-times"></i>
         </a>
-        <div class="modal-container tutor-announcement-details-container">
+        <div class="tutor-modal-container tutor-announcement-details-container">
             <div class="tutor-announcement-big-icon">
                 <i class="tutor-icon-bullhorn"></i>
             </div>
