@@ -1008,7 +1008,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function checking_nonce( $request_method = null ) {
-		! $request_method ? $request_method = $_SERVER['REQUEST_METHOD'] : 0;
+		! $request_method ? $request_method = sanitize_text_field( $_SERVER['REQUEST_METHOD'] ) : 0;
 
 		$data        = strtolower( $request_method ) === 'post' ? $_POST : $_GET;
 		$nonce_value = sanitize_text_field( $this->array_get( tutor()->nonce, $data, null ) );
