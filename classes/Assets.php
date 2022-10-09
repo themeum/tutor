@@ -76,8 +76,8 @@ class Assets {
 		$post_type = get_post_type( $post_id );
 
 		$query_vars = $wp_query->query_vars;
-		if ( is_admin() && isset( $_GET['page'] ) ) {
-			$current_page = $_GET['page'];
+		if ( is_admin() && Input::has( 'page' ) ) {
+			$current_page = Input::get( 'page' );
 		} else {
 			$current_page = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
 		}
