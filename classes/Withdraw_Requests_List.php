@@ -122,10 +122,11 @@ class Withdraw_Requests_List {
 	 */
 	public function update_withdraw_status() {
 		tutor_utils()->checking_nonce();
-		$status         = isset( $_POST['action-type'] ) ? $_POST['action-type'] : '';
-		$withdraw_id    = isset( $_POST['withdraw-id'] ) ? $_POST['withdraw-id'] : '';
-		$reject_type    = isset( $_POST['reject-type'] ) ? $_POST['reject-type'] : '';
-		$reject_comment = isset( $_POST['reject-comment'] ) ? $_POST['reject-comment'] : '';
+		$status         = Input::post( 'action-type', '' );
+		$withdraw_id    = Input::post( 'withdraw-id', '' );
+		$reject_type    = Input::post( 'reject-type', '' );
+		$reject_comment = Input::post( 'reject-comment', '' );
+		
 		if ( '' === $withdraw_id ) {
 			return false;
 		} else {
