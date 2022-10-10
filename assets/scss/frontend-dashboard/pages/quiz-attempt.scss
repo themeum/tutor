@@ -4,19 +4,16 @@
         th {
             white-space: break-spaces;
         }
-        
+
         th,
         td {
             vertical-align: middle;
         }
-        
+
         th,
         td {
             &:first-child {
                 width: 15%;
-                white-space: break-spaces;
-
-
                 @include breakpoint-min(1366) {
                     width: 25%;
                 }
