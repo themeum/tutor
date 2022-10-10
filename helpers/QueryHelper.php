@@ -343,16 +343,20 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	private static function prepare_set_clause( array $data ) {
-		$set = '';
+	public static function prepare_set_clause( array $data ) {
+		$set   = '';
 		foreach ( $data as $key => $value ) {
+			if ( $key === array_key_first ( $data ) ) {
+				$set .= "SET ";
+			}
 			// Multi dimension not allowed.
 			if ( is_array( $value ) ) {
 				continue;
 			}
 			$value = sanitize_text_field( $value );
-			$set  .= is_numeric( $value ) ? "SET $key = $value " : "SET $key = ' " . $value . " ' ";
+			$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value ."'";
+			$set .= ",";
 		}
-		return $set;
+		return rtrim( $set, ',' );
 	}
 }

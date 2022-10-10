@@ -55,4 +55,8 @@ class UtilsTest extends \WP_UnitTestCase {
 		$this->assertEquals( 2, $index3 );
 		$this->assertEquals( $arr3[ $index3 ]['key'], $new_item['key'] );
 	}
+
+	public function test_wp() {
+		echo "hello";
+	}
 }
