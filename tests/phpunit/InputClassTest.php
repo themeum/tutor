@@ -10,6 +10,50 @@ use TUTOR\Input;
  */
 class InputClassTest extends \WP_UnitTestCase {
 
+	/**
+	 * Without GET, POST only sanitize data
+	 *
+	 * @return void
+	 */
+	public function test_sanitize_method() {
+		$this->assertEquals( 'hello', Input::sanitize( ' hello ' ) );
+		$this->assertEquals( 'hello world', Input::sanitize( ' hello <br> <h1> world' ) );
+
+		$this->assertEquals( 0, Input::sanitize( ' hello ', 1, Input::TYPE_INT ) );
+		$this->assertEquals( true, Input::sanitize( 'on', true, Input::TYPE_BOOL ) );
+
+		// seqential array sanitize
+		$this->assertEquals( array(), Input::sanitize( null, array(), Input::TYPE_ARRAY ) );
+		$this->assertEquals( array(), Input::sanitize( null, '', Input::TYPE_ARRAY ) );
+
+		$arr    = array( 'a <i>', 'b <h1>', 'c ' );
+		$expect = array( 'a', 'b', 'c' );
+		$this->assertEquals( $expect, Input::sanitize( $arr, array(), Input::TYPE_ARRAY ) );
+
+		$arr    = array( 'a <i>', '22', 'c ' );
+		$expect = array( 'a', 22, 'c' );
+		$this->assertEquals( $expect, Input::sanitize( $arr, array(), Input::TYPE_ARRAY ) );
+
+		// assoc array sanitize
+		$assoc  = array(
+			" name \n "  => '<b>Karim</b>',
+			'age<br>' => '33',
+		);
+		$expect = array(
+			'name' => 'Karim',
+			'age'  => 33,
+		);
+		$this->assertEquals( $expect, Input::sanitize( $assoc, array(), Input::TYPE_ARRAY ) );
+	}
+
+	public function test_array_value() {
+		// default value must be an array
+		$this->assertEquals( array(), Input::post( 'person', '', Input::TYPE_ARRAY ) );
+
+		$_POST['ids'] = array( '2', 5, 6 );
+		$this->assertEquals( array( 2, 5, 6 ), Input::post( 'ids', array(), Input::TYPE_ARRAY ) );
+	}
+
 	public function test_default_value() {
 		$this->assertEquals( null, Input::get( 'name' ) );
 		$this->assertEquals( null, Input::post( 'name' ) );
@@ -67,18 +111,18 @@ class InputClassTest extends \WP_UnitTestCase {
 		$this->assertEquals( 20, Input::get( $key, 0, Input::TYPE_NUMERIC ) );
 	}
 
-	public function test_text_input() {
+	public function test_text_value() {
 		$unsanitized_val = "<h1>hi</h1> \n   ";
 		$_GET['name']    = $unsanitized_val;
 		$val             = Input::get( 'name' );
 		$this->assertEquals( 'hi', $val );
 	}
 
-	public function test_textarea_input() {
+	public function test_textarea_value() {
 		$unsanitized_val = "<h1>hi</h1> \n How Are you?";
 		$_GET['name']    = $unsanitized_val;
 		$val             = Input::get( 'name', '', Input::TYPE_TEXTAREA );
-		
+
 		$expected = "hi \n How Are you?";
 		$this->assertEquals( $expected, $val );
 	}
