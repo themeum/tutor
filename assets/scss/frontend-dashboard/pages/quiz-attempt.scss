@@ -1,38 +1,26 @@
-// @todo: to be removed
+/* tutor-table.tutor-table-quiz-attempts */
+.tutor-table.tutor-table-quiz-attempts {
+    tr {
+        th {
+            white-space: break-spaces;
+        }
+        
+        th,
+        td {
+            vertical-align: middle;
+        }
+        
+        th,
+        td {
+            &:first-child {
+                width: 15%;
+                white-space: break-spaces;
 
-// table.my-quiz-attempts {
-// 	thead {
-// 		th {
-// 			@include breakpoint-min(desktop-lg) {
-// 				&:last-child {
-// 					> * {
-// 						display: none;
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// 	tr {
-// 		th {
-// 			white-space: unset;
-// 			padding-top: 16px;
-// 			padding-bottom: 16px;
-// 			&:first-child {
-// 				width: 30%;
-// 			}
-// 			span {
-// 				line-height: 131%;
-// 				display: inline-block;
-// 			}
-// 		}
-// 	}
-// 	tbody {
-// 		tr {
-// 			td {
-// 				.td-statement-info {
-// 					padding-right: 20px;
-// 				}
-// 			}
-// 		}
-// 	}
-// }
+
+                @include breakpoint-min(1366) {
+                    width: 25%;
+                }
+            }
+        }
+    }
+}

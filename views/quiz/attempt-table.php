@@ -30,7 +30,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 						}
 						?>
 							
-						<th style="<?php echo $key == 'quiz_info' ? 'width: 30%;' : ''; ?>"><?php echo $column; ?></th>
+						<th><?php echo $column; ?></th>
 					<?php endforeach; ?>
 				</tr>
 			</thead>
@@ -94,10 +94,10 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 									<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
 								<?php elseif ( $key == 'quiz_info' ) : ?>
 									<div>
-										<div class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
+										<div class="tutor-fs-7 tutor-fw-normal">
 											<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
 										</div>
-										<div class="tutor-mt-8">
+										<div class="tutor-mt-4">
 											<?php
 												// For admin panel
 											if ( is_admin() ) {
@@ -116,14 +116,14 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											}
 											?>
 										</div>
-										<div class="tutor-fs-7 tutor-mt-8">
+										<!-- <div class="tutor-fs-7 tutor-mt-8">
 											<?php
 												$attempt_user = get_userdata( $attempt->user_id );
 												$user_name    = $attempt_user ? $attempt_user->display_name : '';
 											?>
 											<span class="tutor-color-secondary"><?php _e( 'Student:', 'tutor' ); ?></span>
 											<span class="tutor-fw-normal tutor-color-muted"><?php echo $context == 'backend-dashboard-students-attempts' ? $user_name : esc_attr( isset( $attempt->display_name ) ? $attempt->display_name : $user_name ); ?></span>
-										</div>
+										</div> -->
 										<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
 									</div>
 								<?php elseif ( $key == 'course' ) : ?>
@@ -137,7 +137,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								<?php elseif ( $key == 'incorrect_answer' ) : ?>
 									<?php echo $incorrect; ?>
 								<?php elseif ( $key == 'earned_marks' ) : ?>
-									<?php echo round( $attempt->earned_marks ) . ' ( ' . $earned_percentage . '% )'; ?>
+									<?php echo round( $attempt->earned_marks ) . ' (' . $earned_percentage . '%)'; ?>
 								<?php elseif ( $key == 'result' ) : ?>
 									<?php
 									if ( $has_pending ) {
@@ -151,10 +151,10 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								<?php elseif ( $key == 'details' ) : ?>
 									<?php
 										$url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
-										$style = 'flex-direction: column; gap: 10px;';
+										$style = '';
 									?>
-									<div class="tutor-d-inline-flex tutor-align-center td-action-btns" style="<?php echo esc_attr( ! is_admin() ? $style : '' ); ?>">
-										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn  tutor-btn-outline-primary tutor-btn-sm">
+									<div class="tutor-d-inline-flex tutor-align-center" style="<?php echo esc_attr( ! is_admin() ? $style : '' ); ?>">
+										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 											<?php
 											if ( $has_pending && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
 												esc_html_e( 'Review', 'tutor' );
@@ -164,8 +164,8 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											?>
 										</a>
 										<?php if ( ! is_admin() ) : ?>
-										<a href="#" class="tutor-quiz-attempt-delete" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>" data-tutor-modal-target="tutor-common-confirmation-modal">
-											<i class="tutor-icon-trash-can-bold tutor-mr-8" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>"></i>
+										<a href="#" class="tutor-quiz-attempt-delete tutor-iconic-btn tutor-flex-shrink-0 tutor-ml-4" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>" data-tutor-modal-target="tutor-common-confirmation-modal">
+											<i class="tutor-icon-trash-can-line" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>"></i>
 										</a>
 										<?php endif; ?>
 									</div>
