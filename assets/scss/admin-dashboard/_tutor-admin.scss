@@ -131,10 +131,17 @@ body.tutor-backend-tutor_settings #wpbody-content {
 	}
 }
 
-.ui-widget-content {
-	border: 1px solid #aaaaaa;
+.ui-datepicker-buttonpane.ui-widget-content {
+    padding-top: 6px;
 	background: #ffffff;
 	color: #222222;
+	display: flex;
+    gap: 10px;
+	button[class^="ui-datepicker-"] {
+		padding: 2px 6px;
+		border-radius: 3px;
+		display: flex;
+	}
 }
 
 .ui-widget-content a {
