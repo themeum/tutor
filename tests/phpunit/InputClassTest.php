@@ -36,8 +36,8 @@ class InputClassTest extends \WP_UnitTestCase {
 
 		// assoc array sanitize
 		$assoc  = array(
-			" name \n "  => '<b>Karim</b>',
-			'age<br>' => '33',
+			" name \n " => '<b>Karim</b>',
+			'age<br>'   => '33',
 		);
 		$expect = array(
 			'name' => 'Karim',
@@ -52,6 +52,8 @@ class InputClassTest extends \WP_UnitTestCase {
 
 		$_POST['ids'] = array( '2', 5, 6 );
 		$this->assertEquals( array( 2, 5, 6 ), Input::post( 'ids', array(), Input::TYPE_ARRAY ) );
+
+		$this->assertEquals( array( 2, 5, 6 ), Input::sanitize( array( 2, 5, 6 ), array(), Input::TYPE_ARRAY ) );
 	}
 
 	public function test_default_value() {
