@@ -22,9 +22,11 @@
 
 	.tutor-wp-dashboard-filter-item {
 
-		.item-reset,
-		.item-reset-admin {
-			margin-top: 12px;
+		&.item-reset,
+		&.item-reset-admin {
+			.tutor-btn{
+				margin-top: 12px;
+			}
 		}
 
 		&.item-reset-admin {
@@ -62,10 +64,11 @@
 			flex: 1 0 50%;
 			margin-top: 12px;
 		}
-
+		
 		@include breakpoint-min(768) {
 			.tutor-col {
 				flex: 1 0 0%;
+				margin-top: 0;
 			}
 
 		}
