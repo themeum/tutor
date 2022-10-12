@@ -55,7 +55,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 			</select>
 		</div>
 
-		<div class="tutor-col-lg-3 tutor-col-md-6 ">
+		<div class="tutor-col-6 tutor-col-lg-3">
 			<label class="tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
 			<select class="tutor-form-select tutor-announcement-order-sorting" data-search="no">
 				<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
@@ -63,7 +63,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 			</select>
 		</div>
 
-		<div class="tutor-col-lg-3 tutor-col-md-6 tutor-mt-md-0 tutor-mt-12">
+		<div class="tutor-col-6 tutor-col-lg-3">
 			<label class="tutor-form-label"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
 			<div class="tutor-v2-date-picker"></div>
 		</div>
