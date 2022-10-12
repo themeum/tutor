@@ -4,14 +4,9 @@ use TUTOR\Input;
 
 if ( isset( $data ) ) : ?>
 	<div class="tutor-px-20">
-		<?php 
-			$is_bulk_action = isset( $data['bulk_action'] ) && true === $data['bulk_action']; 
-			$admin_class = $is_bulk_action ? 'tutor-col-xxxl-2 tutor-col-md-3 tutor-col-sm-6 tutor-mt-xxxl-0 tutor-mt-12': 'tutor-col';
-			$frontend_class = 'tutor-col-lg-3 tutor-col-md-6 tutor-mt-lg-0 tutor-mt-12';
-		?>
-		<div class="tutor-wp-dashboard-filter tutor-align-center <?php echo $is_bulk_action ? "with-bulk-action tutor-row" : (is_admin() ? "without-bulk-action tutor-row": "frontend tutor-row")?>">
+		<div class="tutor-wp-dashboard-filter tutor-d-flex tutor-align-end tutor-justify-<?php echo esc_attr( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ? 'between' : 'end' ); ?>">
 			<?php if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) : ?>
-				<div class="tutor-wp-dashboard-filter-items <?php echo is_admin() ? "tutor-col-xxxl-2 tutor-col-6" : ""?>">
+				<div class="tutor-wp-dashboard-filter-items tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap">
 					<form id="tutor-admin-bulk-action-form" action method="post">
 						<input type="hidden" name="action" value="<?php echo esc_html( $data['ajax_action'] ); ?>" />
 						<div class="tutor-d-flex">
@@ -42,7 +37,8 @@ if ( isset( $data ) ) : ?>
 				$categories = get_terms( $terms_arg );
 				?>
 
-					<div class="tutor-wp-dashboard-filter-item item-reset <?php echo $is_bulk_action ? "item-reset-admin tutor-col-xxxl-2 tutor-col-sm-6" : (is_admin() ? "tutor-col" : "tutor-col-lg-3 tutor-col-md-6")?> ">
+				<div class="tutor-wp-dashboard-filter-items tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap">
+					<div class="tutor-wp-dashboard-filter-item item-reset">
 						<label class="tutor-form-label">
 						</label>
 						<?php
@@ -67,7 +63,7 @@ if ( isset( $data ) ) : ?>
 						}
 
 						?>
-						<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $url ); ?>">
+						<a class="tutor-btn tutor-btn-ghost tutor-mt-28" href="<?php echo esc_url( $url ); ?>">
 							<i class="tutor-icon-refresh tutor-mr-8" area-hidden="true"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
 						</a>
 					</div>
@@ -79,7 +75,7 @@ if ( isset( $data ) ) : ?>
 					$category_slug = Input::get( 'category', '' );
 					?>
 					<?php if ( isset( $data['course_filter'] ) && true === $data['course_filter'] ) : ?>
-						<div class="tutor-wp-dashboard-filter-item <?php echo is_admin() ? "{$admin_class}" : "{$frontend_class}"?>">
+						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Course', 'tutor' ); ?>
 							</label>
@@ -100,7 +96,7 @@ if ( isset( $data ) ) : ?>
 						</div>
 					<?php endif; ?>
 					<?php if ( isset( $data['category_filter'] ) && true === $data['category_filter'] ) : ?>
-						<div class="tutor-wp-dashboard-filter-item <?php echo is_admin() ? "{$admin_class}" : "{$frontend_class}"?>">
+						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Category', 'tutor' ); ?>
 							</label>
@@ -122,7 +118,7 @@ if ( isset( $data ) ) : ?>
 					<?php endif; ?>
 
 					<?php if ( ! isset( $data['sort_by'] ) || $data['sort_by'] == true ) : ?>
-						<div class="tutor-wp-dashboard-filter-item <?php echo is_admin() ? "{$admin_class}" : "{$frontend_class}"?>">
+						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Sort By', 'tutor' ); ?>
 							</label>
@@ -136,13 +132,13 @@ if ( isset( $data ) ) : ?>
 							</select>
 						</div>
 					<?php endif; ?>
-					<div class="tutor-wp-dashboard-filter-item <?php echo is_admin() ? "{$admin_class}" : "{$frontend_class}"?>">
+					<div class="tutor-wp-dashboard-filter-item">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Date', 'tutor' ); ?>
 						</label>
 						<div class="tutor-v2-date-picker"></div>
 					</div>
-					<div class="tutor-wp-dashboard-filter-item <?php echo is_admin() ? "{$admin_class}" : "{$frontend_class}"?>">
+					<div class="tutor-wp-dashboard-filter-item">
 						<form action="" method="get" id="tutor-admin-search-filter-form">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Search', 'tutor' ); ?>
@@ -153,6 +149,7 @@ if ( isset( $data ) ) : ?>
 							</div>
 						</form>
 					</div>
+				</div>
 			<?php endif; ?>
 		</div>
 	</div>

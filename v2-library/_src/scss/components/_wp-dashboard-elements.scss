@@ -5,8 +5,10 @@
 }
 
 .tutor-wp-dashboard-filter {
+	gap: 30px;
 	@include breakpoint-max(1300) {
 		flex-wrap: wrap;
+		margin-top: 40px;
 	}
 	@include breakpoint-max(mobile) {
 		flex-direction: row;
@@ -18,61 +20,14 @@
 				width: 100% !important;
 			}
 		}
-	}
-
-	.tutor-wp-dashboard-filter-item {
-
-		.item-reset,
-		.item-reset-admin {
-			margin-top: 12px;
-		}
-
-		&.item-reset-admin {
-			@include breakpoint-min(320) {
-				text-align: right;
-				margin-top: 0;
-			}
-
-			@include breakpoint-min(1600) {
-				align-self: center;
-				margin-top: 30px;
-			}
-		}
-
-	}
-
-	@include breakpoint-min(1600) {
-		.tutor-col-xxxl-auto {
-			flex: 0 0 auto;
-			width: auto;
-		}
-
-		.tutor-col-xxxl-2 {
-			flex: 0 0 auto;
-			width: 16.66667%;
-		}
-
-		.tutor-mt-xxxl-0 {
-			margin-top: 0;
-		}
-	}
-
-	&.without-bulk-action {
-		.tutor-col {
-			flex: 1 0 50%;
-			margin-top: 12px;
-		}
-
-		@include breakpoint-min(768) {
-			.tutor-col {
-				flex: 1 0 0%;
-			}
-
+		&-item {
+			margin-top: 20px;
 		}
 	}
 }
 
 .tutor-wp-dashboard-filter-items {
+	gap: 24px;
 	.tutor-form-label {
 		@extend .text-medium-caption;
 		color: var(--tutor-color-secondary);
