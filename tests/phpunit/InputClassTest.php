@@ -23,6 +23,7 @@ class InputClassTest extends \WP_UnitTestCase {
 		$this->assertEquals( true, Input::sanitize( 'on', true, Input::TYPE_BOOL ) );
 
 		// seqential array sanitize
+		$this->assertEquals( array(), Input::sanitize( null, null, Input::TYPE_ARRAY ) );
 		$this->assertEquals( array(), Input::sanitize( null, array(), Input::TYPE_ARRAY ) );
 		$this->assertEquals( array(), Input::sanitize( null, '', Input::TYPE_ARRAY ) );
 
@@ -36,8 +37,8 @@ class InputClassTest extends \WP_UnitTestCase {
 
 		// assoc array sanitize
 		$assoc  = array(
-			" name \n "  => '<b>Karim</b>',
-			'age<br>' => '33',
+			" name \n " => '<b>Karim</b>',
+			'age<br>'   => '33',
 		);
 		$expect = array(
 			'name' => 'Karim',
@@ -124,6 +125,15 @@ class InputClassTest extends \WP_UnitTestCase {
 		$val             = Input::get( 'name', '', Input::TYPE_TEXTAREA );
 
 		$expected = "hi \n How Are you?";
+		$this->assertEquals( $expected, $val );
+	}
+
+	public function test_kses_post_value() {
+		$unsanitized_val = '<h1>hi</h1><script></script><style></style>';
+		$_POST['name']   = $unsanitized_val;
+		$val             = Input::post( 'name', '', Input::TYPE_KSES_POST );
+
+		$expected = '<h1>hi</h1>';
 		$this->assertEquals( $expected, $val );
 	}
 }
