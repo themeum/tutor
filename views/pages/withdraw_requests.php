@@ -18,7 +18,7 @@ $withdraw = new Withdraw_Requests_List();
  * Short able params
  */
 $order       = Input::get( 'order', 'DESC' );
-$date        = Input::has( 'date' ) ? tutor_get_formated_date( 'Y-m-d' , Input::get( 'date' ) ) : '';
+$date        = Input::has( 'date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'date' ) ) : '';
 $search_term = Input::get( 'search', '' );
 
 /**
@@ -33,14 +33,14 @@ $paged    = Input::get( 'paged', 1, Input::TYPE_INT );
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$args          = array(
-	'status'   => 'all' === $active_tab ? '' : $active_tab,
-	'date'     => $date,
-	'order'    => $order,
-	'search'   => $search_term,
+$args = array(
+	'status' => 'all' === $active_tab ? '' : $active_tab,
+	'date'   => $date,
+	'order'  => $order,
+	'search' => $search_term,
 );
 
-$withdraw_list = WithdrawModel::get_withdrawals_history( null, $args, $offset, $per_page);
+$withdraw_list = WithdrawModel::get_withdrawals_history( null, $args, $offset, $per_page );
 $total         = $withdraw_list->count;
 
 /**
@@ -274,7 +274,11 @@ $filters = array(
 												<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-left">
 													<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center">
 														<span>
-															<?php echo esc_html( '' !== $details['rejects']['reject_comment'] ? $details['rejects']['reject_comment'] : $details['rejects']['reject_type'] ); ?>
+														<?php
+														if ( is_array( $details ) && isset( $details['rejects'] ) ) {
+															echo esc_html( '' !== $details['rejects']['reject_comment'] ? $details['rejects']['reject_comment'] : $details['rejects']['reject_type'] );
+														}
+														?>
 														</span>
 													</div>
 												</div>
@@ -306,15 +310,15 @@ $filters = array(
 					/**
 					 * Prepare pagination data & load template
 					 */
-					if ($total > $per_page) {
-						$pagination_data     = array(
-							'total_items' => $total,
-							'per_page'    => $per_page,
-							'paged'       => $paged,
-						);
-						$pagination_template = tutor()->path . 'views/elements/pagination.php';
-						tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-					}
+				if ( $total > $per_page ) {
+					$pagination_data     = array(
+						'total_items' => $total,
+						'per_page'    => $per_page,
+						'paged'       => $paged,
+					);
+					$pagination_template = tutor()->path . 'views/elements/pagination.php';
+					tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+				}
 				?>
 			</div>
 
@@ -357,7 +361,7 @@ $filters = array(
 							
 							<div class="tutor-d-flex tutor-justify-center tutor-my-48">
 								<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
-									<?php esc_html_e('Cancel', 'tutor'); ?>
+									<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 								</button>
 								<button type="submit" class="tutor-btn tutor-btn-primary tutor-ml-20" data-tutor-modal-submit>
 									<?php esc_html_e( 'Yes, Approve Withdrawal', 'tutor' ); ?>
@@ -415,7 +419,7 @@ $filters = array(
 							
 							<div class="tutor-d-flex tutor-justify-center tutor-my-48">
 								<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
-									<?php esc_html_e('Cancel', 'tutor'); ?>
+									<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 								</button>
 								<button type="submit" class="tutor-btn tutor-btn-primary tutor-ml-20" data-tutor-modal-submit>
 									<?php esc_html_e( 'Yes, Reject Withdrawal', 'tutor' ); ?>
