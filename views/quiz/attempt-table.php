@@ -163,7 +163,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											}
 											?>
 										</a>
-										<?php if ( ! is_admin() ) : ?>
+										<?php if ( ! is_admin() && current_user_can( tutor()->instructor_role ) ) : ?>
 										<a href="#" class="tutor-quiz-attempt-delete tutor-iconic-btn tutor-flex-shrink-0 tutor-ml-4" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>" data-tutor-modal-target="tutor-common-confirmation-modal">
 											<i class="tutor-icon-trash-can-line" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>"></i>
 										</a>
