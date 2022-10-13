@@ -166,7 +166,16 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 												?>
 											<a class="tutor-dropdown-item" href="?<?php echo esc_attr( $params ); ?>">
 												<i class="tutor-icon-share tutor-mr-8" area-hidden="true"></i>
-												<span><?php esc_html_e( 'Submit', 'tutor' ); ?></span>
+												<span>
+													<?php
+													$can_publish_course = current_user_can( 'administrator' ) || (bool) tutor_utils()->get_option( 'instructor_can_publish_course' );
+													if ( $can_publish_course ) {
+														esc_html_e( 'Publish', 'tutor' );
+													} else {
+														esc_html_e( 'Submit', 'tutor' );
+													}
+													?>
+												</span>
 											</a>
 											<?php endif; ?>
 											<!-- # Submit Action -->
