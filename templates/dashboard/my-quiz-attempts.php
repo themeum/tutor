@@ -24,7 +24,7 @@ $current_page  = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset        = ( $current_page - 1 ) * $item_per_page;
 
 // Filter params.
-$course_filter	= Input::get( 'course-id', 0, Input::TYPE_INT );
+$course_filter	= Input::get( 'course-id', '', Input::TYPE_INT );
 $order_filter	= Input::get( 'order', 'DESC' );
 $date_filter	= Input::get( 'date', '' );
 $course_id		= isset( $course_id ) ? $course_id : array();
