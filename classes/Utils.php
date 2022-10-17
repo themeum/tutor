@@ -10,8 +10,6 @@
 
 namespace TUTOR;
 
-use TutorPro\GoogleMeet\Validator\Validator;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -8633,7 +8631,7 @@ class Utils {
 						break;
 					case $google_meet_post_type:
 						if ( \class_exists( '\TutorPro\GoogleMeet\Frontend\Frontend' ) ) {
-							if ( Validator::is_addon_enabled() ) {
+							if ( \TutorPro\GoogleMeet\Validator\Validator::is_addon_enabled() ) {
 								$is_completed = \TutorPro\GoogleMeet\Frontend\Frontend::is_lesson_completed( false, $content->ID, $user_id );
 								if ( $is_completed ) {
 									$completed++;
