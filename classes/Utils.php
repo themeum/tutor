@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use TutorPro\GoogleMeet\Validator\Validator;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -8598,6 +8600,7 @@ class Utils {
 		$quiz_post_type        = 'tutor_quiz';
 		$assignment_post_type  = 'tutor_assignments';
 		$zoom_lesson_post_type = 'tutor_zoom_meeting';
+		$google_meet_post_type = 'tutor-google-meet';
 
 		if ( $contents ) {
 			foreach ( $contents as $content ) {
@@ -8625,6 +8628,16 @@ class Utils {
 							$is_zoom_lesson_completed = \TUTOR_ZOOM\Zoom::is_zoom_lesson_done( '', $content->ID, $user_id );
 							if ( $is_zoom_lesson_completed ) {
 								$completed++;
+							}
+						}
+						break;
+					case $google_meet_post_type:
+						if ( \class_exists( '\TutorPro\GoogleMeet\Frontend\Frontend' ) ) {
+							if ( Validator::is_addon_enabled() ) {
+								$is_completed = \TutorPro\GoogleMeet\Frontend\Frontend::is_lesson_completed( false, $content->ID, $user_id );
+								if ( $is_completed ) {
+									$completed++;
+								}
 							}
 						}
 						break;
