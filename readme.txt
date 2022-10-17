@@ -3,7 +3,7 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.0.1
+Tested up to: 6.0.2
 Requires PHP: 7.0
 Stable tag: 2.1.0
 License: GPLv3
@@ -225,9 +225,44 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.0 - August 25, 2022
+= 2.1.0 - October 17, 2022
 
-Coming soon...
+New: Rich Text Editor is introduced for the Q&A Reply section
+New: Admin can enable/disable the "Overview" and the "Exercise Files" tab from Settings
+New: On the Manual Enrollment page now the students are searchable by Email Address
+New: Dedicated Login page with Shortcode for Login page is Introduced
+New: "Accessing next Course Content  based on Mandatory Pass in a Quiz" feature is introduced, Admin can enable it from Quiz Builder
+New: The instructors will be able to create Online Event over Google Meet
+New: On manual Enrollment to Paid Courses, an Invoice will be automatically generated, therefore, on changing Payment Status, Earning Report will be reflected
+New: Course Duplicating feature is introduced for the front-end Dashboard
+New: Provision to set Course Start and End Time for a Course is Introduced
+New: Feature to Copy a Topic/Quiz/Lesson/Assignment and Paste it inside another Course is Introduced
+Update: Tutor LMS is now compatible with the latest BuddyBoss
+Update: More security improvements are introduced
+Update: Translations are improved on the Front-end Dashboard
+Update: Quiz Builder Design is Improved for better User Experience
+Update: Front-site Quiz Attempts page Design is revamped for a better User Experience
+Fix: Course List page sorting option was not working properly
+Fix: The Assignment Submission page had a design overlap issue
+Fix: "Zoom Meeting Archive" page and the Meeting links were publicly accessible
+Fix: After an exam is graded, the students were getting emails if even this email is disabled from the settings
+Fix: Math formulas were not appearing correctly on the Quiz Attempt pages
+Fix: The top-right Exit button on the Zoom Meeting page was not closing sometimes
+Fix: Assignment deadline was appearing wrong on Calendar when Content Drip is enabled
+Fix: All questions are required, but still, sometimes the last question of a quiz was appearing optional
+Fix: Course List Page pagination had some issues
+Fix: Admin Panel Quiz Attempts page was showing wrong Quiz Attempt count
+Fix: Assignment Report page had minor design issue
+Fix: Enroll date was showing incorrectly on the Student Details page and also report pages
+Fix: Students were not getting On-site Notification for "Q&A Message Answered" cases
+Fix: Minimum Days Before Balance is Available was selectable as "0" which should not go below "1"
+Fix: In the case of Gutenberg Editor the Primary Author was not changeable
+Fix: If "Deduct Fees" option is disabled in the Settings, still the "Fee Description" and "Fee Amount & Type" options were appearing
+Fix: Username was being sent instead of First Name and Last Name on email notifications
+Fix: GradeBook Generation had multiple issues
+Fix: In case of Reveal Mode, answer was not being revealed when there were multiple questions
+Fix: On the Course List page the "Enroll Now" button was not working until it was clicked twice
+Fix: WooCommerce Products were selectable for multiple Courses which was causing errors
 
 = 2.0.9 - August 18, 2022
 
