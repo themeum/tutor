@@ -262,11 +262,23 @@ class CourseModel {
 					)
 				);
 
+				/**
+				 * Delete Google Meet Record Related to Course Topic
+				 * @since 2.1.0
+				 */
+				$wpdb->delete(
+					$wpdb->posts,
+					array(
+						'post_parent' => $topic_id,
+						'post_type'   => 'tutor-google-meet'
+					)
+				);
+
 				wp_delete_post( $topic_id, true );
 			}
 		}
 
-		$child_post_ids = $this->get_post_ids( array( 'tutor_announcements', 'tutor_enrolled', 'tutor_zoom_meeting' ), $post_id );
+		$child_post_ids = $this->get_post_ids( array( 'tutor_announcements', 'tutor_enrolled', 'tutor_zoom_meeting', 'tutor-google-meet' ), $post_id );
 		if ( ! empty( $child_post_ids ) ) {
 			foreach ( $child_post_ids as $child_post_id ) {
 				wp_delete_post( $child_post_id, true );
