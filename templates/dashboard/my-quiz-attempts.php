@@ -6,7 +6,6 @@
  * @link https://themeum.com
  * @package TutorLMS/Templates
  * @since 1.1.2
- * @version 1.6.4
  */
 
 use TUTOR\Input;
