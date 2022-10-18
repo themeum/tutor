@@ -68,6 +68,7 @@ do_action( 'tutor_course/single/before/topics' );
 										$post->post_type 		=== 'tutor_quiz' ? $topic_content_icon = 'tutor-icon-circle-question-mark' : 0;
 										$post->post_type 		=== 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-document-text' : 0;
 										$post->post_type 		=== 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon-brand-zoom' : 0;
+										$post->post_type 		=== 'tutor-google-meet' ? $topic_content_icon = 'tutor-icon-brand-google-meet' : 0;
 										
 										$is_public_course 		= \TUTOR\Course_List::is_public( $course_id );
 										$is_locked 				= ! ( $is_enrolled || $is_preview || $is_public_course );
