@@ -194,7 +194,7 @@ if ( $topics->have_posts() ) {
 								</div>
 								<div class="tutor-d-flex tutor-ml-auto tutor-flex-shrink-0">
 									<?php if ( $show_permalink ) : ?>
-										<?php do_action( 'tutor/zoom/right_icon_area', $post->ID, $lock_icon ); ?>
+										<?php do_action( 'tutor/google_meet/right_icon_area', $post->ID, $lock_icon ); ?>
 									<?php else : ?>
 										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
 									<?php endif; ?>
