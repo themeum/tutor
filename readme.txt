@@ -272,6 +272,12 @@ Fix: On the Course List page, the "Enroll Now" button was not working until it w
 Fix: WooCommerce Products were selectable for multiple Courses which was causing errors
 Fix: Unnecessary backslashes were coming under the Review tab
 
+= 2.0.10 - September 19, 2022
+
+New: Compatibility with PeepSo Social Networking plugin is Introduced
+Update: More security improvement is introduced
+Fix: Zoom meeting list design was partially broken on the frontend dashboard
+
 = 2.0.9 - August 18, 2022
 
 New: Custom Time setting for showing Answer in the Quiz Reveal mode is introduced
