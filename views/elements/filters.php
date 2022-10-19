@@ -63,7 +63,7 @@ if ( isset( $data ) ) : ?>
 						}
 
 						?>
-						<a class="tutor-btn tutor-btn-ghost tutor-mt-28" href="<?php echo esc_url( $url ); ?>">
+						<a class="tutor-btn tutor-btn-ghost tutor-mt-sm-28" href="<?php echo esc_url( $url ); ?>">
 							<i class="tutor-icon-refresh tutor-mr-8" area-hidden="true"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
 						</a>
 					</div>
