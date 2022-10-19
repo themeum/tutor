@@ -37,11 +37,11 @@ class Quiz_Attempts_List {
 	 * Handle dependencies
 	 */
 	public function __construct( $register_hook = true ) {
+
+		$this->page_title = __( 'Quiz Attempts', 'tutor' );
 		if ( ! $register_hook ) {
 			return;
 		}
-
-		$this->page_title = __( 'Quiz Attempts', 'tutor' );
 
 		/**
 		 * Handle bulk action
