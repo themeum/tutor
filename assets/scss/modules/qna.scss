@@ -348,42 +348,47 @@ body.wp-admin {
 }
 
 /* MCE Editor Styles */
-.tutor-quesanswer-askquestion.tutor-qna-reply-editor {
-	.wp-editor-container {
-		border: none;
-	}
-	.mce-tinymce.mce-panel {
-		background: #fff;
-		border: 1px solid #dcdfe6;
-		border-radius: 6px;
-		box-shadow: none;
-	}
-	.mce-toolbar-grp {
-		border-bottom: none;
-		background: transparent;
-	}
-	.mce-top-part::before {
-		box-shadow: 0 1px 0px #cdcfd5;
-	}
+#tutor-course-details-tab-questions {
+	.tutor-qna-reply-editor {
+		.wp-editor-container {
+			border: none;
+		}
+		.mce-tinymce.mce-panel {
+			background: #fff;
+			border: none;
+			> .mce-container-body {
+				border: 1px solid #dcdfe6;
+				border-radius: 6px;
+			}
+			box-shadow: none;
+		}
+		.mce-toolbar-grp {
+			border-bottom: none;
+			background: transparent;
+		}
+		.mce-top-part::before {
+			box-shadow: 0 1px 0px #cdcfd5;
+		}
 
-	.mce-statusbar {
-		border-top: none;
-		> .mce-container-body .mce-path {
-			visibility: hidden;
+		.mce-statusbar {
+			border-top: none;
+			> .mce-container-body .mce-path {
+				visibility: hidden;
+			}
+			&.mce-last {
+				background-color: transparent;
+			}
 		}
-		&.mce-last {
-			background-color: transparent;
-		}
-	}
-	.mce-toolbar {
-		.mce-ico {
-			color: #767c8e;
-			--size: 22px;
-			width: var(--size);
-			height: var(--size);
-			display: flex;
-			align-items: center;
-			justify-content: center;
+		.mce-toolbar {
+			.mce-ico {
+				color: #767c8e;
+				--size: 22px;
+				width: var(--size);
+				height: var(--size);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
 		}
 	}
 }
