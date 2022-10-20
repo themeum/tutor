@@ -18,7 +18,8 @@ function initTinyMCE(selector, plugins = '', tools = '') {
         plugins: plugins,
         toolbar: defaultTools,
         menu: {},
-        menubar: {}
+        menubar: {},
+        relative_urls : false,
     });
 }
 export default initTinyMCE;
