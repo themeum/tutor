@@ -126,8 +126,8 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 							<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 								<?php _e( 'About Lesson', 'tutor' ); ?>
 							</div>
-							<div class="tutor-fs-6 tutor-color-secondary">
-								<?php echo wp_kses_post( str_replace( 'data-mce-style', 'style', get_the_content() ) ); ?>
+							<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
+								<?php the_content(); ?>
 							</div>
 						</div>
 					</div>
