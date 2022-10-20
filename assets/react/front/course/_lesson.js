@@ -1,4 +1,12 @@
 window.jQuery(document).ready($=>{
+    /**
+     * data-mce-style attr rename to style
+     */
+    $('div.tutor-lesson-wrapper [data-mce-style]').each(function(){
+        $(this).attr('style', $(this).attr('data-mce-style'));
+        $(this).removeAttr('data-mce-style');
+    })
+
     $(document).on('click', '.tutor-single-course-lesson-comments button[type="submit"]', function(e){
         e.preventDefault();
         const {__} = wp.i18n;
