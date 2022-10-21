@@ -74,10 +74,7 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 
 	isset( $url_components['query'] ) ? parse_str( $url_components['query'], $output ) : null;
 	
-	$content_str = get_the_content();
-	$has_iframe	 = preg_match('/(<iframe .*?>)/', $content_str );
-
-	$has_lesson_content		= $has_iframe ? $has_iframe : ! in_array( trim( strip_tags( $content_str ) ), array( null, '' ) );
+	$has_lesson_content		= ! in_array( trim( get_the_content() ), array( null, '', '&nbsp;' ) );
 	$has_lesson_attachment	= count( tutor_utils()->get_attachments() ) > 0;
 	$has_lesson_comment		= (int) get_comments_number( $course_content_id );
 	?>
