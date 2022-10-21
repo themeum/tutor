@@ -33,8 +33,8 @@
 
 			if ( get_tutor_option( 'enable_lesson_classic_editor' ) ) {
 				?>
-						<a	class="tutor-btn tutor-btn-link tutor-ml-12" target="_blank" 
-							href="<?php echo esc_url( get_admin_url() . 'post.php?post=' . esc_attr( $post->ID ) . '&action=edit' ); ?>" >
+						<a class="tutor-btn tutor-btn-link tutor-ml-12" target="_blank" 
+							href="<?php echo esc_url( get_admin_url() . 'post.php?post=' . esc_attr( $post->ID ) . '&action=edit' ); ?>" data-lesson-id="<?php echo esc_attr( $post->ID ); ?>" onclick="tutorLessonWPEditor(event)">
 							<i class="tutor-icon-edit tutor-mr-8"></i> <?php echo esc_html_e( 'WP Editor', 'tutor' ); ?>
 						</a>
 					<?php
@@ -82,3 +82,22 @@
 		do_action( 'tutor_lesson_edit_modal_form_after', $post );
 	?>
 </form>
+<script>
+	/**
+	 * Without lesson id don't redirect user to the
+	 * edit
+	 * 
+	 * @since v2.1.1
+	 */
+	function tutorLessonWPEditor(e) {
+		e.preventDefault();
+		const currentTarget = e.currentTarget;
+		lessonId = currentTarget.dataset.lessonId;
+		if (lessonId == 0) {
+			tutor_toast('Warning', 'Please update lesson to edit with WP editor', 'warning');
+			return;
+		} else {
+			window.location.href = currentTarget.href
+		}
+	}
+</script>
