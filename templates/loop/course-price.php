@@ -13,12 +13,18 @@
 
 ?>
 <?php
-	$course_id    = get_the_ID();
-	$button_class = ' tutor-course-list-enroll';
+	$course_id      = get_the_ID();
+	$button_class   = ' tutor-course-list-enroll';
+	$login_url_attr = '';
+
+	if ( ! tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ) {
+		$login_url_attr = 'data-login_url="' . esc_url( wp_login_url() ) . '"';
+	}
+	
 	if ( ! is_user_logged_in() ) {
 		$button_class = ' tutor-open-login-modal';
 	}
-	$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
+	$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a ' . $login_url_attr . ' href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
 	$free_html  = $enroll_btn;
 if ( tutor_utils()->is_course_purchasable() ) {
 	$enroll_btn = tutor_course_loop_add_to_cart( false );
