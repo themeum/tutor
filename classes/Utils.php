@@ -3573,7 +3573,7 @@ class Utils {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		return $output;
+		return apply_filters( 'tutor_text_avatar', $output );
 	}
 
 	/**
