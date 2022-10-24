@@ -94,7 +94,7 @@
 		const currentTarget = e.currentTarget;
 		lessonId = currentTarget.dataset.lessonId;
 		if (lessonId == 0) {
-			tutor_toast('Warning', 'Please update lesson to edit with WP editor', 'warning');
+			tutor_toast('Warning', 'You can access and edit this Lesson with WP Editor only when you update this Lesson at first.', 'warning');
 			return;
 		} else {
 			window.location.href = currentTarget.href
