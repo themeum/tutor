@@ -225,7 +225,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.1 - October 24, 2022
+= 2.1.1 - October 25, 2022
 
 Update: More security improvement is introduced
 Update: PeepSo Profile Avatar compatibility is introduced
