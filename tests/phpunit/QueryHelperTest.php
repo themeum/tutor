@@ -54,4 +54,21 @@ class QueryHelperTest extends \WP_UnitTestCase {
 		$this->assertSame( $expect4, trim( $actual4 ) );
 	}
 
+	/**
+	 * Test QueryHelper::prepare_in_clause
+	 *
+	 * @return void
+	 * @since 2.1.1
+	 */
+	public function test_prepare_in_clause() {
+		$expected_query = "SELECT * from abc WHERE id IN(3,4,5,'hello')";
+		$raw_sql_query  = "SELECT * from abc WHERE id IN(" . QueryHelper::prepare_in_clause( array( 3,4,5,'hello' ) ) . ")";
+		$this->assertEquals( $expected_query, $raw_sql_query );
+
+		$this->assertEquals( "'A','B','C'", QueryHelper::prepare_in_clause( array( 'A','B','C' ) ) );
+		$this->assertEquals( '10,20,40', QueryHelper::prepare_in_clause( array( 10,20,40 ) ) );
+		$this->assertEquals( "'jhon',3,4.55,'adam'", QueryHelper::prepare_in_clause( array( 'jhon', 3, 4.55, 'adam' ) ) );
+		$this->assertEquals( '2,3,5.996', QueryHelper::prepare_in_clause( array( 2, 3, 5.996 ) ) );
+	}
+
 }

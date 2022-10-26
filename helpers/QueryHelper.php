@@ -359,4 +359,33 @@ class QueryHelper {
 		}
 		return rtrim( $set, ',' );
 	}
+
+	/**
+	 * Make sanitized SQL IN clause value from an array
+	 *
+	 * @param array $arr a sequentital array.
+	 * @return string
+	 * @since 2.1.1
+	 */
+	public static function prepare_in_clause( array $arr ) {
+		$escaped = array_map(
+			function( $value ) {
+				global $wpdb;
+				$escaped_value = null;
+				if ( is_int( $value ) ) {
+					$escaped_value = $wpdb->prepare( '%d', $value );
+				} else if( is_float( $value ) ) {
+					list( $whole, $decimal ) = explode( '.', $value );
+					$expression = '%.'. strlen( $decimal ) . 'f';
+					$escaped_value = $wpdb->prepare( $expression, $value );
+				} else {
+					$escaped_value = $wpdb->prepare( '%s', $value );
+				}
+				return $escaped_value;
+			},
+			$arr
+		);
+	
+		return implode( ',', $escaped );
+	}
 }
