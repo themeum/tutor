@@ -151,6 +151,8 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_update_course_content_order', array($this, 'tutor_update_course_content_order') );
 
 		add_action( 'wp_ajax_tutor_get_wc_product', array( $this, 'tutor_get_wc_product' ) );
+
+		add_action( 'wp_ajax_tutor_course_enrollment', array( $this, 'course_enrollment' ) );
 	}
 
 	/**
@@ -164,6 +166,21 @@ class Course extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 		$product_id	= Input::post( 'product_id' );
 		$product    = wc_get_product( $product_id );
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+		/**
+		 * If selected product is already linked with
+		 * a course & it is not the current course the
+		 * return error
+		 *
+		 * @since v2.1.0
+		 */
+		if ( is_object( $is_linked_with_course ) && $is_linked_with_course->post_id != $course_id ) {
+			wp_send_json_error(
+				__( 'One product can not be added to multiple course!', 'tutor' )
+			);
+		}
 
 		if ( $product ) {
 			$data = array(
@@ -464,20 +481,20 @@ class Course extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		// Check required fields
-		if (empty($_POST['topic_title']) ) {
-			wp_send_json_error(array('message' => __('Topic title is required!', 'tutor')));
+		if ( empty( Input::post( 'topic_title' ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Topic title is required!', 'tutor' ) ) );
 		}
 
 		// Gather parameters
-		$course_id = (int) tutor_utils()->avalue_dot('topic_course_id', $_POST);
-		$topic_id = (int) tutor_utils()->avalue_dot('topic_id', $_POST);
-		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
-		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
+		$course_id			 = Input::post( 'topic_course_id', 0, Input::TYPE_INT );
+		$topic_id			 = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$topic_title   		 = Input::post( 'topic_title' );
+		$topic_summery 		 = wp_kses_post( $_POST['topic_summery'] );
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id, $topic_id);
 
 		// Validate if user can manage the topic
-		if(!tutor_utils()->can_user_manage('course', $course_id) || ($topic_id && !tutor_utils()->can_user_manage('topic', $topic_id))) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) || ( $topic_id && !tutor_utils()->can_user_manage('topic', $topic_id ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
 		// Create payload to create/update the topic
@@ -496,7 +513,7 @@ class Course extends Tutor_Base {
 		ob_start();
 		include  tutor()->path.'views/metabox/course-contents.php';
 
-		wp_send_json_success(array(
+		wp_send_json_success( array(
 			'topic_title' => $topic_title,
 			'course_contents' => ob_get_clean()
 		));
@@ -691,26 +708,47 @@ class Course extends Tutor_Base {
 		}
 	}
 
+	/**
+	 * Delete course delete from frontend dashboard
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
 	public function tutor_delete_dashboard_course(){
 		tutor_utils()->checking_nonce();
 
-		$course_id = intval(sanitize_text_field($_POST['course_id']));
-		if(!tutor_utils()->can_user_manage('course', $course_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) ) {
+			wp_send_json_error( array( 'message'=> __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		wp_delete_post($course_id, true);
+		CourseModel::delete_course( $course_id );
 		wp_send_json_success();
 	}
 
-
+	/**
+	 * Main author change from gutenberg editor
+	 *
+	 * @param array $data
+	 * @param array $postarr
+	 * @return void
+	 * 
+	 * @since 2.0.0
+	 */
 	public function tutor_add_gutenberg_author( $data, $postarr ) {
-		global $wpdb;
+		$gutenberg_enabled	= tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
+		$post_type			= $postarr['post_type'];
+		$courses_post_type	= tutor()->course_post_type;
+		
+		if ( false === $gutenberg_enabled && $post_type !== $courses_post_type ) {
+			return $data;
+		}
 
-		$courses_post_type = tutor()->course_post_type;
-		$post_type = tutor_utils()->array_get('post_type', $postarr);
-
-		if ( $courses_post_type === $post_type ) {
+		/**
+		 * Only admin can change main author
+		 */
+		if ( $courses_post_type === $post_type && ! current_user_can( 'administrator' ) ) {
+			global $wpdb;
 			$post_ID     = (int) tutor_utils()->avalue_dot( 'ID', $postarr );
 			$post_author = (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $post_ID ) );
 
@@ -1035,7 +1073,7 @@ class Course extends Tutor_Base {
 			unset($items['reviews']);
 		}
 
-		// Whether enrolment require
+		// Whether enrollment require
 		$is_enrolled = tutor_utils()->is_enrolled();
 
 		return array_filter($items, function($item) use($is_enrolled) {
@@ -1270,7 +1308,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Delete associated enrolment
+	 * Delete associated enrollment
 	 *
 	 * @since v.1.8.2
 	 */
@@ -1328,6 +1366,34 @@ class Course extends Tutor_Base {
 				tutor_utils()->do_enroll( $course_id, $order_id = 0, $user_id );
 				do_action( 'guest_attempt_after_enrollment', $course_id );
 			}
+		}
+	}
+
+	/**
+	 * Course enrollment
+	 * 
+	 * On the course list page if user hit enroll course
+	 * button then do enrollment
+	 * 
+	 * @since v.2.1.0
+	 * 
+	 * @return void  wp_json response
+	 */
+	public function course_enrollment() {
+		tutor_utils()->checking_nonce();
+
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$user_id   = get_current_user_id();
+
+		if ( $course_id ) {
+			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
+			if ( $enroll ) {
+				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
+			} else {
+				wp_send_json_error( __( 'Enrollment failed, please try again!', 'tutor' ) );
+			}
+		} else {
+			wp_send_json_error( __( 'Invalid course ID', 'tutor' ) );
 		}
 	}
 }

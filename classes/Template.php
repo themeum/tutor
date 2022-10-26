@@ -358,7 +358,7 @@ class Template extends Tutor_Base {
 	 *
 	 * @since v.1.0.0
 	 *
-	 * If course public then enrolment not required
+	 * If course public then enrollment not required
 	 *
 	 * @since v2.0.2
 	 */

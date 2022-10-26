@@ -1,11 +1,12 @@
 <?php
 namespace TUTOR;
 
-use Tutor\Cache\QuizAttempts;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use Tutor\Cache\QuizAttempts;
+use Tutor\Models\QuizModel;
 
 class Quiz_Attempts_List {
 
@@ -35,12 +36,13 @@ class Quiz_Attempts_List {
 	/**
 	 * Handle dependencies
 	 */
-	public function __construct($register_hook=true) {
+	public function __construct( $register_hook = true ) {
+
 		$this->page_title = __( 'Quiz Attempts', 'tutor' );
-		if(!$register_hook) {
+		if ( ! $register_hook ) {
 			return;
 		}
-		
+
 		/**
 		 * Handle bulk action
 		 *
@@ -48,6 +50,15 @@ class Quiz_Attempts_List {
 		 */
 		add_action( 'wp_ajax_tutor_quiz_attempts_bulk_action', array( $this, 'quiz_attempts_bulk_action' ) );
 		add_action( 'wp_ajax_tutor_quiz_attempts_count', array( $this, 'get_quiz_attempts_stat' ) );
+
+		/**
+		 * Delete quiz attempt cache
+		 *
+		 * @since 2.1.0
+		 */
+		add_action( 'tutor_quiz/attempt_ended', array( new QuizAttempts(), 'delete_cache' ) );
+		add_action( 'tutor_quiz/attempt_deleted', array( new QuizAttempts(), 'delete_cache' ) );
+		add_action( 'tutor_quiz/answer/review/after', array( new QuizAttempts(), 'delete_cache' ) );
 	}
 
 	/**
@@ -63,8 +74,8 @@ class Quiz_Attempts_List {
 
 		$user_id = get_current_user_id();
 		// Set query based on action tab.
-		$pass_mark      = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
-		$pending_count  = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
+		$pass_mark     = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
+		$pending_count = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
 
 		$pass_clause = " AND quiz_attempts.earned_marks >= {$pass_mark}  ";
 
@@ -77,7 +88,7 @@ class Quiz_Attempts_List {
 			$user_clause = "AND quiz.post_author = {$user_id}";
 		}
 
-		$count 			= array();
+		$count          = array();
 		$is_ajax_action = isset( $_POST['action'] ) && 'tutor_quiz_attempts_count' === $_POST['action'];
 		if ( $is_ajax_action ) {
 			$attempt_cache = new QuizAttempts();
@@ -86,7 +97,7 @@ class Quiz_Attempts_List {
 				$count = $attempt_cache->get_cache();
 			} else {
 
-				$count = $wpdb->get_col(
+				$count               = $wpdb->get_col(
 					$wpdb->prepare(
 						"SELECT COUNT( DISTINCT attempt_id)
 							 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
@@ -138,18 +149,17 @@ class Quiz_Attempts_List {
 				);
 				$attempt_cache->set_cache();
 			}
-
 		}
 
-		$count_pass 	= $count[0] ?? 0;
-		$count_fail 	= $count[1] ?? 0;
-		$count_pending  = $count[2] ?? 0;
+		$count_pass    = $count[0] ?? 0;
+		$count_fail    = $count[1] ?? 0;
+		$count_pending = $count[2] ?? 0;
 
-		$all 	 = $count_pass + $count_fail + $count_pending;
-		$pass 	 = $count_pass;
-		$fail 	 = $count_fail;
-		$pending = $count_pending;
-		$response = compact('all', 'pass', 'fail', 'pending');
+		$all      = $count_pass + $count_fail + $count_pending;
+		$pass     = $count_pass;
+		$fail     = $count_fail;
+		$pending  = $count_pending;
+		$response = compact( 'all', 'pass', 'fail', 'pending' );
 		return $is_ajax_action ? wp_send_json_success( $response ) : $response;
 	}
 
@@ -163,10 +173,10 @@ class Quiz_Attempts_List {
 	 * @since v2.0.0
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
-		$url     = get_pagenum_link();
-		$stats 	 = $this->get_quiz_attempts_stat();
-		
-		$tabs 	 = array(
+		$url   = get_pagenum_link();
+		$stats = $this->get_quiz_attempts_stat();
+
+		$tabs = array(
 			array(
 				'key'   => 'all',
 				'title' => __( 'All', 'tutor' ),
@@ -192,7 +202,7 @@ class Quiz_Attempts_List {
 				'url'   => $url . '&data=pending',
 			),
 		);
-		
+
 		return $tabs;
 	}
 
@@ -212,7 +222,7 @@ class Quiz_Attempts_List {
 
 	/**
 	 * Count enrolled number by status & filters
-	 * Count all enrolment | approved | cancelled
+	 * Count all enrollment | approved | cancelled
 	 *
 	 * @param string $status | required.
 	 * @param string $user_id selected user id | optional.
@@ -221,12 +231,12 @@ class Quiz_Attempts_List {
 	 * @return int
 	 * @since v2.0.0
 	 */
-	protected static function get_instructor_number( $status = '', $user_id = '', $course_id = '', $attempt_id = '', $date = '', $search_term = ''  ): int {
+	protected static function get_instructor_number( $status = '', $user_id = '', $course_id = '', $attempt_id = '', $date = '', $search_term = '' ): int {
 		global $wpdb;
 		$status      = sanitize_text_field( $status );
 		$course_id   = sanitize_text_field( $course_id );
-		$user_id   = sanitize_text_field( $user_id );
-		$attempt_id   = sanitize_text_field( $attempt_id );
+		$user_id     = sanitize_text_field( $user_id );
+		$attempt_id  = sanitize_text_field( $attempt_id );
 		$date        = sanitize_text_field( $date );
 		$search_term = sanitize_text_field( $search_term );
 
@@ -236,12 +246,6 @@ class Quiz_Attempts_List {
 		$user_query = '';
 		if ( '' !== $user_id ) {
 			$user_query = "AND user.ID = $user_id";
-		}
-
-		// add quiz id in where clause.
-		$quiz_query = '';
-		if ( '' !== $quiz_id ) {
-			$quiz_query = "AND quiz.ID = $user_id";
 		}
 
 		$count = $wpdb->get_var(
@@ -255,7 +259,7 @@ class Quiz_Attempts_List {
 			   WHERE 	attempt_status != %s
 					   AND ( user_email = %s OR display_name LIKE %s OR post_title LIKE %s )
 			   ",
-			   'attempt_started',
+				'attempt_started',
 				$status,
 				$search_term,
 				$search_term,
@@ -277,16 +281,21 @@ class Quiz_Attempts_List {
 		tutor_utils()->checking_nonce();
 
 		$bulk_action = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
-		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) :'';
-		$bulk_ids = explode(',', $bulk_ids);
-		$bulk_ids = array_map(function($id){return (int)trim($id);}, $bulk_ids);
-		
-		switch($bulk_action) {
-			case 'delete' :
-				tutor_utils()->delete_quiz_attempt( $bulk_ids );
+		$bulk_ids    = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
+		$bulk_ids    = explode( ',', $bulk_ids );
+		$bulk_ids    = array_map(
+			function( $id ) {
+				return (int) trim( $id );
+			},
+			$bulk_ids
+		);
+
+		switch ( $bulk_action ) {
+			case 'delete':
+				QuizModel::delete_quiz_attempt( $bulk_ids );
 				break;
 		}
-		
+
 		wp_send_json_success();
 	}
 

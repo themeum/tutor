@@ -22,7 +22,7 @@
 		<div class="tutor-widget tutor-widget-search">
 			<div class="tutor-form-wrap">
 				<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
-				<input type="Search" class="tutor-form-control" name="keyword" placeholder="<?php _e( 'Search...' ); ?>"/>
+				<input type="Search" class="tutor-form-control" name="keyword" placeholder="<?php esc_attr_e( 'Search...', 'tutor' ); ?>"/>
 			</div>
 		</div>
 	<?php endif; ?>

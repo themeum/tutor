@@ -550,7 +550,7 @@ class Options_V2
 								'label'       => __('Auto Course Complete on all Lesson Completion', 'tutor'),
 								'default'     => 'off',
 								'label_title' => __('', 'tutor'),
-								'desc'        => __('If enabled, an Enrolled Course will be automatically completed if all its Lessions, Quizzes, and Assignments are already completed by the Student', 'tutor'),
+								'desc'        => __('If enabled, an Enrolled Course will be automatically completed if all its Lessons, Quizzes, and Assignments are already completed by the Student', 'tutor'),
 							),
 							array(
 								'key'            => 'course_completion_process',
@@ -819,6 +819,7 @@ class Options_V2
 								'type'    => 'number',
 								'label'   => __('Minimum Days Before Balance is Available', 'tutor'),
 								'default' => '7',
+								'min'	  => 1,
 								'desc'    => __('Any income has to remain this many days in the platform before it is available for withdrawal.', 'tutor'),
 							),
 							array(

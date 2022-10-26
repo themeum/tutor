@@ -2,16 +2,11 @@
 /**
  * Display Permission denied
  *
- * @since v.1.0.0
  * @author themeum
- * @url https://themeum.com
- *
+ * @link https://themeum.com
  * @package TutorLMS/Templates
+ * @since 1.0.0
  * @version 1.4.3
- *
- * Template content and design updated
- *
- * @version 1.9.6
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,8 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-
-
 <div class="tutor-disabled-wrapper">
 	<div class="tutor-disabled-content-wrapper">
 		<?php if ( isset( $image_path ) && $image_path !== '' ) : ?>

@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.0.1
+Tested up to: 6.0.3
 Requires PHP: 7.0
-Stable tag: 2.0.9
+Stable tag: 2.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,65 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.1.1 - October 25, 2022
+
+Update: More security improvement is introduced
+Update: PeepSo Profile Avatar compatibility is introduced
+Fix: Some known bugs related to Course, Login and Lesson pages are fixed 
+
+= 2.1.0 - October 19, 2022
+
+New: Instructors will be able to create Online Events over Google Meet
+New: Dedicated Login page with Shortcode for Login page is introduced
+New: "Accessing next Course Content based on Mandatory Pass in a Quiz" feature is introduced; Admin can enable it from Quiz Builder
+New: Course Duplicating feature is introduced for the front-end Dashboard
+New: Rich Text Editor is introduced for the Q&A Reply section
+New: "Overview" and "Exercise File" tabs will now appear only when content is available under the particular tabs
+New: On manual Enrollment to Paid Courses, an Invoice will be automatically generated, therefore, on changing Payment Status, Earning Report will be reflected
+New: On the Manual Enrollment page, the students are searchable by Email Address now
+Update: BunnyNet Compatibility is Improved
+Update: Tutor LMS is now compatible with the latest BuddyBoss
+Update: More security improvements are introduced
+Update: The frontend dashboard Zoom Meeting page design is improved
+Update: The frontend dashboard "Assignment" page design is improved
+Update: Translations are improved on the Front-end Dashboard
+Update: On Question & Answer page, the Table design is improved
+Fix: Changes in text color on the Lesson Editor was not appearing on the Front-end Lesson page
+Fix: Multiple files were not being uploaded while submitting an assignment
+Fix: After changing course author, the new author was unable to edit lessons using WP-Editor
+Fix: In some cases, just after starting a quiz, the unfinished quiz was being marked as completed
+Fix: All questions are required, but still, sometimes the last question of a quiz was appearing optional
+Fix: Instructors with an Admin Role were not removable from the Instructor List 
+Fix: The Course List page sorting option was not working properly
+Fix: Submitted assignment's Attachment File Size was appearing wrong
+Fix: The Assignment Submission page had a design overlap issue
+Fix: "Zoom Meeting Archive" page and the Meeting links were publicly accessible
+Fix: Math formulas were not appearing correctly on the Quiz Attempt pages
+Fix: Toast Message was showing the same color for all message types 
+Fix: Course List Page pagination had some issues
+Fix: Admin Panel Quiz Attempts page was showing the wrong Quiz Attempt count
+Fix: The assignment Report page had a design issue on Upload files tab
+Fix: Enroll date was showing incorrectly on the Student Details page and also report pages
+Fix: Zoom Meeting List page was not showing the Pagination Bar by default
+Fix: Students were not getting the On-site Notification for "Q&A Message Answered" cases
+Fix: Minimum Days Before Balance is Available was selectable as "0" which should not go below "1"
+Fix: In the case of Gutenberg Editor the Primary Author was not changeable
+Fix: If the "Deduct Fees" option was disabled in the Settings, still the "Fee Description" and "Fee Amount & Type" options were appearing
+Fix: Username was being sent instead of First Name and Last Name on email notifications
+Fix: In the LMS Reports section, the Sales Report was not showing Badge design for Processing status
+Fix: The "Disable Tutor Login" option was not working in case of Add to Wishlist
+Fix: In some cases, error was appearing in the Review Section of the Course Details page
+Fix: In the course journey, the "Delete Quiz Attempt" feature was appearing for students as well 
+Fix: On the Course List page, the "Enroll Now" button was not working until it was clicked twice
+Fix: WooCommerce Products were selectable for multiple Courses which was causing errors
+Fix: Unnecessary backslashes were coming under the Review tab
+
+= 2.0.10 - September 19, 2022
+
+New: Compatibility with PeepSo Social Networking plugin is Introduced
+Update: More security improvement is introduced
+Fix: Zoom meeting list design was partially broken on the frontend dashboard
 
 = 2.0.9 - August 18, 2022
 

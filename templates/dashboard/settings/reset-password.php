@@ -18,8 +18,8 @@
 
         <div class="tutor-row">
             <div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-7 tutor-mb-32">
-                <label class="tutor-form-label tutor-color-secondary"> <?php esc_html_e('Current Password', 'tutor'); ?> </label>
-                <input class="tutor-form-control" type="password" name="previous_password" placeholder="Current Password">
+                <label class="tutor-form-label tutor-color-secondary"> <?php esc_html_e('Current Password', 'tutor' ); ?> </label>
+                <input class="tutor-form-control" type="password" name="previous_password" placeholder="<?php esc_attr_e('Current Password', 'tutor' ); ?>">
             </div>
         </div>
 
@@ -36,7 +36,7 @@
 								id="tutor-new-password"
 								type="password"
 								name="new_password"
-								placeholder="Type Password"
+								placeholder="<?php esc_attr_e( 'Type Password', 'tutor' ); ?>"
 							/>
 							<span class="show-hide-btn"></span>
 						</div>
@@ -66,7 +66,7 @@
 							class="tutor-form-control"
 							id="tutor-confirm-password"
 							type="password"
-							placeholder="Type Password"
+							placeholder="<?php esc_attr_e( 'Type Password', 'tutor' ); ?>"
 							name="confirm_new_password"
 						/>
 					</div>

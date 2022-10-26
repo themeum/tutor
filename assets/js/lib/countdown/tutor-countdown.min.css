@@ -1,0 +1,43 @@
+.tutor-time-countdown.tutor-countdown-lg {
+	display: flex;
+	margin-left: -25px;
+	margin-bottom: 50px;
+}
+.tutor-time-countdown.tutor-countdown-lg div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: calc(25% - 25px);
+	height: 150px;
+	border: 1px solid #dcdbdc;
+	box-sizing: border-box;
+	border-radius: 6px;
+	margin-left: 25px;
+}
+.tutor-time-countdown.tutor-countdown-lg div h3 {
+	font-weight: 500;
+	font-size: 80px;
+	color: #000;
+	line-height: 80px;
+}
+.tutor-time-countdown.tutor-countdown-lg div p {
+	font-weight: normal;
+	font-size: 16px;
+	margin: 0;
+}
+
+@media only screen and (max-device-width: 812px) {
+    .tutor-time-countdown.tutor-countdown-lg div {
+        height: 80px;
+    }
+    .tutor-time-countdown.tutor-countdown-lg div h3 {
+        font-weight: 500;
+        font-size: 24px;
+        color: #000;
+        line-height: 24px;
+    }
+    .tutor-time-countdown.tutor-countdown-lg div p {
+        font-size: 14px;
+    }
+}

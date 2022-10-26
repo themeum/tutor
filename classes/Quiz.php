@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Models\QuizModel;
 class Quiz {
 
 	private $allowed_attributes = array(
@@ -85,6 +86,13 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_quiz_abandon', array( $this, 'tutor_quiz_abandon' ) );
 
 		$this->prepare_allowed_html();
+
+		/**
+		 * Delete quiz attempt
+		 *
+		 * @since v2.1.0
+		 */
+		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 	}
 
 	private function prepare_allowed_html() {
@@ -105,7 +113,7 @@ class Quiz {
 	 */
 	public function tutor_instructor_feedback() {
 		tutor_utils()->checking_nonce();
-		$attempt_details 	= self::attempt_details( $_POST['attempt_id'] );
+		$attempt_details 	= self::attempt_details( Input::post( 'attempt_id', 0, Input::TYPE_INT ) );
 		$feedback 			= wp_kses_post( $_POST['feedback'] );
 		$attempt_info 		= isset( $attempt_details->attempt_info ) ? $attempt_details->attempt_info : false;
 		if ( $attempt_info ) {
@@ -139,10 +147,10 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		$quiz_id = (int) tutor_utils()->avalue_dot( 'quiz_id', tutor_sanitize_data($_POST) );
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 
-		if(!tutor_utils()->can_user_manage('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			wp_send_json_error( array( 'message'=> __( 'Access Denied', 'tutor' ) ) );
 		}
 
 		$wpdb->update( $wpdb->posts, array( 'post_parent' => 0 ), array( 'ID' => $quiz_id ) );
@@ -157,7 +165,7 @@ class Quiz {
 	 */
 
 	public function start_the_quiz() {
-		if ( ! isset( $_POST['tutor_action'] ) || $_POST['tutor_action'] !== 'tutor_start_quiz' ) {
+		if ( Input::post( 'tutor_action' ) !== 'tutor_start_quiz' ) {
 			return;
 		}
 		// Checking nonce
@@ -173,7 +181,7 @@ class Quiz {
 		$user_id = get_current_user_id();
 		$user    = get_userdata( $user_id );
 
-		$quiz_id = (int) $_POST['quiz_id'];
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 
 		$quiz   = get_post( $quiz_id );
 		$course = tutor_utils()->get_course_by_quiz( $quiz_id );
@@ -239,7 +247,7 @@ class Quiz {
 
 	public function answering_quiz() {
 
-		if ( tutor_utils()->array_get('tutor_action', $_POST) !== 'tutor_answering_quiz_question' ){
+		if ( Input::post( 'tutor_action' ) !== 'tutor_answering_quiz_question' ){
 			return;
 		}
 		// submit quiz attempts
@@ -257,7 +265,7 @@ class Quiz {
 	 * @since 1.9.6
 	 */
 	public function tutor_quiz_abandon(){
-		if ( tutor_utils()->array_get('tutor_action', $_POST) !== 'tutor_answering_quiz_question' ){
+		if ( Input::post( 'tutor_action' ) !== 'tutor_answering_quiz_question' ){
 			return;
 		}
 		// submit quiz attempts
@@ -290,7 +298,7 @@ class Quiz {
 		// Prepare attempt info
 		global $wpdb;
 		$user_id 		 = get_current_user_id();
-		$attempt_id 	 = (int) tutor_utils()->avalue_dot( 'attempt_id', $_POST );
+		$attempt_id 	 = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$attempt    	 = tutor_utils()->get_attempt( $attempt_id );
 		$course_id  	 = tutor_utils()->get_course_by_quiz( $attempt->quiz_id )->ID;
 		$attempt_answers = isset( $_POST['attempt'] ) ? tutor_sanitize_data( $_POST['attempt'] ) : false;
@@ -342,7 +350,7 @@ class Quiz {
 			if ( tutor_utils()->count($quiz_answers)) {
 
 				foreach ( $quiz_answers as $question_id => $answers ) {
-					$question      = tutor_utils()->get_quiz_question_by_id( $question_id );
+					$question      = QuizModel::get_quiz_question_by_id( $question_id );
 					$question_type = $question->question_type;
 
 					$is_answer_was_correct = false;
@@ -508,7 +516,7 @@ class Quiz {
 
 	public function finishing_quiz_attempt() {
 
-		if ( ! isset( $_POST['tutor_action'] ) || $_POST['tutor_action'] !== 'tutor_finish_quiz_attempt' ) {
+		if ( Input::post( 'tutor_action' ) !== 'tutor_finish_quiz_attempt' ) {
 			return;
 		}
 		// Checking nonce
@@ -520,7 +528,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$quiz_id    = (int) $_POST['quiz_id'];
+		$quiz_id    = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		$attempt    = tutor_utils()->is_started_quiz( $quiz_id );
 		$attempt_id = $attempt->attempt_id;
 
@@ -546,12 +554,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$quiz_id = (int) $_POST['quiz_id'];
-
-		// if(!tutor_utils()->can_user_manage('quiz', $quiz_id)) {
-		// 	wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		// }
-
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		$attempt = tutor_utils()->is_started_quiz( $quiz_id );
 
 		if ( $attempt ) {
@@ -581,13 +584,13 @@ class Quiz {
 
 		global $wpdb;
 
-		$attempt_id = (int) sanitize_text_field($_POST['attempt_id']);
-		$context = sanitize_text_field($_POST['context']);
-		$attempt_answer_id = (int) sanitize_text_field($_POST['attempt_answer_id']);
-		$mark_as = sanitize_text_field($_POST['mark_as']);
+		$attempt_id			= Input::post( 'attempt_id', 0, Input::TYPE_INT );
+		$context			= Input::post( 'context' );
+		$attempt_answer_id	= Input::post( 'attempt_answer_id', 0, Input::TYPE_INT );
+		$mark_as			= Input::post( 'mark_as' );
 
-		if(!tutor_utils()->can_user_manage('attempt', $attempt_id) || !tutor_utils()->can_user_manage('attempt_answer', $attempt_answer_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if ( ! tutor_utils()->can_user_manage( 'attempt', $attempt_id ) || !tutor_utils()->can_user_manage( 'attempt_answer', $attempt_answer_id ) ) {
+			wp_send_json_error( array( 'message'=>__( 'Access Denied', 'tutor' ) ) );
 		}
 
 		$attempt_answer = $wpdb->get_row(
@@ -598,11 +601,11 @@ class Quiz {
 			)
 		);
 
-		$attempt = tutor_utils()->get_attempt($attempt_id);
-		$question = tutor_utils()->get_quiz_question_by_id($attempt_answer->question_id);
-		$course_id = $attempt->course_id;
-		$student_id = $attempt->user_id;
-		$previous_ans =  $attempt_answer->is_correct;
+		$attempt		= tutor_utils()->get_attempt( $attempt_id );
+		$question		= QuizModel::get_quiz_question_by_id( $attempt_answer->question_id );
+		$course_id		= $attempt->course_id;
+		$student_id		= $attempt->user_id;
+		$previous_ans	= $attempt_answer->is_correct;
 
 		do_action( 'tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as );
 
@@ -657,12 +660,12 @@ class Quiz {
 
 		ob_start();
 		tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
-            'attempt_id' => $attempt_id,
-            'user_id' => $student_id,
-			'context' => $context,
-			'back_url' => isset($_POST['back_url']) ? esc_url( $_POST['back_url'] )  : null
+            'attempt_id'	=> $attempt_id,
+            'user_id'		=> $student_id,
+			'context'		=> $context,
+			'back_url'		=> Input::post( 'back_url' )
         ));
-		wp_send_json_success( array('html' => ob_get_clean()) );
+		wp_send_json_success( array( 'html' => ob_get_clean() ) );
 	}
 
 	/**
@@ -673,17 +676,17 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		// Prepare args
-		$topic_id           = sanitize_text_field($_POST['topic_id']);
-		$ex_quiz_id         = isset($_POST['quiz_id']) ? sanitize_text_field($_POST['quiz_id']) : 0;
-		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
+		$topic_id           = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$ex_quiz_id         = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		$quiz_title         = Input::post( 'quiz_title' );
 		$quiz_description   = wp_kses( $_POST['quiz_description'], $this->allowed_html );
-		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id, $ex_quiz_id);
+		$next_order_id      = tutor_utils()->get_next_course_content_order_id( $topic_id, $ex_quiz_id );
 
 		// Check edit privilege
-		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
+		if( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
 			wp_send_json_error( array(
-				'message'=>__('Access Denied', 'tutor'),
-				'data'=>$_POST
+				'message'	=> __( 'Access Denied', 'tutor' ),
+				'data'		=> $_POST
 			));
 		}
 
@@ -701,7 +704,7 @@ class Quiz {
 
 		// Insert quiz and run hook
 		$quiz_id = wp_insert_post( $post_arr );
-		do_action(($ex_quiz_id ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created'), $quiz_id);
+		do_action(( $ex_quiz_id ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
 
 		// Now save quiz settings
 		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] );
@@ -734,7 +737,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$quiz_id = (int) $_POST['quiz_id'];
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		$post    = get_post( $quiz_id );
 
 		if ( ! tutils()->can_user_manage( 'quiz', $quiz_id ) ) {
@@ -769,29 +772,34 @@ class Quiz {
 	/**
 	 * Load quiz Modal on add/edit click
 	 *
-	 * @since v.1.0.0
+	 * @param array $params
+	 * @param boolean $ret
+	 * @return void
+	 * 
+	 * @since 1.0.0
 	 */
-	public function tutor_load_quiz_builder_modal($params=array(), $ret=false){
+	public function tutor_load_quiz_builder_modal( $params = array(), $ret = false ) {
 		tutor_utils()->checking_nonce();
+		
+		$data 		= array_merge( $_POST, $params );
+		$quiz_id 	= isset( $data['quiz_id'] ) ? sanitize_text_field( $data['quiz_id'] ) : 0;
+		$topic_id 	= isset( $data['topic_id'] ) ? sanitize_text_field( $data['topic_id'] ) : 0;
+		$quiz 		= $quiz_id ? get_post( $quiz_id ) : null;
+		$course_id	= Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		$data 		= array_merge($_POST, $params);
-		$quiz_id 	= isset($data['quiz_id']) ? sanitize_text_field ($data['quiz_id']) : 0;
-		$topic_id 	= isset($data['topic_id'])?sanitize_text_field( $data['topic_id'] ):0;
-		$quiz 		= $quiz_id ? get_post($quiz_id) : null;
-
-		if($quiz_id && !tutor_utils()->can_user_manage('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>__('Quiz Permission Denied', 'tutor')) );
+		if ( $quiz_id && ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Quiz Permission Denied', 'tutor' ) ) );
 		}
 
 		ob_start();
 		include tutor()->path . 'views/modal/edit_quiz.php';
 		$output = ob_get_clean();
 
-		if($ret) {
+		if( $ret ) {
 			return $output;
 		}
 
-		wp_send_json_success(array('output' => $output));
+		wp_send_json_success( array( 'output' => $output ) );
 	}
 
 	/**
@@ -803,20 +811,20 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		$quiz_id = sanitize_text_field($_POST['quiz_id']);
-		$topic_id =  isset( $_POST['topic_id'] ) ? (int)$_POST['topic_id'] : 0;
-		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
+		$quiz_id		= Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		$topic_id		= Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$question_id	= Input::post( 'question_id', 0, Input::TYPE_INT );
 
 		// check if the user can manage the quiz
-		if(!tutor_utils()->can_user_manage('quiz', $quiz_id)) {
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		// If question ID not provided, then create new before rendering the form
-		if ( ! $question_id){
-			$next_question_id = tutor_utils()->quiz_next_question_id();
-			$next_question_order = tutor_utils()->quiz_next_question_order_id($quiz_id);
-			$question_title = __('Question', 'tutor').' '.$next_question_id;
+		if ( ! $question_id ) {
+			$next_question_id		= QuizModel::quiz_next_question_id();
+			$next_question_order	= QuizModel::quiz_next_question_order_id( $quiz_id );
+			$question_title			= __( 'Question', 'tutor' ) . ' ' . $next_question_id;
 
 			$new_question_data = array(
 				'quiz_id'               => $quiz_id,
@@ -935,10 +943,10 @@ class Quiz {
 
 		global $wpdb;
 
-		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
+		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
 
-		if(!tutor_utils()->can_user_manage('question', $question_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
+			wp_send_json_error( array( 'message'=>__('Access Denied', 'tutor' ) ) );
 		}
 
 		if ( $question_id ) {
@@ -956,25 +964,25 @@ class Quiz {
 	public function tutor_quiz_question_answer_editor(){
 		tutor_utils()->checking_nonce();
 
-		$question_id 	= sanitize_text_field($_POST['question_id']);
-		$answer_id 		= (int) sanitize_text_field(tutor_utils()->array_get('answer_id', $_POST));
+		$question_id 	= Input::post( 'question_id', 0, Input::TYPE_INT );
+		$answer_id 		= Input::post( 'answer_id', 0, Input::TYPE_INT );
 		$question 		= tutor_utils()->avalue_dot($question_id, $_POST['tutor_quiz_question']);
 		$question_type 	= $question['question_type'];
 
-		if(!tutor_utils()->can_user_manage('question', $question_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
+			wp_send_json_error( array( 'message'=> __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		if($answer_id) {
-			$old_answer = tutor_utils()->get_answer_by_id($answer_id);
-			foreach ($old_answer as $old_answer);
+		if ( $answer_id ) {
+			$old_answer = tutor_utils()->get_answer_by_id( $answer_id );
+			foreach ( $old_answer as $old_answer );
 		}
 
 		ob_start();
 		include  tutor()->path.'views/modal/question_answer_form.php';
 		$output = ob_get_clean();
 
-		wp_send_json_success(array('output' => $output));
+		wp_send_json_success( array( 'output' => $output ) );
 	}
 
 	public function tutor_save_quiz_answer_options($questions=null, $answers=null, $response=true){
@@ -982,12 +990,12 @@ class Quiz {
 
 		global $wpdb;
 
-		$questions = $questions ? $questions : $_POST['tutor_quiz_question'];
-		$answers = $answers ? $answers : $_POST['quiz_answer'];
+		$questions	= $questions ? $questions : $_POST['tutor_quiz_question'];
+		$answers	= $answers ? $answers : $_POST['quiz_answer'];
 
 		foreach ( $answers as $question_id => $answer ) {
 
-			if(!tutor_utils()->can_user_manage('question', $question_id)) {
+			if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
 				continue;
 			}
 
@@ -1090,10 +1098,10 @@ class Quiz {
 
 		global $wpdb;
 
-		$answer_id = (int) $_POST['tutor_quiz_answer_id'];
+		$answer_id = Input::post( 'tutor_quiz_answer_id', 0, Input::TYPE_INT );
 
-		if(!tutor_utils()->can_user_manage('quiz_answer', $answer_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
+			wp_send_json_error( array( 'message'=>__( 'Access Denied', 'tutor' ) ) );
 		}
 
 		$questions = tutor_sanitize_data( $_POST['tutor_quiz_question'] );
@@ -1150,11 +1158,11 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		$question_id   = sanitize_text_field( $_POST['question_id'] );
-		$question_type = sanitize_text_field( $_POST['question_type'] );
+		$question_id   = Input::post( 'question_id', 0, Input::TYPE_INT );
+		$question_type = Input::post( 'question_type' );
 
-		if(!tutor_utils()->can_user_manage('question', $question_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
+			wp_send_json_error( array( 'message'=>__('Access Denied', 'tutor' ) ) );
 		}
 
 		// Get question data by question ID
@@ -1165,7 +1173,7 @@ class Quiz {
 		));
 
 		// Get answers by question ID
-		$answers = $this->get_answers_by_q_id($question_id, $question_type);
+		$answers = $this->get_answers_by_q_id( $question_id, $question_type );
 
 		ob_start();
 		require tutor()->path . '/views/modal/question_answer_list.php';
@@ -1178,10 +1186,10 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		$answer_id = sanitize_text_field($_POST['answer_id']);
+		$answer_id = Input::post( 'answer_id', 0, Input::TYPE_INT );
 
-		if(!tutor_utils()->can_user_manage('quiz_answer', $answer_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
 		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_question_answers', array( 'answer_id' => esc_sql( $answer_id ) ) );
@@ -1237,7 +1245,7 @@ class Quiz {
 
 		global $wpdb;
 
-	    $answer_id = sanitize_text_field($_POST['answer_id']);
+	    $answer_id = Input::post( 'answer_id', 0, Input::TYPE_INT );
 		// get question info.
 		$belong_question = $wpdb->get_row( $wpdb->prepare(
 			" SELECT belongs_question_id, belongs_question_type
@@ -1291,10 +1299,10 @@ class Quiz {
 
 		tutor_utils()->checking_nonce();
 
-		$quiz_id = (int) tutor_utils()->avalue_dot( 'quiz_id', $_POST );
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 
-		if(!tutor_utils()->has_enrolled_content_access('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied.', 'tutor')) );
+		if ( ! tutor_utils()->has_enrolled_content_access( 'quiz', $quiz_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied.', 'tutor' ) ) );
 		}
 
 		ob_start();
@@ -1346,6 +1354,28 @@ class Quiz {
 			array( 'attempt_id' => $attempt_id )
 		);
 		return $update_info ? true : false;
+	}
+
+	/**
+	 * Attempt delete ajax request handler
+	 *
+	 * @since v2.1.0
+	 *
+	 * @return void  wp_json response
+	 */
+	public function attempt_delete() {
+		tutor_utils()->checking_nonce();
+		if ( current_user_can( 'administrator') ||  current_user_can( tutor()->instructor_role ) ) {
+			$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
+			if ( $attempt_id ) {
+				QuizModel::delete_quiz_attempt( $attempt_id );
+				wp_send_json_success( __( 'Attempt deleted successfully!', 'tutor' ) );
+			} else {
+				wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
+			}
+		} else {
+			wp_send_json_error( __( 'You are not authorized to perform this action!', 'tutor' ) );
+		}
 	}
 
 }
