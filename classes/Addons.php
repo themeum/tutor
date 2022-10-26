@@ -2,19 +2,22 @@
 /**
  * Addons class
  *
- * @author: themeum
- * @link: https://themeum.com
+ * @author themeum
+ * @link https://themeum.com
  * @package Tutor
  * @since v.1.0.0
  */
-
 
 namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+/**
+ * Addons Class
+ *
+ * @since 1.0.0
+ */
 class Addons {
 
 	/**
@@ -28,6 +31,7 @@ class Addons {
 	 * Get tutor addons list
 	 *
 	 * @return array
+	 * @since 1.0.0
 	 */
 	public function tutor_addons_lists_to_show() {
 		$addons = array(
@@ -99,7 +103,7 @@ class Addons {
 				'name'        => __( 'Tutor Zoom Integration', 'tutor' ),
 				'description' => __( 'Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page.', 'tutor' ),
 			),
-			'google-meet'               => array(
+			'google-meet'              => array(
 				'name'        => __( 'Tutor Google Meet Integration', 'tutor' ),
 				'description' => __( 'Connect Tutor LMS with Google Meet to host live online classes. Students can attend live classes right from the lesson page.', 'tutor' ),
 			),
