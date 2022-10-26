@@ -15,14 +15,21 @@ Follow along the next few steps to find out how you can get about installing the
 Requirements
 Before getting started with installing Tutor LMS beta on your WordPress site, please make sure you have the following requirements. 
 
+## Development Setup
+Follow the steps
+1. Clone the repository `git clone https://github.com/themeum/tutor.git`.
+2. Run `composer install` for install PHP dependency.
+3. Run `npm install` for install js dependency.
+4. Run `npm run watch` 
+5. Now open any SCSS file from assets directory and hit save.
 ## Testing
 To run PHP unit testing in the development environment follow the below steps:
 
 Go to the terminal then hit commands:
 
-1) composer install
-2) bash bin/install-wp-tests.sh db_name user_name password host latest ( [checkout details](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) )
-3) vendor/bin/phpunit --info
+1) `composer install`
+2) `bash bin/install-wp-tests.sh db_name user_name password host latest` ( [checkout details](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/) )
+3) `vendor/bin/phpunit --info`
 
 If everything goes well then you should see the PHP unit info
 

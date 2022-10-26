@@ -60,7 +60,9 @@ window.jQuery(document).ready($=>{
                 }
                 
                 // move to top
-                $('html, body').animate({ scrollTop: content_container.offset().top }, 'fast');
+                if (type !== 'load_more') {
+                    $('html, body').animate({ scrollTop: content_container.offset().top }, 'fast');
+                }
             },
 
             success: function(resp) {
@@ -92,6 +94,28 @@ window.jQuery(document).ready($=>{
                         if (hide.length) {
                             var loadMoreBtn = document.querySelector('.tutor-btn.page-numbers');
                             loadMoreBtn.remove();
+                        }
+
+                        /**
+                         * Init tinyMCE for Q&A load more list
+                         * 
+                         * @since v2.1.0
+                         */
+                        if (e.target.classList.contains('tutor-qna-load-more') && _tutorobject.tutor_pro_url) {
+                            const ids = document.querySelectorAll('.tutor-load-more-qna-ids');
+                            let lastNode = ids[ids.length - 1];
+                            const lastNodeIds = lastNode ? lastNode.getAttribute('value') : ''
+                            const lastIdsArr = lastNodeIds.split(',');
+                            setTimeout(() => {
+                                lastIdsArr.forEach(element => {
+                                    let editorId = `tutor_qna_reply_editor_${element}`;
+                                    tinymce.execCommand(
+                                        'mceAddEditor',
+                                        false,
+                                        editorId
+                                    );
+                                });
+                            }, 1000) 
                         }
                     } else {
                         content_container.html(html);

@@ -6,8 +6,18 @@ function DatePicker() {
     const wrappers =  document.querySelectorAll('.tutor-v2-date-picker');
     for(let wrapper of wrappers) {
         if (wrapper) {
+            let disablePastDate = false;
             const {dataset={}} = wrapper;
-            ReactDom.render(<TutorDatepicker {...dataset}/>, wrapper);
+            /**
+             * If has tutor-disable-past-date then disable past
+             * date selection
+             * 
+             * @since v2.1.0
+             */
+            if (wrapper.hasAttribute('tutor-disable-past-date')) {
+                disablePastDate = true;
+            }
+            ReactDom.render(<TutorDatepicker {...dataset} disablePastDate={disablePastDate}/>, wrapper);
         }
     }
 }

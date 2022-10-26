@@ -169,15 +169,15 @@ class QueryHelper {
 	/**
 	 * Build where clause string
 	 *
-	 * @param	array $where assoc array with field and value
-	 * @return	string
-	 * 
+	 * @param   array $where assoc array with field and value
+	 * @return  string
+	 *
 	 * @since 2.0.9
 	 */
 	private function build_where_clause( array $where ) {
-		$arr = [];
-		foreach( $where as $field => $value ) {
-			$value = is_numeric( $value ) ? ( $value + 0 ) : "'".$value."'";
+		$arr = array();
+		foreach ( $where as $field => $value ) {
+			$value = is_numeric( $value ) ? ( $value + 0 ) : "'" . $value . "'";
 			$arr[] = "{$field}={$value}";
 		}
 
@@ -189,7 +189,7 @@ class QueryHelper {
 	 *
 	 * @param array $array an assoc array
 	 * @return array
-	 * 
+	 *
 	 * @since 2.0.9
 	 */
 	private function sanitize_assoc_array( array $array ) {
@@ -204,23 +204,23 @@ class QueryHelper {
 	/**
 	 * Delete comment with associate meta data
 	 *
-	 * @param array $where associative array with field and value. 
-	 * 				Example: array( 'comment_type' => 'comment', 'comment_id' => 1 )
+	 * @param array $where associative array with field and value.
+	 *              Example: array( 'comment_type' => 'comment', 'comment_id' => 1 )
 	 * @return bool
-	 * 
+	 *
 	 * @since 2.0.9
 	 */
 	public static function delete_comment_with_meta( array $where ) {
-		if ( count( $where ) === 0 || ! tutor_utils()->is_assoc( $where) ) {
+		if ( count( $where ) === 0 || ! tutor_utils()->is_assoc( $where ) ) {
 			return false;
 		}
 
-		$obj	= new self();
-		$where	= $obj->build_where_clause( $obj->sanitize_assoc_array ( $where ) );
-		
+		$obj   = new self();
+		$where = $obj->build_where_clause( $obj->sanitize_assoc_array( $where ) );
+
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );
-		
+
 		if ( is_array( $ids ) && count( $ids ) ) {
 			$ids_str = "'" . implode( "','", $ids ) . "'";
 			// delete comment metas
@@ -238,22 +238,22 @@ class QueryHelper {
 	 * Delete post with associate meta data
 	 *
 	 * @param array $where associative array with field and value.
-	 * 				Example: array( 'post_type' => 'post', 'id' => 1 )
+	 *              Example: array( 'post_type' => 'post', 'id' => 1 )
 	 * @return bool
-	 * 
+	 *
 	 * @since 2.0.9
 	 */
 	public static function delete_post_with_meta( array $where ) {
-		if ( count( $where ) === 0 || ! tutor_utils()->is_assoc( $where) ) {
+		if ( count( $where ) === 0 || ! tutor_utils()->is_assoc( $where ) ) {
 			return false;
 		}
 
-		$obj	= new self();
-		$where	= $obj->build_where_clause( $obj->sanitize_assoc_array ( $where ) );
-		
+		$obj   = new self();
+		$where = $obj->build_where_clause( $obj->sanitize_assoc_array( $where ) );
+
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );
-		
+
 		if ( is_array( $ids ) && count( $ids ) ) {
 			$ids_str = "'" . implode( "','", $ids ) . "'";
 			// delete post metas
@@ -265,5 +265,98 @@ class QueryHelper {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get a single row from any table with where clause
+	 *
+	 * @param string $table  table name with prefix.
+	 *
+	 * @param array  $where  assoc_array. For ex: [col_name => value ].
+	 * @param string $order_by  order by column name.
+	 * @param string $order  DESC or ASC, default is DESC.
+	 * @param string $output  expected output type, default is object.
+	 *
+	 * @return mixed  based on output param, default object
+	 */
+	public static function get_row( string $table, array $where, string $order_by, string $order = 'DESC', string $output = 'OBJECT' ) {
+		global $wpdb;
+		$obj          = new self();
+		$where_clause = $obj->build_where_clause( $where );
+		$query        = $wpdb->prepare(
+			"SELECT *
+				FROM {$table}
+				WHERE {$where_clause}
+				ORDER BY {$order_by} {$order}
+				LIMIT %d
+			",
+			1
+		);
+		return $wpdb->get_row(
+			$query,
+			$output
+		);
+	}
+
+
+	/**
+	 * Update multiple rows by using where in
+	 * clause
+	 *
+	 * @since v2.1.0
+	 *
+	 * @param string $table  table name.
+	 * @param array  $data assoc_array data to update
+	 *                ex: [id => 2, name => 'john' ].
+	 * @param string $where_in comma separated values, ex: 1,2,3.
+	 * @param string $where_col default is ID but could be other.
+	 *
+	 * @return bool true on success, false on failure
+	 */
+	public static function update_where_in( string $table, array $data, string $where_in, string $where_col = 'ID' ) {
+		global $wpdb;
+		if ( empty( $where_in ) || empty( $where_col ) ) {
+			return false;
+		}
+		$set_clause = self::prepare_set_clause( $data );
+		if ( '' === $set_clause ) {
+			return false;
+		}
+		// @codingStandardsIgnoreStart
+		$query      = $wpdb->prepare(
+			"UPDATE {$table}
+				{$set_clause}
+				WHERE $where_col IN ( $where_in )
+				AND 1 = %d
+			",
+			1
+		);
+		return $wpdb->query( $query ) ? true : false;
+	}
+
+	/**
+	 * Prepare MySQL SET clause for update query
+	 *
+	 * @since v2.1.0
+	 *
+	 * @param array $data  single dimension assoc_array.
+	 *
+	 * @return string
+	 */
+	public static function prepare_set_clause( array $data ) {
+		$set   = '';
+		foreach ( $data as $key => $value ) {
+			if ( $key === array_key_first ( $data ) ) {
+				$set .= "SET ";
+			}
+			// Multi dimension not allowed.
+			if ( is_array( $value ) ) {
+				continue;
+			}
+			$value = sanitize_text_field( $value );
+			$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value ."'";
+			$set .= ",";
+		}
+		return rtrim( $set, ',' );
 	}
 }

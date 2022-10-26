@@ -67,7 +67,7 @@
 			@media screen and (max-width: 782px) {
 				top: 42px;
 			}
-			
+
 			@media screen and (max-width: 600px) {
 				top: 0;
 			}
@@ -110,13 +110,12 @@
 		}
 	}
 
-	// select 
+	// select
 	select.tutor-form-control,
 	.tutor-form-select {
 		padding-right: 36px !important;
 	}
 }
-
 
 /*----------------------------------
 	Component containers
@@ -125,17 +124,24 @@
 body.tutor-backend-tutor_settings #wpbody-content {
 	min-height: 100vh;
 
-	@include breakpoint-min(1400){
-		.tutor-admin-container{
+	@include breakpoint-min(1400) {
+		.tutor-admin-container {
 			overflow-x: unset;
 		}
 	}
 }
 
-.ui-widget-content {
-	border: 1px solid #aaaaaa;
+.ui-datepicker-buttonpane.ui-widget-content {
+    padding-top: 6px;
 	background: #ffffff;
 	color: #222222;
+	display: flex;
+    gap: 10px;
+	button[class^="ui-datepicker-"] {
+		padding: 2px 6px;
+		border-radius: 3px;
+		display: flex;
+	}
 }
 
 .ui-widget-content a {
@@ -197,8 +203,8 @@ body.tutor-backend-tutor_settings #wpbody-content {
 }
 
 /**
-  Option Field
-   */
+* Option Field
+*/
 
 .tutor-option-field-row {
 	border-bottom: 1px solid #e4e4e4;
@@ -970,7 +976,6 @@ span.filled_dash_unser {
 	margin-bottom: 10px;
 }
 
-
 /**
   Tutor Notice
    */
@@ -1215,7 +1220,7 @@ span.filled_dash_unser {
 				margin: 0;
 			}
 		}
-		
+
 		.quiz-manual-review-action {
 			border: 1px solid #d4dadb;
 			color: #d4dadb;
@@ -1243,7 +1248,7 @@ span.filled_dash_unser {
 					color: #df3247;
 				}
 			}
-			
+
 			&:not(:last-child) {
 				margin-right: 17px;
 			}
@@ -1725,12 +1730,31 @@ h2.tutor-page-heading {
 	cursor: pointer;
 }
 
-.tutor-entry-content{
+.tutor-entry-content {
 	> br {
 		display: none;
 	}
-	p:not(:last-child){
+	p:not(:last-child) {
 		padding-bottom: 20px;
 		word-wrap: break-word;
+	}
+}
+
+/* .tutor-table.qna-list-table */
+.tutor-table.qna-list-table {
+	.tutor-form-feedback.tutor-qna-question-col {
+		margin-top: 0;
+		p {
+			margin: 0;
+		}
+	}
+	a:focus{
+		outline: none;
+		box-shadow: none;
+	}
+}
+#tutor-quiz-question-wrapper {
+	.mce-branding {
+		display: none;
 	}
 }

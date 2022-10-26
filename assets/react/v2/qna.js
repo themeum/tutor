@@ -97,19 +97,42 @@ window.jQuery(document).ready($=>{
     })
 
     // Save/update question/reply
-    $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button.sidebar-ask-new-qna-submit-btn', function(){
-        const qnaEditor = document.getElementById('wp-tutor_qna_text_editor-wrap');
+    $(document).on('click', '.tutor-qa-reply button.tutor-btn, .tutor-qa-new button.sidebar-ask-new-qna-submit-btn', function(e){
         let button      = $(this);
+        let currentEditor = '';
+        const closestWrapper = e.target.closest('.tutor-qna-reply-editor');
+        if (_tutorobject.tutor_pro_url && tinymce) {
+            // Current editor id
+            currentEditor = closestWrapper.querySelector('.tmce-active').getAttribute('id').split('-')[1];
+        }
         let form        = button.closest('[data-question_id]');
 
         let question_id = button.closest('[data-question_id]').data('question_id');
         let course_id   = button.closest('[data-course_id]').data('course_id');
         let context     = button.closest('[data-context]').data('context');
-        let answer      = $(this).hasClass('sidebar-ask-new-qna-submit-btn') && qnaEditor ? tinymce.activeEditor.getContent({format: 'raw'}) : form.find('textarea').val();
+        let answer      = '' !== currentEditor ? tinymce.get(currentEditor).getContent({format: 'raw'}) : form.find('textarea').val();
+ 
         let back_url    = $(this).data('back_url');
 
         const btnInnerHtml = button.html().trim();
 
+        /**
+         * Warning alert
+         * 
+         * @since v2.1.0
+         */
+        if (_tutorobject.tutor_pro_url && currentEditor !== '') {
+            let tinyMCEContent = tinymce.get(currentEditor).getContent();
+            if (tinyMCEContent === '') {
+                tutor_toast('Warning!', __( 'Empty Content not Allowed', 'tutor'), 'error');
+                return;
+            }
+        } else {
+            if (answer === '') {
+                tutor_toast('Warning!', __( 'Empty Content not Allowed', 'tutor'), 'error');
+                return;
+            }
+        }
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
@@ -125,6 +148,7 @@ window.jQuery(document).ready($=>{
                 button.addClass('is-loading');
             },
             success: resp => {
+                const {editor_id} = resp.data;
                 if(!resp.success) {
                     tutor_toast('Error!', get_response_message(resp), 'error');
                     return;
@@ -141,16 +165,22 @@ window.jQuery(document).ready($=>{
                 if ($("#sidebar-qna-tab-content .tutor-quesanswer-askquestion textarea")) {
                     $("#sidebar-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
                 }
-                // @TODO will be implemented later
-                // if (_tutorobject.tutor_pro_url && tinymce) {
-                //     tinymce.activeEditor.setContent('');
-                // } else {
-                //     if ($(".tutor-quesanswer-askquestion textarea")) {
-                //         $(".tutor-quesanswer-askquestion textarea").val('');
-                //     }
-                // }
-                if ($(".tutor-quesanswer-askquestion textarea")) {
-                    $(".tutor-quesanswer-askquestion textarea").val('');
+                
+                if (_tutorobject.tutor_pro_url && tinymce && undefined !== editor_id) {
+                    // Clear editor content.
+                    tinymce.get(currentEditor).setContent('');
+                    
+                    // Reinitialize new added question/reply editor.
+                    tinymce.execCommand('mceRemoveEditor', false, editor_id);
+                    tinymce.execCommand('mceAddEditor', false, editor_id);
+                } else {
+                    // Clear question & reply textarea.
+                    if ($(".tutor-quesanswer-askquestion textarea")) {
+                        $(".tutor-quesanswer-askquestion textarea").val('');
+                    }
+                    if (closestWrapper.find('textarea').length) {
+                        closestWrapper.find('textarea').val();
+                    }
                 }
             },
             complete: () =>{

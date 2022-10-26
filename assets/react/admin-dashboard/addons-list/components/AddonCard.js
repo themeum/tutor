@@ -30,7 +30,7 @@ const AddonCard = ({ addon, addonId }) => {
 
 				<div className="tutor-card-footer tutor-d-flex tutor-justify-between tutor-align-center tutor-mt-auto">
 					<div className="tutor-fs-7 tutor-fw-medium tutor-color-muted">
-						<div className="tutor-color-muted tutor-fs-7 tutor-fw-medium tutor-d-flex">
+						<div className="tutor-color-muted tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-center">
 							<span>
 								{addon.plugins_required?.length > 0 ?
 									__('Required Plugin(s)', 'tutor')
@@ -40,8 +40,8 @@ const AddonCard = ({ addon, addonId }) => {
 									__('No extra plugin required', 'tutor')
 								}
 							</span>
-							{addon.ext_required ?
-								<div className="tooltip-wrap tooltip-icon">
+							{addon.ext_required?.length > 0 ?
+								<div className="tooltip-wrap tooltip-icon tutor-mr-8">
 									<span className="tooltip-txt tooltip-top">
 										{addon.ext_required.map((extension, index) => {
 											return (
@@ -52,6 +52,7 @@ const AddonCard = ({ addon, addonId }) => {
 										})}
 									</span>
 								</div>
+								
 							: addon.depend_plugins && addon.plugins_required.length ?
 								<div className="tooltip-wrap tooltip-icon">
 									<span className="tooltip-txt tooltip-top">

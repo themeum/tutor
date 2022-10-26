@@ -6,8 +6,8 @@
 
 $user = wp_get_current_user();
 
-// Prepare profile pic
-$profile_placeholder = tutor()->url . 'assets/images/profile-photo.png';
+// Prepare profile pic.
+$profile_placeholder = apply_filters( 'tutor_login_default_avatar', tutor()->url . 'assets/images/profile-photo.png' );
 $profile_photo_src   = $profile_placeholder;
 $profile_photo_id    = get_user_meta( $user->ID, '_tutor_profile_photo', true );
 if ( $profile_photo_id ) {

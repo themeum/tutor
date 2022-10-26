@@ -5,12 +5,13 @@
  * @since v.1.4.0
  *
  * @author Themeum
- * @url https://themeum.com
+ * @link https://themeum.com
  *
  * @package TutorLMS/Templates
  * @version 1.6.4
  */
 
+use Tutor\Models\QuizModel;
 
 if ( isset( $_GET['view_quiz_attempt_id'] ) ) {
 	// Load single attempt details if ID provided
@@ -33,8 +34,8 @@ $date_filter    = isset( $_GET['date'] ) ? $_GET['date'] : '';
 tutor_load_template_from_custom_path( tutor()->path . 'templates/dashboard/elements/filters.php' );
 
 $course_id           = tutor_utils()->get_assigned_courses_ids_by_instructors();
-$quiz_attempts       = tutor_utils()->get_quiz_attempts($offset, $item_per_page, '', $course_filter, $date_filter, $order_filter, null, false, true );
-$quiz_attempts_count = tutor_utils()->get_quiz_attempts($offset, $item_per_page, '', $course_filter, $date_filter, $order_filter, null, true, true );
+$quiz_attempts       = QuizModel::get_quiz_attempts($offset, $item_per_page, '', $course_filter, $date_filter, $order_filter, null, false, true );
+$quiz_attempts_count = QuizModel::get_quiz_attempts($offset, $item_per_page, '', $course_filter, $date_filter, $order_filter, null, true, true );
 
 tutor_load_template_from_custom_path(
 	tutor()->path . '/views/quiz/attempt-table.php',

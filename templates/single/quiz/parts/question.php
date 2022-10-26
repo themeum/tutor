@@ -57,7 +57,7 @@
 							}
 						}
 
-						$answers            = tutor_utils()->get_answers_by_quiz_question( $question->question_id, $rand_choice );
+						$answers            = \Tutor\Models\QuizModel::get_answers_by_quiz_question( $question->question_id, $rand_choice );
 						$show_question_mark = (bool) tutor_utils()->avalue_dot( 'show_question_mark', $question_settings );
 						$answer_required    = (bool) tutor_utils()->array_get( 'answer_required', $question_settings );	
 						echo '<div class="quiz-question-title tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-20">';

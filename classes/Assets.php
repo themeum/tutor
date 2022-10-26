@@ -76,8 +76,8 @@ class Assets {
 		$post_type = get_post_type( $post_id );
 
 		$query_vars = $wp_query->query_vars;
-		if ( is_admin() && isset( $_GET['page'] ) ) {
-			$current_page = $_GET['page'];
+		if ( is_admin() && Input::has( 'page' ) ) {
+			$current_page = Input::get( 'page' );
 		} else {
 			$current_page = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
 		}
@@ -292,6 +292,28 @@ class Assets {
 		 * @since v2.0.0
 		 */
 		wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+
+		/**
+		 * Enqueue datetime countdown scripts & styles
+		 *
+		 * Add filter to enqueue countdown scripts & styles
+		 * don't return false if it is true to prevent conflict
+		 * with other filters
+		 *
+		 * @since v2.1.0
+		 */
+		$should_enqueue = apply_filters( 'tutor_should_enqueue_countdown_scripts', false );
+		if ( $should_enqueue ) {
+			wp_enqueue_script( 'tutor-moment', tutor()->url . 'assets/js/lib/countdown/moment.min.js', array(), TUTOR_VERSION, true );
+
+			wp_enqueue_script( 'tutor-moment-timezone', tutor()->url . 'assets/js/lib/countdown/moment-timezone-with-data.min.js', array(), TUTOR_VERSION, true );
+
+			wp_enqueue_script( 'tutor-jquery-countdown', tutor()->url . 'assets/js/lib/countdown/jquery.countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+
+			wp_enqueue_script( 'tutor-countdown', tutor()->url . 'assets/js/lib/countdown/tutor-countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+
+			wp_enqueue_style( 'tutor-countdown', tutor()->url . 'assets/js/lib/countdown/tutor-countdown.min.css', '', TUTOR_VERSION );
+		}
 	}
 
 	public function load_meta_data() {

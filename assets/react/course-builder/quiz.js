@@ -249,7 +249,7 @@ window.jQuery(document).ready(function($) {
 				}
 
 				$('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
-				$('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
+				$('.tutor-quiz-builder-modal-wrap .tutor-modal-container').html(data.data.output);
 				$('.tutor-quiz-builder-modal-wrap')
 					.attr('data-quiz-id', quiz_id)
 					.attr('data-topic-id-of-quiz', topic_id);
@@ -341,7 +341,7 @@ window.jQuery(document).ready(function($) {
 					}
 
 					// Update modal content
-					$('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
+					$('.tutor-quiz-builder-modal-wrap .tutor-modal-container').html(data.data.output);
 
 					window.dispatchEvent(new Event(_tutorobject.content_change_event));
 
@@ -391,7 +391,7 @@ window.jQuery(document).ready(function($) {
 			},
 			success: function(data) {
 				// Add the question form in modal
-				modal.find('.modal-container').html(data.data.output);
+				modal.find('.tutor-modal-container').html(data.data.output);
 				modal.addClass('tutor-has-question-from');
 
 				// Enable quiz answer sorting for multi/radio select
@@ -488,7 +488,6 @@ window.jQuery(document).ready(function($) {
 		var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
 		$formInput.action = 'tutor_quiz_modal_update_question';
 		// If pro active then get desc text from tinyMCE editor
-		
 		if (_tutorobject.tutor_pro_url) {
 			const questionId = $formInput.tutor_quiz_question_id;
 			const eidtorId = 'tutor_quiz_desc_text_editor';
@@ -665,6 +664,7 @@ window.jQuery(document).ready(function($) {
 			// Show attempt slider if reveal
 			let is_retry = $(this).val()=='retry';
 			$('.tutor-attempt-allowed-slider')[is_retry ? 'show' : 'hide']();
+			$('.tutor-pass-required-field')[is_retry ? 'show' : 'hide']();
 		}
 	});
 });

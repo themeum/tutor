@@ -1,0 +1,12 @@
+.tutor-dashboard-my-courses{
+    .tutor-iconic-btn.tutor-my-course-edit{
+        opacity: 0;
+    }
+    .tutor-course-card{
+        &:hover{
+            .tutor-iconic-btn.tutor-my-course-edit{
+                opacity: 1;
+            }
+        }
+    }
+}

@@ -6,6 +6,7 @@
  * Time: 12:03 PM
  */
 
+use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -14,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Base class for displaying a list of items in an ajaxified HTML table.
  *
- * @since 3.1.0
+ * @since 1.1.0
  * @access private
  */
 class Tutor_List_Table {
@@ -22,7 +23,7 @@ class Tutor_List_Table {
 	/**
 	 * The current list of items.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 * @var array
 	 */
 	public $items;
@@ -30,7 +31,7 @@ class Tutor_List_Table {
 	/**
 	 * Various information about the current table.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 * @var array
 	 */
 	protected $_args;
@@ -38,7 +39,7 @@ class Tutor_List_Table {
 	/**
 	 * Various information needed for displaying the pagination.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 * @var array
 	 */
 	protected $_pagination_args = array();
@@ -54,7 +55,7 @@ class Tutor_List_Table {
 	/**
 	 * Cached bulk actions.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 * @var array
 	 */
 	private $_actions;
@@ -62,7 +63,7 @@ class Tutor_List_Table {
 	/**
 	 * Cached pagination output.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 * @var string
 	 */
 	private $_pagination;
@@ -70,7 +71,7 @@ class Tutor_List_Table {
 	/**
 	 * The view switcher modes.
 	 *
-	 * @since 4.1.0
+	 * @since 1.1.0
 	 * @var array
 	 */
 	protected $modes = array();
@@ -78,7 +79,7 @@ class Tutor_List_Table {
 	/**
 	 * Stores the value returned by ->get_column_info().
 	 *
-	 * @since 4.1.0
+	 * @since 1.1.0
 	 * @var array
 	 */
 	protected $_column_headers;
@@ -120,7 +121,7 @@ class Tutor_List_Table {
 	 * The child class should call this constructor from its own constructor to override
 	 * the default $args.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param array|string $args {
 	 *     Array or string of arguments.
@@ -179,7 +180,7 @@ class Tutor_List_Table {
 	/**
 	 * Make private properties readable for backward compatibility.
 	 *
-	 * @since 4.0.0
+	 * @since 1.0.0
 	 *
 	 * @param string $name Property to get.
 	 * @return mixed Property.
@@ -193,7 +194,7 @@ class Tutor_List_Table {
 	/**
 	 * Make private properties settable for backward compatibility.
 	 *
-	 * @since 4.0.0
+	 * @since 1.0.0
 	 *
 	 * @param string $name  Property to check if set.
 	 * @param mixed  $value Property value.
@@ -208,7 +209,7 @@ class Tutor_List_Table {
 	/**
 	 * Make private properties checkable for backward compatibility.
 	 *
-	 * @since 4.0.0
+	 * @since 1.0.0
 	 *
 	 * @param string $name Property to check if set.
 	 * @return bool Whether the property is set.
@@ -222,7 +223,7 @@ class Tutor_List_Table {
 	/**
 	 * Make private properties un-settable for backward compatibility.
 	 *
-	 * @since 4.0.0
+	 * @since 1.0.0
 	 *
 	 * @param string $name Property to unset.
 	 */
@@ -235,7 +236,7 @@ class Tutor_List_Table {
 	/**
 	 * Make private/protected methods readable for backward compatibility.
 	 *
-	 * @since 4.0.0
+	 * @since 1.0.0
 	 *
 	 * @param callable $name      Method to call.
 	 * @param array    $arguments Arguments to pass when calling.
@@ -251,7 +252,7 @@ class Tutor_List_Table {
 	/**
 	 * Checks the current user's permissions
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 * @abstract
 	 */
 	public function ajax_user_can() {
@@ -263,7 +264,7 @@ class Tutor_List_Table {
 	 *
 	 * @uses Tutor_List_Table::set_pagination_args()
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 * @abstract
 	 */
 	public function prepare_items() {
@@ -273,7 +274,7 @@ class Tutor_List_Table {
 	/**
 	 * An internal method that sets all the necessary pagination arguments
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param array|string $args Array or string of arguments with information about the pagination.
 	 */
@@ -303,7 +304,7 @@ class Tutor_List_Table {
 	/**
 	 * Access the pagination args.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param string $key Pagination argument to retrieve. Common values include 'total_items',
 	 *                    'total_pages', 'per_page', or 'infinite_scroll'.
@@ -322,7 +323,7 @@ class Tutor_List_Table {
 	/**
 	 * Whether the table has items to display or not
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @return bool
 	 */
@@ -333,7 +334,7 @@ class Tutor_List_Table {
 	/**
 	 * Message to be displayed when there are no items
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 */
 	public function no_items() {
 		_e( 'No items found.' );
@@ -342,29 +343,34 @@ class Tutor_List_Table {
 	/**
 	 * Displays the search box.
 	 *
-	 * @since 3.1.0
-	 *
 	 * @param string $text     The 'submit' button label.
 	 * @param string $input_id ID attribute value for the search input field.
+	 * @since 1.1.0
+	 * @deprecated 2.0.0
 	 */
 	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+		if ( empty( sanitize_text_field( wp_unslash( $_REQUEST['s'] ?? '' ) ) ) && ! $this->has_items() ) {
 			return;
 		}
 
 		$input_id = $input_id . '-search-input';
 
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		$order          = sanitize_text_field( wp_unslash( $_REQUEST['order'] ?? '' ) );
+		$order_by       = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ?? '' ) );
+		$post_mime_type = sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ?? '' ) );
+		$detached       = sanitize_text_field( wp_unslash( $_REQUEST['detached'] ) ?? '' );
+
+		if ( ! empty( $order_by ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $order_by ) . '" />';
 		}
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		if ( ! empty( $order ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( $order ) . '" />';
 		}
-		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
-			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		if ( ! empty( $post_mime_type ) ) {
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $post_mime_type ) . '" />';
 		}
-		if ( ! empty( $_REQUEST['detached'] ) ) {
-			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		if ( ! empty( $detached ) ) {
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $detached ) . '" />';
 		}
 		?>
 		<p class="search-box">
@@ -376,9 +382,11 @@ class Tutor_List_Table {
 	}
 
 	/**
+	 * Get course list
+	 *
+	 * @param $selected selected text.
 	 * @since 1.8.0
-	 * get course list
-	 * @param $selected | optional
+	 * @deprecated 2.0.0
 	 */
 	public function course_dropdown( $selected = '' ) {
 		$courses = ( current_user_can( 'administrator' ) ) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
@@ -393,17 +401,28 @@ class Tutor_List_Table {
 			';
 		$options = '';
 		foreach ( $courses as $course ) {
-			$options .= '<option value="' . $course->ID . '" ' . selected( $selected, $course->ID, false ) . '> ' . $course->post_title . ' </option>';
+			$options .= '<option value="' . esc_attr( $course->ID ) . '" ' . selected( $selected, $course->ID, false ) . '> ' . esc_attr( $course->post_title ) . ' </option>';
 		}
 
 		$content = str_replace( 'OPTIONS_PLACEHOLDER', $options, $markup );
-		echo $content;
+		$allowed = array(
+			'div'    => array( 'class' => true ),
+			'label'  => array(),
+			'select' => array( 'class' => true ),
+			'option' => array(
+				'value'    => true,
+				'selected' => true,
+			),
+		);
+		echo wp_kses( $content, $allowed );
 	}
 
 	/**
-	 * @since 1.8.0
 	 * get sort by param
-	 * @param $selected | optional
+	 *
+	 * @param string $selected selected value.
+	 * @since 1.8.0
+	 * @deprecated 2.0.0
 	 */
 
 	public function sorting_order( $selected = 'DESC' ) {
@@ -421,26 +440,48 @@ class Tutor_List_Table {
 			$options .= '<option value="' . $order . '" ' . selected( $selected, $order, false ) . '> ' . __( $order, 'tutor' ) . ' </option>';
 		}
 		$content = str_replace( 'OPTION_PLACEHOLDER', $options, $markup );
-		echo $content;
+		$allowed = array(
+			'div'    => array( 'class' => true ),
+			'label'  => array(),
+			'select' => array( 'class' => true ),
+			'option' => array(
+				'value'    => true,
+				'selected' => true,
+			),
+		);
+		echo wp_kses( $content, $allowed );
 	}
-	/**
-	 * @since 1.8.0
-	 * get sort by param
-	 * @param $selected | optional
-	 */
 
+	/**
+	 * get sort by param
+	 *
+	 * @param string $selected selected text.
+	 * @since 1.8.0
+	 * @deprecated 2.0.0
+	 */
 	public function sorting_date( $selected = '' ) {
 		$placeholder = __( get_option( 'date_format' ), 'tutor' );
-		$date_filter = sanitize_text_field( tutor_utils()->array_get( 'date', $_GET, '' ) );
+		$date_filter = Input::get( 'date', '' );
 		$date_input  = '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : '';
 		$markup      = '
 			<div class="alignright assignment-date-box">
 				<label>' . __( 'Date', 'tutor' ) . '</label>
-				<input type="" class="tutor_date_picker tutor-assignment-date-sorting" placeholder="' . $placeholder . '" value="' . $date_input . '">
+				<input type="" class="tutor_date_picker tutor-assignment-date-sorting" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $date_input ) . '">
 				<i class="tutor-icon-calendar"></i>
 			</div>
 			';
-		echo $markup;
+		$allowed     = array(
+			'div'   => array( 'class' => true ),
+			'label' => array(),
+			'i'     => array( 'class' => true ),
+			'input' => array(
+				'type'        => true,
+				'class'       => true,
+				'placeholder' => true,
+				'value'       => true,
+			),
+		);
+		echo wp_kses( $markup, $allowed );
 	}
 
 	/**
@@ -458,7 +499,8 @@ class Tutor_List_Table {
 	/**
 	 * Display the list of views available on this table.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
+	 * @deprecated 2.0.0
 	 */
 	public function views() {
 		$views = $this->get_views();
@@ -468,7 +510,7 @@ class Tutor_List_Table {
 		 * The dynamic portion of the hook name, `$this->screen->id`, refers
 		 * to the ID of the current screen, usually a string.
 		 *
-		 * @since 3.5.0
+		 * @since 1.5.0
 		 *
 		 * @param array $views An array of available list table views.
 		 */
@@ -480,19 +522,26 @@ class Tutor_List_Table {
 
 		$this->screen->render_screen_reader_content( 'heading_views' );
 
-		echo '<ul class="subsubsub">';
+		$html_content = '<ul class="subsubsub">';
 		foreach ( $views as $class => $view ) {
 			$views[ $class ] = "\t<li class='$class'>$view";
 		}
-		echo implode( ' |</li>', $views ) . '</li>';
-		echo '</ul>';
+		$html_content .= implode( ' |</li>', $views ) . '</li>';
+		$html_content .= '</ul>';
+
+		$allowed = array(
+			'ul' => array( 'class' => true ),
+			'li' => array( 'class' => true ),
+		);
+
+		echo wp_kses( $html_content, $allowed );
 	}
 
 	/**
 	 * Get an associative array ( option_name => option_title ) with the list
 	 * of bulk actions available on this table.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @return array
 	 */
@@ -503,7 +552,7 @@ class Tutor_List_Table {
 	/**
 	 * Display the bulk actions dropdown.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param string $which The location of the bulk actions: 'top' or 'bottom'.
 	 *                      This is designated as optional for backward compatibility.
@@ -552,7 +601,7 @@ class Tutor_List_Table {
 	/**
 	 * Get the current action selected from the bulk actions dropdown.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @return string|false The action name or False if no action was selected
 	 */
@@ -575,7 +624,7 @@ class Tutor_List_Table {
 	/**
 	 * Generate row actions div
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param array $actions The list of actions
 	 * @param bool  $always_visible Whether the actions should be always visible
@@ -606,7 +655,7 @@ class Tutor_List_Table {
 	/**
 	 * Display a monthly dropdown for filtering items
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @global wpdb      $wpdb
 	 * @global WP_Locale $wp_locale
@@ -629,10 +678,10 @@ class Tutor_List_Table {
 		}
 
 		$extra_checks = "AND post_status != 'auto-draft'";
-		if ( ! isset( $_GET['post_status'] ) || 'trash' !== $_GET['post_status'] ) {
+		if ( ! Input::has( 'post_status' ) || 'trash' !== Input::get( 'post_status' ) ) {
 			$extra_checks .= " AND post_status != 'trash'";
-		} elseif ( isset( $_GET['post_status'] ) ) {
-			$extra_checks = $wpdb->prepare( ' AND post_status = %s', tutor_sanitize_data($_GET['post_status']) );
+		} elseif ( Input::has( 'post_status' ) ) {
+			$extra_checks = $wpdb->prepare( ' AND post_status = %s', Input::get( 'post_status' ) );
 		}
 
 		$months = $wpdb->get_results(
@@ -651,7 +700,7 @@ class Tutor_List_Table {
 		/**
 		 * Filters the 'Months' drop-down results.
 		 *
-		 * @since 3.7.0
+		 * @since 1.7.0
 		 *
 		 * @param object $months    The months drop-down query results.
 		 * @param string $post_type The post type.
@@ -664,7 +713,7 @@ class Tutor_List_Table {
 			return;
 		}
 
-		$m = isset( $_GET['m'] ) ? (int) $_GET['m'] : 0;
+		$m = Input::get( 'm', 0, Input::TYPE_INT );
 		?>
 		<label for="filter-by-date" class="screen-reader-text"><?php _e( 'Filter by date' ); ?></label>
 		<select name="m" id="filter-by-date">
@@ -694,7 +743,7 @@ class Tutor_List_Table {
 	/**
 	 * Display a view switcher
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param string $current_mode
 	 */
@@ -723,7 +772,7 @@ class Tutor_List_Table {
 	/**
 	 * Display a comment count bubble
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param int $post_id          The post ID.
 	 * @param int $pending_comments Number of pending comments.
@@ -795,7 +844,7 @@ class Tutor_List_Table {
 	/**
 	 * Get the current page number
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @return int
 	 */
@@ -812,7 +861,7 @@ class Tutor_List_Table {
 	/**
 	 * Get number of items to display on a single page
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param string $option
 	 * @param int    $default
@@ -833,7 +882,7 @@ class Tutor_List_Table {
 		 * 'users_network_per_page', 'edit_post_per_page', 'edit_page_per_page',
 		 * 'edit_{$post_type}_per_page', etc.
 		 *
-		 * @since 2.9.0
+		 * @since 1.9.0
 		 *
 		 * @param int $per_page Number of items to be displayed. Default 20.
 		 */
@@ -843,7 +892,7 @@ class Tutor_List_Table {
 	/**
 	 * Display the pagination.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param string $which
 	 */
@@ -972,7 +1021,7 @@ class Tutor_List_Table {
 	 * Get a list of columns. The format is:
 	 * 'internal-name' => 'Title'
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 * @abstract
 	 *
 	 * @return array
@@ -989,7 +1038,7 @@ class Tutor_List_Table {
 	 *
 	 * The second format will make the initial sorting order be descending
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @return array
 	 */
@@ -1000,7 +1049,7 @@ class Tutor_List_Table {
 	/**
 	 * Gets the name of the default primary column.
 	 *
-	 * @since 4.3.0
+	 * @since 1.3.0
 	 *
 	 * @return string Name of the default primary column, in this case, an empty string.
 	 */
@@ -1029,7 +1078,7 @@ class Tutor_List_Table {
 	/**
 	 * Public wrapper for Tutor_List_Table::get_default_primary_column_name().
 	 *
-	 * @since 4.4.0
+	 * @since 1.4.0
 	 *
 	 * @return string Name of the default primary column.
 	 */
@@ -1040,7 +1089,7 @@ class Tutor_List_Table {
 	/**
 	 * Gets the name of the primary column.
 	 *
-	 * @since 4.3.0
+	 * @since 1.3.0
 	 *
 	 * @return string The name of the primary column.
 	 */
@@ -1057,7 +1106,7 @@ class Tutor_List_Table {
 		/**
 		 * Filters the name of the primary column for the current list table.
 		 *
-		 * @since 4.3.0
+		 * @since 1.3.0
 		 *
 		 * @param string $default Column name default for the specific list table, e.g. 'name'.
 		 * @param string $context Screen ID for specific list table, e.g. 'plugins'.
@@ -1074,7 +1123,7 @@ class Tutor_List_Table {
 	/**
 	 * Get a list of all, hidden and sortable columns, with filter applied
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @return array
 	 */
@@ -1082,7 +1131,7 @@ class Tutor_List_Table {
 		// $_column_headers is already set / cached
 		if ( isset( $this->_column_headers ) && is_array( $this->_column_headers ) ) {
 			// Back-compat for list tables that have been manually setting $_column_headers for horse reasons.
-			// In 4.3, we added a fourth argument for primary column.
+			// In 1.3, we added a fourth argument for primary column.
 			$column_headers = array( array(), array(), array(), $this->get_primary_column_name() );
 			foreach ( $this->_column_headers as $key => $value ) {
 				$column_headers[ $key ] = $value;
@@ -1101,7 +1150,7 @@ class Tutor_List_Table {
 		 * The dynamic portion of the hook name, `$this->screen->id`, refers
 		 * to the ID of the current screen, usually a string.
 		 *
-		 * @since 3.5.0
+		 * @since 1.5.0
 		 *
 		 * @param array $sortable_columns An array of sortable columns.
 		 */
@@ -1130,7 +1179,7 @@ class Tutor_List_Table {
 	/**
 	 * Return number of visible columns
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @return int
 	 */
@@ -1143,7 +1192,7 @@ class Tutor_List_Table {
 	/**
 	 * Print column headers, accounting for hidden and sortable columns.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @staticvar int $cb_counter
 	 *
@@ -1221,7 +1270,7 @@ class Tutor_List_Table {
 	/**
 	 * Display the table
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 */
 	public function display( $enable_sorting_field_with_bulk_action = false ) {
 		$singular = $this->_args['singular'];
@@ -1264,7 +1313,7 @@ class Tutor_List_Table {
 	/**
 	 * Get a list of CSS classes for the Tutor_List_Table table tag.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @return array List of CSS classes for the table tag.
 	 */
@@ -1275,7 +1324,7 @@ class Tutor_List_Table {
 	/**
 	 * Generate the table navigation above or below the table
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 * @param string $which
 	 */
 	protected function display_tablenav( $which ) {
@@ -1388,7 +1437,7 @@ class Tutor_List_Table {
 	/**
 	 * Extra controls to be displayed between bulk actions and pagination
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param string $which
 	 */
@@ -1397,7 +1446,7 @@ class Tutor_List_Table {
 	/**
 	 * Generate the tbody element for the list table.
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 */
 	public function display_rows_or_placeholder() {
 		if ( $this->has_items() ) {
@@ -1412,7 +1461,7 @@ class Tutor_List_Table {
 	/**
 	 * Generate the table rows
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 */
 	public function display_rows() {
 		foreach ( $this->items as $item ) {
@@ -1423,7 +1472,7 @@ class Tutor_List_Table {
 	/**
 	 * Generates content for a single row of the table
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param object $item The current item
 	 */
@@ -1449,7 +1498,7 @@ class Tutor_List_Table {
 	/**
 	 * Generates the columns for a single row of the table
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 *
 	 * @param object $item The current item
 	 */
@@ -1490,7 +1539,7 @@ class Tutor_List_Table {
 				echo tutor_kses_html( $this->handle_row_actions( $item, $column_name, $primary ) );
 				echo '</td>';
 			} else {
-				echo '<td ' . $attributes . '>'; // esc_attr used already 
+				echo '<td ' . $attributes . '>'; // esc_attr used already
 				echo tutor_kses_html( $this->column_default( $item, $column_name ) );
 				echo tutor_kses_html( $this->handle_row_actions( $item, $column_name, $primary ) );
 				echo '</td>';
@@ -1501,7 +1550,7 @@ class Tutor_List_Table {
 	/**
 	 * Generates and display row actions links for the list table.
 	 *
-	 * @since 4.3.0
+	 * @since 1.3.0
 	 *
 	 * @param object $item        The item being acted upon.
 	 * @param string $column_name Current column name.
@@ -1515,7 +1564,7 @@ class Tutor_List_Table {
 	/**
 	 * Handle an incoming ajax request (called from admin-ajax.php)
 	 *
-	 * @since 3.1.0
+	 * @since 1.1.0
 	 */
 	public function ajax_response() {
 		$this->prepare_items();

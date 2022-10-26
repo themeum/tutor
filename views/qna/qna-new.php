@@ -2,7 +2,7 @@
 extract( $data ); // $course_id, $context.
 ?>
 <div class="tutor-qa-new tutor-quesanswer" data-course_id="<?php echo esc_attr( $course_id ); ?>" data-question_id="0" data-context="<?php echo esc_attr( $context ); ?>">
-	<div class="tutor-quesanswer-askquestion">
+	<div class="tutor-quesanswer-askquestion tutor-qna-reply-editor">
 
 		<?php
 			$placeholder = __( 'Do you have any questions?', 'tutor' );
