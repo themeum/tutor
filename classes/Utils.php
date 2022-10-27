@@ -1811,7 +1811,8 @@ class Utils {
 					! empty( $video['source_youtube'] ) ||
 					! empty( $video['source_vimeo'] ) ||
 					! empty( $video['source_embedded'] ) ||
-					! empty( $video['source_shortcode'] );
+					! empty( $video['source_shortcode'] ) ||
+					( isset( $video['source_bunnynet'] ) && ! empty( $video['source_bunnynet'] ) );
 
 				return $not_empty ? $video : false;
 			}
