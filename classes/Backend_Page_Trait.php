@@ -1,10 +1,12 @@
 <?php
 /**
- * Backend Page Trait to use with existing class
- * contains backend page related reuseable code snippet
+ * Backend Page Trait
+ * Use this trait in existing classes to reuse frequently used methods
  *
- * @package Enrollment List
- * @since v2.0.0
+ * @author themeum
+ * @link https://themeum.com
+ * @package Tutor
+ * @since 2.0.0
  */
 
 namespace TUTOR;
@@ -13,8 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /**
- * Trait for backend pages
- * Reuse able methods implemented can be override from child class
+ * Backend Page Trait
+ *
+ * @since 2.0.0
  */
 trait Backend_Page_Trait {
 	/**
