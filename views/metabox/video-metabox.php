@@ -48,6 +48,7 @@ function tutor_video_input_state($videoSource, $source){
     $value = ($videoSource == $source && in_array($source, $GLOBALS['supported_sources'])) ? 'block' : 'none';
     echo 'display:'.$value.';';
 }
+
 ?>
 
 <div class="tutor-mb-32">
@@ -70,6 +71,14 @@ function tutor_video_input_state($videoSource, $source){
                 <i class="tutor-icon-shortcode" data-for="shortcode"></i>
                 <i class="tutor-icon-link" data-for="external_url"></i>
                 <i class="tutor-icon-coding" data-for="embedded"></i>
+                <?php
+                /**
+                 * Hook added to add external video source icon
+                 *
+                 * @since v2.1.2
+                 */
+                do_action( 'tutor_after_video_source_icon' );
+                ?>
             </div>
             <select name="video[source]" class="tutor-form-control tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
