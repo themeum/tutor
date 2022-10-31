@@ -225,12 +225,11 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.2 - October 31, 2022
+= 2.1.2 - November 1, 2022
 
 Update: BunnyNet Compatibility Update is Introduced
 Update: More Security Compatibility Update is Introduced
 Fix: Backend Assignment page was not showing newly submitted assignments in some cases
-Fix: AJAX request was getting blocked in some cases
 
 = 2.1.1 - October 25, 2022
 
