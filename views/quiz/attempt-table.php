@@ -43,6 +43,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 			<tbody>
 				<?php foreach ( $attempt_list as $attempt ) : ?>
 					<?php
+						$course_id         = is_object( $attempt ) && property_exists( $attempt, 'course_id' ) ? $attempt->course_id : 0;
 						$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
 						$answers           = isset( $answers_array[ $attempt->attempt_id ] ) ? $answers_array[ $attempt->attempt_id ] : array();
 						$attempt_info      = @unserialize( $attempt->attempt_info );
@@ -163,7 +164,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											}
 											?>
 										</a>
-										<?php if ( ! is_admin() && current_user_can( tutor()->instructor_role ) ) : ?>
+										<?php if ( ! is_admin() && $course_id && ( tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id ) || current_user_can( 'administrator' ) ) ) : ?>
 										<a href="#" class="tutor-quiz-attempt-delete tutor-iconic-btn tutor-flex-shrink-0 tutor-ml-4" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>" data-tutor-modal-target="tutor-common-confirmation-modal">
 											<i class="tutor-icon-trash-can-line" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>"></i>
 										</a>
