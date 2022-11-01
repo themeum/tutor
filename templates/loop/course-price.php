@@ -14,7 +14,18 @@
 ?>
 <?php
 	$course_id    = get_the_ID();
-	$button_class = ' tutor-course-list-enroll';
+	$monetization   = tutor_utils()->get_option( 'monetize_by' );
+	/**
+	 * If Monetization is PMPRO then ignore ajax enrolment
+	 * to avoid Paid course enrollment without payment.
+	 *
+	 * Note: There is no mapping between Tutor Course and PMPRO
+	 * That is way there is no way to determine whether course if free
+	 * or paid
+	 *
+	 * @since v2.1.2
+	 */
+	$button_class = 'pmpro' === $monetization ? ' ' : ' tutor-course-list-enroll';
 	if ( ! is_user_logged_in() ) {
 		$button_class = ' tutor-open-login-modal';
 	}
