@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 						continue;
 					}
 					let editWrapClass = assignmentEditFilePreview ? 'tutor-col-sm-5 tutor-py-16 tutor-mr-16' : '';
-					fileCard += `<div class="tutor-instructor-card ${editWrapClass} tutor-assignment-tmp-file">
+					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
                                     <div class="tutor-icard-content">
                                         <div class="tutor-fs-6 tutor-color-secondary">
                                             ${file.name}
