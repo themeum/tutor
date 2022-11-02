@@ -217,6 +217,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		fileUploadField.addEventListener('change', tutorAssignmentFileHandler);
 	}
 	function tutorAssignmentFileHandler() {
+
 		const uploadedFileSize = [...fileUploadField.files].reduce((sum, file) => sum + file.size, 0); // byte
 		const uploadSizeLimit =
 			parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
@@ -227,10 +228,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		).length;
 		const allowedToUpload = maxAllowedFiles - alreadyUploaded;
 		if (fileUploadField.files.length > allowedToUpload) {
+			fileUploadField.value = null;
 			tutor_toast(__('Warning', 'tutor'), __(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'), 'error');
 			return;
+
 		}
 		if (uploadedFileSize > uploadSizeLimit) {
+			fileUploadField.value = null;
 			tutor_toast(
 				__('Warning', 'tutor'),
 				__(`File size exceeds maximum limit ${Math.floor(uploadSizeLimit / 1000000)} MB.`, 'tutor'),
@@ -260,7 +264,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 						continue;
 					}
 					let editWrapClass = assignmentEditFilePreview ? 'tutor-col-sm-5 tutor-py-16 tutor-mr-16' : '';
-					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
+					fileCard += `<div class="tutor-instructor-card ${editWrapClass} tutor-assignment-tmp-file">
                                     <div class="tutor-icard-content">
                                         <div class="tutor-fs-6 tutor-color-secondary">
                                             ${file.name}
