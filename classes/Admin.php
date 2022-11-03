@@ -1,25 +1,33 @@
 <?php
+/**
+ * Class Admin
+ *
+ * @author themeum
+ * @link https://themeum.com
+ * @package Tutor
+ * @since v.1.0.0
+ */
 
 namespace TUTOR;
 
 use TUTOR\Input;
 
-/**
- * Class Admin
- *
- * @package TUTOR
- *
- * @since v.1.0.0
- */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Admin Class
+ *
+ * @since 1.0.0
+ */
 class Admin {
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
-		// Force activate menu for necessary
+		// Force activate menu for necessary.
 		add_filter( 'parent_file', array( $this, 'parent_menu_active' ) );
 		add_filter( 'submenu_file', array( $this, 'submenu_file_active' ), 10, 2 );
 
@@ -29,25 +37,26 @@ class Admin {
 		add_action( 'admin_action_uninstall_tutor_and_erase', array( $this, 'erase_tutor_data' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( TUTOR_FILE ), array( $this, 'plugin_action_links' ) );
 
-		// Plugin Row Meta
+		// Plugin Row Meta.
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 
-		// Admin Footer Text
+		// Admin Footer Text.
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
-		// Register Course Widget
+		// Register Course Widget.
 		add_action( 'widgets_init', array( $this, 'register_course_widget' ) );
 
-		// Handle flash toast message for redirect_to util helper
-		add_action( 'admin_head', array( new Utils, 'handle_flash_message' ), 999 );
+		// Handle flash toast message for redirect_to util helper.
+		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
 	}
 
 	/**
 	 * Register admin menus
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function register_menu() {
-		$hasPro = tutor()->has_pro;
+		$has_pro = tutor()->has_pro;
 
 		$unanswered_questions = tutor_utils()->unanswered_question_count();
 		$unanswered_bubble    = '';
@@ -58,7 +67,7 @@ class Admin {
 		$course_post_type = tutor()->course_post_type;
 
 		$pro_text = '';
-		if ( $hasPro ) {
+		if ( $has_pro ) {
 			$pro_text = ' ' . __( 'Pro', 'tutor' );
 		}
 
@@ -83,8 +92,8 @@ class Admin {
 			$icon_base64_uri,
 			$menu_position
 		);
-		
-		// @since v2.0.0
+
+		// Added @since v2.0.0.
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
 
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
@@ -102,7 +111,7 @@ class Admin {
 		add_submenu_page( 'tutor', __( 'Q & A', 'tutor' ), __( 'Q & A ', 'tutor' ) . $unanswered_bubble, 'manage_tutor_instructor', Question_Answers_List::Question_Answer_PAGE, array( $this, 'question_answer' ) );
 
 		add_submenu_page( 'tutor', __( 'Quiz Attempts', 'tutor' ), __( 'Quiz Attempts', 'tutor' ), 'manage_tutor_instructor', Quiz_Attempts_List::QUIZ_ATTEMPT_PAGE, array( $this, 'quiz_attempts' ) );
-		
+
 		if ( $enable_course_marketplace ) {
 			add_submenu_page( 'tutor', __( 'Withdraw Requests', 'tutor' ), __( 'Withdraw Requests', 'tutor' ), 'manage_tutor', Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE, array( $this, 'withdraw_requests' ) );
 		}
@@ -115,27 +124,57 @@ class Admin {
 
 		add_submenu_page( 'tutor', __( 'Settings', 'tutor' ), __( 'Settings', 'tutor' ), 'manage_tutor', 'tutor_settings', array( new \TUTOR\Options_V2(), 'load_settings_page' ) );
 
-		if ( ! $hasPro ) {
+		if ( ! $has_pro ) {
 			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
 		}
 	}
 
+	/**
+	 * Show students page
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
 	public function tutor_students() {
 		include tutor()->path . 'views/pages/students.php';
 	}
 
+	/**
+	 * Show instructor page
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
 	public function tutor_instructors() {
 		include tutor()->path . 'views/pages/instructors.php';
 	}
 
+	/**
+	 * Show announcements page
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
 	public function tutor_announcements() {
 		include tutor()->path . 'views/pages/announcements.php';
 	}
 
+	/**
+	 * Show Q&A page
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
 	public function question_answer() {
 		include tutor()->path . 'views/pages/question_answer.php';
 	}
 
+	/**
+	 * Show quiz attempts page
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
 	public function quiz_attempts() {
 		include tutor()->path . 'views/pages/quiz_attempts.php';
 	}
@@ -149,6 +188,12 @@ class Admin {
 		include tutor()->path . 'views/pages/withdraw_requests.php';
 	}
 
+	/**
+	 * Enable or disable addons
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
 	public function enable_disable_addons() {
 
 		if ( defined( 'TUTOR_PRO_VERSION' ) ) {
@@ -158,6 +203,12 @@ class Admin {
 		}
 	}
 
+	/**
+	 * Tutor tools page (OLD)
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
 	public function tutor_tools_old() {
 		$tutor_admin_tools_page = Input::get( 'tutor_admin_tools_page' );
 		if ( $tutor_admin_tools_page ) {
@@ -186,6 +237,12 @@ class Admin {
 		}
 	}
 
+	/**
+	 * Show pro upgrade page
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
 	public function tutor_get_pro() {
 		include tutor()->path . 'views/pages/get-pro.php';
 	}
@@ -193,12 +250,13 @@ class Admin {
 	/**
 	 * Parent menu active
 	 *
-	 * @param string $parent_file
+	 * @param string $parent_file parent file.
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function parent_menu_active( $parent_file ) {
 		$taxonomy = Input::get( 'taxonomy' );
-		if ( $taxonomy === 'course-category' || $taxonomy === 'course-tag' ) {
+		if ( 'course-category' === $taxonomy || 'course-tag' === $taxonomy ) {
 			return 'tutor';
 		}
 
@@ -208,18 +266,19 @@ class Admin {
 	/**
 	 * Sub-menu active
 	 *
-	 * @param string $submenu_file
-	 * @param string $parent_file
+	 * @param string $submenu_file submenu file.
+	 * @param string $parent_file parent file.
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function submenu_file_active( $submenu_file, $parent_file ) {
 		$taxonomy         = Input::get( 'taxonomy' );
 		$course_post_type = tutor()->course_post_type;
 
-		if ( $taxonomy === 'course-category' ) {
+		if ( 'course-category' === $taxonomy ) {
 			return 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type;
 		}
-		if ( $taxonomy === 'course-tag' ) {
+		if ( 'course-tag' === $taxonomy ) {
 			return 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type;
 		}
 
@@ -228,21 +287,31 @@ class Admin {
 
 	/**
 	 * Filter posts for instructor
+	 *
+	 * @return void
+	 * @since 1.0.0
 	 */
 	public function filter_posts_for_instructors() {
 		if ( ! current_user_can( 'administrator' ) && current_user_can( tutor()->instructor_role ) ) {
-			@remove_menu_page( 'edit-comments.php' ); // Comments
+			@remove_menu_page( 'edit-comments.php' ); // Comments.
 			add_filter( 'posts_clauses_request', array( $this, 'posts_clauses_request' ) );
 		}
 	}
 
+	/**
+	 * Request for posts clauses
+	 *
+	 * @param mixed $clauses clauses.
+	 * @return mixed
+	 * @since 1.0.0
+	 */
 	public function posts_clauses_request( $clauses ) {
 
 		if ( ! is_admin() || ( ! Input::has( 'post_type' ) || Input::get( 'post_type' ) != tutor()->course_post_type ) || tutor_utils()->has_user_role( array( 'administrator', 'editor' ) ) ) {
 			return $clauses;
 		}
 
-		// Need multi instructor check
+		// Need multi instructor check.
 		global $wpdb;
 
 		$user_id = get_current_user_id();
@@ -253,7 +322,7 @@ class Admin {
 		$in_query_pre   = count( $own_courses ) ? implode( ',', $own_courses ) : null;
 		$in_query_where = $in_query_pre ? " OR {$wpdb->posts}.ID IN({$in_query_pre})" : '';
 
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type    = tutor()->course_post_type;
 		$custom_author_query = "  AND ({$wpdb->posts}.post_type!='{$course_post_type}' OR {$wpdb->posts}.post_author = {$user_id}) {$in_query_where}";
 
 		$clauses['where'] .= $custom_author_query;
@@ -292,16 +361,19 @@ class Admin {
 				);
 
 				if ( ! $get_assigned_courses_ids ) {
-					wp_die( __( 'Permission Denied', 'tutor' ) );
+					wp_die( esc_html__( 'Permission Denied', 'tutor' ) );
 				}
 			}
 		}
 	}
 
 	/**
-	 * Status
+	 * Scan template files
+	 *
+	 * @param string $template_path template file path.
+	 * @return array
+	 * @since 1.0.0
 	 */
-
 	public static function scan_template_files( $template_path = null ) {
 		if ( ! $template_path ) {
 			$template_path = tutor()->path . 'templates/';
@@ -331,6 +403,7 @@ class Admin {
 	 * Get Template overridden files
 	 *
 	 * @return array
+	 * @since 1.0.0
 	 */
 	public static function template_overridden_files() {
 		$template_files = self::scan_template_files();
@@ -356,12 +429,13 @@ class Admin {
 	 * Erase tutor data
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function erase_tutor_data() {
 		global $wpdb;
 
 		$is_erase_data = tutor_utils()->get_option( 'delete_on_uninstall' );
-		// => Deleting Data
+		// Deleting Data.
 
 		$plugin_file = tutor()->basename;
 		if ( $is_erase_data && current_user_can( 'deactivate_plugin', $plugin_file ) ) {
@@ -382,23 +456,23 @@ class Admin {
 			);
 
 			$post_type_strings = "'" . implode( "','", $post_types ) . "'";
-			$tutor_posts       = $wpdb->get_col( "SELECT ID from {$wpdb->posts} WHERE post_type in({$post_type_strings}) ;" );
+			$tutor_posts       = $wpdb->get_col( "SELECT ID from {$wpdb->posts} WHERE post_type in({$post_type_strings}) ;" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			if ( is_array( $tutor_posts ) && count( $tutor_posts ) ) {
 				foreach ( $tutor_posts as $post_id ) {
-					// Delete categories
+					// Delete categories.
 					$terms = wp_get_object_terms( $post_id, 'course-category' );
 					foreach ( $terms as $term ) {
 						wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-category' );
 					}
 
-					// Delete tags if available
+					// Delete tags if available.
 					$terms = wp_get_object_terms( $post_id, 'course-tag' );
 					foreach ( $terms as $term ) {
 						wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-tag' );
 					}
 
-					// Delete All Meta
+					// Delete All Meta.
 					$wpdb->delete( $wpdb->postmeta, array( 'post_id' => $post_id ) );
 					$wpdb->delete( $wpdb->posts, array( 'ID' => $post_id ) );
 				}
@@ -410,7 +484,7 @@ class Admin {
 			$tutor_comments       = $wpdb->get_col( "SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;" );
 			$comments_ids_strings = "'" . implode( "','", $tutor_comments ) . "'";
 			if ( is_array( $tutor_comments ) && count( $tutor_comments ) ) {
-				$wpdb->query( "DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) " );
+				$wpdb->query( "DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) " ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			}
 			$wpdb->delete( $wpdb->comments, array( 'comment_agent' => 'comment_agent' ) );
 
@@ -425,8 +499,9 @@ class Admin {
 			$wpdb->delete( $wpdb->usermeta, array( 'meta_key' => '_is_tutor_instructor' ) );
 			$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE  '%_tutor_completed_lesson_id_%' " );
 
-			// Deleting Table
+			// Deleting Table.
 			$prefix = $wpdb->prefix;
+			//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$wpdb->query( "DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws " );
 
 			deactivate_plugins( $plugin_file );
@@ -439,13 +514,14 @@ class Admin {
 	/**
 	 * Plugin activation link
 	 *
-	 * @param array $actions
+	 * @param array $actions action list.
 	 * @return array
+	 * @since 1.0.0
 	 */
 	public function plugin_action_links( $actions ) {
-		$hasPro = tutor()->has_pro;
+		$has_pro = tutor()->has_pro;
 
-		if ( ! $hasPro ) {
+		if ( ! $has_pro ) {
 			$actions['tutor_pro_link'] =
 				'<a href="https://www.themeum.com/product/tutor-lms/#pricing?utm_source=tutor_plugin_action_link&utm_medium=wordpress_dashboard&utm_campaign=go_premium" target="_blank">
 					<span style="color: #ff7742; font-weight: bold;">' .
@@ -462,13 +538,14 @@ class Admin {
 	/**
 	 * Add plugin meta data in WP plugins list page
 	 *
-	 * @param array  $plugin_meta
-	 * @param string $plugin_file
+	 * @param array  $plugin_meta plugin meta data.
+	 * @param string $plugin_file plugin file.
 	 * @return array
+	 * @since 1.0.0
 	 */
 	public function plugin_row_meta( $plugin_meta, $plugin_file ) {
 
-		if ( $plugin_file === tutor()->basename ) {
+		if ( tutor()->basename === $plugin_file ) {
 			$plugin_meta[] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( 'https://docs.themeum.com/tutor-lms/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_docs_link' ),
@@ -485,11 +562,11 @@ class Admin {
 	}
 
 	/**
-	 * @param $footer_text
-	 *
-	 * @return string
-	 *
 	 * Add footer text only on tutor pages
+	 *
+	 * @param string $footer_text footer text.
+	 * @return string
+	 * @since 1.0.0
 	 */
 	public function admin_footer_text( $footer_text ) {
 		$current_screen = get_current_screen();
@@ -499,6 +576,7 @@ class Admin {
 		 */
 		if ( apply_filters( 'tutor_display_admin_footer_text', ( tutor_utils()->array_get( 'parent_base', $current_screen ) === 'tutor' ) ) ) {
 			$footer_text = sprintf(
+				/* translators: %s: plugin name */
 				__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'tutor' ),
 				sprintf( '<strong>%s</strong>', esc_html__( 'Tutor LMS', 'tutor' ) ),
 				'<a href="https://wordpress.org/support/plugin/tutor/reviews?rate=5#new-post" target="_blank" class="tutor-rating-link">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
@@ -512,6 +590,7 @@ class Admin {
 	 * Register course widget
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function register_course_widget() {
 		register_widget( 'Tutor\Course_Widget' );
@@ -520,7 +599,7 @@ class Admin {
 	/**
 	 * Tutor Course List
 	 *
-	 * @package Course List
+	 * @return void
 	 * @since v2.0.0
 	 */
 	public function tutor_course_list() {
@@ -531,6 +610,7 @@ class Admin {
 	 * Show welcome page
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function welcome_page() {
 		Tutor_Setup::mark_as_visited();
