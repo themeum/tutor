@@ -97,7 +97,7 @@
 			tutor_toast('Warning', 'You can access and edit this Lesson with WP Editor only when you update this Lesson at first.', 'warning');
 			return;
 		} else {
-			window.location.href = currentTarget.href
+			window.open(currentTarget.href, '_blank');
 		}
 	}
 </script>
