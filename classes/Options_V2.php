@@ -2,13 +2,10 @@
 /**
  * Options for TutorLMS
  *
- * @since v.2.0
- *
- * @author Themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Certificate
- * @version 2.0
+ * @version  2.0.0
+ * @package  Tutor\Options
+ * @category Options
+ * @author   Themeum <support@themeum.com>
  */
 
 namespace Tutor;

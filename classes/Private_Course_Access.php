@@ -2,8 +2,10 @@
 /**
  * Private Course Access
  *
- * @since 1.0.0
- * @package Tutor\Course
+ * @version  1.0.0
+ * @package  Tutor\Course
+ * @category Private_Course_Access
+ * @author   Themeum <support@themeum.com>
  */
 
 namespace TUTOR;
@@ -14,11 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Register Tutor's post types
- *
- * @version  1.0.0
- * @package  Tutor\Course
- * @category Private_Course_Access
- * @author   Themeum <support@themeum.com>
  */
 class Private_Course_Access {
 
