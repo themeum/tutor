@@ -2,8 +2,10 @@
 /**
  * Register post types
  *
- * @since 1.0.0
- * @package Tutor\PostTypes
+ * @version  1.0.0
+ * @package  Tutor\PostTypes
+ * @category PostTypes
+ * @author   Themeum <support@themeum.com>
  */
 
 namespace TUTOR;
@@ -13,11 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /**
  * Register Tutor's post types
- *
- * @version  1.0.0
- * @package  Tutor\PostTypes
- * @category PostTypes
- * @author   Themeum <support@themeum.com>
  */
 class Post_types {
 
