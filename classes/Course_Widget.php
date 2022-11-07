@@ -24,8 +24,8 @@ class Course_Widget extends \WP_Widget {
 	/**
 	 * Constructor
 	 *
-	 * @return void
 	 * @since 1.3.1
+	 * @return void
 	 */
 	public function __construct() {
 		parent::__construct(
@@ -38,14 +38,13 @@ class Course_Widget extends \WP_Widget {
 	/**
 	 * Front-end display of widget.
 	 *
+	 * @since 1.3.1
 	 * @see WP_Widget::widget()
 	 *
 	 * @param array $args     Widget arguments.
 	 * @param array $instance Saved values from database.
 	 *
 	 * @return void
-	 *
-	 * @since 1.3.1
 	 */
 	public function widget( $args, $instance ) {
 		echo wp_kses(
@@ -131,11 +130,11 @@ class Course_Widget extends \WP_Widget {
 	/**
 	 * Back-end widget form.
 	 *
+	 * @since 1.3.1
 	 * @see WP_Widget::form()
 	 *
 	 * @param array $instance Previously saved values from database.
 	 * @return void
-	 * @since 1.3.1
 	 */
 	public function form( $instance ) {
 		$title       = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( 'New title', 'tutor' );
@@ -221,14 +220,13 @@ class Course_Widget extends \WP_Widget {
 	/**
 	 * Sanitize widget form values as they are saved.
 	 *
+	 * @since 1.3.1
 	 * @see WP_Widget::update()
 	 *
 	 * @param array $new_instance Values just sent to be saved.
 	 * @param array $old_instance Previously saved values from database.
 	 *
 	 * @return array Updated safe values to be saved.
-	 * 
-	 * @since 1.3.1
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance                = array();
