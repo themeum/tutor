@@ -204,4 +204,19 @@ class Input {
 		return isset( $_REQUEST[ $key ] );
 	}
 
+	/**
+	 * Sanitize & unslash a request data
+	 *
+	 * @param string $key a request key.
+	 * @param mixed  $default_value a default value if key not exists.
+	 *
+	 * @return mixed
+	 */
+	public static function sanitize_request_data( string $key, $default_value = '' ) {
+		if ( self::has( $key ) ) {
+			return sanitize_text_field( wp_unslash( $_REQUEST[ $key ] ) ); //phpcs:ignore
+		}
+		return $default_value;
+	}
+
 }
