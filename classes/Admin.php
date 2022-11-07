@@ -1,11 +1,11 @@
 <?php
 /**
- * Class Admin
+ * Manage admin menu and plugin related logic
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
- * @since v.1.0.0
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 namespace TUTOR;
@@ -24,6 +24,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Admin {
 	/**
 	 * Constructor
+	 *
+	 * @since 1.0.0
+	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
@@ -52,8 +55,8 @@ class Admin {
 	/**
 	 * Register admin menus
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function register_menu() {
 		$has_pro = tutor()->has_pro;
@@ -132,8 +135,8 @@ class Admin {
 	/**
 	 * Show students page
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function tutor_students() {
 		include tutor()->path . 'views/pages/students.php';
@@ -142,8 +145,8 @@ class Admin {
 	/**
 	 * Show instructor page
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function tutor_instructors() {
 		include tutor()->path . 'views/pages/instructors.php';
@@ -152,8 +155,8 @@ class Admin {
 	/**
 	 * Show announcements page
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function tutor_announcements() {
 		include tutor()->path . 'views/pages/announcements.php';
@@ -162,8 +165,8 @@ class Admin {
 	/**
 	 * Show Q&A page
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function question_answer() {
 		include tutor()->path . 'views/pages/question_answer.php';
@@ -172,8 +175,8 @@ class Admin {
 	/**
 	 * Show quiz attempts page
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function quiz_attempts() {
 		include tutor()->path . 'views/pages/quiz_attempts.php';
@@ -182,7 +185,8 @@ class Admin {
 	/**
 	 * Show the withdraw requests table
 	 *
-	 * @since v.1.2.0
+	 * @since 1.2.0
+	 * @return void
 	 */
 	public function withdraw_requests() {
 		include tutor()->path . 'views/pages/withdraw_requests.php';
@@ -191,8 +195,8 @@ class Admin {
 	/**
 	 * Enable or disable addons
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function enable_disable_addons() {
 
@@ -206,8 +210,8 @@ class Admin {
 	/**
 	 * Tutor tools page (OLD)
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function tutor_tools_old() {
 		$tutor_admin_tools_page = Input::get( 'tutor_admin_tools_page' );
@@ -240,8 +244,8 @@ class Admin {
 	/**
 	 * Show pro upgrade page
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function tutor_get_pro() {
 		include tutor()->path . 'views/pages/get-pro.php';
@@ -250,9 +254,10 @@ class Admin {
 	/**
 	 * Parent menu active
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $parent_file parent file.
 	 * @return string
-	 * @since 1.0.0
 	 */
 	public function parent_menu_active( $parent_file ) {
 		$taxonomy = Input::get( 'taxonomy' );
@@ -266,10 +271,12 @@ class Admin {
 	/**
 	 * Sub-menu active
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $submenu_file submenu file.
 	 * @param string $parent_file parent file.
+	 *
 	 * @return string
-	 * @since 1.0.0
 	 */
 	public function submenu_file_active( $submenu_file, $parent_file ) {
 		$taxonomy         = Input::get( 'taxonomy' );
@@ -288,8 +295,8 @@ class Admin {
 	/**
 	 * Filter posts for instructor
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function filter_posts_for_instructors() {
 		if ( ! current_user_can( 'administrator' ) && current_user_can( tutor()->instructor_role ) ) {
@@ -301,9 +308,10 @@ class Admin {
 	/**
 	 * Request for posts clauses
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param mixed $clauses clauses.
 	 * @return mixed
-	 * @since 1.0.0
 	 */
 	public function posts_clauses_request( $clauses ) {
 
@@ -333,7 +341,8 @@ class Admin {
 	/**
 	 * Prevent unauthorised course/lesson edit page by direct URL
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 * @return void
 	 */
 	public function check_if_current_users_post() {
 		if ( current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
@@ -370,9 +379,10 @@ class Admin {
 	/**
 	 * Scan template files
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $template_path template file path.
 	 * @return array
-	 * @since 1.0.0
 	 */
 	public static function scan_template_files( $template_path = null ) {
 		if ( ! $template_path ) {
@@ -402,8 +412,8 @@ class Admin {
 	/**
 	 * Get Template overridden files
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	public static function template_overridden_files() {
 		$template_files = self::scan_template_files();
@@ -428,8 +438,8 @@ class Admin {
 	/**
 	 * Erase tutor data
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function erase_tutor_data() {
 		global $wpdb;
@@ -514,9 +524,10 @@ class Admin {
 	/**
 	 * Plugin activation link
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param array $actions action list.
 	 * @return array
-	 * @since 1.0.0
 	 */
 	public function plugin_action_links( $actions ) {
 		$has_pro = tutor()->has_pro;
@@ -538,10 +549,12 @@ class Admin {
 	/**
 	 * Add plugin meta data in WP plugins list page
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param array  $plugin_meta plugin meta data.
 	 * @param string $plugin_file plugin file.
+	 *
 	 * @return array
-	 * @since 1.0.0
 	 */
 	public function plugin_row_meta( $plugin_meta, $plugin_file ) {
 
@@ -564,9 +577,10 @@ class Admin {
 	/**
 	 * Add footer text only on tutor pages
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $footer_text footer text.
 	 * @return string
-	 * @since 1.0.0
 	 */
 	public function admin_footer_text( $footer_text ) {
 		$current_screen = get_current_screen();
@@ -589,8 +603,8 @@ class Admin {
 	/**
 	 * Register course widget
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function register_course_widget() {
 		register_widget( 'Tutor\Course_Widget' );
@@ -599,8 +613,8 @@ class Admin {
 	/**
 	 * Tutor Course List
 	 *
+	 * @since 2.0.0
 	 * @return void
-	 * @since v2.0.0
 	 */
 	public function tutor_course_list() {
 		include tutor()->path . 'views/pages/course-list.php';
@@ -609,8 +623,8 @@ class Admin {
 	/**
 	 * Show welcome page
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function welcome_page() {
 		Tutor_Setup::mark_as_visited();
