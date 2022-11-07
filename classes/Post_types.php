@@ -2,10 +2,11 @@
 /**
  * Register post types
  *
- * @version  1.0.0
  * @package  Tutor\PostTypes
  * @category PostTypes
  * @author   Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since  1.0.0
  */
 
 namespace TUTOR;
@@ -15,13 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /**
  * Register Tutor's post types
+ *
+ * @since 1.0.0
  */
 class Post_types {
 
 	/**
 	 * Course post type
 	 *
-	 * @since v1.0.0
+	 * @since 1.0.0
 	 *
 	 * @var string
 	 */

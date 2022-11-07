@@ -1,11 +1,11 @@
 <?php
 /**
- * Options for TutorLMS
+ * Settings options
  *
- * @version  2.0.0
- * @package  Tutor\Options
- * @category Options
- * @author   Themeum <support@themeum.com>
+ * @package Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 namespace Tutor;
@@ -20,14 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Contains all the settings options
  *
- * @since v2.0.0
+ * @since 2.0.0
  */
 class Options_V2 {
 
 	/**
 	 * Undocumented variable
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @var array $options
 	 */
@@ -36,7 +36,7 @@ class Options_V2 {
 	/**
 	 * Settings fields
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @var mixed $setting_fields
 	 */
@@ -45,7 +45,7 @@ class Options_V2 {
 	/**
 	 * Register hooks
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @param boolean $register_hook should register hook or not.
 	 *
@@ -72,7 +72,7 @@ class Options_V2 {
 	/**
 	 * Get settings value
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed $key option key.
 	 * @param mixed $default default value.
@@ -121,7 +121,7 @@ class Options_V2 {
 	/**
 	 * Function to get all fields for search tutor_option_search
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -152,7 +152,7 @@ class Options_V2 {
 	/**
 	 * Export settings
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -163,9 +163,9 @@ class Options_V2 {
 
 	/**
 	 * Export single settings
-	 * 
-	 * @since v2.0.0
-	 * 
+	 *
+	 * @since 2.0.0
+	 *
 	 * @return void send wp_json response
 	 */
 	public function tutor_export_single_settings() {
@@ -177,7 +177,7 @@ class Options_V2 {
 	/**
 	 * Apply settings
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -193,7 +193,7 @@ class Options_V2 {
 	/**
 	 * Delete single setting
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -209,7 +209,7 @@ class Options_V2 {
 	/**
 	 * Get request data
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed $var option key.
 	 *
@@ -223,7 +223,7 @@ class Options_V2 {
 	 * Tutor default settings update options
 	 * and send json response
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -251,7 +251,7 @@ class Options_V2 {
 	/**
 	 * Tutor settings log
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -263,7 +263,7 @@ class Options_V2 {
 	/**
 	 * Reset settings
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -294,7 +294,7 @@ class Options_V2 {
 	/**
 	 * Import settings
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -348,7 +348,7 @@ class Options_V2 {
 	/**
 	 * Function tutor_option_save
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -401,7 +401,7 @@ class Options_V2 {
 	/**
 	 * Function tutor_option_save
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void send wp_json response
 	 */
@@ -437,7 +437,7 @@ class Options_V2 {
 	/**
 	 * Load settings page
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -453,7 +453,7 @@ class Options_V2 {
 	/**
 	 * Get settings fields
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return mixed
 	 */
@@ -1575,7 +1575,7 @@ class Options_V2 {
 	/**
 	 * Generate field
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @param array $field field array.
 	 *
@@ -1595,7 +1595,7 @@ class Options_V2 {
 	 * Include field type template & return buffered
 	 * string data.
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @param array $field field.
 	 *
@@ -1613,7 +1613,7 @@ class Options_V2 {
 	 * Include Option blocks template & return
 	 * buffered string data.
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @param array $blocks blocks.
 	 *
@@ -1629,8 +1629,8 @@ class Options_V2 {
 	 * Include options template & returns
 	 * buffered string data.
 	 *
-	 * @since v2.0.0
-	 * 
+	 * @since 2.0.0
+	 *
 	 * @param array $section section.
 	 *
 	 * @return string
@@ -1647,7 +1647,7 @@ class Options_V2 {
 	/**
 	 * Load template inside template dirctory
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 *
 	 * @param  mixed $template_slug template slug.
 	 * @param  mixed $section section.
