@@ -2,9 +2,9 @@
 /**
  * Manage Course Settings Tab
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 2.0.0
  */
 
