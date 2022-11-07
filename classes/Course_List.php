@@ -2,9 +2,9 @@
 /**
  * Manage Course List
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 2.0.0
  */
 
@@ -75,7 +75,7 @@ class Course_List {
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @return array
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 */
 	public function prepare_bulk_actions(): array {
 		$actions = array(
@@ -294,7 +294,7 @@ class Course_List {
 	 * Handle ajax request for updating course status
 	 *
 	 * @return void
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 */
 	public static function tutor_change_course_status() {
 		tutor_utils()->checking_nonce();
@@ -315,7 +315,7 @@ class Course_List {
 	 * Handle ajax request for deleting course
 	 *
 	 * @return json response
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 */
 	public static function tutor_course_delete() {
 		tutor_utils()->checking_nonce();
@@ -332,7 +332,7 @@ class Course_List {
 	 *
 	 * @param string $bulk_ids ids that need to update.
 	 * @return bool
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 */
 	public static function bulk_delete_course( $bulk_ids ): bool {
 		$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
@@ -375,7 +375,7 @@ class Course_List {
 	 *
 	 * @param  int $course_id int | required.
 	 * @return array
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 */
 	public static function course_enrollments_with_student_details( int $course_id ) {
 		global $wpdb;
@@ -420,8 +420,8 @@ class Course_List {
 	 * Check wheather course is public or not
 	 *
 	 * @param integer $course_id  course id to check with.
-	 *
 	 * @return boolean  true if public otherwise false.
+	 * @since 1.0.0
 	 */
 	public static function is_public( int $course_id ): bool {
 		$is_public = get_post_meta( $course_id, '_tutor_is_public_course', true );
