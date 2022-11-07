@@ -2,9 +2,10 @@
 /**
  * Manage course embed
  *
- * @since v2.1.0
- *
- * @package Tutor\CourseEmbed
+ * @author themeum
+ * @link https://themeum.com
+ * @package Tutor
+ * @since 2.1.0
  */
 
 namespace TUTOR;
@@ -14,7 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Course embed view customized
+ * Course embed class
+ *
+ * @since 2.1.0
  */
 class Course_Embed {
 
@@ -46,7 +49,7 @@ class Course_Embed {
 				$html
 			);
 
-            $html = preg_replace( '/( height=".*")/i', ' height="620" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" ', $html );
+			$html = preg_replace( '/( height=".*")/i', ' height="620" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" ', $html );
 
 			$html = str_replace(
 				'<blockquote class="wp-embedded-content"',
