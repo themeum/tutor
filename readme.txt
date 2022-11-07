@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.0.3
 Requires PHP: 7.0
-Stable tag: 2.1.1
+Stable tag: 2.1.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -225,7 +225,17 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.1 - October 24, 2022
+= 2.1.3 - November 3, 2022
+
+Coming soon...
+
+= 2.1.2 - November 2, 2022
+
+Update: BunnyNet Compatibility Update is Introduced
+Update: More Security Compatibility Update is Introduced
+Fix: Backend Assignment page was not showing newly submitted assignments in some cases
+
+= 2.1.1 - October 25, 2022
 
 Update: More security improvement is introduced
 Update: PeepSo Profile Avatar compatibility is introduced
