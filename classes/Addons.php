@@ -1,11 +1,11 @@
 <?php
 /**
- * Addons class
+ * Manage Addons
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
- * @since v.1.0.0
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 namespace TUTOR;
@@ -22,6 +22,9 @@ class Addons {
 
 	/**
 	 * Constructor
+	 *
+	 * @since 1.0.0
+	 * @return void
 	 */
 	public function __construct() {
 		add_filter( 'tutor_pro_addons_lists_for_display', array( $this, 'tutor_addons_lists_to_show' ) );
@@ -30,8 +33,8 @@ class Addons {
 	/**
 	 * Get tutor addons list
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	public function tutor_addons_lists_to_show() {
 		$addons = array(
