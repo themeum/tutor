@@ -207,6 +207,8 @@ class Input {
 	/**
 	 * Sanitize & unslash a request data
 	 *
+	 * @since 2.1.3
+	 *
 	 * @param string $key a request key.
 	 * @param mixed  $default_value a default value if key not exists.
 	 *
