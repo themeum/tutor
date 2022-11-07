@@ -36,11 +36,11 @@ class Question_Answers_List {
 	/**
 	 * Register hooks & dependencies
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param boolean $register_hook weather to register hook or not.
 	 *
 	 * @return void
-	 *
-	 * @since 1.0.0
 	 */
 	public function __construct( $register_hook = true ) {
 		if ( ! $register_hook ) {
@@ -51,11 +51,11 @@ class Question_Answers_List {
 	/**
 	 * Get question answers
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param array $args query args.
 	 *
 	 * @return array
-	 *
-	 * @since 1.0.0
 	 */
 	public function get_items( $args = array() ) {
 		$per_page = tutor_utils()->get_option( 'pagination_per_page' );
@@ -95,12 +95,12 @@ class Question_Answers_List {
 	/**
 	 * Get answer list by question id & type
 	 *
+	 * @since 2.0.2
+	 *
 	 * @param integer $question_id question id.
 	 * @param string  $question_type question type.
 	 *
 	 * @return array list of answer
-	 *
-	 * @since 2.0.2
 	 */
 	public static function answer_list_by_question( int $question_id, string $question_type ): array {
 		global $wpdb;

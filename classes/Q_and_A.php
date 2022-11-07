@@ -2,10 +2,11 @@
 /**
  * Manage Q & A
  *
- * @since 1.0.0
  * @package Tutor\Q_and_A
  * @category Q_and_A
  * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 namespace TUTOR;
@@ -17,6 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /**
  * Question answer management
+ *
+ * @since 1.0.0
  */
 class Q_and_A {
 
