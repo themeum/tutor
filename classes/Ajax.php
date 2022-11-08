@@ -130,9 +130,9 @@ class Ajax {
 	 * @return void
 	 */
 	public function tutor_place_rating() {
-		global $wpdb;
-
 		tutor_utils()->checking_nonce();
+		
+		global $wpdb;
 
 		$moderation = tutor_utils()->get_option( 'enable_course_review_moderation', false, true, true );
 		$rating     = Input::post( 'tutor_rating_gen_input', 0, Input::TYPE_INT );
