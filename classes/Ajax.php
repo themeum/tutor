@@ -135,11 +135,11 @@ class Ajax {
 		tutor_utils()->checking_nonce();
 
 		$moderation = tutor_utils()->get_option( 'enable_course_review_moderation', false, true, true );
-		$rating     = Input::post( 'tutor_rating_gen_input' );
+		$rating     = Input::post( 'tutor_rating_gen_input', 0, Input::TYPE_INT );
 		$course_id  = Input::post( 'course_id' );
 		$review     = Input::post( 'review', '', Input::TYPE_TEXTAREA );
 
-		! $rating ? $rating   = 0 : 0;
+		$rating <= 0 ? $rating = 1 : 0;
 		$rating > 5 ? $rating = 5 : 0;
 
 		$user_id = get_current_user_id();
