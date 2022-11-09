@@ -3,9 +3,9 @@
  * Backend Page Trait
  * Use this trait in existing classes to reuse frequently used methods
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 2.0.0
  */
 
@@ -30,8 +30,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action default option
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_default(): array {
 		return array(
@@ -43,8 +43,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action complete
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_complete(): array {
 		return array(
@@ -56,8 +56,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action published
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_publish(): array {
 		return array(
@@ -69,8 +69,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action draft
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_draft(): array {
 		return array(
@@ -82,8 +82,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action on hold
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_on_hold(): array {
 		return array(
@@ -95,8 +95,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action pending
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_pending(): array {
 		return array(
@@ -108,8 +108,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action processing
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_processing(): array {
 		return array(
@@ -121,8 +121,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action delete
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_delete(): array {
 		return array(
@@ -134,8 +134,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action cancel
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_cancel(): array {
 		return array(
@@ -147,8 +147,8 @@ trait Backend_Page_Trait {
 	/**
 	 * Bulk action approved
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_approved(): array {
 		return array(
@@ -156,11 +156,12 @@ trait Backend_Page_Trait {
 			'option' => __( 'Approve', 'tutor' ),
 		);
 	}
+
 	/**
 	 * Bulk action blocked
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_blocked(): array {
 		return array(
@@ -180,11 +181,12 @@ trait Backend_Page_Trait {
 			'option' => __( 'Trash', 'tutor' ),
 		);
 	}
+
 	/**
 	 * Bulk action trash
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function bulk_action_reject(): array {
 		return array(

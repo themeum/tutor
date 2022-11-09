@@ -1,10 +1,10 @@
 <?php
 /**
- * Assets management class
+ * Manage Assets
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 1.0.0
  */
 
@@ -24,8 +24,8 @@ class Assets {
 	/**
 	 * Constructor
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function __construct() {
 		 /**
@@ -85,8 +85,8 @@ class Assets {
 	/**
 	 * Load default localized data
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	private function get_default_localized_data() {
 		 global $wp_version, $wp_query;
@@ -135,8 +135,8 @@ class Assets {
 	/**
 	 * Enqueue scripts for admin
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function admin_scripts() {
 		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION );
@@ -159,8 +159,8 @@ class Assets {
 	/**
 	 * Load frontend scripts
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function frontend_scripts() {
 		global $post, $wp_query;
@@ -246,9 +246,10 @@ class Assets {
 	/**
 	 * Modify localize data
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param array $localize_data localize data.
 	 * @return array
-	 * @since 1.0.0
 	 */
 	public function modify_localize_data( $localize_data ) {
 		global $post;
@@ -296,8 +297,8 @@ class Assets {
 	/**
 	 * Load common scripts for frontend and backend
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function common_scripts() {
 
@@ -360,8 +361,8 @@ class Assets {
 	/**
 	 * Load meta data
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function load_meta_data() {
 		// Localize scripts.
@@ -379,8 +380,8 @@ class Assets {
 	/**
 	 * Load color palette
 	 *
-	 * @return string
 	 * @since 1.0.0
+	 * @return string
 	 */
 	private function load_color_palette() {
 		 $colors = array(
@@ -474,8 +475,8 @@ class Assets {
 	/**
 	 * Add Tinymce button for placing shortcode
 	 *
-	 * @return void|null
 	 * @since 1.0.0
+	 * @return void|null
 	 */
 	public function tutor_add_mce_button() {
 		// Check user permissions.
@@ -492,9 +493,10 @@ class Assets {
 	/**
 	 * Add tinymce button
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param array $plugin_array plugin array.
 	 * @return array
-	 * @since 1.0.0
 	 */
 	public function tutor_add_tinymce_js( $plugin_array ) {
 		$plugin_array['tutor_button'] = tutor()->url . 'assets/js/lib/mce-button.js';
@@ -504,9 +506,10 @@ class Assets {
 	/**
 	 * Register new button in the editor
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param array $buttons buttons.
 	 * @return array
-	 * @since 1.0.0
 	 */
 	public function tutor_register_mce_button( $buttons ) {
 		array_push( $buttons, 'tutor_button' );
@@ -516,10 +519,12 @@ class Assets {
 	/**
 	 * Output generator tag to aid debugging.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $gen Generator.
 	 * @param string $type Type.
+	 *
 	 * @return string
-	 * @since 1.0.0
 	 */
 	public function tutor_generator_tag( $gen, $type ) {
 		switch ( $type ) {
@@ -537,8 +542,8 @@ class Assets {
 	 * Load text domain handled script after all enqueue_scripts
 	 * registered functions
 	 *
-	 * @return void
 	 * @since 1.9.0
+	 * @return void
 	 */
 	public function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
@@ -549,8 +554,8 @@ class Assets {
 	/**
 	 * Add translation support for external tinyMCE button
 	 *
-	 * @return array
 	 * @since 1.9.7
+	 * @return array
 	 */
 	public function tutor_tinymce_translate() {
 		$locales['tutor_button'] = tutor()->path . 'includes/tinymce_translate.php';
@@ -560,9 +565,10 @@ class Assets {
 	/**
 	 * Add an identifier class to body
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param mixed $classes classes.
 	 * @return mixed
-	 * @since 1.0.0
 	 */
 	public function add_identifier_class_to_body( $classes ) {
 		$course_builder_screen = tutor_utils()->get_course_builder_screen();
@@ -613,8 +619,8 @@ class Assets {
 	 * Enqueue script for adding edit with frontend course builder button
 	 * on the Gutenberg editor
 	 *
-	 * @return void
 	 * @since 2.0.5
+	 * @return void
 	 */
 	public static function add_frontend_editor_button() {
 		$wp_screen = get_current_screen();
