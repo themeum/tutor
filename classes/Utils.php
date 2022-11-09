@@ -1,11 +1,11 @@
 <?php
-
 /**
  * Tutor Utils Helper functions
  *
- * @package TUTOR
- *
- * @since v.1.0.0
+ * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 namespace TUTOR;
@@ -3666,13 +3666,12 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return object
-	 *
 	 * Get course rating
-	 *
-	 * @since v.1.0.0
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param int $course_id course ID.
+	 * @return object
 	 */
 	public function get_course_rating( $course_id = 0 ) {
 		global $wpdb;
@@ -3713,7 +3712,7 @@ class Utils {
 
 			$stars = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT commentmeta.meta_value AS rating,
+					"SELECT CAST(commentmeta.meta_value AS SIGNED) AS rating,
 						COUNT(commentmeta.meta_value) as rating_count
 				FROM	{$wpdb->comments} comments
 						INNER JOIN {$wpdb->commentmeta} commentmeta
@@ -3721,7 +3720,7 @@ class Utils {
 				WHERE	comments.comment_post_ID = %d
 						AND comments.comment_type = %s
 						AND commentmeta.meta_key = %s
-				GROUP BY commentmeta.meta_value;
+				GROUP BY CAST(commentmeta.meta_value AS SIGNED);
 				",
 					$course_id,
 					'tutor_course_rating',

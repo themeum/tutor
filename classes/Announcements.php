@@ -1,10 +1,10 @@
 <?php
 /**
- * Announcements class for handling logics
+ * Manage Announcements
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 2.0.0
  */
 
@@ -41,14 +41,17 @@ class Announcements {
 	public $bulk_action = true;
 
 	/**
-	 * Handle dependencies
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 * @return void
 	 */
 	public function __construct() {
 		$this->page_title = __( 'Announcements', 'tutor' );
 		/**
 		 * Handle bulk action
 		 *
-		 * @since v2.0.0
+		 * @since 2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_announcement_bulk_action', array( $this, 'announcement_bulk_action' ) );
 	}
@@ -56,8 +59,8 @@ class Announcements {
 	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
+	 * @since 2.0.0
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function prepare_bulk_actions(): array {
 		$actions = array(
@@ -70,8 +73,8 @@ class Announcements {
 	/**
 	 * Handle bulk action for enrollment cancel | delete
 	 *
+	 * @since 2.0.0
 	 * @return string JSON response.
-	 * @since v2.0.0
 	 */
 	public function announcement_bulk_action() {
 		tutor_utils()->checking_nonce();
@@ -85,10 +88,12 @@ class Announcements {
 	/**
 	 * Execute bulk action for enrolments ex: complete | cancel
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param string $action hold action.
 	 * @param string $bulk_ids ids that need to update.
+	 *
 	 * @return bool
-	 * @since v2.0.0
 	 */
 	public static function delete_announcements( $action, $bulk_ids ): bool {
 		global $wpdb;
