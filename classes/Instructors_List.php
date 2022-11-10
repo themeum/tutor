@@ -157,7 +157,6 @@ class Instructors_List {
 		$message = 'Instructor status updated';
 
 		return true === $response ? wp_send_json_success( array( 'status' => $message ) ) : wp_send_json_error();
-		exit;
 	}
 
 	/**
@@ -204,29 +203,6 @@ class Instructors_List {
 			}
 		}
 		return false === $update ? false : true;
-	}
-
-	/**
-	 * Bind column value.
-	 *
-	 * @since 1.0.0
-	 * @deprecated 2.0.0
-	 *
-	 * @param object $item item.
-	 * @param string $column_name column name.
-	 *
-	 * @return mixed
-	 */
-	public function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
-			case 'user_email':
-			case 'display_name':
-				return $item->$column_name;
-			case 'registration_date':
-				return esc_html( gmdate( get_option( 'date_format' ), strtotime( $item->user_registered ) ) );
-			default:
-				return print_r( $item, true ); // Show the whole array for troubleshooting purposes.
-		}
 	}
 
 	/**
