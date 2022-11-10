@@ -2,9 +2,9 @@
 /**
  * Manage course embed
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 2.1.0
  */
 
@@ -24,7 +24,8 @@ class Course_Embed {
 	/**
 	 * Register hooks
 	 *
-	 * @since v2.1.0
+	 * @since 2.1.0
+	 * @return void
 	 */
 	public function __construct() {
 		add_filter( 'tutor_get_template_path', __CLASS__ . '::filter_template_path', 100, 2 );
@@ -33,6 +34,8 @@ class Course_Embed {
 
 	/**
 	 * Filter oembed data
+	 *
+	 * @since 2.1.0
 	 *
 	 * @param string $html  html content to filter.
 	 * @param string $url  post embed url.
@@ -65,6 +68,8 @@ class Course_Embed {
 	/**
 	 * Filter template
 	 *
+	 * @since 2.1.0
+	 *
 	 * @param string $template_location default template location.
 	 * @param string $template template name.
 	 *
@@ -83,6 +88,7 @@ class Course_Embed {
 	/**
 	 * Check if current course is embedded
 	 *
+	 * @since 2.1.0
 	 * @return boolean
 	 */
 	public static function is_embed_course() {

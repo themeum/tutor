@@ -1,10 +1,10 @@
 <?php
 /**
- * Input class
+ * Input class for sanitize GET and POST request
  *
- * @author: themeum
- * @link: https://themeum.com
  * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 2.0.2
  */
 
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /**
- * Input class for handling GET and POST request
+ * Input class
  *
  * @since 2.0.2
  */
@@ -34,27 +34,31 @@ class Input {
 	/**
 	 * Common data sanitizer method
 	 *
+	 * @since 2.0.2
+	 *
 	 * @param string  $value            input value.
 	 * @param string  $default          default value if input key is not exit.
 	 * @param string  $type             Default is Input::TYPE_STRING.
 	 * @param boolean $trim             remove blank splace from start and end.
 	 * @param string  $request_method   request method get or post.
+	 *
 	 * @return mixed
 	 */
 	private static function data_sanitizer( $value, $default = null, $type = self::TYPE_STRING, $trim = true, $request_method = null ) {
 		$is_input_request = in_array( $request_method, array( self::GET_REQUEST, self::POST_REQUEST ), true );
 		$key              = null;
 
+		//phpcs:disable WordPress.Security.NonceVerification
 		if ( $is_input_request ) {
 			$key = $value;
-			if ( self::GET_REQUEST === $request_method && ! isset( $_GET[ $key ] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+			if ( self::GET_REQUEST === $request_method && ! isset( $_GET[ $key ] ) ) {
 				if ( self::TYPE_ARRAY === $type ) {
 					return is_array( $default ) ? $default : array();
 				} else {
 					return $default;
 				}
 			}
-			if ( self::POST_REQUEST === $request_method && ! isset( $_POST[ $key ] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+			if ( self::POST_REQUEST === $request_method && ! isset( $_POST[ $key ] ) ) {
 				if ( self::TYPE_ARRAY === $type ) {
 					return is_array( $default ) ? $default : array();
 				} else {
@@ -67,23 +71,19 @@ class Input {
 
 		switch ( $type ) {
 			case self::TYPE_INT:
-				//phpcs:ignore WordPress.Security.NonceVerification
 				$sanitized_value = (int) sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
 				break;
 
 			case self::TYPE_NUMERIC:
-				//phpcs:ignore WordPress.Security.NonceVerification
 				$input           = sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
 				$sanitized_value = is_numeric( $input ) ? $input + 0 : 0;
 				break;
 
 			case self::TYPE_BOOL:
-				//phpcs:ignore WordPress.Security.NonceVerification
 				$sanitized_value = in_array( strtolower( sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) ) ), array( '1', 'true', 'on' ), true );
 				break;
 
 			case self::TYPE_STRING:
-				//phpcs:ignore WordPress.Security.NonceVerification
 				$sanitized_value = sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
 				break;
 			case self::TYPE_ARRAY:
@@ -103,26 +103,23 @@ class Input {
 				break;
 
 			case self::TYPE_TEXTAREA:
-				//phpcs:ignore WordPress.Security.NonceVerification
 				$sanitized_value = sanitize_textarea_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
 				break;
 
 			case self::TYPE_KSES_POST:
-				//phpcs:ignore WordPress.Security.NonceVerification
 				$sanitized_value = wp_kses_post( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
 				break;
 
 			default:
-				//phpcs:ignore WordPress.Security.NonceVerification
 				$sanitized_value = sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
 				break;
 		}
 
+		//phpcs:enable WordPress.Security.NonceVerification
+
 		if ( $trim ) {
 			if ( self::TYPE_ARRAY === $type && is_array( $sanitized_value ) ) {
 				$sanitized_value = array_map( 'trim', $sanitized_value );
-			} else {
-				$sanitized_value = trim( $sanitized_value );
 			}
 		}
 
@@ -157,10 +154,13 @@ class Input {
 	/**
 	 * Sanitize value
 	 *
+	 * @since 2.0.2
+	 *
 	 * @param string  $value      input value.
 	 * @param string  $default    default value if input key is not exit.
 	 * @param string  $type       Default is Input::TYPE_STRING.
 	 * @param boolean $trim       remove blank splace from start and end.
+	 *
 	 * @return mixed
 	 */
 	public static function sanitize( $value, $default = null, $type = self::TYPE_STRING, $trim = true ) {
@@ -174,6 +174,7 @@ class Input {
 	 * @param mixed   $default  default value if input key is not exit.
 	 * @param string  $type     input type. Default is Input::TYPE_STRING.
 	 * @param boolean $trim     remove blank splace from start and end.
+	 *
 	 * @return mixed
 	 */
 	public static function get( $key, $default = null, $type = self::TYPE_STRING, $trim = true ) {
@@ -182,6 +183,8 @@ class Input {
 
 	/**
 	 * Get input value from POST request
+	 *
+	 * @since 2.0.2
 	 *
 	 * @param string  $key      $_POST request key.
 	 * @param mixed   $default  default value if input key is not exit.
@@ -196,11 +199,13 @@ class Input {
 	/**
 	 * Check input has key or not
 	 *
+	 * @since 2.0.2
+	 *
 	 * @param string $key input key name.
 	 * @return boolean
 	 */
 	public static function has( $key ) {
-		//phpcs:ignore
+		//phpcs:ignore WordPress.Security.NonceVerification
 		return isset( $_REQUEST[ $key ] );
 	}
 

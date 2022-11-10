@@ -2,9 +2,9 @@
 /**
  * Manage Course Filter
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 1.0.0
  */
 
@@ -42,9 +42,10 @@ class Course_Filter {
 	/**
 	 * Constructor
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param boolean $register_hook register hook or not.
 	 * @return void|null
-	 * @since 1.0.0
 	 */
 	public function __construct( $register_hook = true ) {
 		if ( ! $register_hook ) {
@@ -57,11 +58,11 @@ class Course_Filter {
 	/**
 	 * Load course listing
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param mixed   $filters filters.
 	 * @param boolean $return_filter return filterd data or not.
 	 * @return mixed
-	 *
-	 * @since 1.0.0
 	 */
 	public function load_listing( $filters = null, $return_filter = false ) {
 		! $return_filter ? tutils()->checking_nonce() : 0;
@@ -212,8 +213,8 @@ class Course_Filter {
 	/**
 	 * Get current term ID
 	 *
-	 * @return integer
 	 * @since 1.0.0
+	 * @return integer
 	 */
 	private function get_current_term_id() {
 
@@ -228,11 +229,11 @@ class Course_Filter {
 	/**
 	 * Sort terms hierarchically
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param array   $terms term list.
 	 * @param integer $parent_id parent ID.
 	 * @return array
-	 *
-	 * @since 1.0.0
 	 */
 	private function sort_terms_hierarchically( $terms, $parent_id = 0 ) {
 		$term_array = array();
@@ -250,11 +251,11 @@ class Course_Filter {
 	/**
 	 * Render terms hierarchically
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param array  $terms term list.
 	 * @param string $taxonomy taxonomy name.
 	 * @return void
-	 *
-	 * @since 1.0.0
 	 */
 	private function render_terms_hierarchically( $terms, $taxonomy ) {
 
@@ -276,9 +277,10 @@ class Course_Filter {
 	/**
 	 * Render terms
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $taxonomy taxonomy name.
 	 * @return void
-	 * @since 1.0.0
 	 */
 	public function render_terms( $taxonomy ) {
 		$terms = get_terms(

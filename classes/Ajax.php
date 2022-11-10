@@ -1,10 +1,10 @@
 <?php
 /**
- * Ajax class for handling ajax request
+ * Handle Ajax Request
  *
- * @author themeum
- * @link https://themeum.com
  * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 1.0.0
  */
 
@@ -26,8 +26,8 @@ class Ajax {
 	/**
 	 * Constructor
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function __construct() {
 
@@ -70,8 +70,8 @@ class Ajax {
 	/**
 	 * Update video information and data when necessary
 	 *
+	 * @since 1.0.0
 	 * @return void
-	 * @since v.1.0.0
 	 */
 	public function sync_video_playback() {
 		tutor_utils()->checking_nonce();
@@ -116,8 +116,8 @@ class Ajax {
 	/**
 	 * Video playback callback for noprev
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function sync_video_playback_noprev() {
 
@@ -126,20 +126,20 @@ class Ajax {
 	/**
 	 * Place rating
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function tutor_place_rating() {
+		tutor_utils()->checking_nonce();
+		
 		global $wpdb;
 
-		tutor_utils()->checking_nonce();
-
 		$moderation = tutor_utils()->get_option( 'enable_course_review_moderation', false, true, true );
-		$rating     = Input::post( 'tutor_rating_gen_input' );
+		$rating     = Input::post( 'tutor_rating_gen_input', 0, Input::TYPE_INT );
 		$course_id  = Input::post( 'course_id' );
 		$review     = Input::post( 'review', '', Input::TYPE_TEXTAREA );
 
-		! $rating ? $rating   = 0 : 0;
+		$rating <= 0 ? $rating = 1 : 0;
 		$rating > 5 ? $rating = 5 : 0;
 
 		$user_id = get_current_user_id();
@@ -251,8 +251,8 @@ class Ajax {
 	/**
 	 * Delete a review
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function delete_tutor_review() {
 		tutor_utils()->checking_nonce();
@@ -274,8 +274,8 @@ class Ajax {
 	/**
 	 * Add course in wishlist
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function tutor_course_add_to_wishlist() {
 		tutor_utils()->checking_nonce();
@@ -333,8 +333,8 @@ class Ajax {
 	/**
 	 * Prepare addons data
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	public function prepare_addons_data() {
 		$addons       = apply_filters( 'tutor_addons_lists_config', array() );
@@ -405,8 +405,8 @@ class Ajax {
 	/**
 	 * Get all notifications
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function tutor_get_all_addons() {
 
@@ -426,8 +426,8 @@ class Ajax {
 	/**
 	 * Method for enable / disable addons
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function addon_enable_disable() {
 
@@ -466,8 +466,8 @@ class Ajax {
 	/**
 	 * Process ajax login
 	 *
+	 * @since 1.6.3
 	 * @return void
-	 * @since v.1.6.3
 	 */
 	public function process_ajax_login() {
 		tutor_utils()->checking_nonce();
@@ -548,8 +548,8 @@ class Ajax {
 	/**
 	 * Create/Update announcement
 	 *
+	 * @since  1.7.9
 	 * @return void
-	 * @since  v.1.7.9
 	 */
 	public function create_or_update_annoucement() {
 		tutor_utils()->checking_nonce();
@@ -625,8 +625,8 @@ class Ajax {
 	/**
 	 * Delete announcement
 	 *
+	 * @since  1.7.9
 	 * @return void
-	 * @since  v.1.7.9
 	 */
 	public function delete_annoucement() {
 		tutor_utils()->checking_nonce();
