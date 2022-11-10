@@ -9304,4 +9304,23 @@ class Utils {
 
 		return $has_access;
 	}
+
+	/**
+	 * Get current page slug
+	 *
+	 * @since 2.1.3
+	 *
+	 * @return string current page slug
+	 */
+   	public function get_current_page_slug() {
+		global $wp_query;
+		$current_page = '';
+		$query_vars   = $wp_query->query_vars;
+	    if ( is_admin() && Input::has( 'page' ) ) {
+		   $current_page = Input::get( 'page' );
+	   	} else {
+		   $current_page = isset( $query_vars['tutor_dashboard_page'] ) ? sanitize_text_field( $query_vars['tutor_dashboard_page'] ) : '';
+	   	}
+	    return $current_page;
+   	}
 }
