@@ -1,11 +1,11 @@
 <?php
 /**
- * Dashboard class
+ * Manage Frontend Dashboard
  *
- * @author: themeum
- * @author_uri: https://themeum.com
  * @package Tutor
- * @since v.1.3.4
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.3.4
  */
 
 namespace TUTOR;
@@ -13,25 +13,52 @@ namespace TUTOR;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+/**
+ * Dashboard Class
+ *
+ * @since 1.3.4
+ */
 class Dashboard {
 
+	/**
+	 * Constructor
+	 *
+	 * @since 1.3.4
+	 * @return void
+	 */
 	public function __construct() {
 		add_action( 'tutor_load_template_after', array( $this, 'tutor_load_template_after' ), 10, 2 );
 		add_filter( 'should_tutor_load_template', array( $this, 'should_tutor_load_template' ), 10, 2 );
 		add_action( 'wp_ajax_tutor_create_new_draft_course', array( __CLASS__, 'create_new_draft_course' ) );
 	}
 
+	/**
+	 * Load template after
+	 *
+	 * @since 1.3.4
+	 * @return void
+	 */
 	public function tutor_load_template_after() {
 		global $wp_query;
 
 		$tutor_dashboard_page = tutor_utils()->array_get( 'query_vars.tutor_dashboard_page', $wp_query );
-		if ( $tutor_dashboard_page === 'create-course' ) {
+		if ( 'create-course' === $tutor_dashboard_page ) {
 			wp_reset_query();
 		}
 	}
 
+	/**
+	 * Check template need to load or not
+	 *
+	 * @since 1.3.4
+	 *
+	 * @param bool   $bool true or false.
+	 * @param string $template template name.
+	 *
+	 * @return boolean
+	 */
 	public function should_tutor_load_template( $bool, $template ) {
-		if ( $template === 'dashboard.create-course' && ! tutor()->has_pro ) {
+		if ( 'dashboard.create-course' === $template && ! tutor()->has_pro ) {
 			return false;
 		}
 		return $bool;
@@ -40,9 +67,8 @@ class Dashboard {
 	/**
 	 * Create new draft course
 	 *
-	 * @since v2.0.3
-	 *
-	 * @return void  send JSON response
+	 * @since 2.0.3
+	 * @return void  JSON response
 	 */
 	public static function create_new_draft_course() {
 		$can_publish_course = (bool) current_user_can( 'tutor_instructor' ) || current_user_can( 'administrator' );
