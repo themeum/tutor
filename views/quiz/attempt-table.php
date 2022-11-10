@@ -164,10 +164,16 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											}
 											?>
 										</a>
-										<?php if ( ! is_admin() && $course_id && ( tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id ) || current_user_can( 'administrator' ) ) ) : ?>
-										<a href="#" class="tutor-quiz-attempt-delete tutor-iconic-btn tutor-flex-shrink-0 tutor-ml-4" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>" data-tutor-modal-target="tutor-common-confirmation-modal">
-											<i class="tutor-icon-trash-can-line" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>"></i>
-										</a>
+										<?php
+										$current_page = tutor_utils()->get_current_page_slug();
+										if ( ! is_admin() && $course_id && ( tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id ) || current_user_can( 'administrator' ) ) ) :
+											?>
+											<!-- Don't show delete option on the spotlight section since JS not support -->
+											<?php if ( 'quiz-attempts' === $current_page || 'tutor_quiz_attempts' === $current_page ) : ?>
+											<a href="#" class="tutor-quiz-attempt-delete tutor-iconic-btn tutor-flex-shrink-0 tutor-ml-4" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>" data-tutor-modal-target="tutor-common-confirmation-modal">
+												<i class="tutor-icon-trash-can-line" data-quiz-id="<?php echo esc_attr( $attempt_id ); ?>"></i>
+											</a>
+											<?php endif; ?>
 										<?php endif; ?>
 									</div>
 								<?php endif; ?>
