@@ -230,35 +230,6 @@ class Instructors_List {
 	}
 
 	/**
-	 * Status column data.
-	 *
-	 * @since 1.0.0
-	 * @deprecated 2.0.0
-	 *
-	 * @param object $item item.
-	 * @return mixed
-	 */
-	public function column_status( $item ) {
-
-		$actions = array();
-		$status  = tutor_utils()->instructor_status( $item->ID, false );
-
-		switch ( $status ) {
-			case 'pending':
-				$actions['approved'] = sprintf( '<span class="tutor-badge-label label-warning">' . __( 'Pending', 'tutor' ) . '</span>' );
-				break;
-			case 'approved':
-				$actions['blocked'] = sprintf( '<span class="tutor-badge-label label-success">' . __( 'Approved', 'tutor' ) . '</span>' );
-				break;
-			case 'blocked':
-				$actions['approved'] = sprintf( '<span class="tutor-badge-label label-danger">' . __( 'Blocked', 'tutor' ) . '</span>' );
-				break;
-		}
-
-		return $this->row_actions( $actions );
-	}
-
-	/**
 	 * Bind display name in column
 	 *
 	 * @since 1.0.0
