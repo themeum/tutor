@@ -89,8 +89,6 @@ class Assets {
 	 * @return array
 	 */
 	private function get_default_localized_data() {
-		 global $wp_version, $wp_query;
-
 		$home_url = get_home_url();
 		$parsed   = parse_url( $home_url );
 
@@ -100,12 +98,8 @@ class Assets {
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
 
-		$query_vars = $wp_query->query_vars;
-		if ( is_admin() && Input::has( 'page' ) ) {
-			$current_page = Input::get( 'page' );
-		} else {
-			$current_page = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
-		}
+		$current_page = tutor_utils()->get_current_page_slug();
+		
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => get_home_url(),
