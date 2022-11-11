@@ -117,14 +117,14 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											}
 											?>
 										</div>
-										<!-- <div class="tutor-fs-7 tutor-mt-8">
+										<div class="tutor-fs-7 tutor-mt-8">
 											<?php
 												$attempt_user = get_userdata( $attempt->user_id );
 												$user_name    = $attempt_user ? $attempt_user->display_name : '';
 											?>
 											<span class="tutor-color-secondary"><?php _e( 'Student:', 'tutor' ); ?></span>
 											<span class="tutor-fw-normal tutor-color-muted"><?php echo $context == 'backend-dashboard-students-attempts' ? $user_name : esc_attr( isset( $attempt->display_name ) ? $attempt->display_name : $user_name ); ?></span>
-										</div> -->
+										</div>
 										<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
 									</div>
 								<?php elseif ( $key == 'course' ) : ?>
