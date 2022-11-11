@@ -1,4 +1,4 @@
-<?php //phpcs:ignore WordPress.Files.FileName.NotHyphenatedLowercase
+<?php
 /**
  * Quiz class
  *
@@ -56,6 +56,10 @@ class Quiz {
 
 	/**
 	 * Register hooks
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'save_post_tutor_quiz', array( $this, 'save_quiz_meta' ) );
@@ -108,7 +112,7 @@ class Quiz {
 		/**
 		 * Delete quiz attempt
 		 *
-		 * @since v2.1.0
+		 * @since 2.1.0
 		 */
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 	}
@@ -133,6 +137,8 @@ class Quiz {
 
 	/**
 	 * Instructor feedback ajax request handler
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return void | send json response
 	 */
@@ -165,19 +171,22 @@ class Quiz {
 	/**
 	 * Update quiz meta
 	 *
-	 * @param int $post_ID post id.
+	 * @since 1.0.0
 	 *
+	 * @param int $post_ID post id.
 	 * @return void
 	 */
 	public function save_quiz_meta( $post_ID ) {
-		$quiz_option = Input::post( 'quiz_option', null, Input::TYPE_ARRAY );
-		if ( ! is_null( $quiz_option ) ) {
+		$quiz_option = Input::post( 'quiz_option', array(), Input::TYPE_ARRAY );
+		if ( count( $quiz_option ) > 0 ) {
 			update_post_meta( $post_ID, 'tutor_quiz_option', $quiz_option );
 		}
 	}
 
 	/**
 	 * Remove quiz from post
+	 *
+	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
@@ -199,6 +208,8 @@ class Quiz {
 	 * Start Quiz from here...
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function start_the_quiz() {
 		if ( Input::post( 'tutor_action' ) !== 'tutor_start_quiz' ) {
@@ -284,6 +295,8 @@ class Quiz {
 	/**
 	 * Answering quiz
 	 *
+	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function answering_quiz() {
@@ -319,7 +332,6 @@ class Quiz {
 
 	/**
 	 * This is  a unified method for handling normal quiz submit or abandon submit
-	 *
 	 * It will handle ajax or normal form submit and can be used with different hooks
 	 *
 	 * @since 1.9.6
@@ -612,6 +624,10 @@ class Quiz {
 
 	/**
 	 * Quiz timeout by ajax
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function tutor_quiz_timeout() {
 		tutils()->checking_nonce();
@@ -739,6 +755,10 @@ class Quiz {
 
 	/**
 	 * Save single quiz into database and send html response
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function tutor_quiz_save() {
 		tutor_utils()->checking_nonce();
@@ -754,7 +774,7 @@ class Quiz {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Access Denied', 'tutor' ),
-					'data'    => $_POST, //phpcs:ignore
+					'data'    => array(),
 				)
 			);
 		}
@@ -776,8 +796,7 @@ class Quiz {
 		do_action( ( $ex_quiz_id ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
 
 		// Now save quiz settings.
-		// Sanitize by helper method.
-		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] );//phpcs:ignore
+		$quiz_option = Input::post( 'quiz_option', array(), Input::TYPE_ARRAY );
 		update_post_meta( $quiz_id, 'tutor_quiz_option', $quiz_option );
 		do_action( 'tutor_quiz_settings_updated', $quiz_id );
 
@@ -830,7 +849,7 @@ class Quiz {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		if ( $post->post_type === 'tutor_quiz' ) {
+		if ( 'tutor_quiz' === $post->post_type ) {
 			do_action( 'tutor_delete_quiz_before', $quiz_id );
 
 			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $quiz_id ) );
@@ -873,6 +892,7 @@ class Quiz {
 	public function tutor_load_quiz_builder_modal( $params = array(), $return = false ) {
 		tutor_utils()->checking_nonce();
 
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$data      = array_merge( $_POST, $params );
 		$quiz_id   = isset( $data['quiz_id'] ) ? sanitize_text_field( $data['quiz_id'] ) : 0;
 		$topic_id  = isset( $data['topic_id'] ) ? sanitize_text_field( $data['topic_id'] ) : 0;
@@ -897,7 +917,9 @@ class Quiz {
 	/**
 	 * Load quiz question form for quiz
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function tutor_quiz_builder_get_question_form() {
 		tutor_utils()->checking_nonce();
@@ -1136,6 +1158,7 @@ class Quiz {
 				)
 			);
 
+			//phpcs:ignore Squiz.Operators.IncrementDecrementUsage.Found
 			$next_order_id = $next_order_id + 1;
 
 			if ( $question ) {
@@ -1152,7 +1175,7 @@ class Quiz {
 							'belongs_question_id'   => esc_sql( $question_id ),
 							'belongs_question_type' => $question_type,
 							'answer_title'          => __( 'True', 'tutor' ),
-							'is_correct'            => $answer['true_false'] == 'true' ? 1 : 0,
+							'is_correct'            => 'true' == $answer['true_false'] ? 1 : 0,
 							'answer_two_gap_match'  => 'true',
 						),
 						array(
@@ -1188,7 +1211,7 @@ class Quiz {
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_question_answers', $answer_data );
 
-				} elseif ( $question_type === 'fill_in_the_blank' ) {
+				} elseif ( 'fill_in_the_blank' === $question_type ) {
 					$wpdb->delete(
 						$wpdb->prefix . 'tutor_quiz_question_answers',
 						array(
@@ -1273,6 +1296,8 @@ class Quiz {
 
 	/**
 	 * Get answers by quiz id
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param int     $question_id question id.
 	 * @param mixed   $question_type type of question.
@@ -1395,8 +1420,7 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		//phpcs:ignore
-		$answer_ids = isset( $_POST['sorted_answer_ids'] ) && is_array( $_POST['sorted_answer_ids']) ? tutor_utils()->sanitize_array( wp_unslash( $_POST['sorted_answer_ids'] ) ) : array();
+		$answer_ids = Input::post( 'sorted_answer_ids', array(), Input::TYPE_ARRAY );
 		if ( count( $answer_ids ) ) {
 			$i = 0;
 			foreach ( $answer_ids as $key => $answer_id ) {
@@ -1535,7 +1559,7 @@ class Quiz {
 	}
 
 	/**
-	 * Undocumented function
+	 * Update quiz attempt info
 	 *
 	 * @since 1.0.0
 	 *
