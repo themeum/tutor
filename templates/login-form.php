@@ -7,14 +7,50 @@
  * @package TutorLMS/Templates
  * @since 2.0.1
  */
-
+if ( ! session_id() ) {
+	session_start();
+}
 $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
+
+/**
+ * Get login validation errors & print
+ *
+ * @since 2.1.3
+ */
+$login_errors = isset( $_SESSION['tutor_login_errors'] ) ? $_SESSION['tutor_login_errors'] : array();
+foreach ( $login_errors as $login_error ) {
+	?>
+	<div class="tutor-alert tutor-warning tutor-mb-12" style="display:block; grid-gap: 0px 10px;">
+		<?php
+		echo wp_kses(
+			$login_error,
+			array(
+				'strong' => true,
+				'a'      => array(
+					'href'  => true,
+					'class' => true,
+					'id'    => true,
+				),
+				'p'      => array(
+					'class' => true,
+					'id'    => true,
+				),
+				'div'    => array(
+					'class' => true,
+					'id'    => true,
+				),
+			)
+		);
+		?>
+	</div>
+	<?php
+}
 ?>
 <form id="tutor-login-form" method="post">
 	<?php if ( is_single_course() ) : ?>
 		<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo esc_attr( get_the_ID() ); ?>">
 	<?php endif; ?>
-	
+	<?php tutor_nonce_field(); ?>
 	<input type="hidden" name="tutor_action" value="tutor_user_login" />
 	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ); ?>" />
 
@@ -65,3 +101,14 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
 		</div>
 	<?php endif; ?>
 </form>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var { __ } = wp.i18n;
+		let errors = <?php echo wp_json_encode( $login_errors ); ?>;
+		errors.forEach(error => {
+			window.tutor_toast( __( 'Login Failed', 'tutor' ), error, 'error');
+		});
+	});
+</script>
+<?php unset( $_SESSION['tutor_login_errors'] ); ?>
