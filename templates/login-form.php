@@ -57,11 +57,11 @@ foreach ( $login_errors as $login_error ) {
 	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ); ?>" />
 
 	<div class="tutor-mb-20">
-		<input type="text" class="tutor-form-control" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" />
+		<input type="text" class="tutor-form-control" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" required/>
 	</div>
 
 	<div class="tutor-mb-32">
-		<input type="password" class="tutor-form-control" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" value="" size="20" />
+		<input type="password" class="tutor-form-control" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" value="" size="20" required/>
 	</div>
 
 	<div class="tutor-login-error"></div>
@@ -108,7 +108,7 @@ foreach ( $login_errors as $login_error ) {
 	document.addEventListener('DOMContentLoaded', function() {
 		var { __ } = wp.i18n;
 		var loginModal = document.querySelector('.tutor-modal.tutor-login-modal');
-		let errors = <?php echo wp_json_encode( $login_errors ); ?>;
+		var errors = <?php echo wp_json_encode( $login_errors ); ?>;
 		if (loginModal && errors.length) {
 			loginModal.classList.add('tutor-is-active');
 		}
