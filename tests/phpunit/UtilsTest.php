@@ -56,7 +56,16 @@ class UtilsTest extends \WP_UnitTestCase {
 		$this->assertEquals( $arr3[ $index3 ]['key'], $new_item['key'] );
 	}
 
-	public function test_wp() {
-		echo "hello";
+	/**
+	 * Test the is_assoc function
+	 *
+	 * @return boolean
+	 */
+	public function test_is_assoc() {
+		$array1 = array(0, 1, 2);
+		$array2 = array( 'a' => 'apple', 'b' => 'banana' );
+
+		$this->assertTrue( tutor_utils()->is_assoc( $array2 ) );
+		$this->assertFalse( tutor_utils()->is_assoc( $array1 ) );
 	}
 }
