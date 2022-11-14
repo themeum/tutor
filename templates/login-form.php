@@ -7,6 +7,7 @@
  * @package TutorLMS/Templates
  * @since 2.0.1
  */
+
 if ( ! session_id() ) {
 	session_start();
 }
@@ -45,6 +46,7 @@ foreach ( $login_errors as $login_error ) {
 	</div>
 	<?php
 }
+
 ?>
 <form id="tutor-login-form" method="post">
 	<?php if ( is_single_course() ) : ?>
@@ -101,14 +103,16 @@ foreach ( $login_errors as $login_error ) {
 		</div>
 	<?php endif; ?>
 </form>
-
+<?php if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) : ?>
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		var { __ } = wp.i18n;
+		var loginModal = document.querySelector('.tutor-modal.tutor-login-modal');
 		let errors = <?php echo wp_json_encode( $login_errors ); ?>;
-		errors.forEach(error => {
-			window.tutor_toast( __( 'Login Failed', 'tutor' ), error, 'error');
-		});
+		if (loginModal && errors.length) {
+			loginModal.classList.add('tutor-is-active');
+		}
 	});
 </script>
+<?php endif; ?>
 <?php unset( $_SESSION['tutor_login_errors'] ); ?>
