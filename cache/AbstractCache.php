@@ -2,18 +2,18 @@
 /**
  * Cache abstract for implementing by the derived class
  *
- * @package  Tutor\Cache
- *
- * @author   Themeum
- *
- * @since    v2.0.6
+ * @package Tutor\Cache
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.6
  */
 
 namespace Tutor\Cache;
 
 /**
- * Containing abstract and regular method for
- * caching
+ * AbstractCache class
+ *
+ * @since 2.0.6
  */
 abstract class AbstractCache {
 
@@ -41,9 +41,8 @@ abstract class AbstractCache {
 	/**
 	 * Set cache data
 	 *
+	 * @since 2.0.6
 	 * @return void
-	 *
-	 * @since v2.0.6
 	 */
 	public function set_cache(): void {
 		do_action( 'tutor_cache_before_' . $this->key(), $this->cache_data() );
@@ -54,9 +53,8 @@ abstract class AbstractCache {
 	/**
 	 * Get user data from cache
 	 *
+	 * @since 2.0.6
 	 * @return object  cache data
-	 *
-	 * @since v2.0.6
 	 */
 	public function get_cache() {
 		$data = get_transient( $this->key() );
@@ -67,9 +65,8 @@ abstract class AbstractCache {
 	 * If cache don't have value or expired or not exists
 	 * will return false
 	 *
-	 * @return bool | true on success, false on fail
-	 *
-	 * @since v2.0.6
+	 * @since 2.0.6
+	 * @return bool true on success, false on fail
 	 */
 	public function has_cache(): bool {
 		return $this->get_cache() ? true : false;
@@ -78,9 +75,8 @@ abstract class AbstractCache {
 	/**
 	 * Delete cache
 	 *
+	 * @since 2.0.6
 	 * @return void
-	 *
-	 * @since v2.0.6
 	 */
 	public function delete_cache(): void {
 		delete_transient( $this->key() );
