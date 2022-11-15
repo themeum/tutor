@@ -665,16 +665,23 @@ class QuizModel {
 	/**
 	 * Get last or first quiz attempt
 	 *
+	 * @since 2.1.0
+	 * @since 2.1.3   user_id param added.
+	 *
 	 * @param integer $quiz_id  quiz id to get attempt of.
+	 * @param integer $user_id  user ID who attempt the quiz.
 	 * @param string  $order  ASC or DESC, default is DESC
 	 *                pass ASC to get first attempt.
 	 *
-	 * @return mixed object on success, null on failure
+	 * @return mixed  object on success, null on failure
 	 */
-	public function get_first_or_last_attempt( int $quiz_id, string $order = 'DESC' ) {
+	public function get_first_or_last_attempt( int $quiz_id, int $user_id = 0, string $order = 'DESC' ) {
 		$attempt = QueryHelper::get_row(
 			$this->get_table(),
-			array( 'quiz_id' => $quiz_id ),
+			array(
+				'quiz_id' => $quiz_id,
+				'user_id' => tutor_utils()->get_user_id( $user_id ),
+			),
 			'attempt_id',
 			$order
 		);
