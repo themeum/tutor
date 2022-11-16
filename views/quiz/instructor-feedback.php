@@ -2,9 +2,10 @@
 /**
  * Instructor Feedback Template
  *
- * @package InstructorFeedback
- *
- * @since v2.0.0
+ * @package Tutor\Views
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 $attempt_data = $data['attempt_data'];
@@ -15,7 +16,7 @@ if ( $attempt_info ) {
 }
 
 ?>
-<div class="wrap">
+<div>
 	<div class="quiz-attempt-answers-wrap">
 		<div class="attempt-answers-header tutor-mb-12">
 			<div class="attempt-header-quiz tutor-mt-24">
