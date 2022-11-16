@@ -66,6 +66,10 @@
 	}
 	
 	tr {
+		td{
+			vertical-align: middle;
+		}
+		
 		&:not(:hover) {
 			&.tutor-quiz-answer-status-correct {
 				.tutor-icon-rounded.tutor-color-danger {
