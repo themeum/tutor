@@ -45,6 +45,11 @@ class Course_Embed {
 	 */
 	public static function oembed_iframe_overrides( $html, $url, $attr ) {
 
+		$post_id = url_to_postid( $url );
+		if ( ! $post_id || tutor()->course_post_type !== get_post_type( $post_id ) ) {
+			return $html;
+		}
+
 		if ( strpos( $html, '<iframe' ) !== false ) {
 			$html = str_replace(
 				'<iframe class="wp-embedded-content" sandbox="allow-scripts" security="restricted" style="position: absolute; clip: rect(1px, 1px, 1px, 1px);"',
