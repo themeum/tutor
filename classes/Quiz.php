@@ -767,7 +767,8 @@ class Quiz {
 		$ex_quiz_id       = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		$quiz_title       = Input::post( 'quiz_title' );
 		$quiz_description = isset( $_POST['quiz_description'] ) ? wp_kses( wp_unslash( $_POST['quiz_description'] ), $this->allowed_html ) : ''; //phpcs:ignore
-		$next_order_id    = tutor_utils()->get_next_course_content_order_id( $topic_id, $ex_quiz_id );
+
+		$next_order_id = tutor_utils()->get_next_course_content_order_id( $topic_id, $ex_quiz_id );
 
 		// Check edit privilege.
 		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
@@ -795,8 +796,8 @@ class Quiz {
 		$quiz_id = wp_insert_post( $post_arr );
 		do_action( ( $ex_quiz_id ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
 
-		// Now save quiz settings.
-		$quiz_option = Input::post( 'quiz_option', array(), Input::TYPE_ARRAY );
+		// Sanitize by helper method & save quiz settings.
+		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] ); //phpcs:ignore
 		update_post_meta( $quiz_id, 'tutor_quiz_option', $quiz_option );
 		do_action( 'tutor_quiz_settings_updated', $quiz_id );
 
@@ -1000,8 +1001,34 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		// Sanitize data by helper method.
-		$question_data     = tutor_utils()->sanitize_array( wp_unslash( $_POST['tutor_quiz_question'] ) ); //phpcs:ignore
+		// Sanitize $_POST below before using.
+		$quiz_question_id = Input::post( 'tutor_quiz_question_id', 0, Input::TYPE_INT );
+		if ( ! $quiz_question_id ) {
+			wp_send_json_error( __( 'Invalid quiz question ID', 'tutor' ) );
+		}
+
+		/**
+		 * Sanitize $_POST[tutor_quiz_question] data through array_walk
+		 * it will override & sanitize all the question data.
+		 *
+		 * @since 2.1.3
+		 */
+		if ( isset( $_POST['tutor_quiz_question'][ $quiz_question_id ] ) ) {
+			array_walk(
+				$_POST['tutor_quiz_question'][ $quiz_question_id ], // phpcs:ignore
+				function( $v, $k ) use ( $quiz_question_id ) {
+					if ( 'question_description' === $k ) {
+						$_POST['tutor_quiz_question'][ $quiz_question_id ][ $k ] = wp_kses_post( wp_unslash( $v ) );
+					} else {
+						$_POST['tutor_quiz_question'][ $quiz_question_id ][ $k ] = sanitize_text_field( wp_unslash( $v ) );
+					}
+				}
+			);
+		} else {
+			wp_send_json_error( __( 'Invalid quiz question ID', 'tutor' ) );
+		}
+
+		$question_data = wp_unslash( $_POST['tutor_quiz_question'] ); //phpcs:ignore
 		$requires_answeres = array(
 			'multiple_choice',
 			'single_choice',
@@ -1020,7 +1047,7 @@ class Quiz {
 		);
 
 		foreach ( $question_data as $question_id => $question ) {
-
+			tutor_log( 'id: ' . $question_id );
 			// Make sure the quiz has answers.
 			if ( isset( $question['question_type'] ) && in_array( $question['question_type'], $requires_answeres ) ) {
 				$require_correct = in_array( $question['question_type'], $need_correct );
@@ -1036,12 +1063,11 @@ class Quiz {
 			if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
 				continue;
 			}
-
-			$question_title = sanitize_text_field( $question['question_title'] ?? '' );
-
-			$question_description = sanitize_post( $question['question_description'] );
-			$question_type        = sanitize_text_field( $question['question_type'] ?? '' );
-			$question_mark        = sanitize_text_field( $question['question_mark'] ?? '' );
+			// Data already sanitize above.
+			$question_title       = $question['question_title'] ?? '';
+			$question_description = $question['question_description'];
+			$question_type        = $question['question_type'] ?? '';
+			$question_mark        = $question['question_mark'] ?? '';
 
 			unset( $question['question_title'] );
 			unset( $question['question_description'] );
