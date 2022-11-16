@@ -188,7 +188,7 @@ if ( is_array( $attempt_info ) ) {
 
 <?php echo is_admin() ? '<div class="tutor-admin-body">' : ''; ?>
 <div class="tutor-table-responsive tutor-mb-32">
-    <table class="tutor-table my-quiz-attempts">
+    <table class="tutor-table tutor-quiz-attempt-details">
         <thead>
             <tr>
                 <?php foreach($table_1_columns as $key => $column) : ?>
@@ -200,7 +200,7 @@ if ( is_array( $attempt_info ) ) {
         <tbody>
             <tr>
                 <?php foreach( $table_1_columns as $key => $column ) : ?>
-                    <td>
+                    <td style="<?php if ('date' === $key): esc_html_e('min-width:180px' ); endif; ?>">
                         <?php if ( $key == 'user' ) : ?>
                             <div class="tutor-d-flex tutor-align-center">
                                 <?php echo tutor_utils()->get_tutor_avatar( $user_id ); ?>
@@ -342,7 +342,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                                 ?>
                                                 <td class="type">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-                                                    <div class="tooltip-wrap tooltip-icon tutor-d-flex">
+                                                    <div class="tooltip-wrap tooltip-icon tutor-d-flex tutor-align-center">
                                                         <?php echo $question_type['icon'] ?? ''; ?>
                                                         <span class="tooltip-txt tooltip-top">
                                                             <?php echo $type['name'] ?? ''; ?>
