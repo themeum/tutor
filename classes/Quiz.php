@@ -177,8 +177,9 @@ class Quiz {
 	 * @return void
 	 */
 	public function save_quiz_meta( $post_ID ) {
-		$quiz_option = Input::post( 'quiz_option', array(), Input::TYPE_ARRAY );
-		if ( count( $quiz_option ) > 0 ) {
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['quiz_option'] ) ) {
+			$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] ); //phpcs:ignore
 			update_post_meta( $post_ID, 'tutor_quiz_option', $quiz_option );
 		}
 	}
