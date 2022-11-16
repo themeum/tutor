@@ -113,7 +113,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 							<?php echo esc_html_e( $comment_count ); ?>
 							</td>
 
-							<td>
+							<td class="tutor-text-right">
 								<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 								<?php esc_html_e( 'Details', 'tutor' ); ?>
 								</a>
