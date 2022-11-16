@@ -796,8 +796,8 @@ class Quiz {
 		$quiz_id = wp_insert_post( $post_arr );
 		do_action( ( $ex_quiz_id ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
 
-		// Now save quiz settings.
-		$quiz_option = Input::post( 'quiz_option', array(), Input::TYPE_ARRAY );
+		// Sanitize by helper method & save quiz settings.
+		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] ); //phpcs:ignore
 		update_post_meta( $quiz_id, 'tutor_quiz_option', $quiz_option );
 		do_action( 'tutor_quiz_settings_updated', $quiz_id );
 
