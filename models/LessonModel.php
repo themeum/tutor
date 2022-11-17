@@ -1,8 +1,17 @@
 <?php
+/**
+ * Lesson Model
+ *
+ * @package Tutor\Models
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.10
+ */
+
 namespace Tutor\Models;
 
 /**
- * Class LessonModel
+ * LessonModel Class
  *
  * @since 2.0.10
  */
@@ -11,8 +20,9 @@ class LessonModel {
 	/**
 	 * Get total number of lesson
 	 *
-	 * @return int
 	 * @since 2.0.2
+	 *
+	 * @return int
 	 */
 	public static function get_total_lesson() {
 		global $wpdb;
@@ -27,15 +37,17 @@ class LessonModel {
 					AND course.post_status = %s
 					AND topic.post_status = %s";
 
+		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type, 'publish', 'publish', 'publish' ) );
 	}
 
 	/**
 	 * Get total lesson count by a course
 	 *
-	 * @param int $course_id
-	 * @return int
 	 * @since 1.0.0
+	 *
+	 * @param int $course_id course id.
+	 * @return int
 	 */
 	public function get_lesson_count_by_course( $course_id = 0 ) {
 		$course_id = tutor_utils()->get_post_id( $course_id );
@@ -45,13 +57,13 @@ class LessonModel {
 	/**
 	 * Get lesson reading info by key
 	 *
-	 * @param int    $lesson_id
-	 * @param int    $user_id
-	 * @param string $key
+	 * @since 1.0.0
+	 *
+	 * @param int    $lesson_id lesson id.
+	 * @param int    $user_id user id.
+	 * @param string $key key.
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * @since 1.0.0
 	 */
 	public function get_lesson_reading_info( $lesson_id = 0, $user_id = 0, $key = '' ) {
 		$lesson_id   = tutor_utils()->get_post_id( $lesson_id );
@@ -64,12 +76,12 @@ class LessonModel {
 	/**
 	 * Get student lesson reading current info
 	 *
-	 * @param int $lesson_id
-	 * @param int $user_id
+	 * @since 1.0.0
+	 *
+	 * @param int $lesson_id lesson id.
+	 * @param int $user_id user id.
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * @since 1.0.0
 	 */
 	public function get_lesson_reading_info_full( $lesson_id = 0, $user_id = 0 ) {
 		$lesson_id = tutor_utils()->get_post_id( $lesson_id );
@@ -82,13 +94,14 @@ class LessonModel {
 	/**
 	 * Update student lesson reading info
 	 *
-	 * @param int   $lesson_id
-	 * @param int   $user_id
-	 * @param array $data
+	 * @since 1.0.0
+	 *
+	 * @param int    $lesson_id lesson id.
+	 * @param int    $user_id user id.
+	 * @param string $key key.
+	 * @param string $value value.
 	 *
 	 * @return void
-	 *
-	 * @since 1.0.0
 	 */
 	public static function update_lesson_reading_info( $lesson_id = 0, $user_id = 0, $key = '', $value = '' ) {
 		$lesson_id = tutor_utils()->get_post_id( $lesson_id );
@@ -104,9 +117,12 @@ class LessonModel {
 	/**
 	 * Mark lesson complete
 	 *
-	 * @param int $post_id
-	 * @return void
 	 * @since 1.0.0
+	 *
+	 * @param int $post_id post id.
+	 * @param int $user_id user id.
+	 *
+	 * @return void
 	 */
 	public static function mark_lesson_complete( $post_id = 0, $user_id = 0 ) {
 		$post_id = tutor_utils()->get_post_id( $post_id );
