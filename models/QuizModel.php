@@ -1,6 +1,6 @@
 <?php
 /**
- * Course Model
+ * Quiz Model
  *
  * @package Tutor\Models
  * @author Themeum <support@themeum.com>
@@ -244,6 +244,7 @@ class QuizModel {
 			$date_filter = '' != $date_filter ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
 		}
 
+		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT( DISTINCT attempt_id)
@@ -262,6 +263,8 @@ class QuizModel {
 				'attempt_started'
 			)
 		);
+
+		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		return (int) $count;
 	}
@@ -340,6 +343,7 @@ class QuizModel {
 				break;
 		}
 
+		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$query = $wpdb->prepare(
 			"SELECT {$select_columns}
 		 	FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
@@ -366,6 +370,9 @@ class QuizModel {
 			$search_filter
 		);
 
+		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query );
 	}
 
@@ -387,9 +394,11 @@ class QuizModel {
 		if ( count( $attempt_ids ) ) {
 			$attempt_ids = implode( ',', $attempt_ids );
 
+			//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			// Deleting attempt (comment), child attempt and attempt meta (comment meta).
 			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
 			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
+			//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			do_action( 'tutor_quiz/attempt_deleted', $attempt_ids );
 		}
@@ -459,6 +468,7 @@ class QuizModel {
 					{$user_filter}
 			ORDER 	BY quiz_attempts.attempt_id {$order_filter} {$limit_offset};";
 
+		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query );
 	}
 
@@ -498,6 +508,7 @@ class QuizModel {
 			$order = ' RAND() ';
 		}
 
+		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$answers = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT *
@@ -510,6 +521,7 @@ class QuizModel {
 				$question->question_type
 			)
 		);
+		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		return $answers;
 	}
@@ -535,6 +547,7 @@ class QuizModel {
 			return array();
 		}
 
+		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$results = $wpdb->get_results(
 			"SELECT answers.*,
 					question.question_title,
@@ -545,6 +558,7 @@ class QuizModel {
 			WHERE 	answers.quiz_attempt_id IN ({$ids_in})
 			ORDER BY attempt_answer_id ASC;"
 		);
+		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		if ( $add_index ) {
 			$new_array = array();
@@ -583,6 +597,7 @@ class QuizModel {
 
 		$in_ids_string = implode( ', ', $answer_id );
 
+		//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		$answer = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT answer.*,
@@ -597,6 +612,7 @@ class QuizModel {
 				1
 			)
 		);
+		//phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 		return $answer;
 	}
@@ -617,7 +633,9 @@ class QuizModel {
 			// Allowed duration.
 			if ( isset( $attempt_info['time_limit'] ) ) {
 				//phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
-				$attempt_duration = $attempt_info['time_limit']['time_value'] . ' ' . __( ucwords( $attempt_info['time_limit']['time_type'] ), 'tutor' );
+				$time_type        = __( ucwords( tutor_utils()->array_get( 'time_limit.time_type', $attempt_info, 'minutes' ) ), 'tutor' );
+				$time_value       = tutor_utils()->array_get( 'time_limit.time_value', $attempt_info, 0 );
+				$attempt_duration = $time_value . ' ' . $time_type;
 			}
 
 			// Taken duration.
