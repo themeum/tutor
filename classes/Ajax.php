@@ -10,10 +10,6 @@
 
 namespace TUTOR;
 
-if ( ! session_id() ) {
-	session_start();
-}
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -27,6 +23,7 @@ use Tutor\Models\LessonModel;
  */
 class Ajax {
 
+	const LOGIN_ERRORS_TRANSIENT_KEY = 'tutor_login_errors';
 	/**
 	 * Constructor
 	 *
@@ -479,14 +476,15 @@ class Ajax {
 	 */
 	public function process_tutor_login() {
 		tutor_utils()->checking_nonce();
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		/**
 		 * Sanitization will happend
 		 * inside wp_signon > wp_authenticate function
 		 */
 		$username    = Input::post( 'log', '' );
-		$password    = Input::post( 'pwd', '' );
-		$redirect_to = Input::post( 'redirect_to', '' );
-		$remember    = Input::post( 'rememberme', '' );
+		$password    = isset( $_POST['pwd'] ) ? $_POST['pwd'] : ''; //phpcs:ignore
+		$redirect_to = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : '';
+		$remember    = isset( $_POST['rememberme'] );
 
 		try {
 			$creds = array(
@@ -543,8 +541,8 @@ class Ajax {
 			do_action( 'tutor_login_failed' );
 			$validation_error->add( 400, $e->getMessage() );
 		} finally {
-			// Store errors in session data.
-			$_SESSION['tutor_login_errors'] = $validation_error->get_error_messages();
+			// Store errors in transient data.
+			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
 		}
 	}
 

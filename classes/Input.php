@@ -27,6 +27,7 @@ class Input {
 	const TYPE_ARRAY     = 'array';
 	const TYPE_TEXTAREA  = 'textarea';
 	const TYPE_KSES_POST = 'kses-post';
+	const TYPE_URL       = 'URL';
 
 	private const GET_REQUEST  = 'get';
 	private const POST_REQUEST = 'post';
@@ -108,6 +109,10 @@ class Input {
 
 			case self::TYPE_KSES_POST:
 				$sanitized_value = wp_kses_post( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
+				break;
+
+			case self::TYPE_URL:
+				$sanitized_value = esc_url_raw( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) );
 				break;
 
 			default:
