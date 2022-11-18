@@ -23,6 +23,7 @@ use Tutor\Models\LessonModel;
  */
 class Ajax {
 
+	const LOGIN_ERRORS_TRANSIENT_KEY = 'tutor_login_errors';
 	/**
 	 * Constructor
 	 *
@@ -54,7 +55,7 @@ class Ajax {
 		 *
 		 * @since  v.1.6.3
 		 */
-		add_action( 'wp_ajax_nopriv_tutor_user_login', array( $this, 'process_ajax_login' ) );
+		add_action( 'tutor_action_tutor_user_login', array( $this, 'process_tutor_login' ) );
 
 		/**
 		 * Announcement
@@ -464,27 +465,34 @@ class Ajax {
 	}
 
 	/**
-	 * Process ajax login
+	 * Process tutor login
 	 *
 	 * @since 1.6.3
+	 *
+	 * @since 2.1.3 Ajax removed, validation errors
+	 * stores in session.
+	 *
 	 * @return void
 	 */
-	public function process_ajax_login() {
+	public function process_tutor_login() {
 		tutor_utils()->checking_nonce();
-		/**
-		 * Sanitization will happend
-		 * inside wp_signon > wp_authenticate function
-		 */
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
-		$username    = tutor_utils()->array_get( 'log', $_POST );
-		$password    = tutor_utils()->array_get( 'pwd', $_POST );
-		$redirect_to = tutor_utils()->array_get( 'redirect_to', $_POST );
+		/**
+		 * No sanitization/wp_unslash needed for log & pwd since WordPress
+		 * does itself
+		 *
+		 * @since 2.1.3
+		 *
+		 * @see https://developer.wordpress.org/reference/functions/wp_signon/
+		 */
+		$username    = tutor_utils()->array_get( 'log', $_POST ); //phpcs:ignore
+		$password    = tutor_utils()->array_get( 'pwd', $_POST ); //phpcs:ignore
+		$redirect_to = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : '';
 		$remember    = isset( $_POST['rememberme'] );
-		//phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		try {
 			$creds = array(
-				'user_login'    => trim( wp_unslash( $username ) ),
+				'user_login'    => trim( $username ),
 				'user_password' => $password,
 				'remember'      => $remember,
 			);
@@ -493,22 +501,20 @@ class Ajax {
 			$validation_error = apply_filters( 'tutor_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
 
 			if ( $validation_error->get_error_code() ) {
-				wp_send_json_error(
-					array(
-						'message' => $validation_error->get_error_message(),
-					)
+				$validation_error->add(
+					$validation_error->get_error_code(),
+					$validation_error->get_error_message()
 				);
 			}
 
 			if ( empty( $creds['user_login'] ) ) {
-				wp_send_json_error(
-					array(
-						'message' => __( 'Username is required.', 'tutor' ),
-					)
+				$validation_error->add(
+					400,
+					__( 'Username is required.', 'tutor' )
 				);
 			}
 
-			// On multisite, ensure user exists on current site, if not add them before allowing login.
+			// On multi-site, ensure user exists on current site, if not add them before allowing login.
 			if ( is_multisite() ) {
 				$user_data = get_user_by( is_email( $creds['user_login'] ) ? 'email' : 'login', $creds['user_login'] );
 
@@ -521,11 +527,10 @@ class Ajax {
 			$user = wp_signon( apply_filters( 'tutor_login_credentials', $creds ), is_ssl() );
 
 			if ( is_wp_error( $user ) ) {
-				wp_send_json_error(
-					array(
-						'message' => $user->get_error_message(),
-					)
-				);
+				// If no error exist then add WP login error, to prevent error duplication.
+				if ( ! $validation_error->has_errors() ) {
+					$validation_error->add( 400, $user->get_error_message() );
+				}
 			} else {
 				do_action( 'tutor_after_login_success', $user->ID );
 				// Since 1.9.8 do enroll if guest attempt to enroll.
@@ -533,15 +538,15 @@ class Ajax {
 				if ( ! empty( $course_enroll_attempt ) && is_a( $user, 'WP_User' ) ) {
 					do_action( 'tutor_do_enroll_after_login_if_attempt', $course_enroll_attempt, $user->ID );
 				}
-				wp_send_json_success(
-					array(
-						'redirect_to' => apply_filters( 'tutor_login_redirect_url', $redirect_to, $user ),
-					)
-				);
+				wp_safe_redirect( $redirect_to );
+				exit();
 			}
 		} catch ( \Exception $e ) {
 			do_action( 'tutor_login_failed' );
-			wp_send_json_error( apply_filters( 'login_errors', $e->getMessage() ) );
+			$validation_error->add( 400, $e->getMessage() );
+		} finally {
+			// Store errors in transient data.
+			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
 		}
 	}
 
