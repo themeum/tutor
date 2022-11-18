@@ -478,17 +478,21 @@ class Ajax {
 		tutor_utils()->checking_nonce();
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		/**
-		 * Sanitization will happend
-		 * inside wp_signon > wp_authenticate function
+		 * No sanitization/wp_unslash needed for log & pwd since WordPress
+		 * does itself
+		 *
+		 * @since 2.1.3
+		 *
+		 * @see https://developer.wordpress.org/reference/functions/wp_signon/
 		 */
-		$username    = Input::post( 'log', '' );
-		$password    = isset( $_POST['pwd'] ) ? $_POST['pwd'] : ''; //phpcs:ignore
+		$username    = tutor_utils()->array_get( 'log', $_POST ); //phpcs:ignore
+		$password    = tutor_utils()->array_get( 'pwd', $_POST ); //phpcs:ignore
 		$redirect_to = isset( $_POST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_POST['redirect_to'] ) ) : '';
 		$remember    = isset( $_POST['rememberme'] );
 
 		try {
 			$creds = array(
-				'user_login'    => trim( wp_unslash( $username ) ),
+				'user_login'    => trim( $username ),
 				'user_password' => $password,
 				'remember'      => $remember,
 			);
