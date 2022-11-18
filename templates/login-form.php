@@ -8,17 +8,15 @@
  * @since 2.0.1
  */
 
-if ( ! session_id() ) {
-	session_start();
-}
-$lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
+use TUTOR\Ajax;
 
+$lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
 /**
  * Get login validation errors & print
  *
  * @since 2.1.3
  */
-$login_errors = isset( $_SESSION['tutor_login_errors'] ) ? $_SESSION['tutor_login_errors'] : array();
+$login_errors = get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) ? get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) : array();
 foreach ( $login_errors as $login_error ) {
 	?>
 	<div class="tutor-alert tutor-warning tutor-mb-12" style="display:block; grid-gap: 0px 10px;">
@@ -115,4 +113,4 @@ foreach ( $login_errors as $login_error ) {
 	});
 </script>
 <?php endif; ?>
-<?php unset( $_SESSION['tutor_login_errors'] ); ?>
+<?php delete_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ); ?>
