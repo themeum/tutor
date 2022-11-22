@@ -189,3 +189,16 @@ $social_media = ob_get_clean();
 
 do_action( 'tutor_profile/' . $user_type . '/after/wrap' );
 tutor_utils()->tutor_custom_footer();
+
+/**
+ * If user not logged in load tutor login modal.
+ * It will appear on enroll btn click.
+ *
+ * @since 2.1.3
+ */
+if ( ! is_user_logged_in() ) {
+	$login_modal = tutor()->path . '/views/modal/login.php';
+	if ( file_exists( $login_modal ) ) {
+		tutor_load_template_from_custom_path( $login_modal );
+	}
+}
