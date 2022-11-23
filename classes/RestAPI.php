@@ -2,7 +2,7 @@
 /**
  * RestAPI class
  *
- * @package Tutor\QuestionAnswer
+ * @package Tutor\API
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 1.5.0

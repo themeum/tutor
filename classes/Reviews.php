@@ -2,7 +2,7 @@
 /**
  * Tutor Ratings
  *
- * @package Tutor\QuestionAnswer
+ * @package Tutor\Reviews
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
@@ -15,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /**
  * Handle ratings related logics
+ *
+ * @since 2.0.0
  */
 class Reviews {
 
