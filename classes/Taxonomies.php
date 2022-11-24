@@ -1,13 +1,32 @@
 <?php
+/**
+ * Tutor taxonomies
+ *
+ * @package Tutor\Taxonomies
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
+
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
-class Taxonomies{
+/**
+ * Manage taxonomies
+ *
+ * @since 1.0.0
+ */
+class Taxonomies {
 
+	/**
+	 * Register hooks
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
-
 		add_action( 'course-category_add_form_fields', array( $this, 'add_category_fields' ) );
 		add_action( 'course-category_edit_form_fields', array( $this, 'edit_category_fields' ) );
 
@@ -16,10 +35,14 @@ class Taxonomies{
 
 		add_filter( 'manage_edit-course-category_columns', array( $this, 'course_category_columns' ) );
 		add_filter( 'manage_course-category_custom_column', array( $this, 'course_category_column' ), 10, 3 );
-
 	}
 
-	public function add_category_fields(){
+	/**
+	 * Add category fields
+	 *
+	 * @return void
+	 */
+	public function add_category_fields() {
 		?>
 		<div class="form-field term-thumbnail-wrap">
 			<label><?php esc_html_e( 'Thumbnail', 'tutor' ); ?></label>
@@ -31,53 +54,53 @@ class Taxonomies{
 			</div>
 			<script type="text/javascript">
 
-                // Only show the "remove image" button when needed
-                if ( ! jQuery( '#course-category_thumbnail_id' ).val() ) {
-                    jQuery( '.remove_image_button' ).hide();
-                }
+				// Only show the "remove image" button when needed
+				if ( ! jQuery( '#course-category_thumbnail_id' ).val() ) {
+					jQuery( '.remove_image_button' ).hide();
+				}
 
-                // Uploading files
-                var file_frame;
+				// Uploading files
+				var file_frame;
 
-                jQuery( document ).on( 'click', '.upload_image_button', function( event ) {
+				jQuery( document ).on( 'click', '.upload_image_button', function( event ) {
 
-                    event.preventDefault();
+					event.preventDefault();
 
-                    // If the media frame already exists, reopen it.
-                    if ( file_frame ) {
-                        file_frame.open();
-                        return;
-                    }
+					// If the media frame already exists, reopen it.
+					if ( file_frame ) {
+						file_frame.open();
+						return;
+					}
 
-                    // Create the media frame.
-                    file_frame = wp.media.frames.downloadable_file = wp.media({
-                        title: '<?php esc_html_e( 'Choose an image', 'tutor' ); ?>',
-                        button: {
-                            text: '<?php esc_html_e( 'Use image', 'tutor' ); ?>'
-                        },
-                        multiple: false
-                    });
+					// Create the media frame.
+					file_frame = wp.media.frames.downloadable_file = wp.media({
+						title: '<?php esc_html_e( 'Choose an image', 'tutor' ); ?>',
+						button: {
+							text: '<?php esc_html_e( 'Use image', 'tutor' ); ?>'
+						},
+						multiple: false
+					});
 
-                    // When an image is selected, run a callback.
-                    file_frame.on( 'select', function() {
-                        var attachment           = file_frame.state().get( 'selection' ).first().toJSON();
-                        var attachment_thumbnail = attachment.sizes.thumbnail || attachment.sizes.full;
+					// When an image is selected, run a callback.
+					file_frame.on( 'select', function() {
+						var attachment           = file_frame.state().get( 'selection' ).first().toJSON();
+						var attachment_thumbnail = attachment.sizes.thumbnail || attachment.sizes.full;
 
-                        jQuery( '#course-category_thumbnail_id' ).val( attachment.id );
-                        jQuery( '#course-category_thumbnail' ).find( 'img' ).attr( 'src', attachment_thumbnail.url );
-                        jQuery( '.remove_image_button' ).show();
-                    });
+						jQuery( '#course-category_thumbnail_id' ).val( attachment.id );
+						jQuery( '#course-category_thumbnail' ).find( 'img' ).attr( 'src', attachment_thumbnail.url );
+						jQuery( '.remove_image_button' ).show();
+					});
 
-                    // Finally, open the modal.
-                    file_frame.open();
-                });
+					// Finally, open the modal.
+					file_frame.open();
+				});
 
-                jQuery( document ).on( 'click', '.remove_image_button', function() {
-                    jQuery( '#course-category_thumbnail' ).find( 'img' ).attr( 'src', '<?php echo esc_js( tutor_placeholder_img_src() ); ?>' );
-                    jQuery( '#course-category_thumbnail_id' ).val( '' );
-                    jQuery( '.remove_image_button' ).hide();
-                    return false;
-                });
+				jQuery( document ).on( 'click', '.remove_image_button', function() {
+					jQuery( '#course-category_thumbnail' ).find( 'img' ).attr( 'src', '<?php echo esc_js( tutor_placeholder_img_src() ); ?>' );
+					jQuery( '#course-category_thumbnail_id' ).val( '' );
+					jQuery( '.remove_image_button' ).hide();
+					return false;
+				});
 
 			</script>
 			<div class="clear"></div>
@@ -85,8 +108,16 @@ class Taxonomies{
 		<?php
 	}
 
-
-	public function edit_category_fields($term){
+	/**
+	 * Edit category fields
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed $term term.
+	 *
+	 * @return void
+	 */
+	public function edit_category_fields( $term ) {
 
 		$thumbnail_id = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
 
@@ -104,59 +135,59 @@ class Taxonomies{
 				<div class="form-field term-thumbnail-wrap">
 					<div id="course-category_thumbnail" style="float: left; margin-right: 10px;"><img src="<?php echo esc_url( $image ); ?>" width="60px" height="60px" /></div>
 					<div style="line-height: 60px;">
-						<input type="hidden" id="course-category_thumbnail_id" name="course_category_thumbnail_id" value="<?php echo $thumbnail_id; ?>" />
+						<input type="hidden" id="course-category_thumbnail_id" name="course_category_thumbnail_id" value="<?php echo esc_attr( $thumbnail_id ); ?>" />
 						<button type="button" class="upload_image_button button"><?php esc_html_e( 'Upload/Add image', 'tutor' ); ?></button>
 						<button type="button" class="remove_image_button button"><?php esc_html_e( 'Remove image', 'tutor' ); ?></button>
 					</div>
 					<script type="text/javascript">
 
-                        // Only show the "remove image" button when needed
-                        if ( ! jQuery( '#course-category_thumbnail_id' ).val() ) {
-                            jQuery( '.remove_image_button' ).hide();
-                        }
+						// Only show the "remove image" button when needed
+						if ( ! jQuery( '#course-category_thumbnail_id' ).val() ) {
+							jQuery( '.remove_image_button' ).hide();
+						}
 
-                        // Uploading files
-                        var file_frame;
+						// Uploading files
+						var file_frame;
 
-                        jQuery( document ).on( 'click', '.upload_image_button', function( event ) {
+						jQuery( document ).on( 'click', '.upload_image_button', function( event ) {
 
-                            event.preventDefault();
+							event.preventDefault();
 
-                            // If the media frame already exists, reopen it.
-                            if ( file_frame ) {
-                                file_frame.open();
-                                return;
-                            }
+							// If the media frame already exists, reopen it.
+							if ( file_frame ) {
+								file_frame.open();
+								return;
+							}
 
-                            // Create the media frame.
-                            file_frame = wp.media.frames.downloadable_file = wp.media({
-                                title: '<?php esc_html_e( 'Choose an image', 'tutor' ); ?>',
-                                button: {
-                                    text: '<?php esc_html_e( 'Use image', 'tutor' ); ?>'
-                                },
-                                multiple: false
-                            });
+							// Create the media frame.
+							file_frame = wp.media.frames.downloadable_file = wp.media({
+								title: '<?php esc_html_e( 'Choose an image', 'tutor' ); ?>',
+								button: {
+									text: '<?php esc_html_e( 'Use image', 'tutor' ); ?>'
+								},
+								multiple: false
+							});
 
-                            // When an image is selected, run a callback.
-                            file_frame.on( 'select', function() {
-                                var attachment           = file_frame.state().get( 'selection' ).first().toJSON();
-                                var attachment_thumbnail = attachment.sizes.thumbnail || attachment.sizes.full;
+							// When an image is selected, run a callback.
+							file_frame.on( 'select', function() {
+								var attachment           = file_frame.state().get( 'selection' ).first().toJSON();
+								var attachment_thumbnail = attachment.sizes.thumbnail || attachment.sizes.full;
 
-                                jQuery( '#course-category_thumbnail_id' ).val( attachment.id );
-                                jQuery( '#course-category_thumbnail' ).find( 'img' ).attr( 'src', attachment_thumbnail.url );
-                                jQuery( '.remove_image_button' ).show();
-                            });
+								jQuery( '#course-category_thumbnail_id' ).val( attachment.id );
+								jQuery( '#course-category_thumbnail' ).find( 'img' ).attr( 'src', attachment_thumbnail.url );
+								jQuery( '.remove_image_button' ).show();
+							});
 
-                            // Finally, open the modal.
-                            file_frame.open();
-                        });
+							// Finally, open the modal.
+							file_frame.open();
+						});
 
-                        jQuery( document ).on( 'click', '.remove_image_button', function() {
-                            jQuery( '#course-category_thumbnail' ).find( 'img' ).attr( 'src', '<?php echo esc_js( tutor_placeholder_img_src() ); ?>' );
-                            jQuery( '#course-category_thumbnail_id' ).val( '' );
-                            jQuery( '.remove_image_button' ).hide();
-                            return false;
-                        });
+						jQuery( document ).on( 'click', '.remove_image_button', function() {
+							jQuery( '#course-category_thumbnail' ).find( 'img' ).attr( 'src', '<?php echo esc_js( tutor_placeholder_img_src() ); ?>' );
+							jQuery( '#course-category_thumbnail_id' ).val( '' );
+							jQuery( '.remove_image_button' ).hide();
+							return false;
+						});
 
 					</script>
 					<div class="clear"></div>
@@ -168,21 +199,33 @@ class Taxonomies{
 	}
 
 	/**
-	 * @param $term_id
-	 * @param string $tt_id
-	 * @param string $taxonomy
-	 *
 	 * Save Course Category Thumbnail
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int    $term_id term id.
+	 * @param string $tt_id tt id.
+	 * @param string $taxonomy taxonomy.
+	 *
+	 * @return void
 	 */
-
 	public function save_category_fields( $term_id, $tt_id = '', $taxonomy = '' ) {
-		if ( isset( $_POST['course_category_thumbnail_id'] ) && 'course-category' === $taxonomy ) {
-			update_term_meta( $term_id, 'thumbnail_id', absint( $_POST['course_category_thumbnail_id'] ) );
+		$thumbnail_id = Input::post( 'course_category_thumbnail_id', 0, Input::TYPE_INT );
+		if ( Input::has( 'course_category_thumbnail_id' ) && 'course-category' === $taxonomy ) {
+			update_term_meta( $term_id, 'thumbnail_id', absint( $thumbnail_id ) );
 		}
 	}
 
-
-	public function course_category_columns($columns){
+	/**
+	 * Course category edit columns
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $columns columns.
+	 *
+	 * @return array
+	 */
+	public function course_category_columns( $columns ) {
 		$new_columns = array();
 
 		if ( isset( $columns['cb'] ) ) {
@@ -198,6 +241,15 @@ class Taxonomies{
 		return $columns;
 	}
 
+	/**
+	 * Course category columns
+	 *
+	 * @param array $columns columns.
+	 * @param mixed $column column name.
+	 * @param int   $id term id.
+	 *
+	 * @return mixed
+	 */
 	public function course_category_column( $columns, $column, $id ) {
 		if ( 'thumb' === $column ) {
 			$thumbnail_id = get_term_meta( $id, 'thumbnail_id', true );
@@ -217,6 +269,4 @@ class Taxonomies{
 		}
 		return $columns;
 	}
-
-
 }
