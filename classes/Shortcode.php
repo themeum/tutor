@@ -2,7 +2,7 @@
 /**
  * Manage short codes
  *
- * @package Tutor\RewriteRules
+ * @package Tutor\ShortCode
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 1.0.0
