@@ -1,13 +1,35 @@
 <?php
+/**
+ * Student List page
+ *
+ * @package Tutor\Student
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
+
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 use TUTOR\Backend_Page_Trait;
 
+/**
+ * Manage student lists
+ *
+ * @since 1.0.0
+ */
 class Students_List {
 
+	/**
+	 * Page slug
+	 *
+	 * @since 2.0.0
+	 *
+	 * @var string
+	 */
 	const STUDENTS_LIST_PAGE = 'tutor-students';
 
 	/**
@@ -15,8 +37,8 @@ class Students_List {
 	 *
 	 * @var $page_title
 	 */
-
 	use Backend_Page_Trait;
+
 	/**
 	 * Page Title
 	 *
@@ -33,13 +55,15 @@ class Students_List {
 
 	/**
 	 * Handle dependencies
+	 *
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		$this->page_title = __( 'Students', 'tutor' );
 		/**
 		 * Handle bulk action
 		 *
-		 * @since v2.0.0
+		 * @since 2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_student_bulk_action', array( $this, 'student_bulk_action' ) );
 	}
@@ -47,8 +71,9 @@ class Students_List {
 	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function prpare_bulk_actions(): array {
 		$actions = array(
@@ -62,41 +87,40 @@ class Students_List {
 	/**
 	 * Handle bulk action for student delete
 	 *
-	 * @return string JSON response.
-	 * @since v2.0.0
+	 * @since 2.0.0
+	 *
+	 * @return string wp_json response
 	 */
 	public function student_bulk_action() {
 		// check nonce.
-
 		tutor_utils()->checking_nonce();
-		$action   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
-		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : array();
+		$action   = Input::post( 'bulk-action', '' );
+		$bulk_ids = Input::post( 'bulk-ids', array() );
 		if ( 'delete' === $action ) {
 			return true === self::delete_students( $bulk_ids ) ? wp_send_json_success() : wp_send_json_error();
 		}
 		return wp_send_json_error();
-		exit;
 	}
 
 	/**
 	 * Delete student
 	 *
-	 * @param string $student_ids, ids that need to delete.
-	 * @param int $reassign_id, reassign to other user.
-	 * @return bool
 	 * @since v2.0.0
+	 *
+	 * @param string $student_ids ids that need to delete.
+	 * @param int    $reassign_id reassign to other user.
+	 *
+	 * @return bool
 	 */
-	public static function delete_students( string $student_ids, $reassign_id = NULL ): bool {
-		$student_ids = explode( ',', $student_ids );
+	public static function delete_students( string $student_ids, $reassign_id = null ): bool {
+		$student_ids     = explode( ',', $student_ids );
 		$current_user_id = get_current_user_id();
 
 		foreach ( $student_ids as $id ) {
-			if($id != $current_user_id){
-				NULL === $reassign_id ? wp_delete_user( $id ) : wp_delete_user( $id, $reassign_id );
+			if ( $id !== $current_user_id ) {
+				null === $reassign_id ? wp_delete_user( $id ) : wp_delete_user( $id, $reassign_id );
 			}
 		}
-		
 		return true;
 	}
-
 }
