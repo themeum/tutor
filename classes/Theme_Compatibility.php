@@ -2,31 +2,38 @@
 /**
  * Integration class
  *
- * @author: themeum
- * @author_uri: https://themeum.com
- * @package Tutor
- * @since v.1.0.0
+ * @package Tutor\ThemeCompatibility
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
-
 
 namespace TUTOR;
 
-
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-
+}
+/**
+ * Template compatibility
+ *
+ * @since 1.0.0
+ */
 class Theme_Compatibility {
 
+	/**
+	 * Prepare dependencies
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
-		$template = trailingslashit(get_template());
+		$template   = trailingslashit( get_template() );
 		$tutor_path = tutor()->path;
 
-		$compatibility_theme_path = $tutor_path.'includes/theme-compatibility/'.$template.'functions.php';
+		$compatibility_theme_path = $tutor_path . 'includes/theme-compatibility/' . $template . 'functions.php';
 
-		if (file_exists($compatibility_theme_path)){
+		if ( file_exists( $compatibility_theme_path ) ) {
 			include $compatibility_theme_path;
 		}
 
 	}
-
 }
