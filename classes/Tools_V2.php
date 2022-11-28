@@ -3,7 +3,7 @@
 /**
  * Options for TutorLMS
  *
- * @package Tutor\ThemeCompatibility
+ * @package Tutor\Tools
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 2.0.0
