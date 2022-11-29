@@ -166,29 +166,35 @@ class Lesson extends Tutor_Base {
 	 * @return void
 	 */
 	public function save_lesson_meta( $post_ID ) {
-		/**
-		 * Add lesson video from YouTube, Viemo, HTML5 etc
-		 */
-		$video        = Input::post( 'video', array(), Input::TYPE_ARRAY );
-		$video_source = tutor_utils()->array_get( 'source', $video );
-		if ( -1 === $video_source ) {
+		$video_source = sanitize_text_field( tutor_utils()->array_get( 'video.source', $_POST ) );
+		if ( '-1' === $video_source ) {
 			delete_post_meta( $post_ID, '_video' );
 		} elseif ( $video_source ) {
+
+			// Sanitize data through helper method.
+			$video = Input::sanitize_array(
+				$_POST['video'], //phpcs:ignore
+				array(
+					'source_external_url' => 'esc_url',
+					'source_embedded'     => 'wp_kses_post',
+				),
+				true
+			);
 			update_post_meta( $post_ID, '_video', $video );
 		}
 
-		/**
-		 * Add attachments to lesson
-		 */
+		// Attachments.
 		$attachments = array();
-		if ( Input::has( 'tutor_attachments' ) ) {
-			$attachments = Input::post( 'tutor_attachments', array(), Input::TYPE_ARRAY );
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		if ( ! empty( $_POST['tutor_attachments'] ) ) {
+			//phpcs:ignore -- data sanitized through helper method.
+			$attachments = tutor_utils()->sanitize_array( wp_unslash( $_POST['tutor_attachments'] ) );
 			$attachments = array_unique( $attachments );
 		}
 
 		/**
-		 * It !empty attachment then update meta else
-		 * Delete meta key to prevetn empty data in db
+		 * If !empty attachment then update meta else
+		 * delete meta key to prevent empty data in db
 		 *
 		 * @since 1.8.9
 		*/
