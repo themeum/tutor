@@ -226,4 +226,79 @@ class Input {
 		return $default_value;
 	}
 
+	/**
+	 * Sanitize array, single or multi dimensional array
+	 * Explicitly setup how should a value sanitize by the
+	 * sanitize function.
+	 *
+	 * @since 2.1.3
+	 *
+	 * @see available sanitize func
+	 * https://developer.wordpress.org/themes/theme-security/data-sanitization-escaping/
+	 *
+	 * @param array $input array to sanitize.
+	 * @param array $sanitize_mapping single dimensional map key value
+	 * pair to set up sanitization process. Key name should by inside
+	 * input array and the value will be callable func.
+	 * For ex: [key1 => sanitize_email, key2 => wp_kses_post ]
+	 *
+	 * If key not passed then default sanitize_text_field will be used.
+	 *
+	 * @param bool  $allow_iframe if set true then iframe tag will be
+	 *  allowed.
+	 *
+	 * @return array
+	 */
+	public static function sanitize_array( array $input, array $sanitize_mapping = array(), $allow_iframe = false ):array {
+		$array = array();
+
+		if ( $allow_iframe ) {
+			add_filter( 'wp_kses_allowed_html', __CLASS__ . '::allow_iframe', 10, 2 );
+		}
+
+		if ( is_array( $input ) && count( $input ) ) {
+			foreach ( $input as $key => $value ) {
+				if ( is_array( $value ) ) {
+					$array[ $key ] = self::sanitize_array( $value );
+				} else {
+					$key = sanitize_text_field( $key );
+
+					// If mapping exists then use callback.
+					if ( isset( $sanitize_mapping[ $key ] ) ) {
+						$callback = $sanitize_mapping[ $key ];
+						$value    = call_user_func( $callback, wp_unslash( $value ) );
+					} else {
+						$value = sanitize_text_field( wp_unslash( $value ) );
+					}
+					$array[ $key ] = $value;
+				}
+			}
+		}
+		return is_array( $array ) && count( $array ) ? $array : array();
+	}
+
+	/**
+	 * This method is used with wp_kses_allowed_html filter
+	 * to allow iframe
+	 *
+	 * @since 2.1.3
+	 *
+	 * @param array  $tags allowed HTML tags.
+	 * @param string $context context name.
+	 *
+	 * @return array
+	 */
+	public static function allow_iframe( $tags, $context ) {
+		$tags['iframe'] = array(
+			'src'             => true,
+			'title'           => true,
+			'height'          => true,
+			'width'           => true,
+			'frameborder'     => true,
+			'allowfullscreen' => true,
+			'allow'           => true,
+			'style'           => true,
+		);
+		return $tags;
+	}
 }
