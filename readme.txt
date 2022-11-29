@@ -227,7 +227,21 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = 2.1.3 - November 29, 2022
 
-Coming soon...
+New: Reset credential for Google Meet is introduced
+Fix: The login form was not showing the user as logged in until the page is refreshed
+Fix: In some cases, the Course Rating Count appeared wrong on the Course Details page
+Fix: XML code was not appearing in Quiz
+Fix: The quiz page used to get jammed if a quiz is abandoned
+Fix: Quiz completion page was showing a fatal error in WP 6.1
+Fix: A PHP warning was appearing on the Quiz Completion page
+Fix: On Google Meet the Help Page was expanding options before clicking on the Tab
+Fix: Google Meet vendor package was showing an error in WP 6.1
+Fix: On completion of a Quiz, it was appearing as Completed for another User in the Course Journey
+Fix: Quiz Attempt page was showing an error in the case of PHP 7.0 or below
+Fix: Email template files were containing some wrong shortcodes
+Fix: Google Meet visibility option’s title was wrong
+Fix: Reports page design was appearing wrong
+Fix: Quiz attempt page had some minor design issue
 
 = 2.1.2 - November 2, 2022
 
