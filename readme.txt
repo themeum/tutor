@@ -4,7 +4,7 @@ Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.1
-Requires PHP: 7.0
+Requires PHP: 7.1
 Stable tag: 2.1.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -225,7 +225,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.3 - November 3, 2022
+= 2.1.3 - November 29, 2022
 
 Coming soon...
 
