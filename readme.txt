@@ -225,7 +225,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.3 - November 29, 2022
+= 2.1.3 - November 30, 2022
 
 New: Reset credential for Google Meet is introduced
 Fix: The login form was not showing the user as logged in until the page is refreshed
