@@ -1,8 +1,11 @@
 <?php
 /**
- * Withdraw Class
+ * Manage withdrawals
  *
- * @package Withdraw
+ * @package Tutor\Withdraw
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 namespace TUTOR;
@@ -12,13 +15,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /**
  * Handle withdraw request logic
+ *
+ * @since 1.0.0
  */
 class Withdraw_Requests_List {
 
+	/**
+	 * Page title
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
 	public $page_title;
 
+	/**
+	 * List page slug
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
 	const WITHDRAW_REQUEST_LIST_PAGE = 'tutor_withdraw_requests';
 
+	/**
+	 * Register hooks, resolve dependencies
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		$this->page_title = __( 'Withdraw Request', 'tutor' );
 		/**
@@ -30,10 +54,12 @@ class Withdraw_Requests_List {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param string $date withdraw request date | optional.
 	 * @param string $search search by instructor name or email | optional.
+	 *
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function tabs_key_value( $date = '', $search = '' ): array {
 		$approved = self::tabs_data( 'approved', $date, $search );
@@ -73,11 +99,13 @@ class Withdraw_Requests_List {
 	/**
 	 * Get counted number of withdraw list by status ex: approved | pending | rejected
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param string $status status required | available : (approved | pending | rejected).
 	 * @param string $date withdraw request date | optional | YYYY-MM-DD.
 	 * @param string $search search by instructor name or email | optional.
+	 *
 	 * @return int
-	 * @since v2.0.0
 	 */
 	public static function tabs_data( string $status, $date = '', $search = '' ): int {
 		global $wpdb;
@@ -117,8 +145,9 @@ class Withdraw_Requests_List {
 	/**
 	 * Handle ajax request for updating withdraw status | available status (approved, rejected, pending)
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return string json response.
-	 * @since v2.0.0
 	 */
 	public function update_withdraw_status() {
 		tutor_utils()->checking_nonce();
@@ -126,7 +155,7 @@ class Withdraw_Requests_List {
 		$withdraw_id    = Input::post( 'withdraw-id', '' );
 		$reject_type    = Input::post( 'reject-type', '' );
 		$reject_comment = Input::post( 'reject-comment', '' );
-		
+
 		if ( '' === $withdraw_id ) {
 			return false;
 		} else {
@@ -139,12 +168,14 @@ class Withdraw_Requests_List {
 	/**
 	 * Update withdraw status | available status (approved, rejected, pending)
 	 *
+	 * @since v2.0.0
+	 *
 	 * @param string $status | required.
 	 * @param int    $withdraw_id | required.
 	 * @param string $reject_type | optional.
 	 * @param string $reject_comment | optional.
+	 *
 	 * @return bool json response.
-	 * @since v2.0.0
 	 */
 	public static function update( string $status, int $withdraw_id, $reject_type = '', $reject_comment = '' ): bool {
 		global $wpdb;
@@ -155,7 +186,7 @@ class Withdraw_Requests_List {
 		// Prepare data for update.
 		$data = array(
 			'status'     => $status,
-			'updated_at' => date( 'Y-m-d H:i:s' ),
+			'updated_at' => gmdate( 'Y-m-d H:i:s' ),
 		);
 
 		// If rejected then append reject_type and comment with method_data.
@@ -170,7 +201,7 @@ class Withdraw_Requests_List {
 				);
 				$data['method_data'] = maybe_serialize( $details );
 
-				// trigger email after rejecting withdraw
+				// Trigger email after rejecting withdraw.
 				do_action( 'tutor_after_rejected_withdraw', $withdraw_id );
 			}
 		} else {
@@ -192,9 +223,11 @@ class Withdraw_Requests_List {
 	/**
 	 * Get withdraw by id
 	 *
-	 * @param int $withdraw_id | required.
-	 * @return object withdraw list.
 	 * @since v2.0.0
+	 *
+	 * @param int $withdraw_id | required.
+	 *
+	 * @return object withdraw list.
 	 */
 	public static function get_withdraw_by_id( int $withdraw_id ) {
 		global $wpdb;
