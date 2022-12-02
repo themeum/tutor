@@ -2,7 +2,7 @@
 /**
  * Tutor Utils Helper functions
  *
- * @package Tutor
+ * @package Tutor\Utils
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 1.0.0
@@ -14,15 +14,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Utility methods
+ *
+ * @since 1.0.0
+ */
 class Utils {
 
 	/**
 	 * Compatibility for splitting utils functions to specific model
 	 *
 	 * @param string $method
-	 * @param array $args
+	 * @param array  $args
 	 * @return void
-	 * 
+	 *
 	 * @since 2.0.6
 	 */
 	public function __call( $method, $args ) {
@@ -30,11 +35,11 @@ class Utils {
 			'Tutor\Models\CourseModel',
 			'Tutor\Models\LessonModel',
 			'Tutor\Models\QuizModel',
-			'Tutor\Models\WithdrawModel'
+			'Tutor\Models\WithdrawModel',
 		);
 
-		foreach( $classes as $class ) {
-			if( method_exists( $obj = new $class, $method ) ) {
+		foreach ( $classes as $class ) {
+			if ( method_exists( $obj = new $class(), $method ) ) {
 				return $obj->$method( ...$args );
 			}
 		}
@@ -43,9 +48,9 @@ class Utils {
 	/**
 	 * Check an array is sequential or associative
 	 *
-	 * @param	array  $array The array to check.
-	 * @return	bool   true if the array is associative, false if it's sequential.
-	 * 
+	 * @param   array $array The array to check.
+	 * @return  bool   true if the array is associative, false if it's sequential.
+	 *
 	 * @since 2.0.9
 	 */
 	public function is_assoc( array $array ) {
@@ -57,12 +62,12 @@ class Utils {
 	 *
 	 * @param string $url
 	 * @return void
-	 * 
+	 *
 	 * @since 2.1.0
 	 */
 	public function redirect_to( string $url, $flash_message = null, $flash_type = 'success' ) {
 		$url = trim( $url );
-		if ( filter_var( $url, FILTER_VALIDATE_URL ) === FALSE ) {
+		if ( filter_var( $url, FILTER_VALIDATE_URL ) === false ) {
 			wp_die( 'Not a valid URL for redirect' );
 		}
 
@@ -71,11 +76,11 @@ class Utils {
 			set_transient( 'tutor_flash_type', $flash_type );
 			set_transient( 'tutor_flash_message', $flash_message );
 		}
-		
+
 		if ( ! headers_sent() ) {
 			wp_safe_redirect( $url );
 		} else {
-			echo "<script>window.location.href = " . "'" . esc_url( $url ) . "';" . "</script>";
+			echo '<script>window.location.href = ' . "'" . esc_url( $url ) . "';" . '</script>';
 		}
 
 		exit;
@@ -88,8 +93,8 @@ class Utils {
 	 * @since 2.1.0
 	 */
 	public function handle_flash_message() {
-		if ( false !== get_transient( 'tutor_flash_type' ) && false !== get_transient( 'tutor_flash_message' )) {
-			$type = get_transient( 'tutor_flash_type' );
+		if ( false !== get_transient( 'tutor_flash_type' ) && false !== get_transient( 'tutor_flash_message' ) ) {
+			$type    = get_transient( 'tutor_flash_type' );
 			$message = get_transient( 'tutor_flash_message' );
 			if ( 'success' === $type && ! empty( $message ) ) {
 				?>
@@ -121,12 +126,12 @@ class Utils {
 	/**
 	 * Add setting's option after a setting key
 	 *
-	 * @param string $target_key	setting's key name like 'tutor_version'
-	 * @param array  $arr			an multi-dimentional settings option array
-	 * @param array  $new_item 		new setting array. a 'key' needed
-	 * 
-	 * @return int|null				inserted index number or null
-	 * 
+	 * @param string $target_key    setting's key name like 'tutor_version'
+	 * @param array  $arr           an multi-dimentional settings option array
+	 * @param array  $new_item      new setting array. a 'key' needed
+	 *
+	 * @return int|null             inserted index number or null
+	 *
 	 * @since 2.1.0
 	 */
 	public function add_option_after( string $target_key, array &$arr, array $new_item ) {
@@ -154,11 +159,11 @@ class Utils {
 	 *
 	 * @param string $file_path
 	 * @return string
-	 * 
+	 *
 	 * @since 2.1.0
 	 */
 	public function get_readable_filesize( string $file_path ) {
-		return  size_format( file_exists( $file_path ) ? filesize( $file_path ) : 0 );
+		return size_format( file_exists( $file_path ) ? filesize( $file_path ) : 0 );
 	}
 
 	private function option_recursive( $array, $key ) {
@@ -199,10 +204,10 @@ class Utils {
 
 	/**
 	 * Get option data
-	 * 
+	 *
 	 * @param string $key
-	 * @param bool $default
-	 * @param bool $type if false return string
+	 * @param bool   $default
+	 * @param bool   $type if false return string
 	 *
 	 * @return array|bool|mixed
 	 *
@@ -330,11 +335,13 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_posts( array(
-			'post_type' => 'page',
-			'post_status'    => 'publish',
-			'numberposts' => -1,
-		) );
+		$wp_pages = get_posts(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+				'numberposts' => -1,
+			)
+		);
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
@@ -357,14 +364,21 @@ class Utils {
 	public function get_not_translated_pages() {
 		do_action( 'tutor_utils/get_pages/before' );
 
-		$pages    = array();
+		$pages = array();
 
-		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true, 'post_status'    => 'publish', 'numberposts' => -1,  ) );
+		$wp_pages = get_posts(
+			array(
+				'post_type'        => 'page',
+				'suppress_filters' => true,
+				'post_status'      => 'publish',
+				'numberposts'      => -1,
+			)
+		);
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
-				$translate_id = icl_object_id($page->ID,'page', true, ICL_LANGUAGE_CODE);
-				if($page->ID === $translate_id){
+				$translate_id = icl_object_id( $page->ID, 'page', true, ICL_LANGUAGE_CODE );
+				if ( $page->ID === $translate_id ) {
 					$pages[ $page->ID ] = $page->post_title;
 				}
 			}
@@ -384,7 +398,7 @@ class Utils {
 	 */
 	public function course_archive_page_url() {
 		$course_post_type = tutor()->course_post_type;
-		$course_page_url   = trailingslashit( home_url() ) . $course_post_type;
+		$course_page_url  = trailingslashit( home_url() ) . $course_post_type;
 
 		$course_archive_page = $this->get_option( 'course_archive_page' );
 		if ( $course_archive_page && $course_archive_page !== '-1' ) {
@@ -722,7 +736,7 @@ class Utils {
 
 		return $count;
 	}
-	
+
 	/**
 	 * @param $instructor_id
 	 *
@@ -732,23 +746,23 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only=false ) {
+	public function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false ) {
 		global $wpdb;
 		$offset           = sanitize_text_field( $offset );
 		$limit            = sanitize_text_field( $limit );
 		$instructor_id    = $this->get_user_id( $instructor_id );
 		$course_post_type = tutor()->course_post_type;
 
-		if ( empty($post_status) || $post_status == 'any' ) {
+		if ( empty( $post_status ) || $post_status == 'any' ) {
 			$where_post_status = '';
 		} else {
-			!is_array($post_status) ? $post_status=array($post_status) : 0;
-			$statuses  = "'" . implode( "','", $post_status ) . "'";
-			$where_post_status = "AND $wpdb->posts.post_status IN({$statuses}) ";
+			! is_array( $post_status ) ? $post_status = array( $post_status ) : 0;
+			$statuses                                 = "'" . implode( "','", $post_status ) . "'";
+			$where_post_status                        = "AND $wpdb->posts.post_status IN({$statuses}) ";
 		}
 
-		$select_col = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
-		$limit_offset = $count_only ? "" : " LIMIT $offset, $limit ";
+		$select_col   = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
+		$limit_offset = $count_only ? '' : " LIMIT $offset, $limit ";
 
 		$query = $wpdb->prepare(
 			"SELECT $select_col
@@ -768,7 +782,7 @@ class Utils {
 			$instructor_id
 		);
 
-		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query, OBJECT);
+		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query, OBJECT );
 	}
 
 	/**
@@ -788,7 +802,7 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 
 		$lesson_ids = $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id );
-		$count = 0;
+		$count      = 0;
 		if ( count( $lesson_ids ) ) {
 			$completed_lesson_meta_ids = array();
 			foreach ( $lesson_ids as $lesson_id ) {
@@ -915,13 +929,13 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_next_topic_order_id( $course_ID, $content_id=null ) {
+	public function get_next_topic_order_id( $course_ID, $content_id = null ) {
 		global $wpdb;
 
-		if($content_id) {
-			$existing_order = get_post_field( 'menu_order', $content_id);
+		if ( $content_id ) {
+			$existing_order = get_post_field( 'menu_order', $content_id );
 
-			if($existing_order>=0) {
+			if ( $existing_order >= 0 ) {
 				return $existing_order;
 			}
 		}
@@ -950,13 +964,13 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_next_course_content_order_id( $topic_ID, $content_id=null ) {
+	public function get_next_course_content_order_id( $topic_ID, $content_id = null ) {
 		global $wpdb;
 
-		if($content_id) {
-			$existing_order = get_post_field( 'menu_order', $content_id);
+		if ( $content_id ) {
+			$existing_order = get_post_field( 'menu_order', $content_id );
 
-			if($existing_order>=0) {
+			if ( $existing_order >= 0 ) {
 				return $existing_order;
 			}
 		}
@@ -988,7 +1002,7 @@ class Utils {
 		$topics_id        = $this->get_post_id( $topics_id );
 		$lesson_post_type = tutor()->lesson_post_type;
 		$post_type        = array_unique( apply_filters( 'tutor_course_contents_post_types', array( $lesson_post_type, 'tutor_quiz' ) ) );
-		
+
 		$args = array(
 			'post_type'      => $post_type,
 			'post_parent'    => $topics_id,
@@ -1051,22 +1065,23 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_course_price( $course_id = 0 ) {
-		$price     = null;
-		$course_id = $this->get_post_id( $course_id );
+		$price      = null;
+		$course_id  = $this->get_post_id( $course_id );
 		$product_id = $this->get_course_product_id( $course_id );
 		if ( $this->is_course_purchasable( $course_id ) ) {
 			$monetize_by = $this->get_option( 'monetize_by' );
 			if ( $this->has_wc() && $monetize_by === 'wc' ) {
-				$product    = wc_get_product( $product_id );
+				$product = wc_get_product( $product_id );
 				if ( $product ) {
 					$price = $product->get_price();
 				}
-			} else if ( 'edd' === $monetize_by && function_exists( 'edd_price' ) ) {
-				$download 	= new \EDD_Download( $product_id );
-				$price 		= \edd_price( $download->ID, false );
+			} elseif ( 'edd' === $monetize_by && function_exists( 'edd_price' ) ) {
+				$download = new \EDD_Download( $product_id );
+				$price    = \edd_price( $download->ID, false );
 			}
 		}
-		return apply_filters( 'get_tutor_course_price', $price, $course_id );;
+		return apply_filters( 'get_tutor_course_price', $price, $course_id );
+
 	}
 
 	/**
@@ -1093,7 +1108,7 @@ class Utils {
 		$product_id = $this->get_course_product_id( $course_id );
 		if ( $product_id ) {
 			if ( $monetize_by === 'wc' && $this->has_wc() ) {
-				$product  = wc_get_product( $product_id );
+				$product = wc_get_product( $product_id );
 				if ( $product ) {
 					$prices['regular_price'] = $product->get_regular_price();
 					$prices['sale_price']    = $product->get_sale_price();
@@ -1165,7 +1180,7 @@ class Utils {
 		if ( $getEnrolledInfo ) {
 			return apply_filters( 'tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id );
 		}
-		
+
 		return false;
 	}
 
@@ -1427,10 +1442,10 @@ class Utils {
 
 	/**
 	 * Get tutor attachment
-	 * 
-	 * @param int $post_id
+	 *
+	 * @param int    $post_id
 	 * @param string $meta_key
-	 * 
+	 *
 	 * @return array
 	 *
 	 * @since v.1.0.0
@@ -1571,41 +1586,38 @@ class Utils {
 	}
 
 	/**
-     * Get human readable time
-     *
-     * @param string $from                  date time string value. Example: 2022-06-24 22:00:00
-     * @param string $to                    (optional) date time string value. Default value is current.
-     * @param string $format                format you want to print. Default: '%ad %hh %im %ss' Help: https://www.php.net/manual/en/dateinterval.format.php
-     * @param bool   $show_postfix_text     show postfix text like 'ago', 'left'
-     * @return string
-     * 
-     * @since 2.0.7
-     */
-    public function get_human_readable_time( $from, $to = null, $format = null, $show_postfix_text = true ) {
-        $postfix_text   = '';
-		$wp_tz 			= new \DateTimeZone( wp_timezone_string() );
-        $fromDateTime   = new \DateTime( $from, $wp_tz );
-        $toDateTime     = $to === null ? new \DateTime( 'now', $wp_tz ) : new \DateTime( $to, $wp_tz );
-		$format			= $format === null ? '%ad %hh %im %ss' : $format;
-        
-        if ( $toDateTime > $fromDateTime ) 
-        {
-            $postfix_text = __( ' ago', 'tutor' );
-        }
-        else
-        {
-            $postfix_text = __( ' left', 'tutor' );
-        }
+	 * Get human readable time
+	 *
+	 * @param string $from                  date time string value. Example: 2022-06-24 22:00:00
+	 * @param string $to                    (optional) date time string value. Default value is current.
+	 * @param string $format                format you want to print. Default: '%ad %hh %im %ss' Help: https://www.php.net/manual/en/dateinterval.format.php
+	 * @param bool   $show_postfix_text     show postfix text like 'ago', 'left'
+	 * @return string
+	 *
+	 * @since 2.0.7
+	 */
+	public function get_human_readable_time( $from, $to = null, $format = null, $show_postfix_text = true ) {
+		$postfix_text = '';
+		$wp_tz        = new \DateTimeZone( wp_timezone_string() );
+		$fromDateTime = new \DateTime( $from, $wp_tz );
+		$toDateTime   = $to === null ? new \DateTime( 'now', $wp_tz ) : new \DateTime( $to, $wp_tz );
+		$format       = $format === null ? '%ad %hh %im %ss' : $format;
 
-        $timeSpan       = $toDateTime->diff( $fromDateTime );
-        $postfix_text   = $show_postfix_text === true ? $postfix_text : '';
+		if ( $toDateTime > $fromDateTime ) {
+			$postfix_text = __( ' ago', 'tutor' );
+		} else {
+			$postfix_text = __( ' left', 'tutor' );
+		}
 
-        return $timeSpan->format( $format ) . $postfix_text;
-    }
+		$timeSpan     = $toDateTime->diff( $fromDateTime );
+		$postfix_text = $show_postfix_text === true ? $postfix_text : '';
+
+		return $timeSpan->format( $format ) . $postfix_text;
+	}
 
 	/**
 	 * Get video info
-	 * 
+	 *
 	 * @param int $lesson_id
 	 * @return mixed bool return if video does not exits otherwise object return.
 	 *
@@ -1854,9 +1866,9 @@ class Utils {
 			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
 
-		$order_query = "ORDER BY posts.post_date {$order}";
+		$order_query     = "ORDER BY posts.post_date {$order}";
 		$search_term_raw = $search_term;
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		$search_term     = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		$students = $wpdb->get_results(
 			$wpdb->prepare(
@@ -1912,7 +1924,7 @@ class Utils {
 			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
 		$search_term_raw = $search_term;
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		$search_term     = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		$students = $wpdb->get_results(
 			$wpdb->prepare(
@@ -2069,14 +2081,14 @@ class Utils {
 	 * @param integer $user_id user id
 	 * @param integer $course_id cousrs id
 	 * @return object | mixed
-	 * 
+	 *
 	 * @since 2.0.5
 	 */
 	public function get_enrolled_data( $user_id = 0, $course_id = 0 ) {
 		global $wpdb;
 		// If course ID provided, it will return single row data.
-		if( 0 != $course_id ) {
-		 	return	$wpdb->get_row(
+		if ( 0 != $course_id ) {
+			return $wpdb->get_row(
 				$wpdb->prepare(
 					"SELECT * FROM 	{$wpdb->posts} 
 						WHERE post_type = %s
@@ -2091,7 +2103,7 @@ class Utils {
 			);
 		} else {
 			// Return all enrolled data by user ID.
-			return	$wpdb->get_results(
+			return $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT * FROM 	{$wpdb->posts} 
 						WHERE post_type = %s
@@ -2175,20 +2187,20 @@ class Utils {
 
 			$result = new \WP_Query( $course_args );
 
-			if(is_object($result) && is_array($result->posts)){
+			if ( is_object( $result ) && is_array( $result->posts ) ) {
 
 				// Sort courses according to the id list
 				$new_array = array();
 
-				foreach($course_ids as $id){
-					foreach($result->posts as $post){
-						$post->ID==$id ? $new_array[] = $post : 0;
+				foreach ( $course_ids as $id ) {
+					foreach ( $result->posts as $post ) {
+						$post->ID == $id ? $new_array[] = $post : 0;
 					}
 				}
 
 				$result->posts = $new_array;
 			}
-			
+
 			return $result;
 		}
 
@@ -2263,11 +2275,10 @@ class Utils {
 	 */
 	public function get_user_name( \WP_User $user ) {
 		$name = '';
-		
+
 		if ( empty( trim( $user->first_name ) ) ) {
 			$name = $user->user_login;
-		} 
-		else {
+		} else {
 			$name = $user->first_name;
 			if ( ! empty( trim( $user->last_name ) ) ) {
 				$name .= " {$user->last_name}";
@@ -2346,12 +2357,12 @@ class Utils {
 		$enroll_data = apply_filters(
 			'tutor_enroll_data',
 			array(
-				'post_type'   => 'tutor_enrolled',
-				'post_title'  => $title,
-				'post_status' => $enrolment_status,
-				'post_author' => $user_id,
-				'post_parent' => $course_id,
-				'post_date_gmt' => current_time( 'mysql', true )
+				'post_type'     => 'tutor_enrolled',
+				'post_title'    => $title,
+				'post_status'   => $enrolment_status,
+				'post_author'   => $user_id,
+				'post_parent'   => $course_id,
+				'post_date_gmt' => current_time( 'mysql', true ),
 			)
 		);
 
@@ -2527,7 +2538,7 @@ class Utils {
 	 *
 	 * WooCommerce specific utils
 	 */
-	public function get_wc_products_db($course_id) {
+	public function get_wc_products_db( $course_id ) {
 		global $wpdb;
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
@@ -2542,16 +2553,17 @@ class Utils {
 			)
 		);
 
-		/* $query = $wpdb->get_results($wpdb->prepare(
+		/*
+		 $query = $wpdb->get_results($wpdb->prepare(
 			"SELECT DISTINCT product.ID, product.post_title
 			FROM {$wpdb->posts} product
 			LEFT JOIN {$wpdb->postmeta} course_meta ON course_meta.meta_value=product.ID
 			WHERE 	product.post_status = 'publish'
 				AND product.post_type = 'product'
 				AND (
-					course_meta.meta_key!='_tutor_course_product_id' 
+					course_meta.meta_key!='_tutor_course_product_id'
 					OR (
-						course_meta.meta_key='_tutor_course_product_id' 
+						course_meta.meta_key='_tutor_course_product_id'
 						AND course_meta.post_id=%d
 					)
 				)",
@@ -2726,7 +2738,6 @@ class Utils {
 	public function tutor_dashboard_nav_ui_items() {
 		$nav_items = $this->tutor_dashboard_pages();
 
-
 		foreach ( $nav_items as $key => $nav_item ) {
 			if ( is_array( $nav_item ) ) {
 
@@ -2857,7 +2868,7 @@ class Utils {
 		$date          = sanitize_text_field( $date );
 
 		$search_term_raw = $search_filter;
-		$search_filter = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
 
 		$status_query = '';
 		if ( is_array( $status ) && count( $status ) ) {
@@ -2921,7 +2932,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '', $count_only=false ) {
+	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '', $count_only = false ) {
 		global $wpdb;
 
 		$search_filter = sanitize_text_field( $search_filter );
@@ -2931,8 +2942,8 @@ class Utils {
 		$rating        = sanitize_text_field( $rating );
 
 		$search_term_raw = $search_filter;
-		$search_filter = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_filter = $course_filter != '' ? " AND umeta.meta_value = $course_filter " : '';
+		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$course_filter   = $course_filter != '' ? " AND umeta.meta_value = $course_filter " : '';
 
 		if ( '' != $date_filter ) {
 			$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
@@ -3006,7 +3017,7 @@ class Utils {
 		}
 
 		$limit_offset = $count_only ? '' : " LIMIT {$start}, {$limit} ";
-		$select_col = $count_only ? 
+		$select_col   = $count_only ?
 						' COUNT(DISTINCT user.ID) ' :
 						' DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status ';
 
@@ -3032,13 +3043,12 @@ class Utils {
 				{$course_filter}
 				{$date_filter}
 			GROUP BY user.ID {$rating_having} {$order_query} {$limit_offset}",
-			
 			$search_filter,
 			$search_term_raw
 		);
 
-		$results = $wpdb->get_results($query);
-		return $count_only ? count($results) : $results;
+		$results = $wpdb->get_results( $query );
+		return $count_only ? count( $results ) : $results;
 	}
 
 	/**
@@ -3117,11 +3127,14 @@ class Utils {
 		);
 		if ( is_array( $instructors ) && count( $instructors ) ) {
 			// Exclude instructor if already in main instructor.
-			$instructors = array_filter( $instructors , function($instructor) use( $main_instructor ) {
-				if ( $instructor->ID !== $main_instructor[0]->ID ) {
-					return true;
+			$instructors = array_filter(
+				$instructors,
+				function( $instructor ) use ( $main_instructor ) {
+					if ( $instructor->ID !== $main_instructor[0]->ID ) {
+						return true;
+					}
 				}
-			});
+			);
 			return array_merge( $main_instructor, $instructors );
 		}
 		return $main_instructor;
@@ -3211,10 +3224,10 @@ class Utils {
 		$course_post_type = tutor()->course_post_type;
 
 		$search_term_raw = $search_filter;
-		$search_query = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_query = '';
-		$date_query   = '';
-		$author_query = '';
+		$search_query    = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$course_query    = '';
+		$date_query      = '';
+		$author_query    = '';
 
 		if ( $course_id ) {
 			$course_query = " AND course.ID = $course_id ";
@@ -3473,9 +3486,9 @@ class Utils {
 
 	public function star_rating_generator_v2( $current_rating, $total_count = null, $show_avg_rate = false, $parent_class = '', $screen_size = '' ) {
 		$current_rating = number_format( $current_rating, 2, '.', '' );
-		$css_class = isset($screen_size) ? "{$parent_class} tutor-ratings-{$screen_size}" : "{$parent_class}";
+		$css_class      = isset( $screen_size ) ? "{$parent_class} tutor-ratings-{$screen_size}" : "{$parent_class}";
 		?>
-		<div class="tutor-ratings<?php echo $css_class; ?>">
+		<div class="tutor-ratings<?php echo esc_attr( $css_class ); ?>">
 			<div class="tutor-ratings-stars">
 				<?php
 				for ( $i = 1; $i <= 5; $i++ ) {
@@ -3490,9 +3503,13 @@ class Utils {
 				}
 				?>
 			</div>
-			<?php if( $show_avg_rate && $total_count > 0 ) : ?>
-				<div class="tutor-ratings-average"><?php echo $current_rating; ?></div>
-				<div class="tutor-ratings-count">(<?php echo $total_count . ' ' . ( $total_count > 1 ? __( 'Ratings', 'tutor' ) : __( 'Rating', 'tutor' ) ); ?>)</div>
+			<?php if ( $show_avg_rate && $total_count > 0 ) : ?>
+				<div class="tutor-ratings-average">
+					<?php echo esc_html( $current_rating ); ?>
+				</div>
+				<div class="tutor-ratings-count">
+					(<?php echo esc_html( $total_count ) . ' ' . ( $total_count > 1 ? esc_html__( 'Ratings', 'tutor' ) : esc_html__( 'Rating', 'tutor' ) ); ?>)
+				</div>
 			<?php endif; ?>
 		</div>
 		<?php
@@ -3515,7 +3532,16 @@ class Utils {
 		}
 
 		if ( $echo ) {
-			echo $output;
+			echo wp_kses(
+				$output,
+				array(
+					'span' => array(
+						'class' => true,
+						'data-rating' => true,
+						'data-rating-value' => true
+					)
+				)
+			);
 		}
 
 		return $output;
@@ -3554,23 +3580,23 @@ class Utils {
 			return '';
 		}
 
-		$user = $this->get_tutor_user( $user_id );
-		$name = is_object($user) ? $user->display_name : '';
-		$arr  = explode( ' ', trim( $name ) );
-		$class = $size ? ' tutor-avatar-'. $size : '';
+		$user  = $this->get_tutor_user( $user_id );
+		$name  = is_object( $user ) ? $user->display_name : '';
+		$arr   = explode( ' ', trim( $name ) );
+		$class = $size ? ' tutor-avatar-' . $size : '';
 
-		$output = '<div class="tutor-avatar'. $class .'">';
+		$output  = '<div class="tutor-avatar' . $class . '">';
 		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
 
-		if ( is_object($user) && $user->tutor_profile_photo ) {
-			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="'. esc_attr( $name ) .'" /> ';
+		if ( is_object( $user ) && $user->tutor_profile_photo ) {
+			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="' . esc_attr( $name ) . '" /> ';
 		} else {
 			$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
 			$second_char    = ! empty( $arr[1] ) ? $this->str_split( $arr[1] )[0] : '';
 			$initial_avatar = strtoupper( $first_char . $second_char );
-			$output .= '<span class="tutor-avatar-text">' . $initial_avatar . '</span>';	
+			$output        .= '<span class="tutor-avatar-text">' . $initial_avatar . '</span>';
 		}
-		
+
 		$output .= '</div>';
 		$output .= '</div>';
 
@@ -3626,14 +3652,14 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only=false, $status_in = array('approved'), $include_user_id=0 ) {
+	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
 		global $wpdb;
 
-		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
-		$status_in = '"' . implode('","', $status_in) . '"';
-		$include_user_id = is_array($include_user_id) ? $include_user_id : array($include_user_id);
-		$include_user_id = implode(',', $include_user_id);
+		$limit_offset    = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		$status_in       = '"' . implode( '","', $status_in ) . '"';
+		$include_user_id = is_array( $include_user_id ) ? $include_user_id : array( $include_user_id );
+		$include_user_id = implode( ',', $include_user_id );
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
 			'_reviews.comment_ID,
@@ -3662,14 +3688,14 @@ class Utils {
 			$course_id
 		);
 
-		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query);
+		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query );
 	}
 
 	/**
 	 * Get course rating
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param int $course_id course ID.
 	 * @return object
 	 */
@@ -3762,7 +3788,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in=array('approved') ) {
+	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in = array( 'approved' ) ) {
 		global $wpdb;
 
 		if ( ! $limit ) {
@@ -3778,12 +3804,12 @@ class Utils {
 
 		$user_filter = '';
 		if ( $user_id !== null ) {
-			$user_id = $this->get_user_id( $user_id );
-			$user_filter = ' AND _comment.user_id='.$user_id;
+			$user_id     = $this->get_user_id( $user_id );
+			$user_filter = ' AND _comment.user_id=' . $user_id;
 		}
 
-		$status_in = '"' . implode('","', $status_in) . '"';
-		$status_filter = ' AND _comment.comment_approved IN ('.$status_in.')';
+		$status_in     = '"' . implode( '","', $status_in ) . '"';
+		$status_filter = ' AND _comment.comment_approved IN (' . $status_in . ')';
 
 		$reviews = $wpdb->get_results(
 			$wpdb->prepare(
@@ -4195,7 +4221,7 @@ class Utils {
 			// Get qa for specific course
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
-		} elseif (!$asker_id && $question_id===null && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
+		} elseif ( ! $asker_id && $question_id === null && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
 			// If current user is simple instructor (non admin), then get qa from their courses only
 			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
 			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
@@ -4228,32 +4254,32 @@ class Utils {
 			$meta_clause .= ' AND ' . implode( ' AND ', $meta_array );
 		}
 
-		$asker_prefix = $asker_id===null ? '' : '_'.$asker_id;
-		$exclude_archive = ' AND NOT EXISTS (SELECT meta_key FROM '.$wpdb->commentmeta.' WHERE meta_key = \'tutor_qna_archived'.$asker_prefix.'\' AND meta_value=1 AND comment_id = _meta.comment_id) ';
+		$asker_prefix    = $asker_id === null ? '' : '_' . $asker_id;
+		$exclude_archive = ' AND NOT EXISTS (SELECT meta_key FROM ' . $wpdb->commentmeta . ' WHERE meta_key = \'tutor_qna_archived' . $asker_prefix . '\' AND meta_value=1 AND comment_id = _meta.comment_id) ';
 
 		// Assign read, unread, archived, important identifier
 		switch ( $question_status ) {
-			case null :
-			case 'all' :
-				if(!$question_id){
+			case null:
+			case 'all':
+				if ( ! $question_id ) {
 					$qna_types_caluse = $exclude_archive;
 				}
 				break;
 
 			case 'read':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value=1) ' . $exclude_archive;
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read' . $asker_prefix . '\' AND _meta.meta_value=1) ' . $exclude_archive;
 				break;
 
 			case 'unread':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value!=1) ' . $exclude_archive;
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read' . $asker_prefix . '\' AND _meta.meta_value!=1) ' . $exclude_archive;
 				break;
 
 			case 'archived':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_archived'.$asker_prefix.'\' AND _meta.meta_value=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_archived' . $asker_prefix . '\' AND _meta.meta_value=1) ';
 				break;
 
 			case 'important':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important'.$asker_prefix.'\' AND _meta.meta_value=1) ' . $exclude_archive;
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important' . $asker_prefix . '\' AND _meta.meta_value=1) ' . $exclude_archive;
 				break;
 		}
 
@@ -4388,7 +4414,7 @@ class Utils {
 
 	/**
 	 * Get question and asnwer by answer_id
-	 * 
+	 *
 	 * @param $answer_id
 	 *
 	 * @return array|null|object
@@ -5801,7 +5827,7 @@ class Utils {
 	 *
 	 * Get purchase history by customer id
 	 */
-	public function get_orders_by_user_id( $user_id=0, $period='', $start_date='', $end_date='', $offset = '', $per_page = '' ) {
+	public function get_orders_by_user_id( $user_id = 0, $period = '', $start_date = '', $end_date = '', $offset = '', $per_page = '' ) {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id( $user_id );
@@ -6446,7 +6472,7 @@ class Utils {
 		$search_term = sanitize_text_field( $search_term );
 
 		$search_term_raw = $search_term;
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		$search_term     = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		// add course id in where clause.
 		$course_query = '';
@@ -6506,7 +6532,7 @@ class Utils {
 		$search_term = sanitize_text_field( $search_term );
 
 		$search_term_raw = $search_term;
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		$search_term     = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		// add course id in where clause.
 		$course_query = '';
@@ -6677,17 +6703,17 @@ class Utils {
 	 *
 	 * Get previous ID
 	 */
-	public function get_course_previous_content_id( $current_id, $exclude_type=array() ) {
+	public function get_course_previous_content_id( $current_id, $exclude_type = array() ) {
 		$course_id = $this->get_course_id_by_content( $current_id );
-		$topics = $this->get_topics( $course_id );
+		$topics    = $this->get_topics( $course_id );
 
 		$content_ids = array();
 
-		foreach($topics->posts as $topic) {
-			$contents  = $this->get_course_contents_by_topic( $topic->ID, -1 );
-			
-			foreach($contents->posts as $content) {
-				if(!in_array($content->post_type, $exclude_type)) {
+		foreach ( $topics->posts as $topic ) {
+			$contents = $this->get_course_contents_by_topic( $topic->ID, -1 );
+
+			foreach ( $contents->posts as $content ) {
+				if ( ! in_array( $content->post_type, $exclude_type ) ) {
 					$content_ids[] = $content->ID;
 				}
 			}
@@ -6712,7 +6738,7 @@ class Utils {
 	 * Get Course iD by any course content
 	 */
 	public function get_course_id_by_content( $post ) {
-		return $this->get_course_id_by_subcontent( is_numeric($post) ? $post : $post->ID );
+		return $this->get_course_id_by_subcontent( is_numeric( $post ) ? $post : $post->ID );
 	}
 
 	/**
@@ -7036,15 +7062,15 @@ class Utils {
 
 		// url where user should redirect for profile completion.
 		$profile_completion_urls = array(
-			'_tutor_profile_photo' 			=> $settings_url,
-			'_tutor_profile_bio'   			=> $settings_url,
-			'_tutor_withdraw_method_data' 	=> $withdraw_settings_url,
+			'_tutor_profile_photo'        => $settings_url,
+			'_tutor_profile_bio'          => $settings_url,
+			'_tutor_withdraw_method_data' => $withdraw_settings_url,
 		);
 		foreach ( $required_fields as $key => $field ) {
 			$required_fields[ $key ] = array(
-				'text' 		=> $field,
-				'is_set'    => get_user_meta( $user_id, $key, true ) ? true : false,
-				'url'		=> $profile_completion_urls[ $key ],
+				'text'   => $field,
+				'is_set' => get_user_meta( $user_id, $key, true ) ? true : false,
+				'url'    => $profile_completion_urls[ $key ],
 			);
 		}
 
@@ -7099,7 +7125,7 @@ class Utils {
 	 * Get students list based on course id
 	 *
 	 * @param integer $course_id
-	 * @param string $field_name
+	 * @param string  $field_name
 	 * @param boolean $all  if all is false it will return only $field_name column
 	 *
 	 * @return array  of objects for student list or array
@@ -7272,25 +7298,31 @@ class Utils {
 			case 'lesson':
 			case 'quiz':
 			case 'assignment':
-				$topic_id = $wpdb->get_var($wpdb->prepare(
-					"SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d",
-					$object_id
-				));
+				$topic_id = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d",
+						$object_id
+					)
+				);
 
-				if(!$topic_id) {
-					$course_id = $wpdb->get_var($wpdb->prepare(
-						"SELECT meta_value
+				if ( ! $topic_id ) {
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT meta_value
 						FROM {$wpdb->prefix}postmeta
 						WHERE post_id=%d AND meta_key='_tutor_course_id_for_lesson'",
-						$object_id
-					));
+							$object_id
+						)
+					);
 				} else {
-					$course_id = $wpdb->get_var($wpdb->prepare(
-						"SELECT post_parent
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT post_parent
 						FROM 	{$wpdb->posts}
 						WHERE 	ID = (SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d);",
-						$object_id
-					));
+							$object_id
+						)
+					);
 				}
 				break;
 
@@ -7411,24 +7443,24 @@ class Utils {
 	 */
 	public function get_course_id_by_subcontent( $content_id ) {
 		$mapping = array(
-			'tutor_assignments'        => 'assignment',
-			'tutor_quiz'               => 'quiz',
-			'lesson'                   => 'lesson',
-			'tutor_zoom_meeting'       => 'zoom_meeting',
-			'tutor_zoom_lesson'        => 'zoom_lesson',
-			'tutor_gm_course'          => 'tutor_gm_course',
-			'tutor_gm_topic'           => 'tutor_gm_topic',
-			'topics'			       => 'topic',
+			'tutor_assignments'  => 'assignment',
+			'tutor_quiz'         => 'quiz',
+			'lesson'             => 'lesson',
+			'tutor_zoom_meeting' => 'zoom_meeting',
+			'tutor_zoom_lesson'  => 'zoom_lesson',
+			'tutor_gm_course'    => 'tutor_gm_course',
+			'tutor_gm_topic'     => 'tutor_gm_topic',
+			'topics'             => 'topic',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
-		
+
 		// Differentiate standalone zoom meeting and zoom lesson
 		if ( $content_type == 'tutor_zoom_meeting' ) {
-			$parent_id = wp_get_post_parent_id( $content_id );
+			$parent_id   = wp_get_post_parent_id( $content_id );
 			$parent_type = get_post_field( 'post_type', $parent_id );
 
-			$content_type = $parent_type==tutor()->course_post_type ? 'tutor_zoom_meeting' : 'tutor_zoom_lesson';
+			$content_type = $parent_type == tutor()->course_post_type ? 'tutor_zoom_meeting' : 'tutor_zoom_lesson';
 		}
 		if ( $content_type == 'tutor-google-meet' ) {
 			$parent_id   = wp_get_post_parent_id( $content_id );
@@ -7499,13 +7531,13 @@ class Utils {
 	 * Check if user has access for content like lesson, quiz, assignment etc.
 	 */
 	public function has_enrolled_content_access( $content, $object_id = 0, $user_id = 0 ) {
-		$user_id               = $this->get_user_id( $user_id );
-		$object_id             = $this->get_post_id( $object_id );
-		$course_id             = $this->get_course_id_by( $content, $object_id );
+		$user_id   = $this->get_user_id( $user_id );
+		$object_id = $this->get_post_id( $object_id );
+		$course_id = $this->get_course_id_by( $content, $object_id );
 
 		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 
-		if ( $this->is_enrolled( $course_id, $user_id ) || $this->has_user_course_content_access($user_id, $course_id)) {
+		if ( $this->is_enrolled( $course_id, $user_id ) || $this->has_user_course_content_access( $user_id, $course_id ) ) {
 			return true;
 		}
 
@@ -7798,12 +7830,14 @@ class Utils {
 	public function get_unique_slug( $slug, $post_type = null, $num_assigned = false ) {
 
 		global $wpdb;
-		$existing_slug = $wpdb->get_var( $wpdb->prepare(
-			"SELECT post_name
+		$existing_slug = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT post_name
 			FROM {$wpdb->posts}
 			WHERE post_name=%s" . ( $post_type ? " AND post_type='{$post_type}' LIMIT 1" : '' ),
-			$slug
-		) );
+				$slug
+			)
+		);
 
 		if ( ! $existing_slug ) {
 			return $slug;
@@ -7826,9 +7860,9 @@ class Utils {
 	/**
 	 * Get post content ids
 	 *
-	 * @param string  $content_type like: lesson, quiz.
-	 * @param string  $ancestor_type like: course, topics
-	 * @param string  $ancestor_ids ancestor like course or topic
+	 * @param string $content_type like: lesson, quiz.
+	 * @param string $ancestor_type like: course, topics
+	 * @param string $ancestor_ids ancestor like course or topic
 	 *
 	 * @return array of ID cols
 	 */
@@ -7838,7 +7872,7 @@ class Utils {
 
 		// Convert single id to array
 		! is_array( $ancestor_ids ) ? $ancestor_ids = array( $ancestor_ids ) : 0;
-		$ancestor_ids = implode( ',', $ancestor_ids );
+		$ancestor_ids                               = implode( ',', $ancestor_ids );
 
 		switch ( $content_type ) {
 
@@ -7866,17 +7900,17 @@ class Utils {
 				}
 				break;
 
-			default :
+			default:
 				switch ( $ancestor_type ) {
 					// Get lesson, quiz, assignment IDs by course ID
-					case 'topic' :
+					case 'topic':
 						$content_ids = $wpdb->get_col(
 							"SELECT content.ID FROM {$wpdb->posts} content
 							INNER JOIN {$wpdb->posts} topic ON topic.ID=content.post_parent
 							WHERE topic.ID IN ({$ancestor_ids})"
 						);
 
-						is_array($content_ids) ? $ids=$content_ids : 0;
+						is_array( $content_ids ) ? $ids = $content_ids : 0;
 						break;
 				}
 		}
@@ -8119,12 +8153,11 @@ class Utils {
 	 * @return mixed|html
 	 */
 	public function tutor_empty_state( string $title = 'No data yet!' ) {
-		$page_title = $title ? $title : '';
 		?>
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
-			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%" />
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $title ); ?>" width="85%" />
 			<div class="tutor-fs-6 tutor-color-secondary tutor-text-center">
-				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
+				<?php echo esc_html( $title, 'tutor' ); ?>
 			</div>
 		</div>
 		<?php
@@ -8135,14 +8168,14 @@ class Utils {
 	 * Settings > General > Terms and Conditions Page
 	 *
 	 * @return null | string
-	 * 
+	 *
 	 * @since 2.0.5
 	 */
 	function get_toc_page_link() {
-		$tutor_toc_page_id      = (int) get_tutor_option( 'tutor_toc_page_id' );
-        $tutor_toc_page_link    = null;
+		$tutor_toc_page_id   = (int) get_tutor_option( 'tutor_toc_page_id' );
+		$tutor_toc_page_link = null;
 
-		if ( ! in_array( $tutor_toc_page_id, [ 0, -1 ] ) ) {
+		if ( ! in_array( $tutor_toc_page_id, array( 0, -1 ) ) ) {
 			$tutor_toc_page_link = get_page_link( $tutor_toc_page_id );
 		}
 
@@ -8162,20 +8195,20 @@ class Utils {
 		$key     = trim( strtolower( $key ) );
 
 		$key_value = array(
-			'all'    => array(
-				'text'  => __( 'All', 'tutor' ),
+			'all'        => array(
+				'text' => __( 'All', 'tutor' ),
 			),
-			'read'    => array(
-				'text'  => __( 'Read', 'tutor' ),
+			'read'       => array(
+				'text' => __( 'Read', 'tutor' ),
 			),
-			'unread'    => array(
-				'text'  => __( 'Unread', 'tutor' ),
+			'unread'     => array(
+				'text' => __( 'Unread', 'tutor' ),
 			),
-			'important'    => array(
-				'text'  => __( 'Important', 'tutor' ),
+			'important'  => array(
+				'text' => __( 'Important', 'tutor' ),
 			),
-			'archived'    => array(
-				'text'  => __( 'Archived', 'tutor' ),
+			'archived'   => array(
+				'text' => __( 'Archived', 'tutor' ),
 			),
 			'pending'    => array(
 				'badge' => 'warning',
@@ -8257,12 +8290,12 @@ class Utils {
 				'badge' => 'warning',
 				'text'  => __( 'Private', 'tutor' ),
 			),
-			'true' 	=> array(
+			'true'       => array(
 				'text' => _x( 'True', 'true/false question options', 'tutor' ),
 			),
-			'false' => array(
+			'false'      => array(
 				'text' => _x( 'False', 'true/false question options', 'tutor' ),
-			)
+			),
 		);
 
 		if ( $add_badge && isset( $key_value[ $key ] ) ) {
@@ -8413,7 +8446,7 @@ class Utils {
 	 *
 	 * @since v2.0.0
 	 *
-	 * Course curriculum tab removed, content shifted 
+	 * Course curriculum tab removed, content shifted
 	 * in the Course Info tab
 	 *
 	 * @since v2.0.5
@@ -8426,12 +8459,12 @@ class Utils {
 		 * @since v2.0.6
 		 */
 		$is_require_enrollment = ! $this->has_user_course_content_access();
-		$array = array(
+		$array                 = array(
 			'info'          => array(
 				'title'  => __( 'Course Info', 'tutor' ),
 				'method' => 'tutor_course_info_tab',
 			),
-			'reviews'    => array(
+			'reviews'       => array(
 				'title'  => __( 'Reviews', 'tutor' ),
 				'method' => 'tutor_course_target_reviews_html',
 			),
@@ -8659,6 +8692,7 @@ class Utils {
 	 * @since v2.0.0
 	 */
 	public function not_found_text(): string {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$course   = isset( $_GET['course-id'] ) ? true : false;
 		$date     = isset( $_GET['date'] ) ? true : false;
 		$search   = isset( $_GET['search'] ) ? true : false;
@@ -8773,22 +8807,22 @@ class Utils {
 	 */
 	public function text_editor_config( $args = array() ) {
 		$default_args = array(
-			'textarea_name'    => 'tutor-global-text-editor',
-			'plugins' 	 	   => 'image',
-			'tinymce'          => array(
+			'textarea_name'     => 'tutor-global-text-editor',
+			'plugins'           => 'image',
+			'tinymce'           => array(
 				'toolbar1' => 'bold,italic,underline,link,unlink,removeformat,image,bullist',
 				'toolbar2' => '',
 				'toolbar3' => '',
 			),
-			'file_picker_types' =>  'image',
-			'media_buttons'    => false,
-			'drag_drop_upload' => false,
-			'quicktags'        => false,
-			'elementpath'      => false,
-			'wpautop'          => false,
-			'statusbar'        => false,
-			'editor_height'    => 112,
-			'editor_css'       => '<style>
+			'file_picker_types' => 'image',
+			'media_buttons'     => false,
+			'drag_drop_upload'  => false,
+			'quicktags'         => false,
+			'elementpath'       => false,
+			'wpautop'           => false,
+			'statusbar'         => false,
+			'editor_height'     => 112,
+			'editor_css'        => '<style>
 				#wp-tutor-global-text-editor-wrap div.mce-toolbar-grp {
 					background-color: #fff;
 				}
@@ -8826,7 +8860,7 @@ class Utils {
 			),
 		);
 		$video_sources = apply_filters( 'tutor_preferred_video_sources', $video_sources );
-		
+
 		if ( $key_title_only ) {
 			foreach ( $video_sources as $key => $data ) {
 				$video_sources[ $key ] = $data['title'];
@@ -8855,7 +8889,8 @@ class Utils {
 	 */
 	public function tutor_custom_header() {
 		global $wp_version;
-		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) { ?>
+		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+			?>
 			<!doctype html>
 				<html <?php language_attributes(); ?>>
 				<head>
@@ -8882,7 +8917,7 @@ class Utils {
 		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && true === wp_is_block_theme() ) {
 			$theme      = wp_get_theme();
 			$theme_slug = $theme->get( 'TextDomain' );
-			echo do_blocks('<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer","className":"site-footer","layout":{"inherit":true}} /-->');
+			echo do_blocks( '<!-- wp:template-part {"slug":"footer","theme":"' . $theme_slug . '","tagName":"footer","className":"site-footer","layout":{"inherit":true}} /-->' );
 			echo '</div>';
 			wp_footer();
 			echo '</body>';
@@ -8892,16 +8927,16 @@ class Utils {
 		}
 	}
 
-	public function can_user_retake_course(){
-		if(!$this->is_enrolled()) {
+	public function can_user_retake_course() {
+		if ( ! $this->is_enrolled() ) {
 			return false;
 		}
 
-		$completed_lessons = $this->get_completed_lesson_count_by_course();
-		$completed_percent = $this->get_course_completed_percent();
+		$completed_lessons   = $this->get_completed_lesson_count_by_course();
+		$completed_percent   = $this->get_course_completed_percent();
 		$is_completed_course = $this->is_completed_course();
-		$retake_course = $this->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
-	
+		$retake_course       = $this->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
+
 		return $retake_course;
 	}
 
@@ -8915,31 +8950,45 @@ class Utils {
 	 */
 
 	public function clean_html_content( $content = '', $allowed = array() ) {
-		
+
 		$default = array(
-			'div' => array( 'class' => 1, 'style' => 1),
-			'b' => array( 'style' => 1 ),
+			'div'    => array(
+				'class' => 1,
+				'style' => 1,
+			),
+			'b'      => array( 'style' => 1 ),
 			'strong' => array( 'style' => 1 ),
-			'i' => array( 'style' => 1 ),
-			'u' => array( 'style' => 1 ),
-			'h1' => array( 'style' => 1 ),
-			'h2' => array( 'style' => 1 ),
-			'h3' => array( 'style' => 1 ),
-			'h4' => array( 'style' => 1 ),
-			'h5' => array( 'style' => 1 ),
-			'h6' => array( 'style' => 1 ),
-			'a' => array( 'href' => array( 'minlen' => 3, 'maxlen' => 100 ), 'target' => 1, 'style' => 1 ),
-			'p' => array( 'style' => 1 ),
-			'img' => array( 'src' => 1, 'alt' => 1, 'style' => 1 ),
-			'pre' => array( 'style' => 1 ),
-			'ul' => array( 'style' => 1 ),
-			'ol' => array( 'style' => 1 ),
-			'li' => array( 'style' => 1 )
+			'i'      => array( 'style' => 1 ),
+			'u'      => array( 'style' => 1 ),
+			'h1'     => array( 'style' => 1 ),
+			'h2'     => array( 'style' => 1 ),
+			'h3'     => array( 'style' => 1 ),
+			'h4'     => array( 'style' => 1 ),
+			'h5'     => array( 'style' => 1 ),
+			'h6'     => array( 'style' => 1 ),
+			'a'      => array(
+				'href'   => array(
+					'minlen' => 3,
+					'maxlen' => 100,
+				),
+				'target' => 1,
+				'style'  => 1,
+			),
+			'p'      => array( 'style' => 1 ),
+			'img'    => array(
+				'src'   => 1,
+				'alt'   => 1,
+				'style' => 1,
+			),
+			'pre'    => array( 'style' => 1 ),
+			'ul'     => array( 'style' => 1 ),
+			'ol'     => array( 'style' => 1 ),
+			'li'     => array( 'style' => 1 ),
 		);
 
 		$allowed = wp_parse_args( $allowed, $default );
 
-		return wp_kses($content, $allowed);
+		return wp_kses( $content, $allowed );
 	}
 
 	/**
@@ -8956,7 +9005,7 @@ class Utils {
 
 		if ( file_exists( $json ) ) {
 			$icons = json_decode( file_get_contents( $json ), true );
-			$icon = isset( $icons[$name] ) ? $icons[$name] : '';
+			$icon  = isset( $icons[ $name ] ) ? $icons[ $name ] : '';
 
 			if ( isset( $icon['viewBox'] ) && isset( $icon['path'] ) ) {
 				$html = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="' . esc_attr( $icon['viewBox'] ) . '"><path fill="currentColor" d="' . esc_attr( $icon['path'] ) . '" /></svg>';
@@ -8967,9 +9016,9 @@ class Utils {
 
 	/**
 	 * Conver Hex to RGB
-	 * 
+	 *
 	 * @return string
-	 * 
+	 *
 	 * @since 2.0.2
 	 */
 
@@ -8986,28 +9035,27 @@ class Utils {
 		}
 
 		// convert hex to rgb
-		if ($color[0] == '#' ) {
-        	$color = substr( $color, 1 );
-        } else {
+		if ( $color[0] == '#' ) {
+			$color = substr( $color, 1 );
+		} else {
 			return $default;
 		}
- 
-        //Check if color has 6 or 3 characters and get values
-        if ( strlen( $color ) == 6 ) {
-            $hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
-        } elseif ( strlen( $color ) == 3 ) {
-            $hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
-        } else {
-            return $default;
-        }
 
-		$rgb =  array_map('hexdec', $hex);
+		// Check if color has 6 or 3 characters and get values
+		if ( strlen( $color ) == 6 ) {
+			$hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
+		} elseif ( strlen( $color ) == 3 ) {
+			$hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
+		} else {
+			return $default;
+		}
 
-		return implode(", ", $rgb);
+		$rgb = array_map( 'hexdec', $hex );
+
+		return implode( ', ', $rgb );
 	}
 
-	public function get_course_builder_screen()
-	{
+	public function get_course_builder_screen() {
 		// Add course editor identifier class
 		if ( is_admin() ) {
 			$screen = get_current_screen();
@@ -9030,7 +9078,7 @@ class Utils {
 	public function get_total_course() {
 		global $wpdb;
 		$course_post_type = tutor()->course_post_type;
-		
+
 		$sql = "SELECT COUNT(ID) 
 		FROM {$wpdb->posts} 
 		WHERE post_type = %s 
@@ -9047,13 +9095,13 @@ class Utils {
 	 */
 	public function get_total_enrolled_course() {
 		global $wpdb;
-		
+
 		$sql = "SELECT COUNT(DISTINCT enroll.ID)
 		FROM {$wpdb->posts} enroll INNER JOIN {$wpdb->posts} course ON enroll.post_parent=course.ID
 		WHERE enroll.post_type = 'tutor_enrolled'
 		AND enroll.post_status = 'completed'
         AND course.post_type=%s";
-		
+
 		return $wpdb->get_var( $wpdb->prepare( $sql, tutor()->course_post_type ) );
 	}
 
@@ -9065,7 +9113,7 @@ class Utils {
 	 */
 	public function get_total_quiz() {
 		global $wpdb;
-		
+
 		$sql = "SELECT COUNT(DISTINCT quiz.ID) 
 			FROM {$wpdb->posts} quiz
 				INNER JOIN {$wpdb->posts} topic ON quiz.post_parent=topic.ID 
@@ -9084,7 +9132,7 @@ class Utils {
 	 */
 	public function get_total_question() {
 		global $wpdb;
-		
+
 		$sql = "SELECT COUNT(DISTINCT question.question_id) 
 				FROM {$wpdb->prefix}tutor_quiz_questions question 
 					INNER JOIN {$wpdb->posts} quiz ON question.quiz_id=quiz.ID 
@@ -9113,15 +9161,15 @@ class Utils {
 		return $wpdb->get_var( $wpdb->prepare( $sql, 'tutor_course_rating', 'approved' ) );
 	}
 
-	private function assign_child_count(array $course_meta, $post_type){
+	private function assign_child_count( array $course_meta, $post_type ) {
 		global $wpdb;
-		$id_array = array_keys($course_meta);
-		
-		if(!count($id_array)){
+		$id_array = array_keys( $course_meta );
+
+		if ( ! count( $id_array ) ) {
 			return $course_meta;
 		}
 
-		$course_ids = implode(',', $id_array);
+		$course_ids = implode( ',', $id_array );
 
 		$results = $wpdb->get_results(
 			"SELECT ID, post_parent AS course_id 
@@ -9131,25 +9179,28 @@ class Utils {
 				AND post_status IN ('completed', 'publish', 'approved')"
 		);
 
-		foreach($results as $result){
-			$course_meta[$result->course_id][$post_type]++;
+		foreach ( $results as $result ) {
+			$course_meta[ $result->course_id ][ $post_type ]++;
 		}
 
 		return $course_meta;
 	}
-	
-	
+
+
 	public function get_course_meta_data( $course_id ) {
 		global $wpdb;
 
-		// Prepare course IDs to get quiz count based on 
-		$course_ids = is_array($course_id) ? $course_id : array($course_id);
-		$course_ids = array_map(function($id){
-			return (int)$id;
-		}, $course_ids);
-		$course_ids = implode(',', $course_ids);
+		// Prepare course IDs to get quiz count based on
+		$course_ids = is_array( $course_id ) ? $course_id : array( $course_id );
+		$course_ids = array_map(
+			function( $id ) {
+				return (int) $id;
+			},
+			$course_ids
+		);
+		$course_ids = implode( ',', $course_ids );
 
-		if(empty($course_ids)){
+		if ( empty( $course_ids ) ) {
 			return array();
 		}
 
@@ -9165,43 +9216,43 @@ class Utils {
 			WHERE topic.post_parent IN ($course_ids)"
 		);
 
-		// Count contents by course IDs 
+		// Count contents by course IDs
 		$course_meta = array();
-		foreach($results as $result){
+		foreach ( $results as $result ) {
 			// Create course key
-			if(!array_key_exists($result->course_id, $course_meta)){
-				$course_meta[$result->course_id]=array(
+			if ( ! array_key_exists( $result->course_id, $course_meta ) ) {
+				$course_meta[ $result->course_id ] = array(
 					'tutor_assignments' => array(),
-					'tutor_quiz' 		=> array(),
-					'lesson' 			=> array(),
-					'topics' 			=> 0,
-					'tutor_enrolled' 	=> 0,
+					'tutor_quiz'        => array(),
+					'lesson'            => array(),
+					'topics'            => 0,
+					'tutor_enrolled'    => 0,
 				);
 			}
 
 			// Create content key
-			if(!array_key_exists($result->content_type, $course_meta[$result->course_id])){
-				$course_meta[$result->course_id][$result->content_type] = array();
+			if ( ! array_key_exists( $result->content_type, $course_meta[ $result->course_id ] ) ) {
+				$course_meta[ $result->course_id ][ $result->content_type ] = array();
 			}
 
-			if($result->content_id){
-				$course_meta[$result->course_id][$result->content_type][] = $result->content_id;
+			if ( $result->content_id ) {
+				$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
 			}
 		}
-		
+
 		// Unify counts
-		foreach($course_meta as $index=>$meta){
-			foreach($meta as $key=>$ids){
-				$course_meta[$index][$key] = is_numeric($ids) ? $ids : count(array_unique($ids));
+		foreach ( $course_meta as $index => $meta ) {
+			foreach ( $meta as $key => $ids ) {
+				$course_meta[ $index ][ $key ] = is_numeric( $ids ) ? $ids : count( array_unique( $ids ) );
 			}
 		}
 
-		$course_meta = $this->assign_child_count($course_meta, 'tutor_enrolled');
-		$course_meta = $this->assign_child_count($course_meta, 'topics');
-		
+		$course_meta = $this->assign_child_count( $course_meta, 'tutor_enrolled' );
+		$course_meta = $this->assign_child_count( $course_meta, 'topics' );
+
 		// Return single count if the course id was single
-		if(!is_array($course_id)) {
-			return isset($course_meta[$course_id]) ? $course_meta[$course_id] : 0;
+		if ( ! is_array( $course_id ) ) {
+			return isset( $course_meta[ $course_id ] ) ? $course_meta[ $course_id ] : 0;
 		}
 
 		return $course_meta;
@@ -9215,7 +9266,7 @@ class Utils {
 	 * @return string
 	 */
 	public function get_local_time_from_unix( $time, $date_format = null ) {
-		$output_format = $date_format ? $date_format : get_option( 'date_format' ). ', ' . get_option( 'time_format' );
+		$output_format = $date_format ? $date_format : get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
 		return get_date_from_gmt( $time, $output_format );
 	}
 
@@ -9223,16 +9274,16 @@ class Utils {
 	 * Execute bulk action for enrollment list ex: complete | cancel
 	 *
 	 * @param string $status hold status for updating.
-	 * @param array $enrollment_ids ids that need to update.
+	 * @param array  $enrollment_ids ids that need to update.
 	 * @return bool
 	 * @since v2.0.3
 	 */
-	public function update_enrollments(string $status, array $enrollment_ids ): bool {
+	public function update_enrollments( string $status, array $enrollment_ids ): bool {
 		global $wpdb;
-		$enrollment_ids_in = implode(',', $enrollment_ids);
-		$status     = 'complete' === $status ? 'completed' : $status;
-		$post_table = $wpdb->posts;
-		$update     = $wpdb->query(
+		$enrollment_ids_in = implode( ',', $enrollment_ids );
+		$status            = 'complete' === $status ? 'completed' : $status;
+		$post_table        = $wpdb->posts;
+		$update            = $wpdb->query(
 			$wpdb->prepare(
 				" UPDATE {$post_table}
 				SET post_status = %s
@@ -9243,19 +9294,19 @@ class Utils {
 		);
 
 		// Clear course progress if cancelled
-		if($status=='cancelled' || $status=='cancel') {
-			foreach($enrollment_ids as $id) {
-				$course_id = get_post_field( 'post_parent', $id );
+		if ( $status == 'cancelled' || $status == 'cancel' ) {
+			foreach ( $enrollment_ids as $id ) {
+				$course_id  = get_post_field( 'post_parent', $id );
 				$student_id = get_post_field( 'post_author', $id );
 
-				if($course_id && $student_id) {
-					$this->delete_course_progress($course_id, $student_id);
+				if ( $course_id && $student_id ) {
+					$this->delete_course_progress( $course_id, $student_id );
 				}
 			}
 		}
 
 		// Run action hook
-		foreach($enrollment_ids as $id) {
+		foreach ( $enrollment_ids as $id ) {
 			do_action( 'tutor_enrollment/after/' . $status, $id );
 		}
 
@@ -9271,17 +9322,17 @@ class Utils {
 	 * @return string
 	 */
 	public function course_content_time_format( string $time_duration ): string {
-		$new_formatted_time 	= '';
-		$time_duration_array 	= explode( ':', $time_duration );
+		$new_formatted_time  = '';
+		$time_duration_array = explode( ':', $time_duration );
 		if ( is_array( $time_duration_array ) && count( $time_duration_array ) ) {
 			$count_fraction = count( $time_duration_array );
 			$first_fraction = (int) $time_duration_array[0];
 			if ( 3 === $count_fraction && $first_fraction < 1 ) {
 				unset( $time_duration_array[0] );
 			}
-			foreach( $time_duration_array as $key => $value ) {
+			foreach ( $time_duration_array as $key => $value ) {
 				// If exists hour fraction but not 00 then skip it.
-				$new_formatted_time .= sprintf("%02d", $value) . ':';
+				$new_formatted_time .= sprintf( '%02d', $value ) . ':';
 			}
 		}
 		return rtrim( $new_formatted_time, ':' );
@@ -9289,18 +9340,18 @@ class Utils {
 
 	/**
 	 * Check if the user has special acess to course
-	 * 
+	 *
 	 * @since v2.0.6
 	 */
-	public function has_user_course_content_access($user_id = 0, $course_id = 0) {
-		$user_id   			   = $this->get_user_id( $user_id );
-		$course_id 			   = $this->get_post_id( $course_id );
+	public function has_user_course_content_access( $user_id = 0, $course_id = 0 ) {
+		$user_id   = $this->get_user_id( $user_id );
+		$course_id = $this->get_post_id( $course_id );
 
-		$is_administrator      = $this->has_user_role( 'administrator', $user_id );
-		$is_instructor         = $this->is_instructor_of_this_course($user_id, $course_id);
-		
+		$is_administrator = $this->has_user_role( 'administrator', $user_id );
+		$is_instructor    = $this->is_instructor_of_this_course( $user_id, $course_id );
+
 		$course_content_access = (bool) get_tutor_option( 'course_content_access_for_ia' );
-		$has_access 	   	   = $course_content_access && ( $is_administrator || $is_instructor );
+		$has_access            = $course_content_access && ( $is_administrator || $is_instructor );
 
 		return $has_access;
 	}
@@ -9312,15 +9363,15 @@ class Utils {
 	 *
 	 * @return string current page slug
 	 */
-   	public function get_current_page_slug() {
+	public function get_current_page_slug() {
 		global $wp_query;
 		$current_page = '';
 		$query_vars   = $wp_query->query_vars;
-	    if ( is_admin() && Input::has( 'page' ) ) {
-		   $current_page = Input::get( 'page' );
-	   	} else {
-		   $current_page = isset( $query_vars['tutor_dashboard_page'] ) ? sanitize_text_field( $query_vars['tutor_dashboard_page'] ) : '';
-	   	}
-	    return $current_page;
-   	}
+		if ( is_admin() && Input::has( 'page' ) ) {
+			$current_page = Input::get( 'page' );
+		} else {
+			$current_page = isset( $query_vars['tutor_dashboard_page'] ) ? sanitize_text_field( $query_vars['tutor_dashboard_page'] ) : '';
+		}
+		return $current_page;
+	}
 }
