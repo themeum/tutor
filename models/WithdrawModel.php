@@ -1,8 +1,17 @@
 <?php
+/**
+ * Withdraw Model
+ *
+ * @package Tutor\Models
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.7
+ */
+
 namespace Tutor\Models;
 
 /**
- * Class WithdrawModel
+ * WithdrawModel Class
  *
  * @since 2.0.7
  */
@@ -17,16 +26,17 @@ class WithdrawModel {
 	/**
 	 * Get withdraw summary info for an user
 	 *
-	 * @param  int $instructor_id
-	 * @return array|object|null|void
-	 *
 	 * @since 2.0.7
+	 *
+	 * @param  int $instructor_id instructor id.
+	 * @return array|object|null|void
 	 */
 	public static function get_withdraw_summary( $instructor_id ) {
 		global $wpdb;
 
 		$maturity_days = tutor_utils()->get_option( 'minimum_days_for_balance_to_be_available' );
 
+		//phpcs:disable WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
 		$data = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT ID, display_name, 
@@ -66,15 +76,20 @@ class WithdrawModel {
 			)
 		);
 
+		//phpcs:enable WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
+
 		return $data;
 	}
 
 	/**
 	 * Get withdrawal history
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param int   $user_id | optional.
-	 * @param array $filter | ex:
-	 * array('status' => '','date' => '', 'order' => '', 'start' => 10, 'per_page' => 10,'search' => '')
+	 * @param array $filter | ex: array('status' => '','date' => '', 'order' => '', 'start' => 10, 'per_page' => 10,'search' => '').
+	 * @param int   $start start.
+	 * @param int   $limit limit.
 	 *
 	 * @return object
 	 */
@@ -82,7 +97,7 @@ class WithdrawModel {
 		global $wpdb;
 
 		$filter = (array) $filter;
-		extract( $filter );
+		extract( $filter ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
@@ -98,7 +113,7 @@ class WithdrawModel {
 			$query_by_user_sql = " AND user_id = {$user_id} ";
 		}
 
-		// Order query @since v2.0.0
+		// Order query @since 2.0.0.
 		$order_query = '';
 		if ( isset( $order ) && '' !== $order ) {
 			$order_query = "ORDER BY  	created_at {$order}";
@@ -106,19 +121,20 @@ class WithdrawModel {
 			$order_query = 'ORDER BY  	created_at DESC';
 		}
 
-		// Date query @since v.2.0.0
+		// Date query @since 2.0.0.
 		$date_query = '';
 		if ( isset( $date ) && '' !== $date ) {
 			$date_query = "AND DATE(created_at) = CAST( '$date' AS DATE )";
 		}
 
-		// Search query @since v.2.0.0
+		// Search query @since 2.0.0.
 		$search_term_raw = empty( $search ) ? '' : $search;
 		$search_query    = '%%';
 		if ( ! empty( $search_term_raw ) ) {
 			$search_query = '%' . $wpdb->esc_like( $search_term_raw ) . '%';
 		}
 
+		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$count = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(withdraw_id)
@@ -164,6 +180,8 @@ class WithdrawModel {
 			)
 		);
 
+		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
 		$withdraw_history = array(
 			'count'   => $count ? $count : 0,
 			'results' => is_array( $results ) ? $results : array(),
@@ -175,8 +193,9 @@ class WithdrawModel {
 	/**
 	 * Get withdraw method for a specific
 	 *
-	 * @param int $user_id
+	 * @since 1.0.0
 	 *
+	 * @param int $user_id user id.
 	 * @return bool|mixed
 	 */
 	public static function get_user_withdraw_method( $user_id = 0 ) {

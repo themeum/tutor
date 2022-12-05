@@ -1,11 +1,11 @@
 <?php
-
 /**
- * Class Instructor
+ * Manage Instructor
  *
- * @package TUTOR
- *
- * @since v.1.0.0
+ * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 namespace TUTOR;
@@ -14,11 +14,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
+/**
+ * Instructor class
+ *
+ * @since 1.0.0
+ */
 class Instructor {
 
-
+	/**
+	 * Error message
+	 *
+	 * @var string
+	 */
 	protected $error_msgs = '';
+
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function __construct() {
 		add_action( 'template_redirect', array( $this, 'register_instructor' ) );
 		add_action( 'template_redirect', array( $this, 'apply_instructor' ) );
@@ -30,35 +45,39 @@ class Instructor {
 		 * Instructor Approval
 		 * Block Unblock
 		 *
-		 * @since v.1.5.3
+		 * @since 1.5.3
 		 */
 		add_action( 'wp_ajax_instructor_approval_action', array( $this, 'instructor_approval_action' ) );
 
 		/**
 		 * Check if instructor can publish courses
 		 *
-		 * @since v.1.5.9
+		 * @since 1.5.9
 		 */
 		add_action( 'tutor_option_save_after', array( $this, 'can_publish_tutor_courses' ) );
 
 		/**
 		 * Hide instructor rejection message
 		 *
-		 * @since v1.9.2
+		 * @since 1.9.2
 		 */
 		add_action( 'wp_loaded', array( $this, 'hide_instructor_notice' ) );
 	}
 
 	/**
-	 * Register new user and mark him as instructor
+	 * Template Redirect Callback
+	 * For Register new user and mark him as instructor
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 * @return void|null
 	 */
 	public function register_instructor() {
-		if ( ! isset( $_POST['tutor_action'] ) || $_POST['tutor_action'] !== 'tutor_register_instructor' ) {
+		// Here tutor_action checking required before nonce checking.
+		if ( 'tutor_register_instructor' !== Input::post( 'tutor_action' ) ) {
 			return;
 		}
-		// Checking nonce
+
+		// Checking nonce.
 		tutor_utils()->checking_nonce();
 
 		$required_fields = apply_filters(
@@ -76,8 +95,8 @@ class Instructor {
 		$validation_errors = array();
 
 		/*
-		*registration_errors
-		*push into validation_errors
+		* Push into validation_errors
+		* Error registration_errors
 		*/
 		$errors = apply_filters( 'registration_errors', new \WP_Error(), '', '' );
 		foreach ( $errors->errors as $key => $value ) {
@@ -85,7 +104,7 @@ class Instructor {
 		}
 
 		foreach ( $required_fields as $required_key => $required_value ) {
-			if ( empty( $_POST[ $required_key ] ) ) {
+			if ( empty( $_POST[ $required_key ] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
 				$validation_errors[ $required_key ] = $required_value;
 			}
 		}
@@ -114,7 +133,6 @@ class Instructor {
 			'user_email' => $email,
 			'first_name' => $first_name,
 			'last_name'  => $last_name,
-			// 'role'          =>  tutor()->instructor_role,
 			'user_pass'  => $password,
 		);
 
@@ -140,27 +158,36 @@ class Instructor {
 		die();
 	}
 
+	/**
+	 * Get instructor reg validation errors.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
 	public function tutor_instructor_form_validation_errors() {
 		 return $this->error_msgs;
 	}
 
 	/**
+	 * Template Redirect Callback
+	 * for instructor applying when a user already logged in
 	 *
-	 * Usage for instructor applying when a user already logged in
-	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 * @return void|null
 	 */
 	public function apply_instructor() {
-		if ( ! isset( $_POST['tutor_action'] ) || $_POST['tutor_action'] !== 'tutor_apply_instructor' ) {
+		// Here tutor_action checking required before nonce checking.
+		if ( 'tutor_apply_instructor' !== Input::post( 'tutor_action' ) ) {
 			return;
 		}
-		// Checking nonce
+
+		// Checking nonce.
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
 		if ( $user_id ) {
 			if ( tutor_utils()->is_instructor() ) {
-				die( __( 'Already applied for instructor', 'tutor' ) );
+				die( esc_html__( 'Already applied for instructor', 'tutor' ) );
 			} else {
 				update_user_meta( $user_id, '_is_tutor_instructor', tutor_time() );
 				update_user_meta( $user_id, '_tutor_instructor_status', apply_filters( 'tutor_initial_instructor_status', 'pending' ) );
@@ -168,7 +195,7 @@ class Instructor {
 				do_action( 'tutor_new_instructor_after', $user_id );
 			}
 		} else {
-			die( __( 'Permission denied', 'tutor' ) );
+			die( esc_html__( 'Permission denied', 'tutor' ) );
 		}
 
 		wp_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
@@ -176,10 +203,16 @@ class Instructor {
 	}
 
 
+	/**
+	 * Add new instructor
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function add_new_instructor() {
 		tutor_utils()->checking_nonce();
 
-		// Only admin should be able to add instructor
+		// Only admin should be able to add instructor.
 		if ( ! current_user_can( 'manage_options' ) || ! get_option( 'users_can_register', false ) ) {
 			wp_send_json_error();
 		}
@@ -199,7 +232,7 @@ class Instructor {
 
 		$validation_errors = array();
 		foreach ( $required_fields as $required_key => $required_value ) {
-			if ( empty( $_POST[ $required_key ] ) ) {
+			if ( empty( $_POST[ $required_key ] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
 				$validation_errors[ $required_key ] = $required_value;
 			}
 		}
@@ -255,6 +288,12 @@ class Instructor {
 		wp_send_json_error( array( 'errors' => $user_id ) );
 	}
 
+	/**
+	 * Handle instructor approval action
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function instructor_approval_action() {
 		tutor_utils()->checking_nonce();
 
@@ -262,8 +301,8 @@ class Instructor {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		$instructor_id = (int) sanitize_text_field( tutor_utils()->array_get( 'instructor_id', $_POST ) );
-		$action        = sanitize_text_field( tutor_utils()->array_get( 'action_name', $_POST ) );
+		$instructor_id = Input::post( 'instructor_id', 0, Input::TYPE_INT );
+		$action        = Input::post( 'action_name' );
 
 		if ( 'approve' === $action ) {
 			do_action( 'tutor_before_approved_instructor', $instructor_id );
@@ -274,7 +313,7 @@ class Instructor {
 			$instructor = new \WP_User( $instructor_id );
 			$instructor->add_role( tutor()->instructor_role );
 
-			// Send E-Mail to this user about instructor approval via hook
+			// Send E-Mail to this user about instructor approval via hook.
 			do_action( 'tutor_after_approved_instructor', $instructor_id );
 		}
 
@@ -286,7 +325,7 @@ class Instructor {
 			$instructor->remove_role( tutor()->instructor_role );
 			do_action( 'tutor_after_blocked_instructor', $instructor_id );
 
-			// TODO: send E-Mail to this user about instructor blocked, should via hook
+			// TODO: send E-Mail to this user about instructor blocked, should via hook.
 		}
 
 		if ( 'remove-instructor' === $action ) {
@@ -299,24 +338,32 @@ class Instructor {
 			update_user_meta( $instructor_id, '_is_tutor_instructor_rejected', tutor_time() );
 			update_user_meta( $instructor_id, 'tutor_instructor_show_rejection_message', true );
 
-			// Send E-Mail to this user about instructor rejection via hook
+			// Send E-Mail to this user about instructor rejection via hook.
 			do_action( 'tutor_after_rejected_instructor', $instructor_id );
 		}
 
 		wp_send_json_success();
 	}
 
+	/**
+	 * Hide instructor notice
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function hide_instructor_notice() {
-		if ( isset( $_GET['tutor_action'] ) && $_GET['tutor_action'] == 'hide_instructor_notice' ) {
+		if ( 'hide_instructor_notice' === Input::get( 'tutor_action' ) ) {
 			delete_user_meta( get_current_user_id(), 'tutor_instructor_show_rejection_message' );
 		}
 	}
 
 	/**
 	 * Can instructor publish courses directly
-	 * Fixed in Gutenberg @since v.1.5.9
+	 * Fixed in Gutenberg
+	 *
+	 * @since 1.5.9
+	 * @return void
 	 */
-
 	public function can_publish_tutor_courses() {
 		$can_publish_course = (bool) tutor_utils()->get_option( 'instructor_can_publish_course' );
 

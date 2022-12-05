@@ -2,11 +2,10 @@
 /**
  * Handle quiz attempt cache data
  *
- * @package  Tutor\Cache
- *
- * @author   Themeum
- *
- * @since    v2.0.6
+ * @package Tutor\Cache
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.6
  */
 
 namespace Tutor\Cache;
@@ -20,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * User data caching
  * Get Set & check
- * 
- * @since    v2.0.6
+ *
+ * @since 2.0.6
  */
 class QuizAttempts extends AbstractCache {
 
@@ -30,7 +29,7 @@ class QuizAttempts extends AbstractCache {
 	 *
 	 * @var string
 	 *
-	 * @since v2.0.6
+	 * @since 2.0.6
 	 */
 	private const KEY = 'tutor_quiz_attempts_count';
 
@@ -39,7 +38,7 @@ class QuizAttempts extends AbstractCache {
 	 *
 	 * @var string
 	 *
-	 * @since v2.0.6
+	 * @since 2.0.6
 	 */
 	private const HOUR_IN_SECONDS = 1800;
 
@@ -48,13 +47,14 @@ class QuizAttempts extends AbstractCache {
 	 *
 	 * @var string
 	 *
-	 * @since v2.0.6
+	 * @since 2.0.6
 	 */
 	public $data;
 
 	/**
 	 * Key
 	 *
+	 * @since 2.0.6
 	 * @return string
 	 */
 	public function key(): string {
@@ -64,6 +64,7 @@ class QuizAttempts extends AbstractCache {
 	/**
 	 * Cache data
 	 *
+	 * @since 2.0.6
 	 * @return object
 	 */
 	public function cache_data() {
@@ -73,6 +74,7 @@ class QuizAttempts extends AbstractCache {
 	/**
 	 * Cache time
 	 *
+	 * @since 2.0.6
 	 * @return int
 	 */
 	public function cache_time(): int {

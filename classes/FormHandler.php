@@ -1,11 +1,11 @@
 <?php
 /**
- * FormHandler class
+ * Manage Form
  *
- * @author: themeum
- * @link: https://themeum.com
  * @package Tutor
- * @since v.1.4.3
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 namespace TUTOR;
@@ -14,9 +14,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
+/**
+ * FormHandler class
+ *
+ * @since 1.4.3
+ */
 class FormHandler {
 
+	/**
+	 * Constructor
+	 *
+	 * @since 1.4.3
+	 * @return void
+	 */
 	public function __construct() {
 		add_action( 'tutor_action_tutor_retrieve_password', array( $this, 'tutor_retrieve_password' ) );
 		add_action( 'tutor_action_tutor_process_reset_password', array( $this, 'tutor_process_reset_password' ) );
@@ -25,9 +35,16 @@ class FormHandler {
 		add_filter( 'tutor_lostpassword_url', array( $this, 'lostpassword_url' ) );
 	}
 
+	/**
+	 * Retrieve Password
+	 *
+	 * @since 1.4.3
+	 * @return void|bool
+	 */
 	public function tutor_retrieve_password() {
 		tutils()->checking_nonce();
 
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$login = sanitize_user( tutils()->array_get( 'user_login', $_POST ) );
 
 		if ( empty( $login ) ) {
@@ -84,8 +101,18 @@ class FormHandler {
 		do_action( 'tutor_reset_password_notification', $user_login, $key );
 	}
 
+	/**
+	 * Send notification for rest password
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param string $user_login username.
+	 * @param string $reset_key reset key.
+	 *
+	 * @return void
+	 */
 	public function reset_password_notification( $user_login = '', $reset_key = '' ) {
-		$this->sendNotification( $user_login, $reset_key );
+		$this->send_notification( $user_login, $reset_key );
 
 		$html  = '<h3>' . __( 'Check your E-Mail', 'tutor' ) . '</h3>';
 		$html .= '<p> ' . __( "We've sent an email to this account's email address. Click the link in the email to reset your password", 'tutor' ) . '</p>';
@@ -93,17 +120,31 @@ class FormHandler {
 		tutor_flash_set( 'success', $html );
 	}
 
+	/**
+	 * Get lost password URL
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param string $url URL.
+	 * @return string
+	 */
 	public function lostpassword_url( $url ) {
 		return tutils()->tutor_dashboard_url( 'retrieve-password' );
 	}
 
+	/**
+	 * Handle reset password request
+	 *
+	 * @since 1.4.3
+	 * @return void|bool
+	 */
 	public function tutor_process_reset_password() {
 		tutils()->checking_nonce();
 
-		$reset_key        = sanitize_text_field( tutils()->array_get( 'reset_key', $_POST ) );
-		$user_id          = (int) tutils()->array_get( 'user_id', $_POST );
-		$password         = sanitize_text_field( tutils()->array_get( 'password', $_POST ) );
-		$confirm_password = sanitize_text_field( tutils()->array_get( 'confirm_password', $_POST ) );
+		$reset_key        = Input::post( 'reset_key' );
+		$user_id          = Input::post( 'user_id', 0, Input::TYPE_INT );
+		$password         = Input::post( 'password' );
+		$confirm_password = Input::post( 'confirm_password' );
 
 		$user = get_user_by( 'ID', $user_id );
 		$user = check_password_reset_key( $reset_key, $user->user_login );
@@ -146,11 +187,15 @@ class FormHandler {
 	/**
 	 * Send Password Reset E-Mail to user.
 	 * We are sending directly right now, later we will introduce centralised E-Mail notification System...
-	 * 
-	 * @param $user_login login username.
-	 * @param $reset_key password reset key.
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param string $user_login login username.
+	 * @param string $reset_key password reset key.
+	 *
+	 * @return void
 	 */
-	public function sendNotification( $user_login, $reset_key ) {
+	public function send_notification( $user_login, $reset_key ) {
 
 		$user_data = get_user_by( 'login', $user_login );
 
@@ -160,7 +205,8 @@ class FormHandler {
 			'user_id'    => $user_data->ID,
 		);
 
-		$html    = tutor_get_template_html( 'email.send-reset-password', $variable );
+		$html = tutor_get_template_html( 'email.send-reset-password', $variable );
+		/* translators: %s: site name */
 		$subject = sprintf( __( 'Password Reset Request for %s', 'tutor' ), get_option( 'blogname' ) );
 
 		$header = 'Content-Type: text/html' . "\r\n";
@@ -177,22 +223,24 @@ class FormHandler {
 	/**
 	 * Get e-mail from address
 	 *
+	 * @since 1.4.3
 	 * @return string
 	 */
 	public function get_from_address() {
 		$from_address = get_tutor_option( 'email_from_address' );
-		$default = !$from_address ? get_option( 'admin_email' ) : $from_address;
+		$default      = ! $from_address ? get_option( 'admin_email' ) : $from_address;
 		return apply_filters( 'tutor_email_from_address', $default );
 	}
 
 	/**
 	 * Get e-mail from name
 	 *
+	 * @since 1.4.3
 	 * @return string
 	 */
 	public function get_from_name() {
 		$from_name = get_tutor_option( 'email_from_name' );
-		$default = !$from_name ? get_option( 'blogname' ) : $from_name;
+		$default   = ! $from_name ? get_option( 'blogname' ) : $from_name;
 		return apply_filters( 'tutor_email_from_name', $default );
 	}
 

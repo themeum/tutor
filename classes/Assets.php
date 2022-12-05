@@ -1,4 +1,12 @@
 <?php
+/**
+ * Manage Assets
+ *
+ * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
 
 namespace TUTOR;
 
@@ -6,8 +14,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Assets class
+ *
+ * @since 1.0.0
+ */
 class Assets {
 
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function __construct() {
 		 /**
 		 * Common scripts loading
@@ -31,8 +50,8 @@ class Assets {
 		add_filter( 'tutor_localize_data', array( $this, 'modify_localize_data' ) );
 
 		/**
-		 * register translatable function to load
-		 * handled script with text domain attached to
+		 * Register translatable function to load
+		 * Handled script with text domain attached to
 		 *
 		 * @since 1.9.0
 		*/
@@ -63,9 +82,13 @@ class Assets {
 		add_action( 'enqueue_block_editor_assets', __CLASS__ . '::add_frontend_editor_button' );
 	}
 
+	/**
+	 * Load default localized data
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
 	private function get_default_localized_data() {
-		 global $wp_version, $wp_query;
-
 		$home_url = get_home_url();
 		$parsed   = parse_url( $home_url );
 
@@ -75,12 +98,8 @@ class Assets {
 		$post_id   = get_the_ID();
 		$post_type = get_post_type( $post_id );
 
-		$query_vars = $wp_query->query_vars;
-		if ( is_admin() && Input::has( 'page' ) ) {
-			$current_page = Input::get( 'page' );
-		} else {
-			$current_page = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
-		}
+		$current_page = tutor_utils()->get_current_page_slug();
+		
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => get_home_url(),
@@ -103,10 +122,16 @@ class Assets {
 			'is_tutor_course_edit'         => isset( $_GET['action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) ? true : false,
 			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
 			'current_page'                 => $current_page,
-			'quiz_answer_display_time'	   => 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' ),
+			'quiz_answer_display_time'     => 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' ),
 		);
 	}
 
+	/**
+	 * Enqueue scripts for admin
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function admin_scripts() {
 		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
@@ -127,6 +152,9 @@ class Assets {
 
 	/**
 	 * Load frontend scripts
+	 *
+	 * @since 1.0.0
+	 * @return void
 	 */
 	public function frontend_scripts() {
 		global $post, $wp_query;
@@ -153,7 +181,7 @@ class Assets {
 		wp_enqueue_script( 'quicktags' );
 
 		$tutor_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
-		if ( $tutor_dashboard_page_id === get_the_ID() ) {
+		if ( get_the_ID() === $tutor_dashboard_page_id ) {
 			wp_enqueue_media();
 		}
 
@@ -163,13 +191,13 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_script( 'jquery-touch-punch', array( 'jquery-ui-sortable' ) );
 
-		// Plyr
+		// Plyr.
 		if ( is_single_course( true ) ) {
 			wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), TUTOR_VERSION );
 			wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		}
 
-		// Social Share
+		// Social Share.
 		wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
 		/**
@@ -181,14 +209,13 @@ class Assets {
 			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION );
 			wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
-			if ( $wp_query->query_vars['tutor_dashboard_page'] === 'earning' ) {
+			if ( 'earning' === $wp_query->query_vars['tutor_dashboard_page'] ) {
 				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/js/lib/Chart.bundle.min.js', array(), TUTOR_VERSION );
 				wp_enqueue_script( 'jquery-ui-datepicker' );
 			}
 		}
 		/**
-		 * dependency wp-i18n added for
-		 * translate js file
+		 * Dependency wp-i18n added for translate js file
 		 *
 		 * @since 1.9.0
 		 */
@@ -206,21 +233,30 @@ class Assets {
 
 		// Load date picker for announcement at frontend.
 		wp_enqueue_script( 'jquery-ui-datepicker' );
-		$css = ".mce-notification.mce-notification-error{display: none !important;}";
+		$css = '.mce-notification.mce-notification-error{display: none !important;}';
 		wp_add_inline_style( 'tutor-frontend', $css );
 	}
 
+	/**
+	 * Modify localize data
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $localize_data localize data.
+	 * @return array
+	 */
 	public function modify_localize_data( $localize_data ) {
 		global $post;
 
 		if ( is_admin() ) {
-			if ( ! empty( $_GET['taxonomy'] ) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag' ) ) {
+			$taxonomy = Input::get( 'taxonomy' );
+			if ( 'course-category' === $taxonomy || 'course-tag' === $taxonomy ) {
 				$localize_data['open_tutor_admin_menu'] = true;
 			}
 		} else {
 
-			// Assign quiz option
-			if ( ! empty( $post->post_type ) && $post->post_type === 'tutor_quiz' ) {
+			// Assign quiz option.
+			if ( ! empty( $post->post_type ) && 'tutor_quiz' === $post->post_type ) {
 				$single_quiz_options = (array) tutor_utils()->get_quiz_option( $post->ID );
 				$saved_quiz_options  = array(
 					'quiz_when_time_expires' => tutor_utils()->get_option( 'quiz_when_time_expires' ),
@@ -237,7 +273,7 @@ class Assets {
 				$localize_data['quiz_options'] = $quiz_options;
 			}
 
-			// Including player assets if video exists
+			// Including player assets if video exists.
 			if ( tutor_utils()->has_video_in_single() ) {
 				$localize_data['post_id']         = get_the_ID();
 				$localize_data['best_watch_time'] = 0;
@@ -253,15 +289,15 @@ class Assets {
 	}
 
 	/**
-	 * Load common scripts
+	 * Load common scripts for frontend and backend
 	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function common_scripts() {
 
 		/**
-		 * Load TinyMCE for tutor settings page if
-		 * tutor pro is not available.
+		 * Load TinyMCE for tutor settings page if tutor pro is not available.
 		 *
 		 * @since v2.0.8
 		 */
@@ -281,7 +317,7 @@ class Assets {
 			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
 		}
 
-		// Load course builder resources
+		// Load course builder resources.
 		if ( tutor_utils()->get_course_builder_screen() ) {
 			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION );
@@ -316,19 +352,31 @@ class Assets {
 		}
 	}
 
+	/**
+	 * Load meta data
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function load_meta_data() {
-		// Localize scripts
+		// Localize scripts.
 		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 		wp_localize_script( 'tutor-frontend', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-admin', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-course-builder', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-script', '_tutorobject', $localize_data );
 
-		// Inline styles
+		// Inline styles.
 		wp_add_inline_style( 'tutor-frontend', $this->load_color_palette() );
 		wp_add_inline_style( 'tutor-admin', $this->load_color_palette() );
 	}
 
+	/**
+	 * Load color palette
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
 	private function load_color_palette() {
 		 $colors = array(
 			 'tutor_primary_color'       => '--tutor-color-primary',
@@ -338,7 +386,7 @@ class Assets {
 			 'tutor_gray_color'          => '--tutor-color-gray',
 		 );
 
-		 // admin colors
+		 // Admin colors.
 		 $admin_colors = array();
 		 if ( is_admin() ) {
 			 $admin_color = get_user_option( 'admin_color' );
@@ -420,25 +468,44 @@ class Assets {
 
 	/**
 	 * Add Tinymce button for placing shortcode
+	 *
+	 * @since 1.0.0
+	 * @return void|null
 	 */
-	function tutor_add_mce_button() {
-		// check user permissions
+	public function tutor_add_mce_button() {
+		// Check user permissions.
 		if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) {
 			return;
 		}
-		// check if WYSIWYG is enabled
+		// Check if WYSIWYG is enabled.
 		if ( 'true' == get_user_option( 'rich_editing' ) ) {
 			add_filter( 'mce_external_plugins', array( $this, 'tutor_add_tinymce_js' ) );
 			add_filter( 'mce_buttons', array( $this, 'tutor_register_mce_button' ) );
 		}
 	}
-	// Declare script for new button
-	function tutor_add_tinymce_js( $plugin_array ) {
+
+	/**
+	 * Add tinymce button
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $plugin_array plugin array.
+	 * @return array
+	 */
+	public function tutor_add_tinymce_js( $plugin_array ) {
 		$plugin_array['tutor_button'] = tutor()->url . 'assets/js/lib/mce-button.js';
 		return $plugin_array;
 	}
-	// Register new button in the editor
-	function tutor_register_mce_button( $buttons ) {
+
+	/**
+	 * Register new button in the editor
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $buttons buttons.
+	 * @return array
+	 */
+	public function tutor_register_mce_button( $buttons ) {
 		array_push( $buttons, 'tutor_button' );
 		return $buttons;
 	}
@@ -446,11 +513,14 @@ class Assets {
 	/**
 	 * Output generator tag to aid debugging.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $gen Generator.
 	 * @param string $type Type.
+	 *
 	 * @return string
 	 */
-	function tutor_generator_tag( $gen, $type ) {
+	public function tutor_generator_tag( $gen, $type ) {
 		switch ( $type ) {
 			case 'html':
 				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '">';
@@ -463,12 +533,13 @@ class Assets {
 	}
 
 	/**
-	 * load text domain handled script after all enqueue_scripts
+	 * Load text domain handled script after all enqueue_scripts
 	 * registered functions
 	 *
 	 * @since 1.9.0
+	 * @return void
 	 */
-	function tutor_script_text_domain() {
+	public function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
@@ -478,23 +549,32 @@ class Assets {
 	 * Add translation support for external tinyMCE button
 	 *
 	 * @since 1.9.7
+	 * @return array
 	 */
-	function tutor_tinymce_translate() {
+	public function tutor_tinymce_translate() {
 		$locales['tutor_button'] = tutor()->path . 'includes/tinymce_translate.php';
 		return $locales;
 	}
 
+	/**
+	 * Add an identifier class to body
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed $classes classes.
+	 * @return mixed
+	 */
 	public function add_identifier_class_to_body( $classes ) {
 		$course_builder_screen = tutor_utils()->get_course_builder_screen();
 		$to_add                = array( 'tutor-lms' );
 
-		// Add backend course editor identifier class to body
+		// Add backend course editor identifier class to body.
 		if ( $course_builder_screen ) {
 			$to_add[] = is_admin() ? 'tutor-backend' : '';
 			$to_add[] = ' tutor-screen-course-builder tutor-screen-course-builder-' . $course_builder_screen . ' ';
 		}
 
-		// Add frontend course builder identifier class
+		// Add frontend course builder identifier class.
 		if ( ! $course_builder_screen && tutor_utils()->is_tutor_frontend_dashboard() ) {
 			$to_add[] = 'tutor-screen-frontend-dashboard';
 		}
@@ -504,19 +584,20 @@ class Assets {
 			$base   = ( $screen && is_object( $screen ) && property_exists( $screen, 'base' ) ) ? $screen->base : '';
 			$index  = strpos( $base, 'tutor' );
 
-			if ( $index === 0 || $index > 0 ) {
+			if ( 0 === $index || $index > 0 ) {
 				$to_add[] = 'tutor-backend';
 
-				if ( isset( $_GET['page'] ) && $_GET['page'] == 'tutor_settings' ) {
+				$page = Input::get( 'page' );
+				if ( 'tutor_settings' === $page ) {
 					$to_add[] = 'tutor-screen-backend-settings ';
 				}
-				if ( isset( $_GET['page'] ) ) {
-					$to_add[] = 'tutor-backend-' . $_GET['page'];
+				if ( ! empty( $page ) ) {
+					$to_add[] = 'tutor-backend-' . $page;
 				}
 			}
 		}
 
-		// Remove duplicate classes if any
+		// Remove duplicate classes if any.
 		$to_add = array_unique( $to_add );
 
 		if ( is_array( $classes ) ) {
@@ -532,8 +613,7 @@ class Assets {
 	 * Enqueue script for adding edit with frontend course builder button
 	 * on the Gutenberg editor
 	 *
-	 * @since v2.0.5
-	 *
+	 * @since 2.0.5
 	 * @return void
 	 */
 	public static function add_frontend_editor_button() {

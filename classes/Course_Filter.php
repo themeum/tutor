@@ -1,16 +1,53 @@
 <?php
+/**
+ * Manage Course Filter
+ *
+ * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
+
 namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Course filter class
+ *
+ * @since 1.0.0
+ */
 class Course_Filter {
-	private $category        = 'course-category';
-	private $tag             = 'course-tag';
+	/**
+	 * Course Category
+	 *
+	 * @var string
+	 */
+	private $category = 'course-category';
+	/**
+	 * Course Tag
+	 *
+	 * @var string
+	 */
+	private $tag = 'course-tag';
+	/**
+	 * Course term id
+	 *
+	 * @var null|integer
+	 */
 	private $current_term_id = null;
 
-	function __construct( $register_hook = true ) {
+	/**
+	 * Constructor
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param boolean $register_hook register hook or not.
+	 * @return void|null
+	 */
+	public function __construct( $register_hook = true ) {
 		if ( ! $register_hook ) {
 			return;
 		}
@@ -18,25 +55,34 @@ class Course_Filter {
 		add_action( 'wp_ajax_nopriv_tutor_course_filter_ajax', array( $this, 'load_listing' ), 10, 0 );
 	}
 
+	/**
+	 * Load course listing
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed   $filters filters.
+	 * @param boolean $return_filter return filterd data or not.
+	 * @return mixed
+	 */
 	public function load_listing( $filters = null, $return_filter = false ) {
 		! $return_filter ? tutils()->checking_nonce() : 0;
 
-		$_post                        = tutor_sanitize_data( $filters == null ? $_POST : $filters );
-		! is_array( $_post ) ? $_post = array() : 0;
+		$sanitized_post                                 = tutor_sanitize_data( null == $filters ? $_POST : $filters ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		! is_array( $sanitized_post ) ? $sanitized_post = array() : 0;
 
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
-		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
+		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $sanitized_post, $default_per_page );
 
-		// Pagination arg
-		$page                  = ( isset( $_post['current_page'] ) && is_numeric( $_post['current_page'] ) && $_post['current_page'] > 0 ) ? $_post['current_page'] : 1;
-		$_post['current_page'] = $page;
+		// Pagination arg.
+		$page                           = max( 1, Input::post( 'current_page', 0, Input::TYPE_INT ) );
+		$sanitized_post['current_page'] = $page;
 
-		// Order arg
+		// Order arg.
 		$order_by = 'post_date';
 		$order    = 'DESC';
 
-		if ( isset( $_post['course_order'] ) ) {
-			switch ( $_post['course_order'] ) {
+		if ( isset( $sanitized_post['course_order'] ) ) {
+			switch ( $sanitized_post['course_order'] ) {
 				case 'newest_first':
 					$order_by = 'post_date';
 					$order    = 'DESC';
@@ -71,10 +117,10 @@ class Course_Filter {
 			),
 		);
 
-		// Prepare taxonomy
+		// Prepare taxonomy.
 		foreach ( array( 'category', 'tag' ) as $taxonomy ) {
 
-			$term_array                             = tutils()->array_get( 'tutor-course-filter-' . $taxonomy, $_post, array() );
+			$term_array                             = tutils()->array_get( 'tutor-course-filter-' . $taxonomy, $sanitized_post, array() );
 			! is_array( $term_array ) ? $term_array = array( $term_array ) : 0;
 
 			$term_array = array_filter(
@@ -95,7 +141,7 @@ class Course_Filter {
 			}
 		}
 
-		// Prepare level and price type
+		// Prepare level and price type.
 		$is_membership = get_tutor_option( 'monetize_by' ) == 'pmpro' && tutils()->has_pmpro();
 		$level_price   = array();
 		foreach ( array( 'level', 'price' ) as $type ) {
@@ -104,10 +150,10 @@ class Course_Filter {
 				continue;
 			}
 
-			$type_array = tutils()->array_get( 'tutor-course-filter-' . $type, $_post, array() );
+			$type_array = tutils()->array_get( 'tutor-course-filter-' . $type, $sanitized_post, array() );
 			$type_array = array_map( 'sanitize_text_field', ( is_array( $type_array ) ? $type_array : array( $type_array ) ) );
 
-			if ( $type == 'level' && in_array( 'all_levels', $type_array ) ) {
+			if ( 'level' == $type && in_array( 'all_levels', $type_array ) ) {
 				continue;
 			}
 
@@ -121,11 +167,11 @@ class Course_Filter {
 		}
 		count( $level_price ) ? $args['meta_query'] = $level_price : 0;
 
-		$search_key              = sanitize_text_field( tutils()->array_get( 'keyword', $_post, null ) );
+		$search_key              = sanitize_text_field( tutils()->array_get( 'keyword', $sanitized_post, null ) );
 		$search_key ? $args['s'] = $search_key : 0;
 
-		if ( isset( $_post['tutor_course_filter'] ) ) {
-			switch ( $_post['tutor_course_filter'] ) {
+		if ( isset( $sanitized_post['tutor_course_filter'] ) ) {
+			switch ( $sanitized_post['tutor_course_filter'] ) {
 
 				case 'newest_first':
 					$args['orderby'] = 'post_date';
@@ -149,7 +195,7 @@ class Course_Filter {
 			}
 		}
 
-		// Return filters
+		// Return filters.
 		$filters = apply_filters( 'tutor_course_filter_args', $args );
 		if ( $return_filter ) {
 			return $filters;
@@ -158,15 +204,21 @@ class Course_Filter {
 		ob_start();
 
 		query_posts( $filters );
-		tutor_load_template( 'archive-course-init', array_merge( array( 'loop_content_only' => true ), $_post ) );
+		tutor_load_template( 'archive-course-init', array_merge( array( 'loop_content_only' => true ), $sanitized_post ) );
 
 		wp_send_json_success( array( 'html' => ob_get_clean() ) );
 		exit;
 	}
 
+	/**
+	 * Get current term ID
+	 *
+	 * @since 1.0.0
+	 * @return integer
+	 */
 	private function get_current_term_id() {
 
-		if ( $this->current_term_id === null ) {
+		if ( null === $this->current_term_id ) {
 			$queried               = get_queried_object();
 			$this->current_term_id = ( is_object( $queried ) && property_exists( $queried, 'term_id' ) ) ? $queried->term_id : false;
 		}
@@ -174,6 +226,15 @@ class Course_Filter {
 		return $this->current_term_id;
 	}
 
+	/**
+	 * Sort terms hierarchically
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array   $terms term list.
+	 * @param integer $parent_id parent ID.
+	 * @return array
+	 */
 	private function sort_terms_hierarchically( $terms, $parent_id = 0 ) {
 		$term_array = array();
 
@@ -187,6 +248,15 @@ class Course_Filter {
 		return $term_array;
 	}
 
+	/**
+	 * Render terms hierarchically
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array  $terms term list.
+	 * @param string $taxonomy taxonomy name.
+	 * @return void
+	 */
 	private function render_terms_hierarchically( $terms, $taxonomy ) {
 
 		$term_id = $this->get_current_term_id();
@@ -204,6 +274,14 @@ class Course_Filter {
 		}
 	}
 
+	/**
+	 * Render terms
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $taxonomy taxonomy name.
+	 * @return void
+	 */
 	public function render_terms( $taxonomy ) {
 		$terms = get_terms(
 			array(

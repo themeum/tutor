@@ -1,4 +1,3 @@
-import './_login-reg';
 import './_spotlight';
 import './_wishlist';
 import './_social-share';

@@ -1,12 +1,11 @@
 <?php
-
 /**
- * Widget class
+ * Course Widget Register
  *
- * @author: themeum
- * @author_uri: https://themeum.com
  * @package Tutor
- * @since v.1.3.1
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.3.1
  */
 
 namespace TUTOR;
@@ -15,28 +14,56 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Course Widget Class
+ *
+ * @since 1.3.1
+ */
 class Course_Widget extends \WP_Widget {
 
-	function __construct() {
+	/**
+	 * Constructor
+	 *
+	 * @since 1.3.1
+	 * @return void
+	 */
+	public function __construct() {
 		parent::__construct(
-			'tutor_course_widget', // Base ID
-			esc_html__( 'Tutor Course', 'tutor' ), // Name
-			array( 'description' => esc_html__( 'Display courses wherever widget support is available.', 'tutor' ) ) // Args
+			'tutor_course_widget', // Base ID.
+			esc_html__( 'Tutor Course', 'tutor' ), // Name.
+			array( 'description' => esc_html__( 'Display courses wherever widget support is available.', 'tutor' ) ) // Args.
 		);
 	}
 
 	/**
 	 * Front-end display of widget.
 	 *
+	 * @since 1.3.1
 	 * @see WP_Widget::widget()
 	 *
 	 * @param array $args     Widget arguments.
 	 * @param array $instance Saved values from database.
+	 *
+	 * @return void
 	 */
 	public function widget( $args, $instance ) {
-		echo $args['before_widget'];
+		echo wp_kses(
+			$args['before_widget'],
+			array(
+				'section' => array(
+					'id'    => true,
+					'class' => true,
+				),
+				'div'     => array(
+					'id'    => true,
+					'class' => true,
+				),
+			)
+		);
 		if ( ! empty( $instance['title'] ) ) {
-			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
+			echo wp_kses( $args['before_title'], array( 'h2' => array( 'class' => true ) ) );
+			echo esc_html( apply_filters( 'widget_title', $instance['title'] ) );
+			echo wp_kses( $args['after_title'], array( 'h2' => array() ) );
 		}
 
 		$course_post_type = tutor()->course_post_type;
@@ -89,17 +116,25 @@ class Course_Widget extends \WP_Widget {
 		$output = ob_get_clean();
 		wp_reset_query();
 
-		echo $output;
+		echo wp_kses_post( $output );
 
-		echo $args['after_widget'];
+		echo wp_kses(
+			$args['after_widget'],
+			array(
+				'section' => array(),
+				'div'     => array(),
+			)
+		);
 	}
 
 	/**
 	 * Back-end widget form.
 	 *
+	 * @since 1.3.1
 	 * @see WP_Widget::form()
 	 *
 	 * @param array $instance Previously saved values from database.
+	 * @return void
 	 */
 	public function form( $instance ) {
 		$title       = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( 'New title', 'tutor' );
@@ -112,42 +147,42 @@ class Course_Widget extends \WP_Widget {
 		?>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
-				<?php _e( 'Title', 'tutor' ); ?>:
+				<?php esc_html_e( 'Title', 'tutor' ); ?>:
 			</label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'id' ) ); ?>">
-				<?php _e( 'ID', 'tutor' ); ?>:
+				<?php esc_html_e( 'ID', 'tutor' ); ?>:
 			</label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'id' ) ); ?>" type="text" value="<?php echo esc_attr( $id ); ?>"> <br />
 			<span style="color: #AAAAAA">
-				<?php _e( 'Place single course id or comma (,) separated course ids', 'tutor' ); ?>
+				<?php esc_html_e( 'Place single course id or comma (,) separated course ids', 'tutor' ); ?>
 			</span>
 		</p>
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>"><?php esc_attr_e( 'Exclude IDS:', 'tutor' ); ?></label>
-			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>" name="<?php echo esc_attr($this->get_field_name( 'exclude_ids' )); ?>" type="text" value="<?php echo esc_attr( $exclude_ids ); ?>"> <br />
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'exclude_ids' ) ); ?>" type="text" value="<?php echo esc_attr( $exclude_ids ); ?>"> <br />
 			<span style="color: #AAAAAA">
-				<?php _e( 'Place comma (,) separated courses ids which you like to exclude from the query', 'tutor' ); ?>
+				<?php esc_html_e( 'Place comma (,) separated courses ids which you like to exclude from the query', 'tutor' ); ?>
 			</span>
 		</p>
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>">
-				<?php _e( 'Category', 'tutor' ); ?>:
+				<?php esc_html_e( 'Category', 'tutor' ); ?>:
 			</label>
-			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>" name="<?php echo esc_attr($this->get_field_name( 'category' )); ?>" type="text" value="<?php echo esc_attr( $category ); ?>"> <br />
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'category' ) ); ?>" type="text" value="<?php echo esc_attr( $category ); ?>"> <br />
 			<span style="color: #AAAAAA">
-				<?php _e( 'Place comma (,) separated category ids', 'tutor' ); ?>
+				<?php esc_html_e( 'Place comma (,) separated category ids', 'tutor' ); ?>
 			</span>
 		</p>
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>">
-				<?php _e( 'OrderBy', 'tutor' ); ?>
+				<?php esc_html_e( 'OrderBy', 'tutor' ); ?>
 			</label>
 
 			<select class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'orderby' ) ); ?>" >
@@ -162,7 +197,7 @@ class Course_Widget extends \WP_Widget {
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'order' ) ); ?>">
-				<?php _e( 'Order', 'tutor' ); ?>
+				<?php esc_html_e( 'Order', 'tutor' ); ?>
 			</label>
 
 			<select class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'order' ) ); ?>" >
@@ -173,9 +208,9 @@ class Course_Widget extends \WP_Widget {
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>"><?php esc_attr_e( 'Count:', 'tutor' ); ?></label>
-			<input  class="widefat tutor-form-number-verify" id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>" name="<?php echo esc_attr($this->get_field_name( 'count' ) ); ?>" type="number" value="<?php echo esc_attr( $count ); ?>" min="1"> <br />
+			<input  class="widefat tutor-form-number-verify" id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'count' ) ); ?>" type="number" value="<?php echo esc_attr( $count ); ?>" min="1"> <br />
 			<span style="color: #AAAAAA">
-				<?php _e('Total results you like to show', 'tutor'); ?>
+				<?php esc_html_e( 'Total results you like to show', 'tutor' ); ?>
 			</span>
 		</p>
 
@@ -185,6 +220,7 @@ class Course_Widget extends \WP_Widget {
 	/**
 	 * Sanitize widget form values as they are saved.
 	 *
+	 * @since 1.3.1
 	 * @see WP_Widget::update()
 	 *
 	 * @param array $new_instance Values just sent to be saved.
