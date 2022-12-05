@@ -534,7 +534,15 @@ class Course extends Tutor_Base {
 
 		// Additional data like course intro video.
 		if ( $additional_data_edit ) {
-			$video        = Input::post( 'video', array(), Input::TYPE_ARRAY );
+			// Sanitize data through helper method.
+			$video        = Input::sanitize_array(
+				$_POST['video'] ?? array(), //phpcs:ignore
+				array(
+					'source_external_url' => 'esc_url',
+					'source_embedded'     => 'wp_kses_post',
+				),
+				true
+			);
 			$video_source = tutor_utils()->array_get( 'source', $video );
 			if ( -1 !== $video_source ) {
 				update_post_meta( $post_ID, '_video', $video );
