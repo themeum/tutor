@@ -535,8 +535,8 @@ class Course extends Tutor_Base {
 		// Additional data like course intro video.
 		if ( $additional_data_edit ) {
 			// Sanitize data through helper method.
-			$video = Input::sanitize_array(
-				$_POST['video'], //phpcs:ignore
+			$video        = Input::sanitize_array(
+				$_POST['video'] ?? array(), //phpcs:ignore
 				array(
 					'source_external_url' => 'esc_url',
 					'source_embedded'     => 'wp_kses_post',
