@@ -1,48 +1,61 @@
 <?php
+/**
+ * Course Model
+ *
+ * @package Tutor\Models
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.6
+ */
+
 namespace Tutor\Models;
 
 use Tutor\Helpers\QueryHelper;
 
 /**
- * Class CourseModel
+ * CourseModel Class
+ *
  * @since 2.0.6
  */
 class CourseModel {
-    /**
-     * WordPress course type name
-     * @var string
-     */
-    const POST_TYPE         = 'courses';
+	/**
+	 * WordPress course type name
+	 *
+	 * @var string
+	 */
+	const POST_TYPE = 'courses';
 
-    const STATUS_PUBLISH    = 'publish';
-    const STATUS_DRAFT      = 'draft';
-    const STATUS_AUTO_DRAFT = 'auto-draft';
-    const STATUS_PENDING    = 'pending';
+	const STATUS_PUBLISH    = 'publish';
+	const STATUS_DRAFT      = 'draft';
+	const STATUS_AUTO_DRAFT = 'auto-draft';
+	const STATUS_PENDING    = 'pending';
 
 	/**
 	 * Course record count
 	 *
-	 * @return int
-	 * 
 	 * @since 2.0.7
+	 *
+	 * @param string $status course status.
+	 * @return int
 	 */
 	public static function count( $status = self::STATUS_PUBLISH ) {
 		$count_obj = wp_count_posts( self::POST_TYPE );
 		if ( 'all' === $status ) {
 			return array_sum( (array) $count_obj );
 		}
-		
+
 		return (int) $count_obj->{$status};
 	}
 
 	/**
 	 * Get courses
-	 * 
-	 * @param array $excludes	exclude course ids
-	 *
-	 * @return array|null|object
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param array $excludes   exclude course ids.
+	 * @param array $post_status post status array.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_courses( $excludes = array(), $post_status = array( 'publish' ) ) {
 		global $wpdb;
@@ -64,6 +77,7 @@ class CourseModel {
 		$post_status      = implode( ',', $post_status );
 		$course_post_type = tutor()->course_post_type;
 
+		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID,
@@ -80,18 +94,18 @@ class CourseModel {
 				$course_post_type
 			)
 		);
+		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		return $query;
 	}
 
 	/**
 	 * Get courses for instructors
-	 * 
-	 * @param int $instructor_id	Instructor ID
-	 *
-	 * @return array|null|object
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param int $instructor_id    Instructor ID.
+	 * @return array|null|object
 	 */
 	public function get_courses_for_instructors( $instructor_id = 0 ) {
 		$instructor_id    = tutor_utils()->get_user_id( $instructor_id );
@@ -109,33 +123,34 @@ class CourseModel {
 		return $courses;
 	}
 
-    /**
-     * Mark the course as completed
-     *
-     * @param int $course_id    course id which is completed
-     * @param int $user_id      student id who completed the course
-     * @return bool
-     * 
-     * @since 2.0.7
-     */
-    public static function mark_course_as_completed( $course_id, $user_id ) {
-        if ( ! $course_id || ! $user_id ) {
-            return false;
-        }
+	/**
+	 * Mark the course as completed
+	 *
+	 * @since 2.0.7
+	 *
+	 * @param int $course_id    course id which is completed.
+	 * @param int $user_id      student id who completed the course.
+	 *
+	 * @return bool
+	 */
+	public static function mark_course_as_completed( $course_id, $user_id ) {
+		if ( ! $course_id || ! $user_id ) {
+			return false;
+		}
 
-        do_action( 'tutor_course_complete_before', $course_id );
-		
-        /**
-		 * Marking course completed at Comment
+		do_action( 'tutor_course_complete_before', $course_id );
+
+		/**
+		 * Marking course completed at Comment.
 		 */
 		global $wpdb;
 
 		$date = date( 'Y-m-d H:i:s', tutor_time() );
 
-		// Making sure that, hash is unique
+		// Making sure that, hash is unique.
 		do {
-			$hash    = substr( md5( wp_generate_password( 32 ) . $date . $course_id . $user_id ), 0, 16 );
-			$hasHash = (int) $wpdb->get_var(
+			$hash     = substr( md5( wp_generate_password( 32 ) . $date . $course_id . $user_id ), 0, 16 );
+			$has_hash = (int) $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT(comment_ID) from {$wpdb->comments}
 				    WHERE comment_agent = 'TutorLMSPlugin' AND comment_type = 'course_completed' AND comment_content = %s ",
@@ -143,14 +158,14 @@ class CourseModel {
 				)
 			);
 
-		} while ( $hasHash > 0 );
+		} while ( $has_hash > 0 );
 
 		$data = array(
 			'comment_post_ID'  => $course_id,
 			'comment_author'   => $user_id,
 			'comment_date'     => $date,
 			'comment_date_gmt' => get_gmt_from_date( $date ),
-			'comment_content'  => $hash, // Identification Hash
+			'comment_content'  => $hash, // Identification Hash.
 			'comment_approved' => 'approved',
 			'comment_agent'    => 'TutorLMSPlugin',
 			'comment_type'     => 'course_completed',
@@ -160,17 +175,17 @@ class CourseModel {
 		$wpdb->insert( $wpdb->comments, $data );
 
 		do_action( 'tutor_course_complete_after', $course_id, $user_id );
-        
-        return true;
-    }
+
+		return true;
+	}
 
 	/**
 	 * Delete a course by ID
 	 *
-	 * @param int $post_id	course id that need to delete
-	 * @return bool
-	 * 
 	 * @since 2.0.9
+	 *
+	 * @param int $post_id  course id that need to delete.
+	 * @return bool
 	 */
 	public static function delete_course( $post_id ) {
 		if ( get_post_type( $post_id ) !== tutor()->course_post_type ) {
@@ -184,7 +199,12 @@ class CourseModel {
 	/**
 	 * Get post ids by post type and parent_id
 	 *
-	 * @since v.1.6.6
+	 * @since 1.6.6
+	 *
+	 * @param string  $post_type post type.
+	 * @param integer $post_parent post parent ID.
+	 *
+	 * @return array
 	 */
 	private function get_post_ids( $post_type, $post_parent ) {
 		$args = array(
@@ -200,10 +220,11 @@ class CourseModel {
 	/**
 	 * Delete course data when permanently deleting a course.
 	 *
+	 * @since 1.6.6
+	 * @since 2.0.9 updated
+	 *
+	 * @param integer $post_id post ID.
 	 * @return bool
-	 * 
-	 * @since v.1.6.6
-	 * @updated 2.0.9
 	 */
 	public function delete_course_data( $post_id ) {
 		$course_post_type = tutor()->course_post_type;
@@ -213,13 +234,13 @@ class CourseModel {
 
 		global $wpdb;
 
-		$lesson_post_type		= tutor()->lesson_post_type;
-		$assignment_post_type	= tutor()->assignment_post_type;
-		$quiz_post_type			= tutor()->quiz_post_type;
+		$lesson_post_type     = tutor()->lesson_post_type;
+		$assignment_post_type = tutor()->assignment_post_type;
+		$quiz_post_type       = tutor()->quiz_post_type;
 
 		$topic_ids = $this->get_post_ids( 'topics', $post_id );
 
-		// Course > Topic > ( Lesson | Quiz | Assignment )
+		// Course > Topic > ( Lesson | Quiz | Assignment ).
 		if ( ! empty( $topic_ids ) ) {
 			foreach ( $topic_ids as $topic_id ) {
 				$content_post_type = array( $lesson_post_type, $assignment_post_type, $quiz_post_type );
@@ -236,6 +257,7 @@ class CourseModel {
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
 							$in_question_ids = "'" . implode( "','", $questions_ids ) . "'";
+							//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 							$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) " );
 						}
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $content_id ) );
@@ -243,10 +265,16 @@ class CourseModel {
 
 					/**
 					 * Delete assignment data ( Assignments, Assignment Submit, Assignment Evalutation )
+					 *
 					 * @since 2.0.9
 					 */
 					if ( get_post_type( $content_id ) === $assignment_post_type ) {
-						QueryHelper::delete_comment_with_meta( array( 'comment_type' => 'tutor_assignment', 'comment_post_ID' => $content_id ) );
+						QueryHelper::delete_comment_with_meta(
+							array(
+								'comment_type'    => 'tutor_assignment',
+								'comment_post_ID' => $content_id,
+							)
+						);
 					}
 
 					wp_delete_post( $content_id, true );
@@ -258,19 +286,20 @@ class CourseModel {
 					$wpdb->posts,
 					array(
 						'post_parent' => $topic_id,
-						'post_type'   => 'tutor_zoom_meeting'
+						'post_type'   => 'tutor_zoom_meeting',
 					)
 				);
 
 				/**
 				 * Delete Google Meet Record Related to Course Topic
+				 *
 				 * @since 2.1.0
 				 */
 				$wpdb->delete(
 					$wpdb->posts,
 					array(
 						'post_parent' => $topic_id,
-						'post_type'   => 'tutor-google-meet'
+						'post_type'   => 'tutor-google-meet',
 					)
 				);
 
@@ -292,27 +321,52 @@ class CourseModel {
 		 */
 		$wpdb->delete( $wpdb->prefix . 'tutor_earnings', array( 'course_id' => $post_id ) );
 		$wpdb->delete( $wpdb->prefix . 'tutor_gradebooks_results', array( 'course_id' => $post_id ) );
-		$wpdb->delete( $wpdb->comments, array( 'comment_type' => 'course_completed', 'comment_post_ID' => $post_id ) );
-		
+		$wpdb->delete(
+			$wpdb->comments,
+			array(
+				'comment_type'    => 'course_completed',
+				'comment_post_ID' => $post_id,
+			)
+		);
+
 		/**
 		 * Delete onsite notification record & _tutor_instructor_course_id user meta
+		 *
 		 * @since 2.1.0
 		 */
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}tutor_notifications WHERE post_id=%d AND type IN ('Announcements','Q&A','Enrollments')", $post_id ) );
-		$wpdb->delete( $wpdb->usermeta, array( 'meta_key' => '_tutor_instructor_course_id', 'meta_value' => $post_id ) );
+		$wpdb->delete(
+			$wpdb->usermeta,
+			array(
+				'meta_key'   => '_tutor_instructor_course_id',
+				'meta_value' => $post_id,
+			)
+		);
 
 		/**
 		 * Delete Course rating and review
+		 *
 		 * @since 2.0.9
 		 */
-		QueryHelper::delete_comment_with_meta( array( 'comment_type' => 'tutor_course_rating', 'comment_post_ID' => $post_id ) );
-		
+		QueryHelper::delete_comment_with_meta(
+			array(
+				'comment_type'    => 'tutor_course_rating',
+				'comment_post_ID' => $post_id,
+			)
+		);
+
 		/**
 		 * Delete Q&A and its status ( read, replied etc )
+		 *
 		 * @since 2.0.9
 		 */
-		QueryHelper::delete_comment_with_meta( array( 'comment_type' => 'tutor_q_and_a', 'comment_post_ID' => $post_id ) );
-		
+		QueryHelper::delete_comment_with_meta(
+			array(
+				'comment_type'    => 'tutor_q_and_a',
+				'comment_post_ID' => $post_id,
+			)
+		);
+
 		/**
 		 * Delete caches
 		 */

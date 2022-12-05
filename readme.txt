@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.0.3
-Requires PHP: 7.0
-Stable tag: 2.1.2
+Tested up to: 6.1
+Requires PHP: 7.1
+Stable tag: 2.1.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,25 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.1.3 - November 30, 2022
+
+New: Reset credential for Google Meet is introduced
+New: More security improvement is introduced to ensure SQL Injection, XSS, CSRF protection
+Fix: The login form was not showing the user as logged in until the page is refreshed
+Fix: In some cases, the Course Rating Count appeared wrong on the Course Details page
+Fix: XML code was not appearing in Quiz
+Fix: The quiz page used to get jammed if a quiz is abandoned
+Fix: Quiz completion page was showing a fatal error
+Fix: A PHP warning was appearing on the Quiz Completion page
+Fix: On Google Meet the Help Page was expanding options before clicking on the Tab
+Fix: Google Meet vendor package was showing a notice error
+Fix: On completion of a Quiz, it was appearing as Completed for another User in the Course Journey
+Fix: Quiz Attempt page was showing an error in the case of PHP 7.0 or below
+Fix: Email template files were containing some wrong short-codes
+Fix: Google Meet visibility option's title was wrong
+Fix: Reports page design was appearing wrong
+Fix: Quiz attempt page had some minor design issue
 
 = 2.1.2 - November 2, 2022
 

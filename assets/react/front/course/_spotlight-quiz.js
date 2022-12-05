@@ -347,7 +347,7 @@ window.jQuery(document).ready($=>{
                                 },
                                 error: function() {
                                     alert(__('Something went wrong', 'tutor'));
-                                    popup.remove();
+                                    popup.find('[data-tutor-modal-close]').click();
                                 },
                             });
                         },
@@ -357,7 +357,7 @@ window.jQuery(document).ready($=>{
                         id: 'reset',
                         class: 'tutor-btn tutor-btn-primary tutor-ml-20',
                         callback: function() {
-                            popup.remove();
+                            popup.find('[data-tutor-modal-close]').click();
                         },
                     },
                 },

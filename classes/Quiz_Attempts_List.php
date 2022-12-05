@@ -1,4 +1,13 @@
 <?php
+/**
+ * Quiz attempt list management
+ *
+ * @package Tutor\QuestionAnswer
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
+
 namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -8,6 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Tutor\Cache\QuizAttempts;
 use Tutor\Models\QuizModel;
 
+/**
+ * Quiz attempt class
+ *
+ * @since 1.0.0
+ */
 class Quiz_Attempts_List {
 
 	const QUIZ_ATTEMPT_PAGE = 'tutor_quiz_attempts';
@@ -35,6 +49,10 @@ class Quiz_Attempts_List {
 
 	/**
 	 * Handle dependencies
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param boolean $register_hook should register hook or not.
 	 */
 	public function __construct( $register_hook = true ) {
 
@@ -46,7 +64,7 @@ class Quiz_Attempts_List {
 		/**
 		 * Handle bulk action
 		 *
-		 * @since v2.0.0
+		 * @since 2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_quiz_attempts_bulk_action', array( $this, 'quiz_attempts_bulk_action' ) );
 		add_action( 'wp_ajax_tutor_quiz_attempts_count', array( $this, 'get_quiz_attempts_stat' ) );
@@ -62,12 +80,11 @@ class Quiz_Attempts_List {
 	}
 
 	/**
-	 * @return array
-	 *
-	 *
 	 * Get the attempts stat from specific instructor context
 	 *
 	 * @since 2.0.0
+	 *
+	 * @return array
 	 */
 	public function get_quiz_attempts_stat() {
 		global $wpdb;
@@ -89,18 +106,18 @@ class Quiz_Attempts_List {
 		}
 
 		$count          = array();
-		$is_ajax_action = isset( $_POST['action'] ) && 'tutor_quiz_attempts_count' === $_POST['action'];
+		$is_ajax_action = 'tutor_quiz_attempts_count' === Input::post( 'action' );
 		if ( $is_ajax_action ) {
 			$attempt_cache = new QuizAttempts();
 
 			if ( $attempt_cache->has_cache() ) {
 				$count = $attempt_cache->get_cache();
 			} else {
-
+				// TODO: need to fix prepare violation.
 				$count               = $wpdb->get_col(
 					$wpdb->prepare(
 						"SELECT COUNT( DISTINCT attempt_id)
-							 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+							FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
 									INNER JOIN {$wpdb->posts} quiz
 										ON quiz_attempts.quiz_id = quiz.ID
 									INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
@@ -113,7 +130,7 @@ class Quiz_Attempts_List {
 							UNION 
 		
 							SELECT COUNT( DISTINCT attempt_id)
-								 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+								FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
 										INNER JOIN {$wpdb->posts} quiz
 											ON quiz_attempts.quiz_id = quiz.ID
 										INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
@@ -126,7 +143,7 @@ class Quiz_Attempts_List {
 							UNION
 		
 							SELECT COUNT( DISTINCT attempt_id)
-								 FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+								FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
 										INNER JOIN {$wpdb->posts} quiz
 											ON quiz_attempts.quiz_id = quiz.ID
 										INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans 
@@ -166,11 +183,14 @@ class Quiz_Attempts_List {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param string $user_id selected quiz_attempts id | optional.
+	 * @param int    $course_id selected quiz_attempts id | optional.
 	 * @param string $date selected date | optional.
 	 * @param string $search search by user name or email | optional.
+	 *
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
 		$url   = get_pagenum_link();
@@ -209,8 +229,9 @@ class Quiz_Attempts_List {
 	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function prpare_bulk_actions(): array {
 		$actions = array(
@@ -220,68 +241,20 @@ class Quiz_Attempts_List {
 		return $actions;
 	}
 
-	/**
-	 * Count enrolled number by status & filters
-	 * Count all enrollment | approved | cancelled
-	 *
-	 * @param string $status | required.
-	 * @param string $user_id selected user id | optional.
-	 * @param string $date selected date | optional.
-	 * @param string $search_term search by user name or email | optional.
-	 * @return int
-	 * @since v2.0.0
-	 */
-	protected static function get_instructor_number( $status = '', $user_id = '', $course_id = '', $attempt_id = '', $date = '', $search_term = '' ): int {
-		global $wpdb;
-		$status      = sanitize_text_field( $status );
-		$course_id   = sanitize_text_field( $course_id );
-		$user_id     = sanitize_text_field( $user_id );
-		$attempt_id  = sanitize_text_field( $attempt_id );
-		$date        = sanitize_text_field( $date );
-		$search_term = sanitize_text_field( $search_term );
-
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
-
-		// add user id in where clause.
-		$user_query = '';
-		if ( '' !== $user_id ) {
-			$user_query = "AND user.ID = $user_id";
-		}
-
-		$count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(attempt_id)
-				FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-					   INNER JOIN {$wpdb->tutor_quiz_attempt_answers} quiz
-							   ON quiz_attempts.quiz_id = quiz.ID
-					   INNER JOIN {$wpdb->users}
-							   ON quiz_attempts.user_id = {$wpdb->users}.ID
-			   WHERE 	attempt_status != %s
-					   AND ( user_email = %s OR display_name LIKE %s OR post_title LIKE %s )
-			   ",
-				'attempt_started',
-				$status,
-				$search_term,
-				$search_term,
-				$search_term,
-				$search_term
-			)
-		);
-		return $count ? $count : 0;
-	}
 
 	/**
 	 * Handle bulk action for instructor delete
 	 *
-	 * @return string JSON response.
-	 * @since v2.0.0
+	 * @since 2.0.0
+	 *
+	 * @return void send wp_json response
 	 */
 	public function quiz_attempts_bulk_action() {
 		// check nonce.
 		tutor_utils()->checking_nonce();
 
-		$bulk_action = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
-		$bulk_ids    = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
+		$bulk_action = Input::post( 'bulk-action', '' );
+		$bulk_ids    = Input::post( 'bulk-ids', '' );
 		$bulk_ids    = explode( ',', $bulk_ids );
 		$bulk_ids    = array_map(
 			function( $id ) {
@@ -299,7 +272,14 @@ class Quiz_Attempts_List {
 		wp_send_json_success();
 	}
 
-	function get_bulk_actions() {
+	/**
+	 * Get bulk action as an array
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_bulk_actions() {
 		$actions = array(
 			'delete' => 'Delete',
 		);

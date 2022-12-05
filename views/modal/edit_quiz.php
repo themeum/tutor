@@ -2,11 +2,10 @@
 /**
  * Quiz Modal Form
  *
- * @since 1.0.0
- * @author themeum
+ * @package Tutor\Views
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- *
- * @package TutorLMS/Templates
+ * @since 1.0.0
  */
 
 ?>
@@ -183,11 +182,11 @@
 
 	<div class="tutor-mb-32">
 		<label class="tutor-form-label">
-			<?php esc_html_e( 'Max questions allowed to answer', 'tutor' ); ?>
+			<?php esc_html_e( 'Max Question Allowed to Answer', 'tutor' ); ?>
 		</label>
 		<input type="number" class="tutor-form-control" name="quiz_option[max_questions_for_answer]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'max_questions_for_answer', 10 ) ); ?>" min="1"/>
 		<div class="tutor-form-feedback">
-			<?php esc_html_e( 'This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor' ); ?>
+			<?php esc_html_e( 'This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount is greater than available question, then all questions will be available for a student to answer.', 'tutor' ); ?>
 		</div>
 	</div>
 

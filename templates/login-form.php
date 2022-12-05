@@ -8,22 +8,58 @@
  * @since 2.0.1
  */
 
+use TUTOR\Ajax;
+
 $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
+/**
+ * Get login validation errors & print
+ *
+ * @since 2.1.3
+ */
+$login_errors = get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) ? get_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ) : array();
+foreach ( $login_errors as $login_error ) {
+	?>
+	<div class="tutor-alert tutor-warning tutor-mb-12" style="display:block; grid-gap: 0px 10px;">
+		<?php
+		echo wp_kses(
+			$login_error,
+			array(
+				'strong' => true,
+				'a'      => array(
+					'href'  => true,
+					'class' => true,
+					'id'    => true,
+				),
+				'p'      => array(
+					'class' => true,
+					'id'    => true,
+				),
+				'div'    => array(
+					'class' => true,
+					'id'    => true,
+				),
+			)
+		);
+		?>
+	</div>
+	<?php
+}
+
 ?>
 <form id="tutor-login-form" method="post">
 	<?php if ( is_single_course() ) : ?>
 		<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo esc_attr( get_the_ID() ); ?>">
 	<?php endif; ?>
-	
+	<?php tutor_nonce_field(); ?>
 	<input type="hidden" name="tutor_action" value="tutor_user_login" />
 	<input type="hidden" name="redirect_to" value="<?php echo esc_url( apply_filters( 'tutor_after_login_redirect_url', tutor()->current_url ) ); ?>" />
 
 	<div class="tutor-mb-20">
-		<input type="text" class="tutor-form-control" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" />
+		<input type="text" class="tutor-form-control" placeholder="<?php esc_html_e( 'Username or Email Address', 'tutor' ); ?>" name="log" value="" size="20" required/>
 	</div>
 
 	<div class="tutor-mb-32">
-		<input type="password" class="tutor-form-control" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" value="" size="20" />
+		<input type="password" class="tutor-form-control" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" name="pwd" value="" size="20" required/>
 	</div>
 
 	<div class="tutor-login-error"></div>
@@ -65,3 +101,16 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
 		</div>
 	<?php endif; ?>
 </form>
+<?php if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) : ?>
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var { __ } = wp.i18n;
+		var loginModal = document.querySelector('.tutor-modal.tutor-login-modal');
+		var errors = <?php echo wp_json_encode( $login_errors ); ?>;
+		if (loginModal && errors.length) {
+			loginModal.classList.add('tutor-is-active');
+		}
+	});
+</script>
+<?php endif; ?>
+<?php delete_transient( Ajax::LOGIN_ERRORS_TRANSIENT_KEY ); ?>
