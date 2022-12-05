@@ -173,7 +173,7 @@ class Lesson extends Tutor_Base {
 
 			// Sanitize data through helper method.
 			$video = Input::sanitize_array(
-				$_POST['video'], //phpcs:ignore
+				$_POST['video'] ?? array(), //phpcs:ignore
 				array(
 					'source_external_url' => 'esc_url',
 					'source_embedded'     => 'wp_kses_post',

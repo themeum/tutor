@@ -103,9 +103,10 @@ class Shortcode {
 			 * If user not logged in show login form instead of
 			 * popup sign-in button
 			 *
-			 * @since 2.1.4
+			 * @since 2.1.3
 			 */
-			tutor_load_template( 'login' );
+			$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
+			echo sprintf( __( 'Please %1$sSign-In%2$s to view this page', 'tutor' ), '<a data-login_url="' . esc_url( $login_url ) . '" href="#" class="tutor-open-login-modal">', '</a>' );
 		}
 		return apply_filters( 'tutor_dashboard/index', ob_get_clean() );
 	}
