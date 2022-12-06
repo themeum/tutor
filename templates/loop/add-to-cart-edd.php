@@ -2,8 +2,11 @@
 /**
  * Edd price template for the course list page
  *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage EDDIntegration
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 $product_id = tutor_utils()->get_course_product_id();
@@ -20,7 +23,7 @@ if ( $download->ID ) {
 		$args            = apply_filters(
 			'edd_purchase_link_defaults',
 			array(
-				'text'  => $button_behavior == 'direct' ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) ),
+				'text'  => 'direct' == $button_behavior ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) ),
 				'style' => edd_get_option( 'button_style', 'button' ),
 				'color' => edd_get_option( 'checkout_color', 'blue' ),
 				'class' => 'edd-submit tutor-open-login-modal',
