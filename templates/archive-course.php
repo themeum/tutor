@@ -2,24 +2,28 @@
 /**
  * Template for displaying courses
  *
- * @author Themeum
+ * @package Tutor\Templates
+ * @subpackage CourseArchive
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
- * @version 1.5.8
+ * @since 1.5.8
  */
+
+use TUTOR\Input;
 
 tutor_utils()->tutor_custom_header();
 
-if ( isset( $_GET['course_filter'] ) ) {
-	$filter = ( new \Tutor\Course_Filter( false ) )->load_listing( $_GET, true );
+$get = isset( $_GET['course_filter'] ) ? Input::sanitize_array( $_GET ) : array();//phpcs:ignore
+if ( isset( $get['course_filter'] ) ) {
+	$filter = ( new \Tutor\Course_Filter( false ) )->load_listing( $get, true );
 	query_posts( $filter );
 }
 
-// Load the
+// Load the template.
 tutor_load_template(
 	'archive-course-init',
 	array_merge(
-		$_GET,
+		$get,
 		array(
 			'course_filter'     => (bool) tutor_utils()->get_option( 'course_archive_filter', false ),
 			'supported_filters' => tutor_utils()->get_option( 'supported_course_filters', array() ),
