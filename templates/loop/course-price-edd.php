@@ -1,14 +1,12 @@
 <?php
-
 /**
  * Course loop price
  *
- * @since v.1.0.0
- * @author themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage CourseLoopPart
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 $product_id = tutor_utils()->get_course_product_id();
@@ -33,7 +31,7 @@ add_filter(
 if ( tutor_utils()->is_course_purchasable() ) {
 		$enroll_btn = tutor_course_loop_add_to_cart( false );
 		$product_id = tutor_utils()->get_course_product_id( $course_id );
-		$edd_price  = function_exists( 'edd_price' ) ? edd_price( $product_id ,false ) : '';
+		$edd_price  = function_exists( 'edd_price' ) ? edd_price( $product_id, false ) : '';
 
 		$total_enrolled   = tutor_utils()->count_enrolled_users_by_course( $course_id );
 		$maximum_students = tutor_utils()->get_course_settings( $course_id, 'maximum_students' );
@@ -82,21 +80,21 @@ if ( tutor_utils()->is_course_purchasable() ) {
 							__( 'Fully Booked', 'tutor' ) . '
                                 </div>
                             </div></div>';
-		echo tutor_kses_html( $price_html );//phpcs:ignore
-		echo tutor_kses_html( $restrict );//phpcs:ignore
+		echo $price_html;//phpcs:ignore --trusted markups
+		echo $restrict;//phpcs:ignore --trusted markups
 	}
 
-	if ( $maximum_students == 0 ) {
+	if ( 0 == $maximum_students ) {
 		?>
 				<div class="list-item-button"> 
 			<?php
 				// PHPCS - the variable $enroll_btn holds safe data.
-				echo apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn );// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn );// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --safe data
 			?>
 				</div>
 			<?php
 	}
 } else {
-	echo tutor_kses_html( $free_html );//phpcs:ignore
+	echo $free_html;//phpcs:ignore --contain safe data
 }
 ?>
