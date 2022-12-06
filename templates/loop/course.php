@@ -2,12 +2,11 @@
 /**
  * A single course loop
  *
- * @since v.1.0.0
- * @author themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage CourseLoopPart
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 do_action( 'tutor_course/loop/before_content' );
@@ -45,7 +44,7 @@ do_action( 'tutor_course/loop/tutor_pagination' );
  * Hooks for enrolled course progress
  * That will affected on dashboard enrolled course page
  *
- * @since v2.0.0
+ * @since 2.0.0
  */
 do_action( 'tutor_course/loop/before_enrolled_progress' );
 do_action( 'tutor_course/loop/enrolled_course_progress' );
