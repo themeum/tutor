@@ -3536,10 +3536,10 @@ class Utils {
 				$output,
 				array(
 					'span' => array(
-						'class' => true,
-						'data-rating' => true,
-						'data-rating-value' => true
-					)
+						'class'             => true,
+						'data-rating'       => true,
+						'data-rating-value' => true,
+					),
 				)
 			);
 		}
@@ -9374,4 +9374,42 @@ class Utils {
 		}
 		return $current_page;
 	}
+
+	/**
+	 * Get allowed tags for avatar, useful while using
+	 * wp_kses
+	 *
+	 * @since 2.1.4
+	 *
+	 * @param array|optional $tags additional tags.
+	 *
+	 * @return array allowed tags
+	 */
+	public function allowed_avatar_tags( array $tags = array() ):array {
+		$defaults = array(
+			'a'   => array(
+				'href'   => true,
+				'class'  => true,
+				'id'     => true,
+				'target' => true,
+			),
+			'img' => array(
+				'src'   => true,
+				'class' => true,
+				'id'    => true,
+				'title' => true,
+				'alt'   => true,
+			),
+			'div' => array(
+				'class' => true,
+				'id'    => true,
+			),
+			'span' => array(
+				'class' => true,
+				'id'    => true,
+			),
+		);
+		return wp_parse_args( $tags , $defaults );
+	}
+
 }

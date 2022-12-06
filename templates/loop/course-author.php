@@ -3,8 +3,6 @@
 /**
  * Display loop thumbnail
  *
- * TODO: Unused template will be removed
- *
  * @package Tutor\Templates
  * @subpackage CourseLoopPart
  * @author Themeum <support@themeum.com>
@@ -24,24 +22,7 @@ $course_categories = get_tutor_course_categories();
 			<?php
 				echo wp_kses(
 					tutor_utils()->get_tutor_avatar( $post->post_author ),
-					array(
-						'div'   => array(
-							'class' => true,
-							'id'    => true,
-						),
-						'a'     => array(
-							'class'  => true,
-							'href'   => true,
-							'id'     => true,
-							'target' => true,
-						),
-						'image' => array(
-							'src'   => true,
-							'class' => true,
-							'id'    => true,
-                            'alt'   => true,
-						),
-					)
+					tutor_utils()->allowed_avatar_tags()
 				);
 				?>
 		</a>
