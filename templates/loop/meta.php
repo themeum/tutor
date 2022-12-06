@@ -1,5 +1,9 @@
 <?php
 /**
+ * Course meta template
+ *
+ * Meta template contains author avatar & categories
+ *
  * @package Tutor\Templates
  * @subpackage CourseLoopPart
  * @author Themeum <support@themeum.com>
