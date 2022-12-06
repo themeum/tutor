@@ -2,12 +2,11 @@
 /**
  * Course loop price
  *
- * @since v.1.0.0
- * @author themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage CourseLoopPart
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 ?>
@@ -43,7 +42,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 	$maximum_students = (int) tutor_utils()->get_course_settings( $course_id, 'maximum_students' );
 
 	if ( false === $product ) {
-		echo tutor_kses_html( $free_html ); //phpcs:ignore
+		echo $free_html; //phpcs:ignore --contain safe data
 	} elseif ( 0 !== $maximum_students && $total_enrolled !== $maximum_students ) {
 		$total_booked     = 100 / $maximum_students * $total_enrolled;
 		$b_total          = ceil( $total_booked );
@@ -58,10 +57,10 @@ if ( tutor_utils()->is_course_purchasable() ) {
 
                     <div class="tutor-course-booking-progress tutor-d-flex tutor-align-center">
                         <div class="tutor-mr-8">
-                            <div class="tutor-progress-circle" style="--pro: ' . $b_total . '%;" area-hidden="true"></div>
+                            <div class="tutor-progress-circle" style="--pro: ' . esc_html( $b_total ) . '%;" area-hidden="true"></div>
                         </div>
                         <div class="tutor-fs-7 tutor-fw-medium tutor-color-black">' .
-						$b_total . __( '% Booked', 'tutor' ) . '
+						esc_html( $b_total ) . __( '% Booked', 'tutor' ) . '
                         </div>
                     </div>
                 </div>
@@ -74,17 +73,17 @@ if ( tutor_utils()->is_course_purchasable() ) {
 	if ( $product && $maximum_students === $total_enrolled && 0 !== $maximum_students ) {
 		$price_html = '<div class=" ' . $utility_classes . ' "><div class="list-item-price tutor-d-flex tutor-align-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">' . $wc_price_html . ' </span></div>';
 		$restrict   = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium tutor-color-black">' . __( 'Fully Booked', 'tutor' ) . '</div></div></div>';
-		echo tutor_kses_html( $price_html ); //phpcs:ignore
-		echo tutor_kses_html( $restrict ); //phpcs:ignore
+		echo $price_html; //phpcs:ignore --contain safe data
+		echo $restrict; //phpcs:ignore --contain safe data
 	}
 
 	if ( $product && 0 === $maximum_students ) {
 		$price_html = '<div class=" ' . $utility_classes . ' "><div class="list-item-price tutor-d-flex tutor-align-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">' . $wc_price_html . ' </span></div>';
 		$cart_html  = '<div class="list-item-button"> ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
-		echo tutor_kses_html( $price_html ); //phpcs:ignore
-		echo tutor_kses_html( $cart_html ); //phpcs:ignore
+		echo $price_html; //phpcs:ignore --contain safe data
+		echo $cart_html; //phpcs:ignore
 	}
 } else {
-	echo tutor_kses_html( $free_html ); //phpcs:ignore
+	echo $free_html; //phpcs:ignore --contain safe data
 }
 
