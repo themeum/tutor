@@ -2,12 +2,11 @@
 /**
  * Course loop price
  *
- * @since v.1.0.0
- * @author themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage CourseLoopPart
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 ?>
