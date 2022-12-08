@@ -1048,7 +1048,6 @@ class Quiz {
 		);
 
 		foreach ( $question_data as $question_id => $question ) {
-			tutor_log( 'id: ' . $question_id );
 			// Make sure the quiz has answers.
 			if ( isset( $question['question_type'] ) && in_array( $question['question_type'], $requires_answeres ) ) {
 				$require_correct = in_array( $question['question_type'], $need_correct );
