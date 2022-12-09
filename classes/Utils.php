@@ -9412,4 +9412,28 @@ class Utils {
 		return wp_parse_args( $tags , $defaults );
 	}
 
+	/**
+	 * Get allowed tags for avatar, useful while using
+	 * wp_kses
+	 *
+	 * @since 2.1.4
+	 *
+	 * @param array|optional $tags additional tags.
+	 *
+	 * @return array allowed tags
+	 */
+	public function allowed_icon_tags( array $tags = array() ):array {
+		$defaults = array(
+			'span' => array(
+				'class' => true,
+				'id'    => true,
+			),
+			'i'    => array(
+				'class' => true,
+				'id'    => true,
+			),
+		);
+		return wp_parse_args( $tags , $defaults );
+	}
+
 }

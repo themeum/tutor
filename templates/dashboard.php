@@ -2,14 +2,13 @@
 /**
  * Template for displaying frontend dashboard
  *
- * @author Themeum
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
- * @since 1.0.0
- * @version 1.4.3
+ * @since 1.4.3
  */
 
-$is_by_short_code = isset( $is_shortcode ) && $is_shortcode === true;
+$is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
 	tutor_utils()->tutor_custom_header();
 }
@@ -72,7 +71,12 @@ do_action( 'tutor_dashboard/before/wrap' );
 		<div class="tutor-row tutor-d-flex tutor-justify-between tutor-frontend-dashboard-header">
 			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar">
-					<?php echo tutor_utils()->get_tutor_avatar( $user_id, 'xl' ); ?>
+					<?php
+					echo wp_kses(
+						tutor_utils()->get_tutor_avatar( $user_id, 'xl' ),
+						tutor_utils()->allowed_avatar_tags()
+					);
+					?>
 				</div>
 
 				<div class="tutor-user-info tutor-ml-24">
@@ -94,7 +98,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 						?>
 						<div class="tutor-dashboard-header-display-name tutor-color-black">
 							<div class="tutor-fs-5 tutor-dashboard-header-greetings">
-								<?php _e( 'Hello', 'tutor' ); ?>,
+								<?php esc_html_e( 'Hello', 'tutor' ); ?>,
 							</div>
 							<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
 								<?php echo esc_html( $user->display_name ); ?>
@@ -119,7 +123,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 					if ( tutor_utils()->get_option( 'enable_become_instructor_btn' ) ) {
 						?>
 						<a id="tutor-become-instructor-button" class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>">
-							<i class="tutor-icon-user-bold"></i> &nbsp; <?php _e( 'Become an instructor', 'tutor' ); ?>
+							<i class="tutor-icon-user-bold"></i> &nbsp; <?php esc_html_e( 'Become an instructor', 'tutor' ); ?>
 						</a>
 						<?php
 					}
@@ -144,15 +148,15 @@ do_action( 'tutor_dashboard/before/wrap' );
 							</a>
 					<?php endif; ?>
 						<?php
-					} elseif ( $instructor_status == 'pending' ) {
+					} elseif ( 'pending' == $instructor_status ) {
 						$on = get_user_meta( $user->ID, '_is_tutor_instructor', true );
 						$on = date( 'd F, Y', $on );
-						echo '<span style="' . $info_message_style . '">
-                                    <i class="dashicons dashicons-info tutor-color-warning" style=" ' . $info_style . '"></i>',
-						__( 'Your Application is pending as of', 'tutor' ), ' <b>', $on, '</b>',
+						echo '<span style="' . esc_attr( $info_message_style ) . '">
+                                    <i class="dashicons dashicons-info tutor-color-warning" style=" ' . esc_attr( $info_style ) . '"></i>',
+						esc_html__( 'Your Application is pending as of', 'tutor' ), ' <b>', esc_html( $on ), '</b>',
 						'</span>';
 					} elseif ( $rejected_on || $instructor_status !== 'blocked' ) {
-						echo $become_button;
+						echo $become_button; //phpcs:ignore --data escaped above
 					}
 					?>
 				</div>
@@ -198,17 +202,34 @@ do_action( 'tutor_dashboard/before/wrap' );
 						if ( $separator ) {
 							echo '<li class="tutor-dashboard-menu-divider"></li>';
 							if ( $menu_title ) {
-								echo "<li class='tutor-dashboard-menu-divider-header'>{$menu_title}</li>";
+								?>
+								<li class='tutor-dashboard-menu-divider-header'>
+									<?php echo esc_html( $menu_title ); ?>
+								</li>
+								<?php
 							}
 						} else {
 							$li_class = "tutor-dashboard-menu-{$dashboard_key}";
-							if ( $dashboard_key === 'index' ) {
+							if ( 'index' === $dashboard_key ) {
 								$dashboard_key = '';
 							}
 							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
 							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
-
-							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-color-black'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-12'>{$menu_title}</span></a></li>";
+							?>
+							<li class='tutor-dashboard-menu-item <?php echo esc_attr( $li_class . ' ' . $active_class ); ?>'>
+								<a <?php echo esc_html( $data_no_instant ); ?> href="<?php echo esc_url( $menu_link ); ?>" class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-color-black'>
+									<?php
+									echo wp_kses(
+										$menu_icon,
+										tutor_utils()->allowed_icon_tags()
+									);
+									?>
+									<span class='tutor-dashboard-menu-item-text tutor-ml-12'>
+										<?php echo esc_html( $menu_title ); ?>
+									</span>
+								</a>
+							</li>
+							<?php
 						}
 					}
 					?>
@@ -225,17 +246,17 @@ do_action( 'tutor_dashboard/before/wrap' );
 						/**
 						 * Load dashboard template part from other location
 						 *
-						 * this filter is basically added for adding templates from respective addons
+						 * This filter is basically added for adding templates from respective addons
 						 *
 						 * @since version 1.9.3
 						 */
 						$other_location      = '';
 						$from_other_location = apply_filters( 'load_dashboard_template_part_from_other_location', $other_location );
 
-						if ( $from_other_location == '' ) {
+						if ( '' == $from_other_location ) {
 							tutor_load_template( 'dashboard.' . $dashboard_page_name );
 						} else {
-							// load template from other location full abspath
+							// Load template from other location full abspath.
 							include_once $from_other_location;
 						}
 
@@ -253,8 +274,8 @@ do_action( 'tutor_dashboard/before/wrap' );
 			<div class="tutor-row">
 				<?php foreach ( $footer_links as $link ) : ?>
 					<a class="tutor-col-4 <?php echo $link['is_active'] ? 'active' : ''; ?>" href="<?php echo esc_url( $link['url'] ); ?>">
-						<i class="<?php echo $link['icon_class']; ?>"></i>
-						<span><?php echo $link['title']; ?></span>
+						<i class="<?php echo esc_attr( $link['icon_class'] ); ?>"></i>
+						<span><?php echo esc_html( $link['title'] ); ?></span>
 					</a>
 				<?php endforeach; ?>
 			</div>
