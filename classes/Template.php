@@ -2,9 +2,10 @@
 /**
  * Template Class
  *
- * @since: v.1.0.0
- *
  * @package Tutor\Template
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 namespace TUTOR;
@@ -15,11 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Handle template before include
+ *
+ * @since 1.0.0
  */
 class Template extends Tutor_Base {
 
 	/**
 	 * Register Hooks
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -52,10 +57,11 @@ class Template extends Tutor_Base {
 		/**
 		 * Dummy template for Spotlight mode design. It will be removed once we adopt the design to core.
 		 */
+		$is_spotlight = Input::get( 'course-spotlight-v2', 0, Input::TYPE_INT );
 		add_action(
 			'wp_loaded',
-			function() {
-				if ( ! is_admin() && isset( $_GET['course-spotlight-v2'] ) && $_GET['course-spotlight-v2'] == 1 ) {
+			function() use ( $is_spotlight ) {
+				if ( ! is_admin() && Input::has( 'course-spotlight-v2' ) && 1 === $is_spotlight ) {
 					tutor_utils()->tutor_custom_header();
 					include tutor()->path . '/views/course-spotlight-v2-static.php';
 					tutor_utils()->tutor_custom_footer();
@@ -66,13 +72,13 @@ class Template extends Tutor_Base {
 	}
 
 	/**
-	 * @param $template
-	 *
-	 * @return bool|string
-	 *
 	 * Load default template for course
 	 *
 	 * @since v.1.0.0
+	 *
+	 * @param sting $template template name.
+	 *
+	 * @return bool|string
 	 */
 	public function load_course_archive_template( $template ) {
 		global $wp_query;
@@ -89,11 +95,15 @@ class Template extends Tutor_Base {
 	}
 
 	/**
-	 * @param $query
-	 *
-	 * limit for course archive listing
+	 * Limit for course archive listing
 	 *
 	 * Make a page to archive listing for courses
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed $query query argument.
+	 *
+	 * @return void
 	 */
 	public function limit_course_query_archive( $query ) {
 		$courses_per_page = (int) tutor_utils()->get_option( 'courses_per_page', 12 );
@@ -126,8 +136,8 @@ class Template extends Tutor_Base {
 				$query->set( 'posts_per_page', $courses_per_page );
 
 				$course_filter = 'newest_first';
-				if ( ! empty( $_GET['tutor_course_filter'] ) ) {
-					$course_filter = sanitize_text_field( $_GET['tutor_course_filter'] );
+				if ( ! empty( Input::get( 'tutor_course_filter', '' ) ) ) {
+					$course_filter = Input::get( 'tutor_course_filter' );
 				}
 				switch ( $course_filter ) {
 					case 'newest_first':
@@ -152,14 +162,13 @@ class Template extends Tutor_Base {
 	}
 
 	/**
-	 * @param $template
-	 *
-	 * @return bool|string
-	 *
 	 * Load Single Course Template
 	 *
 	 * @since v.1.0.0
-	 * @updated v.1.3.5
+	 *
+	 * @param string $template template name to load.
+	 *
+	 * @return bool|string
 	 */
 	public function load_single_course_template( $template ) {
 		global $wp_query;
@@ -173,6 +182,13 @@ class Template extends Tutor_Base {
 		return $template;
 	}
 
+	/**
+	 * Get root post parent id
+	 *
+	 * @param int $id post id.
+	 *
+	 * @return int root post id
+	 */
 	private function get_root_post_parent_id( $id ) {
 		$ancestors = get_post_ancestors( $id );
 		$root      = is_array( $ancestors ) ? end( $ancestors ) : null;
@@ -181,13 +197,13 @@ class Template extends Tutor_Base {
 	}
 
 	/**
-	 * @param $template
-	 *
-	 * @return bool|string
-	 *
 	 * Load lesson template
 	 *
 	 * @since v.1.0.0
+	 *
+	 * @param string $template template name to load.
+	 *
+	 * @return bool|string
 	 */
 	public function load_single_lesson_template( $template ) {
 		global $wp_query;
@@ -212,7 +228,7 @@ class Template extends Tutor_Base {
 
 			// Forcefully show lessons if it is public and not paid.
 			$course_id = $this->get_root_post_parent_id( $page_id );
-			if ( get_post_meta( $course_id, '_tutor_is_public_course', true ) == 'yes' && ! tutor_utils()->is_course_purchasable( $course_id ) ) {
+			if ( 'yes' === get_post_meta( $course_id, '_tutor_is_public_course', true ) && ! tutor_utils()->is_course_purchasable( $course_id ) ) {
 				$template = tutor_get_template( 'single-lesson' );
 			}
 
@@ -222,19 +238,19 @@ class Template extends Tutor_Base {
 	}
 
 	/**
-	 * @param $template
+	 * Play the video in this url.
+	 *
+	 * @param string $template template to load.
 	 *
 	 * @return mixed
-	 *
-	 * Play the video in this url.
 	 */
 	public function play_private_video( $template ) {
 		global $wp_query;
 
-		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['lesson_video'] ) && $wp_query->query_vars['lesson_video'] === 'true' ) {
+		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['lesson_video'] ) && 'true' === $wp_query->query_vars['lesson_video'] ) {
 
-			$isPublicVideo = apply_filters( 'tutor_video_stream_is_public', false, get_the_ID() );
-			if ( $isPublicVideo ) {
+			$is_public_video = apply_filters( 'tutor_video_stream_is_public', false, get_the_ID() );
+			if ( $is_public_video ) {
 				$video_info = tutor_utils()->get_video_info();
 				if ( $video_info ) {
 					$stream = new Video_Stream( $video_info->path );
@@ -250,7 +266,7 @@ class Template extends Tutor_Base {
 					$stream->start();
 				}
 			} else {
-				_e( 'Permission denied', 'tutor' );
+				esc_html_e( 'Permission denied', 'tutor' );
 			}
 			exit();
 		}
@@ -259,31 +275,31 @@ class Template extends Tutor_Base {
 	}
 
 	/**
-	 * @param $content
-	 *
-	 * @return mixed
-	 *
 	 * Tutor Dashboard Page, Responsible to show dashboard stuffs
 	 *
 	 * @since v.1.0.0
+	 *
+	 * @param string $content page content.
+	 *
+	 * @return mixed
 	 */
 	public function convert_static_page_to_template( $content ) {
-		// Dashboard Page
+		// Dashboard Page.
 		$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
-		if ( $student_dashboard_page_id === get_the_ID() ) {
+		if ( get_the_ID() === $student_dashboard_page_id ) {
 			$shortcode = new Shortcode();
 			return $shortcode->tutor_dashboard();
 		}
 
-		// Instructor Registration Page
+		// Instructor Registration Page.
 		$instructor_register_page_page_id = (int) tutor_utils()->get_option( 'instructor_register_page' );
-		if ( $instructor_register_page_page_id === get_the_ID() ) {
+		if ( get_the_ID() === $instructor_register_page_page_id ) {
 			$shortcode = new Shortcode();
 			return $shortcode->instructor_registration_form();
 		}
 
 		$student_register_page_id = (int) tutor_utils()->get_option( 'student_register_page' );
-		if ( $student_register_page_id === get_the_ID() ) {
+		if ( get_the_ID() === $student_register_page_id ) {
 			$shortcode = new Shortcode();
 			return $shortcode->student_registration_form();
 		}
@@ -291,13 +307,22 @@ class Template extends Tutor_Base {
 		return $content;
 	}
 
+	/**
+	 * Tutor dashboard
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $template template name.
+	 *
+	 * @return string
+	 */
 	public function tutor_dashboard( $template ) {
 		global $wp_query;
 		if ( $wp_query->is_page ) {
 			$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
 			$student_dashboard_page_id = apply_filters( 'tutor_dashboard_page_id_filter', $student_dashboard_page_id );
 
-			if ( $student_dashboard_page_id == get_the_ID() ) {
+			if ( get_the_ID() === $student_dashboard_page_id ) {
 				/**
 				 * Handle if logout URL
 				 *
@@ -306,7 +331,7 @@ class Template extends Tutor_Base {
 				if ( tutor_utils()->array_get( 'tutor_dashboard_page', $wp_query->query_vars ) === 'logout' ) {
 					$redirect = apply_filters( 'tutor_dashboard_logout_redirect_url', get_permalink( $student_dashboard_page_id ) );
 					wp_logout();
-					wp_redirect( $redirect );
+					wp_safe_redirect( $redirect );
 					die();
 				}
 
@@ -315,7 +340,7 @@ class Template extends Tutor_Base {
 				$get_dashboard_config  = tutor_utils()->tutor_dashboard_permalinks();
 				$target_dashboard_page = tutor_utils()->array_get( $dashboard_page, $get_dashboard_config );
 
-				if ( isset( $target_dashboard_page['login_require'] ) && $target_dashboard_page['login_require'] === false ) {
+				if ( isset( $target_dashboard_page['login_require'] ) && false === $target_dashboard_page['login_require'] ) {
 					$template = tutor_load_template_part( "template-part.{$dashboard_page}" );
 				} else {
 
@@ -327,13 +352,12 @@ class Template extends Tutor_Base {
 						global $wp;
 						$full_path = explode( '/', trim( str_replace( get_home_url(), '', home_url( $wp->request ) ), '/' ) );
 
-						// $template  = tutor_get_template( end( $full_path ) == 'create-course' ? implode( '/', $full_path ) : 'dashboard' );
-						$template = tutor_get_template( end( $full_path ) == 'create-course' ? 'dashboard.create-course' : 'dashboard' );
+						$template = tutor_get_template( 'create-course' === end( $full_path ) ? 'dashboard.create-course' : 'dashboard' );
 
 						/**
 						 * Check page page permission
 						 *
-						 * @since v.1.3.4
+						 * @since 1.3.4
 						 */
 						$query_var           = tutor_utils()->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
 						$dashboard_pages     = tutor_utils()->tutor_dashboard_pages();
@@ -352,20 +376,22 @@ class Template extends Tutor_Base {
 	}
 
 	/**
-	 * @param $template
+	 * Load quiz template
 	 *
-	 * @return bool|string
-	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
 	 *
 	 * If course public then enrollment not required
 	 *
-	 * @since v2.0.2
+	 * @since 2.0.2
+	 *
+	 * @param string $template template to load.
+	 *
+	 * @return bool|string
 	 */
 	public function load_quiz_template( $template ) {
 		global $wp_query, $post;
 
-		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === 'tutor_quiz' ) {
+		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && 'tutor_quiz' === $wp_query->query_vars['post_type'] ) {
 			if ( is_user_logged_in() ) {
 				$has_content_access = tutor_utils()->has_enrolled_content_access( 'quiz' );
 				$course_id          = tutor_utils()->get_course_id_by_content( $post );
@@ -375,7 +401,7 @@ class Template extends Tutor_Base {
 				if ( $has_content_access || $is_public ) {
 					$template = tutor_get_template( 'single-quiz' );
 				} else {
-					$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first
+					$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first.
 				}
 			} else {
 				$template = tutor_get_template( 'login' );
@@ -385,10 +411,19 @@ class Template extends Tutor_Base {
 		return $template;
 	}
 
+	/**
+	 * Load assignment template
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $template template file to load.
+	 *
+	 * @return string template path
+	 */
 	public function load_assignment_template( $template ) {
 		global $wp_query;
 
-		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === 'tutor_assignments' ) {
+		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && 'tutor_assignments' === $wp_query->query_vars['post_type'] ) {
 			if ( is_user_logged_in() ) {
 				$has_content_access = tutor_utils()->has_enrolled_content_access( 'assignment' );
 				if ( $has_content_access ) {
@@ -406,11 +441,13 @@ class Template extends Tutor_Base {
 	}
 
 	/**
-	 * @param $template
+	 * Student public profile
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $template profile template.
 	 *
 	 * @return bool|string
-	 *
-	 * @since v.1.0.0
 	 */
 	public function student_public_profile( $template ) {
 		global $wp_query;
@@ -423,10 +460,11 @@ class Template extends Tutor_Base {
 	}
 
 	/**
-	 * @return string
 	 * Show student Profile
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return string
 	 */
 	public function student_public_profile_title() {
 		global $wp_query;

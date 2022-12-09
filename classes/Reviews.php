@@ -2,8 +2,10 @@
 /**
  * Tutor Ratings
  *
- * @package Ratings
- * @since v2.0.0
+ * @package Tutor\Reviews
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 namespace TUTOR;
@@ -13,13 +15,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /**
  * Handle ratings related logics
+ *
+ * @since 2.0.0
  */
 class Reviews {
 
 	/**
 	 * Handle actions & dependencies
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		/**
@@ -34,7 +38,7 @@ class Reviews {
 	/**
 	 * Handle ajax request for deleting review
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
 	 */
 	public function delete_review() {
 		tutor_utils()->checking_nonce();
@@ -52,9 +56,11 @@ class Reviews {
 	/**
 	 * Delete review
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param int $id review id required.
+	 *
 	 * @return bool true or false.
-	 * @since v2.0.0
 	 */
 	public static function delete( int $id ): bool {
 		$id = sanitize_text_field( $id );
@@ -69,6 +75,13 @@ class Reviews {
 		return $delete ? true : false;
 	}
 
+	/**
+	 * Load more reviews
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void send wp_json response
+	 */
 	public function tutor_single_course_reviews_load_more() {
 		tutor_utils()->checking_nonce();
 
@@ -79,6 +92,13 @@ class Reviews {
 		wp_send_json_success( array( 'html' => $html ) );
 	}
 
+	/**
+	 * Change review status
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void send wp_json response
+	 */
 	public function tutor_change_review_status() {
 
 		tutor_utils()->checking_nonce();

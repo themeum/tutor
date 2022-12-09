@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.1
 Requires PHP: 7.1
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,14 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.1.4 - December 12, 2022
+
+Fix: Fatal error while saving course when no video source selected
+Fix: Quiz's question description not getting save
+Fix: PMPRO showing lifetime for course validity time regardless of expire time
+Fix: JSON code showing if nonce verification failed while login
+Fix: After submit assignment leading to 404 for multilingual like Arabic
 
 = 2.1.3 - November 30, 2022
 

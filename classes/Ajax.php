@@ -132,7 +132,7 @@ class Ajax {
 	 */
 	public function tutor_place_rating() {
 		tutor_utils()->checking_nonce();
-		
+
 		global $wpdb;
 
 		$moderation = tutor_utils()->get_option( 'enable_course_review_moderation', false, true, true );
@@ -141,7 +141,7 @@ class Ajax {
 		$review     = Input::post( 'review', '', Input::TYPE_TEXTAREA );
 
 		$rating <= 0 ? $rating = 1 : 0;
-		$rating > 5 ? $rating = 5 : 0;
+		$rating > 5 ? $rating  = 5 : 0;
 
 		$user_id = get_current_user_id();
 		$user    = get_userdata( $user_id );
@@ -475,8 +475,21 @@ class Ajax {
 	 * @return void
 	 */
 	public function process_tutor_login() {
-		tutor_utils()->checking_nonce();
+		$validation_error = new \WP_Error();
+
+		/**
+		 * Separate nonce verification added to show nonce verification
+		 * failed message in a proper way.
+		 *
+		 * @since 2.1.4
+		 */
+		if ( ! wp_verify_nonce( $_POST[ tutor()->nonce ], tutor()->nonce_action ) ) {
+			$validation_error->add( 401, __( 'Nonce verification failed', 'tutor' ) );
+			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
+			return;
+		}
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
+
 		/**
 		 * No sanitization/wp_unslash needed for log & pwd since WordPress
 		 * does itself
@@ -497,7 +510,6 @@ class Ajax {
 				'remember'      => $remember,
 			);
 
-			$validation_error = new \WP_Error();
 			$validation_error = apply_filters( 'tutor_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
 
 			if ( $validation_error->get_error_code() ) {
