@@ -434,13 +434,29 @@ document.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * Woocommerce order auto complete
 	 *
-	 * @since v2.0.5
+	 * @since 2.0.5
+	 * 
+	 * Invoice generate options added
+	 *
+	 * @since 2.1.4
 	 */
 	const monetization_field = document.querySelector("[name='tutor_option[monetize_by]']");
 	const order_autocomplete_wrapper = document.getElementById('field_tutor_woocommerce_order_auto_complete');
+
+	const invoice_field = document.querySelector("[name='tutor_option[tutor_woocommerce_invoice]']");
+	const invoice_field_wrapper = document.getElementById('field_tutor_woocommerce_invoice');
+
 	if (monetization_field) {
 		showHideOption(order_autocomplete_wrapper, monetization_field.value, 'wc')
-		monetization_field.onchange = (e) => showHideOption(order_autocomplete_wrapper, e.target.value, 'wc')
+	}
+
+	if (invoice_field) {
+		showHideOption(invoice_field_wrapper, monetization_field.value, 'wc')
+	}
+
+	monetization_field.onchange = (e) => {
+		showHideOption(order_autocomplete_wrapper, e.target.value, 'wc');
+		showHideOption(invoice_field_wrapper, e.target.value, 'wc');
 	}
 
 	/**
