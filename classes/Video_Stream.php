@@ -1,9 +1,11 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: themeum
- * Date: 24/9/18
- * Time: 4:03 PM
+ * Video Stream
+ *
+ * @package Tutor\VideoStream
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 namespace TUTOR;
@@ -16,25 +18,82 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Video_Stream
  *
- * @package TUTOR
- *
- * TUTOR Video Stream Class
- * @since v.1.0.0
+ * @since 1.0.0
  */
-
 class Video_Stream {
 
-	private $path   = '';
+	/**
+	 * Path
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	private $path = '';
+
+	/**
+	 * Stream
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
 	private $stream = '';
+
+	/**
+	 * Buffer time
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
 	private $buffer = 102400;
-	private $start  = -1;
-	private $end    = -1;
-	private $size   = 0;
 
-	private $videoFormats;
+	/**
+	 * Start
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var int
+	 */
+	private $start = -1;
 
-	function __construct( $filePath ) {
-		$this->videoFormats = apply_filters(
+	/**
+	 * End
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var int
+	 */
+	private $end = -1;
+
+	/**
+	 * Size
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var int
+	 */
+	private $size = 0;
+
+	/**
+	 * Video format
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	private $video_format;
+
+	/**
+	 * Resolve dependencies
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $file_path file path.
+	 */
+	public function __construct( $file_path ) {
+		$this->video_format = apply_filters(
 			'tutor_video_types',
 			array(
 				'mp4'  => 'video/mp4',
@@ -42,25 +101,34 @@ class Video_Stream {
 				'ogg'  => 'video/ogg',
 			)
 		);
-		$this->path         = $filePath;
+		$this->path         = $file_path;
 	}
 
 	/**
 	 * Open stream
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	private function open() {
-		if ( ! ( $this->stream = fopen( $this->path, 'rb' ) ) ) {
+		$this->stream = fopen( $this->path, 'rb' );
+		if ( ! ( $this->stream ) ) {
 			die( 'Could not open stream for reading' );
 		}
 	}
 
 	/**
 	 * Set proper header to serve the video content
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
-	private function setHeader() {
+	private function set_header() {
 		ob_get_clean();
 
-		header( 'Content-Type: ' . $this->videoFormats[ strtolower( pathinfo( $this->path, PATHINFO_EXTENSION ) ) ] );
+		header( 'Content-Type: ' . $this->video_format[ strtolower( pathinfo( $this->path, PATHINFO_EXTENSION ) ) ] );
 		header( 'Cache-Control: max-age=2592000, public' );
 		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', tutor_time() + 2592000 ) . ' GMT' );
 		header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', @filemtime( $this->path ) ) . ' GMT' );
@@ -71,9 +139,9 @@ class Video_Stream {
 
 		if ( isset( $_SERVER['HTTP_RANGE'] ) ) {
 			$c_end         = $this->end;
-			list(, $range) = explode( '=', $_SERVER['HTTP_RANGE'], 2 );
+			list(, $range) = explode( '=', sanitize_text_field( wp_unslash( $_SERVER['HTTP_RANGE'] ) ), 2 );
 
-			if ( $range == '-' ) {
+			if ( '-' == $range ) {
 				$c_start = $this->size - substr( $range, 1 );
 			} else {
 				$range   = explode( '-', $range );
@@ -101,7 +169,11 @@ class Video_Stream {
 	}
 
 	/**
-	 * close currently opened stream
+	 * Close currently opened stream
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	private function end() {
 		fclose( $this->stream );
@@ -109,30 +181,37 @@ class Video_Stream {
 	}
 
 	/**
-	 * perform the streaming of calculated range
+	 * Perform the streaming of calculated range
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	private function stream() {
 		$i = $this->start;
 		set_time_limit( 0 );
 		while ( ! feof( $this->stream ) && $i <= $this->end ) {
-			$bytesToRead = $this->buffer;
-			if ( ( $i + $bytesToRead ) > $this->end ) {
-				$bytesToRead = $this->end - $i + 1;
+			$bytes_to_read = $this->buffer;
+			if ( ( $i + $bytes_to_read ) > $this->end ) {
+				$bytes_to_read = $this->end - $i + 1;
 			}
-			// $data = fread($this->stream, $bytesToRead);
-			$data = @stream_get_contents( $this->stream, $bytesToRead, $i );
+			$data = @stream_get_contents( $this->stream, $bytes_to_read, $i );
 			echo $data;
 			flush();
-			$i += $bytesToRead;
+			$i += $bytes_to_read;
 		}
 	}
 
 	/**
 	 * Start streaming tutor video content
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
-	function start() {
+	public function start() {
 		$this->open();
-		$this->setHeader();
+		$this->set_header();
 		$this->stream();
 		$this->end();
 	}

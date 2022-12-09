@@ -2,10 +2,11 @@
 /**
  * Course embed template
  *
- * @author Themeum
+ * @package Tutor\Templates
+ * @subpackage CourseEmbed
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
- * @since v2.1.0
+ * @since 2.1.0
  */
 
 wp_head();
@@ -24,7 +25,7 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 	<div class="tutor-course-thumbnail">
 		<a href="<?php the_permalink(); ?>" class="tutor-d-block">
 			<div class="tutor-ratio tutor-ratio-16x9">
-				<img class="tutor-card-image-top" src="<?php echo empty( esc_url( $tutor_course_img ) ) ? $placeholder_img : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
+				<img class="tutor-card-image-top" src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 			</div>
 		</a>
 	</div>
@@ -40,8 +41,12 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 				</div>
 
 				<?php if ( $course_rating->rating_avg > 0 ) : ?>
-					<div class="tutor-ratings-average"><?php echo apply_filters( 'tutor_course_rating_average', $course_rating->rating_avg ); ?></div>
-					<div class="tutor-ratings-count">(<?php echo $course_rating->rating_count > 0 ? $course_rating->rating_count : 0; ?>)</div>
+					<div class="tutor-ratings-average">
+						<?php echo esc_html( apply_filters( 'tutor_course_rating_average', $course_rating->rating_avg ) ); ?>
+					</div>
+					<div class="tutor-ratings-count">
+						(<?php echo esc_html( $course_rating->rating_count > 0 ? $course_rating->rating_count : 0 ); ?>)
+					</div>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -63,7 +68,12 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 				<?php if ( ! empty( $course_duration ) ) : ?>
 					<div>
 						<span class="tutor-icon-clock-line tutor-meta-icon" area-hidden="true"></span>
-						<span class="tutor-meta-value"><?php echo tutor_utils()->clean_html_content( $course_duration ); ?></span>
+						<span class="tutor-meta-value">
+							<?php
+								//phpcs:ignore --data sanitize through helper method
+								echo tutor_utils()->clean_html_content( $course_duration );
+							?>
+						</span>
 					</div>
 				<?php endif; ?>
 			</div>
@@ -72,13 +82,18 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 		<div class="tutor-meta tutor-mt-auto">
 			<div>
 				<a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-d-flex" target="_parent">
-					<?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?>
+					<?php
+					echo wp_kses(
+						tutor_utils()->get_tutor_avatar( $post->post_author ),
+						tutor_utils()->allowed_avatar_tags()
+					);
+					?>
 				</a>
 			</div>
 
 			<div>
 				<?php esc_html_e( 'By', 'tutor' ); ?>
-				<a href="<?php echo esc_url( $profile_url ); ?>" target="_parent"><?php esc_html_e( get_the_author() ); ?></a>
+				<a href="<?php echo esc_url( $profile_url ); ?>" target="_parent"><?php echo esc_html( get_the_author() ); ?></a>
 
 				<?php if ( ! empty( $course_categories ) && is_array( $course_categories ) && count( $course_categories ) ) : ?>
 					<?php esc_html_e( 'In', 'tutor' ); ?>
@@ -89,7 +104,7 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 						$category_link    = get_term_link( $course_category->term_id );
 						$category_links[] = wp_sprintf( '<a href="%1$s" target="_parent">%2$s</a>', esc_url( $category_link ), esc_html( $category_name ) );
 						endforeach;
-						echo implode( ', ', $category_links );
+						echo implode( ', ', $category_links ); //phpcs:ignore --contain safe data
 					?>
 				<?php endif; ?>
 			</div>

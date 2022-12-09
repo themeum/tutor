@@ -2,11 +2,14 @@
 /**
  * Template for course archive init
  *
- * @author Themeum
+ * @package Tutor\Templates
+ * @subpackage CourseArchive
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
- * @version 1.0.0
+ * @since 1.0.0
  */
+
+use TUTOR\Input;
 
 ! isset( $course_filter ) ? $course_filter         = false : 0;
 ! isset( $supported_filters ) ? $supported_filters = tutor_utils()->get_option( 'supported_course_filters', array() ) : 0;
@@ -16,7 +19,7 @@
 ! isset( $show_pagination ) ? $show_pagination     = true : 0;
 ! isset( $current_page ) ? $current_page           = 1 : 0;
 
-// Hide pagination is there is no page after first one
+// Hide pagination is there is no page after first one.
 $pages_count = 0;
 if ( isset( $the_query ) ) {
 	$pages_count = $the_query->max_num_pages;
@@ -26,7 +29,7 @@ if ( isset( $the_query ) ) {
 }
 	$pages_count < 2 ? $show_pagination = false : 0;
 
-	// Set in global variable to avoid too many stack to pass to other templates
+	// Set in global variable to avoid too many stack to pass to other templates.
 	$GLOBALS['tutor_course_archive_arg'] = compact(
 		'course_filter',
 		'supported_filters',
@@ -36,7 +39,7 @@ if ( isset( $the_query ) ) {
 		'show_pagination'
 	);
 
-	// Render the loop
+	// Render the loop.
 	ob_start();
 	do_action( 'tutor_course/archive/before_loop' );
 
@@ -49,18 +52,20 @@ if ( isset( $the_query ) ) {
 			isset( $the_query ) ? $the_query->the_post() : the_post();
 
 			/**
+			 * Usage Idea, you may keep a loop within a wrap, such as bootstrap col
+			 *
 			 * @hook tutor_course/archive/before_loop_course
 			 * @type action
-			 * Usage Idea, you may keep a loop within a wrap, such as bootstrap col
 			 */
 			do_action( 'tutor_course/archive/before_loop_course' );
 
 			tutor_load_template( 'loop.course' );
 
 			/**
+			 * Usage Idea, If you start any div before course loop, you can end it here, such as </div>
+			 *
 			 * @hook tutor_course/archive/after_loop_course
 			 * @type action
-			 * Usage Idea, If you start any div before course loop, you can end it here, such as </div>
 			 */
 			do_action( 'tutor_course/archive/after_loop_course' );
 		}
@@ -71,20 +76,21 @@ if ( isset( $the_query ) ) {
 		/**
 		 * No course found
 		 */
-		// tutor_load_template('course-none');
 		tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() );
 	}
 
 	do_action( 'tutor_course/archive/after_loop' );
 
 	if ( $show_pagination ) {
-		// Load the pagination now
+
+		// Load the pagination now.
 		global $wp_query;
 
-		$current_url = wp_doing_ajax() ? $_SERVER['HTTP_REFERER'] : tutor()->current_url;
-		$push_link   = add_query_arg( array_merge( $_POST, $GLOBALS['tutor_course_archive_arg'] ), $current_url );
+		$current_url = wp_doing_ajax() ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ?? '' ) ) : tutor()->current_url;
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
+		$push_link = add_query_arg( array_merge( $_POST, $GLOBALS['tutor_course_archive_arg'] ), $current_url );
 
-		$data            = wp_doing_ajax() ? $_POST : $_GET;
+		$data            = wp_doing_ajax() ? Input::sanitize_array( $_POST ) : Input::sanitize_array( $_GET );
 		$pagination_data = array(
 			'total_page' => isset( $the_query ) ? $the_query->max_num_pages : $wp_query->max_num_pages,
 			'per_page'   => $course_per_page,
@@ -107,13 +113,13 @@ if ( isset( $the_query ) ) {
 
 	$course_loop = ob_get_clean();
 
-	if ( isset( $loop_content_only ) && $loop_content_only == true ) {
-		echo $course_loop;
+	if ( isset( $loop_content_only ) && true == $loop_content_only ) {
+		echo $course_loop; //phpcs:ignore --$course_loop contain sanitized data
 		return;
 	}
 
 	$course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
-	$columns            = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
+	$columns            = null === $course_archive_arg ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
 	$has_course_filters = $course_filter && count( $supported_filters );
 
 	$supported_filters_keys = array_keys( $supported_filters );
@@ -123,7 +129,7 @@ if ( isset( $the_query ) ) {
 	<?php if ( $has_course_filters && in_array( 'search', $supported_filters_keys ) ) : ?>
 		<div class="tutor-d-block tutor-d-lg-none tutor-mb-32">
 			<div class="tutor-d-flex tutor-align-center tutor-justify-between">
-				<span class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php _e( 'Courses', 'tutor' ); ?></span>
+				<span class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Courses', 'tutor' ); ?></span>
 				<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-md" tutor-toggle-course-filter><span class="tutor-icon-slider-vertical"></span></a>
 			</div>
 		</div>
@@ -140,13 +146,13 @@ if ( isset( $the_query ) ) {
 			<!-- <?php if ( $columns < 3 ) : ?>
 				<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" area-hidden="true"></div>
 			<?php endif; ?> -->
-			
+
 			<div class="tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?> ">
 				<div>
 					<?php tutor_load_template( 'course-filter.course-archive-filter-bar' ); ?>
 				</div>
 				<div class="tutor-pagination-wrapper-replaceable" tutor-course-list-container>
-					<?php echo $course_loop; ?>
+					<?php echo $course_loop; //phpcs:ignore --$course_loop contain sanitized data ?> 
 				</div>
 			</div>
 		<?php else : ?>
@@ -155,7 +161,7 @@ if ( isset( $the_query ) ) {
 					<?php tutor_load_template( 'course-filter.course-archive-filter-bar' ); ?>
 				</div>
 				<div class="tutor-pagination-wrapper-replaceable" tutor-course-list-container>
-					<?php echo $course_loop; ?>
+					<?php echo $course_loop; //phpcs:ignore --$course_loop contain sanitized data ?>
 				</div>
 			</div>
 		<?php endif; ?>

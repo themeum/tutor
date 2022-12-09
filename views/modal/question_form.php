@@ -142,11 +142,10 @@ $settings = maybe_unserialize( $question->question_settings );
 	<div class="tutor-mb-32">
 		<label class="tutor-form-label"><?php esc_html_e( 'Description', 'tutor' ); ?> <span>(<?php esc_html_e( 'Optional', 'tutor' ); ?>)</span></label>
 		<div class="tutor-mb-16">
-			<textarea name="tutor_quiz_question[
 			<?php
-			echo esc_attr( $question_id );
+				$field_name = "tutor_quiz_question[{$question_id}][question_description]";
 			?>
- ][question_description]" id="tutor_quiz_desc_text_editor" class="tutor-form-control"><?php echo wp_kses_post( wp_unslash( $question->question_description ) ); ?></textarea>
+			<textarea name="<?php echo esc_attr( $field_name ); ?>" id="tutor_quiz_desc_text_editor" class="tutor-form-control"><?php echo wp_kses_post( wp_unslash( $question->question_description ) ); ?></textarea>
 		</div>
 	</div>
 

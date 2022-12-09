@@ -1,11 +1,11 @@
 <?php
-
 /**
- * Class Instructor
+ * Class Student
  *
- * @package TUTOR
- *
- * @since v.1.0.0
+ * @package Tutor\Student
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 namespace TUTOR;
@@ -14,11 +14,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
+/**
+ * Manage students
+ *
+ * @since 1.0.0
+ */
 class Student {
 
 	/**
 	 * Bagged error messages
+	 *
+	 * @since 1.0.0
 	 *
 	 * @var $error_msgs
 	 */
@@ -26,12 +32,13 @@ class Student {
 
 	/**
 	 * Handle Hooks
+	 *
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		add_action( 'template_redirect', array( $this, 'register_student' ) );
 		add_filter( 'get_avatar_url', array( $this, 'filter_avatar' ), 10, 3 );
 		add_action( 'tutor_action_tutor_social_profile', array( $this, 'tutor_social_profile' ) );
-		
 		add_action( 'wp_ajax_tutor_profile_password_reset', array( $this, 'tutor_reset_password' ) );
 		add_action( 'wp_ajax_tutor_update_profile', array( $this, 'update_profile' ) );
 	}
@@ -39,11 +46,13 @@ class Student {
 	/**
 	 * Register new user and mark him as student
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function register_student() {
-		if ( tutor_utils()->array_get( 'tutor_action', $_POST ) !== 'tutor_register_student' || ! get_option( 'users_can_register', false ) ) {
-			// Action must be register, and registrtion must be enabled in dashoard
+		if ( 'tutor_register_student' !== Input::post( 'tutor_action', '' ) || ! get_option( 'users_can_register', false ) ) {
+			// Action must be register, and registration must be enabled in dashboard.
 			return;
 		}
 
@@ -64,10 +73,7 @@ class Student {
 
 		$validation_errors = array();
 
-		/*
-		*registration_errors
-		*push into validation_errors
-		*/
+		// Registration error push into validation_errors.
 		$errors = apply_filters( 'registration_errors', new \WP_Error(), '', '' );
 		foreach ( $errors->errors as $key => $value ) {
 			$validation_errors[ $key ] = $value[0];
@@ -75,7 +81,7 @@ class Student {
 		}
 
 		foreach ( $required_fields as $required_key => $required_value ) {
-			if ( empty( $_POST[ $required_key ] ) ) {
+			if ( empty( Input::post( $required_key, '' ) ) ) {
 				$validation_errors[ $required_key ] = $required_value;
 			}
 		}
@@ -104,7 +110,6 @@ class Student {
 			'user_email' => $email,
 			'first_name' => $first_name,
 			'last_name'  => $last_name,
-			// 'role'          =>  tutor()->student_role,
 			'user_pass'  => $password,
 		);
 
@@ -117,17 +122,18 @@ class Student {
 			}
 
 			do_action( 'tutor_after_student_signup', $user_id );
-			// since 1.9.8 do enroll if guest attempt to enroll
-			if(!empty($_POST['tutor_course_enroll_attempt'])) {
-				do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'], $user_id );
+			// since 1.9.8 do enroll if guest attempt to enroll.
+			$enroll_attempt = Input::post( 'tutor_course_enroll_attempt', '' );
+			if ( ! empty( $enroll_attempt ) ) {
+				do_action( 'tutor_do_enroll_after_login_if_attempt', $enroll_attempt, $user_id );
 			}
-			
-			// Redirect page
-			$redirect_page = tutor_utils()->array_get( 'redirect_to', $_REQUEST );
+
+			// Redirect page.
+			$redirect_page = tutor_utils()->array_get( 'redirect_to', $_REQUEST ); //phpcs:ignore
 			if ( ! $redirect_page ) {
 				$redirect_page = tutor_utils()->tutor_dashboard_url();
 			}
-			wp_redirect(apply_filters('tutor_student_register_redirect_url', $redirect_page, $user));
+			wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', $redirect_page, $user ) );
 			die();
 		} else {
 			$this->error_msgs = $user_id->get_error_messages();
@@ -136,25 +142,39 @@ class Student {
 		}
 
 		$registration_page = tutor_utils()->student_register_url();
-		wp_redirect( $registration_page );
+		wp_safe_redirect( $registration_page );
 		die();
 	}
 
+	/**
+	 * Get validation error messages
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return mixed error messages
+	 */
 	public function tutor_student_form_validation_errors() {
 		return $this->error_msgs;
 	}
 
+	/**
+	 * Update profile
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void send wp_json response
+	 */
 	public function update_profile() {
-		// Checking nonce
+		// Checking nonce.
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
 		do_action( 'tutor_profile_update_before', $user_id );
 
-		$first_name        = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
-		$last_name         = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
-		$phone_number      = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
-		$tutor_profile_bio = wp_kses_post( tutor_utils()->input_old( 'tutor_profile_bio' ) );
+		$first_name              = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
+		$last_name               = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
+		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
+		$tutor_profile_bio       = wp_kses_post( tutor_utils()->input_old( 'tutor_profile_bio' ) );
 		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
 
 		$display_name = sanitize_text_field( tutor_utils()->input_old( 'display_name' ) );
@@ -183,20 +203,20 @@ class Student {
 			}
 		}
 		do_action( 'tutor_profile_update_after', $user_id );
-		
-		wp_send_json_success( array('message' => __('Profile Updated', 'tutor')) );
+
+		wp_send_json_success( array( 'message' => __( 'Profile Updated', 'tutor' ) ) );
 	}
 
 	/**
-	 * Filter Avatar
+	 * Filter Avatar, Change avatar URL with Tutor User Photo
 	 *
-	 * @param $url
-	 * @param $id_or_email id or email
-	 * @param $args extra args
+	 * @since 1.0.0
+	 *
+	 * @param string $url url.
+	 * @param mixed  $id_or_email id or email.
+	 * @param array  $args extra args.
 	 *
 	 * @return false|string
-	 *
-	 * Change avatar URL with Tutor User Photo
 	 */
 	public function filter_avatar( $url, $id_or_email, $args ) {
 		global $wpdb;
@@ -207,13 +227,13 @@ class Student {
 			$finder = absint( $id_or_email );
 		} elseif ( is_string( $id_or_email ) ) {
 			$finder = $id_or_email;
-		} elseif ( $id_or_email instanceof WP_User ) {
-			// User Object
+		} elseif ( $id_or_email instanceof \WP_User ) {
+			// User Object.
 			$finder = $id_or_email->ID;
-		} elseif ( $id_or_email instanceof WP_Post ) {
-			// Post Object
+		} elseif ( $id_or_email instanceof \WP_Post ) {
+			// Post Object.
 			$finder = (int) $id_or_email->post_author;
-		} elseif ( $id_or_email instanceof WP_Comment ) {
+		} elseif ( $id_or_email instanceof \WP_Comment ) {
 			return $url;
 		}
 
@@ -221,12 +241,23 @@ class Student {
 			return $url;
 		}
 
-		$user_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->users} WHERE ID = %s OR user_email = %s ", $finder, $finder ) );
+		$user_id = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT
+					ID 
+				FROM {$wpdb->users}
+				WHERE ID = %s 
+					OR user_email = %s
+				",
+				$finder,
+				$finder
+			)
+		);
 		if ( $user_id ) {
 			$profile_photo = get_user_meta( $user_id, '_tutor_profile_photo', true );
 			if ( $profile_photo ) {
-				$size = isset($args['size']) ? $args['size'] : 'thumbnail';
-				$url = wp_get_attachment_image_url( $profile_photo, $size );
+				$size = isset( $args['size'] ) ? $args['size'] : 'thumbnail';
+				$url  = wp_get_attachment_image_url( $profile_photo, $size );
 			}
 		}
 		return $url;
@@ -234,6 +265,10 @@ class Student {
 
 	/**
 	 * Password Rest
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void send wp_json response
 	 */
 	public function tutor_reset_password() {
 		// Checking nonce.
@@ -241,9 +276,9 @@ class Student {
 
 		$user = wp_get_current_user();
 
-		$previous_password    = sanitize_text_field( $_POST['previous_password'] );
-		$new_password         = sanitize_text_field( $_POST['new_password'] );
-		$confirm_new_password = sanitize_text_field( $_POST['confirm_new_password'] );
+		$previous_password    = Input::post( 'previous_password', '' );
+		$new_password         = Input::post( 'new_password', '' );
+		$confirm_new_password = Input::post( 'confirm_new_password', '' );
 
 		$previous_password_checked = wp_check_password( $previous_password, $user->user_pass, $user->ID );
 
@@ -260,20 +295,22 @@ class Student {
 		if ( $new_password !== $confirm_new_password ) {
 			$validation_errors['password_not_matched'] = __( 'New password and confirm password does not matched', 'tutor' );
 		}
-		
+
 		if ( $previous_password_checked && ! empty( $new_password ) && $new_password === $confirm_new_password ) {
 			wp_set_password( $new_password, $user->ID );
-			wp_send_json_success( array('message' => __('Password Changed', 'tutor')) );
+			wp_send_json_success( array( 'message' => __( 'Password Changed', 'tutor' ) ) );
 		}
 
-		$first_message = count($validation_errors) ? $validation_errors[array_keys($validation_errors)[0]] : __('Something went wrong!', 'tutor');
-		wp_send_json_error( array('message' => $first_message) );
+		$first_message = count( $validation_errors ) ? $validation_errors[ array_keys( $validation_errors )[0] ] : __( 'Something went wrong!', 'tutor' );
+		wp_send_json_error( array( 'message' => $first_message ) );
 	}
 
 	/**
 	 * Handle social links
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
+	 *
+	 * @return void
 	 */
 	public function tutor_social_profile() {
 		tutor_utils()->checking_nonce();
@@ -289,7 +326,7 @@ class Student {
 				delete_user_meta( $user_id, $key );
 			}
 		}
-		wp_redirect( wp_get_raw_referer() );
+		wp_safe_redirect( wp_get_raw_referer() );
 		die();
 	}
 }

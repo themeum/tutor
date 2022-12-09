@@ -1,4 +1,12 @@
 <?php
+/**
+ * Tutor up grader
+ *
+ * @package Tutor\UpGrader
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
 
 namespace TUTOR;
 
@@ -6,13 +14,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Manage up grade
+ *
+ * @since 1.0.0
+ */
 class Upgrader {
 
+	/**
+	 * Register hooks
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		add_action( 'admin_init', array( $this, 'init_upgrader' ) );
-
 		$base_name = tutor()->basename;
-
 		/**
 		 * Installing Gradebook Addon from TutorPro
 		 */
@@ -21,6 +37,13 @@ class Upgrader {
 		add_action( 'upgrader_process_complete', array( $this, 'init_email_table_deployment' ), 10, 2 );
 	}
 
+	/**
+	 * Init up grader
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function init_upgrader() {
 		$upgrades = $this->available_upgrades();
 
@@ -31,6 +54,13 @@ class Upgrader {
 		}
 	}
 
+	/**
+	 * Check availability
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
 	public function available_upgrades() {
 		$version = get_option( 'tutor_version' );
 
@@ -44,6 +74,10 @@ class Upgrader {
 
 	/**
 	 * Upgrade to version 1.3.1
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function upgrade_to_1_3_1() {
 		if ( version_compare( get_option( 'tutor_version' ), '1.3.1', '<' ) ) {
@@ -61,7 +95,9 @@ class Upgrader {
 	/**
 	 * Installing Gradebook if Tutor Pro exists
 	 *
-	 * @since v.1.4.2
+	 * @since v1.4.2
+	 *
+	 * @return void
 	 */
 	public function install_gradebook() {
 		global $wpdb;
@@ -107,20 +143,30 @@ class Upgrader {
 
 	}
 
+	/**
+	 * Email table deployment
+	 *
+	 * @param mixed $upgrader_object up grader obj.
+	 * @param mixed $options options.
+	 *
+	 * @return void
+	 */
 	public function init_email_table_deployment( $upgrader_object, $options ) {
 
-		if ( is_object( $upgrader_object ) && is_array( $upgrader_object->result ) && isset( $upgrader_object->result['destination_name'] ) && $upgrader_object->result['destination_name'] == 'tutor-pro' ) {
-			$addonConfig = tutor_utils()->get_addon_config( 'tutor-pro/addons/tutor-email/tutor-email.php' );
-			$isEnable    = (bool) tutor_utils()->avalue_dot( 'is_enable', $addonConfig );
+		if ( is_object( $upgrader_object ) && is_array( $upgrader_object->result ) && isset( $upgrader_object->result['destination_name'] ) && 'tutor-pro' == $upgrader_object->result['destination_name'] ) {
+			$addon_config = tutor_utils()->get_addon_config( 'tutor-pro/addons/tutor-email/tutor-email.php' );
+			$is_enable    = (bool) tutor_utils()->avalue_dot( 'is_enable', $addon_config );
 
-			$isEnable ? $this->install_tutor_email_queue() : 0;
+			$is_enable ? $this->install_tutor_email_queue() : 0;
 		}
 	}
 
 	/**
 	 * Installing email addon if Tutor Pro exists
 	 *
-	 * @since v.1.8.6
+	 * @since 1.8.6
+	 *
+	 * @return void
 	 */
 	public function install_tutor_email_queue() {
 
