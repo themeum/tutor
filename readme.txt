@@ -227,6 +227,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = 2.1.4 - December 12, 2022
 
+New: WC invoice generate enable/disable settings added
 Fix: Fatal error while saving course when no video source selected
 Fix: Quiz's question description not getting save
 Fix: PMPRO showing lifetime for course validity time regardless of expire time
