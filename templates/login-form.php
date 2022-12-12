@@ -2,9 +2,9 @@
 /**
  * Tutor login form template
  *
- * @author themeum
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
  * @since 2.0.1
  */
 
