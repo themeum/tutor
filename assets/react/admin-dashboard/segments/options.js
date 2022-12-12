@@ -446,19 +446,17 @@ document.addEventListener('DOMContentLoaded', function () {
 	const invoice_field = document.querySelector("[name='tutor_option[tutor_woocommerce_invoice]']");
 	const invoice_field_wrapper = document.getElementById('field_tutor_woocommerce_invoice');
 
-	if (monetization_field) {
-		showHideOption(order_autocomplete_wrapper, monetization_field.value, 'wc')
-	}
-
 	if (invoice_field) {
 		showHideOption(invoice_field_wrapper, monetization_field.value, 'wc')
 	}
 
-	monetization_field.onchange = (e) => {
-		showHideOption(order_autocomplete_wrapper, e.target.value, 'wc');
-		showHideOption(invoice_field_wrapper, e.target.value, 'wc');
+	if (monetization_field) {
+		showHideOption(order_autocomplete_wrapper, monetization_field.value, 'wc');
+		monetization_field.onchange = (e) => {
+			showHideOption(order_autocomplete_wrapper, e.target.value, 'wc');
+			showHideOption(invoice_field_wrapper, e.target.value, 'wc');
+		}
 	}
-
 	/**
 	 * Option (sharing_percentage) toggle on enable_revenue_sharing option change
 	 * @since 2.0.7
