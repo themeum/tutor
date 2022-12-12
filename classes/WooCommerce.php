@@ -780,6 +780,12 @@ class WooCommerce extends Tutor_Base {
 	 *
 	 * @since 2.0.9
 	 *
+	 * Bank transfer & check payments will consider as manual
+	 * payments. Hence, if user pay with bank & check will not
+	 * be auto complete
+	 *
+	 * @since 2.1.4
+	 *
 	 * @param int $order_id  wc order id.
 	 *
 	 * @return boolean  return true if it should auto complete, otherwise false
@@ -795,7 +801,10 @@ class WooCommerce extends Tutor_Base {
 		$should_auto_complete     = tutor_utils()->get_option( 'tutor_woocommerce_order_auto_complete' );
 		$is_enabled_auto_complete = 'wc' === $monetize_by && $should_auto_complete ? true : false;
 
-		if ( ! is_admin() && $is_enabled_auto_complete && 'cod' !== $payment_method ) {
+		$manual_payments = array( 'cod', 'cheque', 'bacs' );
+		$order_status    = method_exists( $order, 'get_status' ) ? $order->get_status() : '';
+
+		if ( ! is_admin() && $is_enabled_auto_complete && 'processing' === $order_status && ! in_array( $payment_method, $manual_payments ) ) {
 			$auto_complete = true;
 		}
 		return $auto_complete;
