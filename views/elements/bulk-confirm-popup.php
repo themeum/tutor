@@ -1,3 +1,16 @@
+
+<?php
+/**
+ * Common bulk confirmation modal
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\ViewElements
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
+
+?>
 <div class="tutor-modal tutor-bulk-modal-disabled" id="tutor-bulk-confirm-popup">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
