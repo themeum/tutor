@@ -2,10 +2,11 @@
 /**
  * Password retrive form
  *
- * @author themeum
+ * @package Tutor\Templates
+ * @subpackage Template_Part
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @since 1.4.3
  */
 
 defined( 'ABSPATH' ) || exit;
