@@ -2346,11 +2346,17 @@ class Utils {
 		}
 
 		$enrolment_status = 'completed';
-
-		if ( $this->is_course_purchasable( $course_id ) ) {
-			/**
-			 * We need to verify this enrollment, we will change the status later after payment confirmation
-			 */
+		$generate_invoice = tutor_utils()->get_option( 'tutor_woocommerce_invoice' );
+		/**
+		 * If course is purchase-able & generate order option enabled
+		 * then keep enrollment status pending.
+		 *
+		 * Admin need to follow generate order instruction to
+		 * complete enrollment
+		 *
+		 * @since 2.1.4
+		 */
+		if ( $this->is_course_purchasable( $course_id ) && $generate_invoice ) {
 			$enrolment_status = 'pending';
 		}
 
