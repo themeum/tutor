@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="tutor-option-field-row">
 	<div class="tutor-option-field-label">
-		<label for=""><?php esc_attr_e( 'Instructor List Layout', 'tutor' ); ?></label>
+		<label for=""><?php esc_html_e( 'Instructor List Layout', 'tutor' ); ?></label>
 	</div>
 	<div class="tutor-option-field">
 		<div class="instructor-layout-templates-fields">
