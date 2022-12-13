@@ -2,14 +2,13 @@
 /**
  * Template for displaying single course
  *
- * @author Themeum
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
  * @since 1.0.0
- * @version 1.4.3
  */
 
-// Prepare the nav items
+// Prepare the nav items.
 $course_id       = get_the_ID();
 $course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), $course_id );
 $is_public       = \TUTOR\Course_List::is_public( $course_id );
@@ -53,7 +52,7 @@ if ( ! is_user_logged_in() && ! $is_public && $student_must_login_to_view_course
 					<?php endif; ?>
 					<div class="tutor-tab tutor-pt-24">
 						<?php foreach ( $course_nav_item as $key => $subpage ) : ?>
-							<div id="tutor-course-details-tab-<?php echo $key; ?>" class="tutor-tab-item<?php echo $key == 'info' ? ' is-active' : ''; ?>">
+							<div id="tutor-course-details-tab-<?php echo esc_attr( $key ); ?>" class="tutor-tab-item<?php echo 'info' == $key ? ' is-active' : ''; ?>">
 								<?php
 									do_action( 'tutor_course/single/tab/' . $key . '/before' );
 
