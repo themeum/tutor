@@ -1,4 +1,15 @@
 <?php
+/**
+ * Filter views
+ *
+ * A common filter element for all the backend pages
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\ViewElements
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
 
 use TUTOR\Input;
 
@@ -117,7 +128,7 @@ if ( isset( $data ) ) : ?>
 						</div>
 					<?php endif; ?>
 
-					<?php if ( ! isset( $data['sort_by'] ) || $data['sort_by'] == true ) : ?>
+					<?php if ( ! isset( $data['sort_by'] ) || true == $data['sort_by'] ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Sort By', 'tutor' ); ?>
