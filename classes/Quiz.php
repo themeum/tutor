@@ -1164,7 +1164,6 @@ class Quiz {
 		$answers   = $answers ? $answers : tutor_utils()->sanitize_array( wp_unslash( $_POST['quiz_answer'] ) ); //phpcs:ignore
 
 		foreach ( $answers as $question_id => $answer ) {
-			tutor_log('abc: ' . $answer['true_false'] );
 			if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
 				continue;
 			}
