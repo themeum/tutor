@@ -1164,6 +1164,7 @@ class Quiz {
 		$answers   = $answers ? $answers : tutor_utils()->sanitize_array( wp_unslash( $_POST['quiz_answer'] ) ); //phpcs:ignore
 
 		foreach ( $answers as $question_id => $answer ) {
+			tutor_log('abc: ' . $answer['true_false'] );
 			if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
 				continue;
 			}
@@ -1208,7 +1209,7 @@ class Quiz {
 							'belongs_question_id'   => esc_sql( $question_id ),
 							'belongs_question_type' => $question_type,
 							'answer_title'          => __( 'False', 'tutor' ),
-							'is_correct'            => 'false' === $answer['true_false'] ? 0 : 1,
+							'is_correct'            => 'false' === $answer['true_false'] ? 1 : 0,
 							'answer_two_gap_match'  => 'false',
 						),
 					);
