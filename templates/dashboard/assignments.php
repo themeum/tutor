@@ -1,15 +1,12 @@
 <?php
-
 /**
  * Template for displaying Assignments
  *
- * @since v.1.3.4
- *
- * @author Themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Dashboard
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.3.4
  */
 
 if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
@@ -19,15 +16,15 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 use TUTOR\Input;
 use TUTOR_ASSIGNMENTS\Assignments_List;
 
-$per_page     = tutor_utils()->get_option( 'pagination_per_page', 10 );
-$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data( $_GET ) ) );
+$per_page     = tutor_utils()->get_option( 'pagination_per_page', 10 ); //phpcs:ignore
+$current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
 $course_id    = Input::get( 'course-id', 0, Input::TYPE_INT );
 $order_filter = Input::get( 'order', 'DESC' );
 $date_filter  = Input::get( 'date', '' );
 
-$current_user = get_current_user_id();
+$current_user = get_current_user_id(); //phpcs:ignore
 $assignments  = tutor_utils()->get_assignments_by_instructor( null, compact( 'course_id', 'order_filter', 'date_filter', 'per_page', 'offset' ) );
 $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
 
@@ -46,7 +43,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 				<?php if ( $courses ) : ?>
 					<?php foreach ( $courses as $course ) : ?>
 						<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
-							<?php echo $course->post_title; ?>
+							<?php echo esc_html( $course->post_title ); ?>
 						</option>
 					<?php endforeach; ?>
 				<?php else : ?>
@@ -98,19 +95,19 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 						?>
 						<tr>
 							<td>
-							<?php esc_html_e( $item->post_title ); ?>
+							<?php echo esc_html( $item->post_title ); ?>
 								<div class="tutor-fs-7 tutor-mt-8">
 									<span class="tutor-fw-medium"><?php esc_html_e( 'Course', 'tutor' ); ?>: </span>
-									<a target="_blank" href='<?php echo esc_url( get_the_permalink( $course_id ) ); ?>'><?php echo esc_html_e( get_the_title( $course_id ) ); ?> </a>
+									<a target="_blank" href='<?php echo esc_url( get_the_permalink( $course_id ) ); ?>'><?php echo esc_html( get_the_title( $course_id ) ); ?> </a>
 								</div>
 							</td>
 
 							<td>
-							<?php echo esc_html_e( $max_mark ); ?>
+							<?php echo esc_html( $max_mark ); ?>
 							</td>
 							
 							<td>
-							<?php echo esc_html_e( $comment_count ); ?>
+							<?php echo esc_html( $comment_count ); ?>
 							</td>
 
 							<td class="tutor-text-right">
