@@ -1208,7 +1208,7 @@ class Quiz {
 							'belongs_question_id'   => esc_sql( $question_id ),
 							'belongs_question_type' => $question_type,
 							'answer_title'          => __( 'False', 'tutor' ),
-							'is_correct'            => 'false' === $answer['true_false'] ? 0 : 1,
+							'is_correct'            => 'false' === $answer['true_false'] ? 1 : 0,
 							'answer_two_gap_match'  => 'false',
 						),
 					);
