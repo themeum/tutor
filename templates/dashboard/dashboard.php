@@ -1,8 +1,12 @@
 <?php
-
 /**
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * Frontend Dashboard Template
+ *
+ * @package Tutor\Templates
+ * @subpackage Dashboard
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 use Tutor\Models\CourseModel;
@@ -10,7 +14,7 @@ use Tutor\Models\WithdrawModel;
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
-	$is_instructor      = tutor_utils()->is_instructor(null, true);
+	$is_instructor      = tutor_utils()->is_instructor( null, true );
 	$total_count        = count( $profile_completion );
 	$incomplete_count   = count(
 		array_filter(
@@ -23,7 +27,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$complete_count     = $total_count - $incomplete_count;
 
 	if ( $is_instructor ) {
-		if ( isset($total_count) && isset($incomplete_count) && $incomplete_count <= $total_count ) {
+		if ( isset( $total_count ) && isset( $incomplete_count ) && $incomplete_count <= $total_count ) {
 			?>
 			<div class="tutor-profile-completion tutor-card tutor-px-32 tutor-py-24 tutor-mb-40">
 				<div class="tutor-row tutor-gx-0">
@@ -52,17 +56,17 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 						<div class="tutor-fs-6 tutor-mt-20">
 							<?php
-								$profile_complete_text = __("Please complete profile", "tutor");
-								if($complete_count > ( $total_count / 2 ) && $complete_count < $total_count) {
-									$profile_complete_text = __("You are almost done", "tutor");
-								} else if($complete_count === $total_count) {
-									$profile_complete_text = __("Thanks for completing your profile", "tutor");
-								}
+								$profile_complete_text = __( 'Please complete profile', 'tutor' );
+							if ( $complete_count > ( $total_count / 2 ) && $complete_count < $total_count ) {
+								$profile_complete_text = __( 'You are almost done', 'tutor' );
+							} elseif ( $complete_count === $total_count ) {
+								$profile_complete_text = __( 'Thanks for completing your profile', 'tutor' );
+							}
 								$profile_complete_status = $profile_complete_text;
 							?>
 
-							<span class="tutor-color-muted"><?php echo $profile_complete_status ?>:</span>
-							<span><?php echo $complete_count . '/' . $total_count; ?></span>
+							<span class="tutor-color-muted"><?php echo esc_html( $profile_complete_status ); ?>:</span>
+							<span><?php echo esc_html( $complete_count . '/' . $total_count ); ?></span>
 						</div>
 					</div>
 
@@ -75,9 +79,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<?php
 						$i = 0;
 						foreach ( $profile_completion as $key => $data ) {
-							$is_set = $data['is_set']; // Whether the step is done or not
+							$is_set = $data['is_set']; // Whether the step is done or not.
 							?>
-								<div class="tutor-d-flex tutor-align-center<?php echo $i < (count($profile_completion) - 1) ? ' tutor-mb-8' : ''; ?>">
+								<div class="tutor-d-flex tutor-align-center<?php echo $i < ( count( $profile_completion ) - 1 ) ? ' tutor-mb-8' : ''; ?>">
 									<?php if ( $is_set ) : ?>
 										<span class="tutor-icon-circle-mark-line tutor-color-success tutor-mr-8"></span>
 									<?php else : ?>
@@ -110,33 +114,33 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						</span>
 					</div>
 					<div class="alert-btn-group">
-						<a href="%s" class="tutor-btn tutor-btn-sm">'.__('Click Here', 'tutor').'</a>
+						<a href="%s" class="tutor-btn tutor-btn-sm">' . __( 'Click Here', 'tutor' ) . '</a>
 					</div>
 				</div>',
 				$profile_completion['_tutor_profile_photo']['text'],
 				tutor_utils()->tutor_dashboard_url( 'settings' )
 			);
 
-			echo $alert_message;
+			echo $alert_message; //phpcs:ignore
 		}
 	}
 }
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24 tutor-dashboard-title"><?php _e( 'Dashboard', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24 tutor-dashboard-title"><?php esc_html_e( 'Dashboard', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner">
 	<?php
-	$user_id		   = get_current_user_id();
+	$user_id           = get_current_user_id();
 	$enrolled_course   = tutor_utils()->get_enrolled_courses_by_user();
 	$completed_courses = tutor_utils()->get_completed_courses_ids_by_user();
 	$total_students    = tutor_utils()->get_total_students_by_instructor( $user_id );
 	$my_courses        = tutor_utils()->get_courses_by_instructor( $user_id, CourseModel::STATUS_PUBLISH );
 	$earning_sum       = WithdrawModel::get_withdraw_summary( $user_id );
-	$active_courses	   = tutor_utils()->get_active_courses_by_user( $user_id );
+	$active_courses    = tutor_utils()->get_active_courses_by_user( $user_id );
 
-	$enrolled_course_count		= $enrolled_course ? $enrolled_course->post_count : 0;
-	$completed_course_count		= count( $completed_courses );
-	$active_course_count		= is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
+	$enrolled_course_count  = $enrolled_course ? $enrolled_course->post_count : 0;
+	$completed_course_count = count( $completed_courses );
+	$active_course_count    = is_object( $active_courses ) && $active_courses->have_posts() ? $active_courses->post_count : 0;
 
 	$status_translations = array(
 		'publish' => __( 'Published', 'tutor' ),
@@ -220,9 +224,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
 							<i class="tutor-icon-coins" area-hidden="true"></i>
 						</span>
-						<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo tutor_utils()->tutor_price( $earning_sum->total_income ); ?></div>
+						<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo wp_kses_post( tutor_utils()->tutor_price( $earning_sum->total_income ) ); ?></div>
 						<div class="tutor-fs-7 tutor-color-secondary"><?php esc_html_e( 'Total Earnings', 'tutor' ); ?></div>
-						<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo tutor_utils()->tutor_price( $earning_sum->total_income ); ?></div>
+						<div class="tutor-fs-4 tutor-fw-bold tutor-d-block tutor-d-lg-none tutor-ml-auto"><?php echo esc_html( tutor_utils()->tutor_price( $earning_sum->total_income ) ); ?></div>
 					</div>
 				</div>
 			</div>
@@ -245,25 +249,25 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24">
 			<?php esc_html_e( 'In Progress Courses', 'tutor' ); ?>
 		</div>
-		<?php 
-			while ( $courses_in_progress->have_posts() ) :
-				$courses_in_progress->the_post();
-				$tutor_course_img = get_tutor_course_thumbnail_src();
-				$course_rating    = tutor_utils()->get_course_rating( get_the_ID() );
-				$course_progress  = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
-				$completed_number = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
+		<?php
+		while ( $courses_in_progress->have_posts() ) :
+			$courses_in_progress->the_post();
+			$tutor_course_img = get_tutor_course_thumbnail_src();
+			$course_rating    = tutor_utils()->get_course_rating( get_the_ID() );
+			$course_progress  = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
+			$completed_number = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
 			?>
 			<div class="tutor-course-progress-item tutor-card tutor-mb-20">
 				<div class="tutor-row tutor-gx-0">
 					<div class="tutor-col-lg-4">
 						<div class="tutor-ratio tutor-ratio-3x2">
-							<img class="tutor-card-image-left" src="<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>" alt="<?php the_title(); ?>" loading="lazy">
+							<img class="tutor-card-image-left" src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 						</div>
 					</div>
 
 					<div class="tutor-col-lg-8 tutor-align-self-center">
 						<div class="tutor-card-body">
-							<?php if ( $course_rating ) : ?>
+						<?php if ( $course_rating ) : ?>
 								<div class="tutor-ratings tutor-mb-4">
 									<?php tutor_utils()->star_rating_generator( $course_rating->rating_avg ); ?>
 									<div class="tutor-ratings-count">
@@ -273,20 +277,20 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 							<?php endif; ?>
 
 							<div class="tutor-course-progress-item-title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
-								<?php the_title(); ?>
+							<?php the_title(); ?>
 							</div>
 
 							<div class="tutor-d-flex tutor-fs-7 tutor-mb-32">
 								<span class="tutor-color-muted tutor-mr-4"><?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?></span>
 								<span class="tutor-fw-medium tutor-color-black">
 									<span>
-										<?php echo esc_html( $course_progress['completed_count'] ); ?>
+									<?php echo esc_html( $course_progress['completed_count'] ); ?>
 									</span>
-									<?php esc_html_e( 'of', 'tutor' ); ?>
+								<?php esc_html_e( 'of', 'tutor' ); ?>
 									<span>
-										<?php echo esc_html( $course_progress['total_count'] ); ?>
+									<?php echo esc_html( $course_progress['total_count'] ); ?>
 									</span>
-									<?php echo esc_html( _n( 'lesson', 'lessons', $completed_number, 'tutor' ) ); ?>
+								<?php echo esc_html( _n( 'lesson', 'lessons', $completed_number, 'tutor' ) ); ?>
 								</span>
 							</div>
 
@@ -298,7 +302,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 								<div class="tutor-col-auto">
 									<span class="progress-percentage tutor-fs-7 tutor-color-muted">
 										<span class="tutor-fw-medium tutor-color-black ">
-											<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
+										<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
 										</span><?php esc_html_e( 'Complete', 'tutor' ); ?>
 									</span>
 								</div>
@@ -353,18 +357,18 @@ if ( count( $instructor_course ) ) {
 							<?php
 							foreach ( $instructor_course as $course ) :
 								$enrolled      = tutor_utils()->count_enrolled_users_by_course( $course->ID );
-								$course_status = isset( $status_translations[ $course->post_status ] ) ? $status_translations[ $course->post_status ] : __( $course->post_status, 'tutor' );
+								$course_status = isset( $status_translations[ $course->post_status ] ) ? $status_translations[ $course->post_status ] : __( $course->post_status, 'tutor' ); //phpcs:ignore
 								$course_rating = tutor_utils()->get_course_rating( $course->ID );
 								$course_badge  = isset( $course_badges[ $course->post_status ] ) ? $course_badges[ $course->post_status ] : 'dark';
-							?>
+								?>
 								<tr>
 									<td>
 										<a href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>" target="_blank">
-											<?php esc_html_e( $course->post_title ); ?>
+											<?php echo esc_html( $course->post_title ); ?>
 										</a>
 									</td>
 									<td>
-										<?php esc_html_e( $enrolled ); ?>
+										<?php echo esc_html( $enrolled ); ?>
 									</td>
 									<td>
 										<?php tutor_utils()->star_rating_generator_v2( $course_rating->rating_avg, null, true ); ?>
