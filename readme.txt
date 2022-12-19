@@ -225,14 +225,16 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.4 - December 12, 2022
+= 2.1.4 - December 19, 2022
 
-New: WC invoice generate enable/disable settings added
-Fix: Fatal error while saving course when no video source selected
-Fix: Quiz's question description not getting save
-Fix: PMPRO showing lifetime for course validity time regardless of expire time
-Fix: JSON code showing if nonce verification failed while login
-Fix: After submit assignment leading to 404 for multilingual like Arabic
+New: Admin will be able to set whether WooCommerce Order will be generated on manual enrolment or not
+Update: More security improvements across the entire plugin is introduced
+Fix: WooCommerce Order was being Completed in case of Bank or Check payment
+Fix: A PHP error was appearing while no Video Source was selected
+Fix: Question Description of the quizzes was not being saved
+Fix: Course Validity Time was not appearing properly in some cases for PmPro
+Fix: JSON Code was appearing if nonce verification failed while the Login
+Fix: After assignment submission, a 404 page was appearing in the case of Multilingual site
 
 = 2.1.3 - November 30, 2022
 
