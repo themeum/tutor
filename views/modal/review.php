@@ -2,11 +2,11 @@
 /**
  * Review Form: To be loaded after course completion button click
  *
- * @since 1.0.0
- * @author themeum
+ * @package Tutor\Views
+ * @subpackage Tutor\Modal
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- *
- * @package TutorLMS/Templates
+ * @since 1.0.0
  */
 
 ?>
