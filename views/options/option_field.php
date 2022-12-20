@@ -2,8 +2,11 @@
 /**
  * Filed input row.
  *
- * @package Tutor LMS
- * @since 2.0
+ * @package Tutor\Views
+ * @subpackage Tutor\Options
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 ?>
@@ -13,6 +16,6 @@
 		<p class="desc"><?php echo isset( $field['desc'] ) ? esc_attr( $field['desc'] ) : ''; ?></p>
 	</div>
 	<div class="tutor-option-field-input">
-		<?php echo $this->field_type( $field ); ?>
+		<?php echo $this->field_type( $field ); //phpcs:ignore -- contain safe data ?>
 	</div>
 </div>
