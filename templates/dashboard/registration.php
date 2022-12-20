@@ -2,8 +2,11 @@
 /**
  * Tutor registration template
  *
+ * @package Tutor\Templates
+ * @subpackage Dashboard
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 1.4.3
- * @package TutorLMS/Templates
  */
 
 ?>
@@ -55,7 +58,7 @@
 						<?php esc_html_e( 'First Name', 'tutor' ); ?>
 					</label>
 
-					<input type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'first_name' ) ); ?>" placeholder="<?php _e( 'First Name', 'tutor' ); ?>" required autocomplete="given-name">
+					<input type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'first_name' ) ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>" required autocomplete="given-name">
 				</div>
 			</div>
 
@@ -65,7 +68,7 @@
 						<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 					</label>
 
-					<input type="text" name="last_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'last_name' ) ); ?>" placeholder="<?php _e( 'Last Name', 'tutor' ); ?>" required autocomplete="family-name">
+					<input type="text" name="last_name" value="<?php echo esc_attr( tutor_utils()->input_old( 'last_name' ) ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>" required autocomplete="family-name">
 				</div>
 			</div>
 
