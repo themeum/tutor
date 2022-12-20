@@ -2,11 +2,11 @@
 /**
  * Topic Form
  *
- * @since 1.0.0
- * @author themeum
+ * @package Tutor\Views
+ * @subpackage Tutor\Modal
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- *
- * @package TutorLMS/Templates
+ * @since 1.0.0
  */
 
 ?>
