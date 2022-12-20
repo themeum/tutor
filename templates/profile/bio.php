@@ -1,9 +1,12 @@
 <?php
 /**
- * Bio Template
+ * Profile Bio Template
  *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Profile
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 $user_name = sanitize_text_field( get_query_var( 'tutor_profile_username' ) );
@@ -14,8 +17,8 @@ $user_id   = $get_user->ID;
 $profile_bio = get_user_meta( $user_id, '_tutor_profile_bio', true );
 if ( $profile_bio ) {
 	?>
-	<?php echo wpautop( $profile_bio ); ?>
+	<?php echo wpautop( $profile_bio );//phpcs:ignore ?>
 	<?php
 } else {
-	_e( 'Bio data is empty', 'tutor' );
+	esc_html_e( 'Bio data is empty', 'tutor' );
 }
