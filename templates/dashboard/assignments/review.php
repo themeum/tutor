@@ -2,13 +2,11 @@
 /**
  * Template for displaying Assignments Review Form
  *
- * @since v.1.3.4
- *
- * @author Themeum
+ * @package Tutor\Templates
+ * @subpackage Dashboard\Assignments
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @version 1.3.4
  */
 
 use TUTOR\Input;
@@ -84,7 +82,7 @@ if ( ! $submitted_assignment ) {
 		</h5>
 		<div class="tutor-mb-16">
 			<p class="tutor-fs-6 tutor-color-secondary tutor-mb-4">
-				<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
+				<?php echo wp_kses_post( nl2br( stripslashes( $submitted_assignment->comment_content ) ) ); ?>
 			</p>
 		</div>
 		<?php
@@ -92,7 +90,7 @@ if ( ! $submitted_assignment ) {
 		if ( $attached_files && is_array( json_decode( $attached_files ) ) ) :
 			?>
 			<div class="tutor-fs-5 tutor-fw-medium tutor-mb-20">
-				<?php _e( 'Attach assignment file(s)', 'tutor' ); ?>
+				<?php esc_html_e( 'Attach assignment file(s)', 'tutor' ); ?>
 			</div>
 			<div class="tutor-attachment-cards">
 				<div class="tutor-row">
@@ -131,7 +129,7 @@ if ( ! $submitted_assignment ) {
 
 	<div class="tutor-dashboard-assignment-review-area tutor-mt-32">
 		<h3><?php esc_html_e( 'Evaluation', 'tutor' ); ?></h3>
-		<form action="" method="post" class="tutor-row tutor-form-submit-through-ajax" data-toast_success_message="<?php _e( 'Assignment evaluated', 'tutor' ); ?>">
+		<form action="" method="post" class="tutor-row tutor-form-submit-through-ajax" data-toast_success_message="<?php esc_attr_e( 'Assignment evaluated', 'tutor' ); ?>">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 			<input type="hidden" value="tutor_evaluate_assignment_submission" name="tutor_action"/>
 			<input type="hidden" value="<?php echo esc_html( $assignment_submitted_id ); ?>" name="assignment_submitted_id"/>
@@ -140,15 +138,15 @@ if ( ! $submitted_assignment ) {
 				<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
 			</div>
 			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9 tutor-mb-32">
-				<input type="number"  class="tutor-form-control" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0" max="<?php echo esc_attr( $max_mark ); ?>" title="<?php esc_attr_e( 'Evaluate mark can not be greater than total mark', 'tutor' ); ?>">
-				<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), "<code>{$max_mark}</code>" ); ?></p>
+				<input type="number"  class="tutor-form-control" name="evaluate_assignment[assignment_mark]" value="<?php echo esc_attr( $given_mark ? $given_mark : 0 ); ?>" min="0" max="<?php echo esc_attr( $max_mark ); ?>" title="<?php esc_attr_e( 'Evaluate mark can not be greater than total mark', 'tutor' ); ?>">
+				<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), "<code>{$max_mark}</code>" );//phpcs:ignore ?></p>
 			</div>
 
 			<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3">
 				<label for=""><?php esc_html_e( 'Feedback', 'tutor' ); ?></label>
 			</div>
 			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9 tutor-mb-20">
-				<textarea class="tutor-form-control" name="evaluate_assignment[instructor_note]"><?php esc_html_e( $instructor_note ); ?></textarea>
+				<textarea class="tutor-form-control" name="evaluate_assignment[instructor_note]"><?php echo esc_html( $instructor_note ); ?></textarea>
 			</div>
 
 			<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3"></div>
