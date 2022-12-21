@@ -2,13 +2,17 @@
 /**
  * Select inside group for tutor settings.
  *
- * @package Tutor LMS
- * @since 2.0
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
+
 ?>
 <select class="tutor-form-select" name="<?php echo esc_attr( $input_name ); ?>">
 	<?php
-	if ( ! isset( $group_field['select_options'] ) || $group_field['select_options'] !== false ) {
+	if ( ! isset( $group_field['select_options'] ) || false !== $group_field['select_options'] ) {
 		echo '<option value="-1">' . esc_attr( 'Select Option' ) . '</option>';
 	}
 	if ( ! empty( $group_field['options'] ) ) {
