@@ -1,6 +1,6 @@
 <?php
 /**
- * Color picker template for settings.
+ * Google class room settings section
  *
  * @package Tutor\Views
  * @subpackage Tutor\Settings
