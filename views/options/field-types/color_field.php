@@ -2,9 +2,13 @@
 /**
  * Color field for settings.
  *
- * @package Tutor LMS
- * @since 2.0
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
+
 $field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
 $field_id  = esc_attr( 'field_' . $field_key );
 $value     = $this->get( $field['key'], $field['default'] );

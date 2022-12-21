@@ -2,8 +2,11 @@
 /**
  * Full horizontal checkbox for tutor settings.
  *
- * @package Tutor LMS
- * @since 2.0
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 if ( ! empty( $field['options'] ) ) {
