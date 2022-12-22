@@ -4,7 +4,10 @@
  *
  * Configure query with get params
  *
- * @package Announcement List
+ * @package Tutor\Views
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
