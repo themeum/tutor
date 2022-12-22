@@ -1,7 +1,12 @@
 <?php
 /**
- * @package TutorLMS/Templates
- * @version 1.6.2
+ * Profile
+ *
+ * @package Tutor\Templates
+ * @subpackage Dashboard\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.6.2
  */
 
 $user = wp_get_current_user();
@@ -15,7 +20,7 @@ if ( $profile_photo_id ) {
 	! empty( $url ) ? $profile_photo_src = $url : 0;
 }
 
-// Prepare cover photo
+// Prepare cover photo.
 $cover_placeholder = tutor()->url . 'assets/images/cover-photo.jpg';
 $cover_photo_src   = $cover_placeholder;
 $cover_photo_id    = get_user_meta( $user->ID, '_tutor_cover_photo', true );
@@ -24,7 +29,7 @@ if ( $cover_photo_id ) {
 	! empty( $url ) ? $cover_photo_src = $url : 0;
 }
 
-// Prepare display name
+// Prepare display name.
 $public_display                     = array();
 $public_display['display_nickname'] = $user->nickname;
 $public_display['display_username'] = $user->user_login;
@@ -42,14 +47,13 @@ if ( ! empty( $user->first_name ) && ! empty( $user->last_name ) ) {
 	$public_display['display_lastfirst'] = $user->last_name . ' ' . $user->first_name;
 }
 
-if ( ! in_array( $user->display_name, $public_display ) ) { // Only add this if it isn't duplicated elsewhere
+if ( ! in_array( $user->display_name, $public_display ) ) { // Only add this if it isn't duplicated elsewhere.
 	$public_display = array( 'display_displayname' => $user->display_name ) + $public_display;
 }
 
 $public_display = array_map( 'trim', $public_display );
 $public_display = array_unique( $public_display );
-$max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
-// $max_filesize = 1009;
+$max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 );
 ?>
 
 <div class="tutor-dashboard-setting-profile tutor-dashboard-content-inner">
@@ -59,8 +63,8 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 	<div id="tutor_profile_cover_photo_editor">
 
 		<input id="tutor_photo_dialogue_box" type="file" accept=".png,.jpg,.jpeg"/>
-		<input type="hidden" class="upload_max_filesize" value="<?php echo $max_filesize; ?>">
-		<div id="tutor_cover_area" data-fallback="<?php esc_attr_e( $cover_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $cover_photo_src ); ?>)">
+		<input type="hidden" class="upload_max_filesize" value="<?php echo esc_attr( $max_filesize ); ?>">
+		<div id="tutor_cover_area" data-fallback="<?php echo esc_attr( $cover_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $cover_photo_src ); ?>)">
 			<span class="tutor_cover_deleter">
 				<span class="dashboard-profile-delete tutor-icon-trash-can-bold"></span>
 			</span>
@@ -77,7 +81,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			<span>&nbsp;&nbsp;&nbsp;&nbsp;<?php esc_html_e( 'Cover Photo Size', 'tutor' ); ?>: <span><?php esc_html_e( '700x430', 'tutor' ); ?></span> <?php esc_html_e( 'pixels', 'tutor' ); ?> </span>
 			<span class="loader-area"><?php esc_html_e( 'Saving...', 'tutor' ); ?></span>
 		</div>
-		<div id="tutor_profile_area" data-fallback="<?php esc_attr_e( $profile_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $profile_photo_src ); ?>)">
+		<div id="tutor_profile_area" data-fallback="<?php echo esc_attr( $profile_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $profile_photo_src ); ?>)">
 			<div class="tutor_overlay">
 				<i class="tutor-icon-camera"></i>
 			</div>
@@ -104,7 +108,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		if ( is_array( $errors ) && count( $errors ) ) {
 			echo '<div class="tutor-alert-warning tutor-mb-12"><ul class="tutor-required-fields">';
 			foreach ( $errors as $error_key => $error_value ) {
-				echo "<li>{$error_value}</li>";
+				echo '<li>' . esc_html( $error_value ) . '</li>';
 			}
 			echo '</ul></div>';
 		}
@@ -117,14 +121,14 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'First Name', 'tutor' ); ?>
 				</label>
-				<input class="tutor-form-control" type="text" name="first_name" value="<?php esc_attr_e( $user->first_name ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>">
+				<input class="tutor-form-control" type="text" name="first_name" value="<?php echo esc_attr( $user->first_name ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>">
 			</div>
 
 			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 				</label>
-				<input class="tutor-form-control" type="text" name="last_name" value="<?php esc_attr_e( $user->last_name ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>">
+				<input class="tutor-form-control" type="text" name="last_name" value="<?php echo esc_attr( $user->last_name ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>">
 			</div>
 		</div>
 
@@ -133,14 +137,14 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'User Name', 'tutor' ); ?>
 				</label>
-				<input class="tutor-form-control" type="text" disabled="disabled" value="<?php esc_attr_e( $user->user_login ); ?>">
+				<input class="tutor-form-control" type="text" disabled="disabled" value="<?php echo esc_attr( $user->user_login ); ?>">
 			</div>
 
 			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 				</label>
-				<input class="tutor-form-control" type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_number" value="<?php esc_html_e( filter_var( get_user_meta( $user->ID, 'phone_number', true ), FILTER_SANITIZE_NUMBER_INT ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
+				<input class="tutor-form-control" type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_number" value="<?php echo esc_html( filter_var( get_user_meta( $user->ID, 'phone_number', true ), FILTER_SANITIZE_NUMBER_INT ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
 			</div>
 		</div>
 
@@ -149,30 +153,30 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
 				</label>
-				<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php esc_attr_e( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
+				<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php echo esc_attr( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
 			</div>
 		</div>
 
 		<div class="tutor-row">
 			<div class="tutor-col-12 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-secondary">
-					<?php _e( 'Bio', 'tutor' ); ?>
+					<?php esc_html_e( 'Bio', 'tutor' ); ?>
 				</label>
-				<textarea class="tutor-form-control" name="tutor_profile_bio"><?php echo strip_tags( get_user_meta( $user->ID, '_tutor_profile_bio', true ) ); ?></textarea>
+				<textarea class="tutor-form-control" name="tutor_profile_bio"><?php echo esc_html( strip_tags( get_user_meta( $user->ID, '_tutor_profile_bio', true ) ) ); ?></textarea>
 			</div>
 		</div>
 
 		<div class="tutor-row">
 			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-secondary">
-					<?php _e( 'Display name publicly as', 'tutor' ); ?>
+					<?php esc_html_e( 'Display name publicly as', 'tutor' ); ?>
 
 				</label>
 				<select class="tutor-form-select" name="display_name">
 					<?php
 					foreach ( $public_display as $id => $item ) {
 						?>
-								<option <?php selected( $user->display_name, $item ); ?>><?php esc_html_e( $item ); ?></option>
+								<option <?php selected( $user->display_name, $item ); ?>><?php echo esc_html( $item ); ?></option>
 							<?php
 					}
 					?>
