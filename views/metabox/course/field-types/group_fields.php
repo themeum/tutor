@@ -1,4 +1,13 @@
 <?php
+/**
+ * Group fields meta box
+ *
+ * @package Tutor\Views
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
+
 if ( ! isset( $field['group_fields'] ) || ! is_array( $field['group_fields'] ) || ! count( $field['group_fields'] ) ) {
 	return;
 }
