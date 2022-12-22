@@ -1,4 +1,14 @@
+<?php
+/**
+ * Add new instructor page
+ *
+ * @package Tutor\Views
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
 
+?>
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php esc_html_e( 'Add new instructor', 'tutor' ); ?></h1>
 	<hr class="wp-header-end">
@@ -137,7 +147,7 @@
 				<div class="tutor-form-group tutor-reg-form-btn-wrap">
 					<button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-button tutor-button-primary">
 						<i class="tutor-icon-plus-square"></i>
-						<?php esc_html_e( 'Add new instructor', 'tutor' ); ?></button>
+						<?php echo esc_html( 'Add new instructor', 'tutor' ); ?></button>
 				</div>
 			</div>
 		</div>
