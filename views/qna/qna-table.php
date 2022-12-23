@@ -1,4 +1,14 @@
 <?php
+/**
+ * Tutor Q&A table
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Q&A
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
+
 extract( $data ); // $qna_list, $context, $qna_pagination, $view_as
 
 $page_key      = 'qna-table';
@@ -11,9 +21,9 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 			<thead>
 				<tr>
 					<?php foreach ( $table_columns as $key => $column ) : ?>
-						<th style="<?php echo $key == 'question' ? 'width: 40%;' : ''; ?>">
-                            <?php echo ( $key != 'action' ? $column : '' ); ?>
-                        </th>
+						<th style="<?php echo esc_attr( 'question' == $key ? 'width: 40%;' : '' ); ?>">
+							<?php echo ( 'action' != $key ? $column : '' ); //phpcs:ignore -- contain safe data ?>
+						</th>
 					<?php endforeach; ?>
 				</tr>
 			</thead>
@@ -26,7 +36,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 					$row_id           = 'tutor_qna_row_' . $qna->comment_ID;
 					$menu_id          = 'tutor_qna_menu_id_' . $qna->comment_ID;
 					$is_self          = $current_user_id == $qna->user_id;
-					$key_slug         = $context == 'frontend-dashboard-qna-table-student' ? '_' . $current_user_id : '';
+					$key_slug         = 'frontend-dashboard-qna-table-student' == $context ? '_' . $current_user_id : '';
 
 					$meta         = $qna->meta;
 					$is_solved    = (int) tutor_utils()->array_get( 'tutor_qna_solved' . $key_slug, $meta, 0 );
@@ -34,14 +44,14 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 					$is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived' . $key_slug, $meta, 0 );
 					$is_read      = (int) tutor_utils()->array_get( 'tutor_qna_read' . $key_slug, $meta, 0 );
 					?>
-					<tr id="<?php echo esc_attr( $row_id );  ?>" data-question_id="<?php echo esc_attr( $qna->comment_ID );  ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
+					<tr id="<?php echo esc_attr( $row_id ); ?>" data-question_id="<?php echo esc_attr( $qna->comment_ID ); ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
 					<?php foreach ( $table_columns as $key => $column ) : ?>
 							<td>
-								<?php if ( $key == 'checkbox' ) : ?>
+								<?php if ( 'checkbox' == $key ) : ?>
 									<div class="tutor-d-flex tutor-align-center">
 										<input id="tutor-admin-list-<?php echo esc_attr( $qna->comment_ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $qna->comment_ID ); ?>" />
 									</div>
-								<?php elseif ( $key == 'student' ) : ?>
+								<?php elseif ( 'student' == $key ) : ?>
 									<div class="tutor-d-flex tutor-align-center tutor-gap-2">
 										<div class="tooltip-wrap tooltip-icon-custom tutor-qna-badges-wrapper tutor-mt-4">
 											<span
@@ -58,7 +68,12 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 											</span>
 										</div>
 
-										<?php echo tutor_utils()->get_tutor_avatar( $qna->user_id ); ?>
+										<?php
+										echo wp_kses(
+											tutor_utils()->get_tutor_avatar( $qna->user_id ),
+											tutor_utils()->allowed_avatar_tags()
+										);
+										?>
 
 										<div>
 											<div>
@@ -69,7 +84,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 											</div>
 										</div>
 									</div>
-								<?php elseif ( $key == 'question' ) : ?>
+								<?php elseif ( 'question' == $key ) : ?>
 									<?php $content = ( stripslashes( $qna->comment_content ) ); ?>
 									<a href="<?php echo esc_url( add_query_arg( array( 'question_id' => $qna->comment_ID ), tutor()->current_url ) ); ?>">
 										<div class="tutor-form-feedback tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
@@ -90,18 +105,18 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 											</div>
 										</div>
 									</a>
-								<?php elseif ( $key == 'reply' ) : ?>
+								<?php elseif ( 'reply' == $key ) : ?>
 									<?php echo esc_html( $qna->answer_count ); ?>
-								<?php elseif ( $key == 'waiting_since' ) : ?>
+								<?php elseif ( 'waiting_since' == $key ) : ?>
 									<?php echo esc_html( human_time_diff( strtotime( $qna->comment_date ) ) ); ?>
-								<?php elseif ( $key == 'status' ) : ?>
+								<?php elseif ( 'status' == $key ) : ?>
 									<div class="tooltip-wrap tooltip-icon-custom" >
 										<i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
 										<span class="tooltip-txt tooltip-bottom">
 											<?php $is_solved ? esc_html_e( 'Solved', 'tutor' ) : esc_html_e( 'Unresolved Yet', 'tutor' ); ?>
 										</span>
 									</div>
-								<?php elseif ( $key == 'action' ) : ?>
+								<?php elseif ( 'action' == $key ) : ?>
 									<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-1">
 										<a href="<?php echo esc_url( add_query_arg( array( 'question_id' => $qna->comment_ID ), tutor()->current_url ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 											<?php esc_html_e( 'Reply', 'tutor-pro' ); ?>
@@ -112,7 +127,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 												<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 											</button>
 											<ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-												<?php if ( $context != 'frontend-dashboard-qna-table-student' ) : ?>
+												<?php if ( 'frontend-dashboard-qna-table-student' != $context ) : ?>
 													<li class="tutor-qna-badges tutor-qna-badges-wrapper">
 														<a class="tutor-dropdown-item" href="#" data-action="archived" data-state-text-selector="[data-state-text]" data-state-class-selector="[data-state-class]" data-state-text-0="<?php esc_attr_e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php esc_attr_e( 'Un-archive', 'tutor' ); ?>">
 															<span class="tutor-icon-archive tutor-mr-8" data-state-class></span>
@@ -131,7 +146,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 													</a>
 												</li>
 												<li>
-													<a class="tutor-dropdown-item" href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete );  ?>">
+													<a class="tutor-dropdown-item" href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete ); ?>">
 														<span class="tutor-icon-trash-can-bold tutor-mr-8"></span>
 														<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 													</a>
@@ -140,7 +155,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 										</div>
 
 										<!-- Delete confirmation modal -->
-										<div id="<?php echo esc_attr( $id_string_delete );  ?>" class="tutor-modal">
+										<div id="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-modal">
 											<div class="tutor-modal-overlay"></div>
 											<div class="tutor-modal-window">
 												<div class="tutor-modal-content tutor-modal-content-white">
@@ -160,7 +175,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 															<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 																<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 															</button>
-															<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"question_id":<?php echo $qna->comment_ID; ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
+															<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"question_id":<?php echo esc_attr( $qna->comment_ID ); ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
 																<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 															</button>
 														</div>
