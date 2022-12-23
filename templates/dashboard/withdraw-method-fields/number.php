@@ -1,6 +1,11 @@
 <?php
 /**
- * @package TutorLMS/Templates
+ * Withdraw method - number field
+ *
+ * @package Tutor\Templates
+ * @subpackage Dashboard\Withdraw_Method_Fields
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @version 1.4.3
  */
 
