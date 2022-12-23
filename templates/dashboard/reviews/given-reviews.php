@@ -85,7 +85,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 						</div>
 
 						<div class="tutor-fs-6 tutor-color-muted">
-						<?php echo wp_kses_post( htmlspecialchars( stripslashes( $review->comment_content ) ) ); ?>
+						<?php echo esc_textarea( htmlspecialchars( stripslashes( $review->comment_content ) ) ); ?>
 						</div>
 					</div>
 
