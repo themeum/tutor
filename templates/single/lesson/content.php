@@ -76,8 +76,8 @@ tutor_load_template(
 	</div>
 
 	<?php
-	$referer_url        = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '';//phpcs:ignore
-	$referer_comment_id = explode( '#', $_SERVER['REQUEST_URI'] ); //phpcs:ignore
+	$referer_url        = wp_get_referer();
+	$referer_comment_id = explode( '#', filter_input( INPUT_SERVER, 'REQUEST_URI' ) );
 	$url_components     = parse_url( $referer_url );
 	$page_tab           = \TUTOR\Input::get( 'page_tab', 'overview' );
 
