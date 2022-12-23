@@ -121,7 +121,7 @@ $col_classes = array(
 								} elseif ( 'textarea' == $field['type'] ) {
 									?>
 											<textarea class="tutor-form-control tutor-mt-4" name="withdraw_method_field[<?php echo esc_attr( $method_id ); ?>][<?php echo esc_attr( $field_name ); ?>]">
-											<?php echo wp_kses_post( $old_value ); ?>
+											<?php echo esc_textarea( $old_value ); ?>
 											</textarea>
 										<?php
 								}
