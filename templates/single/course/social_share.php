@@ -2,15 +2,12 @@
 /**
  * Template for displaying social share
  *
- * @since v.1.0.4
- *
- * @author Themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Single\Course
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.4
  */
-
 
 $share_config = array(
 	'title' => get_the_title(),
@@ -21,10 +18,8 @@ $share_config = array(
 
 <div class="tutor-social-share-wrap" data-social-share-config="<?php echo esc_attr( json_encode( $share_config ) ); ?>">
 	<?php
-		foreach ( $tutor_social_share_icons as $icon ) {
-			echo '<button class="tutor_share ' . $icon['share_class'] . '"> ' . 
-					$icon['icon_html'] . 
-				' </button>';
-		}
+	foreach ( $tutor_social_share_icons as $icon ) {
+		echo '<button class="tutor_share ' . $icon['share_class'] . '"> ' . $icon['icon_html'] . ' </button>'; //phpcs:ignore
+	}
 	?>
 </div>
