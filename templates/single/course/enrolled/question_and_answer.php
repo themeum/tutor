@@ -2,18 +2,20 @@
 /**
  * Question and answer in single course details tab
  *
- * @since v.1.0.0
- * @author themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Single\Course\Enrolled
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
+use TUTOR\Input;
+
 global $post;
-if ( null === $post && isset( $_POST['course_id'] ) ) {
-	$post = get_post( $_POST['course_id'] );
+if ( null === $post && Input::has( 'course_id' ) ) {
+	$post = get_post( Input::post( 'course_id' ) );
 }
+
 $disable_qa_for_this_course = get_post_meta( $post->ID, '_tutor_enable_qa', true ) != 'yes';
 $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_course' );
 
@@ -21,15 +23,17 @@ if ( ! $enable_q_and_a_on_course || $disable_qa_for_this_course ) {
 	tutor_load_template( 'single.course.q_and_a_turned_off' );
 	return;
 }
+
 /**
  * Load more support added
  *
- * @since v2.0.6
+ * @since 2.0.6
  */
 $per_page     = tutor_utils()->get_option( 'pagination_per_page', 10 );
-$current_page = max( 1, (int) tutor_utils()->avalue_dot( 'current_page', $_POST ) );
+$current_page = max( 1, Input::post( 'current_page', 1, Input::TYPE_INT ) );
 $offset       = (int) ( $per_page * $current_page ) - $per_page;
-$is_load_more = isset( $_POST['action'] ) && 'tutor_q_and_a_load_more' === $_POST['action'];
+$is_load_more = 'tutor_q_and_a_load_more' === Input::post( 'action' );
+
 // Previous qna list.
 $questions           = tutor_utils()->get_qa_questions(
 	$offset,
@@ -54,13 +58,14 @@ $total_questions     = tutor_utils()->get_qa_questions(
 	$count_only      = true,
 	$args            = array( 'course_id' => $post->ID )
 );
+
 $load_more_btn = '';
 $max_page      = (int) ceil( $total_questions / $per_page );
 $data          = array(
 	'layout' => array(
 		'type'           => 'load_more',
 		'load_more_text' => __( 'Load More', 'tutor' ),
-        'class'          => 'tutor-qna-load-more',
+		'class'          => 'tutor-qna-load-more',
 	),
 	'ajax'   => array(
 		'action'           => 'tutor_q_and_a_load_more',
@@ -68,6 +73,7 @@ $data          = array(
 		'course_id'        => $post->ID,
 	),
 );
+
 $template      = tutor()->path . 'templates/dashboard/elements/load-more.php';
 if ( file_exists( $template ) && $max_page > $current_page ) {
 	ob_start();
@@ -107,6 +113,7 @@ if ( $is_load_more ) {
 <h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-20">
 	<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
 </h3>
+
 <?php
 // Load new question textarea.
 tutor_load_template_from_custom_path(
@@ -118,6 +125,7 @@ tutor_load_template_from_custom_path(
 	false
 );
 ?>
+
 <div class="tutor-pagination-wrapper-replaceable">
 	<div class="tutor-pagination-content-appendable">
 		<?php
