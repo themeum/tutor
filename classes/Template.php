@@ -53,22 +53,6 @@ class Template extends Tutor_Base {
 
 		add_filter( 'the_content', array( $this, 'convert_static_page_to_template' ) );
 		add_action( 'pre_get_posts', array( $this, 'limit_course_query_archive' ), 99 );
-
-		/**
-		 * Dummy template for Spotlight mode design. It will be removed once we adopt the design to core.
-		 */
-		$is_spotlight = Input::get( 'course-spotlight-v2', 0, Input::TYPE_INT );
-		add_action(
-			'wp_loaded',
-			function() use ( $is_spotlight ) {
-				if ( ! is_admin() && Input::has( 'course-spotlight-v2' ) && 1 === $is_spotlight ) {
-					tutor_utils()->tutor_custom_header();
-					include tutor()->path . '/views/course-spotlight-v2-static.php';
-					tutor_utils()->tutor_custom_footer();
-					exit;
-				}
-			}
-		);
 	}
 
 	/**

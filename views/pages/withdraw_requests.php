@@ -2,7 +2,11 @@
 /**
  * Withdraw List Template.
  *
- * @package Withdraw List
+ * @package Tutor\Views
+ * @subpackage Tutor\Withdraw
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -116,14 +120,19 @@ $filters = array(
 								?>
 							<tr>
 								<td>
-									<div class="tutor-fs-7"><?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ), $list->created_at ) ); ?>,</div>
-									<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php esc_html_e( tutor_get_formated_date( get_option( 'time_format' ), $list->created_at ) ); ?></div>
+									<div class="tutor-fs-7"><?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $list->created_at ) ); ?>,</div>
+									<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $list->created_at ) ); ?></div>
 								</td>
 
 								<td>
 									<div class="tutor-d-flex tutor-gap-2">
-										<?php echo tutor_utils()->get_tutor_avatar( $user_data->ID ); ?>
-										
+										<?php
+										echo wp_kses(
+											tutor_utils()->get_tutor_avatar( $user_data->ID ),
+											tutor_utils()->allowed_avatar_tags()
+										);
+										?>
+
 										<div>
 											<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 												<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
@@ -236,7 +245,7 @@ $filters = array(
 								</td>
 								<td data-th="<?php esc_html_e( 'Amount', 'tutor' ); ?>">
 									<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-										<?php echo tutor_utils()->tutor_price( $list->amount ); ?>
+										<?php echo tutor_utils()->tutor_price( $list->amount ); //phpcs:ignore ?>
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">

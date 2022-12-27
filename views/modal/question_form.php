@@ -2,10 +2,11 @@
 /**
  * Quiz question form template
  *
- * @since 1.0.0
- * @author themeum
+ * @package Tutor\Views
+ * @subpackage Tutor\Modal
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package Tutor\Template
+ * @since 1.0.0
  */
 
 global $wpdb;
@@ -15,7 +16,7 @@ $settings = maybe_unserialize( $question->question_settings );
 <div id="tutor-quiz-question-wrapper" 
 	data-question-id="<?php echo esc_attr( $question_id ); ?>" 
 	data-question_type="<?php echo esc_attr( $question->question_type ); ?>">
-	
+
 	<div class="question-form-header tutor-mb-12">
 		<a	href="javascript:;" class="back-to-quiz-questions-btn tutor-btn tutor-btn-ghost" 
 			data-quiz-id="<?php echo esc_attr( isset( $quiz_id ) ? $quiz_id : '' ); ?>" 
@@ -24,7 +25,7 @@ $settings = maybe_unserialize( $question->question_settings );
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
-	
+
 	<input type="hidden" name="quiz_id" value="<?php echo esc_attr( $quiz_id ); ?>" />
 
 	<div class="tutor-mb-32">
@@ -60,6 +61,7 @@ $settings = maybe_unserialize( $question->question_settings );
 										),
 									);
 
+									//phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 									echo tutor_utils()->clean_html_content(
 										$question_types[ $current_type ]['icon'],
 										$allowed_icon_html_tags
@@ -84,7 +86,7 @@ $settings = maybe_unserialize( $question->question_settings );
 									<p 	class="tutor-select-option" 
 										data-value="<?php echo $type; ?>" <?php echo $question->question_type === $type ? ' data-selected="selected"' : ''; ?> 
 										data-is-pro="<?php echo ( ! $has_tutor_pro && $question_type['is_pro'] ) ? 'true' : 'false'; ?>">
-										
+
 										<?php
 											echo tutor_utils()->clean_html_content( $question_type['icon'], $allowed_icon_html_tags ) . ' ' . esc_html( $question_type['name'] );
 										?>

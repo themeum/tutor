@@ -1,8 +1,19 @@
+<?php
+/**
+ * Options generator
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Options
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
+
+?>
 <div class="wrap">
-	<h1><?php _e( 'Tutor Settings', 'tutor' ); ?></h1>
+	<h1><?php esc_html_e( 'Tutor Settings', 'tutor' ); ?></h1>
 
-
-	<form id="tutor-option-form" class="tutor-option-form" method="post" data-toast_success_message="<?php _e( 'Settings Saved', 'tutor' ); ?>">
+	<form id="tutor-option-form" class="tutor-option-form" method="post" data-toast_success_message="<?php esc_html_e( 'Settings Saved', 'tutor' ); ?>">
 		<input type="hidden" name="action" value="tutor_option_save" >
 
 		<?php
@@ -29,8 +40,8 @@
 
 				$nav_url = add_query_arg( array( 'tab_page' => $key ) );
 				echo '<li class="option-nav-item ' . esc_attr( $current_class ) . '">
-						<a href="' . esc_url( $nav_url ) . '" data-tab="#' . esc_attr( $key ) . '" class="tutor-option-nav-item">' . 
-							esc_attr( $option_group['label'] ) . 
+						<a href="' . esc_url( $nav_url ) . '" data-tab="#' . esc_attr( $key ) . '" class="tutor-option-nav-item">' .
+							esc_attr( $option_group['label'] ) .
 						'</a> 
 					</li>';
 			}
@@ -50,7 +61,6 @@
 				?>
 
 				<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page <?php echo esc_attr( $current_page ) ? 'current-page' : ''; ?> " style="display: <?php echo esc_attr( $current_page ? 'block' : 'none' ); ?>;" >
-					<!--<h3><?php /*echo $option_group['label']; */ ?></h3>-->
 
 				<?php
 				do_action( 'tutor_options_before_' . $key );
@@ -85,7 +95,7 @@
 		?>
 
 		<p class="submit">
-			<button type="button" id="save_tutor_option" class="button button-primary"><?php echo __( 'Save Settings', 'tutor' ); ?></button>
+			<button type="button" id="save_tutor_option" class="button button-primary"><?php esc_html_e( 'Save Settings', 'tutor' ); ?></button>
 		</p>
 	</form>
 </div>

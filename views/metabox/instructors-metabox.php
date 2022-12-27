@@ -2,7 +2,11 @@
 /**
  * Multi instructors view
  *
- * @package TutorPro\MultiInstructor\Template
+ * @package Tutor\Views
+ * @subpackage Tutor\MetaBox
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 ?>
@@ -24,8 +28,13 @@
 				}
 				?>
 				<div id="added-instructor-id-<?php echo esc_attr( $instructor->ID ); ?>" class="added-instructor-item added-instructor-item-<?php echo esc_attr( $instructor->ID ); ?>" data-instructor-id="<?php echo esc_attr( $instructor->ID ); ?>">
-					<?php echo tutor_utils()->get_tutor_avatar( $instructor->ID, 'md' ); ?>
-					<span class="instructor-name tutor-ml-12"> <?php echo esc_attr( $instructor->display_name ) . ' ' . $author_tag; ?> </span>
+					<?php
+						echo wp_kses(
+							tutor_utils()->get_tutor_avatar( $instructor->ID, 'md' ),
+							tutor_utils()->allowed_avatar_tags()
+						);
+					?>
+					<span class="instructor-name tutor-ml-12"> <?php echo esc_attr( $instructor->display_name ) . ' ' . $author_tag; //phpcs:ignore ?> </span>
 					<span class="instructor-control">
 						<a href="javascript:;" class="tutor-instructor-delete-btn tutor-iconic-btn">
 							<i class="tutor-icon-times" area-hidden="true"></i>
@@ -57,12 +66,12 @@
 		<div class="modal-content-body">
 
 			<div class="search-bar">
-				<input type="text" class="tutor-modal-search-input" placeholder="<?php _e( 'Search instructors...', 'tutor' ); ?>">
+				<input type="text" class="tutor-modal-search-input" placeholder="<?php esc_html_e( 'Search instructors...', 'tutor' ); ?>">
 			</div>
 		</div>
 		<div class="tutor-modal-container"></div>
 		<div class="modal-footer has-padding">
-			<button type="button" class="tutor-btn add_instructor_to_course_btn"><?php _e( 'Add Instructors', 'tutor' ); ?></button>
+			<button type="button" class="tutor-btn add_instructor_to_course_btn"><?php esc_html_e( 'Add Instructors', 'tutor' ); ?></button>
 		</div>
 	</div>
 </div>

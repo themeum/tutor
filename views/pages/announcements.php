@@ -1,25 +1,29 @@
 <?php
+/**
+ * Announcement page
+ *
+ * Configure query with get params
+ *
+ * @package Tutor\Views
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-/**
- * Since 1.7.9
- * configure query with get params
- *
- * @package Announcement List
- */
 
 use TUTOR\Input;
 use TUTOR\Announcements;
 $announcement_obj = new Announcements();
 
-$limit			= tutor_utils()->get_option( 'pagination_per_page' );
-$page_filter	= Input::get( 'paged', 1, Input::TYPE_INT );
-$order_filter	= Input::get( 'order', 'DESC' );
-$search_filter	= Input::get( 'search', '');
-$course_id	 	= Input::get( 'course-id', '' );
-$date_filter	= Input::get( 'date', '');
+$limit         = tutor_utils()->get_option( 'pagination_per_page' );
+$page_filter   = Input::get( 'paged', 1, Input::TYPE_INT );
+$order_filter  = Input::get( 'order', 'DESC' );
+$search_filter = Input::get( 'search', '' );
+$course_id     = Input::get( 'course-id', '' );
+$date_filter   = Input::get( 'date', '' );
 
 $year  = date( 'Y', strtotime( $date_filter ) );
 $month = date( 'm', strtotime( $date_filter ) );
@@ -123,7 +127,7 @@ $filters = array(
 					'paged'         => $page_filter,
 				)
 			);
-		?>
+			?>
 		</div>
 	</div>
 </div>

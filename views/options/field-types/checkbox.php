@@ -1,5 +1,16 @@
 <?php
-?><label class="tutor-form-toggle">
+/**
+ * Checkbox items template for full width type field.
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
+
+?>
+<label class="tutor-form-toggle">
 	<span class="label-before">
 		<?php esc_html_e( 'Logged Only', 'tutor' ); ?>
 	</span>
