@@ -2,9 +2,10 @@
 /**
  * My Quiz Attempts
  *
- * @author Themeum
+ * @package Tutor\Templates
+ * @subpackage Dashboard
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
  * @since 1.1.2
  */
 
@@ -12,7 +13,7 @@ use TUTOR\Input;
 use Tutor\Models\QuizModel;
 
 if ( Input::has( 'view_quiz_attempt_id' ) ) {
-	// Load single attempt details if ID provided
+	// Load single attempt details if ID provided.
 	include __DIR__ . '/my-quiz-attempts/attempts-details.php';
 	return;
 }
@@ -31,7 +32,7 @@ $quiz_attempts = QuizModel::get_quiz_attempts_by_course_ids( $offset, $item_per_
 
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php _e( 'My Quiz Attempts', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'My Quiz Attempts', 'tutor' ); ?></div>
 <?php
 $quiz_attempts_count = QuizModel::get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter, get_current_user_id(), true );
 

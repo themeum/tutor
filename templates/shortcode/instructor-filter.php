@@ -1,9 +1,12 @@
 <?php
 /**
- * Prepare categories & short by items
+ * Instructor filter
  *
- * @since v2.0.0
- * @package Instructor list
+ * @package Tutor\Templates
+ * @subpackage Shortcode
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 $category_id      = '';
@@ -24,26 +27,28 @@ if ( $total_categories && $total_categories > $limit ) {
 $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 ?>
 
-<div class="tutor-wrap tutor-wrap-parent tutor-instructors" tutor-instructors <?php
-	foreach ( $attributes as $key => $value )  {
-		if ( is_array( $value ) ) {
-			continue;
-		}
-		echo 'data-' . $key . '="' . $value . '" ';
+<div class="tutor-wrap tutor-wrap-parent tutor-instructors" tutor-instructors 
+<?php
+foreach ( $attributes as $key => $value ) {
+	if ( is_array( $value ) ) {
+		continue;
 	}
-?>>
+	echo esc_attr( 'data-' . $key . '="' . $value . '" ' );
+}
+?>
+>
 	<div class="tutor-row">
 		<aside class="tutor-col-lg-3 tutor-mb-32 tutor-mb-lg-0" tutor-instructors-filters>
 			<div class="tutor-d-flex tutor-align-center">
 				<div>
 					<span class="tutor-icon-slider-vertical tutor-color-primary tutor-mr-8" area-hidden="true"></span>
-					<span class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php _e("Filters", "tutor"); ?></span>
+					<span class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Filters', 'tutor' ); ?></span>
 				</div>
 
 				<div class="tutor-ml-32">
 					<a href="#" class="tutor-btn tutor-btn-ghost" tutor-instructors-filter-clear>
 						<span class="tutor-icon-times tutor-mr-8" area-hidden="true"></span>
-						<span class="tutor-fw-medium"><?php _e("Clear", "tutor"); ?></span>
+						<span class="tutor-fw-medium"><?php esc_html_e( 'Clear', 'tutor' ); ?></span>
 					</a>
 				</div>
 			</div>
@@ -54,13 +59,13 @@ $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 				</h3>
 
 				<div class="tutor-widget-content">
-					<div class="<?php echo $show_more ? 'tutor-toggle-more-content tutor-toggle-more-collapsed' : '' ?>"<?php echo $show_more ? ' data-tutor-toggle-more-content data-toggle-height="200" style="height: 200px;"' : '' ?>>
+					<div class="<?php echo $show_more ? 'tutor-toggle-more-content tutor-toggle-more-collapsed' : ''; ?>"<?php echo $show_more ? ' data-tutor-toggle-more-content data-toggle-height="200" style="height: 200px;"' : ''; ?>>
 						<div class="tutor-list" tutor-instructors-filter-category>
 							<?php foreach ( $categories as $category ) : ?>
 								<div class="tutor-list-item">
 									<label>
-										<input id="tutor-instructor-checkbox-<?php esc_attr_e( $category->term_id ); ?>" type="checkbox" class="tutor-form-check-input" name="category" value="<?php esc_attr_e( $category->term_id ); ?>" />
-										<?php esc_html_e( $category->name ); ?>
+										<input id="tutor-instructor-checkbox-<?php echo esc_attr( $category->term_id ); ?>" type="checkbox" class="tutor-form-check-input" name="category" value="<?php echo esc_attr( $category->term_id ); ?>" />
+										<?php echo esc_html( $category->name ); ?>
 									</label>
 								</div>
 							<?php endforeach; ?>
@@ -85,7 +90,7 @@ $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 				<div class="tutor-ratings tutor-ratings-lg tutor-ratings-selectable">
 						<div class="tutor-ratings-stars">
 							<?php for ( $i = 1; $i < 6; $i++ ) : ?>
-								<i class="tutor-icon-star-line" tutor-instructors-filter-rating data-value="<?php echo $i; ?>" area-hidden="true"></i>
+								<i class="tutor-icon-star-line" tutor-instructors-filter-rating data-value="<?php echo esc_attr( $i ); ?>" area-hidden="true"></i>
 							<?php endfor; ?> 
 						</div>
 						<span class="tutor-ratings-count tutor-instructor-rating-filter" tutor-instructors-filter-rating-count></span>  
@@ -106,14 +111,14 @@ $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 			<div class="tutor-d-flex tutor-align-center tutor-mb-24">
 				<div class="tutor-mr-16">
 					<label for="tutor-instructor-relevant-sort" class="tutor-fs-6 tutor-color-muted">
-						<?php _e( 'Sort by', 'tutor' ); ?>
+						<?php esc_html_e( 'Sort by', 'tutor' ); ?>
 					</label>
 				</div>
 				<div>
 					<select class="tutor-form-control" id="tutor-instructor-relevant-sort" tutor-instructors-filter-sort>
 						<?php foreach ( $short_by as $k => $v ) : ?>
-							<option value="<?php esc_attr_e( $k ); ?>">
-								<?php esc_html_e( $v ); ?>
+							<option value="<?php echo esc_attr( $k ); ?>">
+								<?php echo esc_html( $v ); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -121,7 +126,7 @@ $columns = tutor_utils()->get_option( 'courses_col_per_row', 3 );
 			</div>
 
 			<div tutor-instructors-content>
-				<?php echo $content; ?>
+				<?php echo $content;//phpcs:ignore ?>
 			</div>
 		</main>
 	</div>

@@ -2,13 +2,11 @@
 /**
  * Template for displaying course tags
  *
- * @since v.1.0.0
- *
- * @author Themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Single\Course
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 do_action( 'tutor_course/single/before/tags' );

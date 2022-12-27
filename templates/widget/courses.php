@@ -2,8 +2,11 @@
 /**
  * The template for displaying Tutor Course Widget
  *
- * @package Tutor/Tempaltes
- * @version 1.3.1
+ * @package Tutor\Templates
+ * @subpackage Widget
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.3.1
  */
 
 if ( have_posts() ) :

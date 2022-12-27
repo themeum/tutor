@@ -2,8 +2,11 @@
 /**
  * Frontend course create template
  *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Dashboard
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,7 +20,7 @@ get_tutor_header( true );
 do_action( 'tutor_load_template_before', 'dashboard.create-course', null );
 
 $course_id = Input::get( 'course_ID', 0, Input::TYPE_INT );
-$post      = get_post( $course_id );
+$post      = get_post( $course_id ); //phpcs:ignore
 
 setup_postdata( $post );
 
