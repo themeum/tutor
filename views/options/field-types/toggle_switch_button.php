@@ -2,7 +2,10 @@
 /**
  * Toggle switch button for email settings page.
  *
- * @package Tutor LMS
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @since 2.0.0
  */
 
@@ -23,7 +26,9 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . $field_label . '" data-
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label <?php echo $tooltip_desc ? 'has-tooltip' : ''; ?>">
-		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php echo $field_label; ?></div>
+		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name>
+			<?php echo esc_html( $field_label ); ?>
+		</div>
 		<?php if ( $tooltip_desc ) { ?>
 			<div class="tooltip-wrap tooltip-icon">
 				<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $tooltip_desc ); ?></span>

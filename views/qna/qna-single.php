@@ -1,21 +1,33 @@
 <?php
-	extract( $data ); // $question_id
+/**
+ * Tutor Q&A single page
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Q&A
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
 
-	// QNA data
+use TUTOR\Input;
+
+extract( $data ); // $question_id
+
+// QNA data.
 	$question = tutor_utils()->get_qa_question( $question_id );
-	if ( ! $question ) {
-		tutor_utils()->tutor_empty_state();
-		return;
-	}
+if ( ! $question ) {
+	tutor_utils()->tutor_empty_state();
+	return;
+}
 
-	if ( property_exists( $question, 'meta' ) ) {
-		$meta     = $question->meta;
-	}
-	
+if ( property_exists( $question, 'meta' ) ) {
+	$meta = $question->meta;
+}
+
 	$answers  = tutor_utils()->get_qa_answer_by_question( $question_id );
 	$back_url = isset( $back_url ) ? $back_url : remove_query_arg( 'question_id', tutor()->current_url );
 
-	// Badges data
+	// Badges data.
 	$_user_id = get_current_user_id();
 if ( property_exists( $question, 'user_id' ) ) {
 	$is_user_asker = $question->user_id == $_user_id;
@@ -29,19 +41,19 @@ if ( property_exists( $question, 'user_id' ) ) {
 	$modal_id     = 'tutor_qna_delete_single_' . $question_id;
 	$reply_hidden = ! wp_doing_ajax() ? 'display:none;' : 0;
 
-	// At first set this as read
+	// At first set this as read.
 	update_comment_meta( $question_id, 'tutor_qna_read' . $id_slug, 1 );
 ?>
 
-<div class="tutor-qna-single-question<?php echo is_admin() ? ' tutor-admin-wrap' : ''; ?>" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
+<div class="tutor-qna-single-question<?php echo is_admin() ? ' tutor-admin-wrap' : ''; ?>" data-course_id="<?php echo esc_attr( $question->course_id ); ?>" data-question_id="<?php echo esc_attr( $question_id ); ?>" data-context="<?php echo esc_attr( $context ); ?>">
 	<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
 		<div class="<?php echo is_admin() ? 'tutor-wp-dashboard-header tutor-px-24 tutor-mb-24' : 'tutor-qa-sticky-bar'; ?>">
 			<div class="tutor-row tutor-align-lg-center">
 				<div class="tutor-col-lg">
 					<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-16">
-						<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
+						<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $back_url ); ?>">
 							<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
-							<?php _e( 'Back', 'tutor' ); ?>
+							<?php esc_html_e( 'Back', 'tutor' ); ?>
 						</a>
 					</div>
 				</div>
@@ -51,22 +63,22 @@ if ( property_exists( $question, 'user_id' ) ) {
 						<?php if ( ! $is_user_asker ) : ?>
 							<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-circle-mark-line" data-state-class-1="tutor-icon-circle-mark tutor-color-success" role="button">
 								<i class="<?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success active' : 'tutor-icon-circle-mark-line'; ?> tutor-mr-8"></i>
-								<span><?php _e( 'Solved', 'tutor' ); ?></span>
+								<span><?php esc_html_e( 'Solved', 'tutor' ); ?></span>
 							</span>
 							
 							<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-important-line" data-state-class-1="tutor-icon-important-bold">
 								<i class="<?php echo $is_important ? 'tutor-icon-important-bold active' : 'tutor-icon-important-line'; ?> tutor-mr-8"></i>
-								<span><?php _e( 'Important', 'tutor' ); ?></span>
+								<span><?php esc_html_e( 'Important', 'tutor' ); ?></span>
 							</span>
-	
-							<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-archive" data-state-class-1="tutor-icon-archive">
+
+							<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php esc_html_e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php esc_html_e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-archive" data-state-class-1="tutor-icon-archive">
 								<i class="<?php echo $is_archived ? 'tutor-icon-archive active' : 'tutor-icon-archive'; ?> tutor-mr-8"></i>
-								<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
+								<span><?php $is_archived ? esc_html_e( 'Un-Archive', 'tutor' ) : esc_html_e( 'Archive', 'tutor' ); ?></span>
 							</span>
 						<?php endif; ?>
-						<span class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo $modal_id; ?>">
+						<span class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo esc_attr( $modal_id ); ?>">
 							<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
-							<?php _e( 'Delete', 'tutor' ); ?>
+							<?php esc_html_e( 'Delete', 'tutor' ); ?>
 						</span>
 					</div>
 				</div>
@@ -75,7 +87,7 @@ if ( property_exists( $question, 'user_id' ) ) {
 	<?php endif; ?>
 
 	<div class="<?php echo is_admin() ? 'tutor-admin-container' : ''; ?>">
-		<div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32<?php echo is_single_course( true ) || ( isset( $_POST['action'] ) ) ? ' tutor-d-none' : ''; ?>">
+		<div class="tutor-qna-course-title tutor-color-black tutor-fs-6 tutor-fw-bold tutor-mb-32<?php echo is_single_course( true ) || ( Input::has( 'action' ) ) ? ' tutor-d-none' : ''; ?>">
 			<?php echo esc_html( $question->post_title ); ?>
 			<div class="tutor-hr tutor-mt-20" area-hidden="true"></div>
 		</div>
@@ -91,26 +103,30 @@ if ( property_exists( $question, 'user_id' ) ) {
 						$reply_count = count( $answers ) - 1;
 						foreach ( $answers as $answer ) {
 							if ( ! isset( $avatar_url[ $answer->user_id ] ) ) {
-								// Get avatar url if not already got
+								// Get avatar url if not already got.
 								$avatar_url[ $answer->user_id ] = get_avatar_url( $answer->user_id );
 							}
 
-							$css_class   = ( $current_user_id != $answer->user_id || $answer->comment_parent == 0 ) ? 'tutor-qna-left' : 'tutor-qna-right';
+							$css_class   = ( $current_user_id != $answer->user_id || 0 == $answer->comment_parent ) ? 'tutor-qna-left' : 'tutor-qna-right';
 							$css_style   = ( $is_single && $answer->comment_parent != 0 ) ? 'margin-left:14%;' . $reply_hidden : '';
 							$reply_class = ( $is_single && $answer->comment_parent != 0 ) ? 'tutor-reply-msg' : '';
 							?>
-								<div class="tutor-qna-chat <?php echo $css_class . ' ' . $reply_class; ?>" style="<?php echo $css_style; ?>">
+								<div class="tutor-qna-chat <?php echo esc_attr( $css_class . ' ' . $reply_class ); ?>" style="<?php echo esc_attr( $css_style ); ?>">
 									<div class="tutor-qna-user">
 										<div>
-											<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
+											<img src="<?php echo wp_kses( get_avatar_url( $answer->user_id ), tutor_utils()->allowed_avatar_tags() ); ?>" />
 										</div>
 
 										<div>
 											<div class="tutor-fs-6 tutor-fw-medium tutor-color-secondary">
-												<?php echo $answer->display_name; ?>
+												<?php echo esc_html( $answer->display_name ); ?>
 											</div>
 											<div class="tutor-fs-7 tutor-color-muted">
-												<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ); ?>
+												<?php
+													$date     = human_time_diff( strtotime( $answer->comment_date_gmt ) );
+													$time_ago = __( 'ago', 'tutor' );
+													echo esc_html( $date . ' ' . $time_ago );
+												?>
 											</div>
 										</div>
 									</div>
@@ -119,18 +135,21 @@ if ( property_exists( $question, 'user_id' ) ) {
 										<?php echo wp_kses_post( stripslashes( $answer->comment_content ) ); ?>
 									</div>
 
-								<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>
-										<div class="tutor-toggle-reply">
-											<span><?php _e( 'Reply', 'tutor' ); ?> <?php echo $reply_count ? '(' . $reply_count . ')' : ''; ?></span>
-										</div>
-									<?php endif; ?>
+								<?php if ( $is_single && 0 == $answer->comment_parent ) : ?>
+									<div class="tutor-toggle-reply">
+										<span>
+											<?php esc_html_e( 'Reply', 'tutor' ); ?> 
+											<?php echo esc_html( $reply_count ? '(' . $reply_count . ')' : '' ); ?>
+										</span>
+									</div>
+								<?php endif; ?>
 								</div>
 								<?php
 						}
 					}
 					?>
 				</div>
-				<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24 tutor-qna-reply-editor" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
+				<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24 tutor-qna-reply-editor" data-context="<?php echo esc_attr( $context ); ?>" style="<?php echo esc_attr( $is_single ? $reply_hidden : '' ); ?>">
 					<?php if ( function_exists( 'tutor_pro' ) ) : ?>
 						<?php
 							wp_editor(
@@ -151,9 +170,9 @@ if ( property_exists( $question, 'user_id' ) ) {
 						<?php else : ?>
 						<textarea class="tutor-form-control" placeholder="<?php esc_html_e( 'Write here...', 'tutor' ); ?>"></textarea>
 					<?php endif; ?>
-					
+
 					<div class="tutor-d-flex tutor-align-center tutor-mt-12">
-						<button data-back_url="<?php echo $back_url; ?>" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-sm">
+						<button data-back_url="<?php echo esc_url( $back_url ); ?>" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-sm">
 							<?php esc_html_e( 'Reply', 'tutor' ); ?>
 						</button>
 					</div>
@@ -164,7 +183,7 @@ if ( property_exists( $question, 'user_id' ) ) {
 </div>
 
 <?php
-	// Delete modal
+	// Delete modal.
 	tutor_load_template(
 		'modal.confirm',
 		array(

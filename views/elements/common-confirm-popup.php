@@ -6,8 +6,11 @@
  * Supported arguments:
  * [ message => '', additional_fields => '', disable_action_field => '' ]
  *
- * @package Tutor confirm modal
- * @since v2.0.0
+ * @package Tutor\Views
+ * @subpackage Tutor\ViewElements
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 ?>
@@ -21,7 +24,7 @@
 
 			<div class="tutor-modal-body tutor-text-center">
 				<div class="tutor-mt-48">
-					<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+					<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->url ); ?>assets/images/icon-trash.svg" />
 				</div>
 
 				<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php echo isset( $data['title'] ) ? esc_html( $data['title'] ) : esc_html__( 'Do You Want to Delete This?', 'tutor' ); ?></div>
@@ -39,7 +42,8 @@
 					 *
 					 * @since v2.1.0
 					 */
-					if ( ! isset( $data['disable_action_field'] ) ) : ?>
+					if ( ! isset( $data['disable_action_field'] ) ) :
+						?>
 						<input type="hidden" name="action">
 					<?php endif; ?>
 					<?php

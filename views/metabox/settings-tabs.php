@@ -2,7 +2,11 @@
 /**
  * Settings meta box template
  *
- * @package Tutor\Metabox
+ * @package Tutor\Views
+ * @subpackage Tutor\MetaBox
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 $args = $this->args;
@@ -18,7 +22,7 @@ $args = $this->args;
 				foreach ( $args as $key => $arg ) {
 					$i++;
 
-					$active = $i === 1 ? 'active' : '';
+					$active = 1 === $i ? 'active' : '';
 
 					$label      = tutor_utils()->array_get( 'label', $arg );
 					$icon_class = tutor_utils()->array_get( 'icon_class', $arg );
@@ -53,11 +57,10 @@ $args = $this->args;
 				$fields   = tutor_utils()->array_get( 'fields', $tab );
 
 				// Set first tab as active.
-				$active  = $i === 1 ? 'active' : '';
-				$display = $i === 1 ? 'block' : 'none';
+				$active  = 1 === $i ? 'active' : '';
+				$display = 1 === $i ? 'block' : 'none';
 				?>
 
-				
 				<div id="settings-tab-<?php echo esc_attr( $key ); ?>" class="settings-tab-wrap <?php echo esc_attr( $active ); ?>" style="display: <?php echo esc_attr( $display ); ?>;">
 				<?php
 					do_action( 'tutor_course/settings_tab_content/before', $key, $tab );
@@ -69,7 +72,7 @@ $args = $this->args;
 						$type  = tutor_utils()->array_get( 'type', $field );
 						$value = tutor_utils()->array_get( 'value', $field );
 
-						if ( $type == 'line_break' ) {
+						if ( 'line_break' == $type ) {
 							echo '<hr class="tutor-mb-32"/>';
 							continue;
 						}
@@ -138,7 +141,7 @@ $args = $this->args;
 															</label>
 														</div>
 														<?php
-											} elseif ( $field['type'] == 'toggle_switch' ) {
+											} elseif ( 'toggle_switch' == $field['type'] ) {
 												?>
 															<label class="tutor-form-toggle">
 																<input id="<?php echo esc_attr( $id_string ); ?>" type="checkbox" class="tutor-form-toggle-input" name="<?php echo esc_attr( $field_key ); ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
@@ -163,9 +166,9 @@ $args = $this->args;
 												<select class="tutor-form-select" name="<?php echo esc_attr( $field_key ); ?>" class="tutor_select2">
 											<?php
 											if ( ! empty( $field['options'] ) ) {
-												foreach ( $field['options'] as $optionKey => $option ) {
+												foreach ( $field['options'] as $option_key => $option ) {
 													?>
-															<option value="<?php echo esc_attr( $optionKey ); ?>" <?php selected( $field['value'], $optionKey ); ?> >
+															<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $field['value'], $option_key ); ?> >
 															<?php echo esc_html( $option ); ?>
 															</option>
 															<?php

@@ -2,12 +2,15 @@
 /**
  * Radio input for settings.
  *
- * @package Tutor LMS
- * @since 2.0
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
-if ( ! isset( $field['select_options'] ) || $field['select_options'] !== false ) {
-	echo '<option value="-1">' . __( 'Select Option', 'tutor' ) . '</option>';
+if ( ! isset( $field['select_options'] ) || false !== $field['select_options'] ) {
+	echo '<option value="-1">' . esc_html__( 'Select Option', 'tutor' ) . '</option>';
 }
 if ( ! empty( $field['options'] ) ) {
 	foreach ( $field['options'] as $option_key => $option ) {
