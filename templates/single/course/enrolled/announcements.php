@@ -2,12 +2,11 @@
 /**
  * Announcements
  *
- * @since v.1.0.0
- * @author themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Single\Course\Enrolled
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 $announcements = tutor_utils()->get_announcements( get_the_ID() );
@@ -23,11 +22,16 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 
 				<div class="tutor-meta tutor-mt-16">
 					<div>
-						<?php echo tutor_utils()->get_tutor_avatar( $announcement->post_author, 'sm' ); ?>
+						<?php
+						echo wp_kses(
+							tutor_utils()->get_tutor_avatar( $announcement->post_author, 'sm' ),
+							tutor_utils()->allowed_avatar_tags()
+						);
+						?>
 					</div>
 
 					<div>
-						<span class="tutor-meta-key"><?php esc_html_e('By', 'tutor') ?></span>
+						<span class="tutor-meta-key"><?php esc_html_e( 'By', 'tutor' ); ?></span>
 						<span class="tutor-meta-value"><?php echo esc_html( get_userdata( $announcement->post_author )->display_name ); ?></span>
 					</div>
 
@@ -40,7 +44,7 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 			<div class="tutor-card-body">
 				<div class="tutor-fs-6 tutor-color-secondary">
 					<?php
-						echo tutor_utils()->announcement_content( wpautop( stripslashes( $announcement->post_content ) ) );
+						echo tutor_utils()->announcement_content( wpautop( stripslashes( $announcement->post_content ) ) ) //phpcs:ignore;
 					?>
 				</div>
 			</div>

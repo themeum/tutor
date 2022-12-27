@@ -126,7 +126,15 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 								</span>
 							</td>
 							<td>
-								<?php echo esc_html( tutor_utils()->translate_dynamic_text( $status, true ) ); ?>
+								<?php
+									// $status contains HTML
+									echo wp_kses(
+										tutor_utils()->translate_dynamic_text( $status, true ),
+										array(
+											'span' => array( 'class' => true ),
+										)
+									);
+								?>
 							</td>
 							<td>
 								<a href="<?php echo esc_url( $review_url . '?view_assignment=' . $assignment->comment_ID ) . '&assignment=' . esc_attr( $assignment_id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
