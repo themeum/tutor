@@ -22,7 +22,23 @@ do_action( 'tutor_lesson/single/before/video/embedded' );
 		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ?? null ) ); ?>">
 		<div class="loading-spinner" area-hidden="true"></div>
 		<div class="tutor-ratio tutor-ratio-16x9">
-			<?php echo esc_html( tutor_utils()->array_get( 'source_embedded', $video_info ) ); ?>
+			<?php
+			echo wp_kses(
+				tutor_utils()->array_get( 'source_embedded', $video_info ),
+				array(
+					'iframe' => array(
+						'src'             => true,
+						'title'           => true,
+						'height'          => true,
+						'width'           => true,
+						'frameborder'     => true,
+						'allowfullscreen' => true,
+						'allow'           => true,
+						'style'           => true,
+					),
+				)
+			);
+			?>
 		</div>
 	</div>
 <?php endif; ?>
