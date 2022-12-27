@@ -142,7 +142,15 @@ function tutor_render_fill_in_the_blank_answer( $get_db_answers_by_question, $an
 				$replace      = '<span style="text-decoration:underline;">' . $replace . '</span>';
 				$answer_title = preg_replace( '/{dash}/i', $replace, $answer_title, 1 );
 			}
-			echo esc_html( str_replace( '{dash}', "<span class='filled_dash_unser'>{$spaces}</span>", stripslashes( $answer_title ) ) );
+			echo wp_kses(
+				str_replace( '{dash}', "<span class='filled_dash_unser'>{$spaces}</span>", stripslashes( $answer_title ) ),
+				array(
+					'span' => array(
+						'style' => true,
+						'class' => true,
+					),
+				)
+			);
 		}
 	}
 }
@@ -446,7 +454,13 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													// Open ended or short answer.
 												elseif ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
 													if ( $answer->given_answer ) {
-														echo esc_html( wpautop( stripslashes( $answer->given_answer ) ) );
+														echo wp_kses(
+															wpautop( stripslashes( $answer->given_answer ) ),
+															array(
+																'p' => true,
+																'span' => true,
+															)
+														);
 													}
 												}
 
