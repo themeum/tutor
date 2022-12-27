@@ -2,13 +2,11 @@
 /**
  * Template for displaying course reviews
  *
- * @since v.1.0.0
- *
- * @author Themeum
+ * @package Tutor\Templates
+ * @subpackage Single\Course
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.5
+ * @since 1.0.0
  */
 
 use TUTOR\Input;
@@ -32,7 +30,7 @@ $rating        = tutor_utils()->get_course_rating( $course_id );
 $my_rating     = tutor_utils()->get_reviews_by_user( 0, 0, 150, false, $course_id, array( 'approved', 'hold' ) );
 
 if ( Input::has( 'course_id' ) ) {
-	// It's load more
+	// It's load more.
 	tutor_load_template( 'single.course.reviews-loop', array( 'reviews' => $reviews ) );
 	return;
 }
@@ -67,7 +65,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 
 						<div class="tutor-fs-6 tutor-color-secondary tutor-mt-12 tutor-total-rating-count">
 							<?php esc_html_e( 'Total ', 'tutor' ); ?>
-							<?php echo $reviews_total; ?>
+							<?php echo esc_html( $reviews_total ); ?>
 							<?php echo esc_html( _n( ' Rating', ' Ratings', count( $reviews ), 'tutor' ) ); ?>
 						</div>
 					</div>
@@ -95,7 +93,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 									</div>
 
 									<div class="tutor-col-4 tutor-col-lg-3">
-										<span class="tutor-fs-6 tutor-color-secondary tutor-individual-star-rating"><?php printf( _n( '%s Rating', '%s Ratings', $value == 0 ? 1 : $value, 'tutor' ), number_format_i18n( $value ) ); ?></span>
+										<span class="tutor-fs-6 tutor-color-secondary tutor-individual-star-rating"><?php printf( esc_html( _n( '%s Rating', '%s Ratings', 0 == $value ? 1 : $value, 'tutor' ) ), number_format_i18n( $value ) ); ?></span>
 									</div>
 								</div>
 							<?php endforeach; ?>
@@ -119,7 +117,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 					<i class="tutor-icon-star-line tutor-mr-8"></i>
 					<?php
 						$is_new = ! $my_rating || empty( $my_rating->rating ) || empty( $my_rating->comment_content );
-						$is_new ? _e( 'Write a review', 'tutor' ) : _e( 'Edit review', 'tutor' );
+						$is_new ? esc_html_e( 'Write a review', 'tutor' ) : esc_html_e( 'Edit review', 'tutor' );
 					?>
 				</button>
 			<?php endif; ?>
@@ -152,8 +150,8 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 		<div class="tutor-write-review-form" style="display: none;">
 			<form method="post">
 				<div class="tutor-star-rating-container">
-					<input type="hidden" name="course_id" value="<?php echo $course_id; ?>"/>
-					<input type="hidden" name="review_id" value="<?php echo $my_rating ? $my_rating->comment_ID : ''; ?>"/>
+					<input type="hidden" name="course_id" value="<?php echo esc_attr( $course_id ); ?>"/>
+					<input type="hidden" name="review_id" value="<?php echo esc_attr( $my_rating ? $my_rating->comment_ID : '' ); ?>"/>
 					<input type="hidden" name="action" value="tutor_place_rating"/>
 					<div class="tutor-form-group">
 						<div class="tutor-ratings tutor-ratings-lg tutor-ratings-selectable" tutor-ratings-selectable>
@@ -163,11 +161,11 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 						</div>
 					</div>
 					<div class="tutor-form-group">
-						<textarea name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php echo stripslashes( $my_rating ? $my_rating->comment_content : '' ); ?></textarea>
+						<textarea name="review" placeholder="<?php esc_html_e( 'write a review', 'tutor' ); ?>"><?php echo stripslashes( $my_rating ? $my_rating->comment_content : '' ); //phpcs:ignore ?></textarea>
 					</div>
 					<div class="tutor-form-group">
 						<button type="submit" class="tutor_submit_review_btn tutor-btn tutor-btn-primary">
-							<?php _e( 'Submit Review', 'tutor' ); ?>
+							<?php esc_html_e( 'Submit Review', 'tutor' ); ?>
 						</button>
 					</div>
 				</div>

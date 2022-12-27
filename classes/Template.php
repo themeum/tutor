@@ -322,7 +322,7 @@ class Template extends Tutor_Base {
 			$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
 			$student_dashboard_page_id = apply_filters( 'tutor_dashboard_page_id_filter', $student_dashboard_page_id );
 
-			if ( get_the_ID() === $student_dashboard_page_id ) {
+			if ( get_the_ID() == $student_dashboard_page_id ) {
 				/**
 				 * Handle if logout URL
 				 *

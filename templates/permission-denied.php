@@ -2,11 +2,10 @@
 /**
  * Display Permission denied
  *
- * @author themeum
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
  * @since 1.0.0
- * @version 1.9.6
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
