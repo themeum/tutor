@@ -36,6 +36,7 @@ wp_enqueue_media();
 			<?php
 			$settings = array(
 				'editor_height' => 200,
+				'media_buttons' => false,
 				'tinymce'       => array(
 					'toolbar1' => 'bold, italic, underline, bullist, numlist, link, unlink,|,undo,redo',
 					'toolbar2' => false,
