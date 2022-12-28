@@ -99,7 +99,7 @@ class Assets {
 		$post_type = get_post_type( $post_id );
 
 		$current_page = tutor_utils()->get_current_page_slug();
-		
+
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => get_home_url(),
@@ -123,6 +123,7 @@ class Assets {
 			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
 			'current_page'                 => $current_page,
 			'quiz_answer_display_time'     => 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' ),
+			'is_ssl'                       => is_ssl(),
 		);
 	}
 
