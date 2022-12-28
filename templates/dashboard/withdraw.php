@@ -157,7 +157,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 
 									<div class="tutor-form-help tutor-d-flex tutor-align-center">
 										<span class="tutor-icon-circle-question-mark tutor-mr-8" area-hidden="true"></span>
-										<span><?php esc_html_e( 'Minimum withdraw amount is', 'tutor' ) . ' ' . strip_tags( $formatted_min_withdraw_amount ); ?></span>
+										<span><?php echo wp_kses( __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . $formatted_min_withdraw_amount, array() ); ?></span>
 									</div>
 
 									<div class="tutor-withdraw-form-response"></div>
