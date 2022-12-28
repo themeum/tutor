@@ -21,8 +21,8 @@ $uname = $user->user_login;
 $email = $user->user_email;
 
 $phone = get_user_meta( $uid, 'phone_number', true );
-$job   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile_job_title', true ) ) );
-$bio   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile_bio', true ) ) );
+$job   = nl2br( wp_strip_all_tags( get_user_meta( $uid, '_tutor_profile_job_title', true ) ) );
+$bio   = get_user_meta( $uid, '_tutor_profile_bio', true );
 
 $profile_data = array(
 	array( __( 'Registration Date', 'tutor' ), ( $rdate ? tutor_i18n_get_formated_date( $rdate ) : '' ) ),
@@ -38,13 +38,36 @@ $profile_data = array(
 
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'My Profile', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner tutor-dashboard-profile-data">
-	<?php foreach ( $profile_data as $key => $data ) : ?>
+	<?php
+		$biography_allowed_tags = array(
+			'p'      => array(),
+			'a'      => array(
+				'href'   => 1,
+				'target' => 1,
+				'rel'    => 1,
+			),
+			'span'   => array( 'style' => 1 ),
+			'em'     => array(),
+			'br'     => array(),
+			'strong' => array(),
+			'u'      => array(),
+			'ul'     => array(),
+			'ol'     => array(),
+			'li'     => array(),
+		);
+		
+		foreach ( $profile_data as $key => $data ) :
+			?>
 		<div class="tutor-row tutor-mb-24">
 			<div class="tutor-col-12 tutor-col-sm-5 tutor-col-lg-3">
 				<span class="tutor-fs-6 tutor-color-secondary"><?php echo esc_html( $data[0] ); ?></span>
 			</div>
 			<div class="tutor-col-12 tutor-col-sm-7 tutor-col-lg-9">
-				<?php echo 'Biography' == $data[0] ? '<span class="tutor-fs-6 tutor-color-secondary">' . esc_html( $data[1] ) . '</span>' : '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black">' . esc_html( $data[1] ) . '</span>'; ?>
+				<?php
+				echo 'Biography' === $data[0] ?
+						'<span class="tutor-fs-6 tutor-color-secondary">' . wp_kses( wpautop( $data[1] ), $biography_allowed_tags ) . '</span>'
+						: '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black">' . esc_html( $data[1] ) . '</span>';
+				?>
 			</div>
 		</div>
 	<?php endforeach; ?>
