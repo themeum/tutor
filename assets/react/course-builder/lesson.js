@@ -353,12 +353,14 @@ window.jQuery(document).ready(function($) {
 				var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
 				var match = video_url.match(regExp);
 				var video_id = match ? match[5] : null;
+				var is_ssl = _tutorobject.is_ssl ? 's' : '';
+;				var vimeo_api_url = `http${is_ssl}://vimeo.com/api/v2/video/${video_id}/json`;
 
 				if (video_id) {
 					toggle_loading(true);
 
 					$.getJSON(
-						'http://vimeo.com/api/v2/video/' + video_id + '/json',
+						vimeo_api_url,
 						function(data) {
 							if (
 								Array.isArray(data) &&
