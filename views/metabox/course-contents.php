@@ -145,7 +145,7 @@
 												<span class="tutor-icon-edit" area-hidden="true"></span>
 											</a>
 										<?php endif; ?>
-										<a href="javascript:;" class="tutor-delete-lesson-btn tutor-iconic-btn" data-lesson-id="<?php esc_attr( $content->ID ); ?>">
+										<a href="javascript:;" class="tutor-delete-lesson-btn tutor-iconic-btn" data-lesson-id="<?php echo esc_attr( $content->ID ); ?>">
 											<span class="tutor-icon-trash-can-line" area-hidden="true"></span>
 										</a>
 									</div>
