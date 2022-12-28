@@ -39,23 +39,6 @@ $profile_data = array(
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'My Profile', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner tutor-dashboard-profile-data">
 	<?php
-		$biography_allowed_tags = array(
-			'p'      => array(),
-			'a'      => array(
-				'href'   => 1,
-				'target' => 1,
-				'rel'    => 1,
-			),
-			'span'   => array( 'style' => 1 ),
-			'em'     => array(),
-			'br'     => array(),
-			'strong' => array(),
-			'u'      => array(),
-			'ul'     => array(),
-			'ol'     => array(),
-			'li'     => array(),
-		);
-		
 		foreach ( $profile_data as $key => $data ) :
 			?>
 		<div class="tutor-row tutor-mb-24">
@@ -65,7 +48,7 @@ $profile_data = array(
 			<div class="tutor-col-12 tutor-col-sm-7 tutor-col-lg-9">
 				<?php
 				echo 'Biography' === $data[0] ?
-						'<span class="tutor-fs-6 tutor-color-secondary">' . wp_kses( wpautop( $data[1] ), $biography_allowed_tags ) . '</span>'
+						'<span class="tutor-fs-6 tutor-color-secondary">' . wp_kses_post( wpautop( $data[1] ) ) . '</span>'
 						: '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black">' . esc_html( $data[1] ) . '</span>';
 				?>
 			</div>
