@@ -35,10 +35,11 @@ wp_enqueue_media();
 		<td>
 			<?php
 			$settings = array(
-				'teeny'         => true,
-				'media_buttons' => false,
-				'quicktags'     => false,
 				'editor_height' => 200,
+				'tinymce'       => array(
+					'toolbar1' => 'bold, italic, underline, bullist, numlist, link, unlink,|,undo,redo',
+					'toolbar2' => false,
+				),
 			);
 			wp_editor( get_user_meta( $user->ID, '_tutor_profile_bio', true ), '_tutor_profile_bio', $settings );
 			?>
