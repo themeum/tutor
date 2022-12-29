@@ -125,7 +125,8 @@ if ( $topics->have_posts() ) {
 									<?php
 									$time_limit    = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
 									$last_attempt  = ( new QuizModel() )->get_first_or_last_attempt( $quiz->ID );
-									$attempt_ended = is_object( $last_attempt ) && 'attempt_ended' === ( $last_attempt->attempt_status ) ? true : false;
+
+									$attempt_ended = is_object( $last_attempt ) && ( 'attempt_ended' === ( $last_attempt->attempt_status ) || $last_attempt->is_manually_reviewed ) ? true : false;
 
 									if ( $time_limit ) {
 										$time_type                             = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
