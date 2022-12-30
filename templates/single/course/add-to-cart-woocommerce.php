@@ -2,8 +2,11 @@
 /**
  * Tutor add to cart for WC product that will be visible on the course details page
  *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Single\Course
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 $product_id = tutor_utils()->get_course_product_id();
@@ -28,8 +31,8 @@ if ( $product ) {
 		$regular_price = $product->get_regular_price();
 		?>
 		<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-end tutor-justify-between">
-            <?php ob_start(); ?>
-                <div>
+			<?php ob_start(); ?>
+				<div>
 				<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
 					<?php echo wc_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
 				</span>
@@ -38,7 +41,7 @@ if ( $product ) {
 						<?php echo wc_price( $regular_price ); //phpcs:ignore?>
 					</del>
 				<?php endif; ?>
-			    </div>
+				</div>
             <?php echo apply_filters( 'tutor_course_details_wc_add_to_cart_price', ob_get_clean(), $product ); //phpcs:ignore ?>
 		</div>
 		<form action="<?php echo esc_url( apply_filters( 'tutor_course_add_to_cart_form_action', get_permalink( get_the_ID() ) ) ); ?>" method="post" enctype="multipart/form-data">

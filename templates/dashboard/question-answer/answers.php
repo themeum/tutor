@@ -1,27 +1,42 @@
 <?php
-$question_id = 0;
-if ( isset( $_GET['question_id'] ) ) {
-	$question_id = (int) tutor_sanitize_data($_GET['question_id']);
-}
+/**
+ * Question Answer
+ *
+ * @package Tutor\Templates
+ * @subpackage Dashboard\Question_Answer
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
 
+use TUTOR\Input;
+
+$question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
 $question    = tutils()->get_qa_question( $question_id );
 $answers     = tutils()->get_qa_answer_by_question( $question_id );
 $profile_url = tutils()->profile_url( $question->user_id );
 
 ?>
-<h2><?php _e( 'Answer', 'tutor' ); ?></h2>
+<h2><?php esc_html_e( 'Answer', 'tutor' ); ?></h2>
 <div class="tutor-question-and-answer-wrap">
 	<div class="tutor_question_answer_wrap">
 		<div class="tutor_original_question">
 			<div class="tutor-question-wrap">
 				<div class="question-top-meta">
 					<div class="tutor-question-avater">
-						<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutils()->get_tutor_avatar( $question->user_id ); ?></a>
+						<a href="<?php echo esc_url( $profile_url ); ?>"> 
+											<?php
+											echo wp_kses(
+												tutils()->get_tutor_avatar( $question->user_id ),
+												tutor_utils()->allowed_avatar_tags()
+											);
+											?>
+						</a>
 					</div>
 					<p class="review-meta">
 						<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_attr( $question->display_name ); ?></a>
 						<span class="tutor-text-mute">
-						<?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ); ?>
+						<?php echo esc_html( wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) ); ?>
 					</span>
 					</p>
 				</div>
@@ -43,12 +58,19 @@ $profile_url = tutils()->profile_url( $question->user_id );
 							<div class="tutor-question-wrap">
 								<div class="question-top-meta">
 									<div class="tutor-question-avater">
-										<a href="<?php echo esc_url( $answer_profile ); ?>"> <?php echo tutils()->get_tutor_avatar( $answer->user_id ); ?></a>
+										<a href="<?php echo esc_url( $answer_profile ); ?>"> 
+															<?php
+															echo wp_kses(
+																tutils()->get_tutor_avatar( $answer->user_id ),
+																tutor_utils()->allowed_avatar_tags()
+															);
+															?>
+										</a>
 									</div>
 									<p class="review-meta">
 										<a href="<?php echo esc_url( $answer_profile ); ?>"><?php echo esc_attr( $answer->display_name ); ?></a>
 										<span class="tutor-text-mute">
-										<?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ); ?>
+										<?php echo esc_html( wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ) ); ?>
 										</span>
 									</p>
 								</div>
@@ -63,7 +85,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 			}
 			?>
 			<div class="tutor-add-question-wrap">
-				<form action="<?php echo admin_url( 'admin-post.php' ); ?>" id="tutor_admin_answer_form" method="post">
+				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="tutor_admin_answer_form" method="post">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 					<input type="hidden" value="tutor_place_answer" name="action"/>
 					<input type="hidden" value="<?php echo esc_attr( $question_id ); ?>" name="question_id"/>
@@ -79,7 +101,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 						?>
 					</div>
 					<div class="tutor-form-group">
-						<button type="submit" class="tutor-button tutor-button-primary" name="tutor_question_search_btn"><?php _e( 'Reply', 'tutor' ); ?> </button>
+						<button type="submit" class="tutor-button tutor-button-primary" name="tutor_question_search_btn"><?php esc_html_e( 'Reply', 'tutor' ); ?> </button>
 					</div>
 				</form>
 			</div>

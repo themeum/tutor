@@ -234,7 +234,7 @@ if ( ! function_exists( '_generate_tags_dropdown_option' ) ) {
 
 			$has_in_term = has_term( $tag->term_id, 'course-tag', $post_ID );
 
-			$output .= '<option value="' . $tag->name . '" ' . selected( $has_in_term, true, false ) . '>' . $tag->name . '</option>';
+			$output .= '<option value="' . esc_attr( $tag->name ) . '" ' . selected( $has_in_term, true, false ) . '>' . esc_html( $tag->name ) . '</option>';
 
 		}
 

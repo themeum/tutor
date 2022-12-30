@@ -1,7 +1,18 @@
 <?php
-	// Load header based on context
-if ( $context && file_exists( $file_path = __DIR__ . '/header-context/' . $context . '.php' ) ) {
-	// Prepare header data
+/**
+ * Quiz header
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Quiz
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
+
+// Load header based on context.
+$file_path = __DIR__ . '/header-context/' . $context . '.php';
+if ( $context && file_exists( $file_path ) ) {
+	// Prepare header data.
 	$course_title = get_the_title( $attempt_data->course_id );
 	$course_url   = get_permalink( $attempt_data->course_id );
 

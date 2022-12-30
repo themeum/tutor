@@ -1,4 +1,14 @@
 <?php
+/**
+ * Tutor Q&A
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Q&A
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
+
 extract( $data ); // $course_id, $context.
 ?>
 <div class="tutor-qa-new tutor-quesanswer" data-course_id="<?php echo esc_attr( $course_id ); ?>" data-question_id="0" data-context="<?php echo esc_attr( $context ); ?>">
@@ -17,20 +27,20 @@ extract( $data ); // $course_id, $context.
 			<div class="sidebar-ask-new-qna-submit tutor-row tutor-mt-16">
 				<div class="tutor-col">
 					<button class="sidebar-ask-new-qna-cancel-btn tutor-btn tutor-btn-outline-primary tutor-btn-block">
-						<?php _e( 'Cancel', 'tutor' ); ?>
+						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 					</button>
 				</div>
 
 				<div class="tutor-col">
 					<button class="sidebar-ask-new-qna-submit-btn tutor-btn tutor-btn-primary tutor-btn-block">
-						<?php _e( 'Submit', 'tutor' ); ?>
+						<?php esc_html_e( 'Submit', 'tutor' ); ?>
 					</button>
 				</div>
 			</div>
 
 			<div class="sidebar-ask-new-qna-btn-wrap">
 				<a class="sidebar-ask-new-qna-btn tutor-btn tutor-btn-primary tutor-btn-block">
-					<?php _e( 'Ask a New Question', 'tutor' ); ?>
+					<?php esc_html_e( 'Ask a New Question', 'tutor' ); ?>
 				</a>
 			</div>
 		<?php else : ?>

@@ -1,6 +1,18 @@
 <?php
+/**
+ * Settings tabs
+ *
+ * TODO: file maybe unused will be removed later on
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\MetaBox
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
+
 $args        = $this->args;
-$current_tab = tutils()->array_get( 'settings_tab', tutor_sanitize_data($_GET) );
+$current_tab = tutils()->array_get( 'settings_tab', tutor_sanitize_data( $_GET ) );
 
 ?>
 
@@ -10,7 +22,7 @@ $current_tab = tutils()->array_get( 'settings_tab', tutor_sanitize_data($_GET) )
 	if ( ! $this->is_gutenberg_enable ) {
 		?>
 		<div class="settings-tabs-heading">
-			<h3><?php _e( 'Course Settings', 'tutor' ); ?></h3>
+			<h3><?php esc_html_e( 'Course Settings', 'tutor' ); ?></h3>
 		</div>
 		<?php
 	}
@@ -27,7 +39,7 @@ $current_tab = tutils()->array_get( 'settings_tab', tutor_sanitize_data($_GET) )
 					if ( $current_tab ) {
 						$active = $current_tab === $key ? 'active' : '';
 					} else {
-						$active = $i === 1 ? 'active' : '';
+						$active = 1 === $i ? 'active' : '';
 					}
 
 					$label      = tutils()->array_get( 'label', $arg );
@@ -40,8 +52,8 @@ $current_tab = tutils()->array_get( 'settings_tab', tutor_sanitize_data($_GET) )
 					}
 
 					echo '<li class="' . esc_attr( $active ) . '">
-							<a href="' . esc_url( $url ) . '" data-target="#settings-tab-' . esc_attr( $key ) . '">' . 
-								$icon . ' ' . $label . 
+							<a href="' . esc_url( $url ) . '" data-target="#settings-tab-' . esc_attr( $key ) . '">' .
+								wp_kses( $icon, tutor_utils()->allowed_icon_tags() ) . ' ' . esc_html( $label ) .
 							'</a>
 						</li>';
 				}
@@ -63,8 +75,8 @@ $current_tab = tutils()->array_get( 'settings_tab', tutor_sanitize_data($_GET) )
 					$active  = $current_tab === $key ? 'active' : '';
 					$display = $current_tab === $key ? 'block' : 'none';
 				} else {
-					$active  = $i === 1 ? 'active' : '';
-					$display = $i === 1 ? 'block' : 'none';
+					$active  = 1 === $i ? 'active' : '';
+					$display = 1 === $i ? 'block' : 'none';
 				}
 
 				echo '<div id="settings-tab-' . esc_attr( $key ) . '" class="settings-tab-wrap ' . esc_attr( $active ) . '" style="display: ' . esc_attr( $display ) . ';">';

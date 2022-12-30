@@ -1,21 +1,20 @@
 <?php
 /**
- * Student's Quiz Review Frontend
+ * Frontend Student's Quiz Review
  *
- * @since v.1.4.0
- *
- * @author Themeum
- * @url https://themeum.com
- * @package Tutor
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Dashboard\Quiz_Attempts
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.0
  */
 
-	$attempt_id   = (int) sanitize_text_field( $_GET['view_quiz_attempt_id'] );
-	$attempt_data = tutor_utils()->get_attempt( $attempt_id );
-	$user_id      = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
-	$quiz_id      = $attempt_data->quiz_id;
+use TUTOR\Input;
+
+$attempt_id   = Input::get( 'view_quiz_attempt_id', 0, Input::TYPE_INT );
+$attempt_data = tutor_utils()->get_attempt( $attempt_id );
+$user_id      = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
+$quiz_id      = $attempt_data->quiz_id;
 ?>
 
 <div class="wrap">
@@ -30,7 +29,7 @@
 					'context'      => 'frontend-dashboard-students-attempts',
 				)
 			);
-		?>
+			?>
 	</div>
 
 	<?php
@@ -44,5 +43,5 @@
 			tutor()->path . 'views/quiz/instructor-feedback.php',
 			array( 'attempt_data' => $attempt_data )
 		);
-	?>
+		?>
 </div>

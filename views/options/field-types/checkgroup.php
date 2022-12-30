@@ -1,9 +1,12 @@
 <?php
 /**
- * Checkgroup for settings.
+ * Check group for settings.
  *
- * @package Tutor LMS
- * @since 2.0
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 if ( ! empty( $field['group_options'] ) ) {
@@ -13,7 +16,7 @@ if ( ! empty( $field['group_options'] ) ) {
 <div class="tutor-option-field-row tutor-d-block">
 	<div class="tutor-option-field-label">
 		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php echo esc_attr( $field['label'] ); ?></div>
-		<div class="tutor-fs-7 tutor-color-muted"><?php echo $field['desc']; ?></div>
+		<div class="tutor-fs-7 tutor-color-muted"><?php echo esc_textarea( $field['desc'] ); ?></div>
 	</div>
 	<div class="tutor-option-field-input" id="<?php echo esc_attr( $field_id ); ?>">
 		<div class="type-toggle-grid">

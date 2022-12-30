@@ -3,9 +3,12 @@
  * Tutor available addons
  *
  * @package Tutor\Views
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
-$current_page = tutor_utils()->avalue_dot( 'tab', tutor_sanitize_data( $_GET ) );
+$current_page = tutor_utils()->avalue_dot( 'tab', tutor_sanitize_data( $_GET ) ); //phpcs:ignore
 $page_name    = $current_page ? $current_page : 'addons';
 ?>
 
@@ -20,7 +23,7 @@ $page_name    = $current_page ? $current_page : 'addons';
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-addons' ) ); ?>" aria-current="page"><?php esc_html_e( 'Plugins', 'tutor' ); ?>
 				</a>
 			</li>
-			<li class="tutor-available-themes <?php echo esc_attr( $page_name === 'themes' ? 'current' : '' ); ?>">
+			<li class="tutor-available-themes <?php echo esc_attr( 'themes' === $page_name ? 'current' : '' ); ?>">
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-addons&tab=themes' ) ); ?>">
 					<?php esc_html_e( 'Themes', 'tutor' ); ?>
 				</a>
@@ -38,7 +41,7 @@ $page_name    = $current_page ? $current_page : 'addons';
 				$last_checked_time = tutor_utils()->avalue_dot( 'last_checked_time', $addons_themes_data );
 				$data              = json_decode( tutor_utils()->avalue_dot( 'data', $addons_themes_data ) );
 
-				if ( $current_page === 'themes' ) {
+				if ( 'themes' === $current_page ) {
 					$addons = tutor_utils()->avalue_dot( 'theme', $data );
 				} else {
 					$addons = tutor_utils()->avalue_dot( 'addon', $data );

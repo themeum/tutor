@@ -1,3 +1,15 @@
+<?php
+/**
+ * Search filter
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\ViewElements
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
+
+?>
 <?php if ( isset( $data ) ) : ?>
 
 	<div class="tutor-admin-page-filters" style="display: flex; justify-content: space-between">
@@ -6,9 +18,9 @@
 				<form action="" method="post">
 					<div class="tutor-bulk-action-group">
 						<select name="bulk-action" id="tutor-backend-bulk-action">
-							<?php foreach( $data['bulk_actions'] as $k => $v) : ?>
-								<option value="<?php esc_attr_e( $v['value'] ); ?>">
-									<?php esc_html_e( $v['option'] ); ?>
+							<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
+								<option value="<?php echo esc_attr( $v['value'] ); ?>">
+									<?php echo esc_html( $v['option'] ); ?>
 								</option>
 							<?php endforeach; ?>
 						</select>

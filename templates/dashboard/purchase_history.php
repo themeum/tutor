@@ -2,17 +2,21 @@
 /**
  * Purchase history
  *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Dashboard
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Input;
 
-// global variables
+// Global variables.
 $user_id     = get_current_user_id();
-$time_period = $active = Input::get( 'period', '' );
+$active      = Input::get( 'period', '' );
+$time_period = $active;
 $start_date  = Input::get( 'start_date', '' );
 $end_date    = Input::get( 'end_date', '' );
 
@@ -101,7 +105,7 @@ $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 				<tbody>
 					<?php foreach ( $orders as $order ) : ?>
 						<?php
-						if ( $monetize_by === 'wc' ) {
+						if ( 'wc' === $monetize_by ) {
 							$wc_order          = wc_get_order( $order->ID );
 							$price             = tutor_utils()->tutor_price( $wc_order->get_total() );
 							$raw_price         = $wc_order->get_total();
@@ -135,7 +139,7 @@ $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 									$order_status_text = __( 'Pending', 'tutor' );
 									break;
 							}
-						} elseif ( $monetize_by === 'edd' ) {
+						} elseif ( 'edd' === $monetize_by ) {
 							$edd_order         = edd_get_payment( $order->ID );
 							$price             = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
 							$raw_price         = $edd_order->total;
@@ -146,7 +150,7 @@ $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 						?>
 						<tr>
 							<td>
-								#<?php esc_html_e( $order->ID ); ?>
+								#<?php echo esc_html( $order->ID ); ?>
 							</td>
 
 							<td>
@@ -161,7 +165,7 @@ $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 							</td>
 
 							<td>
-								<?php echo date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ); ?>
+								<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>
 							</td>
 
 							<td>
@@ -169,7 +173,7 @@ $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 							</td>
 
 							<td>
-								<span class="tutor-badge-label label-<?php esc_attr_e( $badge_class ); ?> tutor-m-4"><?php esc_html_e( $order_status_text ); ?></span>
+								<span class="tutor-badge-label label-<?php echo esc_attr( $badge_class ); ?> tutor-m-4"><?php echo esc_html( $order_status_text ); ?></span>
 							</td>
 							
 							<td>

@@ -1,12 +1,12 @@
 <?php
 /**
- * Tutor alert template
+ * Alert template
  *
- * Display various alert message
- *
- * @package TutorAlertTemplate
- *
- * @since v2.0.0
+ * @package Tutor\Templates
+ * @subpackage Global
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 /**

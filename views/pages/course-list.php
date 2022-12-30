@@ -2,7 +2,10 @@
 /**
  * Course List Template.
  *
- * @package Course List
+ * @package Tutor\Views
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -38,7 +41,7 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 /**
  * Navbar data to make nav menu
  */
-$add_course_url = esc_url( admin_url( 'post-new.php?post_type='.tutor()->course_post_type ) );
+$add_course_url = esc_url( admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) );
 $navbar_data    = array(
 	'page_title'   => $courses->page_title,
 	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
@@ -72,7 +75,7 @@ $args = array(
 if ( 'all' === $active_tab || 'mine' === $active_tab ) {
 	$args['post_status'] = array( 'publish', 'pending', 'draft', 'private' );
 } else {
-	$status              = $active_tab === 'published' ? 'publish' : $active_tab;
+	$status              = 'published' === $active_tab ? 'publish' : $active_tab;
 	$args['post_status'] = array( $status );
 }
 
@@ -124,11 +127,11 @@ $the_query = new WP_Query( $args );
 remove_filter( 'posts_search', '_tutor_search_by_title_only', 500 );
 
 $available_status = array(
-	'publish' => array(__( 'Publish', 'tutor' ), 'select-success'),
-	'pending' => array(__( 'Pending', 'tutor' ), 'select-warning'),
-	'trash'   => array(__( 'Trash', 'tutor' ), 'select-danger'),
-	'draft'   => array(__( 'Draft', 'tutor' ), 'select-default'),
-	'private' => array(__( 'Private', 'tutor' ), 'select-default'),
+	'publish' => array( __( 'Publish', 'tutor' ), 'select-success' ),
+	'pending' => array( __( 'Pending', 'tutor' ), 'select-warning' ),
+	'trash'   => array( __( 'Trash', 'tutor' ), 'select-danger' ),
+	'draft'   => array( __( 'Draft', 'tutor' ), 'select-default' ),
+	'private' => array( __( 'Private', 'tutor' ), 'select-default' ),
 );
 
 ?>
@@ -178,20 +181,21 @@ $available_status = array(
 					<tbody>
 						<?php if ( $the_query->have_posts() ) : ?>
 							<?php
-							$course_ids = array_column($the_query->posts, 'ID');
-							$course_meta_data = tutor_utils()->get_course_meta_data($course_ids);
-							$authors = array();
-							
+							$course_ids       = array_column( $the_query->posts, 'ID' );
+							$course_meta_data = tutor_utils()->get_course_meta_data( $course_ids );
+							$authors          = array();
+
 							foreach ( $the_query->posts as $key => $post ) :
-								$count_lesson     = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['lesson'] : 0;;
-								$count_quiz       = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_quiz'] : 0;
-								$count_assignment = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['tutor_assignments'] : 0;
-								$count_topic      = isset($course_meta_data[$post->ID]) ? $course_meta_data[$post->ID]['topics'] : 0;
-								$thumbnail_id 	  = (int) get_post_thumbnail_id( $post->ID );
-								$thumbnail 		  = $thumbnail_id ? wp_get_attachment_image_url( $thumbnail_id, 'thumbnail', false ) : tutor()->url . 'assets/images/placeholder.svg';
-								
-								!isset($authors[$post->post_author]) ? $authors[$post->post_author]=get_userdata( $post->post_author ) : 0;
-								$author_details = $authors[$post->post_author];
+								$count_lesson = isset( $course_meta_data[ $post->ID ] ) ? $course_meta_data[ $post->ID ]['lesson'] : 0;
+
+								$count_quiz       = isset( $course_meta_data[ $post->ID ] ) ? $course_meta_data[ $post->ID ]['tutor_quiz'] : 0;
+								$count_assignment = isset( $course_meta_data[ $post->ID ] ) ? $course_meta_data[ $post->ID ]['tutor_assignments'] : 0;
+								$count_topic      = isset( $course_meta_data[ $post->ID ] ) ? $course_meta_data[ $post->ID ]['topics'] : 0;
+								$thumbnail_id     = (int) get_post_thumbnail_id( $post->ID );
+								$thumbnail        = $thumbnail_id ? wp_get_attachment_image_url( $thumbnail_id, 'thumbnail', false ) : tutor()->url . 'assets/images/placeholder.svg';
+
+								! isset( $authors[ $post->post_author ] ) ? $authors[ $post->post_author ] = get_userdata( $post->post_author ) : 0;
+								$author_details = $authors[ $post->post_author ];
 								?>
 								<tr>
 									<td>
@@ -205,16 +209,16 @@ $available_status = array(
 											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-d-block">
 												<div style="width: 76px;">
 													<div class="tutor-ratio tutor-ratio-16x9">
-														<img class="tutor-radius-6" src="<?php echo $thumbnail; ?>" alt="<?php the_title(); ?>" loading="lazy">
+														<img class="tutor-radius-6" src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 													</div>
 												</div>
 											</a>
-	
+
 											<div>
 												<a class="tutor-table-link" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
 													<?php echo esc_html( $post->post_title ); ?>
 												</a>
-		
+
 												<div class="tutor-meta tutor-mt-4">
 													<span>
 														<?php esc_html_e( 'Topic:', 'tutor' ); ?>
@@ -222,21 +226,21 @@ $available_status = array(
 															<?php echo esc_html( $count_topic ); ?>
 														</span>
 													</span>
-		
+
 													<span>
 														<?php esc_html_e( 'Lesson:', 'tutor' ); ?>
 														<span class="tutor-meta-value">
 															<?php echo esc_html( $count_lesson ); ?>
 														</span>
 													</span>
-		
+
 													<span>
 														<?php esc_html_e( 'Quiz:', 'tutor' ); ?>
 														<span class="tutor-meta-value">
 															<?php echo esc_html( $count_quiz ); ?>
 														</span>
 													</span>
-		
+
 													<span>
 														<?php esc_html_e( 'Assignment:', 'tutor' ); ?>
 														<span class="tutor-meta-value">
@@ -252,18 +256,23 @@ $available_status = array(
 										<span class="tutor-fw-normal tutor-fs-7">
 											<?php
 												$terms = wp_get_post_terms( $post->ID, 'course-category' );
-												if ( count( $terms ) ) {
-													echo implode(', ', array_column($terms, 'name')) . '&nbsp;';
-												} else {
-													echo '...';
-												}
+											if ( count( $terms ) ) {
+												echo esc_html( implode( ', ', array_column( $terms, 'name' ) ) . '&nbsp;' );
+											} else {
+												echo '...';
+											}
 											?>
 										</span>
 									</td>
 
 									<td>
 										<div class="tutor-d-flex tutor-align-center">
-											<?php echo tutor_utils()->get_tutor_avatar( $author_details->ID, 'sm' ); ?>
+											<?php
+											echo wp_kses(
+												tutor_utils()->get_tutor_avatar( $author_details->ID, 'sm' ),
+												tutor_utils()->allowed_avatar_tags()
+											)
+											?>
 											<div class="tutor-ml-12">
 												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>">
 													<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
@@ -276,11 +285,11 @@ $available_status = array(
 										<div class="tutor-fs-7">
 											<?php
 												$price = tutor_utils()->get_course_price( $post->ID );
-												if ( null == $price ) {
-													esc_html_e( 'Free', 'tutor' );
-												} else {
-													echo $price;
-												}
+											if ( null == $price ) {
+												esc_html_e( 'Free', 'tutor' );
+											} else {
+												echo $price; //phpcs:ignore
+											}
 												// Alert class for course status.
 												$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : ( 'private' === $post->post_status ? 'select-default' : 'select-default' ) ) ) );
 											?>
@@ -303,7 +312,7 @@ $available_status = array(
 											<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 												<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="tutor_change_course_status">
 													<?php foreach ( $available_status as $key => $value ) : ?>
-														<option data-status_class="<?php echo esc_attr( $value[1] ); ?>" value="<?php echo $key; ?>" <?php selected( $key, $post->post_status, 'selected' ); ?>>
+														<option data-status_class="<?php echo esc_attr( $value[1] ); ?>" value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $post->post_status, 'selected' ); ?>>
 															<?php echo esc_html( $value[0] ); ?>
 														</option>
 													<?php endforeach; ?>
@@ -352,7 +361,7 @@ $available_status = array(
 			/**
 			 * Prepare pagination data & load template
 			 */
-			if($the_query->found_posts > $limit) {
+			if ( $the_query->found_posts > $limit ) {
 				$pagination_data     = array(
 					'total_items' => $the_query->found_posts,
 					'per_page'    => $limit,
@@ -366,7 +375,10 @@ $available_status = array(
 	</div>
 </div>
 
-<?php 
-tutor_load_template_from_custom_path( tutor()->path . 'views/elements/common-confirm-popup.php', array( 
-	'message' => __( 'Deletion of the course will erase all its topics, lessons, quizzes, events, and other information. Please confirm your choice.', 'tutor' )
-));
+<?php
+tutor_load_template_from_custom_path(
+	tutor()->path . 'views/elements/common-confirm-popup.php',
+	array(
+		'message' => __( 'Deletion of the course will erase all its topics, lessons, quizzes, events, and other information. Please confirm your choice.', 'tutor' ),
+	)
+);

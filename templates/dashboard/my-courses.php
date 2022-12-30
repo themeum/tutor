@@ -2,8 +2,11 @@
 /**
  * My Courses Page
  *
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * @package Tutor\Templates
+ * @subpackage Dashboard
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 use TUTOR\Input;
@@ -48,17 +51,17 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 		<div class="tutor-mb-32">
 			<ul class="tutor-nav">
 				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( $active_tab === 'my-courses' ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ); ?>">
+					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ); ?>">
 						<?php esc_html_e( 'Publish', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['publish'] . ')' ); ?>
 					</a>
 				</li>
 				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( $active_tab === 'my-courses/pending-courses' ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/pending-courses' ) ); ?>">
+					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/pending-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/pending-courses' ) ); ?>">
 						<?php esc_html_e( 'Pending', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['pending'] . ')' ); ?>
 					</a>
 				</li>
 				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( $active_tab === 'my-courses/draft-courses' ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ); ?>">
+					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/draft-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ); ?>">
 						<?php esc_html_e( 'Draft', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['draft'] . ')' ); ?>
 					</a>
 				</li>
@@ -69,14 +72,14 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 		<?php
 		$placeholder_img = tutor()->url . 'assets/images/placeholder.svg';
 
-		if ( ! is_array( $results ) || ( ! count( $results ) && $paged == 1 ) ) {
+		if ( ! is_array( $results ) || ( ! count( $results ) && 1 == $paged ) ) {
 			tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() );
 		} else {
 			?>
 			<div class="tutor-grid tutor-grid-3">
 				<?php
 				global $post;
-                $tutor_nonce_value = wp_create_nonce( tutor()->nonce_action );
+				$tutor_nonce_value = wp_create_nonce( tutor()->nonce_action );
 				foreach ( $results as $post ) :
 					setup_postdata( $post );
 
@@ -91,7 +94,7 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 					<div id="<?php echo esc_attr( $row_id ); ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
 						<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-d-block">
 							<div class="tutor-ratio tutor-ratio-16x9">
-								<img class="tutor-card-image-top" src="<?php echo empty( esc_url( $tutor_course_img ) ) ? $placeholder_img : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
+								<img class="tutor-card-image-top" src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 							</div>
 						</a>
 
@@ -111,14 +114,32 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 								<?php if ( ! empty( $course_duration ) ) : ?>
 									<div>
 										<span class="tutor-icon-clock-line tutor-meta-icon" area-hidden="true"></span>
-										<span class="tutor-meta-value"><?php echo stripslashes( $course_duration ); ?></span>
+										<span class="tutor-meta-value">
+										<?php
+										echo wp_kses(
+											stripslashes( $course_duration ),
+											array(
+												'span' => array( 'class' => true ),
+											)
+										);
+										?>
+																		</span>
 									</div>
 								<?php endif; ?>
 	
 								<?php if ( ! empty( $course_students ) ) : ?>
 									<div>
 										<span class="tutor-icon-user-line tutor-meta-icon" area-hidden="true"></span>
-										<span class="tutor-meta-value"><?php echo stripslashes( $course_students ); ?></span>
+										<span class="tutor-meta-value">
+										<?php
+										echo wp_kses(
+											stripslashes( $course_students ),
+											array(
+												'span' => array( 'class' => true ),
+											)
+										);
+										?>
+																		</span>
 									</div>
 								<?php endif; ?>
 							</div>
@@ -137,7 +158,7 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 										if ( null === $price ) {
 											esc_html_e( 'Free', 'tutor' );
 										} else {
-											echo tutor_utils()->get_course_price();
+											echo wp_kses_post( tutor_utils()->get_course_price() );
 										}
 										?>
 									</span>
@@ -160,7 +181,7 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 														'tutor_action' => 'update_course_status',
 														'status' => CourseModel::STATUS_PENDING,
 														'course_id' => $post->ID,
-                                                        tutor()->nonce => $tutor_nonce_value,
+														tutor()->nonce => $tutor_nonce_value,
 													)
 												);
 												?>
@@ -205,7 +226,7 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 														'tutor_action' => 'update_course_status',
 														'status' => CourseModel::STATUS_DRAFT,
 														'course_id' => $post->ID,
-                                                        tutor()->nonce => $tutor_nonce_value,
+														tutor()->nonce => $tutor_nonce_value,
 													)
 												);
 												?>
@@ -224,7 +245,7 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 														'tutor_action' => 'update_course_status',
 														'status' => CourseModel::STATUS_DRAFT,
 														'course_id' => $post->ID,
-                                                        tutor()->nonce => $tutor_nonce_value,
+														tutor()->nonce => $tutor_nonce_value,
 													)
 												);
 												?>
@@ -271,7 +292,7 @@ $results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, 
 											<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 												<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 											</button>
-											<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"course_id":<?php echo esc_attr( $post->ID ); ?>,"action":"tutor_delete_dashboard_course","redirect_to":"<?php echo esc_url( home_url( $_SERVER['REQUEST_URI'] ) );?>"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
+											<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"course_id":<?php echo esc_attr( $post->ID ); ?>,"action":"tutor_delete_dashboard_course","redirect_to":"<?php echo esc_url( tutor_utils()->get_current_url() ); ?>"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
 												<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 											</button>
 										</div>

@@ -1,4 +1,18 @@
-<h2><?php _e( 'Tutor Fields', 'tutor' ); ?></h2>
+<?php
+/**
+ * Settings meta box template
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\MetaBox
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
+
+?>
+<h2>
+	<?php esc_html_e( 'Tutor Fields', 'tutor' ); ?>
+</h2>
 
 <?php
 /**
@@ -8,7 +22,7 @@ wp_enqueue_media();
 ?>
 
 <table class="form-table">
-	<?php do_action('tutor_backend_profile_fields_before'); ?>
+	<?php do_action( 'tutor_backend_profile_fields_before' ); ?>
 	<tr class="user-description-wrap">
 		<th><label for="description"><?php esc_html_e( 'Job Title', 'tutor' ); ?></label></th>
 		<td>
@@ -21,9 +35,9 @@ wp_enqueue_media();
 		<td>
 			<?php
 			$settings = array(
-				'teeny' => true,
+				'teeny'         => true,
 				'media_buttons' => false,
-				'quicktags' => false,
+				'quicktags'     => false,
 				'editor_height' => 200,
 			);
 			wp_editor( get_user_meta( $user->ID, '_tutor_profile_bio', true ), '_tutor_profile_bio', $settings );

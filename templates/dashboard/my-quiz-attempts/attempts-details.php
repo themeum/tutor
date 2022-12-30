@@ -1,11 +1,11 @@
 <?php
-
 /**
  * My Quiz Attempts Details
  *
- * @author Themeum
+ * @package Tutor\Templates
+ * @subpackage Dashboard\My_Quiz_Attempts
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
  * @since 1.6.4
  */
 

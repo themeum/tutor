@@ -2,8 +2,11 @@
 /**
  * Color picker for settings.
  *
- * @package Tutor LMS
- * @since 2.0
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 $field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;

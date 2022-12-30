@@ -272,8 +272,10 @@ window.jQuery(document).ready($=>{
             setTimeout(() => { quizSubmitBtn.disabled = true; }, 500);
         } else {
             e.preventDefault();
-            quizSubmitBtn.classList.remove('is-loading')
-            quizSubmitBtn.disabled = false;
+            if (quizSubmitBtn) {
+                quizSubmitBtn.classList.remove('is-loading')
+                quizSubmitBtn.disabled = false;
+            }
         }
     });
     

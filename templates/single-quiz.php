@@ -2,16 +2,15 @@
 /**
  * Template for displaying single quiz
  *
- * @author Themeum
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
  * @since 1.0.0
- * @version 1.4.3
  */
 
 global $previous_id;
 
-// Get the ID of this content and the corresponding course
+// Get the ID of this content and the corresponding course.
 $course_content_id     = get_the_ID();
 $course_id             = tutor_utils()->get_course_id_by_subcontent( $course_content_id );
 $content_id            = tutor_utils()->get_post_id( $course_content_id );
@@ -39,7 +38,7 @@ ob_start();
 </div>
 <?php
 tutor_load_template( 'single.common.footer', array( 'course_id' => $course_id ) );
-echo apply_filters( 'tutor_quiz/single/wrapper', ob_get_clean() );
+echo apply_filters( 'tutor_quiz/single/wrapper', ob_get_clean() ); //phpcs:ignore
 tutor_load_template_from_custom_path(
 	__DIR__ . '/single-content-loader.php',
 	array(

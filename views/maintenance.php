@@ -1,10 +1,21 @@
+<?php
+/**
+ * Tutor maintenance template
+ *
+ * @package Tutor\MaintenanceMode
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.5.8
+ */
+
+?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.0">
 	<link rel="profile" href="http://gmpg.org/xfn/11">
-	<title><?php echo get_option('blogname'); ?></title>
+	<title><?php echo esc_html( get_option( 'blogname' ) ); ?></title>
 	<style type="text/css">
 	html, body {
 		margin: 0 auto;
