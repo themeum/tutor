@@ -20,7 +20,7 @@
 	<div>
 		<label class="tutor-form-label"><?php esc_html_e( 'Summary', 'tutor' ); ?></label>
 		<div class="tutor-mb-16">
-			<textarea name="quiz_description" class="tutor-form-control tutor-mb-12" rows="5"><?php echo stripslashes( $quiz ? $quiz->post_content : '' ); ?></textarea>
+			<textarea name="quiz_description" class="tutor-form-control tutor-mb-12" rows="5"><?php echo esc_textarea( stripslashes( $quiz ? $quiz->post_content : '' ) ); ?></textarea>
 		</div>
 	</div>
 	<?php do_action( 'tutor_quiz_edit_modal_info_tab_after', $quiz ); ?>
@@ -46,7 +46,7 @@
 						<div class="tutor-quiz-item-type">
 							<?php
 								$type = tutor_utils()->get_question_types( $question->question_type );
-								echo stripslashes( $type['icon'] ) . ' ' . esc_html( $type['name'] );
+								echo wp_kses( stripslashes( $type['icon'] ), tutor_utils()->allowed_icon_tags() ) . ' ' . esc_html( $type['name'] );
 							?>
 						</div>
 						<div class="tutor-dropdown-parent">
@@ -149,7 +149,7 @@
 			</label>
 		</div>
 	</div>
-	
+
 	<div class="tutor-mb-32 tutor-quiz-slider tutor-attempt-allowed-slider" style="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 'default' ) === 'retry' ? 'display: block' : 'display: none' ); ?>">
 		<label class="tutor-form-label">
 			<?php esc_html_e( 'Attempts Allowed', 'tutor' ); ?>

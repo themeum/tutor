@@ -2,20 +2,25 @@
 /**
  * Options generator
  *
- * @param object $this
+ * @package Tutor\Views
+ * @subpackage Tutor\Options
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
+
 ?>
 <div class="tutor-admin-wrap">
 	<div class="tutor-wp-dashboard-header tutor-px-24 tutor-mb-24">
 		<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-16">
-			<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php _e( 'Tools', 'tutor' ); ?></span>
+			<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Tools', 'tutor' ); ?></span>
 		</div>
 	</div>
 
 	<div class="tutor-admin-container">
 		<div class="tutor-row tutor-gx-lg-0 tutor-my-24">
 			<div class="tutor-col-auto tutor-col-lg-2">
-				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" data-page="<?php esc_attr_e( $_GET['page'] ); ?>">
+				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" data-page="<?php echo esc_attr( wp_unslash( $_GET['page'] ) ); ?>">
 					<?php
 					foreach ( $tools_fields as $key => $section ) {
 						$icon         = tutor()->icon_dir . $key . '.svg';
@@ -47,7 +52,7 @@
 							<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
 							<?php
 							if ( isset( $section['template'] ) && ! empty( $section['template'] ) ) {
-								echo $this->template( $section );
+								echo $this->template( $section ); //phpcs:ignore -- contain safe data
 							}
 							?>
 							</div>
@@ -59,5 +64,7 @@
 		</div>
 	</div>
 
-	<?php echo $this->view_template( 'common/modal-confirm.php', array() ); ?>
+	<?php
+	//phpcs:ignore -- contain safe data
+	echo $this->view_template( 'common/modal-confirm.php', array() ); ?>
 </div>

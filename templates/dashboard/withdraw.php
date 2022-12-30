@@ -1,16 +1,20 @@
 <?php
-
 /**
- * @package TutorLMS/Templates
+ * Withdraw Page
+ *
+ * @package Tutor\Templates
+ * @subpackage Dashboard
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @version 1.4.3
  */
 
 use TUTOR\Input;
 use Tutor\Models\WithdrawModel;
 
-$per_page     = tutor_utils()->get_option('statement_show_per_page', 20);
-$current_page = Input::get( 'current_page', 1, Input::TYPE_INT );
-$offset       = ( abs($current_page) - 1 ) * $per_page;
+$per_page     = tutor_utils()->get_option( 'statement_show_per_page', 20 );
+$current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
+$offset       = ( $current_page - 1 ) * $per_page;
 
 $min_withdraw                  = tutor_utils()->get_option( 'min_withdraw_amount' );
 $formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
@@ -18,10 +22,10 @@ $formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 $saved_account        = WithdrawModel::get_user_withdraw_method();
 $withdraw_method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $saved_account );
 
-$user_id			= get_current_user_id();
-$withdraw_status	= array( WithdrawModel::STATUS_PENDING, WithdrawModel::STATUS_APPROVED, WithdrawModel::STATUS_REJECTED );
-$all_histories		= WithdrawModel::get_withdrawals_history( $user_id, array( 'status' => $withdraw_status ), $offset, $per_page );
-$image_base			= tutor()->url . '/assets/images/';
+$user_id         = get_current_user_id();
+$withdraw_status = array( WithdrawModel::STATUS_PENDING, WithdrawModel::STATUS_APPROVED, WithdrawModel::STATUS_REJECTED );
+$all_histories   = WithdrawModel::get_withdrawals_history( $user_id, array( 'status' => $withdraw_status ), $offset, $per_page );
+$image_base      = tutor()->url . '/assets/images/';
 
 $method_icons = array(
 	'bank_transfer_withdraw' => $image_base . 'icon-bank.svg',
@@ -41,14 +45,14 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	$currency_symbol = edd_currency_symbol();
 }
 
-$summary_data 						= WithdrawModel::get_withdraw_summary( $user_id );
-$is_balance_sufficient				= $summary_data->available_for_withdraw >= $min_withdraw;
-$available_for_withdraw_formatted	= tutor_utils()->tutor_price( $summary_data->available_for_withdraw );
-$current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->current_balance );
+$summary_data                     = WithdrawModel::get_withdraw_summary( $user_id );
+$is_balance_sufficient            = $summary_data->available_for_withdraw >= $min_withdraw;
+$available_for_withdraw_formatted = tutor_utils()->tutor_price( $summary_data->available_for_withdraw );
+$current_balance_formated         = tutor_utils()->tutor_price( $summary_data->current_balance );
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal tutor-color-black">
-	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php echo __( 'Withdrawal', 'tutor' ); ?></div>
+	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'Withdrawal', 'tutor' ); ?></div>
 
 	<div class="tutor-card tutor-p-24">
 		<div class="tutor-row tutor-align-lg-center">
@@ -59,13 +63,13 @@ $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->curren
 			</div>
 
 			<div class="tutor-col tutor-mb-16 tutor-mb-lg-0">
-				<div class="tutor-fs-6 tutor-color-muted tutor-mb-4"><?php echo sprintf( esc_html__( 'Current Balance is %s', 'tutor' ), $current_balance_formated ); ?></div>
+				<div class="tutor-fs-6 tutor-color-muted tutor-mb-4"><?php echo wp_kses_post( sprintf( esc_html__( 'Current Balance is %s', 'tutor' ), $current_balance_formated ) ); ?></div>
 				<div class="tutor-fs-5 tutor-color-black">
 					<?php
 					if ( $is_balance_sufficient ) {
-						echo sprintf( __( 'You have %1$s %2$s %3$s ready to withdraw now', 'tutor' ), "<strong class='available_balance'>", $available_for_withdraw_formatted, '</strong>' );
+						echo wp_kses_post( sprintf( __( 'You have %1$s %2$s %3$s ready to withdraw now', 'tutor' ), "<strong class='available_balance'>", $available_for_withdraw_formatted, '</strong>' ) );
 					} else {
-						echo sprintf( __( 'You have %1$s %2$s %3$s and this is insufficient balance to withdraw', 'tutor' ), "<strong class='available_balance'>", $available_for_withdraw_formatted, '</strong>' );
+						echo wp_kses_post( sprintf( __( 'You have %1$s %2$s %3$s and this is insufficient balance to withdraw', 'tutor' ), "<strong class='available_balance'>", $available_for_withdraw_formatted, '</strong>' ) );
 					}
 					?>
 				</div>
@@ -87,13 +91,18 @@ $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->curren
 
 	<div class="current-withdraw-account-wrap tutor-d-flex tutor-mt-20">
 		<span class="tutor-svg tutor-fs-4 tutor-mr-8">
-			<?php echo tutor_utils()->get_svg_icon('infoCircle'); ?>
+			<?php echo tutor_utils()->get_svg_icon( 'infoCircle' );//phpcs:ignore ?>
 		</span>
 		<span class="tutor-fs-7 tutor-mt-4">
 			<?php
 			$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/withdraw-settings' );
-			echo $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), $withdraw_method_name ) : '';
-			echo sprintf( __( 'You can change your %1$s Withdraw Preference %2$s', 'tutor' ), "<a href='{$my_profile_url}'>", '</a>' );
+			echo esc_html( $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), $withdraw_method_name ) : '' );
+			echo wp_kses(
+				sprintf( __( 'You can change your %1$s Withdraw Preference %2$s', 'tutor' ), "<a href='{$my_profile_url}'>", '</a>' ),
+				array(
+					'a' => array( 'href' => true ),
+				)
+			);
 			?>
 		</span>
 	</div>
@@ -126,7 +135,7 @@ $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->curren
 
 								<div class="tutor-col">
 									<div class="tutor-fs-6 tutor-color-secondary tutor-mb-4"><?php esc_html_e( 'Selected Payment Method', 'tutor' ); ?></div>
-									<div class="tutor-fs-6 tutor-fw-bold tutor-color-black"><?php esc_html_e( $withdraw_method_name ); ?></div>
+									<div class="tutor-fs-6 tutor-fw-bold tutor-color-black"><?php echo esc_html( $withdraw_method_name ); ?></div>
 								</div>
 							</div>
 						</div>
@@ -148,7 +157,7 @@ $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->curren
 
 									<div class="tutor-form-help tutor-d-flex tutor-align-center">
 										<span class="tutor-icon-circle-question-mark tutor-mr-8" area-hidden="true"></span>
-										<span><?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . strip_tags( $formatted_min_withdraw_amount ); ?></span>
+										<span><?php echo wp_kses( __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . $formatted_min_withdraw_amount, array() ); ?></span>
 									</div>
 
 									<div class="tutor-withdraw-form-response"></div>
@@ -159,7 +168,7 @@ $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->curren
 								<div class="tutor-d-flex tutor-mt-48">
 									<div>
 										<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
-											<?php _e( 'Cancel', 'tutor' ); ?>
+											<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 										</button>
 									</div>
 
@@ -177,8 +186,8 @@ $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->curren
 		</div>
 		<?php
 	}
-	
-	if ( is_array( $all_histories->results ) && count ( $all_histories->results ) ) {
+
+	if ( is_array( $all_histories->results ) && count( $all_histories->results ) ) {
 		?>
 		<div class="withdraw-history-table-wrap tutor-tooltip-inside tutor-mt-40">
 			<div class="withdraw-history-table-title">
@@ -246,30 +255,31 @@ $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->curren
 									<?php echo esc_attr( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $withdraw_history->created_at ) ) ); ?>
 								</td>
 								<td>
-									<?php echo tutor_utils()->tutor_price( $withdraw_history->amount ); ?>
+									<?php echo wp_kses_post( tutor_utils()->tutor_price( $withdraw_history->amount ) ); ?>
 								</td>
 								<td>
 									<span class="inline-image-text is-inline-block">
 										<span class="tutor-badge-label
 										<?php
-										if ( $withdraw_history->status == 'approved' ) {
+										if ( 'approved' == $withdraw_history->status ) {
 											echo 'label-success'; }
 										?>
 										<?php
-										if ( $withdraw_history->status == 'pending' ) {
+										if ( 'pending' == $withdraw_history->status ) {
 											echo 'label-warning'; }
 										?>
 										<?php
-										if ( $withdraw_history->status == 'rejected' ) {
-											echo 'label-danger'; }
+										if ( 'rejected' == $withdraw_history->status ) {
+											echo 'label-danger';
+										}
 										?>
 										">
-											<?php echo __( ucfirst( $withdraw_history->status ), 'tutor' ); ?>
+										<?php esc_html_e( ucfirst( $withdraw_history->status ), 'tutor' ); //phpcs:ignore ?>
 										</span>
 									</span>
 								</td>
 								<td>
-									<?php if ( $withdraw_history->status !== 'approved' && isset( $status_message[ $withdraw_history->status ] ) ) : ?>
+									<?php if ( 'approved' !== $withdraw_history->status && isset( $status_message[ $withdraw_history->status ] ) ) : ?>
 										<span class="tool-tip-container">
 											<div class="tooltip-wrap tooltip-icon tutor-mt-12">
 												<span class="tooltip-txt tooltip-left">
@@ -292,17 +302,17 @@ $current_balance_formated 			= tutor_utils()->tutor_price( $summary_data->curren
 	?>
 </div>
 
-<?php 
-	if ( $all_histories->count >= $per_page ) {
-		$pagination_data = array(
-			'total_items' => $all_histories->count,
-			'per_page'    => $per_page,
-			'paged'       => $current_page,
-		);
+<?php
+if ( $all_histories->count >= $per_page ) {
+	$pagination_data = array(
+		'total_items' => $all_histories->count,
+		'per_page'    => $per_page,
+		'paged'       => $current_page,
+	);
 
-		tutor_load_template_from_custom_path(
-			tutor()->path . 'templates/dashboard/elements/pagination.php',
-			$pagination_data
-		);
-	}
+	tutor_load_template_from_custom_path(
+		tutor()->path . 'templates/dashboard/elements/pagination.php',
+		$pagination_data
+	);
+}
 ?>

@@ -1,18 +1,21 @@
 <?php
-
 /**
  * Color picker template for settings.
  *
- * @package Tutor LMS
- * @since 2.0
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
+
 $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] : array();
 
 ?>
 <div class="tutor-option-single-item tutor-mb-32 <?php echo esc_attr( $blocks['slug'] ); ?>">
-	<?php if ( isset($blocks['label']) ) : ?>
+	<?php if ( isset( $blocks['label'] ) ) : ?>
 		<div class="tutor-option-group-title tutor-mb-16">
-			<div class="tutor-fs-6 tutor-color-muted"><?php echo esc_attr($blocks['label']); ?></div>
+			<div class="tutor-fs-6 tutor-color-muted"><?php echo esc_attr( $blocks['label'] ); ?></div>
 		</div>
 	<?php endif; ?>
 	<div class="item-grid">
@@ -77,6 +80,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 							<?php
 							foreach ( $fields_group['fields'] as $key => $field ) {
 								if ( true === $field['preset_exist'] ) {
+									//phpcs:ignore -- contain safe data
 									echo $this->generate_field( tutils()->sanitize_array( $field ) );
 								}
 							}
@@ -84,6 +88,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 								<?php
 								foreach ( $fields_group['fields'] as $key => $field ) {
 									if ( false === $field['preset_exist'] ) {
+										//phpcs:ignore -- contain safe data
 										echo $this->generate_field( tutils()->sanitize_array( $field ) );
 									}
 								}

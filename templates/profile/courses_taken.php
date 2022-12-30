@@ -1,7 +1,12 @@
 <?php
 /**
- * @package TutorLMS/Templates
- * @version 1.4.3
+ * Courses taken template
+ *
+ * @package Tutor\Templates
+ * @subpackage Profile
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.4.3
  */
 
 $user_name = sanitize_text_field( get_query_var( 'tutor_profile_username' ) );
@@ -14,29 +19,32 @@ $pageposts = tutor_utils()->get_courses_by_instructor( $user_id );
 	<?php
 	if ( $pageposts ) {
 		global $post;
-		
+
+		//phpcs:ignore
 		foreach ( $pageposts as $post ) {
 			setup_postdata( $post );
 
 			/**
+			 * Usage Idea, you may keep a loop within a wrap, such as bootstrap col
+			 *
 			 * @hook tutor_course/archive/before_loop_course
 			 * @type action
-			 * Usage Idea, you may keep a loop within a wrap, such as bootstrap col
 			 */
 			do_action( 'tutor_course/archive/before_loop_course' );
 
 			tutor_load_template( 'loop.course' );
 
 			/**
+			 * Usage Idea, If you start any div before course loop, you can end it here, such as </div>
+			 *
 			 * @hook tutor_course/archive/after_loop_course
 			 * @type action
-			 * Usage Idea, If you start any div before course loop, you can end it here, such as </div>
 			 */
 			do_action( 'tutor_course/archive/after_loop_course' );
 		}
 	} else {
 		?>
-			<p><?php _e( 'No course yet.', 'tutor' ); ?></p>
+			<p><?php esc_html_e( 'No course yet.', 'tutor' ); ?></p>
 		<?php
 	}
 	?>

@@ -518,21 +518,35 @@ class Quiz {
 						$image_inputs          = (array) array_map( 'sanitize_text_field', $image_inputs );
 						$given_answer          = maybe_serialize( $image_inputs );
 						$is_answer_was_correct = false;
+						/**
+						 * For the image_answering question type result
+						 * remain pending in spite of correct answer & required
+						 * review of admin/instructor. Since it's
+						 * pending we need to mark it as incorrect. Otherwise if
+						 * mark it correct then earned mark will be updated. then
+						 * again when instructor/admin review & mark it as correct
+						 * extra mark is adding. In this case, student
+						 * getting double mark for the same question.
+						 *
+						 * For now code is commenting will be removed later on
+						 *
+						 * @since 2.1.5
+						 */
 
-						$db_answer = $wpdb->get_col(
-							$wpdb->prepare(
-								"SELECT answer_title
-									FROM {$wpdb->prefix}tutor_quiz_question_answers
-									WHERE belongs_question_id = %d
-										AND belongs_question_type = 'image_answering'
-									ORDER BY answer_order asc ;",
-								$question_id
-							)
-						);
+						// $db_answer = $wpdb->get_col(
+						// 	$wpdb->prepare(
+						// 		"SELECT answer_title
+						// 			FROM {$wpdb->prefix}tutor_quiz_question_answers
+						// 			WHERE belongs_question_id = %d
+						// 				AND belongs_question_type = 'image_answering'
+						// 			ORDER BY answer_order asc ;",
+						// 		$question_id
+						// 	)
+						// );
 
-						if ( is_array( $db_answer ) && count( $db_answer ) ) {
-							$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
-						}
+						// if ( is_array( $db_answer ) && count( $db_answer ) ) {
+						// 	$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
+						// }
 					}
 
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;

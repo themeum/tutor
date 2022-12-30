@@ -2,12 +2,15 @@
 /**
  * Email field for settings.
  *
- * @package Tutor LMS
- * @since 2.0
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 $value = $this->get( $field['key'] );
-if ( $value != '0' && ! $value && isset( $field['default'] ) ) {
+if ( '0' != $value && ! $value && isset( $field['default'] ) ) {
 	$value = $field['default'];
 }
 $field_key   = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;

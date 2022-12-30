@@ -1,11 +1,13 @@
 <?php
 /**
-* Welcome page template
-*
-* @package Tutor\Welcome
-*
-* @since v2.0.0
-*/
+ * Welcome page
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Welcome
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
 
 $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 ?>
@@ -51,7 +53,6 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 			</div>
 		</div>
 	</section>
-	
 	<section class="tutor-mb-32 tutor-mb-xl-40" style="margin-top: -140px;">
 		<div class="tutor-container">
 			<div class="tutor-row tutor-gx-xl-5">
@@ -62,17 +63,17 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 							<div class="tutor-fs-6 tutor-color-secondary">Get great improvements to the dashboard offering a more intuitive, organized, and modern approach.</div>
 						</div>
 						<div>
-							<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/dashboard.png" srcset="<?php echo esc_url($image_url); ?>/dashboard-2x.png 2x" alt="Dashboard" loading="lazy">
+							<img class="tutor-img-responsive" src="<?php echo esc_url( $image_url ); ?>/dashboard.png" srcset="<?php echo esc_url( $image_url ); ?>/dashboard-2x.png 2x" alt="Dashboard" loading="lazy">
 						</div>
 					</div>
 				</div>
-	
+
 				<div class="tutor-col-lg-6">
 					<div class="tutor-welcome-card tutor-px-24 tutor-px-xl-48 tutor-pt-24 tutor-pt-xl-48 tutor-pb-20 tutor-pb-xl-32 tutor-mb-32 tutor-mb-xl-40">
 						<div class="tutor-row tutor-align-center">
 							<div class="tutor-col-lg-6 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<div>
-									<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/design-system.png" srcset="<?php echo esc_url($image_url); ?>/design-system-2x.png 2x" alt="Unified Design" loading="lazy">
+									<img class="tutor-img-responsive" src="<?php echo esc_url( $image_url ); ?>/design-system.png" srcset="<?php echo esc_url( $image_url ); ?>/design-system-2x.png 2x" alt="Unified Design" loading="lazy">
 								</div>
 							</div>
 							<div class="tutor-col-lg-6">
@@ -81,12 +82,11 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 							</div>
 						</div>
 					</div>
-	
 					<div class="tutor-welcome-card">
 						<div class="tutor-row tutor-align-center">
 							<div class="tutor-col-lg-6 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<div>
-									<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/analytics.png" srcset="<?php echo esc_url($image_url); ?>/analytics-2x.png 2x" alt="Analytics" loading="lazy">
+									<img class="tutor-img-responsive" src="<?php echo esc_url( $image_url ); ?>/analytics.png" srcset="<?php echo esc_url( $image_url ); ?>/analytics-2x.png 2x" alt="Analytics" loading="lazy">
 								</div>
 							</div>
 							<div class="tutor-col-lg-6">
@@ -101,7 +101,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 			</div>
 		</div>
 	</section>
-	
+
 	<section class="tutor-mb-32 tutor-mb-xl-40">
 		<div class="tutor-container">
 			<div class="tutor-welcome-card">
@@ -117,7 +117,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 									</div>
 									<div class="tutor-fs-6 tutor-fw-medium">Get Pre-designed Email Templates</div>
 								</div>
-	
+
 								<div class="tutor-col-6">
 									<div class="tutor-mb-8">
 										<svg xmlns="http://www.w3.org/2000/svg" width="59" height="58" fill="none"><circle cx="29.5" cy="29" r="29" fill="#1F3BD8" opacity=".08"/><path fill="#1F3BD8" d="m43.64 15.672-5.26-2.724a1.108 1.108 0 0 0-1.45.487l-8.16 15.789c-.113.214-.151.46-.111.697l.83 4.861a1.108 1.108 0 0 0 1.572.808l4.43-2.214c.214-.105.388-.275.498-.487l8.127-15.734a1.108 1.108 0 0 0-.477-1.484Zm-9.445 15.921-2.801 1.351-.52-3.033 7.473-14.472 3.321 1.694-7.473 14.46Zm9.378-5.668v11.382a5.536 5.536 0 0 1-5.536 5.536h-15.5A5.536 5.536 0 0 1 17 37.307V21.806a5.536 5.536 0 0 1 5.536-5.536h8.659a1.107 1.107 0 0 1 0 2.214h-8.659a3.322 3.322 0 0 0-3.322 3.322v15.5a3.322 3.322 0 0 0 3.322 3.323h15.501a3.322 3.322 0 0 0 3.322-3.322V25.925a1.107 1.107 0 1 1 2.214 0Z"/></svg>	
@@ -128,13 +128,13 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 						</div>
 					</div>
 					<div class="tutor-col-lg-7 tutor-col-xl-8 tutor-d-none tutor-d-lg-block">
-						<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/email-templates.png" srcset="<?php echo esc_url($image_url); ?>/email-templates-2x.png 2x" alt="Email Templates" loading="lazy">
+						<img class="tutor-img-responsive" src="<?php echo esc_url( $image_url ); ?>/email-templates.png" srcset="<?php echo esc_url( $image_url ); ?>/email-templates-2x.png 2x" alt="Email Templates" loading="lazy">
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
-	
+
 	<section class="tutor-mb-40 tutor-mb-xl-80">
 		<div class="tutor-container">
 			<div class="tutor-row tutor-gx-xl-5">
@@ -143,10 +143,10 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 						<div class="tutor-row">
 							<div class="tutor-col-xl-6 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<div>
-									<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/notifications.png" srcset="<?php echo esc_url($image_url); ?>/notifications-2x.png 2x" alt="Notifications" loading="lazy">
+									<img class="tutor-img-responsive" src="<?php echo esc_url( $image_url ); ?>/notifications.png" srcset="<?php echo esc_url( $image_url ); ?>/notifications-2x.png 2x" alt="Notifications" loading="lazy">
 								</div>
 							</div>
-	
+
 							<div class="tutor-col-xl-6">
 								<div class="tutor-py-32">
 									<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">Notifications</div>
@@ -158,14 +158,14 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 						</div>
 					</div>
 				</div>
-	
+
 				<div class="tutor-col-lg-6">
 					<div class="tutor-welcome-card tutor-px-32 tutor-py-44">
 						<div class="tutor-row">
 							<div class="tutor-col-xl-4 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<svg xmlns="http://www.w3.org/2000/svg" width="155" height="155" fill="none"><circle cx="77.5" cy="77.5" r="77.5" fill="#3E64DE" fill-opacity=".1"/><path fill="#3E64DE" d="M97.857 72.41H82.59V57.144a3.393 3.393 0 0 0-3.393-3.393h-3.392a3.393 3.393 0 0 0-3.393 3.393V72.41H57.143a3.393 3.393 0 0 0-3.393 3.393v3.392a3.393 3.393 0 0 0 3.393 3.393H72.41v15.268a3.393 3.393 0 0 0 3.393 3.393h3.392a3.393 3.393 0 0 0 3.393-3.393V82.59h15.268a3.393 3.393 0 0 0 3.393-3.393v-3.392a3.393 3.393 0 0 0-3.393-3.393Z"/></svg>
 							</div>
-	
+
 							<div class="tutor-col-xl-8 tutor-mt-24 tutor-mt-xl-0">
 								<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12">And more…</div>
 								<div class="tutor-fs-6 tutor-color-secondary">
@@ -178,22 +178,22 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 			</div>
 		</div>
 	</section>
-		
+
 	<section>
 		<div class="tutor-container">
 			<div class="tutor-row tutor-justify-center tutor-gx-xl-5">
 				<div class="tutor-col-lg-4 tutor-col-xl-3 tutor-mb-24 tutor-mb-lg-0">
-					<a class="tutor-btn tutor-btn-primary tutor-d-block" href="<?php echo admin_url( 'post-new.php?post_type='.tutor()->course_post_type ); ?>">
-						<?php _e("Let's Start Building", 'tutor'); ?>
+					<a class="tutor-btn tutor-btn-primary tutor-d-block" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ); ?>">
+						<?php esc_html_e( "Let's Start Building", 'tutor' ); ?>
 					</a>
 				</div>
 				<div class="tutor-col-lg-4 tutor-col-xl-3">
 					<a target="_blank" class="tutor-btn tutor-btn-outline-primary tutor-d-block" href="https://www.themeum.com/tutor-lms/pricing/" rel="noreferrer noopener">
-						<?php _e('Get Tutor LMS Pro - 20% off', 'tutor'); ?>
+						<?php esc_html_e( 'Get Tutor LMS Pro - 20% off', 'tutor' ); ?>
 					</a>
 				</div>
 			</div>
 		</div>
 	</section>
 </div>
-	
+

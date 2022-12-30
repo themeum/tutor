@@ -1,11 +1,16 @@
 <?php
 /**
- * @package TutorLMS/Templates
+ * Frontend Settings Page
+ *
+ * @package Tutor\Templates
+ * @subpackage Dashboard
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
  * @version 1.4.3
  */
 
 ?>
-<div class="tutor-fs-5 tutor-fw-medium tutor-mb-24"><?php _e( 'Settings', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-mb-24"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 
 <div class="tutor-dashboard-content-inner">
 	<div class="tutor-mb-32">

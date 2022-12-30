@@ -1,6 +1,12 @@
 <?php
 /**
  * Template: Field heading
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Settings
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
  */
 
 ?>

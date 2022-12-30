@@ -1,14 +1,35 @@
 <?php
+/**
+ * Announcement fragment view
+ *
+ * @package Tutor\Views
+ * @subpackage Tutor\Fragments
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 2.0.0
+ */
 
+/**
+ * Announcement modal
+ *
+ * @since 2.0.0
+ *
+ * @param string $id modal id.
+ * @param string $title modal title.
+ * @param string $courses courses.
+ * @param string $announcement announcement.
+ *
+ * @return void
+ */
 function tutor_announcement_modal( $id, $title, $courses, $announcement = null ) {
 	$course_id         = $announcement ? $announcement->post_parent : null;
 	$announcment_id    = $announcement ? $announcement->ID : null;
 	$announcment_title = $announcement ? $announcement->post_title : '';
 	$summary           = $announcement ? $announcement->post_content : '';
-	// Assign fallback course id
+	// Assign fallback course id.
 	( ! $course_id && count( $courses ) ) ? $course_id = $courses[0]->ID : 0;
 	?>
-	<form class="tutor-modal tutor-modal-scrollable tutor-announcements-form" id="<?php echo $id; ?>">
+	<form class="tutor-modal tutor-modal-scrollable tutor-announcements-form" id="<?php echo esc_attr( $id ); ?>">
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window">
 			<div class="tutor-modal-content">
@@ -47,7 +68,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Announcement Title', 'tutor' ); ?>
 						</label>
-						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php esc_html_e( 'Announcement title', 'tutor' ); ?>" maxlength="255" required>
+						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo esc_attr( $announcment_title ); ?>" placeholder="<?php esc_html_e( 'Announcement title', 'tutor' ); ?>" maxlength="255" required>
 					</div>
 
 					<div class="tutor-mb-32">
@@ -74,9 +95,24 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 	<?php
 }
 
+/**
+ * Announcement modal
+ *
+ * @since 2.0.0
+ *
+ * @param string $id modal id.
+ * @param string $update_modal_id update modal id.
+ * @param string $delete_modal_id delete_modal_id.
+ * @param string $announcement announcement.
+ * @param string $course_title course title.
+ * @param string $publish_date announcement publish date.
+ * @param string $publish_time announcement publish time.
+ *
+ * @return void
+ */
 function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $publish_date, $publish_time ) {
 	?>
-	<div id="<?php echo $id; ?>" class="tutor-modal">
+	<div id="<?php echo esc_attr( $id ); ?>" class="tutor-modal">
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window">
 			<div class="tutor-modal-content tutor-modal-content-white">
@@ -89,8 +125,12 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 						<span class="tutor-round-box tutor-round-box-lg tutor-mb-32">
 							<i class="tutor-icon-bullhorn" area-hidden="true"></i>
 						</span>
-						<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-24"><?php echo $announcement->post_title; ?></div>
-						<div class="tutor-fs-6 tutor-color-muted"><?php echo $announcement->post_content; ?></div>
+						<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-24">
+							<?php echo esc_html( $announcement->post_title ); ?>
+						</div>
+						<div class="tutor-fs-6 tutor-color-muted">
+							<?php echo wp_kses_post( $announcement->post_content ); ?>
+						</div>
 					</div>
 
 					<div class="tutor-mx-n32 tutor-my-32"><div class="tutor-hr" area-hidden="true"></div></div>
@@ -99,19 +139,19 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 						<div class="tutor-row tutor-mb-60">
 							<div class="tutor-col-lg-7 tutor-mb-16 tutor-mb-lg-0">
 								<div class="tutor-fs-7 tutor-color-secondary">
-									<?php _e( 'Course', 'tutor' ); ?>
+									<?php esc_html_e( 'Course', 'tutor' ); ?>
 								</div>
 								<div class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mt-4">
-									<?php echo $course_title; ?>
+									<?php echo esc_html( $course_title ); ?>
 								</div>
 							</div>
 
 							<div class="tutor-col-lg-5">
 								<div class="tutor-fs-7 tutor-color-secondary">
-									<?php _e( 'Published Date', 'tutor' ); ?>
+									<?php esc_html_e( 'Published Date', 'tutor' ); ?>
 								</div>
 								<div class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mt-4">
-									<?php echo $publish_date . ', ' . $publish_time; ?>
+									<?php echo esc_html( $publish_date . ', ' . $publish_time ); ?>
 								</div>
 							</div>
 						</div>
@@ -119,17 +159,17 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 						<div class="tutor-row">
 							<div class="tutor-col-6 tutor-col-lg-7">
 								<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md" data-tutor-modal-close>
-									<?php _e( 'Cancel', 'tutor' ); ?>
+									<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 								</button>
 							</div>
 
 							<div class="tutor-col-6 tutor-col-lg-5">
 								<div class="tutor-d-flex tutor-justify-end">
-									<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-secondary tutor-btn-md tutor-modal-btn-delete">
-										<?php _e( 'Delete', 'tutor' ); ?>
+									<button data-tutor-modal-target="<?php echo esc_attr( $delete_modal_id ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-md tutor-modal-btn-delete">
+										<?php esc_html_e( 'Delete', 'tutor' ); ?>
 									</button>
-									<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-primary tutor-btn-md tutor-modal-btn-edit tutor-ml-16">
-										<?php _e( 'Edit', 'tutor' ); ?>
+									<button data-tutor-modal-target="<?php echo esc_attr( $update_modal_id ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-md tutor-modal-btn-edit tutor-ml-16">
+										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</button>
 								</div>
 							</div>
@@ -142,9 +182,20 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 	<?php
 }
 
+/**
+ * Announcement delete modal
+ *
+ * @since 2.0.0
+ *
+ * @param int $id id.
+ * @param int $announcment_id announcement id.
+ * @param int $row_id row id.
+ *
+ * @return void
+ */
 function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 	?>
-	<div id="<?php echo $id; ?>" class="tutor-modal">
+	<div id="<?php echo esc_attr( $id ); ?>" class="tutor-modal">
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window">
 			<div class="tutor-modal-content tutor-modal-content-white">
@@ -154,18 +205,17 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-mt-48">
-						<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+						<img class="tutor-d-inline-block" src="<?php echo esc_url( tutor()->url ); ?>assets/images/icon-trash.svg" />
 					</div>
 
-					<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php _e( 'Delete This Announcement?', 'tutor' ); ?></div>
-					<div class="tutor-fs-6 tutor-color-muted"><?php _e( 'Are you sure you want to delete this Announcement permanently from the site? Please confirm your choice.', 'tutor' ); ?></div>
-					
+					<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Delete This Announcement?', 'tutor' ); ?></div>
+					<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Are you sure you want to delete this Announcement permanently from the site? Please confirm your choice.', 'tutor' ); ?></div>
 					<div class="tutor-d-flex tutor-justify-center tutor-my-48">
 						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
-							<?php esc_html_e('Cancel', 'tutor'); ?>
+							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"announcement_id":<?php echo $announcment_id; ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo $row_id; ?>">
-							<?php esc_html_e('Yes, Delete This', 'tutor'); ?>
+						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"announcement_id":<?php echo esc_attr( $announcment_id ); ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
+							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>
 				</div>
@@ -190,11 +240,11 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 						</div>
 					</th>
 					<th width="17%">
-						<?php esc_html_e( 'Date', 'tutor-pro'); ?>
+						<?php esc_html_e( 'Date', 'tutor-pro' ); ?>
 					</th>
 				<?php else : ?>
 					<th width="17%">
-						<?php esc_html_e( 'Date', 'tutor'); ?>
+						<?php esc_html_e( 'Date', 'tutor' ); ?>
 					</th>
 				<?php endif; ?>
 				<th>
@@ -216,16 +266,16 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 						$delete_modal_id  = $update_modal_id . '_delete';
 						$row_id           = 'tutor-announcement-tr-' . $announcement->ID;
 					?>
-					<tr id="<?php echo $row_id; ?>">
+					<tr id="<?php echo esc_attr( $row_id ); ?>">
 						<?php if ( is_admin() ) : ?>
 							<td class="v-align-top">
 								<div class="tutor-form-check">
 									<input
-										id="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>"
+										id="tutor-admin-list-<?php echo esc_attr( $announcement->ID ); ?>"
 										type="checkbox"
 										class="tutor-form-check-input tutor-bulk-checkbox"
 										name="tutor-bulk-checkbox-all"
-										value="<?php esc_attr_e( $announcement->ID ); ?>"
+										value="<?php echo esc_attr( $announcement->ID ); ?>"
 									/>
 								</div>
 							</td>
@@ -254,7 +304,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 						<td>
 							<div class="tutor-d-flex tutor-align-center tutor-justify-end">
 								<div class="tutor-d-inline-flex tutor-align-center td-action-btns tutor-mr-4">
-									<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
+									<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo esc_attr( $details_modal_id ); ?>">
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</button>
 								</div>
@@ -265,15 +315,15 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 									</button>
 									<ul class="tutor-dropdown tutor-dropdown-dark">
 										<li>
-											<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
+											<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $update_modal_id ); ?>">
 												<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
-												<span><?php _e( 'Edit', 'tutor' ); ?></span>
+												<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 											</a>
 										</li>
 										<li>
-											<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
+											<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $delete_modal_id ); ?>">
 												<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
-												<span><?php _e( 'Delete', 'tutor' ); ?></span>
+												<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 											</a>
 										</li>
 									</ul>
@@ -281,7 +331,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							</div>
 
 							<?php
-								$course_title = isset($course->post_title)?$course->post_title:'';
+								$course_title = isset( $course->post_title ) ? $course->post_title : '';
 								tutor_announcement_modal( $update_modal_id, __( 'Edit Announcement', 'tutor' ), $courses, $announcement );
 								tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $date_format, $time_format );
 								tutor_announcement_modal_delete( $delete_modal_id, $announcement->ID, $row_id );
@@ -302,22 +352,22 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 
 <div class="tutor-pagination-wrapper <?php echo esc_attr( is_admin() ? 'tutor-mt-20' : 'tutor-mt-40' ); ?>">
 	<?php
-		$limit           = tutor_utils()->get_option( 'pagination_per_page' );
-		if ( $the_query->found_posts > $limit ) {
-			$pagination_data = array(
-				'total_items' => $the_query->found_posts,
-				'per_page'    => $limit,
-				'paged'       => $paged,
-			);
+		$limit = tutor_utils()->get_option( 'pagination_per_page' );
+	if ( $the_query->found_posts > $limit ) {
+		$pagination_data = array(
+			'total_items' => $the_query->found_posts,
+			'per_page'    => $limit,
+			'paged'       => $paged,
+		);
 
-			$pagination_template = tutor()->path . 'views/elements/pagination.php';
-			if ( is_admin() ) {
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			} else {
-				$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
-			}
+		$pagination_template = tutor()->path . 'views/elements/pagination.php';
+		if ( is_admin() ) {
+			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+		} else {
+			$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+			tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
 		}
+	}
 	?>
 </div>
 <?php

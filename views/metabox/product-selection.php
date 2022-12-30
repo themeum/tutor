@@ -2,18 +2,22 @@
 /**
  * Product selection meta box
  *
- * @package Tutor\Metabox
+ * @package Tutor\Views
+ * @subpackage Tutor\MetaBox
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 use TUTOR\Input;
 
-	$tutor_course_price_type = tutils()->price_type();
-	$course_price            = tutor_utils()->get_raw_course_price( get_the_ID() );
-	$monetization            = tutor_utils()->get_option( 'monetize_by' );
-	$course_id               = Input::get( 'course_ID', 0, Input::TYPE_INT );
-	if ( ! $course_id ) {
-		$course_id = get_the_ID();
-	}
+$tutor_course_price_type = tutils()->price_type();
+$course_price            = tutor_utils()->get_raw_course_price( get_the_ID() );
+$monetization            = tutor_utils()->get_option( 'monetize_by' );
+$course_id               = Input::get( 'course_ID', 0, Input::TYPE_INT );
+if ( ! $course_id ) {
+	$course_id = get_the_ID();
+}
 ?>
 <div class="tutor-row tutor-mt-16 tutor-mb-16 tutor-course-price-fields">
 	<div class="tutor-col-12 tutor-col-sm-5 tutor-col-lg-4">

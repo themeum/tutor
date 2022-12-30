@@ -1,15 +1,12 @@
 <?php
-
 /**
  * Template for displaying course content
  *
- * @since v.1.6.7
- *
- * @author Themeum
- * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version v.1.6.7
+ * @package Tutor\Templates
+ * @subpackage Single\Course
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.6.7
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -35,12 +32,12 @@ global $wp_query;
 		<?php do_action( 'tutor_course/single/actions_btn_group/before' ); ?>
 
 		<?php
-		if ( $wp_query->query['post_type'] !== 'lesson' ) {
+		if ( 'lesson' !== $wp_query->query['post_type'] ) {
 			$lesson_url = tutor_utils()->get_course_first_lesson();
 			if ( $lesson_url ) {
 				?>
 				<a href="<?php echo esc_url( $lesson_url ); ?>" class="tutor-button tutor-button-primary">
-					<?php _e( 'Continue to lesson', 'tutor' ); ?>
+					<?php esc_html_e( 'Continue to lesson', 'tutor' ); ?>
 				</a>
 				<?php
 			}

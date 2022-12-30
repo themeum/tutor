@@ -2,9 +2,9 @@
 /**
  * Main template
  *
- * @author Themeum
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @package TutorLMS/Templates
  * @since 1.4.3
  */
 

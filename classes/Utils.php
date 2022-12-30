@@ -6619,6 +6619,7 @@ class Utils {
 			return get_the_permalink( $page_id );
 		} else {
 			global $wp;
+			$wp->parse_request();
 			$current_url = home_url( $wp->request );
 			return $current_url;
 		}
