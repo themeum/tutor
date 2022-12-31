@@ -227,7 +227,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = 2.1.6 - December 31, 2022
 
-Coming soon...
+Update: More security improvement is introduced
 
 = 2.1.5 - December 29, 2022
 
