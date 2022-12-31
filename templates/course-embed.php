@@ -104,7 +104,15 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 						$category_link    = get_term_link( $course_category->term_id );
 						$category_links[] = wp_sprintf( '<a href="%1$s" target="_parent">%2$s</a>', esc_url( $category_link ), esc_html( $category_name ) );
 						endforeach;
-						echo implode( ', ', $category_links ); //phpcs:ignore --contain safe data
+						echo wp_kses(
+							implode( ', ', $category_links ),
+							array(
+								'a' => array(
+									'href'   => true,
+									'target' => true,
+								),
+							)
+						);
 					?>
 				<?php endif; ?>
 			</div>

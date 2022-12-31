@@ -388,16 +388,17 @@ if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
 if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 	function course_builder_section_wrap( $content = '', $title = '', $echo = true ) {
 		ob_start();
+		
 		?>
 		<div class="tutor-course-builder-section">
 			<div class="tutor-course-builder-section-title">
 				<span class="tutor-fs-5 tutor-fw-bold tutor-color-secondary">
 					<i class="tutor-icon-angle-up" area-hidden="true"></i>
-					<span><?php echo $title; ?></span>
+					<span><?php echo esc_html( $title ); ?></span>
 				</span>
 			</div>
 			<div class="tutor-course-builder-section-content">
-				<?php echo $content; ?>
+				<?php echo $content; //phpcs:ignore --data already escaped inside template file ?>
 			</div>
 		</div>
 		<?php
