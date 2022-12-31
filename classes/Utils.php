@@ -2269,11 +2269,14 @@ class Utils {
 	/**
 	 * Get user name for e-mail salutation
 	 *
-	 * @param \WP_User $user
+	 * @param mixed $user user object.
 	 * @return string
 	 * @since 2.0.9
 	 */
-	public function get_user_name( \WP_User $user ) {
+	public function get_user_name( $user ) {
+		if ( ! is_a( $user, 'WP_User' ) ) {
+			return '';
+		}
 		$name = '';
 
 		if ( empty( trim( $user->first_name ) ) ) {
