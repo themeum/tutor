@@ -462,7 +462,7 @@ if ( ! function_exists( 'tutor_course_loop_author' ) ) {
 		tutor_load_template( 'loop.course-author' );
 		$output = apply_filters( 'tutor_course_loop_author', ob_get_clean() );
 
-		echo $output;
+		echo $output; //phpcs:ignore -- data already escaped inside template file
 	}
 }
 
@@ -557,7 +557,7 @@ if ( ! function_exists( 'tutor_course_price' ) ) {
 		tutor_load_template( 'single.course.wc-price-html' );
 		$output = apply_filters( 'tutor_course_price', ob_get_clean() );
 
-		echo $output;
+		echo $output; //phpcs:ignore -- data already escaped inside template file
 	}
 }
 
@@ -1132,7 +1132,7 @@ function tutor_single_quiz_body( $echo = true ) {
 	$output = apply_filters( 'tutor_single_quiz/body', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output;
+		echo $output; //phpcs:ignore -- data already escaped inside template file
 	}
 	return $output;
 }

@@ -196,7 +196,7 @@ class Video_Stream {
 				$bytes_to_read = $this->end - $i + 1;
 			}
 			$data = @stream_get_contents( $this->stream, $bytes_to_read, $i );
-			echo $data;
+			echo wp_kses_post( $data );
 			flush();
 			$i += $bytes_to_read;
 		}
