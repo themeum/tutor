@@ -49,7 +49,11 @@ if ( ! function_exists( 'tutor_get_template' ) ) {
 			}
 
 			if ( ! file_exists( $template_location ) ) {
-				echo '<div class="tutor-notice-warning"> ' . __( sprintf( 'The file you are trying to load does not exist in your theme or Tutor LMS plugin location. If you are extending the Tutor LMS plugin, please create a php file here: %s ', '<code>' . $file_in_theme . '</code>' ), 'tutor' ) . ' </div>';
+				$warning_msg = __( 'The file you are trying to load does not exist in your theme or Tutor LMS plugin location. If you are extending the Tutor LMS plugin, please create a php file here: ', 'tutor' );
+				$warning_msg = $warning_msg . "<code>$file_in_theme</code>";
+				echo wp_kses( $warning_msg, array( 'code' => true ) );
+				?>
+				<?php
 			}
 		}
 
@@ -181,7 +185,7 @@ if ( ! function_exists( 'tutor_course_loop_start' ) ) {
 		$output = apply_filters( 'tutor_course_loop_start', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore
 		}
 		return $output;
 	}
@@ -194,7 +198,7 @@ if ( ! function_exists( 'tutor_course_loop_end' ) ) {
 
 		$output = apply_filters( 'tutor_course_loop_end', ob_get_clean() );
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 
 		return $output;
@@ -206,7 +210,7 @@ function tutor_course_loop_before_content() {
 	tutor_load_template( 'loop.loop-before-content' );
 
 	$output = apply_filters( 'tutor_course_loop_before_content', ob_get_clean() );
-	echo tutor_kses_html( $output );
+	echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 }
 
 function tutor_course_loop_after_content() {
@@ -214,7 +218,7 @@ function tutor_course_loop_after_content() {
 	tutor_load_template( 'loop.loop-after-content' );
 
 	$output = apply_filters( 'tutor_course_loop_after_content', ob_get_clean() );
-	echo tutor_kses_html( $output );
+	echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 }
 
 if ( ! function_exists( 'tutor_course_loop_title' ) ) {
@@ -223,7 +227,7 @@ if ( ! function_exists( 'tutor_course_loop_title' ) ) {
 		tutor_load_template( 'loop.title' );
 		$output = apply_filters( 'tutor_course_loop_title', ob_get_clean() );
 
-		echo tutor_kses_html( $output );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -234,7 +238,7 @@ if ( ! function_exists( 'tutor_course_loop_header' ) ) {
 		tutor_load_template( 'loop.header' );
 		$output = apply_filters( 'tutor_course_loop_header', ob_get_clean() );
 
-		echo tutor_kses_html( $output );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -244,7 +248,7 @@ if ( ! function_exists( 'tutor_course_loop_footer' ) ) {
 		tutor_load_template( 'loop.footer' );
 		$output = apply_filters( 'tutor_course_loop_footer', ob_get_clean() );
 
-		echo tutor_kses_html( $output );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -257,7 +261,7 @@ if ( ! function_exists( 'tutor_course_loop_start_content_wrap' ) ) {
 		tutor_load_template( 'loop.start_content_wrap' );
 		$output = apply_filters( 'tutor_course_loop_start_content_wrap', ob_get_clean() );
 
-		echo tutor_kses_html( $output );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -267,7 +271,7 @@ if ( ! function_exists( 'tutor_course_loop_end_content_wrap' ) ) {
 		tutor_load_template( 'loop.end_content_wrap' );
 		$output = apply_filters( 'tutor_course_loop_end_content_wrap', ob_get_clean() );
 
-		echo tutor_kses_html( $output );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -278,7 +282,7 @@ if ( ! function_exists( 'tutor_course_loop_thumbnail' ) ) {
 		$output = apply_filters( 'tutor_course_loop_thumbnail', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		} else {
 			return $output;
 		}
@@ -417,7 +421,7 @@ if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
 		}
 
 		echo '<div class="tutor-course-thumbnail">
-            <img src="' . $thumb_url . '" />
+            <img src="' . esc_url( $thumb_url ) . '" />
         </div>';
 	}
 }
@@ -446,7 +450,7 @@ if ( ! function_exists( 'tutor_course_loop_meta' ) ) {
 		tutor_load_template( 'loop.meta' );
 		$output = apply_filters( 'tutor_course_loop_meta', ob_get_clean() );
 
-		echo tutor_kses_html( $output );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -498,7 +502,7 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 				tutor_load_template( 'loop.course-price' );
 			}
 		}
-		echo apply_filters( 'tutor_course_loop_price', ob_get_clean() );
+		echo apply_filters( 'tutor_course_loop_price', ob_get_clean() ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -521,7 +525,7 @@ if ( ! function_exists( 'tutor_course_loop_rating' ) ) {
 		tutor_load_template( 'loop.rating' );
 		$output = apply_filters( 'tutor_course_loop_rating', ob_get_clean() );
 
-		echo tutor_kses_html( $output );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -573,7 +577,7 @@ if ( ! function_exists( 'tutor_the_excerpt' ) ) {
 		if ( ! $post_id ) {
 			$post_id = get_the_ID();
 		}
-		echo tutor_get_the_excerpt( $post_id );
+		echo esc_textarea( tutor_get_the_excerpt( $post_id ) );
 	}
 }
 /**
@@ -683,7 +687,7 @@ if ( ! function_exists( 'tutor_course_topics' ) ) {
 		wp_reset_postdata();
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 
 		return $output;
@@ -733,7 +737,7 @@ if ( ! function_exists( 'tutor_course_requirements_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/requirements_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 		return $output;
 	}
@@ -782,7 +786,7 @@ if ( ! function_exists( 'tutor_course_target_audience_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/audience_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 		return $output;
 	}
@@ -813,7 +817,7 @@ if ( ! function_exists( 'tutor_course_material_includes_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/material_includes', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 		return $output;
 	}
@@ -834,7 +838,7 @@ if ( ! function_exists( 'tutor_course_instructors_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/instructors_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 		return $output;
 	}
@@ -848,7 +852,7 @@ if ( ! function_exists( 'tutor_course_target_reviews_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/reviews_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 		return $output;
 	}
@@ -870,7 +874,7 @@ if ( ! function_exists( 'tutor_course_content' ) ) {
 		$output = apply_filters( 'tutor_course/single/content', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 
 		return $output;
@@ -908,7 +912,7 @@ if ( ! function_exists( 'tutor_course_lead_info' ) ) {
 		$output = apply_filters( 'tutor_course/single/lead_info', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 		return $output;
 	}
@@ -944,7 +948,7 @@ if ( ! function_exists( 'tutor_course_enrolled_lead_info' ) ) {
 		$output = apply_filters( 'tutor_course/single/enrolled/lead_info', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 
 		return $output;
@@ -977,7 +981,7 @@ if ( ! function_exists( 'tutor_lesson_lead_info' ) ) {
 		$output = apply_filters( 'tutor_course/single/enrolled/lead_info', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo $output; //phpcs:ignore -- already escaped inside template file
 		}
 
 		return $output;
@@ -992,7 +996,7 @@ if ( ! function_exists( 'tutor_course_video' ) ) {
 		$output = apply_filters( 'tutor_course/single/video', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo $output; //phpcs:ignore -- already escaped inside template file
 		}
 		return $output;
 	}
@@ -1005,7 +1009,7 @@ if ( ! function_exists( 'tutor_lesson_video' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/video', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 		return $output;
 	}
@@ -1028,7 +1032,7 @@ if ( ! function_exists( 'get_tutor_posts_attachments' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/attachments', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 		return $output;
 	}
@@ -1049,7 +1053,7 @@ if ( ! function_exists( 'tutor_lesson_content' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/content', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo $output; //phpcs:ignore -- already escaped inside template file
 		}
 
 		return $output;
@@ -1063,7 +1067,7 @@ if ( ! function_exists( 'tutor_lesson_mark_complete_html' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/complete_form', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 
 		return $output;
@@ -1076,7 +1080,7 @@ function tutor_course_question_and_answer( $echo = true ) {
 	$output = apply_filters( 'tutor_course/single/question_and_answer', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output;
+		echo $output; //phpcs:ignore -- already escaped inside template file
 	}
 
 	return $output;
@@ -1109,7 +1113,7 @@ function tutor_course_announcements( $echo = true ) {
 	$output = apply_filters( 'tutor_course/single/announcements', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output;
+		echo $output; //phpcs:ignore -- already escaped inside template file
 	}
 
 	return $output;
@@ -1121,7 +1125,7 @@ function tutor_single_quiz_top( $echo = true ) {
 	$output = apply_filters( 'tutor_single_quiz/top', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output;
+		echo $output; //phpcs:ignore -- already escaped inside template file
 	}
 	return $output;
 }
@@ -1150,7 +1154,7 @@ function tutor_single_quiz_content( $echo = true ) {
 	$output = apply_filters( 'tutor_single_quiz/content', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output;
+		echo $output; //phpcs:ignore -- already escaped inside template file
 	}
 	return $output;
 }
@@ -1162,7 +1166,7 @@ function tutor_single_quiz_no_course_belongs( $echo = true ) {
 	$output = apply_filters( 'tutor_single_quiz/no_course_belongs', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output;
+		echo $output; //phpcs:ignore -- already escaped inside template file
 	}
 	return $output;
 }
@@ -1174,7 +1178,7 @@ function single_quiz_contents( $echo = true ) {
 	$output = apply_filters( 'tutor_single_quiz/single_quiz_contents', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output;
+		echo $output; //phpcs:ignore -- already escaped inside template file
 	}
 	return $output;
 }
@@ -1299,7 +1303,7 @@ if ( ! function_exists( 'tutor_lesson_sidebar_question_and_answer' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/sidebar_question_and_answer', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 
 		return $output;
@@ -1323,7 +1327,7 @@ if ( ! function_exists( 'tutor_assignment_content' ) ) {
 		$output = apply_filters( 'tutor_assignment/single/content', ob_get_clean() );
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 		}
 
 		return $output;
@@ -1382,7 +1386,7 @@ function tutor_next_previous_pagination( $course_content_id = 0, $echo = true ) 
 	$output = apply_filters( 'tutor/single/next_previous_pagination', ob_get_clean() );
 
 	if ( $echo ) {
-		echo tutor_kses_html( $output );
+		echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 	}
 
 	return $output;
