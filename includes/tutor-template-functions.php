@@ -3,6 +3,9 @@
  * Tutor template functions
  *
  * @package TutorFunctions
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
