@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+use TUTOR\Input;
+
 ?>
 <form class="tutor_lesson_modal_form">
 	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
@@ -43,6 +45,12 @@
 		</label>
 
 		<?php
+			/**
+			 * Allow iframe inside lesson modal
+			 *
+			 * @since 2.1.6
+			 */
+			add_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
 			$sanitized_content = wp_kses_post( wp_unslash( str_replace( 'data-mce-style', 'style', $post->post_content ) ) );
 			wp_editor( $sanitized_content, 'tutor_lesson_modal_editor', array( 'editor_height' => 150 ) );
 		?>
