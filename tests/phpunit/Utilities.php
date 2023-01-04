@@ -26,9 +26,9 @@ class Utilities extends  \WP_UnitTestCase {
 	public static function get_user_id( array $args ): int {
 		$default_args = array(
 			'user_pass'     => '1234',
-			'user_login'    => 'test_user' . time(),
-			'user_nicename' => 'test_user_nice' . time(),
-			'user_email'    => 'test_user_email' . time(),
+			'user_login'    => 'test_user',
+			'user_nicename' => 'test_user_nice',
+			'user_email'    => 'test@email.com',
 			'role'          => 'subscriber',
 		);
 		$args         = wp_parse_args( $args, $default_args );
@@ -46,9 +46,9 @@ class Utilities extends  \WP_UnitTestCase {
 	public static function get_user( array $args ) {
 		$default_args = array(
 			'user_pass'     => '1234',
-			'user_login'    => 'test_user' . time(),
-			'user_nicename' => 'test_user_nice' . time(),
-			'user_email'    => 'test_user_email' . time(),
+			'user_login'    => 'test_user',
+			'user_nicename' => 'test_user_nice',
+			'user_email'    => 'test@email.com',
 			'role'          => 'subscriber',
 		);
 		$args         = wp_parse_args( $args, $default_args );
