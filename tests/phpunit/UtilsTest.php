@@ -62,10 +62,47 @@ class UtilsTest extends \WP_UnitTestCase {
 	 * @return boolean
 	 */
 	public function test_is_assoc() {
-		$array1 = array(0, 1, 2);
-		$array2 = array( 'a' => 'apple', 'b' => 'banana' );
+		$array1 = array( 0, 1, 2 );
+		$array2 = array(
+			'a' => 'apple',
+			'b' => 'banana',
+		);
 
 		$this->assertTrue( tutor_utils()->is_assoc( $array2 ) );
 		$this->assertFalse( tutor_utils()->is_assoc( $array1 ) );
+	}
+
+	/**
+	 * Test display name
+	 *
+	 * @return void
+	 */
+	public function test_display_name() {
+		$args      = array(
+			'display_name' => 'john doe',
+		);
+		$user_id   = Utilities::get_user_id( $args );
+		$expected1 = 'john doe';
+		$actual1   = tutor_utils()->display_name( $user_id );
+
+		// Test display name.
+		$this->assertSame( $expected1, $actual1 );
+
+		// Update user , set display name empty.
+		$update_args = array(
+			'ID'           => $user_id,
+			'display_name' => '',
+			'user_login'   => 'abc',
+		);
+		$user_id = Utilities::get_user_id( $update_args );
+
+		$expected2 = 'abc';
+		/**
+		 * It should return user_login since display name empty
+		 * & first name & last name not been setup
+		 */
+		$actual2 = tutor_utils()->display_name( $user_id );
+
+		$this->assertSame( $expected2, $actual2 );
 	}
 }
