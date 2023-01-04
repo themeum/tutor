@@ -9446,4 +9446,32 @@ class Utils {
 		return wp_parse_args( $tags , $defaults );
 	}
 
+	/**
+	 * Get user to display
+	 * 
+	 * It will return display name if not empty, if empty
+	 * then it will return first name & last name if first
+	 * & last name empty then it will return user_login name
+	 *
+	 * @since 2.1.6
+	 *
+	 * @param integer $user_id
+	 *
+	 * @return string
+	 */
+	public function display_name( int $user_id ): string {
+		$name = '';
+		$user_data = get_userdata( $user_id );
+
+		if ( is_a( $user_data, 'WP_User' ) ) {
+			if ( $user_data->display_name ) {
+				$name = $user_data->display_name;
+			} else {
+				$first_name = \get_user_meta( $user_id, 'first_name', true );
+				$last_name = \get_user_meta( $user_id, 'last_name', true );
+				$name = $first_name && $last_name ? $first_name . ' ' . $last_name : $user_data->user_login;
+			}
+		}
+		return $name;
+	}
 }
