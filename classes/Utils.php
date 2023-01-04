@@ -9467,8 +9467,8 @@ class Utils {
 			if ( $user_data->display_name ) {
 				$name = $user_data->display_name;
 			} else {
-				$first_name = \get_user_meta( $user_id, 'first_name', true );
-				$last_name = \get_user_meta( $user_id, 'last_name', true );
+				$first_name = trim( $user_data->first_name );
+				$last_name = trim( $user_data->last_name );
 				$name = $first_name && $last_name ? $first_name . ' ' . $last_name : $user_data->user_login;
 			}
 		}
