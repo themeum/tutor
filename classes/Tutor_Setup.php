@@ -693,9 +693,9 @@ class Tutor_Setup {
 						<div>
 							<div class="wizard-boarding-header-sub tutor-fs-5 tutor-color-black">
 							<?php
-								$greeting  = _x( 'Hello', 'tutor-wizard-greeting', 'tutor' );
-								$greeting .= $current_user->user_login;
-								$greeting .= _x( 'welcome to Tutor LMS!', 'tutor-wizard-greeting', 'tutor' );
+								$greeting  = _x( 'Hello ', 'tutor-wizard-greeting', 'tutor' );
+								$greeting .= tutor_utils()->display_name( $current_user->ID );
+								$greeting .= _x( ' welcome to Tutor LMS!', 'tutor-wizard-greeting', 'tutor' );
 								echo esc_html( $greeting );
 							?>
 							</div>
