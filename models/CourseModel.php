@@ -124,6 +124,27 @@ class CourseModel {
 	}
 
 	/**
+	 * Check a user is main instructor of a course
+	 *
+	 * @since 2.1.6
+	 *
+	 * @param integer $course_id course id.
+	 * @param integer $user_id instructor id ( optional ) default: current user id.
+	 *
+	 * @return boolean
+	 */
+	public static function is_main_instructor( $course_id, $user_id = 0 ) {
+		$course  = get_post( $course_id );
+		$user_id = tutor_utils()->get_user_id( $user_id );
+
+		if ( ! $course || self::POST_TYPE !== $course->post_type || $user_id !== (int) $course->post_author ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Mark the course as completed
 	 *
 	 * @since 2.0.7
