@@ -190,6 +190,12 @@ window.jQuery(document).ready(function($) {
 	$(document).on('click', '.update_lesson_modal_btn', function(event) {
 		event.preventDefault();
 
+		/**
+		 * Fix - [embed] shortcode does not work from visual mode
+		 * @since 2.1.6
+		 */
+		$('#tutor_lesson_modal_editor-html').click();
+
 		var $that = $(this);
 		var content;
 		var inputid = 'tutor_lesson_modal_editor';
