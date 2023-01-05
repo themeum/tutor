@@ -9464,12 +9464,14 @@ class Utils {
 		$user_data = get_userdata( $user_id );
 
 		if ( is_a( $user_data, 'WP_User' ) ) {
-			if ( $user_data->display_name ) {
-				$name = $user_data->display_name;
+			$display_name = $user_data->display_name;
+			$user_name 	  = $user_data->user_login;
+			$custom_name  = trim( trim( $user_data->first_name ) . ' ' . trim( $user_data->last_name ) );
+
+			if ( $display_name ) {
+				$name = $display_name === $user_name && $custom_name ? $custom_name : $display_name;
 			} else {
-				$first_name = trim( $user_data->first_name );
-				$last_name = trim( $user_data->last_name );
-				$name = $first_name && $last_name ? $first_name . ' ' . $last_name : $user_data->user_login;
+				$name = $custom_name ? $custom_name : $user_name;
 			}
 		}
 		return $name;
