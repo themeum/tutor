@@ -9447,11 +9447,12 @@ class Utils {
 	}
 
 	/**
-	 * Get user to display
+	 * Get user name to display
 	 * 
 	 * It will return display name if not empty, if empty
-	 * then it will return first name & last name if first
-	 * & last name empty then it will return user_login name
+	 * then it will return first name & last name or if display
+	 * name & user same it will return first & last name (if ot emtpy)
+	 * if first & last name empty then it will return user_login name
 	 *
 	 * @since 2.1.6
 	 *
