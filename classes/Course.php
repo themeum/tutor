@@ -882,6 +882,14 @@ class Course extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
+		/**
+		 * Co-instructor can not delete a course
+		 * @since 2.1.6
+		 */
+		if ( false === CourseModel::is_main_instructor( $course_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Only main instructor can delete this course', 'tutor' ) ) );
+		}
+
 		CourseModel::delete_course( $course_id );
 		wp_send_json_success();
 	}
