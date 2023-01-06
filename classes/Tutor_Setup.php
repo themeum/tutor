@@ -800,7 +800,7 @@ class Tutor_Setup {
 							<label for="enable_course_marketplace-0">
 								<img src="<?php echo esc_url( tutor()->url . 'assets/images/single-marketplace.svg' ); ?>" />
 								<div class="title"><?php esc_html_e( 'Individual', 'tutor' ); ?></div>
-								<div class="subtitle"><?php esc_html_e( 'Share solo journey as an educator and spared knowledge', 'tutor' ); ?></div>
+								<div class="subtitle"><?php esc_html_e( 'Share solo journey as an educator and spread knowledge', 'tutor' ); ?></div>
 								<div class="action">
 									<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-type-next">
 									<?php esc_html_e( 'Next', 'tutor' ); ?>
