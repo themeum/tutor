@@ -2349,28 +2349,9 @@ class Utils {
 		}
 
 		$enrolment_status  = 'completed';
-		$generate_wc_order = tutor_utils()->get_option( 'tutor_woocommerce_invoice' );
-		/**
-		 * If course is purchase-able & generate order option enabled
-		 * then keep enrollment status pending.
-		 *
-		 * Admin need to follow generate order instruction to
-		 * complete enrollment
-		 *
-		 * @since 2.1.4
-		 */
+		
 		if ( $this->is_course_purchasable( $course_id ) ) {
 			$enrolment_status = 'pending';
-		}
-
-		/**
-		 * If admin doing manual enrollment & generate order is not enabled
-		 * then make enrollment complete even when it is paid course
-		 *
-		 * @since 2.1.6
-		 */
-		if ( is_admin() && ! $generate_wc_order ) {
-			$enrolment_status = 'completed';
 		}
 
 		$enroll_data = apply_filters(
