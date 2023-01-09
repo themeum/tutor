@@ -132,18 +132,22 @@ class User {
 			if ( ! function_exists( 'wp_handle_upload' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/file.php';
 			}
-
 			$upload_overrides = array( 'test_form' => false );
 			$movefile         = wp_handle_upload( $photo, $upload_overrides );
 
 			if ( $movefile && ! isset( $movefile['error'] ) ) {
 				$file_path = tutor_utils()->array_get( 'file', $movefile );
 				$file_url  = tutor_utils()->array_get( 'url', $movefile );
+				$mime_type = '';
+				if ( file_exists( $file_path ) ) {
+					$image_info = getimagesize( $file_path );
+					$mime_type  = is_array( $image_info ) && count( $image_info ) ? $image_info['mime'] : '';
+				}
 
 				$media_id = wp_insert_attachment(
 					array(
 						'guid'           => $file_path,
-						'post_mime_type' => mime_content_type( $file_path ),
+						'post_mime_type' => $mime_type,
 						'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_url ) ),
 						'post_content'   => '',
 						'post_status'    => 'inherit',
