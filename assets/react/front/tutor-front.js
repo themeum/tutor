@@ -521,8 +521,15 @@ jQuery(document).ready(function($) {
 			},
 			success: function(data) {
 				if (data.success) {
-					location.reload();
+					/**
+					 * The `true` value will force reload current page
+					 * from server instead of browser cache.
+					 */
+					location.reload(true);
 				}
+			},
+			error: function(xhr, status, error) {
+				 console.log('assignment start error: ' + error ); 
 			},
 			complete: function() {
 				$('#tutor_assignment_start_btn').removeClass('is-loading');
