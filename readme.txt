@@ -234,7 +234,6 @@ Fix: Front-site Dashboard was showing Markup Error in Mobile and Tab View
 Fix: On Assignment Submission, files were not being uploaded if the file language isn't English
 Fix: The Product Orders that does not belong to Tutor LMS was getting Completed status
 Fix: For Paid Courses, students were getting Enrolled when Orders are even not Completed
-Fix: Audio File Embed was not working in the Lesson Description
 Fix: Gutenberg Editor was not being activated on Lesson pages even though Gutenberg is enabled from Settings
 Fix: Email Template Formatting was not working properly
 Fix: On the Lesson page, the Comment section was showing Username instead of Display Name
