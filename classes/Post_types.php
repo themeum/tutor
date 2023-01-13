@@ -264,6 +264,15 @@ class Post_types {
 			),
 		);
 
+		/**
+		 * Added for support gutenberg editor to lesson post type
+		 * @since 2.1.6
+		 */
+		$enable_gutenberg = (bool) tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
+		if ( $enable_gutenberg ) {
+			$args['show_in_rest'] = true;
+		}
+		
 		register_post_type( $lesson_post_type, $args );
 	}
 

@@ -693,9 +693,9 @@ class Tutor_Setup {
 						<div>
 							<div class="wizard-boarding-header-sub tutor-fs-5 tutor-color-black">
 							<?php
-								$greeting  = _x( 'Hello', 'tutor-wizard-greeting', 'tutor' );
-								$greeting .= $current_user->user_login;
-								$greeting .= _x( 'welcome to Tutor LMS!', 'tutor-wizard-greeting', 'tutor' );
+								$greeting  = _x( 'Hello ', 'tutor-wizard-greeting', 'tutor' );
+								$greeting .= tutor_utils()->display_name( $current_user->ID );
+								$greeting .= _x( ' welcome to Tutor LMS!', 'tutor-wizard-greeting', 'tutor' );
 								echo esc_html( $greeting );
 							?>
 							</div>
@@ -800,7 +800,7 @@ class Tutor_Setup {
 							<label for="enable_course_marketplace-0">
 								<img src="<?php echo esc_url( tutor()->url . 'assets/images/single-marketplace.svg' ); ?>" />
 								<div class="title"><?php esc_html_e( 'Individual', 'tutor' ); ?></div>
-								<div class="subtitle"><?php esc_html_e( 'Share solo journey as an educator and spared knowledge', 'tutor' ); ?></div>
+								<div class="subtitle"><?php esc_html_e( 'Share solo journey as an educator and spread knowledge', 'tutor' ); ?></div>
 								<div class="action">
 									<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-type-next">
 									<?php esc_html_e( 'Next', 'tutor' ); ?>

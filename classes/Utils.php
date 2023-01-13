@@ -2269,11 +2269,14 @@ class Utils {
 	/**
 	 * Get user name for e-mail salutation
 	 *
-	 * @param \WP_User $user
+	 * @param mixed $user user object.
 	 * @return string
 	 * @since 2.0.9
 	 */
-	public function get_user_name( \WP_User $user ) {
+	public function get_user_name( $user ) {
+		if ( ! is_a( $user, 'WP_User' ) ) {
+			return '';
+		}
 		$name = '';
 
 		if ( empty( trim( $user->first_name ) ) ) {
@@ -2345,18 +2348,9 @@ class Utils {
 			}
 		}
 
-		$enrolment_status = 'completed';
-		$generate_invoice = tutor_utils()->get_option( 'tutor_woocommerce_invoice' );
-		/**
-		 * If course is purchase-able & generate order option enabled
-		 * then keep enrollment status pending.
-		 *
-		 * Admin need to follow generate order instruction to
-		 * complete enrollment
-		 *
-		 * @since 2.1.4
-		 */
-		if ( $this->is_course_purchasable( $course_id ) && $generate_invoice ) {
+		$enrolment_status  = 'completed';
+		
+		if ( $this->is_course_purchasable( $course_id ) ) {
 			$enrolment_status = 'pending';
 		}
 
@@ -2372,7 +2366,7 @@ class Utils {
 			)
 		);
 
-		// Insert the post into the database
+		// Insert the post into the database.
 		$isEnrolled = wp_insert_post( $enroll_data );
 		if ( $isEnrolled ) {
 
@@ -9443,4 +9437,35 @@ class Utils {
 		return wp_parse_args( $tags , $defaults );
 	}
 
+	/**
+	 * Get user name to display
+	 * 
+	 * It will return display name if not empty, if empty
+	 * then it will return first name & last name or if display
+	 * name & user same it will return first & last name (if ot emtpy)
+	 * if first & last name empty then it will return user_login name
+	 *
+	 * @since 2.1.6
+	 *
+	 * @param integer $user_id
+	 *
+	 * @return string
+	 */
+	public function display_name( int $user_id ): string {
+		$name = '';
+		$user_data = get_userdata( $user_id );
+
+		if ( is_a( $user_data, 'WP_User' ) ) {
+			$display_name = $user_data->display_name;
+			$user_name 	  = $user_data->user_login;
+			$custom_name  = trim( trim( $user_data->first_name ) . ' ' . trim( $user_data->last_name ) );
+
+			if ( $display_name ) {
+				$name = $display_name === $user_name && $custom_name ? $custom_name : $display_name;
+			} else {
+				$name = $custom_name ? $custom_name : $user_name;
+			}
+		}
+		return $name;
+	}
 }
