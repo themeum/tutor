@@ -803,8 +803,15 @@ class WooCommerce extends Tutor_Base {
 
 		$manual_payments = array( 'cod', 'cheque', 'bacs' );
 		$order_status    = method_exists( $order, 'get_status' ) ? $order->get_status() : '';
+		$is_tutor_order  = get_post_meta( $order->get_id(), '_is_tutor_order_for_course', true );
 
-		if ( ! is_admin() && $is_enabled_auto_complete && 'processing' === $order_status && ! in_array( $payment_method, $manual_payments ) ) {
+		/**
+		 * Is tutor order condition added with other conditions,
+		 * to prevent order other than Tutor get completed
+		 *
+		 * @since 2.1.6
+		 */
+		if ( ! is_admin() && $is_enabled_auto_complete && 'processing' === $order_status && ! in_array( $payment_method, $manual_payments ) && $is_tutor_order ) {
 			$auto_complete = true;
 		}
 		return $auto_complete;

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Tutor general functions
+ *
+ * @package TutorFunctions
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.0.0
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -387,25 +396,21 @@ if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
 
 if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 	function course_builder_section_wrap( $content = '', $title = '', $echo = true ) {
-		ob_start();
-		?>
-		<div class="tutor-course-builder-section">
-			<div class="tutor-course-builder-section-title">
-				<span class="tutor-fs-5 tutor-fw-bold tutor-color-secondary">
-					<i class="tutor-icon-angle-up" area-hidden="true"></i>
-					<span><?php echo $title; ?></span>
-				</span>
-			</div>
-			<div class="tutor-course-builder-section-content">
-				<?php echo $content; ?>
-			</div>
-		</div>
-		<?php
-		$html = ob_get_clean();
-
+		$template = trailingslashit( tutor()->path . 'templates' ) . 'metabox-wrapper.php';
 		if ( $echo ) {
-			echo tutor_kses_html( $html );
+			if ( file_exists( $template ) ) {
+				include $template;
+			} else {
+				echo esc_html( $template ) . esc_html__( 'file not exists', 'tutor' );
+			}
 		} else {
+			ob_start();
+			if ( file_exists( $template ) ) {
+				include $template;
+			} else {
+				echo esc_html( $template ) . esc_html__( 'file not exists', 'tutor' );
+			}
+			$html = ob_get_clean();
 			return $html;
 		}
 	}
@@ -560,7 +565,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 					</div>
 				</div>';
 		if ( $echo ) {
-			echo tutor_kses_html( $html );
+			echo tutor_kses_html( $html ); //phpcs:ignore
 		}
 		return $html;
 	}
@@ -661,11 +666,20 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 	function tutor_action_field( $action = '', $echo = true ) {
 		$output = '';
 		if ( $action ) {
-			$output = '<input type="hidden" name="tutor_action" value="' . $action . '">';
+			$output = '<input type="hidden" name="tutor_action" value="' . esc_attr( $action ) . '">';
 		}
 
 		if ( $echo ) {
-			echo tutor_kses_html( $output );
+			echo wp_kses(
+				$output,
+				array(
+					'input' => array(
+						'type'  => true,
+						'name'  => true,
+						'value' => true,
+					),
+				)
+			);
 		} else {
 			return $output;
 		}
@@ -676,6 +690,7 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 if ( ! function_exists( 'tutor_time' ) ) {
 	/**
 	 * Return current Time from WordPress time
+	 *
 	 * @return int|string
 	 * @since v.1.4.3
 	 */
@@ -847,21 +862,6 @@ if ( ! function_exists( '_tutor_search_by_title_only' ) ) {
 	}
 }
 
-if ( ! function_exists( 'pr' ) ) {
-	/**
-	 * Function to print_r
-	 *
-	 * @param  array $var .
-	 * @return array
-	 */
-	function pr( $var ) {
-		$template = PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg' ? '<pre class="pr">%s</pre>' : "\n%s\n\n";
-		printf( $template, trim( print_r( $var, true ) ) );
-
-		return $var;
-	}
-}
-
 if ( ! function_exists( 'get_request' ) ) {
 	/**
 	 * Function to get_request
@@ -938,7 +938,7 @@ if ( ! function_exists( 'tutor_log' ) ) {
 	function tutor_log() {
 		$arg_list = func_get_args();
 
-		foreach ($arg_list as $data) {
+		foreach ( $arg_list as $data ) {
 			ob_start();
 			var_dump( $data );
 			error_log( ob_get_clean() );

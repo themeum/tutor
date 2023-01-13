@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.1
 Requires PHP: 7.1
-Stable tag: 2.1.5
+Stable tag: 2.1.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,22 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.1.6 - January 11, 2023
+
+New: Co-Instructors will not be able to delete a Course like the Course Publishing Instructor
+Update: More security improvements are introduced
+Fix: Profile Photo Upload was showing a Mime Type error in some cases
+Fix: Front-site Dashboard was showing Markup Error in Mobile and Tab View
+Fix: On Assignment Submission, files were not being uploaded if the file language isn't English
+Fix: The Product Orders that does not belong to Tutor LMS was getting Completed status
+Fix: For Paid Courses, students were getting Enrolled when Orders are even not Completed
+Fix: Gutenberg Editor was not being activated on Lesson pages even though Gutenberg is enabled from Settings
+Fix: Email Template Formatting was not working properly
+Fix: On the Lesson page, the Comment section was showing Username instead of Display Name
+Fix: Third-party Embed Codes were not working in the Lesson pages
+Fix: Sometimes Start Assignment button was needing more than one click to be executed
+Fix: Some Email Template texts were fixed
 
 = 2.1.5 - December 29, 2022
 

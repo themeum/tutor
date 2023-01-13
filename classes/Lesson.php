@@ -257,6 +257,14 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
+		
+		/**
+		 * Allow iframe inside lesson content to support
+		 * embed video & other stuff
+		 *
+		 * @since 2.1.6
+		 */
+		add_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
 
 		$lesson_id        = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 		$topic_id         = Input::post( 'current_topic_id', 0, Input::TYPE_INT );
