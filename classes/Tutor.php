@@ -591,6 +591,7 @@ final class Tutor {
 		include tutor()->path . 'includes/tutor-general-functions.php';
 		include tutor()->path . 'includes/tutor-template-functions.php';
 		include tutor()->path . 'includes/tutor-template-hook.php';
+		include tutor()->path . 'includes/translate-text.php';
 	}
 
 	/**
