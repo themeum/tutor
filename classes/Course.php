@@ -909,7 +909,7 @@ class Course extends Tutor_Base {
 		$post_type         = $postarr['post_type'];
 		$courses_post_type = tutor()->course_post_type;
 
-		if ( false === $gutenberg_enabled && $post_type !== $courses_post_type ) {
+		if ( false === is_admin() || false === $gutenberg_enabled || $post_type !== $courses_post_type ) {
 			return $data;
 		}
 
