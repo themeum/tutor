@@ -53,6 +53,7 @@ class Course_Filter {
 		}
 		add_action( 'wp_ajax_tutor_course_filter_ajax', array( $this, 'load_listing' ), 10, 0 );
 		add_action( 'wp_ajax_nopriv_tutor_course_filter_ajax', array( $this, 'load_listing' ), 10, 0 );
+		add_filter( 'term_link', __CLASS__ . '::filter_course_category_term_link', 10, 3 );
 	}
 
 	/**
@@ -258,7 +259,6 @@ class Course_Filter {
 	 * @return void
 	 */
 	private function render_terms_hierarchically( $terms, $taxonomy ) {
-
 		$term_id = $this->get_current_term_id();
 
 		foreach ( $terms as $term ) {
@@ -290,5 +290,24 @@ class Course_Filter {
 			)
 		);
 		$this->render_terms_hierarchically( $this->sort_terms_hierarchically( $terms ), $taxonomy );
+	}
+
+	/**
+	 * Filter course-category term's permalink
+	 *
+	 * Add a query param so that course filter can work
+	 *
+	 * @param string   $termlink default term link.
+	 * @param \WP_Term $term term obj.
+	 * @param string   $taxonomy taxonomy.
+	 *
+	 * @return string customized term link
+	 */
+	public static function filter_course_category_term_link( string $termlink, \WP_Term $term, string $taxonomy ) {
+		if ( 'course-category' === $taxonomy ) {
+			$termlink = add_query_arg( 'tutor-course-filter-category', $term->term_id, $termlink );
+
+		}
+		return $termlink;
 	}
 }
