@@ -738,54 +738,6 @@ class Utils {
 	}
 
 	/**
-	 * @param $instructor_id
-	 *
-	 * @return array|null|object
-	 *
-	 * Get courses by a instructor
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false ) {
-		global $wpdb;
-		$offset           = sanitize_text_field( $offset );
-		$limit            = sanitize_text_field( $limit );
-		$instructor_id    = $this->get_user_id( $instructor_id );
-		$course_post_type = tutor()->course_post_type;
-
-		if ( empty( $post_status ) || $post_status == 'any' ) {
-			$where_post_status = '';
-		} else {
-			! is_array( $post_status ) ? $post_status = array( $post_status ) : 0;
-			$statuses                                 = "'" . implode( "','", $post_status ) . "'";
-			$where_post_status                        = "AND $wpdb->posts.post_status IN({$statuses}) ";
-		}
-
-		$select_col   = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
-		$limit_offset = $count_only ? '' : " LIMIT $offset, $limit ";
-
-		$query = $wpdb->prepare(
-			"SELECT $select_col
-			FROM 	$wpdb->posts
-			LEFT JOIN {$wpdb->usermeta}
-					ON $wpdb->usermeta.user_id = %d
-					AND $wpdb->usermeta.meta_key = %s
-					AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
-			WHERE	1 = 1 {$where_post_status}
-				AND $wpdb->posts.post_type = %s
-				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
-			ORDER BY $wpdb->posts.post_date DESC $limit_offset",
-			$instructor_id,
-			'_tutor_instructor_course_id',
-			$course_post_type,
-			$instructor_id,
-			$instructor_id
-		);
-
-		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query, OBJECT );
-	}
-
-	/**
 	 * @param int $course_id
 	 * @param int $user_id
 	 *
