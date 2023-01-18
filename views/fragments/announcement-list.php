@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+use Tutor\Models\CourseModel;
+
 /**
  * Announcement modal
  *
@@ -16,8 +18,8 @@
  *
  * @param string $id modal id.
  * @param string $title modal title.
- * @param string $courses courses.
- * @param string $announcement announcement.
+ * @param array $courses courses.
+ * @param object|null $announcement announcement.
  *
  * @return void
  */
@@ -103,7 +105,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
  * @param string $id modal id.
  * @param string $update_modal_id update modal id.
  * @param string $delete_modal_id delete_modal_id.
- * @param string $announcement announcement.
+ * @param object $announcement announcement.
  * @param string $course_title course title.
  * @param string $publish_date announcement publish date.
  * @param string $publish_time announcement publish time.
@@ -226,7 +228,7 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 }
 
 extract( $data );
-$courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
+$courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 ?>
 
 <div class="tutor-table-responsive">
