@@ -73,8 +73,8 @@
 			<animateTransform attributeName="transform" begin="0s" dur="2s" from="0 78 21" repeatCount="indefinite" to="-360 78 21" type="rotate"/>
 		</g>
 	</svg>
-	<h1>Under Maintenance</h1>
-	<h2>Sorry for the inconvenience.</h2>
+	<h1><?php esc_html_e( 'Under Maintenance', 'tutor' ); ?></h1>
+	<h2><?php esc_html_e( 'Sorry for the inconvenience.', 'tutor' ); ?></h2>
 </main>
 
 </body>
