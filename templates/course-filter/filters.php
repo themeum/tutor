@@ -33,7 +33,7 @@ $reset_link        = remove_query_arg( $supported_filters, get_pagenum_link() );
 		<div class="tutor-widget tutor-widget-search">
 			<div class="tutor-form-wrap">
 				<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>
-				<input type="Search" class="tutor-form-control" name="keyword" placeholder="<?php esc_attr_e( 'Search...', 'tutor' ); ?>"/>
+				<input type="Search" class="tutor-form-control" name="keyword" placeholder="<?php esc_attr_e( 'Search', 'tutor' ); ?>"/>
 			</div>
 		</div>
 	<?php endif; ?>
