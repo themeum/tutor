@@ -10,6 +10,7 @@
  */
 
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -55,7 +56,7 @@ if ( ! current_user_can( 'administrator' ) ) {
 $the_query = new WP_Query( $args );
 
 // Get courses.
-$courses    = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
+$courses    = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 $image_base = tutor()->url . '/assets/images/';
 ?>
 
