@@ -9,11 +9,13 @@
  * @since 1.4.3
  */
 
+use Tutor\Models\CourseModel;
+
 $user_name = sanitize_text_field( get_query_var( 'tutor_profile_username' ) );
 $get_user  = tutor_utils()->get_user_by_login( $user_name );
 $user_id   = $get_user->ID;
 
-$pageposts = tutor_utils()->get_courses_by_instructor( $user_id );
+$pageposts = CourseModel::get_courses_by_instructor( $user_id );
 ?>
 <div class="tutor-grid tutor-grid-3">
 	<?php
