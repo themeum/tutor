@@ -28,9 +28,9 @@ $status = isset( $status_map[ $active_tab ] ) ? $status_map[ $active_tab ] : Cou
 
 // Get counts for course tabs.
 $count_map = array(
-	'publish' => tutor_utils()->get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true ),
-	'pending' => tutor_utils()->get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true ),
-	'draft'   => tutor_utils()->get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true ),
+	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true ),
+	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true ),
+	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true ),
 );
 
 $course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
@@ -39,7 +39,7 @@ $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
 $paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
 
-$results = tutor_utils()->get_courses_by_instructor( $current_user_id, $status, $offset, $per_page );
+$results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page );
 ?>
 
 <div class="tutor-dashboard-my-courses">
