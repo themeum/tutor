@@ -124,6 +124,8 @@ class Assets {
 			'current_page'                 => $current_page,
 			'quiz_answer_display_time'     => 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' ),
 			'is_ssl'                       => is_ssl(),
+			'course_list_page_url'         => admin_url( 'admin.php?page=tutor' ),
+			'course_post_type'             => tutor()->course_post_type,
 		);
 	}
 
@@ -148,7 +150,7 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'wp-color-picker', 'wp-i18n' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
 	}
 
 	/**
