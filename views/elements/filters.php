@@ -12,6 +12,7 @@
  */
 
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 
 if ( isset( $data ) ) : ?>
 	<div class="tutor-px-20">
@@ -39,7 +40,7 @@ if ( isset( $data ) ) : ?>
 			<?php endif; ?>
 			<?php if ( isset( $data['filters'] ) && true === $data['filters'] ) : ?>
 				<?php
-				$courses    = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
+				$courses    = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 				$terms_arg  = array(
 					'taxonomy' => 'course-category',
 					'orderby'  => 'term_id',
