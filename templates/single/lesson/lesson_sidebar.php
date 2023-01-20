@@ -94,7 +94,7 @@ if ( $topics->have_posts() ) {
 				</div>
 			</div>
 
-			<div class="tutor-accordion-item-body <?php echo $is_topic_active ? '' : 'tutor-d-none'; ?>">
+			<div class="tutor-accordion-item-body <?php echo $is_topic_active ? '' : 'tutor-display-none'; ?>">
 				<?php
 				do_action( 'tutor/lesson_list/before/topic', $topic_id );
 				$is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
