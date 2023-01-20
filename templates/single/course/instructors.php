@@ -18,7 +18,7 @@ $instructors = tutor_utils()->get_instructors_by_course();
 if ( $instructors && count( $instructors ) ) : ?>
 <div class="tutor-course-details-instructors">
 	<h3 class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-16">
-		<?php echo esc_html( 'A course by', 'tutor' ); ?>
+		<?php esc_html_e( 'A course by', 'tutor' ); ?>
 	</h3>
 
 	<?php foreach ( $instructors as $key => $instructor ) : ?>
