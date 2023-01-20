@@ -465,9 +465,6 @@ class Quiz {
 
 					} elseif ( 'fill_in_the_blank' === $question_type ) {
 
-						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
-						$given_answer = maybe_serialize( $given_answer );
-
 						$get_original_answer = $wpdb->get_row(
 							$wpdb->prepare(
 								"SELECT * 
@@ -480,10 +477,22 @@ class Quiz {
 							)
 						);
 
+						/**
+						 * Answers stored in DB
+						 */
 						$gap_answer = (array) explode( '|', $get_original_answer->answer_two_gap_match );
+						$gap_answer = maybe_serialize( array_map( 'wp_slash', $gap_answer ) );
 
-						$gap_answer = array_map( 'sanitize_text_field', $gap_answer );
-						if ( strtolower( $given_answer ) == strtolower( maybe_serialize( $gap_answer ) ) ) {
+						/**
+						 * Answers from user input
+						 */
+						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
+						$given_answer = maybe_serialize( $given_answer );
+						
+						/**
+						 * Compare answer's by making both case-insensitive.
+						 */
+						if ( strtolower( $given_answer ) == strtolower( $gap_answer ) ) {
 							$is_answer_was_correct = true;
 						}
 					} elseif ( 'open_ended' === $question_type || 'short_answer' === $question_type ) {
