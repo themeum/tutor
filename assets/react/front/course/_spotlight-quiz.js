@@ -29,9 +29,6 @@ window.jQuery(document).ready($ => {
         var quiz_answers = JSON.parse(window.tutor_quiz_context.split('').reverse().join(''));
         !Array.isArray(quiz_answers) ? quiz_answers = [] : 0;
 
-        // Evaluate result
-        var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
-
         if (get_quiz_layout_view() !== 'question_below_each_other') {
             $('.tutor-quiz-answer-single-info').remove();
         }
@@ -42,7 +39,7 @@ window.jQuery(document).ready($ => {
         var $inputs = $question_wrap.find('input');
         var $checkedInputs = $question_wrap.find('input[type="radio"]:checked, input[type="checkbox"]:checked');
 
-        if (feedBackMode === 'reveal') {
+        if (is_reveal_mode()) {
 
             // Loop through every single checked radio/checkbox input field
             $checkedInputs.each(function () {
