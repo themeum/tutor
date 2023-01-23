@@ -878,7 +878,7 @@ if ( ! function_exists( 'get_request' ) ) {
 if ( ! function_exists( 'tutor_kses_allowed_html' ) ) {
 	function tutor_kses_allowed_html( $allowed_tags, $context ) {
 		$tags = array( 'input', 'style', 'script', 'select', 'form', 'option', 'optgroup', 'iframe', 'bdi', 'source', 'a' );
-		$atts = array( 'min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'role', 'placeholder', 'value', 'data-*', 'src', 'width', 'height', 'frameborder', 'allow', 'fullscreen', 'title', 'multiple', 'tutor-hide-course-single-sidebar' );
+		$atts = array( 'min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'role', 'placeholder', 'value', 'data-*', 'src', 'width', 'height', 'frameborder', 'allow', 'fullscreen', 'title', 'multiple', 'tutor-hide-course-single-sidebar', 'href' );
 
 		foreach ( $tags as $tag ) {
 			$tag_attrs = array();
