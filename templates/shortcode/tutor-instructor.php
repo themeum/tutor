@@ -9,6 +9,8 @@
  * @since 2.0.0
  */
 
+use Tutor\Models\CourseModel;
+
 ?>
 <div class="tutor-pagination-wrapper-replaceable tutor-instructor-list-wrapper">
 	<?php if ( count( $instructors ) ) : ?>
@@ -16,7 +18,7 @@
 			<div class="tutor-grid tutor-grid-<?php echo esc_attr( $column_count ); ?>">
 				<?php foreach ( $instructors as $instructor ) : ?>
 					<?php
-						$instructor->course_count = tutor_utils()->get_course_count_by_instructor( $instructor->ID );
+						$instructor->course_count = CourseModel::get_course_count_by_instructor( $instructor->ID );
 						$instructor->ratings      = tutor_utils()->get_instructor_ratings( $instructor->ID );
 						tutor_load_template(
 							'instructor.' . $layout,
