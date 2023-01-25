@@ -30,6 +30,7 @@ if ( isset( $wp_query->query_vars['tutor_dashboard_sub_page'] ) && $wp_query->qu
 		$dashboard_page_name = $dashboard_page_slug . '/' . $dashboard_page_name;
 	}
 }
+$dashboard_page_name = apply_filters( 'tutor_dashboard_sub_page_template', $dashboard_page_name );
 
 $user_id                   = get_current_user_id();
 $user                      = get_user_by( 'ID', $user_id );
