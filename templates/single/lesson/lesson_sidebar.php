@@ -17,10 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $post;
+
 $post_id = get_the_ID();
 if ( ! empty( Input::post( 'lesson_id' ) ) ) {
 	$post_id = Input::post( 'lesson_id' );
 }
+
 $currentPost = $post;
 $_is_preview = get_post_meta( $post_id, '_is_preview', true );
 $course_id   = tutor_utils()->get_course_id_by_subcontent( $post->ID );
@@ -97,7 +99,6 @@ if ( $topics->have_posts() ) {
 			<div class="tutor-accordion-item-body <?php echo $is_topic_active ? '' : 'tutor-display-none'; ?>">
 				<?php
 				do_action( 'tutor/lesson_list/before/topic', $topic_id );
-				$is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 
 				// Loop through lesson, quiz, assignment, zoom lesson.
 				while ( $lessons->have_posts() ) {
