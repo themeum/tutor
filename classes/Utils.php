@@ -783,11 +783,11 @@ class Utils {
 				"SELECT count(quiz_id) completed 
 				FROM (
 					SELECT  DISTINCT quiz_id, course_id, attempt_status 
-					FROM 	{$wpdb -> tutor_quiz_attempts} 
+					FROM 	{$wpdb->tutor_quiz_attempts} 
 					WHERE 	quiz_id IN ({$quiz_ids_str}) 
 							AND user_id = % d 
-							AND attempt_status != 'attempt_started'
-				) a", $user_id )
+							AND attempt_status != %s
+				) a", $user_id, 'attempt_started' )
 		);
 		
 		$assignment_submitted = (int) $wpdb->get_var(
