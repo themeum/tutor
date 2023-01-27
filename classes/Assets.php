@@ -230,7 +230,8 @@ class Assets {
 		 *
 		 * @since v1.9.8
 		 */
-		if ( tutor_utils()->is_tutor_frontend_dashboard() ) {
+		$should_load_dashboard_styles = apply_filters( 'tutor_should_load_dashboard_styles', tutor_utils()->is_tutor_frontend_dashboard() );
+		if ( $should_load_dashboard_styles ) {
 			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', TUTOR_VERSION );
 		}
 
