@@ -54,6 +54,7 @@ if ( ! function_exists( 'tutor_get_template' ) ) {
 			if ( ! file_exists( $template_location ) ) {
 				$warning_msg = __( 'The file you are trying to load does not exist in your theme or Tutor LMS plugin location. If you are extending the Tutor LMS plugin, please create a php file here: ', 'tutor' );
 				$warning_msg = $warning_msg . "<code>$file_in_theme</code>";
+				$warning_msg = apply_filters( 'tutor_not_found_template_warning_msg', $warning_msg );
 				echo wp_kses( $warning_msg, array( 'code' => true ) );
 				?>
 				<?php
@@ -124,7 +125,12 @@ if ( ! function_exists( 'tutor_load_template' ) ) {
 		}
 
 		do_action( 'tutor_load_template_before', $template, $variables );
-		include tutor_get_template( $template, $tutor_pro );
+		$template_file = tutor_get_template( $template, $tutor_pro );
+		if ( file_exists( $template_file ) ) {
+			include tutor_get_template( $template, $tutor_pro );
+		} else {
+			do_action( 'tutor_after_template_not_found', $template );
+		}
 		do_action( 'tutor_load_template_after', $template, $variables );
 	}
 }
