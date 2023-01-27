@@ -774,38 +774,42 @@ class Utils {
 			}
 		}
 
-		$quiz_ids_str		= QueryHelper::prepare_in_clause( $quiz_ids );
-		$assignment_ids_str = QueryHelper::prepare_in_clause( $assignment_ids );
+		global $wpdb;
 
-		global $wpdb;		
-		$quiz_completed = (int) $wpdb->get_var( 
-			$wpdb->prepare(
-				"SELECT count(quiz_id) completed 
-				FROM (
-					SELECT  DISTINCT quiz_id, course_id, attempt_status 
-					FROM 	{$wpdb->tutor_quiz_attempts} 
-					WHERE 	quiz_id IN ({$quiz_ids_str}) 
-							AND user_id = % d 
-							AND attempt_status != %s
-				) a", $user_id, 'attempt_started' )
-		);
+		if ( count( $quiz_ids ) ) {
+			$quiz_ids_str   = QueryHelper::prepare_in_clause( $quiz_ids );
+			$quiz_completed = (int) $wpdb->get_var( 
+				$wpdb->prepare(
+					"SELECT count(quiz_id) completed 
+					FROM (
+						SELECT  DISTINCT quiz_id, course_id, attempt_status 
+						FROM 	{$wpdb->tutor_quiz_attempts} 
+						WHERE 	quiz_id IN ({$quiz_ids_str}) 
+								AND user_id = % d 
+								AND attempt_status != %s
+					) a", $user_id, 'attempt_started' )
+			);
+			$completedCount += $quiz_completed;
+		}
 		
-		$assignment_submitted = (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT count(*) completed
-				FROM 	{$wpdb->comments}
-				WHERE 	comment_type = %s
-						AND comment_approved = %s
-						AND user_id = %d
-						AND comment_post_ID IN({$assignment_ids_str});
-				",
-					'tutor_assignment',
-					'submitted',
-					$user_id
-				)
-		);
-
-		$completedCount += $quiz_completed + $assignment_submitted;
+		if ( count( $assignment_ids ) ) {
+			$assignment_ids_str   = QueryHelper::prepare_in_clause( $assignment_ids );
+			$assignment_submitted = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT count(*) completed
+					FROM 	{$wpdb->comments}
+					WHERE 	comment_type = %s
+							AND comment_approved = %s
+							AND user_id = %d
+							AND comment_post_ID IN({$assignment_ids_str});
+					",
+						'tutor_assignment',
+						'submitted',
+						$user_id
+					)
+			);
+			$completedCount += $assignment_submitted;
+		}
 
 		if ( $this->count( $course_contents ) ) {
 			foreach ( $course_contents as $content ) {
