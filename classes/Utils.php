@@ -9290,8 +9290,4 @@ class Utils {
 		}
 		return $name;
 	}
-
-	public function selected_course_id() {
-		return get_transient('tutor_selected_course_id');
-	}
 }
