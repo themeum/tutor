@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\QueryHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -759,23 +761,63 @@ class Utils {
 		$totalContents    = $this->count( $course_contents );
 		$totalContents    = $totalContents ? $totalContents : 0;
 		$completedCount   = $completed_lesson;
+
+		$quiz_ids 		= array();
+		$assignment_ids = array();
+
+		foreach ( $course_contents as $content ) {
+			if ( 'tutor_quiz' === $content->post_type ) {
+				$quiz_ids[] = (int) $content->ID;
+			}
+			if ( 'tutor_assignments' === $content->post_type ) {
+				$assignment_ids[] = (int) $content->ID;
+			}
+		}
+
+		global $wpdb;
+
+		if ( count( $quiz_ids ) ) {
+			$quiz_ids_str   = QueryHelper::prepare_in_clause( $quiz_ids );
+			$quiz_completed = (int) $wpdb->get_var( 
+				$wpdb->prepare(
+					"SELECT count(quiz_id) completed 
+					FROM (
+						SELECT  DISTINCT quiz_id, course_id, attempt_status 
+						FROM 	{$wpdb->tutor_quiz_attempts} 
+						WHERE 	quiz_id IN ({$quiz_ids_str}) 
+								AND user_id = % d 
+								AND attempt_status != %s
+					) a", $user_id, 'attempt_started' )
+			);
+			$completedCount += $quiz_completed;
+		}
+		
+		if ( count( $assignment_ids ) ) {
+			$assignment_ids_str   = QueryHelper::prepare_in_clause( $assignment_ids );
+			$assignment_submitted = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT count(*) completed
+					FROM 	{$wpdb->comments}
+					WHERE 	comment_type = %s
+							AND comment_approved = %s
+							AND user_id = %d
+							AND comment_post_ID IN({$assignment_ids_str});
+					",
+						'tutor_assignment',
+						'submitted',
+						$user_id
+					)
+			);
+			$completedCount += $assignment_submitted;
+		}
+
 		if ( $this->count( $course_contents ) ) {
 			foreach ( $course_contents as $content ) {
-				if ( $content->post_type === 'tutor_quiz' ) {
-					$attempt = $this->get_quiz_attempt( $content->ID, $user_id );
-					if ( $attempt ) {
-						$completedCount++;
-					}
-				} elseif ( $content->post_type === 'tutor_assignments' ) {
-					$isSubmitted = $this->is_assignment_submitted( $content->ID, $user_id );
-					if ( $isSubmitted ) {
-						$completedCount++;
-					}
-				} elseif ( $content->post_type === 'tutor_zoom_meeting' ) {
+				if ( $content->post_type === 'tutor_zoom_meeting' ) {
 					/**
 					 * count zoom lesson completion for course progress
 					 *
-					 * @since v2.0.0
+					 * @since 2.0.0
 					 */
 					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
@@ -785,7 +827,7 @@ class Utils {
 					/**
 					 * count zoom lesson completion for course progress
 					 *
-					 * @since v2.0.0
+					 * @since 2.0.0
 					 */
 					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
