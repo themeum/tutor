@@ -73,10 +73,6 @@ get_tutor_header();
 
 <!-- Course Progressbar on sm/mobile  -->
 <?php
-	// Get the ID of this content and the corresponding course.
-	$course_content_id = get_the_ID();
-	$course_id         = tutor_utils()->get_course_id_by_subcontent( $course_content_id );
-
 	// Get total content count.
 	$course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 
