@@ -10,7 +10,9 @@
  */
 
 // Utility data.
-$is_enrolled          = apply_filters( 'tutor_alter_enroll_status', tutor_utils()->is_enrolled() );
+global $is_enrolled;
+
+$is_enrolled          = apply_filters( 'tutor_alter_enroll_status', $is_enrolled );
 $lesson_url           = tutor_utils()->get_course_first_lesson();
 $is_privileged_user   = tutor_utils()->has_user_course_content_access();
 $tutor_course_sell_by = apply_filters( 'tutor_course_sell_by', null );
