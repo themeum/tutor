@@ -66,11 +66,11 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 			ob_start();
 
 			// Course Info.
-			$completed_percent   = tutor_utils()->get_course_completed_percent();
 			$is_completed_course = tutor_utils()->is_completed_course();
 			$retake_course       = tutor_utils()->can_user_retake_course();
 			$course_id           = get_the_ID();
 			$course_progress     = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+			$completed_percent   = $course_progress['completed_percent'];
 			?>
 			<!-- course progress -->
 			<?php if ( tutor_utils()->get_option( 'enable_course_progress_bar', true, true ) && is_array( $course_progress ) && count( $course_progress ) ) : ?>
@@ -85,11 +85,11 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
 							</span>
 							<span class="progress-percentage">
-								<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
+								<?php echo esc_html( $completed_percent . '%' ); ?>
 								<?php esc_html_e( 'Complete', 'tutor' ); ?>
 							</span>
 						</div>
-						<div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
+						<div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo esc_attr( $completed_percent ); ?>%;">
 							<span class="tutor-progress-value" area-hidden="true"></span>
 						</div>
 					</div>
