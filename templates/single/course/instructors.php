@@ -26,7 +26,7 @@ if ( $instructors && count( $instructors ) ) : ?>
 			<div class="tutor-d-flex tutor-mr-16">
 				<?php
 				echo wp_kses(
-					tutor_utils()->get_tutor_avatar( $instructor->ID, 'md' ),
+					tutor_utils()->get_tutor_avatar( $instructor, 'md' ),
 					tutor_utils()->allowed_avatar_tags()
 				);
 				?>
