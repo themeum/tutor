@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-global $post, $authordata;
+global $post, $authordata, $course_rating;
 
 $profile_url       = tutor_utils()->profile_url( $authordata->ID, true );
 $show_author       = tutor_utils()->get_option( 'enable_course_author' );
@@ -26,7 +26,6 @@ $is_wish_listed    = tutor_utils()->is_wishlisted( $post->ID, get_current_user_i
 	<?php if ( ! $disable_reviews ) : ?>
 		<div class="tutor-course-details-ratings">
 			<?php
-				$course_rating = tutor_utils()->get_course_rating();
 				tutor_utils()->star_rating_generator_v2( $course_rating->rating_avg, $course_rating->rating_count, true );
 			?>
 		</div>

@@ -13,9 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+global $is_enrolled;
+
 $topics      = tutor_utils()->get_topics();
 $course_id   = get_the_ID();
-$is_enrolled = tutor_utils()->is_enrolled( $course_id );
 $index       = 0;
 
 do_action( 'tutor_course/single/before/topics' );

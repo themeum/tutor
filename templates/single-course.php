@@ -8,8 +8,11 @@
  * @since 1.0.0
  */
 
-// Prepare the nav items.
 $course_id       = get_the_ID();
+$course_rating   = tutor_utils()->get_course_rating( $course_id );
+$is_enrolled     = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
+
+// Prepare the nav items.
 $course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), $course_id );
 $is_public       = \TUTOR\Course_List::is_public( $course_id );
 $is_mobile       = wp_is_mobile();
