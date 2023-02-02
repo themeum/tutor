@@ -3524,22 +3524,26 @@ class Utils {
 	}
 
 	/**
-	 * @param null $name
+	 * Generate avatar for user
+	 *
+	 * @since 1.0.0
+	 * @since 2.1.7          changed param $user_id to $user for reduce query.
+	 *  
+	 * @param integer|object $user user id or object.
+	 * @param string         $size size of avatar like sm, md, lg.
 	 *
 	 * @return string
-	 *
-	 * Generate text to avatar
-	 *
-	 * @since v.1.0.0
 	 */
-	public function get_tutor_avatar( $user_id = null, $size = '' ) {
-		global $wpdb;
+	public function get_tutor_avatar( $user = null, $size = '' ) {
 
-		if ( ! $user_id ) {
+		if ( ! $user ) {
 			return '';
 		}
 
-		$user  = $this->get_tutor_user( $user_id );
+		if ( ! is_object( $user ) ) {
+			$user  = $this->get_tutor_user( $user );
+		}
+		
 		$name  = is_object( $user ) ? $user->display_name : '';
 		$arr   = explode( ' ', trim( $name ) );
 		$class = $size ? ' tutor-avatar-' . $size : '';
