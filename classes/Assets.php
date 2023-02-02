@@ -322,7 +322,8 @@ class Assets {
 		}
 
 		// Load course builder resources.
-		if ( tutor_utils()->get_course_builder_screen() ) {
+		$load_course_builder_scripts = apply_filters( 'tutor_load_course_builder_scripts', tutor_utils()->get_course_builder_screen() );
+		if ( $load_course_builder_scripts ) {
 			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION );
 		}
