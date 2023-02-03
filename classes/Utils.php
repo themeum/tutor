@@ -410,15 +410,18 @@ class Utils {
 	}
 
 	/**
-	 * @param int $student_id
-	 *
+	 * Get profile URL.
+	 * 
+	 * @since 1.0.0
+	 * @since 2.1.7 changed param $student_id to $user.
+	 * 
+	 * @param int|object $student     student ID or object.
+	 * @param bool $instructor_view   instractior view.
+	 * @param string $fallback_url    fallback URL.
+	 * 
 	 * @return string
-	 *
-	 * Get student URL
-	 *
-	 * @since v.1.0.0
 	 */
-	public function profile_url( $student_id = 0, $instructor_view = false, $fallback_url = '#' ) {
+	public function profile_url( $user = 0, $instructor_view = false, $fallback_url = '#' ) {
 		$instructor_profile = $this->get_option( 'public_profile_layout' ) != 'private';
 		$student_profile    = $this->get_option( 'student_public_profile_layout' ) != 'private';
 		if ( ( $instructor_view && ! $instructor_profile ) || ( ! $instructor_view && ! $student_profile ) ) {
@@ -426,26 +429,11 @@ class Utils {
 		}
 
 		$site_url   = trailingslashit( home_url() ) . 'profile/';
-		$student_id = $this->get_user_id( $student_id );
-		$user_name  = '';
-		if ( $student_id ) {
-			global $wpdb;
-			$user = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT user_nicename
-				FROM 	{$wpdb->users}
-				WHERE  	ID = %d;
-				",
-					$student_id
-				)
-			);
-
-			if ( $user ) {
-				$user_name = $user->user_nicename;
-			}
-		} else {
-			$user_name = 'user_name';
+		if ( ! is_object( $user ) ) {
+			$user = get_userdata( $this->get_user_id( $user ) );
 		}
+
+		$user_name = ( is_object( $user ) && isset( $user->user_nicename ) ) ? $user->user_nicename : 'user_name';
 
 		return add_query_arg( array( 'view' => $instructor_view ? 'instructor' : 'student' ), $site_url . $user_name );
 	}
