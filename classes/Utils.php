@@ -3570,6 +3570,9 @@ class Utils {
 			$wpdb->prepare(
 				"SELECT ID,
 					display_name,
+					user_email,
+					user_login,
+					user_nicename,
 					tutor_job_title.meta_value AS tutor_profile_job_title,
 					tutor_bio.meta_value AS tutor_profile_bio,
 					tutor_photo.meta_value AS tutor_profile_photo
