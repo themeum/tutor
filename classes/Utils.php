@@ -410,15 +410,18 @@ class Utils {
 	}
 
 	/**
-	 * @param int $student_id
-	 *
+	 * Get profile URL.
+	 * 
+	 * @since 1.0.0
+	 * @since 2.1.7 changed param $student_id to $user.
+	 * 
+	 * @param int|object $student     student ID or object.
+	 * @param bool $instructor_view   instractior view.
+	 * @param string $fallback_url    fallback URL.
+	 * 
 	 * @return string
-	 *
-	 * Get student URL
-	 *
-	 * @since v.1.0.0
 	 */
-	public function profile_url( $student_id = 0, $instructor_view = false, $fallback_url = '#' ) {
+	public function profile_url( $user = 0, $instructor_view = false, $fallback_url = '#' ) {
 		$instructor_profile = $this->get_option( 'public_profile_layout' ) != 'private';
 		$student_profile    = $this->get_option( 'student_public_profile_layout' ) != 'private';
 		if ( ( $instructor_view && ! $instructor_profile ) || ( ! $instructor_view && ! $student_profile ) ) {
@@ -426,26 +429,11 @@ class Utils {
 		}
 
 		$site_url   = trailingslashit( home_url() ) . 'profile/';
-		$student_id = $this->get_user_id( $student_id );
-		$user_name  = '';
-		if ( $student_id ) {
-			global $wpdb;
-			$user = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT user_nicename
-				FROM 	{$wpdb->users}
-				WHERE  	ID = %d;
-				",
-					$student_id
-				)
-			);
-
-			if ( $user ) {
-				$user_name = $user->user_nicename;
-			}
-		} else {
-			$user_name = 'user_name';
+		if ( ! is_object( $user ) ) {
+			$user = get_userdata( $this->get_user_id( $user ) );
 		}
+
+		$user_name = ( is_object( $user ) && isset( $user->user_nicename ) ) ? $user->user_nicename : 'user_name';
 
 		return add_query_arg( array( 'view' => $instructor_view ? 'instructor' : 'student' ), $site_url . $user_name );
 	}
@@ -3524,22 +3512,26 @@ class Utils {
 	}
 
 	/**
-	 * @param null $name
+	 * Generate avatar for user
+	 *
+	 * @since 1.0.0
+	 * @since 2.1.7          changed param $user_id to $user for reduce query.
+	 *  
+	 * @param integer|object $user user id or object.
+	 * @param string         $size size of avatar like sm, md, lg.
 	 *
 	 * @return string
-	 *
-	 * Generate text to avatar
-	 *
-	 * @since v.1.0.0
 	 */
-	public function get_tutor_avatar( $user_id = null, $size = '' ) {
-		global $wpdb;
+	public function get_tutor_avatar( $user = null, $size = '' ) {
 
-		if ( ! $user_id ) {
+		if ( ! $user ) {
 			return '';
 		}
 
-		$user  = $this->get_tutor_user( $user_id );
+		if ( ! is_object( $user ) ) {
+			$user  = $this->get_tutor_user( $user );
+		}
+		
 		$name  = is_object( $user ) ? $user->display_name : '';
 		$arr   = explode( ' ', trim( $name ) );
 		$class = $size ? ' tutor-avatar-' . $size : '';
@@ -3578,6 +3570,9 @@ class Utils {
 			$wpdb->prepare(
 				"SELECT ID,
 					display_name,
+					user_email,
+					user_login,
+					user_nicename,
 					tutor_job_title.meta_value AS tutor_profile_job_title,
 					tutor_bio.meta_value AS tutor_profile_bio,
 					tutor_photo.meta_value AS tutor_profile_photo
