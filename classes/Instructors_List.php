@@ -81,15 +81,11 @@ class Instructors_List {
 	 */
 	public function tabs_key_value( $search = '', $course_id = '', $date = '' ): array {
 		$url     = get_pagenum_link();
-		// $approve = tutor_utils()->get_total_instructors( $search, array( 'approved' ), $course_id, $date );
-		// $pending = tutor_utils()->get_total_instructors( $search, array( 'pending' ), $course_id, $date );
-		// $blocked = tutor_utils()->get_total_instructors( $search, array( 'blocked' ), $course_id, $date );
-	
 		$approve = self::count_total_instructors( array( 'approved' ), $search, $course_id, $date, 'approved' );
 		$pending = self::count_total_instructors( array( 'pending' ), $search, $course_id, $date, 'pending' );
 		$blocked = self::count_total_instructors( array( 'blocked' ), $search, $course_id, $date, 'blocked' );
 
-		$tabs    = array(
+		$tabs = array(
 			array(
 				'key'   => 'all',
 				'title' => __( 'All', 'tutor' ),
@@ -302,13 +298,10 @@ class Instructors_List {
 	 */
 	public static function get_instructors( array $status, $offset, $per_page, $search = '', $course_id = '', $date = '', $order = 'DESC' ) {
 		global $wpdb;
-		$course_clause = '';
-		$date_clause   = '';
-		$order_clause  = '';
-		$wild          = '%';
+
+		$wild = '%';
 
 		$search_clause = $wild . $wpdb->esc_like( $search ) . $wild;
-
 		$course_clause = '' !== $course_id ? "AND umeta.meta_value = {$course_id}" : '';
 		$date_clause   = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
 		$order_clause  = '' !== $order ? "ORDER BY user.ID {$order}" : '';
@@ -373,10 +366,8 @@ class Instructors_List {
 	 *
 	 * @return int count value of instructors
 	 */
-	public static function count_total_instructors( array $status, $search = '', $course_id = '', $date = '',  $unique_cache_key = '' ) {
+	public static function count_total_instructors( array $status, $search = '', $course_id = '', $date = '', $unique_cache_key = '' ) {
 		global $wpdb;
-		$course_clause = '';
-		$date_clause   = '';
 
 		$wild = '%';
 
