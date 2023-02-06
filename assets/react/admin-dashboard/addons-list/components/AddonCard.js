@@ -72,7 +72,7 @@ const AddonCard = ({ addon, addonId }) => {
 						</div>
 					</div>
 
-					{addon.plugins_required?.length === 0 && (
+					{!addon.disable_on_off && addon.plugins_required?.length === 0 && (
 						<div className="addon-toggle">
 							<label className="tutor-form-toggle">
 								<input
