@@ -194,7 +194,13 @@ $available_status = array(
 								$thumbnail_id     = (int) get_post_thumbnail_id( $post->ID );
 								$thumbnail        = $thumbnail_id ? wp_get_attachment_image_url( $thumbnail_id, 'thumbnail', false ) : tutor()->url . 'assets/images/placeholder.svg';
 
-								! isset( $authors[ $post->post_author ] ) ? $authors[ $post->post_author ] = get_userdata( $post->post_author ) : 0;
+								/**
+								 * Prevent re-query for same author details inside loop
+								 */
+								if ( ! isset( $authors[ $post->post_author ] ) ) {
+									$authors[ $post->post_author ] = tutils()->get_tutor_user( $post->post_author );
+								}
+
 								$author_details = $authors[ $post->post_author ];
 								?>
 								<tr>
@@ -269,12 +275,12 @@ $available_status = array(
 										<div class="tutor-d-flex tutor-align-center">
 											<?php
 											echo wp_kses(
-												tutor_utils()->get_tutor_avatar( $author_details->ID, 'sm' ),
+												tutor_utils()->get_tutor_avatar( $author_details, 'sm' ),
 												tutor_utils()->allowed_avatar_tags()
 											)
 											?>
 											<div class="tutor-ml-12">
-												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>">
+												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $author_details, true ) ); ?>">
 													<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 												</a>
 											</div>
