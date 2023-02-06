@@ -219,11 +219,11 @@ class Student {
 	 * @return false|string
 	 */
 	public function filter_avatar( $url, $id_or_email, $args ) {
-		global $wpdb;
 
 		$finder = false;
+		$is_id  = is_numeric( $id_or_email );
 
-		if ( is_numeric( $id_or_email ) ) {
+		if ( $is_id ) {
 			$finder = absint( $id_or_email );
 		} elseif ( is_string( $id_or_email ) ) {
 			$finder = $id_or_email;
@@ -241,20 +241,10 @@ class Student {
 			return $url;
 		}
 
-		$user_id = (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT
-					ID 
-				FROM {$wpdb->users}
-				WHERE ID = %s 
-					OR user_email = %s
-				",
-				$finder,
-				$finder
-			)
-		);
-		if ( $user_id ) {
-			$profile_photo = get_user_meta( $user_id, '_tutor_profile_photo', true );
+		$user = get_user_by( $is_id ? 'ID' : 'email', $finder );
+
+		if ( $user ) {
+			$profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
 			if ( $profile_photo ) {
 				$size = isset( $args['size'] ) ? $args['size'] : 'thumbnail';
 				$url  = wp_get_attachment_image_url( $profile_photo, $size );
