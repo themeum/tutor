@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Students_List;
 use TUTOR\Backend_Page_Trait;
+use Tutor\Helpers\QueryHelper;
 
 /**
  * Instructors_List class
@@ -24,7 +25,9 @@ use TUTOR\Backend_Page_Trait;
  */
 class Instructors_List {
 
-	const INSTRUCTOR_LIST_PAGE = 'tutor-instructors';
+	const INSTRUCTOR_LIST_PAGE       = 'tutor-instructors';
+	const INSTRUCTOR_LIST_CACHE_KEY  = 'tutor-instructors-list';
+	const INSTRUCTOR_COUNT_CACHE_KEY = 'tutor-instructors-count';
 
 	/**
 	 * Trait for utilities
@@ -78,9 +81,14 @@ class Instructors_List {
 	 */
 	public function tabs_key_value( $search = '', $course_id = '', $date = '' ): array {
 		$url     = get_pagenum_link();
-		$approve = tutor_utils()->get_total_instructors( $search, array( 'approved' ), $course_id, $date );
-		$pending = tutor_utils()->get_total_instructors( $search, array( 'pending' ), $course_id, $date );
-		$blocked = tutor_utils()->get_total_instructors( $search, array( 'blocked' ), $course_id, $date );
+		// $approve = tutor_utils()->get_total_instructors( $search, array( 'approved' ), $course_id, $date );
+		// $pending = tutor_utils()->get_total_instructors( $search, array( 'pending' ), $course_id, $date );
+		// $blocked = tutor_utils()->get_total_instructors( $search, array( 'blocked' ), $course_id, $date );
+	
+		$approve = self::count_total_instructors( array( 'approved' ), $search, $course_id, $date, 'approved' );
+		$pending = self::count_total_instructors( array( 'pending' ), $search, $course_id, $date, 'pending' );
+		$blocked = self::count_total_instructors( array( 'blocked' ), $search, $course_id, $date, 'blocked' );
+
 		$tabs    = array(
 			array(
 				'key'   => 'all',
@@ -277,4 +285,135 @@ class Instructors_List {
 		do_action( 'tutor_after_blocked_instructor', $instructor_id );
 	}
 
+	/**
+	 * Get instructors list
+	 *
+	 * @since 2.1.7
+	 *
+	 * @param array  $status instructor status: approved, pending, block.
+	 * @param int    $offset offset for pagination.
+	 * @param int    $per_page per page limit.
+	 * @param string $search search keyword.
+	 * @param string $course_id course id.
+	 * @param string $date instructor registration date.
+	 * @param string $order sorting order.
+	 *
+	 * @return wpdb::results
+	 */
+	public static function get_instructors( array $status, $offset, $per_page, $search = '', $course_id = '', $date = '', $order = 'DESC' ) {
+		global $wpdb;
+		$course_clause = '';
+		$date_clause   = '';
+		$order_clause  = '';
+		$wild          = '%';
+
+		$search_clause = $wild . $wpdb->esc_like( $search ) . $wild;
+
+		$course_clause = '' !== $course_id ? "AND umeta.meta_value = {$course_id}" : '';
+		$date_clause   = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
+		$order_clause  = '' !== $order ? "ORDER BY user.ID {$order}" : '';
+		$in_clause     = QueryHelper::prepare_in_clause( $status );
+
+		$query  = "SELECT
+					DISTINCT user.*,
+					ins_status.meta_value AS status,
+					(
+						SELECT
+							COUNT(*)
+							FROM {$wpdb->posts}
+							WHERE post_author = user.ID
+								AND post_type = 'courses'
+					) total_courses
+					FROM {$wpdb->users} AS user
+						
+					INNER JOIN {$wpdb->usermeta} AS ins_status
+						ON ( user.ID = ins_status.user_id )
+						AND ins_status.meta_key = '_tutor_instructor_status'
+					LEFT JOIN {$wpdb->usermeta} AS umeta
+						ON umeta.user_id = user.ID
+						AND umeta.meta_key = '_tutor_instructor_course_id'
+					WHERE ins_status.meta_value IN ($in_clause)
+						AND (user.user_email LIKE %s OR user.display_name LIKE %s)
+						{$course_clause}
+						{$date_clause}
+					{$order_clause}
+					LIMIT %d, %d;
+				";
+		$result = wp_cache_get( self::INSTRUCTOR_LIST_CACHE_KEY );
+		if ( false === $result ) {
+			wp_cache_set(
+				self::INSTRUCTOR_LIST_CACHE_KEY,
+				$result = $wpdb->get_results(
+					$wpdb->prepare(
+						$query,
+						$search_clause,
+						$search_clause,
+						$offset,
+						$per_page
+					)
+				)
+			);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Count total instructors
+	 *
+	 * @since 2.1.7
+	 *
+	 * @param array  $status instructor status: approved, pending, block.
+	 * @param string $search search keyword.
+	 * @param string $course_id course id.
+	 * @param string $date instructor registration date.
+	 * @param string $unique_cache_key unique key will be append with
+	 * self::INSTRUCTOR_COUNT_CACHE_KEY so that multiple count value could be
+	 * stored as unique data.
+	 *
+	 * @return int count value of instructors
+	 */
+	public static function count_total_instructors( array $status, $search = '', $course_id = '', $date = '',  $unique_cache_key = '' ) {
+		global $wpdb;
+		$course_clause = '';
+		$date_clause   = '';
+
+		$wild = '%';
+
+		$search_clause = $wild . $wpdb->esc_like( $search ) . $wild;
+		$course_clause = '' !== $course_id ? "AND umeta.meta_value = {$course_id}" : '';
+		$date_clause   = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
+		$in_clause     = QueryHelper::prepare_in_clause( $status );
+
+		$query  = "SELECT
+					COUNT(DISTINCT user.ID)
+					
+					FROM {$wpdb->users} AS user
+						
+					INNER JOIN {$wpdb->usermeta} AS ins_status
+						ON ( user.ID = ins_status.user_id )
+						AND ins_status.meta_key = '_tutor_instructor_status'
+					LEFT JOIN {$wpdb->usermeta} AS umeta
+						ON umeta.user_id = user.ID
+						AND umeta.meta_key = '_tutor_instructor_course_id'
+					WHERE ins_status.meta_value IN ($in_clause)
+						AND (user.user_email LIKE %s OR user.display_name LIKE %s)
+						{$course_clause}
+						{$date_clause}
+				";
+		$result = wp_cache_get( self::INSTRUCTOR_COUNT_CACHE_KEY . $unique_cache_key );
+		if ( false === $result ) {
+			wp_cache_set(
+				self::INSTRUCTOR_COUNT_CACHE_KEY,
+				$result = $wpdb->get_var(
+					$wpdb->prepare(
+						$query,
+						$search_clause,
+						$search_clause
+					)
+				)
+			);
+		}
+		return $result;
+	}
 }
