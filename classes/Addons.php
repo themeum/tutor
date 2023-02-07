@@ -124,7 +124,7 @@ class Addons {
 			),
 			'tutor-weglot'      => array(
 				'name'        => 'Weglot',
-				'description' => 'Create multilingual courses, lessons, dashboard and more for a global audience.',
+				'description' => __( 'Translate & manage multilingual courses for global reach with full edit control.', 'tutor' ),
 			),
 			'tutor-wpml'               => array(
 				'name'        => __( 'WPML Multilingual CMS', 'tutor' ),
