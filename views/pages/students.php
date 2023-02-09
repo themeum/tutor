@@ -101,7 +101,9 @@ $filters = array(
 					</thead>
 
 					<tbody>
-						<?php foreach ( $students_list as $list ) : ?>
+						<?php foreach ( $students_list as $list ) :
+							$reg_date = $list->user_registered;
+						?>
 							<tr>
 								<td>
 									<div class="tutor-d-flex">
@@ -131,7 +133,7 @@ $filters = array(
 								</td>
 								<td>
 									<span class="tutor-fs-7">
-										<?php echo esc_html( tutor_utils()->get_local_time_from_unix( $list->user_registered ) ); ?>
+										<?php echo esc_html( $reg_date ? tutor_i18n_get_formated_date( tutor_utils()->get_local_time_from_unix( $list->user_registered ) ) : '' ); ?>
 									</span>
 								</td>
 								<td>
