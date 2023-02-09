@@ -482,7 +482,9 @@ class Quiz {
 						 * Answers stored in DB
 						 */
 						$gap_answer = (array) explode( '|', $get_original_answer->answer_two_gap_match );
-						$gap_answer = maybe_serialize( array_map( 'wp_slash', $gap_answer ) );
+						$gap_answer = maybe_serialize( array_map( function ( $ans) {
+							return wp_slash( trim( $ans ) );
+						}, $gap_answer ) );
 
 						/**
 						 * Answers from user input
