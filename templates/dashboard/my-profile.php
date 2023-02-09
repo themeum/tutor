@@ -14,7 +14,7 @@ $user = get_userdata( $uid );
 
 $profile_settings_link = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings' );
 
-$rdate = tutor_utils()->get_local_time_from_unix ( $user->user_registered );
+$rdate = $user->user_registered;
 $fname = $user->first_name;
 $lname = $user->last_name;
 $uname = $user->user_login;
@@ -25,7 +25,7 @@ $job   = nl2br( wp_strip_all_tags( get_user_meta( $uid, '_tutor_profile_job_titl
 $bio   = get_user_meta( $uid, '_tutor_profile_bio', true );
 
 $profile_data = array(
-	array( __( 'Registration Date', 'tutor' ), ( $rdate ? : '' ) ),
+	array( __( 'Registration Date', 'tutor' ), ( $rdate ? tutor_utils()->get_local_time_from_unix( $rdate ) : '' ) ),
 	array( __( 'First Name', 'tutor' ), ( $fname ? $fname : esc_html( '-' ) ) ),
 	array( __( 'Last Name', 'tutor' ), ( $lname ? $lname : __( '-' ) ) ),
 	array( __( 'Username', 'tutor' ), $uname ),
