@@ -14,7 +14,7 @@ $user = get_userdata( $uid );
 
 $profile_settings_link = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings' );
 
-$rdate = gmdate( 'Y-m-d h:i:s', strtotime( get_option( 'gmt_offset' ) . ' hours', strtotime( $user->user_registered ) ) );
+$rdate = tutor_utils()->get_local_time_from_unix ( $user->user_registered );
 $fname = $user->first_name;
 $lname = $user->last_name;
 $uname = $user->user_login;
