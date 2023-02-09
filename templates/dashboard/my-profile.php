@@ -25,7 +25,7 @@ $job   = nl2br( wp_strip_all_tags( get_user_meta( $uid, '_tutor_profile_job_titl
 $bio   = get_user_meta( $uid, '_tutor_profile_bio', true );
 
 $profile_data = array(
-	array( __( 'Registration Date', 'tutor' ), ( $rdate ? tutor_i18n_get_formated_date( $rdate ) : '' ) ),
+	array( __( 'Registration Date', 'tutor' ), ( $rdate ? tutor_utils()->get_local_time_from_unix( $rdate ) : '' ) ),
 	array( __( 'First Name', 'tutor' ), ( $fname ? $fname : esc_html( '-' ) ) ),
 	array( __( 'Last Name', 'tutor' ), ( $lname ? $lname : __( '-' ) ) ),
 	array( __( 'Username', 'tutor' ), $uname ),
