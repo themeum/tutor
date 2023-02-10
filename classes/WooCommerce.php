@@ -661,19 +661,32 @@ class WooCommerce extends Tutor_Base {
 	 * @return void
 	 */
 	public function course_placing_order_from_customer( $item_id, $item, $order_id ) {
-		if ( is_admin() ) {
-			return;
-		}
 
-		$item          = new \WC_Order_Item_Product( $item );
-		$product_id    = $item->get_product_id();
-		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+        if ( is_admin() ) {
 
-		if ( $if_has_course ) {
-			$course_id = $if_has_course->post_id;
-			tutor_utils()->do_enroll( $course_id, $order_id );
-		}
-	}
+            return;
+
+        }
+
+        $item          = new \WC_Order_Item_Product( $item );
+
+        $product_id    = $item->get_product_id();
+
+        $if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+
+        $order = wc_get_order( $order_id );
+
+        $customer_id = $order->get_customer_id();
+
+        if ( $if_has_course ) {
+
+            $course_id = $if_has_course->post_id;
+
+            tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+
+        }
+
+    }
 
 	/**
 	 * Disable course monetization on woocommerce deactivation
