@@ -59,8 +59,8 @@ if ( ! function_exists( 'tutor' ) ) {
 		$parsed = parse_url($home_url);
 		$base_path = (is_array($parsed) && isset($parsed['path'])) ? $parsed['path'] : '/';
 		$base_path = rtrim($base_path, '/') . '/';
-		// Get current URL
-		$current_url = $home_url . '/' . substr($_SERVER['REQUEST_URI'], strlen($base_path));
+		// Get current URL.
+		$current_url = trailingslashit( $home_url ) . substr($_SERVER['REQUEST_URI'], strlen($base_path));
 
 		$info = array(
 			'path'                 => $path,
