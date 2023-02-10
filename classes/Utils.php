@@ -9289,4 +9289,18 @@ class Utils {
 		}
 		return $name;
 	}
+
+	/** 
+	 * Grant the file upload permissions to a tutor instructor
+	 * 
+	 * This functions will allow Tutor Instructor to upload files. 
+	 * Some thimes some secuirty plugins, image optimizations plugins and 
+	 * also server side optimizations not allowed to upload files from frontend
+	 * */ 
+	function grant_file_upload_permissions() {
+		$wp_roles = wp_roles();
+		$wp_roles->add_cap( 'tutor_instructor', 'upload_files' );
+	}
+	add_action( 'init', 'grant_file_upload_permissions' );
+
 }
