@@ -578,14 +578,13 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 							<div class="tutor-entry-content tutor-fs-6 tutor-color-secondary tutor-pt-12">
 								<?php echo apply_filters( 'the_content', $s_content ); //phpcs:ignore ?>
 							</div>
-
-							<?php if ( $has_show_more ) : ?>
-								<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
-									<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
-									<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
-								</a>
-							<?php endif; ?>
 						</div>
+						<?php if ( $has_show_more ) : ?>
+							<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
+								<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
+								<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
+							</a>
+						<?php endif; ?>
 					</div>
 
 					<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
