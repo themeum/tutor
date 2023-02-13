@@ -114,7 +114,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 				<div class="tutor-d-flex tutor-align-center">
 					<?php
 					do_action( 'tutor_dashboard/before_header_button' );
-					$instructor_status  = tutor_utils()->instructor_status();
+					$instructor_status  = tutor_utils()->instructor_status( 0, false );
 					$instructor_status  = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
 					$rejected_on        = get_user_meta( $user->ID, '_is_tutor_instructor_rejected', true );
 					$info_style         = 'vertical-align: middle; margin-right: 7px;';
