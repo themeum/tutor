@@ -225,9 +225,21 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.7 - February 11, 2023
+= 2.1.7 - February 13, 2023
 
-Coming soon...
+New: WeGlot is onboarded as an Add-on with Tutor LMS
+Update: Compatibility with the latest WPML plugin is introduced
+Update: The “View Certificate” button now loads the certificate on a WordPress native page. This change has been brought for 3rd party compatibility.
+Update: On the Front-site Course Details page, the title Course Content was appearing even when there is no content
+Update: Performance enhancement for the Instructor List page
+Update: Duplicated courses were adding the word “Copy” on every course content which was not intended
+Update: Query optimization for the Course List, Course Details, and Lesson page was introduced.
+Update: Overall Query execution time reduced and improved page load speeds.
+Update: The backend courses page has better query handling. 
+Update: Missing Strings have been added to improve the overall translation experience.
+Fix: Course could not be duplicated for admin as a co-author
+Fix: In an Assignment, the “Duration time” and “Remaining time” were not translateable
+Fix: The Reveal Mode was not working when “Question below each other” is selected
 
 = 2.1.6 - January 11, 2023
 
