@@ -225,7 +225,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.7 - February 13, 2023
+= 2.1.7 - February 14, 2023
 
 New: WeGlot is onboarded as an Add-on with Tutor LMS
 Update: Compatibility with the latest WPML plugin is introduced
