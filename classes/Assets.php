@@ -124,6 +124,8 @@ class Assets {
 			'current_page'                 => $current_page,
 			'quiz_answer_display_time'     => 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' ),
 			'is_ssl'                       => is_ssl(),
+			'course_list_page_url'         => admin_url( 'admin.php?page=tutor' ),
+			'course_post_type'             => tutor()->course_post_type,
 		);
 	}
 
@@ -148,7 +150,7 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'wp-color-picker', 'wp-i18n' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
 	}
 
 	/**
@@ -228,7 +230,8 @@ class Assets {
 		 *
 		 * @since v1.9.8
 		 */
-		if ( tutor_utils()->is_tutor_frontend_dashboard() ) {
+		$should_load_dashboard_styles = apply_filters( 'tutor_should_load_dashboard_styles', tutor_utils()->is_tutor_frontend_dashboard() );
+		if ( $should_load_dashboard_styles ) {
 			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', TUTOR_VERSION );
 		}
 
@@ -319,7 +322,8 @@ class Assets {
 		}
 
 		// Load course builder resources.
-		if ( tutor_utils()->get_course_builder_screen() ) {
+		$load_course_builder_scripts = apply_filters( 'tutor_load_course_builder_scripts', tutor_utils()->get_course_builder_screen() );
+		if ( $load_course_builder_scripts ) {
 			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION );
 		}

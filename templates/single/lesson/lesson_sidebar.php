@@ -17,10 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $post;
+
 $post_id = get_the_ID();
 if ( ! empty( Input::post( 'lesson_id' ) ) ) {
 	$post_id = Input::post( 'lesson_id' );
 }
+
 $currentPost = $post;
 $_is_preview = get_post_meta( $post_id, '_is_preview', true );
 $course_id   = tutor_utils()->get_course_id_by_subcontent( $post->ID );
@@ -31,6 +33,7 @@ $enable_q_and_a_on_course     = tutor_utils()->get_option( 'enable_q_and_a_on_co
 $is_enrolled                  = tutor_utils()->is_enrolled( $course_id );
 $is_instructor_of_this_course = tutor_utils()->has_user_course_content_access( $user_id, $course_id );
 $is_user_admin                = current_user_can( 'administrator' );
+$is_public_course             = \TUTOR\Course_List::is_public( $course_id );
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/lesson_sidebar' ); ?>
@@ -94,15 +97,13 @@ if ( $topics->have_posts() ) {
 				</div>
 			</div>
 
-			<div class="tutor-accordion-item-body" style="<?php echo $is_topic_active ? ' display: block;' : 'display: none;'; ?>">
+			<div class="tutor-accordion-item-body <?php echo $is_topic_active ? '' : 'tutor-display-none'; ?>">
 				<?php
 				do_action( 'tutor/lesson_list/before/topic', $topic_id );
-				$is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 
 				// Loop through lesson, quiz, assignment, zoom lesson.
 				while ( $lessons->have_posts() ) {
 					$lessons->the_post();
-					$is_public_course = \TUTOR\Course_List::is_public( $course_id );
 
 					$show_permalink = ! $_is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course || $is_instructor_of_this_course;
 					$show_permalink = apply_filters( 'tutor_course/single/content/show_permalink', $show_permalink, get_the_ID() );
@@ -123,8 +124,8 @@ if ( $topics->have_posts() ) {
 								</div>
 								<div class="tutor-d-flex tutor-ml-auto tutor-flex-shrink-0">
 									<?php
-									$time_limit    = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
-									$last_attempt  = ( new QuizModel() )->get_first_or_last_attempt( $quiz->ID );
+									$time_limit   = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
+									$last_attempt = ( new QuizModel() )->get_first_or_last_attempt( $quiz->ID );
 
 									$attempt_ended = is_object( $last_attempt ) && ( 'attempt_ended' === ( $last_attempt->attempt_status ) || $last_attempt->is_manually_reviewed ) ? true : false;
 

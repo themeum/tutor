@@ -119,7 +119,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 								<?php elseif ( 'action' == $key ) : ?>
 									<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-1">
 										<a href="<?php echo esc_url( add_query_arg( array( 'question_id' => $qna->comment_ID ), tutor()->current_url ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-											<?php esc_html_e( 'Reply', 'tutor-pro' ); ?>
+											<?php esc_html_e( 'Reply', 'tutor' ); ?>
 										</a>
 
 										<div class="tutor-dropdown-parent">

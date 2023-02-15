@@ -1,5 +1,26 @@
-window.jQuery(document).ready($=>{
-    const {__} = window.wp.i18n;
+window.jQuery(document).ready($ => {
+    const { __ } = window.wp.i18n;
+
+    let quiz_options = _tutorobject.quiz_options
+
+    function get_reveal_wait_time() {
+        return Number(_tutorobject.quiz_answer_display_time) || 2000;
+    }
+
+    function is_reveal_mode() {
+        return 'reveal' === quiz_options.feedback_mode
+    }
+
+    function get_quiz_layout_view() {
+        return _tutorobject.quiz_options.question_layout_view
+    }
+
+    function get_hint_markup(text) {
+        return `<span class="tutor-quiz-answer-single-info tutor-color-success tutor-mt-8">
+            <i class="tutor-icon-mark tutor-color-success" area-hidden="true"></i>
+            ${text}
+        </span>`
+    }
 
     function feedback_response($question_wrap) {
         var goNext = false;
@@ -8,16 +29,17 @@ window.jQuery(document).ready($=>{
         var quiz_answers = JSON.parse(window.tutor_quiz_context.split('').reverse().join(''));
         !Array.isArray(quiz_answers) ? quiz_answers = [] : 0;
 
-        // Evaluate result
-        var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
-        $('.tutor-quiz-answer-single-info').remove();
+        if (get_quiz_layout_view() !== 'question_below_each_other') {
+            $('.tutor-quiz-answer-single-info').remove();
+        }
+
         $('.tutor-quiz-answer-single').removeClass('tutor-quiz-answer-single-correct tutor-quiz-answer-single-incorrect');
 
         var validatedTrue = true;
         var $inputs = $question_wrap.find('input');
         var $checkedInputs = $question_wrap.find('input[type="radio"]:checked, input[type="checkbox"]:checked');
 
-        if (feedBackMode === 'reveal') {
+        if (is_reveal_mode()) {
 
             // Loop through every single checked radio/checkbox input field
             $checkedInputs.each(function () {
@@ -44,10 +66,7 @@ window.jQuery(document).ready($=>{
                         $input
                             .closest('.tutor-quiz-answer-single')
                             .addClass('tutor-quiz-answer-single-correct')
-                            .append(`<span class="tutor-quiz-answer-single-info tutor-color-success tutor-mt-8">
-                                        <i class="tutor-icon-mark tutor-color-success" area-hidden="true"></i>
-                                        ${__('Correct Answer', 'tutor')}
-                                    </span>`)
+                            .append(get_hint_markup(__('Correct Answer', 'tutor')))
                             .find('.tutor-quiz-answer-single-info:eq(1)')
                             .remove();
                     } else {
@@ -172,7 +191,7 @@ window.jQuery(document).ready($=>{
          * 
          * @since v2.0.9
          */
-        if (!feedBackMode === 'reveal') {
+        if (!is_reveal_mode()) {
             if (!feedBackNext) {
                 return;
             }
@@ -190,14 +209,11 @@ window.jQuery(document).ready($=>{
                  * @since 1.8.10
                  */
 
-                var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
-                const answerDisplayTime = Number(_tutorobject.quiz_answer_display_time);
-                if (feedBackMode === 'reveal') {
+                if (is_reveal_mode()) {
                     setTimeout(() => {
                         $('.quiz-attempt-single-question').hide();
                         $nextQuestion.show();
-                    },
-                        answerDisplayTime);
+                    }, get_reveal_wait_time());
                 } else {
                     $('.quiz-attempt-single-question').hide();
                     $nextQuestion.show();
@@ -220,44 +236,47 @@ window.jQuery(document).ready($=>{
         }
     });
 
-	$(document).on('click', '.tutor-quiz-question-paginate-item', function(e) {
-		e.preventDefault();
-		var $that = $(this);
-		var $question = $($that.attr('href'));
-		$('.quiz-attempt-single-question').hide();
-		$question.show();
+    $(document).on('click', '.tutor-quiz-question-paginate-item', function(e) {
+        e.preventDefault();
+        var $that = $(this);
+        var $question = $($that.attr('href'));
+        $('.quiz-attempt-single-question').hide();
+        $question.show();
 
-		//Active Class
-		$('.tutor-quiz-question-paginate-item').removeClass('active');
-		$that.addClass('active');
-	});
+        //Active Class
+        $('.tutor-quiz-question-paginate-item').removeClass('active');
+        $that.addClass('active');
+    });
 
-	/**
-	 * Limit Short Answer Question Type
-	 */
-     $(document).on('keyup', 'textarea.question_type_short_answer, textarea.question_type_open_ended', function(e) {
-		var $that = $(this);
-		var value = $that.val();
-		var limit = $that.hasClass('question_type_short_answer')
-			? _tutorobject.quiz_options.short_answer_characters_limit
-			: _tutorobject.quiz_options.open_ended_answer_characters_limit;
-		var remaining = limit - value.length;
+    /**
+     * Limit Short Answer Question Type
+     */
+    $(document).on('keyup', 'textarea.question_type_short_answer, textarea.question_type_open_ended', function(e) {
+        var $that = $(this);
+        var value = $that.val();
+        var limit = $that.hasClass('question_type_short_answer')
+            ? _tutorobject.quiz_options.short_answer_characters_limit
+            : _tutorobject.quiz_options.open_ended_answer_characters_limit;
+        var remaining = limit - value.length;
 
-		if (remaining < 1) {
-			$that.val(value.substr(0, limit));
-			remaining = 0;
-		}
-        
-		$that
-			.closest('.tutor-quiz-answers-wrap')
-			.find('.characters_remaining')
-			.html(remaining);
-	});
+        if (remaining < 1) {
+            $that.val(value.substr(0, limit));
+            remaining = 0;
+        }
+
+        $that
+            .closest('.tutor-quiz-answers-wrap')
+            .find('.characters_remaining')
+            .html(remaining);
+    });
 
     $(document).on('submit', '#tutor-answering-quiz', function (e) {
+        e.preventDefault();
+
         let $questions_wrap = $('.quiz-attempt-single-question');
-        let quizSubmitBtn = document.querySelector('.tutor-quiz-submit-btn');
-        
+        let quizSubmitBtn   = document.querySelector('.tutor-quiz-submit-btn');
+        let submitted_form  = $(e.target)
+
         let quiz_validated      = true;
         let feedback_validated  = true;
 
@@ -269,46 +288,50 @@ window.jQuery(document).ready($=>{
         }
 
         if (quiz_validated && feedback_validated) {
-            setTimeout(() => { quizSubmitBtn.disabled = true; }, 500);
+            let wait = 500
+            if (is_reveal_mode() && get_quiz_layout_view() === 'question_below_each_other') {
+                wait = get_reveal_wait_time()
+                submitted_form.find(':submit').addClass('is-loading').attr('disabled', 'disabled')
+            }
+            setTimeout(() => { e.target.submit() }, wait);
         } else {
-            e.preventDefault();
             if (quizSubmitBtn) {
                 quizSubmitBtn.classList.remove('is-loading')
                 quizSubmitBtn.disabled = false;
             }
         }
     });
-    
+
     $(".tutor-quiz-submit-btn").click(function(event) {
         event.preventDefault();
-    
-        const question = event.target.closest('.quiz-attempt-single-question');
-        const mode = question.getAttribute('data-quiz-feedback-mode');
-        const answerDisplayTime = Number(_tutorobject.quiz_answer_display_time);
-        if (mode === 'reveal') {
+
+        if (is_reveal_mode()) {
             var $questions_wrap = $('.quiz-attempt-single-question');
             var validated = true;
             if ($questions_wrap.length) {
                 $questions_wrap.each(function (index, question) {
                     validated = tutor_quiz_validation($(question));
                     validated = feedback_response($(question));
-    
+
                 });
             }
+            
             $(this).attr('disabled', 'disabled')
+            
             setTimeout(() => {
                 $(this).addClass('is-loading');
                 $("#tutor-answering-quiz").submit();
-            }
-            , answerDisplayTime);
+            }, get_reveal_wait_time());
+
         } else {
             $(this).attr('disabled', 'disabled').addClass('is-loading');
             $("#tutor-answering-quiz").submit();
         }
 
     });
-	//warn user before leave page if quiz is running
-	var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
+
+    //warn user before leave page if quiz is running
+    var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     // @todo: check the button class functionality
 
     $(document).on('click', 'a',  function(event) {
@@ -369,10 +392,10 @@ window.jQuery(document).ready($=>{
         }
     });
 
-	/* Disable start quiz button  */
-	$('body').on('submit', 'form#tutor-start-quiz', function() {
-		$(this)
-			.find('button')
-			.prop('disabled', true);
-	});
+    /* Disable start quiz button  */
+    $('body').on('submit', 'form#tutor-start-quiz', function() {
+        $(this)
+            .find('button')
+            .prop('disabled', true);
+    });
 });

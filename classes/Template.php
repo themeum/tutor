@@ -302,11 +302,13 @@ class Template extends Tutor_Base {
 	 */
 	public function tutor_dashboard( $template ) {
 		global $wp_query;
-		if ( $wp_query->is_page ) {
+		$is_page = apply_filters( 'tutor_determine_is_page', $wp_query->is_page, $template );
+		if ( $is_page ) {
 			$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
 			$student_dashboard_page_id = apply_filters( 'tutor_dashboard_page_id_filter', $student_dashboard_page_id );
+			$is_dashboard_page         = apply_filters( 'tutor_determine_is_dashboard_page', get_the_ID() == $student_dashboard_page_id );
 
-			if ( get_the_ID() == $student_dashboard_page_id ) {
+			if ( $is_dashboard_page ) {
 				/**
 				 * Handle if logout URL
 				 *

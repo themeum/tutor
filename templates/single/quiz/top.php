@@ -9,6 +9,8 @@
  * @version 1.4.3
  */
 
+use Tutor\Models\CourseModel;
+
 global $post;
 global $next_id;
 
@@ -23,7 +25,7 @@ $next_id     = $contents->next_id;
 $currentPost       = $post; //phpcs:ignore
 $quiz_id           = get_the_ID();
 $is_started_quiz   = tutor_utils()->is_started_quiz();
-$course            = tutor_utils()->get_course_by_quiz( get_the_ID() );
+$course            = CourseModel::get_course_by_quiz( get_the_ID() );
 $previous_attempts = tutor_utils()->quiz_attempts();
 $attempted_count   = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
 
