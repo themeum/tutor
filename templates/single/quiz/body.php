@@ -9,10 +9,12 @@
  * @since 1.5.7
  */
 
+use Tutor\Models\CourseModel;
+
 global $post;
 
 $currentPost     = $post;//phpcs:ignore
-$course          = tutor_utils()->get_course_by_quiz( get_the_ID() );
+$course          = CourseModel::get_course_by_quiz( get_the_ID() );
 $quiz_id         = get_the_ID();
 $quiz_details    = tutor_utils()->get_quiz_option( $quiz_id );
 $quiz_time_limit = ( isset( $quiz_details['time_limit'] ) && is_array( $quiz_details['time_limit'] ) ) ? $quiz_details['time_limit'] : array();

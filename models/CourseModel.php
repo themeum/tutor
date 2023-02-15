@@ -57,7 +57,7 @@ class CourseModel {
 	 *
 	 * @return array|null|object
 	 */
-	public function get_courses( $excludes = array(), $post_status = array( 'publish' ) ) {
+	public static function get_courses( $excludes = array(), $post_status = array( 'publish' ) ) {
 		global $wpdb;
 
 		$excludes      = (array) $excludes;
@@ -97,6 +97,124 @@ class CourseModel {
 		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		return $query;
+	}
+
+	/**
+	 * Get course count by instructor
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param $instructor_id
+	 *
+	 * @return null|string
+	 */
+	public static function get_course_count_by_instructor( $instructor_id ) {
+		global $wpdb;
+
+		$course_post_type = tutor()->course_post_type;
+
+		$count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(ID)
+			FROM 	{$wpdb->posts}
+					INNER JOIN {$wpdb->usermeta}
+							ON user_id = %d
+							AND meta_key = %s
+							AND meta_value = ID
+			WHERE 	post_status = %s
+					AND post_type = %s;
+			",
+				$instructor_id,
+				'_tutor_instructor_course_id',
+				'publish',
+				$course_post_type
+			)
+		);
+
+		return $count;
+	}
+
+	/**
+	 * Get course by quiz
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param $quiz_id quiz id.
+	 *
+	 * @return array|bool|null|object|void
+	 */
+	public static function get_course_by_quiz( $quiz_id ) {
+		global $wpdb;
+
+		$quiz_id = tutils()->get_post_id( $quiz_id );
+		$post    = get_post( $quiz_id );
+
+		if ( $post ) {
+			$course_post_type = tutor()->course_post_type;
+			$query_string     = "SELECT ID, post_author, post_name, post_type, post_parent FROM {$wpdb->posts} where ID = %d";
+			$course           = $wpdb->get_row( $wpdb->prepare( $query_string, $post->post_parent ) );
+
+			if ( $course ) {
+				if ( $course->post_type !== $course_post_type ) {
+					$course = $wpdb->get_row( $wpdb->prepare( $query_string, $course->post_parent ) );
+				}
+				return $course;
+			}
+		}
+
+		return false;
+	}
+
+	 /**
+	  * Get courses by a instructor
+	  *
+	  * @since 1.0.0
+	  *
+	  * @param integer $instructor_id
+	  * @param array|string $post_status
+	  * @param integer $offset
+	  * @param integer $limit
+	  * @param boolean $count_only
+	  *
+	  * @return array|null|object
+	  */
+	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false ) {
+		global $wpdb;
+		$offset           = sanitize_text_field( $offset );
+		$limit            = sanitize_text_field( $limit );
+		$instructor_id    = tutils()->get_user_id( $instructor_id );
+		$course_post_type = tutor()->course_post_type;
+
+		if ( empty( $post_status ) || $post_status == 'any' ) {
+			$where_post_status = '';
+		} else {
+			! is_array( $post_status ) ? $post_status = array( $post_status ) : 0;
+			$statuses                                 = "'" . implode( "','", $post_status ) . "'";
+			$where_post_status                        = "AND $wpdb->posts.post_status IN({$statuses}) ";
+		}
+
+		$select_col   = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
+		$limit_offset = $count_only ? '' : " LIMIT $offset, $limit ";
+
+		$query = $wpdb->prepare(
+			"SELECT $select_col
+			FROM 	$wpdb->posts
+			LEFT JOIN {$wpdb->usermeta}
+					ON $wpdb->usermeta.user_id = %d
+					AND $wpdb->usermeta.meta_key = %s
+					AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
+			WHERE	1 = 1 {$where_post_status}
+				AND $wpdb->posts.post_type = %s
+				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
+			ORDER BY $wpdb->posts.post_date DESC $limit_offset",
+			$instructor_id,
+			'_tutor_instructor_course_id',
+			$course_post_type,
+			$instructor_id,
+			$instructor_id
+		);
+
+		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query, OBJECT );
 	}
 
 	/**

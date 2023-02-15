@@ -188,6 +188,13 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_get_wc_product', array( $this, 'tutor_get_wc_product' ) );
 
 		add_action( 'wp_ajax_tutor_course_enrollment', array( $this, 'course_enrollment' ) );
+
+		/**
+		 * After trash a course redirect to course list page
+		 *
+		 * @since 2.1.7
+		 */
+		add_action( 'trashed_post', __CLASS__ . '::redirect_to_course_list_page' );
 	}
 
 	/**
@@ -884,6 +891,7 @@ class Course extends Tutor_Base {
 
 		/**
 		 * Co-instructor can not delete a course
+		 *
 		 * @since 2.1.6
 		 */
 		if ( false === CourseModel::is_main_instructor( $course_id ) ) {
@@ -909,7 +917,7 @@ class Course extends Tutor_Base {
 		$post_type         = $postarr['post_type'];
 		$courses_post_type = tutor()->course_post_type;
 
-		if ( false === $gutenberg_enabled && $post_type !== $courses_post_type ) {
+		if ( false === is_admin() || false === $gutenberg_enabled || $post_type !== $courses_post_type ) {
 			return $data;
 		}
 
@@ -1622,4 +1630,25 @@ class Course extends Tutor_Base {
 			wp_send_json_error( __( 'Invalid course ID', 'tutor' ) );
 		}
 	}
+
+	/**
+	 * After trash a course direct to the course list page
+	 *
+	 * @since 2.1.7
+	 *
+	 * @param integer $post_id int course id.
+	 *
+	 * @return void
+	 */
+	public static function redirect_to_course_list_page( int $post_id ): void {
+		$post = get_post( $post_id );
+		if ( tutor()->course_post_type === $post->post_type ) {
+			$is_gutenberg_enabled = tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
+			if ( ! $is_gutenberg_enabled ) {
+				wp_safe_redirect( admin_url( 'admin.php?page=tutor' ) );
+				exit;
+			}
+		}
+	}
+
 }

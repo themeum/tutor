@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 /**
  * Manage quiz operations.
@@ -232,7 +233,7 @@ class Quiz {
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 
 		$quiz   = get_post( $quiz_id );
-		$course = tutor_utils()->get_course_by_quiz( $quiz_id );
+		$course = CourseModel::get_course_by_quiz( $quiz_id );
 		if ( empty( $course->ID ) ) {
 			die( 'There is something went wrong with course, please check if quiz attached with a course' );
 		}
@@ -353,7 +354,7 @@ class Quiz {
 		$user_id    = get_current_user_id();
 		$attempt_id = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$attempt    = tutor_utils()->get_attempt( $attempt_id );
-		$course_id  = tutor_utils()->get_course_by_quiz( $attempt->quiz_id )->ID;
+		$course_id  = CourseModel::get_course_by_quiz( $attempt->quiz_id )->ID;
 
 		// Sanitize data by helper method.
 		$attempt_answers = isset( $_POST['attempt'] ) ? tutor_sanitize_data( $_POST['attempt'] ) : false; //phpcs:ignore
@@ -465,9 +466,6 @@ class Quiz {
 
 					} elseif ( 'fill_in_the_blank' === $question_type ) {
 
-						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
-						$given_answer = maybe_serialize( $given_answer );
-
 						$get_original_answer = $wpdb->get_row(
 							$wpdb->prepare(
 								"SELECT * 
@@ -480,10 +478,24 @@ class Quiz {
 							)
 						);
 
+						/**
+						 * Answers stored in DB
+						 */
 						$gap_answer = (array) explode( '|', $get_original_answer->answer_two_gap_match );
+						$gap_answer = maybe_serialize( array_map( function ( $ans) {
+							return wp_slash( trim( $ans ) );
+						}, $gap_answer ) );
 
-						$gap_answer = array_map( 'sanitize_text_field', $gap_answer );
-						if ( strtolower( $given_answer ) == strtolower( maybe_serialize( $gap_answer ) ) ) {
+						/**
+						 * Answers from user input
+						 */
+						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
+						$given_answer = maybe_serialize( $given_answer );
+						
+						/**
+						 * Compare answer's by making both case-insensitive.
+						 */
+						if ( strtolower( $given_answer ) == strtolower( $gap_answer ) ) {
 							$is_answer_was_correct = true;
 						}
 					} elseif ( 'open_ended' === $question_type || 'short_answer' === $question_type ) {

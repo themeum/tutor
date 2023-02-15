@@ -122,6 +122,10 @@ class Addons {
 				'name'        => 'Notifications',
 				'description' => 'Get On Site and Push Notifications on specified tutor events.',
 			),
+			'tutor-weglot'      => array(
+				'name'        => 'Weglot',
+				'description' => __( 'Translate & manage multilingual courses for global reach with full edit control.', 'tutor' ),
+			),
 			'tutor-wpml'               => array(
 				'name'        => __( 'WPML Multilingual CMS', 'tutor' ),
 				'description' => __( 'Create multilingual courses, lessons, dashboard and more for a global audience.', 'tutor' ),

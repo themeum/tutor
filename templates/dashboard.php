@@ -30,6 +30,7 @@ if ( isset( $wp_query->query_vars['tutor_dashboard_sub_page'] ) && $wp_query->qu
 		$dashboard_page_name = $dashboard_page_slug . '/' . $dashboard_page_name;
 	}
 }
+$dashboard_page_name = apply_filters( 'tutor_dashboard_sub_page_template', $dashboard_page_name );
 
 $user_id                   = get_current_user_id();
 $user                      = get_user_by( 'ID', $user_id );
@@ -113,7 +114,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 				<div class="tutor-d-flex tutor-align-center">
 					<?php
 					do_action( 'tutor_dashboard/before_header_button' );
-					$instructor_status  = tutor_utils()->instructor_status();
+					$instructor_status  = tutor_utils()->instructor_status( 0, false );
 					$instructor_status  = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
 					$rejected_on        = get_user_meta( $user->ID, '_is_tutor_instructor_rejected', true );
 					$info_style         = 'vertical-align: middle; margin-right: 7px;';
@@ -215,6 +216,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 							}
 							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
 							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
+							$menu_link = apply_filters( 'tutor_dashboard_menu_link', $menu_link, $menu_title );
 							?>
 							<li class='tutor-dashboard-menu-item <?php echo esc_attr( $li_class . ' ' . $active_class ); ?>'>
 								<a <?php echo esc_html( $data_no_instant ); ?> href="<?php echo esc_url( $menu_link ); ?>" class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-color-black'>

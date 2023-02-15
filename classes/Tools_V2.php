@@ -191,7 +191,7 @@ class Tools_V2 {
 								array(
 									'key'     => 'wordpress_cron',
 									'type'    => 'info_col',
-									'label'   => __( 'WordPress corn', 'tutor' ),
+									'label'   => __( 'WordPress Cron', 'tutor' ),
 									'status'  => ! empty( _get_cron_array() ) ? 'success' : 'default',
 									'default' => $this->status( 'wordpress_cron' ),
 

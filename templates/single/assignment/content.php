@@ -54,7 +54,12 @@ $course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true
 function tutor_assignment_convert_seconds( $seconds ) {
 	$dt1 = new DateTime( '@0' );
 	$dt2 = new DateTime( "@$seconds" );
-	return $dt1->diff( $dt2 )->format( '%a Days, %h Hours' );
+
+	$diff  = $dt1->diff( $dt2 );
+	$days  = $diff->days;
+	$hours = $diff->h;
+
+	return $days . ' ' . __( 'Days', 'tutor' ) . ', ' . $hours . ' ' . __( 'Hours', 'tutor' );
 }
 
 $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
@@ -126,7 +131,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 						<div class="tutor-assignment-duration">
 							<span class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
 							<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
-								<?php echo esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . $time_duration['time'] : __( 'No limit', 'tutor' ) ); ?>
+								<?php echo esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . __( $time_duration['time'], 'tutor' ) : __( 'No limit', 'tutor' ) ); ?>
 							</span>
 						</div>
 						<div class="tutor-assignmetn-deadline">
@@ -573,14 +578,13 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 							<div class="tutor-entry-content tutor-fs-6 tutor-color-secondary tutor-pt-12">
 								<?php echo apply_filters( 'the_content', $s_content ); //phpcs:ignore ?>
 							</div>
-
-							<?php if ( $has_show_more ) : ?>
-								<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
-									<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
-									<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
-								</a>
-							<?php endif; ?>
 						</div>
+						<?php if ( $has_show_more ) : ?>
+							<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
+								<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
+								<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
+							</a>
+						<?php endif; ?>
 					</div>
 
 					<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>

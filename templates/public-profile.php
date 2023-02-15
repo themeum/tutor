@@ -11,6 +11,7 @@
  */
 
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 
 // Get the accessed user data.
 $user_name = sanitize_text_field( get_query_var( 'tutor_profile_username' ) );
@@ -119,7 +120,7 @@ do_action( 'tutor_profile/' . $user_type . '/before/wrap' );
 					<h3><?php echo esc_html( $get_user->display_name ); ?></h3>
 					<?php
 					if ( $is_instructor ) {
-						$course_count  = tutor_utils()->get_course_count_by_instructor( $user_id );
+						$course_count  = CourseModel::get_course_count_by_instructor( $user_id );
 						$student_count = tutor_utils()->get_total_students_by_instructor( $user_id );
 						?>
 							<span>
