@@ -210,6 +210,10 @@ window.jQuery(document).ready(function($) {
 		} else {
 			content = $('#' + inputid).val();
 		}
+		
+		// removing <br data-mce-bogus="1">
+		content = content.replaceAll('<p><br data-mce-bogus="1"></p>', '');
+
 		var form_data = $(this)
 			.closest('.tutor-modal')
 			.find('form')
