@@ -587,7 +587,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 						<?php endif; ?>
 					</div>
 
-					<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
+					<?php if ( $next_prev_content_id->next_id ) : ?>
 						<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
 							<a class="tutor-btn tutor-btn-primary tutor-static-loader"
 								href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
