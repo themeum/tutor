@@ -8712,6 +8712,10 @@ class Utils {
 	public function tutor_custom_header() {
 		global $wp_version;
 		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+			$theme      = wp_get_theme();
+			$theme_slug = $theme->get( 'TextDomain' );
+			$header_theme_block = do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
+
 			?>
 			<!doctype html>
 				<html <?php language_attributes(); ?>>
@@ -8723,9 +8727,7 @@ class Utils {
 				<?php wp_body_open(); ?>
 					<div class="wp-site-blocks">
 					<?php
-						$theme      = wp_get_theme();
-						$theme_slug = $theme->get( 'TextDomain' );
-						echo do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
+						echo $header_theme_block;
 		} else {
 			get_header();
 		}
