@@ -61,6 +61,7 @@ do_action( 'tutor_course/single/before/topics' );
 										$video      = tutor_utils()->get_video_info();
 										$play_time  = $video ? $video->playtime : false;
 										$is_preview = get_post_meta( $post->ID, '_is_preview', true );
+										$is_enrolled     = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 
 										// Determine topic content icon based on lesson, video, quiz etc.
 										$topic_content_icon                                     = $play_time ? 'tutor-icon-brand-youtube-bold' : 'tutor-icon-document-text';
