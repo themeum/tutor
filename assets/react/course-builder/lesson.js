@@ -212,7 +212,9 @@ window.jQuery(document).ready(function($) {
 		}
 		
 		// removing <br data-mce-bogus="1">
-		content = content.replaceAll('<p><br data-mce-bogus="1"></p>', '');
+		if(content === '<p><br data-mce-bogus="1"></p>') {
+			content = '';
+		}
 
 		var form_data = $(this)
 			.closest('.tutor-modal')
