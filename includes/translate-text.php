@@ -162,8 +162,8 @@ function tutor_get_translate_text() {
 		'may'        => array(
 			'text' => _x( 'May', 'Month name', 'tutor' ),
 		),
-		'jun'        => array(
-			'text' => _x( 'Jun', 'Month name', 'tutor' ),
+		'june'       => array(
+			'text' => _x( 'June', 'Month name', 'tutor' ),
 		),
 		'july'       => array(
 			'text' => _x( 'July', 'Month name', 'tutor' ),
