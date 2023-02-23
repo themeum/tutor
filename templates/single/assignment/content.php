@@ -278,7 +278,9 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 								<div class="tutor-assignment-attachment tutor-mt-32 tutor-py-20 tutor-px-16 tutor-py-sm-32 tutor-px-sm-32">
 									<div class="tutor-fs-7 tutor-color-secondary">
 										<?php
-											esc_html_e( sprintf( 'Attach assignment files (Max: %s file)', $allow_to_upload ), 'tutor' ); //phpcs:ignore
+											$attachment_text  = _x( 'Attach assignment files (Max: ', 'Assignment attachment', 'tutor' );
+											$attachment_text .= $allow_to_upload . _x( ' file)', 'Assignment attachment', 'tutor' );
+											echo esc_html( $attachment_text );
 										?>
 									</div>
 									<div class="tutor-attachment-files tutor-mt-12">
