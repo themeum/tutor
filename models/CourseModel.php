@@ -144,19 +144,14 @@ class CourseModel {
 	 * @return array|bool|null|object|void
 	 */
 	public static function get_course_by_quiz( $quiz_id ) {
-		global $wpdb;
-
 		$quiz_id = tutils()->get_post_id( $quiz_id );
 		$post    = get_post( $quiz_id );
 
 		if ( $post ) {
-			$course_post_type = tutor()->course_post_type;
-			$query_string     = "SELECT ID, post_author, post_name, post_type, post_parent FROM {$wpdb->posts} where ID = %d";
-			$course           = $wpdb->get_row( $wpdb->prepare( $query_string, $post->post_parent ) );
-
+			$course = get_post( $post->post_parent );
 			if ( $course ) {
-				if ( $course->post_type !== $course_post_type ) {
-					$course = $wpdb->get_row( $wpdb->prepare( $query_string, $course->post_parent ) );
+				if ( $course->post_type !== tutor()->course_post_type ) {
+					$course = get_post( $course->post_parent );
 				}
 				return $course;
 			}
