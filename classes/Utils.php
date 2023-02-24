@@ -3516,7 +3516,11 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 * @since 2.1.7          changed param $user_id to $user for reduce query.
-	 *  
+	 * 
+	 * Get user data using get_userdata API
+	 *
+	 * @since 2.1.8
+	 *
 	 * @param integer|object $user user id or object.
 	 * @param string         $size size of avatar like sm, md, lg.
 	 *
@@ -3527,18 +3531,24 @@ class Utils {
 		if ( ! $user ) {
 			return '';
 		}
-
+	
 		if ( ! is_object( $user ) ) {
-			$user  = $this->get_tutor_user( $user );
+			$user = get_userdata( $user );
+		}
+
+		if ( is_a( $user, 'WP_User' ) ) {
+			// Get & set user profile photo.
+			$profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
+			$user->tutor_profile_photo = $profile_photo;
 		}
 		
 		$name  = is_object( $user ) ? $user->display_name : '';
 		$arr   = explode( ' ', trim( $name ) );
 		$class = $size ? ' tutor-avatar-' . $size : '';
-
+	
 		$output  = '<div class="tutor-avatar' . $class . '">';
 		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
-
+	
 		if ( is_object( $user ) && $user->tutor_profile_photo ) {
 			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="' . esc_attr( $name ) . '" /> ';
 		} else {
@@ -3547,10 +3557,10 @@ class Utils {
 			$initial_avatar = strtoupper( $first_char . $second_char );
 			$output        .= '<span class="tutor-avatar-text">' . $initial_avatar . '</span>';
 		}
-
+	
 		$output .= '</div>';
 		$output .= '</div>';
-
+	
 		return apply_filters( 'tutor_text_avatar', $output );
 	}
 
