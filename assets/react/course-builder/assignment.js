@@ -49,6 +49,7 @@ window.jQuery(document).ready(function($){
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
 
                 window.dispatchEvent(new Event(_tutorobject.content_change_event));
+                window.dispatchEvent(new CustomEvent('tutor_modal_shown', {detail: e.target}));
             },
             complete: function () {
                 $that.removeClass('is-loading');
