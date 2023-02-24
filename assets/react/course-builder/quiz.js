@@ -407,6 +407,7 @@ window.jQuery(document).ready(function($) {
 						initTinyMCE('textarea#tutor_quiz_desc_text_editor', 'codesample image', 'codesample image');
 					}
 				}
+				window.dispatchEvent(new CustomEvent('tutor_modal_shown', {detail: e.target}));
 			},
 			complete: function() {
 				$that.removeClass('is-loading').attr('disabled', false);
