@@ -1095,37 +1095,41 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function is_enrolled( $course_id = 0, $user_id = 0 ) {
+		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
-
-		global $wpdb;
+		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}";
 
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
-		$getEnrolledInfo = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT ID,
-					post_author,
-					post_date,
-					post_date_gmt,
-					post_title
-			FROM 	{$wpdb->posts}
-			WHERE 	post_author>0 
-					AND post_parent>0
-					AND post_type = %s
-					AND post_parent = %d
-					AND post_author = %d
-					AND post_status = %s;
-			",
-				'tutor_enrolled',
-				$course_id,
-				$user_id,
-				'completed'
-			)
-		);
+		$get_enrolled_info = wp_cache_get( $cache_key );
+		if ( false === $get_enrolled_info ) {
+			$get_enrolled_info = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT ID,
+						post_author,
+						post_date,
+						post_date_gmt,
+						post_title
+				FROM 	{$wpdb->posts}
+				WHERE 	post_author>0 
+						AND post_parent>0
+						AND post_type = %s
+						AND post_parent = %d
+						AND post_author = %d
+						AND post_status = %s;
+				",
+					'tutor_enrolled',
+					$course_id,
+					$user_id,
+					'completed'
+				)
+			);
+			wp_cache_set( $cache_key, $get_enrolled_info );
+		}
 
-		if ( $getEnrolledInfo ) {
-			return apply_filters( 'tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id );
+		if ( $get_enrolled_info ) {
+			return apply_filters( 'tutor_is_enrolled', $get_enrolled_info, $course_id, $user_id );
 		}
 
 		return false;
