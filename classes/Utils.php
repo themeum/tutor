@@ -3555,15 +3555,22 @@ class Utils {
 	}
 
 	/**
-	 * @param $user_id
+	 * Get tutor user.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param int $user_id user id.
 	 *
 	 * @return array|null|object|void
-	 *
-	 * Get tutor user
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_tutor_user( $user_id ) {
+		$cache_key   = 'tutor_user_' . $user_id;
+		$cached_data = wp_cache_get( $cache_key );
+
+		if ( false !== $cached_data ) {
+			return $cached_data;
+		}
+
 		global $wpdb;
 
 		$user = $wpdb->get_row(
@@ -3591,6 +3598,8 @@ class Utils {
 				$user_id
 			)
 		);
+
+		wp_cache_set( $cache_key, $user );
 
 		return $user;
 	}
