@@ -1104,7 +1104,7 @@ class Options_V2 {
 										'label'       => __( 'Level', 'tutor' ),
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
-										'desc'        => __( 'Toggle to remove course level', 'tutor' ),
+										'desc'        => __( 'Enable to show course level', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_share',
