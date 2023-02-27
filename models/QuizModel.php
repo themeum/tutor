@@ -47,18 +47,25 @@ class QuizModel {
 		$quiz_id = tutor_utils()->get_post_id( $quiz_id );
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
-		$attempts = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->prefix}tutor_quiz_attempts
-			WHERE 	quiz_id = %d
-					AND user_id = %d
-					ORDER BY attempt_id  DESC
-			",
-				$quiz_id,
-				$user_id
-			)
-		);
+		$cache_key = "tutor_quiz_attempts_for_{$user_id}_{$quiz_id}";
+		$attempts  = wp_cache_get( $cache_key );
+
+		if ( false === $attempts ) {
+			$attempts = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT *
+				FROM 	{$wpdb->prefix}tutor_quiz_attempts
+				WHERE 	quiz_id = %d
+						AND user_id = %d
+						ORDER BY attempt_id  DESC
+				",
+					$quiz_id,
+					$user_id
+				)
+			);
+			wp_cache_set( $cache_key,  $attempts );
+		}
+		
 
 		if ( is_array( $attempts ) && count( $attempts ) ) {
 			return $attempts;
