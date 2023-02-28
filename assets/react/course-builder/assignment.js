@@ -73,6 +73,11 @@ window.jQuery(document).ready(function($){
         } else {
             content = $('#'+inputid).val();
         }
+         
+        // removing <br data-mce-bogus="1">
+        if(content === '<p><br data-mce-bogus="1"></p>') {
+            content = '';
+        }
         
         var form_data = $(this).closest('.tutor-modal').find('form.tutor_assignment_modal_form').serializeObject();
         form_data.assignment_content = content;
