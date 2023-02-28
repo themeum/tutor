@@ -6,15 +6,6 @@
     font-style: normal;
     font-display: block;
   }
-
-  @font-face {
-    font-family: 'tutor';
-    src: url("../fonts/tutor-v2.woff2") format("woff2"),
-    url("../fonts/tutor-v2.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-  }
   
   [class^="tutor-icon-"], [class*=" tutor-icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
@@ -31,10 +22,6 @@
 	-moz-osx-font-smoothing: grayscale;
   }
   
-  .tutor-icon-brand-chatgpt:before {
-    content: "\ea40";
-  }
-
   .tutor-icon-brand-buddypress:before {
 	content: "\e9e0";
   }
