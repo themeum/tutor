@@ -715,8 +715,9 @@ class Utils {
 				$completed_lesson_meta_ids[] = '_tutor_completed_lesson_id_' . $lesson_id;
 			}
 			$in_ids = implode( "','", $completed_lesson_meta_ids );
-			
-			$cache_key = "tutor_get_completed_lesson_count_by{$user_id}_{$in_ids}";
+
+			$prepare_ids = str_replace( "','", '', $in_ids );
+			$cache_key = "tutor_get_completed_lesson_count_by{$user_id}_{$prepare_ids}";
 			$count = wp_cache_get( $cache_key );
 
 			if ( false === $count ) {
@@ -773,7 +774,8 @@ class Utils {
 			$quiz_ids_str   = QueryHelper::prepare_in_clause( $quiz_ids );
 
 			// Get data from cache.
-			$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$quiz_ids_str}";
+			$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
+			$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$prepare_quiz_ids_str}";
 			$quiz_completed           = wp_cache_get( $quiz_completed_cache_key );
 
 			if ( false === $quiz_completed ) {
@@ -798,7 +800,8 @@ class Utils {
 			$assignment_ids_str   = QueryHelper::prepare_in_clause( $assignment_ids );
 
 			// Get data from cache.
-			$assignment_submitted_cache_key = "tutor_assignment_submitted{$user_id}_{$assignment_ids_str}";
+			$prepare_assignment_ids_str     = str_replace( ',', '_', $assignment_ids_str );
+			$assignment_submitted_cache_key = "tutor_assignment_submitted{$user_id}_{$prepare_assignment_ids_str}";
 			$assignment_submitted           = wp_cache_get( $assignment_submitted_cache_key );
 
 			if ( false === $assignment_submitted ) {
@@ -7854,8 +7857,9 @@ class Utils {
 		! is_array( $ancestor_ids ) ? $ancestor_ids = array( $ancestor_ids ) : 0;
 		$ancestor_ids                               = implode( ',', $ancestor_ids );
 
-		$cache_key = "tutor_get_content_ids_{$content_type}_{$ancestor_type}_{$ancestor_ids}";
-		$ids = wp_cache_get( $cache_key );
+		$prepare_ancestor_ids = str_replace( ',', '_', $ancestor_ids );
+		$cache_key 			  = "tutor_get_content_ids_{$content_type}_{$ancestor_type}_{$prepare_ancestor_ids}";
+		$ids 				  = wp_cache_get( $cache_key );
 
 		if ( false === $ids ) {
 			switch ( $content_type ) {
