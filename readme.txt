@@ -225,9 +225,13 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.8 - March 14, 2023
+= 2.1.8 - March 1, 2023
 
-Coming soon...
+New: Introduced ChatGPT integration for content generation
+Improvement: Missing translation strings for dynamic texts like date has been added 
+Fix: In Q&A, student reply to emails were being sent back to the student instead of the instructor
+Fix: For built-in emails, placeholder texts in email message content for Email to Students were not being replaced with values
+Fix: Admins were unable to delete course reviews from the list on the "LMS Reports" page of the Admin panel
 
 = 2.1.7 - February 14, 2023
 
