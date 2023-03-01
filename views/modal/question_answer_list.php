@@ -98,7 +98,7 @@ if ( 'open_ended' === $question_type || 'short_answer' === $question_type ) {
 </div>
 
 <?php if ( 'true_false' != $question_type && ( 'fill_in_the_blank' != $question_type || empty( $answers ) ) ) : ?>
-	<a href="javascript:;" class="add_question_answers_option tutor-d-flex tutor-align-center" data-question-id="<?php echo esc_attr( $question_id ); ?>">
+	<a href="javascript:;" class="add_question_answers_option tutor-btn tutor-d-flex tutor-align-center" data-question-id="<?php echo esc_attr( $question_id ); ?>">
 		<i class="tutor-icon-plus-o "></i>
 		<?php esc_html_e( 'Add An Option', 'tutor' ); ?>
 	</a>

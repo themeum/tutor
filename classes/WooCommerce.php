@@ -670,8 +670,16 @@ class WooCommerce extends Tutor_Base {
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
 		if ( $if_has_course ) {
-			$course_id = $if_has_course->post_id;
-			tutor_utils()->do_enroll( $course_id, $order_id );
+			$order = wc_get_order( $order_id );
+
+			/**
+			 * Get customer ID from from order
+			 *
+			 * @since 2.1.7
+			 */
+			$customer_id = $order->get_customer_id();
+			$course_id   = $if_has_course->post_id;
+			tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
 		}
 	}
 
