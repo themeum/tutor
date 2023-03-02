@@ -5972,6 +5972,25 @@ class Utils {
 	}
 
 	/**
+	 *
+	 * @param integer $assignment_id
+	 *
+	 * @return array
+	 *
+	 * Get assignment content_drip_settings
+	 */
+	public function get_assignment_content_drip_settings( $assignment_id = 0 ) {
+		$assignment_id              = $this->get_post_id( $assignment_id );
+		$content_drip_settings_meta = maybe_unserialize( get_post_meta( $assignment_id, '_content_drip_settings', true ) );
+
+		if ( ! empty( $content_drip_settings_meta ) ) {
+			return $content_drip_settings_meta;
+		}
+
+		return array();
+	}
+
+	/**
 	 * @param int $assignment_id
 	 * @param int $user_id
 	 *
