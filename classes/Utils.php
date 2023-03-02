@@ -6013,14 +6013,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $assignment_id
-	 * @param int $user_id
+	 * Determine if any assignment submitted by user to a assignment.
+	 * 
+	 * @since 1.3.3
+	 * 
+	 * @param int $assignment_id assignment id.
+	 * @param int $user_id user id.
 	 *
 	 * @return array|null|object
-	 *
-	 * Determine if any assignment submitted by user to a assignment
-	 *
-	 * @since v.1.3.3
 	 */
 	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0 ) {
 		global $wpdb;
