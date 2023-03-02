@@ -6028,21 +6028,27 @@ class Utils {
 		$assignment_id = $this->get_post_id( $assignment_id );
 		$user_id       = $this->get_user_id( $user_id );
 
-		$has_submitted = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->comments}
-			WHERE 	comment_type = %s
-					AND comment_approved = %s
-					AND user_id = %d
-					AND comment_post_ID = %d;
-			",
-				'tutor_assignment',
-				'submitted',
-				$user_id,
-				$assignment_id
-			)
-		);
+		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}";
+		$has_submitted = wp_cache_get( $cache_key );
+
+		if ( false === $has_submitted ) {
+			$has_submitted = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT *
+				FROM 	{$wpdb->comments}
+				WHERE 	comment_type = %s
+						AND comment_approved = %s
+						AND user_id = %d
+						AND comment_post_ID = %d;
+				",
+					'tutor_assignment',
+					'submitted',
+					$user_id,
+					$assignment_id
+				)
+			);
+			wp_cache_set( $cache_key, $has_submitted );
+		}
 
 		return $has_submitted;
 	}
