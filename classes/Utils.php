@@ -4778,19 +4778,25 @@ class Utils {
 		$quiz_id = $this->get_post_id( $quiz_id );
 		$user_id = get_current_user_id();
 
-		$is_started = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->prefix}tutor_quiz_attempts
-			WHERE 	user_id =  %d
-					AND quiz_id = %d
-					AND attempt_status = %s;
-			",
-				$user_id,
-				$quiz_id,
-				'attempt_started'
-			)
-		);
+		$cache_key  = "tutor_is_started_quiz_{$user_id}_{$quiz_id}";
+		$is_started = wp_cache_get( $cache_key );
+		
+		if ( false === $is_started ) {
+			$is_started = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT *
+				FROM 	{$wpdb->prefix}tutor_quiz_attempts
+				WHERE 	user_id =  %d
+						AND quiz_id = %d
+						AND attempt_status = %s;
+				",
+					$user_id,
+					$quiz_id,
+					'attempt_started'
+				)
+			);
+			wp_cache_set( $cache_key, $is_started );
+		}
 
 		return $is_started;
 	}
