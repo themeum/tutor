@@ -2111,7 +2111,6 @@ class Utils {
 	 * @since 1.9.9
 	 */
 	public function count_enrolled_users_by_course( $course_id = 0, $period = '' ) {
-		global $wpdb;
 
 		$course_id = $this->get_post_id( $course_id );
 		// set period wise query
@@ -2126,21 +2125,29 @@ class Utils {
 			$period_filter = 'AND YEAR(post_date) = YEAR(CURDATE()) ';
 		}
 
-		$course_ids = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(ID)
-			FROM	{$wpdb->posts}
-			WHERE 	post_type = %s
-					AND post_status = %s
-					AND post_parent = %d;
-					{$period_filter}
-			",
-				'tutor_enrolled',
-				'completed',
-				$course_id
-			)
-		);
+		$cache_key  = 'tutor_enroll_count_for_course_' . $course_id . '_' . $period_filter;
+		$course_ids = wp_cache_get( $cache_key );
 
+		if ( false === $course_ids ) {
+			global $wpdb;
+			$course_ids = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(ID)
+				FROM	{$wpdb->posts}
+				WHERE 	post_type = %s
+						AND post_status = %s
+						AND post_parent = %d;
+						{$period_filter}
+				",
+					'tutor_enrolled',
+					'completed',
+					$course_id
+				)
+			);
+
+			wp_cache_set( $cache_key, (int) $course_ids );
+		}
+		
 		return (int) $course_ids;
 	}
 
@@ -4797,7 +4804,7 @@ class Utils {
 	/**
 	 * Determine if there is any started quiz exists.
 	 * 
-	 * @since 2.1.9
+	 * @since 1.0.0
 	 * 
 	 * @param int $quiz_id quiz id.
 	 *
