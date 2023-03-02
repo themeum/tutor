@@ -4764,13 +4764,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $quiz_id
+	 * Determine if there is any started quiz exists.
+	 * 
+	 * @since 2.1.9
+	 * 
+	 * @param int $quiz_id quiz id.
 	 *
 	 * @return array|null|object|void
-	 *
-	 * Determine if there is any started quiz exists
-	 *
-	 * @since v.1.0.0
 	 */
 	public function is_started_quiz( $quiz_id = 0 ) {
 		global $wpdb;
