@@ -184,7 +184,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 				</div>
 			<?php endif; ?>
 
-			<?php if ( ! $is_submitting && ! $submitted_assignment ) : ?>
+			<?php if ( ! $is_submitting && ! $submitted_assignment && get_the_content() ) : ?>
 				<div class="tutor-time-out-assignment-details tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
 					<div class="tutor-to-assignment tutor-pt-32 tutor-pt-sm-40">
 						<div class="tutor-to-title tutor-fs-6 tutor-fw-medium tutor-color-black">
@@ -278,7 +278,9 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 								<div class="tutor-assignment-attachment tutor-mt-32 tutor-py-20 tutor-px-16 tutor-py-sm-32 tutor-px-sm-32">
 									<div class="tutor-fs-7 tutor-color-secondary">
 										<?php
-											esc_html_e( sprintf( 'Attach assignment files (Max: %s file)', $allow_to_upload ), 'tutor' ); //phpcs:ignore
+											$attachment_text  = _x( 'Attach assignment files (Max: ', 'Assignment attachment', 'tutor' );
+											$attachment_text .= $allow_to_upload . _x( ' file)', 'Assignment attachment', 'tutor' );
+											echo esc_html( $attachment_text );
 										?>
 									</div>
 									<div class="tutor-attachment-files tutor-mt-12">
@@ -360,25 +362,27 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 
 				<?php $has_show_more = strlen( $s_content ) > 500 ? true : false; ?>
 
-				<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-32 tutor-pb-sm-44">
-					<div id="content-section" class="tutor-pt-40 tutor-pt-sm-60<?php echo esc_attr( $has_show_more ? ' tutor-toggle-more-content tutor-toggle-more-collapsed' : '' ); ?>"<?php echo $has_show_more ? ' data-tutor-toggle-more-content data-toggle-height="300" style="height: 300px;"' : ''; ?>>
-						<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
-							<?php esc_html_e( 'Description', 'tutor' ); ?>
+				<?php if( $s_content ): ?>
+					<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-32 tutor-pb-sm-44">
+						<div id="content-section" class="tutor-pt-40 tutor-pt-sm-60<?php echo esc_attr( $has_show_more ? ' tutor-toggle-more-content tutor-toggle-more-collapsed' : '' ); ?>"<?php echo $has_show_more ? ' data-tutor-toggle-more-content data-toggle-height="300" style="height: 300px;"' : ''; ?>>
+							<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+								<?php esc_html_e( 'Description', 'tutor' ); ?>
+							</div>
+							<div class="tutor-entry-content tutor-fs-6 tutor-color-secondary tutor-pt-12">
+								<?php echo apply_filters( 'the_content', $s_content );//phpcs:ignore ?>
+							</div>
 						</div>
-						<div class="tutor-entry-content tutor-fs-6 tutor-color-secondary tutor-pt-12">
-							<?php echo apply_filters( 'the_content', $s_content );//phpcs:ignore ?>
-						</div>
+
+						<?php if ( $has_show_more ) : ?>
+							<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
+								<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
+								<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
+							</a>
+						<?php endif; ?>
 					</div>
+				<?php endif; ?>
 
-					<?php if ( $has_show_more ) : ?>
-						<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
-							<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
-							<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
-						</a>
-					<?php endif; ?>
-				</div>
-
-				<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
+				<?php if ( $next_prev_content_id->next_id ) : ?>
 					<div class="tutor-assignment-footer tutor-d-flex tutor-justify-end tutor-pt-32 tutor-pt-sm-44">
 						<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tuttor-assignment-skip-button tutor-btn tutor-btn-ghost tutor-mt-md-0 tutor-mt-12">
 							<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
@@ -570,24 +574,27 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 
 					<?php $has_show_more = strlen( $s_content ) > 500 ? true : false; ?>
 
-					<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-32 tutor-pb-sm-44">
-						<div id="content-section" class="tutor-pt-40 tutor-pt-sm-60<?php echo $has_show_more ? ' tutor-toggle-more-content tutor-toggle-more-collapsed' : ''; ?>"<?php echo $has_show_more ? ' data-tutor-toggle-more-content data-toggle-height="300" style="height: 300px;"' : ''; ?>>
-							<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
-								<?php esc_html_e( 'Description', 'tutor' ); ?>
+					<?php if( $s_content ): ?>
+						<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-32 tutor-pb-sm-44">
+							<div id="content-section" class="tutor-pt-40 tutor-pt-sm-60<?php echo $has_show_more ? ' tutor-toggle-more-content tutor-toggle-more-collapsed' : ''; ?>"<?php echo $has_show_more ? ' data-tutor-toggle-more-content data-toggle-height="300" style="height: 300px;"' : ''; ?>>
+								<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+									<?php esc_html_e( 'Description', 'tutor' ); ?>
+								</div>
+								<div class="tutor-entry-content tutor-fs-6 tutor-color-secondary tutor-pt-12">
+									<?php echo apply_filters( 'the_content', $s_content ); //phpcs:ignore ?>
+								</div>
 							</div>
-							<div class="tutor-entry-content tutor-fs-6 tutor-color-secondary tutor-pt-12">
-								<?php echo apply_filters( 'the_content', $s_content ); //phpcs:ignore ?>
-							</div>
+							<?php if ( $has_show_more ) : ?>
+								<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
+									<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
+									<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
+								</a>
+							<?php endif; ?>
 						</div>
-						<?php if ( $has_show_more ) : ?>
-							<a href="#" class="tutor-btn-show-more tutor-btn tutor-btn-ghost tutor-mt-32" data-tutor-toggle-more=".tutor-toggle-more-content">
-								<span class="tutor-toggle-btn-icon tutor-icon tutor-icon-plus tutor-mr-8" area-hidden="true"></span>
-								<span class="tutor-toggle-btn-text"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
-							</a>
-						<?php endif; ?>
-					</div>
+					<?php endif; ?>
 
-					<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
+
+					<?php if ( $next_prev_content_id->next_id ) : ?>
 						<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
 							<a class="tutor-btn tutor-btn-primary tutor-static-loader"
 								href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
@@ -607,7 +614,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 								</button>
 							</form>
 
-							<?php if ( isset( $next_prev_content_id->next_id ) && 0 !== $next_prev_content_id->next_id ) : ?>
+							<?php if ( $next_prev_content_id->next_id ) : ?>
 								<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-ghost tutor-mt-md-0 tutor-mt-12">
 									<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
 								</a>

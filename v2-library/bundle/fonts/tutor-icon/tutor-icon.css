@@ -2,9 +2,9 @@
 	font-family: 'tutor';
 	src: url("../fonts/tutor.woff2") format("woff2"),
 	  url("../fonts/tutor.woff") format("woff");
-	font-weight: normal;
-	font-style: normal;
-	font-display: block;
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
   }
   
   [class^="tutor-icon-"], [class*=" tutor-icon-"] {
