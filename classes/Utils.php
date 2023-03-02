@@ -2100,15 +2100,14 @@ class Utils {
 	}
 
 	/**
-	 * Get total enrolled students by course id
+	 * Get total enrolled students by course id.
 	 *
-	 * @param int                                    $course_id
-	 *
+	 * @since 1.9.9
+	 * 
+	 * @param int $course_id course id.
 	 * @param $period string | optional added since 1.9.9
 	 *
 	 * @return int
-	 *
-	 * @since 1.9.9
 	 */
 	public function count_enrolled_users_by_course( $course_id = 0, $period = '' ) {
 
@@ -2125,7 +2124,7 @@ class Utils {
 			$period_filter = 'AND YEAR(post_date) = YEAR(CURDATE()) ';
 		}
 
-		$cache_key  = 'tutor_enroll_count_for_course_' . $course_id . '_' . $period_filter;
+		$cache_key  = "tutor_enroll_count_for_course_{$course_id}_{$period}";
 		$course_ids = wp_cache_get( $cache_key );
 
 		if ( false === $course_ids ) {
