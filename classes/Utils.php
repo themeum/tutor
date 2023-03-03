@@ -2100,18 +2100,16 @@ class Utils {
 	}
 
 	/**
-	 * Get total enrolled students by course id
+	 * Get total enrolled students by course id.
 	 *
-	 * @param int                                    $course_id
-	 *
+	 * @since 1.9.9
+	 * 
+	 * @param int $course_id course id.
 	 * @param $period string | optional added since 1.9.9
 	 *
 	 * @return int
-	 *
-	 * @since 1.9.9
 	 */
 	public function count_enrolled_users_by_course( $course_id = 0, $period = '' ) {
-		global $wpdb;
 
 		$course_id = $this->get_post_id( $course_id );
 		// set period wise query
@@ -2126,21 +2124,29 @@ class Utils {
 			$period_filter = 'AND YEAR(post_date) = YEAR(CURDATE()) ';
 		}
 
-		$course_ids = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(ID)
-			FROM	{$wpdb->posts}
-			WHERE 	post_type = %s
-					AND post_status = %s
-					AND post_parent = %d;
-					{$period_filter}
-			",
-				'tutor_enrolled',
-				'completed',
-				$course_id
-			)
-		);
+		$cache_key  = "tutor_enroll_count_for_course_{$course_id}_{$period}";
+		$course_ids = wp_cache_get( $cache_key );
 
+		if ( false === $course_ids ) {
+			global $wpdb;
+			$course_ids = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(ID)
+				FROM	{$wpdb->posts}
+				WHERE 	post_type = %s
+						AND post_status = %s
+						AND post_parent = %d;
+						{$period_filter}
+				",
+					'tutor_enrolled',
+					'completed',
+					$course_id
+				)
+			);
+
+			wp_cache_set( $cache_key, (int) $course_ids );
+		}
+		
 		return (int) $course_ids;
 	}
 
@@ -4795,13 +4801,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $quiz_id
+	 * Determine if there is any started quiz exists.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param int $quiz_id quiz id.
 	 *
 	 * @return array|null|object|void
-	 *
-	 * Determine if there is any started quiz exists
-	 *
-	 * @since v.1.0.0
 	 */
 	public function is_started_quiz( $quiz_id = 0 ) {
 		global $wpdb;
@@ -4809,19 +4815,25 @@ class Utils {
 		$quiz_id = $this->get_post_id( $quiz_id );
 		$user_id = get_current_user_id();
 
-		$is_started = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->prefix}tutor_quiz_attempts
-			WHERE 	user_id =  %d
-					AND quiz_id = %d
-					AND attempt_status = %s;
-			",
-				$user_id,
-				$quiz_id,
-				'attempt_started'
-			)
-		);
+		$cache_key  = "tutor_is_started_quiz_{$user_id}_{$quiz_id}";
+		$is_started = wp_cache_get( $cache_key );
+		
+		if ( false === $is_started ) {
+			$is_started = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT *
+				FROM 	{$wpdb->prefix}tutor_quiz_attempts
+				WHERE 	user_id =  %d
+						AND quiz_id = %d
+						AND attempt_status = %s;
+				",
+					$user_id,
+					$quiz_id,
+					'attempt_started'
+				)
+			);
+			wp_cache_set( $cache_key, $is_started );
+		}
 
 		return $is_started;
 	}
@@ -6038,14 +6050,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $assignment_id
-	 * @param int $user_id
+	 * Determine if any assignment submitted by user to a assignment.
+	 * 
+	 * @since 1.3.3
+	 * 
+	 * @param int $assignment_id assignment id.
+	 * @param int $user_id user id.
 	 *
 	 * @return array|null|object
-	 *
-	 * Determine if any assignment submitted by user to a assignment
-	 *
-	 * @since v.1.3.3
 	 */
 	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0 ) {
 		global $wpdb;
@@ -6053,21 +6065,27 @@ class Utils {
 		$assignment_id = $this->get_post_id( $assignment_id );
 		$user_id       = $this->get_user_id( $user_id );
 
-		$has_submitted = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->comments}
-			WHERE 	comment_type = %s
-					AND comment_approved = %s
-					AND user_id = %d
-					AND comment_post_ID = %d;
-			",
-				'tutor_assignment',
-				'submitted',
-				$user_id,
-				$assignment_id
-			)
-		);
+		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}";
+		$has_submitted = wp_cache_get( $cache_key );
+
+		if ( false === $has_submitted ) {
+			$has_submitted = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT *
+				FROM 	{$wpdb->comments}
+				WHERE 	comment_type = %s
+						AND comment_approved = %s
+						AND user_id = %d
+						AND comment_post_ID = %d;
+				",
+					'tutor_assignment',
+					'submitted',
+					$user_id,
+					$assignment_id
+				)
+			);
+			wp_cache_set( $cache_key, $has_submitted );
+		}
 
 		return $has_submitted;
 	}
