@@ -7271,44 +7271,29 @@ class Utils {
 	 * Return the course ID(s) by lession, quiz, answer etc.
 	 */
 	public function get_course_id_by( $content, $object_id ) {
-		$course_id = null;
-
-		$cache_key = "get_course_id_by_{$content}_{$object_id}";
+		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
 		$course_id = wp_cache_get( $cache_key );
+
 		if ( false === $course_id ) {
 			global $wpdb;
 			switch ( $content ) {
 				case 'course':
 					$course_id = $object_id;
 					break;
-
+	
 				case 'zoom_meeting':
 				case 'tutor_gm_course':
 				case 'topic':
 				case 'announcement':
-					$course_id = $wpdb->get_var(
-						$wpdb->prepare(
-							"SELECT post_parent
-						FROM {$wpdb->posts}
-						WHERE ID=%d
-						LIMIT 1",
-							$object_id
-						)
-					);
+					$course_id = wp_get_post_parent_id( $object_id );
 					break;
-
+	
 				case 'zoom_lesson':
 				case 'tutor_gm_topic':
 				case 'lesson':
 				case 'quiz':
 				case 'assignment':
-					$topic_id = $wpdb->get_var(
-						$wpdb->prepare(
-							"SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d",
-							$object_id
-						)
-					);
-
+					$topic_id = wp_get_post_parent_id( $object_id );
 					if ( ! $topic_id ) {
 						$course_id = $wpdb->get_var(
 							$wpdb->prepare(
@@ -7329,7 +7314,7 @@ class Utils {
 						);
 					}
 					break;
-
+	
 				case 'assignment_submission':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7343,7 +7328,7 @@ class Utils {
 						)
 					);
 					break;
-
+	
 				case 'question':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7359,7 +7344,7 @@ class Utils {
 						)
 					);
 					break;
-
+	
 				case 'quiz_answer':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7377,7 +7362,7 @@ class Utils {
 						)
 					);
 					break;
-
+	
 				case 'attempt':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7389,7 +7374,7 @@ class Utils {
 						)
 					);
 					break;
-
+	
 				case 'attempt_answer':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7401,29 +7386,18 @@ class Utils {
 						)
 					);
 					break;
-
+	
 				case 'review':
 				case 'qa_question':
-					$course_id = $wpdb->get_var(
-						$wpdb->prepare(
-							"SELECT comment_post_ID
-						FROM 	{$wpdb->comments}
-						WHERE 	comment_ID = %d;
-						",
-							$object_id
-						)
-					);
+					$question = get_comment( $object_id );
+					if ( is_a( $question, 'WP_Comment' ) ) {
+						$course_id = $question->comment_post_ID;
+					}
 					break;
-
+	
 				case 'instructor':
-					$course_ids = $wpdb->get_col(
-						$wpdb->prepare(
-							"SELECT meta_value FROM {$wpdb->usermeta}
-						WHERE user_id=%d AND meta_key='_tutor_instructor_course_id'",
-							$object_id
-						)
-					);
-
+					$course_ids = get_user_meta( $object_id, '_tutor_instructor_course_id' );
+	
 					! is_array( $course_ids ) ? $course_ids = array() : 0;
 					$course_id                              = array_filter(
 						$course_ids,
@@ -7433,7 +7407,7 @@ class Utils {
 					);
 					break;
 			}
-
+			
 			wp_cache_set( $cache_key, $course_id );
 		}
 
