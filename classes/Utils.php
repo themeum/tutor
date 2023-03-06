@@ -7014,18 +7014,24 @@ class Utils {
 			return false;
 		}
 
-		$instructor = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT umeta_id
-			FROM   {$wpdb->usermeta}
-			WHERE  user_id = %d
-				AND meta_key = '_tutor_instructor_course_id'
-				AND meta_value = %d
-			",
-				$instructor_id,
-				$course_id
-			)
-		);
+		$cache_key  = "tutor_is_instructor_of_the_course_{$instructor_id}_{$course_id}";
+		$instructor = wp_cache_get( $cache_key );
+
+		if ( false === $instructor ) {
+			$instructor = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT umeta_id
+				FROM   {$wpdb->usermeta}
+				WHERE  user_id = %d
+					AND meta_key = '_tutor_instructor_course_id'
+					AND meta_value = %d
+				",
+					$instructor_id,
+					$course_id
+				)
+			);
+			wp_cache_set( $cache_key, $instructor );
+		}
 
 		if ( is_array( $instructor ) && count( $instructor ) ) {
 			return $instructor;
