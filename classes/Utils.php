@@ -7310,14 +7310,7 @@ class Utils {
 							)
 						);
 					} else {
-						$course_id = $wpdb->get_var(
-							$wpdb->prepare(
-								"SELECT post_parent
-							FROM 	{$wpdb->posts}
-							WHERE 	ID = (SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d);",
-								$object_id
-							)
-						);
+						$course_id = wp_get_post_parent_id( $topic_id );
 					}
 					break;
 	
