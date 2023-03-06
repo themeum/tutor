@@ -7271,164 +7271,144 @@ class Utils {
 	 * Return the course ID(s) by lession, quiz, answer etc.
 	 */
 	public function get_course_id_by( $content, $object_id ) {
-		global $wpdb;
-		$course_id = null;
+		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
+		$course_id = wp_cache_get( $cache_key );
 
-		switch ( $content ) {
-			case 'course':
-				$course_id = $object_id;
-				break;
-
-			case 'zoom_meeting':
-			case 'tutor_gm_course':
-			case 'topic':
-			case 'announcement':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT post_parent
-					FROM {$wpdb->posts}
-					WHERE ID=%d
-					LIMIT 1",
-						$object_id
-					)
-				);
-				break;
-
-			case 'zoom_lesson':
-			case 'tutor_gm_topic':
-			case 'lesson':
-			case 'quiz':
-			case 'assignment':
-				$topic_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d",
-						$object_id
-					)
-				);
-
-				if ( ! $topic_id ) {
-					$course_id = $wpdb->get_var(
-						$wpdb->prepare(
-							"SELECT meta_value
-						FROM {$wpdb->prefix}postmeta
-						WHERE post_id=%d AND meta_key='_tutor_course_id_for_lesson'",
-							$object_id
-						)
-					);
-				} else {
-					$course_id = $wpdb->get_var(
-						$wpdb->prepare(
-							"SELECT post_parent
-						FROM 	{$wpdb->posts}
-						WHERE 	ID = (SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d);",
-							$object_id
-						)
-					);
-				}
-				break;
-
-			case 'assignment_submission':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT DISTINCT _course.ID
-					FROM {$wpdb->posts} _course
-						INNER JOIN {$wpdb->posts} _topic ON _topic.post_parent=_course.ID
-						INNER JOIN {$wpdb->posts} _assignment ON _assignment.post_parent=_topic.ID
-						INNER JOIN {$wpdb->comments} _submission ON _submission.comment_post_ID=_assignment.ID
-					WHERE _submission.comment_ID=%d;",
-						$object_id
-					)
-				);
-				break;
-
-			case 'question':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT topic.post_parent
-					FROM 	{$wpdb->posts} topic
-							INNER JOIN {$wpdb->posts} quiz
-									ON quiz.post_parent=topic.ID
-							INNER JOIN {$wpdb->prefix}tutor_quiz_questions question
-									ON question.quiz_id=quiz.ID
-					WHERE 	question.question_id = %d;
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'quiz_answer':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT topic.post_parent
-					FROM 	{$wpdb->posts} topic
-							INNER JOIN {$wpdb->posts} quiz
-									ON quiz.post_parent=topic.ID
-							INNER JOIN {$wpdb->prefix}tutor_quiz_questions question
-									ON question.quiz_id=quiz.ID
-							INNER JOIN {$wpdb->prefix}tutor_quiz_question_answers answer
-									ON answer.belongs_question_id=question.question_id
-					WHERE 	answer.answer_id = %d;
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'attempt':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT course_id
-					FROM 	{$wpdb->prefix}tutor_quiz_attempts
-					WHERE 	attempt_id=%d;
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'attempt_answer':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT course_id
-					FROM 	{$wpdb->prefix}tutor_quiz_attempts
-					WHERE 	attempt_id = (SELECT quiz_attempt_id FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id=%d)
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'review':
-			case 'qa_question':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT comment_post_ID
-					FROM 	{$wpdb->comments}
-					WHERE 	comment_ID = %d;
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'instructor':
-				$course_ids = $wpdb->get_col(
-					$wpdb->prepare(
-						"SELECT meta_value FROM {$wpdb->usermeta}
-					WHERE user_id=%d AND meta_key='_tutor_instructor_course_id'",
-						$object_id
-					)
-				);
-
-				! is_array( $course_ids ) ? $course_ids = array() : 0;
-				$course_id                              = array_filter(
-					$course_ids,
-					function ( $id ) {
-						return ( $id && is_numeric( $id ) );
+		if ( false === $course_id ) {
+			global $wpdb;
+			switch ( $content ) {
+				case 'course':
+					$course_id = $object_id;
+					break;
+	
+				case 'zoom_meeting':
+				case 'tutor_gm_course':
+				case 'topic':
+				case 'announcement':
+					$course_id = wp_get_post_parent_id( $object_id );
+					break;
+	
+				case 'zoom_lesson':
+				case 'tutor_gm_topic':
+				case 'lesson':
+				case 'quiz':
+				case 'assignment':
+					$topic_id = wp_get_post_parent_id( $object_id );
+					if ( ! $topic_id ) {
+						$course_id = $wpdb->get_var(
+							$wpdb->prepare(
+								"SELECT meta_value
+							FROM {$wpdb->prefix}postmeta
+							WHERE post_id=%d AND meta_key='_tutor_course_id_for_lesson'",
+								$object_id
+							)
+						);
+					} else {
+						$course_id = $wpdb->get_var(
+							$wpdb->prepare(
+								"SELECT post_parent
+							FROM 	{$wpdb->posts}
+							WHERE 	ID = (SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d);",
+								$object_id
+							)
+						);
 					}
-				);
-				break;
+					break;
+	
+				case 'assignment_submission':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT DISTINCT _course.ID
+						FROM {$wpdb->posts} _course
+							INNER JOIN {$wpdb->posts} _topic ON _topic.post_parent=_course.ID
+							INNER JOIN {$wpdb->posts} _assignment ON _assignment.post_parent=_topic.ID
+							INNER JOIN {$wpdb->comments} _submission ON _submission.comment_post_ID=_assignment.ID
+						WHERE _submission.comment_ID=%d;",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'question':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT topic.post_parent
+						FROM 	{$wpdb->posts} topic
+								INNER JOIN {$wpdb->posts} quiz
+										ON quiz.post_parent=topic.ID
+								INNER JOIN {$wpdb->prefix}tutor_quiz_questions question
+										ON question.quiz_id=quiz.ID
+						WHERE 	question.question_id = %d;
+						",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'quiz_answer':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT topic.post_parent
+						FROM 	{$wpdb->posts} topic
+								INNER JOIN {$wpdb->posts} quiz
+										ON quiz.post_parent=topic.ID
+								INNER JOIN {$wpdb->prefix}tutor_quiz_questions question
+										ON question.quiz_id=quiz.ID
+								INNER JOIN {$wpdb->prefix}tutor_quiz_question_answers answer
+										ON answer.belongs_question_id=question.question_id
+						WHERE 	answer.answer_id = %d;
+						",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'attempt':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT course_id
+						FROM 	{$wpdb->prefix}tutor_quiz_attempts
+						WHERE 	attempt_id=%d;
+						",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'attempt_answer':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT course_id
+						FROM 	{$wpdb->prefix}tutor_quiz_attempts
+						WHERE 	attempt_id = (SELECT quiz_attempt_id FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id=%d)
+						",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'review':
+				case 'qa_question':
+					$question = get_comment( $object_id );
+					if ( is_a( $question, 'WP_Comment' ) ) {
+						$course_id = $question->comment_post_ID;
+					}
+					break;
+	
+				case 'instructor':
+					$course_ids = get_user_meta( $object_id, '_tutor_instructor_course_id' );
+	
+					! is_array( $course_ids ) ? $course_ids = array() : 0;
+					$course_id                              = array_filter(
+						$course_ids,
+						function ( $id ) {
+							return ( $id && is_numeric( $id ) );
+						}
+					);
+					break;
+			}
+			
+			wp_cache_set( $cache_key, $course_id );
 		}
 
 		return $course_id;
