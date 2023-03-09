@@ -496,12 +496,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		fields = fields.map(s => s.trim());
 		isChecked
-			? fields.forEach((f) => $('#field_' + f).removeClass('tutor-hide-settings'))
-			: fields.forEach((f) => $('#field_' + f).addClass('tutor-hide-settings'))
+			? fields.forEach((f) => $('#field_' + f).removeClass('tutor-hide-option'))
+			: fields.forEach((f) => $('#field_' + f).addClass('tutor-hide-option'))
 
 		let toggleWrapper = el.parent().parent().parent()
 		let sectionWrapper = el.parent().parent().parent().parent()
-		let visibleElements = sectionWrapper.find('.tutor-option-field-row').not('div.tutor-hide-settings').length
+		let visibleElements = sectionWrapper.find('.tutor-option-field-row').not('div.tutor-hide-option').length
 
 		visibleElements === 1
 			? toggleWrapper.addClass('tutor-option-no-bottom-border')
