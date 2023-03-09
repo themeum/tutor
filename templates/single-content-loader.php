@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+use TUTOR_CONTENT_DRIP\ContentDrip;
+
 global $post;
 //phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 $currentPost = $post;
@@ -51,6 +53,21 @@ function tutor_course_single_sidebar( $echo = true, $context = 'desktop' ) {
 do_action( 'tutor/course/single/content/before/all', $course_id, $content_id );
 
 get_tutor_header();
+
+$post_type                                   = get_post_type( get_the_ID() );
+$accepted_array_for_showing_mark_as_complete = array( 'lesson' );
+$show_mark_as_complete                       = false;
+
+if ( in_array( $post_type, $accepted_array_for_showing_mark_as_complete ) ) {
+	$show_mark_as_complete = true;
+
+	if ( function_exists( 'tutor_pro' ) ) {
+		$drip = new ContentDrip();
+		if ( $drip->is_lock_lesson( get_the_ID() ) ) {
+			$show_mark_as_complete = false;
+		}
+	}
+}
 
 ?>
 
@@ -96,7 +113,11 @@ get_tutor_header();
 
 			<?php if ( ! $is_completed_lesson ) : ?>
 				<div class="tutor-spotlight-mobile-progress-right tutor-col-sm-4 tutor-col-6">
-					<?php tutor_lesson_mark_complete_html(); ?>
+					<?php
+					if ( $show_mark_as_complete ) {
+						tutor_lesson_mark_complete_html();
+					}
+					?>
 				</div>
 			<?php endif; ?>
 
