@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+use TUTOR_CONTENT_DRIP\ContentDrip;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -1071,6 +1073,13 @@ if ( ! function_exists( 'tutor_lesson_content' ) ) {
 
 if ( ! function_exists( 'tutor_lesson_mark_complete_html' ) ) {
 	function tutor_lesson_mark_complete_html( $echo = true ) {
+		
+		if( function_exists( 'tutor_pro' ) ) {
+			$drip = new ContentDrip();
+			if ( $drip->is_lock_lesson( get_the_ID() ) ) {
+				return;
+			}
+		}
 		ob_start();
 		tutor_load_template( 'single.lesson.complete_form' );
 		$output = apply_filters( 'tutor_lesson/single/complete_form', ob_get_clean() );
