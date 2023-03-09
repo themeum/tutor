@@ -54,11 +54,10 @@ do_action( 'tutor/course/single/content/before/all', $course_id, $content_id );
 
 get_tutor_header();
 
-$post_type                                   = get_post_type( get_the_ID() );
-$accepted_array_for_showing_mark_as_complete = array( 'lesson' );
-$show_mark_as_complete                       = false;
+$post_type             = get_post_type( get_the_ID() );
+$show_mark_as_complete = false;
 
-if ( in_array( $post_type, $accepted_array_for_showing_mark_as_complete ) ) {
+if ( tutor()->lesson_post_type === $post_type ) {
 	$show_mark_as_complete = true;
 
 	if ( function_exists( 'tutor_pro' ) ) {
