@@ -493,12 +493,22 @@ document.addEventListener('DOMContentLoaded', function () {
 		let isChecked = el.is(':checked')
 		let fields = el.data('toggle-fields').split(',')
 		if (Array.isArray(fields) === false || fields.length === 0) return
+
 		fields = fields.map(s => s.trim());
 		isChecked
-			? fields.forEach((f) => $('#field_' + f).show())
-			: fields.forEach((f) => $('#field_' + f).hide())
+			? fields.forEach((f) => $('#field_' + f).removeClass('tutor-hide-settings'))
+			: fields.forEach((f) => $('#field_' + f).addClass('tutor-hide-settings'))
+
+		let toggleWrapper = el.parent().parent().parent()
+		let sectionWrapper = el.parent().parent().parent().parent()
+		let visibleElements = sectionWrapper.find('.tutor-option-field-row').not('div.tutor-hide-settings').length
+
+		visibleElements === 1
+			? toggleWrapper.addClass('tutor-option-no-bottom-border')
+			: toggleWrapper.removeClass('tutor-option-no-bottom-border')
+
 	}
-	
+
 	const btnToggles = $('input[type="checkbox"][data-toggle-fields]')
 	btnToggles.each(function () {
 		showHideToggleChildren($(this))
