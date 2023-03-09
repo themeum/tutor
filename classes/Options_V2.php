@@ -835,12 +835,13 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'         => 'enable_fees_deducting',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Deduct Fees', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'Fees are charged from the entire sales amount. The remaining amount will be divided among admin and instructors.', 'tutor' ),
+								'key'           => 'enable_fees_deducting',
+								'type'          => 'toggle_switch',
+								'label'         => __( 'Deduct Fees', 'tutor' ),
+								'label_title'   => '',
+								'default'       => 'off',
+								'desc'          => __( 'Fees are charged from the entire sales amount. The remaining amount will be divided among admin and instructors.', 'tutor' ),
+								'toggle_fields' => 'fees_name,fee_amount_type'
 							),
 							array(
 								'key'         => 'fees_name',

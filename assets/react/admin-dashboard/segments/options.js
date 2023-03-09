@@ -469,23 +469,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/**
-	 * Show/Hide fees_name and fee_amount_type on deduct fee option toggle
-	 * @since 2.1.0
-	 */
-	const enable_fees_deducting_field = document.querySelector("[name='tutor_option[enable_fees_deducting]']");
-	const field_fees_name_wrapper = document.getElementById("field_fees_name");
-	const field_fee_amount_type_wrapper = document.getElementById("field_fee_amount_type");
-	if (enable_fees_deducting_field) {
-		showHideOption(field_fees_name_wrapper, enable_fees_deducting_field.value)
-		showHideOption(field_fee_amount_type_wrapper, enable_fees_deducting_field.value)
-
-		changeListener(enable_fees_deducting_field, (value) => {
-			showHideOption(field_fees_name_wrapper, value)
-			showHideOption(field_fee_amount_type_wrapper, value)
-		});
-	}
-
-	/**
 	 * On toggle switch change - show, hide setting's elements
 	 * @since 2.1.9
 	 */
