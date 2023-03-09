@@ -484,4 +484,38 @@ document.addEventListener('DOMContentLoaded', function () {
 			showHideOption(field_fee_amount_type_wrapper, value)
 		});
 	}
+
+	/**
+	 * On toggle switch change - show, hide setting's elements
+	 * @since 2.1.9
+	 */
+	function showHideToggleChildren(el) {
+		let isChecked = el.is(':checked')
+		let fields = el.data('toggle-fields').split(',')
+		if (Array.isArray(fields) === false || fields.length === 0) return
+
+		fields = fields.map(s => s.trim());
+		isChecked
+			? fields.forEach((f) => $('#field_' + f).removeClass('tutor-hide-option'))
+			: fields.forEach((f) => $('#field_' + f).addClass('tutor-hide-option'))
+
+		let toggleWrapper = el.parent().parent().parent()
+		let sectionWrapper = el.parent().parent().parent().parent()
+		let visibleElements = sectionWrapper.find('.tutor-option-field-row').not('div.tutor-hide-option').length
+
+		visibleElements === 1
+			? toggleWrapper.addClass('tutor-option-no-bottom-border')
+			: toggleWrapper.removeClass('tutor-option-no-bottom-border')
+
+	}
+
+	const btnToggles = $('input[type="checkbox"][data-toggle-fields]')
+	btnToggles.each(function () {
+		showHideToggleChildren($(this))
+	})
+
+	btnToggles.change(function () {
+		showHideToggleChildren($(this))
+	})
+
 });
