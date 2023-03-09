@@ -790,12 +790,13 @@ class Options_V2 {
 								'desc'        => __( 'If enabled, in the case of Courses, WooCommerce Orders will get the "Completed" status .', 'tutor' ),
 							),
 							array(
-								'key'         => 'enable_revenue_sharing',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Enable Revenue Sharing', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
+								'key'           => 'enable_revenue_sharing',
+								'type'          => 'toggle_switch',
+								'label'         => __( 'Enable Revenue Sharing', 'tutor' ),
+								'label_title'   => '',
+								'default'       => 'off',
+								'desc'          => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
+								'toggle_fields' => 'sharing_percentage'
 							),
 							array(
 								'key'         => 'sharing_percentage',

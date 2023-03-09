@@ -457,16 +457,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			showHideOption(invoice_field_wrapper, e.target.value, 'wc');
 		}
 	}
-	/**
-	 * Option (sharing_percentage) toggle on enable_revenue_sharing option change
-	 * @since 2.0.7
-	 */
-	const revenue_sharing_field = document.querySelector("[name='tutor_option[enable_revenue_sharing]']");
-	const sharing_percent_wrapper = document.getElementById("field_sharing_percentage");
-	if (revenue_sharing_field) {
-		showHideOption(sharing_percent_wrapper, revenue_sharing_field.value)
-		changeListener(revenue_sharing_field, (value) => showHideOption(sharing_percent_wrapper, value));
-	}
 
 	/**
 	 * On toggle switch change - show, hide setting's elements
