@@ -206,6 +206,19 @@ body.tutor-backend-tutor_settings #wpbody-content {
 * Option Field
 */
 
+.tutor-hide-option{
+	display: none!important;
+}
+
+.tutor-option-no-bottom-border{
+	border-bottom: 0!important;
+	padding-bottom: 0!important;
+}
+
+.tutor-option-checkbox-horizontal{
+	display: block;
+}
+
 .tutor-option-field-row {
 	border-bottom: 1px solid #e4e4e4;
 	padding: 20px 0;
