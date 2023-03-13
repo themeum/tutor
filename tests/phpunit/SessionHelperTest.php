@@ -27,7 +27,7 @@ class SessionHelperTest extends \WP_UnitTestCase {
 	private static $key = 'test_key';
 
 	/**
-	 * Session key default null if key not exist.
+	 * Session key default value null if key not exist.
 	 *
 	 * @return void
 	 */
@@ -36,7 +36,7 @@ class SessionHelperTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Session key default data if key does not exist.
+	 * Session key default value test if key does not exist.
 	 *
 	 * @return void
 	 */
@@ -58,7 +58,7 @@ class SessionHelperTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Session store string data in a key.
+	 * Session set and get multiple key data.
 	 *
 	 * @return void
 	 */
