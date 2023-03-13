@@ -45,6 +45,7 @@ foreach ( $login_errors as $login_error ) {
 	<?php
 }
 
+do_action( 'tutor_before_login_form' );
 ?>
 <form id="tutor-login-form" method="post">
 	<?php if ( is_single_course() ) : ?>
@@ -102,7 +103,9 @@ foreach ( $login_errors as $login_error ) {
 		</div>
 	<?php endif; ?>
 </form>
-<?php if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) : ?>
+<?php
+do_action( 'tutor_after_login_form' );
+if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) : ?>
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		var { __ } = wp.i18n;
