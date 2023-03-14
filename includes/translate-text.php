@@ -122,6 +122,30 @@ function tutor_get_translate_text() {
 		'false'      => array(
 			'text' => _x( 'False', 'true/false question options', 'tutor' ),
 		),
+		'days'  => array(
+			'text' => __( 'Days', 'tutor' ),
+		),
+		'day'  => array(
+			'text' => __( 'Day', 'tutor' ),
+		),
+		'hours'  => array(
+			'text' => __( 'Hours', 'tutor' ),
+		),
+		'hour'  => array(
+			'text' => __( 'Hour', 'tutor' ),
+		),
+		'minutes'  => array(
+			'text' => __( 'Minutes', 'tutor' ),
+		),
+		'minute'  => array(
+			'text' => __( 'Minute', 'tutor' ),
+		),
+		'seconds'  => array(
+			'text' => __( 'Seconds', 'tutor' ),
+		),
+		'second'  => array(
+			'text' => __( 'Second', 'tutor' ),
+		),
 
 		// Translate able week name.
 		'monday'     => array(
