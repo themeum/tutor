@@ -58,14 +58,7 @@ $post_type             = get_post_type( get_the_ID() );
 $show_mark_as_complete = false;
 
 if ( tutor()->lesson_post_type === $post_type ) {
-	$show_mark_as_complete = true;
-
-	if ( function_exists( 'tutor_pro' ) ) {
-		$drip = new ContentDrip();
-		if ( $drip->is_lock_lesson( get_the_ID() ) ) {
-			$show_mark_as_complete = false;
-		}
-	}
+	$show_mark_as_complete = apply_filters( 'tutor_lesson_show_mark_as_complete', true );
 }
 
 ?>
