@@ -52,10 +52,9 @@ do_action( 'tutor/course/single/content/before/all', $course_id, $content_id );
 
 get_tutor_header();
 
-$post_type             = get_post_type( get_the_ID() );
 $show_mark_as_complete = false;
 
-if ( tutor()->lesson_post_type === $post_type ) {
+if ( tutor()->lesson_post_type === $post->post_type ) {
 	$show_mark_as_complete = apply_filters( 'tutor_lesson_show_mark_as_complete', true );
 }
 
