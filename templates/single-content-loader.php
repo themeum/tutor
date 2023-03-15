@@ -8,8 +8,6 @@
  * @since 1.0.0
  */
 
-use TUTOR_CONTENT_DRIP\ContentDrip;
-
 global $post;
 //phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 $currentPost = $post;
