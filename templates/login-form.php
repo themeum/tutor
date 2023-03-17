@@ -85,7 +85,7 @@ do_action( 'tutor_before_login_form' );
 	<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block">
 		<?php esc_html_e( 'Sign In', 'tutor' ); ?>
 	</button>
-	<?php do_action( 'tutor_after_sign_in_button' ); ?>
+	
 	<?php if ( get_option( 'users_can_register', false ) ) : ?>
 		<?php
 			$url_arg = array(
@@ -102,6 +102,7 @@ do_action( 'tutor_before_login_form' );
 			</a>
 		</div>
 	<?php endif; ?>
+	<?php do_action( 'tutor_after_sign_in_button' ); ?>
 </form>
 <?php
 do_action( 'tutor_after_login_form' );
