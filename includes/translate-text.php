@@ -207,5 +207,41 @@ function tutor_get_translate_text() {
 		'december'   => array(
 			'text' => _x( 'December', 'Month name', 'tutor' ),
 		),
+		'jan'    => array(
+			'text' => _x( 'January', 'Month name', 'tutor' ),
+		),
+		'feb'   => array(
+			'text' => _x( 'February', 'Month name', 'tutor' ),
+		),
+		'mar'      => array(
+			'text' => _x( 'March', 'Month name', 'tutor' ),
+		),
+		'apr'      => array(
+			'text' => _x( 'April', 'Month name', 'tutor' ),
+		),
+		'may'        => array(
+			'text' => _x( 'May', 'Month name', 'tutor' ),
+		),
+		'jun'       => array(
+			'text' => _x( 'June', 'Month name', 'tutor' ),
+		),
+		'jul'       => array(
+			'text' => _x( 'July', 'Month name', 'tutor' ),
+		),
+		'aug'     => array(
+			'text' => _x( 'August', 'Month name', 'tutor' ),
+		),
+		'sep'  => array(
+			'text' => _x( 'September', 'Month name', 'tutor' ),
+		),
+		'oct'    => array(
+			'text' => _x( 'October', 'Month name', 'tutor' ),
+		),
+		'nov'   => array(
+			'text' => _x( 'November', 'Month name', 'tutor' ),
+		),
+		'dec'   => array(
+			'text' => _x( 'December', 'Month name', 'tutor' ),
+		),
 	);
 }
