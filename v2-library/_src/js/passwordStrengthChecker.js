@@ -53,7 +53,7 @@
 						weak.classList.add('active');
 						if (noticeText) {
 							noticeText.style.display = 'block';
-							noticeText.textContent = 'week';
+							noticeText.textContent = 'weak';
 							// noticeText.classList.add('weak');
 						}
 					}

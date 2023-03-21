@@ -19,6 +19,15 @@ $topics      = tutor_utils()->get_topics();
 $course_id   = get_the_ID();
 $index       = 0;
 
+/**
+ * $is_enrolled getting null for Addons plugin like Elementor addons
+ *
+ * @since 2.1.8
+ */
+if ( is_null( $is_enrolled ) ) {
+	$is_enrolled = tutor_utils()->is_enrolled( $course_id );
+}
+
 do_action( 'tutor_course/single/before/topics' );
 ?>
 <div class="tutor-mt-40">
