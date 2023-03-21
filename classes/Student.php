@@ -113,28 +113,32 @@ class Student {
 			'user_pass'  => $password,
 		);
 
-		$user_id = wp_insert_user( $userdata );
+		$user_id        = wp_insert_user( $userdata );
+		$enroll_attempt = Input::post( 'tutor_course_enroll_attempt', '' );
 		if ( ! is_wp_error( $user_id ) ) {
 			$user = get_user_by( 'id', $user_id );
-			if ( $user ) {
+
+			$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
+			if ( $is_req_email_verification ) {
+				do_action( 'tutor_send_verification_mail', $user, $enroll_attempt );
+			} else {
 				wp_set_current_user( $user_id, $user->user_login );
 				wp_set_auth_cookie( $user_id );
-			}
 
-			do_action( 'tutor_after_student_signup', $user_id );
-			// since 1.9.8 do enroll if guest attempt to enroll.
-			$enroll_attempt = Input::post( 'tutor_course_enroll_attempt', '' );
-			if ( ! empty( $enroll_attempt ) ) {
-				do_action( 'tutor_do_enroll_after_login_if_attempt', $enroll_attempt, $user_id );
-			}
+				do_action( 'tutor_after_student_signup', $user_id );
+				// since 1.9.8 do enroll if guest attempt to enroll.
+				if ( ! empty( $enroll_attempt ) ) {
+					do_action( 'tutor_do_enroll_after_login_if_attempt', $enroll_attempt, $user_id );
+				}
 
-			// Redirect page.
-			$redirect_page = tutor_utils()->array_get( 'redirect_to', $_REQUEST ); //phpcs:ignore
-			if ( ! $redirect_page ) {
-				$redirect_page = tutor_utils()->tutor_dashboard_url();
+				// Redirect page.
+				$redirect_page = tutor_utils()->array_get( 'redirect_to', $_REQUEST ); //phpcs:ignore
+				if ( ! $redirect_page ) {
+					$redirect_page = tutor_utils()->tutor_dashboard_url();
+				}
+				wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', $redirect_page, $user ) );
+				die();
 			}
-			wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', $redirect_page, $user ) );
-			die();
 		} else {
 			$this->error_msgs = $user_id->get_error_messages();
 			add_filter( 'tutor_student_register_validation_errors', array( $this, 'tutor_student_form_validation_errors' ) );
