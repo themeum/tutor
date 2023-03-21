@@ -229,6 +229,7 @@ gulp.task('copy', function() {
 			'!yarn-error.log',
 			'!bin/**',
 			'!tests/**',
+			'!.env',
 			'!vendor/bin/**',
 			'!vendor/doctrine/**',
 			'!vendor/myclabs/**',
