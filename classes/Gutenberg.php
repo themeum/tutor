@@ -85,7 +85,7 @@ class Gutenberg {
 				'tutor-student-registration-block',
 				tutor()->url . 'assets/js/lib/gutenberg_blocks.js',
 				array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-editor' ),
-				TUTOR_VERSION,
+				TUTOR_VERSION
 			);
 		}
 

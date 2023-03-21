@@ -146,6 +146,7 @@
 		<div>
 			<button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-btn tutor-btn-primary"><?php esc_html_e( 'Register as instructor', 'tutor' ); ?></button>
 		</div>
+		<?php do_action( 'tutor_after_register_button' ); ?>
 
 	</form>
 
