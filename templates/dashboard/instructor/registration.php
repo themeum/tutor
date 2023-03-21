@@ -41,7 +41,7 @@
 		<?php
 		$errors = apply_filters( 'tutor_instructor_register_validation_errors', array() );//phpcs:ignore
 		if ( is_array( $errors ) && count( $errors ) ) {
-			echo '<div class="tutor-alert-warning"><ul class="tutor-required-fields">';
+			echo '<div class="tutor-alert tutor-warning"><ul class="tutor-required-fields">';
 			foreach ( $errors as $error_key => $error_value ) {
 				echo wp_kses( "<li>{$error_value}</li>", array( 'li' => array() ) );
 			}
