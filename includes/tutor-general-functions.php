@@ -1023,5 +1023,29 @@ if ( ! function_exists( 'tutor_meta_box_wrapper' ) ) {
 			);
 		}
 	}
+
+}
+
+if ( ! function_exists( 'tutor_close_able_alert_msg' ) ) {
+	/**
+	 * Create a close-able alert message
+	 *
+	 * @since 2.1.9
+	 *
+	 * @param string $message alert message.
+	 * @param string $alert alert key like: success, warning, danger, etc.
+	 *
+	 * @return void
+	 */
+	function tutor_close_able_alert_msg( string $message, string $alert = 'success' ) {
+		?>
+		<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?> tutor-mb-12 tutor-alert tutor-success tutor-mb-12 tutor-d-flex tutor-align-center tutor-justify-between">
+			<span>
+				<?php echo esc_html( $message ); ?>
+			</span>
+			<span class="tutor-icon-times" area-hidden="true" onclick="this.closest('div').remove()" style="cursor: pointer;"></span>
+		</div>
+		<?php
+	}
 }
 
