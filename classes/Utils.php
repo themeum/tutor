@@ -8400,42 +8400,43 @@ class Utils {
 		return str_replace( array( ' hour', ' minute', ' second', 's', ',' ), array( 'H', 'M', 'S', '', '' ), $_attempt_duration ); */
 	}
 
-	public function seconds_to_time( $inputSeconds ) {
-		$secondsInAMinute = 60;
-		$secondsInAnHour  = 60 * $secondsInAMinute;
-		$secondsInADay    = 24 * $secondsInAnHour;
-
+	public function seconds_to_time( $input_seconds ) {
+		$seconds_in_a_minute = 60;
+		$seconds_in_an_hour  = 60 * $seconds_in_a_minute;
+		$seconds_in_a_day    = 24 * $seconds_in_an_hour;
+	
 		// Extract days
-		$days = floor( $inputSeconds / $secondsInADay );
-
+		$days = floor( $input_seconds / $seconds_in_a_day );
+	
 		// Extract hours
-		$hourSeconds = $inputSeconds % $secondsInADay;
-		$hours       = floor( $hourSeconds / $secondsInAnHour );
-
+		$hour_seconds	= $input_seconds % $seconds_in_a_day;
+		$hours			= floor( $hour_seconds / $seconds_in_an_hour );
+	
 		// Extract minutes
-		$minuteSeconds = $hourSeconds % $secondsInAnHour;
-		$minutes       = floor( $minuteSeconds / $secondsInAMinute );
-
+		$minute_seconds = $hour_seconds % $seconds_in_an_hour;
+		$minutes		= floor( $minute_seconds / $seconds_in_a_minute );
+	
 		// Extract the remaining seconds
-		$remainingSeconds = $minuteSeconds % $secondsInAMinute;
-		$seconds          = ceil( $remainingSeconds );
-
+		$remaining_seconds	= $minute_seconds % $seconds_in_a_minute;
+		$seconds			= ceil( $remaining_seconds );
+	
 		// Format and return
-		$timeParts = array();
+		$time_parts = array();
 		$sections  = array(
 			'day'    => (int) $days,
 			'hour'   => (int) $hours,
 			'minute' => (int) $minutes,
 			'second' => (int) $seconds,
 		);
-
-		foreach ( $sections as $name => $value ) {
+	
+		foreach ( $sections as $unit => $value ) {
 			if ( $value > 0 ) {
-				$timeParts[] = $value . ' ' . $name . ( $value == 1 ? '' : 's' );
+				$unit_name		= $unit . ( $value == 1 ? '' : 's' );
+				$time_parts[]	= $value . ' ' . $this->translate_dynamic_text( $unit_name );
 			}
 		}
-
-		return implode( ', ', $timeParts );
+	
+		return implode( ', ', $time_parts );
 	}
 
 	/**
