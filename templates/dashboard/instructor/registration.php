@@ -41,7 +41,7 @@
 		<?php
 		$errors = apply_filters( 'tutor_instructor_register_validation_errors', array() );//phpcs:ignore
 		if ( is_array( $errors ) && count( $errors ) ) {
-			echo '<div class="tutor-alert-warning"><ul class="tutor-required-fields">';
+			echo '<div class="tutor-alert tutor-warning"><ul class="tutor-required-fields">';
 			foreach ( $errors as $error_key => $error_value ) {
 				echo wp_kses( "<li>{$error_value}</li>", array( 'li' => array() ) );
 			}
@@ -146,6 +146,7 @@
 		<div>
 			<button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-btn tutor-btn-primary"><?php esc_html_e( 'Register as instructor', 'tutor' ); ?></button>
 		</div>
+		<?php do_action( 'tutor_after_register_button' ); ?>
 
 	</form>
 

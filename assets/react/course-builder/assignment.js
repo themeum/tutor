@@ -49,6 +49,7 @@ window.jQuery(document).ready(function($){
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
 
                 window.dispatchEvent(new Event(_tutorobject.content_change_event));
+                window.dispatchEvent(new CustomEvent('tutor_modal_shown', {detail: e.target}));
             },
             complete: function () {
                 $that.removeClass('is-loading');
@@ -71,6 +72,11 @@ window.jQuery(document).ready(function($){
             content = editor.getContent({format: 'raw'});
         } else {
             content = $('#'+inputid).val();
+        }
+         
+        // removing <br data-mce-bogus="1">
+        if(content === '<p><br data-mce-bogus="1"></p>') {
+            content = '';
         }
         
         var form_data = $(this).closest('.tutor-modal').find('form.tutor_assignment_modal_form').serializeObject();

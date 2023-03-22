@@ -704,7 +704,6 @@ class Utils {
 	 */
 	public function get_completed_lesson_count_by_course( $course_id = 0, $user_id = 0 ) {
 		global $wpdb;
-
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
@@ -717,16 +716,23 @@ class Utils {
 			}
 			$in_ids = implode( "','", $completed_lesson_meta_ids );
 
-			$count = (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT count(umeta_id)
-				FROM	{$wpdb->usermeta}
-				WHERE	user_id = %d
-						AND meta_key IN ('{$in_ids}')
-				",
-					$user_id
-				)
-			);
+			$prepare_ids = str_replace( "','", '', $in_ids );
+			$cache_key = "tutor_get_completed_lesson_count_by{$user_id}_{$prepare_ids}";
+			$count = wp_cache_get( $cache_key );
+
+			if ( false === $count ) {
+				$count = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT count(umeta_id)
+					FROM	{$wpdb->usermeta}
+					WHERE	user_id = %d
+							AND meta_key IN ('{$in_ids}')
+					",
+						$user_id
+					)
+				);
+				wp_cache_set( $cache_key, $count );
+			}
 		}
 
 		return $count;
@@ -766,36 +772,55 @@ class Utils {
 
 		if ( count( $quiz_ids ) ) {
 			$quiz_ids_str   = QueryHelper::prepare_in_clause( $quiz_ids );
-			$quiz_completed = (int) $wpdb->get_var( 
-				$wpdb->prepare(
-					"SELECT count(quiz_id) completed 
-					FROM (
-						SELECT  DISTINCT quiz_id, course_id, attempt_status 
-						FROM 	{$wpdb->tutor_quiz_attempts} 
-						WHERE 	quiz_id IN ({$quiz_ids_str}) 
-								AND user_id = % d 
-								AND attempt_status != %s
-					) a", $user_id, 'attempt_started' )
-			);
+
+			// Get data from cache.
+			$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
+			$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$prepare_quiz_ids_str}";
+			$quiz_completed           = wp_cache_get( $quiz_completed_cache_key );
+
+			if ( false === $quiz_completed ) {
+				$quiz_completed = (int) $wpdb->get_var( 
+					$wpdb->prepare(
+						"SELECT count(quiz_id) completed 
+						FROM (
+							SELECT  DISTINCT quiz_id, course_id, attempt_status 
+							FROM 	{$wpdb->tutor_quiz_attempts} 
+							WHERE 	quiz_id IN ({$quiz_ids_str}) 
+									AND user_id = % d 
+									AND attempt_status != %s
+						) a", $user_id, 'attempt_started' )
+				);
+				// Set cache data.
+				wp_cache_set( $quiz_completed_cache_key, $quiz_completed );
+			}
 			$completedCount += $quiz_completed;
 		}
 		
 		if ( count( $assignment_ids ) ) {
 			$assignment_ids_str   = QueryHelper::prepare_in_clause( $assignment_ids );
-			$assignment_submitted = (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT count(*) completed
-					FROM 	{$wpdb->comments}
-					WHERE 	comment_type = %s
-							AND comment_approved = %s
-							AND user_id = %d
-							AND comment_post_ID IN({$assignment_ids_str});
-					",
-						'tutor_assignment',
-						'submitted',
-						$user_id
-					)
-			);
+
+			// Get data from cache.
+			$prepare_assignment_ids_str     = str_replace( ',', '_', $assignment_ids_str );
+			$assignment_submitted_cache_key = "tutor_assignment_submitted{$user_id}_{$prepare_assignment_ids_str}";
+			$assignment_submitted           = wp_cache_get( $assignment_submitted_cache_key );
+
+			if ( false === $assignment_submitted ) {
+				$assignment_submitted = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT count(*) completed
+						FROM 	{$wpdb->comments}
+						WHERE 	comment_type = %s
+								AND comment_approved = %s
+								AND user_id = %d
+								AND comment_post_ID IN({$assignment_ids_str});
+						",
+							'tutor_assignment',
+							'submitted',
+							$user_id
+						)
+				);
+				wp_cache_set( $assignment_submitted_cache_key, $assignment_submitted );
+			}
 			$completedCount += $assignment_submitted;
 		}
 
@@ -1095,37 +1120,41 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function is_enrolled( $course_id = 0, $user_id = 0 ) {
+		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
-
-		global $wpdb;
+		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}";
 
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
-		$getEnrolledInfo = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT ID,
-					post_author,
-					post_date,
-					post_date_gmt,
-					post_title
-			FROM 	{$wpdb->posts}
-			WHERE 	post_author>0 
-					AND post_parent>0
-					AND post_type = %s
-					AND post_parent = %d
-					AND post_author = %d
-					AND post_status = %s;
-			",
-				'tutor_enrolled',
-				$course_id,
-				$user_id,
-				'completed'
-			)
-		);
+		$get_enrolled_info = wp_cache_get( $cache_key );
+		if ( false === $get_enrolled_info ) {
+			$get_enrolled_info = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT ID,
+						post_author,
+						post_date,
+						post_date_gmt,
+						post_title
+				FROM 	{$wpdb->posts}
+				WHERE 	post_author>0 
+						AND post_parent>0
+						AND post_type = %s
+						AND post_parent = %d
+						AND post_author = %d
+						AND post_status = %s;
+				",
+					'tutor_enrolled',
+					$course_id,
+					$user_id,
+					'completed'
+				)
+			);
+			wp_cache_set( $cache_key, $get_enrolled_info );
+		}
 
-		if ( $getEnrolledInfo ) {
-			return apply_filters( 'tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id );
+		if ( $get_enrolled_info ) {
+			return apply_filters( 'tutor_is_enrolled', $get_enrolled_info, $course_id, $user_id );
 		}
 
 		return false;
@@ -1678,14 +1707,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 * @param int $user_id
-	 *
-	 * @return array|bool|null|object
-	 *
 	 * Determine if a course completed
 	 *
 	 * @since v.1.0.0
+	 * 
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return array|bool|null|object
 	 *
 	 * @updated v.1.4.9
 	 */
@@ -1695,25 +1724,31 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
-		$is_completed = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT comment_ID,
-					comment_post_ID AS course_id,
-					comment_author AS completed_user_id,
-					comment_date AS completion_date,
-					comment_content AS completed_hash
-			FROM	{$wpdb->comments}
-			WHERE 	comment_agent = %s
-					AND comment_type = %s
-					AND comment_post_ID = %d
-					AND user_id = %d;
-			",
-				'TutorLMSPlugin',
-				'course_completed',
-				$course_id,
-				$user_id
-			)
-		);
+		$cache_key    = "tutor_is_completed_course_{$course_id}_{$user_id}";
+		$is_completed = wp_cache_get( $cache_key );
+
+		if ( false === $is_completed ) {
+			$is_completed = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT comment_ID,
+						comment_post_ID AS course_id,
+						comment_author AS completed_user_id,
+						comment_date AS completion_date,
+						comment_content AS completed_hash
+				FROM	{$wpdb->comments}
+				WHERE 	comment_agent = %s
+						AND comment_type = %s
+						AND comment_post_ID = %d
+						AND user_id = %d;
+				",
+					'TutorLMSPlugin',
+					'course_completed',
+					$course_id,
+					$user_id
+				)
+			);
+			wp_cache_set( $cache_key, $is_completed );
+		}
 
 		if ( $is_completed ) {
 			return apply_filters( 'is_completed_course', $is_completed, $course_id, $user_id );
@@ -2065,18 +2100,16 @@ class Utils {
 	}
 
 	/**
-	 * Get total enrolled students by course id
+	 * Get total enrolled students by course id.
 	 *
-	 * @param int                                    $course_id
-	 *
+	 * @since 1.9.9
+	 * 
+	 * @param int $course_id course id.
 	 * @param $period string | optional added since 1.9.9
 	 *
 	 * @return int
-	 *
-	 * @since 1.9.9
 	 */
 	public function count_enrolled_users_by_course( $course_id = 0, $period = '' ) {
-		global $wpdb;
 
 		$course_id = $this->get_post_id( $course_id );
 		// set period wise query
@@ -2091,21 +2124,29 @@ class Utils {
 			$period_filter = 'AND YEAR(post_date) = YEAR(CURDATE()) ';
 		}
 
-		$course_ids = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(ID)
-			FROM	{$wpdb->posts}
-			WHERE 	post_type = %s
-					AND post_status = %s
-					AND post_parent = %d;
-					{$period_filter}
-			",
-				'tutor_enrolled',
-				'completed',
-				$course_id
-			)
-		);
+		$cache_key  = "tutor_enroll_count_for_course_{$course_id}_{$period}";
+		$course_ids = wp_cache_get( $cache_key );
 
+		if ( false === $course_ids ) {
+			global $wpdb;
+			$course_ids = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(ID)
+				FROM	{$wpdb->posts}
+				WHERE 	post_type = %s
+						AND post_status = %s
+						AND post_parent = %d;
+						{$period_filter}
+				",
+					'tutor_enrolled',
+					'completed',
+					$course_id
+				)
+			);
+
+			wp_cache_set( $cache_key, (int) $course_ids );
+		}
+		
 		return (int) $course_ids;
 	}
 
@@ -3516,7 +3557,11 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 * @since 2.1.7          changed param $user_id to $user for reduce query.
-	 *  
+	 * 
+	 * Get user data using get_userdata API
+	 *
+	 * @since 2.1.8
+	 *
 	 * @param integer|object $user user id or object.
 	 * @param string         $size size of avatar like sm, md, lg.
 	 *
@@ -3527,18 +3572,24 @@ class Utils {
 		if ( ! $user ) {
 			return '';
 		}
-
+	
 		if ( ! is_object( $user ) ) {
-			$user  = $this->get_tutor_user( $user );
+			$user = get_userdata( $user );
+		}
+
+		if ( is_a( $user, 'WP_User' ) ) {
+			// Get & set user profile photo.
+			$profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
+			$user->tutor_profile_photo = $profile_photo;
 		}
 		
 		$name  = is_object( $user ) ? $user->display_name : '';
 		$arr   = explode( ' ', trim( $name ) );
 		$class = $size ? ' tutor-avatar-' . $size : '';
-
+	
 		$output  = '<div class="tutor-avatar' . $class . '">';
 		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
-
+	
 		if ( is_object( $user ) && $user->tutor_profile_photo ) {
 			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="' . esc_attr( $name ) . '" /> ';
 		} else {
@@ -3547,23 +3598,30 @@ class Utils {
 			$initial_avatar = strtoupper( $first_char . $second_char );
 			$output        .= '<span class="tutor-avatar-text">' . $initial_avatar . '</span>';
 		}
-
+	
 		$output .= '</div>';
 		$output .= '</div>';
-
+	
 		return apply_filters( 'tutor_text_avatar', $output );
 	}
 
 	/**
-	 * @param $user_id
+	 * Get tutor user.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param int $user_id user id.
 	 *
 	 * @return array|null|object|void
-	 *
-	 * Get tutor user
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_tutor_user( $user_id ) {
+		$cache_key   = 'tutor_user_' . $user_id;
+		$cached_data = wp_cache_get( $cache_key );
+
+		if ( false !== $cached_data ) {
+			return $cached_data;
+		}
+
 		global $wpdb;
 
 		$user = $wpdb->get_row(
@@ -3591,6 +3649,8 @@ class Utils {
 				$user_id
 			)
 		);
+
+		wp_cache_set( $cache_key, $user );
 
 		return $user;
 	}
@@ -4741,13 +4801,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $quiz_id
+	 * Determine if there is any started quiz exists.
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param int $quiz_id quiz id.
 	 *
 	 * @return array|null|object|void
-	 *
-	 * Determine if there is any started quiz exists
-	 *
-	 * @since v.1.0.0
 	 */
 	public function is_started_quiz( $quiz_id = 0 ) {
 		global $wpdb;
@@ -4755,19 +4815,25 @@ class Utils {
 		$quiz_id = $this->get_post_id( $quiz_id );
 		$user_id = get_current_user_id();
 
-		$is_started = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->prefix}tutor_quiz_attempts
-			WHERE 	user_id =  %d
-					AND quiz_id = %d
-					AND attempt_status = %s;
-			",
-				$user_id,
-				$quiz_id,
-				'attempt_started'
-			)
-		);
+		$cache_key  = "tutor_is_started_quiz_{$user_id}_{$quiz_id}";
+		$is_started = wp_cache_get( $cache_key );
+		
+		if ( false === $is_started ) {
+			$is_started = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT *
+				FROM 	{$wpdb->prefix}tutor_quiz_attempts
+				WHERE 	user_id =  %d
+						AND quiz_id = %d
+						AND attempt_status = %s;
+				",
+					$user_id,
+					$quiz_id,
+					'attempt_started'
+				)
+			);
+			wp_cache_set( $cache_key, $is_started );
+		}
 
 		return $is_started;
 	}
@@ -5984,14 +6050,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $assignment_id
-	 * @param int $user_id
+	 * Determine if any assignment submitted by user to a assignment.
+	 * 
+	 * @since 1.3.3
+	 * 
+	 * @param int $assignment_id assignment id.
+	 * @param int $user_id user id.
 	 *
 	 * @return array|null|object
-	 *
-	 * Determine if any assignment submitted by user to a assignment
-	 *
-	 * @since v.1.3.3
 	 */
 	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0 ) {
 		global $wpdb;
@@ -5999,21 +6065,27 @@ class Utils {
 		$assignment_id = $this->get_post_id( $assignment_id );
 		$user_id       = $this->get_user_id( $user_id );
 
-		$has_submitted = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->comments}
-			WHERE 	comment_type = %s
-					AND comment_approved = %s
-					AND user_id = %d
-					AND comment_post_ID = %d;
-			",
-				'tutor_assignment',
-				'submitted',
-				$user_id,
-				$assignment_id
-			)
-		);
+		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}";
+		$has_submitted = wp_cache_get( $cache_key );
+
+		if ( false === $has_submitted ) {
+			$has_submitted = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT *
+				FROM 	{$wpdb->comments}
+				WHERE 	comment_type = %s
+						AND comment_approved = %s
+						AND user_id = %d
+						AND comment_post_ID = %d;
+				",
+					'tutor_assignment',
+					'submitted',
+					$user_id,
+					$assignment_id
+				)
+			);
+			wp_cache_set( $cache_key, $has_submitted );
+		}
 
 		return $has_submitted;
 	}
@@ -6679,22 +6751,27 @@ class Utils {
 
 		$course_id = $this->get_post_id( $course_id );
 
-		$contents = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT items.*
-			FROM 	{$wpdb->posts} topic
-					INNER JOIN {$wpdb->posts} items
-							ON topic.ID = items.post_parent
-			WHERE 	topic.post_parent = %d
-					AND items.post_status = %s
-			ORDER BY topic.menu_order ASC,
-					items.menu_order ASC;
-			",
-				$course_id,
-				'publish'
-			)
-		);
+		$cache_key = "tutor_get_course_contents_by_{$course_id}";
 
+		$contents = wp_cache_get( $cache_key );
+		if ( false === $contents ) {
+			$contents = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT items.*
+				FROM 	{$wpdb->posts} topic
+						INNER JOIN {$wpdb->posts} items
+								ON topic.ID = items.post_parent
+				WHERE 	topic.post_parent = %d
+						AND items.post_status = %s
+				ORDER BY topic.menu_order ASC,
+						items.menu_order ASC;
+				",
+					$course_id,
+					'publish'
+				)
+			);
+			wp_cache_set( $cache_key, $contents );
+		}
 		return $contents;
 	}
 
@@ -6937,18 +7014,24 @@ class Utils {
 			return false;
 		}
 
-		$instructor = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT umeta_id
-			FROM   {$wpdb->usermeta}
-			WHERE  user_id = %d
-				AND meta_key = '_tutor_instructor_course_id'
-				AND meta_value = %d
-			",
-				$instructor_id,
-				$course_id
-			)
-		);
+		$cache_key  = "tutor_is_instructor_of_the_course_{$instructor_id}_{$course_id}";
+		$instructor = wp_cache_get( $cache_key );
+
+		if ( false === $instructor ) {
+			$instructor = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT umeta_id
+				FROM   {$wpdb->usermeta}
+				WHERE  user_id = %d
+					AND meta_key = '_tutor_instructor_course_id'
+					AND meta_value = %d
+				",
+					$instructor_id,
+					$course_id
+				)
+			);
+			wp_cache_set( $cache_key, $instructor );
+		}
 
 		if ( is_array( $instructor ) && count( $instructor ) ) {
 			return $instructor;
@@ -7194,164 +7277,137 @@ class Utils {
 	 * Return the course ID(s) by lession, quiz, answer etc.
 	 */
 	public function get_course_id_by( $content, $object_id ) {
-		global $wpdb;
-		$course_id = null;
+		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
+		$course_id = wp_cache_get( $cache_key );
 
-		switch ( $content ) {
-			case 'course':
-				$course_id = $object_id;
-				break;
-
-			case 'zoom_meeting':
-			case 'tutor_gm_course':
-			case 'topic':
-			case 'announcement':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT post_parent
-					FROM {$wpdb->posts}
-					WHERE ID=%d
-					LIMIT 1",
-						$object_id
-					)
-				);
-				break;
-
-			case 'zoom_lesson':
-			case 'tutor_gm_topic':
-			case 'lesson':
-			case 'quiz':
-			case 'assignment':
-				$topic_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d",
-						$object_id
-					)
-				);
-
-				if ( ! $topic_id ) {
-					$course_id = $wpdb->get_var(
-						$wpdb->prepare(
-							"SELECT meta_value
-						FROM {$wpdb->prefix}postmeta
-						WHERE post_id=%d AND meta_key='_tutor_course_id_for_lesson'",
-							$object_id
-						)
-					);
-				} else {
-					$course_id = $wpdb->get_var(
-						$wpdb->prepare(
-							"SELECT post_parent
-						FROM 	{$wpdb->posts}
-						WHERE 	ID = (SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d);",
-							$object_id
-						)
-					);
-				}
-				break;
-
-			case 'assignment_submission':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT DISTINCT _course.ID
-					FROM {$wpdb->posts} _course
-						INNER JOIN {$wpdb->posts} _topic ON _topic.post_parent=_course.ID
-						INNER JOIN {$wpdb->posts} _assignment ON _assignment.post_parent=_topic.ID
-						INNER JOIN {$wpdb->comments} _submission ON _submission.comment_post_ID=_assignment.ID
-					WHERE _submission.comment_ID=%d;",
-						$object_id
-					)
-				);
-				break;
-
-			case 'question':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT topic.post_parent
-					FROM 	{$wpdb->posts} topic
-							INNER JOIN {$wpdb->posts} quiz
-									ON quiz.post_parent=topic.ID
-							INNER JOIN {$wpdb->prefix}tutor_quiz_questions question
-									ON question.quiz_id=quiz.ID
-					WHERE 	question.question_id = %d;
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'quiz_answer':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT topic.post_parent
-					FROM 	{$wpdb->posts} topic
-							INNER JOIN {$wpdb->posts} quiz
-									ON quiz.post_parent=topic.ID
-							INNER JOIN {$wpdb->prefix}tutor_quiz_questions question
-									ON question.quiz_id=quiz.ID
-							INNER JOIN {$wpdb->prefix}tutor_quiz_question_answers answer
-									ON answer.belongs_question_id=question.question_id
-					WHERE 	answer.answer_id = %d;
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'attempt':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT course_id
-					FROM 	{$wpdb->prefix}tutor_quiz_attempts
-					WHERE 	attempt_id=%d;
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'attempt_answer':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT course_id
-					FROM 	{$wpdb->prefix}tutor_quiz_attempts
-					WHERE 	attempt_id = (SELECT quiz_attempt_id FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id=%d)
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'review':
-			case 'qa_question':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT comment_post_ID
-					FROM 	{$wpdb->comments}
-					WHERE 	comment_ID = %d;
-					",
-						$object_id
-					)
-				);
-				break;
-
-			case 'instructor':
-				$course_ids = $wpdb->get_col(
-					$wpdb->prepare(
-						"SELECT meta_value FROM {$wpdb->usermeta}
-					WHERE user_id=%d AND meta_key='_tutor_instructor_course_id'",
-						$object_id
-					)
-				);
-
-				! is_array( $course_ids ) ? $course_ids = array() : 0;
-				$course_id                              = array_filter(
-					$course_ids,
-					function ( $id ) {
-						return ( $id && is_numeric( $id ) );
+		if ( false === $course_id ) {
+			global $wpdb;
+			switch ( $content ) {
+				case 'course':
+					$course_id = $object_id;
+					break;
+	
+				case 'zoom_meeting':
+				case 'tutor_gm_course':
+				case 'topic':
+				case 'announcement':
+					$course_id = wp_get_post_parent_id( $object_id );
+					break;
+	
+				case 'zoom_lesson':
+				case 'tutor_gm_topic':
+				case 'lesson':
+				case 'quiz':
+				case 'assignment':
+					$topic_id = wp_get_post_parent_id( $object_id );
+					if ( ! $topic_id ) {
+						$course_id = $wpdb->get_var(
+							$wpdb->prepare(
+								"SELECT meta_value
+							FROM {$wpdb->prefix}postmeta
+							WHERE post_id=%d AND meta_key='_tutor_course_id_for_lesson'",
+								$object_id
+							)
+						);
+					} else {
+						$course_id = wp_get_post_parent_id( $topic_id );
 					}
-				);
-				break;
+					break;
+	
+				case 'assignment_submission':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT DISTINCT _course.ID
+						FROM {$wpdb->posts} _course
+							INNER JOIN {$wpdb->posts} _topic ON _topic.post_parent=_course.ID
+							INNER JOIN {$wpdb->posts} _assignment ON _assignment.post_parent=_topic.ID
+							INNER JOIN {$wpdb->comments} _submission ON _submission.comment_post_ID=_assignment.ID
+						WHERE _submission.comment_ID=%d;",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'question':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT topic.post_parent
+						FROM 	{$wpdb->posts} topic
+								INNER JOIN {$wpdb->posts} quiz
+										ON quiz.post_parent=topic.ID
+								INNER JOIN {$wpdb->prefix}tutor_quiz_questions question
+										ON question.quiz_id=quiz.ID
+						WHERE 	question.question_id = %d;
+						",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'quiz_answer':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT topic.post_parent
+						FROM 	{$wpdb->posts} topic
+								INNER JOIN {$wpdb->posts} quiz
+										ON quiz.post_parent=topic.ID
+								INNER JOIN {$wpdb->prefix}tutor_quiz_questions question
+										ON question.quiz_id=quiz.ID
+								INNER JOIN {$wpdb->prefix}tutor_quiz_question_answers answer
+										ON answer.belongs_question_id=question.question_id
+						WHERE 	answer.answer_id = %d;
+						",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'attempt':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT course_id
+						FROM 	{$wpdb->prefix}tutor_quiz_attempts
+						WHERE 	attempt_id=%d;
+						",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'attempt_answer':
+					$course_id = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT course_id
+						FROM 	{$wpdb->prefix}tutor_quiz_attempts
+						WHERE 	attempt_id = (SELECT quiz_attempt_id FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id=%d)
+						",
+							$object_id
+						)
+					);
+					break;
+	
+				case 'review':
+				case 'qa_question':
+					$question = get_comment( $object_id );
+					if ( is_a( $question, 'WP_Comment' ) ) {
+						$course_id = $question->comment_post_ID;
+					}
+					break;
+	
+				case 'instructor':
+					$course_ids = get_user_meta( $object_id, '_tutor_instructor_course_id' );
+	
+					! is_array( $course_ids ) ? $course_ids = array() : 0;
+					$course_id                              = array_filter(
+						$course_ids,
+						function ( $id ) {
+							return ( $id && is_numeric( $id ) );
+						}
+					);
+					break;
+			}
+			
+			wp_cache_set( $cache_key, $course_id );
 		}
 
 		return $course_id;
@@ -7798,45 +7854,52 @@ class Utils {
 		! is_array( $ancestor_ids ) ? $ancestor_ids = array( $ancestor_ids ) : 0;
 		$ancestor_ids                               = implode( ',', $ancestor_ids );
 
-		switch ( $content_type ) {
+		$prepare_ancestor_ids = str_replace( ',', '_', $ancestor_ids );
+		$cache_key 			  = "tutor_get_content_ids_{$content_type}_{$ancestor_type}_{$prepare_ancestor_ids}";
+		$ids 				  = wp_cache_get( $cache_key );
+
+		if ( false === $ids ) {
+			switch ( $content_type ) {
 
 				// Get lesson, quiz, assignment IDs
-			case tutor()->lesson_post_type:
-			case 'tutor_quiz':
-			case 'tutor_assignments':
-				switch ( $ancestor_type ) {
+				case tutor()->lesson_post_type:
+				case 'tutor_quiz':
+				case 'tutor_assignments':
+					switch ( $ancestor_type ) {
 
+							// Get lesson, quiz, assignment IDs by course ID
+						case tutor()->course_post_type:
+							$content_ids = $wpdb->get_col(
+								$wpdb->prepare(
+									"SELECT content.ID FROM {$wpdb->posts} course
+									INNER JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
+									INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
+								WHERE course.ID IN ({$ancestor_ids}) AND content.post_type=%s",
+									$content_type
+								)
+							);
+
+							// Assign id array to the variable
+							is_array( $content_ids ) ? $ids = $content_ids : 0;
+							break 2;
+					}
+					break;
+
+				default:
+					switch ( $ancestor_type ) {
 						// Get lesson, quiz, assignment IDs by course ID
-					case tutor()->course_post_type:
-						$content_ids = $wpdb->get_col(
-							$wpdb->prepare(
-								"SELECT content.ID FROM {$wpdb->posts} course
-								INNER JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
-								INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
-							WHERE course.ID IN ({$ancestor_ids}) AND content.post_type=%s",
-								$content_type
-							)
-						);
+						case 'topic':
+							$content_ids = $wpdb->get_col(
+								"SELECT content.ID FROM {$wpdb->posts} content
+								INNER JOIN {$wpdb->posts} topic ON topic.ID=content.post_parent
+								WHERE topic.ID IN ({$ancestor_ids})"
+							);
 
-						// Assign id array to the variable
-						is_array( $content_ids ) ? $ids = $content_ids : 0;
-						break 2;
-				}
-				break;
-
-			default:
-				switch ( $ancestor_type ) {
-					// Get lesson, quiz, assignment IDs by course ID
-					case 'topic':
-						$content_ids = $wpdb->get_col(
-							"SELECT content.ID FROM {$wpdb->posts} content
-							INNER JOIN {$wpdb->posts} topic ON topic.ID=content.post_parent
-							WHERE topic.ID IN ({$ancestor_ids})"
-						);
-
-						is_array( $content_ids ) ? $ids = $content_ids : 0;
-						break;
-				}
+							is_array( $content_ids ) ? $ids = $content_ids : 0;
+							break;
+					}
+			}
+			wp_cache_set( $cache_key, $ids );
 		}
 
 		return $ids;
@@ -8337,42 +8400,43 @@ class Utils {
 		return str_replace( array( ' hour', ' minute', ' second', 's', ',' ), array( 'H', 'M', 'S', '', '' ), $_attempt_duration ); */
 	}
 
-	public function seconds_to_time( $inputSeconds ) {
-		$secondsInAMinute = 60;
-		$secondsInAnHour  = 60 * $secondsInAMinute;
-		$secondsInADay    = 24 * $secondsInAnHour;
-
+	public function seconds_to_time( $input_seconds ) {
+		$seconds_in_a_minute = 60;
+		$seconds_in_an_hour  = 60 * $seconds_in_a_minute;
+		$seconds_in_a_day    = 24 * $seconds_in_an_hour;
+	
 		// Extract days
-		$days = floor( $inputSeconds / $secondsInADay );
-
+		$days = floor( $input_seconds / $seconds_in_a_day );
+	
 		// Extract hours
-		$hourSeconds = $inputSeconds % $secondsInADay;
-		$hours       = floor( $hourSeconds / $secondsInAnHour );
-
+		$hour_seconds	= $input_seconds % $seconds_in_a_day;
+		$hours			= floor( $hour_seconds / $seconds_in_an_hour );
+	
 		// Extract minutes
-		$minuteSeconds = $hourSeconds % $secondsInAnHour;
-		$minutes       = floor( $minuteSeconds / $secondsInAMinute );
-
+		$minute_seconds = $hour_seconds % $seconds_in_an_hour;
+		$minutes		= floor( $minute_seconds / $seconds_in_a_minute );
+	
 		// Extract the remaining seconds
-		$remainingSeconds = $minuteSeconds % $secondsInAMinute;
-		$seconds          = ceil( $remainingSeconds );
-
+		$remaining_seconds	= $minute_seconds % $seconds_in_a_minute;
+		$seconds			= ceil( $remaining_seconds );
+	
 		// Format and return
-		$timeParts = array();
+		$time_parts = array();
 		$sections  = array(
 			'day'    => (int) $days,
 			'hour'   => (int) $hours,
 			'minute' => (int) $minutes,
 			'second' => (int) $seconds,
 		);
-
-		foreach ( $sections as $name => $value ) {
+	
+		foreach ( $sections as $unit => $value ) {
 			if ( $value > 0 ) {
-				$timeParts[] = $value . ' ' . $name . ( $value == 1 ? '' : 's' );
+				$unit_name		= $unit . ( $value == 1 ? '' : 's' );
+				$time_parts[]	= $value . ' ' . $this->translate_dynamic_text( $unit_name );
 			}
 		}
-
-		return implode( ', ', $timeParts );
+	
+		return implode( ', ', $time_parts );
 	}
 
 	/**

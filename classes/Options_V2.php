@@ -790,12 +790,13 @@ class Options_V2 {
 								'desc'        => __( 'If enabled, in the case of Courses, WooCommerce Orders will get the "Completed" status .', 'tutor' ),
 							),
 							array(
-								'key'         => 'enable_revenue_sharing',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Enable Revenue Sharing', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
+								'key'           => 'enable_revenue_sharing',
+								'type'          => 'toggle_switch',
+								'label'         => __( 'Enable Revenue Sharing', 'tutor' ),
+								'label_title'   => '',
+								'default'       => 'off',
+								'desc'          => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
+								'toggle_fields' => 'sharing_percentage'
 							),
 							array(
 								'key'         => 'sharing_percentage',
@@ -835,12 +836,13 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'         => 'enable_fees_deducting',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Deduct Fees', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'Fees are charged from the entire sales amount. The remaining amount will be divided among admin and instructors.', 'tutor' ),
+								'key'           => 'enable_fees_deducting',
+								'type'          => 'toggle_switch',
+								'label'         => __( 'Deduct Fees', 'tutor' ),
+								'label_title'   => '',
+								'default'       => 'off',
+								'desc'          => __( 'Fees are charged from the entire sales amount. The remaining amount will be divided among admin and instructors.', 'tutor' ),
+								'toggle_fields' => 'fees_name,fee_amount_type'
 							),
 							array(
 								'key'         => 'fees_name',
