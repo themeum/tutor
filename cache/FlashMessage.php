@@ -81,4 +81,22 @@ class FlashMessage extends AbstractCache {
 		$cache_time = self::HOUR_IN_SECONDS;
 		return $cache_time;
 	}
+
+	/**
+	 * Helper method to print & remove message
+	 *
+	 * This helper method assume that $this->data has single dimensional
+	 * array. For ex: [alert => warning, message => operation failed ]
+	 *
+	 * @return void
+	 */
+	public function print_message() {
+		$data = $this->get_cache();
+		if ( is_array( $data ) && count( $data ) ) {
+			tutor_closeable_alert_msg( $data['message'], $data['alert'] );
+
+			// Delete flash message.
+			$this->delete_cache();
+		}
+	}
 }

@@ -1023,7 +1023,6 @@ if ( ! function_exists( 'tutor_meta_box_wrapper' ) ) {
 			);
 		}
 	}
-
 }
 
 if ( ! function_exists( 'tutor_close_able_alert_msg' ) ) {
@@ -1034,14 +1033,15 @@ if ( ! function_exists( 'tutor_close_able_alert_msg' ) ) {
 	 *
 	 * @param string $message alert message.
 	 * @param string $alert alert key like: success, warning, danger, etc.
+	 * @param array  $allowed_tags allowed tags to use with WP_KSES.
 	 *
 	 * @return void
 	 */
-	function tutor_close_able_alert_msg( string $message, string $alert = 'success' ) {
+	function tutor_closeable_alert_msg( string $message, string $alert = 'success', $allowed_tags = array() ) {
 		?>
 		<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?> tutor-mb-12 tutor-alert tutor-success tutor-mb-12 tutor-d-flex tutor-align-center tutor-justify-between">
 			<span>
-				<?php echo esc_html( $message ); ?>
+				<?php echo is_array( $allowed_tags ) && count( $allowed_tags ) ? wp_kses( $message, $allowed_tags ) : esc_html( $message ); ?>
 			</span>
 			<span class="tutor-icon-times" area-hidden="true" onclick="this.closest('div').remove()" style="cursor: pointer;"></span>
 		</div>
