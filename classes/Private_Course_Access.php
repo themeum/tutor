@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Cache\TutorCache;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -62,7 +64,7 @@ class Private_Course_Access {
 
 			// Get data from cache.
 			$cache_key = "tutor_private_query_{$course_post_type}_{$p_name}";
-			$result    = wp_cache_get( $cache_key );
+			$result    = TutorCache::get( $cache_key );
 
 			if ( false === $result ) {
 				$private_query = $wpdb->prepare(
@@ -78,7 +80,7 @@ class Private_Course_Access {
 				);
 				$result = $wpdb->get_results( $private_query ); //phpcs:ignore
 				// Set cache data.
-				wp_cache_set( $cache_key, $result );
+				TutorCache::set( $cache_key, $result );
 			}
 
 			$private_course_id = ( is_array( $result ) && isset( $result[0] ) ) ? $result[0]->ID : 0;
