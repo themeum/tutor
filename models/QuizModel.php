@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -48,7 +49,7 @@ class QuizModel {
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
 		$cache_key = "tutor_quiz_attempts_for_{$user_id}_{$quiz_id}";
-		$attempts  = wp_cache_get( $cache_key );
+		$attempts  = TutorCache::get( $cache_key );
 
 		if ( false === $attempts ) {
 			$attempts = $wpdb->get_results(
@@ -63,7 +64,7 @@ class QuizModel {
 					$user_id
 				)
 			);
-			wp_cache_set( $cache_key,  $attempts );
+			TutorCache::set( $cache_key,  $attempts );
 		}
 		
 

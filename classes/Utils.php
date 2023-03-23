@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -718,7 +719,7 @@ class Utils {
 
 			$prepare_ids = str_replace( "','", '', $in_ids );
 			$cache_key = "tutor_get_completed_lesson_count_by{$user_id}_{$prepare_ids}";
-			$count = wp_cache_get( $cache_key );
+			$count = TutorCache::get( $cache_key );
 
 			if ( false === $count ) {
 				$count = (int) $wpdb->get_var(
@@ -731,7 +732,7 @@ class Utils {
 						$user_id
 					)
 				);
-				wp_cache_set( $cache_key, $count );
+				TutorCache::set( $cache_key, $count );
 			}
 		}
 
@@ -776,7 +777,7 @@ class Utils {
 			// Get data from cache.
 			$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
 			$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$prepare_quiz_ids_str}";
-			$quiz_completed           = wp_cache_get( $quiz_completed_cache_key );
+			$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
 
 			if ( false === $quiz_completed ) {
 				$quiz_completed = (int) $wpdb->get_var( 
@@ -791,7 +792,7 @@ class Utils {
 						) a", $user_id, 'attempt_started' )
 				);
 				// Set cache data.
-				wp_cache_set( $quiz_completed_cache_key, $quiz_completed );
+				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
 			}
 			$completedCount += $quiz_completed;
 		}
@@ -802,7 +803,7 @@ class Utils {
 			// Get data from cache.
 			$prepare_assignment_ids_str     = str_replace( ',', '_', $assignment_ids_str );
 			$assignment_submitted_cache_key = "tutor_assignment_submitted{$user_id}_{$prepare_assignment_ids_str}";
-			$assignment_submitted           = wp_cache_get( $assignment_submitted_cache_key );
+			$assignment_submitted           = TutorCache::get( $assignment_submitted_cache_key );
 
 			if ( false === $assignment_submitted ) {
 				$assignment_submitted = (int) $wpdb->get_var(
@@ -819,7 +820,7 @@ class Utils {
 							$user_id
 						)
 				);
-				wp_cache_set( $assignment_submitted_cache_key, $assignment_submitted );
+				TutorCache::set( $assignment_submitted_cache_key, $assignment_submitted );
 			}
 			$completedCount += $assignment_submitted;
 		}
@@ -1127,7 +1128,7 @@ class Utils {
 
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
-		$get_enrolled_info = wp_cache_get( $cache_key );
+		$get_enrolled_info = TutorCache::get( $cache_key );
 		if ( false === $get_enrolled_info ) {
 			$get_enrolled_info = $wpdb->get_row(
 				$wpdb->prepare(
@@ -1150,7 +1151,7 @@ class Utils {
 					'completed'
 				)
 			);
-			wp_cache_set( $cache_key, $get_enrolled_info );
+			TutorCache::set( $cache_key, $get_enrolled_info );
 		}
 
 		if ( $get_enrolled_info ) {
@@ -1725,7 +1726,7 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 
 		$cache_key    = "tutor_is_completed_course_{$course_id}_{$user_id}";
-		$is_completed = wp_cache_get( $cache_key );
+		$is_completed = TutorCache::get( $cache_key );
 
 		if ( false === $is_completed ) {
 			$is_completed = $wpdb->get_row(
@@ -1747,7 +1748,7 @@ class Utils {
 					$user_id
 				)
 			);
-			wp_cache_set( $cache_key, $is_completed );
+			TutorCache::set( $cache_key, $is_completed );
 		}
 
 		if ( $is_completed ) {
@@ -2125,7 +2126,7 @@ class Utils {
 		}
 
 		$cache_key  = "tutor_enroll_count_for_course_{$course_id}_{$period}";
-		$course_ids = wp_cache_get( $cache_key );
+		$course_ids = TutorCache::get( $cache_key );
 
 		if ( false === $course_ids ) {
 			global $wpdb;
@@ -2144,7 +2145,7 @@ class Utils {
 				)
 			);
 
-			wp_cache_set( $cache_key, (int) $course_ids );
+			TutorCache::set( $cache_key, (int) $course_ids );
 		}
 		
 		return (int) $course_ids;
@@ -3616,7 +3617,7 @@ class Utils {
 	 */
 	public function get_tutor_user( $user_id ) {
 		$cache_key   = 'tutor_user_' . $user_id;
-		$cached_data = wp_cache_get( $cache_key );
+		$cached_data = TutorCache::get( $cache_key );
 
 		if ( false !== $cached_data ) {
 			return $cached_data;
@@ -3650,7 +3651,7 @@ class Utils {
 			)
 		);
 
-		wp_cache_set( $cache_key, $user );
+		TutorCache::set( $cache_key, $user );
 
 		return $user;
 	}
@@ -4816,7 +4817,7 @@ class Utils {
 		$user_id = get_current_user_id();
 
 		$cache_key  = "tutor_is_started_quiz_{$user_id}_{$quiz_id}";
-		$is_started = wp_cache_get( $cache_key );
+		$is_started = TutorCache::get( $cache_key );
 		
 		if ( false === $is_started ) {
 			$is_started = $wpdb->get_row(
@@ -4832,7 +4833,7 @@ class Utils {
 					'attempt_started'
 				)
 			);
-			wp_cache_set( $cache_key, $is_started );
+			TutorCache::set( $cache_key, $is_started );
 		}
 
 		return $is_started;
@@ -6066,7 +6067,7 @@ class Utils {
 		$user_id       = $this->get_user_id( $user_id );
 
 		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}";
-		$has_submitted = wp_cache_get( $cache_key );
+		$has_submitted = TutorCache::get( $cache_key );
 
 		if ( false === $has_submitted ) {
 			$has_submitted = $wpdb->get_row(
@@ -6084,7 +6085,7 @@ class Utils {
 					$assignment_id
 				)
 			);
-			wp_cache_set( $cache_key, $has_submitted );
+			TutorCache::set( $cache_key, $has_submitted );
 		}
 
 		return $has_submitted;
@@ -6753,7 +6754,7 @@ class Utils {
 
 		$cache_key = "tutor_get_course_contents_by_{$course_id}";
 
-		$contents = wp_cache_get( $cache_key );
+		$contents = TutorCache::get( $cache_key );
 		if ( false === $contents ) {
 			$contents = $wpdb->get_results(
 				$wpdb->prepare(
@@ -6770,7 +6771,7 @@ class Utils {
 					'publish'
 				)
 			);
-			wp_cache_set( $cache_key, $contents );
+			TutorCache::set( $cache_key, $contents );
 		}
 		return $contents;
 	}
@@ -7015,7 +7016,7 @@ class Utils {
 		}
 
 		$cache_key  = "tutor_is_instructor_of_the_course_{$instructor_id}_{$course_id}";
-		$instructor = wp_cache_get( $cache_key );
+		$instructor = TutorCache::get( $cache_key );
 
 		if ( false === $instructor ) {
 			$instructor = $wpdb->get_col(
@@ -7030,7 +7031,7 @@ class Utils {
 					$course_id
 				)
 			);
-			wp_cache_set( $cache_key, $instructor );
+			TutorCache::set( $cache_key, $instructor );
 		}
 
 		if ( is_array( $instructor ) && count( $instructor ) ) {
@@ -7278,7 +7279,7 @@ class Utils {
 	 */
 	public function get_course_id_by( $content, $object_id ) {
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
-		$course_id = wp_cache_get( $cache_key );
+		$course_id = TutorCache::get( $cache_key );
 
 		if ( false === $course_id ) {
 			global $wpdb;
@@ -7407,7 +7408,7 @@ class Utils {
 					break;
 			}
 			
-			wp_cache_set( $cache_key, $course_id );
+			TutorCache::set( $cache_key, $course_id );
 		}
 
 		return $course_id;
@@ -7856,7 +7857,7 @@ class Utils {
 
 		$prepare_ancestor_ids = str_replace( ',', '_', $ancestor_ids );
 		$cache_key 			  = "tutor_get_content_ids_{$content_type}_{$ancestor_type}_{$prepare_ancestor_ids}";
-		$ids 				  = wp_cache_get( $cache_key );
+		$ids 				  = TutorCache::get( $cache_key );
 
 		if ( false === $ids ) {
 			switch ( $content_type ) {
@@ -7899,7 +7900,7 @@ class Utils {
 							break;
 					}
 			}
-			wp_cache_set( $cache_key, $ids );
+			TutorCache::set( $cache_key, $ids );
 		}
 
 		return $ids;
