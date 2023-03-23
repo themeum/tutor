@@ -1025,7 +1025,7 @@ if ( ! function_exists( 'tutor_meta_box_wrapper' ) ) {
 	}
 }
 
-if ( ! function_exists( 'tutor_close_able_alert_msg' ) ) {
+if ( ! function_exists( 'tutor_closeable_alert_msg' ) ) {
 	/**
 	 * Create a close-able alert message
 	 *
