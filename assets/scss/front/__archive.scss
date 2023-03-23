@@ -146,7 +146,6 @@ Instructor
 	color: var(--tutor-color-muted);
 }
 
-
 .single-instructor-wrap .single-instructor-bottom {
 	padding: 15px 20px;
 	text-align: right;
@@ -212,7 +211,8 @@ Instructor
 
 /* ********************* */
 
-.tutor-login-wrap {
+.tutor-login-wrap,
+#tutor-registration-wrap {
 	max-width: 520px;
 	margin: 0 auto;
 	padding: 40px 55px;
@@ -1436,7 +1436,8 @@ table.course-single-gradebooks a {
 	}
 }
 
-.list-item-button, .tutor-course-booking-availability {
+.list-item-button,
+.tutor-course-booking-availability {
 	.ajax_add_to_cart.added {
 		display: none;
 	}
