@@ -5,7 +5,22 @@
  * @package Tutor
  */
 
-$_tests_dir = getenv( 'WP_TESTS_DIR' );
+! session_id() ? session_start() : 0;
+
+$test_env_key = 'WP_TESTS_DIR';
+$_tests_dir   = getenv( $test_env_key );
+
+/**
+ * Local .env file support
+ * Put a .env file in root of project.
+ */
+$local_env = __DIR__ . '/../.env';
+if ( file_exists( $local_env ) ) {
+	$env = parse_ini_file( $local_env );
+	if ( is_array( $env ) && array_key_exists( $test_env_key, $env ) ) {
+		$_tests_dir = trim( $env[ $test_env_key ] );
+	}
+}
 
 if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
