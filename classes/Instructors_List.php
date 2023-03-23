@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Students_List;
 use TUTOR\Backend_Page_Trait;
+use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -332,9 +333,9 @@ class Instructors_List {
 					{$order_clause}
 					LIMIT %d, %d;
 				";
-		$result = wp_cache_get( self::INSTRUCTOR_LIST_CACHE_KEY );
+		$result = TutorCache::get( self::INSTRUCTOR_LIST_CACHE_KEY );
 		if ( false === $result ) {
-			wp_cache_set(
+			TutorCache::set(
 				self::INSTRUCTOR_LIST_CACHE_KEY,
 				$result = $wpdb->get_results(
 					$wpdb->prepare(
@@ -392,9 +393,9 @@ class Instructors_List {
 						{$course_clause}
 						{$date_clause}
 				";
-		$result = wp_cache_get( self::INSTRUCTOR_COUNT_CACHE_KEY . $unique_cache_key );
+		$result = TutorCache::get( self::INSTRUCTOR_COUNT_CACHE_KEY . $unique_cache_key );
 		if ( false === $result ) {
-			wp_cache_set(
+			TutorCache::set(
 				self::INSTRUCTOR_COUNT_CACHE_KEY,
 				$result = $wpdb->get_var(
 					$wpdb->prepare(
