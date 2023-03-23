@@ -24,6 +24,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class FlashMessage extends AbstractCache {
 
+	const SUCCESS = 'success';
+	const WARNING = 'warning';
+	const DANGER  = 'danger';
+	const INFO    = 'info';
+
+	/**
+	 * Set data property
+	 *
+	 * @since 2.1.9
+	 *
+	 * @param string $msg alert message.
+	 * @param string $alert_type alert type.
+	 */
+	public function __construct( $msg = '', $alert_type = self::SUCCESS ) {
+		if ( '' !== $msg ) {
+			$this->data = array(
+				'alert'   => $alert_type,
+				'message' => $msg,
+			);
+		}
+	}
+
 	/**
 	 * Key for cache identifier
 	 *
@@ -88,9 +110,11 @@ class FlashMessage extends AbstractCache {
 	 * This helper method assume that $this->data has single dimensional
 	 * array. For ex: [alert => warning, message => operation failed ]
 	 *
+	 * @since 2.1.9
+	 *
 	 * @return void
 	 */
-	public function print_message() {
+	public function show() {
 		$data = $this->get_cache();
 		if ( is_array( $data ) && count( $data ) ) {
 			tutor_closeable_alert_msg( $data['message'], $data['alert'] );
