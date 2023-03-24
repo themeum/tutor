@@ -386,7 +386,7 @@ jQuery.fn.serializeObject = function() {
  * 
  * @since 1.0.0
  */
-window.tutor_toast = function( title, description, type ) {
+window.tutor_toast = function( title, description, type, autoClose = true ) {
 	if ( ! jQuery('.tutor-toast-parent').length ) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
 	}
@@ -421,13 +421,15 @@ window.tutor_toast = function( title, description, type ) {
 
 	jQuery('.tutor-toast-parent').append(content);
 
-	setTimeout(function() {
-		if (content) {
-			content.fadeOut('fast', function() {
-				jQuery(this).remove();
-			});
-		}
-	}, 5000);
+	if(autoClose) {
+		setTimeout(function() {
+			if (content) {
+				content.fadeOut('fast', function() {
+					jQuery(this).remove();
+				});
+			}
+		}, 5000);
+	}
 };
 
 
