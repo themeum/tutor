@@ -4224,6 +4224,9 @@ class Utils {
 		$qna_types_caluse   = '';
 		$filter_clause      = '';
 
+		// Sanitize args before process.
+		$args = Input::sanitize_array( $args );
+
 		/**
 		 * Get only assinged  courses questions if current user is not admin
 		 */
