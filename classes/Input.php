@@ -70,22 +70,26 @@ class Input {
 		$sanitized_value = null;
 
 		switch ( $type ) {
-			case self::TYPE_INT:
-				$sanitized_value = (int) sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
-				break;
-
-			case self::TYPE_NUMERIC:
-				$input           = sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
-				$sanitized_value = is_numeric( $input ) ? $input + 0 : 0;
-				break;
-
-			case self::TYPE_BOOL:
-				$sanitized_value = in_array( strtolower( sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) ) ), array( '1', 'true', 'on' ), true );
-				break;
-
 			case self::TYPE_STRING:
-				$sanitized_value = sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
+			case self::TYPE_INT:
+			case self::TYPE_NUMERIC:
+			case self::TYPE_BOOL:
+			default:
+				//phpcs:ignore WordPress.Security.NonceVerification
+				$sanitized_value = sanitize_text_field( wp_unslash( self::get_value( $request_method, $_GET, $_POST, $key, $value ) ) );
+
+				if ( self::TYPE_INT === $type ) {
+					$sanitized_value = (int) $sanitized_value;
+				}
+				if ( self::TYPE_NUMERIC === $type ) {
+					$sanitized_value = is_numeric( $sanitized_value ) ? $sanitized_value + 0 : 0;
+				}
+				if ( self::TYPE_BOOL === $type ) {
+					$sanitized_value = in_array( strtolower( $sanitized_value ), array( '1', 'true', 'on' ), true );
+				}
+
 				break;
+
 			case self::TYPE_ARRAY:
 				if ( ! is_array( $default ) ) {
 					$sanitized_value = array();
@@ -93,8 +97,8 @@ class Input {
 					$sanitized_value = array_map(
 						'sanitize_text_field',
 						wp_unslash(
-							is_array( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) //phpcs:ignore
-							? ( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) //phpcs:ignore
+							is_array( self::get_value( $request_method, $_GET, $_POST, $key, $value ) )
+							? ( self::get_value( $request_method, $_GET, $_POST, $key, $value ) )
 							: $default
 						)
 					);
@@ -110,9 +114,6 @@ class Input {
 				$sanitized_value = wp_kses_post( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
 				break;
 
-			default:
-				$sanitized_value = sanitize_text_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
-				break;
 		}
 
 		//phpcs:enable WordPress.Security.NonceVerification
@@ -149,6 +150,25 @@ class Input {
 
 		return $sanitized_value;
 
+	}
+
+	/**
+	 * Dynamically get value
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param string $request_method   detect called from get or post method.
+	 * @param array  $get              GET superglobal.
+	 * @param array  $post             POST superglobal.
+	 * @param string $key              GET or POST input key name.
+	 * @param string $value            value of variable or DB value.
+	 *
+	 * @return mixed
+	 */
+	private static function get_value( $request_method, $get, $post, $key, $value ) {
+		return self::GET_REQUEST === $request_method
+				? $get[ $key ]
+				: ( self::POST_REQUEST === $request_method ? $post[ $key ] : $value );
 	}
 
 	/**
