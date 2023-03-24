@@ -253,6 +253,11 @@ class Quiz_Attempts_List {
 		// check nonce.
 		tutor_utils()->checking_nonce();
 
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+			wp_send_json_error( __( 'You are not privileged to perform this action', 'tutor-pro' ) );
+		}
+
 		$bulk_action = Input::post( 'bulk-action', '' );
 		$bulk_ids    = Input::post( 'bulk-ids', '' );
 		$bulk_ids    = explode( ',', $bulk_ids );
