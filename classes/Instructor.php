@@ -138,15 +138,20 @@ class Instructor {
 
 		$user_id = wp_insert_user( $userdata );
 		if ( ! is_wp_error( $user_id ) ) {
-			update_user_meta( $user_id, '_is_tutor_instructor', tutor_time() );
-			update_user_meta( $user_id, '_tutor_instructor_status', apply_filters( 'tutor_initial_instructor_status', 'pending' ) );
 
-			do_action( 'tutor_new_instructor_after', $user_id );
+			$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
 
-			$user = get_user_by( 'id', $user_id );
-			if ( $user ) {
-				wp_set_current_user( $user_id, $user->user_login );
-				wp_set_auth_cookie( $user_id );
+			if ( $is_req_email_verification ) {
+				do_action( 'tutor_send_verification_mail', get_userdata( $user_id ), 'instructor-registration' );
+			} else {
+
+				$this->update_instructor_meta( $user_id );
+
+				$user = get_user_by( 'id', $user_id );
+				if ( $user ) {
+					wp_set_current_user( $user_id, $user->user_login );
+					wp_set_auth_cookie( $user_id );
+				}
 			}
 		} else {
 			$this->error_msgs = $user_id->get_error_messages();
@@ -165,7 +170,7 @@ class Instructor {
 	 * @return string
 	 */
 	public function tutor_instructor_form_validation_errors() {
-		 return $this->error_msgs;
+		return $this->error_msgs;
 	}
 
 	/**
@@ -375,5 +380,21 @@ class Instructor {
 		} else {
 			$instructor->remove_cap( 'publish_tutor_courses' );
 		}
+	}
+
+	/**
+	 * Update instructor meta just after register
+	 *
+	 * @since 2.1.9
+	 *
+	 * @param integer $user_id user id.
+	 *
+	 * @return void
+	 */
+	public function update_instructor_meta( int $user_id ) {
+		update_user_meta( $user_id, '_is_tutor_instructor', tutor_time() );
+		update_user_meta( $user_id, '_tutor_instructor_status', apply_filters( 'tutor_initial_instructor_status', 'pending' ) );
+
+		do_action( 'tutor_new_instructor_after', $user_id );
 	}
 }
