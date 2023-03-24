@@ -244,8 +244,7 @@ class Input {
 	 *
 	 * If key not passed then default sanitize_text_field will be used.
 	 *
-	 * @param bool  $allow_iframe if set true then iframe tag will be
-	 *  allowed.
+	 * @param bool  $allow_iframe if set true then iframe tag will be allowed.
 	 *
 	 * @return array
 	 */
@@ -259,7 +258,7 @@ class Input {
 		if ( is_array( $input ) && count( $input ) ) {
 			foreach ( $input as $key => $value ) {
 				if ( is_array( $value ) ) {
-					$array[ $key ] = self::sanitize_array( $value );
+					$array[ $key ] = self::sanitize_array( $value, $sanitize_mapping, $allow_iframe );
 				} else {
 					$key = sanitize_text_field( $key );
 
