@@ -145,6 +145,12 @@ class Quiz {
 	 */
 	public function tutor_instructor_feedback() {
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+			wp_send_json_error( __( 'You are not privileged to perform this action', 'tutor-pro' ) );
+		}
+
 		$attempt_details = self::attempt_details( Input::post( 'attempt_id', 0, Input::TYPE_INT ) );
 		$feedback        = Input::post( 'feedback', '', Input::TYPE_KSES_POST );
 		$attempt_info    = isset( $attempt_details->attempt_info ) ? $attempt_details->attempt_info : false;
