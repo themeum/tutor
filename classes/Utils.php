@@ -9357,4 +9357,30 @@ class Utils {
 		}
 		return $name;
 	}
+
+	/**
+	 * Get error message by error code
+	 *
+	 * @since 2.1.9
+	 *
+	 * @param string $key error code.
+	 *
+	 * @return string error message
+	 */
+	public function error_message( $key = '401' ) {
+		$error_message = __( 'Something went wrong', 'tutor' ); 
+
+		$error_messages = apply_filters(
+			'tutor_default_error_messages',
+			array(
+				'401' => __( 'You are not authorzied to perform this action', 'tutor' ),
+			)
+		);
+
+		if ( array_key_exists( $key, $error_messages ) ) {
+			$error_message = $error_messages[ $key ];
+		}
+
+		return $error_message;
+	}
 }
