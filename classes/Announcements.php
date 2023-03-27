@@ -81,7 +81,7 @@ class Announcements {
 
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
-			wp_send_json_error( __( 'You are not privileged to perform this action', 'tutor-pro' ) );
+			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		$action   = Input::post( 'bulk-action', '' );
