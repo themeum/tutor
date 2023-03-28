@@ -102,7 +102,7 @@ do_action( 'tutor_before_login_form' );
 			</a>
 		</div>
 	<?php endif; ?>
-	<?php do_action( 'tutor_after_sign_in_button' ); ?>
+	<?php //do_action( 'tutor_after_sign_in_button' ); ?>
 </form>
 <?php
 do_action( 'tutor_after_login_form' );

@@ -211,7 +211,18 @@ Instructor
 
 /* ********************* */
 
-.tutor-login-wrap,
+.tutor-login-wrap {
+	max-width: 520px;
+	margin: 0 auto;
+	padding: 40px 0px;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+}
+
+.tutor-login-form-wrapper {
+	padding: 24px 55px;
+}
+
 #tutor-registration-wrap {
 	max-width: 520px;
 	margin: 0 auto;
