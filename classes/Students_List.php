@@ -94,6 +94,12 @@ class Students_List {
 	public function student_bulk_action() {
 		// check nonce.
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', array() );
 		if ( 'delete' === $action ) {

@@ -157,6 +157,11 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_export_settings() {
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$tutor_option = get_option( 'tutor_option' );
 		wp_send_json_success( maybe_unserialize( $tutor_option ) );
 	}
@@ -169,6 +174,12 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_export_single_settings() {
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$export_id          = $this->get_request_data( 'export_id' );
 		wp_send_json_success( $tutor_settings_log[ $export_id ] );
@@ -182,6 +193,12 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_apply_settings() {
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$apply_id           = $this->get_request_data( 'apply_id' );
 
@@ -198,6 +215,11 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_delete_single_settings() {
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$delete_id          = $this->get_request_data( 'delete_id' );
 		unset( $tutor_settings_log[ $delete_id ] );
@@ -257,6 +279,12 @@ class Options_V2 {
 	 */
 	public function load_saved_data() {
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		wp_send_json_success( get_option( 'tutor_settings_log' ) );
 	}
 
@@ -269,6 +297,12 @@ class Options_V2 {
 	 */
 	public function reset_settings_data() {
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$reset_fields = $return_fields = $return_fields_group = array();
 		$reset_page   = Input::post( 'reset_page' );
 		$setting_data = $this->get_setting_fields()['option_fields'][ $reset_page ]['blocks'];
@@ -300,6 +334,12 @@ class Options_V2 {
 	 */
 	public function tutor_import_settings() {
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$request = $this->get_request_data( 'tutor_options' );
 		$request = json_decode( stripslashes( $request ), true );
 

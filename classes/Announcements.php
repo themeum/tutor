@@ -79,6 +79,11 @@ class Announcements {
 	public function announcement_bulk_action() {
 		tutor_utils()->checking_nonce();
 
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
 		$update   = self::delete_announcements( $action, $bulk_ids );
