@@ -477,8 +477,18 @@ class Options_V2 {
 		foreach ( $withdrawl_methods as $key => $method ) {
 			$methods_array[ $key ] = $method['method_name'];
 		}
-		$course_archive_page_id = get_page_by_title( 'Courses' );
-		$attr                   = array(
+
+		$page_args = array(
+			'post_type'      => 'page',
+			'post_status'    => 'publish',
+			'posts_per_page' => 1,
+			'title'          => 'Courses',
+		);
+
+		$page_posts             = get_posts( $page_args );
+		$course_archive_page_id = ( is_array( $page_posts ) && count( $page_posts ) ) ? $page_posts[0] : null;
+
+		$attr = array(
 			'general'      => array(
 				'label'    => __( 'General', 'tutor' ),
 				'slug'     => 'general',
@@ -796,7 +806,7 @@ class Options_V2 {
 								'label_title'   => '',
 								'default'       => 'off',
 								'desc'          => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
-								'toggle_fields' => 'sharing_percentage'
+								'toggle_fields' => 'sharing_percentage',
 							),
 							array(
 								'key'         => 'sharing_percentage',
@@ -842,7 +852,7 @@ class Options_V2 {
 								'label_title'   => '',
 								'default'       => 'off',
 								'desc'          => __( 'Fees are charged from the entire sales amount. The remaining amount will be divided among admin and instructors.', 'tutor' ),
-								'toggle_fields' => 'fees_name,fee_amount_type'
+								'toggle_fields' => 'fees_name,fee_amount_type',
 							),
 							array(
 								'key'         => 'fees_name',
