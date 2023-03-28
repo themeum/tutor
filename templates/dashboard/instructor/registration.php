@@ -32,7 +32,7 @@
 	<?php do_action( 'tutor_before_instructor_reg_form' ); ?>
 
 	<div id="tutor-registration-wrap">
-		<form method="post" enctype="multipart/form-data">
+		<form method="post" enctype="multipart/form-data" id="tutor-registration-form">
 
 			<?php do_action( 'tutor_instructor_reg_form_start' ); ?>
 
@@ -148,8 +148,9 @@
 				<button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-btn tutor-btn-primary tutor-btn-block"><?php esc_html_e( 'Register as instructor', 'tutor' ); ?></button>
 			</div>
 			<?php do_action( 'tutor_after_register_button' ); ?>
-
+			
 		</form>
+		<?php do_action( 'tutor_after_registration_form_wrap' ); ?>
 	</div>
 
 	<?php do_action( 'tutor_after_instructor_reg_form' ); ?>
