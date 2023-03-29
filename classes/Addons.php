@@ -130,6 +130,10 @@ class Addons {
 				'name'        => __( 'WPML Multilingual CMS', 'tutor' ),
 				'description' => __( 'Create multilingual courses, lessons, dashboard and more for a global audience.', 'tutor' ),
 			),
+			'social-login'               => array(
+				'name'        => __( 'Social Login', 'tutor' ),
+				'description' => __( 'Let users register & login through social network like Facebook, Google, etc.', 'tutor' ),
+			),
 		);
 
 		return $addons;
