@@ -160,7 +160,7 @@ class Instructor {
 			}
 		} else {
 			/**
-			 * Tutor Free - regular instruction reg process.
+			 * Tutor Free - regular instructor reg process.
 			 */
 			$this->update_instructor_meta( $user_id );
 			$user = get_user_by( 'id', $user_id );
