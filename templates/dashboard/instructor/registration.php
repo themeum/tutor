@@ -29,9 +29,10 @@
 
 <?php else : ?>
 
-	<?php do_action( 'tutor_before_instructor_reg_form' ); ?>
-
 	<div id="tutor-registration-wrap">
+
+		<?php do_action( 'tutor_before_instructor_reg_form' ); ?>
+
 		<form method="post" enctype="multipart/form-data" id="tutor-registration-form">
 
 			<?php do_action( 'tutor_instructor_reg_form_start' ); ?>
