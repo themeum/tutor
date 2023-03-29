@@ -236,6 +236,7 @@ Update: Translations improvements for better compatibility
 Fix: Content Drip “Course content available sequentially” not working on the mobile device
 Fix: Backend assignment page was showing pagination even if there was no content.
 Fix: When admin changed the status of an instructor from the instructor list, it generated a console error
+Fix: Enrol button need to click twice from course details
 
 = 2.1.8 - March 1, 2023
 
