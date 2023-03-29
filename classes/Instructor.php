@@ -136,27 +136,38 @@ class Instructor {
 			'user_pass'  => $password,
 		);
 
+		global $wpdb;
+		$wpdb->query( 'START TRANSACTION' );
+
 		$user_id = wp_insert_user( $userdata );
-		if ( ! is_wp_error( $user_id ) ) {
 
-			$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
-
-			if ( $is_req_email_verification ) {
-				do_action( 'tutor_send_verification_mail', get_userdata( $user_id ), 'instructor-registration' );
-			} else {
-
-				$this->update_instructor_meta( $user_id );
-
-				$user = get_user_by( 'id', $user_id );
-				if ( $user ) {
-					wp_set_current_user( $user_id, $user->user_login );
-					wp_set_auth_cookie( $user_id );
-				}
-			}
-		} else {
+		if ( is_wp_error( $user_id ) ) {
 			$this->error_msgs = $user_id->get_error_messages();
 			add_filter( 'tutor_instructor_register_validation_errors', array( $this, 'tutor_instructor_form_validation_errors' ) );
 			return;
+		}
+
+		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
+
+		if ( $is_req_email_verification ) {
+			do_action( 'tutor_send_verification_mail', get_userdata( $user_id ), 'instructor-registration' );
+			$reg_done = apply_filters( 'tutor_registration_done', true );
+			if ( ! $reg_done ) {
+				$wpdb->query( 'ROLLBACK' );
+				return;
+			} else {
+				$wpdb->query( 'COMMIT' );
+			}
+		} else {
+			/**
+			 * Tutor Free - regular instructor reg process.
+			 */
+			$this->update_instructor_meta( $user_id );
+			$user = get_user_by( 'id', $user_id );
+			if ( $user ) {
+				wp_set_current_user( $user_id, $user->user_login );
+				wp_set_auth_cookie( $user_id );
+			}
 		}
 
 		wp_redirect( tutor_utils()->input_old( '_wp_http_referer' ) );
