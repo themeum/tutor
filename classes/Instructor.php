@@ -163,6 +163,7 @@ class Instructor {
 			 * Tutor Free - regular instructor reg process.
 			 */
 			$this->update_instructor_meta( $user_id );
+			$wpdb->query( 'COMMIT' );
 			$user = get_user_by( 'id', $user_id );
 			if ( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );
