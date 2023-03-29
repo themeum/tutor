@@ -33,6 +33,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
 
 					<?php do_action( 'tutor_after_login_form' ); ?>
 				</div>
+				<?php do_action( 'tutor_after_login_form_wrapper' ); ?>
 			</div>
 		</div>
 	</div>
