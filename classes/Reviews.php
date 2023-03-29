@@ -42,6 +42,11 @@ class Reviews {
 	 */
 	public function delete_review() {
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+		}
 		$review_id = Input::post( 'id', 0, Input::TYPE_INT );
 		$delete    = self::delete( $review_id );
 
