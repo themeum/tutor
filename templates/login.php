@@ -41,8 +41,8 @@ do_action( 'tutor/template/login/before/wrap' );
 					false
 				);
 				?>
-			<?php do_action( 'tutor_after_login_form' ); ?>
 		</div>
+		<?php do_action( 'tutor_after_login_form_wrapper' ); ?>
 	</div>
 </div>
 <?php
