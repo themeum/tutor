@@ -27,9 +27,10 @@
 		?>
 <?php else : ?>
 
-	<?php do_action( 'tutor_before_student_reg_form' ); ?>
-
 	<div id="tutor-registration-wrap">
+
+		<?php do_action( 'tutor_before_student_reg_form' ); ?>
+
 		<form method="post" enctype="multipart/form-data" id="tutor-registration-form">
 			<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo isset( $_GET['enrol_course_id'] ) ? (int) $_GET['enrol_course_id'] : ''; ?>">
 			<?php do_action( 'tutor_student_reg_form_start' ); ?>
