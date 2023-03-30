@@ -64,6 +64,10 @@ const load_saved_data = () => {
 	};
 };
 
+function capitalizeFirstLetter(string){
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function tutor_option_history_load(dataset) {
 	var output = '';
 	if (null !== dataset && 0 !== dataset.length) {
@@ -73,33 +77,33 @@ function tutor_option_history_load(dataset) {
 
 			let badgeStatus = dataValue.datatype == 'saved' ? ' label-primary' : ' label-refund';
 			output += `<div class="tutor-option-field-row">
-					<div class="tutor-option-field-label">
-						<p class="tutor-fs-7 tutor-fw-medium">${dataValue.history_date}
-						<span class="tutor-badge-label tutor-ml-16${badgeStatus}"> ${dataValue.datatype}</span> </p>
+				<div class="tutor-option-field-label">
+					<div class="tutor-fs-7 tutor-fw-medium">${dataValue.history_date}
+					<span class="tutor-badge-label tutor-ml-16${badgeStatus}"> ${capitalizeFirstLetter(dataValue.datatype)}</span> </div>
+				</div>
+				<div class="tutor-option-field-input">
+					<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution." data-id="${dataKey}">Apply</button>
+					<div class="tutor-dropdown-parent tutor-ml-16">
+						<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+							<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+						</button>
+						<ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+							<li>
+								<a href="javascript:;" class="tutor-dropdown-item export_single_settings" data-id="${dataKey}">
+									<span class="tutor-icon-archive tutor-mr-8" area-hidden="true"></span>
+									<span>Download</span>
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;" class="tutor-dropdown-item delete_single_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
+									<span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
+									<span>Delete</span>
+								</a>
+							</li>
+						</ul>
 					</div>
-					<div class="tutor-option-field-input">
-						<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution." data-id="${dataKey}">Apply</button>
-						<div class="tutor-dropdown-parent tutor-ml-16">
-							<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-								<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
-							</button>
-							<ul class="tutor-dropdown tutor-dropdown-dark">
-								<li>
-									<a class="tutor-dropdown-item export_single_settings" data-id="${dataKey}">
-										<span class="tutor-icon-archive tutor-mr-8" area-hidden="true"></span>
-										<span>Download</span>
-									</a>
-								</li>
-								<li>
-									<a class="tutor-dropdown-item delete_single_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
-										<span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
-										<span>Delete</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-          </div>
-        </div>`;
+          		</div>
+        	</div>`;
 		});
 	} else {
 		output += `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p class="tutor-fs-7 tutor-fw-medium">No settings data found.</p></div></div>`;
@@ -333,14 +337,14 @@ const delete_settings_xhttp_request = (modelOpener, modalElement) => {
 	xhttp.send(formData);
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState === 4) {
-			// console.log(JSON.parse(xhttp.response));
 			modalElement.classList.remove('tutor-is-active');
 			let historyData = JSON.parse(xhttp.response);
 			historyData = historyData.data;
 			tutor_option_history_load(Object.entries(historyData));
 			delete_history_data();
 
-			setTimeout(function() {
+			setTimeout(function () {
+				// document.body.style.overflow = 'auto';
 				tutor_toast('Success', 'Data deleted successfully!', 'success');
 			}, 200);
 		}
