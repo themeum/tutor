@@ -3,7 +3,7 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 7.1
 Stable tag: 2.1.9
 License: GPLv3
@@ -225,7 +225,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.9 - March 29, 2023
+= 2.1.9 - March 30, 2023
 
 New: Introduced Social Login to let users register & login through social networks like Facebook or Google                                                                       
 New: Introduced Email verification option upon signup, which will be applicable for new student or instructor registration
