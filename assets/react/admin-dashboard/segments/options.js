@@ -457,31 +457,38 @@ document.addEventListener('DOMContentLoaded', function () {
 			showHideOption(invoice_field_wrapper, e.target.value, 'wc');
 		}
 	}
-	/**
-	 * Option (sharing_percentage) toggle on enable_revenue_sharing option change
-	 * @since 2.0.7
-	 */
-	const revenue_sharing_field = document.querySelector("[name='tutor_option[enable_revenue_sharing]']");
-	const sharing_percent_wrapper = document.getElementById("field_sharing_percentage");
-	if (revenue_sharing_field) {
-		showHideOption(sharing_percent_wrapper, revenue_sharing_field.value)
-		changeListener(revenue_sharing_field, (value) => showHideOption(sharing_percent_wrapper, value));
-	}
 
 	/**
-	 * Show/Hide fees_name and fee_amount_type on deduct fee option toggle
-	 * @since 2.1.0
+	 * On toggle switch change - show, hide setting's elements
+	 * @since 2.1.9
 	 */
-	const enable_fees_deducting_field = document.querySelector("[name='tutor_option[enable_fees_deducting]']");
-	const field_fees_name_wrapper = document.getElementById("field_fees_name");
-	const field_fee_amount_type_wrapper = document.getElementById("field_fee_amount_type");
-	if (enable_fees_deducting_field) {
-		showHideOption(field_fees_name_wrapper, enable_fees_deducting_field.value)
-		showHideOption(field_fee_amount_type_wrapper, enable_fees_deducting_field.value)
+	function showHideToggleChildren(el) {
+		let isChecked = el.is(':checked')
+		let fields = el.data('toggle-fields').split(',')
+		if (Array.isArray(fields) === false || fields.length === 0) return
 
-		changeListener(enable_fees_deducting_field, (value) => {
-			showHideOption(field_fees_name_wrapper, value)
-			showHideOption(field_fee_amount_type_wrapper, value)
-		});
+		fields = fields.map(s => s.trim());
+		isChecked
+			? fields.forEach((f) => $('#field_' + f).removeClass('tutor-hide-option'))
+			: fields.forEach((f) => $('#field_' + f).addClass('tutor-hide-option'))
+
+		let toggleWrapper = el.parent().parent().parent()
+		let sectionWrapper = el.parent().parent().parent().parent()
+		let visibleElements = sectionWrapper.find('.tutor-option-field-row').not('div.tutor-hide-option').length
+
+		visibleElements === 1
+			? toggleWrapper.addClass('tutor-option-no-bottom-border')
+			: toggleWrapper.removeClass('tutor-option-no-bottom-border')
+
 	}
+
+	const btnToggles = $('input[type="checkbox"][data-toggle-fields]')
+	btnToggles.each(function () {
+		showHideToggleChildren($(this))
+	})
+
+	btnToggles.change(function () {
+		showHideToggleChildren($(this))
+	})
+
 });

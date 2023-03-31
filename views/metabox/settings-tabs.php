@@ -77,7 +77,7 @@ $args = $this->args;
 							continue;
 						}
 						?>
-							<div class="tutor-row tutor-mb-32">
+							<div class="tutor-row tutor-mb-32 <?php if( 'Content Drip Type' === $field['label'] ): echo esc_attr( 'content-drip-options-wrapper' ); endif; ?>">
 							<?php
 								$second_class = 'tutor-col-12';
 								$_vertical    = isset( $field['is_vertical'] ) ? $field['is_vertical'] : false;

@@ -52,6 +52,12 @@ do_action( 'tutor/course/single/content/before/all', $course_id, $content_id );
 
 get_tutor_header();
 
+$show_mark_as_complete = false;
+
+if ( tutor()->lesson_post_type === $post->post_type ) {
+	$show_mark_as_complete = apply_filters( 'tutor_lesson_show_mark_as_complete', true );
+}
+
 ?>
 
 <?php do_action( 'tutor_' . $context . '/single/before/wrap' ); ?>
@@ -96,7 +102,11 @@ get_tutor_header();
 
 			<?php if ( ! $is_completed_lesson ) : ?>
 				<div class="tutor-spotlight-mobile-progress-right tutor-col-sm-4 tutor-col-6">
-					<?php tutor_lesson_mark_complete_html(); ?>
+					<?php
+					if ( $show_mark_as_complete ) {
+						tutor_lesson_mark_complete_html();
+					}
+					?>
 				</div>
 			<?php endif; ?>
 
