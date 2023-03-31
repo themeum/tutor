@@ -80,5 +80,10 @@ abstract class AbstractCache {
 	 */
 	public function delete_cache(): void {
 		delete_transient( $this->key() );
+
+		// Clear data after delete cache.
+		if ( isset( $this->data ) ) {
+			$this->data = '';
+		}
 	}
 }
