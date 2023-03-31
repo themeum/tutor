@@ -10,12 +10,19 @@
  */
 
 if ( ! empty( $field['options'] ) ) {
-	$field_key                              = sanitize_key( $field['key'] );
-	$field_id                               = esc_attr( 'field_' . $field_key );
-	$saved_data                             = $this->get( esc_attr( $field_key ), array() );
-	! is_array( $saved_data ) ? $saved_data = array() : 0;
+	$field_key = sanitize_key( $field['key'] );
+	$field_id  = esc_attr( 'field_' . $field_key );
+	$default   = array();
+	if ( isset( $field['default'] ) ) {
+		$default = array_combine( $field['default'], $field['default'] );
+	}
+
+	$saved_data = $this->get( esc_attr( $field_key ), $default );
+	if ( ! is_array( $saved_data ) ) {
+		$saved_data = array();
+	}
 	?>
-	<div class="tutor-option-field-row tutor-d-block" id="<?php echo esc_attr( $field_id ); ?>">
+	<div class="tutor-option-field-row tutor-option-checkbox-horizontal" id="<?php echo esc_attr( $field_id ); ?>">
 		<?php include tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 		<div class="tutor-option-field-input tutor-d-flex">
 			<div class="type-check tutor-d-flex">

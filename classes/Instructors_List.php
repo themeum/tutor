@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Students_List;
 use TUTOR\Backend_Page_Trait;
+use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -138,6 +139,11 @@ class Instructors_List {
 	 */
 	public function instructor_bulk_action() {
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
 
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
@@ -332,9 +338,9 @@ class Instructors_List {
 					{$order_clause}
 					LIMIT %d, %d;
 				";
-		$result = wp_cache_get( self::INSTRUCTOR_LIST_CACHE_KEY );
+		$result = TutorCache::get( self::INSTRUCTOR_LIST_CACHE_KEY );
 		if ( false === $result ) {
-			wp_cache_set(
+			TutorCache::set(
 				self::INSTRUCTOR_LIST_CACHE_KEY,
 				$result = $wpdb->get_results(
 					$wpdb->prepare(
@@ -392,9 +398,9 @@ class Instructors_List {
 						{$course_clause}
 						{$date_clause}
 				";
-		$result = wp_cache_get( self::INSTRUCTOR_COUNT_CACHE_KEY . $unique_cache_key );
+		$result = TutorCache::get( self::INSTRUCTOR_COUNT_CACHE_KEY . $unique_cache_key );
 		if ( false === $result ) {
-			wp_cache_set(
+			TutorCache::set(
 				self::INSTRUCTOR_COUNT_CACHE_KEY,
 				$result = $wpdb->get_var(
 					$wpdb->prepare(

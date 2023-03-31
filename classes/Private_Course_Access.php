@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Cache\TutorCache;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -60,19 +62,27 @@ class Private_Course_Access {
 			// Get using raw query to speed up.
 			$course_post_type = tutor()->course_post_type;
 
-			$private_query = $wpdb->prepare(
-				"SELECT ID, post_parent
-                    FROM {$wpdb->posts}
-                    WHERE post_type = %s
-                        AND post_name = %s
-                        AND post_status = %s
-                ",
-				$course_post_type,
-				$p_name,
-				'private'
-			);
+			// Get data from cache.
+			$cache_key = "tutor_private_query_{$course_post_type}_{$p_name}";
+			$result    = TutorCache::get( $cache_key );
 
-			$result = $wpdb->get_results( $private_query ); //phpcs:ignore
+			if ( false === $result ) {
+				$private_query = $wpdb->prepare(
+					"SELECT ID, post_parent
+						FROM {$wpdb->posts}
+						WHERE post_type = %s
+							AND post_name = %s
+							AND post_status = %s
+					",
+					$course_post_type,
+					$p_name,
+					'private'
+				);
+				$result = $wpdb->get_results( $private_query ); //phpcs:ignore
+				// Set cache data.
+				TutorCache::set( $cache_key, $result );
+			}
+
 			$private_course_id = ( is_array( $result ) && isset( $result[0] ) ) ? $result[0]->ID : 0;
 
 			if ( $private_course_id > 0 && tutor_utils()->is_enrolled( $private_course_id ) ) {

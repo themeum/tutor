@@ -41,3 +41,4 @@ vendor/
 !v2-library/_src/scss/structure/vendor
 .phpunit.result.cache
 yarn.lock
+.env
