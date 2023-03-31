@@ -10,12 +10,22 @@ class FlashMessageTest extends \WP_UnitTestCase {
 
 	private static $flash_msg;
 
-    private $key = 'tutor_flash_message';
+	private $key = 'tutor_flash_message';
 
+	/**
+	 * Setup flash object
+	 *
+	 * @return void
+	 */
 	public static function set_up_before_class() {
 		self::$flash_msg = new FlashMessage();
 	}
 
+	/**
+	 * Test setting up data while creating object
+	 *
+	 * @return void
+	 */
 	public function test_data_feeding_with_construct() {
 		$flash_msg = new FlashMessage( 'success', FlashMessage::DANGER );
 
@@ -30,6 +40,11 @@ class FlashMessageTest extends \WP_UnitTestCase {
 		$flash_msg = $this->assertSame( $expected, $actual );
 	}
 
+	/**
+	 * Test get_cache returns expected result
+	 *
+	 * @return void
+	 */
 	public function test_get_cache() {
 		$expected = array(
 			'alert'   => 'danger',
@@ -45,6 +60,11 @@ class FlashMessageTest extends \WP_UnitTestCase {
 		$this->assertSame( $expected, $actual );
 	}
 
+	/**
+	 * Test set_cache setting up data
+	 *
+	 * @return void
+	 */
 	public function test_set_cache() {
 		$expected = array(
 			'alert'   => 'danger',
@@ -60,6 +80,12 @@ class FlashMessageTest extends \WP_UnitTestCase {
 		$this->assertSame( $expected, $actual );
 	}
 
+	/**
+	 * Test delete_method clears transient as
+	 * well as clean up data property
+	 *
+	 * @return void
+	 */
 	public function test_delete_cache() {
 		$data = array(
 			'alert'   => 'danger',
@@ -73,6 +99,8 @@ class FlashMessageTest extends \WP_UnitTestCase {
 		self::$flash_msg->delete_cache();
 
 		$this->assertFalse( get_transient( $this->key ) );
+
+		$this->assertSame( '', self::$flash_msg->data );
 	}
 
 }
