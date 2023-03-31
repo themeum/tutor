@@ -75,9 +75,7 @@ class Input {
 			case self::TYPE_NUMERIC:
 			case self::TYPE_BOOL:
 			default:
-				//phpcs:ignore WordPress.Security.NonceVerification
 				$sanitized_value = sanitize_text_field( wp_unslash( self::get_value( $request_method, $_GET, $_POST, $key, $value ) ) );
-
 				if ( self::TYPE_INT === $type ) {
 					$sanitized_value = (int) $sanitized_value;
 				}
