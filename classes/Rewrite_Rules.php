@@ -112,10 +112,7 @@ class Rewrite_Rules extends Tutor_Base {
 	 * @return string
 	 */
 	public function change_lesson_single_url( $post_link, $id = 0 ) {
-		$post = get_post( $id );
-
-		global $wpdb;
-
+		$post             = get_post( $id );
 		$course_base_slug = 'sample-course';
 
 		if ( is_object( $post ) && $post->post_type == $this->lesson_post_type ) {
@@ -123,7 +120,7 @@ class Rewrite_Rules extends Tutor_Base {
 			$course_id = tutor_utils()->get_course_id_by( 'lesson', $post->ID );
 
 			if ( $course_id ) {
-				$course = $wpdb->get_row( $wpdb->prepare( "SELECT post_name from {$wpdb->posts} where ID = %d ", $course_id ) );
+				$course = get_post( $course_id );
 				if ( $course ) {
 					$course_base_slug = $course->post_name;
 				}
@@ -133,15 +130,15 @@ class Rewrite_Rules extends Tutor_Base {
 			}
 		} elseif ( is_object( $post ) && 'tutor_quiz' === $post->post_type ) {
 			// Quiz Permalink.
-			$course = $wpdb->get_row( $wpdb->prepare( "SELECT ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = %d ", $post->post_parent ) );
+			$course = get_post( $post->post_parent );
 			if ( $course ) {
 				// Checking if this topic.
 				if ( $course->post_type !== $this->course_post_type ) {
-					$course = $wpdb->get_row( $wpdb->prepare( "SELECT ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = %d ", $course->post_parent ) );
+					$course = get_post( $course->post_parent );
 				}
 				// Checking if this lesson.
 				if ( isset( $course->post_type ) && $course->post_type !== $this->course_post_type ) {
-					$course = $wpdb->get_row( $wpdb->prepare( "SELECT ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = %d ", $course->post_parent ) );
+					$course = get_post( $course->post_parent );
 				}
 
 				$course_post_name = isset( $course->post_name ) ? $course->post_name : 'sample-course';

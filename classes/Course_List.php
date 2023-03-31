@@ -249,6 +249,11 @@ class Course_List {
 
 		tutor_utils()->checking_nonce();
 
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
 
@@ -298,6 +303,12 @@ class Course_List {
 	 */
 	public static function tutor_change_course_status() {
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$status = Input::post( 'status' );
 		$id     = Input::post( 'id' );
 
@@ -319,6 +330,11 @@ class Course_List {
 	 */
 	public static function tutor_course_delete() {
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
 
 		$id     = Input::post( 'id', 0, Input::TYPE_INT );
 		$delete = CourseModel::delete_course( $id );

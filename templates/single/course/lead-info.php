@@ -9,17 +9,30 @@
  * @since 1.0.0
  */
 
+use TUTOR\Input;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 global $post, $authordata, $course_rating;
 
+$course_id         = Input::post( 'course_id', get_the_ID(), Input::TYPE_INT );
 $profile_url       = tutor_utils()->profile_url( $authordata->ID, true );
 $show_author       = tutor_utils()->get_option( 'enable_course_author' );
 $course_categories = get_tutor_course_categories();
 $disable_reviews   = ! get_tutor_option( 'enable_course_review' );
 $is_wish_listed    = tutor_utils()->is_wishlisted( $post->ID, get_current_user_id() );
+
+/**
+ * Global $course_rating get null for third party
+ * who only include this file without single-course.php file.
+ *
+ * @since 2.1.9
+ */
+if ( is_null( $course_rating ) ) {
+	$course_rating = tutor_utils()->get_course_rating( $course_id );
+}
 ?>
 
 <header class="tutor-course-details-header tutor-mb-44">

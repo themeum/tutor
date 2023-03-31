@@ -58,10 +58,14 @@ document.addEventListener("DOMContentLoaded", function () {
     let prevLabel = document.querySelector('a[data-keypage=' + previousStatus + ']');
     let nextLabel = document.querySelector('a[data-keypage=' + nextStatus + ']');
 
-    prevLabel.dataset.keyvalue = parseInt(prevLabel.dataset.keyvalue) - 1;
-    nextLabel.dataset.keyvalue = parseInt(nextLabel.dataset.keyvalue) + 1;
+    if (prevLabel) {
+      prevLabel.dataset.keyvalue = parseInt(prevLabel.dataset.keyvalue) - 1;
+      prevLabel.querySelector('.filter-btn-number') && (prevLabel.querySelector('.filter-btn-number').innerText = '(' + prevLabel.dataset.keyvalue + ')');
+    }
 
-    prevLabel.querySelector('.filter-btn-number').innerText = '(' + prevLabel.dataset.keyvalue + ')';
-    nextLabel.querySelector('.filter-btn-number').innerText = '(' + nextLabel.dataset.keyvalue + ')';
+    if (nextLabel) {
+      nextLabel.dataset.keyvalue = parseInt(nextLabel.dataset.keyvalue) + 1;
+      nextLabel.querySelector('.filter-btn-number') && (nextLabel.querySelector('.filter-btn-number').innerText = '(' + nextLabel.dataset.keyvalue + ')');
+    }
   }
 });

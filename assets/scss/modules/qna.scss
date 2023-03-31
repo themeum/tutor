@@ -143,6 +143,18 @@
 					}
 				}
 			}
+
+			p {
+				margin: 0;
+			}
+
+			ul {
+				padding-left: 2rem;
+
+				li {
+					list-style-type: disc;
+				}
+			}
 		}
 	}
 
@@ -243,6 +255,15 @@ table.qna-list-table {
 				font-weight: bold;
 				font-size: 16px;
 				color: var(--tutor-body-color);
+
+				ul {
+					padding-left: 2rem;
+
+					li {
+						list-style-type: disc;
+    					line-height: 1.5;
+					}
+				}
 			}
 		}
 
@@ -256,6 +277,15 @@ table.qna-list-table {
 				font-weight: 500;
 				font-size: 16px;
 				color: #212327;
+
+				ul {
+					padding-left: 2rem;
+					
+					li {
+						list-style-type: disc;
+    					line-height: 1.5;
+					}
+				}
 			}
 		}
 	}

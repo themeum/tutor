@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.1
+Tested up to: 6.2
 Requires PHP: 7.1
-Stable tag: 2.1.8
+Stable tag: 2.1.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,19 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.1.9 - March 30, 2023
+
+New: Introduced Social Login to let users register & login through social networks like Facebook or Google                                                                       
+New: Introduced Email verification option upon signup, which will be applicable for new student or instructor registration
+New: Introduced reCaptcha and HoneyPot as Fraud protection tools
+New: Two-Factor Authentication with Email OTP added for Tutor and WP logins
+Update: Some Performance optimizations across the plugin
+Update: Translations improvements for better compatibility
+Fix: Content Drip “Course content available sequentially” not working on the mobile device
+Fix: Backend assignment page was showing pagination even if there was no content.
+Fix: When admin changed the status of an instructor from the instructor list, it generated a console error
+Fix: Enrol button need to click twice from course details
 
 = 2.1.8 - March 1, 2023
 
