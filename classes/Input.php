@@ -105,11 +105,11 @@ class Input {
 				break;
 
 			case self::TYPE_TEXTAREA:
-				$sanitized_value = sanitize_textarea_field( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
+				$sanitized_value = sanitize_textarea_field( wp_unslash( self::get_value( $request_method, $_GET, $_POST, $key, $value ) ) );
 				break;
 
 			case self::TYPE_KSES_POST:
-				$sanitized_value = wp_kses_post( wp_unslash( self::GET_REQUEST === $request_method ? $_GET[ $key ] : ( self::POST_REQUEST === $request_method ? $_POST[ $key ] : $value ) ) );
+				$sanitized_value = wp_kses_post( wp_unslash( self::get_value( $request_method, $_GET, $_POST, $key, $value ) ) );
 				break;
 
 		}
