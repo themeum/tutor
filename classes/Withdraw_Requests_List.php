@@ -151,6 +151,12 @@ class Withdraw_Requests_List {
 	 */
 	public function update_withdraw_status() {
 		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		$status         = Input::post( 'action-type', '' );
 		$withdraw_id    = Input::post( 'withdraw-id', '' );
 		$reject_type    = Input::post( 'reject-type', '' );

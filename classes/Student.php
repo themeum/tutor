@@ -113,17 +113,41 @@ class Student {
 			'user_pass'  => $password,
 		);
 
-		$user_id = wp_insert_user( $userdata );
-		if ( ! is_wp_error( $user_id ) ) {
-			$user = get_user_by( 'id', $user_id );
-			if ( $user ) {
-				wp_set_current_user( $user_id, $user->user_login );
-				wp_set_auth_cookie( $user_id );
+		global $wpdb;
+		$wpdb->query( 'START TRANSACTION' );
+
+		$user_id        = wp_insert_user( $userdata );
+		$enroll_attempt = Input::post( 'tutor_course_enroll_attempt', '' );
+
+		if ( is_wp_error( $user_id ) ) {
+			$this->error_msgs = $user_id->get_error_messages();
+			add_filter( 'tutor_student_register_validation_errors', array( $this, 'tutor_student_form_validation_errors' ) );
+			return;
+		}
+
+		$user = get_user_by( 'id', $user_id );
+
+		$is_req_email_verification = apply_filters( 'tutor_require_email_verification', false );
+		if ( $is_req_email_verification ) {
+			do_action( 'tutor_send_verification_mail', $user, $enroll_attempt );
+			$reg_done = apply_filters( 'tutor_registration_done', true );
+			if ( ! $reg_done ) {
+				$wpdb->query( 'ROLLBACK' );
+				return;
+			} else {
+				$wpdb->query( 'COMMIT' );
 			}
+		} else {
+			/**
+			 * Tutor Free - reqular student reg process.
+			 */
+			$wpdb->query( 'COMMIT' );
+
+			wp_set_current_user( $user_id, $user->user_login );
+			wp_set_auth_cookie( $user_id );
 
 			do_action( 'tutor_after_student_signup', $user_id );
 			// since 1.9.8 do enroll if guest attempt to enroll.
-			$enroll_attempt = Input::post( 'tutor_course_enroll_attempt', '' );
 			if ( ! empty( $enroll_attempt ) ) {
 				do_action( 'tutor_do_enroll_after_login_if_attempt', $enroll_attempt, $user_id );
 			}
@@ -135,10 +159,6 @@ class Student {
 			}
 			wp_safe_redirect( apply_filters( 'tutor_student_register_redirect_url', $redirect_page, $user ) );
 			die();
-		} else {
-			$this->error_msgs = $user_id->get_error_messages();
-			add_filter( 'tutor_student_register_validation_errors', array( $this, 'tutor_student_form_validation_errors' ) );
-			return;
 		}
 
 		$registration_page = tutor_utils()->student_register_url();

@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -48,7 +49,7 @@ class QuizModel {
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
 		$cache_key = "tutor_quiz_attempts_for_{$user_id}_{$quiz_id}";
-		$attempts  = wp_cache_get( $cache_key );
+		$attempts  = TutorCache::get( $cache_key );
 
 		if ( false === $attempts ) {
 			$attempts = $wpdb->get_results(
@@ -63,7 +64,7 @@ class QuizModel {
 					$user_id
 				)
 			);
-			wp_cache_set( $cache_key,  $attempts );
+			TutorCache::set( $cache_key,  $attempts );
 		}
 		
 
@@ -296,6 +297,13 @@ class QuizModel {
 	 */
 	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
 		global $wpdb;
+
+		$start         = sanitize_text_field( $start );
+		$limit         = sanitize_text_field( $limit );
+		$search_filter = sanitize_text_field( $search_filter );
+		$course_filter = sanitize_text_field( $course_filter );
+		$date_filter   = sanitize_text_field( $date_filter );
+		$order_filter  = sanitize_text_field( $order_filter );
 
 		$search_term_raw = $search_filter;
 		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';

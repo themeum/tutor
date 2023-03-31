@@ -803,7 +803,8 @@ class Course extends Tutor_Base {
 		}
 
 		$referer_url = wp_get_referer();
-		wp_redirect( $referer_url );
+		wp_safe_redirect( $referer_url . '?nocache='. time() );
+		exit;
 	}
 
 	/**

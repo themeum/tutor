@@ -45,6 +45,7 @@ foreach ( $login_errors as $login_error ) {
 	<?php
 }
 
+do_action( 'tutor_before_login_form' );
 ?>
 <form id="tutor-login-form" method="post">
 	<?php if ( is_single_course() ) : ?>
@@ -84,6 +85,7 @@ foreach ( $login_errors as $login_error ) {
 	<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block">
 		<?php esc_html_e( 'Sign In', 'tutor' ); ?>
 	</button>
+	
 	<?php if ( get_option( 'users_can_register', false ) ) : ?>
 		<?php
 			$url_arg = array(
@@ -100,8 +102,11 @@ foreach ( $login_errors as $login_error ) {
 			</a>
 		</div>
 	<?php endif; ?>
+	<?php do_action( 'tutor_after_sign_in_button' ); ?>
 </form>
-<?php if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) : ?>
+<?php
+do_action( 'tutor_after_login_form' );
+if ( ! tutor_utils()->is_tutor_frontend_dashboard() ) : ?>
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		var { __ } = wp.i18n;
