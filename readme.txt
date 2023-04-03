@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.2
 Requires PHP: 7.1
-Stable tag: 2.1.9
+Stable tag: 2.1.10
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,10 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.1.10 - April 13, 2023
+
+Coming soon...
 
 = 2.1.9 - March 30, 2023
 
