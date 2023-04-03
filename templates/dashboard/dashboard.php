@@ -79,6 +79,12 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<?php
 						$i = 0;
 						foreach ( $profile_completion as $key => $data ) {
+							if ( $key === '_tutor_withdraw_method_data' ) {
+								$monetize_by = tutils()->get_option( 'monetize_by' );
+								if ($monetize_by === 'free') {
+									continue;
+								}
+							}
 							$is_set = $data['is_set']; // Whether the step is done or not.
 							?>
 								<div class="tutor-d-flex tutor-align-center<?php echo $i < ( count( $profile_completion ) - 1 ) ? ' tutor-mb-8' : ''; ?>">
