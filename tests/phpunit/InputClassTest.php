@@ -136,4 +136,37 @@ class InputClassTest extends \WP_UnitTestCase {
 		$expected = '<h1>hi</h1>';
 		$this->assertEquals( $expected, $val );
 	}
+
+	public function test_sanitize_array() {
+
+		// Set data to $_POST superglobal.
+		$_POST['profile']  = array(
+			'first <b>name</b>' => 'hello\ <b>world</b>',
+			'website'           => 'abc',
+		);
+
+		$_POST['email']    = 'ab\c@___d.com';
+		$_POST['website'] = 'hello.com?file=my file.php';
+
+		$sanitization_config = array(
+			'email'    => 'sanitize_email',
+			'website' => 'sanitize_url'
+		);
+
+		$sanitized_data = Input::sanitize_array(
+			wp_unslash( $_POST ),
+			$sanitization_config
+		);
+
+		$expected = array(
+			'email'    => 'abc@d.com',
+			'website' => 'http://hello.com?file=my%20file.php',
+			'profile'  => array(
+				'first name' => 'hello world',
+				'website'    => 'http://abc',
+			),
+		);
+
+		$this->assertEquals( $expected, $sanitized_data );
+	}
 }
