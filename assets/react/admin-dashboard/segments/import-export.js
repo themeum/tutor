@@ -64,7 +64,10 @@ const load_saved_data = () => {
 	};
 };
 
-function capitalizeFirstLetter(string){
+function capitalizeFirstLetter(string) {
+	if (!string) {
+		return '';
+	}
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -344,7 +347,7 @@ const delete_settings_xhttp_request = (modelOpener, modalElement) => {
 			delete_history_data();
 
 			setTimeout(function () {
-				// document.body.style.overflow = 'auto';
+				document.body.style.overflow = 'auto';
 				tutor_toast('Success', 'Data deleted successfully!', 'success');
 			}, 200);
 		}
