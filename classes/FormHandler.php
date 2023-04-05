@@ -44,6 +44,17 @@ class FormHandler {
 	 */
 	public function tutor_retrieve_password() {
 		tutils()->checking_nonce();
+		
+		/**
+		 * To use spam protection, before reset request form process.
+		 * 
+		 * @since 2.1.10
+		 */
+		$before_form_process = apply_filters( 'tutor_before_retrieve_password_form_process', null );
+		if ( is_wp_error( $before_form_process ) ) {
+			tutor_flash_set( 'danger', $before_form_process->get_error_message() );
+			return false;
+		}
 
 		//phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$login = sanitize_user( tutils()->array_get( 'user_login', $_POST ) );
