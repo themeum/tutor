@@ -33,6 +33,7 @@ class FormHandler {
 
 		add_action( 'tutor_reset_password_notification', array( $this, 'reset_password_notification' ), 10, 2 );
 		add_filter( 'tutor_lostpassword_url', array( $this, 'lostpassword_url' ) );
+		add_filter( 'lostpassword_url',  array( $this, 'lostpassword_url' ), 99 );
 	}
 
 	/**
