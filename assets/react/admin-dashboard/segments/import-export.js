@@ -111,7 +111,7 @@ function tutor_option_history_load(dataset) {
 	} else {
 		output += `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p class="tutor-fs-7 tutor-fw-medium">No settings data found.</p></div></div>`;
 	}
-	const heading = `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p>Date</p></div></div>`;
+	const heading = `<div class="tutor-option-field-row"><div class="tutor-option-field-label">Date</div></div>`;
 
 	const historyData = document.querySelector('.history_data');
 	null !== historyData ? (historyData.innerHTML = heading + output) : '';
