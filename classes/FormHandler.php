@@ -46,7 +46,7 @@ class FormHandler {
 		tutils()->checking_nonce();
 		
 		/**
-		 * To use spam protection, before reset request form process.
+		 * To check spam or other logic before form process.
 		 * 
 		 * @since 2.1.10
 		 */
