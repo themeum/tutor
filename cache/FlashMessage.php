@@ -77,6 +77,7 @@ class FlashMessage extends AbstractCache {
 	 * Key
 	 *
 	 * @since 2.1.9
+	 *
 	 * @return string
 	 */
 	public function key(): string {
@@ -87,6 +88,7 @@ class FlashMessage extends AbstractCache {
 	 * Cache data
 	 *
 	 * @since 2.1.9
+	 *
 	 * @return object
 	 */
 	public function cache_data() {
@@ -97,6 +99,7 @@ class FlashMessage extends AbstractCache {
 	 * Cache time
 	 *
 	 * @since 2.1.9
+	 *
 	 * @return int
 	 */
 	public function cache_time(): int {
