@@ -77,11 +77,11 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 					<div class="tutor-col-lg-4 tutor-d-flex tutor-flex-column tutor-justify-center">
 						<?php
-						$i = 0;
+						$i           = 0;
 						$monetize_by = tutils()->get_option( 'monetize_by' );
 						foreach ( $profile_completion as $key => $data ) {
-							if ( $key === '_tutor_withdraw_method_data' ) {
-								if ($monetize_by === 'free') {
+							if ( '_tutor_withdraw_method_data' === $key ) {
+								if ( 'free' === $monetize_by ) {
 									continue;
 								}
 							}
