@@ -1075,7 +1075,8 @@ final class Tutor {
 	 * @return bool
 	 */
 	public function wp_doing_ajax( $bool ) {
-		if ( Input::has( 'tutor_ajax_action ' ) ) {
+		// Don't use Input::has helper to avoid conflict.
+		if ( isset( $_REQUEST['tutor_ajax_action'] ) ) {
 			return true;
 		}
 		return $bool;
