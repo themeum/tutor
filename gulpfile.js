@@ -26,6 +26,8 @@ var prefixerOptions = {
 	overrideBrowserslist: ['last 2 versions'],
 };
 
+
+
 var scss_blueprints = {
 	tutor_front: { src: 'assets/scss/front/index.scss', mode: 'expanded', destination: 'tutor-front.min.css' },
 
@@ -250,6 +252,15 @@ gulp.task('copy', function() {
 		.pipe(gulp.dest('build/tutor/'));
 });
 
+const ASSETS_FONTS_DIR = 'assets/fonts';
+const V2_LIBRARY_FONTS_DIR = 'v2-library/bundle/fonts/fonts/*';
+
+gulp.task('copy-fonts', function() {
+	return gulp
+		.src(V2_LIBRARY_FONTS_DIR)
+		.pipe(gulp.dest(ASSETS_FONTS_DIR));
+});
+
 gulp.task('make-zip', function() {
 	return gulp
 		.src('./build/**/*.*')
@@ -260,6 +271,6 @@ gulp.task('make-zip', function() {
 /**
  * Export tasks
  */
-exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'makepot', i18n_makepot, 'copy', 'make-zip', 'clean-build');
+exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'makepot', i18n_makepot, 'copy', 'copy-fonts', 'make-zip', 'clean-build');
 exports.sass = gulp.parallel(...task_keys);
 exports.default = gulp.parallel(...task_keys, 'watch');
