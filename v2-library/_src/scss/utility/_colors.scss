@@ -18,8 +18,9 @@
 
 	// extra colors need to be replaces later
 	--tutor-color-secondary: 	#{$color-secondary};
+	--tutor-color-subdued: 		#{$color-subdued};
 	--tutor-color-muted: 		#{$color-muted};
-
+	
 	// gray colors
 	--tutor-color-gray: 		#{$color-gray-20};
 	--tutor-color-gray-10: 		#{$color-gray-10};
@@ -36,6 +37,7 @@ $colorUtils: (
 	'danger' $color-danger,
 	'secondary' $color-secondary,
 	'muted' $color-muted,
+	'subdued' $color-subdued,
 	'gray-20' $color-gray-20,
 	'gray-10' $color-gray-10,
 );
