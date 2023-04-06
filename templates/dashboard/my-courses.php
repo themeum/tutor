@@ -100,7 +100,7 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 						</a>
 
 						<?php if ( false === $is_main_instructor ) : ?>
-						<div class="tutor-course-co-author"><?php esc_html_e( 'Co-author', 'tutor' ); ?></div>
+						<div class="tutor-course-co-author-badge"><?php esc_html_e( 'Co-author', 'tutor' ); ?></div>
 						<?php endif; ?>
 
 						<div class="tutor-card-body">
