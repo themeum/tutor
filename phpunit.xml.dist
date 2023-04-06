@@ -21,5 +21,8 @@
 		<testsuite name="query-helper-test">
 			<directory>tests/phpunit/QueryHelperTest.php</directory>
 		</testsuite>
+		<testsuite name="flash-message-test">
+			<directory>tests/phpunit/FlashMessageTest.php</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>
