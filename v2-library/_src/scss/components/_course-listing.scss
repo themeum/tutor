@@ -15,6 +15,17 @@
 				right: 12px;
 			}
 
+			&-co-author {
+				position: absolute;
+				top: 9px;
+				right: 10px;
+				border-radius: 4px;
+				font-size: 10px;
+				padding: 0px 7px;
+				background: #3F51B5;
+				color: white;
+			}
+
 			&-difficulty-level {
 				position: absolute;
 				top: 12px;
