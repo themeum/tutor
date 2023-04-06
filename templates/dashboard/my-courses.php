@@ -83,12 +83,13 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 				foreach ( $results as $post ) :
 					setup_postdata( $post );
 
-					$avg_rating       = tutor_utils()->get_course_rating()->rating_avg;
-					$tutor_course_img = get_tutor_course_thumbnail_src();
-					$id_string_delete = 'tutor_my_courses_delete_' . $post->ID;
-					$row_id           = 'tutor-dashboard-my-course-' . $post->ID;
-					$course_duration  = get_tutor_course_duration_context( $post->ID, true );
-					$course_students  = tutor_utils()->count_enrolled_users_by_course();
+					$avg_rating         = tutor_utils()->get_course_rating()->rating_avg;
+					$tutor_course_img   = get_tutor_course_thumbnail_src();
+					$id_string_delete   = 'tutor_my_courses_delete_' . $post->ID;
+					$row_id             = 'tutor-dashboard-my-course-' . $post->ID;
+					$course_duration    = get_tutor_course_duration_context( $post->ID, true );
+					$course_students    = tutor_utils()->count_enrolled_users_by_course();
+					$is_main_instructor = CourseModel::is_main_instructor( $post->ID );
 					?>
 	
 					<div id="<?php echo esc_attr( $row_id ); ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
@@ -97,6 +98,10 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 								<img class="tutor-card-image-top" src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 							</div>
 						</a>
+
+						<?php if ( false === $is_main_instructor ) : ?>
+						<div class="tutor-course-co-author"><?php esc_html_e( 'Co-author', 'tutor' ); ?></div>
+						<?php endif; ?>
 
 						<div class="tutor-card-body">
 							<div class="tutor-meta tutor-mb-8">
@@ -257,7 +262,7 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 											<!-- # Cancel Submission -->
 											
 											<!-- Delete Action -->
-											<?php if ( in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT ) ) ) : ?>
+											<?php if ( $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT ) ) ) : ?>
 											<a href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-dropdown-item tutor-admin-course-delete">
 												<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
 												<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
