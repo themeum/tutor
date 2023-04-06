@@ -34,7 +34,10 @@ class Instructor {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hook = true ) {
+		if ( ! $register_hook ) {
+			return;
+		}
 		add_action( 'template_redirect', array( $this, 'register_instructor' ) );
 		add_action( 'template_redirect', array( $this, 'apply_instructor' ) );
 
