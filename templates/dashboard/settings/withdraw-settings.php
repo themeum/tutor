@@ -152,7 +152,7 @@ $col_classes = array(
 			?>
 			<div class="tutor-row tutor-mb-32">
 				<p>
-					<?php echo __('No Withdrawal method found! To select a Withdraw method please contact with the Site Admin.', 'tutor') ?>
+					<?php echo __( 'There\'s no Withdrawal method selected yet! To select a Withdraw method, please contact the Site Admin.', 'tutor' ); ?>
 				</p>
 			</div>
 			<?php
