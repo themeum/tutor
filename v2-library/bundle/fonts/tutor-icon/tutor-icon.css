@@ -47,6 +47,9 @@
 .tutor-icon-mobile:before {
   content: "\f904";
 }
+.tutor-icon-map:before {
+  content: "\f905";
+}
 
 
 /* tutor old fonts */
