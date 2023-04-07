@@ -148,6 +148,14 @@ $col_classes = array(
 			}
 
 				do_action( 'tutor_withdraw_set_account_form_after' );
+		} else {
+			?>
+			<div class="tutor-row tutor-mb-32">
+				<p>
+					<?php echo __( 'There\'s no Withdrawal method selected yet! To select a Withdraw method, please contact the Site Admin.', 'tutor' ); ?>
+				</p>
+			</div>
+			<?php
 		}
 		?>
 	</form>
