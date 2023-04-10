@@ -143,6 +143,7 @@ $filters = array(
 								<td>
 									<?php if ( tutor()->has_pro ) : ?>
 										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+											<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
 											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
 											class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 												<?php esc_html_e( 'Details', 'tutor' ); ?>
