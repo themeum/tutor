@@ -127,8 +127,8 @@ class FormHandler {
 		$this->send_notification( $user_login, $reset_key );
 
 		$html  = '<h3>' . __( 'Check your E-Mail', 'tutor' ) . '</h3>';
-		$html .= '<p> ' . __( "We've sent an email to this account's email address. Click the link in the email to reset your password", 'tutor' ) . '</p>';
-		$html .= '<p>' . __( "If you don't see the email, check other places it might be, like your junk, spam, social, promotion or others folders.", 'tutor' ) . '</p>';
+		$html .= '<p> ' . __( "We've sent an email to this account's email address. Click the link in the email to reset your password.", 'tutor' ) . '</p>';
+		$html .= '<p>' . __( " If you don't see the email, check other places it might be, like your junk, spam, social, promotion or others folders.", 'tutor' ) . '</p>';
 		tutor_flash_set( 'success', $html );
 	}
 
