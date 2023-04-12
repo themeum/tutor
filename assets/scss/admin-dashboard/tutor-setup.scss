@@ -16,8 +16,8 @@
 }
 
 * {
-	// margin: 0;
-	// padding: 0;
+	margin: 0;
+	padding: 0;
 	box-sizing: border-box;
 }
 
@@ -88,23 +88,12 @@ ul.tutor-setup-content li.active {
 
 		.tutor-setup-content-heading {
 			.setup-section-title {
-				// color: #1f2949;
 			}
 
 			.step-info {
-				// strong {
-				// 	font-style: normal;
-				// 	font-weight: normal;
-				// 	font-size: 15px;
-				// 	color: #757c8e;
-				// }
 			}
 
 			.tutor-reset-section {
-				// font-style: normal;
-				// font-weight: 500;
-				// font-size: 13px;
-				// color: #5b616f;
 			}
 		}
 
@@ -723,6 +712,9 @@ input[type='number'].attempts:focus {
 
 .tutor-setup-btn-wrapper {
 	justify-self: left;
+	a.tutor-btn-primary:visited {
+		color: #fff;
+	}
 }
 
 .tutor-setup-title li {
