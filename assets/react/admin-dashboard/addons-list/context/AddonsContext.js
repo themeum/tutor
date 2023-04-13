@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 // Custom contexts.
 const AddonsContext = createContext();
@@ -33,6 +33,7 @@ export const AddonsContextProvider = (props) => {
 	const allAddonsRef = useRef(null);
 	const [addons, setAddons] = useState([]);
 	const [addonLoading, setAddonLoading] = useState({});
+	const [search, setSearch] = useState('');
 
 	/**
 	 *
@@ -98,26 +99,48 @@ export const AddonsContextProvider = (props) => {
 		setAddons(allAddonsRef.current);
 	});
 
+	function filterList(list, fn) {
+		return list.filter(fn);
+	}
+
 	const handleOnChange = (event, addonBaseName) => {
 		const { checked } = event.target;
 		setAddonLoading((prev) => ({ ...prev, [addonBaseName]: true }));
+
 		const updatedAddonList = allAddonsRef.current.map((addon) => {
 			if (addon.basename === addonBaseName) return { ...addon, is_enabled: checked };
 			return addon;
 		});
 
+		const filterUpdatedAddonList = filterList(updatedAddonList, (item) =>
+			item.name.toLowerCase().includes(search.toLowerCase()),
+		);
+
 		if (activeTab === 'active') {
-			const activeAddons = updatedAddonList.filter((updatedAddon) => updatedAddon.is_enabled);
+			const activeAddons = filterList(
+				search.trim() === '' ? updatedAddonList : filterUpdatedAddonList,
+				(addon) => addon.is_enabled,
+			);
+
 			setAllAddons(activeAddons);
 		} else if (activeTab === 'deactive') {
-			const deActiveAddons = updatedAddonList.filter((updatedAddon) => !updatedAddon.is_enabled);
+			const deActiveAddons = filterList(
+				search.trim() === '' ? updatedAddonList : filterUpdatedAddonList,
+				(addon) => !addon.is_enabled,
+			);
+
 			setAllAddons(deActiveAddons);
 		} else if (activeTab === 'required') {
-			const requiredAddons = updatedAddonList.filter((updatedAddon) => updatedAddon?.depend_plugins);
+			const requiredAddons = filterList(
+				search.trim() === '' ? updatedAddonList : filterUpdatedAddonList,
+				(addon) => addon?.depend_plugins,
+			);
+
 			setAllAddons(requiredAddons);
 		} else if (activeTab === 'all') {
-			setAllAddons(updatedAddonList);
+			setAllAddons(filterUpdatedAddonList);
 		}
+
 		allAddonsRef.current = updatedAddonList;
 
 		const toggleAddonStatus = async () => {
@@ -165,21 +188,31 @@ export const AddonsContextProvider = (props) => {
 		}
 	};
 
-	const filterAddons = (searchValue = '') => {
-		if (searchValue.trim()) {
+	useEffect(() => {
+		const searchValue = search.trim();
+		if (searchValue) {
 			const filteredAddons = allAddonsRef.current.filter((addon) =>
 				addon.name.toLowerCase().includes(searchValue.toLowerCase()),
 			);
 			setAllAddons(filteredAddons);
 		} else {
-			setAllAddons(allAddonsRef.current);
+			setAllAddons(allAddonsRef.current ?? []);
 		}
-	};
+	}, [search]);
 
 	return (
 		<AddonsContext.Provider value={{ allAddons, addonList: addons, loading }}>
 			<AddonsUpdateContext.Provider
-				value={{ activeTab, getTabStatus, setActiveTab, setAllAddons, handleOnChange, filterAddons, addonLoading }}
+				value={{
+					activeTab,
+					getTabStatus,
+					setActiveTab,
+					setAllAddons,
+					handleOnChange,
+					addonLoading,
+					search,
+					setSearch,
+				}}
 			>
 				{props.children}
 			</AddonsUpdateContext.Provider>
