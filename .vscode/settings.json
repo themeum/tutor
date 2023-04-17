@@ -1,0 +1,29 @@
+{
+    /**
+    WPCS configuration.
+
+    Step 1: Please install these two composer package.
+
+      1. composer global require squizlabs/php_codesniffer
+      2. composer global require wp-coding-standards/wpcs
+      
+    Step 2: Set WordPress as default coding standard.
+
+      phpcs --config-set installed_paths /Users/your_username/.composer/vendor/wp-coding-standards/wpcs  (change your_username)
+      phpcs --config-set default_standard WordPress
+
+    Problem Fix:
+        If phpcs and phpcbf command not found as command, set it to your path variable.
+        export PATH="/Users/your_username/.composer/vendor/bin:$PATH" (change your_username)
+    
+    **/
+	"phpcbf.standard": "WordPress",
+    "phpcbf.enable": true,
+    "phpcbf.executablePath": "phpcbf",
+    "phpcbf.documentFormattingProvider": true,
+    "phpcbf.onsave": false,
+    "phpcbf.debug":false,
+
+    // PHPunit test runner configuration.
+    "yet-phpunit.xmlConfigFilepath": "${workspaceRoot}/wp-content/plugins/tutor/phpunit.xml.dist"
+}
