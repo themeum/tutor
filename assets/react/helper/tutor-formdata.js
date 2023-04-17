@@ -10,6 +10,22 @@
  * 
  * @return mixed formData on success, false on any error
  */
+
+
+if (!window.tutor_get_nonce_data) {
+    window.tutor_get_nonce_data = function(send_key_value) {
+        var nonce_data = window._tutorobject || {};
+        var nonce_key = nonce_data.nonce_key || '';
+        var nonce_value = nonce_data[nonce_key] || '';
+    
+        if (send_key_value) {
+            return { key: nonce_key, value: nonce_value };
+        }
+    
+        return { [nonce_key]: nonce_value };
+    };
+}
+
 function tutorFormData(data = []) {
         const formData = new FormData();
         data.forEach((item) => {

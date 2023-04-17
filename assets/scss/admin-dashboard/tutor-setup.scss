@@ -88,23 +88,12 @@ ul.tutor-setup-content li.active {
 
 		.tutor-setup-content-heading {
 			.setup-section-title {
-				// color: #1f2949;
 			}
 
 			.step-info {
-				// strong {
-				// 	font-style: normal;
-				// 	font-weight: normal;
-				// 	font-size: 15px;
-				// 	color: #757c8e;
-				// }
 			}
 
 			.tutor-reset-section {
-				// font-style: normal;
-				// font-weight: 500;
-				// font-size: 13px;
-				// color: #5b616f;
 			}
 		}
 
@@ -149,14 +138,14 @@ ul.tutor-setup-content li.active {
 	letter-spacing: -0.08px;
 	color: var(--primary-text);
 	position: relative;
-    // list-style: none;
-    // font-size: 14px;
-    // letter-spacing: -0.08px;
-    // color: var(--primary-text);
-    // position: relative;
-    // display: flex;
-    // flex-direction: column;
-    // row-gap: 50px;
+	// list-style: none;
+	// font-size: 14px;
+	// letter-spacing: -0.08px;
+	// color: var(--primary-text);
+	// position: relative;
+	// display: flex;
+	// flex-direction: column;
+	// row-gap: 50px;
 }
 
 .tutor-setup-title:before {
@@ -723,6 +712,9 @@ input[type='number'].attempts:focus {
 
 .tutor-setup-btn-wrapper {
 	justify-self: left;
+	a.tutor-btn-primary:visited {
+		color: #fff;
+	}
 }
 
 .tutor-setup-title li {
