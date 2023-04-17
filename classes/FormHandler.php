@@ -33,6 +33,7 @@ class FormHandler {
 
 		add_action( 'tutor_reset_password_notification', array( $this, 'reset_password_notification' ), 10, 2 );
 		add_filter( 'tutor_lostpassword_url', array( $this, 'lostpassword_url' ) );
+		add_filter( 'lostpassword_url',  array( $this, 'lostpassword_url' ), 99 );
 	}
 
 	/**
@@ -43,6 +44,17 @@ class FormHandler {
 	 */
 	public function tutor_retrieve_password() {
 		tutils()->checking_nonce();
+		
+		/**
+		 * To check spam or other logic before form process.
+		 * 
+		 * @since 2.1.10
+		 */
+		$before_form_process = apply_filters( 'tutor_before_retrieve_password_form_process', null );
+		if ( is_wp_error( $before_form_process ) ) {
+			tutor_flash_set( 'danger', $before_form_process->get_error_message() );
+			return false;
+		}
 
 		//phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$login = sanitize_user( tutils()->array_get( 'user_login', $_POST ) );
@@ -115,8 +127,8 @@ class FormHandler {
 		$this->send_notification( $user_login, $reset_key );
 
 		$html  = '<h3>' . __( 'Check your E-Mail', 'tutor' ) . '</h3>';
-		$html .= '<p> ' . __( "We've sent an email to this account's email address. Click the link in the email to reset your password", 'tutor' ) . '</p>';
-		$html .= '<p>' . __( "If you don't see the email, check other places it might be, like your junk, spam, social, promotion or others folders.", 'tutor' ) . '</p>';
+		$html .= '<p> ' . __( "We've sent an email to this account's email address. Click the link in the email to reset your password.", 'tutor' ) . '</p>';
+		$html .= '<p>' . __( " If you don't see the email, check other places it might be, like your junk, spam, social, promotion or others folders.", 'tutor' ) . '</p>';
 		tutor_flash_set( 'success', $html );
 	}
 

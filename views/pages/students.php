@@ -127,9 +127,12 @@ $filters = array(
 									</div>
 								</td>
 								<td>
+									<div class="tutor-d-flex tutor-align-center" style="gap: 5px;">
 									<span class="tutor-fs-7">
 										<?php echo esc_html( $list->user_email ); ?>
 									</span>
+									<?php do_action( 'tutor_show_email_verified_badge', $list->ID ); ?>
+									</div>
 								</td>
 								<td>
 									<span class="tutor-fs-7">
@@ -143,6 +146,7 @@ $filters = array(
 								<td>
 									<?php if ( tutor()->has_pro ) : ?>
 										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+											<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
 											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
 											class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 												<?php esc_html_e( 'Details', 'tutor' ); ?>
