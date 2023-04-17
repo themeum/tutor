@@ -227,7 +227,12 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = 2.1.10 - April 13, 2023
 
-Coming soon...
+New: Added option to manage active login sessions 
+New: Added Twitter as part of social logins
+New: Added Fraud protection on Password reset form
+Update: Introduced Co-Author badge on the My Courses page to clarify roles
+Update: “Set Withdraw Method” option was showing up on the Dashboard profile even if monetization was disabled
+Fix: Decimal values are no longer allowed in content drip settings in lessons when setting the number of days
 
 = 2.1.9 - March 30, 2023
 
