@@ -27,11 +27,12 @@ class Utils {
 	/**
 	 * Compatibility for splitting utils functions to specific model
 	 *
-	 * @param string $method
-	 * @param array  $args
-	 * @return void
-	 *
 	 * @since 2.0.6
+	 *
+	 * @param string $method method name.
+	 * @param array  $args   args.
+	 *
+	 * @return void
 	 */
 	public function __call( $method, $args ) {
 		$classes = array(
@@ -51,10 +52,11 @@ class Utils {
 	/**
 	 * Check an array is sequential or associative
 	 *
-	 * @param   array $array The array to check.
-	 * @return  bool   true if the array is associative, false if it's sequential.
-	 *
 	 * @since 2.0.9
+	 *
+	 * @param  array $array The array to check.
+	 *
+	 * @return bool   true if the array is associative, false if it's sequential.
 	 */
 	public function is_assoc( array $array ) {
 		return array_keys( $array ) !== range( 0, count( $array ) - 1 );
@@ -63,10 +65,11 @@ class Utils {
 	/**
 	 * Redirect to URL
 	 *
-	 * @param string $url
-	 * @return void
-	 *
 	 * @since 2.1.0
+	 *
+	 * @param string $url URL.
+	 *
+	 * @return void
 	 */
 	public function redirect_to( string $url, $flash_message = null, $flash_type = 'success' ) {
 		$url = trim( $url );
@@ -92,8 +95,9 @@ class Utils {
 	/**
 	 * Handle flash message for redirect_to util helper
 	 *
-	 * @return void
 	 * @since 2.1.0
+	 *
+	 * @return void
 	 */
 	public function handle_flash_message() {
 		if ( false !== get_transient( 'tutor_flash_type' ) && false !== get_transient( 'tutor_flash_message' ) ) {
@@ -129,13 +133,13 @@ class Utils {
 	/**
 	 * Add setting's option after a setting key
 	 *
+	 * @since 2.1.0
+	 *
 	 * @param string $target_key    setting's key name like 'tutor_version'
 	 * @param array  $arr           an multi-dimentional settings option array
 	 * @param array  $new_item      new setting array. a 'key' needed
 	 *
 	 * @return int|null             inserted index number or null
-	 *
-	 * @since 2.1.0
 	 */
 	public function add_option_after( string $target_key, array &$arr, array $new_item ) {
 		if ( ! is_array( $arr ) || ! is_array( $new_item ) ) {
@@ -160,15 +164,26 @@ class Utils {
 	/**
 	 * Get human readable file size from file path
 	 *
-	 * @param string $file_path
-	 * @return string
-	 *
 	 * @since 2.1.0
+	 *
+	 * @param string $file_path file path.
+	 *
+	 * @return string
 	 */
 	public function get_readable_filesize( string $file_path ) {
 		return size_format( file_exists( $file_path ) ? filesize( $file_path ) : 0 );
 	}
 
+	/**
+	 * Option recursive
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array  $array array.
+	 * @param string $key option key.
+	 *
+	 * @return mixed
+	 */
 	private function option_recursive( $array, $key ) {
 		foreach ( $array as $option ) {
 			$is_array = is_array( $option );
@@ -191,6 +206,17 @@ class Utils {
 		return null;
 	}
 
+	/**
+	 * Get default value for a tutor option.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param string $key option key.
+	 * @param mixed $fallback fallback value.
+	 * @param mixed $from_options from option.
+	 * 
+	 * @return mixed
+	 */
 	private function get_option_default( $key, $fallback, $from_options ) {
 		if ( ! $from_options ) {
 			// Avoid infinity recursion
@@ -265,12 +291,14 @@ class Utils {
 	}
 
 	/**
-	 * @param null $key
-	 * @param bool $value
-	 *
 	 * Update Option
-	 *
-	 * @since v.1.0.0
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param null|string $key option key.
+	 * @param mixed $value option value. 
+	 * 
+	 * @return void
 	 */
 	public function update_option( $key = null, $value = false ) {
 		$option         = (array) maybe_unserialize( get_option( 'tutor_option' ) );
@@ -279,16 +307,16 @@ class Utils {
 	}
 
 	/**
-	 * @param null  $key
-	 * @param array $array
+	 * get array value by dot notation
+	 * 
+	 * @since 1.0.0
+	 * @since 1.4.1 default parameter added
+	 * 
+	 * @param null  $key option key.
+	 * @param array $array array.
+	 * @param mixed $default default value.
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * get array value by dot notation
-	 *
-	 * @since v.1.0.0
-	 *
-	 * @update v.1.4.1 (Added default parameter)
 	 */
 	public function avalue_dot( $key = null, $array = array(), $default = false ) {
 		$array = (array) $array;
@@ -412,14 +440,14 @@ class Utils {
 
 	/**
 	 * Get profile URL.
-	 * 
+	 *
 	 * @since 1.0.0
 	 * @since 2.1.7 changed param $student_id to $user.
-	 * 
+	 *
 	 * @param int|object $student     student ID or object.
-	 * @param bool $instructor_view   instractior view.
-	 * @param string $fallback_url    fallback URL.
-	 * 
+	 * @param bool       $instructor_view   instractior view.
+	 * @param string     $fallback_url    fallback URL.
+	 *
 	 * @return string
 	 */
 	public function profile_url( $user = 0, $instructor_view = false, $fallback_url = '#' ) {
@@ -429,7 +457,7 @@ class Utils {
 			return $fallback_url;
 		}
 
-		$site_url   = trailingslashit( home_url() ) . 'profile/';
+		$site_url = trailingslashit( home_url() ) . 'profile/';
 		if ( ! is_object( $user ) ) {
 			$user = get_userdata( $this->get_user_id( $user ) );
 		}
@@ -718,8 +746,8 @@ class Utils {
 			$in_ids = implode( "','", $completed_lesson_meta_ids );
 
 			$prepare_ids = str_replace( "','", '', $in_ids );
-			$cache_key = "tutor_get_completed_lesson_count_by{$user_id}_{$prepare_ids}";
-			$count = TutorCache::get( $cache_key );
+			$cache_key   = "tutor_get_completed_lesson_count_by{$user_id}_{$prepare_ids}";
+			$count       = TutorCache::get( $cache_key );
 
 			if ( false === $count ) {
 				$count = (int) $wpdb->get_var(
@@ -757,7 +785,7 @@ class Utils {
 		$totalContents    = $totalContents ? $totalContents : 0;
 		$completedCount   = $completed_lesson;
 
-		$quiz_ids 		= array();
+		$quiz_ids       = array();
 		$assignment_ids = array();
 
 		foreach ( $course_contents as $content ) {
@@ -772,7 +800,7 @@ class Utils {
 		global $wpdb;
 
 		if ( count( $quiz_ids ) ) {
-			$quiz_ids_str   = QueryHelper::prepare_in_clause( $quiz_ids );
+			$quiz_ids_str = QueryHelper::prepare_in_clause( $quiz_ids );
 
 			// Get data from cache.
 			$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
@@ -780,7 +808,7 @@ class Utils {
 			$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
 
 			if ( false === $quiz_completed ) {
-				$quiz_completed = (int) $wpdb->get_var( 
+				$quiz_completed = (int) $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT count(quiz_id) completed 
 						FROM (
@@ -789,16 +817,19 @@ class Utils {
 							WHERE 	quiz_id IN ({$quiz_ids_str}) 
 									AND user_id = % d 
 									AND attempt_status != %s
-						) a", $user_id, 'attempt_started' )
+						) a",
+						$user_id,
+						'attempt_started'
+					)
 				);
 				// Set cache data.
 				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
 			}
 			$completedCount += $quiz_completed;
 		}
-		
+
 		if ( count( $assignment_ids ) ) {
-			$assignment_ids_str   = QueryHelper::prepare_in_clause( $assignment_ids );
+			$assignment_ids_str = QueryHelper::prepare_in_clause( $assignment_ids );
 
 			// Get data from cache.
 			$prepare_assignment_ids_str     = str_replace( ',', '_', $assignment_ids_str );
@@ -815,10 +846,10 @@ class Utils {
 								AND user_id = %d
 								AND comment_post_ID IN({$assignment_ids_str});
 						",
-							'tutor_assignment',
-							'submitted',
-							$user_id
-						)
+						'tutor_assignment',
+						'submitted',
+						$user_id
+					)
 				);
 				TutorCache::set( $assignment_submitted_cache_key, $assignment_submitted );
 			}
@@ -1711,7 +1742,7 @@ class Utils {
 	 * Determine if a course completed
 	 *
 	 * @since v.1.0.0
-	 * 
+	 *
 	 * @param int $course_id course id.
 	 * @param int $user_id user id.
 	 *
@@ -2104,8 +2135,8 @@ class Utils {
 	 * Get total enrolled students by course id.
 	 *
 	 * @since 1.9.9
-	 * 
-	 * @param int $course_id course id.
+	 *
+	 * @param int                                    $course_id course id.
 	 * @param $period string | optional added since 1.9.9
 	 *
 	 * @return int
@@ -2147,7 +2178,7 @@ class Utils {
 
 			TutorCache::set( $cache_key, (int) $course_ids );
 		}
-		
+
 		return (int) $course_ids;
 	}
 
@@ -2337,8 +2368,8 @@ class Utils {
 			}
 		}
 
-		$enrolment_status  = 'completed';
-		
+		$enrolment_status = 'completed';
+
 		if ( $this->is_course_purchasable( $course_id ) ) {
 			$enrolment_status = 'pending';
 		}
@@ -3558,7 +3589,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 * @since 2.1.7          changed param $user_id to $user for reduce query.
-	 * 
+	 *
 	 * Get user data using get_userdata API
 	 *
 	 * @since 2.1.8
@@ -3573,24 +3604,24 @@ class Utils {
 		if ( ! $user ) {
 			return '';
 		}
-	
+
 		if ( ! is_object( $user ) ) {
 			$user = get_userdata( $user );
 		}
 
 		if ( is_a( $user, 'WP_User' ) ) {
 			// Get & set user profile photo.
-			$profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
+			$profile_photo             = get_user_meta( $user->ID, '_tutor_profile_photo', true );
 			$user->tutor_profile_photo = $profile_photo;
 		}
-		
+
 		$name  = is_object( $user ) ? $user->display_name : '';
 		$arr   = explode( ' ', trim( $name ) );
 		$class = $size ? ' tutor-avatar-' . $size : '';
-	
+
 		$output  = '<div class="tutor-avatar' . $class . '">';
 		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
-	
+
 		if ( is_object( $user ) && $user->tutor_profile_photo ) {
 			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="' . esc_attr( $name ) . '" /> ';
 		} else {
@@ -3599,18 +3630,18 @@ class Utils {
 			$initial_avatar = strtoupper( $first_char . $second_char );
 			$output        .= '<span class="tutor-avatar-text">' . $initial_avatar . '</span>';
 		}
-	
+
 		$output .= '</div>';
 		$output .= '</div>';
-	
+
 		return apply_filters( 'tutor_text_avatar', $output );
 	}
 
 	/**
 	 * Get tutor user.
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param int $user_id user id.
 	 *
 	 * @return array|null|object|void
@@ -4806,9 +4837,9 @@ class Utils {
 
 	/**
 	 * Determine if there is any started quiz exists.
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param int $quiz_id quiz id.
 	 *
 	 * @return array|null|object|void
@@ -4821,7 +4852,7 @@ class Utils {
 
 		$cache_key  = "tutor_is_started_quiz_{$user_id}_{$quiz_id}";
 		$is_started = TutorCache::get( $cache_key );
-		
+
 		if ( false === $is_started ) {
 			$is_started = $wpdb->get_row(
 				$wpdb->prepare(
@@ -6055,9 +6086,9 @@ class Utils {
 
 	/**
 	 * Determine if any assignment submitted by user to a assignment.
-	 * 
+	 *
 	 * @since 1.3.3
-	 * 
+	 *
 	 * @param int $assignment_id assignment id.
 	 * @param int $user_id user id.
 	 *
@@ -7290,14 +7321,14 @@ class Utils {
 				case 'course':
 					$course_id = $object_id;
 					break;
-	
+
 				case 'zoom_meeting':
 				case 'tutor_gm_course':
 				case 'topic':
 				case 'announcement':
 					$course_id = wp_get_post_parent_id( $object_id );
 					break;
-	
+
 				case 'zoom_lesson':
 				case 'tutor_gm_topic':
 				case 'lesson':
@@ -7317,7 +7348,7 @@ class Utils {
 						$course_id = wp_get_post_parent_id( $topic_id );
 					}
 					break;
-	
+
 				case 'assignment_submission':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7331,7 +7362,7 @@ class Utils {
 						)
 					);
 					break;
-	
+
 				case 'question':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7347,7 +7378,7 @@ class Utils {
 						)
 					);
 					break;
-	
+
 				case 'quiz_answer':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7365,7 +7396,7 @@ class Utils {
 						)
 					);
 					break;
-	
+
 				case 'attempt':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7377,7 +7408,7 @@ class Utils {
 						)
 					);
 					break;
-	
+
 				case 'attempt_answer':
 					$course_id = $wpdb->get_var(
 						$wpdb->prepare(
@@ -7389,7 +7420,7 @@ class Utils {
 						)
 					);
 					break;
-	
+
 				case 'review':
 				case 'qa_question':
 					$question = get_comment( $object_id );
@@ -7397,10 +7428,10 @@ class Utils {
 						$course_id = $question->comment_post_ID;
 					}
 					break;
-	
+
 				case 'instructor':
 					$course_ids = get_user_meta( $object_id, '_tutor_instructor_course_id' );
-	
+
 					! is_array( $course_ids ) ? $course_ids = array() : 0;
 					$course_id                              = array_filter(
 						$course_ids,
@@ -7410,7 +7441,7 @@ class Utils {
 					);
 					break;
 			}
-			
+
 			TutorCache::set( $cache_key, $course_id );
 		}
 
@@ -7859,8 +7890,8 @@ class Utils {
 		$ancestor_ids                               = implode( ',', $ancestor_ids );
 
 		$prepare_ancestor_ids = str_replace( ',', '_', $ancestor_ids );
-		$cache_key 			  = "tutor_get_content_ids_{$content_type}_{$ancestor_type}_{$prepare_ancestor_ids}";
-		$ids 				  = TutorCache::get( $cache_key );
+		$cache_key            = "tutor_get_content_ids_{$content_type}_{$ancestor_type}_{$prepare_ancestor_ids}";
+		$ids                  = TutorCache::get( $cache_key );
 
 		if ( false === $ids ) {
 			switch ( $content_type ) {
@@ -8408,38 +8439,38 @@ class Utils {
 		$seconds_in_a_minute = 60;
 		$seconds_in_an_hour  = 60 * $seconds_in_a_minute;
 		$seconds_in_a_day    = 24 * $seconds_in_an_hour;
-	
+
 		// Extract days
 		$days = floor( $input_seconds / $seconds_in_a_day );
-	
+
 		// Extract hours
-		$hour_seconds	= $input_seconds % $seconds_in_a_day;
-		$hours			= floor( $hour_seconds / $seconds_in_an_hour );
-	
+		$hour_seconds = $input_seconds % $seconds_in_a_day;
+		$hours        = floor( $hour_seconds / $seconds_in_an_hour );
+
 		// Extract minutes
 		$minute_seconds = $hour_seconds % $seconds_in_an_hour;
-		$minutes		= floor( $minute_seconds / $seconds_in_a_minute );
-	
+		$minutes        = floor( $minute_seconds / $seconds_in_a_minute );
+
 		// Extract the remaining seconds
-		$remaining_seconds	= $minute_seconds % $seconds_in_a_minute;
-		$seconds			= ceil( $remaining_seconds );
-	
+		$remaining_seconds = $minute_seconds % $seconds_in_a_minute;
+		$seconds           = ceil( $remaining_seconds );
+
 		// Format and return
 		$time_parts = array();
-		$sections  = array(
+		$sections   = array(
 			'day'    => (int) $days,
 			'hour'   => (int) $hours,
 			'minute' => (int) $minutes,
 			'second' => (int) $seconds,
 		);
-	
+
 		foreach ( $sections as $unit => $value ) {
 			if ( $value > 0 ) {
-				$unit_name		= $unit . ( $value == 1 ? '' : 's' );
-				$time_parts[]	= $value . ' ' . $this->translate_dynamic_text( $unit_name );
+				$unit_name    = $unit . ( $value == 1 ? '' : 's' );
+				$time_parts[] = $value . ' ' . $this->translate_dynamic_text( $unit_name );
 			}
 		}
-	
+
 		return implode( ', ', $time_parts );
 	}
 
@@ -9277,20 +9308,20 @@ class Utils {
 	 */
 	public function allowed_avatar_tags( array $tags = array() ):array {
 		$defaults = array(
-			'a'   => array(
+			'a'    => array(
 				'href'   => true,
 				'class'  => true,
 				'id'     => true,
 				'target' => true,
 			),
-			'img' => array(
+			'img'  => array(
 				'src'   => true,
 				'class' => true,
 				'id'    => true,
 				'title' => true,
 				'alt'   => true,
 			),
-			'div' => array(
+			'div'  => array(
 				'class' => true,
 				'id'    => true,
 			),
@@ -9299,7 +9330,7 @@ class Utils {
 				'id'    => true,
 			),
 		);
-		return wp_parse_args( $tags , $defaults );
+		return wp_parse_args( $tags, $defaults );
 	}
 
 	/**
@@ -9323,12 +9354,12 @@ class Utils {
 				'id'    => true,
 			),
 		);
-		return wp_parse_args( $tags , $defaults );
+		return wp_parse_args( $tags, $defaults );
 	}
 
 	/**
 	 * Get user name to display
-	 * 
+	 *
 	 * It will return display name if not empty, if empty
 	 * then it will return first name & last name or if display
 	 * name & user same it will return first & last name (if ot emtpy)
@@ -9341,12 +9372,12 @@ class Utils {
 	 * @return string
 	 */
 	public function display_name( int $user_id ): string {
-		$name = '';
+		$name      = '';
 		$user_data = get_userdata( $user_id );
 
 		if ( is_a( $user_data, 'WP_User' ) ) {
 			$display_name = $user_data->display_name;
-			$user_name 	  = $user_data->user_login;
+			$user_name    = $user_data->user_login;
 			$custom_name  = trim( trim( $user_data->first_name ) . ' ' . trim( $user_data->last_name ) );
 
 			if ( $display_name ) {
@@ -9368,7 +9399,7 @@ class Utils {
 	 * @return string error message
 	 */
 	public function error_message( $key = '401' ) {
-		$error_message = __( 'Something went wrong', 'tutor' ); 
+		$error_message = __( 'Something went wrong', 'tutor' );
 
 		$error_messages = apply_filters(
 			'tutor_default_error_messages',
