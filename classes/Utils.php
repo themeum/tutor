@@ -210,11 +210,11 @@ class Utils {
 	 * Get default value for a tutor option.
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param string $key option key.
-	 * @param mixed $fallback fallback value.
-	 * @param mixed $from_options from option.
-	 * 
+	 * @param mixed  $fallback fallback value.
+	 * @param mixed  $from_options from option.
+	 *
 	 * @return mixed
 	 */
 	private function get_option_default( $key, $fallback, $from_options ) {
@@ -292,12 +292,12 @@ class Utils {
 
 	/**
 	 * Update Option
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param null|string $key option key.
-	 * @param mixed $value option value. 
-	 * 
+	 * @param mixed       $value option value.
+	 *
 	 * @return void
 	 */
 	public function update_option( $key = null, $value = false ) {
@@ -308,10 +308,10 @@ class Utils {
 
 	/**
 	 * get array value by dot notation
-	 * 
+	 *
 	 * @since 1.0.0
 	 * @since 1.4.1 default parameter added
-	 * 
+	 *
 	 * @param null  $key option key.
 	 * @param array $array array.
 	 * @param mixed $default default value.
@@ -338,29 +338,29 @@ class Utils {
 	}
 
 	/**
-	 * @param null  $key
-	 * @param array $array
-	 *
-	 * @return array|bool|mixed
-	 *
-	 * alias of avalue_dot method of utils
-	 *
+	 * Alias of avalue_dot method of utils
 	 * Get array value by key and recursive array value by dot notation key
 	 *
 	 * ex: $this->array_get('key.child_key', $array);
 	 *
-	 * @since v.1.3.3
+	 * @since 1.3.3
+	 *
+	 * @param null  $key key name.
+	 * @param array $array array.
+	 * @param mixed $default default value.
+	 *
+	 * @return array|bool|mixed
 	 */
 	public function array_get( $key = null, $array = array(), $default = false ) {
 		return $this->avalue_dot( $key, $array, $default );
 	}
 
 	/**
-	 * @return array
-	 *
 	 * Get all pages
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return array
 	 */
 	public function get_pages() {
 		do_action( 'tutor_utils/get_pages/before' );
@@ -384,14 +384,14 @@ class Utils {
 
 		return $pages;
 	}
-	/**
-	 * @return array
-	 *
-	 * Get all pages
-	 *
-	 * @since v.1.0.0
-	 */
 
+	/**
+	 * Get all pages which are not translated.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
 	public function get_not_translated_pages() {
 		do_action( 'tutor_utils/get_pages/before' );
 
@@ -421,11 +421,11 @@ class Utils {
 	}
 
 	/**
-	 * @return string
-	 *
 	 * Get course archive URL
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return string
 	 */
 	public function course_archive_page_url() {
 		$course_post_type = tutor()->course_post_type;
@@ -468,13 +468,13 @@ class Utils {
 	}
 
 	/**
-	 * @param string $user_nicename
-	 *
-	 * @return array|null|object
-	 *
 	 * Get user by user login
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param string $user_nicename user nicename.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_user_by_login( $user_nicename = '' ) {
 		global $wpdb;
@@ -492,40 +492,48 @@ class Utils {
 	}
 
 	/**
-	 * @return bool
-	 *
 	 * Check if WooCommerce Activated
 	 *
-	 * @since v.1.0.0
-	 * @updated @1.5.9
+	 * @since 1.0.0
+	 *
+	 * @return bool
 	 */
 	public function has_wc() {
 		return class_exists( 'WooCommerce' );
 	}
 
 	/**
+	 * Determine if EDD plugin activated
+	 *
+	 * @since 1.0.0
+	 *
 	 * @return bool
-	 *
-	 * determine if EDD plugin activated
-	 *
-	 * @since v.1.0.0
 	 */
 	public function has_edd() {
 		 return $this->is_plugin_active( 'easy-digital-downloads/easy-digital-downloads.php' );
 	}
 
 	/**
-	 * @return bool
-	 *
 	 * Determine if PMPro is activated
 	 *
-	 * @since v.1.3.6
+	 * @since 1.3.6
+	 *
+	 * @return bool
 	 */
 	public function has_pmpro( $check_monetization = false ) {
 		$has_pmpro = $this->is_plugin_active( 'paid-memberships-pro/paid-memberships-pro.php' );
 		return $has_pmpro && ( ! $check_monetization || get_tutor_option( 'monetize_by' ) == 'pmpro' );
 	}
 
+	/**
+	 * Check plugin active status.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $plugin_path plugin path.
+	 *
+	 * @return boolean
+	 */
 	public function is_plugin_active( $plugin_path ) {
 		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
 		$depends           = is_array( $plugin_path ) ? $plugin_path : array( $plugin_path );
@@ -534,11 +542,27 @@ class Utils {
 		return $has_plugin;
 	}
 
+	/**
+	 * Check WC subscription activated.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return boolean
+	 */
 	public function has_wcs() {
 		 $has_wcs = $this->is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' );
 		return $has_wcs;
 	}
 
+	/**
+	 * Check addon status.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $basename addon base name.
+	 *
+	 * @return boolean
+	 */
 	public function is_addon_enabled( $basename ) {
 		if ( $this->is_plugin_active( 'tutor-pro/tutor-pro.php' ) ) {
 			$addonConfig = $this->get_addon_config( $basename );
@@ -548,11 +572,11 @@ class Utils {
 	}
 
 	/**
+	 * Checking if BuddyPress exists and activated.
+	 *
+	 * @since 1.4.8
+	 *
 	 * @return bool
-	 *
-	 * checking if BuddyPress exists and activated;
-	 *
-	 * @since v.1.4.8
 	 */
 	public function has_bp() {
 		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
@@ -562,9 +586,11 @@ class Utils {
 	}
 
 	/**
-	 * @return mixed
+	 * Get languages list.
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return array
 	 */
 	public function languages() {
 		$language_codes = array(
@@ -709,11 +735,13 @@ class Utils {
 	}
 
 	/**
-	 * @param string $value
+	 * Check raw data.
 	 *
-	 * Check raw data
+	 * @since 1.0.0
 	 *
-	 * @since v.1.0.0
+	 * @param string $value value.
+	 *
+	 * @return void
 	 */
 	public function print_view( $value = '' ) {
 		echo '<pre>';
@@ -722,14 +750,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 * @param int $user_id
-	 *
-	 * @return int
-	 *
 	 * Get completed lesson total number by a course
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 * @param int $user_id user ID.
+	 *
+	 * @return int
 	 */
 	public function get_completed_lesson_count_by_course( $course_id = 0, $user_id = 0 ) {
 		global $wpdb;
@@ -768,13 +796,16 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 * @param int $user_id
+	 * Get course completed percentage.
 	 *
-	 * @return float|int
+	 * @since 1.0.0
+	 * @since 1.6.1 get status param added.
 	 *
-	 * @since v.1.0.0
-	 * @updated v.1.6.1
+	 * @param int  $course_id course ID.
+	 * @param int  $user_id user ID.
+	 * @param bool $get_stats get status.
+	 *
+	 * @return mixed
 	 */
 	public function get_course_completed_percent( $course_id = 0, $user_id = 0, $get_stats = false ) {
 		$course_id        = $this->get_post_id( $course_id );
@@ -900,13 +931,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return \WP_Query
-	 *
 	 * Get all topics by given course ID
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return \WP_Query
 	 */
 	public function get_topics( $course_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
@@ -925,13 +956,14 @@ class Utils {
 	}
 
 	/**
-	 * @param $course_ID
-	 *
-	 * @return int
-	 *
 	 * Get next topic order id
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param $course_ID course ID.
+	 * @param mixed               $content_id content ID.
+	 *
+	 * @return int
 	 */
 	public function get_next_topic_order_id( $course_ID, $content_id = null ) {
 		global $wpdb;
@@ -960,13 +992,14 @@ class Utils {
 	}
 
 	/**
-	 * @param $topic_ID
-	 *
-	 * @return int
-	 *
 	 * Get next course content order id
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param $topic_ID topic ID.
+	 * @param mixed             $content_id content ID.
+	 *
+	 * @return int
 	 */
 	public function get_next_course_content_order_id( $topic_ID, $content_id = null ) {
 		global $wpdb;
@@ -993,14 +1026,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $topics_id
-	 * @param int $limit
-	 *
-	 * @return \WP_Query
-	 *
 	 * Get course content by topic
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $topics_id topics ID.
+	 * @param int $limit limit.
+	 *
+	 * @return \WP_Query
 	 */
 	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10 ) {
 		$topics_id        = $this->get_post_id( $topics_id );
@@ -1019,11 +1052,13 @@ class Utils {
 	}
 
 	/**
-	 * @param string $request_method
+	 * Check actions nonce.
 	 *
-	 * Check actions nonce
+	 * @since 1.0.0
 	 *
-	 * @since v.1.0.0
+	 * @param string $request_method request method.
+	 *
+	 * @return void.
 	 */
 	public function checking_nonce( $request_method = null ) {
 		! $request_method ? $request_method = sanitize_text_field( $_SERVER['REQUEST_METHOD'] ) : 0;
@@ -1039,11 +1074,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
+	 * Check is course purchaseable.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
 	 *
 	 * @return bool
-	 *
-	 * @since v.1.0.0
 	 */
 	public function is_course_purchasable( $course_id = 0 ) {
 
@@ -1060,13 +1097,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
+	 * Get course price in digits format if any.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
 	 *
 	 * @return null|string
-	 *
-	 * get course price in digits format if any
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_course_price( $course_id = 0 ) {
 		$price      = null;
@@ -1089,15 +1126,15 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return object
-	 *
 	 * Get raw course price and sale price of a course
 	 * It could help you to calculate something
 	 * Such as Calculate discount by regular price and sale price
 	 *
-	 * @since v.1.3.1
+	 * @since 1.3.1
+	 *
+	 * @param int $course_id courrse ID.
+	 *
+	 * @return object
 	 */
 	public function get_raw_course_price( $course_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
@@ -1127,13 +1164,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return mixed
-	 *
 	 * Get the course price type
 	 *
-	 * @since  v.1.3.5
+	 * @since 1.3.5
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return mixed
 	 */
 	public function price_type( $course_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
@@ -1143,13 +1180,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return array|bool|null|object
-	 *
 	 * Check if current user has been enrolled or not
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return array|bool|null|object
 	 */
 	public function is_enrolled( $course_id = 0, $user_id = 0 ) {
 		global $wpdb;
@@ -1193,20 +1230,20 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return array|bool|null|object
-	 *
 	 * Delete course progress
 	 *
-	 * @since v.1.9.5
+	 * @since 1.9.5
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return array|bool|null|object
 	 */
 	public function delete_course_progress( $course_id = 0, $user_id = 0 ) {
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
-		// Delete Quiz submissions
+		// Delete Quiz submissions.
 		$attempts = \Tutor\Models\QuizModel::get_quiz_attempts_by_course_ids( $start = 0, $limit = 99999999, $course_ids = array( $course_id ), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = $user_id, false, true );
 
 		if ( is_array( $attempts ) ) {
@@ -1220,7 +1257,7 @@ class Utils {
 			$this->delete_quiz_attempt( $attempt_ids );
 		}
 
-		// Delete Course completion row
+		// Delete Course completion row.
 		$del_where = array(
 			'user_id'         => $user_id,
 			'comment_post_ID' => $course_id,
@@ -1229,7 +1266,7 @@ class Utils {
 		);
 		$wpdb->delete( $wpdb->comments, $del_where );
 
-		// Delete Completed lesson count
+		// Delete Completed lesson count.
 		$lesson_ids = $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id );
 		foreach ( $lesson_ids as $id ) {
 			delete_user_meta( $user_id, '_tutor_completed_lesson_id_' . $id );
@@ -1240,14 +1277,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 * @param int $user_id
-	 *
-	 * @return array|bool|null|object|void
-	 *
 	 * Has any enrolled for a user in a course
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 * @param int $user_id user ID.
+	 *
+	 * @return array|bool|null|object|void
 	 */
 	public function has_any_enrolled( $course_id = 0, $user_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
