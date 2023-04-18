@@ -1513,6 +1513,15 @@ class Utils {
 		return $attachments_arr;
 	}
 
+	/**
+	 * Get attachment data.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed $attachment_id attachment id.
+	 *
+	 * @return object
+	 */
 	public function get_attachment_data( $attachment_id ) {
 		$url       = wp_get_attachment_url( $attachment_id );
 		$file_type = wp_check_filetype( $url );
@@ -1561,13 +1570,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $seconds
-	 *
-	 * @return string
-	 *
 	 * return seconds to formatted playtime
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param $seconds seconds.
+	 *
+	 * @return string
 	 */
 	public function playtime_string( $seconds ) {
 		$sign    = ( ( $seconds < 0 ) ? '-' : '' );
@@ -1579,13 +1588,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $seconds
-	 *
-	 * @return array
-	 *
 	 * Get the playtime in array
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param $seconds seconds.
+	 *
+	 * @return array
 	 */
 	public function playtime_array( $seconds ) {
 		$run_time_format = array(
@@ -1615,13 +1624,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $seconds
-	 *
-	 * @return string
-	 *
 	 * Convert seconds to human readable time
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param $seconds seconds.
+	 *
+	 * @return string
 	 */
 	public function seconds_to_time_context( $seconds ) {
 		$sign    = ( ( $seconds < 0 ) ? '-' : '' );
@@ -1636,13 +1645,14 @@ class Utils {
 	/**
 	 * Get human readable time
 	 *
+	 * @since 2.0.7
+	 *
 	 * @param string $from                  date time string value. Example: 2022-06-24 22:00:00
 	 * @param string $to                    (optional) date time string value. Default value is current.
 	 * @param string $format                format you want to print. Default: '%ad %hh %im %ss' Help: https://www.php.net/manual/en/dateinterval.format.php
 	 * @param bool   $show_postfix_text     show postfix text like 'ago', 'left'
-	 * @return string
 	 *
-	 * @since 2.0.7
+	 * @return string
 	 */
 	public function get_human_readable_time( $from, $to = null, $format = null, $show_postfix_text = true ) {
 		$postfix_text = '';
@@ -1666,10 +1676,11 @@ class Utils {
 	/**
 	 * Get video info
 	 *
-	 * @param int $lesson_id
-	 * @return mixed bool return if video does not exits otherwise object return.
+	 * @since 1.0.0
 	 *
-	 * @since v.1.0.0
+	 * @param int $lesson_id lesson id.
+	 *
+	 * @return mixed bool return if video does not exits otherwise object return.
 	 */
 	public function get_video_info( $lesson_id = 0 ) {
 		$lesson_id = $this->get_post_id( $lesson_id );
@@ -1737,13 +1748,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $post_id
+	 * Ensure if attached video is self hosted or not.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id post ID.
 	 *
 	 * @return bool
-	 *
-	 * Ensure if attached video is self hosted or not
-	 *
-	 * @since v.1.0.0
 	 */
 	public function is_html5_video( $post_id = 0 ) {
 		$post_id = $this->get_post_id( $post_id );
@@ -1759,12 +1770,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $lesson_id
-	 * @param int $user_id
+	 * Check lesson is completed.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $lesson_id lesson id.
+	 * @param int $user_id user id.
 	 *
 	 * @return bool|mixed
-	 *
-	 * @since v.1.0.0
 	 */
 	public function is_completed_lesson( $lesson_id = 0, $user_id = 0 ) {
 		$lesson_id    = $this->get_post_id( $lesson_id );
@@ -1781,14 +1794,12 @@ class Utils {
 	/**
 	 * Determine if a course completed
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
 	 *
 	 * @param int $course_id course id.
 	 * @param int $user_id user id.
 	 *
 	 * @return array|bool|null|object
-	 *
-	 * @updated v.1.4.9
 	 */
 	public function is_completed_course( $course_id = 0, $user_id = 0 ) {
 
@@ -1830,13 +1841,13 @@ class Utils {
 	}
 
 	/**
-	 * @param array $input
-	 *
-	 * @return array
-	 *
 	 * Sanitize input array
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param array $input input.
+	 *
+	 * @return array
 	 */
 	public function sanitize_array( $input = array() ) {
 		$array = array();
@@ -1857,13 +1868,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $post_id
-	 *
-	 * @return array|bool
-	 *
 	 * Determine if has any video in single
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id post id.
+	 *
+	 * @return array|bool
 	 */
 	public function has_video_in_single( $post_id = 0 ) {
 		if ( is_single() ) {
@@ -1887,19 +1898,19 @@ class Utils {
 	}
 
 	/**
-	 * @param int    $start
-	 * @param int    $limit
-	 * @param string $search_term
-	 * @param int    $course_id
-	 *
-	 * @return array|null|object
-	 *
-	 *
 	 * Get the enrolled students for all courses.
-	 *
 	 * Pass course id in 4th parameter to get students course wise.
 	 *
 	 * @since v.1.0.0
+	 *
+	 * @param int    $start start.
+	 * @param int    $limit limit.
+	 * @param string $search_term search term.
+	 * @param int    $course_id course id.
+	 * @param string $date data.
+	 * @param string $order order.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_students( $start = 0, $limit = 10, $search_term = '', $course_id = '', $date = '', $order = 'DESC' ) {
 		global $wpdb;
@@ -1952,14 +1963,16 @@ class Utils {
 	}
 
 	/**
-	 * @return int
-	 *
-	 * @since v.1.0.0
-	 *
-	 * get the total students
+	 * Get the total students
 	 * pass course id to get course wise total students
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param string $search_term search term.
+	 * @param string $course_id course id.
+	 * @param string $date date.
+	 *
+	 * @return int
 	 */
 	public function get_total_students( $search_term = '', $course_id = '', $date = '' ): int {
 		global $wpdb;
