@@ -1321,12 +1321,13 @@ class Utils {
 
 
 	/**
-	 * @param int $enrol_id
-	 * @return array|bool|\WP_Post|null
-	 *
 	 * Get course by enrol id
 	 *
-	 * @since v.1.6.1
+	 * @since 1.6.1
+	 *
+	 * @param int $enrol_id enrol ID.
+	 *
+	 * @return array|bool|\WP_Post|null
 	 */
 	public function get_course_by_enrol_id( $enrol_id = 0 ) {
 		if ( ! $enrol_id ) {
@@ -1355,14 +1356,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $lesson_id
-	 * @param int $user_id
-	 *
-	 * @return array|bool|null|object
-	 *
 	 * Get the course Enrolled confirmation by lesson ID
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $lesson_id lesson ID.
+	 * @param int $user_id user ID.
+	 *
+	 * @return array|bool|null|object
 	 */
 	public function is_course_enrolled_by_lesson( $lesson_id = 0, $user_id = 0 ) {
 		$lesson_id = $this->get_post_id( $lesson_id );
@@ -1373,16 +1374,14 @@ class Utils {
 	}
 
 	/**
+	 * Get the course ID by Lesson
+	 *
+	 * @since 1.0.0
+	 * @since 1.4.8 Legacy Supports Added.
+	 *
 	 * @param int $lesson_id
 	 *
 	 * @return bool|mixed
-	 *
-	 * Get the course ID by Lesson
-	 *
-	 * @since v.1.0.0
-	 *
-	 * @updated v.1.4.8
-	 * Added Legacy Supports
 	 */
 	public function get_course_id_by_lesson( $lesson_id = 0 ) {
 		$lesson_id = $this->get_post_id( $lesson_id );
@@ -1399,13 +1398,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return bool|false|string
-	 *
 	 * Get first lesson of a course
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course ID.
+	 *
+	 * @return bool|false|string
 	 */
 	public function get_course_first_lesson( $course_id = 0, $post_type = null ) {
 		global $wpdb;
@@ -1454,11 +1453,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $post_id
+	 * Get post video.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id post ID.
 	 *
 	 * @return bool|array
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_video( $post_id = 0 ) {
 		$post_id     = $this->get_post_id( $post_id );
@@ -1470,12 +1471,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int   $post_id
-	 * @param array $video_data
+	 * Update the video Info
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int   $post_id post ID.
+	 * @param array $video_data video data.
 	 *
 	 * @return bool
-	 *
-	 * Update the video Info
 	 */
 	public function update_video( $post_id = 0, $video_data = array() ) {
 		$post_id = $this->get_post_id( $post_id );
@@ -1488,12 +1491,12 @@ class Utils {
 	/**
 	 * Get tutor attachment
 	 *
-	 * @param int    $post_id
-	 * @param string $meta_key
+	 * @since 1.0.0
+	 *
+	 * @param int    $post_id post id.
+	 * @param string $meta_key meta key.
 	 *
 	 * @return array
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_attachments( $post_id = 0, $meta_key = '_tutor_attachments' ) {
 		$post_id         = $this->get_post_id( $post_id );
