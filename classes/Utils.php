@@ -2017,13 +2017,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return array
-	 *
 	 * Get complete courses ids by user
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return array
 	 */
 	public function get_completed_courses_ids_by_user( $user_id = 0 ) {
 		global $wpdb;
@@ -2053,13 +2053,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return bool|\WP_Query
-	 *
 	 * Return completed courses by user_id
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return bool|\WP_Query
 	 */
 	public function get_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1 ) {
 		$user_id    = $this->get_user_id( $user_id );
@@ -2082,13 +2082,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return bool|\WP_Query
-	 *
 	 * Get the active course by user
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return bool|\WP_Query
 	 */
 	public function get_active_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1 ) {
 		$user_id             = $this->get_user_id( $user_id );
@@ -2113,13 +2113,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return array
-	 *
 	 * Get enrolled course ids by a user
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return array
 	 */
 	public function get_enrolled_courses_ids_by_user( $user_id = 0 ) {
 		global $wpdb;
@@ -2145,11 +2145,12 @@ class Utils {
 	/**
 	 * Get single or list of enrolled course data by a user
 	 *
-	 * @param integer $user_id user id
-	 * @param integer $course_id cousrs id
-	 * @return object | mixed
-	 *
 	 * @since 2.0.5
+	 *
+	 * @param integer $user_id user id.
+	 * @param integer $course_id cousrs id.
+	 *
+	 * @return object|mixed
 	 */
 	public function get_enrolled_data( $user_id = 0, $course_id = 0 ) {
 		global $wpdb;
@@ -2187,17 +2188,18 @@ class Utils {
 	/**
 	 * Get total enrolled students by course id.
 	 *
-	 * @since 1.9.9
+	 * @since 1.0.0
+	 * @since 1.9.9 $period param added.
 	 *
-	 * @param int                                    $course_id course id.
-	 * @param $period string | optional added since 1.9.9
+	 * @param int    $course_id course id.
+	 * @param string $period period ( optional ).
 	 *
 	 * @return int
 	 */
 	public function count_enrolled_users_by_course( $course_id = 0, $period = '' ) {
 
 		$course_id = $this->get_post_id( $course_id );
-		// set period wise query
+		// Set period wise query.
 		$period_filter = '';
 		if ( 'today' === $period ) {
 			$period_filter = 'AND DATE(post_date) = CURDATE()';
@@ -2235,13 +2237,18 @@ class Utils {
 		return (int) $course_ids;
 	}
 
-	/**
-	 * @param int $user_id
-	 *
-	 * @return bool|\WP_Query
-	 *
-	 * Get the enrolled courses by user
-	 */
+	 /**
+	  * Get the enrolled courses by user
+	  *
+	  * @since 1.0.0
+	  *
+	  * @param integer $user_id user id.
+	  * @param string  $post_status post status.
+	  * @param integer $offset offset.
+	  * @param integer $posts_per_page post per page.
+	  *
+	  * @return bool|\WP_Query
+	  */
 	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1 ) {
 		global $wpdb;
 
@@ -2262,7 +2269,7 @@ class Utils {
 
 			if ( is_object( $result ) && is_array( $result->posts ) ) {
 
-				// Sort courses according to the id list
+				// Sort courses according to the id list.
 				$new_array = array();
 
 				foreach ( $course_ids as $id ) {
@@ -2281,11 +2288,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $post_id
+	 * Get the video streaming URL by post/lesson/course ID
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id post id.
 	 *
 	 * @return string
-	 *
-	 * Get the video streaming URL by post/lesson/course ID
 	 */
 	public function get_video_stream_url( $post_id = 0 ) {
 		$post_id = $this->get_post_id( $post_id );
@@ -2302,13 +2311,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $post_id
-	 *
-	 * @return bool|false|int
-	 *
 	 * Get current post id or given post id
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id post id.
+	 *
+	 * @return bool|false|int
 	 */
 	public function get_post_id( $post_id = 0 ) {
 		if ( ! $post_id ) {
@@ -2324,12 +2333,12 @@ class Utils {
 	/**
 	 * Get current user ID or given user ID
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param mixed $user_id user ID.
 	 *
 	 * @return int  when $user_id = 0, return 0 or current user ID
 	 *              otherwise return given ID
-	 *
-	 * @since 1.0.0
 	 */
 	public function get_user_id( $user_id = 0 ) {
 		if ( ! $user_id ) {
@@ -2340,11 +2349,13 @@ class Utils {
 	}
 
 	/**
-	 * Get user name for e-mail salutation
+	 * Get user name for e-mail salutation.
+	 *
+	 * @since 2.0.9
 	 *
 	 * @param mixed $user user object.
+	 *
 	 * @return string
-	 * @since 2.0.9
 	 */
 	public function get_user_name( $user ) {
 		if ( ! is_a( $user, 'WP_User' ) ) {
@@ -2365,13 +2376,13 @@ class Utils {
 	}
 
 	/**
-	 * @param string $url
-	 *
-	 * @return bool
-	 *
 	 * Get the Youtube Video ID from URL
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param string $url URL.
+	 *
+	 * @return bool
 	 */
 	public function get_youtube_video_id( $url = '' ) {
 		if ( ! $url ) {
@@ -2389,20 +2400,15 @@ class Utils {
 	}
 
 	/**
-	 *
-	 * @param int $course_id
-	 * @param int $order_id
-	 * @param int $user_id
-	 *
 	 * Saving enroll information to posts table
 	 * post_author = enrolled_student_id (wp_users id)
 	 * post_parent = enrolled course id
 	 *
-	 * @type: call when need
-	 * @return bool;
+	 * @since 1.0.0
 	 *
-	 * @since v.1.0.0
-	 * @updated v.1.4.3
+	 * @param int $course_id course id.
+	 * @param int $order_id order id.
+	 * @param int $user_id user id.
 	 *
 	 * @return bool
 	 */
@@ -2443,19 +2449,19 @@ class Utils {
 		$isEnrolled = wp_insert_post( $enroll_data );
 		if ( $isEnrolled ) {
 
-			// Run this hook for both of pending and completed enrollment
+			// Run this hook for both of pending and completed enrollment.
 			do_action( 'tutor_after_enroll', $course_id, $isEnrolled );
 
-			// Run this hook for completed enrollment regardless of payment provider and free/paid mode
+			// Run this hook for completed enrollment regardless of payment provider and free/paid mode.
 			if ( $enroll_data['post_status'] == 'completed' ) {
 				do_action( 'tutor_after_enrolled', $course_id, $user_id, $isEnrolled );
 			}
 
-			// Mark Current User as Students with user meta data
+			// Mark Current User as Students with user meta data.
 			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );
 
 			if ( $order_id ) {
-				// Mark order for course and user
+				// Mark order for course and user.
 				$product_id = $this->get_course_product_id( $course_id );
 				update_post_meta( $isEnrolled, '_tutor_enrolled_by_order_id', $order_id );
 				update_post_meta( $isEnrolled, '_tutor_enrolled_by_product_id', $product_id );
@@ -2469,12 +2475,14 @@ class Utils {
 	}
 
 	/**
-	 * @param bool   $enrol_id
-	 * @param string $new_status
-	 *
 	 * Enrol Status change
 	 *
-	 * @since v.1.6.1
+	 * @since 1.6.1
+	 *
+	 * @param bool   $enrol_id enrol id.
+	 * @param string $new_status new status.
+	 *
+	 * @return mixed
 	 */
 	public function course_enrol_status_change( $enrol_id = false, $new_status = '' ) {
 		if ( ! $enrol_id ) {
@@ -2489,9 +2497,15 @@ class Utils {
 	}
 
 	/**
-	 * @param int    $course_id
-	 * @param int    $user_id
-	 * @param string $cancel_status
+	 * Cancel course enrol
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int    $course_id course id.
+	 * @param int    $user_id user id.
+	 * @param string $cancel_status cancel status.
+	 *
+	 * @return void
 	 */
 	public function cancel_course_enrol( $course_id = 0, $user_id = 0, $cancel_status = 'canceled' ) {
 		$course_id = $this->get_post_id( $course_id );
@@ -2511,7 +2525,7 @@ class Utils {
 					)
 				);
 
-				// Delete Related Meta Data
+				// Delete Related Meta Data.
 				delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_product_id' );
 				$order_id = get_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id', true );
 				if ( $order_id ) {
@@ -2538,11 +2552,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $order_id
-	 *
 	 * Complete course enrollment and do some task
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $order_id order id.
+	 *
+	 * @return mixed
 	 */
 	public function complete_course_enroll( $order_id ) {
 		if ( ! $this->is_tutor_order( $order_id ) ) {
@@ -2564,16 +2580,18 @@ class Utils {
 	}
 
 	/**
-	 * @param $order_id
+	 * Get enrol ids by order id.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $order_id order id.
 	 *
 	 * @return array|bool
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_course_enrolled_ids_by_order_id( $order_id ) {
 		global $wpdb;
 
-		// Getting all of courses ids within this order
+		// Getting all of courses ids within this order.
 		$courses_ids = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT *
@@ -2604,12 +2622,10 @@ class Utils {
 	 * Get wc product in efficient query
 	 *
 	 * @since v.1.0.0
-	 */
-
-	/**
-	 * @return array|null|object
 	 *
-	 * WooCommerce specific utils
+	 * @param int $course_id course id.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_wc_products_db( $course_id ) {
 		global $wpdb;
@@ -2647,9 +2663,11 @@ class Utils {
 	}
 
 	/**
-	 * @return array|null|object
-	 *
 	 * Get EDD Products
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array|null|object
 	 */
 	public function get_edd_products() {
 		global $wpdb;
@@ -2670,13 +2688,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return int
-	 *
 	 * Get course productID
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return int
 	 */
 	public function get_course_product_id( $course_id = 0 ) {
 		$course_id  = $this->get_post_id( $course_id );
@@ -2686,13 +2704,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $product_id
-	 *
-	 * @return array|null|object|void
-	 *
 	 * Get Product belongs with course
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $product_id product id.
+	 *
+	 * @return array|null|object|void
 	 */
 	public function product_belongs_with_course( $product_id = 0 ) {
 		global $wpdb;
@@ -2714,9 +2732,11 @@ class Utils {
 	}
 
 	/**
-	 * #End WooCommerce specific utils
+	 * Get enroll status
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return array
 	 */
 	public function get_enrolled_statuses() {
 		return apply_filters(
@@ -2734,24 +2754,24 @@ class Utils {
 	}
 
 	/**
-	 * @param $order_id
+	 * Determine is this a tutor order
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $order_id order id.
 	 *
 	 * @return mixed
-	 *
-	 * determine is this a tutor order
-	 *
-	 * @since v.1.0.0
 	 */
 	public function is_tutor_order( $order_id ) {
 		return get_post_meta( $order_id, '_is_tutor_order_for_course', true );
 	}
 
 	/**
-	 * @return mixed
-	 *
 	 * Tutor Dashboard Pages, supporting for the URL rewriting
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return mixed
 	 */
 	public function tutor_dashboard_pages() {
 		$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
@@ -2782,6 +2802,13 @@ class Utils {
 		return apply_filters( 'tutor_dashboard/nav_items_all', $all_nav_items );
 	}
 
+	/**
+	 * Get tutor dashboard permalinks
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
 	public function tutor_dashboard_permalinks() {
 		$dashboard_pages = $this->tutor_dashboard_pages();
 
@@ -2801,12 +2828,12 @@ class Utils {
 	}
 
 	/**
-	 * @return mixed
-	 *
 	 * Tutor Dashboard UI nav, only for using in the nav, it's handling user permission based
 	 * Dashboard nav items
 	 *
-	 * @since v.1.3.4
+	 * @since 1.3.4
+	 *
+	 * @return mixed
 	 */
 	public function tutor_dashboard_nav_ui_items() {
 		$nav_items = $this->tutor_dashboard_pages();
@@ -2827,14 +2854,14 @@ class Utils {
 	}
 
 	/**
-	 * @param string $page_key
-	 * @param int    $page_id
-	 *
-	 * @return string
-	 *
 	 * Get tutor dashboard page single URL
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param string $page_key page key.
+	 * @param int    $page_id page id.
+	 *
+	 * @return string
 	 */
 	public function get_tutor_dashboard_page_permalink( $page_key = '', $page_id = 0 ) {
 		if ( $page_key === 'index' ) {
@@ -2847,14 +2874,14 @@ class Utils {
 	}
 
 	/**
-	 * @param string $input
-	 *
-	 * @return array|bool|mixed|string
-	 *
 	 * Get old input
 	 *
-	 * @since v.1.0.0
-	 * @updated v.1.4.2
+	 * @since 1.0.0
+	 * @since 1.4.2 updated.
+	 *
+	 * @param string $input input.
+	 *
+	 * @return array|bool|mixed|string
 	 */
 	public function input_old( $input = '', $old_data = null ) {
 		if ( ! $old_data ) {
@@ -2869,13 +2896,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return mixed
-	 *
 	 * Determine if is instructor or not
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return mixed
 	 */
 	public function is_instructor( $user_id = 0, $is_approved = false ) {
 		$user_id = $this->get_user_id( $user_id );
@@ -2888,14 +2915,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int  $user_id
-	 * @param bool $status_name
-	 *
-	 * @return bool|mixed
-	 *
 	 * Instructor status
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int  $user_id user id.
+	 * @param bool $status_name status name.
+	 *
+	 * @return bool|mixed
 	 */
 	public function instructor_status( $user_id = 0, $status_name = true ) {
 		$user_id = $this->get_user_id( $user_id );
@@ -2923,16 +2950,14 @@ class Utils {
 	/**
 	 * Get Total number of instructor
 	 *
-	 * @param string $search_term
-	 * @param string $status (approved | pending | blocked)
-	 * @param string $course_id
-	 * @param string $date, user_registered date
+	 * @since 1.0.0
+	 *
+	 * @param string $search_term serach term.
+	 * @param string $status (approved | pending | blocked).
+	 * @param string $course_id course id.
+	 * @param string $date user_registered date.
 	 *
 	 * @return int
-	 *
-	 * Get total number of instructors
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_total_instructors( $search_filter = '', $status = array(), $course_id = '', $date = '' ): int {
 		global $wpdb;
@@ -2995,15 +3020,13 @@ class Utils {
 	 * Get instructor with optional filters.
 	 * Available instructor status ( approved | blocked | pending )
 	 *
-	 * @param int    $start
-	 * @param int    $limit
-	 * @param string $search_term
+	 * @since 1.0.0
+	 *
+	 * @param int    $start start.
+	 * @param int    $limit limit.
+	 * @param string $search_term search term.
 	 *
 	 * @return array|null|object
-	 *
-	 * Get all instructors
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '', $count_only = false ) {
 		global $wpdb;
@@ -3063,7 +3086,7 @@ class Utils {
 			$category_where = " AND term.term_id IN ({$cat_ids})";
 		}
 
-		// rating wise sorting @since v2.0.0
+		// Rating wise sorting @since v2.0.0.
 		$rating        = isset( $_POST['rating_filter'] ) ? $rating : '';
 		$rating_having = '';
 		if ( '' !== $rating ) {
@@ -3078,7 +3101,7 @@ class Utils {
 		 * Handle Sort by Relevant | New | Popular & Order Shorting
 		 * from instructor list backend
 		 *
-		 * @since v2.0.0
+		 * @since 2.0.0
 		 */
 		$order_query = '';
 		if ( 'new' === $order_filter ) {
@@ -3125,13 +3148,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return array|bool|null|object
-	 *
 	 * Get all instructors by course
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return array|bool|null|object
 	 */
 	public function get_instructors_by_course( $course_id = 0 ) {
 		global $wpdb;
@@ -3214,14 +3237,14 @@ class Utils {
 	}
 
 	/**
-	 * @param $instructor_id
-	 *
 	 * Get total Students by instructor
 	 * 1 enrollment = 1 student, so total enrolled for a equivalent total students (Tricks)
 	 *
-	 * @return int
+	 * @since 1.0.0
 	 *
-	 * @since v.1.0.0
+	 * @param int $instructor_id instructor id.
+	 *
+	 * @return int
 	 */
 	public function get_total_students_by_instructor( $instructor_id ) {
 		global $wpdb;
@@ -3254,21 +3277,18 @@ class Utils {
 	/**
 	 * Get all students by instructor_id
 	 *
-	 * @param $instructor_id int | required
+	 * @since 1.9.9
 	 *
-	 * @param $offset int | required
-	 *
-	 * @param $limit int | required
-	 *
-	 * @param $search string | optional
-	 *
-	 * @param $course_id int | optional
-	 *
-	 * @param $date string | optional
+	 * @param integer $instructor_id instructor id.
+	 * @param integer $offset offset.
+	 * @param integer $limit limit.
+	 * @param string  $search_filter search filter.
+	 * @param string  $course_id course id.
+	 * @param string  $date_filter date filter.
+	 * @param string  $order_by order by.
+	 * @param string  $order order.
 	 *
 	 * @return array
-	 *
-	 * @since 1.9.9
 	 */
 	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '' ): array {
 		global $wpdb;
@@ -3312,7 +3332,7 @@ class Utils {
 		 * If instructor id set then by only students that belongs to instructor
 		 * otherwise get all
 		 *
-		 * @since v.2.0.0
+		 * @since 2.0.0
 		 */
 		if ( $instructor_id ) {
 			$author_query = "AND course.post_author = $instructor_id";
@@ -3391,13 +3411,12 @@ class Utils {
 	/**
 	 * Get all course for a give student & instructor id
 	 *
-	 * @param $student_id int | required
+	 * @since 1.9.9
 	 *
-	 * @param $instructor_id int | required
+	 * @param int $student_id student id.
+	 * @param int $instructor_id instructor id.
 	 *
 	 * @return array
-	 *
-	 * @since 1.9.9
 	 */
 	public function get_courses_by_student_instructor_id( int $student_id, int $instructor_id ): array {
 		global $wpdb;
@@ -3430,11 +3449,12 @@ class Utils {
 	/**
 	 * Get total number of completed assignment
 	 *
-	 * @param $course_id int | required
-	 *
-	 * @param $student | required
-	 *
 	 * @since 1.9.9
+	 *
+	 * @param int $course_id course id.
+	 * @param int $student_id student id.
+	 *
+	 * @return int
 	 */
 	public function get_completed_assignment( int $course_id, int $student_id ): int {
 		global $wpdb;
@@ -3459,14 +3479,16 @@ class Utils {
 		);
 		return (int) $count;
 	}
+
 	/**
 	 * Get total number of completed quiz
 	 *
-	 * @param $course_id int | required
-	 *
-	 * @param $student | required
-	 *
 	 * @since 1.9.9
+	 *
+	 * @param int $course_id course id.
+	 * @param int $student_id student id.
+	 *
+	 * @return int
 	 */
 	public function get_completed_quiz( int $course_id, int $student_id ): int {
 		global $wpdb;
@@ -3489,13 +3511,13 @@ class Utils {
 	}
 
 	/**
-	 * @param float $input
-	 *
-	 * @return float|string
-	 *
 	 * Get rating format from value
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param float $input input.
+	 *
+	 * @return float|string
 	 */
 	public function get_rating_value( $input = 0.00 ) {
 
@@ -3519,14 +3541,14 @@ class Utils {
 	}
 
 	/**
-	 * @param float $current_rating
-	 * @param bool  $echo
-	 *
-	 * @return string
-	 *
 	 * Generate star rating based in given rating value
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param float $current_rating current rating.
+	 * @param bool  $echo print output.
+	 *
+	 * @return string
 	 */
 	public function star_rating_generator( $current_rating = 0.00, $echo = true ) {
 
@@ -3557,6 +3579,19 @@ class Utils {
 		return $output;
 	}
 
+	/**
+	 * Generate star rating.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed   $current_rating current rating.
+	 * @param mixed   $total_count total count.
+	 * @param boolean $show_avg_rate show avg rate.
+	 * @param string  $parent_class perent class.
+	 * @param string  $screen_size screen size.
+	 *
+	 * @return void
+	 */
 	public function star_rating_generator_v2( $current_rating, $total_count = null, $show_avg_rate = false, $parent_class = '', $screen_size = '' ) {
 		$current_rating = number_format( $current_rating, 2, '.', '' );
 		$css_class      = isset( $screen_size ) ? "{$parent_class} tutor-ratings-{$screen_size}" : "{$parent_class}";
@@ -3571,7 +3606,7 @@ class Utils {
 						$class = 'tutor-icon-star-bold';
 					}
 
-					// @todo: Add half start later. tutor-icon-star-half-bold
+					// Todo: Add half start later. tutor-icon-star-half-bold.
 					echo '<span class="' . $class . '"></span>';
 				}
 				?>
@@ -3588,6 +3623,16 @@ class Utils {
 		<?php
 	}
 
+	/**
+	 * Generate course star rating.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param float   $current_rating current rating.
+	 * @param boolean $echo output print.
+	 *
+	 * @return mixed
+	 */
 	public function star_rating_generator_course( $current_rating = 0.00, $echo = true ) {
 		$output = '';
 		for ( $i = 1; $i <= 5; $i++ ) {
@@ -3621,11 +3666,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $string
+	 * Split string regardless of ASCI, Unicode
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $string string.
 	 *
 	 * @return string
-	 *
-	 * Split string regardless of ASCI, Unicode
 	 */
 	public function str_split( $string ) {
 		$strlen = mb_strlen( $string );
@@ -3641,11 +3688,8 @@ class Utils {
 	 * Generate avatar for user
 	 *
 	 * @since 1.0.0
-	 * @since 2.1.7          changed param $user_id to $user for reduce query.
-	 *
-	 * Get user data using get_userdata API
-	 *
-	 * @since 2.1.8
+	 * @since 2.1.7   changed param $user_id to $user for reduce query.
+	 * @since 2.1.8   Get user data using get_userdata API
 	 *
 	 * @param integer|object $user user id or object.
 	 * @param string         $size size of avatar like sm, md, lg.
@@ -3741,15 +3785,15 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 * @param int $offset
-	 * @param int $limit
+	 * Get course reviews
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param int $course_id course id.
+	 * @param int $offset offset.
+	 * @param int $limit limit.
 	 *
 	 * @return array|null|object
-	 *
-	 * get course reviews
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
@@ -3796,6 +3840,7 @@ class Utils {
 	 * @since 1.0.0
 	 *
 	 * @param int $course_id course ID.
+	 * 
 	 * @return object
 	 */
 	public function get_course_rating( $course_id = 0 ) {
@@ -3877,15 +3922,18 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 * @param int $offset
-	 * @param int $limit
-	 *
-	 * @return array|null|object
-	 *
 	 * Get reviews by a user (Given by the user)
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 * 
+	 * @param int $user_id user id.
+	 * @param int $offset offset.
+	 * @param int $limit limit.
+	 * @param bool $get_object get object.
+	 * @param mixed $course_id course id.
+	 * @param array $status_in status.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = null, $get_object = false, $course_id = null, $status_in = array( 'approved' ) ) {
 		global $wpdb;
@@ -3945,7 +3993,7 @@ class Utils {
 		);
 
 		if ( $get_object ) {
-			// Prepare other data for multiple reviews case
+			// Prepare other data for multiple reviews case.
 			$count = (int) $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT({$wpdb->comments}.comment_ID)
@@ -3973,7 +4021,7 @@ class Utils {
 			);
 		}
 
-		// Return single review for single course
+		// Return single review for single course.
 		if ( $course_id && ! is_array( $course_id ) ) {
 			return count( $reviews ) ? $reviews[0] : null;
 		}
@@ -3982,23 +4030,21 @@ class Utils {
 	}
 
 	/**
-	 * @param int                  $user_id
-	 * @param int                  $offset
-	 * @param int                  $limit
+	 * Get reviews by instructor (Received by the instructor)
+	 * 
+	 * 
+	 * @since 1.0.0
+	 * @since 1.4.0 $course_id $date_filter param added.
+	 * @since 1.9.9 Course id & date filter is sorting with specific course and date.
+	 * 
+	 * @param int $user_id user id.
+	 * @param int $offset offset.
+	 * @param int $limit limit.
+	 * @param string $course_id course id.
+	 * @param string $date_filter date filter.
+	 * 
 	 *
 	 * @return array|null|object
-	 *
-	 * Get reviews by instructor (Received by the instructor)
-	 *
-	 * @since v.1.4.0
-	 *
-	 * @param $course_id optional
-	 *
-	 * @param $date_filter optional
-	 *
-	 * Course id & date filter is sorting with specific course and date
-	 *
-	 * @since 1.9.9
 	 */
 	public function get_reviews_by_instructor( $instructor_id = 0, $offset = 0, $limit = 150, $course_id = '', $date_filter = '' ) {
 		global $wpdb;
@@ -4030,7 +4076,7 @@ class Utils {
 		if ( $this->count( $cours_ids ) ) {
 			$implode_ids = implode( ',', $cours_ids );
 
-			// Count
+			// Count.
 			$results['count'] = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT({$wpdb->comments}.comment_ID)
@@ -4050,7 +4096,7 @@ class Utils {
 				)
 			);
 
-			// Results
+			// Results.
 			$results['results'] = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT {$wpdb->comments}.comment_ID,
@@ -4091,13 +4137,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $instructor_id
-	 *
-	 * @return object
-	 *
 	 * Get instructors rating
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 * 
+	 * @param $instructor_id instructor id.
+	 *
+	 * @return object
 	 */
 	public function get_instructor_ratings( $instructor_id ) {
 		global $wpdb;
@@ -4140,14 +4186,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 * @param int $user_id
-	 *
-	 * @return object
-	 *
 	 * Get course rating by user
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 * 
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return object
 	 */
 	public function get_course_rating_by_user( $course_id = 0, $user_id = 0 ) {
 		global $wpdb;
