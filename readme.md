@@ -33,6 +33,25 @@ Go to the terminal then hit commands:
 
 If everything goes well then you should see the PHP unit info
 
+## WPCS configuration
+<b>Step 1:</b> Please install these two composer package.
+```
+1. composer global require squizlabs/php_codesniffer
+2. composer global require wp-coding-standards/wpcs
+```
+<b>Step 2:</b> Set WordPress as default coding standard. `(change your_username)`
+```
+phpcs --config-set installed_paths /Users/your_username/.composer/vendor/wp-coding-standards/wpcs
+phpcs --config-set default_standard WordPress
+```
+
+<b>Problem Fix:</b>
+
+If phpcs and phpcbf command not found as command, set it to your path variable.
+
+`export PATH="/Users/your_username/.composer/vendor/bin:$PATH"`
+
+
 ## System Requirements
 1. PHP – 7.0 (or later)
 2. Database – MariaDB – 10.1 or later / MySQL – 5.7 or later
