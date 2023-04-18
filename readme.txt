@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.2
 Requires PHP: 7.1
-Stable tag: 2.1.10
+Stable tag: 2.2.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -225,9 +225,18 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.1.10 - April 13, 2023
+= 2.2.0 - June 13, 2023
 
 Coming soon...
+
+= 2.1.10 - April 13, 2023
+
+New: Added option to manage active login sessions 
+New: Added Twitter as part of social logins
+New: Added Fraud protection on Password reset form
+Update: Introduced Co-Author badge on the My Courses page to clarify roles
+Update: “Set Withdraw Method” option was showing up on the Dashboard profile even if monetization was disabled
+Fix: Decimal values are no longer allowed in content drip settings in lessons when setting the number of days
 
 = 2.1.9 - March 30, 2023
 
