@@ -8,7 +8,6 @@ languages/*
 test/
 build/
 .idea/
-.vscode/
 .history
 .docz/
 .DS_Store
