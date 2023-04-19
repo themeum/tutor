@@ -2543,18 +2543,18 @@ class Utils {
 	public function get_subscription_by_subscription_id( $subscription_id ) {
 		global $wpdb;
 
-		// Getting return all children of subscription
+		// Returns subscription information
 		$subscription = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT subscriptions.*
 				 FROM {$wpdb->prefix}woocommerce_order_items items
 				 LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta meta
-						ON items.order_item_id = meta.order_item_id
-					   AND meta.meta_key = '_product_id'
+					ON items.order_item_id = meta.order_item_id
+				       AND meta.meta_key = '_product_id'
 				 LEFT JOIN $wpdb->posts subscriptions
-						ON meta.meta_value = subscriptions.ID
-					 WHERE `order_id` = %s
-					   AND `order_item_type` = 'line_item'
+					ON meta.meta_value = subscriptions.ID
+				 WHERE `order_id` = %s
+				   AND `order_item_type` = 'line_item'
 				",
 				$subscription_id
 			)
