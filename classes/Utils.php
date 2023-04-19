@@ -2517,6 +2517,53 @@ class Utils {
 	}
 
 	/**
+	 * @param $order_id
+	 *
+	 * @return array
+	 *
+	 */
+	public function get_subscriptions_by_order_id( $order_id ) {
+		global $wpdb;
+
+		// Return all children of subscription
+		$args = array(
+			'post_parent' 	=> $order_id,
+			'post_type' 	=> 'shop_subscription'
+		);
+		
+		return get_children($args);
+	}
+	
+	/**
+	 * @param $subscription_id
+	 *
+	 * @return object
+	 *
+	 */
+	public function get_subscription_by_subscription_id( $subscription_id ) {
+		global $wpdb;
+
+		// Getting return all children of subscription
+		$subscription = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT subscriptions.*
+				 FROM {$wpdb->prefix}woocommerce_order_items items
+				 LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta meta
+						ON items.order_item_id = meta.order_item_id
+					   AND meta.meta_key = '_product_id'
+				 LEFT JOIN $wpdb->posts subscriptions
+						ON meta.meta_value = subscriptions.ID
+					 WHERE `order_id` = %s
+					   AND `order_item_type` = 'line_item'
+				",
+				$subscription_id
+			)
+		);
+		
+		return $subscription;
+	}
+	
+	/**
 	 * Get wc product in efficient query
 	 *
 	 * @since v.1.0.0
