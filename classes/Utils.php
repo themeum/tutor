@@ -2658,6 +2658,49 @@ class Utils {
 	}
 
 	/**
+	 * @param $order_id
+	 *
+	 * @return array
+	 *
+	 */
+	public function get_subscriptions_by_order_id( $order_id ) {
+		global $wpdb;
+
+		// Return all children of a subscription
+		$args = array(
+			'post_parent' => $order_id,
+			'post_type'   => 'shop_subscription'
+		);
+		return get_children($args);
+	}
+
+	/**
+	 * @param $subscription_id
+	 *
+	 * @return object
+	 *
+	 */
+	public function get_subscription_by_subscription_id( $subscription_id ) {
+		global $wpdb;
+
+		// Returns subscription information
+		$subscription = $wpdb->get_row(
+			$wpdb->prepare(
+			    "SELECT subscriptions.*
+			       FROM {$wpdb->prefix}woocommerce_order_items items
+			  LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta meta
+			         ON items.order_item_id = meta.order_item_id
+			        AND meta.meta_key = '_product_id'
+			  LEFT JOIN $wpdb->posts subscriptions
+			         ON meta.meta_value = subscriptions.ID
+			      WHERE `order_id` = %s
+			        AND `order_item_type` = 'line_item'", $subscription_id
+			)
+		);
+		return $subscription;
+	}
+
+	/**
 	 * Get wc product in efficient query
 	 *
 	 * @since 1.0.0
@@ -6020,12 +6063,19 @@ class Utils {
 		$post_type = '';
 		$user_meta = '';
 
-		if ( 'wc' === $monetize_by ) {
+		if ( 'wc' === $monetize_by || 'pmpro' === $monetize_by ) {
 			$post_type = 'shop_order';
 			$user_meta = '_customer_user';
 		} elseif ( 'edd' === $monetize_by ) {
 			$post_type = 'edd_payment';
 			$user_meta = '_edd_payment_user_id';
+		}
+
+		$add_join = '';
+		if ($monetize_by !== 'pmpro') {
+			$add_join = "INNER JOIN {$wpdb->postmeta} tutor_order
+			                     ON id = tutor_order.post_id
+			                    AND tutor_order.meta_key = '_is_tutor_order_for_course'";
 		}
 
 		$period_query = '';
@@ -6054,11 +6104,9 @@ class Utils {
 				"SELECT {$wpdb->posts}.*
 			FROM	{$wpdb->posts}
 					INNER JOIN {$wpdb->postmeta} customer
-							ON id = customer.post_id
-						   AND customer.meta_key = '{$user_meta}'
-					INNER JOIN {$wpdb->postmeta} tutor_order
-							ON id = tutor_order.post_id
-						   AND tutor_order.meta_key = '_is_tutor_order_for_course'
+					        ON id = customer.post_id
+					       AND customer.meta_key = '{$user_meta}'
+					{$add_join}
 			WHERE	post_type = %s
 					AND customer.meta_value = %d
 					{$period_query}
