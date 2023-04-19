@@ -105,7 +105,7 @@ $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 				<tbody>
 					<?php foreach ( $orders as $order ) : ?>
 						<?php
-						if ( 'wc' === $monetize_by ) {
+						if ( 'wc' === $monetize_by || 'pmpro' === $monetize_by ) {
 							$wc_order          = wc_get_order( $order->ID );
 							$price             = tutor_utils()->tutor_price( $wc_order->get_total() );
 							$raw_price         = $wc_order->get_total();
@@ -159,6 +159,16 @@ $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 								if ( tutor_utils()->count( $courses ) ) {
 									foreach ( $courses as $course ) {
 										echo '<div>' . esc_html( get_the_title( $course['course_id'] ) ) . '</div>';
+									}
+								}
+								
+								if ( $monetize_by === 'pmpro') {
+									$subscriptions = tutor_utils()->get_subscriptions_by_order_id( $order->ID );
+									if ( tutor_utils()->count( $subscriptions ) ) {
+										foreach ( $subscriptions as $subscription ) {
+											echo '<div>Subscription - ' . esc_html( tutor_utils()->get_subscription_by_subscription_id( $subscription->ID )->post_title ) . '</div>';
+										}
+	
 									}
 								}
 								?>
