@@ -5829,12 +5829,17 @@ class Utils {
 		$post_type = '';
 		$user_meta = '';
 
-		if ( $monetize_by === 'wc' ) {
+		if ( $monetize_by === 'wc' || $monetize_by === 'pmpro' ) {
 			$post_type = 'shop_order';
 			$user_meta = '_customer_user';
 		} elseif ( $monetize_by === 'edd' ) {
 			$post_type = 'edd_payment';
 			$user_meta = '_edd_payment_user_id';
+		}
+		
+		$add_join = '';
+		if ($monetize_by !== 'pmpro') {
+			$add_join = "INNER JOIN {$wpdb->postmeta} tutor_order ON id = tutor_order.post_id AND tutor_order.meta_key = '_is_tutor_order_for_course'";
 		}
 
 		$period_query = '';
@@ -5865,9 +5870,7 @@ class Utils {
 					INNER JOIN {$wpdb->postmeta} customer
 							ON id = customer.post_id
 						   AND customer.meta_key = '{$user_meta}'
-					INNER JOIN {$wpdb->postmeta} tutor_order
-							ON id = tutor_order.post_id
-						   AND tutor_order.meta_key = '_is_tutor_order_for_course'
+					{$add_join}
 			WHERE	post_type = %s
 					AND customer.meta_value = %d
 					{$period_query}
