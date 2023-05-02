@@ -219,7 +219,7 @@ class Utils {
 	 */
 	private function get_option_default( $key, $fallback, $from_options ) {
 		if ( ! $from_options ) {
-			// Avoid infinity recursion
+			// Avoid infinity recursion.
 			return $fallback;
 		}
 
@@ -234,25 +234,25 @@ class Utils {
 	/**
 	 * Get option data
 	 *
-	 * @param string $key
-	 * @param bool   $default
+	 * @since 1.0.0
+	 *
+	 * @param string $key key.
+	 * @param bool   $default default.
 	 * @param bool   $type if false return string
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_option( $key, $default = false, $type = true, $from_options = false ) {
 		$option = (array) maybe_unserialize( get_option( 'tutor_option' ) );
 
 		if ( empty( $option ) || ! is_array( $option ) ) {
-			// If the option array is not yet stored on database, then return default/fallback
+			// If the option array is not yet stored on database, then return default/fallback.
 			return $this->get_option_default( $key, $default, $from_options );
 		}
 
-		// Get option value by option key
+		// Get option value by option key.
 		if ( array_key_exists( $key, $option ) ) {
-			// Convert off/on switch values to boolean
+			// Convert off/on switch values to boolean.
 			$value = $option[ $key ];
 
 			if ( true == $type ) {
@@ -263,7 +263,7 @@ class Utils {
 			return apply_filters( $key, $value );
 		}
 
-		// Access array value via dot notation, such as option->get('value.subvalue')
+		// Access array value via dot notation, such as option->get('value.subvalue').
 		if ( strpos( $key, '.' ) ) {
 			$option_key_array = explode( '.', $key );
 
@@ -276,7 +276,7 @@ class Utils {
 				}
 			}
 
-			// Convert off/on switch values to boolean
+			// Convert off/on switch values to boolean.
 			$value = $new_option;
 
 			if ( true == $type ) {
@@ -2058,6 +2058,8 @@ class Utils {
 	 * @since 1.0.0
 	 *
 	 * @param int $user_id user id.
+	 * @param int $offset offset.
+	 * @param int $posts_per_page posts per page.
 	 *
 	 * @return bool|\WP_Query
 	 */
@@ -3086,7 +3088,7 @@ class Utils {
 			$category_where = " AND term.term_id IN ({$cat_ids})";
 		}
 
-		// Rating wise sorting @since v2.0.0.
+		// Rating wise sorting @since 2.0.0.
 		$rating        = isset( $_POST['rating_filter'] ) ? $rating : '';
 		$rating_having = '';
 		if ( '' !== $rating ) {
@@ -5833,7 +5835,7 @@ class Utils {
 		 * Delete duplicated earning rows that were created due to not checking if already added while creating new.
 		 * New entries will check before insert.
 		 *
-		 * @since v1.9.7
+		 * @since 1.9.7
 		 */
 		if ( ! get_option( 'tutor_duplicated_earning_deleted', false ) ) {
 
@@ -8663,7 +8665,7 @@ class Utils {
 		$filter_hook ? $columns = apply_filters( $filter_hook, $contexts[ $page_key ]['columns'] ) : 0;
 
 		$allowed                         = $contexts[ $page_key ]['contexts'][ $context ];
-		is_string( $allowed ) ? $allowed = $contexts[ $page_key ]['contexts'][ $allowed ] : 0; // By reference
+		is_string( $allowed ) ? $allowed = $contexts[ $page_key ]['contexts'][ $allowed ] : 0; // By reference.
 
 		if ( $allowed === true ) {
 			$fields = $columns;
