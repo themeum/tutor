@@ -3786,9 +3786,9 @@ class Utils {
 
 	/**
 	 * Get course reviews
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param int $course_id course id.
 	 * @param int $offset offset.
 	 * @param int $limit limit.
@@ -3840,7 +3840,7 @@ class Utils {
 	 * @since 1.0.0
 	 *
 	 * @param int $course_id course ID.
-	 * 
+	 *
 	 * @return object
 	 */
 	public function get_course_rating( $course_id = 0 ) {
@@ -3925,11 +3925,11 @@ class Utils {
 	 * Get reviews by a user (Given by the user)
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @param int $user_id user id.
-	 * @param int $offset offset.
-	 * @param int $limit limit.
-	 * @param bool $get_object get object.
+	 *
+	 * @param int   $user_id user id.
+	 * @param int   $offset offset.
+	 * @param int   $limit limit.
+	 * @param bool  $get_object get object.
 	 * @param mixed $course_id course id.
 	 * @param array $status_in status.
 	 *
@@ -4031,18 +4031,16 @@ class Utils {
 
 	/**
 	 * Get reviews by instructor (Received by the instructor)
-	 * 
-	 * 
+	 *
 	 * @since 1.0.0
 	 * @since 1.4.0 $course_id $date_filter param added.
 	 * @since 1.9.9 Course id & date filter is sorting with specific course and date.
-	 * 
-	 * @param int $user_id user id.
-	 * @param int $offset offset.
-	 * @param int $limit limit.
+	 *
+	 * @param int    $user_id user id.
+	 * @param int    $offset offset.
+	 * @param int    $limit limit.
 	 * @param string $course_id course id.
 	 * @param string $date_filter date filter.
-	 * 
 	 *
 	 * @return array|null|object
 	 */
@@ -4140,7 +4138,7 @@ class Utils {
 	 * Get instructors rating
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param $instructor_id instructor id.
 	 *
 	 * @return object
@@ -4189,7 +4187,7 @@ class Utils {
 	 * Get course rating by user
 	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param int $course_id course id.
 	 * @param int $user_id user id.
 	 *
@@ -4236,11 +4234,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
+	 * Count reviews wrote by user
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $user_id user id.
 	 *
 	 * @return null|string
-	 *
-	 * @since v.1.0.0
 	 */
 	public function count_reviews_wrote_by_user( $user_id = 0 ) {
 		global $wpdb;
@@ -4263,13 +4263,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $size
-	 *
-	 * @return bool|int|string
-	 *
 	 * This function transforms the php.ini notation for numbers (like '2M') to an integer.
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param $size size.
+	 *
+	 * @return bool|int|string
 	 */
 	function let_to_num( $size ) {
 		$l    = substr( $size, -1 );
@@ -4297,11 +4297,11 @@ class Utils {
 	}
 
 	/**
-	 * @return array
-	 *
 	 * Get Database version
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return array
 	 */
 	function get_db_version() {
 		 global $wpdb;
@@ -4325,21 +4325,35 @@ class Utils {
 		);
 	}
 
+	/**
+	 * Get help tip
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $tip tip name.
+	 *
+	 * @return string
+	 */
 	public function help_tip( $tip = '' ) {
 		return '<span class="tutor-help-tip" data-tip="' . $tip . '"></span>';
 	}
 
 	/**
-	 * @param int    $start
-	 * @param int    $limit
-	 * @param string $search_term
-	 *
-	 * @return array|null|object
-	 *
-	 *
 	 * Get question and answer query
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param integer $start start.
+	 * @param integer $limit limit.
+	 * @param string  $search_term search term.
+	 * @param mixed   $question_id question id.
+	 * @param mixed   $meta_query meta query.
+	 * @param mixed   $asker_id asker id.
+	 * @param mixed   $question_status question status.
+	 * @param boolean $count_only count only.
+	 * @param array   $args args.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_qa_questions( $start = 0, $limit = 10, $search_term = '', $question_id = null, $meta_query = null, $asker_id = null, $question_status = null, $count_only = false, $args = array() ) {
 		global $wpdb;
@@ -4360,17 +4374,17 @@ class Utils {
 		/**
 		 * Get only assinged  courses questions if current user is not admin
 		 */
-		// User query
+		// User query.
 		if ( $asker_id ) {
 			$question_clause .= ' AND _question.user_id=' . $asker_id;
 		}
 
 		if ( isset( $args['course_id'] ) ) {
-			// Get qa for specific course
+			// Get qa for specific course.
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
 		} elseif ( ! $asker_id && $question_id === null && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
-			// If current user is simple instructor (non admin), then get qa from their courses only
+			// If current user is simple instructor (non admin), then get qa from their courses only.
 			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
 			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
 			$in_course_id_query .= " AND _question.comment_post_ID IN($in_ids) ";
@@ -4393,7 +4407,7 @@ class Utils {
 			}
 		}
 
-		// Meta query
+		// Meta query.
 		if ( $meta_query ) {
 			$meta_array = array();
 			foreach ( $meta_query as $key => $value ) {
@@ -4405,7 +4419,7 @@ class Utils {
 		$asker_prefix    = $asker_id === null ? '' : '_' . $asker_id;
 		$exclude_archive = ' AND NOT EXISTS (SELECT meta_key FROM ' . $wpdb->commentmeta . ' WHERE meta_key = \'tutor_qna_archived' . $asker_prefix . '\' AND meta_value=1 AND comment_id = _meta.comment_id) ';
 
-		// Assign read, unread, archived, important identifier
+		// Assign read, unread, archived, important identifier.
 		switch ( $question_status ) {
 			case null:
 			case 'all':
@@ -4479,14 +4493,14 @@ class Utils {
 
 		$query = $wpdb->get_results( $query );
 
-		// Collect question IDs and create empty meta array placeholder
+		// Collect question IDs and create empty meta array placeholder.
 		$question_ids = array();
 		foreach ( $query as $index => $q ) {
 			$question_ids[]        = $q->comment_ID;
 			$query[ $index ]->meta = array();
 		}
 
-		// Assign meta data
+		// Assign meta data.
 		if ( count( $question_ids ) ) {
 			$q_ids      = implode( ',', $question_ids );
 			$meta_array = $wpdb->get_results(
@@ -4494,9 +4508,9 @@ class Utils {
 				FROM {$wpdb->commentmeta}
 				WHERE comment_id IN ({$q_ids})"
 			);
-			// Loop through meta array
+			// Loop through meta array.
 			foreach ( $meta_array as $meta ) {
-				// Loop through questions
+				// Loop through questions.
 				foreach ( $query as $index => $question ) {
 
 					if ( $query[ $index ]->comment_ID == $meta->comment_id ) {
@@ -4515,24 +4529,26 @@ class Utils {
 	}
 
 	/**
-	 * @param $question_id
-	 *
-	 * @return array|null|object|void
-	 *
 	 * Get question for Q&A
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param $question_id question id.
+	 *
+	 * @return array|null|object|void
 	 */
 	public function get_qa_question( $question_id ) {
 		return $this->get_qa_questions( 0, 1, '', $question_id );
 	}
 
 	/**
+	 * Get question and asnwer by question
+	 *
+	 * @since 1.0.0
+	 *
 	 * @param $question_id
 	 *
 	 * @return array|null|object
-	 *
-	 * Get question and asnwer by question
 	 */
 	public function get_qa_answer_by_question( $question_id ) {
 		global $wpdb;
@@ -4563,11 +4579,11 @@ class Utils {
 	/**
 	 * Get question and asnwer by answer_id
 	 *
+	 * @since 1.6.9
+	 *
 	 * @param $answer_id
 	 *
 	 * @return array|null|object
-	 *
-	 * @since v1.6.9
 	 */
 	public function get_qa_answer_by_answer_id( $answer_id ) {
 		global $wpdb;
@@ -4599,6 +4615,13 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * Get total number of un-answered question.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return int
+	 */
 	public function unanswered_question_count() {
 		global $wpdb;
 		/**
@@ -4672,13 +4695,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return array|null|object
-	 *
 	 * Return all of announcements for a course
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_announcements( $course_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
@@ -4707,13 +4730,13 @@ class Utils {
 	}
 
 	/**
+	 * Announcement content
+	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $content
 	 *
 	 * @return mixed
-	 *
-	 * Announcement content
-	 *
-	 * @since v.1.0.0
 	 */
 	public function announcement_content( $content = '' ) {
 		$search = array( '{user_display_name}' );
@@ -4730,13 +4753,15 @@ class Utils {
 	}
 
 	/**
-	 * @param int    $post_id
-	 * @param string $option_key
-	 * @param bool   $default
+	 * Get the quiz option from meta
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int    $post_id post id.
+	 * @param string $option_key option key.
+	 * @param bool   $default default.
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * Get the quiz option from meta
 	 */
 	public function get_quiz_option( $post_id = 0, $option_key = '', $default = false ) {
 		$post_id         = $this->get_post_id( $post_id );
@@ -4755,11 +4780,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $quiz_id
+	 * Get the questions by quiz ID
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $quiz_id quiz id.
 	 *
 	 * @return array|bool|null|object
-	 *
-	 * Get the questions by quiz ID
 	 */
 	public function get_questions_by_quiz( $quiz_id = 0 ) {
 		$quiz_id = $this->get_post_id( $quiz_id );
@@ -4780,13 +4807,13 @@ class Utils {
 	}
 
 	/**
-	 * @param null $type
-	 *
-	 * @return array|mixed
-	 *
 	 * Get all question types
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param mixed $type type.
+	 *
+	 * @return array|mixed
 	 */
 	public function get_question_types( $type = null ) {
 		$types = array(
@@ -4849,6 +4876,15 @@ class Utils {
 		return $types;
 	}
 
+	/**
+	 * Get quiz answer options by question ID
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $question_id question id.
+	 *
+	 * @return mixed
+	 */
 	public function get_quiz_answer_options_by_question( $question_id ) {
 		global $wpdb;
 
@@ -4874,11 +4910,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $post_id
+	 * Get attached quiz.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id post id.
 	 *
 	 * @return array|bool|null|object
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_attached_quiz( $post_id = 0 ) {
 		global $wpdb;
@@ -4910,11 +4948,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $quiz_id
+	 * Total questions for student by quiz.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $quiz_id quiz id.
 	 *
 	 * @return int
-	 *
-	 * @since v.1.0.0
 	 */
 	public function total_questions_for_student_by_quiz( $quiz_id ) {
 		$quiz_id = $this->get_post_id( $quiz_id );
@@ -4973,15 +5013,15 @@ class Utils {
 	}
 
 	/**
-	 * @param $quiz_id
-	 *
 	 * Method for get the total amount of question for a quiz
 	 * Student will answer this amount of question, one quiz have many question
 	 * but student will answer a specific amount of questions
 	 *
-	 * @return int
+	 * @since 1.0.0
 	 *
-	 * @since v.1.0.0
+	 * @param int $quiz_id quiz id.
+	 *
+	 * @return int
 	 */
 	public function max_questions_for_take_quiz( $quiz_id ) {
 		$quiz_id = $this->get_post_id( $quiz_id );
@@ -5007,13 +5047,13 @@ class Utils {
 	}
 
 	/**
+	 * Get single quiz attempt
+	 *
+	 * @since 1.0.0
+	 *
 	 * @param int $attempt_id
 	 *
 	 * @return array|bool|null|object|void
-	 *
-	 * Get single quiz attempt
-	 *
-	 * @since v.1.0.0
 	 */
 	public function get_attempt( $attempt_id = 0 ) {
 		global $wpdb;
@@ -5035,27 +5075,27 @@ class Utils {
 	}
 
 	/**
-	 * @param $attempt_info
-	 *
-	 * @return mixed
-	 *
 	 * Get unserialize attempt info
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param $attempt_info attempt info.
+	 *
+	 * @return mixed
 	 */
 	public function quiz_attempt_info( $attempt_info ) {
 		return maybe_unserialize( $attempt_info );
 	}
 
 	/**
-	 * @param $quiz_attempt_id
-	 * @param array           $attempt_info
-	 *
-	 * @return bool|int
-	 *
 	 * Update attempt for various action
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int                                  $quiz_attempt_id  quiz attempt id.
+	 * @param array attempt_info      attempt info.
+	 *
+	 * @return bool|int
 	 */
 	public function quiz_update_attempt_info( $quiz_attempt_id, $attempt_info = array() ) {
 		$answers             = $this->avalue_dot( 'answers', $attempt_info );
@@ -5068,13 +5108,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $quiz_id
-	 *
-	 * @return array|null|object
-	 *
 	 * Get random question by quiz id
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $quiz_id quiz id.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_random_question_by_quiz( $quiz_id = 0 ) {
 		global $wpdb;
@@ -5100,11 +5140,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $quiz_id
+	 * Get random questions by quiz
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $quiz_id quiz id.
 	 *
 	 * @return array|null|object
-	 *
-	 * Get random questions by quiz
 	 */
 	public function get_random_questions_by_quiz( $quiz_id = 0 ) {
 		global $wpdb;
@@ -5150,13 +5192,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return array|bool|null|object
-	 *
 	 * Get attempts by an user
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return array|bool|null|object
 	 */
 	public function get_all_quiz_attempts_by_user( $user_id = 0 ) {
 		global $wpdb;
@@ -5181,13 +5223,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $ids
-	 *
-	 * @return array|bool|null|object
-	 *
 	 * Get quiz answers by ids
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param array $ids ids.
+	 *
+	 * @return array|bool|null|object
 	 */
 	public function get_quiz_answers_by_ids( $ids ) {
 		$ids = (array) $ids;
@@ -5220,13 +5262,13 @@ class Utils {
 	}
 
 	/**
-	 * @param null $level
-	 *
-	 * @return mixed
-	 *
 	 * Get the users / students / course levels
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param mixed $level level.
+	 *
+	 * @return mixed
 	 */
 	public function course_levels( $level = null ) {
 		$levels = apply_filters(
@@ -5251,11 +5293,11 @@ class Utils {
 	}
 
 	/**
-	 * @return bool|false|string
-	 *
 	 * Student registration form
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return bool|false|string
 	 */
 	public function student_register_url() {
 		$student_register_page = (int) $this->get_option( 'student_register_page' );
@@ -5268,11 +5310,11 @@ class Utils {
 	}
 
 	/**
-	 * @return bool|false|string
-	 *
 	 * Instructor registration form
 	 *
 	 * @since v.1.2.13
+	 *
+	 * @return bool|false|string
 	 */
 	public function instructor_register_url() {
 		 $instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
@@ -5285,9 +5327,13 @@ class Utils {
 	}
 
 	/**
-	 * @return false|string
-	 *
 	 * Get frontend dashboard URL
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $sub_url sub url.
+	 *
+	 * @return false|string
 	 */
 	public function tutor_dashboard_url( $sub_url = '' ) {
 		$page_id = (int) $this->get_option( 'tutor_dashboard_page_id' );
@@ -5298,6 +5344,8 @@ class Utils {
 	/**
 	 * Get the tutor dashboard page ID
 	 *
+	 * @since 1.0.0
+	 *
 	 * @return int
 	 */
 	public function dashboard_page_id() {
@@ -5307,14 +5355,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 * @param int $user_id
+	 * Check is wishlisted.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
 	 *
 	 * @return bool
-	 *
-	 * is_wishlisted();
-	 *
-	 * @since v.1.0.0
 	 */
 	public function is_wishlisted( $course_id = 0, $user_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
@@ -5341,13 +5389,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return array|null|object
-	 *
 	 * Get the wish lists by an user
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_wishlist( $user_id = 0, int $offset = 0, int $limit = PHP_INT_MAX ) {
 		global $wpdb;
@@ -5381,13 +5429,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $limit
-	 *
-	 * @return array|null|object
-	 *
 	 * Getting popular courses
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $limit limit.
+	 *
+	 * @return array|null|object
 	 */
 	public function most_popular_courses( $limit = 10, $user_id = '' ) {
 		global $wpdb;
@@ -5426,13 +5474,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $limit
-	 *
-	 * @return array|bool|null|object
-	 *
 	 * Get most rated courses lists
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param int $limit limit.
+	 *
+	 * @return array|bool|null|object
 	 */
 	public function most_rated_courses( $limit = 10 ) {
 		global $wpdb;
@@ -5466,13 +5514,13 @@ class Utils {
 	}
 
 	/**
-	 * @param null $addon_field
-	 *
-	 * @return bool
-	 *
 	 * Get Addon config
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @param mixed $addon_field addon field.
+	 *
+	 * @return mixed
 	 */
 	public function get_addon_config( $addon_field = null ) {
 		if ( ! $addon_field ) {
@@ -5489,11 +5537,11 @@ class Utils {
 	}
 
 	/**
-	 * @return array|false|string
-	 *
 	 * Get the IP from visitor
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 *
+	 * @return array|false|string
 	 */
 	function get_ip() {
 		 $ipaddress = '';
@@ -5516,11 +5564,11 @@ class Utils {
 	}
 
 	/**
-	 * @return array $array
-	 *
 	 * Get the social icons
 	 *
-	 * @since v.1.0.4
+	 * @since 1.0.4
+	 *
+	 * @return array $array
 	 */
 	public function tutor_social_share_icons() {
 		$icons = array(
@@ -5548,11 +5596,11 @@ class Utils {
 	}
 
 	/**
-	 * @return array $array
-	 *
 	 * Get the user social icons
 	 *
-	 * @since v.1.3.7
+	 * @since 1.3.7
+	 *
+	 * @return array $array
 	 */
 	public function tutor_user_social_icons() {
 		 $icons = array(
@@ -5587,13 +5635,13 @@ class Utils {
 	}
 
 	/**
-	 * @param array $array
-	 *
-	 * @return bool
-	 *
 	 * count method with check is_array
 	 *
-	 * @since v.1.0.4
+	 * @since 1.0.4
+	 *
+	 * @param array $array array.
+	 *
+	 * @return bool
 	 */
 	public function count( $array = array() ) {
 		if ( is_array( $array ) && count( $array ) ) {
@@ -5604,11 +5652,11 @@ class Utils {
 	}
 
 	/**
+	 * Get all screen ids
+	 *
+	 * @since 1.1.2
+	 *
 	 * @return array
-	 *
-	 * get all screen ids
-	 *
-	 * @since v.1.1.2
 	 */
 	public function tutor_get_screen_ids() {
 		$screen_ids = array(
@@ -5631,11 +5679,11 @@ class Utils {
 	}
 
 	/**
+	 * Get earning transaction completed status
+	 *
+	 * @since 1.1.2
+	 *
 	 * @return mixed
-	 *
-	 * get earning transaction completed status
-	 *
-	 * @since v.1.1.2
 	 */
 	public function get_earnings_completed_statuses() {
 		return apply_filters(
@@ -5649,14 +5697,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int   $user_id
-	 * @param array $date_filter
-	 *
-	 * @return array|null|object
-	 *
 	 * Get all time earning sum for an instructor with all commission
 	 *
-	 * @since v.1.1.2
+	 * @since 1.1.2
+	 *
+	 * @param int   $user_id user id.
+	 * @param array $date_filter date filter.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_earning_sum( $user_id = 0, $date_filter = array() ) {
 		global $wpdb;
@@ -5703,9 +5751,6 @@ class Utils {
 			)
 		);
 
-		// TODO: need to check
-		// (SUM(instructor_amount) - (SELECT withdraws_amount) ) as balance,
-
 		if ( $earning_sum->course_price_total ) {
 			$earning_sum->balance = $earning_sum->instructor_amount - $earning_sum->withdraws_amount;
 		} else {
@@ -5724,14 +5769,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int   $user_id
-	 * @param array $date_filter
-	 *
-	 * @return array|null|object
-	 *
 	 * Get earning statements
 	 *
-	 * @since v.1.1.2
+	 * @since 1.1.2
+	 *
+	 * @param int   $user_id user id.
+	 * @param array $date_filter date filter.
+	 *
+	 * @return array|null|object
 	 */
 	public function get_earning_statements( $user_id = 0, $filter_data = array() ) {
 		global $wpdb;
@@ -5792,7 +5837,7 @@ class Utils {
 		 */
 		if ( ! get_option( 'tutor_duplicated_earning_deleted', false ) ) {
 
-			// Get the duplicated order IDs
+			// Get the duplicated order IDs.
 			$del_rows  = array();
 			$order_ids = $wpdb->get_col(
 				"SELECT order_id
@@ -5813,7 +5858,7 @@ class Utils {
 				$excluded_first = array();
 				foreach ( $earnings as $earning ) {
 					if ( ! in_array( $earning->course_id, $excluded_first ) ) {
-						// Exclude first course ID from deletion
+						// Exclude first course ID from deletion.
 						$excluded_first[] = $earning->course_id;
 						continue;
 					}
@@ -5862,13 +5907,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $price
-	 *
-	 * @return int|string
-	 *
 	 * Get the price format
 	 *
-	 * @since v.1.1.2
+	 * @since 1.1.2
+	 *
+	 * @param int $price price.
+	 *
+	 * @return int|string
 	 */
 	public function tutor_price( $price = 0 ) {
 		if ( function_exists( 'wc_price' ) ) {
@@ -5881,11 +5926,11 @@ class Utils {
 	}
 
 	/**
-	 * @return mixed
-	 *
 	 * Get currency symbol from activated plugin, WC,EDD
 	 *
-	 * @since  v.1.3.4
+	 * @since  1.3.4
+	 *
+	 * @return mixed
 	 */
 	public function currency_symbol() {
 		 $enable_tutor_edd = $this->get_option( 'enable_tutor_edd' );
@@ -5904,9 +5949,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $instructor_id
+	 * Add Instructor role to any user by user ID
 	 *
-	 * Add Instructor role to any user by user iD
+	 * @since 1.0.0
+	 *
+	 * @param int $instructor_id instructor id.
+	 *
+	 * @return void
 	 */
 	public function add_instructor_role( $instructor_id = 0 ) {
 		if ( ! $instructor_id ) {
@@ -5925,9 +5974,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $instructor_id
-	 *
 	 * Remove instructor role by instructor id
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $instructor_id instructor id.
+	 *
+	 * @return void
 	 */
 	public function remove_instructor_role( $instructor_id = 0 ) {
 		if ( ! $instructor_id ) {
@@ -5944,11 +5997,18 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return array|null|object
-	 *
 	 * Get purchase history by customer id
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param integer $user_id user id.
+	 * @param string  $period period.
+	 * @param string  $start_date start date.
+	 * @param string  $end_date end date.
+	 * @param string  $offset offset.
+	 * @param string  $per_page per page.
+	 *
+	 * @return mixed
 	 */
 	public function get_orders_by_user_id( $user_id = 0, $period = '', $start_date = '', $end_date = '', $offset = '', $per_page = '' ) {
 		global $wpdb;
@@ -6013,11 +6073,16 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return array|null|object
-	 *
 	 * Get total purchase history by customer id
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int    $user_id user id.
+	 * @param string $period period.
+	 * @param string $start_date start date.
+	 * @param string $end_date end date.
+	 *
+	 * @return mixed
 	 */
 	public function get_total_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
 		global $wpdb;
@@ -6077,6 +6142,13 @@ class Utils {
 
 	/**
 	 * Export purchased course data
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $order_id order id.
+	 * @param string $purchase_date purchase date.
+	 *
+	 * @return mixed
 	 */
 	public function export_purchased_course_data( $order_id = '', $purchase_date = '' ) {
 		global $wpdb;
@@ -6096,13 +6168,13 @@ class Utils {
 	}
 
 	/**
-	 * @param null $status
-	 *
-	 * @return string
-	 *
 	 * Get status contact formatted for order
 	 *
-	 * @since v.1.3.1
+	 * @since 1.3.1
+	 *
+	 * @param mixed $status status.
+	 *
+	 * @return string
 	 */
 	public function order_status_context( $status = null ) {
 		$status      = str_replace( 'wc-', '', $status );
@@ -6112,8 +6184,9 @@ class Utils {
 	}
 
 	/**
-	 * Depricated since v1.9.8
 	 * This function is redundant and will be removed later
+	 *
+	 * @deprecated 1.9.8
 	 */
 	public function get_course_id_by_assignment( $assignment_id = 0 ) {
 		$assignment_id = $this->get_post_id( $assignment_id );
@@ -6121,15 +6194,15 @@ class Utils {
 	}
 
 	/**
-	 * @param int    $assignment_id
-	 * @param string $option_key
-	 * @param bool   $default
-	 *
-	 * @return array|bool|mixed
-	 *
 	 * Get assignment options
 	 *
-	 * @since v.1.3.3
+	 * @since 1.3.3
+	 *
+	 * @param int    $assignment_id assignment id.
+	 * @param string $option_key option key.
+	 * @param bool   $default default.
+	 *
+	 * @return array|bool|mixed
 	 */
 	public function get_assignment_option( $assignment_id = 0, $option_key = '', $default = false ) {
 		$assignment_id   = $this->get_post_id( $assignment_id );
@@ -6149,14 +6222,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $assignment_id
-	 * @param int $user_id
-	 *
-	 * @return int
-	 *
 	 * Is running any assignment submitting
 	 *
-	 * @since v.1.3.3
+	 * @since 1.3.3
+	 *
+	 * @param int $assignment_id assignment id.
+	 * @param int $user_id user id.
+	 *
+	 * @return int
 	 */
 	public function is_assignment_submitting( $assignment_id = 0, $user_id = 0 ) {
 		global $wpdb;
@@ -6224,6 +6297,15 @@ class Utils {
 		return $has_submitted;
 	}
 
+	/**
+	 * Get assignment submitted info
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param integer $assignment_submitted_id assignment submitted id.
+	 *
+	 * @return mixed
+	 */
 	public function get_assignment_submit_info( $assignment_submitted_id = 0 ) {
 		global $wpdb;
 
@@ -6247,8 +6329,12 @@ class Utils {
 	}
 
 	/**
-	 * Depricated since v1.9.8
 	 * It is redundant and will be removed later
+	 *
+	 * @since 1.0.0
+	 * @deprecated 1.9.8
+	 *
+	 * @return int
 	 */
 	public function get_total_assignments() {
 		global $wpdb;
@@ -6269,8 +6355,12 @@ class Utils {
 	}
 
 	/**
-	 * Depricated since v1.9.8
 	 * It is redundant and will be removed later
+	 *
+	 * @since 1.0.0
+	 * @deprecated 1.9.8
+	 *
+	 * @return mixed
 	 */
 	public function get_assignments() {
 		 global $wpdb;
@@ -6291,13 +6381,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return array
-	 *
 	 * Get all courses id assigned or owned by an instructors
 	 *
-	 * @since v.1.3.3
+	 * @since 1.3.3
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return array
 	 */
 	public function get_assigned_courses_ids_by_instructors( $user_id = 0 ) {
 		global $wpdb;
@@ -6319,13 +6409,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $parent
-	 *
-	 * @return array
-	 *
 	 * Get course categories in array with child
 	 *
-	 * @since v.1.3.4
+	 * @since 1.3.4
+	 *
+	 * @param int $parent parent.
+	 *
+	 * @return array
 	 */
 	public function get_course_categories( $parent = 0 ) {
 		$args = apply_filters(
@@ -6349,13 +6439,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $parent
-	 *
-	 * @return array
-	 *
 	 * Get course tags in array with child
 	 *
-	 * @since v.1.9.3
+	 * @since 1.9.3
+	 *
+	 * @param int $parent parent.
+	 *
+	 * @return array
 	 */
 	public function get_course_tags() {
 		$args = apply_filters(
@@ -6378,13 +6468,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $parent_id
-	 *
-	 * @return array|int|\WP_Error
-	 *
 	 * Get course categories terms in raw array
 	 *
-	 * @since v.1.3.5
+	 * @since 1.3.5
+	 *
+	 * @param int $parent_id parent id.
+	 *
+	 * @return array|int|\WP_Error
 	 */
 	public function get_course_categories_term( $parent_id = 0 ) {
 		$args = apply_filters(
@@ -6402,10 +6492,11 @@ class Utils {
 	}
 
 	/**
-	 * @return mixed
-	 *
 	 * Get back url from the request
-	 * @since v.1.3.4
+	 *
+	 * @since 1.3.4
+	 *
+	 * @return mixed
 	 */
 	public function referer() {
 		 $url = $this->array_get( '_wp_http_referer', $_REQUEST );
@@ -6413,13 +6504,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 *
-	 * @return false|string
-	 *
 	 * Get the frontend dashboard course edit page
 	 *
-	 * @since v.1.3.4
+	 * @since 1.3.4
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return false|string
 	 */
 	public function course_edit_link( $course_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
@@ -6432,6 +6523,16 @@ class Utils {
 		return $url;
 	}
 
+	/**
+	 * Get assignments by instructor
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param integer $instructor_id instructor id.
+	 * @param array   $filter_data filter data.
+	 *
+	 * @return mixed
+	 */
 	public function get_assignments_by_instructor( $instructor_id = 0, $filter_data = array() ) {
 		global $wpdb;
 
@@ -6503,11 +6604,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
+	 * Get assignments by course id
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $course_id course id.
 	 *
 	 * @return bool|object
-	 *
-	 * Get assignments by course id
 	 */
 	public function get_assignments_by_course( $course_id = 0 ) {
 		if ( ! $course_id ) {
@@ -6556,11 +6659,11 @@ class Utils {
 	}
 
 	/**
-	 * @return bool
-	 *
 	 * Determine if script debug
 	 *
-	 * @since v.1.3.4
+	 * @since 1.3.4
+	 *
+	 * @return bool
 	 */
 	public function is_script_debug() {
 		 return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
@@ -6569,7 +6672,12 @@ class Utils {
 	/**
 	 * Check lesson edit access by instructor
 	 *
-	 * @since  v.1.4.0
+	 * @since  1.4.0
+	 *
+	 * @param int $lesson_id lesson id.
+	 * @param int $instructor_id instructor id.
+	 *
+	 * @return bool
 	 */
 	public function has_lesson_edit_access( $lesson_id = 0, $instructor_id = 0 ) {
 		$lesson_id     = $this->get_post_id( $lesson_id );
@@ -6591,7 +6699,14 @@ class Utils {
 	/**
 	 * Get total Enrolments
 	 *
-	 * @since v.1.4.0
+	 * @since 1.4.0
+	 *
+	 * @param string $status status.
+	 * @param string $search_term search term.
+	 * @param string $course_id course id.
+	 * @param string $date date.
+	 *
+	 * @return int
 	 */
 	public function get_total_enrolments( $status, $search_term = '', $course_id = '', $date = '' ) {
 		global $wpdb;
@@ -6603,19 +6718,19 @@ class Utils {
 		$search_term_raw = $search_term;
 		$search_term     = '%' . $wpdb->esc_like( $search_term ) . '%';
 
-		// add course id in where clause.
+		// Add course id in where clause.
 		$course_query = '';
 		if ( '' !== $course_id ) {
 			$course_query = "AND course.ID = $course_id";
 		}
 
-		// add date in where clause.
+		// Add date in where clause.
 		$date_query = '';
 		if ( '' !== $date ) {
 			$date_query = "AND DATE(enrol.post_date) = CAST('$date' AS DATE) ";
 		}
 
-		// add status in where clause.
+		// Add status in where clause.
 		if ( 'approved' === $status ) {
 			$status = 'completed';
 		} elseif ( 'cancelled' === $status ) {
@@ -6729,11 +6844,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $post_id
+	 * Get current URL
+	 * 
+	 * @since 1.4.0
+	 * 
+	 * @param int $post_id post ID.
 	 *
 	 * @return false|string
-	 *
-	 * @since v.1.4.0
 	 */
 	public function get_current_url( $post_id = 0 ) {
 		$page_id = $this->get_post_id( $post_id );
@@ -6749,13 +6866,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $rating_id
+	 * Get rating by rating id|comment_ID
+	 * 
+	 * @since 1.4.0
+	 * 
+	 * @param int $rating_id rating id.
 	 *
 	 * @return object
-	 *
-	 * Get rating by rating id|comment_ID
-	 *
-	 * @since v.1.4.0
 	 */
 
 	public function get_rating_by_id( $rating_id = 0 ) {
@@ -6791,13 +6908,15 @@ class Utils {
 	}
 
 	/**
-	 * @param int  $course_id
-	 * @param null $key
-	 * @param bool $default
+	 * Get course settings by course ID
+	 * 
+	 * @since 1.4.0
+	 * 
+	 * @param int  $course_id course id.
+	 * @param null $key key.
+	 * @param bool $default default value.
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * Get course settings by course ID
 	 */
 	public function get_course_settings( $course_id = 0, $key = null, $default = false ) {
 		$course_id     = $this->get_post_id( $course_id );
@@ -6808,15 +6927,15 @@ class Utils {
 	}
 
 	/**
-	 * @param int  $lesson_id
-	 * @param null $key
-	 * @param bool $default
+	 * Get Lesson content drip settings
+	 * 
+	 * @since 1.4.0
+	 * 
+	 * @param int  $lesson_id lesson id.
+	 * @param null $key key.
+	 * @param bool $default default value.
 	 *
 	 * @return array|bool|mixed
-	 *
-	 * Get Lesson content drip settings
-	 *
-	 * @since v.1.4.0
 	 */
 	public function get_item_content_drip_settings( $lesson_id = 0, $key = null, $default = false ) {
 		$lesson_id     = $this->get_post_id( $lesson_id );
@@ -6827,11 +6946,14 @@ class Utils {
 	}
 
 	/**
-	 * @param null $post
-	 *
-	 * @return bool
-	 *
-	 * Get previous ID
+	 * Get course previous content ID
+	 * 
+	 * @since 1.4.0
+	 * 
+	 * @param int $current_id current id.
+	 * @param array $exclude_type types.
+	 * 
+	 * @return mixed
 	 */
 	public function get_course_previous_content_id( $current_id, $exclude_type = array() ) {
 		$course_id = $this->get_course_id_by_content( $current_id );
@@ -6861,24 +6983,26 @@ class Utils {
 	}
 
 	/**
-	 * @param null $post
+	 * Get Course ID by any course content
+	 * 
+	 * @since 1.0.0
+	 * 
+	 * @param object $post post object.
 	 *
 	 * @return int
-	 *
-	 * Get Course iD by any course content
 	 */
 	public function get_course_id_by_content( $post ) {
 		return $this->get_course_id_by_subcontent( is_numeric( $post ) ? $post : $post->ID );
 	}
 
 	/**
-	 * @param int $course_id
+	 * Get Course contents by Course ID
+	 * 
+	 * @since 1.4.1
+	 * 
+	 * @param int $course_id course id.
 	 *
 	 * @return array|null|object
-	 *
-	 * Get Course contents by Course ID
-	 *
-	 * @since v.1.4.1
 	 */
 	public function get_course_contents_by_id( $course_id = 0 ) {
 		global $wpdb;
@@ -6910,13 +7034,11 @@ class Utils {
 	}
 
 	/**
-	 * @param string $grade_for
-	 *
-	 * @return array|null|object
-	 *
 	 * Get Gradebooks lists by type
-	 *
-	 * @since v.1.4.2
+	 * 
+	 * @since 1.4.2
+	 * 
+	 * @return array|null|object
 	 */
 	public function get_gradebooks() {
 		global $wpdb;
@@ -6926,14 +7048,14 @@ class Utils {
 
 
 	/**
-	 * @param int $quiz_id
-	 * @param int $user_id
+	 * Get Attempt row by grade method settings
+	 * 
+	 * @since 1.4.2
+	 * 
+	 * @param int $quiz_id quiz id.
+	 * @param int $user_id user id.
 	 *
 	 * @return array|bool|null|object
-	 *
-	 * Get Attempt row by grade method settings
-	 *
-	 * @since v.1.4.2
 	 */
 	public function get_quiz_attempt( $quiz_id = 0, $user_id = 0 ) {
 		global $wpdb;
@@ -6974,14 +7096,12 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 * @param int $user_id
+	 * Print Course Status Context
+	 * 
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
 	 *
 	 * @return string
-	 *
-	 * Print Course Status Context
-	 *
-	 * @since v.1.4.2
 	 */
 	public function course_progress_status_context( $course_id = 0, $user_id = 0 ) {
 		$course_id    = $this->get_post_id( $course_id );
@@ -7003,12 +7123,14 @@ class Utils {
 	}
 
 	/**
-	 * @param $user
-	 * @param $new_pass
-	 *
 	 * Reset Password
+	 * 
+	 * @since 1.4.3
+	 * 
+	 * @param object $user user object.
+	 * @param string $new_pass new password.
 	 *
-	 * @since v.1.4.3
+	 * @return void
 	 */
 	public function reset_password( $user, $new_pass ) {
 		do_action( 'password_reset', $user, $new_pass );
@@ -7023,11 +7145,11 @@ class Utils {
 	}
 
 	/**
-	 * @return array
-	 *
 	 * Get tutor pages, required to show dashboard, and others forms
-	 *
-	 * @since v.1.4.3
+	 * 
+	 * @since 1.4.3
+	 * 
+	 * @return array
 	 */
 	public function tutor_pages() {
 		$pages = apply_filters(
@@ -7069,13 +7191,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
+	 * Get Course prev next lession contents by content ID
+	 * 
+	 * @since 1.4.9
+	 * 
+	 * @param int $course_id course id.
 	 *
 	 * @return array|null|object
-	 *
-	 * Get Course prev next lession contents by content ID
-	 *
-	 * @since v.1.4.9
 	 */
 	public function get_course_prev_next_contents_by_id( $content_id = 0 ) {
 
@@ -7113,12 +7235,12 @@ class Utils {
 	/**
 	 * Get a subset of the items from the given array.
 	 *
-	 * @param array        $array
-	 * @param array|string $keys
+	 * @since 1.5.2
+	 * 
+	 * @param array        $array array.
+	 * @param array|string $keys keys.
 	 *
 	 * @return array|bool
-	 *
-	 * @since v.1.5.2
 	 */
 	public function array_only( $array = array(), $keys = null ) {
 		if ( ! $this->count( $array ) || ! $keys ) {
@@ -7129,14 +7251,14 @@ class Utils {
 	}
 
 	/**
-	 * @param int $instructor_id
-	 * @param int $course_id
+	 * Is instructor of this course
+	 * 
+	 * @since 1.6.4
+	 * 
+	 * @param int $instructor_id instructor id.
+	 * @param int $course_id course id.
 	 *
 	 * @return bool|int
-	 *
-	 * Is instructor of this course
-	 *
-	 * @since v.1.6.4
 	 */
 	public function is_instructor_of_this_course( $instructor_id = 0, $course_id = 0 ) {
 		global $wpdb;
@@ -7175,13 +7297,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
+	 * User profile completion
+	 * 
+	 * @since 1.6.6
+	 * 
+	 * @param int $user_id user id.
 	 *
 	 * @return array|object
-	 *
-	 * User profile completion
-	 *
-	 * @since v.1.6.6
 	 */
 	public function user_profile_completion( $user_id = 0 ) {
 		$user_id           = $this->get_user_id( $user_id );
@@ -7196,7 +7318,7 @@ class Utils {
 			'_tutor_profile_bio'   => __( 'Set Your Bio', 'tutor' ),
 		);
 
-		// Add payment method as a required on if current user is an approved instructor
+		// Add payment method as a required on if current user is an approved instructor.
 		if ( 'approved' == $instructor_status ) {
 			$required_fields['_tutor_withdraw_method_data'] = __( 'Set Withdraw Method', 'tutor' );
 		}
@@ -7215,18 +7337,18 @@ class Utils {
 			);
 		}
 
-		// Apply fitlers on the list
+		// Apply fitlers on the list.
 		return apply_filters( 'tutor/user/profile/completion', $required_fields );
 	}
 
 	/**
-	 * @param int $enrol_id
+	 * Get enrollment by enrol_id
+	 * 
+	 * @since 1.6.9
+	 * 
+	 * @param int $enrol_id enrol id.
 	 *
 	 * @return array|object
-	 *
-	 * Get enrollment by enrol_id
-	 *
-	 * @since v1.6.9
 	 */
 	public function get_enrolment_by_enrol_id( $enrol_id = 0 ) {
 		global $wpdb;
@@ -7265,9 +7387,11 @@ class Utils {
 	/**
 	 * Get students list based on course id
 	 *
-	 * @param integer $course_id
-	 * @param string  $field_name
-	 * @param boolean $all  if all is false it will return only $field_name column
+	 * @since 1.6.6
+	 * 
+	 * @param integer $course_id course id.
+	 * @param string  $field_name field name.
+	 * @param boolean $all  if all is false it will return only $field_name column.
 	 *
 	 * @return array  of objects for student list or array
 	 */
@@ -7297,6 +7421,15 @@ class Utils {
 		return array_column( $student_data, $field_name );
 	}
 
+	/**
+	 * Get student data by course id.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param integer $course_id course id.
+	 * 
+	 * @return array
+	 */
 	public function get_students_all_data_by_course_id( $course_id = 0 ) {
 
 		global $wpdb;
@@ -7322,22 +7455,28 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
+	 * Get students email by course id
+	 * 
+	 * @since 1.6.9
+	 * 
+	 * @param int $course_id course id.
 	 *
 	 * @return array
-	 *
-	 * @since v1.6.9
-	 *
-	 * Get students email by course id
 	 */
 	public function get_student_emails_by_course_id( $course_id = 0 ) {
 		return $this->get_students_data_by_course_id( $course_id, 'user_email' );
 	}
 
-	/*
-	*requie post id & user id
-	*return single comment post
-	*/
+	/**
+	 * Get single comment user post id.
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param int $post_id post id.
+	 * @param int $user_id user id.
+	 * 
+	 * @return mixed
+	 */
 	public function get_single_comment_user_post_id( $post_id, $user_id ) {
 		global $wpdb;
 		$table = $wpdb->prefix . 'comments';
@@ -7357,13 +7496,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
+	 * Check if course is in wc cart
+	 * 
+	 * @since 1.7.5
+	 * 
+	 * @param int $course_id course id.
 	 *
 	 * @return bool
-	 *
-	 * @since v1.7.5
-	 *
-	 * Check if course is in wc cart
 	 */
 	public function is_course_added_to_cart( $course_or_product_id = 0, $is_product_id = false ) {
 
@@ -7384,13 +7523,13 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 *
-	 * @return bool
-	 *
-	 * @since v1.7.5
-	 *
 	 * Get profile pic url
+	 * 
+	 * @since 1.7.5
+	 * 
+	 * @param int $user_id user id.
+	 *
+	 * @return string
 	 */
 	public function get_cover_photo_url( $user_id ) {
 		$cover_photo_src = tutor()->url . 'assets/images/cover-photo.jpg';
@@ -7404,11 +7543,14 @@ class Utils {
 	}
 
 	/**
-	 * @return int
-	 *
-	 * @since v1.7.9
-	 *
 	 * Return the course ID(s) by lession, quiz, answer etc.
+	 * 
+	 * @since 1.7.9
+	 *
+	 * @param string $content content like lession, quiz, answer etc.
+	 * @param int $object_id object id.
+	 * 
+	 * @return int
 	 */
 	public function get_course_id_by( $content, $object_id ) {
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
@@ -7549,11 +7691,13 @@ class Utils {
 
 
 	/**
-	 * @return int
-	 *
-	 * @since v1.7.9
-	 *
 	 * Return the course ID(s) by lession, quiz, answer etc.
+	 * 
+	 * @since 1.7.9
+	 *
+	 * @param int $content_id content id.
+	 * 
+	 * @return int
 	 */
 	public function get_course_id_by_subcontent( $content_id ) {
 		$mapping = array(
@@ -7569,7 +7713,7 @@ class Utils {
 
 		$content_type = get_post_field( 'post_type', $content_id );
 
-		// Differentiate standalone zoom meeting and zoom lesson
+		// Differentiate standalone zoom meeting and zoom lesson.
 		if ( $content_type == 'tutor_zoom_meeting' ) {
 			$parent_id   = wp_get_post_parent_id( $content_id );
 			$parent_type = get_post_field( 'post_type', $parent_id );
@@ -7586,11 +7730,16 @@ class Utils {
 	}
 
 	/**
-	 * @return bool
-	 *
-	 * @since v1.7.7
-	 *
 	 * Check if user can create, edit, delete various tutor contents such as lesson, quiz, answer etc.
+	 *
+	 * @since 1.7.9
+	 * 
+	 * @param string $content content.
+	 * @param int $object_id object id.
+	 * @param integer $user_id user id.
+	 * @param boolean $allow_current_admin is allow current admin.
+	 * 
+	 * @return boolean
 	 */
 	public function can_user_manage( $content, $object_id, $user_id = 0, $allow_current_admin = true ) {
 		$user_id   = (int) $this->get_user_id( $user_id );
@@ -7598,7 +7747,7 @@ class Utils {
 
 		if ( $course_id ) {
 			if ( $allow_current_admin && current_user_can( 'administrator' ) ) {
-				// Admin has access to everything
+				// Admin has access to everything.
 				return true;
 			}
 
@@ -7621,7 +7770,7 @@ class Utils {
 		switch ( $content ) {
 			case 'review':
 			case 'qa_question':
-				// just check if own content. Instructor privilege already checked in the earlier blocks
+				// Just check if own content. Instructor privilege already checked in the earlier blocks.
 				$id = $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT comment_ID
@@ -7638,11 +7787,15 @@ class Utils {
 	}
 
 	/**
-	 * @return bool
-	 *
-	 * @since v1.7.9
-	 *
 	 * Check if user has access for content like lesson, quiz, assignment etc.
+	 * 
+	 * @since 1.7.9
+	 *
+	 * @param string $content content.
+	 * @param integer $object_id object id.
+	 * @param integer $user_id user id.
+	 * 
+	 * @return boolean
 	 */
 	public function has_enrolled_content_access( $content, $object_id = 0, $user_id = 0 ) {
 		$user_id   = $this->get_user_id( $user_id );
@@ -7655,7 +7808,7 @@ class Utils {
 			return true;
 		}
 
-		// Check Lesson edit access to support page builders (eg: Oxygen)
+		// Check Lesson edit access to support page builders (eg: Oxygen).
 		if ( current_user_can( tutor()->instructor_role ) && $this->has_lesson_edit_access() ) {
 			return true;
 		}
@@ -7664,11 +7817,15 @@ class Utils {
 	}
 
 	/**
-	 * @return date
-	 *
-	 * @since v1.8.0
-	 *
 	 * Return the assignment deadline date based on duration and assignment creation date
+	 * 
+	 * @since 1.8.0
+	 *
+	 * @param int $assignment_id assignment id.
+	 * @param mixed $format format.
+	 * @param mixed $fallback fallback.
+	 * 
+	 * @return string|false
 	 */
 	public function get_assignment_deadline_date( $assignment_id, $format = null, $fallback = null ) {
 
@@ -7690,18 +7847,20 @@ class Utils {
 	}
 
 	/**
-	 * @return array
-	 *
-	 * @since v1.8.2
-	 *
 	 * Get earning chart data
+	 * 
+	 * @since 1.8.2
+	 *
+	 * @param int $user_id user id.
+	 * @param string $start_date start date.
+	 * @param string $end_date end date.
+	 * 
+	 * @return array
 	 */
 	public function get_earning_chart( $user_id, $start_date, $end_date ) {
 		global $wpdb;
 
-		/**
-		 * Format Date Name
-		 */
+		// Format Date Name.
 		$begin    = new \DateTime( $start_date );
 		$end      = new \DateTime( $end_date );
 		$interval = \DateInterval::createFromDateString( '1 day' );
@@ -7712,7 +7871,7 @@ class Utils {
 			$datesPeriod[ $dt->format( 'Y-m-d' ) ] = 0;
 		}
 
-		// Get statuses
+		// Get statuses.
 		$complete_status = $this->get_earnings_completed_statuses();
 		$statuses        = $complete_status;
 		$complete_status = "'" . implode( "','", $complete_status ) . "'";
@@ -7760,11 +7919,14 @@ class Utils {
 	}
 
 	/**
-	 * @return array
-	 *
-	 * @since v1.8.2
-	 *
 	 * Get earning chart data yearly
+	 *
+	 * @since 1.8.2
+	 * 
+	 * @param int $user_id user id.
+	 * @param int $year year.
+	 * 
+	 * @return array
 	 */
 	public function get_earning_chart_yearly( $user_id, $year ) {
 		global $wpdb;
@@ -7815,11 +7977,11 @@ class Utils {
 	}
 
 	/**
-	 * @return object
-	 *
-	 * @since v1.8.4
-	 *
 	 * Return object from vendor package
+	 * 
+	 * @since 1.8.4
+	 * 
+	 * @return object
 	 */
 	function get_package_object() {
 		 $params = func_get_args();
@@ -7838,33 +8000,39 @@ class Utils {
 	}
 
 	/**
-	 * @return boolean
-	 *
-	 * @since v1.8.9
-	 *
 	 * Check if user has specific role
+	 * 
+	 * @since 1.8.9
+	 *
+	 * @param mixed $roles roles.
+	 * @param integer $user_id user id.
+	 * 
+	 * @return boolean
 	 */
 	public function has_user_role( $roles, $user_id = 0 ) {
 
-		// Prepare the user ID and roles array
+		// Prepare the user ID and roles array.
 		! $user_id ? $user_id         = get_current_user_id() : 0;
 		! is_array( $roles ) ? $roles = array( $roles ) : 0;
 
-		// Get the user data and it's role array
+		// Get the user data and it's role array.
 		$user      = get_userdata( $user_id );
 		$role_list = ( is_object( $user ) && is_array( $user->roles ) ) ? $user->roles : array();
 
-		// Check if at least one role exists
+		// Check if at least one role exists.
 		$without_roles = array_diff( $roles, $role_list );
 		return count( $roles ) > count( $without_roles );
 	}
 
 	/**
-	 * @return boolean
-	 *
-	 * @since v1.8.9
-	 *
 	 * Check if user can edit course
+	 * 
+	 * @since 1.8.9
+	 *
+	 * @param int $user_id user id.
+	 * @param int $course_id course id.
+	 * 
+	 * @return boolean
 	 */
 	public function can_user_edit_course( $user_id, $course_id ) {
 		return $this->has_user_role( array( 'administrator', 'editor' ) ) || $this->is_instructor_of_this_course( $user_id, $course_id );
@@ -7872,11 +8040,13 @@ class Utils {
 
 
 	/**
-	 * @return boolean
-	 *
-	 * @since v1.9.0
-	 *
 	 * Check if course member limit full
+	 * 
+	 * @since 1.9.0
+	 *
+	 * @param integer $course_id course id.
+	 * 
+	 * @return boolean
 	 */
 	public function is_course_fully_booked( $course_id = 0 ) {
 
@@ -7886,6 +8056,15 @@ class Utils {
 		return $maximum_students && $maximum_students <= $total_enrolled;
 	}
 
+	/**
+	 * Check course is booked.
+	 *
+	 * @since 1.9.0
+	 * 
+	 * @param integer $course_id course id.
+	 * 
+	 * @return boolean
+	 */
 	function is_course_booked( $course_id = 0 ) {
 
 		$total_enrolled   = $this->count_enrolled_users_by_course( $course_id );
@@ -7897,15 +8076,17 @@ class Utils {
 	}
 
 	/**
-	 * @return boolean
-	 *
-	 * @since v1.9.2
-	 *
 	 * Check if current screen is under tutor dashboard
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @param string $subpage subpage.
+	 * 
+	 * @return boolean
 	 */
 	public function is_tutor_dashboard( $subpage = null ) {
 
-		// To Do: Add subpage check later
+		// To Do: Add subpage check later.
 
 		if ( function_exists( 'is_admin' ) && is_admin() ) {
 			$screen = get_current_screen();
@@ -7916,11 +8097,13 @@ class Utils {
 	}
 
 	/**
-	 * @return boolean
-	 *
-	 * @since v1.9.4
-	 *
 	 * Check if current screen tutor frontend dashboard
+	 * 
+	 * @since 1.9.4
+	 *
+	 * @param string $subpage subpage.
+	 * 
+	 * @return boolean
 	 */
 	public function is_tutor_frontend_dashboard( $subpage = null ) {
 
@@ -7941,6 +8124,17 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * Get unique slug.
+	 *
+	 * @since 1.9.4
+	 * 
+	 * @param string $slug slug.
+	 * @param string $post_type post type.
+	 * @param boolean $num_assigned num of assigned.
+	 * 
+	 * @return string
+	 */
 	public function get_unique_slug( $slug, $post_type = null, $num_assigned = false ) {
 
 		global $wpdb;
@@ -7974,6 +8168,8 @@ class Utils {
 	/**
 	 * Get post content ids
 	 *
+	 * @since 1.9.4
+	 * 
 	 * @param string $content_type like: lesson, quiz.
 	 * @param string $ancestor_type like: course, topics
 	 * @param string $ancestor_ids ancestor like course or topic
@@ -7984,7 +8180,7 @@ class Utils {
 		global $wpdb;
 		$ids = array();
 
-		// Convert single id to array
+		// Convert single id to array.
 		! is_array( $ancestor_ids ) ? $ancestor_ids = array( $ancestor_ids ) : 0;
 		$ancestor_ids                               = implode( ',', $ancestor_ids );
 
@@ -7995,13 +8191,13 @@ class Utils {
 		if ( false === $ids ) {
 			switch ( $content_type ) {
 
-				// Get lesson, quiz, assignment IDs
+				// Get lesson, quiz, assignment IDs.
 				case tutor()->lesson_post_type:
 				case 'tutor_quiz':
 				case 'tutor_assignments':
 					switch ( $ancestor_type ) {
 
-							// Get lesson, quiz, assignment IDs by course ID
+							// Get lesson, quiz, assignment IDs by course ID.
 						case tutor()->course_post_type:
 							$content_ids = $wpdb->get_col(
 								$wpdb->prepare(
@@ -8013,7 +8209,7 @@ class Utils {
 								)
 							);
 
-							// Assign id array to the variable
+							// Assign id array to the variable.
 							is_array( $content_ids ) ? $ids = $content_ids : 0;
 							break 2;
 					}
@@ -8021,7 +8217,7 @@ class Utils {
 
 				default:
 					switch ( $ancestor_type ) {
-						// Get lesson, quiz, assignment IDs by course ID
+						// Get lesson, quiz, assignment IDs by course ID.
 						case 'topic':
 							$content_ids = $wpdb->get_col(
 								"SELECT content.ID FROM {$wpdb->posts} content
@@ -8042,25 +8238,27 @@ class Utils {
 	/**
 	 * Get course element list
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @param string $content_type, content type like: lesson, assignment, quiz
 	 * @param string $ancestor_type, content type like: lesson, assignment, quiz
 	 * @param int    $ancestor_ids, post_parent id
+	 * 
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function get_course_content_list( string $content_type, string $ancestor_type, string $ancestor_ids ) {
 		global $wpdb;
 		$ids = array();
-		// Convert single id to array
+		// Convert single id to array.
 		! is_array( $ancestor_ids ) ? $ancestor_ids = array( $ancestor_ids ) : 0;
 		$ancestor_ids                               = implode( ',', $ancestor_ids );
 		switch ( $content_type ) {
-				// Get lesson, quiz, assignment IDs
+				// Get lesson, quiz, assignment IDs.
 			case tutor()->lesson_post_type:
 			case 'tutor_quiz':
 			case 'tutor_assignments':
 				switch ( $ancestor_type ) {
-						// Get lesson, quiz, assignment IDs by course ID
+						// Get lesson, quiz, assignment IDs by course ID.
 					case tutor()->course_post_type:
 						$content_ids = $wpdb->get_results(
 							$wpdb->prepare(
@@ -8073,7 +8271,7 @@ class Utils {
 							)
 						);
 
-						// Assign id array to the variable
+						// Assign id array to the variable.
 						$ids = $content_ids;
 						break 2;
 				}
@@ -8083,11 +8281,14 @@ class Utils {
 	}
 
 	/**
-	 * @return array
-	 *
 	 * Sanitize array key abd values recursively
+	 * 
+	 * @since 2.0.0
 	 *
-	 * @since v2.0.0
+	 * @param array $array array.
+	 * @param array $skip skip.
+	 * 
+	 * @return array
 	 */
 	public function sanitize_recursively( $array, $skip = array() ) {
 		$new_array = array();
@@ -8101,7 +8302,7 @@ class Utils {
 					$new_array[ $key ] = $this->sanitize_recursively( $value );
 					continue;
 				}
-				// Leave numeric as it is
+				// Leave numeric as it is.
 				$new_array[ $key ] = is_numeric( $value ) ? $value : sanitize_text_field( $value );
 			}
 		}
@@ -8124,7 +8325,7 @@ class Utils {
 		}
 		$data = array();
 		foreach ( $enrolled_courses->posts as $key => $course ) {
-			// push courses
+			// Push courses.
 			array_push( $data, array( 'course' => array( 'title' => $course->post_title ) ) );
 			$topics = $this->get_topics( $course->ID );
 
@@ -8134,7 +8335,7 @@ class Utils {
 					if ( count( $materials->posts ) || ! is_null( $materials->posts ) ) {
 						$topic->materials = $materials->posts;
 					}
-					// push topics
+					// Push topics.
 					array_push( $data[ $key ]['course'], array( 'topics' => $topic ) );
 				}
 			}
@@ -8142,6 +8343,17 @@ class Utils {
 		return $data;
 	}
 
+	/**
+	 * Get course duration
+	 *
+	 * @since 2.0.0
+	 * 
+	 * @param int $course_id course id.
+	 * @param array $return_array return array.
+	 * @param array $texts texts.
+	 * 
+	 * @return string
+	 */
 	public function get_course_duration( $course_id, $return_array, $texts = array(
 		'h' => 'hr',
 		'm' => 'min',
@@ -8172,6 +8384,10 @@ class Utils {
 
 	/**
 	 * Prepare free addons data
+	 * 
+	 * @since 2.0.0
+	 * 
+	 * @return array
 	 */
 	public function prepare_free_addons_data() {
 		$addons       = apply_filters( 'tutor_pro_addons_lists_for_display', array() );
@@ -8209,8 +8425,11 @@ class Utils {
 	/**
 	 * Get completed assignment number
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @param int $course_id course id | required.
 	 * @param int $student_id student id | required.
+	 * 
 	 * @return int
 	 */
 	public function get_submitted_assignment_count( int $assignment_id, int $student_id ): int {
@@ -8239,8 +8458,11 @@ class Utils {
 	/**
 	 * Get completed assignment number
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @param int $course_id course id | required.
 	 * @param int $student_id student id | required.
+	 * 
 	 * @return int
 	 */
 	public function count_completed_assignment( int $course_id, int $student_id ): int {
@@ -8266,12 +8488,14 @@ class Utils {
 		return $count ? $count : 0;
 	}
 
-	/*
+	/**
 	 * Empty state template
 	 *
-	 * @param string $title
+	 * @since 2.0.0
+	 * 
+	 * @param string $title title.
 	 *
-	 * @return mixed|html
+	 * @return mixed html
 	 */
 	public function tutor_empty_state( string $title = 'No data yet!' ) {
 		?>
@@ -8288,9 +8512,9 @@ class Utils {
 	 * Get tutor TOC page link
 	 * Settings > General > Terms and Conditions Page
 	 *
-	 * @return null | string
-	 *
 	 * @since 2.0.5
+	 * 
+	 * @return null | string
 	 */
 	function get_toc_page_link() {
 		$tutor_toc_page_id   = (int) get_tutor_option( 'tutor_toc_page_id' );
@@ -8307,9 +8531,11 @@ class Utils {
 	 * Translate dynamic text, dynamic text is not translate while potting
 	 * that's why define key here to make it translate able. It will put text in the pot file while compilling.
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @param string $key, pass key to get translate text | required.
+	 * 
 	 * @return string
-	 * @since v2.0.0
 	 */
 	public function translate_dynamic_text( $key, $add_badge = false, $badge_tag = 'span' ): string {
 		$old_key = $key;
@@ -8323,7 +8549,7 @@ class Utils {
 				'</' . $badge_tag . '>';
 		}
 
-		// Revert to linear textual array
+		// Revert to linear textual array.
 		$key_value = array_map(
 			function ( $kv ) {
 				return $kv['text'];
@@ -8338,9 +8564,11 @@ class Utils {
 	 * Show character as asterisk symbol for email
 	 * it will replace character with asterisk till @ symbol
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @param string $email | required.
+	 * 
 	 * @return string
-	 * @since v2.0.0
 	 */
 	function asterisks_email( string $email ): string {
 		if ( '' === $email ) {
@@ -8355,9 +8583,11 @@ class Utils {
 	 * Show some character as asterisk symbol
 	 * it will replace character with asterisk from the beginning and ending
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @param string $text | required.
+	 * 
 	 * @return string
-	 * @since v2.0.0
 	 */
 	function asterisks_center_text( string $str ): string {
 		if ( '' === $str ) {
@@ -8370,8 +8600,9 @@ class Utils {
 	/**
 	 * Report frequencies that will be shown on the dropdown
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @return array
-	 * @since v2.0.0
 	 */
 	public function report_frequencies() {
 		$frequencies = array(
@@ -8388,8 +8619,9 @@ class Utils {
 	/**
 	 * Add interval days with today date. For ex: 10 days add with today
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @param string $interval | required.
-	 * @since v2.0.0
 	 */
 	public function add_days_with_today( $interval ) {
 		$today    = date_create( date( 'Y-m-d' ) );
@@ -8400,8 +8632,11 @@ class Utils {
 	/**
 	 * Subtract interval days from today date. For ex: 10 days back from today
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @param string $interval | required.
-	 * @since v2.0.0
+	 * 
+	 * @return mixed
 	 */
 	public function sub_days_with_today( $interval ) {
 		$today    = date_create( date( 'Y-m-d' ) );
@@ -8412,7 +8647,14 @@ class Utils {
 	/**
 	 * Get renderable column list for tables based on context
 	 *
-	 * @since v2.0.0
+	 * @since 2.0.0
+	 * 
+	 * @param string $page_key page key.
+	 * @param string $context context.
+	 * @param array $contexts contexts.
+	 * @param mixed $filter_hook filter hook.
+	 * 
+	 * @return array
 	 */
 	public function get_table_columns_from_context( $page_key, $context, $contexts, $filter_hook = null ) {
 
@@ -8437,13 +8679,16 @@ class Utils {
 	/**
 	 * Check a user has attempted a quiz
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @param string $user_id | user that taken course.
 	 * @param string $quiz_id | quiz id that need to check wheather attempted or not.
+	 * 
 	 * @return bool | true if attempted otherwise false.
 	 */
 	public function has_attempted_quiz( $user_id, $quiz_id, $row = false ) {
 		global $wpdb;
-		// Sanitize data
+		// Sanitize data.
 		$user_id   = sanitize_text_field( $user_id );
 		$quiz_id   = sanitize_text_field( $quiz_id );
 		$attempted = $wpdb->get_row(
@@ -8463,19 +8708,16 @@ class Utils {
 	/**
 	 * Course nav items
 	 *
-	 * @since v2.0.0
-	 *
-	 * Course curriculum tab removed, content shifted
-	 * in the Course Info tab
-	 *
-	 * @since v2.0.5
+	 * @since 2.0.0
+	 * 
+	 * @return mixed
 	 */
 	public function course_nav_items() {
 		/**
 		 * If current user has course content then enrollment is not
 		 * required
 		 *
-		 * @since v2.0.6
+		 * @since 2.0.6
 		 */
 		$is_require_enrollment = ! $this->has_user_course_content_access();
 		$array                 = array(
@@ -8501,11 +8743,20 @@ class Utils {
 		return $array;
 	}
 
+	/**
+	 * Second to formated time.
+	 *
+	 * @since 2.0.0
+	 * 
+	 * @param string $seconds seconds.
+	 * @param string $type type.
+	 * 
+	 * @return DateInterval|false
+	 */
 	public function second_to_formated_time( $seconds, $type = null ) {
 
 		$dtF = new \DateTime( '@0' );
 		$dtT = new \DateTime( "@$seconds" );
-		// pr($dtF->diff( $dtT ));
 
 		switch ( $type ) {
 
@@ -8528,10 +8779,6 @@ class Utils {
 		}
 
 		return $dtF->diff( $dtT )->format( $format );
-
-		/*
-		return $_attempt_duration = human_readable_duration( gmdate( 't:i:s', $seconds ) );
-		return str_replace( array( ' hour', ' minute', ' second', 's', ',' ), array( 'H', 'M', 'S', '', '' ), $_attempt_duration ); */
 	}
 
 	public function seconds_to_time( $input_seconds ) {
