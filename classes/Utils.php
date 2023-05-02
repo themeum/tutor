@@ -124,7 +124,7 @@ class Utils {
 				<?php
 			}
 
-			// delete flash message
+			// Delete flash message.
 			delete_transient( 'tutor_flash_type' );
 			delete_transient( 'tutor_flash_message' );
 		}
@@ -4375,8 +4375,8 @@ class Utils {
 
 		/**
 		 * Get only assinged  courses questions if current user is not admin
+		 * User query.
 		 */
-		// User query.
 		if ( $asker_id ) {
 			$question_clause .= ' AND _question.user_id=' . $asker_id;
 		}
@@ -4632,7 +4632,7 @@ class Utils {
 		 * from now on it will check if tutor instructor and count
 		 * from instructor's course
 		 *
-		 * @since version 1.9.0
+		 * @since 1.9.0
 		 */
 		$user_id     = get_current_user_id();
 		$course_type = tutor()->course_post_type;
