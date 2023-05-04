@@ -83,6 +83,19 @@ class Lesson extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'tutor_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'tutor_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
+		add_filter( 'tutor_load_course_builder_scripts', array( $this, 'tutor_admin_check_lesson_editor' ) );
+	}
+
+	public function tutor_admin_check_lesson_editor($param)
+	{
+		$post_ID = get_the_ID();
+		$type = get_post_type($post_ID);
+
+		if ( is_admin() && tutor()->lesson_post_type === $type ) {
+			return true;
+		}
+		
+		return $param;
 	}
 
 	/**
