@@ -94,4 +94,22 @@
 			}
 		}
 	}
+
+	.quiz-explanation-wrapper{
+		display: flex;
+		background:#E5F5EB;
+		padding:15px;
+		border-radius:8px;
+		box-sizing: border-box;
+	}
+
+	.explain-toggle{
+		background:#F4F6F9; 
+		text-align:center!important;
+		padding:4px;
+		button{
+			margin:0;
+			line-height: 32px;
+		}
+	}
 }
