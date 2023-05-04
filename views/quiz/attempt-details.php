@@ -343,7 +343,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 	echo 'course-single-previous-attempts' != $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
 	?>
 		<div class="tutor-table-responsive tutor-mt-16">
-			<table class="tutor-table tutor-quiz-attempt-details tutor-mb-32">
+			<table class="tutor-table tutor-quiz-attempt-details tutor-mb-32 tutor-table-data-td-target">
 				<thead>
 					<tr>
 					<?php foreach ( $table_2_columns as $key => $column ) : ?>
@@ -732,6 +732,9 @@ if ( is_array( $answers ) && count( $answers ) ) {
 									?>
 								<?php endforeach; ?>
 							</tr>
+							
+							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status )?>
+
 							<?php
 				}
 				?>
