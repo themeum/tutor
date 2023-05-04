@@ -86,15 +86,21 @@ class Lesson extends Tutor_Base {
 		add_filter( 'tutor_load_course_builder_scripts', array( $this, 'tutor_admin_check_lesson_editor' ) );
 	}
 
-	public function tutor_admin_check_lesson_editor($param)
-	{
+	/**
+	 * Function to check Lesson WP Editor
+	 *
+	 * @param mixed $param Param.
+	 *
+	 * @return mixed
+	 */
+	public function tutor_admin_check_lesson_editor( $param ) {
 		$post_ID = get_the_ID();
-		$type = get_post_type($post_ID);
+		$type    = get_post_type( $post_ID );
 
 		if ( is_admin() && tutor()->lesson_post_type === $type ) {
 			return true;
 		}
-		
+
 		return $param;
 	}
 
@@ -270,7 +276,7 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		
+
 		/**
 		 * Allow iframe inside lesson content to support
 		 * embed video & other stuff
