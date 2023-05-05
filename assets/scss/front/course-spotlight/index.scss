@@ -45,12 +45,12 @@
 			@include breakpoint-max(desktop-lg) {
 				.tutor-course-single-sidebar-wrapper {
 					background-color: #fff;
-					height: 100%;
+					height: 100vh;
 					right: 0 !important;
 					overflow-y: auto;
 					opacity: 1;
 					z-index: 1026;
-
+					padding-bottom: 150px;
 					.tutor-course-single-sidebar-title {
 						position: sticky;
 						top: 0;
