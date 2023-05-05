@@ -64,9 +64,8 @@ class QuizModel {
 					$user_id
 				)
 			);
-			TutorCache::set( $cache_key,  $attempts );
+			TutorCache::set( $cache_key, $attempts );
 		}
-		
 
 		if ( is_array( $attempts ) && count( $attempts ) ) {
 			return $attempts;
@@ -565,8 +564,7 @@ class QuizModel {
 		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$results = $wpdb->get_results(
 			"SELECT answers.*,
-					question.question_title,
-					question.question_type
+					question.*
 			FROM 	{$wpdb->prefix}tutor_quiz_attempt_answers answers
 					LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question
 						   ON answers.question_id = question.question_id

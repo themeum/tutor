@@ -963,7 +963,7 @@ class Quiz {
 		$topic_id    = Input::post( 'topic_id', 0, Input::TYPE_INT );
 		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
 
-		// check if the user can manage the quiz.
+		// Check if the user can manage the quiz.
 		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
@@ -983,6 +983,8 @@ class Quiz {
 				'question_settings'    => maybe_serialize( array() ),
 				'question_order'       => esc_sql( $next_question_order ),
 			);
+
+			$new_question_data = apply_filters( 'tutor_quiz_question_data', $new_question_data );
 
 			$wpdb->insert( $wpdb->prefix . 'tutor_quiz_questions', $new_question_data );
 			$question_id = $wpdb->insert_id;
@@ -1111,6 +1113,8 @@ class Quiz {
 				'question_mark'        => $question_mark,
 				'question_settings'    => maybe_serialize( $question ),
 			);
+
+			$data = apply_filters( 'tutor_quiz_question_data', $data );
 
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_questions', $data, array( 'question_id' => $question_id ) );
 		}
