@@ -123,14 +123,16 @@ class User {
 	}
 
 	/**
-	 * Check user is instructor.
+	 * Check current user is instructor.
 	 *
 	 * @since 2.2.0
 	 *
+	 * @param bool $is_approved instructor is approved or not.
+	 * 
 	 * @return boolean
 	 */
-	public static function is_instructor() {
-		return current_user_can( self::INSTRUCTOR );
+	public static function is_instructor( $is_approved = true ) {
+		return tutils()->is_instructor( 0, $is_approved );
 	}
 
 	/**
