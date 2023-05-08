@@ -21,6 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class User {
 
+	const STUDENT    = 'subscriber';
+	const INSTRUCTOR = 'tutor_instructor';
+	const ADMIN      = 'administrator';
+
 	/**
 	 * Registration notice
 	 *
@@ -34,8 +38,17 @@ class User {
 	 * Register hooks
 	 *
 	 * @since 1.0.0
+	 * @since 2.2.0 $register_hooks param added to resuse the class without hooks register.
+	 *
+	 * @param bool $register_hooks register hooks.
+	 *
+	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
+		if ( ! $register_hooks ) {
+			return;
+		}
+
 		add_action( 'edit_user_profile', array( $this, 'edit_user_profile' ) );
 		add_action( 'show_user_profile', array( $this, 'edit_user_profile' ), 10, 1 );
 
@@ -47,6 +60,79 @@ class User {
 
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
 		add_action( 'admin_init', array( $this, 'hide_notices' ) );
+	}
+
+	/**
+	 * Check user has provided role.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param string $role role.
+	 *
+	 * @return boolean
+	 */
+	public static function is( string $role ) {
+		return current_user_can( $role );
+	}
+
+	/**
+	 * Check user has any role.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param array $roles roles.
+	 *
+	 * @return boolean
+	 */
+	public static function has_any_role( array $roles ) {
+		$user = wp_get_current_user();
+		if ( empty( $user->roles ) || empty( $roles ) ) {
+			return false;
+		}
+
+		foreach ( $roles as $role ) {
+			if ( in_array( $role, $user->roles, true ) ) {
+				return true;
+				break;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check user is student.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_student() {
+		return current_user_can( self::STUDENT );
+	}
+
+	/**
+	 * Check user is admin.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_admin() {
+		return current_user_can( self::ADMIN );
+	}
+
+	/**
+	 * Check current user is instructor.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param bool $is_approved instructor is approved or not.
+	 * 
+	 * @return boolean
+	 */
+	public static function is_instructor( $is_approved = true ) {
+		return tutils()->is_instructor( 0, $is_approved );
 	}
 
 	/**
@@ -203,7 +289,7 @@ class User {
 	 *
 	 * @param int    $user_id user id.
 	 * @param string $role user role.
-	 * @param string $old_roles old role.
+	 * @param array  $old_roles old role.
 	 *
 	 * @return void
 	 */
