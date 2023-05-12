@@ -220,7 +220,15 @@ Instructor
 }
 
 .tutor-login-form-wrapper, #tutor-registration-form {
-	padding: 24px 55px;
+	padding: 24px 24px;
+	.tutor-password-strength-checker {
+		.show-hide-btn {
+			top: 45%;
+			@media (max-width: 767px) {
+				top: 42%;
+			}
+		}
+	}
 }
 
 .tutor-login-wrap form {
