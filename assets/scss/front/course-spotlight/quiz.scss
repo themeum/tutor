@@ -246,21 +246,23 @@
 			}
 
 			.fill-in-the-gap {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: flex-end;
-
 				.fill-blank {
+					display: inline-block;
 					border-bottom: 2px dashed var(--tutor-color-secondary);
-					margin: 0px 10px 5px 10px;
+					margin: 0px 0px 10px 0px;
 					@include breakpoint-max(mobile) {
 						margin: 0px 10px 5px 0px;
 					}
 				}
 
 				input {
-					width: 150px !important;
-					margin: 10px 10px 10px 10px;
+					border-radius: 5px;
+    				background-color: var(--tutor-color-white);
+					border: 1px solid var(--tutor-border-color);
+					box-shadow: none;
+					transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
+					margin: 0px 0px 3px 0px;
+					padding: 2px 5px;
 				}
 			}
 		}
