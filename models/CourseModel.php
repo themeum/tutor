@@ -31,6 +31,13 @@ class CourseModel {
 	const STATUS_PENDING    = 'pending';
 
 	/**
+	 * Course mapped with the product using this meta key
+	 *
+	 * @var string
+	 */
+	const WC_PRODUCT_META_KEY = '_tutor_course_product_id';
+
+	/**
 	 * Course record count
 	 *
 	 * @since 2.0.7
