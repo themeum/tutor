@@ -9839,4 +9839,49 @@ class Utils {
 
 		return $error_message;
 	}
+
+	/**
+	 * Get paid courses
+	 *
+	 * To indentify course is connected with any product
+	 * like WC Product or EDD product meta key will be used
+	 *
+	 * @since 2.2.0
+	 * 
+	 * @param string $meta_key course product id meta key.
+	 * @param array  $args wp_query args.
+	 *
+	 * @return array
+	 */
+	public function get_paid_courses( string $meta_key, array $args = array() ): array {
+		$current_user = wp_get_current_user();
+		$default_args = array(
+			'post_type'      => 'courses',
+			'post_status'    => 'publish',
+			'no_found_rows'  => true,
+			'posts_per_page' => -1,
+			'relation'       => 'AND',
+			'meta_query' => array(
+				array(
+					'key' => sanitize_text_field( $meta_key ),
+					'value' => 0,
+					'compare' => '!=',
+					'type' => 'NUMERIC',
+				),
+			),
+		);
+
+		// Check if the current user is an admin
+		if ( ! current_user_can( 'administrator' ) ) {
+			$args['author'] = $current_user->ID;
+		}
+
+		$query = new \WP_Query( wp_parse_args( $args, $default_args ) );
+	
+		if ( $query->have_posts() ) {
+			return $query->posts;
+		}
+
+		return array();
+	}
 }
