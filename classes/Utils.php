@@ -8996,7 +8996,7 @@ class Utils {
 	 * @return array array of menu items.
 	 */
 	public function instructor_menus(): array {
-		return array(
+		$menus = array(
 			'separator-1'   => array(
 				'title'    => __( 'Instructor', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
@@ -9012,6 +9012,11 @@ class Utils {
 				'auth_cap' => tutor()->instructor_role,
 				'icon'     => 'tutor-icon-rocket',
 			),
+		);
+
+		$menus = apply_filters( 'tutor_after_instructor_menu_my_courses', $menus );
+
+		$other_menus = array(
 			'announcements' => array(
 				'title'    => __( 'Announcements', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
@@ -9028,6 +9033,8 @@ class Utils {
 				'icon'     => 'tutor-icon-quiz-o',
 			),
 		);
+		
+		return array_merge( $menus, $other_menus );
 	}
 
 
