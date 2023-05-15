@@ -1518,21 +1518,17 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function social_share_content() {
-		global $wp_query, $post;
-		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === $this->course_post_type ) { ?>
-			<!--Facebook-->
-			<meta property="og:type" content="website"/>
-			<meta property="og:image" content="<?php echo esc_url( get_tutor_course_thumbnail_src() ); ?>" />
-			<meta property="og:description" content="<?php echo esc_html( $post->post_content ); ?>" />
-			<!--Twitter-->
-			<meta name="twitter:image" content="<?php echo esc_url( get_tutor_course_thumbnail_src() ); ?>">
-			<meta name="twitter:description" content="<?php echo esc_html( $post->post_content ); ?>">
-			<!--Google+-->
-			<meta itemprop="image" content="<?php echo esc_url( get_tutor_course_thumbnail_src() ); ?>">
-			<meta itemprop="description" content="<?php echo esc_html( $post->post_content ); ?>">
-			<?php
-		}
-	}
+		$description = wp_filter_nohtml_kses( $this->post->post_content ); // Remove HTML tags from the content
+	
+		// Generate the social share content
+		$content = array(
+			'title'       => $this->post->post_title,
+			'description' => $description,
+			'url'         => get_permalink( $this->post->ID ),
+		);
+	
+		return apply_filters( 'tutor_social_share_content', $content );
+	}	
 
 	/**
 	 * Delete associated enrollment
