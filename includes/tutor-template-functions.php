@@ -446,7 +446,7 @@ if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
 			$size = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
 			$src  = wp_get_attachment_image_url( $post_thumbnail_id, $size, false );
 		} else {
-			$src = tutor()->url . 'assets/images/placeholder.svg';
+			$src = apply_filters( 'tutor_course_thumbnail_placeholder', tutor()->url . 'assets/images/placeholder.svg' );
 		}
 
 		return $src;
