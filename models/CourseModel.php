@@ -533,7 +533,7 @@ class CourseModel {
 	 *
 	 * @return array
 	 */
-	public function get_paid_courses( string $meta_key, array $args = array() ): array {
+	public static function get_paid_courses( string $meta_key, array $args = array() ): array {
 		$current_user = wp_get_current_user();
 		$default_args = array(
 			'post_type'      => 'courses',
