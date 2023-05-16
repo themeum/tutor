@@ -434,12 +434,19 @@ if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
         </div>';
 	}
 }
-/**
- * Get the course/post thumbnail src
- */
+
 if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
-	function get_tutor_course_thumbnail_src( $size = 'post-thumbnail' ) {
-		$post_id           = get_the_ID();
+	/**
+	 * Get the course/post thumbnail src.
+	 *
+	 * @since 1.0.0
+	 * @since 2.2.0 $id param added to provide post id to access outside of post loop.
+	 *
+	 * @param string $size size of thumb.
+	 * @param int    $id post id.
+	 */
+	function get_tutor_course_thumbnail_src( $size = 'post-thumbnail', $id = 0 ) {
+		$post_id           = $id ? $id : get_the_ID();
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 
 		if ( $post_thumbnail_id ) {
