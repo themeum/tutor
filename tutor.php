@@ -166,3 +166,11 @@ if ( ! function_exists( 'str_contains' ) ) {
 }
 // add_action('plugins_loaded', 'tutor_lms');.
 $GLOBALS['tutor'] = tutor_lms();
+
+/**
+ * TEST - do not merge 
+ **/
+function tutor_wpcs_test() {
+    $value = $_POST['wpcs-test'];
+    $arr = [$value];
+}
