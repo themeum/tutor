@@ -108,9 +108,9 @@ class CourseModel {
 
 	/**
 	 * Get course count by instructor
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param $instructor_id
 	 *
 	 * @return null|string
@@ -143,9 +143,9 @@ class CourseModel {
 
 	/**
 	 * Get course by quiz
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
+	 *
 	 * @param $quiz_id quiz id.
 	 *
 	 * @return array|bool|null|object|void
@@ -172,11 +172,11 @@ class CourseModel {
 	  *
 	  * @since 1.0.0
 	  *
-	  * @param integer $instructor_id
+	  * @param integer      $instructor_id
 	  * @param array|string $post_status
-	  * @param integer $offset
-	  * @param integer $limit
-	  * @param boolean $count_only
+	  * @param integer      $offset
+	  * @param integer      $limit
+	  * @param boolean      $count_only
 	  *
 	  * @return array|null|object
 	  */
@@ -523,7 +523,7 @@ class CourseModel {
 	/**
 	 * Get paid courses
 	 *
-	 * To indentify course is connected with any product
+	 * To identify course is connected with any product
 	 * like WC Product or EDD product meta key will be used
 	 *
 	 * @since 2.2.0
@@ -533,7 +533,7 @@ class CourseModel {
 	 *
 	 * @return array
 	 */
-	public function get_paid_courses( string $meta_key, array $args = array() ): array {
+	public static function get_paid_courses( string $meta_key, array $args = array() ): array {
 		$current_user = wp_get_current_user();
 		$default_args = array(
 			'post_type'      => 'courses',
@@ -541,23 +541,23 @@ class CourseModel {
 			'no_found_rows'  => true,
 			'posts_per_page' => -1,
 			'relation'       => 'AND',
-			'meta_query' => array(
+			'meta_query'     => array(
 				array(
-					'key' => sanitize_text_field( $meta_key ),
-					'value' => 0,
+					'key'     => sanitize_text_field( $meta_key ),
+					'value'   => 0,
 					'compare' => '!=',
-					'type' => 'NUMERIC',
+					'type'    => 'NUMERIC',
 				),
 			),
 		);
 
-		// Check if the current user is an admin
+		// Check if the current user is an admin.
 		if ( ! current_user_can( 'administrator' ) ) {
 			$args['author'] = $current_user->ID;
 		}
 
 		$query = new \WP_Query( wp_parse_args( $args, $default_args ) );
-	
+
 		if ( $query->have_posts() ) {
 			return $query->posts;
 		}
