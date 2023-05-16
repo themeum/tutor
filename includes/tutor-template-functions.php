@@ -562,6 +562,8 @@ if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
 	 *
 	 * @param string $size size of thumb.
 	 * @param int    $id post id.
+	 *
+	 * @return string src of the post thumbnail | default placeholder
 	 */
 	function get_tutor_course_thumbnail_src( $size = 'post-thumbnail', $id = 0 ) {
 		$post_id           = $id ? $id : get_the_ID();
