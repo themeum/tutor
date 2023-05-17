@@ -9,14 +9,15 @@
  * @since 1.0.0
  */
 
-extract( $data ); // $attempt_list, $context;
+// Data variable contains $attempt_list, $context.
+extract( $data ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 $page_key                  = 'attempt-table';
 $table_columns             = include __DIR__ . '/contexts.php';
 $enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
 
 if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) && count( $attempt_list ) ) {
-	// Provide the attempt data from the first attempt
+	// Provide the attempt data from the first attempt.
 	// For now now attempt specific data is shown, that's why no problem if we take meta data from any attempt.
 	$attempt_data = $attempt_list[0];
 	include __DIR__ . '/header.php';
@@ -54,7 +55,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 				<?php foreach ( $attempt_list as $attempt ) : ?>
 					<?php
 						$course_id         = is_object( $attempt ) && property_exists( $attempt, 'course_id' ) ? $attempt->course_id : 0;
-						$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
+						$earned_percentage = ( $attempt->earned_marks > 0 && $attempt->total_marks > 0 ) ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
 						$answers           = isset( $answers_array[ $attempt->attempt_id ] ) ? $answers_array[ $attempt->attempt_id ] : array();
 						$attempt_info      = @unserialize( $attempt->attempt_info );
 						$attempt_info      = ! is_array( $attempt_info ) ? array() : $attempt_info;
