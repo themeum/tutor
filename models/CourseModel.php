@@ -38,6 +38,13 @@ class CourseModel {
 	const WC_PRODUCT_META_KEY = '_tutor_course_product_id';
 
 	/**
+	 * Course attachment/downloadable resources meta key
+	 *
+	 * @var string
+	 */
+	const ATTACHMENT_META_KEY = '_tutor_attachments';
+
+	/**
 	 * Course record count
 	 *
 	 * @since 2.0.7
