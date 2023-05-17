@@ -1650,11 +1650,7 @@ class Course extends Tutor_Base {
 			$product_obj = wc_get_product( $product_id );
 		}
 
-		// Add product name for new one.
-		if ( ! $product_id ) {
-			$product_obj->set_name( $title );
-		}
-
+		$product_obj->set_name( $title );
 		$product_obj->set_status( $status );
 		$product_obj->set_price( $reg_price );
 		$product_obj->set_regular_price( $reg_price );
