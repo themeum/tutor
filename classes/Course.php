@@ -803,7 +803,7 @@ class Course extends Tutor_Base {
 		}
 
 		$referer_url = wp_get_referer();
-		wp_safe_redirect( $referer_url . '?nocache='. time() );
+		wp_safe_redirect( $referer_url . '?nocache=' . time() );
 		exit;
 	}
 
@@ -1004,35 +1004,12 @@ class Course extends Tutor_Base {
 				}
 
 				$product_obj = wc_get_product( $attached_product_id );
-				$product_obj->set_price( $course_price ); // Set product price.
-				$product_obj->set_regular_price( $course_price ); // Set product regular price.
-
-				if ( $sale_price > 0 ) {
-					$product_obj->set_sale_price( $sale_price );
-				} else {
-					// When use remove sale price ( discounted price ).
-					$product_obj->set_sale_price( null );
-				}
-
-				$product_obj->set_sold_individually( true );
-				$product_id = $product_obj->save();
+				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $attached_product_id );
 				if ( $product_obj->is_type( 'subscription' ) ) {
 					update_post_meta( $attached_product_id, '_subscription_price', $course_price );
 				}
 			} else {
-				$product_obj = new \WC_Product();
-				$product_obj->set_name( $course->post_title );
-				$product_obj->set_status( 'publish' );
-				$product_obj->set_price( $course_price ); // Set product price.
-				$product_obj->set_regular_price( $course_price ); // Set product regular price.
-
-				if ( $sale_price > 0 ) {
-					$product_obj->set_sale_price( $sale_price );
-				}
-
-				$product_obj->set_sold_individually( true );
-
-				$product_id = $product_obj->save();
+				$product_id = self::create_wc_product( $course->post_title, $course_price, $sale_price );
 				if ( $product_id ) {
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 					// Mark product for woocommerce.
@@ -1650,6 +1627,47 @@ class Course extends Tutor_Base {
 				exit;
 			}
 		}
+	}
+
+	/**
+	 * Create or update WooCommerce product
+	 *
+	 * If product id not set it will create new one.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param string $title product title.
+	 * @param string $reg_price product price.
+	 * @param string $sale_price product sale price.
+	 * @param int    $product_id product ID.
+	 * @param string $status product status.
+	 *
+	 * @return integer
+	 */
+	public static function create_wc_product( $title, $reg_price, $sale_price, $product_id = 0, $status = 'publish' ) {
+		$product_obj = new \WC_Product();
+		if ( $product_id ) {
+			$product_obj = wc_get_product( $product_id );
+		}
+
+		// Add product name for new one.
+		if ( ! $product_id ) {
+			$product_obj->set_name( $title );
+		}
+
+		$product_obj->set_status( $status );
+		$product_obj->set_price( $reg_price );
+		$product_obj->set_regular_price( $reg_price );
+
+		if ( $sale_price > 0 ) {
+			$product_obj->set_sale_price( $sale_price );
+		} else {
+			$product_obj->set_sale_price( null );
+		}
+
+		$product_obj->set_sold_individually( true );
+
+		return $product_obj->save();
 	}
 
 }
