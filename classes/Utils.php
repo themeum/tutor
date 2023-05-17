@@ -1493,6 +1493,9 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 2.2.0
+	 * count param added to count attachment.
+	 *
 	 * @param int    $post_id post id.
 	 * @param string $meta_key meta key.
 	 * @param bool   $count set true to get only count.
