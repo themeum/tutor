@@ -10,7 +10,7 @@
  */
 
 // Data variable contains $attempt_list, $context.
-extract( $data );
+extract( $data ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 $page_key                  = 'attempt-table';
 $table_columns             = include __DIR__ . '/contexts.php';
