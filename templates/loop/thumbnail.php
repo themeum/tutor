@@ -19,4 +19,5 @@ $placeholder_img  = tutor()->url . 'assets/images/placeholder.svg';
 			<img class="tutor-card-image-top" src="<?php echo empty( esc_url( $tutor_course_img ) ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 		</div>
 	</a>
+	<?php do_action( 'tutor_after_course_loop_thumbnail_link', get_the_ID() ); ?>
 </div>
