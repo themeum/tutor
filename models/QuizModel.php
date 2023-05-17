@@ -754,4 +754,36 @@ class QuizModel {
 		);
 		return $attempt;
 	}
+
+	/**
+	 * Get total number of quizzes by course id
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param int|array $course_id Course id or array of course ids.
+	 *
+	 * @return int
+	 */
+	public static function get_quiz_count_by_course( $course_id ) {
+		global $wpdb;
+
+		$and_clause = is_array( $course_id ) ? ' AND post_parent IN (' . implode( ',', $course_id ) . ')' : "AND post_parent = $course_id";
+
+		$count = $wpdb->get_var(
+			"SELECT
+				COUNT(ID) 
+			FROM {$wpdb->posts}
+			WHERE post_parent IN 
+				(SELECT
+					ID 
+				FROM {$wpdb->posts} 
+					WHERE post_type='topics'
+					{$and_clause}
+					AND post_status = 'publish'
+				)
+				AND post_type ='tutor_quiz' 
+				AND post_status = 'publish'"
+		);
+		return $count ? $count : 0;
+	}
 }
