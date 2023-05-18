@@ -1493,15 +1493,24 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 2.2.0
+	 * count param added to count attachment.
+	 *
 	 * @param int    $post_id post id.
 	 * @param string $meta_key meta key.
+	 * @param bool   $count set true to get only count.
 	 *
 	 * @return array
 	 */
-	public function get_attachments( $post_id = 0, $meta_key = '_tutor_attachments' ) {
+	public function get_attachments( $post_id = 0, $meta_key = '_tutor_attachments', $count = false ) {
 		$post_id         = $this->get_post_id( $post_id );
 		$attachments     = maybe_unserialize( get_post_meta( $post_id, $meta_key, true ) );
 		$attachments_arr = array();
+
+		// Since 2.2.0 get only count if required.
+		if ( $count ) {
+			return is_array( $attachments ) ? count( $attachments ) : 0;
+		}
 
 		if ( is_array( $attachments ) && count( $attachments ) ) {
 			foreach ( $attachments as $attachment ) {
