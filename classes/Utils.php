@@ -3045,8 +3045,10 @@ class Utils {
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
 		$date_filter   = sanitize_text_field( $date_filter );
-		$order_filter  = sanitize_text_field( $order_filter );
+		$order_filter  = sanitize_sql_orderby( $order_filter );
 		$rating        = sanitize_text_field( $rating );
+		
+	
 
 		$search_term_raw = $search_filter;
 		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
@@ -3098,7 +3100,10 @@ class Utils {
 		}
 
 		// Rating wise sorting @since 2.0.0.
-		$rating        = isset( $_POST['rating_filter'] ) ? $rating : '';
+		$res_rat = array(1,2,3,4,5);
+	
+		$rating        = isset( $_POST['rating_filter'] ) &&  in_array($rating,$res_rat) ? $rating : '';
+		
 		$rating_having = '';
 		if ( '' !== $rating ) {
 			$max_rating = (int) $rating + 1;
