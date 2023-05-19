@@ -664,7 +664,7 @@ class Quiz {
 	 */
 	public function tutor_quiz_timeout() {
 		tutils()->checking_nonce();
-
+		
 		global $wpdb;
 
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
