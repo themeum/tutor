@@ -1578,3 +1578,36 @@ if ( ! function_exists( 'tutor_enrolled_course_progress' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'tutor_permission_denied_template' ) ) {
+	/**
+	 * Load permission denied template
+	 *
+	 * It will load permission denied template & return so not code
+	 * after this will execute
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param integer $post_id post id if 0 then current post id will be used.
+	 *
+	 * @return void
+	 */
+	function tutor_permission_denied_template( int $post_id = 0 ) {
+		if ( ! $post_id ) {
+			$post_id = get_the_ID();
+		}
+
+		$args = array(
+			'headline'    => __( 'Permission Denied', 'tutor-pro' ),
+			'message'     => __( 'You don\'t have the right to edit this course', 'tutor-pro' ),
+			'description' => __( 'Please make sure you are logged in to correct account', 'tutor-pro' ),
+			'button'      => array(
+				'url'  => get_permalink( $post_id ),
+				'text' => __( 'View Course', 'tutor-pro' ),
+			),
+		);
+
+		tutor_load_template( 'permission-denied', $args );
+		return;
+	}
+}
