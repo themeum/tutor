@@ -9016,6 +9016,11 @@ class Utils {
 				'show_ui'  => false,
 				'auth_cap' => tutor()->instructor_role,
 			),
+			'create-bundle' => array(
+				'title'    => __( 'Create Bundle', 'tutor' ),
+				'show_ui'  => false,
+				'auth_cap' => tutor()->instructor_role,
+			),
 			'my-courses'    => array(
 				'title'    => __( 'My Courses', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
@@ -9387,17 +9392,17 @@ class Utils {
 	 * @return void
 	 */
 	public function get_course_builder_screen() {
-		// Add course editor identifier class.
+		$builder_screen = null;
 		if ( is_admin() ) {
 			$screen = get_current_screen();
 			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == tutor()->course_post_type ) {
-				return $screen->is_block_editor ? 'gutenberg' : 'classic';
+				$builder_screen = $screen->is_block_editor ? 'gutenberg' : 'classic';
 			}
 		} elseif ( $this->is_tutor_frontend_dashboard( 'create-course' ) ) {
-			return 'frontend';
+			$builder_screen = 'frontend';
 		}
 
-		return null;
+		return apply_filters( 'tutor_builder_screen', $builder_screen );
 	}
 
 	/**
