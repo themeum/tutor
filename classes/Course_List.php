@@ -256,7 +256,7 @@ class Course_List {
 
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
-
+        
 		if ( '' === $action || '' === $bulk_ids ) {
 			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
 			exit;
@@ -375,6 +375,7 @@ class Course_List {
 		$post_table = $wpdb->posts;
 		$status     = sanitize_text_field( $status );
 		$bulk_ids   = sanitize_text_field( $bulk_ids );
+		
 
 		$update = $wpdb->query(
 			$wpdb->prepare(
