@@ -3112,7 +3112,7 @@ class Utils {
 			}
 			$rating_having = " HAVING rating >= {$rating} AND rating <= {$max_rating} ";
 		}
-		
+
 
 		/**
 		 * Handle Sort by Relevant | New | Popular & Order Shorting
