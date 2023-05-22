@@ -42,6 +42,17 @@ if ( $product ) {
 					</del>
 				<?php endif; ?>
 				</div>
+				<?php
+					/**
+					 * Added to show info about price.
+					 * 
+					 * @since 2.2.0
+					 */
+					do_action( 'tutor_after_course_details_wc_cart_price', $product, get_the_ID() ); 
+				?>
+				<div>
+					<span class="tutor-icon-badge-percent tutor-color-danger"></span>	75% off
+				</div>
             <?php echo apply_filters( 'tutor_course_details_wc_add_to_cart_price', ob_get_clean(), $product ); //phpcs:ignore ?>
 		</div>
 		<form action="<?php echo esc_url( apply_filters( 'tutor_course_add_to_cart_form_action', get_permalink( get_the_ID() ) ) ); ?>" method="post" enctype="multipart/form-data">
