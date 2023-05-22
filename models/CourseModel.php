@@ -45,6 +45,13 @@ class CourseModel {
 	const ATTACHMENT_META_KEY = '_tutor_attachments';
 
 	/**
+	 * Course benefits meta key
+	 *
+	 * @var string
+	 */
+	const BENEFITS_META_KEY = '_tutor_course_benefits';
+
+	/**
 	 * Course record count
 	 *
 	 * @since 2.0.7

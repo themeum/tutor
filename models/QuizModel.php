@@ -767,7 +767,7 @@ class QuizModel {
 	public static function get_quiz_count_by_course( $course_id ) {
 		global $wpdb;
 
-		$and_clause = is_array( $course_id ) ? ' AND post_parent IN (' . QueryHelper::prepare_in_clause( $course_id ) . ')' : "AND post_parent = $course_id";
+		$and_clause = is_array( $course_id ) && count( $course_id ) ? ' AND post_parent IN (' . QueryHelper::prepare_in_clause( $course_id ) . ')' : "AND post_parent = $course_id";
 
 		$count = $wpdb->get_var(
 			"SELECT
