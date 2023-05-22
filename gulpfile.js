@@ -249,6 +249,7 @@ gulp.task('copy', function() {
 			'!.travis.yml',
 			'!phpunit.xml.dist',
 			'!phpunit.xml',
+			'!phpcs.xml'
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });
