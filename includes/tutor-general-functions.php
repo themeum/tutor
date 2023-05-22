@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+use Tutor\Cache\FlashMessage;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -1049,3 +1051,19 @@ if ( ! function_exists( 'tutor_closeable_alert_msg' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_set_flash_message' ) ) {
+	/**
+	 * Utility API Set flash message to show somewhere
+	 *
+	 * It will call set_cache method of FlashMessage class to set cache
+	 *
+	 * @param mixed  $message message to show.
+	 * @param string $alert alert type as FlashMessage::$alert_types.
+	 *
+	 * @return void
+	 */
+	function tutor_set_flash_message( $message = '', $alert = 'success' ) {
+		$flash_msg = new FlashMessage( $message, $alert );
+		$flash_msg->set_cache();
+	}
+}
