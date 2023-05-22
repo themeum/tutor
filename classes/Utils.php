@@ -3112,6 +3112,7 @@ class Utils {
 			}
 			$rating_having = " HAVING rating >= {$rating} AND rating <= {$max_rating} ";
 		}
+		
 
 		/**
 		 * Handle Sort by Relevant | New | Popular & Order Shorting
@@ -4397,6 +4398,7 @@ class Utils {
 
 		if ( isset( $args['course_id'] ) ) {
 			// Get qa for specific course.
+			$args['course_id'] = intval($args['course_id']);
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
 		} elseif ( ! $asker_id && $question_id === null && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
@@ -4412,7 +4414,7 @@ class Utils {
 		}
 
 		if ( isset( $args['date'] ) ) {
-			$date           = sanitize_text_field( $args['date'] );
+			$date           = esc_sql( $args['date'] );
 			$filter_clause .= ' AND DATE(_question.comment_date)=\'' . $date . '\'';
 		}
 
