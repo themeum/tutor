@@ -21,7 +21,7 @@ if ( is_array( $course_tags ) && count( $course_tags ) ) { ?>
 		  <ul class="tutor-tag-list">
 				<?php
 				foreach ( $course_tags as $course_tag ) {
-					$tag_link = get_term_link( $course_tag->term_id );
+					$tag_link = get_term_link( (int) $course_tag->term_id );
 					echo "<li><a href=' " . esc_url( $tag_link ) . " '> " . esc_html( $course_tag->name ) . ' </a></li>';
 				}
 				?>
