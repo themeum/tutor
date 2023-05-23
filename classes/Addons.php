@@ -136,7 +136,7 @@ class Addons {
 			),
 			'course-bundle'            => array(
 				'name'        => __( 'Course Bundle', 'tutor' ),
-				'description' => __( 'Capture Residual Revenue with Recurring Payments.', 'tutor' ),
+				'description' => __( 'Group multiple courses to sell together.', 'tutor' ),
 			),
 		);
 
