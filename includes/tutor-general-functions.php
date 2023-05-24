@@ -1071,33 +1071,42 @@ if ( ! function_exists( 'tutor_set_flash_message' ) ) {
 
 if ( ! function_exists( 'tutor_snackbar' ) ) {
 	/**
-	 * Reuseable snackbar
+	 * Reuseable snackbar to show on the frontend
 	 *
 	 * Create a snackbar based on title, action buttons
 	 *
 	 * @since 2.2.0
 	 *
 	 * @param string $title title to show.
-	 * @param array  $action_buttons action buttons to show. Supported attrs:
-	 * [ [title => title, id => '', class => '' url => '', target => ''] ].
-	 * @param string $title_icon_class title icon class.
+	 * @param array  $action_buttons 2 dimensional array of action buttons to show.
+	 * Supported attrs: [ [title => title, id => '', class => '' url => '', target => ''] ].
+	 * @param string $title_icon_class title icon to show before title.
 	 *
 	 * @return void
 	 */
 	function tutor_snackbar( string $title, array $action_buttons = array(), $title_icon_class = '' ) {
 		?>
-		<div id="tutor-reuseable-snackbar">
-			<div>
-				<p><i class="<?php echo esc_attr( $title_icon_class ); ?>"></i>
-				<?php echo esc_html( $title ); ?>
+		<div id="tutor-reuseable-snackbar" class="tutor-snackbar-wrapper">
+			<div class="tutor-snackbar">
+				<p>
+					<?php if ( ! empty( $title_icon_class ) ) : ?>
+						<i class="tutor-snackbar-title-icon <?php echo esc_attr( $title_icon_class ); ?>"></i>
+					<?php endif; ?>
+					<?php echo esc_html( $title ); ?>
 				</p>
 				<div>
-					<?php foreach ( $action_buttons as $button ) : ?>
-						<a id="<?php echo esc_attr( isset( $button['id'] ) ? $button['id'] : '' ); ?>"  class="<?php echo esc_html( isset( $button['class'] ) ? $button['class'] : '' ); ?>" href="<?php echo esc_url( isset( $button['url'] ) ? $button['url'] : 'javascript:void(0)' ); ?>" target="<?php echo esc_attr( isset( $button['target'] ) ? $button['target'] : '' ); ?>">
+					<?php foreach ( $action_buttons as $attr => $button ) : ?>
+						<a
+							<?php foreach ( $button as $attr => $value ) : ?>
+								<?php if ( ! empty( $value ) ) : ?>
+									<?php echo esc_attr( $attr ) . '="' . esc_attr( $value ) . '" '; ?>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						>
 							<?php echo esc_html( isset( $button['title'] ) ? $button['title'] : '' ); ?>
 						</a>
 					<?php endforeach; ?>
-					<span id="tutor-snackbar-close"><?php esc_html_e( '✕', 'tutor-pro' ); ?></span>
+					<span class="tutor-icon-times" area-hidden="true" onclick="this.closest('#tutor-reuseable-snackbar').remove()" style="cursor: pointer;"></span>
 				</div>
 			</div>
 		</div>
