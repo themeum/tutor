@@ -1067,3 +1067,49 @@ if ( ! function_exists( 'tutor_set_flash_message' ) ) {
 		$flash_msg->set_cache();
 	}
 }
+
+
+if ( ! function_exists( 'tutor_snackbar' ) ) {
+	/**
+	 * Reuseable snackbar to show on the frontend
+	 *
+	 * Create a snackbar based on title, action buttons
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param string $title title to show.
+	 * @param array  $action_buttons 2 dimensional array of action buttons to show.
+	 * Supported attrs: [ [title => title, id => '', class => '' url => '', target => ''] ].
+	 * @param string $title_icon_class title icon to show before title.
+	 *
+	 * @return void
+	 */
+	function tutor_snackbar( string $title, array $action_buttons = array(), $title_icon_class = '' ) {
+		?>
+		<div id="tutor-reuseable-snackbar" class="tutor-snackbar-wrapper">
+			<div class="tutor-snackbar">
+				<p>
+					<?php if ( ! empty( $title_icon_class ) ) : ?>
+						<i class="tutor-snackbar-title-icon <?php echo esc_attr( $title_icon_class ); ?>"></i>
+					<?php endif; ?>
+					<?php echo esc_html( $title ); ?>
+				</p>
+				<div>
+					<?php foreach ( $action_buttons as $attr => $button ) : ?>
+						<a
+							<?php foreach ( $button as $attr => $value ) : ?>
+								<?php if ( ! empty( $value ) ) : ?>
+									<?php echo esc_attr( $attr ) . '="' . esc_attr( $value ) . '" '; ?>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						>
+							<?php echo esc_html( isset( $button['title'] ) ? $button['title'] : '' ); ?>
+						</a>
+					<?php endforeach; ?>
+					<span class="tutor-icon-times" area-hidden="true" onclick="this.closest('#tutor-reuseable-snackbar').remove()" style="cursor: pointer;"></span>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+}
