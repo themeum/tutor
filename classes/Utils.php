@@ -5412,7 +5412,8 @@ class Utils {
 		global $wpdb;
 
 		$user_id          = $this->get_user_id( $user_id );
-		$course_post_type = tutor()->course_post_type;
+		$post_types       = apply_filters( 'tutor_wishlist_post_types', array( tutor()->course_post_type ) );
+		$post_type_clause = QueryHelper::prepare_in_clause( $post_types );
 
 		$pageposts = $wpdb->get_results(
 			$wpdb->prepare(
@@ -5420,13 +5421,12 @@ class Utils {
 	    	FROM 	$wpdb->posts
 	    			LEFT JOIN $wpdb->usermeta
 						   ON ($wpdb->posts.ID = $wpdb->usermeta.meta_value)
-	    	WHERE 	post_type = %s
+	    	WHERE 	post_type IN ({$post_type_clause})
 					AND post_status = %s
 					AND $wpdb->usermeta.meta_key = %s
 					AND $wpdb->usermeta.user_id = %d
 	    	ORDER BY $wpdb->usermeta.umeta_id DESC LIMIT %d, %d;
 			",
-				$course_post_type,
 				'publish',
 				'_tutor_course_wishlist',
 				$user_id,
@@ -9047,7 +9047,7 @@ class Utils {
 				'icon'     => 'tutor-icon-quiz-o',
 			),
 		);
-		
+
 		return array_merge( $menus, $other_menus );
 	}
 
