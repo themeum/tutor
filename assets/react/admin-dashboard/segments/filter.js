@@ -7,9 +7,9 @@
  * @package Filter / sorting
  * @since v2.0.0
  */
- const { __, _x, _n, _nx } = wp.i18n;
+const { __, _x, _n, _nx } = wp.i18n;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	const commonConfirmModal = document.getElementById('tutor-common-confirmation-modal');
 	const commonConfirmForm = document.getElementById('tutor-common-confirmation-form');
 
@@ -50,13 +50,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (filterSearch) {
 		// Resubmit filter on clear
 		// So we can avoid wrong tab link retaining search value
-		search_field.addEventListener('search', e=>{
-			let {value} = e.currentTarget || {};
-			if(/\S+/.test(value)==false) {
+		search_field.addEventListener('search', e => {
+			let { value } = e.currentTarget || {};
+			if (/\S+/.test(value) == false) {
 				window.location = urlPrams('search', '');
 			}
 		});
-		
+
 		// Assign search value to normal form submission
 		filterSearch.onsubmit = (e) => {
 			e.preventDefault();
@@ -215,10 +215,17 @@ document.addEventListener('DOMContentLoaded', function() {
 				const response = await post.json();
 				submitButton.classList.remove('is-loading');
 				if (response) {
-					tutor_toast(__('Delete', 'tutor'), __('Course has been deleted ', 'tutor'), 'success');
-					location.reload();
+					if (typeof response === 'object' && response.success) {
+						tutor_toast(__('Delete', 'tutor'), response.data, 'success');
+						location.reload();
+					} else if (typeof response === 'object' && response.success === false) {
+						tutor_toast(__('Failed', 'tutor'), response.data, 'error');
+					} else {
+						tutor_toast(__('Delete', 'tutor'), __('Succefully deleted ', 'tutor'), 'success');
+						location.reload();
+					}
 				} else {
-					tutor_toast(__('Failed', 'tutor'), __('Course delete failed ', 'tutor'), 'error');
+					tutor_toast(__('Failed', 'tutor'), __('Delete failed ', 'tutor'), 'error');
 				}
 			}
 		};
