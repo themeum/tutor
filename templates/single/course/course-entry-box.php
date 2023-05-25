@@ -62,6 +62,10 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 ?>
 
 <div class="tutor-card tutor-card-md tutor-sidebar-card">
+	<?php
+	$tutor_load_sidebar_actions = apply_filters( 'tutor_load_single_sidebar_actions', true, get_the_ID() );
+	if ( $tutor_load_sidebar_actions ) :
+		?>
 	<div class="tutor-card-body">
 		<?php
 		if ( $is_enrolled || $is_privileged_user ) {
@@ -234,9 +238,9 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 		do_action( 'tutor_course/single/entry/after', get_the_ID() );
 		?>
 	</div>
-
+	<?php endif; ?>
 	<!-- Course Info -->
-	<div class="tutor-card-footer">
+	<div class="tutor-card-footer <?php echo esc_attr( $tutor_load_sidebar_actions ? '' : 'tutor-no-border' ); ?>">
 		<ul class="tutor-ul">
 			<?php foreach ( $sidebar_meta as $key => $meta ) : ?>
 				<?php
