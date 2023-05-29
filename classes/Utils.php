@@ -3045,8 +3045,10 @@ class Utils {
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
 		$date_filter   = sanitize_text_field( $date_filter );
-		$order_filter  = sanitize_text_field( $order_filter );
+		$order_filter  = sanitize_sql_orderby( $order_filter );
 		$rating        = sanitize_text_field( $rating );
+		
+	
 
 		$search_term_raw = $search_filter;
 		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
@@ -3098,7 +3100,10 @@ class Utils {
 		}
 
 		// Rating wise sorting @since 2.0.0.
-		$rating        = isset( $_POST['rating_filter'] ) ? $rating : '';
+		$res_rat 	   = array(1,2,3,4,5);
+	
+		$rating        = isset( $_POST['rating_filter'] ) &&  in_array($rating,$res_rat) ? $rating : '';
+		
 		$rating_having = '';
 		if ( '' !== $rating ) {
 			$max_rating = (int) $rating + 1;
@@ -3107,6 +3112,7 @@ class Utils {
 			}
 			$rating_having = " HAVING rating >= {$rating} AND rating <= {$max_rating} ";
 		}
+
 
 		/**
 		 * Handle Sort by Relevant | New | Popular & Order Shorting
@@ -4392,6 +4398,7 @@ class Utils {
 
 		if ( isset( $args['course_id'] ) ) {
 			// Get qa for specific course.
+			$args['course_id'] = intval($args['course_id']);
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
 		} elseif ( ! $asker_id && $question_id === null && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
@@ -4407,7 +4414,7 @@ class Utils {
 		}
 
 		if ( isset( $args['date'] ) ) {
-			$date           = sanitize_text_field( $args['date'] );
+			$date           = esc_sql( $args['date'] );
 			$filter_clause .= ' AND DATE(_question.comment_date)=\'' . $date . '\'';
 		}
 

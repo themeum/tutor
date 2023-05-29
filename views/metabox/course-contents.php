@@ -50,6 +50,7 @@
 			'ID'         => 0,
 			'post_title' => __( 'Un-assigned Topic Contents', 'tutor' ),
 			'contents'   => $unassigned_contents,
+			
 		);
 	}
 
