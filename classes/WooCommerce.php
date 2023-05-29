@@ -774,12 +774,11 @@ class WooCommerce extends Tutor_Base {
 		if ( is_admin() ) {
 			return false;
 		}
-		global $wpdb;
-		$update = $wpdb->update(
-			$wpdb->posts,
-			array( 'post_status' => 'wc-completed' ),
-			array( 'ID' => $order_id )
-		);
+
+		$order = \wc_get_order( $order_id );
+		$order->set_status( 'completed' );
+		$update = $order->save();
+
 		return (bool) $update;
 	}
 
