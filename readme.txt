@@ -225,9 +225,15 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 == Changelog ==
 
-= 2.2.0 - June 13, 2023
+= 2.2.0 - May 30, 2023
 
-Coming soon...
+New: Course Bundle addon with WooCommerce
+New: Quiz answer explanation
+Update: Zoom integration updated from JWT to OAuth
+Update: Security improvement
+Fix: Clear all session button is not appearing for social login
+Fix: Instructor avatar isn't working in the email
+Fix: Social login or registration not working with some languages
 
 = 2.1.10 - April 13, 2023
 
