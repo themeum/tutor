@@ -394,7 +394,7 @@ class Quiz {
 				$question_ids_string = QueryHelper::prepare_in_clause( $question_ids );
 
 				// Get total marks of the questions from question table.
-				$query = $wpdb->prepaare(
+				$query = $wpdb->prepare(
 					"SELECT SUM(question_mark)
 						FROM {$wpdb->prefix}tutor_quiz_questions
 						WHERE 1 = %d
