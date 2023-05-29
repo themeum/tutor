@@ -3100,7 +3100,7 @@ class Utils {
 		}
 
 		// Rating wise sorting @since 2.0.0.
-		$res_rat = array(1,2,3,4,5);
+		$res_rat 	   = array(1,2,3,4,5);
 	
 		$rating        = isset( $_POST['rating_filter'] ) &&  in_array($rating,$res_rat) ? $rating : '';
 		

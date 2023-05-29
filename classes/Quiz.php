@@ -394,12 +394,15 @@ class Quiz {
 				$question_ids_string = QueryHelper::prepare_in_clause( $question_ids );
 
 				// Get total marks of the questions from question table.
-				$total_question_marks = $wpdb->get_var(
+				$query = $wpdb->prepaare(
 					"SELECT SUM(question_mark)
 						FROM {$wpdb->prefix}tutor_quiz_questions
-						WHERE question_id IN({$question_ids_string});
-					"
+						WHERE 1 = %d
+							AND question_id IN({$question_ids_string});
+					",
+					1
 				);
+				$total_question_marks = $wpdb->get_var( $query );
 
 				// Set the the total mark in the attempt table for the question.
 				$wpdb->update(
@@ -488,7 +491,8 @@ class Quiz {
 						 * Answers stored in DB
 						 */
 						$gap_answer = (array) explode( '|', $get_original_answer->answer_two_gap_match );
-						$gap_answer = maybe_serialize( array_map( function ( $ans) {
+						$gap_answer = maybe_serialize( array_map( function ( $ans) 
+						{
 							return wp_slash( trim( $ans ) );
 						}, $gap_answer ) );
 
