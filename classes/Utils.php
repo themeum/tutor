@@ -5715,6 +5715,43 @@ class Utils {
 	}
 
 	/**
+	 * Change earning status.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param int    $order_id order id.
+	 * @param string $status status.
+	 *
+	 * @return bool
+	 */
+	public static function change_earning_status( $order_id, $status ) {
+		$is_updated = false;
+
+		global $wpdb;
+		$is_earning_data = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(earning_id)
+			FROM {$wpdb->prefix}tutor_earnings
+			WHERE order_id = %d  ",
+				$order_id
+			)
+		);
+
+		if ( $is_earning_data ) {
+			$update_earning_status = $wpdb->update(
+				$wpdb->prefix . 'tutor_earnings',
+				array( 'order_status' => $status ),
+				array( 'order_id' => $order_id )
+			);
+
+			$is_updated = true;
+			do_action( 'tutor_after_earning_status_change', $update_earning_status );
+		}
+
+		return $is_updated;
+	}
+	
+	/**
 	 * Get all time earning sum for an instructor with all commission
 	 *
 	 * @since 1.1.2
