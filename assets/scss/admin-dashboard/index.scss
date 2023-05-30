@@ -23,6 +23,7 @@ table.tutor-table.tutor-table-with-checkbox {
 
 	.tutor-badge-new {
 		background: #E5803C;
+		color: #fff;
 		font-weight: 400;
 		border-radius: 16px;
 		padding: 1px 6px;
@@ -34,7 +35,7 @@ table.tutor-table.tutor-table-with-checkbox {
 
 .tutor-course-bundle{
 	&-wrapper{
-		width: 81%;
+		width: 68%;
 		margin:0 auto;
 		padding: 25px;
 	}
@@ -51,7 +52,7 @@ table.tutor-table.tutor-table-with-checkbox {
 	&-footer{
 		background-color: white;
 		padding: 25px;
-		padding-top: 32px;
+		padding-top: 16px;
 		text-align: center;
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;
@@ -62,6 +63,7 @@ table.tutor-table.tutor-table-with-checkbox {
 			h2{
 				font-size: 30px;
 				color: #212327;
+				margin-bottom: 24px;
 			}
 
 			p{
@@ -76,8 +78,8 @@ table.tutor-table.tutor-table-with-checkbox {
 				border-radius: 6px;
 				text-decoration: none;
 				color: #fff;
-				margin-bottom: 64px;
-				margin-top: 28px;
+				margin-bottom: 40px;
+				margin-top: 20px;
 				&:hover{
 					background: #0b51f3;
 				}
