@@ -102,6 +102,10 @@ class Admin {
 		// Extendable action hook @since 2.2.0.
 		do_action( 'tutor_after_courses_menu' );
 
+		if ( ! $has_pro ) {
+			add_submenu_page( 'tutor', __( 'Course Bundles', 'tutor' ), __( 'Course Bundle <span class="tutor-badge-new">New</span>', 'tutor' ), 'manage_tutor', 'course-bundle', array( $this, 'course_bundle_page' ) );
+		}
+
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
 
 		add_submenu_page( 'tutor', __( 'Tags', 'tutor' ), __( 'Tags', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type, null );
@@ -133,6 +137,17 @@ class Admin {
 		if ( ! $has_pro ) {
 			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
 		}
+	}
+
+	/**
+	 * Show Course Bundle Page For Free User.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function course_bundle_page() {
+		include tutor()->path . 'views/pages/course-bundle.php';
 	}
 
 	/**
