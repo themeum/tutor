@@ -782,8 +782,9 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public static function should_order_auto_complete( int $order_id ): bool {
 		$auto_complete = false;
-		$order         = wc_get_order( $order_id );
-		$order_data    = is_object( $order ) && method_exists( $order, 'get_data' ) ? $order->get_data() : array();
+
+		$order      = wc_get_order( $order_id );
+		$order_data = is_object( $order ) && method_exists( $order, 'get_data' ) ? $order->get_data() : array();
 
 		$payment_method = isset( $order_data['payment_method'] ) ? $order_data['payment_method'] : '';
 		$monetize_by    = tutor_utils()->get_option( 'monetize_by' );
@@ -793,17 +794,23 @@ class WooCommerce extends Tutor_Base {
 
 		$manual_payments = array( 'cod', 'cheque', 'bacs' );
 		$order_status    = method_exists( $order, 'get_status' ) ? $order->get_status() : '';
-		$is_tutor_order  = get_post_meta( $order->get_id(), '_is_tutor_order_for_course', true );
 
-		/**
-		 * Is tutor order condition added with other conditions,
-		 * to prevent order other than Tutor get completed
-		 *
-		 * @since 2.1.6
-		 */
-		if ( ! is_admin() && $is_enabled_auto_complete && 'processing' === $order_status && ! in_array( $payment_method, $manual_payments ) && $is_tutor_order ) {
+		if ( 'completed' !== $order_status ) {
+			$is_tutor_order = get_post_meta( $order->get_id(), '_is_tutor_order_for_course', true );
+
+			/**
+			 * Is tutor order condition added with other conditions,
+			 * to prevent order other than Tutor get completed
+			 *
+			 * @since 2.1.6
+			 */
+			if ( ! is_admin() && $is_enabled_auto_complete && 'processing' === $order_status && ! in_array( $payment_method, $manual_payments ) && $is_tutor_order ) {
+				$auto_complete = true;
+			}
+		} else {
 			$auto_complete = true;
 		}
+
 		return $auto_complete;
 	}
 }
