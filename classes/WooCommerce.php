@@ -592,7 +592,6 @@ class WooCommerce extends Tutor_Base {
 			tutor_log( 'not tutor order' );
 			return;
 		}
-		global $wpdb;
 
 		/**
 		 * If it is auto complete order then make earning status complete
@@ -604,23 +603,7 @@ class WooCommerce extends Tutor_Base {
 			$status_to = 'completed';
 		}
 
-		$is_earning_data = (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(earning_id)
-			FROM {$wpdb->prefix}tutor_earnings
-			WHERE order_id = %d  ",
-				$order_id
-			)
-		);
-
-		if ( $is_earning_data ) {
-			$update_earning_status = $wpdb->update(
-				$wpdb->prefix . 'tutor_earnings',
-				array( 'order_status' => $status_to ),
-				array( 'order_id' => $order_id )
-			);
-			do_action( 'tutor_after_earning_status_change', $update_earning_status );
-		}
+		tutor_utils()->change_earning_status( $order_id, $status_to );
 	}
 
 	/**
@@ -774,12 +757,11 @@ class WooCommerce extends Tutor_Base {
 		if ( is_admin() ) {
 			return false;
 		}
-		global $wpdb;
-		$update = $wpdb->update(
-			$wpdb->posts,
-			array( 'post_status' => 'wc-completed' ),
-			array( 'ID' => $order_id )
-		);
+
+		$order = \wc_get_order( $order_id );
+		$order->set_status( 'completed' );
+		$update = $order->save();
+
 		return (bool) $update;
 	}
 
@@ -800,8 +782,9 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public static function should_order_auto_complete( int $order_id ): bool {
 		$auto_complete = false;
-		$order         = wc_get_order( $order_id );
-		$order_data    = is_object( $order ) && method_exists( $order, 'get_data' ) ? $order->get_data() : array();
+
+		$order      = wc_get_order( $order_id );
+		$order_data = is_object( $order ) && method_exists( $order, 'get_data' ) ? $order->get_data() : array();
 
 		$payment_method = isset( $order_data['payment_method'] ) ? $order_data['payment_method'] : '';
 		$monetize_by    = tutor_utils()->get_option( 'monetize_by' );
@@ -811,17 +794,23 @@ class WooCommerce extends Tutor_Base {
 
 		$manual_payments = array( 'cod', 'cheque', 'bacs' );
 		$order_status    = method_exists( $order, 'get_status' ) ? $order->get_status() : '';
-		$is_tutor_order  = get_post_meta( $order->get_id(), '_is_tutor_order_for_course', true );
 
-		/**
-		 * Is tutor order condition added with other conditions,
-		 * to prevent order other than Tutor get completed
-		 *
-		 * @since 2.1.6
-		 */
-		if ( ! is_admin() && $is_enabled_auto_complete && 'processing' === $order_status && ! in_array( $payment_method, $manual_payments ) && $is_tutor_order ) {
+		if ( 'completed' !== $order_status ) {
+			$is_tutor_order = get_post_meta( $order->get_id(), '_is_tutor_order_for_course', true );
+
+			/**
+			 * Is tutor order condition added with other conditions,
+			 * to prevent order other than Tutor get completed
+			 *
+			 * @since 2.1.6
+			 */
+			if ( ! is_admin() && $is_enabled_auto_complete && 'processing' === $order_status && ! in_array( $payment_method, $manual_payments ) && $is_tutor_order ) {
+				$auto_complete = true;
+			}
+		} else {
 			$auto_complete = true;
 		}
+
 		return $auto_complete;
 	}
 }

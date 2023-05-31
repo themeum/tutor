@@ -64,9 +64,8 @@ class QuizModel {
 					$user_id
 				)
 			);
-			TutorCache::set( $cache_key,  $attempts );
+			TutorCache::set( $cache_key, $attempts );
 		}
-		
 
 		if ( is_array( $attempts ) && count( $attempts ) ) {
 			return $attempts;
@@ -295,7 +294,7 @@ class QuizModel {
 	 *
 	 * @return mixed
 	 */
-	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
+	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
 		global $wpdb;
 
 		$start         = sanitize_text_field( $start );
@@ -303,7 +302,7 @@ class QuizModel {
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
 		$date_filter   = sanitize_text_field( $date_filter );
-		$order_filter  = sanitize_text_field( $order_filter );
+		$order_filter  = sanitize_sql_orderby( $order_filter );
 
 		$search_term_raw = $search_filter;
 		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
@@ -311,7 +310,7 @@ class QuizModel {
 		// Filter by course.
 		if ( '' != $course_filter ) {
 			! is_array( $course_filter ) ? $course_filter = array( $course_filter ) : 0;
-			$course_ids                                   = implode( ',', $course_filter );
+			$course_ids                                   = implode( ',', array_map('intval', $course_filter ));
 			$course_filter                                = " AND quiz_attempts.course_id IN ($course_ids) ";
 		}
 
@@ -565,8 +564,7 @@ class QuizModel {
 		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$results = $wpdb->get_results(
 			"SELECT answers.*,
-					question.question_title,
-					question.question_type
+					question.*
 			FROM 	{$wpdb->prefix}tutor_quiz_attempt_answers answers
 					LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question
 						   ON answers.question_id = question.question_id
@@ -755,5 +753,37 @@ class QuizModel {
 			$order
 		);
 		return $attempt;
+	}
+
+	/**
+	 * Get total number of quizzes by course id
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param int|array $course_id Course id or array of course ids.
+	 *
+	 * @return int
+	 */
+	public static function get_quiz_count_by_course( $course_id ) {
+		global $wpdb;
+
+		$and_clause = is_array( $course_id ) && count( $course_id ) ? ' AND post_parent IN (' . QueryHelper::prepare_in_clause( $course_id ) . ')' : "AND post_parent = $course_id";
+
+		$count = $wpdb->get_var(
+			"SELECT
+				COUNT(ID) 
+			FROM {$wpdb->posts}
+			WHERE post_parent IN 
+				(SELECT
+					ID 
+				FROM {$wpdb->posts} 
+					WHERE post_type='topics'
+					{$and_clause}
+					AND post_status = 'publish'
+				)
+				AND post_type ='tutor_quiz' 
+				AND post_status = 'publish'"
+		);
+		return $count ? $count : 0;
 	}
 }

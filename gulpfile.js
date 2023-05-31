@@ -221,6 +221,7 @@ gulp.task('copy', function() {
 			'!./.docz/**',
 			'!./**/*.zip',
 			'!.github',
+			'!.vscode',
 			'!./readme.md',
 			'!.DS_Store',
 			'!./**/.DS_Store',
@@ -248,6 +249,7 @@ gulp.task('copy', function() {
 			'!.travis.yml',
 			'!phpunit.xml.dist',
 			'!phpunit.xml',
+			'!phpcs.xml'
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });

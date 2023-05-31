@@ -38,6 +38,15 @@ $reset_link        = remove_query_arg( $supported_filters, get_pagenum_link() );
 		</div>
 	<?php endif; ?>
 
+	<?php
+		/**
+		 * Add action before category filter.
+		 *
+		 * @since 2.2.0
+		 */
+		do_action( 'tutor_before_course_category_filter' );
+	?>
+
 	<?php if ( in_array( 'category', $supported_filters ) ) : ?>
 		<div class="tutor-widget tutor-widget-course-categories tutor-mt-48">
 			<h3 class="tutor-widget-title">
@@ -97,6 +106,17 @@ $reset_link        = remove_query_arg( $supported_filters, get_pagenum_link() );
 		$is_membership = get_tutor_option( 'monetize_by' ) == 'pmpro' && tutor_utils()->has_pmpro();
 	if ( ! $is_membership && in_array( 'price_type', $supported_filters ) ) :
 		?>
+	
+
+		<?php
+		/**
+		 * Add action before price filter.
+		 *
+		 * @since 2.2.0
+		 */
+		do_action( 'tutor_before_course_price_filter' );
+		?>
+
 	<div class="tutor-widget tutor-widget-course-price tutor-mt-48">
 		<h3 class="tutor-widget-title">
 		<?php esc_html_e( 'Price', 'tutor' ); ?>

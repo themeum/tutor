@@ -1,28 +1,47 @@
 <img src=".github/tutor-github.png" alt="TutorLMS" width="100%"/>
 
-## What is Tutor LMS 2.0 Beta?
-Tutor LMS 2.0 beta version is built to experience Tutor LMS 2.0 before it is officially released. As this is a beta version, please don’t expect everything to work properly.
+## What is Tutor LMS?
+Tutor LMS is a complete, feature-packed, and robust WordPress LMS plugin to easily create & sell courses online. All the features of this learning management system hit all the checkpoints for a full-fledged online course marketplace.
 
+## <a id="wpcs"></a>WPCS configuration
+<b>Step 1:</b> Please install these two composer package.
+```
+1. composer global require squizlabs/php_codesniffer
+2. composer global require wp-coding-standards/wpcs
+```
+<b>Step 2:</b> Set WordPress as default coding standard. `(change your_username)`
+```
+phpcs --config-set installed_paths /Users/your_username/.composer/vendor/wp-coding-standards/wpcs
+phpcs --config-set default_standard WordPress
+```
+<b>Problem Fix:</b>
 
-## Installing Tutor LMS Beta version
-We strongly recommend that you do not install beta releases on live sites.
+If phpcs and phpcbf command not found as command, set it to your path variable.
 
-Use them in a test environment so you can try out the new features, see what breaks without worrying about the consequences, and give us feedback. It is paramount that you follow these guidelines when installing the version, because as the name suggests it is in the stage of development and is not entirely stable, yet.
-
-We will be taking valuable feedback from the version users to get firsthand insight on key improvements.
-
-Follow along the next few steps to find out how you can get about installing the version for testing.
-Requirements
-Before getting started with installing Tutor LMS beta on your WordPress site, please make sure you have the following requirements. 
+`export PATH="/Users/your_username/.composer/vendor/bin:$PATH"`
 
 ## Development Setup
 Follow the steps
-1. Clone the repository `git clone https://github.com/themeum/tutor.git`.
-2. Run `composer install` for install PHP dependency.
-3. Run `npm install` for install js dependency.
-4. Run `npm run watch` 
-5. Now open any SCSS file from assets directory and hit save.
-## Testing
+
+1. [Configure WPCS](#wpcs) to write code that complies with the WordPress Coding Standard.
+2. Clone the repository `git clone https://github.com/themeum/tutor.git`.
+3. Checkout to `dev` brunch `git checkout dev`
+4. Make your own brunch `git checkout -b your_brunch_name`
+5. Go to vscode extension tab and install recommended extension.
+3. Run `composer install` for install PHP dependency.
+4. Run `npm install` for install js dependency.
+5. Run `npm run watch` 
+6. Now open any SCSS file from assets directory and hit save.
+
+
+
+
+## Contribution Guide
+1. Make sure your code complies with the WordPress Coding Standard (WPCS) before open a PR.
+2. Open a pull request (PR) to the `dev` branch. PRs to other branches will be closed without any discussion.
+
+
+## Unit Testing
 To run PHP unit testing in the development environment follow the below steps:
 
 Go to the terminal then hit commands:

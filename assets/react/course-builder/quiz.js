@@ -405,6 +405,15 @@ window.jQuery(document).ready(function($) {
 					if (data.data.output) {
 						tinyMCE.remove('textarea#tutor_quiz_desc_text_editor');
 						initTinyMCE('textarea#tutor_quiz_desc_text_editor', 'codesample image', 'codesample image');
+
+						/**
+						 * Quiz answer explanation rich text editor
+						 * @since 2.2.0
+						 */
+						if (document.getElementById('tutor_answer_explanation')) {
+							tinyMCE.remove('textarea#tutor_answer_explanation');
+							initTinyMCE('textarea#tutor_answer_explanation', 'codesample image', 'codesample image');
+						}
 					}
 				}
 				window.dispatchEvent(new CustomEvent('tutor_modal_shown', {detail: e.target}));
@@ -492,9 +501,16 @@ window.jQuery(document).ready(function($) {
 		if (_tutorobject.tutor_pro_url) {
 			const questionId = $formInput.tutor_quiz_question_id;
 			const eidtorId = 'tutor_quiz_desc_text_editor';
+			const ansExplainEidtorId = 'tutor_answer_explanation';
+
 			if (tinyMCE.get(eidtorId)) {
-				$formInput["tutor_quiz_question["+questionId+"][question_description]"] = tinyMCE.activeEditor.getContent({format: 'raw'})
+				$formInput["tutor_quiz_question["+questionId+"][question_description]"] = tinyMCE.get(eidtorId)?.getContent({format: 'raw'})
 			}
+			
+			if (tinyMCE.get(ansExplainEidtorId)) {
+				$formInput["answer_explanation"] = tinyMCE.get(ansExplainEidtorId)?.getContent({format: 'raw'})
+			}
+			
 		}
 
 		$.ajax({
