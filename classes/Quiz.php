@@ -394,12 +394,15 @@ class Quiz {
 				$question_ids_string = QueryHelper::prepare_in_clause( $question_ids );
 
 				// Get total marks of the questions from question table.
-				$total_question_marks = $wpdb->get_var(
+				$query = $wpdb->prepare(
 					"SELECT SUM(question_mark)
 						FROM {$wpdb->prefix}tutor_quiz_questions
-						WHERE question_id IN({$question_ids_string});
-					"
+						WHERE 1 = %d
+							AND question_id IN({$question_ids_string});
+					",
+					1
 				);
+				$total_question_marks = $wpdb->get_var( $query );
 
 				// Set the the total mark in the attempt table for the question.
 				$wpdb->update(
@@ -488,7 +491,8 @@ class Quiz {
 						 * Answers stored in DB
 						 */
 						$gap_answer = (array) explode( '|', $get_original_answer->answer_two_gap_match );
-						$gap_answer = maybe_serialize( array_map( function ( $ans) {
+						$gap_answer = maybe_serialize( array_map( function ( $ans) 
+						{
 							return wp_slash( trim( $ans ) );
 						}, $gap_answer ) );
 
@@ -664,7 +668,7 @@ class Quiz {
 	 */
 	public function tutor_quiz_timeout() {
 		tutils()->checking_nonce();
-
+		
 		global $wpdb;
 
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
@@ -963,7 +967,7 @@ class Quiz {
 		$topic_id    = Input::post( 'topic_id', 0, Input::TYPE_INT );
 		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
 
-		// check if the user can manage the quiz.
+		// Check if the user can manage the quiz.
 		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
@@ -983,6 +987,8 @@ class Quiz {
 				'question_settings'    => maybe_serialize( array() ),
 				'question_order'       => esc_sql( $next_question_order ),
 			);
+
+			$new_question_data = apply_filters( 'tutor_quiz_question_data', $new_question_data );
 
 			$wpdb->insert( $wpdb->prefix . 'tutor_quiz_questions', $new_question_data );
 			$question_id = $wpdb->insert_id;
@@ -1111,6 +1117,8 @@ class Quiz {
 				'question_mark'        => $question_mark,
 				'question_settings'    => maybe_serialize( $question ),
 			);
+
+			$data = apply_filters( 'tutor_quiz_question_data', $data );
 
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_questions', $data, array( 'question_id' => $question_id ) );
 		}

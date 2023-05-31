@@ -812,4 +812,14 @@ jQuery(document).ready(function($) {
 				.attr('disabled', 'disabled');
 		}, 100);
 	});
+
+	// Show the snackbar
+	const snackbar = document.getElementById('tutor-reuseable-snackbar');
+	if (snackbar) {
+		// Apply the animation class after a short delay
+		setTimeout(function() {
+			snackbar.classList.add('tutor-snackbar-show');
+		}, 1000); // Adjust the delay (in milliseconds) as needed
+	}
+	
 });

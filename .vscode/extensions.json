@@ -1,0 +1,10 @@
+{
+	"recommendations": [
+        "bmewburn.vscode-intelephense-client",
+        "zobo.php-intellisense",
+        "neilbrayfield.php-docblocker",
+		"ikappas.phpcs",
+		"persoderlind.vscode-phpcbf",
+		"danilopolani.yet-another-phpunit"
+	]
+}

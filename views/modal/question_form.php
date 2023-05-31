@@ -165,4 +165,6 @@ $settings = maybe_unserialize( $question->question_settings );
 		require __DIR__ . '/question_answer_list.php';
 		?>
 	</div>
+
+	<?php do_action( 'tutor_quiz_question_form_after_answer_list', $question ); ?>
 </div>

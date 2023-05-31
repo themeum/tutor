@@ -256,7 +256,6 @@ class Course_List {
 
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
-
 		if ( '' === $action || '' === $bulk_ids ) {
 			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
 			exit;
@@ -325,21 +324,28 @@ class Course_List {
 	/**
 	 * Handle ajax request for deleting course
 	 *
-	 * @return json response
 	 * @since 2.0.0
+	 *
+	 * @return void JSON response
 	 */
 	public static function tutor_course_delete() {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+		$roles = array( User::ADMIN, User::INSTRUCTOR );
+		if ( ! User::has_any_role( $roles ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		$id     = Input::post( 'id', 0, Input::TYPE_INT );
 		$delete = CourseModel::delete_course( $id );
 
-		return wp_send_json( $delete );
+		if ( $delete ) {
+			wp_send_json_success( __( 'Course has been deleted ', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'Course delete failed ', 'tutor' ) );
+		}
+
 		exit;
 	}
 
@@ -375,7 +381,6 @@ class Course_List {
 		$post_table = $wpdb->posts;
 		$status     = sanitize_text_field( $status );
 		$bulk_ids   = sanitize_text_field( $bulk_ids );
-
 		$update = $wpdb->query(
 			$wpdb->prepare(
 				"UPDATE {$post_table} SET post_status = %s WHERE ID IN ($bulk_ids)", //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared

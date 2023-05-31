@@ -122,7 +122,7 @@ class Addons {
 				'name'        => 'Notifications',
 				'description' => 'Get On Site and Push Notifications on specified tutor events.',
 			),
-			'tutor-weglot'      => array(
+			'tutor-weglot'             => array(
 				'name'        => 'Weglot',
 				'description' => __( 'Translate & manage multilingual courses for global reach with full edit control.', 'tutor' ),
 			),
@@ -130,9 +130,13 @@ class Addons {
 				'name'        => __( 'WPML Multilingual CMS', 'tutor' ),
 				'description' => __( 'Create multilingual courses, lessons, dashboard and more for a global audience.', 'tutor' ),
 			),
-			'social-login'               => array(
+			'social-login'             => array(
 				'name'        => __( 'Social Login', 'tutor' ),
 				'description' => __( 'Let users register & login through social network like Facebook, Google, etc.', 'tutor' ),
+			),
+			'course-bundle'            => array(
+				'name'        => __( 'Course Bundle', 'tutor' ),
+				'description' => __( 'Group multiple courses to sell together.', 'tutor' ),
 			),
 		);
 
