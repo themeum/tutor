@@ -32,7 +32,7 @@ class Utils {
 	 * @param string $method method name.
 	 * @param array  $args   args.
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function __call( $method, $args ) {
 		$classes = array(
@@ -43,6 +43,7 @@ class Utils {
 		);
 
 		foreach ( $classes as $class ) {
+			//phpcs:ignore
 			if ( method_exists( $obj = new $class(), $method ) ) {
 				return $obj->$method( ...$args );
 			}
@@ -68,6 +69,8 @@ class Utils {
 	 * @since 2.1.0
 	 *
 	 * @param string $url URL.
+	 * @param string $flash_message flash message.
+	 * @param string $flash_type flash type.
 	 *
 	 * @return void
 	 */
@@ -135,9 +138,9 @@ class Utils {
 	 *
 	 * @since 2.1.0
 	 *
-	 * @param string $target_key    setting's key name like 'tutor_version'
-	 * @param array  $arr           an multi-dimentional settings option array
-	 * @param array  $new_item      new setting array. a 'key' needed
+	 * @param string $target_key    setting's key name like 'tutor_version'.
+	 * @param array  $arr           an multi-dimentional settings option array.
+	 * @param array  $new_item      new setting array. a 'key' needed.
 	 *
 	 * @return int|null             inserted index number or null
 	 */
@@ -154,7 +157,7 @@ class Utils {
 			}
 		}
 
-		if ( $found_index !== null && array_key_exists( 'key', $new_item ) ) {
+		if ( null !== $found_index && array_key_exists( 'key', $new_item ) ) {
 			$target_index = $found_index + 1;
 			array_splice( $arr, $target_index, 0, array( $new_item ) );
 			return $target_index;
@@ -189,16 +192,16 @@ class Utils {
 			$is_array = is_array( $option );
 
 			if ( $is_array && isset( $option['key'], $option['default'] ) && $option['key'] == $key ) {
-				$value                               = $option['default'];
-				$option['default'] == 'on' ? $value  = true : 0;
-				$option['default'] == 'off' ? $value = false : 0;
+				$value                                = $option['default'];
+				'on' === $option['default'] ? $value  = true : 0;
+				'off' === $option['default'] ? $value = false : 0;
 
 				return $value;
 			}
 
 			$value = $is_array ? $this->option_recursive( $option, $key ) : null;
 
-			if ( ! ( $value === null ) ) {
+			if ( ! ( null === $value ) ) {
 				return $value;
 			}
 		}
@@ -228,7 +231,7 @@ class Utils {
 
 		$default_value = $this->option_recursive( $tutor_options_array, $key );
 
-		return $default_value === null ? $fallback : $default_value;
+		return null === $default_value ? $fallback : $default_value;
 	}
 
 	/**
@@ -238,7 +241,8 @@ class Utils {
 	 *
 	 * @param string $key key.
 	 * @param bool   $default default.
-	 * @param bool   $type if false return string
+	 * @param bool   $type if false return string.
+	 * @param bool   $from_options from option.
 	 *
 	 * @return array|bool|mixed
 	 */
@@ -256,8 +260,8 @@ class Utils {
 			$value = $option[ $key ];
 
 			if ( true == $type ) {
-				$value == 'off' ? $value = false : 0;
-				$value == 'on' ? $value  = true : 0;
+				'off' === $value ? $value = false : 0;
+				'on' === $value ? $value  = true : 0;
 			}
 
 			return apply_filters( $key, $value );
@@ -268,9 +272,9 @@ class Utils {
 			$option_key_array = explode( '.', $key );
 
 			$new_option = $option;
-			foreach ( $option_key_array as $dotKey ) {
-				if ( isset( $new_option[ $dotKey ] ) ) {
-					$new_option = $new_option[ $dotKey ];
+			foreach ( $option_key_array as $dot_key ) {
+				if ( isset( $new_option[ $dot_key ] ) ) {
+					$new_option = $new_option[ $dot_key ];
 				} else {
 					return $this->get_option_default( $key, $default, $from_options );
 				}
@@ -280,8 +284,8 @@ class Utils {
 			$value = $new_option;
 
 			if ( true == $type ) {
-				$value == 'off' ? $value = false : 0;
-				$value == 'on' ? $value  = true : 0;
+				'off' === $value ? $value = false : 0;
+				'on' === $value ? $value  = true : 0;
 			}
 
 			return apply_filters( $key, $value );
@@ -307,7 +311,7 @@ class Utils {
 	}
 
 	/**
-	 * get array value by dot notation
+	 * Get array value by dot notation
 	 *
 	 * @since 1.0.0
 	 * @since 1.4.1 default parameter added
@@ -327,9 +331,9 @@ class Utils {
 
 		$value = $array;
 
-		foreach ( $option_key_array as $dotKey ) {
-			if ( isset( $value[ $dotKey ] ) ) {
-				$value = $value[ $dotKey ];
+		foreach ( $option_key_array as $dot_key ) {
+			if ( isset( $value[ $dot_key ] ) ) {
+				$value = $value[ $dot_key ];
 			} else {
 				return $default;
 			}
@@ -341,7 +345,7 @@ class Utils {
 	 * Alias of avalue_dot method of utils
 	 * Get array value by key and recursive array value by dot notation key
 	 *
-	 * ex: $this->array_get('key.child_key', $array);
+	 * Ex: $this->array_get('key.child_key', $array);
 	 *
 	 * @since 1.3.3
 	 *
@@ -444,9 +448,9 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 2.1.7 changed param $student_id to $user.
 	 *
-	 * @param int|object $student     student ID or object.
+	 * @param int|object $user              student ID or object.
 	 * @param bool       $instructor_view   instractior view.
-	 * @param string     $fallback_url    fallback URL.
+	 * @param string     $fallback_url      fallback URL.
 	 *
 	 * @return string
 	 */
@@ -510,13 +514,15 @@ class Utils {
 	 * @return bool
 	 */
 	public function has_edd() {
-		 return $this->is_plugin_active( 'easy-digital-downloads/easy-digital-downloads.php' );
+		return $this->is_plugin_active( 'easy-digital-downloads/easy-digital-downloads.php' );
 	}
 
 	/**
 	 * Determine if PMPro is activated
 	 *
 	 * @since 1.3.6
+	 *
+	 * @param bool $check_monetization check monetization.
 	 *
 	 * @return bool
 	 */
@@ -550,7 +556,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function has_wcs() {
-		 $has_wcs = $this->is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' );
+		$has_wcs = $this->is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' );
 		return $has_wcs;
 	}
 
@@ -565,9 +571,9 @@ class Utils {
 	 */
 	public function is_addon_enabled( $basename ) {
 		if ( $this->is_plugin_active( 'tutor-pro/tutor-pro.php' ) ) {
-			$addonConfig = $this->get_addon_config( $basename );
+			$addon_config = $this->get_addon_config( $basename );
 
-			return (bool) $this->avalue_dot( 'is_enable', $addonConfig );
+			return (bool) $this->avalue_dot( 'is_enable', $addon_config );
 		}
 	}
 
@@ -5743,7 +5749,7 @@ class Utils {
 
 		return $is_updated;
 	}
-	
+
 	/**
 	 * Get all time earning sum for an instructor with all commission
 	 *
