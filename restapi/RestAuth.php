@@ -22,5 +22,27 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 2.2.1
  */
 class RestAuth {
+    /**
+     * Permissions
+     *
+     * @var string
+     */
+    const READ = 'read';
 
+    /**
+     * Get available permission
+     *
+     * @since 2.2.1
+     *
+     * @return array
+     */
+    public static function available_permissions(): array {
+        $permissions = array(
+            array(
+                'value' => self::READ,
+                'label' => __( 'Read', 'tutor' ),
+            )
+        );
+        return $permissions;
+    }
 }
