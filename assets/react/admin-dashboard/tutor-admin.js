@@ -16,6 +16,7 @@ import './segments/column-filter';
 import './segments/multiple_email_input';
 import './quiz-attempts';
 import './wp-events-subscriber';
+import './segments/manage-api-keys';
 
 const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
 toggleChange.forEach((element) => {
