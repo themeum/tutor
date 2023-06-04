@@ -310,10 +310,11 @@ class QueryHelper {
 	 *
 	 * @return mixed  based on output param, default object
 	 */
-	public static function get_all( string $table, array $where, string $order_by, string $order = 'DESC', string $output = 'OBJECT' ) {
+	public static function get_all( string $table, array $where, string $order_by, $limit = 1000, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
 		$obj          = new self();
 		$where_clause = $obj->build_where_clause( $where );
+		$limit        = sanitize_text_field( $limit );
 		$query        = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
@@ -321,7 +322,7 @@ class QueryHelper {
 				ORDER BY {$order_by} {$order}
 				LIMIT %d
 			",
-			1
+			$limit
 		);
 		return $wpdb->get_results(
 			$query,

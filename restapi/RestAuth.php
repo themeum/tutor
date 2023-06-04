@@ -119,7 +119,7 @@ class RestAuth {
 
 		if ( is_array( $results ) && count( $results ) ) {
 			foreach ( $results as $result ) {
-				$result = json_decode( $result );
+				$result = json_decode( $result->meta_value );
 				if ( $result->key === $api_key && $result->secret === $api_secret ) {
 					$valid = true;
 					break;
