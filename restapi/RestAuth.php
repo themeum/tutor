@@ -12,8 +12,10 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\QueryHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 /**
@@ -23,20 +25,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class RestAuth {
 
-    /**
-     * Permissions
-     *
-     * @var string
-     */
-    const READ = 'read';
+	/**
+	 * Permissions
+	 *
+	 * @var string
+	 */
+	const READ = 'read';
 
-    /**
-     * User meta key to store key, secret, permission info
-     *
-     * @var string
-     */
-    const KEYS_USER_META_KEY = 'api-key-secret';
-    
+	/**
+	 * User meta key to store key, secret, permission info
+	 *
+	 * @var string
+	 */
+	const KEYS_USER_META_KEY = 'tutor-api-key-secret';
+
 	/**
 	 * Register hooks.
 	 *
@@ -48,8 +50,15 @@ class RestAuth {
 		add_action( 'wp_ajax_tutor_generate_api_keys', __CLASS__ . '::generate_api_keys' );
 	}
 
-    public static function generate_api_keys() {
-        // Validate nonce.
+    /**
+     * Generate api keys
+     *
+     * @since 2.2.1
+     *
+     * @return void send wp_json response
+     */
+	public static function generate_api_keys() {
+		// Validate nonce.
 		tutor_utils()->checking_nonce();
 
 		// Check user permission.
@@ -57,116 +66,152 @@ class RestAuth {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-        $api_key    = 'key_' . bin2hex(random_bytes(16));
-        $api_secret = 'secret_' . bin2hex(random_bytes(32));
+		$api_key    = 'key_' . bin2hex( random_bytes( 16 ) );
+		$api_secret = 'secret_' . bin2hex( random_bytes( 32 ) );
 
-        $permission = Input::post('permission');
+		$permission = Input::post( 'permission' );
 
-        $info = json_encode(
-            array(
-                'key'        => $api_key,
-                'secret'     => $api_secret,
-                'permission' => $permission,
-            )
-        );
+		$info = json_encode(
+			array(
+				'key'        => $api_key,
+				'secret'     => $api_secret,
+				'permission' => $permission,
+			)
+		);
 
-        // Update user meta.
-        $add = add_user_meta(
-            get_current_user_id(),
-            self::KEYS_USER_META_KEY,
-            $info
-        );
+		// Update user meta.
+		$add = add_user_meta(
+			get_current_user_id(),
+			self::KEYS_USER_META_KEY,
+			$info
+		);
 
-        if ( $add ) {
-            $response = self::prepare_response( $api_key, $api_secret, $permission );
-            wp_send_json_success( $response );
-        } else {
-            wp_send_json_error( tutor_utils()->error_message( '0' ) );
-        }
+		if ( $add ) {
+			$response = self::prepare_response( $api_key, $api_secret, $permission );
+			wp_send_json_success( $response );
+		} else {
+			wp_send_json_error( tutor_utils()->error_message( '0' ) );
+		}
 
-    }
+	}
 
-    function validateApiKeyAndSecret($apiKey, $apiSecret) {
-        // Retrieve the stored API key and secret from your storage mechanism based on the given apiKey
-        $storedApiKey = "stored_api_key"; // Replace with the actual stored API key
-        $storedApiSecret = "stored_api_secret"; // Replace with the actual stored API secret
-        
-        if ($apiKey === $storedApiKey && $apiSecret === $storedApiSecret) {
-            return true; // Key and secret are valid
-        }
-        
-        return false; // Key and secret are invalid
-    }
-    
+	/**
+	 * Check if api key & secret is valid
+	 *
+	 * @since 2.2.1
+	 *
+	 * @param string $api_key api key.
+	 * @param string $api_secret api secret.
+	 *
+	 * @return boolean
+	 */
+	public static function validate_api_key_secret( $api_key, $api_secret ) {
+		global $wpdb;
+		$table = $wpdb->usermeta;
 
-    function processApiRequest() {
-        $headers = apache_request_headers();
-        
-        if (isset($headers['Authorization'])) {
-            $authorizationHeader = $headers['Authorization'];
-            
-            if (strpos($authorizationHeader, 'Basic') !== false) {
-                $base64Credentials = str_replace('Basic ', '', $authorizationHeader);
-                $credentials = base64_decode($base64Credentials);
-                
-                list($apiKey, $apiSecret) = explode(':', $credentials);
-                
-                if (validateApiKeyAndSecret($apiKey, $apiSecret)) {
-                    // Key and secret are valid, process the API request
-                    // Your code to handle the API request goes here
-                    echo "API request authorized!";
-                    return;
-                }
-            }
-        }
-        
-        // Key and secret are invalid or not provided
-        header('HTTP/1.0 401 Unauthorized');
-        echo "Unauthorized";
-    }
-    
+		$valid = false;
 
-    private static function prepare_response( $key, $secret, $permission ) {
-        $user_id = get_current_user_id();
-        ob_start();
-        ?>
-        <tr>
-            <td>
-                <?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
-            </td>
-            <td>
-                <?php echo esc_html( $key ); ?>
-            </td>
-            <td>
-                <?php echo esc_html( $secret ); ?>
-            </td>
-            <td>
-                <?php echo esc_html( $permission ); ?>
-            </td>
-            <td>
-                <button class="tutor-btn tutor-btn-sm tutor-btn-danger">
-                    <?php esc_html_e( 'Revoke', 'tutor' ); ?>
-                </button>
-            </td>
-        </tr>
-        <?php
-        return ob_get_clean();
-    }
+		$results = QueryHelper::get_all(
+			$table,
+			array( 'meta_key' => self::KEYS_USER_META_KEY ),
+			'umeta_id'
+		);
+
+		if ( is_array( $results ) && count( $results ) ) {
+			foreach ( $results as $result ) {
+				$result = json_decode( $result );
+				if ( $result->key === $api_key && $result->secret === $api_secret ) {
+					$valid = true;
+					break;
+				}
+			}
+		}
+
+		return $valid;
+	}
+
+	/**
+	 * Process api request
+	 *
+	 * @since 2.2.1
+	 *
+	 * @return boolean
+	 */
+	public static function process_api_request() {
+		$headers = apache_request_headers();
+
+		if ( isset( $headers['Authorization'] ) ) {
+			$authorization_header = $headers['Authorization'];
+
+			if ( strpos( $authorization_header, 'Basic' ) !== false ) {
+				$base_64_credentials = str_replace( 'Basic ', '', $authorization_header );
+				$credentials         = base64_decode( $base_64_credentials );
+
+				list($api_key, $api_secret) = explode( ':', $credentials );
+
+				if ( self::validate_api_key_secret( $api_key, $api_secret ) ) {
+					return true;
+				}
+			}
+		}
+
+		// Key and secret are invalid or not provided.
+		header( 'HTTP/1.0 401 Unauthorized' );
+		return false;
+	}
 
     /**
-     * Get available permission
+     * Prepare html response
      *
      * @since 2.2.1
      *
-     * @return array
+     * @param string $key api key.
+     * @param string $secret api secret.
+     * @param string $permission authorization permission.
+     *
+     * @return string
      */
-    public static function available_permissions(): array {
-        $permissions = array(
-            array(
-                'value' => self::READ,
-                'label' => __( 'Read', 'tutor' ),
-            )
-        );
-        return $permissions;
-    }
+	public static function prepare_response( $key, $secret, $permission ) {
+		$user_id = get_current_user_id();
+		ob_start();
+		?>
+		<tr>
+			<td>
+				<?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
+			</td>
+			<td>
+				<?php echo esc_html( $key ); ?>
+			</td>
+			<td>
+				<?php echo esc_html( $secret ); ?>
+			</td>
+			<td>
+				<?php echo esc_html( $permission ); ?>
+			</td>
+			<td>
+				<button class="tutor-btn tutor-btn-sm tutor-btn-danger">
+					<?php esc_html_e( 'Revoke', 'tutor' ); ?>
+				</button>
+			</td>
+		</tr>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get available permission
+	 *
+	 * @since 2.2.1
+	 *
+	 * @return array
+	 */
+	public static function available_permissions(): array {
+		$permissions = array(
+			array(
+				'value' => self::READ,
+				'label' => __( 'Read', 'tutor' ),
+			),
+		);
+		return $permissions;
+	}
 }
