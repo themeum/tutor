@@ -16,7 +16,7 @@ global $wpdb;
 $user_id = get_current_user_id();
 
 // Getting user meta using custom query since get_user_meta .
-//not return umeta_id .
+// not return umeta_id .
 $tokens  = QueryHelper::get_all(
 	$wpdb->usermeta,
 	array(
@@ -48,10 +48,20 @@ $user        = get_userdata( get_current_user_id() );
 		</thead>
 		<tbody>
 			<?php
-			foreach ( $tokens as $token ) {
-				$api = json_decode( $token->meta_value );
-                echo RestAuth::prepare_response( $token->umeta_id, $api->key, $api->secret, $api->permission ); //phpcs:ignore
-			}
+                if ( is_array( $tokens ) && count( $tokens ) ) {
+                    foreach ( $tokens as $token ) {
+                        $api = json_decode( $token->meta_value );
+                        echo RestAuth::prepare_response( $token->umeta_id, $api->key, $api->secret, $api->permission ); //phpcs:ignore
+                    }
+                } else {
+                   ?>
+                   <tr>
+                        <td colspan="100%" id="tutor-api-keys-no-record">
+                            <?php esc_html_e( 'No record available', 'tutor' ); ?>
+                        </td>
+                   </tr>
+                   <?php
+                }
 			?>
 		</tbody>
 	</table>

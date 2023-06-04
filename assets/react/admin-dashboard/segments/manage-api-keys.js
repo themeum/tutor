@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     const apiKeysForm = document.getElementById("tutor-generate-api-keys");
     const submitBtn = document.querySelector("#tutor-generate-api-keys button[type=submit]");
     const modal = document.getElementById("tutor-add-new-api-keys");
+    const noRecordElem = document.getElementById("tutor-api-keys-no-record");
 
     if (!keysListWrapper) {
         return;
@@ -41,6 +42,9 @@ document.addEventListener("DOMContentLoaded", async function() {
             submitBtn.classList.remove("is-loading");
             submitBtn.removeAttribute("disabled");
             modal.classList.remove("tutor-is-active");
+            if (noRecordElem) {
+                noRecordElem.remove();
+            }
         }
     };
 
@@ -48,7 +52,9 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (listTable) {
         listTable.addEventListener("click", async (e) => {
             const target = e.target;
+            console.log('clicked' + target.tagName);
             if (target.hasAttribute("data-meta-id")) {
+                console.log('has');
                 const metaId = target.dataset.metaId;
                 const formData = tutorFormData([{ action: "tutor_revoke_api_keys", meta_id: metaId }]);
 
