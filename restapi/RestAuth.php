@@ -132,7 +132,7 @@ class RestAuth {
         ?>
         <tr>
             <td>
-                <?php tutor_utils()->display_name( $user_id ); ?>
+                <?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
             </td>
             <td>
                 <?php echo esc_html( $key ); ?>
@@ -142,6 +142,11 @@ class RestAuth {
             </td>
             <td>
                 <?php echo esc_html( $permission ); ?>
+            </td>
+            <td>
+                <button class="tutor-btn tutor-btn-sm tutor-btn-danger">
+                    <?php esc_html_e( 'Revoke', 'tutor' ); ?>
+                </button>
             </td>
         </tr>
         <?php
