@@ -48,15 +48,16 @@ class RestAuth {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_tutor_generate_api_keys', __CLASS__ . '::generate_api_keys' );
+		add_action( 'wp_ajax_tutor_revoke_api_keys', __CLASS__ . '::revoke_api_keys' );
 	}
 
-    /**
-     * Generate api keys
-     *
-     * @since 2.2.1
-     *
-     * @return void send wp_json response
-     */
+	/**
+	 * Generate api keys
+	 *
+	 * @since 2.2.1
+	 *
+	 * @return void send wp_json response
+	 */
 	public static function generate_api_keys() {
 		// Validate nonce.
 		tutor_utils()->checking_nonce();
@@ -93,6 +94,39 @@ class RestAuth {
 			wp_send_json_error( tutor_utils()->error_message( '0' ) );
 		}
 
+	}
+
+	/**
+	 * Revoke api keys
+	 *
+	 * @since 2.2.1
+	 *
+	 * @return void send wp_json response
+	 */
+	public static function revoke_api_keys() {
+		// Validate nonce.
+		tutor_utils()->checking_nonce();
+
+		// Check user permission.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
+		$meta_id = Input::post( 'meta_id', 0, Input::TYPE_INT );
+
+		if ( ! $meta_id ) {
+			wp_send_json_error( __( 'Invalid meta id', 'tutor' ) );
+		}
+
+		// Delete api keys.
+		global $wpdb;
+		$delete = QueryHelper::delete( $wpdb->usermeta, array( 'umeta_id' => $meta_id ) );
+
+		if ( $delete ) {
+			wp_send_json_success( __( 'API keys permanently revoked', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'API keys revoke failed, please try again.', 'tutor' ) );
+		}
 	}
 
 	/**
@@ -160,49 +194,49 @@ class RestAuth {
 		return false;
 	}
 
-    /**
-     * Prepare html response
-     *
-     * @since 2.2.1
-     *
-     * @param int    $meta_id meta id.
-     * @param string $key api key.
-     * @param string $secret api secret.
-     * @param string $permission authorization permission.
-     *
-     * @return string
-     */
-	public static function prepare_response($meta_id, $key, $secret, $permission ) {
+	/**
+	 * Prepare html response
+	 *
+	 * @since 2.2.1
+	 *
+	 * @param int    $meta_id meta id.
+	 * @param string $key api key.
+	 * @param string $secret api secret.
+	 * @param string $permission authorization permission.
+	 *
+	 * @return string
+	 */
+	public static function prepare_response( $meta_id, $key, $secret, $permission ) {
 		$user_id = get_current_user_id();
 		ob_start();
 		?>
 					<tr>
 						<td>
-                            <?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
+							<?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
 						</td>
 						<td>
-                            <a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-                                <span class="tutor-icon-copy tutor-mr-8"></span>
-                                <span class="tutor-copy-text" data-text="<?php echo esc_attr( $key ); ?>">
-                                    <?php echo esc_html( substr( $key, 0, 5 ) . '...' ); ?>
-                                </span>
-                            </a>
+							<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+								<span class="tutor-icon-copy tutor-mr-8"></span>
+								<span class="tutor-copy-text" data-text="<?php echo esc_attr( $key ); ?>">
+									<?php echo esc_html( substr( $key, 0, 5 ) . '...' ); ?>
+								</span>
+							</a>
 						</td>
 						<td>
-                            <a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-                                <span class="tutor-icon-copy tutor-mr-8"></span>
-                                <span class="tutor-copy-text" data-text="<?php echo esc_attr( $secret ); ?>">
-                                    <?php echo esc_html( substr( $secret, 0, 9 ) . '...' ); ?>
-                                </span>
-                            </a>
+							<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+								<span class="tutor-icon-copy tutor-mr-8"></span>
+								<span class="tutor-copy-text" data-text="<?php echo esc_attr( $secret ); ?>">
+									<?php echo esc_html( substr( $secret, 0, 9 ) . '...' ); ?>
+								</span>
+							</a>
 						</td>
 						<td>
-                            <?php echo esc_html( $permission ); ?>
+							<?php echo esc_html( ucfirst( $permission ) ); ?>
 						</td>
 						<td>
-                            <button class="tutor-btn tutor-btn-sm tutor-btn-danger" data-meta-id="<?php echo esc_attr( $meta_id ); ?>">
-                                <?php esc_html_e( 'Revoke', 'tutor' ); ?>
-                            </button>
+							<button class="tutor-btn tutor-btn-sm tutor-btn-danger" data-meta-id="<?php echo esc_attr( $meta_id ); ?>">
+								<?php esc_html_e( 'Revoke', 'tutor' ); ?>
+							</button>
 						</td>
 					</tr>
 		<?php
