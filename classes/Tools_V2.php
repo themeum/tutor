@@ -337,7 +337,7 @@ class Tools_V2 {
 				'desc'      => __( 'Token List', 'tutor' ),
 				'template'  => 'manage-tokens',
 				'view_path' => tutor()->path . 'views/pages/tools/',
-				'icon'      => 'tutor-icon-page-review',
+				'icon'      => 'tutor-icon-privacy',
 				'blocks'    => array(
 					'block' => array(),
 				),
