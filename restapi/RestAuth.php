@@ -87,7 +87,7 @@ class RestAuth {
 		);
 
 		if ( $add ) {
-			$response = self::prepare_response( $api_key, $api_secret, $permission );
+			$response = self::prepare_response( $meta_id, $api_key, $api_secret, $permission );
 			wp_send_json_success( $response );
 		} else {
 			wp_send_json_error( tutor_utils()->error_message( '0' ) );
@@ -165,35 +165,46 @@ class RestAuth {
      *
      * @since 2.2.1
      *
+     * @param int    $meta_id meta id.
      * @param string $key api key.
      * @param string $secret api secret.
      * @param string $permission authorization permission.
      *
      * @return string
      */
-	public static function prepare_response( $key, $secret, $permission ) {
+	public static function prepare_response($meta_id, $key, $secret, $permission ) {
 		$user_id = get_current_user_id();
 		ob_start();
 		?>
-		<tr>
-			<td>
-				<?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
-			</td>
-			<td>
-				<?php echo esc_html( $key ); ?>
-			</td>
-			<td>
-				<?php echo esc_html( $secret ); ?>
-			</td>
-			<td>
-				<?php echo esc_html( $permission ); ?>
-			</td>
-			<td>
-				<button class="tutor-btn tutor-btn-sm tutor-btn-danger">
-					<?php esc_html_e( 'Revoke', 'tutor' ); ?>
-				</button>
-			</td>
-		</tr>
+					<tr>
+						<td>
+                            <?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
+						</td>
+						<td>
+                            <a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+                                <span class="tutor-icon-copy tutor-mr-8"></span>
+                                <span class="tutor-copy-text" data-text="<?php echo esc_attr( $key ); ?>">
+                                    <?php echo esc_html( substr( $key, 0, 5 ) . '...' ); ?>
+                                </span>
+                            </a>
+						</td>
+						<td>
+                            <a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+                                <span class="tutor-icon-copy tutor-mr-8"></span>
+                                <span class="tutor-copy-text" data-text="<?php echo esc_attr( $secret ); ?>">
+                                    <?php echo esc_html( substr( $secret, 0, 9 ) . '...' ); ?>
+                                </span>
+                            </a>
+						</td>
+						<td>
+                            <?php echo esc_html( $permission ); ?>
+						</td>
+						<td>
+                            <button class="tutor-btn tutor-btn-sm tutor-btn-danger" data-meta-id="<?php echo esc_attr( $meta_id ); ?>">
+                                <?php esc_html_e( 'Revoke', 'tutor' ); ?>
+                            </button>
+						</td>
+					</tr>
 		<?php
 		return ob_get_clean();
 	}

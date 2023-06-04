@@ -37,27 +37,7 @@ $current_user = get_userdata( get_current_user_id() );
 			<?php
 			foreach ( $tokens as $token ) {
                 $token = json_decode( $token );
-				?>
-					<tr>
-						<td>
-                            <?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
-						</td>
-						<td>
-                            <?php echo esc_html( substr( $token->key, 0, 5 ) . '...' ); ?>
-						</td>
-						<td>
-                            <?php echo esc_html( substr( $token->secret, 0, 9 ) . '...' ); ?>
-						</td>
-						<td>
-                            <?php echo esc_html( $token->permission ); ?>
-						</td>
-						<td>
-                            <button class="tutor-btn tutor-btn-sm tutor-btn-danger">
-                                <?php esc_html_e( 'Revoke', 'tutor' ); ?>
-                            </button>
-						</td>
-					</tr>
-				<?php
+                echo RestAuth::prepare_response( 1, $token->key, $token->secret, $token->permission ); //phpcs:ignore
 			}
 			?>
 		</tbody>
