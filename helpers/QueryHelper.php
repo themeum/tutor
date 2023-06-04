@@ -299,12 +299,15 @@ class QueryHelper {
 	}
 
 	/**
-	 * Get a single row from any table with where clause
+	 * Get all row from any table with where clause
+	 *
+	 * @since 2.2.1
 	 *
 	 * @param string $table  table name with prefix.
 	 *
 	 * @param array  $where  assoc_array. For ex: [col_name => value ].
 	 * @param string $order_by  order by column name.
+	 * @param int    $limit default is 1000.
 	 * @param string $order  DESC or ASC, default is DESC.
 	 * @param string $output  expected output type, default is object.
 	 *
