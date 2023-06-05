@@ -436,7 +436,7 @@ class Utils {
 		$course_page_url  = trailingslashit( home_url() ) . $course_post_type;
 
 		$course_archive_page = $this->get_option( 'course_archive_page' );
-		if ( $course_archive_page && $course_archive_page !== '-1' ) {
+		if ( $course_archive_page && '-1' !== $course_archive_page ) {
 			$course_page_url = get_permalink( $course_archive_page );
 		}
 		return trailingslashit( $course_page_url );
