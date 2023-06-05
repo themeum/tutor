@@ -50,6 +50,9 @@
 .tutor-icon-map-pin:before {
   content: "\f905";
 }
+.tutor-icon-api:before {
+  content: "\f906";
+}
 
 
 /* tutor old fonts */
