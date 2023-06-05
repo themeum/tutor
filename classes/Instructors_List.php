@@ -175,7 +175,7 @@ class Instructors_List {
 	 * @since 2.0.0
 	 *
 	 * @param string $status hold status for updating.
-	 * @param string $user_ids ids that need to update.
+	 * @param string $user_ids comma seperated user ids.
 	 *
 	 * @return bool
 	 */
@@ -184,11 +184,14 @@ class Instructors_List {
 		$status           = sanitize_text_field( $status );
 		$instructor_table = $wpdb->usermeta;
 
+		$ids       = array_map( 'intval', explode( ',', $user_ids ) );
+		$in_clause = QueryHelper::prepare_in_clause( $ids );
+
 		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$update = $wpdb->query(
 			$wpdb->prepare(
 				"UPDATE {$instructor_table} SET meta_value = %s 
-				WHERE user_id IN ($user_ids) 
+				WHERE user_id IN ($in_clause) 
 				AND meta_key = %s",
 				$status,
 				'_tutor_instructor_status'

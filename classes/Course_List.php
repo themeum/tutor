@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -381,9 +382,13 @@ class Course_List {
 		$post_table = $wpdb->posts;
 		$status     = sanitize_text_field( $status );
 		$bulk_ids   = sanitize_text_field( $bulk_ids );
+
+		$ids       = array_map( 'intval', explode( ',', $bulk_ids ) );
+		$in_clause = QueryHelper::prepare_in_clause( $ids );
+
 		$update = $wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$post_table} SET post_status = %s WHERE ID IN ($bulk_ids)", //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"UPDATE {$post_table} SET post_status = %s WHERE ID IN ($in_clause)", //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$status
 			)
 		);
