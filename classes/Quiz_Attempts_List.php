@@ -254,7 +254,7 @@ class Quiz_Attempts_List {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
