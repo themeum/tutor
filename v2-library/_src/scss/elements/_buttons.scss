@@ -103,6 +103,13 @@ $disabled-color: #e9e9ea !default;
 		&:active {
 			color: #ffffff;
 		}
+
+		&[disabled],
+		&.disabled {
+			border-color: #e9e9ea;
+			background-color: #e9e9ea;
+			color: #000;
+		}
 	}
 
 	&-link {
