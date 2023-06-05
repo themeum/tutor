@@ -3,9 +3,10 @@
  * Tutor pages
  *
  * @package Tutor\Views
+ * @subpackage Tutor\Tools
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 2.2.1
  */
 
 use Tutor\Helpers\QueryHelper;
@@ -17,11 +18,11 @@ $user_id = get_current_user_id();
 
 // Getting user meta using custom query since get_user_meta .
 // not return umeta_id .
-$tokens  = QueryHelper::get_all(
+$tokens = QueryHelper::get_all(
 	$wpdb->usermeta,
 	array(
 		'user_id'  => $user_id,
-		'meta_key' => RestAuth::KEYS_USER_META_KEY,
+		'meta_key' => RestAuth::KEYS_USER_META_KEY, //phpcs:ignore
 	),
 	'umeta_id'
 );
@@ -48,20 +49,20 @@ $user        = get_userdata( get_current_user_id() );
 		</thead>
 		<tbody>
 			<?php
-                if ( is_array( $tokens ) && count( $tokens ) ) {
-                    foreach ( $tokens as $token ) {
-                        $api = json_decode( $token->meta_value );
-                        echo RestAuth::prepare_response( $token->umeta_id, $api->key, $api->secret, $api->permission ); //phpcs:ignore
-                    }
-                } else {
-                   ?>
-                   <tr>
-                        <td colspan="100%" id="tutor-api-keys-no-record">
-                            <?php esc_html_e( 'No record available', 'tutor' ); ?>
-                        </td>
-                   </tr>
-                   <?php
-                }
+			if ( is_array( $tokens ) && count( $tokens ) ) {
+				foreach ( $tokens as $token ) {
+					$api = json_decode( $token->meta_value );
+					echo RestAuth::prepare_response( $token->umeta_id, $api->key, $api->secret, $api->permission ); //phpcs:ignore
+				}
+			} else {
+				?>
+				<tr>
+					<td colspan="100%" id="tutor-api-keys-no-record">
+					<?php esc_html_e( 'No record available', 'tutor' ); ?>
+					</td>
+				</tr>
+				<?php
+			}
 			?>
 		</tbody>
 	</table>
@@ -101,7 +102,7 @@ $user        = get_userdata( get_current_user_id() );
 						</label>
 						<div class="tutor-mb-16">
 							<select name="permission" class="tutor-form-select">
-							   <?php foreach ( $permissions as $permission ) : ?>
+								<?php foreach ( $permissions as $permission ) : ?>
 								<option value="<?php echo esc_attr( $permission['value'] ); ?>">
 									<?php echo esc_html( $permission['label'] ); ?>
 								</option>

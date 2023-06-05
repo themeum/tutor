@@ -2,7 +2,7 @@
 /**
  * Manage Rest API Authentication
  *
- * Token create, invoke etc
+ * API key, secret create, invoke etc
  *
  * @package Tutor
  * @author Themeum <support@themeum.com>
@@ -72,7 +72,7 @@ class RestAuth {
 
 		$permission = Input::post( 'permission' );
 
-		$info = json_encode(
+		$info = wp_json_encode(
 			array(
 				'key'        => $api_key,
 				'secret'     => $api_secret,
@@ -147,7 +147,7 @@ class RestAuth {
 
 		$results = QueryHelper::get_all(
 			$table,
-			array( 'meta_key' => self::KEYS_USER_META_KEY ),
+			array( 'meta_key' => self::KEYS_USER_META_KEY ), //phpcs:ignore
 			'umeta_id'
 		);
 
@@ -179,7 +179,7 @@ class RestAuth {
 
 			if ( strpos( $authorization_header, 'Basic' ) !== false ) {
 				$base_64_credentials = str_replace( 'Basic ', '', $authorization_header );
-				$credentials         = base64_decode( $base_64_credentials );
+				$credentials         = base64_decode( $base_64_credentials ); //phpcs:ignore
 
 				list($api_key, $api_secret) = explode( ':', $credentials );
 
@@ -190,7 +190,6 @@ class RestAuth {
 		}
 
 		// Key and secret are invalid or not provided.
-		header( 'HTTP/1.0 401 Unauthorized' );
 		return false;
 	}
 
