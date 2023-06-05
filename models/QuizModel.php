@@ -310,7 +310,7 @@ class QuizModel {
 		// Filter by course.
 		if ( '' != $course_filter ) {
 			! is_array( $course_filter ) ? $course_filter = array( $course_filter ) : 0;
-			$course_ids                                   = implode( ',', array_map('intval', $course_filter ));
+			$course_ids                                   = implode( ',', array_map( 'intval', $course_filter ) );
 			$course_filter                                = " AND quiz_attempts.course_id IN ($course_ids) ";
 		}
 
@@ -439,8 +439,9 @@ class QuizModel {
 	public static function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only = false, $all_attempt = false ) {
 		global $wpdb;
 		$search_filter = sanitize_text_field( $search_filter );
-		$course_filter = sanitize_text_field( $course_filter );
+		$course_filter = (int) sanitize_text_field( $course_filter );
 		$date_filter   = sanitize_text_field( $date_filter );
+		$order_filter  = sanitize_sql_orderby( $order_filter );
 
 		$course_ids = array_map(
 			function ( $id ) {
@@ -455,7 +456,7 @@ class QuizModel {
 		$search_term_raw = $search_filter;
 		$search_filter   = $search_filter ? "AND ( users.user_email = '{$search_term_raw}' OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
 
-		$course_filter = '' != $course_filter ? " AND quiz_attempts.course_id = $course_filter " : '';
+		$course_filter = 0 !== $course_filter ? " AND quiz_attempts.course_id = $course_filter " : '';
 		$date_filter   = '' != $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter   = '' != $date_filter ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
 		$user_filter   = $user_id ? ' AND user_id=\'' . esc_sql( $user_id ) . '\' ' : '';
