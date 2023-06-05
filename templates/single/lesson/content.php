@@ -83,7 +83,7 @@ tutor_load_template(
 
 	isset( $url_components['query'] ) ? parse_str( $url_components['query'], $output ) : null;
 
-	$has_lesson_content    = ! in_array( trim( get_the_content() ), array( null, '', '&nbsp;' ) );
+	$has_lesson_content    = apply_filters( 'tutor_has_lesson_content', ! in_array( trim( get_the_content() ), array( null, '', '&nbsp;' ) ), $course_content_id );
 	$has_lesson_attachment = count( tutor_utils()->get_attachments() ) > 0;
 	$has_lesson_comment    = (int) get_comments_number( $course_content_id );
 	?>
