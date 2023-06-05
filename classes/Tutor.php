@@ -408,6 +408,15 @@ final class Tutor {
 	private $course_embed;
 
 	/**
+	 * Rest Authentication
+	 *
+	 * @var $rest_auth
+	 *
+	 * @since 2.1.0
+	 */
+	private $rest_auth;
+
+	/**
 	 * Run the TUTOR
 	 *
 	 * @since 1.2.0
@@ -515,6 +524,7 @@ final class Tutor {
 		$this->student_list    = new Students_List();
 		$this->instructor_list = new Instructors_List();
 		$this->course_embed    = new Course_Embed();
+		$this->rest_auth       = new RestAuth();
 
 		/**
 		 * Run Method

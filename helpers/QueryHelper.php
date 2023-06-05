@@ -298,6 +298,41 @@ class QueryHelper {
 		);
 	}
 
+	/**
+	 * Get all row from any table with where clause
+	 *
+	 * @since 2.2.1
+	 *
+	 * @param string $table  table name with prefix.
+	 *
+	 * @param array  $where  assoc_array. For ex: [col_name => value ].
+	 * @param string $order_by  order by column name.
+	 * @param int    $limit default is 1000.
+	 * @param string $order  DESC or ASC, default is DESC.
+	 * @param string $output  expected output type, default is object.
+	 *
+	 * @return mixed  based on output param, default object
+	 */
+	public static function get_all( string $table, array $where, string $order_by, $limit = 1000, string $order = 'DESC', string $output = 'OBJECT' ) {
+		global $wpdb;
+		$obj          = new self();
+		$where_clause = $obj->build_where_clause( $where );
+		$limit        = sanitize_text_field( $limit );
+		$query        = $wpdb->prepare(
+			"SELECT *
+				FROM {$table}
+				WHERE {$where_clause}
+				ORDER BY {$order_by} {$order}
+				LIMIT %d
+			",
+			$limit
+		);
+		return $wpdb->get_results(
+			$query,
+			$output
+		);
+	}
+
 
 	/**
 	 * Update multiple rows by using where in
