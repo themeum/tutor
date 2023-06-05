@@ -63,13 +63,13 @@ class Course_List {
 		 *
 		 * @since v2.0.0
 		 */
-		add_action( 'wp_ajax_tutor_change_course_status', array( __CLASS__, 'tutor_change_course_status' ) );
+		add_action( 'wp_ajax_tutor_change_course_status', array( $this, 'tutor_change_course_status' ) );
 		/**
 		 * Handle ajax request for delete course
 		 *
 		 * @since v2.0.0
 		 */
-		add_action( 'wp_ajax_tutor_course_delete', array( __CLASS__, 'tutor_course_delete' ) );
+		add_action( 'wp_ajax_tutor_course_delete', array( $this, 'tutor_course_delete' ) );
 	}
 
 	/**
@@ -251,7 +251,7 @@ class Course_List {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -305,7 +305,7 @@ class Course_List {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
