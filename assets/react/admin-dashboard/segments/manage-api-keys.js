@@ -16,45 +16,45 @@ document.addEventListener("DOMContentLoaded", async function() {
         return;
     }
 
-    apiKeysForm.onsubmit = async (e) => {
-        e.preventDefault();
-
-        const formData = new FormData(apiKeysForm);
-
-        try {
-            // Show loading
-            submitBtn.classList.add("is-loading");
-            submitBtn.setAttribute("disabled", true);
-
-            const post = await ajaxHandler(formData);
-            const res = await post.json();
-            const { success, data } = res;
-
-            if (success) {
-                listTable.insertAdjacentHTML("beforeend", `${data}`);
-                tutor_toast(__("Success", "tutor"), __("API key & secret generated successfully"), "success");
-            } else {
-                tutor_toast(__("Failed", "tutor"), data, "error");
+    if (apiKeysForm) {
+        apiKeysForm.onsubmit = async (e) => {
+            e.preventDefault();
+    
+            const formData = new FormData(apiKeysForm);
+    
+            try {
+                // Show loading
+                submitBtn.classList.add("is-loading");
+                submitBtn.setAttribute("disabled", true);
+    
+                const post = await ajaxHandler(formData);
+                const res = await post.json();
+                const { success, data } = res;
+    
+                if (success) {
+                    listTable.insertAdjacentHTML("beforeend", `${data}`);
+                    tutor_toast(__("Success", "tutor"), __("API key & secret generated successfully"), "success");
+                } else {
+                    tutor_toast(__("Failed", "tutor"), data, "error");
+                }
+            } catch (error) {
+                tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
+            } finally {
+                submitBtn.classList.remove("is-loading");
+                submitBtn.removeAttribute("disabled");
+                modal.classList.remove("tutor-is-active");
+                if (noRecordElem) {
+                    noRecordElem.remove();
+                }
             }
-        } catch (error) {
-            tutor_toast(__("Failed", "tutor"), defaultErrMsg, "error");
-        } finally {
-            submitBtn.classList.remove("is-loading");
-            submitBtn.removeAttribute("disabled");
-            modal.classList.remove("tutor-is-active");
-            if (noRecordElem) {
-                noRecordElem.remove();
-            }
-        }
-    };
+        };
+    }
 
     // Revoke api keys
     if (listTable) {
         listTable.addEventListener("click", async (e) => {
             const target = e.target;
-            console.log('clicked' + target.tagName);
             if (target.hasAttribute("data-meta-id")) {
-                console.log('has');
                 const metaId = target.dataset.metaId;
                 const formData = tutorFormData([{ action: "tutor_revoke_api_keys", meta_id: metaId }]);
 
