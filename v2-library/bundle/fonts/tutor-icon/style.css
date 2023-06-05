@@ -22,6 +22,30 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* tutor v2 new icons */
+
+.tutor-icon-privacy:before {
+  content: "\f900";
+}
+.tutor-icon-laptop:before {
+  content: "\f901";
+}
+.tutor-icon-desktop:before {
+  content: "\f902";
+}
+.tutor-icon-tablet:before {
+  content: "\f903";
+}
+.tutor-icon-mobile:before {
+  content: "\f904";
+}
+.tutor-icon-map-pin:before {
+  content: "\f905";
+}
+.tutor-icon-api:before {
+  content: "\f906";
+}
+
 .tutor-icon-brand-buddypress:before {
   content: "\e9e0";
 }
