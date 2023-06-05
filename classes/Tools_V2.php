@@ -331,6 +331,17 @@ class Tools_V2 {
 					'block' => array(),
 				),
 			),
+			'tutor_rest_api'   => array(
+				'label'     => __( 'Rest API', 'tutor' ),
+				'slug'      => 'tutor_rest_api',
+				'desc'      => __( 'Token List', 'tutor' ),
+				'template'  => 'manage-tokens',
+				'view_path' => tutor()->path . 'views/pages/tools/',
+				'icon'      => 'tutor-icon-privacy',
+				'blocks'    => array(
+					'block' => array(),
+				),
+			),
 			'tutor-setup'   => array(
 				'label'  => __( 'Setup Wizard', 'tutor' ),
 				'slug'   => 'tutor-setup',
