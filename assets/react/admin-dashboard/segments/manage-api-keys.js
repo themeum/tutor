@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 submitBtn.classList.remove("is-loading");
                 submitBtn.removeAttribute("disabled");
                 modal.classList.remove("tutor-is-active");
+                document.body.classList.remove('tutor-modal-open');
                 if (noRecordElem) {
                     noRecordElem.remove();
                 }
