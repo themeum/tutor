@@ -104,7 +104,7 @@ class Tools_V2 {
 		}
 
 		$attr_tools = array(
-			'status'        => array(
+			'status'         => array(
 				'label'     => __( 'Status', 'tutor' ),
 				'slug'      => 'status',
 				'desc'      => __( 'Status Settings', 'tutor' ),
@@ -310,7 +310,7 @@ class Tools_V2 {
 					),
 				),
 			),
-			'import_export' => array(
+			'import_export'  => array(
 				'label'     => __( 'Import/Export', 'tutor' ),
 				'slug'      => 'import_export',
 				'desc'      => __( 'Import/Export Settings', 'tutor' ),
@@ -319,7 +319,7 @@ class Tools_V2 {
 				'icon'      => 'tutor-icon-import-export',
 				'blocks'    => array(),
 			),
-			'tutor_pages'   => array(
+			'tutor_pages'    => array(
 				'label'     => __( 'Tutor Pages', 'tutor' ),
 				'slug'      => 'tutor_pages',
 
@@ -331,7 +331,18 @@ class Tools_V2 {
 					'block' => array(),
 				),
 			),
-			'tutor-setup'   => array(
+			'tutor_rest_api' => array(
+				'label'     => __( 'Rest API', 'tutor' ),
+				'slug'      => 'tutor_rest_api',
+				'desc'      => __( 'Token List', 'tutor' ),
+				'template'  => 'manage-tokens',
+				'view_path' => tutor()->path . 'views/pages/tools/',
+				'icon'      => 'tutor-icon-api',
+				'blocks'    => array(
+					'block' => array(),
+				),
+			),
+			'tutor-setup'    => array(
 				'label'  => __( 'Setup Wizard', 'tutor' ),
 				'slug'   => 'tutor-setup',
 				'desc'   => __( 'Setup Wizard Settings', 'tutor' ),

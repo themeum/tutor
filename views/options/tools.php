@@ -68,3 +68,5 @@
 	//phpcs:ignore -- contain safe data
 	echo $this->view_template( 'common/modal-confirm.php', array() ); ?>
 </div>
+
+
