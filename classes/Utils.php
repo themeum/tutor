@@ -9490,26 +9490,6 @@ class Utils {
 	}
 
 	/**
-	 * Get total number of quiz
-	 *
-	 * @since 2.0.2
-	 *
-	 * @return int
-	 */
-	public function get_total_quiz() {
-		global $wpdb;
-
-		$sql = "SELECT COUNT(DISTINCT quiz.ID) 
-			FROM {$wpdb->posts} quiz
-				INNER JOIN {$wpdb->posts} topic ON quiz.post_parent=topic.ID 
-				INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID 
-			WHERE course.post_type=%s
-				AND quiz.post_type='tutor_quiz'";
-
-		return $wpdb->get_var( $wpdb->prepare( $sql, tutor()->course_post_type ) );
-	}
-
-	/**
 	 * Get total number of question
 	 *
 	 * @since 2.0.2
