@@ -7031,55 +7031,6 @@ class Utils {
 		return $results;
 	}
 
-
-	/**
-	 * Get Attempt row by grade method settings
-	 *
-	 * @since 1.4.2
-	 *
-	 * @param int $quiz_id quiz id.
-	 * @param int $user_id user id.
-	 *
-	 * @return array|bool|null|object
-	 */
-	public function get_quiz_attempt( $quiz_id = 0, $user_id = 0 ) {
-		global $wpdb;
-
-		$quiz_id = $this->get_post_id( $quiz_id );
-		$user_id = $this->get_user_id( $user_id );
-
-		$attempt = false;
-
-		$quiz_grade_method = get_tutor_option( 'quiz_grade_method', 'highest_grade' );
-		$from_string       = "FROM {$wpdb->tutor_quiz_attempts} WHERE quiz_id = %d AND user_id = %d AND attempt_status != 'attempt_started' ";
-
-		if ( $quiz_grade_method === 'highest_grade' ) {
-
-			$attempt = $wpdb->get_row( $wpdb->prepare( "SELECT * {$from_string} ORDER BY earned_marks DESC LIMIT 1; ", $quiz_id, $user_id ) );
-		} elseif ( $quiz_grade_method === 'average_grade' ) {
-
-			$attempt = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT {$wpdb->tutor_quiz_attempts}.*,
-						COUNT(attempt_id) AS attempt_count,
-						AVG(total_marks) AS total_marks,
-						AVG(earned_marks) AS earned_marks {$from_string}
-				",
-					$quiz_id,
-					$user_id
-				)
-			);
-		} elseif ( $quiz_grade_method === 'first_attempt' ) {
-
-			$attempt = $wpdb->get_row( $wpdb->prepare( "SELECT * {$from_string} ORDER BY attempt_id ASC LIMIT 1; ", $quiz_id, $user_id ) );
-		} elseif ( $quiz_grade_method === 'last_attempt' ) {
-
-			$attempt = $wpdb->get_row( $wpdb->prepare( "SELECT * {$from_string} ORDER BY attempt_id DESC LIMIT 1; ", $quiz_id, $user_id ) );
-		}
-
-		return $attempt;
-	}
-
 	/**
 	 * Print Course Status Context
 	 *
