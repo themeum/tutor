@@ -4897,39 +4897,6 @@ class Utils {
 	}
 
 	/**
-	 * Get quiz answer options by question ID
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $question_id question id.
-	 *
-	 * @return mixed
-	 */
-	public function get_quiz_answer_options_by_question( $question_id ) {
-		global $wpdb;
-
-		$answer_options = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT {$wpdb->comments}.comment_ID,
-					{$wpdb->comments}.comment_post_ID,
-					{$wpdb->comments}.comment_content
-			FROM 	{$wpdb->comments}
-			WHERE 	{$wpdb->comments}.comment_post_ID = %d
-					AND {$wpdb->comments}.comment_type = %s
-			ORDER BY {$wpdb->comments}.comment_karma ASC;
-			",
-				$question_id,
-				'quiz_answer_option'
-			)
-		);
-
-		if ( is_array( $answer_options ) && count( $answer_options ) ) {
-			return $answer_options;
-		}
-		return false;
-	}
-
-	/**
 	 * Get attached quiz.
 	 *
 	 * @since 1.0.0
