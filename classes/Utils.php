@@ -5210,45 +5210,6 @@ class Utils {
 	}
 
 	/**
-	 * Get quiz answers by ids
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $ids ids.
-	 *
-	 * @return array|bool|null|object
-	 */
-	public function get_quiz_answers_by_ids( $ids ) {
-		$ids = (array) $ids;
-
-		if ( ! count( $ids ) ) {
-			return false;
-		}
-
-		$in_ids = implode( ',', $ids );
-
-		global $wpdb;
-
-		$query = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT comment_ID,
-					comment_content
-		 	FROM 	{$wpdb->comments}
-			WHERE 	comment_type = %s
-					AND comment_ID IN({$in_ids})
-			",
-				'quiz_answer_option'
-			)
-		);
-
-		if ( is_array( $query ) && count( $query ) ) {
-			return $query;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Get the users / students / course levels
 	 *
 	 * @since 1.0.0
