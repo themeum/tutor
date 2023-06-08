@@ -33,6 +33,76 @@ class QuizModel {
 	}
 
 	/**
+	 * Get total number of quiz
+	 *
+	 * @since 2.0.2
+	 *
+	 * @return int
+	 */
+	public static function get_total_quiz() {
+		global $wpdb;
+
+		$sql = "SELECT COUNT(DISTINCT quiz.ID) 
+			FROM {$wpdb->posts} quiz
+				INNER JOIN {$wpdb->posts} topic ON quiz.post_parent=topic.ID 
+				INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID 
+			WHERE course.post_type=%s
+				AND quiz.post_type='tutor_quiz'";
+
+		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return $wpdb->get_var( $wpdb->prepare( $sql, tutor()->course_post_type ) );
+	}
+
+	/**
+	 * Get Attempt row by grade method settings
+	 *
+	 * @since 1.4.2
+	 *
+	 * @param int $quiz_id quiz id.
+	 * @param int $user_id user id.
+	 *
+	 * @return array|bool|null|object
+	 */
+	public function get_quiz_attempt( $quiz_id = 0, $user_id = 0 ) {
+		global $wpdb;
+
+		$quiz_id = tutils()->get_post_id( $quiz_id );
+		$user_id = tutils()->get_user_id( $user_id );
+
+		$attempt = false;
+
+		$quiz_grade_method = get_tutor_option( 'quiz_grade_method', 'highest_grade' );
+		$from_string       = "FROM {$wpdb->tutor_quiz_attempts} WHERE quiz_id = %d AND user_id = %d AND attempt_status != 'attempt_started' ";
+
+		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		if ( 'highest_grade' === $quiz_grade_method ) {
+			$attempt = $wpdb->get_row( $wpdb->prepare( "SELECT * {$from_string} ORDER BY earned_marks DESC LIMIT 1; ", $quiz_id, $user_id ) );
+		} elseif ( 'average_grade' === $quiz_grade_method ) {
+
+			$attempt = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT {$wpdb->tutor_quiz_attempts}.*,
+						COUNT(attempt_id) AS attempt_count,
+						AVG(total_marks) AS total_marks,
+						AVG(earned_marks) AS earned_marks {$from_string}
+				",
+					$quiz_id,
+					$user_id
+				)
+			);
+		} elseif ( 'first_attempt' === $quiz_grade_method ) {
+
+			$attempt = $wpdb->get_row( $wpdb->prepare( "SELECT * {$from_string} ORDER BY attempt_id ASC LIMIT 1; ", $quiz_id, $user_id ) );
+		} elseif ( 'last_attempt' === $quiz_grade_method ) {
+
+			$attempt = $wpdb->get_row( $wpdb->prepare( "SELECT * {$from_string} ORDER BY attempt_id DESC LIMIT 1; ", $quiz_id, $user_id ) );
+		}
+		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		return $attempt;
+	}
+
+	/**
 	 * Get all of the attempts by an user of a quiz
 	 *
 	 * @since 1.0.0

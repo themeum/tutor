@@ -4897,39 +4897,6 @@ class Utils {
 	}
 
 	/**
-	 * Get quiz answer options by question ID
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $question_id question id.
-	 *
-	 * @return mixed
-	 */
-	public function get_quiz_answer_options_by_question( $question_id ) {
-		global $wpdb;
-
-		$answer_options = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT {$wpdb->comments}.comment_ID,
-					{$wpdb->comments}.comment_post_ID,
-					{$wpdb->comments}.comment_content
-			FROM 	{$wpdb->comments}
-			WHERE 	{$wpdb->comments}.comment_post_ID = %d
-					AND {$wpdb->comments}.comment_type = %s
-			ORDER BY {$wpdb->comments}.comment_karma ASC;
-			",
-				$question_id,
-				'quiz_answer_option'
-			)
-		);
-
-		if ( is_array( $answer_options ) && count( $answer_options ) ) {
-			return $answer_options;
-		}
-		return false;
-	}
-
-	/**
 	 * Get attached quiz.
 	 *
 	 * @since 1.0.0
@@ -5237,45 +5204,6 @@ class Utils {
 
 		if ( is_array( $attempts ) && count( $attempts ) ) {
 			return $attempts;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get quiz answers by ids
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $ids ids.
-	 *
-	 * @return array|bool|null|object
-	 */
-	public function get_quiz_answers_by_ids( $ids ) {
-		$ids = (array) $ids;
-
-		if ( ! count( $ids ) ) {
-			return false;
-		}
-
-		$in_ids = implode( ',', $ids );
-
-		global $wpdb;
-
-		$query = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT comment_ID,
-					comment_content
-		 	FROM 	{$wpdb->comments}
-			WHERE 	comment_type = %s
-					AND comment_ID IN({$in_ids})
-			",
-				'quiz_answer_option'
-			)
-		);
-
-		if ( is_array( $query ) && count( $query ) ) {
-			return $query;
 		}
 
 		return false;
@@ -7101,55 +7029,6 @@ class Utils {
 		global $wpdb;
 		$results = $wpdb->get_results( "SELECT * FROM {$wpdb->tutor_gradebooks} ORDER BY grade_point DESC " );
 		return $results;
-	}
-
-
-	/**
-	 * Get Attempt row by grade method settings
-	 *
-	 * @since 1.4.2
-	 *
-	 * @param int $quiz_id quiz id.
-	 * @param int $user_id user id.
-	 *
-	 * @return array|bool|null|object
-	 */
-	public function get_quiz_attempt( $quiz_id = 0, $user_id = 0 ) {
-		global $wpdb;
-
-		$quiz_id = $this->get_post_id( $quiz_id );
-		$user_id = $this->get_user_id( $user_id );
-
-		$attempt = false;
-
-		$quiz_grade_method = get_tutor_option( 'quiz_grade_method', 'highest_grade' );
-		$from_string       = "FROM {$wpdb->tutor_quiz_attempts} WHERE quiz_id = %d AND user_id = %d AND attempt_status != 'attempt_started' ";
-
-		if ( $quiz_grade_method === 'highest_grade' ) {
-
-			$attempt = $wpdb->get_row( $wpdb->prepare( "SELECT * {$from_string} ORDER BY earned_marks DESC LIMIT 1; ", $quiz_id, $user_id ) );
-		} elseif ( $quiz_grade_method === 'average_grade' ) {
-
-			$attempt = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT {$wpdb->tutor_quiz_attempts}.*,
-						COUNT(attempt_id) AS attempt_count,
-						AVG(total_marks) AS total_marks,
-						AVG(earned_marks) AS earned_marks {$from_string}
-				",
-					$quiz_id,
-					$user_id
-				)
-			);
-		} elseif ( $quiz_grade_method === 'first_attempt' ) {
-
-			$attempt = $wpdb->get_row( $wpdb->prepare( "SELECT * {$from_string} ORDER BY attempt_id ASC LIMIT 1; ", $quiz_id, $user_id ) );
-		} elseif ( $quiz_grade_method === 'last_attempt' ) {
-
-			$attempt = $wpdb->get_row( $wpdb->prepare( "SELECT * {$from_string} ORDER BY attempt_id DESC LIMIT 1; ", $quiz_id, $user_id ) );
-		}
-
-		return $attempt;
 	}
 
 	/**
@@ -9485,26 +9364,6 @@ class Utils {
 		WHERE enroll.post_type = 'tutor_enrolled'
 		AND enroll.post_status = 'completed'
         AND course.post_type=%s";
-
-		return $wpdb->get_var( $wpdb->prepare( $sql, tutor()->course_post_type ) );
-	}
-
-	/**
-	 * Get total number of quiz
-	 *
-	 * @since 2.0.2
-	 *
-	 * @return int
-	 */
-	public function get_total_quiz() {
-		global $wpdb;
-
-		$sql = "SELECT COUNT(DISTINCT quiz.ID) 
-			FROM {$wpdb->posts} quiz
-				INNER JOIN {$wpdb->posts} topic ON quiz.post_parent=topic.ID 
-				INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID 
-			WHERE course.post_type=%s
-				AND quiz.post_type='tutor_quiz'";
 
 		return $wpdb->get_var( $wpdb->prepare( $sql, tutor()->course_post_type ) );
 	}
