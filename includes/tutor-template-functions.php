@@ -574,7 +574,7 @@ if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
 			$src  = wp_get_attachment_image_url( $post_thumbnail_id, $size, false );
 		} else {
 			$placeholder_url = tutor()->url . 'assets/images/placeholder.svg';
-			$src             = apply_filters( 'tutor_course_thumbnail_placeholder', $post_id, $placeholder_url );
+			$src             = apply_filters( 'tutor_course_thumbnail_placeholder', $placeholder_url, $post_id );
 		}
 
 		return $src;
