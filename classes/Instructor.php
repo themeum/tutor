@@ -32,6 +32,9 @@ class Instructor {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param bool $register_hook register hook or not.
+	 *
 	 * @return void
 	 */
 	public function __construct( $register_hook = true ) {
