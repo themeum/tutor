@@ -32,6 +32,9 @@ class Instructor {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param bool $register_hook register hook or not.
+	 *
 	 * @return void
 	 */
 	public function __construct( $register_hook = true ) {
@@ -171,6 +174,7 @@ class Instructor {
 			if ( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );
 				wp_set_auth_cookie( $user_id );
+				do_action( 'tutor_after_instructor_signup', $user_id );
 			}
 		}
 
