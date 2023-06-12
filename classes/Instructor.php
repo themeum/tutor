@@ -171,6 +171,7 @@ class Instructor {
 			if ( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );
 				wp_set_auth_cookie( $user_id );
+				do_action( 'tutor_after_instructor_signup', $user_id );
 			}
 		}
 
