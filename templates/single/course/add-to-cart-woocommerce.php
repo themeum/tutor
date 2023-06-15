@@ -33,14 +33,9 @@ if ( $product ) {
 		<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-end tutor-justify-between">
 			<?php ob_start(); ?>
 				<div>
-				<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
-					<?php echo wc_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
+				<span class="tutor-course-price tutor-fs-6 tutor-fw-bold tutor-color-black">
+					<?php echo wp_kses_post($wc_price_html); //phpcs:ignore?>
 				</span>
-				<?php if ( $regular_price && $sale_price && $sale_price != $regular_price ) : ?>
-					<del class="tutor-fs-7 tutor-color-muted tutor-ml-8">
-						<?php echo wc_price( $regular_price ); //phpcs:ignore?>
-					</del>
-				<?php endif; ?>
 				</div>
 				<?php
 					/**
