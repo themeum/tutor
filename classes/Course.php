@@ -1494,16 +1494,16 @@ class Course extends Tutor_Base {
 	 * @since 1.6.3
 	 * @return void
 	 */
-	public function social_share_content(): array {
-		$description = wp_strip_all_tags( $this->post->post_content );
-	
-		// Generate the social share content.
-		$content = [
+	public function social_share_content() {
+		$description = wp_filter_nohtml_kses( $this->post->post_content );
+		
+		// Generate the social share content
+		$content = array(
 			'title'       => $this->post->post_title,
 			'description' => $description,
 			'url'         => get_permalink( $this->post->ID ),
-		];
-	
+		);
+
 		return apply_filters( 'tutor_social_share_content', $content );
 	}
 
