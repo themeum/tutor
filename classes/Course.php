@@ -1495,7 +1495,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function social_share_content() {
-		$description = wp_filter_nohtml_kses( $this->post->post_content ); // Remove HTML tags from the content
+		$description = wp_strip_all_tags( $this->post->post_content ); // Remove HTML tags from the content
 	
 		// Generate the social share content
 		$content = array(
