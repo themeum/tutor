@@ -396,15 +396,15 @@ final class Tutor {
 	 * @var $course_list
 	 * @since 2.0.0
 	 */
-	private $course_list;
+	public $course_list;
 
 	//phpcs:disable
-	private $q_and_a_list;
-	private $q_attempt;
-	private $rest_api;
-	private $setup;
-	private $private_course_access;
-	private $course_filter;
+	public $q_and_a_list;
+	public $q_attempt;
+	public $rest_api;
+	public $setup;
+	public $private_course_access;
+	public $course_filter;
 	//phpcs:enable
 
 	/**
