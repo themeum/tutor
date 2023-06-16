@@ -14,6 +14,7 @@ $product    = wc_get_product( $product_id );
 
 $is_logged_in             = is_user_logged_in();
 $enable_guest_course_cart = tutor_utils()->get_option( 'enable_guest_course_cart' );
+$wc_price_html = apply_filters( 'tutor_loop_wc_price_html', $product->get_price_html(), $product );
 $required_loggedin_class  = '';
 if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
