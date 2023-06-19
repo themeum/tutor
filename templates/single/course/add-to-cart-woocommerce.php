@@ -27,8 +27,12 @@ if ( $product ) {
 			</a>
 		<?php
 	} else {
-		$regular_price = wc_get_price_to_display( $product, array( 'price' => $product->get_regular_price() ) );
-		$sale_price    = wc_get_price_to_display( $product, array( 'price' => $product->get_sale_price() ) );
+		/**
+		 * The WC settings under TAX section `Display prices in the shop` only applicable for shop page (Listing Page)
+		 * That's why, on details page price shown without tax.
+		 */
+		$sale_price    = $product->get_sale_price();
+		$regular_price = $product->get_regular_price();
 		?>
 		<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-end tutor-justify-between">
 			<?php ob_start(); ?>

@@ -241,7 +241,6 @@ Fix: Students were receiving the certificate download URL in the course complete
 Fix: On the assignment page, pass assignments show failed count if the assignment total mark and evaluate mark are the same
 Fix: Corrected the course completed count display issue when the admin manually enrolled students in a free course
 Fix: Resolved fatal error related to COOKIEHASH in a multisite environment
-Fix: On the course details page course price showing wihtout TAX
 Fix: GradeBook settings were allowing a minimum percentile value higher than the maximum percentile
 Fix: Addressed conflicts with export_settings ID with other vendors
 Fix: Fix translation-related issues
