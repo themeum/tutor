@@ -5323,7 +5323,7 @@ class Utils {
 		$student_register_page = (int) $this->get_option( 'student_register_page' );
 
 		if ( $student_register_page ) {
-			return get_the_permalink( $student_register_page );
+			return apply_filters( 'tutor_student_register_url', get_the_permalink( $student_register_page ) );
 		}
 
 		return false;
@@ -5340,7 +5340,7 @@ class Utils {
 		 $instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
 
 		if ( $instructor_register_page ) {
-			return get_the_permalink( $instructor_register_page );
+			return apply_filters( 'tutor_instructor_register_url', get_the_permalink( $instructor_register_page ) );
 		}
 
 		return false;
@@ -5358,7 +5358,7 @@ class Utils {
 	public function tutor_dashboard_url( $sub_url = '' ) {
 		$page_id = (int) $this->get_option( 'tutor_dashboard_page_id' );
 		$page_id = apply_filters( 'tutor_dashboard_page_id', $page_id );
-		return trailingslashit( get_the_permalink( $page_id ) ) . $sub_url;
+		return apply_filters( 'tutor_dashboard_url', trailingslashit( get_the_permalink( $page_id ) ) . $sub_url );
 	}
 
 	/**
