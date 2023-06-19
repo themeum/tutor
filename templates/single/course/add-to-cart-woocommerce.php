@@ -27,8 +27,8 @@ if ( $product ) {
 			</a>
 		<?php
 	} else {
-		$sale_price    = $product->get_sale_price();
-		$regular_price = $product->get_regular_price();
+		$regular_price = wc_get_price_to_display( $product, array( 'price' => $product->get_regular_price() ) );
+		$sale_price    = wc_get_price_to_display( $product, array( 'price' => $product->get_sale_price() ) );
 		?>
 		<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-end tutor-justify-between">
 			<?php ob_start(); ?>
@@ -36,9 +36,9 @@ if ( $product ) {
 				<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
 					<?php echo wc_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
 				</span>
-				<?php if ( $regular_price && $sale_price && $sale_price != $regular_price ) : ?>
+				<?php if ( $regular_price && $sale_price && $sale_price !== $regular_price ) : ?>
 					<del class="tutor-fs-7 tutor-color-muted tutor-ml-8">
-						<?php echo wc_price( $regular_price ); //phpcs:ignore?>
+					<?php echo wc_price( $regular_price ); //phpcs:ignore?>
 					</del>
 				<?php endif; ?>
 				</div>
