@@ -775,7 +775,7 @@ final class Tutor {
 				quiz_id bigint(20) DEFAULT NULL,
 				question_title text,
 				question_description longtext,
-				answer_explanation longtext DEFAULT ''
+				answer_explanation longtext DEFAULT '',
 				question_type varchar(50) DEFAULT NULL,
 				question_mark decimal(9,2) DEFAULT NULL,
 				question_settings longtext,
