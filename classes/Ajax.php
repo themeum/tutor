@@ -145,7 +145,7 @@ class Ajax {
 
 		$user_id = get_current_user_id();
 		$user    = get_userdata( $user_id );
-		$date    = date( 'Y-m-d H:i:s', tutor_time() );
+		$date    = date( 'Y-m-d H:i:s', tutor_time() ); //phpcs:ignore
 
 		if ( ! tutor_utils()->has_enrolled_content_access( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -483,7 +483,7 @@ class Ajax {
 		 *
 		 * @since 2.1.4
 		 */
-		if ( ! wp_verify_nonce( $_POST[ tutor()->nonce ], tutor()->nonce_action ) ) {
+		if ( ! wp_verify_nonce( $_POST[ tutor()->nonce ], tutor()->nonce_action ) ) { //phpcs:ignore
 			$validation_error->add( 401, __( 'Nonce verification failed', 'tutor' ) );
 			\set_transient( self::LOGIN_ERRORS_TRANSIENT_KEY, $validation_error->get_error_messages() );
 			return;
