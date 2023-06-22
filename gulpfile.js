@@ -10,7 +10,14 @@ var gulp = require('gulp'),
 	zip = require('gulp-zip'),
 	fs = require('fs'),
 	path = require('path'),
-	build_name = 'tutor-' + require('./package.json').version + '.zip';
+	versionNumber = '';
+
+try {
+	const data = fs.readFileSync('tutor.php', 'utf8');
+	versionNumber = data.match(/Version:\s*([\d.]+)/i)?.[1] || '';
+} catch (err) {}
+
+const build_name = 'tutor-' + versionNumber + '.zip';
 
 var onError = function(err) {
 	notify.onError({
