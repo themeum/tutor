@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.2
 Requires PHP: 7.1
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,27 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.2.2 - June 21, 2023
+
+Update: Added manual enrollment support for Course Bundle
+Update: Included Answer Explanation data in Quiz Export CSV
+Update: Improved the statement section of Dashboard Analytics
+Fix: Fixed redirection issue for students or instructors after registration
+Fix: Resolved Course default thumbnail image not displaying issue
+Fix: Fixed Clear all sessions not working in WP native login and Tutor modal login
+Fix: Fixed the inability to add questions to Quiz in new tutor site setups
+Fix: Corrected wrong enrollment count display on the course list page when the Course Bundle addon was disabled
+Fix: Creating a course as an instructor from the backend resulted in all courses being assigned under the topic issue
+Fix: Resolved Login OTP issue for some themes or custom headers
+Fix: Students were receiving the certificate download URL in the course completed email even when certificates were disabled for the course
+Fix: On the assignment page, pass assignments show failed count if the assignment total mark and evaluate mark are the same
+Fix: Corrected the course completed count display issue when the admin manually enrolled students in a free course
+Fix: Resolved fatal error related to COOKIEHASH in a multisite environment
+Fix: On the course details page course price showing without TAX
+Fix: GradeBook settings were allowing a minimum percentile value higher than the maximum percentile
+Fix: Addressed conflicts with export_settings ID with other vendors
+Fix: Fix translation-related issues
 
 = 2.2.1 - June 05, 2023
 
