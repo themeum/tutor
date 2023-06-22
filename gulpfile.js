@@ -1,5 +1,5 @@
 var gulp = require('gulp'),
-	sass = require('gulp-sass'),
+	sass = require('gulp-sass')(require('sass')),
 	sourcemaps = require('gulp-sourcemaps'),
 	rename = require('gulp-rename'),
 	prefix = require('gulp-autoprefixer'),
@@ -79,9 +79,8 @@ for (let task in scss_blueprints) {
 			.src(blueprint.src)
 			.pipe(plumber({ errorHandler: onError }))
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
-			.pipe(sass({ outputStyle: 'compressed' }))
+			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }))
 			.pipe(rename(blueprint.destination))
-			.pipe(sourcemaps.write('.', { addComment: process.env._GULP_ENV != 'build' }))
 			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'));
 	});
 }
