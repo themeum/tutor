@@ -818,9 +818,9 @@ class Utils {
 		$user_id          = $this->get_user_id( $user_id );
 		$completed_lesson = $this->get_completed_lesson_count_by_course( $course_id, $user_id );
 		$course_contents  = $this->get_course_contents_by_id( $course_id );
-		$totalContents    = $this->count( $course_contents );
-		$totalContents    = $totalContents ? $totalContents : 0;
-		$completedCount   = $completed_lesson;
+		$total_contents   = $this->count( $course_contents );
+		$total_contents   = $total_contents ? $total_contents : 0;
+		$completed_count  = $completed_lesson;
 
 		$quiz_ids       = array();
 		$assignment_ids = array();
@@ -862,7 +862,7 @@ class Utils {
 				// Set cache data.
 				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
 			}
-			$completedCount += $quiz_completed;
+			$completed_count += $quiz_completed;
 		}
 
 		if ( count( $assignment_ids ) ) {
@@ -890,30 +890,30 @@ class Utils {
 				);
 				TutorCache::set( $assignment_submitted_cache_key, $assignment_submitted );
 			}
-			$completedCount += $assignment_submitted;
+			$completed_count += $assignment_submitted;
 		}
 
 		if ( $this->count( $course_contents ) ) {
 			foreach ( $course_contents as $content ) {
-				if ( $content->post_type === 'tutor_zoom_meeting' ) {
+				if ( 'tutor_zoom_meeting' === $content->post_type ) {
 					/**
-					 * count zoom lesson completion for course progress
+					 * Count zoom lesson completion for course progress
 					 *
 					 * @since 2.0.0
 					 */
 					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
-						$completedCount++;
+						$completed_count++;
 					}
-				} elseif ( $content->post_type === 'tutor-google-meet' ) {
+				} elseif ( 'tutor-google-meet' === $content->post_type ) {
 					/**
-					 * count zoom lesson completion for course progress
+					 * Count zoom lesson completion for course progress
 					 *
 					 * @since 2.0.0
 					 */
 					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
-						$completedCount++;
+						$completed_count++;
 					}
 				}
 			}
@@ -921,15 +921,15 @@ class Utils {
 
 		$percent_complete = 0;
 
-		if ( $totalContents > 0 && $completedCount > 0 ) {
-			$percent_complete = number_format( ( $completedCount * 100 ) / $totalContents );
+		if ( $total_contents > 0 && $completed_count > 0 ) {
+			$percent_complete = number_format( ( $completed_count * 100 ) / $total_contents );
 		}
 
 		if ( $get_stats ) {
 			return array(
 				'completed_percent' => $percent_complete,
-				'completed_count'   => $completedCount,
-				'total_count'       => $totalContents,
+				'completed_count'   => $completed_count,
+				'total_count'       => $total_contents,
 			);
 		}
 
