@@ -966,12 +966,12 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $course_ID course ID.
-	 * @param mixed               $content_id content ID.
+	 * @param int   $course_id course ID.
+	 * @param mixed $content_id content ID.
 	 *
 	 * @return int
 	 */
-	public function get_next_topic_order_id( $course_ID, $content_id = null ) {
+	public function get_next_topic_order_id( $course_id, $content_id = null ) {
 		global $wpdb;
 
 		if ( $content_id ) {
@@ -989,7 +989,7 @@ class Utils {
 			WHERE 	post_parent = %d
 					AND post_type = %s;
 			",
-				$course_ID,
+				$course_id,
 				'topics'
 			)
 		);
@@ -1002,12 +1002,12 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $topic_ID topic ID.
-	 * @param mixed             $content_id content ID.
+	 * @param int   $topic_id topic ID.
+	 * @param mixed $content_id content ID.
 	 *
 	 * @return int
 	 */
-	public function get_next_course_content_order_id( $topic_ID, $content_id = null ) {
+	public function get_next_course_content_order_id( $topic_id, $content_id = null ) {
 		global $wpdb;
 
 		if ( $content_id ) {
@@ -1024,7 +1024,7 @@ class Utils {
 			FROM	{$wpdb->posts}
 			WHERE	post_parent = %d;
 			",
-				$topic_ID
+				$topic_id
 			)
 		);
 
@@ -1067,9 +1067,9 @@ class Utils {
 	 * @return void.
 	 */
 	public function checking_nonce( $request_method = null ) {
-		! $request_method ? $request_method = sanitize_text_field( $_SERVER['REQUEST_METHOD'] ) : 0;
+		! $request_method ? $request_method = sanitize_text_field( $_SERVER['REQUEST_METHOD'] ) : 0; //phpcs:ignore
 
-		$data        = strtolower( $request_method ) === 'post' ? $_POST : $_GET;
+		$data        = strtolower( $request_method ) === 'post' ? $_POST : $_GET; //phpcs:ignore
 		$nonce_value = sanitize_text_field( $this->array_get( tutor()->nonce, $data, null ) );
 		$matched     = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
 
@@ -1092,7 +1092,7 @@ class Utils {
 
 		$course_id  = $this->get_post_id( $course_id );
 		$price_type = $this->price_type( $course_id );
-		if ( $price_type === 'free' ) {
+		if ( 'free' === $price_type ) {
 			$is_paid = apply_filters( 'is_course_paid', false, $course_id );
 			if ( ! $is_paid ) {
 				return false;
@@ -1117,7 +1117,7 @@ class Utils {
 		$product_id = $this->get_course_product_id( $course_id );
 		if ( $this->is_course_purchasable( $course_id ) ) {
 			$monetize_by = $this->get_option( 'monetize_by' );
-			if ( $this->has_wc() && $monetize_by === 'wc' ) {
+			if ( $this->has_wc() && 'wc' === $monetize_by ) {
 				$product = wc_get_product( $product_id );
 				if ( $product ) {
 					$price = $product->get_price();
@@ -1154,13 +1154,13 @@ class Utils {
 
 		$product_id = $this->get_course_product_id( $course_id );
 		if ( $product_id ) {
-			if ( $monetize_by === 'wc' && $this->has_wc() ) {
+			if ( 'wc' === $monetize_by && $this->has_wc() ) {
 				$product = wc_get_product( $product_id );
 				if ( $product ) {
 					$prices['regular_price'] = $product->get_regular_price();
 					$prices['sale_price']    = $product->get_sale_price();
 				}
-			} elseif ( $monetize_by === 'edd' && $this->has_edd() ) {
+			} elseif ( 'edd' === $monetize_by && $this->has_edd() ) {
 				$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
 				$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
 			}
@@ -1190,7 +1190,8 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course ID.
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
 	 *
 	 * @return array|bool|null|object
 	 */
@@ -1241,8 +1242,9 @@ class Utils {
 	 * @since 1.9.5
 	 *
 	 * @param int $course_id course ID.
+	 * @param int $user_id user id.
 	 *
-	 * @return array|bool|null|object
+	 * @return void
 	 */
 	public function delete_course_progress( $course_id = 0, $user_id = 0 ) {
 		global $wpdb;
@@ -1299,7 +1301,7 @@ class Utils {
 		if ( is_user_logged_in() ) {
 			global $wpdb;
 
-			$getEnrolledInfo = $wpdb->get_row(
+			$enrolled_info = $wpdb->get_row(
 				$wpdb->prepare(
 					"SELECT ID,
 						post_author,
@@ -1317,8 +1319,8 @@ class Utils {
 				)
 			);
 
-			if ( $getEnrolledInfo ) {
-				return $getEnrolledInfo;
+			if ( $enrolled_info ) {
+				return $enrolled_info;
 			}
 		}
 
