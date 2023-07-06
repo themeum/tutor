@@ -276,6 +276,9 @@ $filters = array(
 						<div class="tutor-col">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
+								<span class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
+									<?php esc_html_e( '(Optional)', 'tutor' ); ?>
+								</span>
 							</label>
 							<div class="tutor-mb-16">
 								<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>"/>
