@@ -252,7 +252,7 @@ $filters = array(
 								<?php esc_html_e( 'First Name', 'tutor' ); ?>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="first_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
+								<input type="text" name="first_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter First Name', 'tutor' ); ?>" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 							</div>
 						</div>
 						<div class="tutor-col">
@@ -260,7 +260,7 @@ $filters = array(
 								<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="last_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
+								<input type="text" name="last_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Last Name', 'tutor' ); ?>" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 							</div>
 						</div>
 					</div>
@@ -278,7 +278,7 @@ $filters = array(
 								<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
+								<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>"/>
 							</div>
 						</div>
 					</div>
