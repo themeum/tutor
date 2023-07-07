@@ -248,7 +248,6 @@ class Instructor {
 				'last_name'             => __( 'Last name field is required', 'tutor' ),
 				'email'                 => __( 'E-Mail field is required', 'tutor' ),
 				'user_login'            => __( 'User Name field is required', 'tutor' ),
-				'phone_number'          => __( 'Phone Number field is required', 'tutor' ),
 				'password'              => __( 'Password field is required', 'tutor' ),
 				'password_confirmation' => __( 'Your passwords should match each other. Please recheck.', 'tutor' ),
 			)
