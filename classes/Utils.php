@@ -1813,13 +1813,15 @@ class Utils {
 	 * Determine if a course completed
 	 *
 	 * @since 1.0.0
+	 * @since 2.2.3 $enable_cache param added.
 	 *
-	 * @param int $course_id course id.
-	 * @param int $user_id user id.
+	 * @param int  $course_id course id.
+	 * @param int  $user_id user id.
+	 * @param bool $enable_cache enable or disable cache for particular function call.
 	 *
 	 * @return array|bool|null|object
 	 */
-	public function is_completed_course( $course_id = 0, $user_id = 0 ) {
+	public function is_completed_course( $course_id = 0, $user_id = 0, $enable_cache = true ) {
 
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
@@ -1828,7 +1830,7 @@ class Utils {
 		$cache_key    = "tutor_is_completed_course_{$course_id}_{$user_id}";
 		$is_completed = TutorCache::get( $cache_key );
 
-		if ( false === $is_completed ) {
+		if ( false === $is_completed || false === $enable_cache ) {
 			$is_completed = $wpdb->get_row(
 				$wpdb->prepare(
 					"SELECT comment_ID,
