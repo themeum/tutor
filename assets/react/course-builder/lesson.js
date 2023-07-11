@@ -193,14 +193,14 @@ window.jQuery(document).ready(function($) {
 	$(document).on('click', '.update_lesson_modal_btn', function(event) {
 		event.preventDefault();
 
-		let $that	= $(this),
-		 	editor 	= tinyMCE.get('tutor_lesson_modal_editor'),
-		 	editorWrap = document.getElementById( 'wp-tutor_lesson_modal_editor-wrap' ),
-		 	isHtmlActive = editorWrap.classList.contains('html-active'),
-		 	content = editor.getContent({format: 'html'});
-		
+		let $that = $(this),
+			editor = tinyMCE.get('tutor_lesson_modal_editor'),
+			editorWrap = document.getElementById('wp-tutor_lesson_modal_editor-wrap'),
+			isHtmlActive = editorWrap.classList.contains('html-active'),
+			content = editor.getContent({ format: 'html' });
+
 		// removing <br data-mce-bogus="1">
-		if ( content === '<p><br data-mce-bogus="1"></p>' ) {
+		if (content === '<p><br data-mce-bogus="1"></p>') {
 			content = '';
 		}
 
