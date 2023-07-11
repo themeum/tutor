@@ -187,37 +187,24 @@ window.jQuery(document).ready(function($) {
 			.attr('data-video_source', val);
 	});
 
-	// Update lesson
+	/**
+	 * Lesson Update From Lesson Modal
+	 */
 	$(document).on('click', '.update_lesson_modal_btn', function(event) {
 		event.preventDefault();
 
-		/**
-		 * Fix - [embed] shortcode does not work from visual mode
-		 * @since 2.1.6
-		 */
-		//$('#tutor_lesson_modal_editor-html').click();
+		let $that = $(this),
+			editor = tinyMCE.get('tutor_lesson_modal_editor'),
+			editorWrap = document.getElementById('wp-tutor_lesson_modal_editor-wrap'),
+			isHtmlActive = editorWrap.classList.contains('html-active'),
+			content = editor.getContent({ format: 'html' });
 
-		var $that = $(this);
-		var content;
-		var inputid = 'tutor_lesson_modal_editor';
-		var editor = tinyMCE.get(inputid);
-		const editorWrap = document.getElementById(
-			'wp-tutor_lesson_modal_editor-wrap',
-		);
-		const isHtmlActive = editorWrap.classList.contains('html-active');
-
-		if (editor) {
-			content = editor.getContent({format: 'raw'});
-		} else {
-			content = $('#' + inputid).val();
-		}
-		
 		// removing <br data-mce-bogus="1">
-		if(content === '<p><br data-mce-bogus="1"></p>') {
+		if (content === '<p><br data-mce-bogus="1"></p>') {
 			content = '';
 		}
 
-		var form_data = $(this)
+		let form_data = $(this)
 			.closest('.tutor-modal')
 			.find('form')
 			.serializeObject();
