@@ -246,7 +246,7 @@ class Quiz {
 
 		do_action( 'tutor_quiz/start/before', $quiz_id, $user_id );
 
-		$date = date( 'Y-m-d H:i:s', tutor_time() );
+		$date = date( 'Y-m-d H:i:s', tutor_time() ); //phpcs:ignore
 
 		$tutor_quiz_option = (array) maybe_unserialize( get_post_meta( $quiz_id, 'tutor_quiz_option', true ) );
 		$attempts_allowed  = tutor_utils()->get_quiz_option( $quiz_id, 'attempts_allowed', 0 );
@@ -394,6 +394,7 @@ class Quiz {
 				$question_ids_string = QueryHelper::prepare_in_clause( $question_ids );
 
 				// Get total marks of the questions from question table.
+				//phpcs:disable
 				$query = $wpdb->prepare(
 					"SELECT SUM(question_mark)
 						FROM {$wpdb->prefix}tutor_quiz_questions
@@ -403,6 +404,7 @@ class Quiz {
 					1
 				);
 				$total_question_marks = $wpdb->get_var( $query );
+				//phpcs:enable
 
 				// Set the the total mark in the attempt table for the question.
 				$wpdb->update(
@@ -491,17 +493,21 @@ class Quiz {
 						 * Answers stored in DB
 						 */
 						$gap_answer = (array) explode( '|', $get_original_answer->answer_two_gap_match );
-						$gap_answer = maybe_serialize( array_map( function ( $ans) 
-						{
-							return wp_slash( trim( $ans ) );
-						}, $gap_answer ) );
+						$gap_answer = maybe_serialize(
+							array_map(
+								function ( $ans ) {
+									return wp_slash( trim( $ans ) );
+								},
+								$gap_answer
+							)
+						);
 
 						/**
 						 * Answers from user input
 						 */
 						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
 						$given_answer = maybe_serialize( $given_answer );
-						
+
 						/**
 						 * Compare answer's by making both case-insensitive.
 						 */
@@ -555,6 +561,8 @@ class Quiz {
 						 * @since 2.1.5
 						 */
 
+						//phpcs:disable
+
 						// $db_answer = $wpdb->get_col(
 						// 	$wpdb->prepare(
 						// 		"SELECT answer_title
@@ -569,6 +577,7 @@ class Quiz {
 						// if ( is_array( $db_answer ) && count( $db_answer ) ) {
 						// 	$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
 						// }
+						//phpcs:enable
 					}
 
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;
@@ -603,7 +612,7 @@ class Quiz {
 				'total_answered_questions' => tutor_utils()->count( $quiz_answers ),
 				'earned_marks'             => $total_marks,
 				'attempt_status'           => 'attempt_ended',
-				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ),
+				'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
 
 			if ( $review_required ) {
@@ -649,7 +658,7 @@ class Quiz {
 			'total_answered_questions' => 0,
 			'earned_marks'             => 0,
 			'attempt_status'           => 'attempt_ended',
-			'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ),
+			'attempt_ended_at'         => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 		);
 
 		do_action( 'tutor_quiz_before_finish', $attempt_id, $quiz_id, $attempt->user_id );
@@ -668,7 +677,7 @@ class Quiz {
 	 */
 	public function tutor_quiz_timeout() {
 		tutils()->checking_nonce();
-		
+
 		global $wpdb;
 
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
@@ -679,7 +688,7 @@ class Quiz {
 
 			$data = array(
 				'attempt_status'   => 'attempt_timeout',
-				'attempt_ended_at' => date( 'Y-m-d H:i:s', tutor_time() ),
+				'attempt_ended_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 			);
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempts', $data, array( 'attempt_id' => $attempt->attempt_id ) );
 
@@ -743,7 +752,7 @@ class Quiz {
 				$attempt_update_data = array(
 					'earned_marks'         => $attempt->earned_marks + $attempt_answer->question_mark,
 					'is_manually_reviewed' => 1,
-					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ),
+					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
 				);
 			}
 
@@ -765,7 +774,7 @@ class Quiz {
 				$attempt_update_data = array(
 					'earned_marks'         => $attempt->earned_marks - $attempt_answer->question_mark,
 					'is_manually_reviewed' => 1,
-					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ),
+					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ),//phpcs:ignore
 				);
 			}
 			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
@@ -897,12 +906,14 @@ class Quiz {
 
 			if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
 				$in_question_ids = QueryHelper::prepare_in_clause( $questions_ids );
+				//phpcs:disable
 				$wpdb->query(
 					"DELETE 
 						FROM {$wpdb->prefix}tutor_quiz_question_answers
 						WHERE belongs_question_id IN({$in_question_ids})
 					"
 				);
+				//phpcs:enable
 			}
 
 			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) );
@@ -1052,11 +1063,13 @@ class Quiz {
 		 *
 		 * @since 2.1.3
 		 */
+		// phpcs:ignore
 		if ( isset( $_POST['tutor_quiz_question'][ $quiz_question_id ] ) ) {
 			array_walk(
 				$_POST['tutor_quiz_question'][ $quiz_question_id ], // phpcs:ignore
 				function( $v, $k ) use ( $quiz_question_id ) {
 					if ( 'question_description' === $k ) {
+						add_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
 						$_POST['tutor_quiz_question'][ $quiz_question_id ][ $k ] = wp_kses_post( wp_unslash( $v ) );
 					} else {
 						$_POST['tutor_quiz_question'][ $quiz_question_id ][ $k ] = sanitize_text_field( wp_unslash( $v ) );
@@ -1375,7 +1388,7 @@ class Quiz {
 		global $wpdb;
 
 		$correct_clause = $is_correct ? ' AND is_correct=1 ' : '';
-
+		//phpcs:disable
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers
@@ -1388,6 +1401,7 @@ class Quiz {
 				esc_sql( $question_type )
 			)
 		);
+		//phpcs:enable
 	}
 
 	/**
@@ -1591,7 +1605,7 @@ class Quiz {
 		ob_start();
 		global $post;
 
-		$post = get_post( $quiz_id );
+		$post = get_post( $quiz_id ); //phpcs:ignore
 		setup_postdata( $post );
 
 		single_quiz_contents();
