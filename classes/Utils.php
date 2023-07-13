@@ -2557,6 +2557,14 @@ class Utils {
 					delete_post_meta( $order_id, '_is_tutor_order_for_course' );
 					delete_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id );
 				}
+
+				/**
+				 * Added for third-party
+				 *
+				 * @since 2.2.3
+				 */
+				do_action( 'tutor_after_enrollment_deleted', $course_id, $user_id );
+
 			} else {
 				$wpdb->update(
 					$wpdb->posts,
@@ -2567,6 +2575,13 @@ class Utils {
 						'post_parent' => $course_id,
 					)
 				);
+
+				/**
+				 * Added for third-party
+				 *
+				 * @since 2.2.3
+				 */
+				do_action( 'tutor_after_enrollment_cancelled', $course_id, $user_id );
 
 				if ( 'cancel' === $cancel_status ) {
 					die( esc_html( $cancel_status ) );
