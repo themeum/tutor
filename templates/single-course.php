@@ -8,9 +8,9 @@
  * @since 1.0.0
  */
 
-$course_id       = get_the_ID();
-$course_rating   = tutor_utils()->get_course_rating( $course_id );
-$is_enrolled     = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
+$course_id     = get_the_ID();
+$course_rating = tutor_utils()->get_course_rating( $course_id );
+$is_enrolled   = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 
 // Prepare the nav items.
 $course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), $course_id );
@@ -78,7 +78,8 @@ if ( ! is_user_logged_in() && ! $is_public && $student_must_login_to_view_course
 			</main>
 
 			<aside class="tutor-col-xl-4">
-				<div class="tutor-single-course-sidebar tutor-mt-40 tutor-mt-xl-0">
+				<?php $is_tutor_sticky_sidebar = tutor_utils()->get_option( 'enable_sticky_sidebar', false, true, true ); ?>
+				<div class="tutor-single-course-sidebar tutor-mt-40 tutor-mt-xl-0" <?php echo $is_tutor_sticky_sidebar ? 'data-tutor-sticky-sidebar' : ''; ?> >
 					<?php do_action( 'tutor_course/single/before/sidebar' ); ?>
 					
 					<?php if ( ( $is_mobile && 'bottom' === $enrollment_box_position ) || ! $is_mobile ) : ?>
