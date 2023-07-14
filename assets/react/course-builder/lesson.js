@@ -127,48 +127,43 @@ window.jQuery(document).ready(function($) {
 					'data-lesson-id': lesson_id,
 					'data-topic-id': topic_id,
 				});
+
 				$('.tutor-lesson-modal-wrap').addClass('tutor-is-active');
-				if ($('#wp-tutor_lesson_modal_editor-wrap').hasClass('html-active')) {
-					$('#wp-tutor_lesson_modal_editor-wrap').removeClass('html-active');
-				}
 
-				$('#wp-tutor_lesson_modal_editor-wrap').addClass('tmce-active');
+				let editor_id = 'tutor_lesson_modal_editor',
+					editor_wrap_selector = '#wp-tutor_lesson_modal_editor-wrap',
+					tinymceConfig = tinyMCEPreInit.mceInit.tutor_lesson_editor_config;
 
-				var tinymceConfig = tinyMCEPreInit.mceInit.tutor_lesson_editor_config;
 				if (!tinymceConfig) {
 					tinymceConfig = tinyMCEPreInit.mceInit.course_description;
 				}
+
+				if ($(editor_wrap_selector).hasClass('html-active')) {
+					$(editor_wrap_selector).removeClass('html-active');
+				}
+				$(editor_wrap_selector).addClass('tmce-active');
+
 				/**
-				 * Add codesample plugin to support code snippet
+				 * Code snippet support for PRO user.
 				 *
-				 * @since v2.0.9
+				 * @since 2.0.9
 				 */
-				if (!tinymceConfig.plugins.includes('codesample')) {
-					if (tinymceConfig && _tutorobject.tutor_pro_url) {
-						tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
-						tinymceConfig.codesample_languages = codeSampleLang;
-						// tinymceConfig.codesample_dialog_width = '440';
-						tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
-					}
+				if (_tutorobject.tutor_pro_url && tinymceConfig && !tinymceConfig.plugins.includes('codesample')) {
+					tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
+					tinymceConfig.codesample_languages = codeSampleLang;
+					tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
 				}
 
 				tinymce.init(tinymceConfig);
-				tinymce.execCommand(
-					'mceRemoveEditor',
-					false,
-					'tutor_lesson_modal_editor',
-				);
-				tinyMCE.execCommand(
-					'mceAddEditor',
-					false,
-					'tutor_lesson_modal_editor',
-				);
+				tinymce.execCommand('mceRemoveEditor', false, editor_id);
+				tinyMCE.execCommand('mceAddEditor', false, editor_id);
+				quicktags({ id: editor_id });
+
 				window.dispatchEvent(new Event(_tutorobject.content_change_event));
-				window.dispatchEvent(new CustomEvent('tutor_modal_shown', {detail: e.target}));
+				window.dispatchEvent(new CustomEvent('tutor_modal_shown', { detail: e.target }));
 			},
 			complete: function() {
 				$that.removeClass('is-loading').attr('disabled', false);
-				quicktags({ id: 'tutor_lesson_modal_editor' });
 			},
 		});
 	});
