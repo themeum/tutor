@@ -125,7 +125,7 @@
 					if ( $question_description ) {
 						$markup = "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
 						if ( tutor()->has_pro ) {
-							do_action( 'tutor_render_question_desc', $markup, $question );
+							do_action( 'tutor_quiz_question_desc_render', $markup, $question );
 						} else {
 							echo wp_kses_post( $markup );
 						}
