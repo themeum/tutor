@@ -121,10 +121,14 @@
 						);
 					}
 
-					$question_description = apply_filters( 'tutor_quiz_question_description', wp_unslash( $question->question_description ), $question );
+					$question_description = wp_unslash( $question->question_description );
 					if ( $question_description ) {
 						$markup = "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
-						echo wp_kses_post( $markup );
+						if ( tutor()->has_pro ) {
+							do_action( 'tutor_render_question_desc', $markup, $question );
+						} else {
+							echo wp_kses_post( $markup );
+						}
 					}
 					?>
 					</div>
