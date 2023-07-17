@@ -40,7 +40,7 @@ if ( ! is_user_logged_in() && ! $is_public && $student_must_login_to_view_course
 			<main class="tutor-col-xl-8">
 				<?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 				<?php do_action( 'tutor_course/single/before/inner-wrap' ); ?>
-				
+
 				<?php if ( $is_mobile && 'top' === $enrollment_box_position ) : ?>
 					<div class="tutor-mt-32">
 						<?php tutor_load_template( 'single.course.course-entry-box' ); ?>
@@ -78,10 +78,10 @@ if ( ! is_user_logged_in() && ! $is_public && $student_must_login_to_view_course
 			</main>
 
 			<aside class="tutor-col-xl-4">
-				<?php $is_tutor_sticky_sidebar = tutor_utils()->get_option( 'enable_sticky_sidebar', false, true, true ); ?>
-				<div class="tutor-single-course-sidebar tutor-mt-40 tutor-mt-xl-0" <?php echo $is_tutor_sticky_sidebar ? 'data-tutor-sticky-sidebar' : ''; ?> >
+				<?php $sidebar_attr = apply_filters( 'tutor_course_details_sidebar_attr', '' ); ?>
+				<div class="tutor-single-course-sidebar tutor-mt-40 tutor-mt-xl-0" <?php echo esc_attr( $sidebar_attr ); ?> >
 					<?php do_action( 'tutor_course/single/before/sidebar' ); ?>
-					
+
 					<?php if ( ( $is_mobile && 'bottom' === $enrollment_box_position ) || ! $is_mobile ) : ?>
 						<?php tutor_load_template( 'single.course.course-entry-box' ); ?>
 					<?php endif ?>
