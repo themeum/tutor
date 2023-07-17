@@ -899,8 +899,10 @@ class Options_V2 {
 								'type'        => 'textarea',
 								'label'       => __( 'Fee Description', 'tutor' ),
 								'placeholder' => __( 'Fee Description', 'tutor' ),
-								'desc'        => __( 'Set a description for the fee that you are deducting. Make sure to give a reasonable explanation to maintain transparency with your site’s instructors', 'tutor' ),
-								'default'     => 'free',
+								'desc'        => __( 'Set a description for the fee that you are deducting. Make sure to give a reasonable explanation to maintain transparency with your site’s instructors (within 200-character limit).', 'tutor' ),
+								'maxlength'   => 200,
+								'rows'        => 5,
+								'default'     => 'Maintenance Fees',
 							),
 							array(
 								'key'          => 'fee_amount_type',
