@@ -9,11 +9,9 @@
  * @since 2.0.0
  */
 
-$value = $this->get( $field['key'] );
-if ( empty( $value ) && isset( $field['default'] ) ) {
-	$value = $field['default'];
-}
-$field_key     = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
+$field_key     = sanitize_key( $field['key'] );
+$default       = isset( $field['default'] ) ? $field['default'] : false;
+$value         = $this->get( $field_key, $default );
 $field_id      = esc_attr( 'field_' . $field_key );
 $placeholder   = isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : esc_attr( $field['desc'] );
 $field_classes = isset( $field['field_classes'] ) ? $field['field_classes'] : '';
