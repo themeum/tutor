@@ -9,12 +9,9 @@
  * @since 2.0.0
  */
 
-$field_key = sanitize_key( $field['key'] );
-$value     = $this->get( $field_key );
-if ( empty( $value ) && isset( $field['default'] ) ) {
-	$value = $field['default'];
-}
-
+$field_key   = sanitize_key( $field['key'] );
+$default     = isset( $field['default'] ) ? $field['default'] : false;
+$value       = $this->get( $field_key, $default );
 $field_id    = sanitize_key( 'field_' . $field_key );
 $placeholder = isset( $field['placeholder'] ) ? $field['placeholder'] : $field['desc'];
 $max_length  = isset( $field['maxlength'] ) ? (int) $field['maxlength'] : 0;
