@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.2
 Requires PHP: 7.1
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,23 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.2.3 - July 20, 2023
+
+New: Quiz question description section now has WP Editor support.
+New: Added option to showcase Certificates in the course details page.
+New: Added Audio and Video support in Lesson Description text editor.
+New: Added option to make the sidebar sticky in the course details page.
+Fix: The quiz attempts count was being inaccurate.
+Fix: Instructor insert name pattern matching issue.
+Fix: Lesson count was being displayed twice in the report for any specific course.
+Fix: Wrong email was being sent out upon quiz submission in specific cases.
+Fix: Bundled courses weren't showing on the default course archive page.
+Fix: Course bundle price wasn’t supporting decimal value inputs.
+Fix: The current course list shortcode was not working for course bundles.
+Fix: In manual instructor registration, instructor could not be added without a phone number.
+Fix: Students weren't getting certificate download links with email after course completion when AutoComplete course  was enabled.
+Fix: When the "Deduct Fees" option was disabled in settings, the “Fee Description” and "Fee Amount & Type" options were still appearing in analytics.
 
 = 2.2.2 - June 21, 2023
 
