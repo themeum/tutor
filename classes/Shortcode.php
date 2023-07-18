@@ -138,11 +138,9 @@ class Shortcode {
 	 * @return string
 	 */
 	public function tutor_course( $atts ) {
-		$course_post_type = tutor()->course_post_type;
-
 		$a = shortcode_atts(
 			array(
-				'post_type'   => $course_post_type,
+				'post_type'   => apply_filters( 'tutor_course_archive_post_types', array( tutor()->course_post_type ) ),
 				'post_status' => 'publish',
 
 				'id'          => '',
