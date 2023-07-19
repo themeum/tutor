@@ -52,6 +52,7 @@ window.jQuery(document).ready(function($){
                     }
 				}
 
+                tinymceConfig.wpautop = false;
                 tinymce.init(tinymceConfig);
                 tinymce.execCommand('mceRemoveEditor', false, editor_id );
                 tinyMCE.execCommand('mceAddEditor', false, editor_id );
