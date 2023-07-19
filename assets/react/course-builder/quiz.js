@@ -423,6 +423,7 @@ window.jQuery(document).ready(function($) {
 							tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
 						}
 
+						tinymceConfig.wpautop = false;
 						tinymce.init(tinymceConfig);
 						tinymce.execCommand('mceRemoveEditor', false, id);
 						tinymce.execCommand('mceAddEditor', false, id);
