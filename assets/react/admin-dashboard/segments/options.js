@@ -491,4 +491,28 @@ document.addEventListener('DOMContentLoaded', function () {
 		showHideToggleChildren($(this))
 	})
 
+	/**
+	 * Maxlength counter for Textarea and Text field.
+	 * @since 2.2.3
+	 */
+	let maxLengthTargets = $('.tutor-option-field-input textarea[maxlength], .tutor-option-field-input input[maxlength]')
+	maxLengthTargets.each(function () {
+		let el = $(this),
+			max = $(this).attr('maxlength'),
+			len = $(this).val().length,
+			text = `${len}/${max}`;
+
+		el.css('margin-right', 0)
+		$(this).parent().append(`<div class="tutor-field-maxlength-info tutor-mr-4 tutor-fs-8 tutor-color-muted">${text}</div>`)
+	});
+
+	maxLengthTargets.keyup(function () {
+		let el = $(this),
+			max = $(this).attr('maxlength'),
+			len = $(this).val().length,
+			text = `${len}/${max}`;
+
+		el.parent().find('.tutor-field-maxlength-info').text(text)
+	})
+
 });

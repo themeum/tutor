@@ -303,7 +303,7 @@ class Options_V2 {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$reset_fields = $return_fields = $return_fields_group = array();
+		$reset_fields = $return_fields = $return_fields_group = array(); //phpcs:ignore
 		$reset_page   = Input::post( 'reset_page' );
 		$setting_data = $this->get_setting_fields()['option_fields'][ $reset_page ]['blocks'];
 
@@ -400,7 +400,7 @@ class Options_V2 {
 
 		do_action( 'tutor_option_save_before' );
 
-		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
+		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
 		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
 
@@ -482,7 +482,7 @@ class Options_V2 {
 	 * @return void
 	 */
 	public function load_settings_page() {
-		extract( $this->get_setting_fields() );
+		extract( $this->get_setting_fields() ); //phpcs:ignore
 
 		if ( ! $template_path ) {
 			$template_path = tutor()->path . '/views/options/settings.php';
@@ -508,7 +508,7 @@ class Options_V2 {
 		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
 		$course_base = tutor_utils()->get_option( 'course_permalink_base', tutor()->course_post_type );
 		$course_url  = site_url() . '/<code>' . $course_base . '</code>/sample-course';
-		$lesson_url  = site_url() . '/' . $course_base . '/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
+		$lesson_url  = site_url() . '/' . $course_base . '/sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
 		$student_url = tutor_utils()->profile_url( 0, false );
 
 		$methods_array     = array();
@@ -899,8 +899,10 @@ class Options_V2 {
 								'type'        => 'textarea',
 								'label'       => __( 'Fee Description', 'tutor' ),
 								'placeholder' => __( 'Fee Description', 'tutor' ),
-								'desc'        => __( 'Set a description for the fee that you are deducting. Make sure to give a reasonable explanation to maintain transparency with your site’s instructors', 'tutor' ),
-								'default'     => 'free',
+								'desc'        => __( 'Set a description for the fee that you are deducting. Make sure to give a reasonable explanation to maintain transparency with your site’s instructors.', 'tutor' ),
+								'maxlength'   => 200,
+								'rows'        => 5,
+								'default'     => 'Maintenance Fees',
 							),
 							array(
 								'key'          => 'fee_amount_type',
@@ -1529,14 +1531,6 @@ class Options_V2 {
 								'options' => $pages,
 								'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
 							),
-							// TODO
-							// array(
-							// 'key'     => 'course_permalink_base',
-							// 'type'    => 'text',
-							// 'label'   => __('Course Permalink Base', 'tutor'),
-							// 'default' => tutor()->course_post_type,
-							// 'desc'    => $course_url,
-							// ),
 							array(
 								'key'     => 'lesson_permalink_base',
 								'type'    => 'text',

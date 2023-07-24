@@ -17,8 +17,8 @@ use TUTOR\Input;
 use TUTOR\Instructors_List;
 
 if ( Input::has( 'sub_page' ) ) {
-	$page = Input::get( 'sub_page' );
-	include_once tutor()->path . "views/pages/{$page}.php";
+	$sub_page = Input::get( 'sub_page' );
+	include_once tutor()->path . "views/pages/{$sub_page}.php";
 	return;
 }
 
@@ -27,11 +27,11 @@ $instructors = new Instructors_List();
 /**
  * Short able params
  */
-$user_id   = Input::get( 'user_id', '' );
-$course_id = Input::get( 'course-id', '' );
-$order     = Input::get( 'order', 'DESC' );
-$date      = Input::get( 'date', '' );
-$search    = Input::get( 'search', '' );
+$user_id     = Input::get( 'user_id', '' );
+$course_id   = Input::get( 'course-id', '' );
+$data_order  = Input::get( 'order', 'DESC' );
+$date        = Input::get( 'date', '' );
+$search_term = Input::get( 'search', '' );
 
 /**
  * Determine active tab
@@ -41,9 +41,9 @@ $active_tab = Input::get( 'data', 'all' );
 /**
  * Pagination data
  */
-$paged    = Input::get( 'paged', 1, Input::TYPE_INT );
-$per_page = tutor_utils()->get_option( 'pagination_per_page' );
-$offset   = ( $per_page * $paged ) - $per_page;
+$selected_page = Input::get( 'paged', 1, Input::TYPE_INT );
+$per_page_data = tutor_utils()->get_option( 'pagination_per_page' );
+$offset        = ( $per_page_data * $selected_page ) - $per_page_data;
 
 // Available status for instructor.
 $instructor_status = array( 'approved', 'pending', 'blocked' );
@@ -51,12 +51,12 @@ if ( 'pending' === $active_tab ) {
 	$instructor_status = array( 'pending' );
 } elseif ( 'blocked' === $active_tab ) {
 	$instructor_status = array( 'blocked' );
-} elseif ( 'approved' == $active_tab ) {
+} elseif ( 'approved' === $active_tab ) {
 	$instructor_status = array( 'approved' );
 }
-$instructors_list = Instructors_List::get_instructors( $instructor_status, $offset, $per_page, $search, $course_id, $date, $order );
+$instructors_list = Instructors_List::get_instructors( $instructor_status, $offset, $per_page_data, $search_term, $course_id, $date, $data_order );
 
-$total = Instructors_List::count_total_instructors( $instructor_status, $search, $course_id, $date );
+$total = Instructors_List::count_total_instructors( $instructor_status, $search_term, $course_id, $date );
 
 /**
  * Navbar data to make nav menu
@@ -65,7 +65,7 @@ $url               = get_pagenum_link();
 $add_insructor_url = $url . '&sub_page=add_new_instructor';
 $navbar_data       = array(
 	'page_title'   => $instructors->page_title,
-	'tabs'         => $instructors->tabs_key_value( $search, $course_id, $date ),
+	'tabs'         => $instructors->tabs_key_value( $search_term, $course_id, $date ),
 	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
@@ -184,7 +184,7 @@ $filters = array(
 									</span>
 									<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
 										<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
-											<?php foreach ( $available_status as $key => $status ) : ?>
+											<?php foreach ( $available_status as $key => $status_name ) : ?>
 												<option data-status_class="<?php echo esc_attr( $available_status[ $key ][1] ); ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
 													<?php echo esc_html( $available_status[ $key ][0] ); ?>
 												</option>
@@ -216,11 +216,11 @@ $filters = array(
 				/**
 				 * Prepare pagination data & load template
 				 */
-			if ( $total > $per_page ) {
+			if ( $total > $per_page_data ) {
 				$pagination_data     = array(
 					'total_items' => $total,
-					'per_page'    => $per_page,
-					'paged'       => $paged,
+					'per_page'    => $per_page_data,
+					'paged'       => $selected_page,
 				);
 				$pagination_template = tutor()->path . 'views/elements/pagination.php';
 				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
@@ -252,7 +252,7 @@ $filters = array(
 								<?php esc_html_e( 'First Name', 'tutor' ); ?>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="first_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
+								<input type="text" name="first_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter First Name', 'tutor' ); ?>" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 							</div>
 						</div>
 						<div class="tutor-col">
@@ -260,7 +260,7 @@ $filters = array(
 								<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="last_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
+								<input type="text" name="last_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Last Name', 'tutor' ); ?>" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 							</div>
 						</div>
 					</div>
@@ -276,9 +276,12 @@ $filters = array(
 						<div class="tutor-col">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
+								<span class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
+									<?php esc_html_e( '(Optional)', 'tutor' ); ?>
+								</span>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
+								<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>"/>
 							</div>
 						</div>
 					</div>
