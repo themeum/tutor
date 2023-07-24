@@ -28,14 +28,22 @@ window.jQuery(document).ready(function($){
             success: function (data) {
                 $('.tutor-assignment-modal-wrap .tutor-modal-container').html(data.data.output);
                 $('.tutor-assignment-modal-wrap').addClass('tutor-is-active');
+
+                let editor_id = 'tutor_assignments_modal_editor',
+                    editor_wrap_selector = '#wp-tutor_assignments_modal_editor-wrap',
+                    tinymceConfig = tinyMCEPreInit.mceInit.tutor_assignment_editor_config;
+
+                if ($(editor_wrap_selector).hasClass('html-active')) {
+                    $(editor_wrap_selector).removeClass('html-active');
+                }
+
+				$(editor_wrap_selector).addClass('tmce-active');
                 
                 /**
 				 * Add codesample plugin to support code snippet
 				 *
-				 * @since v2.0.9
+				 * @since 2.0.9
 				 */
-                var tinymceConfig = tinyMCEPreInit.mceInit.tutor_assignment_editor_config;
-
 				if (tinymceConfig && _tutorobject.tutor_pro_url) {
                     if (!tinymceConfig.plugins.includes('codesample')) {
                         tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
@@ -44,16 +52,17 @@ window.jQuery(document).ready(function($){
                     }
 				}
 
+                tinymceConfig.wpautop = false;
                 tinymce.init(tinymceConfig);
-                tinymce.execCommand('mceRemoveEditor', false, 'tutor_assignments_modal_editor');
-                tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
+                tinymce.execCommand('mceRemoveEditor', false, editor_id );
+                tinyMCE.execCommand('mceAddEditor', false, editor_id );
+                quicktags({ id: editor_id });
 
                 window.dispatchEvent(new Event(_tutorobject.content_change_event));
                 window.dispatchEvent(new CustomEvent('tutor_modal_shown', {detail: e.target}));
             },
             complete: function () {
                 $that.removeClass('is-loading');
-                quicktags({ id: "tutor_assignments_modal_editor" });
             }
         });
     });

@@ -166,7 +166,7 @@ class Lesson extends Tutor_Base {
 	 * @return void
 	 */
 	public function save_lesson_meta( $post_ID ) {
-		$video_source = sanitize_text_field( tutor_utils()->array_get( 'video.source', $_POST ) );
+		$video_source = sanitize_text_field( tutor_utils()->array_get( 'video.source', $_POST ) ); //phpcs:ignore
 		if ( '-1' === $video_source ) {
 			delete_post_meta( $post_ID, '_video' );
 		} elseif ( $video_source ) {
@@ -257,7 +257,7 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		
+
 		/**
 		 * Allow iframe inside lesson content to support
 		 * embed video & other stuff
@@ -271,31 +271,29 @@ class Lesson extends Tutor_Base {
 		$current_topic_id = $topic_id;
 		$course_id        = tutor_utils()->get_course_id_by( 'topic', $topic_id );
 
-		$_lesson_thumbnail_id = Input::post( '_lesson_thumbnail_id', 0, Input::TYPE_INT );
-		$is_html_active       = Input::post( 'is_html_active' ) === 'true' ? true : false;
-		$raw_html_content     = Input::post( 'tutor_lesson_modal_editor', '', Input::TYPE_KSES_POST );
-		$tmce_content         = Input::post( 'lesson_content', '', Input::TYPE_KSES_POST );
-
 		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		$title          = Input::post( 'lesson_title' );
-		$lesson_content = $is_html_active ? $raw_html_content : $tmce_content;
+		$title                = Input::post( 'lesson_title' );
+		$_lesson_thumbnail_id = Input::post( '_lesson_thumbnail_id', 0, Input::TYPE_INT );
+		$lesson_content       = Input::post( 'lesson_content', '', Input::TYPE_KSES_POST );
+		$is_html_active       = Input::post( 'is_html_active' ) === 'true' ? true : false;
+		$raw_html_content     = Input::post( 'tutor_lesson_modal_editor', '', Input::TYPE_KSES_POST );
+		$post_content         = $is_html_active ? $raw_html_content : $lesson_content;
 
 		$lesson_data = array(
 			'post_type'      => $this->lesson_post_type,
 			'post_title'     => $title,
 			'post_name'      => sanitize_title( $title ),
-			'post_content'   => $lesson_content,
+			'post_content'   => $post_content,
 			'post_status'    => 'publish',
 			'comment_status' => 'open',
 			'post_author'    => get_current_user_id(),
 			'post_parent'    => $topic_id,
 		);
 
-		if ( 0 == $lesson_id ) {
-
+		if ( 0 === $lesson_id ) {
 			$lesson_data['menu_order'] = tutor_utils()->get_next_course_content_order_id( $topic_id );
 			$lesson_id                 = wp_insert_post( $lesson_data );
 

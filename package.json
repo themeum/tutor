@@ -1,6 +1,5 @@
 {
 	"name": "tutor",
-	"version": "2.2.2",
 	"description": "<img src='.github/tutor-github.png' alt='TutorLMS' width='100%'>",
 	"main": "index.js",
 	"engines": {
@@ -90,7 +89,7 @@
 		"prop-types": "^15.7.2",
 		"react": "^16.11.0",
 		"react-color": "^2.19.3",
-		"react-datepicker": "^4.5.0",
+		"react-datepicker": "4.8.0",
 		"react-dnd": "^14.0.2",
 		"react-dnd-html5-backend": "^14.0.0",
 		"react-dom": "^16.11.0",
