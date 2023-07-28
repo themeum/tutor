@@ -359,17 +359,14 @@ class WooCommerce extends Tutor_Base {
 					 * @since v2.0.5
 					 */
 					if ( self::should_order_auto_complete( $order_id ) ) {
+						// Mark enrollment as completed.
 						tutor_utils()->course_enrol_status_change( $enrolled_id, 'completed' );
-						// Mark complete only from client side.
-						$mark_completed = self::mark_order_complete( $order_id );
-						if ( $mark_completed ) {
-							$user_id   = get_post_field( 'post_author', $enrolled_id );
-							$course_id = get_post_field( 'post_parent', $enrolled_id );
-							do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
-						}
+						// Mark WC order as completed.
+						self::mark_order_complete( $order_id );
 					} else {
 						tutor_utils()->course_enrol_status_change( $enrolled_id, $status_to );
 					}
+
 					// Invoke enrolled hook.
 					if ( 'completed' === $status_to ) {
 						$user_id   = get_post_field( 'post_author', $enrolled_id );
