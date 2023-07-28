@@ -9,7 +9,7 @@
  * @since 2.0.0
  */
 
-$field_key     = sanitize_key( $field['key'] );
+$field_key     = $field['key'];
 $default       = isset( $field['default'] ) ? $field['default'] : false;
 $value         = $this->get( $field_key, $default );
 $field_id      = esc_attr( 'field_' . $field_key );
