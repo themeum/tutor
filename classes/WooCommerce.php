@@ -89,7 +89,7 @@ class WooCommerce extends Tutor_Base {
 		 * @since 1.7.8
 		 */
 		$woocommerce_path = dirname( dirname( __DIR__ ) ) . DIRECTORY_SEPARATOR . 'woocommerce' . DIRECTORY_SEPARATOR . 'woocommerce.php';
-		register_deactivation_hook( $woocommerce_path, array( $this, 'disable_tutor_monetization' ) );
+		register_deactivation_hook( $woocommerce_path, array( $this, 'woocommerce_deactivation_handler' ) );
 		/**
 		 * Redirect student on enrolled courses after course
 		 * Enrollment complete
@@ -664,15 +664,25 @@ class WooCommerce extends Tutor_Base {
 	}
 
 	/**
-	 * Disable course monetization on woocommerce deactivation
+	 * Handle disabling WooCommerce monetization on WooCommerce plugin deactivation
 	 *
 	 * @since 1.7.8
 	 *
 	 * @return void
 	 */
-	public function disable_tutor_monetization() {
-		tutor_utils()->update_option( 'monetize_by', 'free' );
-		update_option( 'tutor_show_woocommerce_notice', true );
+	public function woocommerce_deactivation_handler() {
+		if ( tutor_utils()->get_option( 'monetize_by' ) === 'wc' ) {
+			tutor_utils()->update_option( 'monetize_by', 'free' );
+			/**
+			 * Show a reminder to re-enable Tutor monetization to
+			 * monetize courses after re-activating WooCommerce:
+			 *
+			 * Possible follow-up fix: Only show a notice when
+			 * WooCommerce was re-activated after this forced
+			 * disabling of WooCommerce monetisation took place:
+			 */
+			update_option( 'tutor_show_woocommerce_notice', true );
+		}
 	}
 
 	/**
