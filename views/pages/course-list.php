@@ -149,6 +149,7 @@ $available_status = array(
 	<div class="tutor-admin-body">
 		<div class="tutor-mt-24">
 			<div class="tutor-table-responsive">
+
 				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
@@ -360,23 +361,25 @@ $available_status = array(
 						<?php endif; ?>
 					</tbody>
 				</table>
+
+				<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
+					<?php
+					/**
+					 * Prepare pagination data & load template
+					 */
+					if ( $the_query->found_posts > $limit ) {
+						$pagination_data     = array(
+							'total_items' => $the_query->found_posts,
+							'per_page'    => $limit,
+							'paged'       => $paged_filter,
+						);
+						$pagination_template = tutor()->path . 'views/elements/pagination.php';
+						tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+					}
+					?>
+				</div>
 			</div>
-		</div>
-		<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
-			<?php
-			/**
-			 * Prepare pagination data & load template
-			 */
-			if ( $the_query->found_posts > $limit ) {
-				$pagination_data     = array(
-					'total_items' => $the_query->found_posts,
-					'per_page'    => $limit,
-					'paged'       => $paged_filter,
-				);
-				$pagination_template = tutor()->path . 'views/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			}
-			?>
+			<!-- end table responsive -->
 		</div>
 	</div>
 </div>
