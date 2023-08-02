@@ -30,7 +30,7 @@ class CourseModel {
 	const STATUS_AUTO_DRAFT = 'auto-draft';
 	const STATUS_PENDING    = 'pending';
 	const STATUS_PRIVATE    = 'private';
-	const STATUS_SCHEDULE   = 'future';
+	const STATUS_FUTURE     = 'future';
 
 	/**
 	 * Course mapped with the product using this meta key
