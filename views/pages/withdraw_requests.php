@@ -18,9 +18,7 @@ use Tutor\Models\WithdrawModel;
 use TUTOR\Withdraw_Requests_List;
 $withdraw = new Withdraw_Requests_List();
 
-/**
- * Short able params
- */
+//phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 $order       = Input::get( 'order', 'DESC' );
 $date        = Input::has( 'date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'date' ) ) : '';
 $search_term = Input::get( 'search', '' );
@@ -65,6 +63,7 @@ $filters = array(
 	'course_filter' => false,
 );
 
+//phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 ?>
 
 <div class="tutor-admin-wrap">
