@@ -118,6 +118,8 @@ class Course_List {
 		$draft     = self::count_course( 'draft', $category_slug, $course_id, $date, $search );
 		$pending   = self::count_course( 'pending', $category_slug, $course_id, $date, $search );
 		$trash     = self::count_course( 'trash', $category_slug, $course_id, $date, $search );
+		$private   = self::count_course( 'private', $category_slug, $course_id, $date, $search );
+		$future    = self::count_course( 'future', $category_slug, $course_id, $date, $search );
 
 		$tabs = array(
 			array(
@@ -149,6 +151,18 @@ class Course_List {
 				'title' => __( 'Pending', 'tutor' ),
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
+			),
+			array(
+				'key'   => 'future',
+				'title' => __( 'Scheduled', 'tutor' ),
+				'value' => $future,
+				'url'   => $url . '&data=future',
+			),
+			array(
+				'key'   => 'private',
+				'title' => __( 'Private', 'tutor' ),
+				'value' => $private,
+				'url'   => $url . '&data=private',
 			),
 			array(
 				'key'   => 'trash',
@@ -187,7 +201,7 @@ class Course_List {
 		);
 
 		if ( 'all' === $status || 'mine' === $status ) {
-			$args['post_status'] = array( 'publish', 'pending', 'draft', 'private' );
+			$args['post_status'] = array( 'publish', 'pending', 'draft', 'private', 'future' );
 		} else {
 			$args['post_status'] = array( $status );
 		}
@@ -311,13 +325,24 @@ class Course_List {
 
 		$status = Input::post( 'status' );
 		$id     = Input::post( 'id' );
+		$course = get_post( $id );
+
+		if ( CourseModel::POST_TYPE !== $course->post_type ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
 
 		$args = array(
 			'ID'          => $id,
 			'post_status' => $status,
 		);
-		wp_update_post( $args );
 
+		if ( CourseModel::STATUS_FUTURE === $course->post_status && CourseModel::STATUS_PUBLISH === $status ) {
+			$args['post_status']   = CourseModel::STATUS_PUBLISH;
+			$args['post_date']     = current_time( 'mysql' );
+			$args['post_date_gmt'] = current_time( 'mysql', 1 );
+		}
+
+		wp_update_post( $args );
 		wp_send_json_success();
 		exit;
 	}
