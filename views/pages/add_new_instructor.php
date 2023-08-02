@@ -134,7 +134,7 @@
 				</label>
 			</div>
 			<div class="tutor-option-field">
-				<textarea name="tutor_profile_bio"><?php esc_html_e( tutor_utils()->input_old( 'tutor_profile_bio' ) ); ?></textarea>
+				<textarea name="tutor_profile_bio"><?php echo esc_html( tutor_utils()->input_old( 'tutor_profile_bio' ) ); ?></textarea>
 			</div>
 		</div>
 
