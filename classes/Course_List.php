@@ -336,7 +336,7 @@ class Course_List {
 			'post_status' => $status,
 		);
 
-		if ( CourseModel::STATUS_SCHEDULE === $course->post_status && CourseModel::STATUS_PUBLISH === $status ) {
+		if ( CourseModel::STATUS_FUTURE === $course->post_status && CourseModel::STATUS_PUBLISH === $status ) {
 			$args['post_status']   = CourseModel::STATUS_PUBLISH;
 			$args['post_date']     = current_time( 'mysql' );
 			$args['post_date_gmt'] = current_time( 'mysql', 1 );
