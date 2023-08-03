@@ -12,6 +12,7 @@
 use TUTOR\Input;
 use Tutor\Models\WithdrawModel;
 
+//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 $per_page     = tutor_utils()->get_option( 'statement_show_per_page', 20 );
 $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset       = ( $current_page - 1 ) * $per_page;
@@ -46,8 +47,9 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 }
 
 $summary_data                     = WithdrawModel::get_withdraw_summary( $user_id );
-$is_balance_sufficient            = $summary_data->available_for_withdraw >= $min_withdraw;
-$available_for_withdraw_formatted = tutor_utils()->tutor_price( $summary_data->available_for_withdraw );
+$available_for_withdraw           = $summary_data->available_for_withdraw - $summary_data->total_pending;
+$is_balance_sufficient            = $available_for_withdraw >= $min_withdraw;
+$available_for_withdraw_formatted = tutor_utils()->tutor_price( $available_for_withdraw );
 $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->current_balance );
 ?>
 
@@ -62,6 +64,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 				</div>
 			</div>
 
+			<?php //phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment ?>
 			<div class="tutor-col tutor-mb-16 tutor-mb-lg-0">
 				<div class="tutor-fs-6 tutor-color-muted tutor-mb-4"><?php echo wp_kses_post( sprintf( esc_html__( 'Current Balance is %s', 'tutor' ), $current_balance_formated ) ); ?></div>
 				<div class="tutor-fs-5 tutor-color-black">
@@ -73,6 +76,9 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 					}
 					?>
 				</div>
+				<?php if ( $summary_data->total_pending > 0 ) : ?>
+				<div class="tutor-badge-label label-warning	 tutor-mt-4" style="display: inline-flex; gap: 3px"><?php echo wp_kses_post( sprintf( esc_html__( 'Total Pending Withdrawal %s', 'tutor' ), tutor_utils()->tutor_price( $summary_data->total_pending ) ) ); ?></div>
+				<?php endif; ?>
 			</div>
 
 			<?php
@@ -148,7 +154,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 									<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 									<input type="hidden" value="tutor_make_an_withdraw" name="action" />
 									<?php do_action( 'tutor_withdraw_form_before' ); ?>
-									
+
 									<label class="tutor-form-label" for="tutor_withdraw_amount"><?php esc_html_e( 'Amount', 'tutor' ); ?></label>
 									<div class="tutor-form-wrap tutor-mb-16">
 										<span class="tutor-form-icon"><?php echo esc_attr( $currency_symbol ); ?></span>
@@ -261,15 +267,17 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 									<span class="inline-image-text is-inline-block">
 										<span class="tutor-badge-label
 										<?php
-										if ( 'approved' == $withdraw_history->status ) {
-											echo 'label-success'; }
+										if ( 'approved' === $withdraw_history->status ) {
+											echo 'label-success';
+										}
 										?>
 										<?php
-										if ( 'pending' == $withdraw_history->status ) {
-											echo 'label-warning'; }
+										if ( 'pending' === $withdraw_history->status ) {
+											echo 'label-warning';
+										}
 										?>
 										<?php
-										if ( 'rejected' == $withdraw_history->status ) {
+										if ( 'rejected' === $withdraw_history->status ) {
 											echo 'label-danger';
 										}
 										?>
@@ -315,4 +323,5 @@ if ( $all_histories->count >= $per_page ) {
 		$pagination_data
 	);
 }
+//phpcs:enable WordPress.WP.I18n.MissingTranslatorsComment
 ?>
