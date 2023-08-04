@@ -270,7 +270,19 @@ class QuizModel {
 		}
 
 		// Set query based on action tab.
-		$pass_mark     = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
+		$pass_mark     = "((( SUBSTRING_INDEX(
+			SUBSTRING_INDEX(
+			  attempt_info,
+			  CONCAT(
+				  '\"passing_grade\";s:',
+				  SUBSTRING_INDEX(SUBSTRING_INDEX(attempt_info, '\"passing_grade\";s:', -1), ':\"', 1),
+				  ':\"'
+			  ),
+			  -1
+			), 
+			'\"', 
+			1
+  		))/100) * quiz_attempts.total_marks)";
 		$pending_count = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
 
 		$tab_join   = '';
@@ -287,8 +299,7 @@ class QuizModel {
 
 			case 'fail':
 				// Check if earned marks is less than pass mark and there is no pending question.
-				$tab_clause = " AND quiz_attempts.earned_marks < {$pass_mark}
-									AND {$pending_count} = 0 ";
+				$tab_clause = " AND quiz_attempts.earned_marks < {$pass_mark} AND {$pending_count} < 1 ";
 				break;
 			case 'pending':
 				$tab_clause = " AND {$pending_count} > 0 ";
@@ -392,7 +403,19 @@ class QuizModel {
 		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name';
 		$limit_offset   = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
 
-		$pass_mark     = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
+		$pass_mark     = "((( SUBSTRING_INDEX(
+			SUBSTRING_INDEX(
+			  attempt_info,
+			  CONCAT(
+				  '\"passing_grade\";s:',
+				  SUBSTRING_INDEX(SUBSTRING_INDEX(attempt_info, '\"passing_grade\";s:', -1), ':\"', 1),
+				  ':\"'
+			  ),
+			  -1
+			), 
+			'\"', 
+			1
+  		))/100) * quiz_attempts.total_marks)";
 		$pending_count = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
 
 		// Get attempts by instructor ID.
@@ -418,8 +441,7 @@ class QuizModel {
 
 			case 'fail':
 				// Check if earned marks is less than pass mark and there is no pending question.
-				$result_clause = " AND quiz_attempts.earned_marks<{$pass_mark}
-								   AND {$pending_count}=0 ";
+				$result_clause = " AND quiz_attempts.earned_marks<{$pass_mark} AND {$pending_count} < 1 ";
 				break;
 
 			case 'pending':
