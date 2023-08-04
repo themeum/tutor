@@ -862,21 +862,29 @@ class QuizModel {
 
 		$and_clause = is_array( $course_id ) && count( $course_id ) ? ' AND post_parent IN (' . QueryHelper::prepare_in_clause( $course_id ) . ')' : "AND post_parent = $course_id";
 
+		//phpcs:disable
 		$count = $wpdb->get_var(
-			"SELECT
-				COUNT(ID) 
-			FROM {$wpdb->posts}
-			WHERE post_parent IN 
-				(SELECT
-					ID 
-				FROM {$wpdb->posts} 
-					WHERE post_type='topics'
-					{$and_clause}
-					AND post_status = 'publish'
-				)
-				AND post_type ='tutor_quiz' 
-				AND post_status = 'publish'"
+			$wpdb->prepare(
+				"SELECT
+					COUNT(ID) 
+				FROM {$wpdb->posts}
+				WHERE post_parent IN 
+					(SELECT
+						ID 
+					FROM {$wpdb->posts} 
+						WHERE post_type = %s
+						{$and_clause}
+						AND post_status = %s
+					)
+					AND post_type = %s 
+					AND post_status = %s",
+				'topics',
+				'publish',
+				'tutor_quiz',
+				'publish'
+			)
 		);
+		//phpcs:enable
 		return $count ? $count : 0;
 	}
 }
