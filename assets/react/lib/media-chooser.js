@@ -49,21 +49,24 @@ window.jQuery(document).ready(function ($) {
         });
         frame.open();
     });
+
     /**
      * Thumbnail Delete
-     * @since v.1.5.6
+     * @since 1.5.6
      */
     $(document).on('click', '.tutor-thumbnail-uploader .delete-btn', function (e) {
         e.preventDefault();
 
-        var $that = $(this);
-        var wrapper = $that.closest('.tutor-thumbnail-uploader');
-        var img = wrapper.find('img');
-        var placeholder = img.data('placeholder') || '';
+        let $that = $(this),
+            wrapper = $that.closest('.tutor-thumbnail-uploader'),
+            img = wrapper.find('img'),
+            placeholder = img.data('placeholder') || '';
 
         wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
         img.attr('src', placeholder);
-
         $that.hide();
+
+        // Enable save button after thumbnail remove.
+        $('#save_tutor_option').prop('disabled', false);
     });
 });
