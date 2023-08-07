@@ -160,6 +160,14 @@
 		}
 		@import './quiz';
 	}
+
+	/**
+	* Latex disply inline support.
+	* @since 2.2.4
+	*/
+	mjx-container, .MathJax_Display {
+		display: inline!important;
+	}
 }
 
 @import './spotlight';
