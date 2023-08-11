@@ -9061,6 +9061,28 @@ class Utils {
 	}
 
 	/**
+	 * Get config for profile bio editor.
+	 *
+	 * @since 2.2.4
+	 * 
+	 * @param string $textarea_name textarea name for post request.
+	 *
+	 * @return array
+	 */
+	public function get_profile_bio_editor_config( $textarea_name = 'tutor_profile_bio' ) {
+		return $this->text_editor_config(
+			array(
+				'textarea_name' => $textarea_name,
+				'tinymce' => array(
+					'toolbar1' => 'bold,italic,underline,blockquote,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,removeformat',
+					'toolbar2' => '',
+					'toolbar3' => '',
+				),
+			)
+		);
+	}
+
+	/**
 	 * Get video sources.
 	 *
 	 * @since 2.0.0

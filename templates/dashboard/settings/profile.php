@@ -104,10 +104,10 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 
 	<form action="" method="post" enctype="multipart/form-data">
 		<?php
-		$errors = apply_filters( 'tutor_profile_edit_validation_errors', array() );
-		if ( is_array( $errors ) && count( $errors ) ) {
+		$error_list = apply_filters( 'tutor_profile_edit_validation_errors', array() );
+		if ( is_array( $error_list ) && count( $error_list ) ) {
 			echo '<div class="tutor-alert-warning tutor-mb-12"><ul class="tutor-required-fields">';
-			foreach ( $errors as $error_key => $error_value ) {
+			foreach ( $error_list as $error_key => $error_value ) {
 				echo '<li>' . esc_html( $error_value ) . '</li>';
 			}
 			echo '</ul></div>';
@@ -162,7 +162,10 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Bio', 'tutor' ); ?>
 				</label>
-				<textarea class="tutor-form-control" name="tutor_profile_bio"><?php echo esc_html( strip_tags( get_user_meta( $user->ID, '_tutor_profile_bio', true ) ) ); ?></textarea>
+				<?php
+				$profile_bio = get_user_meta( $user->ID, '_tutor_profile_bio', true );
+				wp_editor( $profile_bio, 'tutor_profile_bio', tutor_utils()->get_profile_bio_editor_config() );
+				?>
 			</div>
 		</div>
 
@@ -174,7 +177,7 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 				</label>
 				<select class="tutor-form-select" name="display_name">
 					<?php
-					foreach ( $public_display as $id => $item ) {
+					foreach ( $public_display as $_id => $item ) {
 						?>
 								<option <?php selected( $user->display_name, $item ); ?>><?php echo esc_html( $item ); ?></option>
 							<?php
