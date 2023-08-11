@@ -23,7 +23,7 @@ require_once 'vendor/autoload.php';
 /**
  * Defined the tutor main file
  */
-define( 'TUTOR_VERSION', '2.2.3' );
+define( 'TUTOR_VERSION', '2.2.4' );
 define( 'TUTOR_FILE', __FILE__ );
 
 /**
