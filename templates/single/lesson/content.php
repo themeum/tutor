@@ -75,7 +75,7 @@ tutor_load_template(
 		$completion_mode                              = tutor_utils()->get_option( 'course_completion_process' );
 		$json_data['strict_mode']                     = ( 'strict' === $completion_mode );
 		$json_data['control_video_lesson_completion'] = (bool) tutor_utils()->get_option( 'control_video_lesson_completion', false );
-		$json_data['required_percentage']             = tutor_utils()->get_option( 'required_percentage_to_complete_video_lesson', 80 );
+		$json_data['required_percentage']             = (int) tutor_utils()->get_option( 'required_percentage_to_complete_video_lesson', 80 );
 		?>
 		<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $json_data ) ); ?>">
 	<?php endif; ?>
