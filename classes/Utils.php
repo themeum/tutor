@@ -1278,6 +1278,7 @@ class Utils {
 		$lesson_ids = $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id );
 		foreach ( $lesson_ids as $id ) {
 			delete_user_meta( $user_id, '_tutor_completed_lesson_id_' . $id );
+			delete_user_meta( $user_id, '_lesson_reading_info' );
 		}
 
 		// Delete other addon-wise stuffs by hook, specially assignment.
