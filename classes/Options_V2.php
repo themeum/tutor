@@ -702,7 +702,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'block_lesson' => array(
 						'label'      => __( 'Lesson', 'tutor' ),
 						'slug'       => 'lesson',
 						'block_type' => 'uniform',
