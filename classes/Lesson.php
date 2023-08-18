@@ -454,6 +454,15 @@ class Lesson extends Tutor_Base {
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
+		if ( ! $lesson_id ) {
+			return;
+		}
+
+		$validated = apply_filters( 'tutor_validate_lesson_complete', true, $user_id,  $lesson_id );
+		if ( ! $validated ) {
+			return;
+		}
+
 		do_action( 'tutor_lesson_completed_before', $lesson_id );
 		/**
 		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = tutor_time();
