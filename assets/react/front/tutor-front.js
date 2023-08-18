@@ -247,7 +247,7 @@ jQuery(document).ready(function($) {
 		enable_complete_lesson_btn: function(instance) {
 			const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
 			const video_data = this.video_data();
-			const completedPercentage = (instance.currentTime / instance.duration) * 100;
+			const completedPercentage = getPercentage(Number(instance.currentTime), Number(instance.duration));
 			
 			if (completedPercentage >= video_data.required_percentage) {
 				complete_lesson_btn.attr('disabled', false);
@@ -261,13 +261,19 @@ jQuery(document).ready(function($) {
 			}
 
 			const { best_watch_time, video_duration, required_percentage } = video_data;
-			const completedPercentage = (Number(best_watch_time) / Number(video_duration)) * 100;
+			const completedPercentage = this.getPercentage(Number(best_watch_time), Number(video_duration));
 			
 			if (completedPercentage < required_percentage) {
 				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
 				complete_lesson_btn.attr('disabled', true);
 				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">You have to complete ${video_data.required_percentage}% of the lesson.</span>`);
 			}
+		},
+		getPercentage: function(value, total) {
+			if (value > 0 && total > 0) {
+				return Math.round((value / total) * 100);;
+			}
+			return 0;
 		},
 		init: function(element) {
 			this.player_DOM = element;
