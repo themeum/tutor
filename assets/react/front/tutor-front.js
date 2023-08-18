@@ -136,16 +136,31 @@ jQuery(document).ready(function($) {
 		track_player: function() {
 			const that = this;
 			if (typeof Plyr !== 'undefined') {
-				const player = new Plyr(this.player_DOM);
 				const video_data = that.video_data();
+				const player = new Plyr(this.player_DOM, {
+					keyboard: {
+						focused: that.isRequiredPercentage() ? false : true,
+						global: false,
+					},
+					listeners: {
+						...(that.isRequiredPercentage() && {
+							seek(e) {
+								e.preventDefault();
+								tutor_toast(__('Warning', 'tutor'), __(`You have to watch ${video_data.required_percentage}% of this video lesson.`, 'tutor'), 'error');
+								return false;
+							},
+						}),
+					}
+				});
 				player.on('ready', function(event) {
 					const instance = event.detail.plyr;
 					const { best_watch_time = 0 } = video_data || {};
-					if (
-						best_watch_time > 0 &&
-						instance.duration > Math.round(best_watch_time)
-					) {
-						instance.media.currentTime = best_watch_time;
+					if (best_watch_time > 0) {
+						if (instance.provider === 'youtube') {
+							instance.embed.seekTo(best_watch_time);
+						}else {
+							instance.media.currentTime = best_watch_time;
+						}
 					}
 					that.sync_time(instance);
 				});
@@ -182,13 +197,21 @@ jQuery(document).ready(function($) {
 			}
 		},
 		sync_time: function(instance, options) {
-			const post_id = this.video_data().post_id;
+			const video_data = this.video_data();
+			if (!video_data) {
+				return;
+			}
+
+			if (this.isRequiredPercentage()) {
+				this.enable_complete_lesson_btn(instance);
+			}
+
 			//TUTOR is sending about video playback information to server.
 			let data = {
 				action: 'sync_video_playback',
 				currentTime: instance.currentTime,
 				duration: instance.duration,
-				post_id,
+				post_id: video_data.post_id,
 			};
 			data[this.nonce_key] = _tutorobject[this.nonce_key];
 			let data_send = data;
@@ -209,9 +232,55 @@ jQuery(document).ready(function($) {
 				}
 			});
 		},
+		isRequiredPercentage: function() {
+			const video_data = this.video_data();
+			if (!video_data) {
+				return false;
+			}
+
+			const { strict_mode, control_video_lesson_completion } = video_data;
+			if (_tutorobject.tutor_pro_url && strict_mode && control_video_lesson_completion) {
+				return true;
+			}
+			return false;
+		},
+		enable_complete_lesson_btn: function(instance) {
+			const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
+			const video_data = this.video_data();
+			const completedPercentage = this.getPercentage(Number(instance.currentTime), Number(instance.duration));
+			
+			if (completedPercentage >= video_data.required_percentage) {
+				complete_lesson_btn.attr('disabled', false);
+				complete_lesson_btn.next().remove();
+			}
+		},
+		disable_complete_lesson_btn: function() {
+			const video_data = this.video_data();
+			if (!video_data) {
+				return;
+			}
+
+			const { best_watch_time, video_duration, required_percentage } = video_data;
+			const completedPercentage = this.getPercentage(Number(best_watch_time), Number(video_duration));
+			
+			if (completedPercentage < required_percentage) {
+				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
+				complete_lesson_btn.attr('disabled', true);
+				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">You have to watch ${video_data.required_percentage}% of this video lesson.</span>`);
+			}
+		},
+		getPercentage: function(value, total) {
+			if (value > 0 && total > 0) {
+				return Math.round((value / total) * 100);
+			}
+			return 0;
+		},
 		init: function(element) {
 			this.player_DOM = element;
 			this.track_player();
+			if (this.isRequiredPercentage()) {
+				this.disable_complete_lesson_btn();
+			}
 		},
 	};
 

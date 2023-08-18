@@ -51,5 +51,10 @@
 			height: 100%;
 			border: none;
 		}
+
+		.plyr--youtube iframe {
+			top: -50%;
+			height: 200%;
+		}
 	}
 }
