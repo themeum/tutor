@@ -247,7 +247,7 @@ jQuery(document).ready(function($) {
 		enable_complete_lesson_btn: function(instance) {
 			const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
 			const video_data = this.video_data();
-			const completedPercentage = getPercentage(Number(instance.currentTime), Number(instance.duration));
+			const completedPercentage = this.getPercentage(Number(instance.currentTime), Number(instance.duration));
 			
 			if (completedPercentage >= video_data.required_percentage) {
 				complete_lesson_btn.attr('disabled', false);
@@ -271,7 +271,7 @@ jQuery(document).ready(function($) {
 		},
 		getPercentage: function(value, total) {
 			if (value > 0 && total > 0) {
-				return Math.round((value / total) * 100);;
+				return Math.round((value / total) * 100);
 			}
 			return 0;
 		},
