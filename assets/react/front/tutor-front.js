@@ -146,7 +146,7 @@ jQuery(document).ready(function($) {
 						...(that.isRequiredPercentage() && {
 							seek(e) {
 								e.preventDefault();
-								tutor_toast(__('Warning', 'tutor'), __(`You have to complete ${video_data.required_percentage}% of the lesson.`, 'tutor'), 'error');
+								tutor_toast(__('Warning', 'tutor'), __(`You have to watch ${video_data.required_percentage}% of this video lesson.`, 'tutor'), 'error');
 								return false;
 							},
 						}),
@@ -266,7 +266,7 @@ jQuery(document).ready(function($) {
 			if (completedPercentage < required_percentage) {
 				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
 				complete_lesson_btn.attr('disabled', true);
-				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">You have to complete ${video_data.required_percentage}% of the lesson.</span>`);
+				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">You have to watch ${video_data.required_percentage}% of this video lesson.</span>`);
 			}
 		},
 		getPercentage: function(value, total) {
