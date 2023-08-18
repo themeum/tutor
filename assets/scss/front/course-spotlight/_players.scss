@@ -7,6 +7,11 @@
 			margin-left: -25px;
 		}
 	}
+
+	.plyr--youtube iframe {
+		top: -50%;
+		height: 200%;
+	}
 }
 
 .tutor-video-player-wrapper {
@@ -50,11 +55,6 @@
 			width: 100%;
 			height: 100%;
 			border: none;
-		}
-
-		.plyr--youtube iframe {
-			top: -50%;
-			height: 200%;
 		}
 	}
 }
