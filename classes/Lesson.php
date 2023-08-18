@@ -458,7 +458,7 @@ class Lesson extends Tutor_Base {
 			return;
 		}
 
-		$validated = apply_filters( 'tutor_validate_lesson_complete', true, $user_id,  $lesson_id );
+		$validated = apply_filters( 'tutor_validate_lesson_complete', true, $user_id, $lesson_id );
 		if ( ! $validated ) {
 			return;
 		}
