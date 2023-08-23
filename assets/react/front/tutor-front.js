@@ -163,17 +163,17 @@ jQuery(document).ready(function($) {
 					const { best_watch_time = 0 } = video_data || {};
 					if (best_watch_time > 0) {
 						var previous_duration = Math.round(best_watch_time);
-						var previousTimeSetter = setInterval(function(){
-							if (player.playing !== true && player.currentTime != previous_duration) {
+						var previousTimeSetter = setTimeout(function(){
+							if (player.playing !== true && player.currentTime !== previous_duration) {
 								if (instance.provider === 'youtube') {
 									instance.embed.seekTo(best_watch_time);
 								} else {
 									instance.media.currentTime = previous_duration;
 								}
-							} else{
-								clearInterval(previousTimeSetter);
+							} else {
+								clearTimeout(previousTimeSetter);
 							}
-						}, 800);
+						});
 					}
 					that.sync_time(instance);
 				});
