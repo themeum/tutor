@@ -198,7 +198,7 @@ class TutorEDD extends Tutor_Base {
 	 * @return void
 	 */
 	public function edd_update_payment_status( $payment_id, $new_status, $old_status ) {
-		if ( 'publish' !== $new_status ) {
+		if ( 'complete' !== $new_status ) {
 			return;
 		}
 
