@@ -145,9 +145,15 @@ jQuery(document).ready(function($) {
 					listeners: {
 						...(that.isRequiredPercentage() && {
 							seek(e) {
-								e.preventDefault();
-								tutor_toast(__('Warning', 'tutor'), __(`You have to watch ${video_data.required_percentage}% of this video lesson.`, 'tutor'), 'error');
-								return false;
+								var currentTime = player.currentTime;
+								var newTime = that.getTargetTime(player, e);
+								// Disallow moving forward
+								if (newTime > currentTime) {
+									e.preventDefault();
+									tutor_toast(__('Warning', 'tutor'), __(`Forward seeking is not allowed for this video lesson.`, 'tutor'), 'error');
+									return false;
+								}
+								return true;
 							},
 						}),
 					}
@@ -156,11 +162,18 @@ jQuery(document).ready(function($) {
 					const instance = event.detail.plyr;
 					const { best_watch_time = 0 } = video_data || {};
 					if (best_watch_time > 0) {
-						if (instance.provider === 'youtube') {
-							instance.embed.seekTo(best_watch_time);
-						}else {
-							instance.media.currentTime = best_watch_time;
-						}
+						var previous_duration = Math.round(best_watch_time);
+						var previousTimeSetter = setInterval(function(){
+							if (player.playing !== true && player.currentTime != previous_duration) {
+								if (instance.provider === 'youtube') {
+									instance.embed.seekTo(best_watch_time);
+								} else {
+									instance.media.currentTime = previous_duration;
+								}
+							} else{
+								clearInterval(previousTimeSetter);
+							}
+						}, 800);
 					}
 					that.sync_time(instance);
 				});
@@ -274,6 +287,16 @@ jQuery(document).ready(function($) {
 				return Math.round((value / total) * 100);
 			}
 			return 0;
+		},
+		getTargetTime: function(player, input) {
+			if (
+			  typeof input === "object" &&
+			  (input.type === "input" || input.type === "change")
+			) {
+			  return input.target.value / input.target.max * player.media.duration;
+			} else {
+			  return Number(input);
+			}
 		},
 		init: function(element) {
 			this.player_DOM = element;
