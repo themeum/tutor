@@ -134,9 +134,24 @@ class Admin {
 
 		add_submenu_page( 'tutor', __( 'Settings', 'tutor' ), __( 'Settings', 'tutor' ), 'manage_tutor', 'tutor_settings', array( new \TUTOR\Options_V2(), 'load_settings_page' ) );
 
+		do_action( 'tutor_after_settings_menu' );
+
+		add_submenu_page( 'tutor', __( "What's New", 'tutor' ), __( "What's New", 'tutor' ), 'manage_options', 'tutor-whats-new', array( $this, 'whats_new_page' ) );
+
 		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
+			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), __( '<span class="tutor-get-pro-text">Upgrade to Pro</span>', 'tutor' ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
 		}
+	}
+
+	/**
+	 * What's new page.
+	 *
+	 * @since 2.2.4
+	 *
+	 * @return void
+	 */
+	public function whats_new_page() {
+		include tutor()->path . 'views/pages/whats-new.php';
 	}
 
 	/**
