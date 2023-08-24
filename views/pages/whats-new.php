@@ -186,17 +186,17 @@ function tutor_whatnew_item( $type, $log ) {
 				<h2>You are not only missing these features, you are missing your revenues too!</h2>
 
 				<div class="tutor-whats-new-pro-banner">
-					<img src="<?php echo tutor()->url . 'assets/images/whats-new/pro-features.png'; ?>" alt="pro features">
+					<img src="https://ysn.sya.mybluehost.me/tutor-assets/course-bundle-banner.png" alt="pro features">
 				</div>
 
 				<div class="tutor-mt-30 tutor-whats-new-pro-banner">
-					<img src="<?php echo tutor()->url . 'assets/images/whats-new/pro-features.png'; ?>" alt="pro features">
+					<img src="https://ysn.sya.mybluehost.me/tutor-assets/course-bundle-banner.png" alt="pro features">
 				</div>
 
 				<a class="tutor-whats-new-action-btn" 
 					target="_blank" 
 					href="https://www.themeum.com/product/tutor-lms/?utm_source=tutor_lms_wp_dashboard&utm_medium=update&utm_campaign=what_s_new"> 
-					<span class="tutor-icon-crown"></span> Get Tutor Pro</a>
+					<span class="tutor-icon-crown"></span> Get Tutor LMS Pro</a>
 			</div>
 			<!-- end pro section -->
 			<?php endif; ?>
