@@ -173,8 +173,10 @@ class TutorEDD extends Tutor_Base {
 	 */
 	public function get_tutor_course_price( $price, $course_id ) {
 		$product_id = tutor_utils()->get_course_product_id( $course_id );
-
-		return edd_price( $product_id, false );
+		if( tutils()->has_edd() ){
+			return edd_price( $product_id, false );
+		}
+		
 	}
 
 	/**
