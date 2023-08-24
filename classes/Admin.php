@@ -50,6 +50,7 @@ class Admin {
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
+		add_action( 'tutor_after_settings_menu', array( $this, 'whats_new_menu' ), 11 );
 	}
 
 	/**
@@ -136,8 +137,6 @@ class Admin {
 
 		do_action( 'tutor_after_settings_menu' );
 
-		add_submenu_page( 'tutor', __( "What's New", 'tutor' ), __( "What's New", 'tutor' ), 'manage_options', 'tutor-whats-new', array( $this, 'whats_new_page' ) );
-
 		if ( ! $has_pro ) {
 			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), __( '<span class="tutor-get-pro-text">Upgrade to Pro</span>', 'tutor' ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
 		}
@@ -150,8 +149,29 @@ class Admin {
 	 *
 	 * @return void
 	 */
-	public function whats_new_page() {
-		include tutor()->path . 'views/pages/whats-new.php';
+	public function whats_new_menu() {
+		$plugin_info       = tutils()->get_remote_plugin_info();
+		$remote_version    = $plugin_info->version ?? TUTOR_VERSION;
+		$installed_version = '1.0.0';
+		// $installed_version =  TUTOR_VERSION;
+		$update_required = version_compare( $remote_version, $installed_version, '>' );
+
+		
+		$menu_text = __( "What's New", 'tutor' );
+		if ( $update_required ) {
+			$menu_text .= ' <span class="update-plugins"><span class="plugin-count">1</span></span>';
+		}
+		
+		add_submenu_page(
+			'tutor',
+			__( "What's New", 'tutor' ),
+			$menu_text,
+			'manage_options',
+			'tutor-whats-new',
+			function() use ( $remote_version, $installed_version, $update_required ) {
+				include tutor()->path . 'views/pages/whats-new.php';
+			}
+		);
 	}
 
 	/**
