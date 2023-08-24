@@ -8,65 +8,76 @@
  * @since 2.2.4
  */
 
-$changelogs = array(
-	'new'    => array(
-		array(
-			'title'  => 'E-mail background image change support added.',
+ $changelogs = array(
+    'new' => array(
+        array(
+            'title' => 'Option to control when students can skip lessons on Tutor LMS Player',
 			'is_pro' => true,
-		),
-		array(
-			'title' => 'Basic editor support for profile bio change.',
-		),
-		array(
-			'title'  => 'Instructor\'s earning summary on instructor list.',
+        ),
+        array(
+            'title' => 'Hide video branding (YouTube) in Tutor LMS Player',
 			'is_pro' => true,
-		),
-		array(
-			'title' => 'Latex support to lesson and quiz editor.',
-		),
-		array(
-			'title'  => 'Delete cancelled enrollment from enrollment list.',
+        ),
+        array(
+            'title' => 'Let students resume lessons where they left off (Tutor LMS Player)',
 			'is_pro' => true,
-		),
+        ),
+        array(
+            'title' => 'Option to change background image in email Template',
+			'is_pro' => true,
+        ),
+        array(
+            'title' => 'WP editor support on the frontend instructor profile-bio field'
+        ),
+        array(
+            'title' => "Showcase instructor's earning summary on the instructor list",
+			'is_pro' => true,
+        ),
+        array(
+            'title' => 'Latex support to lesson and quiz editor'
+        ),
+        array(
+            'title' => 'Deletion of canceled enrollment from the enrollment list',
+			'is_pro' => true,
+        ),
 		array(
-			'title' => 'Private and Schedule filter tab in courses and course bundle listing page.',
-		),
-	),
-	'update' => array(
+            'title' => 'Private and Schedule filter tabs in course bundle listing page',
+			'is_pro' => true,
+        ),
+        array(
+            'title' => 'Private and Schedule filter tabs in course listing page'
+        ),
+    ),
+    'update' => array(
+        array(
+            'title' => 'Email address to Analytics CSV data'
+        ),
 		array(
-			'title' => 'Email address also added to Analytics CSV data along with display name.',
-		),
+            'title' => 'Tutor LMS password reset form only works for Tutor LMS login page'
+        ),
+    ),
+    'fix' => array(
+        array(
+            'title' => 'Incorrect information on the quiz attempt list'
+        ),
+        array(
+            'title' => 'Instructors making withdrawal requests exceeding available balance'
+        ),
+        array(
+            'title' => 'Invalid or missing Google client ID for Google login'
+        ),
+        array(
+            'title' => 'Course enrollment email to students'
+        ),
+        array(
+            'title' => 'Error on completing a course when the Certificate addon is disabled'
+        ),
 		array(
-			'title' => 'Remove force password reset form to tutor.',
-		),
-	),
-	'fix'    => array(
-		array(
-			'title' => 'Quiz attempt list showing wrong.',
-		),
-		array(
-			'title' => "Some strings aren't translatable.",
-		),
-		array(
-			'title' => 'In the Course List page of WP Admin, the Edit menu had design issue.',
-		),
-		array(
-			'title' => 'Instructors can make withdrawal requests greater than their available balance.',
-		),
-		array(
-			'title' => 'Invalid or no google client ID found for Google login.',
-		),
-		array(
-			'title' => 'Course enrollment email to student issue.',
-		),
-		array(
-			'title' => 'HTML code appearing on the course details page enrollment box, if user use the Restrict Content Pro.',
-		),
-		array(
-			'title' => 'Student can complete course without passing the quiz.',
-		),
-	),
+            'title' => 'Several known bugs'
+        ),
+    ),
 );
+
 
 function tutor_whatnew_item( $type, $log ) {
 	 $obj = (object) $log;
@@ -84,6 +95,29 @@ function tutor_whatnew_item( $type, $log ) {
 
 	<div class="tutor-whats-new-wrapper">
 			
+			<?php if ( $update_required ) : ?>
+			<div class="tutor-update-available">
+				<div class="tutor-version-alert">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 18 16" fill="none">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M6.99065 1.5025C7.95315 -0.164164 10.3598 -0.164164 11.3215 1.5025L17.4506 12.1258C18.4123 13.7925 17.209 15.8758 15.2848 15.8758H3.02731C1.10315 15.8758 -0.0993531 13.7925 0.862314 12.1258L6.98981 1.5025H6.99065ZM9.15648 5.875C9.32224 5.875 9.48121 5.94085 9.59842 6.05806C9.71563 6.17527 9.78148 6.33424 9.78148 6.5V9.625C9.78148 9.79076 9.71563 9.94973 9.59842 10.0669C9.48121 10.1842 9.32224 10.25 9.15648 10.25C8.99072 10.25 8.83175 10.1842 8.71454 10.0669C8.59733 9.94973 8.53148 9.79076 8.53148 9.625V6.5C8.53148 6.33424 8.59733 6.17527 8.71454 6.05806C8.83175 5.94085 8.99072 5.875 9.15648 5.875ZM9.15648 12.75C9.32224 12.75 9.48121 12.6842 9.59842 12.5669C9.71563 12.4497 9.78148 12.2908 9.78148 12.125C9.78148 11.9592 9.71563 11.8003 9.59842 11.6831C9.48121 11.5659 9.32224 11.5 9.15648 11.5C8.99072 11.5 8.83175 11.5659 8.71454 11.6831C8.59733 11.8003 8.53148 11.9592 8.53148 12.125C8.53148 12.2908 8.59733 12.4497 8.71454 12.5669C8.83175 12.6842 8.99072 12.75 9.15648 12.75Z" fill="#FF9C21"/>
+					</svg>
+					<p>New version available.</p>
+				</div>
+				
+				<div class="tutor-update-version">
+						<svg xmlns="http://www.w3.org/2000/svg" width="40" viewBox="0 0 61 80" fill="none">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M43.9167 50.9466C43.4065 50.9537 42.8999 50.8591 42.4266 50.6685C41.9533 50.4779 41.5227 50.1949 41.16 49.8362C40.7973 49.4775 40.5097 49.0502 40.3141 48.5793C40.1184 48.1083 40.0186 47.6032 40.0204 47.0932V38.2799C40.0204 37.2579 40.4267 36.2778 41.1499 35.5552C41.8731 34.8326 42.8539 34.4266 43.8767 34.4266C44.8994 34.4266 45.8803 34.8326 46.6035 35.5552C47.3267 36.2778 47.733 37.2579 47.733 38.2799V47.0932C47.7347 47.5998 47.6362 48.1016 47.443 48.5699C47.2498 49.0382 46.9659 49.4637 46.6074 49.8219C46.249 50.1801 45.8232 50.4638 45.3545 50.6569C44.8858 50.8499 44.3836 50.9483 43.8767 50.9466" fill="#0049F8"/>
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M16.0843 50.946C15.0732 50.9095 14.1133 50.4919 13.3979 49.777C12.6825 49.0621 12.2645 48.103 12.228 47.0926V38.2793C12.228 37.2573 12.6343 36.2772 13.3575 35.5546C14.0807 34.8319 15.0616 34.426 16.0843 34.426C17.1071 34.426 18.0879 34.8319 18.8111 35.5546C19.5343 36.2772 19.9406 37.2573 19.9406 38.2793V47.0926C19.9534 47.6021 19.8624 48.109 19.6732 48.5823C19.4839 49.0556 19.2003 49.4855 18.8397 49.8459C18.479 50.2063 18.0487 50.4896 17.5751 50.6787C17.1014 50.8679 16.5942 50.9588 16.0843 50.946Z" fill="#0049F8"/>
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M8.36661 31.6667C9.12855 30.0292 10.3302 28.635 11.8379 27.6392C13.3456 26.6435 15.1002 26.0853 16.9065 26.0267C19.4985 26.1103 21.9525 27.2137 23.7343 29.0965C25.5162 30.9794 26.4816 33.4893 26.4204 36.08V54.12C26.5389 54.9854 26.9671 55.7787 27.6257 56.353C28.2844 56.9272 29.129 57.2437 30.0032 57.2437C30.8773 57.2437 31.7219 56.9272 32.3806 56.353C33.0392 55.7787 33.4674 54.9854 33.5859 54.12V36.08C33.5211 33.4906 34.4835 30.9806 36.2633 29.0974C38.043 27.2141 40.4956 26.1103 43.0865 26.0267C44.8254 25.9964 46.5352 26.4751 48.0052 27.4038C49.4752 28.3325 50.6412 29.6706 51.3595 31.2533C53.2193 34.8947 54.1174 38.9504 53.9686 43.0359C53.8198 47.1213 52.6291 51.1011 50.5093 54.5978C48.3896 58.0944 45.4111 60.9921 41.8563 63.0159C38.3015 65.0397 34.2883 66.1227 30.1972 66.162C26.1061 66.2013 22.0727 65.1957 18.4796 63.2406C14.8865 61.2855 11.8528 58.4457 9.66612 54.9904C7.47944 51.5352 6.2123 47.579 5.98488 43.4972C5.75746 39.4154 6.57728 35.3431 8.36661 31.6667ZM23.5249 8H37.0285V13.2133C34.7736 12.6701 32.4628 12.3926 30.1433 12.3867C27.9025 12.4089 25.6688 12.641 23.4715 13.08L23.5249 8ZM60.1796 44.8933C60.1796 44.0667 60.313 43.3733 60.313 42.5467C60.3005 37.1921 58.8661 31.9367 56.1561 27.3173C53.446 22.6978 49.5576 18.8799 44.8879 16.2533V8H50.6923C51.754 8 52.7722 7.57857 53.5229 6.82843C54.2736 6.07828 54.6954 5.06087 54.6954 4C54.6954 2.93913 54.2736 1.92172 53.5229 1.17157C52.7722 0.421427 51.754 0 50.6923 0L9.741 0C8.67381 0.053895 7.6669 0.510644 6.92381 1.27792C6.18071 2.0452 5.75686 3.06577 5.73794 4.13333C5.73794 5.1942 6.15969 6.21162 6.91041 6.96176C7.66113 7.71191 8.67932 8.13333 9.741 8.13333H15.6655V16.2667C12.0388 18.2486 8.85922 20.9554 6.32477 24.2185C3.79032 27.4816 1.95526 31.231 0.933855 35.2335C-0.08755 39.2359 -0.273433 43.4057 0.387781 47.483C1.04899 51.5603 2.54315 55.458 4.7772 58.9333C15.9991 77.9333 46.3957 79.8667 56.7369 80C57.6496 79.9722 58.5253 79.6335 59.2188 79.04C59.5394 78.7137 59.79 78.3255 59.9552 77.899C60.1204 77.4726 60.1967 77.0169 60.1796 76.56V44.8933Z" fill="#0049F8"/>
+						</svg>
+						<div>
+							<h3>Tutor LMS  v<?php echo esc_html( $remote_version ); ?></h3>
+							<p><a href="<?php echo esc_url( admin_url( 'plugins.php?s=tutor-lms&plugin_status=all' ) ); ?>">Update Now</a></p>
+						</div>
+				</div>
+			</div>
+			<?php endif; ?>
+
 			<div class="tutor-whats-new-header">
 				<div class="tutor-whats-new-header-symbols tutor-symbol-left-top">
 					<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" fill="none">
@@ -111,9 +145,11 @@ function tutor_whatnew_item( $type, $log ) {
 				</div>
 
 				<h1>What's New 🥳 in Tutor LMS</h1>
-				<p>Congratulations! You have successfully upgraded to <br>
-					the latest version of <strong>Tutor LMS (v<?php echo esc_html( TUTOR_VERSION ); ?>)</strong>
+				
+				<p>You are using <strong>Tutor LMS (v<?php echo esc_html( $installed_version ); ?>)</strong> <br>
+				Here are features and improvements made to this version!
 				</p>
+				
 				<div class="tutor-logo-head">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 61 80" fill="none">
 					<path fill-rule="evenodd" clip-rule="evenodd" d="M43.9167 50.9466C43.4065 50.9537 42.8999 50.8591 42.4266 50.6685C41.9533 50.4779 41.5227 50.1949 41.16 49.8362C40.7973 49.4775 40.5097 49.0502 40.3141 48.5793C40.1184 48.1083 40.0186 47.6032 40.0204 47.0932V38.2799C40.0204 37.2579 40.4267 36.2778 41.1499 35.5552C41.8731 34.8326 42.8539 34.4266 43.8767 34.4266C44.8994 34.4266 45.8803 34.8326 46.6035 35.5552C47.3267 36.2778 47.733 37.2579 47.733 38.2799V47.0932C47.7347 47.5998 47.6362 48.1016 47.443 48.5699C47.2498 49.0382 46.9659 49.4637 46.6074 49.8219C46.249 50.1801 45.8232 50.4638 45.3545 50.6569C44.8858 50.8499 44.3836 50.9483 43.8767 50.9466" fill="#0049F8"/>
@@ -125,7 +161,7 @@ function tutor_whatnew_item( $type, $log ) {
 			<!-- end header section -->
 			
 			<div class="tutor-changelog-wrapper">
-				<h3><strong>Changelog (v<?php echo esc_html( TUTOR_VERSION ); ?>)</strong></h3>
+				<h3><strong>Changelog (v<?php echo esc_html( $installed_version ); ?>)</strong></h3>
 				<ul class="tutor-changelog-list">
 					<?php
 					foreach ( $changelogs['new'] as $log ) {
@@ -150,12 +186,16 @@ function tutor_whatnew_item( $type, $log ) {
 				<h2>You are not only missing these features, you are missing your revenues too!</h2>
 
 				<div class="tutor-whats-new-pro-banner">
-					<img src="https://ysn.sya.mybluehost.me/tutor-assets/course-bundle-banner.png" alt="course bundle banner">
+					<img src="<?php echo tutor()->url . 'assets/images/whats-new/pro-features.png'; ?>" alt="pro features">
+				</div>
+
+				<div class="tutor-mt-30 tutor-whats-new-pro-banner">
+					<img src="<?php echo tutor()->url . 'assets/images/whats-new/pro-features.png'; ?>" alt="pro features">
 				</div>
 
 				<a class="tutor-whats-new-action-btn" 
 					target="_blank" 
-					href="https://www.themeum.com/tutor-lms/pricing/?utm_source=get_pro&amp;utm_medium=wordpress_dashboard&amp;utm_campaign=course_bundle"> 
+					href="https://www.themeum.com/product/tutor-lms/?utm_source=tutor_lms_wp_dashboard&utm_medium=update&utm_campaign=what_s_new"> 
 					<span class="tutor-icon-crown"></span> Get Tutor Pro</a>
 			</div>
 			<!-- end pro section -->
