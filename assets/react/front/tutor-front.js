@@ -232,7 +232,11 @@ jQuery(document).ready(function($) {
 				data_send = Object.assign(data, options);
 			}
 			$.post(this.ajaxurl, data_send);
-			this.max_seek_time = video_data.best_watch_time > instance.currentTime ? video_data.best_watch_time : instance.currentTime;
+			
+			const seekTime = video_data.best_watch_time > instance.currentTime ? video_data.best_watch_time : instance.currentTime;
+			if (seekTime > this.max_seek_time) {
+				this.max_seek_time = seekTime;
+			}
 		},
 		autoload_content: function() {
 			console.log('Autoloader called');
