@@ -1791,8 +1791,49 @@ h2.tutor-page-heading {
 	background-color: white;
 	margin: 25px auto;
 	border-radius: 8px;
+	padding: 0 0 40px 0;
 
-	padding: 40px 0;
+	.tutor-update-available{
+		background: #FFF5E0;
+		margin-bottom: 25px;
+		border-top-left-radius: 8px;
+    	border-top-right-radius: 8px;
+		padding: 25px;
+
+		.tutor-version-alert{
+			display: flex;
+			gap: 15px;
+			justify-content: center;
+			align-items: center;
+			margin-bottom: 10px;
+			p{
+				margin: 0;
+			}
+		}
+
+		.tutor-update-version{
+			border-radius: 6px;
+			background-color: #fff;
+			padding: 20px 25px;
+			display: flex;
+			gap: 25px;
+			align-items: center;
+			width: 200px;
+			margin: 0 auto;
+
+			>div:nth-child(2) {
+				h3,p{
+					margin: 0;
+				}
+				p{
+					margin-top: 5px;
+				}
+				a{
+					text-decoration: none;
+				}
+			}
+		}
+	}
 
 	.tutor-whats-new-header{
 		text-align: center;
