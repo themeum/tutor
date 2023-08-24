@@ -150,18 +150,26 @@ class Admin {
 	 * @return void
 	 */
 	public function whats_new_menu() {
-		$plugin_info       = tutils()->get_remote_plugin_info();
+		$transient_key = 'tutor_plugin_info';
+		$plugin_info   = get_transient( $transient_key );
+
+		if ( false === $plugin_info ) {
+			$plugin_info     = tutils()->get_remote_plugin_info();
+			$hour_in_seconds = 1800;
+			set_transient( $transient_key, $plugin_info, $hour_in_seconds );
+		}
+
 		$remote_version    = $plugin_info->version ?? TUTOR_VERSION;
 		$installed_version = '1.0.0';
+		// TODO need to change.
 		// $installed_version =  TUTOR_VERSION;
 		$update_required = version_compare( $remote_version, $installed_version, '>' );
 
-		
 		$menu_text = __( "What's New", 'tutor' );
 		if ( $update_required ) {
 			$menu_text .= ' <span class="update-plugins"><span class="plugin-count">1</span></span>';
 		}
-		
+
 		add_submenu_page(
 			'tutor',
 			__( "What's New", 'tutor' ),
