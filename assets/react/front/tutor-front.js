@@ -129,6 +129,7 @@ jQuery(document).ready(function($) {
 		ajaxurl: window._tutorobject.ajaxurl,
 		nonce_key: window._tutorobject.nonce_key,
 		played_once: false,
+		max_seek_time: 0,
 		video_data: function() {
 			const video_track_data = $('#tutor_video_tracking_information').val();
 			return video_track_data ? JSON.parse(video_track_data) : {};
@@ -145,10 +146,9 @@ jQuery(document).ready(function($) {
 					listeners: {
 						...(that.isRequiredPercentage() && {
 							seek(e) {
-								var currentTime = player.currentTime;
 								var newTime = that.getTargetTime(player, e);
 								// Disallow moving forward
-								if (newTime > currentTime) {
+								if (newTime > that.max_seek_time) {
 									e.preventDefault();
 									tutor_toast(__('Warning', 'tutor'), __(`Forward seeking is not allowed for this video lesson.`, 'tutor'), 'error');
 									return false;
@@ -161,7 +161,7 @@ jQuery(document).ready(function($) {
 				player.on('ready', function(event) {
 					const instance = event.detail.plyr;
 					const { best_watch_time = 0 } = video_data || {};
-					if (best_watch_time > 0) {
+					if (_tutorobject.tutor_pro_url && best_watch_time > 0) {
 						var previous_duration = Math.round(best_watch_time);
 						var previousTimeSetter = setTimeout(function(){
 							if (player.playing !== true && player.currentTime !== previous_duration) {
@@ -232,6 +232,7 @@ jQuery(document).ready(function($) {
 				data_send = Object.assign(data, options);
 			}
 			$.post(this.ajaxurl, data_send);
+			this.max_seek_time = video_data.best_watch_time > instance.currentTime ? video_data.best_watch_time : instance.currentTime;
 		},
 		autoload_content: function() {
 			console.log('Autoloader called');
@@ -251,8 +252,8 @@ jQuery(document).ready(function($) {
 				return false;
 			}
 
-			const { strict_mode, control_video_lesson_completion } = video_data;
-			if (_tutorobject.tutor_pro_url && strict_mode && control_video_lesson_completion) {
+			const { strict_mode, control_video_lesson_completion, lesson_completed, is_enrolled } = video_data;
+			if (_tutorobject.tutor_pro_url && is_enrolled && !lesson_completed && strict_mode && control_video_lesson_completion) {
 				return true;
 			}
 			return false;
