@@ -146,11 +146,13 @@ jQuery(document).ready(function($) {
 					listeners: {
 						...(that.isRequiredPercentage() && {
 							seek(e) {
-								var newTime = that.getTargetTime(player, e);
+								const newTime = that.getTargetTime(player, e);
+								const currentTime = player.currentTime;
+								const max_seek_time = currentTime > that.max_seek_time ? currentTime : that.max_seek_time;
 								// Disallow moving forward
-								if (newTime > that.max_seek_time) {
+								if (newTime > max_seek_time) {
 									e.preventDefault();
-									tutor_toast(__('Warning', 'tutor'), __(`Forward seeking is not allowed for this video lesson.`, 'tutor'), 'error');
+									tutor_toast(__('Warning', 'tutor'), __(`Forward seeking is not allowed.`, 'tutor'), 'error');
 									return false;
 								}
 								return true;
@@ -179,7 +181,7 @@ jQuery(document).ready(function($) {
 				});
 
 				let tempTimeNow = 0;
-				let intervalSeconds = 30; //Send to tutor backend about video playing time in this interval
+				let intervalSeconds = 10; //Send to tutor backend about video playing time in this interval
 				player.on('timeupdate', function(event) {
 					const instance = event.detail.plyr;
 					const tempTimeNowInSec = tempTimeNow / 4; //timeupdate firing 250ms interval
@@ -284,7 +286,7 @@ jQuery(document).ready(function($) {
 			if (completedPercentage < required_percentage) {
 				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
 				complete_lesson_btn.attr('disabled', true);
-				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">You have to watch ${video_data.required_percentage}% of this video lesson.</span>`);
+				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">Watch at least ${video_data.required_percentage}% to complete the lesson.</span>`);
 			}
 		},
 		getPercentage: function(value, total) {
