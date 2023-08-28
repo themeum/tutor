@@ -160,10 +160,8 @@ class Admin {
 		}
 
 		$remote_version    = $plugin_info->version ?? TUTOR_VERSION;
-		$installed_version = '1.0.0';
-		// TODO need to change.
-		// $installed_version =  TUTOR_VERSION;
-		$update_required = version_compare( $remote_version, $installed_version, '>' );
+		$installed_version = TUTOR_VERSION;
+		$update_required   = version_compare( $remote_version, $installed_version, '>' );
 
 		$menu_text = __( "What's New", 'tutor' );
 		if ( $update_required ) {
