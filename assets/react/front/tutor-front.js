@@ -152,7 +152,7 @@ jQuery(document).ready(function($) {
 								// Disallow moving forward
 								if (newTime > max_seek_time) {
 									e.preventDefault();
-									tutor_toast(__('Warning', 'tutor'), __(`Forward seeking is not allowed.`, 'tutor'), 'error');
+									tutor_toast(__('Warning', 'tutor'), __(`Forward seeking is disabled.`, 'tutor'), 'error');
 									return false;
 								}
 								return true;
