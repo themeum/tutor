@@ -11,7 +11,11 @@
  $changelogs = array(
     'new' => array(
         array(
-            'title' => 'Option to control when students can skip lessons on Tutor LMS Player',
+            'title' => 'Restrict students from completing video lessons until reaching a certain length',
+			'is_pro' => true,
+        ),
+		array(
+            'title' => 'Restrict forward seeking within the defined video length',
 			'is_pro' => true,
         ),
         array(
@@ -19,7 +23,7 @@
 			'is_pro' => true,
         ),
         array(
-            'title' => 'Let students resume lessons where they left off (Tutor LMS Player)',
+            'title' => 'Let students automatically resume video lessons where they left off',
 			'is_pro' => true,
         ),
         array(
@@ -49,6 +53,9 @@
         ),
     ),
     'update' => array(
+		array(
+            'title' => 'WordPress 6.3 compatibility'
+        ),
         array(
             'title' => 'Email address to Analytics CSV data'
         ),
@@ -101,7 +108,7 @@ function tutor_whatnew_item( $type, $log ) {
 					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 18 16" fill="none">
 						<path fill-rule="evenodd" clip-rule="evenodd" d="M6.99065 1.5025C7.95315 -0.164164 10.3598 -0.164164 11.3215 1.5025L17.4506 12.1258C18.4123 13.7925 17.209 15.8758 15.2848 15.8758H3.02731C1.10315 15.8758 -0.0993531 13.7925 0.862314 12.1258L6.98981 1.5025H6.99065ZM9.15648 5.875C9.32224 5.875 9.48121 5.94085 9.59842 6.05806C9.71563 6.17527 9.78148 6.33424 9.78148 6.5V9.625C9.78148 9.79076 9.71563 9.94973 9.59842 10.0669C9.48121 10.1842 9.32224 10.25 9.15648 10.25C8.99072 10.25 8.83175 10.1842 8.71454 10.0669C8.59733 9.94973 8.53148 9.79076 8.53148 9.625V6.5C8.53148 6.33424 8.59733 6.17527 8.71454 6.05806C8.83175 5.94085 8.99072 5.875 9.15648 5.875ZM9.15648 12.75C9.32224 12.75 9.48121 12.6842 9.59842 12.5669C9.71563 12.4497 9.78148 12.2908 9.78148 12.125C9.78148 11.9592 9.71563 11.8003 9.59842 11.6831C9.48121 11.5659 9.32224 11.5 9.15648 11.5C8.99072 11.5 8.83175 11.5659 8.71454 11.6831C8.59733 11.8003 8.53148 11.9592 8.53148 12.125C8.53148 12.2908 8.59733 12.4497 8.71454 12.5669C8.83175 12.6842 8.99072 12.75 9.15648 12.75Z" fill="#FF9C21"/>
 					</svg>
-					<p>New version available.</p>
+					<p>New version available. You didn't update yet!</p>
 				</div>
 				
 				<div class="tutor-update-version">
@@ -112,8 +119,14 @@ function tutor_whatnew_item( $type, $log ) {
 						</svg>
 						<div>
 							<h3>Tutor LMS  v<?php echo esc_html( $remote_version ); ?></h3>
-							<p><a href="<?php echo esc_url( admin_url( 'plugins.php?s=tutor-lms&plugin_status=all' ) ); ?>">Update Now</a></p>
+							<p><a target="_blank" href="https://www.themeum.com/tutor-lms/changelog/?utm_source=wp_admin_dashboard&utm_medium=update&utm_campaign=what_s_new_top_bar">More info...</a></p>
 						</div>
+						<a class="tutor-whats-new-update-now" href="<?php echo esc_url( admin_url( 'plugins.php?s=tutor-lms&plugin_status=all' ) ); ?>">
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M6.24054 10.275C6.54314 9.14466 7.13799 8.11387 7.96528 7.28629C8.79256 6.4587 9.82314 5.86349 10.9534 5.56048C12.0837 5.25747 13.2738 5.25734 14.4041 5.56011C15.5344 5.86287 16.5651 6.45787 17.3926 7.28527L19.0839 8.97657H16.255C16.0782 8.97657 15.9087 9.04679 15.7836 9.1718C15.6586 9.2968 15.5884 9.46634 15.5884 9.64313C15.5884 9.81991 15.6586 9.98945 15.7836 10.1145C15.9087 10.2395 16.0782 10.3097 16.255 10.3097H20.6916C20.8684 10.3097 21.0379 10.2395 21.163 10.1145C21.288 9.98945 21.3582 9.81991 21.3582 9.64313V5.20649C21.3582 5.0297 21.288 4.86016 21.163 4.73516C21.0379 4.61015 20.8684 4.53992 20.6916 4.53992C20.5148 4.53992 20.3453 4.61015 20.2203 4.73516C20.0953 4.86016 20.0251 5.0297 20.0251 5.20649V8.03271L18.3364 6.34409C17.3437 5.35087 16.1069 4.63652 14.7505 4.27286C13.3941 3.9092 11.9659 3.90905 10.6094 4.27242C9.25295 4.63579 8.01605 5.34988 7.02308 6.34288C6.0301 7.33589 5.31606 8.57282 4.95274 9.92931C4.9301 10.0139 4.92434 10.1022 4.93581 10.189C4.94727 10.2759 4.97572 10.3596 5.01955 10.4354C5.06337 10.5113 5.1217 10.5777 5.19121 10.631C5.26072 10.6843 5.34005 10.7234 5.42467 10.7461C5.50928 10.7687 5.59753 10.7745 5.68437 10.763C5.77121 10.7515 5.85494 10.7231 5.93079 10.6793C6.00663 10.6354 6.0731 10.5771 6.1264 10.5076C6.1797 10.4381 6.21879 10.3588 6.24143 10.2741L6.24054 10.275ZM19.9344 13.2541C19.8498 13.2314 19.7616 13.2256 19.6748 13.2369C19.588 13.2483 19.5043 13.2767 19.4284 13.3204C19.3526 13.3642 19.2861 13.4224 19.2328 13.4919C19.1795 13.5613 19.1403 13.6406 19.1176 13.7252C18.815 14.8555 18.2202 15.8863 17.3929 16.7139C16.5656 17.5415 15.535 18.1367 14.4048 18.4397C13.2745 18.7427 12.0844 18.7429 10.9541 18.4401C9.82377 18.1373 8.79307 17.5423 7.9656 16.7149L6.2752 15.0236H9.10409C9.28088 15.0236 9.45042 14.9534 9.57542 14.8284C9.70043 14.7034 9.77066 14.5338 9.77066 14.3571C9.77066 14.1803 9.70043 14.0107 9.57542 13.8857C9.45042 13.7607 9.28088 13.6905 9.10409 13.6905H4.66656C4.48978 13.6905 4.32024 13.7607 4.19523 13.8857C4.07023 14.0107 4 14.1803 4 14.3571V18.7937C4 18.9705 4.07023 19.14 4.19523 19.265C4.32024 19.39 4.48978 19.4603 4.66656 19.4603C4.84335 19.4603 5.01289 19.39 5.13789 19.265C5.2629 19.14 5.33313 18.9705 5.33313 18.7937V15.9675L7.02175 17.6561C8.01457 18.6493 9.25139 19.3636 10.6078 19.7272C11.9643 20.0908 13.3926 20.0909 14.749 19.7275C16.1055 19.364 17.3424 18.6498 18.3353 17.6567C19.3283 16.6636 20.0422 15.4266 20.4054 14.07C20.4511 13.8993 20.4271 13.7176 20.3387 13.5646C20.2504 13.4116 20.105 13.2999 19.9344 13.2541Z" fill="white"/>
+							</svg>
+							Update Now
+						</a>
 				</div>
 			</div>
 			<?php endif; ?>
@@ -182,21 +195,32 @@ function tutor_whatnew_item( $type, $log ) {
 
 			<?php if ( ! tutor()->has_pro ) : ?>
 			<!-- PRO section -->
+			<div class="tutor-whats-new-pro-section tutor-pro-section-top">
+				<div>
+					<h2>Upgrade to Tutor LMS Pro and Maximize <br/> Your Revenue Potential!</h2>
+
+					<div class="tutor-whats-new-pro-banner">
+						<img src="https://ysn.sya.mybluehost.me/tutor-assets/whats-new/banner-top.png" alt="pro features">
+					</div>
+				</div>
+			</div>
+
 			<div class="tutor-whats-new-pro-section">
-				<h2>You are not only missing these features, you are missing your revenues too!</h2>
+				<div>
+					<h2>Users love Tutor LMS Pro, <br/> you will love it too!</h2>
 
-				<div class="tutor-whats-new-pro-banner">
-					<img src="https://ysn.sya.mybluehost.me/tutor-assets/course-bundle-banner.png" alt="pro features">
+					<div class="tutor-mt-30 tutor-whats-new-pro-banner">
+						<img src="https://ysn.sya.mybluehost.me/tutor-assets/whats-new/banner-bottom.png" alt="pro features">
+					</div>
+
+					<p>Get access to plenty of functional addons, useful integrations, <br/> new exciting features and much more, so why wait!</p>
+
+					<a class="tutor-whats-new-action-btn" 
+						target="_blank" 
+						href="https://www.themeum.com/product/tutor-lms/?utm_source=tutor_lms_wp_dashboard&utm_medium=update&utm_campaign=what_s_new"> 
+						<span class="tutor-icon-crown"></span> Get Tutor LMS Pro
+					</a>
 				</div>
-
-				<div class="tutor-mt-30 tutor-whats-new-pro-banner">
-					<img src="https://ysn.sya.mybluehost.me/tutor-assets/course-bundle-banner.png" alt="pro features">
-				</div>
-
-				<a class="tutor-whats-new-action-btn" 
-					target="_blank" 
-					href="https://www.themeum.com/product/tutor-lms/?utm_source=tutor_lms_wp_dashboard&utm_medium=update&utm_campaign=what_s_new"> 
-					<span class="tutor-icon-crown"></span> Get Tutor LMS Pro</a>
 			</div>
 			<!-- end pro section -->
 			<?php endif; ?>
