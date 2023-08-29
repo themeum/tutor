@@ -116,14 +116,17 @@ $filters = array(
 							<?php esc_html_e( 'Email', 'tutor' ); ?>
 							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 						</th>
-						<th class="tutor-table-rows-sorting" width="10%">
+						<th class="tutor-table-rows-sorting" width="5%">
 							<?php esc_html_e( 'Total Courses', 'tutor' ); ?>
 							<span class="tutor-icon-order-down up-down-icon"></span>
 						</th>
-						<th class="tutor-table-rows-sorting" width="10%">
+						<th class="tutor-table-rows-sorting" width="5%">
 							<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
 						</th>
-						<th class="tutor-table-rows-sorting" width="15%">
+
+						<?php do_action( 'tutor_after_instructor_list_commission_column' ); ?>
+
+						<th class="tutor-table-rows-sorting" width="10%">
 							<?php esc_html_e( 'Status', 'tutor' ); ?>
 							<span class="tutor-icon-order-down up-down-icon"></span>
 						</th>
@@ -175,6 +178,9 @@ $filters = array(
 										?>
 									</span>
 								</td>
+
+								<?php do_action( 'tutor_after_instructor_list_commission_column_data', $list->ID ); ?>
+
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
 									<span style="display:block; width:0; height:0; overflow:hidden;">
 										<?php
@@ -454,3 +460,9 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 		</div>
 	</div>
 <?php endif; ?>
+
+<style>
+	.table-instructors .woocommerce-Price-amount{
+		font-size: 0.875rem;
+	}
+</style>

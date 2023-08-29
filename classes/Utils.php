@@ -1278,6 +1278,7 @@ class Utils {
 		$lesson_ids = $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id );
 		foreach ( $lesson_ids as $id ) {
 			delete_user_meta( $user_id, '_tutor_completed_lesson_id_' . $id );
+			delete_user_meta( $user_id, '_lesson_reading_info' );
 		}
 
 		// Delete other addon-wise stuffs by hook, specially assignment.
@@ -9061,6 +9062,28 @@ class Utils {
 	}
 
 	/**
+	 * Get config for profile bio editor.
+	 *
+	 * @since 2.2.4
+	 *
+	 * @param string $textarea_name textarea name for post request.
+	 *
+	 * @return array
+	 */
+	public function get_profile_bio_editor_config( $textarea_name = 'tutor_profile_bio' ) {
+		return $this->text_editor_config(
+			array(
+				'textarea_name' => $textarea_name,
+				'tinymce'       => array(
+					'toolbar1' => 'bold,italic,underline,blockquote,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,removeformat',
+					'toolbar2' => '',
+					'toolbar3' => '',
+				),
+			)
+		);
+	}
+
+	/**
 	 * Get video sources.
 	 *
 	 * @since 2.0.0
@@ -9767,6 +9790,24 @@ class Utils {
 		}
 
 		return $error_message;
+	}
+
+	/**
+	 * Get remote plugin information by plugin slug.
+	 *
+	 * @since 2.2.4
+	 *
+	 * @param string $plugin_slug
+	 *
+	 * @return object|bool if success return object otherwise return false;
+	 */
+	public function get_remote_plugin_info( $plugin_slug = 'tutor' ) {
+		$response = wp_remote_get( "https://api.wordpress.org/plugins/info/1.0/{$plugin_slug}.json" );
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		return (object) json_decode( $response['body'], true );
 	}
 
 }

@@ -503,5 +503,15 @@ jQuery(document).ready(function($) {
 			}
 		});
 	}
-	  
+	
+	/**
+	 * Fix - Table last row context menu hidden.
+	 * 
+	 * @since 2.2.4
+	 */
+	let tableDropdown = jQuery('.tutor-table-responsive .tutor-table .tutor-dropdown')
+	if (tableDropdown.length) {
+		let tableHeight = jQuery('.tutor-table-responsive .tutor-table').height()
+		jQuery('.tutor-table-responsive').css('min-height', tableHeight + 110)
+	}
 });

@@ -33,7 +33,6 @@ class FormHandler {
 
 		add_action( 'tutor_reset_password_notification', array( $this, 'reset_password_notification' ), 10, 2 );
 		add_filter( 'tutor_lostpassword_url', array( $this, 'lostpassword_url' ) );
-		add_filter( 'lostpassword_url',  array( $this, 'lostpassword_url' ), 99 );
 	}
 
 	/**
@@ -44,10 +43,10 @@ class FormHandler {
 	 */
 	public function tutor_retrieve_password() {
 		tutils()->checking_nonce();
-		
+
 		/**
 		 * To check spam or other logic before form process.
-		 * 
+		 *
 		 * @since 2.1.10
 		 */
 		$before_form_process = apply_filters( 'tutor_before_retrieve_password_form_process', null );
