@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.2
+Tested up to: 6.3
 Requires PHP: 7.1
-Stable tag: 2.2.3
+Stable tag: 2.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,30 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.2.4 - August 28, 2023
+
+New: Added Video Lesson Completion Control when using Tutor Player.
+New: Added ability to hide video branding in Tutor Player.
+New: Implemented automatic video lesson resume feature in Tutor Player.
+New: Added support for changing the Email Template background image.
+New: Added WP editor support on the frontend instructor profile-bio field.
+New: Added instructor’s earning summary on the instructor list.
+New: Added Latex support to lesson and quiz editor.
+New: Added deletion of canceled enrollment from the enrollment list.
+New: Added Private and Schedule filter tabs in courses and course bundle listing page.
+Update: WordPress 6.3 compatibility.
+Update: Added email address to Analytics CSV data.
+Update: Removed Tutor LMS's force password reset form.
+Fix: Fixed issue with displaying incorrect information on the quiz attempt list.
+Fix: Fixed issue with untranslated strings.
+Fix: Resolved design problem with the Edit menu on the Course List page.
+Fix: Fixed issue with instructors making withdrawal requests exceeding available balance.
+Fix: Fixed issue with invalid or missing Google client ID for Google login.
+Fix: Fixed issue with course enrollment email to students.
+Fix: Removed the appearance of HTML code in the course details page enrollment box when using Restrict Content Pro.
+Fix: Fixed issue with missing space in quiz attempt table headings.
+Fix: Resolved fatal error on completing a course when the Certificate addon is disabled.
 
 = 2.2.3 - July 20, 2023
 
