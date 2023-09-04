@@ -16,7 +16,7 @@ window.jQuery(document).ready($=>{
         let data = form.serialize();
         let comment = form.find('textarea[name="comment"]').val();
         
-        if (comment.length === 0) {
+        if ( comment.trim().length === 0 ) {
             tutor_toast(__('Warning', 'tutor'), __('Blank comment is not allowed.', 'tutor'), 'error');
             return;
         }
