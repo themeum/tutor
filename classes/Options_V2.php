@@ -636,6 +636,15 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
+								'key'         => 'course_permalink_base',
+								'type'        => 'text',
+								'label'       => __( 'Course Slug', 'tutor' ),
+								'placeholder' => __( 'Course Slug', 'tutor' ),
+								'label_title' => '',
+								'default'     => tutor()->course_post_type,
+								'desc'        => __( 'Update the permalink when changing the course slug', 'tutor' ),
+							),
+							array(
 								'key'         => 'student_must_login_to_view_course',
 								'type'        => 'toggle_switch',
 								'label'       => __( 'Course Visibility', 'tutor' ),
