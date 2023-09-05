@@ -39,13 +39,24 @@ window.jQuery(document).ready(function ($) {
             multiple: false, // Set to true to allow multiple files to be selected
         });
         frame.on('select', function () {
-            var attachment = frame.state().get('selection').first().toJSON();
+            let attachment = frame.state().get('selection').first().toJSON(),
+                inputEl = wrapper.find('input[type="hidden"].tutor-tumbnail-id-input');
 
             wrapper.find('img').attr('src', attachment.url);
-            wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val(attachment.id);
+            inputEl.val(attachment.id);
             wrapper.find('.delete-btn').show();
 
             $('#save_tutor_option').prop('disabled', false);
+
+            document.querySelector('.tutor-option-form .tutor-thumbnail-uploader')
+                .dispatchEvent(new CustomEvent('tutor_settings_media_selected', {
+                    detail: {
+                        wrapper: wrapper,
+                        settingsName: inputEl.attr('name').replace(/.*\[(.*?)\]/, '$1'),
+                        attachment: attachment
+                    }
+                }));
+
         });
         frame.open();
     });

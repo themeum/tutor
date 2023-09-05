@@ -233,6 +233,15 @@ window.jQuery(document).ready(($) => {
 		var data = form.serializeObject();
 		let phone = document.querySelector('[name=phone_number]');
 
+		/**
+		 * Basic markup for profile bio
+		 * @since 2.2.4
+		 */
+		if (window.tinyMCE !== undefined) {
+			let editor = tinyMCE.get('tutor_profile_bio');
+			data.tutor_profile_bio = editor.getContent({ format: 'html' });
+		}
+
 		if (data.phone_number && !data.phone_number.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)) {
 			phone.classList.add('invalid');
 			tutor_toast('Invalid', 'Invalid phone number', 'error');

@@ -93,9 +93,10 @@ class Lesson extends Tutor_Base {
 	 */
 	public function tutor_single_course_lesson_load_more() {
 		tutor_utils()->checking_nonce();
-		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) ) {
+		$comment = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
 			$comment_data = array(
-				'comment_content' => Input::post( 'comment', '', Input::TYPE_KSES_POST ),
+				'comment_content' => $comment,
 				'comment_post_ID' => Input::post( 'comment_post_ID', 0, Input::TYPE_INT ),
 				'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 			);
@@ -454,6 +455,15 @@ class Lesson extends Tutor_Base {
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
+		if ( ! $lesson_id ) {
+			return;
+		}
+
+		$validated = apply_filters( 'tutor_validate_lesson_complete', true, $user_id, $lesson_id );
+		if ( ! $validated ) {
+			return;
+		}
+
 		do_action( 'tutor_lesson_completed_before', $lesson_id );
 		/**
 		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = tutor_time();
@@ -554,8 +564,14 @@ class Lesson extends Tutor_Base {
 	 */
 	public function reply_lesson_comment() {
 		tutor_utils()->checking_nonce();
+		$comment = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		if ( 0 === strlen( $comment ) ) {
+			wp_send_json_error();
+			return;
+		}
+
 		$comment_data = array(
-			'comment_content' => Input::post( 'comment', '', Input::TYPE_KSES_POST ),
+			'comment_content' => $comment,
 			'comment_post_ID' => Input::post( 'comment_post_ID', 0, Input::TYPE_INT ),
 			'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 		);
