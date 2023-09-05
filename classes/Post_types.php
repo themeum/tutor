@@ -113,7 +113,7 @@ class Post_types {
 			'query_var'          => true,
 			'rewrite'            => array(
 				'slug'       => tutor_utils()->get_option( 'course_permalink_base', tutor()->course_post_type ),
-				'with_front' => false,
+				'with_front' => true,
 			),
 			'menu_icon'          => 'dashicons-book-alt',
 			'capability_type'    => 'post',
