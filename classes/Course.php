@@ -835,6 +835,24 @@ class Course extends Tutor_Base {
 		$permalink = get_the_permalink( $course_id );
 
 		// Set temporary identifier to show review pop up.
+		self::set_review_popup_data( $user_id, $course_id, $permalink );
+
+		wp_safe_redirect( $permalink );
+		exit;
+	}
+
+	/**
+	 * Set data for review popup.
+	 *
+	 * @since 2.2.5
+	 *
+	 * @param int    $user_id user id.
+	 * @param int    $course_id course id.
+	 * @param string $permalink course permalink.
+	 *
+	 * @return void
+	 */
+	public static function set_review_popup_data( $user_id, $course_id, $permalink ) {
 		if ( get_tutor_option( 'enable_course_review' ) ) {
 			$rating = tutor_utils()->get_course_rating_by_user( $course_id, $user_id );
 			if ( ! $rating || ( empty( $rating->rating ) && empty( $rating->review ) ) ) {
@@ -848,9 +866,6 @@ class Course extends Tutor_Base {
 				);
 			}
 		}
-
-		wp_redirect( $permalink );
-		exit;
 	}
 
 	/**
