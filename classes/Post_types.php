@@ -84,7 +84,6 @@ class Post_types {
 	 */
 	public function register_course_post_types() {
 		$course_post_type  = $this->course_post_type;
-		$courses_base_slug = apply_filters( 'tutor_courses_base_slug', $course_post_type );
 
 		$labels = array(
 			'name'               => _x( 'Courses', 'post type general name', 'tutor' ),
@@ -112,7 +111,7 @@ class Post_types {
 			// 'show_in_menu'              => 'tutor',
 			'query_var'          => true,
 			'rewrite'            => array(
-				'slug'       => tutor_utils()->get_option( 'course_permalink_base', tutor()->course_post_type ),
+				'slug'       => tutor_utils()->get_option( 'course_permalink_base', $course_post_type ),
 				'with_front' => true,
 			),
 			'menu_icon'          => 'dashicons-book-alt',
