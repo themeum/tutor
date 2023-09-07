@@ -632,7 +632,7 @@ class Options_V2 {
 								'placeholder' => __( 'Course Slug', 'tutor' ),
 								'label_title' => '',
 								'default'     => tutor()->course_post_type,
-								'desc'        => __( 'Update the permalink after changing slug', 'tutor' ),
+								'desc'        => __( 'Update the permalink when changing the course slug', 'tutor' ),
 							),
 							array(
 								'key'         => 'student_must_login_to_view_course',
