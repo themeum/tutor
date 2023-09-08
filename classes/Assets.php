@@ -150,7 +150,7 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
 	}
 
 	/**
