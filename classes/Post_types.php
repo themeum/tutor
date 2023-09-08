@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
+//phpcs:ignore
 class Post_types {
 
 	/**
