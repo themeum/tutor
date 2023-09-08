@@ -1532,6 +1532,15 @@ class Options_V2 {
 								'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
 							),
 							array(
+								'key'         => 'course_permalink_base',
+								'type'        => 'text',
+								'label'       => __( 'Course Permalink Base', 'tutor' ),
+								'placeholder' => __( 'Course Slug', 'tutor' ),
+								'label_title' => '',
+								'default'     => tutor()->course_post_type,
+								'desc'        => $course_url,
+							),
+							array(
 								'key'     => 'lesson_permalink_base',
 								'type'    => 'text',
 								'label'   => __( 'Lesson Permalink Base', 'tutor' ),
