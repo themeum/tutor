@@ -150,7 +150,7 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
 	}
 
 	/**
@@ -232,7 +232,7 @@ class Assets {
 		 */
 		$should_load_dashboard_styles = apply_filters( 'tutor_should_load_dashboard_styles', tutor_utils()->is_tutor_frontend_dashboard() );
 		if ( $should_load_dashboard_styles ) {
-			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', TUTOR_VERSION );
+			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', array(), TUTOR_VERSION );
 		}
 
 		// Load date picker for announcement at frontend.
