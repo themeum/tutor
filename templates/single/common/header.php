@@ -27,6 +27,13 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
 	if ( $course_stats['completed_count'] === $course_stats['total_count'] ) {
 		// Complete the course.
 		\Tutor\Models\CourseModel::mark_course_as_completed( $course_id, get_current_user_id() );
+
+		/**
+		 * Show review popup when course get auto completed.
+		 *
+		 * @since 2.2.5
+		 */
+		\TUTOR\Course::set_review_popup_data( get_current_user_id(), $course_id, get_the_permalink( $course_id ) );
 	}
 }
 
