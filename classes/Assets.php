@@ -232,7 +232,7 @@ class Assets {
 		 */
 		$should_load_dashboard_styles = apply_filters( 'tutor_should_load_dashboard_styles', tutor_utils()->is_tutor_frontend_dashboard() );
 		if ( $should_load_dashboard_styles ) {
-			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', TUTOR_VERSION );
+			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', array(), TUTOR_VERSION );
 		}
 
 		// Load date picker for announcement at frontend.
