@@ -265,7 +265,7 @@ class WooCommerce extends Tutor_Base {
 			'id'            => '_tutor_product',
 			'wrapper_class' => 'show_if_simple',
 			'label'         => __( 'For Tutor', 'tutor' ),
-			'description'   => __( 'This checkmark ensure that you will sell a specif course via this product.', 'tutor' ),
+			'description'   => __( 'This checkmark ensure that you will sell a specific course via this product.', 'tutor' ),
 			'default'       => 'no',
 		);
 
