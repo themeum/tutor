@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
+//phpcs:ignore
 class Post_types {
 
 	/**
@@ -83,8 +84,7 @@ class Post_types {
 	 * @return void
 	 */
 	public function register_course_post_types() {
-		$course_post_type  = $this->course_post_type;
-		$courses_base_slug = apply_filters( 'tutor_courses_base_slug', $course_post_type );
+		$course_post_type = $this->course_post_type;
 
 		$labels = array(
 			'name'               => _x( 'Courses', 'post type general name', 'tutor' ),
@@ -112,8 +112,8 @@ class Post_types {
 			// 'show_in_menu'              => 'tutor',
 			'query_var'          => true,
 			'rewrite'            => array(
-				'slug'       => tutor_utils()->get_option( 'course_permalink_base', tutor()->course_post_type ),
-				'with_front' => false,
+				'slug'       => tutor_utils()->get_option( 'course_permalink_base', $course_post_type ),
+				'with_front' => true,
 			),
 			'menu_icon'          => 'dashicons-book-alt',
 			'capability_type'    => 'post',
@@ -266,13 +266,14 @@ class Post_types {
 
 		/**
 		 * Added for support gutenberg editor to lesson post type
+		 *
 		 * @since 2.1.6
 		 */
 		$enable_gutenberg = (bool) tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
 		if ( $enable_gutenberg ) {
 			$args['show_in_rest'] = true;
 		}
-		
+
 		register_post_type( $lesson_post_type, $args );
 	}
 
