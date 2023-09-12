@@ -514,4 +514,18 @@ jQuery(document).ready(function($) {
 		let tableHeight = jQuery('.tutor-table-responsive .tutor-table').height()
 		jQuery('.tutor-table-responsive').css('min-height', tableHeight + 110)
 	}
+
+	/**
+	 * Set get pro link
+	 * @since 2.2.5
+	 */
+	const getProMenu = document.querySelector('span.tutor-get-pro-text')
+	if (getProMenu?.parentElement?.nodeName === 'A') {
+		const el = getProMenu.parentElement;
+		const link = 'https://www.themeum.com/product/tutor-lms/pricing?utm_source=tutor_plugin_get_pro_page&utm_medium=wordpress_dashboard&utm_campaign=go_premium';
+
+		el.setAttribute('href', link)
+		el.setAttribute('target', '_blank')
+	}
+
 });
