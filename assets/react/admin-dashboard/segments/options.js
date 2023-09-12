@@ -197,19 +197,18 @@ document.addEventListener('DOMContentLoaded', function () {
 						button.attr('disabled', true);
 					},
 					success: function (resp) {
-						const { data = {}, success } = resp || {};
-						const { message = __('Something Went Wrong!', 'tutor') } = data;
+						const { data = {}, success, message = __('Settings Saved', 'tutor')  } = resp || {};
 
 						if (success) {
 							// Disableing save btn after saved successfully
 							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = true;
 							}
-							tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
-							return;
+							tutor_toast( __('Success!','tutor'), message , 'success');
+							window.dispatchEvent(new CustomEvent('tutor_option_saved', {detail: data}));
+						}else{
+							tutor_toast( __('Warning!','tutor'), message, 'warning');
 						}
-
-						tutor_toast('Error!', message, 'error');
 					},
 					complete: function () {
 						button.removeClass('is-loading');
