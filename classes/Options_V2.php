@@ -435,7 +435,16 @@ class Options_V2 {
 
 		do_action( 'tutor_option_save_after' );
 
-		wp_send_json_success( $option );
+		$data = apply_filters(
+			'tutor_option_saved_data',
+			array(
+				'success' => true,
+				'message' => __( 'Settings Saved', 'tutor' ),
+				'options' => $option,
+			)
+		);
+
+		wp_send_json( $data );
 	}
 
 	/**
