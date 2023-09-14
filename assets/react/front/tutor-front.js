@@ -196,8 +196,10 @@ jQuery(document).ready(function($) {
 					}
 				});
 
-				player.on('pause', () => {
+				player.on('pause', (event) => {
 					clearInterval(syncTimeInterval);
+					const instance = event.detail.plyr;
+					that.sync_time(instance);
 				});
 
 				player.on('ended', function(event) {
