@@ -117,10 +117,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				const { target } = e;
 				const min = Number(target.getAttribute('min') || -Infinity);
 				const max = Number(target.getAttribute('max') || Infinity);
+				const numberType = target.getAttribute('data-number-type') || 'decimal';
 				const value = Number(target.value);
-				
+
 				if (min !== -Infinity && value <= min) e.target.value = min;
 				if (max !== Infinity && value >= max) e.target.value = max;
+				if (['integer', 'int'].includes(numberType)) e.target.value = parseInt(e.target.value)
 			};
 		});
 	};
