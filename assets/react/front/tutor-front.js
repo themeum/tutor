@@ -137,6 +137,7 @@ jQuery(document).ready(function($) {
 		track_player: function() {
 			const that = this;
 			if (typeof Plyr !== 'undefined') {
+				let syncTimeInterval;
 				const video_data = that.video_data();
 				const player = new Plyr(this.player_DOM, {
 					keyboard: {
@@ -179,28 +180,30 @@ jQuery(document).ready(function($) {
 					}
 					that.sync_time(instance);
 				});
-
-				let tempTimeNow = 0;
-				let intervalSeconds = 10; //Send to tutor backend about video playing time in this interval
-				player.on('timeupdate', function(event) {
-					const instance = event.detail.plyr;
-					const tempTimeNowInSec = tempTimeNow / 4; //timeupdate firing 250ms interval
-					if (tempTimeNowInSec >= intervalSeconds) {
-						that.sync_time(instance);
-						tempTimeNow = 0;
-					}
-					tempTimeNow++;
-				});
-
-				player.on('play', () => {
+				
+				player.on('play', (event) => {
 					that.played_once = true;
+
+					// Send to tutor backend about video playing time in this interval
+					const intervalSeconds = 10;
+					const instance = event.detail.plyr;
+					syncTimeInterval = setInterval(() => {
+						that.sync_time(instance);
+					}, intervalSeconds * 1000);
 
 					if (_tutorobject.tutor_pro_url && player.provider === 'youtube') {
 						$('.plyr--youtube.plyr__poster-enabled .plyr__poster').css('opacity', 0);
 					}
 				});
 
+				player.on('pause', (event) => {
+					clearInterval(syncTimeInterval);
+					const instance = event.detail.plyr;
+					that.sync_time(instance);
+				});
+
 				player.on('ended', function(event) {
+					clearInterval(syncTimeInterval);
 					const video_data = that.video_data();
 					const instance = event.detail.plyr;
 					const data = { is_ended: true };
