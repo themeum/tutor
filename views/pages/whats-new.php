@@ -11,24 +11,25 @@
 $changelogs = array(
 	'new'    => array(
 		array(
-			'title'  => 'Option to secure course content against hotlinking.',
+			'title'  => 'Option to secure course content against hotlinking',
 			'is_pro' => true,
 		),
 		array(
-			'title'  => 'Option to disable right-click to prevent content copying.',
+			'title'  => 'Option to disable right-click to prevent content copying',
 			'is_pro' => true,
 		),
 		array(
-			'title' => 'Course review submission popup on automatic course completion.',
+			'title'  => 'Hide recommended YouTube videos on Tutor Player',
+			'is_pro' => true,
+		),
+		array(
+			'title' => 'Course review submission popup on automatic course completion',
 		),
 		array(
 			'title' => 'Course permalink base is now updatable (supports any language)',
 		),
 	),
 	'update' => array(
-		array(
-			'title' => 'Hide recommended YouTube videos on Tutor Player',
-		),
 		array(
 			'title' => 'The "Mark as complete" button is visible after the start of the Zoom/Google Meet meeting',
 		),
