@@ -320,10 +320,10 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 New: Secure your Tutor LMS site content with Hotlink protection
 New: Disable right-click for Tutor LMS site content to prevent copying
+New: Recommended YouTube videos will be hidden on Tutor Player
 New: Added course review pop-up when a course is automatically completed
 New: Course permalink base is now updatable
 Update: For live lessons, the “Mark as complete” button will only appear once the Zoom/Google Meet meeting has started.
-Update: Recommended YouTube videos will be hidden on Tutor Player
 Update: Tutor LMS settings navigation bar is now sticky
 Fix: Resolved email formatting issues on Gmail and Outlook web versions
 Fix: Resolved the on-site notification system’s incorrect time issue
