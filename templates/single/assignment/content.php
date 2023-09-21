@@ -119,7 +119,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 					}
 				}
 
-				$time_duration_in_sec = $time_duration_in_sec * $time_duration['value'];
+				$time_duration_in_sec = $time_duration_in_sec * (int) $time_duration['value'];
 				$remaining_time       = $assignment_created_time + $time_duration_in_sec;
 				$now                  = time();
 				$remaining            = $now - $remaining_time;

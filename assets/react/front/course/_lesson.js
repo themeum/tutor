@@ -9,10 +9,18 @@ window.jQuery(document).ready($=>{
 
     $(document).on('click', '.tutor-single-course-lesson-comments button[type="submit"]', function(e){
         e.preventDefault();
+
         const {__} = wp.i18n;
         let btn = $(this);
         let form = btn.closest('form');
         let data = form.serialize();
+        let comment = form.find('textarea[name="comment"]').val();
+        
+        if ( comment.trim().length === 0 ) {
+            tutor_toast(__('Warning', 'tutor'), __('Blank comment is not allowed.', 'tutor'), 'error');
+            return;
+        }
+
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',

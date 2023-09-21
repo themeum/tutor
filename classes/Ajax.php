@@ -395,9 +395,19 @@ class Ajax {
 			}
 		}
 
+		/**
+		 * Keep same sorting order.
+		 * 
+		 * @since 2.2.4
+		 */
+		$free_addon_list = apply_filters( 'tutor_pro_addons_lists_for_display', array() );
 		$prepared_addons = array();
-		foreach ( $plugins_data as $tutor_addon ) {
-			array_push( $prepared_addons, $tutor_addon );
+
+		foreach ( $free_addon_list as $addon_name => $addon ) {
+			$key = "tutor-pro/addons/{$addon_name}/{$addon_name}.php";
+			if ( isset( $plugins_data[ $key ] ) ) {
+				$prepared_addons[] = $plugins_data[ $key ];
+			}
 		}
 
 		return $prepared_addons;

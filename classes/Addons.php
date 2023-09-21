@@ -78,7 +78,7 @@ class Addons {
 				'name'        => __( 'Tutor E-Mail', 'tutor' ),
 				'description' => 'Send email on various tutor events',
 			),
-			'tutor-calendar'           => array(
+			'calendar'           => array(
 				'name'        => 'Calendar',
 				'description' => 'Allow students to see everything in a calendar view in the front dashboard.',
 			),

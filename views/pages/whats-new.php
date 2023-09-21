@@ -8,86 +8,65 @@
  * @since 2.2.4
  */
 
- $changelogs = array(
-    'new' => array(
-        array(
-            'title' => 'Restrict students from completing video lessons until reaching a certain length',
-			'is_pro' => true,
-        ),
+$changelogs = array(
+	'new'    => array(
 		array(
-            'title' => 'Restrict forward seeking within the defined video length',
+			'title'  => 'Option to secure course content against hotlinking',
 			'is_pro' => true,
-        ),
-        array(
-            'title' => 'Hide video branding (YouTube) in Tutor LMS Player',
-			'is_pro' => true,
-        ),
-        array(
-            'title' => 'Let students automatically resume video lessons where they left off',
-			'is_pro' => true,
-        ),
-        array(
-            'title' => 'Option to change background image in email Template',
-			'is_pro' => true,
-        ),
-        array(
-            'title' => 'WP editor support on the frontend instructor profile-bio field'
-        ),
-        array(
-            'title' => "Showcase instructor's earning summary on the instructor list",
-			'is_pro' => true,
-        ),
-        array(
-            'title' => 'Latex support to lesson and quiz editor'
-        ),
-        array(
-            'title' => 'Deletion of canceled enrollment from the enrollment list',
-			'is_pro' => true,
-        ),
+		),
 		array(
-            'title' => 'Private and Schedule filter tabs in course bundle listing page',
+			'title'  => 'Option to disable right-click to prevent content copying',
 			'is_pro' => true,
-        ),
-        array(
-            'title' => 'Private and Schedule filter tabs in course listing page'
-        ),
-    ),
-    'update' => array(
+		),
 		array(
-            'title' => 'WordPress 6.3 compatibility'
-        ),
-        array(
-            'title' => 'Email address to Analytics CSV data'
-        ),
+			'title'  => 'Hide recommended YouTube videos on Tutor Player',
+			'is_pro' => true,
+		),
 		array(
-            'title' => 'Tutor LMS password reset form only works for Tutor LMS login page'
-        ),
-    ),
-    'fix' => array(
-        array(
-            'title' => 'Incorrect information on the quiz attempt list'
-        ),
-        array(
-            'title' => 'Instructors making withdrawal requests exceeding available balance'
-        ),
-        array(
-            'title' => 'Invalid or missing Google client ID for Google login'
-        ),
-        array(
-            'title' => 'Course enrollment email to students'
-        ),
-        array(
-            'title' => 'Error on completing a course when the Certificate addon is disabled'
-        ),
+			'title' => 'Course review submission popup on automatic course completion',
+		),
 		array(
-            'title' => 'Several known bugs'
-        ),
-    ),
+			'title' => 'Course permalink base is now updatable (supports any language)',
+		),
+	),
+	'update' => array(
+		array(
+			'title' => 'The "Mark as complete" button is visible after the start of the Zoom/Google Meet meeting',
+		),
+		array(
+			'title' => 'Tutor LMS settings navigation bar is now sticky',
+		),
+	),
+	'fix'    => array(
+		array(
+			'title' => 'Email formatting issues on Gmail and Outlook web versions',
+		),
+		array(
+			'title' => 'Resolved incorrect time issue on the on-site notification system',
+		),
+		array(
+			'title' => 'Addressed various translation-related issues',
+		),
+		array(
+			'title' => 'Resolved known security issues',
+		),
+		array(
+			'title' => 'Several other known issues',
+		),
+	),
 );
 
 
+/**
+ * Whats new item.
+ *
+ * @param string $type type of item.
+ * @param string $log changelog item.
+ *
+ * @return void
+ */
 function tutor_whatnew_item( $type, $log ) {
-	 $obj = (object) $log;
+	$obj = (object) $log;
 	?>
 		<li class="tutor-fs-7"><strong><?php echo esc_html( $type ); ?>:</strong> <span><?php echo esc_html( $obj->title ); ?></span> 
 		<?php
@@ -101,7 +80,7 @@ function tutor_whatnew_item( $type, $log ) {
 <div class="wrap">
 
 	<div class="tutor-whats-new-wrapper">
-			
+
 			<?php if ( $update_required ) : ?>
 			<div class="tutor-update-available">
 				<div class="tutor-version-alert">
@@ -110,7 +89,7 @@ function tutor_whatnew_item( $type, $log ) {
 					</svg>
 					<p>New version available. You didn't update yet!</p>
 				</div>
-				
+
 				<div class="tutor-update-version">
 						<svg xmlns="http://www.w3.org/2000/svg" width="40" viewBox="0 0 61 80" fill="none">
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M43.9167 50.9466C43.4065 50.9537 42.8999 50.8591 42.4266 50.6685C41.9533 50.4779 41.5227 50.1949 41.16 49.8362C40.7973 49.4775 40.5097 49.0502 40.3141 48.5793C40.1184 48.1083 40.0186 47.6032 40.0204 47.0932V38.2799C40.0204 37.2579 40.4267 36.2778 41.1499 35.5552C41.8731 34.8326 42.8539 34.4266 43.8767 34.4266C44.8994 34.4266 45.8803 34.8326 46.6035 35.5552C47.3267 36.2778 47.733 37.2579 47.733 38.2799V47.0932C47.7347 47.5998 47.6362 48.1016 47.443 48.5699C47.2498 49.0382 46.9659 49.4637 46.6074 49.8219C46.249 50.1801 45.8232 50.4638 45.3545 50.6569C44.8858 50.8499 44.3836 50.9483 43.8767 50.9466" fill="#0049F8"/>
@@ -172,7 +151,7 @@ function tutor_whatnew_item( $type, $log ) {
 				</div>
 			</div>
 			<!-- end header section -->
-			
+
 			<div class="tutor-changelog-wrapper">
 				<h3><strong>Changelog (v<?php echo esc_html( $installed_version ); ?>)</strong></h3>
 				<ul class="tutor-changelog-list">

@@ -117,10 +117,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				const { target } = e;
 				const min = Number(target.getAttribute('min') || -Infinity);
 				const max = Number(target.getAttribute('max') || Infinity);
+				const numberType = target.getAttribute('data-number-type') || 'decimal';
 				const value = Number(target.value);
-				
+
 				if (min !== -Infinity && value <= min) e.target.value = min;
 				if (max !== Infinity && value >= max) e.target.value = max;
+				if (['integer', 'int'].includes(numberType)) e.target.value = parseInt(e.target.value)
 			};
 		});
 	};
@@ -197,19 +199,18 @@ document.addEventListener('DOMContentLoaded', function () {
 						button.attr('disabled', true);
 					},
 					success: function (resp) {
-						const { data = {}, success } = resp || {};
-						const { message = __('Something Went Wrong!', 'tutor') } = data;
+						const { data = {}, success, message = __('Settings Saved', 'tutor')  } = resp || {};
 
 						if (success) {
 							// Disableing save btn after saved successfully
 							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = true;
 							}
-							tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
-							return;
+							tutor_toast( __('Success!','tutor'), message , 'success');
+							window.dispatchEvent(new CustomEvent('tutor_option_saved', {detail: data}));
+						}else{
+							tutor_toast( __('Warning!','tutor'), message, 'warning');
 						}
-
-						tutor_toast('Error!', message, 'error');
 					},
 					complete: function () {
 						button.removeClass('is-loading');

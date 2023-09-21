@@ -127,7 +127,7 @@ class Admin {
 			add_submenu_page( 'tutor', __( 'Withdraw Requests', 'tutor' ), __( 'Withdraw Requests', 'tutor' ), 'manage_tutor', Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE, array( $this, 'withdraw_requests' ) );
 		}
 
-		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), __( 'Add-ons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
+		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), sprintf( '<span class="tutor-addons-text">%s</span>', __( 'Add-ons', 'tutor' ) ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
 
 		do_action( 'tutor_admin_register' );
 
@@ -138,7 +138,7 @@ class Admin {
 		do_action( 'tutor_after_settings_menu' );
 
 		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), __( '<span class="tutor-get-pro-text">Upgrade to Pro</span>', 'tutor' ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
+			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), sprintf( '<span class="tutor-get-pro-text">%s</span>', __( 'Upgrade to Pro', 'tutor' ) ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
 		}
 	}
 

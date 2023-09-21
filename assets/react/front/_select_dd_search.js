@@ -143,7 +143,7 @@ window.selectSearchField = (selectElement) => {
 		Array.from(options).forEach((item) => {
 			optionsList += `
             <div class="tutor-form-select-option">
-				<span tutor-dropdown-item data-key="${item.value}" class="tutor-nowrap-ellipsis" title="${item.text}">${item.text}</span>
+				<span tutor-dropdown-item data-key="${tutor_esc_html(item.value)}" class="tutor-nowrap-ellipsis" title="${tutor_esc_html(item.text)}">${tutor_esc_html(item.text)}</span>
             </div>
             `;
 		});
