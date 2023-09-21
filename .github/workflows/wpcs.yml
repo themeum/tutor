@@ -40,7 +40,7 @@ jobs:
             repo_branch: 'dev' # Branch of Standard repository
             paths: "${{ steps.changed-files.outputs.files }}" # Paths to check, space separated like ./views ./classes ./models
             excludes: '' # Paths to excludes, space separated
-            standard: 'phpcs.xml' # Coding standard
-            enable_warnings: 'false' # Enable checking for warnings (-w)
+            standard: './phpcs.xml.dist' # Coding standard
             use_local_config: 'false' # Use local config if available
+            enable_warnings: 'false' # Enable checking for warnings (-w)
             extra_args: '-d error_reporting="E_ALL&~E_DEPRECATED"'

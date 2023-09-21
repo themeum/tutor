@@ -137,6 +137,7 @@ jQuery(document).ready(function($) {
 		track_player: function() {
 			const that = this;
 			if (typeof Plyr !== 'undefined') {
+				let syncTimeInterval;
 				const video_data = that.video_data();
 				const player = new Plyr(this.player_DOM, {
 					keyboard: {
@@ -179,34 +180,40 @@ jQuery(document).ready(function($) {
 					}
 					that.sync_time(instance);
 				});
+				
+				player.on('play', (event) => {
+					that.played_once = true;
 
-				let tempTimeNow = 0;
-				let intervalSeconds = 10; //Send to tutor backend about video playing time in this interval
-				player.on('timeupdate', function(event) {
+					// Send to tutor backend about video playing time in this interval
+					const intervalSeconds = 10;
 					const instance = event.detail.plyr;
-					const tempTimeNowInSec = tempTimeNow / 4; //timeupdate firing 250ms interval
-					if (tempTimeNowInSec >= intervalSeconds) {
+					syncTimeInterval = setInterval(() => {
 						that.sync_time(instance);
-						tempTimeNow = 0;
+					}, intervalSeconds * 1000);
+
+					if (_tutorobject.tutor_pro_url && player.provider === 'youtube') {
+						$('.plyr--youtube.plyr__poster-enabled .plyr__poster').css('opacity', 0);
 					}
-					tempTimeNow++;
 				});
 
-				player.on('play', () => {
-					that.played_once = true;
+				player.on('pause', (event) => {
+					clearInterval(syncTimeInterval);
+					const instance = event.detail.plyr;
+					that.sync_time(instance);
 				});
 
 				player.on('ended', function(event) {
+					clearInterval(syncTimeInterval);
 					const video_data = that.video_data();
 					const instance = event.detail.plyr;
 					const data = { is_ended: true };
 					that.sync_time(instance, data);
-					console.log(
-						video_data.autoload_next_course_content,
-						that.played_once,
-					);
 					if (video_data.autoload_next_course_content && that.played_once) {
 						that.autoload_content();
+					}
+
+					if (_tutorobject.tutor_pro_url && player.provider === 'youtube') {
+						$('.plyr--youtube.plyr__poster-enabled .plyr__poster').css('opacity', 1);
 					}
 				});
 			}

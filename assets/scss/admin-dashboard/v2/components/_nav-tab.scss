@@ -8,6 +8,8 @@
 .tutor-nav {
 	// admin option tabs
 	&.tutor-option-tabs {
+		position: sticky;
+    	top: 120px;
 		.tutor-nav-link {
 			color: var(--tutor-color-secondary);
 			border: 1px solid transparent;

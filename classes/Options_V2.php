@@ -435,7 +435,16 @@ class Options_V2 {
 
 		do_action( 'tutor_option_save_after' );
 
-		wp_send_json_success( $option );
+		$data = apply_filters(
+			'tutor_option_saved_data',
+			array(
+				'success' => true,
+				'message' => __( 'Settings Saved', 'tutor' ),
+				'options' => $option,
+			)
+		);
+
+		wp_send_json( $data );
 	}
 
 	/**
@@ -580,11 +589,12 @@ class Options_V2 {
 								'desc'        => __( 'Allow multiple instructors to upload their courses.', 'tutor' ),
 							),
 							array(
-								'key'     => 'pagination_per_page',
-								'type'    => 'number',
-								'label'   => __( 'Pagination', 'tutor' ),
-								'default' => '20',
-								'desc'    => __( 'Set the number of rows to be displayed per page', 'tutor' ),
+								'key'         => 'pagination_per_page',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Pagination', 'tutor' ),
+								'default'     => '20',
+								'desc'        => __( 'Set the number of rows to be displayed per page', 'tutor' ),
 							),
 						),
 					),
@@ -759,11 +769,12 @@ class Options_V2 {
 								'desc'    => __( 'Put the answer display time in seconds', 'tutor' ),
 							),
 							array(
-								'key'     => 'quiz_attempts_allowed',
-								'type'    => 'number',
-								'label'   => __( 'Default Quiz Attempt limit (when Retry Mode is enabled)', 'tutor' ),
-								'default' => '10',
-								'desc'    => __( 'The highest number of attempts allowed for students to participate a quiz. 0 means unlimited. This will work as the default Quiz Attempt limit in case of Quiz Retry Mode.', 'tutor' ),
+								'key'         => 'quiz_attempts_allowed',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Default Quiz Attempt limit (when Retry Mode is enabled)', 'tutor' ),
+								'default'     => '10',
+								'desc'        => __( 'The highest number of attempts allowed for students to participate a quiz. 0 means unlimited. This will work as the default Quiz Attempt limit in case of Quiz Retry Mode.', 'tutor' ),
 							),
 							array(
 								'key'     => 'quiz_previous_button_enabled',
@@ -871,12 +882,13 @@ class Options_V2 {
 								'desc'        => __( 'Set how the sales revenue will be shared among admins and instructors.', 'tutor' ),
 							),
 							array(
-								'key'     => 'statement_show_per_page',
-								'type'    => 'number',
-								'label'   => __( 'Show Statement Per Page', 'tutor' ),
-								'default' => '20',
+								'key'         => 'statement_show_per_page',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Show Statement Per Page', 'tutor' ),
+								'default'     => '20',
 
-								'desc'    => __( 'Define the number of statements to show.', 'tutor' ),
+								'desc'        => __( 'Define the number of statements to show.', 'tutor' ),
 							),
 						),
 					),
@@ -939,12 +951,13 @@ class Options_V2 {
 								'desc'    => __( 'Instructors should earn equal or above this amount to make a withdraw request.', 'tutor' ),
 							),
 							array(
-								'key'     => 'minimum_days_for_balance_to_be_available',
-								'type'    => 'number',
-								'label'   => __( 'Minimum Days Before Balance is Available', 'tutor' ),
-								'default' => '7',
-								'min'     => 1,
-								'desc'    => __( 'Any income has to remain this many days in the platform before it is available for withdrawal.', 'tutor' ),
+								'key'         => 'minimum_days_for_balance_to_be_available',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Minimum Days Before Balance is Available', 'tutor' ),
+								'default'     => '7',
+								'min'         => 1,
+								'desc'        => __( 'Any income has to remain this many days in the platform before it is available for withdrawal.', 'tutor' ),
 							),
 							array(
 								'key'     => 'tutor_withdrawal_methods',
@@ -999,11 +1012,12 @@ class Options_V2 {
 								'desc'        => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
 							),
 							array(
-								'key'     => 'courses_per_page',
-								'type'    => 'number',
-								'label'   => __( 'Courses Per Page', 'tutor' ),
-								'default' => '12',
-								'desc'    => __( 'Set the number of courses to display per page on the Course List page.', 'tutor' ),
+								'key'         => 'courses_per_page',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Courses Per Page', 'tutor' ),
+								'default'     => '12',
+								'desc'        => __( 'Set the number of courses to display per page on the Course List page.', 'tutor' ),
 							),
 							array(
 								'key'     => 'supported_course_filters',
@@ -1530,6 +1544,15 @@ class Options_V2 {
 								'default' => '0',
 								'options' => $pages,
 								'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
+							),
+							array(
+								'key'         => 'course_permalink_base',
+								'type'        => 'text',
+								'label'       => __( 'Course Permalink Base', 'tutor' ),
+								'placeholder' => __( 'Course Slug', 'tutor' ),
+								'label_title' => '',
+								'default'     => tutor()->course_post_type,
+								'desc'        => $course_url,
 							),
 							array(
 								'key'     => 'lesson_permalink_base',

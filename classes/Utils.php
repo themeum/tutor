@@ -9135,15 +9135,17 @@ class Utils {
 	 * NOTE: date_i18n translate able string is not supported
 	 *
 	 * @since 2.0.0
+	 * @since 2.2.5 $format param added to modify the format if required.
 	 *
 	 * @param string $date string date time to convert.
+	 * @param string $format format of date time.
 	 *
-	 * @return string date time.
+	 * @return string formated date-time.
 	 */
-	public function convert_date_into_wp_timezone( string $date ): string {
+	public function convert_date_into_wp_timezone( string $date, string $format = null ): string {
 		$date = new \DateTime( $date );
 		$date->setTimezone( wp_timezone() );
-		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
+		return $date->format( ! is_null( $format ) ? $format : get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 	}
 
 	/**
