@@ -457,7 +457,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 										<?php endif; ?>
 
 										<?php if ( ! $is_reviewed_by_instructor ) : ?>
-											<span class="tutor-badge-label label-danger">
+											<span class="tutor-badge-label label-warning">
 												<?php esc_html_e( 'Pending', 'tutor' ); ?>
 											</span>
 										<?php endif; ?>
