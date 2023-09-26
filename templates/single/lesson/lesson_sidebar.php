@@ -107,7 +107,6 @@ if ( $topics->have_posts() ) {
 
 					$show_permalink = ! $_is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course || $is_instructor_of_this_course;
 					$show_permalink = apply_filters( 'tutor_course/single/content/show_permalink', $show_permalink, get_the_ID() );
-
 					$lock_icon      = ! $show_permalink;
 					$show_permalink = null === $show_permalink ? true : $show_permalink;
 
@@ -127,7 +126,20 @@ if ( $topics->have_posts() ) {
 									$time_limit   = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
 									$last_attempt = ( new QuizModel() )->get_first_or_last_attempt( $quiz->ID );
 
-									$attempt_ended = is_object( $last_attempt ) && ( 'attempt_ended' === ( $last_attempt->attempt_status ) || $last_attempt->is_manually_reviewed ) ? true : false;
+									// $attempt_ended = is_object( $last_attempt ) && ( 'attempt_ended' === ( $last_attempt->attempt_status ) || $last_attempt->is_manually_reviewed ) ? true : false;
+
+									$attempt_ended = is_object( $last_attempt );
+									$result_class  = '';
+
+									$quiz_result = QuizModel::get_quiz_result( $quiz->ID );
+									if ( $attempt_ended ) {
+										if ( 'fail' === $quiz_result ) {
+											$result_class = 'tutor-check-fail';
+										}
+										if ( 'pending' === $quiz_result ) {
+											$result_class = 'tutor-check-pending';
+										}
+									}
 
 									if ( $time_limit ) {
 										$time_type                             = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
@@ -148,7 +160,11 @@ if ( $topics->have_posts() ) {
 									?>
 
 									<?php if ( ! $lock_icon ) : ?>
-										<input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" disabled="disabled" readonly="readonly" <?php echo esc_attr( $attempt_ended ? 'checked="checked"' : '' ); ?> />
+										<input 	type="checkbox" 
+												class="tutor-form-check-input tutor-form-check-circle <?php echo esc_attr( $result_class ); ?>" 
+												disabled="disabled" 
+												readonly="readonly" 
+												<?php echo esc_attr( $attempt_ended ? 'checked="checked"' : '' ); ?> />
 									<?php else : ?>
 										<i class="tutor-icon-lock-line tutor-fs-7 tutor-color-muted tutor-mr-4" area-hidden="true"></i>
 									<?php endif; ?>
@@ -156,7 +172,7 @@ if ( $topics->have_posts() ) {
 							</a>
 						</div>
 					<?php } elseif ( 'tutor_assignments' === $post->post_type ) { ?>
-						<div class="tutor-course-topic-item tutor-course-topic-item-assignment<?php echo ( get_the_ID() == $currentPost->ID ) ? ' is-active' : ''; ?>">
+						<div class="tutor-course-topic-item tutor-course-topic-item-assignment<?php echo esc_attr( get_the_ID() == $currentPost->ID ? ' is-active' : '' ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>" data-assignment-id="<?php echo esc_attr( $post->ID ); ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<span class="tutor-course-topic-item-icon tutor-icon-assignment tutor-mr-8" area-hidden="true"></span>
