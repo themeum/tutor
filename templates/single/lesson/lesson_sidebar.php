@@ -18,14 +18,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $post;
 
-$post_id = get_the_ID();
+$current_post_id = get_the_ID();
 if ( ! empty( Input::post( 'lesson_id' ) ) ) {
-	$post_id = Input::post( 'lesson_id' );
+	$current_post_id = Input::post( 'lesson_id' );
 }
 
-$currentPost = $post;
-$_is_preview = get_post_meta( $post_id, '_is_preview', true );
-$course_id   = tutor_utils()->get_course_id_by_subcontent( $post->ID );
+$current_post = $post;
+$_is_preview  = get_post_meta( $current_post_id, '_is_preview', true );
+$course_id    = tutor_utils()->get_course_id_by_subcontent( $post->ID );
 
 $user_id                      = get_current_user_id();
 $enable_qa_for_this_course    = get_post_meta( $course_id, '_tutor_enable_qa', true ) == 'yes';
@@ -60,8 +60,8 @@ if ( $topics->have_posts() ) {
 		$is_topic_active = ! empty(
 			array_filter(
 				$lessons->posts,
-				function ( $content ) use ( $currentPost ) {
-					return $content->ID == $currentPost->ID;
+				function ( $content ) use ( $current_post ) {
+					return $content->ID == $current_post->ID;
 				}
 			)
 		);
@@ -113,7 +113,7 @@ if ( $topics->have_posts() ) {
 					if ( 'tutor_quiz' === $post->post_type ) {
 						$quiz = $post;
 						?>
-						<div class="tutor-course-topic-item tutor-course-topic-item-quiz<?php echo ( get_the_ID() == $currentPost->ID ) ? ' is-active' : ''; ?>" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
+						<div class="tutor-course-topic-item tutor-course-topic-item-quiz<?php echo ( get_the_ID() == $current_post->ID ) ? ' is-active' : ''; ?>" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $quiz->ID ) ) : '#'; ?>" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<span class="tutor-course-topic-item-icon tutor-icon-quiz-o tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
@@ -172,7 +172,7 @@ if ( $topics->have_posts() ) {
 							</a>
 						</div>
 					<?php } elseif ( 'tutor_assignments' === $post->post_type ) { ?>
-						<div class="tutor-course-topic-item tutor-course-topic-item-assignment<?php echo esc_attr( get_the_ID() == $currentPost->ID ? ' is-active' : '' ); ?>">
+						<div class="tutor-course-topic-item tutor-course-topic-item-assignment<?php echo esc_attr( get_the_ID() == $current_post->ID ? ' is-active' : '' ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>" data-assignment-id="<?php echo esc_attr( $post->ID ); ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<span class="tutor-course-topic-item-icon tutor-icon-assignment tutor-mr-8" area-hidden="true"></span>
@@ -190,7 +190,7 @@ if ( $topics->have_posts() ) {
 							</a>
 						</div>
 					<?php } elseif ( 'tutor_zoom_meeting' === $post->post_type ) { ?>
-						<div class="tutor-course-topic-item tutor-course-topic-item-zoom<?php echo esc_attr( ( get_the_ID() == $currentPost->ID ) ? ' is-active' : '' ); ?>">
+						<div class="tutor-course-topic-item tutor-course-topic-item-zoom<?php echo esc_attr( ( get_the_ID() == $current_post->ID ) ? ' is-active' : '' ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<span class="tutor-course-topic-item-icon tutor-icon-brand-zoom-o tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
@@ -208,7 +208,7 @@ if ( $topics->have_posts() ) {
 							</a>
 						</div>
 					<?php } elseif ( 'tutor-google-meet' === $post->post_type ) { ?>
-						<div class="tutor-course-topic-item tutor-course-topic-item-zoom<?php echo esc_attr( get_the_ID() == $currentPost->ID ? ' is-active' : '' ); ?>">
+						<div class="tutor-course-topic-item tutor-course-topic-item-zoom<?php echo esc_attr( get_the_ID() == $current_post->ID ? ' is-active' : '' ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<span class="tutor-course-topic-item-icon tutor-icon-brand-google-meet tutor-mr-8 tutor-mt-2" area-hidden="true"></span>
@@ -235,7 +235,7 @@ if ( $topics->have_posts() ) {
 						}
 						$is_completed_lesson = tutor_utils()->is_completed_lesson();
 						?>
-						<div class="tutor-course-topic-item tutor-course-topic-item-lesson<?php echo esc_attr( get_the_ID() == $currentPost->ID ? ' is-active' : '' ); ?>">
+						<div class="tutor-course-topic-item tutor-course-topic-item-lesson<?php echo esc_attr( get_the_ID() == $current_post->ID ? ' is-active' : '' ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_the_permalink() ) : '#'; ?>" data-lesson-id="<?php the_ID(); ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<?php
