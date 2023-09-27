@@ -33,6 +33,12 @@ class CourseModel {
 	const STATUS_FUTURE     = 'future';
 
 	/**
+	 * Course completion modes
+	 */
+	const MODE_FLEXIBLE = 'flexible';
+	const MODE_STRICT   = 'strict';
+
+	/**
 	 * Course mapped with the product using this meta key
 	 *
 	 * @var string
@@ -579,5 +585,68 @@ class CourseModel {
 		}
 
 		return array();
+	}
+
+	/**
+	 * Check the course is completeable or not
+	 *
+	 * @since 2.3.1
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return boolean
+	 */
+	public static function can_complete_course( $course_id, $user_id ) {
+
+		$mode = tutor_utils()->get_option( 'course_completion_process' );
+		if ( self::MODE_FLEXIBLE === $mode ) {
+			return true;
+		}
+
+		if ( self::MODE_STRICT === $mode ) {
+			$completed_lesson = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
+			$lesson_count     = tutor_utils()->get_lesson_count_by_course( $course_id, $user_id );
+
+			if ( $completed_lesson < $lesson_count ) {
+				return false;
+			}
+
+			$quizzes     = array();
+			$assignments = array();
+
+			$course_contents = tutor_utils()->get_course_contents_by_id( $course_id );
+			if ( tutor_utils()->count( $course_contents ) ) {
+				foreach ( $course_contents as $content ) {
+					if ( 'tutor_quiz' === $content->post_type ) {
+						$quizzes[] = $content;
+					}
+					if ( 'tutor_assignments' === $content->post_type ) {
+						$assignments[] = $content;
+					}
+				}
+			}
+
+			foreach ( $quizzes as $row ) {
+				$result = QuizModel::get_quiz_result( $row->ID );
+				if ( 'pass' !== $result ) {
+					return false;
+				}
+			}
+
+			if ( tutor()->has_pro ) {
+				foreach ( $assignments as $row ) {
+					$result = \TUTOR_ASSIGNMENTS\Assignments::get_assignment_result( $row->ID, $user_id );
+					if ( 'pass' !== $result ) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+
 	}
 }
