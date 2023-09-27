@@ -133,7 +133,7 @@ class CourseModel {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $instructor_id
+	 * @param int $instructor_id instructor ID.
 	 *
 	 * @return null|string
 	 */
@@ -168,7 +168,7 @@ class CourseModel {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $quiz_id quiz id.
+	 * @param int $quiz_id quiz id.
 	 *
 	 * @return array|bool|null|object|void
 	 */
@@ -179,7 +179,7 @@ class CourseModel {
 		if ( $post ) {
 			$course = get_post( $post->post_parent );
 			if ( $course ) {
-				if ( $course->post_type !== tutor()->course_post_type ) {
+				if ( tutor()->course_post_type !== $course->post_type ) {
 					$course = get_post( $course->post_parent );
 				}
 				return $course;
@@ -194,11 +194,11 @@ class CourseModel {
 	  *
 	  * @since 1.0.0
 	  *
-	  * @param integer      $instructor_id
-	  * @param array|string $post_status
-	  * @param integer      $offset
-	  * @param integer      $limit
-	  * @param boolean      $count_only
+	  * @param integer      $instructor_id instructor id.
+	  * @param array|string $post_status post status.
+	  * @param integer      $offset offset.
+	  * @param integer      $limit limit.
+	  * @param boolean      $count_only count or not.
 	  *
 	  * @return array|null|object
 	  */
@@ -209,7 +209,7 @@ class CourseModel {
 		$instructor_id    = tutils()->get_user_id( $instructor_id );
 		$course_post_type = tutor()->course_post_type;
 
-		if ( empty( $post_status ) || $post_status == 'any' ) {
+		if ( empty( $post_status ) || 'any' == $post_status ) {
 			$where_post_status = '';
 		} else {
 			! is_array( $post_status ) ? $post_status = array( $post_status ) : 0;
@@ -220,6 +220,7 @@ class CourseModel {
 		$select_col   = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
 		$limit_offset = $count_only ? '' : " LIMIT $offset, $limit ";
 
+		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT $select_col
 			FROM 	$wpdb->posts
@@ -237,7 +238,9 @@ class CourseModel {
 			$instructor_id,
 			$instructor_id
 		);
+		//phpcs:enable
 
+		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query, OBJECT );
 	}
 
@@ -308,7 +311,7 @@ class CourseModel {
 		 */
 		global $wpdb;
 
-		$date = date( 'Y-m-d H:i:s', tutor_time() );
+		$date = date( 'Y-m-d H:i:s', tutor_time() ); //phpcs:ignore
 
 		// Making sure that, hash is unique.
 		do {
