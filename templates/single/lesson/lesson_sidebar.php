@@ -128,11 +128,11 @@ if ( $topics->have_posts() ) {
 
 									// $attempt_ended = is_object( $last_attempt ) && ( 'attempt_ended' === ( $last_attempt->attempt_status ) || $last_attempt->is_manually_reviewed ) ? true : false;
 
-									$attempt_ended = is_object( $last_attempt );
+									$attempt_ended = is_object( $last_attempt ) && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status;
 									$result_class  = '';
 
 									$quiz_result = QuizModel::get_quiz_result( $quiz->ID );
-									if ( $attempt_ended ) {
+									if ( $attempt_ended && QuizModel::ATTEMPT_STARTED !== $last_attempt->attempt_status ) {
 										if ( 'fail' === $quiz_result ) {
 											$result_class = 'tutor-check-fail';
 										}
