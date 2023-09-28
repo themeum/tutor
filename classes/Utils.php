@@ -12,6 +12,7 @@ namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\QuizModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -845,21 +846,22 @@ class Utils {
 			$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
 
 			if ( false === $quiz_completed ) {
+				//phpcs:disable
 				$quiz_completed = (int) $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT count(quiz_id) completed 
 						FROM (
-							SELECT  DISTINCT quiz_id, course_id, attempt_status 
+							SELECT  DISTINCT quiz_id 
 							FROM 	{$wpdb->tutor_quiz_attempts} 
 							WHERE 	quiz_id IN ({$quiz_ids_str}) 
 									AND user_id = % d 
 									AND attempt_status != %s
 						) a",
 						$user_id,
-						'attempt_started'
+						QuizModel::ATTEMPT_STARTED
 					)
 				);
-				// Set cache data.
+				//phpcs:enable
 				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
 			}
 			$completed_count += $quiz_completed;
