@@ -44,7 +44,6 @@
 		margin-right: auto;
 		padding-left: 30px;
 		padding-right: 30px;
-		overflow-x: auto;
 
 		&-sm {
 			max-width: 760px;
@@ -123,12 +122,6 @@
 
 body.tutor-backend-tutor_settings #wpbody-content {
 	min-height: 100vh;
-
-	@include breakpoint-min(1400) {
-		.tutor-admin-container {
-			overflow-x: unset;
-		}
-	}
 }
 
 .ui-datepicker-buttonpane.ui-widget-content {
