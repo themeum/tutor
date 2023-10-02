@@ -137,7 +137,8 @@ $filters = array(
 					<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
 						<?php
 						foreach ( $instructors_list as $list ) :
-							$alert = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
+							$alert     = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
+							$user_data = get_userdata( $list->ID );
 							?>
 							<tr>
 								<td>
@@ -153,7 +154,7 @@ $filters = array(
 											tutor_utils()->allowed_avatar_tags()
 										);
 										?>
-										<?php echo esc_html( $list->display_name ); ?>
+										<?php echo esc_html( tutils()->get_user_name( $user_data ) ); ?>
 										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
 											<span class="tutor-icon-external-link"></span>
 										</a>
@@ -201,9 +202,15 @@ $filters = array(
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-									<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+									<?php ob_start(); ?>
+									<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" 
+										class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
+									<?php
+									$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
+									echo wp_kses_post( $edit_button );
+									?>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -335,7 +342,7 @@ $filters = array(
 								</span>
 							</label>
 							<div class="tutor-mb-16">
-								<textarea  name="tutor_profile_bio" class="tutor-form-control" rows="3" style="width: 100%;" placeholder="<?php esc_html_e( 'Write Your Bio...', 'tutor' ); ?>"></textarea>
+								<?php wp_editor( '', 'tutor_profile_bio', tutor_utils()->get_profile_bio_editor_config( 'tutor_profile_bio' ) ); ?>
 							</div>
 						</div>
 					</div>
