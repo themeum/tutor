@@ -12,6 +12,7 @@ namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\QuizModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -845,21 +846,22 @@ class Utils {
 			$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
 
 			if ( false === $quiz_completed ) {
+				//phpcs:disable
 				$quiz_completed = (int) $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT count(quiz_id) completed 
 						FROM (
-							SELECT  DISTINCT quiz_id, course_id, attempt_status 
+							SELECT  DISTINCT quiz_id 
 							FROM 	{$wpdb->tutor_quiz_attempts} 
 							WHERE 	quiz_id IN ({$quiz_ids_str}) 
 									AND user_id = % d 
 									AND attempt_status != %s
 						) a",
 						$user_id,
-						'attempt_started'
+						QuizModel::ATTEMPT_STARTED
 					)
 				);
-				// Set cache data.
+				//phpcs:enable
 				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
 			}
 			$completed_count += $quiz_completed;
@@ -9135,15 +9137,17 @@ class Utils {
 	 * NOTE: date_i18n translate able string is not supported
 	 *
 	 * @since 2.0.0
+	 * @since 2.2.5 $format param added to modify the format if required.
 	 *
 	 * @param string $date string date time to convert.
+	 * @param string $format format of date time.
 	 *
-	 * @return string date time.
+	 * @return string formated date-time.
 	 */
-	public function convert_date_into_wp_timezone( string $date ): string {
+	public function convert_date_into_wp_timezone( string $date, string $format = null ): string {
 		$date = new \DateTime( $date );
 		$date->setTimezone( wp_timezone() );
-		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
+		return $date->format( ! is_null( $format ) ? $format : get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 	}
 
 	/**
