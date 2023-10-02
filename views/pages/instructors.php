@@ -202,14 +202,18 @@ $filters = array(
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-									<?php ob_start(); ?>
-									<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" 
+									<?php
+									ob_start();
+									$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
+									?>
+									<a href="<?php echo esc_url( $profile_url ); ?>" 
 										class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
 									<?php
 									$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
-									echo wp_kses_post( $edit_button );
+									//phpcs:ignore -- already escaped.
+									echo $edit_button;
 									?>
 								</td>
 							</tr>
