@@ -50,7 +50,7 @@ class Admin {
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
-		add_action( 'tutor_after_settings_menu', array( $this, 'whats_new_menu' ), 11 );
+		add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
 	}
 
 	/**
@@ -127,7 +127,7 @@ class Admin {
 			add_submenu_page( 'tutor', __( 'Withdraw Requests', 'tutor' ), __( 'Withdraw Requests', 'tutor' ), 'manage_tutor', Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE, array( $this, 'withdraw_requests' ) );
 		}
 
-		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), __( 'Add-ons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
+		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), sprintf( '<span class="tutor-addons-text">%s</span>', __( 'Add-ons', 'tutor' ) ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
 
 		do_action( 'tutor_admin_register' );
 
@@ -138,46 +138,8 @@ class Admin {
 		do_action( 'tutor_after_settings_menu' );
 
 		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), __( '<span class="tutor-get-pro-text">Upgrade to Pro</span>', 'tutor' ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
+			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), sprintf( '<span class="tutor-get-pro-text">%s</span>', __( 'Upgrade to Pro', 'tutor' ) ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
 		}
-	}
-
-	/**
-	 * What's new page.
-	 *
-	 * @since 2.2.4
-	 *
-	 * @return void
-	 */
-	public function whats_new_menu() {
-		$transient_key = 'tutor_plugin_info';
-		$plugin_info   = get_transient( $transient_key );
-
-		if ( false === $plugin_info ) {
-			$plugin_info     = tutils()->get_remote_plugin_info();
-			$hour_in_seconds = 1800;
-			set_transient( $transient_key, $plugin_info, $hour_in_seconds );
-		}
-
-		$remote_version    = $plugin_info->version ?? TUTOR_VERSION;
-		$installed_version = TUTOR_VERSION;
-		$update_required   = version_compare( $remote_version, $installed_version, '>' );
-
-		$menu_text = __( "What's New", 'tutor' );
-		if ( $update_required ) {
-			$menu_text .= ' <span class="update-plugins"><span class="plugin-count">1</span></span>';
-		}
-
-		add_submenu_page(
-			'tutor',
-			__( "What's New", 'tutor' ),
-			$menu_text,
-			'manage_options',
-			'tutor-whats-new',
-			function() use ( $remote_version, $installed_version, $update_required ) {
-				include tutor()->path . 'views/pages/whats-new.php';
-			}
-		);
 	}
 
 	/**

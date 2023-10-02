@@ -255,7 +255,8 @@ gulp.task('copy', function() {
 			'!.travis.yml',
 			'!phpunit.xml.dist',
 			'!phpunit.xml',
-			'!phpcs.xml'
+			'!phpcs.xml',
+			'!phpcs.xml.dist',
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });
