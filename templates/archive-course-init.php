@@ -101,6 +101,8 @@ if ( isset( $the_query ) ) {
 				array(
 					'loading_container' => '.tutor-course-filter-loop-container',
 					'action'            => 'tutor_course_filter_ajax',
+					'course_per_page'   => $course_per_page,
+					'column_per_row'    => $column_per_row,
 				)
 			),
 		);
