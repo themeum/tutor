@@ -51,5 +51,9 @@
 			height: 100%;
 			border: none;
 		}
+
+		.plyr--vimeo .plyr__captions {
+			display: none!important;
+		}
 	}
 }
