@@ -106,7 +106,7 @@ class Shortcode {
 			 * @since 2.1.3
 			 */
 			$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
-			echo sprintf( __( 'Please %1$sSign-In%2$s to view this page', 'tutor' ), '<a data-login_url="' . esc_url( $login_url ) . '" href="#" class="tutor-open-login-modal">', '</a>' );
+			echo sprintf( __( 'Please %1$sSign-In%2$s to view this page', 'tutor' ), '<a data-login_url="' . esc_url( $login_url ) . '" href="#" class="tutor-open-login-modal">', '</a>' );//phpcs:ignore
 		}
 		return apply_filters( 'tutor_dashboard/index', ob_get_clean() );
 	}
@@ -228,12 +228,12 @@ class Shortcode {
 			tutor_load_template(
 				'archive-course-init',
 				array(
-					'course_filter'     => isset( $atts['course_filter'] ) && $atts['course_filter'] == 'on',
+					'course_filter'     => isset( $atts['course_filter'] ) && 'on' === $atts['course_filter'],
 					'supported_filters' => tutor_utils()->get_option( 'supported_course_filters', array() ),
 					'loop_content_only' => false,
 					'column_per_row'    => isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
 					'course_per_page'   => $a['posts_per_page'],
-					'show_pagination'   => isset( $atts['show_pagination'] ) && $atts['show_pagination'] == 'on',
+					'show_pagination'   => isset( $atts['show_pagination'] ) && 'on' === $atts['show_pagination'],
 					'the_query'         => $the_query,
 					'current_page'      => isset( $get['current_page'] ) ? (int) $get['current_page'] : 1,
 				)
