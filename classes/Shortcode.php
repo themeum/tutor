@@ -149,7 +149,7 @@ class Shortcode {
 
 				'orderby'     => 'ID',
 				'order'       => 'DESC',
-				'count'       => 6,
+				'count'       => tutils()->get_option( 'courses_per_page', 12 ),
 				'paged'       => get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
 			),
 			$atts
