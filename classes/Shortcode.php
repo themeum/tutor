@@ -211,7 +211,7 @@ class Shortcode {
 		$the_query = new \WP_Query( $a );
 
 		/**
-		 * Pagination & filter handle from query param on page load (without ajax)
+		 * Pagination & course filter handle from query param on page load (without ajax)
 		 *
 		 * @since 2.3.1
 		 */
