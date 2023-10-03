@@ -82,8 +82,6 @@ if ( isset( $the_query ) ) {
 	do_action( 'tutor_course/archive/after_loop' );
 
 	if ( $show_pagination ) {
-
-		// Load the pagination now.
 		global $wp_query;
 
 		$current_url = wp_doing_ajax() ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ?? '' ) ) : tutor()->current_url;
