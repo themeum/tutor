@@ -87,12 +87,14 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 $social_media            = ob_get_clean();
 $allowed_html_for_social = array(
 	'a' => array(
+		'href'   => true,
 		'class'  => true,
 		'target' => true,
 		'rel'    => true,
 		'title'  => true,
 	),
 );
+
 ?>
 
 <?php
@@ -157,38 +159,13 @@ do_action( 'tutor_profile/' . $user_type . '/before/wrap' );
 				</div>
 
 				<div class="tutor-social-container content-for-mobile">
-					<?php
-					foreach ( $tutor_user_social_icons as $key => $social_icon ) {
-						$url = $social_icon['url'];
-						if ( ! empty( $url ) ) :
-							?>
-								<a	href="<?php echo esc_url( $url ); ?>" 
-									target="_blank" rel="noopener noreferrer nofollow" 
-									class="<?php echo esc_attr( $social_icon['icon_classes'] ); ?>" 
-									title="<?php esc_attr( $social_icon['label'] ); ?>"></a>
-									<?php
-								endif;
-					}
-					?>
+					<?php echo wp_kses( $social_media, $allowed_html_for_social ); ?>
 				</div>
-
 
 				<div class="profile-rating-media content-for-desktop">
 					<?php echo wp_kses( $rating_content, $allowed_html_for_rating ); ?>
 					<div class="tutor-social-container content-for-desktop">
-						<?php
-						foreach ( $tutor_user_social_icons as $key => $social_icon ) {
-							$url = $social_icon['url'];
-							if ( ! empty( $url ) ) :
-								?>
-							<a	href="<?php echo esc_url( $url ); ?>" 
-								target="_blank" rel="noopener noreferrer nofollow" 
-								class="<?php echo esc_attr( $social_icon['icon_classes'] ); ?>" 
-								title="<?php esc_attr( $social_icon['label'] ); ?>"></a>
-								<?php
-							endif;
-						}
-						?>
+					<?php echo wp_kses( $social_media, $allowed_html_for_social ); ?>
 					</div>
 				</div>
 			</div>
