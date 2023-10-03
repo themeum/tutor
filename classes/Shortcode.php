@@ -210,6 +210,17 @@ class Shortcode {
 		wp_reset_query();
 		$the_query = new \WP_Query( $a );
 
+		/**
+		 * Pagination & filter handle from query param on page load (without ajax)
+		 *
+		 * @since 2.3.1
+		 */
+		$get = Input::has( 'course_filter' ) ? Input::sanitize_array( $_GET ) : array();
+		if ( Input::has( 'course_filter' ) ) {
+			$filter    = ( new \Tutor\Course_Filter( false ) )->load_listing( $get, true );
+			$the_query = new \WP_Query( $filter );
+		}
+
 		// Load the renderer now.
 		ob_start();
 
@@ -224,6 +235,7 @@ class Shortcode {
 					'course_per_page'   => $a['posts_per_page'],
 					'show_pagination'   => isset( $atts['show_pagination'] ) && $atts['show_pagination'] == 'on',
 					'the_query'         => $the_query,
+					'current_page'      => isset( $get['current_page'] ) ? (int) $get['current_page'] : 1,
 				)
 			);
 		} else {
