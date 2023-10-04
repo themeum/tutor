@@ -84,6 +84,7 @@ if ( ! function_exists( 'tutor' ) ) {
 			'enrollment_post_type'   => apply_filters( 'tutor_enrollment_post_type', 'tutor_enrolled' ),
 			'quiz_post_type'         => apply_filters( 'tutor_quiz_post_type', 'tutor_quiz' ),
 			'zoom_post_type'         => apply_filters( 'tutor_zoom_meeting_post_type', 'tutor_zoom_meeting' ),
+			'meet_post_type'         => apply_filters( 'tutor_google_meeting_post_type', 'tutor-google-meet' ),
 		);
 
 		$GLOBALS['tutor_plugin_info'] = (object) $info;

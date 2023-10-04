@@ -21,7 +21,7 @@
 		if ( isset( $get_option_meta['open_ended_answer_characters_limit'] ) ) {
 			if ( '' != $get_option_meta['open_ended_answer_characters_limit'] ) {
 				$characters_limit = $get_option_meta['open_ended_answer_characters_limit'];
-				$markup           = '<p class="answer_limit_desc">' . __( 'characters remaining', 'tutor' ) . ' :<span class="characters_remaining">' . $characters_limit . '</span> </p>';
+				$markup           = '<p class="answer_limit_desc">' . __( 'Character Limit', 'tutor' ) . ' :<span class="characters_remaining">' . $characters_limit . '</span> </p>';
 				echo wp_kses(
 					$markup,
 					array(
