@@ -516,8 +516,8 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 							</div>
 
 							<?php
-								$evaluated = Assignments::is_evaluated( $post_id );
-							if ( ! $evaluated && ( $remaining_time > $now || 0 == $time_duration['value'] ) ) :
+							$result = Assignments::get_assignment_result( $post_id, $user_id );
+							if ( in_array( $result, array( 'pending', 'fail' ), true ) && ( $remaining_time > $now || 0 == $time_duration['value'] ) ) :
 								?>
 								<div class="tutor-ar-btn">
 									<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>"
