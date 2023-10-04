@@ -84,6 +84,7 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
 			if ( $show_mark_complete ) {
 				tutor_lesson_mark_complete_html();
 			}
+			do_action( 'tutor_after_lesson_completion_button', $course_id, $user_id, $is_course_completed, $course_stats );
 			?>
 			<?php endif; ?>
 		<?php
