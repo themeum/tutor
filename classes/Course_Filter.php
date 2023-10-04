@@ -75,8 +75,9 @@ class Course_Filter {
 		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $sanitized_post, $default_per_page );
 
 		// Pagination arg.
-		$page                           = max( 1, Input::post( 'current_page', 0, Input::TYPE_INT ) );
-		$sanitized_post['current_page'] = $page;
+		$current_page                   = (int) Input::sanitize_request_data( 'current_page', 1 );
+		$paged                          = max( 1, $current_page );
+		$sanitized_post['current_page'] = $paged;
 
 		// Order arg.
 		$order_by = 'post_date';
@@ -110,7 +111,7 @@ class Course_Filter {
 			'post_status'    => 'publish',
 			'post_type'      => tutor()->course_post_type,
 			'posts_per_page' => $courses_per_page,
-			'paged'          => (int) $page,
+			'paged'          => $paged,
 			'orderby'        => $order_by,
 			'order'          => $order,
 			'tax_query'      => array(
