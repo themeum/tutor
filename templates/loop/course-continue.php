@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Course loop continue when enrolled
  *
