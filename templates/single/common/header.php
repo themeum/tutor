@@ -41,7 +41,7 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
 			 */
 			$course_link = get_the_permalink( $course_id );
 			\TUTOR\Course::set_review_popup_data( get_current_user_id(), $course_id, $course_link );
-			wp_safe_redirect( $course_link );
+			tutils()->redirect_to( $course_link );
 			exit;
 		}
 	}
