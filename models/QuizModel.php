@@ -911,14 +911,22 @@ class QuizModel {
 		$user_id      = tutor_utils()->get_user_id( $user_id );
 		$attempt_list = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id=%d AND quiz_id=%d", $user_id, $quiz_id ) );
 
-		/**
-		 * Check all attempts are pending or not
-		 */
-		foreach ( $attempt_list as $attempt ) {
-			if ( self::REVIEW_REQUIRED !== $attempt->attempt_status ) {
-				$all_pending = false;
-				break;
-			}
+		$total_pending_attempt = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(quiz_attempt_id) total_pending_attempt
+				FROM (
+					SELECT qa.quiz_attempt_id, COUNT(*) AS total_pending
+					FROM {$wpdb->prefix}tutor_quiz_attempt_answers qa
+					WHERE qa.quiz_id = %d AND qa.is_correct IS NULL
+					GROUP BY qa.quiz_attempt_id
+				) a
+				",
+				$quiz_id
+			)
+		);
+
+		if ( count( $attempt_list ) !== $total_pending_attempt ) {
+			$all_pending = false;
 		}
 
 		if ( false === $all_pending ) {
