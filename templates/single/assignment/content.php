@@ -450,7 +450,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 													<?php esc_html_e( 'Passed', 'tutor' ); ?>
 												</span>
 											<?php else : ?>
-												<span class="tutor-badge-label label-warning">
+												<span class="tutor-badge-label label-danger">
 													<?php esc_html_e( 'Failed', 'tutor' ); ?>
 												</span>
 											<?php endif; ?>
