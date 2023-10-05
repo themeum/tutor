@@ -917,11 +917,12 @@ class QuizModel {
 				FROM (
 					SELECT qa.quiz_attempt_id, COUNT(*) AS total_pending
 					FROM {$wpdb->prefix}tutor_quiz_attempt_answers qa
-					WHERE qa.quiz_id = %d AND qa.is_correct IS NULL
+					WHERE qa.quiz_id = %d AND qa.user_id=%d AND qa.is_correct IS NULL
 					GROUP BY qa.quiz_attempt_id
 				) a
 				",
-				$quiz_id
+				$quiz_id,
+				$user_id
 			)
 		);
 
