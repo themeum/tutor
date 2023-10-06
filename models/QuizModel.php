@@ -895,7 +895,7 @@ class QuizModel {
 	/**
 	 * Get final quiz result depending on all attempts.
 	 *
-	 * @since 2.3.1
+	 * @since 2.4.0
 	 *
 	 * @param int $quiz_id quiz id.
 	 * @param int $user_id user id.

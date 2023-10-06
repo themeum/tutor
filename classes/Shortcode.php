@@ -213,7 +213,7 @@ class Shortcode {
 		/**
 		 * Pagination & course filter handle from query param on page load (without ajax)
 		 *
-		 * @since 2.3.1
+		 * @since 2.4.0
 		 */
 		$get = Input::has( 'course_filter' ) ? Input::sanitize_array( $_GET ) : array();
 		if ( Input::has( 'course_filter' ) ) {
