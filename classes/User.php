@@ -25,6 +25,8 @@ class User {
 	const INSTRUCTOR = 'tutor_instructor';
 	const ADMIN      = 'administrator';
 
+	const REVIEW_POPUP_META = 'tutor_review_course_popup';
+
 	/**
 	 * Registration notice
 	 *
