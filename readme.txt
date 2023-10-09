@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.3
 Requires PHP: 7.1
-Stable tag: 2.3.0
+Stable tag: 2.4.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -315,6 +315,26 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.4.0 - October 10, 2023
+
+New: In Learning mode, the blue completed tick icon will now be different colors to show completed, pending or failed
+New: A new "Review Progress" button is introduced on the course details page for strict Mode
+New: Scheduled Zoom and Google Meet meetings are now displayed on the Tutor Calender(Pro)
+New: Upcoming Lessons and Quizzes can now be showcased on the Tutor Calendar (Pro)
+New: Social Share option added to the Certificate Download page (Pro)
+New: Upon completing all course content, students will get a "Complete Course" button on the lesson screen (Pro)
+New: Admins and Instructors can now check if a student has generated a certificate for an enrolled course (Pro)
+New: Instructor info and sharing percentage data can be updated through modal popup on the Instructor List page (Pro)
+Update: Editor support added for instructor bio from the backend instructor list
+Update: Certificate preview and OTP page are now compatible with Elementor/Divi custom header, footer (Pro)
+Update: Certificate download time has been optimized and resolution enhanced (Pro)
+Fix: On Strict Mode with auto-complete enabled, students could complete a course without passing  quiz/assignments
+Fix: Course Percentage was displaying inaccurately in some cases
+Fix: Tutor Player optimized for Vimeo videos
+Fix: Pagination issues on the course list page were resolved for users who used shortcodes
+Fix: The Certificate preview section on the course details page had issues with Safari Browser
+Fix: Social links are now operational on the Instructor profile page in the mobile view
 
 = 2.3.0 - September 20, 2023
 
