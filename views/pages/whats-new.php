@@ -130,8 +130,8 @@ use TUTOR\WhatsNew;
 
 					<a class="tutor-whats-new-action-btn" 
 						target="_blank" 
-						href="https://www.themeum.com/product/tutor-lms/?utm_source=tutor_lms_wp_dashboard&utm_medium=update&utm_campaign=what_s_new"> 
-						<span class="tutor-icon-crown"></span> Get Tutor LMS Pro
+						href="https://www.themeum.com/tutor-lms/pricing?utm_source=tutor_lms_wp_dashboard&utm_medium=update&utm_campaign=what_s_new#comparison"> 
+						Compare Free vs Pro
 					</a>
 				</div>
 			</div>
