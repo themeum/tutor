@@ -652,4 +652,33 @@ class CourseModel {
 		return false;
 
 	}
+
+	/**
+	 * Check a course can be auto complete by an enrolled student.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return boolean
+	 */
+	public static function can_autocomplete_course( $course_id, $user_id ) {
+		$auto_course_complete_option = (bool) tutor_utils()->get_option( 'auto_course_complete_on_all_lesson_completion' );
+		if ( ! $auto_course_complete_option ) {
+			return false;
+		}
+
+		$is_course_completed = tutor_utils()->is_completed_course( $course_id, $user_id );
+		if ( $is_course_completed ) {
+			return false;
+		}
+
+		$course_stats = tutor_utils()->get_course_completed_percent( $course_id, $user_id, true );
+		if ( $course_stats['completed_count'] === $course_stats['total_count'] ) {
+			return self::can_complete_course( $course_id, $user_id );
+		} else {
+			return false;
+		}
+	}
 }
