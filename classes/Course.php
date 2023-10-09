@@ -845,48 +845,36 @@ class Course extends Tutor_Base {
 	 * Set data for review popup.
 	 *
 	 * @since 2.2.5
+	 * @since 2.4.0 removed $permalink param. store user meta instead of option data.
 	 *
-	 * @param int    $user_id user id.
-	 * @param int    $course_id course id.
-	 * @param string $permalink course permalink.
+	 * @param int $user_id user id.
+	 * @param int $course_id course id.
 	 *
 	 * @return void
 	 */
-	public static function set_review_popup_data( $user_id, $course_id, $permalink ) {
+	public static function set_review_popup_data( $user_id, $course_id ) {
 		if ( get_tutor_option( 'enable_course_review' ) ) {
 			$rating = tutor_utils()->get_course_rating_by_user( $course_id, $user_id );
 			if ( ! $rating || ( empty( $rating->rating ) && empty( $rating->review ) ) ) {
-				update_option(
-					'tutor_course_complete_popup_' . $user_id,
-					array(
-						'course_id'  => $course_id,
-						'course_url' => $permalink,
-						'expires'    => time() + 10,
-					)
-				);
+				add_user_meta( $user_id, User::REVIEW_POPUP_META, $course_id );
 			}
 		}
 	}
 
 	/**
-	 * Popup review form
+	 * Popup review form on course details
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function popup_review_form() {
 		if ( is_user_logged_in() ) {
-			$key   = 'tutor_course_complete_popup_' . get_current_user_id();
-			$popup = get_option( $key );
+			$user_id   = get_current_user_id();
+			$course_id = (int) get_user_meta( $user_id, User::REVIEW_POPUP_META, true );
 
-			if ( is_array( $popup ) ) {
-
-				if ( $popup['expires'] > time() ) {
-					$course_id = $popup['course_id'];
-					include tutor()->path . 'views/modal/review.php';
-				}
-
-				delete_option( $key );
+			if ( is_single() && get_the_ID() === $course_id ) {
+				include tutor()->path . 'views/modal/review.php';
+				delete_user_meta( $user_id, User::REVIEW_POPUP_META, $course_id );
 			}
 		}
 	}
