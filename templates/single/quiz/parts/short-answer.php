@@ -21,7 +21,7 @@
 		if ( isset( $get_option_meta['short_answer_characters_limit'] ) ) {
 			if ( '' != $get_option_meta['short_answer_characters_limit'] ) {
 				$characters_limit = tutor_utils()->avalue_dot( 'short_answer_characters_limit', $quiz_attempt_info );
-				$markup           = '<p class="answer_limit_desc">' . __( 'Character Limit', 'tutor' ) . ' :<span class="characters_remaining">' . $characters_limit . '</span> </p>';
+				$markup           = '<p class="answer_limit_desc">' . __( 'Character Remaining: ', 'tutor' ) . '<span class="characters_remaining">' . $characters_limit . '</span> </p>';
 				echo wp_kses(
 					$markup,
 					array(
