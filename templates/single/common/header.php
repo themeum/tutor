@@ -37,7 +37,7 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
 			 * Set review popup data and redirect to course details page.
 			 * Review popup will be shown on course details page.
 			 *
-			 * @since 2.3.1
+			 * @since 2.4.0
 			 */
 			$course_link = get_the_permalink( $course_id );
 			\TUTOR\Course::set_review_popup_data( get_current_user_id(), $course_id, $course_link );

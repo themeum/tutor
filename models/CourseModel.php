@@ -593,7 +593,7 @@ class CourseModel {
 	/**
 	 * Check the course is completeable or not
 	 *
-	 * @since 2.3.1
+	 * @since 2.4.0
 	 *
 	 * @param int $course_id course id.
 	 * @param int $user_id user id.
