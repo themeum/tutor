@@ -9,42 +9,37 @@
  * @since 1.0.0
  */
 
+use TUTOR\Course;
 use Tutor\Models\CourseModel;
 
+$user_id            = get_current_user_id();
 $course_id          = isset( $course_id ) ? (int) $course_id : 0;
 $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 $course_stats       = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 $show_mark_complete = isset( $mark_as_complete ) ? $mark_as_complete : false;
 
+
+$is_course_completed = tutor_utils()->is_completed_course( $course_id, $user_id );
+
 /**
  * Auto course complete on all lesson, quiz, assignment complete
  *
  * @since 2.0.7
+ * @since 2.4.0 update and refactor.
  */
-$user_id                     = get_current_user_id();
-$auto_course_complete_option = tutor_utils()->get_option( 'auto_course_complete_on_all_lesson_completion' );
-$is_course_completed         = tutor_utils()->is_completed_course( $course_id, $user_id );
-$completion_mode             = tutor_utils()->get_option( 'course_completion_process' );
-if ( true === $auto_course_complete_option && false === $is_course_completed ) {
-	if ( $course_stats['completed_count'] === $course_stats['total_count'] ) {
-		$can_complete_course = CourseModel::can_complete_course( $course_id, $user_id );
+if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
+	\Tutor\Models\CourseModel::mark_course_as_completed( $course_id, $user_id );
 
-		if ( $can_complete_course ) {
-			\Tutor\Models\CourseModel::mark_course_as_completed( $course_id, $user_id );
-
-			/**
-			 * After auto complete the course.
-			 * Set review popup data and redirect to course details page.
-			 * Review popup will be shown on course details page.
-			 *
-			 * @since 2.4.0
-			 */
-			$course_link = get_the_permalink( $course_id );
-			\TUTOR\Course::set_review_popup_data( get_current_user_id(), $course_id, $course_link );
-			tutils()->redirect_to( $course_link );
-			exit;
-		}
-	}
+	/**
+	 * After auto complete the course.
+	 * Set review popup data and redirect to course details page.
+	 * Review popup will be shown on course details page.
+	 *
+	 * @since 2.4.0
+	 */
+	Course::set_review_popup_data( $user_id, $course_id );
+	tutils()->redirect_to( $course_link );
+	exit;
 }
 
 ?>
