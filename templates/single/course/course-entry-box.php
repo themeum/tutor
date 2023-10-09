@@ -120,7 +120,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 				 *       we need to make it `data-link` attribute and update the js code at course-landing.js
 				 *
 				 * @since 1.0.0
-				 * @since 2.3.1 refactored and hide it when strict mode enabled and course not completed.
+				 * @since 2.4.0 refactored and hide it when strict mode enabled and course not completed.
 				 */
 				if ( $retake_course && ( CourseModel::MODE_FLEXIBLE === $completion_mode || $is_completed_course ) ) {
 					?>
@@ -137,7 +137,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 				 * Start/Continue learning button
 				 *
 				 * @since 1.0.0
-				 * @since 2.3.1 refactored for enhance readibility.
+				 * @since 2.4.0 refactored for enhance readibility.
 				 */
 				$link_text = '';
 				if ( ! $is_completed_course ) {
@@ -154,7 +154,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 					 * - course progress 100%
 					 * - in course progress any quiz or assignemnt result is not passed.
 					 *
-					 * @since 2.3.1
+					 * @since 2.4.0
 					 */
 					if ( 100 === (int) $completed_percent && false === CourseModel::can_complete_course( $course_id, $user_id ) ) {
 						$link_text = __( 'Review Progress', 'tutor' );
