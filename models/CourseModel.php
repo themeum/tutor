@@ -681,4 +681,49 @@ class CourseModel {
 			return false;
 		}
 	}
+
+	/**
+	 * Get review progress link when course progress 100% and
+	 * User has pending or fail quiz or assignment
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return string course content permalink.
+	 */
+	public static function get_review_progress_link( $course_id, $user_id ) {
+		$course_progress   = tutor_utils()->get_course_completed_percent( $course_id, $user_id, true );
+		$completed_percent = (int) $course_progress['completed_percent'];
+		$course_contents   = tutor_utils()->get_course_contents_by_id( $course_id );
+		$permalink         = '';
+
+		if ( tutor_utils()->count( $course_contents ) && 100 === $completed_percent ) {
+			foreach ( $course_contents as $content ) {
+				if ( 'tutor_quiz' === $content->post_type ) {
+					$result = QuizModel::get_quiz_result( $content->ID, $user_id );
+					if ( 'pass' !== $result ) {
+						$permalink = get_the_permalink( $content->ID );
+						break;
+					}
+				}
+
+				if ( tutor()->has_pro && 'tutor_assignments' === $content->post_type ) {
+					$result = \TUTOR_ASSIGNMENTS\Assignments::get_assignment_result( $content->ID, $user_id );
+					if ( 'pass' !== $result ) {
+						$permalink = get_the_permalink( $content->ID );
+						break;
+					}
+				}
+			}
+		}
+
+		// Fallback link.
+		if ( empty( $permalink ) ) {
+			$permalink = tutils()->get_course_first_lesson( $course_id );
+		}
+
+		return $permalink;
+	}
 }
