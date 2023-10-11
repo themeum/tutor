@@ -28,7 +28,7 @@ $is_course_completed = tutor_utils()->is_completed_course( $course_id, $user_id 
  * @since 2.4.0 update and refactor.
  */
 if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
-	\Tutor\Models\CourseModel::mark_course_as_completed( $course_id, $user_id );
+	CourseModel::mark_course_as_completed( $course_id, $user_id );
 
 	/**
 	 * After auto complete the course.
