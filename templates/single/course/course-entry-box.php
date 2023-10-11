@@ -157,7 +157,8 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 					 * @since 2.4.0
 					 */
 					if ( 100 === (int) $completed_percent && false === CourseModel::can_complete_course( $course_id, $user_id ) ) {
-						$link_text = __( 'Review Progress', 'tutor' );
+						$lesson_url = CourseModel::get_review_progress_link( $course_id, $user_id );
+						$link_text  = __( 'Review Progress', 'tutor' );
 					}
 				}
 
