@@ -38,8 +38,11 @@ if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
 	 * @since 2.4.0
 	 */
 	Course::set_review_popup_data( $user_id, $course_id );
-	tutils()->redirect_to( $course_link );
-	exit;
+	$course_link = get_permalink( $course_id );
+	if ( $course_link ) {
+		tutils()->redirect_to( $course_link );
+		exit;
+	}
 }
 
 ?>
