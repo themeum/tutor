@@ -652,4 +652,78 @@ class CourseModel {
 		return false;
 
 	}
+
+	/**
+	 * Check a course can be auto complete by an enrolled student.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return boolean
+	 */
+	public static function can_autocomplete_course( $course_id, $user_id ) {
+		$auto_course_complete_option = (bool) tutor_utils()->get_option( 'auto_course_complete_on_all_lesson_completion' );
+		if ( ! $auto_course_complete_option ) {
+			return false;
+		}
+
+		$is_course_completed = tutor_utils()->is_completed_course( $course_id, $user_id );
+		if ( $is_course_completed ) {
+			return false;
+		}
+
+		$course_stats = tutor_utils()->get_course_completed_percent( $course_id, $user_id, true );
+		if ( $course_stats['completed_count'] === $course_stats['total_count'] ) {
+			return self::can_complete_course( $course_id, $user_id );
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Get review progress link when course progress 100% and
+	 * User has pending or fail quiz or assignment
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return string course content permalink.
+	 */
+	public static function get_review_progress_link( $course_id, $user_id ) {
+		$course_progress   = tutor_utils()->get_course_completed_percent( $course_id, $user_id, true );
+		$completed_percent = (int) $course_progress['completed_percent'];
+		$course_contents   = tutor_utils()->get_course_contents_by_id( $course_id );
+		$permalink         = '';
+
+		if ( tutor_utils()->count( $course_contents ) && 100 === $completed_percent ) {
+			foreach ( $course_contents as $content ) {
+				if ( 'tutor_quiz' === $content->post_type ) {
+					$result = QuizModel::get_quiz_result( $content->ID, $user_id );
+					if ( 'pass' !== $result ) {
+						$permalink = get_the_permalink( $content->ID );
+						break;
+					}
+				}
+
+				if ( tutor()->has_pro && 'tutor_assignments' === $content->post_type ) {
+					$result = \TUTOR_ASSIGNMENTS\Assignments::get_assignment_result( $content->ID, $user_id );
+					if ( 'pass' !== $result ) {
+						$permalink = get_the_permalink( $content->ID );
+						break;
+					}
+				}
+			}
+		}
+
+		// Fallback link.
+		if ( empty( $permalink ) ) {
+			$permalink = tutils()->get_course_first_lesson( $course_id );
+		}
+
+		return $permalink;
+	}
 }

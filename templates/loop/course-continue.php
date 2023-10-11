@@ -35,23 +35,24 @@ if ( $retake_course && $can_complete_course && CourseModel::MODE_FLEXIBLE === $c
 
 if ( $lesson_url && ! $is_completed_course ) {
 	ob_start();
+	$link_text = __( 'Continue Learning', 'tutor' );
+	if ( 0 === (int) $completed_percent ) {
+		$link_text = __( 'Start Learning', 'tutor' );
+	} elseif ( $completed_percent > 0 && $completed_percent < 100 ) {
+		$link_text = __( 'Continue Learning', 'tutor' );
+	} elseif ( 100 === (int) $completed_percent && false === $can_complete_course ) {
+		$lesson_url = CourseModel::get_review_progress_link( $course_id, $user_id );
+		$link_text  = __( 'Review Progress', 'tutor' );
+	} else {
+		$link_text = __( 'Continue Learning', 'tutor' );
+	}
 	?>
-		<a href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo esc_attr( $button_class ); ?>" data-course_id="<?php echo get_the_ID(); ?>">
-		<?php
-		if ( ! $is_completed_course ) {
-			if ( 0 === (int) $completed_percent ) {
-				esc_html_e( 'Start Learning', 'tutor' );
-			} elseif ( $completed_percent > 0 && $completed_percent < 100 ) {
-				esc_html_e( 'Continue Learning', 'tutor' );
-			} elseif ( 100 === (int) $completed_percent && false === $can_complete_course ) {
-				esc_html_e( 'Review Progress', 'tutor' );
-			} else {
-				esc_html_e( 'Continue Learning', 'tutor' );
-			}
-		}
-		?>
-		</a>
-		<?php
+	<a 	href="<?php echo esc_url( $lesson_url ); ?>" 
+		class="<?php echo esc_attr( $button_class ); ?>" 
+		data-course_id="<?php echo get_the_ID(); ?>">
+		<?php echo esc_html( $link_text ); ?>
+	</a>
+	<?php
 		$enroll_btn = ob_get_clean();
 }
 

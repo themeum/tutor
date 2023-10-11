@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -34,6 +36,27 @@ class Frontend {
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'wp_head', array( new Utils(), 'handle_flash_message' ), 999 );
+
+		add_action( 'tutor_course/single/before/wrap', array( $this, 'do_auto_course_complete' ) );
+	}
+
+	/**
+	 * Do auto course complete on course details page.
+	 *
+	 * @return void
+	 */
+	public function do_auto_course_complete() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		$course_id = get_the_ID();
+		$user_id   = get_current_user_id();
+
+		if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
+			CourseModel::mark_course_as_completed( $course_id, $user_id );
+			Course::set_review_popup_data( $user_id, $course_id );
+		}
 	}
 
 	/**
