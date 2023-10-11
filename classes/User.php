@@ -25,6 +25,8 @@ class User {
 	const INSTRUCTOR = 'tutor_instructor';
 	const ADMIN      = 'administrator';
 
+	const REVIEW_POPUP_META = 'tutor_review_course_popup';
+
 	/**
 	 * Registration notice
 	 *
@@ -128,7 +130,7 @@ class User {
 	 * @since 2.2.0
 	 *
 	 * @param bool $is_approved instructor is approved or not.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public static function is_instructor( $is_approved = true ) {
@@ -269,7 +271,7 @@ class User {
 	 * @return void
 	 */
 	public function profile_update( $user_id ) {
-		if ( tutor_utils()->array_get( 'tutor_action', $_POST ) !== 'tutor_profile_update_by_wp' ) {
+		if ( 'tutor_profile_update_by_wp' !== Input::post( 'tutor_action' ) ) {
 			return;
 		}
 
