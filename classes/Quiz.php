@@ -116,6 +116,8 @@ class Quiz {
 		 * @since 2.1.0
 		 */
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
+
+		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 	}
 
 	/**
@@ -797,6 +799,24 @@ class Quiz {
 			)
 		);
 		wp_send_json_success( array( 'html' => ob_get_clean() ) );
+	}
+
+	/**
+	 * Do auto course complete after review a quiz attempt.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $attempt_answer_id attempt answer id.
+	 * @param int $course_id course id.
+	 * @param int $user_id student id.
+	 *
+	 * @return void
+	 */
+	public function do_auto_course_complete( $attempt_answer_id, $course_id, $user_id ) {
+		if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
+			CourseModel::mark_course_as_completed( $course_id, $user_id );
+			Course::set_review_popup_data( $user_id, $course_id );
+		}
 	}
 
 	/**
