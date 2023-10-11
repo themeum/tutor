@@ -175,6 +175,7 @@ class Course extends Tutor_Base {
 		 * @since v1.9.7
 		 */
 		add_action( 'wp_footer', array( $this, 'popup_review_form' ) );
+		add_action( 'wp_ajax_tutor_clear_review_popup_data', array( $this, 'clear_review_popup_data' ) );
 
 		/**
 		 * Do enroll after login if guest take enroll attempt
@@ -874,8 +875,29 @@ class Course extends Tutor_Base {
 
 			if ( is_single() && get_the_ID() === $course_id ) {
 				include tutor()->path . 'views/modal/review.php';
+			}
+		}
+	}
+
+	/**
+	 * Review popup data clear
+	 *
+	 * @since 2.4.0
+	 *
+	 * @return void
+	 */
+	public function clear_review_popup_data() {
+		tutils()->checking_nonce();
+
+		if ( is_user_logged_in() ) {
+			$user_id   = get_current_user_id();
+			$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+			if ( $course_id ) {
 				delete_user_meta( $user_id, User::REVIEW_POPUP_META, $course_id );
 			}
+
+			wp_send_json_success();
 		}
 	}
 
