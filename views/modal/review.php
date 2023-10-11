@@ -14,7 +14,7 @@
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
 		<div class="tutor-modal-content tutor-modal-content-white">
-			<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+			<button type="button" class="tutor-iconic-btn tutor-modal-close-o">
 				<span class="tutor-icon-times" area-hidden="true"></span>
 			</button>
 
