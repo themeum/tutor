@@ -35,7 +35,7 @@ window.jQuery(document).ready($ => {
      *
      * @since 2.4.0
      */
-    $(document).on('click','.tutor-course-review-popup-form .tutor-modal-close-o', function() {
+    $(document).on('click','.tutor-course-review-popup-form .tutor-modal-close-o, .tutor-course-review-popup-form .tutor-review-popup-cancel', function() {
 		let modal = $(this).closest('.tutor-modal');
 		let course_id = modal.find('input[name="course_id"]').val();
 		let data = {
