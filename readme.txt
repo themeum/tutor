@@ -327,7 +327,7 @@ New: Option to complete course on lesson screen upon completing all course conte
 New: Ability to check for admins and instructors if a student has generated a certificate (Pro)
 New: Ability to update instructor information and set custom revenue share percentage on a popup (Pro)
 Update: Editor support for instructor bio from the backend instructor list
-Update: Certificate preview and OTP page are now compatible with Elementor/Divi custom header, footer Pro (Pro)
+Update: Certificate preview and OTP page are now compatible with Elementor/Divi custom header, footer (Pro)
 Update: Optimized certificate download time (Pro)
 Update: Enhanced certificate resolution for certificate builder-generated certificates
 Update: Tutor Player optimized for Vimeo videos (Pro)
