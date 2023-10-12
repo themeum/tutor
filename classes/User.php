@@ -65,6 +65,19 @@ class User {
 	}
 
 	/**
+	 * Get meta key name for review popup.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return string user meta key name.
+	 */
+	public static function get_review_popup_meta( $course_id ) {
+		return self::REVIEW_POPUP_META . '_' . $course_id;
+	}
+
+	/**
 	 * Check user has provided role.
 	 *
 	 * @since 2.2.0
