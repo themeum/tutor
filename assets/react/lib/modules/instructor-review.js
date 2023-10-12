@@ -43,20 +43,20 @@ window.jQuery(document).ready($ => {
 			course_id: course_id
 		}
 
-		$.ajax({
-			url: _tutorobject.ajaxurl,
-			type: 'POST',
-			dataType: 'json',
-			data: data,
-			success: function (res) {
-				if ( ! res.success ) {
-					console.warn('review pupup data clear error');	
-				}
-			},
-			complete: function(){
-				modal.removeClass('tutor-is-active');
-			}
-		});
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            beforeSend: function () {
+                modal.removeClass('tutor-is-active');
+            },
+            success: function (res) {
+                if (!res.success) {
+                    console.warn('review popup data clear error');
+                }
+            }
+        });
 	})
 
     $(document).on('click', '.tutor_submit_review_btn', function (e) {
@@ -115,7 +115,7 @@ window.jQuery(document).ready($ => {
                     },
                     success: function (res) {
                         if ( ! res.success ) {
-                            console.warn('review pupup data clear error');	
+                            console.warn('review popup data clear error');	
                         }
                     }
                 });
