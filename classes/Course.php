@@ -857,8 +857,8 @@ class Course extends Tutor_Base {
 		if ( get_tutor_option( 'enable_course_review' ) ) {
 			$rating = tutor_utils()->get_course_rating_by_user( $course_id, $user_id );
 			if ( ! $rating || ( empty( $rating->rating ) && empty( $rating->review ) ) ) {
-				$meta_key = User::REVIEW_POPUP_META . '_' . $course_id;
-				add_user_meta( $user_id, $meta_key, $course_id );
+				$meta_key = User::get_review_popup_meta( $course_id );
+				add_user_meta( $user_id, $meta_key, $course_id, true );
 			}
 		}
 	}
@@ -873,7 +873,7 @@ class Course extends Tutor_Base {
 		if ( is_user_logged_in() ) {
 			$user_id          = get_current_user_id();
 			$course_id        = get_the_ID();
-			$meta_key         = User::REVIEW_POPUP_META . '_' . $course_id;
+			$meta_key         = User::get_review_popup_meta( $course_id );
 			$review_course_id = (int) get_user_meta( $user_id, $meta_key, true );
 
 			if ( is_single() && $course_id === $review_course_id ) {
@@ -897,7 +897,7 @@ class Course extends Tutor_Base {
 			$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 			if ( $course_id ) {
-				$meta_key = User::REVIEW_POPUP_META . '_' . $course_id;
+				$meta_key = User::get_review_popup_meta( $course_id );
 				delete_user_meta( $user_id, $meta_key, $course_id );
 			}
 
