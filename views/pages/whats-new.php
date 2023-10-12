@@ -113,7 +113,7 @@ use TUTOR\WhatsNew;
 					<h2>Upgrade to Tutor LMS Pro and Maximize <br/> Your Revenue Potential!</h2>
 
 					<div class="tutor-whats-new-pro-banner">
-						<img src="https://ysn.sya.mybluehost.me/tutor-assets/whats-new/banner-top.png" alt="pro features">
+						<img src="https://www.themeum.com/wp-content/uploads/2023/10/banner-top.png" alt="pro features">
 					</div>
 				</div>
 			</div>
@@ -123,7 +123,7 @@ use TUTOR\WhatsNew;
 					<h2>Users love Tutor LMS Pro, <br/> you will love it too!</h2>
 
 					<div class="tutor-mt-30 tutor-whats-new-pro-banner">
-						<img src="https://ysn.sya.mybluehost.me/tutor-assets/whats-new/banner-bottom.png" alt="pro features">
+						<img src="https://www.themeum.com/wp-content/uploads/2023/10/banner-top.png" alt="pro features">
 					</div>
 
 					<p>Get access to plenty of functional addons, useful integrations, <br/> new exciting features and much more, so why wait!</p>
