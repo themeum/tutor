@@ -12,7 +12,7 @@
 
 <div class="tutor-course-bundle-wrapper">
 	<div class="tutor-course-bundle-content">
-		<img src="https://ysn.sya.mybluehost.me/tutor-assets/course-bundle-banner.png" alt="course bundle banner">
+		<img src="https://www.themeum.com/wp-content/uploads/2023/10/course-bundle-banner.png" alt="course bundle banner">
 	</div>
 	<div class="tutor-course-bundle-footer">
 		<div class="tutor-course-bundle-footer-content">
