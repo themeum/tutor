@@ -35,7 +35,7 @@
 				<textarea name="review" class="tutor-form-control tutor-mt-28" placeholder="<?php esc_attr_e( 'Tell us about your own personal experience taking this course. Was it a good match for you?', 'tutor' ); ?>"></textarea>
 
 				<div class="tutor-d-flex tutor-justify-center tutor-my-48">
-					<button type="button" class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+					<button type="button" class="tutor-review-popup-cancel tutor-btn tutor-btn-outline-primary">
 						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 					</button>
 					<button type="submit" class="tutor_submit_review_btn tutor-btn tutor-btn-primary tutor-ml-20">
