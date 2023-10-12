@@ -316,25 +316,26 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 == Changelog ==
 
-= 2.4.0 - October 10, 2023
+= 2.4.0 - October 12, 2023
 
-New: In Learning mode, the blue completed tick icon will now be different colors to show completed, pending or failed
-New: A new "Review Progress" button is introduced on the course details page for strict Mode
-New: Scheduled Zoom and Google Meet meetings are now displayed on the Tutor Calender(Pro)
-New: Upcoming Lessons and Quizzes can now be showcased on the Tutor Calendar (Pro)
-New: Social Share option added to the Certificate Download page (Pro)
-New: Upon completing all course content, students will get a "Complete Course" button on the lesson screen (Pro)
-New: Admins and Instructors can now check if a student has generated a certificate for an enrolled course (Pro)
-New: Instructor info and sharing percentage data can be updated through modal popup on the Instructor List page (Pro)
-Update: Editor support added for instructor bio from the backend instructor list
-Update: Certificate preview and OTP page are now compatible with Elementor/Divi custom header, footer (Pro)
-Update: Certificate download time has been optimized and resolution enhanced (Pro)
-Fix: On Strict Mode with auto-complete enabled, students could complete a course without passing  quiz/assignments
-Fix: Course Percentage was displaying inaccurately in some cases
-Fix: Tutor Player optimized for Vimeo videos
-Fix: Pagination issues on the course list page were resolved for users who used shortcodes
-Fix: The Certificate preview section on the course details page had issues with Safari Browser
-Fix: Social links are now operational on the Instructor profile page in the mobile view
+New: Display lesson, quiz, and assignment status with colored tick marks in learning mode
+New: Let students track the course progress on the course detail page with a new "Review Progress" button (Pro)
+New: Showcase Zoom and Google Meet meetings on the Tutor LMS Calendar (Pro)
+New: Showcase upcoming lessons and quizzes on the Tutor Calendar upon scheduling them with Content Drip (Pro)
+New: Let students share their certificates to social media from the certificate download page (Pro)
+New: Option to complete course on lesson screen upon completing all course content (Pro)
+New: Ability to check for admins and instructors if a student has generated a certificate (Pro)
+New: Ability to update instructor information and set custom revenue share percentage on a popup (Pro)
+Update: Editor support for instructor bio from the backend instructor list
+Update: Certificate preview and OTP page are now compatible with Elementor/Divi custom header, footer Pro (Pro)
+Update: Optimized certificate download time (Pro)
+Update: Enhanced certificate resolution for certificate builder-generated certificates
+Update: Tutor Player optimized for Vimeo videos (Pro)
+Fix: Ability to complete a course without passing quizzes/assignments with auto-complete enabled on strict mode
+Fix: Inaccurate course percentage in some cases
+Fix: Pagination issues on the course list page resolved for users who used shortcodes
+Fix: The Certificate preview section issues on the course details page on Safari
+Fix: Social links not working issue on the Instructor profile page in the mobile view
 
 = 2.3.0 - September 20, 2023
 
