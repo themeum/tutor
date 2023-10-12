@@ -675,7 +675,7 @@ class CourseModel {
 		}
 
 		$course_stats = tutor_utils()->get_course_completed_percent( $course_id, $user_id, true );
-		if ( $course_stats['completed_count'] === $course_stats['total_count'] ) {
+		if ( $course_stats['total_count'] && $course_stats['completed_count'] === $course_stats['total_count'] ) {
 			return self::can_complete_course( $course_id, $user_id );
 		} else {
 			return false;
