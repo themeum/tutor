@@ -316,12 +316,12 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 == Changelog ==
 
-= 2.4.0 - October 12, 2023
+= 2.4.0 - October 16, 2023
 
 New: Display lesson, quiz, and assignment status with colored tick marks in learning area
 New: Let students track the course progress on the course detail page with a new "Review Progress" button
 New: Showcase Zoom and Google Meet meetings on the Tutor LMS Calendar (Pro)
-New: Showcase upcoming lessons and quizzes on the Tutor Calendar upon scheduling them with Content Drip (Pro)
+New: Showcase upcoming lessons and quizzes on the Tutor LMS Calendar upon scheduling them with Content Drip (Pro)
 New: Let students share their certificates to social media from the certificate download page (Pro)
 New: “Complete Course” button added on learning area upon completing all course content (Pro)
 New: Ability to check for admins and instructors if a student has generated a certificate (Pro)
