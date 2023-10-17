@@ -277,7 +277,7 @@ class Instructor {
 		$user_login              = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
 		$password                = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
-		$tutor_profile_bio       = wp_kses_post( tutor_utils()->input_old( 'tutor_profile_bio' ) );
+		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
 		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
 
 		$userdata = apply_filters(

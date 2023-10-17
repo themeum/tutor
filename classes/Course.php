@@ -175,6 +175,7 @@ class Course extends Tutor_Base {
 		 * @since v1.9.7
 		 */
 		add_action( 'wp_footer', array( $this, 'popup_review_form' ) );
+		add_action( 'wp_ajax_tutor_clear_review_popup_data', array( $this, 'clear_review_popup_data' ) );
 
 		/**
 		 * Do enroll after login if guest take enroll attempt
@@ -845,49 +846,62 @@ class Course extends Tutor_Base {
 	 * Set data for review popup.
 	 *
 	 * @since 2.2.5
+	 * @since 2.4.0 removed $permalink param. store user meta instead of option data.
 	 *
-	 * @param int    $user_id user id.
-	 * @param int    $course_id course id.
-	 * @param string $permalink course permalink.
+	 * @param int $user_id user id.
+	 * @param int $course_id course id.
 	 *
 	 * @return void
 	 */
-	public static function set_review_popup_data( $user_id, $course_id, $permalink ) {
+	public static function set_review_popup_data( $user_id, $course_id ) {
 		if ( get_tutor_option( 'enable_course_review' ) ) {
 			$rating = tutor_utils()->get_course_rating_by_user( $course_id, $user_id );
 			if ( ! $rating || ( empty( $rating->rating ) && empty( $rating->review ) ) ) {
-				update_option(
-					'tutor_course_complete_popup_' . $user_id,
-					array(
-						'course_id'  => $course_id,
-						'course_url' => $permalink,
-						'expires'    => time() + 10,
-					)
-				);
+				$meta_key = User::get_review_popup_meta( $course_id );
+				add_user_meta( $user_id, $meta_key, $course_id, true );
 			}
 		}
 	}
 
 	/**
-	 * Popup review form
+	 * Popup review form on course details
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function popup_review_form() {
 		if ( is_user_logged_in() ) {
-			$key   = 'tutor_course_complete_popup_' . get_current_user_id();
-			$popup = get_option( $key );
+			$user_id          = get_current_user_id();
+			$course_id        = get_the_ID();
+			$meta_key         = User::get_review_popup_meta( $course_id );
+			$review_course_id = (int) get_user_meta( $user_id, $meta_key, true );
 
-			if ( is_array( $popup ) ) {
-
-				if ( $popup['expires'] > time() ) {
-					$course_id = $popup['course_id'];
-					include tutor()->path . 'views/modal/review.php';
-				}
-
-				delete_option( $key );
+			if ( is_single() && $course_id === $review_course_id ) {
+				include tutor()->path . 'views/modal/review.php';
 			}
+		}
+	}
+
+	/**
+	 * Review popup data clear
+	 *
+	 * @since 2.4.0
+	 *
+	 * @return void
+	 */
+	public function clear_review_popup_data() {
+		tutils()->checking_nonce();
+
+		if ( is_user_logged_in() ) {
+			$user_id   = get_current_user_id();
+			$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+			if ( $course_id ) {
+				$meta_key = User::get_review_popup_meta( $course_id );
+				delete_user_meta( $user_id, $meta_key, $course_id );
+			}
+
+			wp_send_json_success();
 		}
 	}
 

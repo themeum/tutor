@@ -9,31 +9,39 @@
  * @since 1.0.0
  */
 
-$course_id    = isset( $course_id ) ? (int) $course_id : 0;
-$is_enrolled  = tutor_utils()->is_enrolled( $course_id );
-$course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+use TUTOR\Course;
+use Tutor\Models\CourseModel;
 
-// Options.
+$user_id            = get_current_user_id();
+$course_id          = isset( $course_id ) ? (int) $course_id : 0;
+$is_enrolled        = tutor_utils()->is_enrolled( $course_id );
+$course_stats       = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 $show_mark_complete = isset( $mark_as_complete ) ? $mark_as_complete : false;
+
+
+$is_course_completed = tutor_utils()->is_completed_course( $course_id, $user_id );
 
 /**
  * Auto course complete on all lesson, quiz, assignment complete
  *
  * @since 2.0.7
+ * @since 2.4.0 update and refactor.
  */
-$auto_course_complete_option = tutor_utils()->get_option( 'auto_course_complete_on_all_lesson_completion' );
-$is_course_completed         = tutor_utils()->is_completed_course( $course_id, get_current_user_id() );
-if ( true === $auto_course_complete_option && false === $is_course_completed ) {
-	if ( $course_stats['completed_count'] === $course_stats['total_count'] ) {
-		// Complete the course.
-		\Tutor\Models\CourseModel::mark_course_as_completed( $course_id, get_current_user_id() );
+if ( CourseModel::can_autocomplete_course( $course_id, $user_id ) ) {
+	CourseModel::mark_course_as_completed( $course_id, $user_id );
 
-		/**
-		 * Show review popup when course get auto completed.
-		 *
-		 * @since 2.2.5
-		 */
-		\TUTOR\Course::set_review_popup_data( get_current_user_id(), $course_id, get_the_permalink( $course_id ) );
+	/**
+	 * After auto complete the course.
+	 * Set review popup data and redirect to course details page.
+	 * Review popup will be shown on course details page.
+	 *
+	 * @since 2.4.0
+	 */
+	Course::set_review_popup_data( $user_id, $course_id );
+	$course_link = get_permalink( $course_id );
+	if ( $course_link ) {
+		tutils()->redirect_to( $course_link );
+		exit;
 	}
 }
 
@@ -74,6 +82,7 @@ if ( true === $auto_course_complete_option && false === $is_course_completed ) {
 			if ( $show_mark_complete ) {
 				tutor_lesson_mark_complete_html();
 			}
+			do_action( 'tutor_after_lesson_completion_button', $course_id, $user_id, $is_course_completed, $course_stats );
 			?>
 			<?php endif; ?>
 		<?php

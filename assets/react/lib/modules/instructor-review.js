@@ -29,6 +29,36 @@ window.jQuery(document).ready($ => {
         (rating && selected && selected.length>0) ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-bold').addClass('tutor-icon-star-line');
     });
 
+
+    /**
+     * On review popup dismiss, clear the review popup data.
+     *
+     * @since 2.4.0
+     */
+    $(document).on('click','.tutor-course-review-popup-form .tutor-modal-close-o, .tutor-course-review-popup-form .tutor-review-popup-cancel', function() {
+		let modal = $(this).closest('.tutor-modal');
+		let course_id = modal.find('input[name="course_id"]').val();
+		let data = {
+			action: 'tutor_clear_review_popup_data',
+			course_id: course_id
+		}
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            beforeSend: function () {
+                modal.removeClass('tutor-is-active');
+            },
+            success: function (res) {
+                if (!res.success) {
+                    console.warn('review popup data clear error');
+                }
+            }
+        });
+	})
+
     $(document).on('click', '.tutor_submit_review_btn', function (e) {
         // Prevent normal submission to validate input
         e.preventDefault();
@@ -69,6 +99,26 @@ window.jQuery(document).ready($ => {
 
                 // Show thank you
                 tutor_toast(review_id ? __('Updated successfully!', 'tutor') : __('Thank You for Rating The Course!', 'tutor'), review_id ?  __('Updated rating will now be visible in the course page', 'tutor') : __('Your rating will now be visible in the course page', 'tutor'), 'success');
+
+                /**
+                 * After review submit success, clear review popup data
+                 *
+                 * @since 2.4.0
+                 */
+                $.ajax({
+                    url: _tutorobject.ajaxurl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: 'tutor_clear_review_popup_data',
+			            course_id: course_id
+                    },
+                    success: function (res) {
+                        if ( ! res.success ) {
+                            console.warn('review popup data clear error');	
+                        }
+                    }
+                });
 
                 setTimeout(function(){
                     location.reload();
