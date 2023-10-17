@@ -12,6 +12,7 @@ namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\QuizModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -845,21 +846,22 @@ class Utils {
 			$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
 
 			if ( false === $quiz_completed ) {
+				//phpcs:disable
 				$quiz_completed = (int) $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT count(quiz_id) completed 
 						FROM (
-							SELECT  DISTINCT quiz_id, course_id, attempt_status 
+							SELECT  DISTINCT quiz_id 
 							FROM 	{$wpdb->tutor_quiz_attempts} 
 							WHERE 	quiz_id IN ({$quiz_ids_str}) 
 									AND user_id = % d 
 									AND attempt_status != %s
 						) a",
 						$user_id,
-						'attempt_started'
+						QuizModel::ATTEMPT_STARTED
 					)
 				);
-				// Set cache data.
+				//phpcs:enable
 				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
 			}
 			$completed_count += $quiz_completed;
@@ -1388,7 +1390,7 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 1.4.8 Legacy Supports Added.
 	 *
-	 * @param int $lesson_id
+	 * @param int $lesson_id lesson id.
 	 *
 	 * @return bool|mixed
 	 */
@@ -1411,7 +1413,8 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course ID.
+	 * @param int   $course_id course ID.
+	 * @param mixed $post_type post type.
 	 *
 	 * @return bool|false|string
 	 */
@@ -1487,7 +1490,7 @@ class Utils {
 	 * @param int   $post_id post ID.
 	 * @param array $video_data video data.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function update_video( $post_id = 0, $video_data = array() ) {
 		$post_id = $this->get_post_id( $post_id );
@@ -1588,11 +1591,11 @@ class Utils {
 	}
 
 	/**
-	 * return seconds to formatted playtime
+	 * Return seconds to formatted playtime.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $seconds seconds.
+	 * @param int $seconds seconds.
 	 *
 	 * @return string
 	 */
@@ -1610,7 +1613,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $seconds seconds.
+	 * @param int $seconds seconds.
 	 *
 	 * @return array
 	 */
@@ -1646,7 +1649,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $seconds seconds.
+	 * @param int $seconds seconds.
 	 *
 	 * @return string
 	 */
@@ -7135,7 +7138,7 @@ class Utils {
 	 *
 	 * @since 1.4.9
 	 *
-	 * @param int $course_id course id.
+	 * @param int $content_id content id.
 	 *
 	 * @return array|null|object
 	 */
@@ -7440,7 +7443,8 @@ class Utils {
 	 *
 	 * @since 1.7.5
 	 *
-	 * @param int $course_id course id.
+	 * @param int  $course_or_product_id course or product id.
+	 * @param bool $is_product_id is product id or not.
 	 *
 	 * @return bool
 	 */

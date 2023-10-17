@@ -20,6 +20,10 @@ use Tutor\Helpers\QueryHelper;
  */
 class QuizModel {
 
+	const ATTEMPT_STARTED = 'attempt_started';
+	const ATTEMPT_ENDED   = 'attempt_ended';
+	const REVIEW_REQUIRED = 'review_required';
+
 	/**
 	 * Get quiz table name
 	 *
@@ -886,5 +890,60 @@ class QuizModel {
 		);
 		//phpcs:enable
 		return $count ? $count : 0;
+	}
+
+	/**
+	 * Get final quiz result depending on all attempts.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $quiz_id quiz id.
+	 * @param int $user_id user id.
+	 *
+	 * @return string pass, fail, pending
+	 */
+	public static function get_quiz_result( $quiz_id, $user_id = 0 ) {
+		global $wpdb;
+
+		$all_pending = true;
+		$result      = 'pending';
+
+		$user_id      = tutor_utils()->get_user_id( $user_id );
+		$attempt_list = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id=%d AND quiz_id=%d", $user_id, $quiz_id ) );
+
+		$total_pending_attempt = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(quiz_attempt_id) total_pending_attempt
+				FROM (
+					SELECT qa.quiz_attempt_id, COUNT(*) AS total_pending
+					FROM {$wpdb->prefix}tutor_quiz_attempt_answers qa
+					WHERE qa.quiz_id = %d AND qa.user_id=%d AND qa.is_correct IS NULL
+					GROUP BY qa.quiz_attempt_id
+				) a
+				",
+				$quiz_id,
+				$user_id
+			)
+		);
+
+		if ( count( $attempt_list ) !== $total_pending_attempt ) {
+			$all_pending = false;
+		}
+
+		if ( false === $all_pending ) {
+			$required_percentage = tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
+			foreach ( $attempt_list as $attempt ) {
+				$earned_percentage = $attempt->earned_marks > 0 ? ( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) : 0;
+				if ( $earned_percentage >= $required_percentage ) {
+					// If at least one attempt passed then quiz passed.
+					$result = 'pass';
+					break;
+				} else {
+					$result = 'fail';
+				}
+			}
+		}
+
+		return $result;
 	}
 }

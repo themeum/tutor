@@ -40,7 +40,7 @@ use TUTOR\Input;
 		<input type="hidden" name="action" value="tutor_option_save">
 		<div class="tutor-row tutor-gx-lg-0 tutor-my-24">
 			<div class="tutor-col-auto tutor-col-lg-2">
-				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" tutor-option-tabs>
+				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v tutor-is-sticky" tutor-option-tabs>
 					<?php
 					foreach ( $option_fields as $key => $section ) {
 						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';

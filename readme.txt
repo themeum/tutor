@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.3
 Requires PHP: 7.1
-Stable tag: 2.3.0
+Stable tag: 2.4.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -315,6 +315,27 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.4.0 - October 16, 2023
+
+New: Display lesson, quiz, and assignment status with colored tick marks in learning area
+New: Let students track the course progress on the course detail page with a new "Review Progress" button
+New: Showcase Zoom and Google Meet meetings on the Tutor LMS Calendar (Pro)
+New: Showcase upcoming lessons and quizzes on the Tutor LMS Calendar upon scheduling them with Content Drip (Pro)
+New: Let students share their certificates to social media from the certificate download page (Pro)
+New: “Complete Course” button added on learning area upon completing all course content (Pro)
+New: Ability to check for admins and instructors if a student has generated a certificate (Pro)
+New: Ability to update instructor information and set custom revenue share percentage on a popup (Pro)
+Update: Editor support for instructor bio from the backend instructor list
+Update: Certificate preview and OTP page are now compatible with Elementor/Divi custom header, footer (Pro)
+Update: Optimized certificate download time (Pro)
+Update: Enhanced certificate resolution for certificate builder-generated certificates
+Update: Tutor Player optimized for Vimeo videos (Pro)
+Fix: Ability to complete a course without passing quizzes/assignments with auto-complete enabled on strict mode
+Fix: Inaccurate course percentage in some cases
+Fix: Pagination issues on the course list page resolved for users who used shortcodes
+Fix: The Certificate preview section issues on the course details page on Safari
+Fix: Social links not working issue on the Instructor profile page in the mobile view
 
 = 2.3.0 - September 20, 2023
 
