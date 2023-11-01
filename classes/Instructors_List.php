@@ -204,16 +204,15 @@ class Instructors_List {
 			$arr = explode( ',', $user_ids );
 			foreach ( $arr as $instructor_id ) {
 				$instructor_id = (int) sanitize_text_field( $instructor_id );
-				self::remove_instructor_role( $instructor_id, $status );
+				self::instructor_blockage( $instructor_id, $status );
 			}
 		}
 		if ( 'reject' === $status ) {
 			$arr = explode( ',', $user_ids );
 			foreach ( $arr as $instructor_id ) {
 				$instructor_id = (int) sanitize_text_field( $instructor_id );
-				self::remove_instructor_role( $instructor_id, $status );
+				self::instructor_rejection( $instructor_id, $status );
 			}
-			do_action( 'tutor_after_rejected_instructor', $instructor_id );
 		}
 
 		if ( 'approved' === $status ) {
@@ -289,13 +288,41 @@ class Instructors_List {
 	protected static function remove_instructor_role( int $instructor_id, string $status ) {
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$status        = sanitize_text_field( $status );
-
-		do_action( 'tutor_before_blocked_instructor', $instructor_id );
 		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
-
 		$instructor = new \WP_User( $instructor_id );
 		$instructor->remove_role( tutor()->instructor_role );
+	}
+	/**
+	 * Instructor blocking function
+	 *
+	 * @since 2.5.0
+	 * 
+	 * @param integer $instructor_id
+	 * @param string $status
+	 * @return void
+	 */
+	protected static function instructor_blockage(int $instructor_id, string $status ){
+		$instructor_id = sanitize_text_field( $instructor_id );
+		$status        = sanitize_text_field( $status );
+		do_action( 'tutor_before_blocked_instructor', $instructor_id );
+		self::remove_instructor_role( $instructor_id, $status );
 		do_action( 'tutor_after_blocked_instructor', $instructor_id );
+	}
+	/**
+	 * Instructor rejection function
+	 *
+	 * @since 2.5.0
+	 * 
+	 * @param integer $instructor_id
+	 * @param string $status
+	 * @return void
+	 */
+	protected static function instructor_rejection(int $instructor_id, string $status ){
+		$instructor_id = sanitize_text_field( $instructor_id );
+		$status        = sanitize_text_field( $status );
+		
+		self::remove_instructor_role( $instructor_id, $status );
+		do_action( 'tutor_after_rejected_instructor', $instructor_id );
 	}
 
 	/**
