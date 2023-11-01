@@ -382,7 +382,6 @@ class Instructors_List {
 				self::INSTRUCTOR_LIST_CACHE_KEY,
 				$result = $wpdb->get_results(
 					$wpdb->prepare(
-						//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 						$query,
 						$search_clause,
 						$search_clause,
@@ -443,7 +442,6 @@ class Instructors_List {
 				self::INSTRUCTOR_COUNT_CACHE_KEY,
 				$result = $wpdb->get_var(
 					$wpdb->prepare(
-						//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 						$query,
 						$search_clause,
 						$search_clause
