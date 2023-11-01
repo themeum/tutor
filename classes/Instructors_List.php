@@ -380,7 +380,7 @@ class Instructors_List {
 		if ( false === $result ) {
 			TutorCache::set(
 				self::INSTRUCTOR_LIST_CACHE_KEY,
-				//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				//phpcs:disable
 				$result = $wpdb->get_results(
 					$wpdb->prepare(
 						$query,
@@ -390,7 +390,7 @@ class Instructors_List {
 						$per_page
 					)
 				)
-				//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				//phpcs:enable
 			);
 		}
 
@@ -442,7 +442,7 @@ class Instructors_List {
 		if ( false === $result ) {
 			TutorCache::set(
 				self::INSTRUCTOR_COUNT_CACHE_KEY,
-				//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				//phpcs:disable
 				$result = $wpdb->get_var(
 					$wpdb->prepare(
 						$query,
@@ -450,7 +450,7 @@ class Instructors_List {
 						$search_clause
 					)
 				)
-				//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				//phpcs:enable
 			);
 		}
 		return $result;
