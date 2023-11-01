@@ -296,12 +296,12 @@ class Instructors_List {
 	 * Instructor blocking function
 	 *
 	 * @since 2.5.0
-	 * 
-	 * @param integer $instructor_id
-	 * @param string $status
+	 *
+	 * @param int  $instructor_id | user id that need to add role.
+	 * @param string  $status | status that will added with role (approved).
 	 * @return void
 	 */
-	protected static function instructor_blockage(int $instructor_id, string $status ){
+	protected static function instructor_blockage( int $instructor_id, string $status ) {
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$status        = sanitize_text_field( $status );
 		do_action( 'tutor_before_blocked_instructor', $instructor_id );
@@ -312,15 +312,15 @@ class Instructors_List {
 	 * Instructor rejection function
 	 *
 	 * @since 2.5.0
-	 * 
-	 * @param integer $instructor_id
-	 * @param string $status
+	 *
+	 * @param int  $instructor_id | user id that need to add role.
+	 * @param string  $status | status that will added with role (approved).
 	 * @return void
 	 */
-	protected static function instructor_rejection(int $instructor_id, string $status ){
+	protected static function instructor_rejection( int $instructor_id, string $status ) {
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$status        = sanitize_text_field( $status );
-		
+		do_action( 'tutor_before_rejected_instructor', $instructor_id );
 		self::remove_instructor_role( $instructor_id, $status );
 		do_action( 'tutor_after_rejected_instructor', $instructor_id );
 	}
