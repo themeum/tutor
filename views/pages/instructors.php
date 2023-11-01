@@ -54,16 +54,15 @@ $available_status = array(
 
 $instructor_status = array( 'approved', 'pending', 'blocked' );
 if ( 'pending' === $active_tab ) {
-	$instructor_status = array( 'pending' );
-	$ins_reject_status_key = 'reject';
-	$ins_reject_value =  array( __( 'Reject', 'tutor' ), 'select-danger' );
-	$available_status[ $ins_reject_status_key ] = $ins_reject_value;
+	$instructor_status          = array( 'pending' );
+	$available_status['reject'] = array( __( 'Reject', 'tutor' ), 'select-danger' );
 
 } elseif ( 'blocked' === $active_tab ) {
 	$instructor_status = array( 'blocked' );
 } elseif ( 'approved' === $active_tab ) {
 	$instructor_status = array( 'approved' );
 }
+
 $instructors_list = Instructors_List::get_instructors( $instructor_status, $offset, $per_page_data, $search_term, $course_id, $date, $data_order );
 
 $total = Instructors_List::count_total_instructors( $instructor_status, $search_term, $course_id, $date );
