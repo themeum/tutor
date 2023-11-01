@@ -56,7 +56,7 @@ $instructor_status = array( 'approved', 'pending', 'blocked' );
 if ( 'pending' === $active_tab ) {
 	$instructor_status          = array( 'pending' );
 	$available_status['reject'] = array( __( 'Reject', 'tutor' ), 'select-danger' );
-	
+
 } elseif ( 'blocked' === $active_tab ) {
 	$instructor_status = array( 'blocked' );
 } elseif ( 'approved' === $active_tab ) {

@@ -297,8 +297,8 @@ class Instructors_List {
 	 *
 	 * @since 2.5.0
 	 *
-	 * @param int  $instructor_id | user id that need to add role.
-	 * @param string  $status | status that will added with role (approved).
+	 * @param int    $instructor_id | user id that need to add role.
+	 * @param string $status | status that will added with role (approved).
 	 * @return void
 	 */
 	protected static function instructor_blockage( int $instructor_id, string $status ) {
@@ -313,8 +313,8 @@ class Instructors_List {
 	 *
 	 * @since 2.5.0
 	 *
-	 * @param int  $instructor_id | user id that need to add role.
-	 * @param string  $status | status that will added with role (approved).
+	 * @param int    $instructor_id | user id that need to add role.
+	 * @param string $status | status that will added with role (approved).
 	 * @return void
 	 */
 	protected static function instructor_rejection( int $instructor_id, string $status ) {
