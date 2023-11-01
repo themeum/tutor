@@ -207,6 +207,14 @@ class Instructors_List {
 				self::remove_instructor_role( $instructor_id, $status );
 			}
 		}
+		if ( 'reject' === $status ) {
+			$arr = explode( ',', $user_ids );
+			foreach ( $arr as $instructor_id ) {
+				$instructor_id = (int) sanitize_text_field( $instructor_id );
+				self::remove_instructor_role( $instructor_id, $status );
+			}
+			do_action( 'tutor_after_rejected_instructor', $instructor_id );
+		}
 
 		if ( 'approved' === $status ) {
 			$arr = explode( ',', $user_ids );

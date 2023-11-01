@@ -46,9 +46,19 @@ $per_page_data = tutor_utils()->get_option( 'pagination_per_page' );
 $offset        = ( $per_page_data * $selected_page ) - $per_page_data;
 
 // Available status for instructor.
+$available_status = array(
+	'pending'  => array( __( 'Pending', 'tutor' ), 'select-warning' ),
+	'approved' => array( __( 'Approved', 'tutor' ), 'select-success' ),
+	'blocked'  => array( __( 'Blocked', 'tutor' ), 'select-danger' ),
+);
+
 $instructor_status = array( 'approved', 'pending', 'blocked' );
 if ( 'pending' === $active_tab ) {
 	$instructor_status = array( 'pending' );
+	$ins_reject_status_key = 'reject';
+	$ins_reject_value =  array( __( 'Reject', 'tutor' ), 'select-danger' );
+	$available_status[ $ins_reject_status_key ] = $ins_reject_value;
+
 } elseif ( 'blocked' === $active_tab ) {
 	$instructor_status = array( 'blocked' );
 } elseif ( 'approved' === $active_tab ) {
@@ -92,12 +102,7 @@ $filters = array(
 		$filters_template = tutor()->path . 'views/elements/filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
-		$available_status = array(
-			'pending'  => array( __( 'Pending', 'tutor' ), 'select-warning' ),
-			'approved' => array( __( 'Approved', 'tutor' ), 'select-success' ),
-			'blocked'  => array( __( 'Blocked', 'tutor' ), 'select-danger' ),
-		);
-		?>
+	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-table-responsive tutor-mt-32">
 			<table class="tutor-table tutor-table-middle table-instructors tutor-table-with-checkbox">
