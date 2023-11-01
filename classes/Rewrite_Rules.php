@@ -65,21 +65,23 @@ class Rewrite_Rules extends Tutor_Base {
 	 * Tutor rewrite rules
 	 *
 	 * @since 1.0.0
+	 * @since 2.5.0     Param typecast added.
+	 *                  Dynamic course permalink support added.
 	 *
-	 * @param string $wp_rewrite get the rewrite rule.
+	 * @param \WP_Rewrite $wp_rewrite get the rewrite rule.
 	 *
 	 * @return void
 	 */
-	public function add_rewrite_rules( $wp_rewrite ) {
+	public function add_rewrite_rules( \WP_Rewrite $wp_rewrite ) {
 		$new_rules = array(
 			// Lesson Permalink.
-			$this->course_post_type . "/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=" . $wp_rewrite->preg_index( 2 ),
+			$this->course_base_permalink . "/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=" . $wp_rewrite->preg_index( 2 ),
 			// Quiz Permalink.
-			$this->course_post_type . '/(.+?)/tutor_quiz/(.+?)/?$' => 'index.php?post_type=tutor_quiz&name=' . $wp_rewrite->preg_index( 2 ),
+			$this->course_base_permalink . '/(.+?)/tutor_quiz/(.+?)/?$' => 'index.php?post_type=tutor_quiz&name=' . $wp_rewrite->preg_index( 2 ),
 			// Assignments URL.
-			$this->course_post_type . '/(.+?)/assignments/(.+?)/?$' => 'index.php?post_type=tutor_assignments&name=' . $wp_rewrite->preg_index( 2 ),
+			$this->course_base_permalink . '/(.+?)/assignments/(.+?)/?$' => 'index.php?post_type=tutor_assignments&name=' . $wp_rewrite->preg_index( 2 ),
 			// Zoom Meeting.
-			$this->course_post_type . '/(.+?)/zoom-meeting/(.+?)/?$' => 'index.php?post_type=tutor_zoom_meeting&name=' . $wp_rewrite->preg_index( 2 ),
+			$this->course_base_permalink . '/(.+?)/zoom-meeting/(.+?)/?$' => 'index.php?post_type=tutor_zoom_meeting&name=' . $wp_rewrite->preg_index( 2 ),
 
 			// Private Video URL.
 			'video-url/(.+?)/?$' => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=" . $wp_rewrite->preg_index( 1 ),
@@ -124,9 +126,9 @@ class Rewrite_Rules extends Tutor_Base {
 				if ( $course ) {
 					$course_base_slug = $course->post_name;
 				}
-				return home_url( "/{$this->course_post_type}/{$course_base_slug}/{$this->lesson_base_permalink}/" . $post->post_name . '/' );
+				return home_url( "/{$this->course_base_permalink}/{$course_base_slug}/{$this->lesson_base_permalink}/" . $post->post_name . '/' );
 			} else {
-				return home_url( "/{$this->course_post_type}/sample-course/{$this->lesson_base_permalink}/" . $post->post_name . '/' );
+				return home_url( "/{$this->course_base_permalink}/sample-course/{$this->lesson_base_permalink}/" . $post->post_name . '/' );
 			}
 		} elseif ( is_object( $post ) && 'tutor_quiz' === $post->post_type ) {
 			// Quiz Permalink.
@@ -142,9 +144,9 @@ class Rewrite_Rules extends Tutor_Base {
 				}
 
 				$course_post_name = isset( $course->post_name ) ? $course->post_name : 'sample-course';
-				return home_url( "/{$this->course_post_type}/{$course_post_name}/tutor_quiz/{$post->post_name}/" );
+				return home_url( "/{$this->course_base_permalink}/{$course_post_name}/tutor_quiz/{$post->post_name}/" );
 			} else {
-				return home_url( "/{$this->course_post_type}/sample-course/tutor_quiz/{$post->post_name}/" );
+				return home_url( "/{$this->course_base_permalink}/sample-course/tutor_quiz/{$post->post_name}/" );
 			}
 		}
 		return $post_link;
