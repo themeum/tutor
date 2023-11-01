@@ -314,7 +314,7 @@ class Instructor {
 	/**
 	 * Handle instructor approval action
 	 * This function not used maybe, will be removed
-	 * 
+	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
