@@ -204,7 +204,11 @@ class Instructors_List {
 			$arr = explode( ',', $user_ids );
 			foreach ( $arr as $instructor_id ) {
 				$instructor_id = (int) sanitize_text_field( $instructor_id );
-				self::instructor_blockage( $instructor_id, $status );
+				if ( 'pending' === $status ) {
+					self::remove_instructor_role( $instructor_id, $status );
+				} else {
+					self::instructor_blockage( $instructor_id ); // status removed
+				}
 			}
 		}
 		if ( 'reject' === $status ) {
@@ -297,15 +301,13 @@ class Instructors_List {
 	 *
 	 * @since 2.5.0
 	 *
-	 * @param int    $instructor_id | user id that need to add role.
-	 * @param string $status | status that will added with role (approved).
+	 * @param int $instructor_id | user id that need to add role.
 	 * @return void
 	 */
-	protected static function instructor_blockage( int $instructor_id, string $status ) {
+	protected static function instructor_blockage( int $instructor_id ) {
 		$instructor_id = sanitize_text_field( $instructor_id );
-		$status        = sanitize_text_field( $status );
 		do_action( 'tutor_before_blocked_instructor', $instructor_id );
-		self::remove_instructor_role( $instructor_id, $status );
+		self::remove_instructor_role( $instructor_id, 'blocked' );
 		do_action( 'tutor_after_blocked_instructor', $instructor_id );
 	}
 	/**
