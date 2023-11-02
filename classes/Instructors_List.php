@@ -313,7 +313,7 @@ class Instructors_List {
 	 *
 	 * @since 2.5.0
 	 *
-	 * @param int    $instructor_id | user id that need to add role.
+	 * @param int $instructor_id | user id that need to add role.
 	 * @return void
 	 */
 	protected static function instructor_rejection( int $instructor_id ) {
