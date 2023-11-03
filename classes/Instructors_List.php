@@ -207,7 +207,7 @@ class Instructors_List {
 				if ( 'pending' === $status ) {
 					self::remove_instructor_role( $instructor_id, $status );
 				} else {
-					self::instructor_blockage( $instructor_id ); // status removed
+					self::instructor_blockage( $instructor_id );
 				}
 			}
 		}
