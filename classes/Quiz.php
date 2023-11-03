@@ -149,7 +149,7 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! User::has_any_role( [User::ADMIN,User::INSTRUCTOR] ) ) {
+		if ( ! User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
