@@ -48,6 +48,15 @@ class Tutor_Base {
 	public $lesson_base_permalink;
 
 	/**
+	 * Course base permalink
+	 *
+	 * @since 2.5.0
+	 *
+	 * @var string
+	 */
+	public $course_base_permalink;
+
+	/**
 	 * Register hooks
 	 *
 	 * @since 1.0.0
@@ -57,11 +66,8 @@ class Tutor_Base {
 		$this->course_post_type = tutor()->course_post_type;
 		$this->lesson_post_type = tutor()->lesson_post_type;
 
-		// Lesson Permalink.
-		$this->lesson_base_permalink = tutor_utils()->get_option( 'lesson_permalink_base' );
-		if ( ! $this->lesson_base_permalink ) {
-			$this->lesson_base_permalink = $this->lesson_post_type;
-		}
+		$this->course_base_permalink = tutor_utils()->get_option( 'course_permalink_base', $this->course_post_type );
+		$this->lesson_base_permalink = tutor_utils()->get_option( 'lesson_permalink_base', $this->lesson_post_type );
 
 	}
 
