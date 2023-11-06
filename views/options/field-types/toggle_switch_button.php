@@ -36,22 +36,26 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . $field_label . '" data-
 			<span style="white-space: nowrap;"></span>
 		<?php } ?>
 	</div>
-	<div class="tutor-option-field-input tutor-d-flex has-btn-after">
-		<label class="tutor-form-toggle">
-			<input type="hidden" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][<?php echo esc_attr( $field['event'] ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
-			<input type="checkbox" value="on" <?php esc_attr( checked( $option_value, 'on' ) ); ?> class="tutor-form-toggle-input">
-			<span class="tutor-form-toggle-control"></span>
-		</label>
-		<?php
-		if ( isset( $field['buttons'] ) ) {
-			foreach ( $field['buttons'] as $key => $button ) {
-				if ( 'anchor' === $button['type'] ) {
-					?>
+	<div class="tutor-option-field-input tutor-d-flex">
+	<?php
+	if ( isset( $field['buttons'] ) ) {
+		$total_btn = count( $field['buttons'] );
+
+		echo $total_btn ? '<div class="tutor-mr-16">' : '';
+		foreach ( $field['buttons'] as $key => $button ) {
+			if ( 'anchor' === $button['type'] ) {
+				?>
 					<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_attr( $button['url'] ); ?>"><?php echo esc_attr( $button['text'] ); ?></a>
 					<?php
-				}
 			}
 		}
-		?>
+		echo $total_btn ? '</div>' : '';
+	}
+	?>
+	<label class="tutor-form-toggle">
+		<input type="hidden" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][<?php echo esc_attr( $field['event'] ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
+		<input type="checkbox" value="on" <?php esc_attr( checked( $option_value, 'on' ) ); ?> class="tutor-form-toggle-input">
+		<span class="tutor-form-toggle-control"></span>
+	</label>
 	</div>
 </div>
