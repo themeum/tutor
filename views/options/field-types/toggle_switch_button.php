@@ -26,7 +26,7 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . $field_label . '" data-
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label <?php echo $tooltip_desc ? 'has-tooltip' : ''; ?>">
-		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name>
+		<div class="tutor-fs-6 tutor-fw-medium tutor-my-4" tutor-option-name>
 			<?php echo esc_html( $field_label ); ?>
 		</div>
 		<?php if ( $tooltip_desc ) { ?>
