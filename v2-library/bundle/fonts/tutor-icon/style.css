@@ -45,6 +45,18 @@
 .tutor-icon-api:before {
   content: "\f906";
 }
+.tutor-icon-align-center:before {
+  content: "\e900";
+}
+.tutor-icon-align-justify:before {
+  content: "\e901";
+}
+.tutor-icon-align-left:before {
+  content: "\e902";
+}
+.tutor-icon-align-right:before {
+  content: "\e903";
+}
 
 .tutor-icon-brand-buddypress:before {
   content: "\e9e0";

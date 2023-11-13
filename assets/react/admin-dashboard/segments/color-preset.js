@@ -70,16 +70,18 @@
 			const pickerCode = picker.nextElementSibling;
 			pickerCode.innerText = picker.value;
 
-			colorPickerInputs.forEach((picker) => {
-				let preset = picker.dataset.picker;
-				presetColors.forEach((toPreset) => {
-					if (toPreset.dataset.preset == preset) {
-						toPreset.dataset.color = picker.value;
-						toPreset.style.backgroundColor = picker.value;
-					}
+			if (presetColors) {
+				colorPickerInputs.forEach((picker) => {
+					let preset = picker.dataset.picker;
+					presetColors.forEach((toPreset) => {
+						if (toPreset.dataset.preset == preset) {
+							toPreset.dataset.color = picker.value;
+							toPreset.style.backgroundColor = picker.value;
+						}
+					});
+					presetItem.checked = true;
 				});
-				presetItem.checked = true;
-			});
+		}
 		});
 	};
 	// listening color pickers input event
