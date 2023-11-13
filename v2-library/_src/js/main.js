@@ -11,3 +11,4 @@ import './accordion';
 import './accordionRadioFields';
 import './dropdownSelect';
 import './toggleMore';
+import './alignmentField';
