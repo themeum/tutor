@@ -381,6 +381,7 @@ class User {
 	 * Set the user last active timestamp to now.
 	 *
 	 * @since 2.5.0
+	 * @param int $user_id User ID to check active user.
 	 */
 	public function tutor_update_user_last_login( $user_id ) {
 		update_user_meta( $user_id, 'tutor_last_login', (string) strtotime( gmdate( 'Y-m-d', time() ) ) );
