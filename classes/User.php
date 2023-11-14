@@ -62,6 +62,7 @@ class User {
 
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
 		add_action( 'admin_init', array( $this, 'hide_notices' ) );
+		add_action( 'tutor_after_login_success', array( $this, 'tutor_update_user_last_login' ) );
 	}
 
 	/**
@@ -376,4 +377,14 @@ class User {
 		</div>
 		<?php
 	}
+	/**
+	 * Set the user last active timestamp to now.
+	 *
+	 * @since 2.5.0
+	 */
+	public function tutor_update_user_last_login( $user_id ) {
+		update_user_meta( $user_id, 'tutor_last_login', (string) strtotime( gmdate( 'Y-m-d', time() ) ) );
+	}
+
+
 }
