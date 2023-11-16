@@ -62,7 +62,7 @@ class User {
 
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
 		add_action( 'admin_init', array( $this, 'hide_notices' ) );
-		add_action( 'tutor_after_login_success', array( $this, 'tutor_update_user_last_login' ) );
+		add_action( 'wp_login', array( $this, 'update_user_last_login' ), 10, 2 );
 	}
 
 	/**
@@ -381,10 +381,11 @@ class User {
 	 * Set the user last active timestamp to now.
 	 *
 	 * @since 2.5.0
-	 * @param int $user_id User ID to check active user.
+	 * @param string $user_login active user name.
+	 * @param int $user User ID to check active user.
 	 */
-	public function tutor_update_user_last_login( $user_id ) {
-		update_user_meta( $user_id, 'tutor_last_login', (string) strtotime( gmdate( 'Y-m-d', time() ) ) );
+	public function update_user_last_login( $user_login, $user ) {
+		update_user_meta( $user->ID, 'tutor_last_login', time() );
 	}
 
 
