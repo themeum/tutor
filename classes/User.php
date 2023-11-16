@@ -26,6 +26,7 @@ class User {
 	const ADMIN      = 'administrator';
 
 	const REVIEW_POPUP_META = 'tutor_review_course_popup';
+	const LAST_LOGIN_META   = 'tutor_last_login';
 
 	/**
 	 * Registration notice
@@ -382,12 +383,13 @@ class User {
 	 *
 	 * @since 2.5.0
 	 *
-	 * @param string $user_login active user name.
-	 * @param obj    $user User object data.
+	 * @param string   $user_login active user name.
+	 * @param \WP_User $user User object data.
+	 *
 	 * @return void
 	 */
 	public function update_user_last_login( $user_login, $user ) {
-		update_user_meta( $user->ID, 'tutor_last_login', time() );
+		update_user_meta( $user->ID, self::LAST_LOGIN_META, time() );
 	}
 
 }
