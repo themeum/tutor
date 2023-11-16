@@ -386,7 +386,7 @@ class User {
 	 * @param int    $user User ID to check active user.
 	 */
 	public function update_user_last_login( $user_login, $user ) {
-		update_user_meta( $user->ID, 'tutor_last_login', time() );
+		update_user_meta( $user->ID, 'tutor_last_login', current_time( 'timestamp', true ) );
 	}
 
 }
