@@ -381,12 +381,12 @@ class User {
 	 * Set the user last active timestamp to now.
 	 *
 	 * @since 2.5.0
+	 * 
 	 * @param string $user_login active user name.
-	 * @param int $user User ID to check active user.
+	 * @param int    $user User ID to check active user.
 	 */
 	public function update_user_last_login( $user_login, $user ) {
 		update_user_meta( $user->ID, 'tutor_last_login', time() );
 	}
-
 
 }
