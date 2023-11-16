@@ -378,6 +378,7 @@ class User {
 		</div>
 		<?php
 	}
+
 	/**
 	 * Set the user last active timestamp to now.
 	 *
