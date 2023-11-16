@@ -383,10 +383,11 @@ class User {
 	 * @since 2.5.0
 	 *
 	 * @param string $user_login active user name.
-	 * @param int    $user User ID to check active user.
+	 * @param obj    $user User object data.
+	 * @return void
 	 */
 	public function update_user_last_login( $user_login, $user ) {
-		update_user_meta( $user->ID, 'tutor_last_login', current_time( 'timestamp', true ) );
+		update_user_meta( $user->ID, 'tutor_last_login', time() );
 	}
 
 }
