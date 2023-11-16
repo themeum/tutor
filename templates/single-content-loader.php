@@ -22,7 +22,9 @@ $course_id   = tutor_utils()->get_course_id_by_subcontent( $content_id );
 $contents    = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
 $previous_id = $contents->previous_id;
 $next_id     = $contents->next_id;
+$user_id     = get_current_user_id();
 
+$is_course_completed   = tutor_utils()->is_completed_course( $course_id, $user_id );
 $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 extract( $data ); // $data variable consist $context, $html_content.
@@ -100,15 +102,14 @@ if ( tutor()->lesson_post_type === $post->post_type ) {
 				</div>
 			</div>
 
-			<?php if ( ! $is_completed_lesson ) : ?>
-				<div class="tutor-spotlight-mobile-progress-right tutor-col-sm-4 tutor-col-6">
-					<?php
-					if ( $show_mark_as_complete ) {
-						tutor_lesson_mark_complete_html();
-					}
-					?>
-				</div>
-			<?php endif; ?>
+			<div class="tutor-spotlight-mobile-progress-right tutor-col-sm-4 tutor-col-6">
+				<?php
+				if ( ! $is_completed_lesson && $show_mark_as_complete ) {
+					tutor_lesson_mark_complete_html();
+				}
+				do_action( 'tutor_after_lesson_completion_button', $course_id, $user_id, $is_course_completed, $course_stats );
+				?>
+			</div>
 
 		</div>
 	</div>
