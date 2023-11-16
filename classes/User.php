@@ -381,7 +381,7 @@ class User {
 	 * Set the user last active timestamp to now.
 	 *
 	 * @since 2.5.0
-	 * 
+	 *
 	 * @param string $user_login active user name.
 	 * @param int    $user User ID to check active user.
 	 */
