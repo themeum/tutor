@@ -101,7 +101,7 @@ class Lesson extends Tutor_Base {
 				'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 			);
 			self::create_comment( $comment_data );
-			do_action( 'tutor_new_comment_added' , $comment_data );
+			do_action( 'tutor_new_comment_added', $comment_data );
 		}
 		ob_start();
 		tutor_load_template( 'single.lesson.comment' );
