@@ -34,7 +34,7 @@ trait JsonResponse {
 	/**
 	 * Response JSON fail message.
 	 *
-	 * @param string $message success message.
+	 * @param string $message fail message.
 	 *
 	 * @return void
 	 */
