@@ -316,6 +316,10 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 == Changelog ==
 
+= 2.5.0 - December 06, 2023
+
+New: Manual email (Pro)
+
 = 2.4.0 - October 16, 2023
 
 New: Display lesson, quiz, and assignment status with colored tick marks in learning area
