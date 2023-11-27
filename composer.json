@@ -6,7 +6,8 @@
         "psr-4": {
             "Tutor\\Cache\\":"cache/",
             "Tutor\\Models\\":"models/",
-            "Tutor\\Helpers\\":"helpers/"
+            "Tutor\\Helpers\\":"helpers/",
+            "Tutor\\Traits\\":"traits/"
         }
     },
     "autoload-dev": {
