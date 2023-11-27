@@ -1,5 +1,7 @@
 // dropdown
 (function tutorDropdownMenu() {
+	const dropdownCloseEvent = new Event("tutor_dropdown_closed");
+
 	document.addEventListener('click', (e) => {
 		const dropdownAttr = 'action-tutor-dropdown';
 		const dropDownTarget = e.target.hasAttribute(dropdownAttr)
@@ -13,6 +15,7 @@
 
 			if (dropdownParent.classList.contains('is-open')) {
 				dropdownParent.classList.remove('is-open');
+				dropdownParent.dispatchEvent(dropdownCloseEvent);
 			} else {
 				document
 					.querySelectorAll('.tutor-dropdown-parent')
@@ -36,7 +39,10 @@
 				document
 					.querySelectorAll('.tutor-dropdown-parent')
 					.forEach((dropdownParent) => {
-						dropdownParent.classList.remove('is-open');
+						if (dropdownParent.classList.contains('is-open')) {
+							dropdownParent.classList.remove('is-open');
+							dropdownParent.dispatchEvent(dropdownCloseEvent);
+						}
 					});
 			}
 		}
