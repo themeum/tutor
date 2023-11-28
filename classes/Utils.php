@@ -2269,15 +2269,17 @@ class Utils {
 	 * Get the enrolled courses by user
 	 *
 	 * @since 1.0.0
+	 * @since 2.5.0 $filters param added to query enrolled courses with additional filters.
 	 *
 	 * @param integer $user_id user id.
 	 * @param string  $post_status post status.
 	 * @param integer $offset offset.
 	 * @param integer $posts_per_page post per page.
+	 * @param array   $filters additional filters with key value for \WP_Query.
 	 *
 	 * @return bool|\WP_Query
 	 */
-	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1 ) {
+	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $filters = array() ) {
 		global $wpdb;
 
 		$user_id    = $this->get_user_id( $user_id );
@@ -2292,6 +2294,15 @@ class Utils {
 				'offset'         => $offset,
 				'posts_per_page' => $posts_per_page,
 			);
+
+			if ( count( $filters ) ) {
+				$keys = array_keys( $course_args );
+				foreach ( $filters as $key => $value ) {
+					if ( ! in_array( $key, $keys ) ) {
+						$course_args[ $key ] = $value;
+					}
+				}
+			}
 
 			$result = new \WP_Query( $course_args );
 
