@@ -406,9 +406,6 @@ class Options_V2 {
 
 		$old_dashboard_id    = get_tutor_option( 'tutor_dashboard_page_id' );
 		$dashboard_update_id = isset( $option['tutor_dashboard_page_id'] ) && null !== $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
-		$email_footer_text   = json_encode( wp_unslash( $option['email_footer_text'] ) );
-
-		$option['email_footer_text'] = ! empty( $option['email_footer_text'] ) ? $email_footer_text : '';
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
