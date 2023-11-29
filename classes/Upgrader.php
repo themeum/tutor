@@ -183,6 +183,7 @@ class Upgrader {
 				subject text NOT NULL,
 				message text NOT NULL,
 				headers text NOT NULL,
+				batch varchar(50) NULL,
 				PRIMARY KEY (id)
 			) {$charset_collate};";
 
