@@ -393,6 +393,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/**
+	 * Highlight items form query params
+	 */
+	const urlParams = new URLSearchParams(window.location.search);
+	if (urlParams.get('highlight')) {
+		highlightSearchedItem(urlParams.get('highlight'));
+	}
+
+	/**
 	 * Show/Hide setting option
 	 * @param object element			Dom object
 	 * @param string value 				change value
