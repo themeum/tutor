@@ -9,6 +9,9 @@
 	const colorPickerInputs = document.querySelectorAll(
 		"label.color-picker-input input[type='color']",
 	);
+	const colorPickerTextInputs = document.querySelectorAll(
+		"label.color-picker-input input[type='text']",
+	);
 	const pickerView = document.querySelectorAll(
 		'.color-picker-wrapper [data-key]',
 	);
@@ -68,7 +71,7 @@
 			const presetItem =
 				customPresetEl && customPresetEl.querySelector('input[type="radio"]');
 			const pickerCode = picker.nextElementSibling;
-			pickerCode.innerText = picker.value;
+			pickerCode.value = picker.value;
 
 			if (presetColors) {
 				colorPickerInputs.forEach((picker) => {
@@ -88,6 +91,16 @@
 	if (colorPickerInputs) {
 		colorPickerInputs.forEach((picker) => {
 			updateCustomPreset(picker);
+		});
+	}
+	if (colorPickerTextInputs) {
+		colorPickerTextInputs.forEach((picker) => {
+			picker.addEventListener('input', function(e) {
+				if (e.target.value.length === 7) {
+					picker.previousElementSibling.value = e.target.value;
+					picker.previousElementSibling.dispatchEvent(new Event('input', { bubbles: true }));
+				}
+			});
 		});
 	}
 })();
