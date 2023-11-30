@@ -129,7 +129,7 @@
 	}
 }
 
-.item-wrapper .color-picker-wrapper {
+.color-picker-wrapper {
 	.tutor-option-field-row:first-child {
 		padding-top: 15px;
 	}
@@ -146,31 +146,16 @@
 	label.color-picker-input {
 		cursor: pointer;
 		display: grid;
-		align-items: center;
-		grid-auto-flow: column;
+		grid-template-columns: 32px 1fr;
+		gap: 10px;
 		background: var(--tutor-color-white);
 		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
-		width: 109px;
+		width: 120px;
 		height: 34px;
 		transition: 200ms;
 		box-sizing: border-box;
-
 		overflow: hidden;
-		.picker-value {
-			text-align: left;
-			@extend .text-regular-small;
-			color: var(--tutor-body-color);
-			> .color {
-				display: inline-flex;
-				width: 32px;
-				height: 32px;
-			}
-			> .value {
-				padding: 5px 10px;
-				color: var(--tutor-body-color);
-			}
-		}
 
 		input[type='color'] {
 			cursor: pointer;
@@ -188,6 +173,16 @@
 			&::-webkit-color-swatch {
 				border: none;
 			}
+		}
+
+		input[type='text'] {
+			all: unset;
+			width: 100%;
+			height: 32px;
+			border: none;
+			box-shadow: none;
+			text-align: left;
+			cursor: text;
 		}
 	}
 }
