@@ -162,6 +162,7 @@
 			width: 32px;
 			height: 32px;
 			border: none;
+			box-shadow: none;
 			border-right: 1px solid #cecfd5;
 			border-radius: 0;
 			&:checked {
@@ -171,6 +172,9 @@
 				padding: 0;
 			}
 			&::-webkit-color-swatch {
+				border: none;
+			}
+			&::-moz-color-swatch {
 				border: none;
 			}
 		}
