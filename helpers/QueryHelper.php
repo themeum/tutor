@@ -423,4 +423,19 @@ class QueryHelper {
 	
 		return implode( ',', $escaped );
 	}
+
+	/**
+	 * Check table exist in database.
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param string $table table name.
+	 *
+	 * @return bool
+	 */
+	public static function table_exists( $table ) {
+		global $wpdb;
+		$sql = "SHOW TABLES LIKE '{$table}'";
+		return $wpdb->get_var( $sql ) === $table;
+	}
 }
