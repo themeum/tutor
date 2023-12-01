@@ -241,7 +241,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 			<?php if ( ( $is_submitting || isset( $_GET['update-assignment'] ) ) && ( $remaining_time > $now || 0 == $time_duration['value'] ) ) : ?>
 				<div class="tutor-assignment-submission tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
 					<form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
-						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 						<input type="hidden" value="tutor_assignment_submit" name="tutor_action" />
 						<input type="hidden" value="<?php echo esc_url( strtok( urldecode( tutor()->current_url ), '?' ) ); ?>" name="_wp_http_referer" />
 						<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
