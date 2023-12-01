@@ -6507,6 +6507,24 @@ class Utils {
 	}
 
 	/**
+	 * Get HTTP referer field
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param boolean $url_decode URL decode for unicode support.
+	 * 
+	 * @return void|string
+	 */
+	public function referer_field( $url_decode = true ) {
+		$url = remove_query_arg( '_wp_http_referer' );
+		if ( $url_decode ) {
+			$url = urldecode( $url );
+		}
+		
+		echo '<input type="hidden" name="_wp_http_referer" value="'. esc_url( $url ) .'">';
+	}
+
+	/**
 	 * Get the frontend dashboard course edit page
 	 *
 	 * @since 1.3.4
