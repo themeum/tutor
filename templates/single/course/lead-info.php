@@ -48,7 +48,7 @@ if ( is_null( $course_rating ) ) {
 		<?php do_action( 'tutor_course/single/title/before' ); ?>
 		<span><?php the_title(); ?></span>
 	</h1>
-	
+
 	<div class="tutor-course-details-top tutor-mt-16">
 		<div class="tutor-row">
 			<div class="tutor-col">
