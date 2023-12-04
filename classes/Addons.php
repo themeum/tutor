@@ -75,7 +75,7 @@ class Addons {
 				'description' => 'Check your course performance through Tutor Report stats.',
 			),
 			'tutor-email'              => array(
-				'name'        => __( 'Tutor E-Mail', 'tutor' ),
+				'name'        => __( 'Email', 'tutor' ),
 				'description' => 'Send email on various tutor events',
 			),
 			'calendar'           => array(
