@@ -76,10 +76,7 @@ class Utils {
 	 * @return void
 	 */
 	public function redirect_to( string $url, $flash_message = null, $flash_type = 'success' ) {
-		$url = trim( $url );
-		if ( filter_var( $url, FILTER_VALIDATE_URL ) === false ) {
-			wp_die( 'Not a valid URL for redirect' );
-		}
+		$url = esc_url( trim( $url ) );
 
 		$available_types = array( 'success', 'error' );
 		if ( ! empty( $flash_message ) && in_array( $flash_type, $available_types ) ) {
