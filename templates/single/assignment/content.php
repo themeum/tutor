@@ -243,7 +243,6 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 					<form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
 						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 						<input type="hidden" value="tutor_assignment_submit" name="tutor_action" />
-						<input type="hidden" value="<?php echo esc_url( strtok( urldecode( tutor()->current_url ), '?' ) ); ?>" name="_wp_http_referer" />
 						<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
 						<?php $allowed_upload_files = (int) tutor_utils()->get_assignment_option( get_the_ID(), 'upload_files_limit' ); ?>

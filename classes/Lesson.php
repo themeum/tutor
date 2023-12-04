@@ -548,9 +548,9 @@ class Lesson extends Tutor_Base {
 		$contents                = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
 		$autoload_course_content = (bool) get_tutor_option( 'autoload_next_course_content' );
 		if ( $autoload_course_content ) {
-			wp_redirect( get_the_permalink( $contents->next_id ) );
+			wp_safe_redirect( get_the_permalink( $contents->next_id ) );
 		} else {
-			wp_redirect( get_the_permalink( $content_id ) );
+			wp_safe_redirect( get_the_permalink( $content_id ) );
 		}
 		die();
 	}

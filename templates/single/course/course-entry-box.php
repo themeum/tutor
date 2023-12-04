@@ -180,10 +180,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 				ob_start();
 				?>
 				<form method="post" class="tutor-mt-20">
-					<?php
-						wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false );
-						tutor_utils()->referer_field();
-					?>
+					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
 					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
