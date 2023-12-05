@@ -322,6 +322,8 @@ class Instructors_List {
 		$instructor_id = sanitize_text_field( $instructor_id );
 		do_action( 'tutor_before_rejected_instructor', $instructor_id );
 		self::remove_instructor_role( $instructor_id, 'reject' );
+		delete_user_meta( $instructor_id, '_is_tutor_instructor' );
+		update_user_meta( $instructor_id, '_tutor_instructor_status', 'try_again' );
 		do_action( 'tutor_after_rejected_instructor', $instructor_id );
 	}
 
