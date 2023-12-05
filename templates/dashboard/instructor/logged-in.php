@@ -9,11 +9,24 @@
  * @since 1.4.3
  */
 
-$is_instructor = tutor_utils()->is_instructor();
-
+$is_instructor     = tutor_utils()->is_instructor();
+$user_id           = get_current_user_id();
+$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
+if ( 'try_again' == $instructor_status ) {
+	?>
+	<div class="tutor-alert-text tutor-d-flex tutor-align-center tutor-justify-center">
+		<span class="tutor-icon-circle-info tutor-color-warning tutor-fs-4 tutor-mr-12"></span>
+		<span>
+		<?php
+			esc_html_e( 'You have been rejected from being an instructor.', 'tutor' );
+		?>
+		</span>
+	</div>
+	<?php
+	tutor_load_template( 'dashboard.instructor.apply_for_instructor' );
+	return;
+}
 if ( $is_instructor ) {
-	$user_id           = get_current_user_id();
-	$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 	?>
 	<div class="tutor-container">
 		<div class="tutor-instructor-application-process tutor-pt-48 tutor-pb-48">
@@ -29,10 +42,6 @@ if ( $is_instructor ) {
 						esc_html_e( 'Your application has been accepted. Further necessary details have been sent to your registered email account.', 'tutor' );
 					} elseif ( 'blocked' == $instructor_status ) {
 						esc_html_e( 'You have been blocked from being an instructor.', 'tutor' );
-					} elseif ( 'reject' == $instructor_status ) {
-						esc_html_e( 'You have been rejected from being an instructor.', 'tutor' );
-						delete_user_meta( $user_id, '_tutor_instructor_status' );
-						delete_user_meta( $user_id, '_is_tutor_instructor' );
 					}
 					?>
 					</span>
