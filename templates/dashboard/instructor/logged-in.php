@@ -29,6 +29,10 @@ if ( $is_instructor ) {
 						esc_html_e( 'Your application has been accepted. Further necessary details have been sent to your registered email account.', 'tutor' );
 					} elseif ( 'blocked' == $instructor_status ) {
 						esc_html_e( 'You have been blocked from being an instructor.', 'tutor' );
+					} elseif ( 'reject' == $instructor_status ) {
+						esc_html_e( 'You have been rejected from being an instructor.', 'tutor' );
+						delete_user_meta( $user_id, '_tutor_instructor_status' );
+						delete_user_meta( $user_id, '_is_tutor_instructor' );
 					}
 					?>
 					</span>
