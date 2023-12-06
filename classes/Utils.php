@@ -9555,8 +9555,12 @@ class Utils {
 				$course_meta[ $result->course_id ][ $result->content_type ] = array();
 			}
 
-			if ( $result->content_id ) {
-				$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
+			try {
+				if ( $result->content_id ) {
+					$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
+				}
+			} catch (\Throwable $th) {
+				tutor_log( 'Affected course ID : ' . $result->course_id . ' Error : '. $th->getMessage() );
 			}
 		}
 
