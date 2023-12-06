@@ -318,7 +318,33 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 = 2.5.0 - December 06, 2023
 
-New: Manual email (Pro)
+New: A revamped design for email with a better user experience (Pro)
+New: Default configuration for email templates (Pro)
+New: Option to add Alt tag/text for Email logo (Pro)
+New: Customize the email template color for each part (header, body, button, footer) (Pro)
+New: Option to align email logo, title, body, button, and footer text (Pro)
+New: (Triggered Event) Send a test email to a given email address (Pro)
+New: (Triggered Event) Reminder email to students to resume the course if they are inactive for a certain period (Pro)
+New: (Triggered Event) A welcome email to students after registration (Pro)
+New: (Triggered Event) Reminder email for lesson comments (Pro)
+New: (Triggered Event) Email notification for instructors if their application gets rejected (Pro)
+New: Manual template creation for manually sending email (Pro)
+New: (Manual email) Email everyone about any news, event, or manual notifications (Pro)
+New: (Manual email) Email only all admins about any updates (Pro)
+New: (Manual email) Email all students about any events (Pro)
+New: (Manual email) Email all instructors about any events (Pro)
+New: (Manual email) Email all instructors of a selected course/courses (Pro)
+New: (Manual email) Email all students of a selected course/courses (Pro)
+New: (Manual email) Email all students who completed any course. (Pro)
+New: (Manual email) Email all students who completed a selected course/courses (Pro)
+New: (Manual email) Email all students except selected courses. (Pro)
+Update: Custom course slug will be applied in the learning area
+Update: Added WordPress 6.4 compatibility
+Update: Added MySQL 8 compatibility
+Fix: Students getting course access even after the PM Pro subscription had expired issue fixed (Pro)
+Fix: New student sign-up mail not being sent to the admin issue fixed (Pro)
+Fix: The “Complete Course” button not appearing issue on mobile devices in the learning area fixed
+Fix: Email template translation issues and some Email triggers not working issue fixed (Pro)
 
 = 2.4.0 - October 16, 2023
 
