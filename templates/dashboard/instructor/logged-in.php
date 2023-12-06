@@ -9,23 +9,21 @@
  * @since 1.4.3
  */
 
-$is_instructor     = tutor_utils()->is_instructor();
 $user_id           = get_current_user_id();
+$is_instructor     = tutor_utils()->is_instructor( $user_id );
 $instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
-if ( 'try_again' == $instructor_status ) {
+
+if ( 'try_again' === $instructor_status ) {
 	?>
-	<div class="tutor-alert-text tutor-d-flex tutor-align-center tutor-justify-center">
+	<div class="tutor-alert tutor-warning tutor-d-flex tutor-align-center">
 		<span class="tutor-icon-circle-info tutor-color-warning tutor-fs-4 tutor-mr-12"></span>
-		<span>
-		<?php
-			esc_html_e( 'You have been rejected from being an instructor.', 'tutor' );
-		?>
-		</span>
+		<span><?php esc_html_e( 'You have been rejected from being an instructor.', 'tutor' ); ?></span>
 	</div>
 	<?php
 	tutor_load_template( 'dashboard.instructor.apply_for_instructor' );
 	return;
 }
+
 if ( $is_instructor ) {
 	?>
 	<div class="tutor-container">

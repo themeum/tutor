@@ -321,9 +321,14 @@ class Instructors_List {
 	protected static function instructor_rejection( int $instructor_id ) {
 		$instructor_id = sanitize_text_field( $instructor_id );
 		do_action( 'tutor_before_rejected_instructor', $instructor_id );
-		self::remove_instructor_role( $instructor_id, 'reject' );
+
+		/**
+		 * Removed tutor_instructor role and set `try_again` status
+		 * for apply again as instructor with show message to applier in frontend.
+		 */
+		self::remove_instructor_role( $instructor_id, 'try_again' );
 		delete_user_meta( $instructor_id, '_is_tutor_instructor' );
-		update_user_meta( $instructor_id, '_tutor_instructor_status', 'try_again' );
+
 		do_action( 'tutor_after_rejected_instructor', $instructor_id );
 	}
 
