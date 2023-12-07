@@ -7,7 +7,7 @@
  * Version: 2.5.0
  * Author URI: https://themeum.com
  * Requires at least: 5.3
- * Tested up to: 6.3
+ * Tested up to: 6.4
  * License: GPLv2 or later
  * Text Domain: tutor
  *
