@@ -316,7 +316,7 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 == Changelog ==
 
-= 2.5.0 - December 06, 2023
+= 2.5.0 - December 07, 2023
 
 New: A revamped design for email with a better user experience (Pro)
 New: Default configuration for email templates (Pro)
