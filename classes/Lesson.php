@@ -101,11 +101,11 @@ class Lesson extends Tutor_Base {
 				'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 			);
 			self::create_comment( $comment_data );
+			do_action( 'tutor_new_comment_added', $comment_data );
 		}
 		ob_start();
 		tutor_load_template( 'single.lesson.comment' );
 		$html = ob_get_clean();
-
 		wp_send_json_success( array( 'html' => $html ) );
 	}
 
@@ -548,9 +548,9 @@ class Lesson extends Tutor_Base {
 		$contents                = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
 		$autoload_course_content = (bool) get_tutor_option( 'autoload_next_course_content' );
 		if ( $autoload_course_content ) {
-			wp_redirect( get_the_permalink( $contents->next_id ) );
+			wp_safe_redirect( get_the_permalink( $contents->next_id ) );
 		} else {
-			wp_redirect( get_the_permalink( $content_id ) );
+			wp_safe_redirect( get_the_permalink( $content_id ) );
 		}
 		die();
 	}
@@ -581,6 +581,8 @@ class Lesson extends Tutor_Base {
 			return;
 		}
 		$reply = get_comment( $comment_id );
+		do_action( 'tutor_reply_lesson_comment_thread', $comment_id, $comment_data );
+
 		ob_start();
 		?>
 		<div class="tutor-comments-list tutor-child-comment tutor-mt-32" id="lesson-comment-<?php echo esc_attr( $reply->comment_ID ); ?>">

@@ -53,7 +53,18 @@
 .tutor-icon-api:before {
   content: "\f906";
 }
-
+.tutor-icon-align-center:before {
+  content: "\f907";
+}
+.tutor-icon-align-justify:before {
+  content: "\f908";
+}
+.tutor-icon-align-left:before {
+  content: "\f909";
+}
+.tutor-icon-align-right:before {
+  content: "\f910";
+}
 
 /* tutor old fonts */
   

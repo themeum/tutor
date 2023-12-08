@@ -48,7 +48,7 @@ window.jQuery(document).ready(function ($) {
 
             $('#save_tutor_option').prop('disabled', false);
 
-            document.querySelector('.tutor-option-form .tutor-thumbnail-uploader')
+            document.querySelector('.tutor-thumbnail-uploader')
                 .dispatchEvent(new CustomEvent('tutor_settings_media_selected', {
                     detail: {
                         wrapper: wrapper,
