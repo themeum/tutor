@@ -76,10 +76,7 @@ class Utils {
 	 * @return void
 	 */
 	public function redirect_to( string $url, $flash_message = null, $flash_type = 'success' ) {
-		$url = trim( $url );
-		if ( filter_var( $url, FILTER_VALIDATE_URL ) === false ) {
-			wp_die( 'Not a valid URL for redirect' );
-		}
+		$url = esc_url( trim( $url ) );
 
 		$available_types = array( 'success', 'error' );
 		if ( ! empty( $flash_message ) && in_array( $flash_type, $available_types ) ) {
@@ -2269,15 +2266,17 @@ class Utils {
 	 * Get the enrolled courses by user
 	 *
 	 * @since 1.0.0
+	 * @since 2.5.0 $filters param added to query enrolled courses with additional filters.
 	 *
 	 * @param integer $user_id user id.
 	 * @param string  $post_status post status.
 	 * @param integer $offset offset.
 	 * @param integer $posts_per_page post per page.
+	 * @param array   $filters additional filters with key value for \WP_Query.
 	 *
 	 * @return bool|\WP_Query
 	 */
-	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1 ) {
+	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $filters = array() ) {
 		global $wpdb;
 
 		$user_id    = $this->get_user_id( $user_id );
@@ -2292,6 +2291,15 @@ class Utils {
 				'offset'         => $offset,
 				'posts_per_page' => $posts_per_page,
 			);
+
+			if ( count( $filters ) ) {
+				$keys = array_keys( $course_args );
+				foreach ( $filters as $key => $value ) {
+					if ( ! in_array( $key, $keys ) ) {
+						$course_args[ $key ] = $value;
+					}
+				}
+			}
 
 			$result = new \WP_Query( $course_args );
 
@@ -6496,6 +6504,24 @@ class Utils {
 	}
 
 	/**
+	 * Get HTTP referer field
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param boolean $url_decode URL decode for unicode support.
+	 * 
+	 * @return void|string
+	 */
+	public function referer_field( $url_decode = true ) {
+		$url = remove_query_arg( '_wp_http_referer' );
+		if ( $url_decode ) {
+			$url = urldecode( $url );
+		}
+		
+		echo '<input type="hidden" name="_wp_http_referer" value="'. esc_url( $url ) .'">';
+	}
+
+	/**
 	 * Get the frontend dashboard course edit page
 	 *
 	 * @since 1.3.4
@@ -9529,8 +9555,12 @@ class Utils {
 				$course_meta[ $result->course_id ][ $result->content_type ] = array();
 			}
 
-			if ( $result->content_id ) {
-				$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
+			try {
+				if ( $result->content_id ) {
+					$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
+				}
+			} catch (\Throwable $th) {
+				tutor_log( 'Affected course ID : ' . $result->course_id . ' Error : '. $th->getMessage() );
 			}
 		}
 

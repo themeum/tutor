@@ -104,7 +104,7 @@ class Admin {
 		do_action( 'tutor_after_courses_menu' );
 
 		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'Course Bundles', 'tutor' ), __( 'Course Bundle <span class="tutor-badge-new">New</span>', 'tutor' ), 'manage_tutor', 'course-bundle', array( $this, 'course_bundle_page' ) );
+			add_submenu_page( 'tutor', __( 'Email', 'tutor' ), __( 'Email <span class="tutor-badge-new">Hot</span>', 'tutor' ), 'manage_tutor', 'new-key-feature', array( $this, 'feature_promotion_page' ) );
 		}
 
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
@@ -143,14 +143,14 @@ class Admin {
 	}
 
 	/**
-	 * Show Course Bundle Page For Free User.
+	 * Show Feature Promotion Page for Free User.
 	 *
 	 * @since 2.2.0
 	 *
 	 * @return void
 	 */
-	public function course_bundle_page() {
-		include tutor()->path . 'views/pages/course-bundle.php';
+	public function feature_promotion_page() {
+		include tutor()->path . 'views/pages/feature-promotion.php';
 	}
 
 	/**

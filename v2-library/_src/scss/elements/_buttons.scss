@@ -347,6 +347,28 @@ $disabled-color: #e9e9ea !default;
 	}
 }
 
+.tutor-btn-group {
+	position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+
+	.tutor-btn {
+		position: relative;
+		flex: 1;
+
+		&:not(:last-child) {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+		
+		&:not(:first-child) {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			margin-left: -1px;
+		}
+	}
+}
+
 .tutor-btn,
 .tutor-iconic-btn {
 	// loading state

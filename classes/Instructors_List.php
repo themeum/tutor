@@ -204,7 +204,18 @@ class Instructors_List {
 			$arr = explode( ',', $user_ids );
 			foreach ( $arr as $instructor_id ) {
 				$instructor_id = (int) sanitize_text_field( $instructor_id );
-				self::remove_instructor_role( $instructor_id, $status );
+				if ( 'pending' === $status ) {
+					self::remove_instructor_role( $instructor_id, $status );
+				} else {
+					self::instructor_blockage( $instructor_id );
+				}
+			}
+		}
+		if ( 'reject' === $status ) {
+			$arr = explode( ',', $user_ids );
+			foreach ( $arr as $instructor_id ) {
+				$instructor_id = (int) sanitize_text_field( $instructor_id );
+				self::instructor_rejection( $instructor_id );
 			}
 		}
 
@@ -281,13 +292,44 @@ class Instructors_List {
 	protected static function remove_instructor_role( int $instructor_id, string $status ) {
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$status        = sanitize_text_field( $status );
-
-		do_action( 'tutor_before_blocked_instructor', $instructor_id );
 		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
-
 		$instructor = new \WP_User( $instructor_id );
 		$instructor->remove_role( tutor()->instructor_role );
+	}
+	/**
+	 * Instructor blocking function
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param int $instructor_id | user id that need to add role.
+	 * @return void
+	 */
+	protected static function instructor_blockage( int $instructor_id ) {
+		$instructor_id = sanitize_text_field( $instructor_id );
+		do_action( 'tutor_before_blocked_instructor', $instructor_id );
+		self::remove_instructor_role( $instructor_id, 'blocked' );
 		do_action( 'tutor_after_blocked_instructor', $instructor_id );
+	}
+	/**
+	 * Instructor rejection function
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param int $instructor_id | user id that need to add role.
+	 * @return void
+	 */
+	protected static function instructor_rejection( int $instructor_id ) {
+		$instructor_id = sanitize_text_field( $instructor_id );
+		do_action( 'tutor_before_rejected_instructor', $instructor_id );
+
+		/**
+		 * Removed tutor_instructor role and set `try_again` status
+		 * for apply again as instructor with show message to applier in frontend.
+		 */
+		self::remove_instructor_role( $instructor_id, 'try_again' );
+		delete_user_meta( $instructor_id, '_is_tutor_instructor' );
+
+		do_action( 'tutor_after_rejected_instructor', $instructor_id );
 	}
 
 	/**
@@ -345,6 +387,7 @@ class Instructors_List {
 		if ( false === $result ) {
 			TutorCache::set(
 				self::INSTRUCTOR_LIST_CACHE_KEY,
+				//phpcs:disable
 				$result = $wpdb->get_results(
 					$wpdb->prepare(
 						$query,
@@ -354,6 +397,7 @@ class Instructors_List {
 						$per_page
 					)
 				)
+				//phpcs:enable
 			);
 		}
 
@@ -405,6 +449,7 @@ class Instructors_List {
 		if ( false === $result ) {
 			TutorCache::set(
 				self::INSTRUCTOR_COUNT_CACHE_KEY,
+				//phpcs:disable
 				$result = $wpdb->get_var(
 					$wpdb->prepare(
 						$query,
@@ -412,6 +457,7 @@ class Instructors_List {
 						$search_clause
 					)
 				)
+				//phpcs:enable
 			);
 		}
 		return $result;
