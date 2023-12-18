@@ -512,7 +512,7 @@ class Utils {
 	 * @return bool
 	 */
 	public function has_edd() {
-		return $this->is_plugin_active( 'easy-digital-downloads/easy-digital-downloads.php' );
+		return class_exists( 'Easy_Digital_Downloads' );
 	}
 
 	/**
