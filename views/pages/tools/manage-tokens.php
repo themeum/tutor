@@ -52,7 +52,7 @@ $user        = get_userdata( get_current_user_id() );
 			if ( is_array( $tokens ) && count( $tokens ) ) {
 				foreach ( $tokens as $token ) {
 					$api = json_decode( $token->meta_value );
-					echo RestAuth::prepare_response( $token->umeta_id, $api->key, $api->secret, $api->permission ); //phpcs:ignore
+					echo RestAuth::prepare_response( $token->umeta_id, $api->key, $api->secret, $api->permission, $api->description ?? '' ); //phpcs:ignore
 				}
 			} else {
 				?>
