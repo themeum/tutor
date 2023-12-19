@@ -40,11 +40,25 @@ class RestAuth {
 	const WRITE = 'Write';
 
 	/**
+	 * Delete Permissions
+	 *
+	 * @var string
+	 */
+	const DELETE = 'Delete';
+
+	/**
 	 * Read Write Permissions
 	 *
 	 * @var string
 	 */
 	const READ_WRITE = 'Read/Write';
+
+	/**
+	 * All Permissions
+	 *
+	 * @var string
+	 */
+	const ALL = 'All';
 
 	/**
 	 * User meta key to store key, secret, permission info
@@ -294,6 +308,14 @@ class RestAuth {
 			array(
 				'value' => self::READ_WRITE,
 				'label' => __( 'Read/Write', 'tutor' ),
+			),
+			array(
+				'value' => self::DELETE,
+				'label' => __( 'Delete', 'tutor' ),
+			),
+			array(
+				'value' => self::ALL,
+				'label' => __( 'All', 'tutor' ),
 			),
 		);
 		return $permissions;
