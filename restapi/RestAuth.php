@@ -30,21 +30,21 @@ class RestAuth {
 	 *
 	 * @var string
 	 */
-	const READ = 'read';
+	const READ = 'Read';
 
 	/**
 	 * Write Permissions
 	 *
 	 * @var string
 	 */
-	const WRITE = 'write';
+	const WRITE = 'Write';
 
 	/**
 	 * Read Write Permissions
 	 *
 	 * @var string
 	 */
-	const READ_WRITE = 'read_write';
+	const READ_WRITE = 'Read/Write';
 
 	/**
 	 * User meta key to store key, secret, permission info
@@ -84,13 +84,15 @@ class RestAuth {
 		$api_key    = 'key_' . bin2hex( random_bytes( 16 ) );
 		$api_secret = 'secret_' . bin2hex( random_bytes( 32 ) );
 
-		$permission = Input::post( 'permission' );
+		$permission  = Input::post( 'permission' );
+		$description = Input::post( 'description', '', Input::TYPE_TEXTAREA );
 
 		$info = wp_json_encode(
 			array(
-				'key'        => $api_key,
-				'secret'     => $api_secret,
-				'permission' => $permission,
+				'key'         => $api_key,
+				'secret'      => $api_secret,
+				'permission'  => $permission,
+				'description' => $description,
 			)
 		);
 
@@ -102,7 +104,7 @@ class RestAuth {
 		);
 
 		if ( $add ) {
-			$response = self::prepare_response( $add, $api_key, $api_secret, $permission );
+			$response = self::prepare_response( $add, $api_key, $api_secret, $permission, $description );
 			wp_send_json_success( $response );
 		} else {
 			wp_send_json_error( tutor_utils()->error_message( '0' ) );
@@ -219,7 +221,7 @@ class RestAuth {
 	 *
 	 * @return string
 	 */
-	public static function prepare_response( $meta_id, $key, $secret, $permission ) {
+	public static function prepare_response( $meta_id, $key, $secret, $permission, $description = '' ) {
 		$user_id = get_current_user_id();
 		ob_start();
 		?>
@@ -244,15 +246,23 @@ class RestAuth {
 				</a>
 			</td>
 			<td>
-				<?php echo esc_html( ucfirst( $permission ) ); ?>
+				<?php echo esc_html( $permission ); ?>
+				<?php if ( ! empty( $description ) ) : ?>
+				<div class="tooltip-wrap tooltip-icon-custom" >
+					<i class="tutor-fs-7 tutor-icon-circle-info-o tutor-color-muted tutor-ml-4"></i>
+					<span class="tooltip-txt tooltip-bottom">
+						<?php echo esc_textarea( $description ); ?>
+					</span>
+				</div>
+				<?php endif; ?>
 			</td>
 			<td>
 				<div class="tutor-dropdown-parent">
 					<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
 						<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 					</button>
-					<div class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-						<a href="javascript:void(0)" class="tutor-dropdown-item">
+					<div class="tutor-dropdown tutor-dropdown-dark tutor-text-left" data-meta-id="<?php echo esc_attr( $meta_id ); ?>">
+						<a href="javascript:void(0)" class="tutor-dropdown-item" data-meta-id="<?php echo esc_attr( $meta_id ); ?>">
 							<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true" data-meta-id="<?php echo esc_attr( $meta_id ); ?>"></i>
 							<span data-meta-id="<?php echo esc_attr( $meta_id ); ?>"><?php esc_html_e( 'Revoke', 'tutor' ); ?></span>
 						</a>

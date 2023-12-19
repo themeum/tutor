@@ -47,6 +47,8 @@ document.addEventListener("DOMContentLoaded", async function() {
                 if (noRecordElem) {
                     noRecordElem.remove();
                 }
+                // Reset form
+                apiKeysForm.reset();
             }
         };
     }
