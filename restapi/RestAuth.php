@@ -26,11 +26,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class RestAuth {
 
 	/**
-	 * Permissions
+	 * Read Permissions
 	 *
 	 * @var string
 	 */
 	const READ = 'read';
+
+	/**
+	 * Write Permissions
+	 *
+	 * @var string
+	 */
+	const WRITE = 'write';
+
+	/**
+	 * Read Write Permissions
+	 *
+	 * @var string
+	 */
+	const READ_WRITE = 'read_write';
 
 	/**
 	 * User meta key to store key, secret, permission info
@@ -262,6 +276,14 @@ class RestAuth {
 			array(
 				'value' => self::READ,
 				'label' => __( 'Read', 'tutor' ),
+			),
+			array(
+				'value' => self::WRITE,
+				'label' => __( 'Write', 'tutor' ),
+			),
+			array(
+				'value' => self::READ_WRITE,
+				'label' => __( 'Read/Write', 'tutor' ),
 			),
 		);
 		return $permissions;

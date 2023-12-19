@@ -97,17 +97,23 @@ $user        = get_userdata( get_current_user_id() );
 				</div>
 				<div class="tutor-row">
 					<div class="tutor-col">
-						<label class="tutor-form-label">
+						<label class="tutor-form-label" for="permission">
 							<?php esc_html_e( 'Permission', 'tutor' ); ?>
 						</label>
 						<div class="tutor-mb-16">
-							<select name="permission" class="tutor-form-select">
+							<select name="permission" id="permission" class="tutor-form-select tutor-hide-search">
 								<?php foreach ( $permissions as $permission ) : ?>
 								<option value="<?php echo esc_attr( $permission['value'] ); ?>">
 									<?php echo esc_html( $permission['label'] ); ?>
 								</option>
 								<?php endforeach; ?>
 							</select>
+						</div>
+						<div class="tutor-mb-16">
+							<label class="tutor-form-label" for="description">
+								<?php esc_html_e( 'Description', 'tutor' ); ?>
+							</label>
+							<textarea name="description" id="description" class="tutor-form-control" cols="30" rows="3" placeholder="<?php esc_html_e( 'Write here...', 'tutor' ); ?>"></textarea>
 						</div>
 					</div>
 				</div>
