@@ -398,6 +398,7 @@ class Options_V2 {
 
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
 
+		$data_before = get_option( 'tutor_option' );
 		do_action( 'tutor_option_save_before' );
 
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
@@ -429,6 +430,23 @@ class Options_V2 {
 		update_option( 'tutor_settings_log', $update_option );
 		update_option( 'tutor_option', $option );
 		update_option( 'tutor_option_update_time', gmdate( 'j M, Y, g:i a', $time ) );
+
+		/**
+		 * Hook for each tutor settings option change detection.
+		 * Example: `tutor_option_{course_permalink_base}_changed`
+		 *
+		 * @since 2.6.0
+		 */
+		$data_after = get_option( 'tutor_option' );
+		if ( $data_before !== $data_after && is_array( $data_after ) ) {
+			foreach ( $data_after as $key => $value ) {
+				$from = $data_before[ $key ] ?? null;
+				$to   = $value;
+				if ( $from !== $to ) {
+					do_action( "tutor_option_{$key}_changed", $from, $to );
+				}
+			}
+		}
 
 		do_action( 'tutor_option_save_after' );
 
