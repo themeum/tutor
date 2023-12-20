@@ -10,7 +10,6 @@
 
 namespace Tutor;
 
-use TUTOR\Admin;
 use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
