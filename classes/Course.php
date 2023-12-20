@@ -994,8 +994,12 @@ class Course extends Tutor_Base {
 
 		/**
 		 * From Admin Panel, Free user can only select product from dropdown
+		 *
+		 * @since 2.6.0
+		 * 
+		 * is_rest check added for rest api
 		 */
-		if ( $is_admin_panel && 'wc' === $monetize_by && tutor()->has_pro === false ) {
+		if ( ( $is_admin_panel || is_rest() ) && 'wc' === $monetize_by && tutor()->has_pro === false ) {
 			if ( $product_id > 0 ) {
 				update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 			} elseif ( -1 === $product_id ) {
