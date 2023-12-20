@@ -393,7 +393,6 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_option_save() {
-		global $wpdb;
 		tutor_utils()->checking_nonce();
 
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
@@ -403,11 +402,7 @@ class Options_V2 {
 
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
-		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
-
-		$old_dashboard_id    = get_tutor_option( 'tutor_dashboard_page_id' );
-		$dashboard_update_id = isset( $option['tutor_dashboard_page_id'] ) && null !== $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
-
+		$option = tutor_utils()->sanitize_recursively( $option );
 		$option = apply_filters( 'tutor_option_input', $option );
 
 		$time                                  = strtotime( 'now' ) + ( 6 * 60 * 60 );
