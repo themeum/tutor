@@ -11,5 +11,7 @@ export default defineConfig({
   env: {
     base_url: 'http://localhost:10003',
     single_course_slug: 'the-complete-javascript-course-2019-build-real-projects',
+    student_username: 'student',
+    student_password: 'test123',
   },
 });
