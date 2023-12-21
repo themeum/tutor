@@ -91,6 +91,14 @@ class ValidationHelper {
 								$validation_errors[ $key ] = $key . __( ' invalid date format', 'products' );
 							}
 							break;
+						case 'author_exists':
+							$user_id = $data[ $key ];
+							$is_exists = self::is_user_exists( $user_id );
+							if ( ! $is_exists ) {
+								$validation_pass           = false;
+								$validation_errors[ $key ] = $key . __( ' user does not exist', 'products' );
+							}
+							break;
 						default:
 							// code...
 							break;
@@ -190,5 +198,18 @@ class ValidationHelper {
 		$formatted_date = is_object( $date_object ) ? $date_object->format( $format ) : null;
 
 		return $date_object && $formatted_date === $date_string ? true : false;
+	}
+
+	/**
+	 * Check if user exists
+	 *
+	 * Rules: user_exists:{user_id}
+	 *
+	 * @param integer $user_id user id.
+	 * @return boolean
+	 */
+	public static function is_user_exists( int $user_id ): bool {
+		$user = get_user_by( 'id', $user_id );
+		return $user ? true : false;
 	}
 }
