@@ -49,26 +49,26 @@ class ValidationHelper {
 						case 'required':
 							if ( ! self::has_key( $key, $data ) || self::is_empty( $data[ $key ] ) ) {
 								$validation_pass     = false;
-								$validation_errors[] = $key . __( ' is required', 'products' );
+								$validation_errors[ $key ] = $key . __( ' is required', 'products' );
 							}
 							break;
 						case 'numeric':
 							if ( ! self::is_numeric( $data[ $key ] ) ) {
 								$validation_pass     = false;
-								$validation_errors[] = $key . __( ' is not numeric', 'products' );
+								$validation_errors[ $key ] = $key . __( ' is not numeric', 'products' );
 							}
 							break;
 						case 'min_length':
 							if ( strlen( $data[ $key ] ) < $nested_rules[1] ) {
 								$validation_pass     = false;
-								$validation_errors[] = $key . __( ' minimum length is ', 'products' ) . $nested_rules[1];
+								$validation_errors[ $key ] = $key . __( ' minimum length is ', 'products' ) . $nested_rules[1];
 							}
 							break;
 						case 'mimes':
 							$extensions = explode( ',', $nested_rules[1] );
 							if ( ! self::in_array( $data[ $key ], $extensions ) ) {
 								$validation_pass     = false;
-								$validation_errors[] = $key . __( ' extension is not valid', 'products' );
+								$validation_errors[ $key ] = $key . __( ' extension is not valid', 'products' );
 							}
 							break;
 						case 'match_string':
@@ -81,14 +81,14 @@ class ValidationHelper {
 						case 'boolean':
 							if ( ! self::is_boolean( $data[ $key ] ) ) {
 								$validation_pass     = false;
-								$validation_errors[] = $key . __( ' is not boolean', 'products' );
+								$validation_errors[ $key ] = $key . __( ' is not boolean', 'products' );
 							}
 							break;
 						case 'date_format':
 							$format = $nested_rules[1];
 							if ( ! self::is_valid_date( $data[ $key ], $format ) ) {
 								$validation_pass     = false;
-								$validation_errors[] = $key . __( ' invalid date format', 'products' );
+								$validation_errors[ $key ] = $key . __( ' invalid date format', 'products' );
 							}
 							break;
 						default:
@@ -187,7 +187,7 @@ class ValidationHelper {
 	public static function is_valid_date( $date_string, $format ): bool {
 		$date_string    = gmdate( $format, strtotime( $date_string ) );
 		$date_object    = \DateTime::createFromFormat( $format, $date_string );
-		$formatted_date = $date_object->format( $format );
+		$formatted_date = is_object( $date_object ) ? $date_object->format( $format ) : null;
 
 		return $date_object && $formatted_date === $date_string ? true : false;
 	}
