@@ -77,11 +77,14 @@ class Rewrite_Rules extends Tutor_Base {
 			// Lesson Permalink.
 			$this->course_base_permalink . "/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=" . $wp_rewrite->preg_index( 2 ),
 			// Quiz Permalink.
-			$this->course_base_permalink . '/(.+?)/tutor_quiz/(.+?)/?$' => 'index.php?post_type=tutor_quiz&name=' . $wp_rewrite->preg_index( 2 ),
+			$this->course_base_permalink . "/(.+?)/{$this->quiz_base_permalink}/(.+?)/?$" => 'index.php?post_type=tutor_quiz&name=' . $wp_rewrite->preg_index( 2 ),
 			// Assignments URL.
-			$this->course_base_permalink . '/(.+?)/assignments/(.+?)/?$' => 'index.php?post_type=tutor_assignments&name=' . $wp_rewrite->preg_index( 2 ),
-			// Zoom Meeting.
-			$this->course_base_permalink . '/(.+?)/zoom-meeting/(.+?)/?$' => 'index.php?post_type=tutor_zoom_meeting&name=' . $wp_rewrite->preg_index( 2 ),
+			$this->course_base_permalink . "/(.+?)/{$this->assignment_base_permalink}/(.+?)/?$" => 'index.php?post_type=tutor_assignments&name=' . $wp_rewrite->preg_index( 2 ),
+
+			// Zoom Lessons.
+			$this->course_base_permalink . '/(.+?)/zoom-lessons/(.+?)/?$' => 'index.php?post_type=tutor_zoom_meeting&name=' . $wp_rewrite->preg_index( 2 ),
+			// Meet Lessons.
+			$this->course_base_permalink . '/(.+?)/meet-lessons/(.+?)/?$' => 'index.php?post_type=tutor-google-meet&name=' . $wp_rewrite->preg_index( 2 ),
 
 			// Private Video URL.
 			'video-url/(.+?)/?$' => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=" . $wp_rewrite->preg_index( 1 ),
@@ -144,9 +147,9 @@ class Rewrite_Rules extends Tutor_Base {
 				}
 
 				$course_post_name = isset( $course->post_name ) ? $course->post_name : 'sample-course';
-				return home_url( "/{$this->course_base_permalink}/{$course_post_name}/tutor_quiz/{$post->post_name}/" );
+				return home_url( "/{$this->course_base_permalink}/{$course_post_name}/{$this->quiz_base_permalink}/{$post->post_name}/" );
 			} else {
-				return home_url( "/{$this->course_base_permalink}/sample-course/tutor_quiz/{$post->post_name}/" );
+				return home_url( "/{$this->course_base_permalink}/sample-course/{$this->quiz_base_permalink}/{$post->post_name}/" );
 			}
 		}
 		return $post_link;
