@@ -10,7 +10,6 @@
 
 namespace Tutor;
 
-use TUTOR\Admin;
 use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -524,12 +523,16 @@ class Options_V2 {
 
 		$pages = tutor_utils()->get_pages();
 
+		$site_url    = site_url();
+		$course_base = $this->get( 'course_permalink_base', 'courses' );
 		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
-		$course_base = tutor_utils()->get_option( 'course_permalink_base', tutor()->course_post_type );
-		$course_url  = site_url() . '/<code>' . $course_base . '</code>/sample-course';
-		$lesson_url  = site_url() . '/' . $course_base . '/sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
-		$student_url = tutor_utils()->profile_url( 0, false );
+		$quiz_key    = $this->get( 'quiz_permalink_base', 'quizzes' );
 
+		$course_url = $site_url . '/<code>' . $course_base . '</code>/sample-course';
+		$lesson_url = $site_url . '/' . $course_base . '/sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
+		$quiz_url   = $site_url . '/' . $course_base . '/sample-course/<code>' . $quiz_key . '</code>/sample-quiz/';
+
+		$student_url       = tutor_utils()->profile_url( 0, false );
 		$methods_array     = array();
 		$withdrawl_methods = apply_filters( 'tutor_withdrawal_methods_all', array() );
 
@@ -1556,27 +1559,39 @@ class Options_V2 {
 								'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
 							),
 							array(
-								'key'         => 'course_permalink_base',
-								'type'        => 'text',
-								'label'       => __( 'Course Permalink Base', 'tutor' ),
-								'placeholder' => __( 'Course Slug', 'tutor' ),
-								'label_title' => '',
-								'default'     => tutor()->course_post_type,
-								'desc'        => $course_url,
-							),
-							array(
-								'key'     => 'lesson_permalink_base',
-								'type'    => 'text',
-								'label'   => __( 'Lesson Permalink Base', 'tutor' ),
-								'default' => 'lessons',
-								'desc'    => $lesson_url,
-							),
-							array(
 								'key'     => 'lesson_video_duration_youtube_api_key',
 								'type'    => 'text',
 								'label'   => __( 'Youtube API Key', 'tutor' ),
 								'default' => '',
 								'desc'    => __( 'Insert the YouTube API key to host live videos using YouTube.', 'tutor' ),
+							),
+						),
+					),
+					array(
+						'label'      => __( 'Base Permalink', 'tutor' ),
+						'slug'       => 'base_permalink',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'course_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Course Permalink', 'tutor' ),
+								'default' => 'courses',
+								'desc'    => $course_url,
+							),
+							array(
+								'key'     => 'lesson_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Lesson Permalink', 'tutor' ),
+								'default' => 'lessons',
+								'desc'    => $lesson_url,
+							),
+							array(
+								'key'     => 'quiz_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Quiz Permalink', 'tutor' ),
+								'default' => 'quizzes',
+								'desc'    => $quiz_url,
 							),
 						),
 					),

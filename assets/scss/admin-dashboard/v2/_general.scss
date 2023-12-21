@@ -364,6 +364,18 @@
 			}
 		}
 	}
+
+	/**
+	* Set base permalink input box width
+	* @since 2.6.0
+	*/
+	&.base_permalink{
+		.tutor-option-field-input input{
+			min-width: 220px;
+			max-width: 220px;
+		}
+	}
+
 } // end of .tutor-option-single-item
 
 .item-wrapper > .tutor-option-field-row {
