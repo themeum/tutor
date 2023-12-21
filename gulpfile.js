@@ -8,6 +8,7 @@ var gulp = require('gulp'),
 	wpPot = require('gulp-wp-pot'),
 	clean = require('gulp-clean'),
 	zip = require('gulp-zip'),
+	cache = require('gulp-cached'),
 	fs = require('fs'),
 	path = require('path'),
 	versionNumber = '';
@@ -84,6 +85,7 @@ for (let task in scss_blueprints) {
 	gulp.task(task, function() {
 		return gulp
 			.src(blueprint.src)
+			.pipe(cache('sass'))
 			.pipe(plumber({ errorHandler: onError }))
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
 			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }))
