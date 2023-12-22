@@ -76,10 +76,7 @@ class Utils {
 	 * @return void
 	 */
 	public function redirect_to( string $url, $flash_message = null, $flash_type = 'success' ) {
-		$url = trim( $url );
-		if ( filter_var( $url, FILTER_VALIDATE_URL ) === false ) {
-			wp_die( 'Not a valid URL for redirect' );
-		}
+		$url = esc_url( trim( $url ) );
 
 		$available_types = array( 'success', 'error' );
 		if ( ! empty( $flash_message ) && in_array( $flash_type, $available_types ) ) {
@@ -515,7 +512,7 @@ class Utils {
 	 * @return bool
 	 */
 	public function has_edd() {
-		return $this->is_plugin_active( 'easy-digital-downloads/easy-digital-downloads.php' );
+		return class_exists( 'Easy_Digital_Downloads' );
 	}
 
 	/**
@@ -6507,6 +6504,24 @@ class Utils {
 	}
 
 	/**
+	 * Get HTTP referer field
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param boolean $url_decode URL decode for unicode support.
+	 * 
+	 * @return void|string
+	 */
+	public function referer_field( $url_decode = true ) {
+		$url = remove_query_arg( '_wp_http_referer' );
+		if ( $url_decode ) {
+			$url = urldecode( $url );
+		}
+		
+		echo '<input type="hidden" name="_wp_http_referer" value="'. esc_url( $url ) .'">';
+	}
+
+	/**
 	 * Get the frontend dashboard course edit page
 	 *
 	 * @since 1.3.4
@@ -9540,8 +9555,12 @@ class Utils {
 				$course_meta[ $result->course_id ][ $result->content_type ] = array();
 			}
 
-			if ( $result->content_id ) {
-				$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
+			try {
+				if ( $result->content_id ) {
+					$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
+				}
+			} catch (\Throwable $th) {
+				tutor_log( 'Affected course ID : ' . $result->course_id . ' Error : '. $th->getMessage() );
 			}
 		}
 
