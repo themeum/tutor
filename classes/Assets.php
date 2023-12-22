@@ -192,7 +192,7 @@ class Assets {
 		 * Enabling Sorting, draggable, droppable...
 		 */
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		wp_enqueue_script( 'jquery-touch-punch', array( 'jquery-ui-sortable' ) );
+		wp_enqueue_script( 'jquery-touch-punch', array( 'jquery-ui-sortable' ) ); //phpcs:ignore
 
 		// Plyr.
 		if ( is_single_course( true ) ) {
@@ -575,13 +575,38 @@ class Assets {
 
 		// Add backend course editor identifier class to body.
 		if ( $course_builder_screen ) {
-			$to_add[] = is_admin() ? 'tutor-backend' : '';
+			$to_add[] = is_admin() ? 'tutor-backend' : 'tutor-frontend';
 			$to_add[] = ' tutor-screen-course-builder tutor-screen-course-builder-' . $course_builder_screen . ' ';
 		}
 
 		// Add frontend course builder identifier class.
 		if ( ! $course_builder_screen && tutor_utils()->is_tutor_frontend_dashboard() ) {
 			$to_add[] = 'tutor-screen-frontend-dashboard';
+		}
+
+		if ( is_post_type_archive( tutor()->course_post_type ) ) {
+			$to_add[] = 'tutor-frontend';
+		}
+
+		if ( tutor_utils()->is_tutor_frontend_dashboard() ) {
+			$to_add[] = 'tutor-frontend';
+		}
+
+		if ( is_single() ) {
+			global $post;
+
+			$post_types = array(
+				tutor()->course_post_type,
+				tutor()->lesson_post_type,
+				tutor()->quiz_post_type,
+				tutor()->assignment_post_type,
+				tutor()->zoom_post_type,
+				tutor()->meet_post_type,
+			);
+
+			if ( isset( $post->post_type ) && in_array( $post->post_type, $post_types, true ) ) {
+				$to_add[] = 'tutor-frontend';
+			}
 		}
 
 		if ( is_admin() ) {
