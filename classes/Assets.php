@@ -584,7 +584,7 @@ class Assets {
 			$to_add[] = 'tutor-screen-frontend-dashboard';
 		}
 
-		if ( is_post_type_archive( 'courses' ) ) {
+		if ( is_post_type_archive( tutor()->course_post_type ) ) {
 			$to_add[] = 'tutor-frontend';
 		}
 
@@ -594,7 +594,16 @@ class Assets {
 
 		if ( is_single() ) {
 			global $post;
-			$post_types = array( 'lesson', 'courses', 'tutor_quiz', 'tutor_assignments', 'tutor-google-meet', 'tutor_zoom_meeting' );
+
+			$post_types = array(
+				tutor()->course_post_type,
+				tutor()->lesson_post_type,
+				tutor()->quiz_post_type,
+				tutor()->assignment_post_type,
+				tutor()->zoom_post_type,
+				tutor()->meet_post_type,
+			);
+
 			if ( isset( $post->post_type ) && in_array( $post->post_type, $post_types, true ) ) {
 				$to_add[] = 'tutor-frontend';
 			}
