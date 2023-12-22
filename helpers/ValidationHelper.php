@@ -116,6 +116,8 @@ class ValidationHelper {
 	/**
 	 * Check if value is numeric
 	 *
+	 * Rules: numeric
+	 *
 	 * @param mixed $value  value to check.
 	 *
 	 * @return boolean
@@ -128,6 +130,8 @@ class ValidationHelper {
 	 * Check if value is empty
 	 *
 	 * Value will be considered empty if it is either null or empty string.
+	 *
+	 * Rules: required
 	 *
 	 * @param mixed $value  value to check.
 	 *
@@ -151,6 +155,8 @@ class ValidationHelper {
 
 	/**
 	 * Check if element has in array
+	 *
+	 * Rules: match_string:{value1},{value2}",
 	 *
 	 * @param string $key  key to check.
 	 * @param array  $array  array where to check.
