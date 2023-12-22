@@ -509,28 +509,36 @@ class Course extends Tutor_Base {
 				$course_benefits = Input::post( 'course_benefits', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_benefits', $course_benefits );
 			} else {
-				delete_post_meta( $post_ID, '_tutor_course_benefits' );
+				if ( ! tutor_is_rest() ) {
+					delete_post_meta( $post_ID, '_tutor_course_benefits' );
+				}
 			}
 
 			if ( ! empty( $_POST['course_requirements'] ) ) {
 				$requirements = Input::post( 'course_requirements', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_requirements', $requirements );
 			} else {
-				delete_post_meta( $post_ID, '_tutor_course_requirements' );
+				if ( ! tutor_is_rest() ) {
+					delete_post_meta( $post_ID, '_tutor_course_requirements' );
+				}
 			}
 
 			if ( ! empty( $_POST['course_target_audience'] ) ) {
 				$target_audience = Input::post( 'course_target_audience', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_target_audience', $target_audience );
 			} else {
-				delete_post_meta( $post_ID, '_tutor_course_target_audience' );
+				if ( ! tutor_is_rest() ) {
+					delete_post_meta( $post_ID, '_tutor_course_target_audience' );
+				}
 			}
 
 			if ( ! empty( $_POST['course_material_includes'] ) ) {
 				$material_includes = Input::post( 'course_material_includes', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_material_includes', $material_includes );
 			} else {
-				delete_post_meta( $post_ID, '_tutor_course_material_includes' );
+				if ( ! tutor_is_rest() ) {
+					delete_post_meta( $post_ID, '_tutor_course_material_includes' );
+				}
 			}
 			//phpcs:enable WordPress.Security.NonceVerification.Missing
 		}
@@ -555,7 +563,9 @@ class Course extends Tutor_Base {
 			if ( -1 !== $video_source ) {
 				update_post_meta( $post_ID, '_video', $video );
 			} else {
-				delete_post_meta( $post_ID, '_video' );
+				if ( ! tutor_is_rest() ) {
+					delete_post_meta( $post_ID, '_video' );
+				}
 			}
 		}
 
@@ -989,7 +999,7 @@ class Course extends Tutor_Base {
 		 * It does not check any role
 		 *
 		 * @since 2.6.0
-		 * 
+		 *
 		 * tutor_is_rest() check added, if loaded from rest api
 		 */
 		$is_admin_panel = is_admin() || tutor_is_rest();
@@ -1003,7 +1013,9 @@ class Course extends Tutor_Base {
 			if ( $product_id > 0 ) {
 				update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 			} elseif ( -1 === $product_id ) {
-				delete_post_meta( $post_ID, '_tutor_course_product_id' );
+				if ( ! tutor_is_rest() ) {
+					delete_post_meta( $post_ID, '_tutor_course_product_id' );
+				}
 			}
 
 			return;
