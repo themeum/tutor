@@ -91,8 +91,8 @@ class ValidationHelper {
 								$validation_errors[ $key ] = $key . __( ' invalid date format', 'products' );
 							}
 							break;
-						case 'author_exists':
-							$user_id = $data[ $key ];
+						case 'user_exists':
+							$user_id   = (int) $data[ $key ];
 							$is_exists = self::is_user_exists( $user_id );
 							if ( ! $is_exists ) {
 								$validation_pass           = false;
