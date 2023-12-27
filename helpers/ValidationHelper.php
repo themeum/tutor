@@ -84,6 +84,12 @@ class ValidationHelper {
 								$validation_errors[ $key ] = $key . __( ' is not boolean', 'products' );
 							}
 							break;
+						case 'is_array':
+							if ( ! self::is_array( $data[ $key ] ) ) {
+								$validation_pass     = false;
+								$validation_errors[ $key ] = $key . __( ' is not an array', 'products' );
+							}
+							break;
 						case 'date_format':
 							$format = $nested_rules[1];
 							if ( ! self::is_valid_date( $data[ $key ], $format ) ) {
@@ -182,6 +188,20 @@ class ValidationHelper {
 	public static function is_boolean( $value ): bool {
 		$allowed_booleans = array( 1, 0, '1', '0', 'true', 'false', true, false );
 		return in_array( $value, $allowed_booleans, true );
+	}
+
+	/**
+	 * The function checks if a given value is an array.
+	 *
+	 * Usage: is_array:{value}
+	 *
+	 * @param mixed $value  is the variable that will be checked if it is an array or not.
+	 *
+	 * @return bool A boolean value is being returned, indicating whether the input value is a valid
+	 * boolean or not.
+	 */
+	public static function is_array( $value ): bool {
+		return is_array( $value );
 	}
 
 	/**
