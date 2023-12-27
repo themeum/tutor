@@ -180,7 +180,7 @@ class ValidationHelper {
 	 * boolean or not.
 	 */
 	public static function is_boolean( $value ): bool {
-		$allowed_booleans = array( 1, 0, 'true', 'false', true, false );
+		$allowed_booleans = array( 1, 0, '1', '0', 'true', 'false', true, false );
 		return in_array( $value, $allowed_booleans, true );
 	}
 
