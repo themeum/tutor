@@ -49,52 +49,52 @@ class ValidationHelper {
 						case 'required':
 							if ( ! self::has_key( $key, $data ) || self::is_empty( $data[ $key ] ) ) {
 								$validation_pass     = false;
-								$validation_errors[ $key ] = $key . __( ' is required', 'products' );
+								$validation_errors[ $key ] = $key . __( ' is required', 'tutor' );
 							}
 							break;
 						case 'numeric':
 							if ( ! self::is_numeric( $data[ $key ] ) ) {
 								$validation_pass     = false;
-								$validation_errors[ $key ] = $key . __( ' is not numeric', 'products' );
+								$validation_errors[ $key ] = $key . __( ' is not numeric', 'tutor' );
 							}
 							break;
 						case 'min_length':
 							if ( strlen( $data[ $key ] ) < $nested_rules[1] ) {
 								$validation_pass     = false;
-								$validation_errors[ $key ] = $key . __( ' minimum length is ', 'products' ) . $nested_rules[1];
+								$validation_errors[ $key ] = $key . __( ' minimum length is ', 'tutor' ) . $nested_rules[1];
 							}
 							break;
 						case 'mimes':
 							$extensions = explode( ',', $nested_rules[1] );
 							if ( ! self::in_array( $data[ $key ], $extensions ) ) {
 								$validation_pass     = false;
-								$validation_errors[ $key ] = $key . __( ' extension is not valid', 'products' );
+								$validation_errors[ $key ] = $key . __( ' extension is not valid', 'tutor' );
 							}
 							break;
 						case 'match_string':
 							$strings = explode( ',', $nested_rules[1] );
 							if ( ! self::in_array( $data[ $key ], $strings ) ) {
 								$validation_pass     = false;
-								$validation_errors[] = $key . __( ' string is not valid', 'products' );
+								$validation_errors[] = $key . __( ' string is not valid', 'tutor' );
 							}
 							break;
 						case 'boolean':
 							if ( ! self::is_boolean( $data[ $key ] ) ) {
 								$validation_pass     = false;
-								$validation_errors[ $key ] = $key . __( ' is not boolean', 'products' );
+								$validation_errors[ $key ] = $key . __( ' is not boolean', 'tutor' );
 							}
 							break;
 						case 'is_array':
 							if ( ! self::is_array( $data[ $key ] ) ) {
 								$validation_pass     = false;
-								$validation_errors[ $key ] = $key . __( ' is not an array', 'products' );
+								$validation_errors[ $key ] = $key . __( ' is not an array', 'tutor' );
 							}
 							break;
 						case 'date_format':
 							$format = $nested_rules[1];
 							if ( ! self::is_valid_date( $data[ $key ], $format ) ) {
-								$validation_pass     = false;
-								$validation_errors[ $key ] = $key . __( ' invalid date format', 'products' );
+								$validation_pass           = false;
+								$validation_errors[ $key ] = $key . __( ' invalid date format', 'tutor' );
 							}
 							break;
 						case 'user_exists':
@@ -102,7 +102,7 @@ class ValidationHelper {
 							$is_exists = self::is_user_exists( $user_id );
 							if ( ! $is_exists ) {
 								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' user does not exist', 'products' );
+								$validation_errors[ $key ] = $key . __( ' user does not exist', 'tutor' );
 							}
 							break;
 						default:
