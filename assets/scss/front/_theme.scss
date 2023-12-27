@@ -1,6 +1,12 @@
 body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+
+	&.tutor-frontend {
+		*, *::before, *::after {
+			box-sizing: border-box;
+		}
+	}
 }
 
 //common and reset css

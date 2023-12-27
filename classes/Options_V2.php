@@ -10,7 +10,6 @@
 
 namespace Tutor;
 
-use TUTOR\Admin;
 use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -393,20 +392,16 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_option_save() {
-		global $wpdb;
 		tutor_utils()->checking_nonce();
 
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
 
+		$data_before = get_option( 'tutor_option' );
 		do_action( 'tutor_option_save_before' );
 
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
-		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
-
-		$old_dashboard_id    = get_tutor_option( 'tutor_dashboard_page_id' );
-		$dashboard_update_id = isset( $option['tutor_dashboard_page_id'] ) && null !== $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
-
+		$option = tutor_utils()->sanitize_recursively( $option );
 		$option = apply_filters( 'tutor_option_input', $option );
 
 		$time                                  = strtotime( 'now' ) + ( 6 * 60 * 60 );
@@ -429,6 +424,23 @@ class Options_V2 {
 		update_option( 'tutor_settings_log', $update_option );
 		update_option( 'tutor_option', $option );
 		update_option( 'tutor_option_update_time', gmdate( 'j M, Y, g:i a', $time ) );
+
+		/**
+		 * Hook for each tutor settings option change detection.
+		 * Example: `tutor_option_{course_permalink_base}_changed`
+		 *
+		 * @since 2.6.0
+		 */
+		$data_after = get_option( 'tutor_option' );
+		if ( $data_before !== $data_after && is_array( $data_after ) ) {
+			foreach ( $data_after as $key => $value ) {
+				$from = $data_before[ $key ] ?? null;
+				$to   = $value;
+				if ( $from !== $to ) {
+					do_action( "tutor_option_{$key}_changed", $from, $to );
+				}
+			}
+		}
 
 		do_action( 'tutor_option_save_after' );
 
@@ -511,12 +523,16 @@ class Options_V2 {
 
 		$pages = tutor_utils()->get_pages();
 
+		$site_url    = site_url();
+		$course_base = $this->get( 'course_permalink_base', 'courses' );
 		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
-		$course_base = tutor_utils()->get_option( 'course_permalink_base', tutor()->course_post_type );
-		$course_url  = site_url() . '/<code>' . $course_base . '</code>/sample-course';
-		$lesson_url  = site_url() . '/' . $course_base . '/sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
-		$student_url = tutor_utils()->profile_url( 0, false );
+		$quiz_key    = $this->get( 'quiz_permalink_base', 'quizzes' );
 
+		$course_url = $site_url . '/<code>' . $course_base . '</code>/sample-course';
+		$lesson_url = $site_url . '/' . $course_base . '/sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
+		$quiz_url   = $site_url . '/' . $course_base . '/sample-course/<code>' . $quiz_key . '</code>/sample-quiz/';
+
+		$student_url       = tutor_utils()->profile_url( 0, false );
 		$methods_array     = array();
 		$withdrawl_methods = apply_filters( 'tutor_withdrawal_methods_all', array() );
 
@@ -1543,27 +1559,39 @@ class Options_V2 {
 								'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
 							),
 							array(
-								'key'         => 'course_permalink_base',
-								'type'        => 'text',
-								'label'       => __( 'Course Permalink Base', 'tutor' ),
-								'placeholder' => __( 'Course Slug', 'tutor' ),
-								'label_title' => '',
-								'default'     => tutor()->course_post_type,
-								'desc'        => $course_url,
-							),
-							array(
-								'key'     => 'lesson_permalink_base',
-								'type'    => 'text',
-								'label'   => __( 'Lesson Permalink Base', 'tutor' ),
-								'default' => 'lessons',
-								'desc'    => $lesson_url,
-							),
-							array(
 								'key'     => 'lesson_video_duration_youtube_api_key',
 								'type'    => 'text',
 								'label'   => __( 'Youtube API Key', 'tutor' ),
 								'default' => '',
 								'desc'    => __( 'Insert the YouTube API key to host live videos using YouTube.', 'tutor' ),
+							),
+						),
+					),
+					array(
+						'label'      => __( 'Base Permalink', 'tutor' ),
+						'slug'       => 'base_permalink',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'course_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Course Permalink', 'tutor' ),
+								'default' => 'courses',
+								'desc'    => $course_url,
+							),
+							array(
+								'key'     => 'lesson_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Lesson Permalink', 'tutor' ),
+								'default' => 'lessons',
+								'desc'    => $lesson_url,
+							),
+							array(
+								'key'     => 'quiz_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Quiz Permalink', 'tutor' ),
+								'default' => 'quizzes',
+								'desc'    => $quiz_url,
 							),
 						),
 					),
