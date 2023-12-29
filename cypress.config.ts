@@ -13,5 +13,7 @@ export default defineConfig({
     single_course_slug: 'the-complete-javascript-course-2019-build-real-projects',
     student_username: 'student',
     student_password: 'test123',
+    admin_username: 'admin',
+    admin_password: 'admin',
   },
 });
