@@ -125,12 +125,12 @@ use TUTOR\Quiz;
 			<div class="tutor-fs-7 tutor-color-muted tutor-mb-12">
 				(<?php esc_html_e( 'Pick the quiz system"s behaviour on choice based questions.', 'tutor' ); ?>)
 			</div>
-			<?php foreach( Quiz::quiz_modes() as $mode ) : ?>
+			<?php foreach ( Quiz::quiz_modes() as $quiz_mode ) : ?>
 				<label class="tutor-radio-select tutor-bg-white tutor-mb-8">
-				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="<?php echo esc_attr( $mode['key'] ); ?>" <?php checked( $mode['key'], tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', $mode['key'] ) ); ?>>
+				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="<?php echo esc_attr( $quiz_mode['key'] ); ?>" <?php checked( $quiz_mode['key'], tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', $quiz_mode['key'] ) ); ?>>
 				<div class="tutor-radio-select-content">
-					<span class="tutor-radio-select-title"><?php echo esc_html( $mode['value'] ); ?></span>
-					<?php echo esc_html( $mode['description'] ); ?>
+					<span class="tutor-radio-select-title"><?php echo esc_html( $quiz_mode['value'] ); ?></span>
+					<?php echo esc_html( $quiz_mode['description'] ); ?>
 				</div>
 				</label>
 			<?php endforeach; ?>
