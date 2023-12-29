@@ -177,7 +177,7 @@ class Quiz {
 	 */
 	public static function quiz_question_layouts() {
 		$layouts = array(
-			''                          =>  __( 'Set question layout view', 'tutor' ),
+			''                          => __( 'Set question layout view', 'tutor' ),
 			'single_question'           => __( 'Single Question', 'tutor' ),
 			'question_pagination'       => __( 'Question Pagination', 'tutor' ),
 			'question_below_each_other' => __( 'Question below each other', 'tutor' ),
