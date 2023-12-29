@@ -215,10 +215,11 @@ use TUTOR\Quiz;
 						<?php esc_html_e( 'Question Layout', 'tutor' ); ?>
 					</label>
 					<select class="tutor-form-control" name="quiz_option[question_layout_view]">
-						<option value=""><?php esc_html_e( 'Set question layout view', 'tutor' ); ?></option>
-						<option value="single_question" <?php selected( 'single_question', tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' ) ); ?>> <?php esc_html_e( 'Single Question', 'tutor' ); ?> </option>
-						<option value="question_pagination" <?php selected( 'question_pagination', tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' ) ); ?>> <?php esc_html_e( 'Question Pagination', 'tutor' ); ?> </option>
-						<option value="question_below_each_other" <?php selected( 'question_below_each_other', tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' ) ); ?>> <?php esc_html_e( 'Question below each other', 'tutor' ); ?> </option>
+						<?php foreach ( Quiz::quiz_question_layouts() as $key => $value ) : ?>
+							<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' ) ); ?>>
+								<?php echo esc_html( $value ); ?> 
+							</option>
+						<?php endforeach; ?>
 					</select>
 				</div>
 
@@ -227,10 +228,11 @@ use TUTOR\Quiz;
 						<?php esc_html_e( 'Questions Order', 'tutor' ); ?>
 					</label>
 					<select class="tutor-form-control" name="quiz_option[questions_order]">
-						<option value="rand" <?php selected( 'rand', tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> <?php esc_html_e( 'Random', 'tutor' ); ?> </option>
-						<option value="sorting" <?php selected( 'sorting', tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> <?php esc_html_e( 'Sorting', 'tutor' ); ?> </option>
-						<option value="asc" <?php selected( 'asc', tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> <?php esc_html_e( 'Ascending', 'tutor' ); ?> </option>
-						<option value="desc" <?php selected( 'desc', tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> <?php esc_html_e( 'Descending', 'tutor' ); ?> </option>
+						<?php foreach ( Quiz::quiz_question_orders() as $key => $value ): ?>
+							<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> 
+								<?php echo esc_html( $value ); ?>
+							</option>
+						<?php endforeach; ?>
 					</select>
 				</div>
 
