@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+use TUTOR\Quiz;
+
 ?>
 <input type="hidden" name="quiz_id" value="<?php echo esc_attr( $quiz_id ); ?>"/>
 <div id="quiz-builder-tab-quiz-info">
@@ -96,11 +98,11 @@
 			<div class="tutor-col-3">
 				<?php $limit_time_type = tutor_utils()->get_quiz_option( $quiz_id, 'time_limit.time_type', 'minutes' ); ?>
 				<select name="quiz_option[time_limit][time_type]" class="tutor-form-control">
-					<option value="seconds" <?php selected( 'seconds', $limit_time_type ); ?>><?php esc_html_e( 'Seconds', 'tutor' ); ?></option>
-					<option value="minutes" <?php selected( 'minutes', $limit_time_type ); ?>><?php esc_html_e( 'Minutes', 'tutor' ); ?></option>
-					<option value="hours" <?php selected( 'hours', $limit_time_type ); ?>><?php esc_html_e( 'Hours', 'tutor' ); ?></option>
-					<option value="days" <?php selected( 'days', $limit_time_type ); ?>><?php esc_html_e( 'Days', 'tutor' ); ?></option>
-					<option value="weeks" <?php selected( 'weeks', $limit_time_type ); ?>><?php esc_html_e( 'Weeks', 'tutor' ); ?></option>
+					<?php foreach ( Quiz::quiz_time_units() as $key => $value ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $limit_time_type ); ?>>
+							<?php echo esc_html( $value ); ?>
+						</option>
+					<?php endforeach; ?>
 				</select>
 			</div>
 			<div class="tutor-col-6">
