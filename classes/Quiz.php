@@ -120,24 +120,53 @@ class Quiz {
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 	}
 
-    /**
-     * Get quiz time units options.
-     *
+	/**
+	 * Get quiz time units options.
+	 *
 	 * @since 2.6.0
 	 *
-     * @return array
-     */
-    public static function quiz_time_units() {
-        $time_units = array(
-            'seconds' => esc_html__( 'Seconds', 'tutor' ),
-            'minutes' => esc_html__( 'Minutes', 'tutor' ),
-            'hours'   => esc_html__( 'Hours', 'tutor' ),
-            'days'    => esc_html__( 'Days', 'tutor' ),
-            'weeks'   => esc_html__( 'Weeks', 'tutor' ),
-        );
+	 * @return array
+	 */
+	public static function quiz_time_units() {
+		$time_units = array(
+			'seconds' => esc_html__( 'Seconds', 'tutor' ),
+			'minutes' => esc_html__( 'Minutes', 'tutor' ),
+			'hours'   => esc_html__( 'Hours', 'tutor' ),
+			'days'    => esc_html__( 'Days', 'tutor' ),
+			'weeks'   => esc_html__( 'Weeks', 'tutor' ),
+		);
 
 		return apply_filters( 'tutor_quiz_time_units', $time_units );
-    }
+	}
+
+	/**
+	 * Get quiz modes
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return array
+	 */
+	public static function quiz_modes() {
+		$modes = array(
+			array(
+				'key'         => 'default',
+				'value'       => esc_html__( 'Default', 'tutor' ),
+				'description' => esc_html__( 'Answers shown after quiz is finished', 'tutor' ),
+			),
+			array(
+				'key'         => 'reveal',
+				'value'       => esc_html__( 'Reveal Mode', 'tutor' ),
+				'description' => esc_html__( 'Show result after the attempt.', 'tutor' ),
+			),
+			array(
+				'key'         => 'retry',
+				'value'       => esc_html__( 'Retry Mode', 'tutor' ),
+				'description' => esc_html__( 'Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor' ),
+			),
+		);
+
+		return apply_filters( 'tutor_quiz_modes', $modes );
+	}
 
 	/**
 	 * Prepare allowed HTML

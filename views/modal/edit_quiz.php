@@ -125,30 +125,15 @@ use TUTOR\Quiz;
 			<div class="tutor-fs-7 tutor-color-muted tutor-mb-12">
 				(<?php esc_html_e( 'Pick the quiz system"s behaviour on choice based questions.', 'tutor' ); ?>)
 			</div>
-
-			<label class="tutor-radio-select tutor-bg-white tutor-mb-8">
-				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked( 'default', tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 'default' ) ); ?>>
+			<?php foreach( Quiz::quiz_modes() as $mode ) : ?>
+				<label class="tutor-radio-select tutor-bg-white tutor-mb-8">
+				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="<?php echo esc_attr( $mode['key'] ); ?>" <?php checked( $mode['key'], tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', $mode['key'] ) ); ?>>
 				<div class="tutor-radio-select-content">
-					<span class="tutor-radio-select-title"><?php esc_html_e( 'Default', 'tutor' ); ?></span>
-					<?php esc_html_e( 'Answers shown after quiz is finished', 'tutor' ); ?>
+					<span class="tutor-radio-select-title"><?php echo esc_html( $mode['value'] ); ?></span>
+					<?php echo esc_html( $mode['description'] ); ?>
 				</div>
-			</label>
-
-			<label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
-				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked( 'reveal', tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode' ) ); ?>>
-				<div class="tutor-radio-select-content">
-					<span class="tutor-radio-select-title"><?php esc_html_e( 'Reveal Mode', 'tutor' ); ?></span>
-					<?php esc_html_e( 'Show result after the attempt.', 'tutor' ); ?>
-				</div>
-			</label>
-
-			<label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
-				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked( 'retry', tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode' ) ); ?>>
-				<div class="tutor-radio-select-content">
-					<span class="tutor-radio-select-title"><?php esc_html_e( 'Retry Mode', 'tutor' ); ?></span>
-					<?php esc_html_e( 'Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor' ); ?>
-				</div>
-			</label>
+				</label>
+			<?php endforeach; ?>
 		</div>
 	</div>
 
