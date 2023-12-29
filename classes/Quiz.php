@@ -120,6 +120,25 @@ class Quiz {
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
 	}
 
+    /**
+     * Get quiz time units options.
+     *
+	 * @since 2.6.0
+	 *
+     * @return array
+     */
+    public static function quiz_time_units() {
+        $time_units = array(
+            'seconds' => esc_html__( 'Seconds', 'tutor' ),
+            'minutes' => esc_html__( 'Minutes', 'tutor' ),
+            'hours'   => esc_html__( 'Hours', 'tutor' ),
+            'days'    => esc_html__( 'Days', 'tutor' ),
+            'weeks'   => esc_html__( 'Weeks', 'tutor' ),
+        );
+
+		return apply_filters( 'tutor_quiz_time_units', $time_units );
+    }
+
 	/**
 	 * Prepare allowed HTML
 	 *
