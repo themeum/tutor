@@ -15,5 +15,7 @@ export default defineConfig({
     student_password: 'test123',
     admin_username: 'admin',
     admin_password: 'admin',
+    instructor_username: 'instructor',
+    instructor_password: 'test123',
   },
 });

@@ -2,6 +2,9 @@ declare namespace Cypress {
   interface Chainable {
     getByInputName(dataTestAttribute: string): Chainable<JQuery<HTMLElement>>
     setTinyMceContent(selector: string, content: string): Chainable<JQuery<HTMLElement>>
+    loginAsAdmin(): Chainable<JQuery<HTMLElement>>
+    loginAsInstructor(): Chainable<JQuery<HTMLElement>>
+    loginAsStudent(): Chainable<JQuery<HTMLElement>>
   }
 }
 
@@ -24,4 +27,22 @@ Cypress.Commands.add("setTinyMceContent", (selector, content) => {
       editorInstance.setContent(content);
     })
   )
+})
+
+Cypress.Commands.add("loginAsAdmin", () => {
+  cy.getByInputName("log").type(Cypress.env("admin_username"))
+  cy.getByInputName("pwd").type(Cypress.env("admin_password"))
+  cy.get("#tutor-login-form button").contains("Sign In").click()
+})
+
+Cypress.Commands.add("loginAsInstructor", () => {
+  cy.getByInputName("log").type(Cypress.env("instructor_username"))
+  cy.getByInputName("pwd").type(Cypress.env("instructor_password"))
+  cy.get("#tutor-login-form button").contains("Sign In").click()
+})
+
+Cypress.Commands.add("loginAsStudent", () => {
+  cy.getByInputName("log").type(Cypress.env("student_username"))
+  cy.getByInputName("pwd").type(Cypress.env("student_password"))
+  cy.get("#tutor-login-form button").contains("Sign In").click()
 })
