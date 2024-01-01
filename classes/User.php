@@ -25,6 +25,9 @@ class User {
 	const INSTRUCTOR = 'tutor_instructor';
 	const ADMIN      = 'administrator';
 
+	const REVIEW_POPUP_META = 'tutor_review_course_popup';
+	const LAST_LOGIN_META   = 'tutor_last_login';
+
 	/**
 	 * Registration notice
 	 *
@@ -60,6 +63,20 @@ class User {
 
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
 		add_action( 'admin_init', array( $this, 'hide_notices' ) );
+		add_action( 'wp_login', array( $this, 'update_user_last_login' ), 10, 2 );
+	}
+
+	/**
+	 * Get meta key name for review popup.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return string user meta key name.
+	 */
+	public static function get_review_popup_meta( $course_id ) {
+		return self::REVIEW_POPUP_META . '_' . $course_id;
 	}
 
 	/**
@@ -128,7 +145,7 @@ class User {
 	 * @since 2.2.0
 	 *
 	 * @param bool $is_approved instructor is approved or not.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public static function is_instructor( $is_approved = true ) {
@@ -269,7 +286,7 @@ class User {
 	 * @return void
 	 */
 	public function profile_update( $user_id ) {
-		if ( tutor_utils()->array_get( 'tutor_action', $_POST ) !== 'tutor_profile_update_by_wp' ) {
+		if ( 'tutor_profile_update_by_wp' !== Input::post( 'tutor_action' ) ) {
 			return;
 		}
 
@@ -361,4 +378,19 @@ class User {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Set the user last active timestamp to now.
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param string   $user_login active user name.
+	 * @param \WP_User $user User object data.
+	 *
+	 * @return void
+	 */
+	public function update_user_last_login( $user_login, $user ) {
+		update_user_meta( $user->ID, self::LAST_LOGIN_META, time() );
+	}
+
 }

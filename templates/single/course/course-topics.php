@@ -149,4 +149,4 @@ do_action( 'tutor_course/single/before/topics' );
 	<?php endif; ?>
 </div>
 
-<?php do_action( 'tutor_course/single/after/topics' ); ?>
+<?php do_action( 'tutor_course/single/after/topics', $course_id ); ?>

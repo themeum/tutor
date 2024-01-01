@@ -1,5 +1,5 @@
 var gulp = require('gulp'),
-	sass = require('gulp-sass'),
+	sass = require('gulp-sass')(require('sass')),
 	sourcemaps = require('gulp-sourcemaps'),
 	rename = require('gulp-rename'),
 	prefix = require('gulp-autoprefixer'),
@@ -10,7 +10,14 @@ var gulp = require('gulp'),
 	zip = require('gulp-zip'),
 	fs = require('fs'),
 	path = require('path'),
-	build_name = 'tutor-' + require('./package.json').version + '.zip';
+	versionNumber = '';
+
+try {
+	const data = fs.readFileSync('tutor.php', 'utf8');
+	versionNumber = data.match(/Version:\s*([\d.]+)/i)?.[1] || '';
+} catch (err) {}
+
+const build_name = 'tutor-' + versionNumber + '.zip';
 
 var onError = function(err) {
 	notify.onError({
@@ -79,9 +86,8 @@ for (let task in scss_blueprints) {
 			.src(blueprint.src)
 			.pipe(plumber({ errorHandler: onError }))
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
-			.pipe(sass({ outputStyle: 'compressed' }))
+			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }))
 			.pipe(rename(blueprint.destination))
-			.pipe(sourcemaps.write('.', { addComment: process.env._GULP_ENV != 'build' }))
 			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'));
 	});
 }
@@ -249,6 +255,8 @@ gulp.task('copy', function() {
 			'!.travis.yml',
 			'!phpunit.xml.dist',
 			'!phpunit.xml',
+			'!phpcs.xml',
+			'!phpcs.xml.dist',
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });

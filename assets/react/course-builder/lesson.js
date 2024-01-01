@@ -127,48 +127,44 @@ window.jQuery(document).ready(function($) {
 					'data-lesson-id': lesson_id,
 					'data-topic-id': topic_id,
 				});
+
 				$('.tutor-lesson-modal-wrap').addClass('tutor-is-active');
-				if ($('#wp-tutor_lesson_modal_editor-wrap').hasClass('html-active')) {
-					$('#wp-tutor_lesson_modal_editor-wrap').removeClass('html-active');
-				}
 
-				$('#wp-tutor_lesson_modal_editor-wrap').addClass('tmce-active');
+				let editor_id = 'tutor_lesson_modal_editor',
+					editor_wrap_selector = '#wp-tutor_lesson_modal_editor-wrap',
+					tinymceConfig = tinyMCEPreInit.mceInit.tutor_lesson_editor_config;
 
-				var tinymceConfig = tinyMCEPreInit.mceInit.tutor_lesson_editor_config;
 				if (!tinymceConfig) {
 					tinymceConfig = tinyMCEPreInit.mceInit.course_description;
 				}
+
+				if ($(editor_wrap_selector).hasClass('html-active')) {
+					$(editor_wrap_selector).removeClass('html-active');
+				}
+				$(editor_wrap_selector).addClass('tmce-active');
+
 				/**
-				 * Add codesample plugin to support code snippet
+				 * Code snippet support for PRO user.
 				 *
-				 * @since v2.0.9
+				 * @since 2.0.9
 				 */
-				if (!tinymceConfig.plugins.includes('codesample')) {
-					if (tinymceConfig && _tutorobject.tutor_pro_url) {
-						tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
-						tinymceConfig.codesample_languages = codeSampleLang;
-						// tinymceConfig.codesample_dialog_width = '440';
-						tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
-					}
+				if (_tutorobject.tutor_pro_url && tinymceConfig && !tinymceConfig.plugins.includes('codesample')) {
+					tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
+					tinymceConfig.codesample_languages = codeSampleLang;
+					tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
 				}
 
+				tinymceConfig.wpautop = false;
 				tinymce.init(tinymceConfig);
-				tinymce.execCommand(
-					'mceRemoveEditor',
-					false,
-					'tutor_lesson_modal_editor',
-				);
-				tinyMCE.execCommand(
-					'mceAddEditor',
-					false,
-					'tutor_lesson_modal_editor',
-				);
+				tinymce.execCommand('mceRemoveEditor', false, editor_id);
+				tinyMCE.execCommand('mceAddEditor', false, editor_id);
+				quicktags({ id: editor_id });
+
 				window.dispatchEvent(new Event(_tutorobject.content_change_event));
-				window.dispatchEvent(new CustomEvent('tutor_modal_shown', {detail: e.target}));
+				window.dispatchEvent(new CustomEvent('tutor_modal_shown', { detail: e.target }));
 			},
 			complete: function() {
 				$that.removeClass('is-loading').attr('disabled', false);
-				quicktags({ id: 'tutor_lesson_modal_editor' });
 			},
 		});
 	});
@@ -187,37 +183,24 @@ window.jQuery(document).ready(function($) {
 			.attr('data-video_source', val);
 	});
 
-	// Update lesson
+	/**
+	 * Lesson Update From Lesson Modal
+	 */
 	$(document).on('click', '.update_lesson_modal_btn', function(event) {
 		event.preventDefault();
 
-		/**
-		 * Fix - [embed] shortcode does not work from visual mode
-		 * @since 2.1.6
-		 */
-		//$('#tutor_lesson_modal_editor-html').click();
+		let $that = $(this),
+			editor = tinyMCE.get('tutor_lesson_modal_editor'),
+			editorWrap = document.getElementById('wp-tutor_lesson_modal_editor-wrap'),
+			isHtmlActive = editorWrap.classList.contains('html-active'),
+			content = editor.getContent({ format: 'html' });
 
-		var $that = $(this);
-		var content;
-		var inputid = 'tutor_lesson_modal_editor';
-		var editor = tinyMCE.get(inputid);
-		const editorWrap = document.getElementById(
-			'wp-tutor_lesson_modal_editor-wrap',
-		);
-		const isHtmlActive = editorWrap.classList.contains('html-active');
-
-		if (editor) {
-			content = editor.getContent({format: 'raw'});
-		} else {
-			content = $('#' + inputid).val();
-		}
-		
 		// removing <br data-mce-bogus="1">
-		if(content === '<p><br data-mce-bogus="1"></p>') {
+		if (content === '<p><br data-mce-bogus="1"></p>') {
 			content = '';
 		}
 
-		var form_data = $(this)
+		let form_data = $(this)
 			.closest('.tutor-modal')
 			.find('form')
 			.serializeObject();

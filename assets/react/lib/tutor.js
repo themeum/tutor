@@ -432,6 +432,28 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 	}
 };
 
+/**
+ * Escape HTML and return safe HTML
+ * 
+ * @since 2.2.4
+ * 
+ * @param {string} unsafeText HTML string
+ * @returns string
+ */
+window.tutor_esc_html = function (unsafeText) {
+	let safeHTML = ''
+	let div = document.createElement('div');
+	/**
+	 * When set an HTML string to an element's innerText
+	 * the browser automatically escapes any HTML tags and
+	 * treats the content as plain text.
+	 */
+	div.innerText = unsafeText;
+	safeHTML = div.innerHTML;
+	div.remove()
+
+	return safeHTML;
+}
 
 // enable custom selector when modal opens
 window.addEventListener('tutor_modal_shown', (e) => {

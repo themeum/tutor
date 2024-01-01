@@ -18,9 +18,7 @@ use Tutor\Models\WithdrawModel;
 use TUTOR\Withdraw_Requests_List;
 $withdraw = new Withdraw_Requests_List();
 
-/**
- * Short able params
- */
+//phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 $order       = Input::get( 'order', 'DESC' );
 $date        = Input::has( 'date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'date' ) ) : '';
 $search_term = Input::get( 'search', '' );
@@ -65,6 +63,7 @@ $filters = array(
 	'course_filter' => false,
 );
 
+//phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 ?>
 
 <div class="tutor-admin-wrap">
@@ -361,8 +360,8 @@ $filters = array(
 										<path d="M48.8438 36.9234C48.4151 36.9234 48.0038 36.7533 47.7022 36.4496L43.3945 32.1419L45.6798 29.8567L48.7662 32.9431L55.1675 25.6287L57.5992 27.7545L50.0607 36.3699C49.7656 36.7059 49.3456 36.9062 48.8976 36.9213C48.8804 36.9234 48.861 36.9234 48.8438 36.9234Z" fill="white"/>
 									</svg>
 								</span>
-								<input type="hidden" name="action" value="<?php echo esc_html( 'tutor_admin_withdraw_action' ); ?>">
-								<input type="hidden" name="action-type" value="<?php echo esc_html( 'approved' ); ?>">
+								<input type="hidden" name="action" value="tutor_admin_withdraw_action">
+								<input type="hidden" name="action-type" value="approved">
 							</div>
 
 							<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Approve Withdrawal?', 'tutor' ); ?></div>

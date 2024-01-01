@@ -17,8 +17,8 @@ use TUTOR\Input;
 use TUTOR\Instructors_List;
 
 if ( Input::has( 'sub_page' ) ) {
-	$page = Input::get( 'sub_page' );
-	include_once tutor()->path . "views/pages/{$page}.php";
+	$sub_page = Input::get( 'sub_page' );
+	include_once tutor()->path . "views/pages/{$sub_page}.php";
 	return;
 }
 
@@ -27,11 +27,11 @@ $instructors = new Instructors_List();
 /**
  * Short able params
  */
-$user_id   = Input::get( 'user_id', '' );
-$course_id = Input::get( 'course-id', '' );
-$order     = Input::get( 'order', 'DESC' );
-$date      = Input::get( 'date', '' );
-$search    = Input::get( 'search', '' );
+$user_id     = Input::get( 'user_id', '' );
+$course_id   = Input::get( 'course-id', '' );
+$data_order  = Input::get( 'order', 'DESC' );
+$date        = Input::get( 'date', '' );
+$search_term = Input::get( 'search', '' );
 
 /**
  * Determine active tab
@@ -41,22 +41,30 @@ $active_tab = Input::get( 'data', 'all' );
 /**
  * Pagination data
  */
-$paged    = Input::get( 'paged', 1, Input::TYPE_INT );
-$per_page = tutor_utils()->get_option( 'pagination_per_page' );
-$offset   = ( $per_page * $paged ) - $per_page;
+$selected_page = Input::get( 'paged', 1, Input::TYPE_INT );
+$per_page_data = tutor_utils()->get_option( 'pagination_per_page' );
+$offset        = ( $per_page_data * $selected_page ) - $per_page_data;
 
 // Available status for instructor.
+$available_status = array(
+	'pending'  => array( __( 'Pending', 'tutor' ), 'select-warning' ),
+	'approved' => array( __( 'Approved', 'tutor' ), 'select-success' ),
+	'blocked'  => array( __( 'Blocked', 'tutor' ), 'select-danger' ),
+);
+
 $instructor_status = array( 'approved', 'pending', 'blocked' );
 if ( 'pending' === $active_tab ) {
-	$instructor_status = array( 'pending' );
+	$instructor_status          = array( 'pending' );
+	$available_status['reject'] = array( __( 'Reject', 'tutor' ), 'select-danger' );
+
 } elseif ( 'blocked' === $active_tab ) {
 	$instructor_status = array( 'blocked' );
-} elseif ( 'approved' == $active_tab ) {
+} elseif ( 'approved' === $active_tab ) {
 	$instructor_status = array( 'approved' );
 }
-$instructors_list = Instructors_List::get_instructors( $instructor_status, $offset, $per_page, $search, $course_id, $date, $order );
+$instructors_list = Instructors_List::get_instructors( $instructor_status, $offset, $per_page_data, $search_term, $course_id, $date, $data_order );
 
-$total = Instructors_List::count_total_instructors( $instructor_status, $search, $course_id, $date );
+$total = Instructors_List::count_total_instructors( $instructor_status, $search_term, $course_id, $date );
 
 /**
  * Navbar data to make nav menu
@@ -65,7 +73,7 @@ $url               = get_pagenum_link();
 $add_insructor_url = $url . '&sub_page=add_new_instructor';
 $navbar_data       = array(
 	'page_title'   => $instructors->page_title,
-	'tabs'         => $instructors->tabs_key_value( $search, $course_id, $date ),
+	'tabs'         => $instructors->tabs_key_value( $search_term, $course_id, $date ),
 	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
@@ -92,12 +100,7 @@ $filters = array(
 		$filters_template = tutor()->path . 'views/elements/filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
-		$available_status = array(
-			'pending'  => array( __( 'Pending', 'tutor' ), 'select-warning' ),
-			'approved' => array( __( 'Approved', 'tutor' ), 'select-success' ),
-			'blocked'  => array( __( 'Blocked', 'tutor' ), 'select-danger' ),
-		);
-		?>
+	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-table-responsive tutor-mt-32">
 			<table class="tutor-table tutor-table-middle table-instructors tutor-table-with-checkbox">
@@ -116,14 +119,17 @@ $filters = array(
 							<?php esc_html_e( 'Email', 'tutor' ); ?>
 							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 						</th>
-						<th class="tutor-table-rows-sorting" width="10%">
+						<th class="tutor-table-rows-sorting" width="5%">
 							<?php esc_html_e( 'Total Courses', 'tutor' ); ?>
 							<span class="tutor-icon-order-down up-down-icon"></span>
 						</th>
-						<th class="tutor-table-rows-sorting" width="10%">
+						<th class="tutor-table-rows-sorting" width="5%">
 							<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
 						</th>
-						<th class="tutor-table-rows-sorting" width="15%">
+
+						<?php do_action( 'tutor_after_instructor_list_commission_column' ); ?>
+
+						<th class="tutor-table-rows-sorting" width="10%">
 							<?php esc_html_e( 'Status', 'tutor' ); ?>
 							<span class="tutor-icon-order-down up-down-icon"></span>
 						</th>
@@ -134,7 +140,8 @@ $filters = array(
 					<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
 						<?php
 						foreach ( $instructors_list as $list ) :
-							$alert = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
+							$alert     = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
+							$user_data = get_userdata( $list->ID );
 							?>
 							<tr>
 								<td>
@@ -150,7 +157,7 @@ $filters = array(
 											tutor_utils()->allowed_avatar_tags()
 										);
 										?>
-										<?php echo esc_html( $list->display_name ); ?>
+										<?php echo esc_html( tutils()->get_user_name( $user_data ) ); ?>
 										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
 											<span class="tutor-icon-external-link"></span>
 										</a>
@@ -175,6 +182,9 @@ $filters = array(
 										?>
 									</span>
 								</td>
+
+								<?php do_action( 'tutor_after_instructor_list_commission_column_data', $list->ID ); ?>
+
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
 									<span style="display:block; width:0; height:0; overflow:hidden;">
 										<?php
@@ -184,7 +194,7 @@ $filters = array(
 									</span>
 									<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
 										<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
-											<?php foreach ( $available_status as $key => $status ) : ?>
+											<?php foreach ( $available_status as $key => $status_name ) : ?>
 												<option data-status_class="<?php echo esc_attr( $available_status[ $key ][1] ); ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
 													<?php echo esc_html( $available_status[ $key ][0] ); ?>
 												</option>
@@ -195,9 +205,19 @@ $filters = array(
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-									<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+									<?php
+									ob_start();
+									$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
+									?>
+									<a href="<?php echo esc_url( $profile_url ); ?>" 
+										class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
+									<?php
+									$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
+									//phpcs:ignore -- already escaped.
+									echo $edit_button;
+									?>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -216,11 +236,11 @@ $filters = array(
 				/**
 				 * Prepare pagination data & load template
 				 */
-			if ( $total > $per_page ) {
+			if ( $total > $per_page_data ) {
 				$pagination_data     = array(
 					'total_items' => $total,
-					'per_page'    => $per_page,
-					'paged'       => $paged,
+					'per_page'    => $per_page_data,
+					'paged'       => $selected_page,
 				);
 				$pagination_template = tutor()->path . 'views/elements/pagination.php';
 				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
@@ -252,7 +272,7 @@ $filters = array(
 								<?php esc_html_e( 'First Name', 'tutor' ); ?>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="first_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
+								<input type="text" name="first_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter First Name', 'tutor' ); ?>" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 							</div>
 						</div>
 						<div class="tutor-col">
@@ -260,7 +280,7 @@ $filters = array(
 								<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="last_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
+								<input type="text" name="last_name" class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Last Name', 'tutor' ); ?>" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 							</div>
 						</div>
 					</div>
@@ -276,9 +296,12 @@ $filters = array(
 						<div class="tutor-col">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
+								<span class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
+									<?php esc_html_e( '(Optional)', 'tutor' ); ?>
+								</span>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
+								<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-12" placeholder="<?php esc_attr_e( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>"/>
 							</div>
 						</div>
 					</div>
@@ -326,7 +349,7 @@ $filters = array(
 								</span>
 							</label>
 							<div class="tutor-mb-16">
-								<textarea  name="tutor_profile_bio" class="tutor-form-control" rows="3" style="width: 100%;" placeholder="<?php esc_html_e( 'Write Your Bio...', 'tutor' ); ?>"></textarea>
+								<?php wp_editor( '', 'tutor_profile_bio', tutor_utils()->get_profile_bio_editor_config( 'tutor_profile_bio' ) ); ?>
 							</div>
 						</div>
 					</div>
@@ -451,3 +474,9 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 		</div>
 	</div>
 <?php endif; ?>
+
+<style>
+	.table-instructors .woocommerce-Price-amount{
+		font-size: 0.875rem;
+	}
+</style>

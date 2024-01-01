@@ -1,21 +1,25 @@
 .tutor {
 	&-card {
 		background-color: #FFFFFF;
-		border: 1px solid var(--tutor-border-color);
 		position: relative;
 		border-radius: 6px;
 		display: flex;
 		flex-direction: column;
 		min-width: 0;
 		word-wrap: break-word;
+		&:not(.tutor-no-border) {
+			border: 1px solid var(--tutor-border-color);
+		}
 
 		&-header {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			border-bottom: 1px solid var(--tutor-border-color);
 			padding: 16px 20px;
 			border-radius: 5px 5px 0 0;
+			&:not(.tutor-no-border) {
+				border-bottom: 1px solid var(--tutor-border-color);
+			}
 		}
 
 		&-title {
@@ -73,7 +77,9 @@
 		// sizes
 		&-sm {
 			.tutor-card {
-				&-header,
+				&-header {
+					padding: 10px 16px;
+				}
 				&-body,
 				&-footer {
 					padding: 16px;

@@ -26,7 +26,7 @@ $height-sm: 38px;
 		font-weight: 400;
 		line-height: 1.4;
 		height: auto;
-		border: 1px solid var(--tutor-border-color);
+		border: 1px solid var(--tutor-border-color)!important;
 		box-shadow: none;
 		transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
 	

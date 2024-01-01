@@ -9,6 +9,8 @@
  * @since 1.0.0
  */
 
+use Tutor\Models\CourseModel;
+
 // Utility data.
 global $is_enrolled;
 
@@ -62,15 +64,21 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 ?>
 
 <div class="tutor-card tutor-card-md tutor-sidebar-card">
+	<?php
+	$tutor_load_sidebar_actions = apply_filters( 'tutor_load_single_sidebar_actions', true, get_the_ID() );
+	if ( $tutor_load_sidebar_actions ) :
+		?>
 	<div class="tutor-card-body">
 		<?php
 		if ( $is_enrolled || $is_privileged_user ) {
 			ob_start();
 
 			// Course Info.
+			$user_id             = get_current_user_id();
+			$course_id           = get_the_ID();
+			$completion_mode     = tutor_utils()->get_option( 'course_completion_process' );
 			$is_completed_course = tutor_utils()->is_completed_course();
 			$retake_course       = tutor_utils()->can_user_retake_course();
-			$course_id           = get_the_ID();
 			$course_progress     = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 			$completed_percent   = $course_progress['completed_percent'];
 			?>
@@ -83,8 +91,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 					<div class="list-item-progress">
 						<div class="tutor-fs-6 tutor-color-secondary tutor-d-flex tutor-align-center tutor-justify-between">
 							<span class="progress-steps">
-								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
-								<?php echo esc_html( $course_progress['total_count'] ); ?>
+								<?php echo esc_html( $course_progress['completed_count'] . '/' . $course_progress['total_count'] ); ?>
 							</span>
 							<span class="progress-percentage">
 								<?php echo esc_html( $completed_percent . '%' ); ?>
@@ -105,29 +112,66 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 
 			// Show Start/Continue/Retake Button.
 			if ( $lesson_url ) {
-				$button_class = 'tutor-btn ' .
-								( $retake_course ? 'tutor-btn-outline-primary' : 'tutor-btn-primary' ) .
-								' tutor-btn-block' .
-								( $retake_course ? ' tutor-course-retake-button' : '' );
-
-				// Button identifier class.
-				$button_identifier = 'start-continue-retake-button';
-				$tag               = $retake_course ? 'button' : 'a';
 				ob_start();
-				?>
-					<<?php echo esc_html( $tag ); ?> <?php echo $retake_course ? 'disabled="disabled"' : ''; ?> href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo esc_attr( $button_class . ' ' . $button_identifier ); ?>" data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
-					<?php
-					if ( $retake_course ) {
-						esc_html_e( 'Retake This Course', 'tutor' );
-					} elseif ( $completed_percent <= 0 ) {
-						esc_html_e( 'Start Learning', 'tutor' );
-					} else {
-						esc_html_e( 'Continue Learning', 'tutor' );
-					}
+				/**
+				 * Course retake button.
+				 *
+				 * Todo: `href` attribute is exist for backward compatibility.
+				 *       we need to make it `data-link` attribute and update the js code at course-landing.js
+				 *
+				 * @since 1.0.0
+				 * @since 2.4.0 refactored and hide it when strict mode enabled and course not completed.
+				 */
+				if ( $retake_course && ( CourseModel::MODE_FLEXIBLE === $completion_mode || $is_completed_course ) ) {
 					?>
-					</<?php echo esc_html( $tag ); ?>>
+					<button type="button" 
+							class="tutor-btn tutor-btn-block tutor-btn-outline-primary start-continue-retake-button tutor-course-retake-button" 
+							href="<?php echo esc_url( $lesson_url ); ?>"
+							data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
+						<?php esc_html_e( 'Retake This Course', 'tutor' ); ?>
+					</button>
 					<?php
-					$start_content = ob_get_clean();
+				}
+
+				/**
+				 * Start/Continue learning button
+				 *
+				 * @since 1.0.0
+				 * @since 2.4.0 refactored for enhance readibility.
+				 */
+				$link_text = '';
+				if ( ! $is_completed_course ) {
+					if ( 0 === (int) $completed_percent ) {
+						$link_text = __( 'Start Learning', 'tutor' );
+					}
+					if ( $completed_percent > 0 && $completed_percent < 100 ) {
+						$link_text = __( 'Continue Learning', 'tutor' );
+					}
+
+					/**
+					 * `Review Progress` link text shown when
+					 * - strict mode enabled
+					 * - course progress 100%
+					 * - in course progress any quiz or assignemnt result is not passed.
+					 *
+					 * @since 2.4.0
+					 */
+					if ( 100 === (int) $completed_percent && false === CourseModel::can_complete_course( $course_id, $user_id ) ) {
+						$lesson_url = CourseModel::get_review_progress_link( $course_id, $user_id );
+						$link_text  = __( 'Review Progress', 'tutor' );
+					}
+				}
+
+				if ( strlen( $link_text ) > 0 ) {
+					?>
+					<a 	href="<?php echo esc_url( $lesson_url ); ?>" 
+						class="tutor-btn tutor-btn-block tutor-btn-primary tutor-mt-20">
+						<?php echo esc_html( $link_text ); ?>
+					</a>
+					<?php
+				}
+
+				$start_content = ob_get_clean();
 			}
 			echo apply_filters( 'tutor_course/single/start/button', $start_content, get_the_ID() );//phpcs:ignore
 
@@ -136,7 +180,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 				ob_start();
 				?>
 				<form method="post" class="tutor-mt-20">
-					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
 					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
@@ -234,9 +278,9 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 		do_action( 'tutor_course/single/entry/after', get_the_ID() );
 		?>
 	</div>
-
+	<?php endif; ?>
 	<!-- Course Info -->
-	<div class="tutor-card-footer">
+	<div class="tutor-card-footer <?php echo esc_attr( $tutor_load_sidebar_actions ? '' : 'tutor-no-border' ); ?>">
 		<ul class="tutor-ul">
 			<?php foreach ( $sidebar_meta as $key => $meta ) : ?>
 				<?php

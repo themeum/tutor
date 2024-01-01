@@ -10,7 +10,6 @@
 
 namespace Tutor;
 
-use TUTOR\Admin;
 use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -303,7 +302,7 @@ class Options_V2 {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$reset_fields = $return_fields = $return_fields_group = array();
+		$reset_fields = $return_fields = $return_fields_group = array(); //phpcs:ignore
 		$reset_page   = Input::post( 'reset_page' );
 		$setting_data = $this->get_setting_fields()['option_fields'][ $reset_page ]['blocks'];
 
@@ -393,23 +392,16 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_option_save() {
-		global $wpdb;
 		tutor_utils()->checking_nonce();
 
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
 
+		$data_before = get_option( 'tutor_option' );
 		do_action( 'tutor_option_save_before' );
 
-		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
+		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
-		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
-
-		$old_dashboard_id    = get_tutor_option( 'tutor_dashboard_page_id' );
-		$dashboard_update_id = isset( $option['tutor_dashboard_page_id'] ) && null !== $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
-		$email_footer_text   = json_encode( wp_unslash( $option['email_footer_text'] ) );
-
-		$option['email_footer_text'] = ! empty( $option['email_footer_text'] ) ? $email_footer_text : '';
-
+		$option = tutor_utils()->sanitize_recursively( $option );
 		$option = apply_filters( 'tutor_option_input', $option );
 
 		$time                                  = strtotime( 'now' ) + ( 6 * 60 * 60 );
@@ -433,9 +425,35 @@ class Options_V2 {
 		update_option( 'tutor_option', $option );
 		update_option( 'tutor_option_update_time', gmdate( 'j M, Y, g:i a', $time ) );
 
+		/**
+		 * Hook for each tutor settings option change detection.
+		 * Example: `tutor_option_{course_permalink_base}_changed`
+		 *
+		 * @since 2.6.0
+		 */
+		$data_after = get_option( 'tutor_option' );
+		if ( $data_before !== $data_after && is_array( $data_after ) ) {
+			foreach ( $data_after as $key => $value ) {
+				$from = $data_before[ $key ] ?? null;
+				$to   = $value;
+				if ( $from !== $to ) {
+					do_action( "tutor_option_{$key}_changed", $from, $to );
+				}
+			}
+		}
+
 		do_action( 'tutor_option_save_after' );
 
-		wp_send_json_success( $option );
+		$data = apply_filters(
+			'tutor_option_saved_data',
+			array(
+				'success' => true,
+				'message' => __( 'Settings Saved', 'tutor' ),
+				'options' => $option,
+			)
+		);
+
+		wp_send_json( $data );
 	}
 
 	/**
@@ -482,7 +500,7 @@ class Options_V2 {
 	 * @return void
 	 */
 	public function load_settings_page() {
-		extract( $this->get_setting_fields() );
+		extract( $this->get_setting_fields() ); //phpcs:ignore
 
 		if ( ! $template_path ) {
 			$template_path = tutor()->path . '/views/options/settings.php';
@@ -505,12 +523,16 @@ class Options_V2 {
 
 		$pages = tutor_utils()->get_pages();
 
+		$site_url    = site_url();
+		$course_base = $this->get( 'course_permalink_base', 'courses' );
 		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
-		$course_base = tutor_utils()->get_option( 'course_permalink_base', tutor()->course_post_type );
-		$course_url  = site_url() . '/<code>' . $course_base . '</code>/sample-course';
-		$lesson_url  = site_url() . '/' . $course_base . '/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
-		$student_url = tutor_utils()->profile_url( 0, false );
+		$quiz_key    = $this->get( 'quiz_permalink_base', 'quizzes' );
 
+		$course_url = $site_url . '/<code>' . $course_base . '</code>/sample-course';
+		$lesson_url = $site_url . '/' . $course_base . '/sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
+		$quiz_url   = $site_url . '/' . $course_base . '/sample-course/<code>' . $quiz_key . '</code>/sample-quiz/';
+
+		$student_url       = tutor_utils()->profile_url( 0, false );
 		$methods_array     = array();
 		$withdrawl_methods = apply_filters( 'tutor_withdrawal_methods_all', array() );
 
@@ -580,11 +602,12 @@ class Options_V2 {
 								'desc'        => __( 'Allow multiple instructors to upload their courses.', 'tutor' ),
 							),
 							array(
-								'key'     => 'pagination_per_page',
-								'type'    => 'number',
-								'label'   => __( 'Pagination', 'tutor' ),
-								'default' => '20',
-								'desc'    => __( 'Set the number of rows to be displayed per page', 'tutor' ),
+								'key'         => 'pagination_per_page',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Pagination', 'tutor' ),
+								'default'     => '20',
+								'desc'        => __( 'Set the number of rows to be displayed per page', 'tutor' ),
 							),
 						),
 					),
@@ -667,7 +690,7 @@ class Options_V2 {
 							array(
 								'key'         => 'auto_course_complete_on_all_lesson_completion',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Auto Course Complete on all Lesson Completion', 'tutor' ),
+								'label'       => __( 'Auto Complete Course on all Lesson Completion', 'tutor' ),
 								'default'     => 'off',
 								'label_title' => '',
 								'desc'        => __( 'If enabled, an Enrolled Course will be automatically completed if all its Lessons, Quizzes, and Assignments are already completed by the Student', 'tutor' ),
@@ -702,7 +725,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'block_lesson' => array(
 						'label'      => __( 'Lesson', 'tutor' ),
 						'slug'       => 'lesson',
 						'block_type' => 'uniform',
@@ -759,11 +782,12 @@ class Options_V2 {
 								'desc'    => __( 'Put the answer display time in seconds', 'tutor' ),
 							),
 							array(
-								'key'     => 'quiz_attempts_allowed',
-								'type'    => 'number',
-								'label'   => __( 'Default Quiz Attempt limit (when Retry Mode is enabled)', 'tutor' ),
-								'default' => '10',
-								'desc'    => __( 'The highest number of attempts allowed for students to participate a quiz. 0 means unlimited. This will work as the default Quiz Attempt limit in case of Quiz Retry Mode.', 'tutor' ),
+								'key'         => 'quiz_attempts_allowed',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Default Quiz Attempt limit (when Retry Mode is enabled)', 'tutor' ),
+								'default'     => '10',
+								'desc'        => __( 'The highest number of attempts allowed for students to participate a quiz. 0 means unlimited. This will work as the default Quiz Attempt limit in case of Quiz Retry Mode.', 'tutor' ),
 							),
 							array(
 								'key'     => 'quiz_previous_button_enabled',
@@ -871,12 +895,13 @@ class Options_V2 {
 								'desc'        => __( 'Set how the sales revenue will be shared among admins and instructors.', 'tutor' ),
 							),
 							array(
-								'key'     => 'statement_show_per_page',
-								'type'    => 'number',
-								'label'   => __( 'Show Statement Per Page', 'tutor' ),
-								'default' => '20',
+								'key'         => 'statement_show_per_page',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Show Statement Per Page', 'tutor' ),
+								'default'     => '20',
 
-								'desc'    => __( 'Define the number of statements to show.', 'tutor' ),
+								'desc'        => __( 'Define the number of statements to show.', 'tutor' ),
 							),
 						),
 					),
@@ -899,8 +924,10 @@ class Options_V2 {
 								'type'        => 'textarea',
 								'label'       => __( 'Fee Description', 'tutor' ),
 								'placeholder' => __( 'Fee Description', 'tutor' ),
-								'desc'        => __( 'Set a description for the fee that you are deducting. Make sure to give a reasonable explanation to maintain transparency with your site’s instructors', 'tutor' ),
-								'default'     => 'free',
+								'desc'        => __( 'Set a description for the fee that you are deducting. Make sure to give a reasonable explanation to maintain transparency with your site’s instructors.', 'tutor' ),
+								'maxlength'   => 200,
+								'rows'        => 5,
+								'default'     => 'Maintenance Fees',
 							),
 							array(
 								'key'          => 'fee_amount_type',
@@ -937,12 +964,13 @@ class Options_V2 {
 								'desc'    => __( 'Instructors should earn equal or above this amount to make a withdraw request.', 'tutor' ),
 							),
 							array(
-								'key'     => 'minimum_days_for_balance_to_be_available',
-								'type'    => 'number',
-								'label'   => __( 'Minimum Days Before Balance is Available', 'tutor' ),
-								'default' => '7',
-								'min'     => 1,
-								'desc'    => __( 'Any income has to remain this many days in the platform before it is available for withdrawal.', 'tutor' ),
+								'key'         => 'minimum_days_for_balance_to_be_available',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Minimum Days Before Balance is Available', 'tutor' ),
+								'default'     => '7',
+								'min'         => 1,
+								'desc'        => __( 'Any income has to remain this many days in the platform before it is available for withdrawal.', 'tutor' ),
 							),
 							array(
 								'key'     => 'tutor_withdrawal_methods',
@@ -997,11 +1025,12 @@ class Options_V2 {
 								'desc'        => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
 							),
 							array(
-								'key'     => 'courses_per_page',
-								'type'    => 'number',
-								'label'   => __( 'Courses Per Page', 'tutor' ),
-								'default' => '12',
-								'desc'    => __( 'Set the number of courses to display per page on the Course List page.', 'tutor' ),
+								'key'         => 'courses_per_page',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Courses Per Page', 'tutor' ),
+								'default'     => '12',
+								'desc'        => __( 'Set the number of courses to display per page on the Course List page.', 'tutor' ),
 							),
 							array(
 								'key'     => 'supported_course_filters',
@@ -1529,27 +1558,40 @@ class Options_V2 {
 								'options' => $pages,
 								'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
 							),
-							// TODO
-							// array(
-							// 'key'     => 'course_permalink_base',
-							// 'type'    => 'text',
-							// 'label'   => __('Course Permalink Base', 'tutor'),
-							// 'default' => tutor()->course_post_type,
-							// 'desc'    => $course_url,
-							// ),
-							array(
-								'key'     => 'lesson_permalink_base',
-								'type'    => 'text',
-								'label'   => __( 'Lesson Permalink Base', 'tutor' ),
-								'default' => 'lessons',
-								'desc'    => $lesson_url,
-							),
 							array(
 								'key'     => 'lesson_video_duration_youtube_api_key',
 								'type'    => 'text',
 								'label'   => __( 'Youtube API Key', 'tutor' ),
 								'default' => '',
 								'desc'    => __( 'Insert the YouTube API key to host live videos using YouTube.', 'tutor' ),
+							),
+						),
+					),
+					array(
+						'label'      => __( 'Base Permalink', 'tutor' ),
+						'slug'       => 'base_permalink',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'course_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Course Permalink', 'tutor' ),
+								'default' => 'courses',
+								'desc'    => $course_url,
+							),
+							array(
+								'key'     => 'lesson_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Lesson Permalink', 'tutor' ),
+								'default' => 'lessons',
+								'desc'    => $lesson_url,
+							),
+							array(
+								'key'     => 'quiz_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Quiz Permalink', 'tutor' ),
+								'default' => 'quizzes',
+								'desc'    => $quiz_url,
 							),
 						),
 					),

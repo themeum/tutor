@@ -13,10 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$class = isset( $class ) ? ' ' . $class : ' tutor-mb-8';
+$class               = isset( $class ) ? ' ' . $class : ' tutor-mb-8';
+$show_course_ratings = apply_filters( 'tutor_show_course_ratings', true, get_the_ID() );
 ?>
 
 <div class="tutor-course-ratings<?php echo esc_html( $class ); ?>">
+	<?php if ( $show_course_ratings ) : ?>
 	<div class="tutor-ratings">
 		<div class="tutor-ratings-stars">
 			<?php
@@ -34,4 +36,6 @@ $class = isset( $class ) ? ' ' . $class : ' tutor-mb-8';
 			</div>
 		<?php endif; ?>
 	</div>
+	<?php endif; ?>
 </div>
+<?php do_action( 'tutor_after_course_loop_rating', get_the_ID() ); ?>

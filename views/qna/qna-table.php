@@ -30,7 +30,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 
 			<tbody>
 				<?php
-					$current_user_id = get_current_user_id();
+				$current_user_id = get_current_user_id();
 				foreach ( $qna_list as $qna ) :
 					$id_string_delete = 'tutor_delete_qna_' . $qna->comment_ID;
 					$row_id           = 'tutor_qna_row_' . $qna->comment_ID;
@@ -191,22 +191,23 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+
+		<?php if ( $qna_pagination['total_items'] > $qna_pagination['per_page'] ) : ?>
+			<div class="tutor-mt-32">
+				<?php
+					$pagination_data     = array(
+						'base'        => ! empty( $qna_pagination['base'] ) ? $qna_pagination['base'] : null,
+						'total_items' => $qna_pagination['total_items'],
+						'per_page'    => $qna_pagination['per_page'],
+						'paged'       => $qna_pagination['paged'],
+					);
+					$pagination_template = tutor()->path . 'views/elements/pagination.php';
+					tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+					?>
+			</div>
+		<?php endif; ?>
 	</div>
+	<!-- end table responsive -->
 <?php else : ?>
 	<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-<?php endif; ?>
-
-<?php if ( $qna_pagination['total_items'] > $qna_pagination['per_page'] ) : ?>
-	<div class="tutor-mt-32">
-		<?php
-			$pagination_data     = array(
-				'base'        => ! empty( $qna_pagination['base'] ) ? $qna_pagination['base'] : null,
-				'total_items' => $qna_pagination['total_items'],
-				'per_page'    => $qna_pagination['per_page'],
-				'paged'       => $qna_pagination['paged'],
-			);
-			$pagination_template = tutor()->path . 'views/elements/pagination.php';
-			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			?>
-	</div>
 <?php endif; ?>

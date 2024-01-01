@@ -162,7 +162,7 @@ class RestAPI {
 					$this->course_obj,
 					'course',
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -176,7 +176,7 @@ class RestAPI {
 					$this->course_obj,
 					'course_by_terms',
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -203,7 +203,7 @@ class RestAPI {
 						'type'     => 'number',
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -224,7 +224,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -245,7 +245,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -266,14 +266,14 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
 		// Course announcement by course id.
 		register_rest_route(
 			$this->namespace,
-			'/course-annoucement/(?P<id>\d+)',
+			'/course-announcement/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array(
@@ -287,7 +287,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -308,7 +308,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -329,7 +329,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -350,7 +350,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -371,7 +371,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 
@@ -392,7 +392,7 @@ class RestAPI {
 						},
 					),
 				),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
 	}

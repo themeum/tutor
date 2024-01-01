@@ -39,31 +39,45 @@ window.jQuery(document).ready(function ($) {
             multiple: false, // Set to true to allow multiple files to be selected
         });
         frame.on('select', function () {
-            var attachment = frame.state().get('selection').first().toJSON();
+            let attachment = frame.state().get('selection').first().toJSON(),
+                inputEl = wrapper.find('input[type="hidden"].tutor-tumbnail-id-input');
 
             wrapper.find('img').attr('src', attachment.url);
-            wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val(attachment.id);
+            inputEl.val(attachment.id);
             wrapper.find('.delete-btn').show();
 
             $('#save_tutor_option').prop('disabled', false);
+
+            document.querySelector('.tutor-thumbnail-uploader')
+                .dispatchEvent(new CustomEvent('tutor_settings_media_selected', {
+                    detail: {
+                        wrapper: wrapper,
+                        settingsName: inputEl.attr('name').replace(/.*\[(.*?)\]/, '$1'),
+                        attachment: attachment
+                    }
+                }));
+
         });
         frame.open();
     });
+
     /**
      * Thumbnail Delete
-     * @since v.1.5.6
+     * @since 1.5.6
      */
     $(document).on('click', '.tutor-thumbnail-uploader .delete-btn', function (e) {
         e.preventDefault();
 
-        var $that = $(this);
-        var wrapper = $that.closest('.tutor-thumbnail-uploader');
-        var img = wrapper.find('img');
-        var placeholder = img.data('placeholder') || '';
+        let $that = $(this),
+            wrapper = $that.closest('.tutor-thumbnail-uploader'),
+            img = wrapper.find('img'),
+            placeholder = img.data('placeholder') || '';
 
         wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
         img.attr('src', placeholder);
-
         $that.hide();
+
+        // Enable save button after thumbnail remove.
+        $('#save_tutor_option').prop('disabled', false);
     });
 });

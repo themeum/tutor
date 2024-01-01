@@ -129,6 +129,7 @@ jQuery(document).ready(function($) {
 		ajaxurl: window._tutorobject.ajaxurl,
 		nonce_key: window._tutorobject.nonce_key,
 		played_once: false,
+		max_seek_time: 0,
 		video_data: function() {
 			const video_track_data = $('#tutor_video_tracking_information').val();
 			return video_track_data ? JSON.parse(video_track_data) : {};
@@ -136,59 +137,103 @@ jQuery(document).ready(function($) {
 		track_player: function() {
 			const that = this;
 			if (typeof Plyr !== 'undefined') {
-				const player = new Plyr(this.player_DOM);
+				let syncTimeInterval;
 				const video_data = that.video_data();
+				const player = new Plyr(this.player_DOM, {
+					keyboard: {
+						focused: that.isRequiredPercentage() ? false : true,
+						global: false,
+					},
+					listeners: {
+						...(that.isRequiredPercentage() && {
+							seek(e) {
+								const newTime = that.getTargetTime(player, e);
+								const currentTime = player.currentTime;
+								const max_seek_time = currentTime > that.max_seek_time ? currentTime : that.max_seek_time;
+								// Disallow moving forward
+								if (newTime > max_seek_time) {
+									e.preventDefault();
+									tutor_toast(__('Warning', 'tutor'), __(`Forward seeking is disabled.`, 'tutor'), 'error');
+									return false;
+								}
+								return true;
+							},
+						}),
+					}
+				});
 				player.on('ready', function(event) {
 					const instance = event.detail.plyr;
 					const { best_watch_time = 0 } = video_data || {};
-					if (
-						best_watch_time > 0 &&
-						instance.duration > Math.round(best_watch_time)
-					) {
-						instance.media.currentTime = best_watch_time;
+					if (_tutorobject.tutor_pro_url && best_watch_time > 0) {
+						var previous_duration = Math.round(best_watch_time);
+						var previousTimeSetter = setTimeout(function(){
+							if (player.playing !== true && player.currentTime !== previous_duration) {
+								if (instance.provider === 'youtube') {
+									instance.embed.seekTo(best_watch_time);
+								} else {
+									instance.media.currentTime = previous_duration;
+								}
+							} else {
+								clearTimeout(previousTimeSetter);
+							}
+						});
 					}
 					that.sync_time(instance);
 				});
+				
+				player.on('play', (event) => {
+					that.played_once = true;
 
-				let tempTimeNow = 0;
-				let intervalSeconds = 30; //Send to tutor backend about video playing time in this interval
-				player.on('timeupdate', function(event) {
+					// Send to tutor backend about video playing time in this interval
+					const intervalSeconds = 10;
 					const instance = event.detail.plyr;
-					const tempTimeNowInSec = tempTimeNow / 4; //timeupdate firing 250ms interval
-					if (tempTimeNowInSec >= intervalSeconds) {
+					syncTimeInterval = setInterval(() => {
 						that.sync_time(instance);
-						tempTimeNow = 0;
+					}, intervalSeconds * 1000);
+
+					if (_tutorobject.tutor_pro_url && player.provider === 'youtube') {
+						$('.plyr--youtube.plyr__poster-enabled .plyr__poster').css('opacity', 0);
 					}
-					tempTimeNow++;
 				});
 
-				player.on('play', () => {
-					that.played_once = true;
+				player.on('pause', (event) => {
+					clearInterval(syncTimeInterval);
+					const instance = event.detail.plyr;
+					that.sync_time(instance);
 				});
 
 				player.on('ended', function(event) {
+					clearInterval(syncTimeInterval);
 					const video_data = that.video_data();
 					const instance = event.detail.plyr;
 					const data = { is_ended: true };
 					that.sync_time(instance, data);
-					console.log(
-						video_data.autoload_next_course_content,
-						that.played_once,
-					);
 					if (video_data.autoload_next_course_content && that.played_once) {
 						that.autoload_content();
+					}
+
+					if (_tutorobject.tutor_pro_url && player.provider === 'youtube') {
+						$('.plyr--youtube.plyr__poster-enabled .plyr__poster').css('opacity', 1);
 					}
 				});
 			}
 		},
 		sync_time: function(instance, options) {
-			const post_id = this.video_data().post_id;
+			const video_data = this.video_data();
+			if (!video_data) {
+				return;
+			}
+
+			if (this.isRequiredPercentage()) {
+				this.enable_complete_lesson_btn(instance);
+			}
+
 			//TUTOR is sending about video playback information to server.
 			let data = {
 				action: 'sync_video_playback',
 				currentTime: instance.currentTime,
 				duration: instance.duration,
-				post_id,
+				post_id: video_data.post_id,
 			};
 			data[this.nonce_key] = _tutorobject[this.nonce_key];
 			let data_send = data;
@@ -196,6 +241,11 @@ jQuery(document).ready(function($) {
 				data_send = Object.assign(data, options);
 			}
 			$.post(this.ajaxurl, data_send);
+			
+			const seekTime = video_data.best_watch_time > instance.currentTime ? video_data.best_watch_time : instance.currentTime;
+			if (seekTime > this.max_seek_time) {
+				this.max_seek_time = seekTime;
+			}
 		},
 		autoload_content: function() {
 			console.log('Autoloader called');
@@ -209,9 +259,65 @@ jQuery(document).ready(function($) {
 				}
 			});
 		},
+		isRequiredPercentage: function() {
+			const video_data = this.video_data();
+			if (!video_data) {
+				return false;
+			}
+
+			const { strict_mode, control_video_lesson_completion, lesson_completed, is_enrolled } = video_data;
+			if (_tutorobject.tutor_pro_url && is_enrolled && !lesson_completed && strict_mode && control_video_lesson_completion) {
+				return true;
+			}
+			return false;
+		},
+		enable_complete_lesson_btn: function(instance) {
+			const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
+			const video_data = this.video_data();
+			const completedPercentage = this.getPercentage(Number(instance.currentTime), Number(instance.duration));
+			
+			if (completedPercentage >= video_data.required_percentage) {
+				complete_lesson_btn.attr('disabled', false);
+				complete_lesson_btn.next().remove();
+			}
+		},
+		disable_complete_lesson_btn: function() {
+			const video_data = this.video_data();
+			if (!video_data) {
+				return;
+			}
+
+			const { best_watch_time, video_duration, required_percentage } = video_data;
+			const completedPercentage = this.getPercentage(Number(best_watch_time), Number(video_duration));
+			
+			if (completedPercentage < required_percentage) {
+				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
+				complete_lesson_btn.attr('disabled', true);
+				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">Watch at least ${video_data.required_percentage}% to complete the lesson.</span>`);
+			}
+		},
+		getPercentage: function(value, total) {
+			if (value > 0 && total > 0) {
+				return Math.round((value / total) * 100);
+			}
+			return 0;
+		},
+		getTargetTime: function(player, input) {
+			if (
+			  typeof input === "object" &&
+			  (input.type === "input" || input.type === "change")
+			) {
+			  return input.target.value / input.target.max * player.media.duration;
+			} else {
+			  return Number(input);
+			}
+		},
 		init: function(element) {
 			this.player_DOM = element;
 			this.track_player();
+			if (this.isRequiredPercentage()) {
+				this.disable_complete_lesson_btn();
+			}
 		},
 	};
 
@@ -812,4 +918,14 @@ jQuery(document).ready(function($) {
 				.attr('disabled', 'disabled');
 		}, 100);
 	});
+
+	// Show the snackbar
+	const snackbar = document.getElementById('tutor-reuseable-snackbar');
+	if (snackbar) {
+		// Apply the animation class after a short delay
+		setTimeout(function() {
+			snackbar.classList.add('tutor-snackbar-show');
+		}, 1000); // Adjust the delay (in milliseconds) as needed
+	}
+	
 });

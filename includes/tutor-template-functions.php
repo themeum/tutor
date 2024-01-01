@@ -12,20 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * @param null $template
- * @param bool $tutor_pro
- *
- * @return bool|string
- *
- * Load template with override file system
- *
- * @since v.1.0.0
- * @updated v.1.4.2
- * @updated v.1.4.3
- */
 
 if ( ! function_exists( 'tutor_get_template' ) ) {
+	/**
+	 * Load template with override file system
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param null $template template.
+	 * @param bool $tutor_pro is tutor pro.
+	 *
+	 * @return bool|string
+	 */
 	function tutor_get_template( $template = null, $tutor_pro = false ) {
 		if ( ! $template ) {
 			return false;
@@ -65,17 +63,17 @@ if ( ! function_exists( 'tutor_get_template' ) ) {
 	}
 }
 
-/**
- * @param null $template
- * @param bool $tutor_pro
- *
- * @return bool|mixed|void
- *
- * Get only template path without any warning...
- *
- * @since v.1.4.2
- */
 if ( ! function_exists( 'tutor_get_template_path' ) ) {
+	/**
+	 * Get only template path without any warning...
+	 *
+	 * @since 1.4.2
+	 *
+	 * @param null $template template.
+	 * @param bool $tutor_pro is tutor pro.
+	 *
+	 * @return bool|mixed|void
+	 */
 	function tutor_get_template_path( $template = null, $tutor_pro = false ) {
 		if ( ! $template ) {
 			return false;
@@ -101,19 +99,19 @@ if ( ! function_exists( 'tutor_get_template_path' ) ) {
 	}
 }
 
-/**
- * @param null $template
- *
- * @param array $variables
- *
- * Load template for TUTOR
- *
- * @since v.1.0.0
- *
- * @updated v.1.1.2
- */
-
 if ( ! function_exists( 'tutor_load_template' ) ) {
+	/**
+	 * Load template for TUTOR
+	 *
+	 * @since 1.0.0
+	 * @since 1.1.2 updated
+	 *
+	 * @param null  $template template.
+	 * @param array $variables variables.
+	 * @param bool  $tutor_pro is tutor pro.
+	 *
+	 * @return void
+	 */
 	function tutor_load_template( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
 		$variables = apply_filters( 'get_tutor_load_template_variables', $variables );
@@ -135,15 +133,18 @@ if ( ! function_exists( 'tutor_load_template' ) ) {
 	}
 }
 
-/**
- * @param null $template
- * @param array $variables
- * @param bool $tutor_pro
- *
- * @since v.1.4.3
- */
-
 if ( ! function_exists( 'tutor_load_template_part' ) ) {
+	/**
+	 * Load tutor template part.
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param null  $template template.
+	 * @param array $variables variables.
+	 * @param bool  $tutor_pro is tutor pro.
+	 *
+	 * @return void
+	 */
 	function tutor_load_template_part( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
 		$variables = apply_filters( 'get_tutor_load_template_variables', $variables );
@@ -169,16 +170,18 @@ if ( ! function_exists( 'tutor_load_template_part' ) ) {
 	}
 }
 
-/**
- * @param $template_name
- * @param array $variables
- *
- * @return string
- *
- * @since v.1.4.3
- */
-
 if ( ! function_exists( 'tutor_get_template_html' ) ) {
+	/**
+	 * Tutor get template HTML.
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param null  $template template.
+	 * @param array $variables variables.
+	 * @param bool  $tutor_pro is tutor pro.
+	 *
+	 * @return string
+	 */
 	function tutor_get_template_html( $template_name, $variables = array(), $tutor_pro = false ) {
 		ob_start();
 		tutor_load_template( $template_name, $variables, $tutor_pro );
@@ -188,6 +191,15 @@ if ( ! function_exists( 'tutor_get_template_html' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_loop_start' ) ) {
+	/**
+	 * Tutor course loop start.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param boolean $echo echo.
+	 *
+	 * @return mixed
+	 */
 	function tutor_course_loop_start( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'loop.loop-start' );
@@ -201,6 +213,15 @@ if ( ! function_exists( 'tutor_course_loop_start' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_loop_end' ) ) {
+	/**
+	 * Tutor course loop end.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param boolean $echo echo.
+	 *
+	 * @return mixed
+	 */
 	function tutor_course_loop_end( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'loop.loop-end' );
@@ -214,6 +235,13 @@ if ( ! function_exists( 'tutor_course_loop_end' ) ) {
 	}
 }
 
+/**
+ * Tutor course loop before content.
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ */
 function tutor_course_loop_before_content() {
 	ob_start();
 	tutor_load_template( 'loop.loop-before-content' );
@@ -222,6 +250,13 @@ function tutor_course_loop_before_content() {
 	echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file
 }
 
+/**
+ * Tutor course loop after content.
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ */
 function tutor_course_loop_after_content() {
 	ob_start();
 	tutor_load_template( 'loop.loop-after-content' );
@@ -231,6 +266,13 @@ function tutor_course_loop_after_content() {
 }
 
 if ( ! function_exists( 'tutor_course_loop_title' ) ) {
+	/**
+	 * Tutor course loop title.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_course_loop_title() {
 		ob_start();
 		tutor_load_template( 'loop.title' );
@@ -242,6 +284,13 @@ if ( ! function_exists( 'tutor_course_loop_title' ) ) {
 
 
 if ( ! function_exists( 'tutor_course_loop_header' ) ) {
+	/**
+	 * Tutor course loop header.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_course_loop_header() {
 		ob_start();
 		tutor_load_template( 'loop.header' );
@@ -252,6 +301,13 @@ if ( ! function_exists( 'tutor_course_loop_header' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_loop_footer' ) ) {
+	/**
+	 * Tutor course loop footer.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_course_loop_footer() {
 		ob_start();
 		tutor_load_template( 'loop.footer' );
@@ -261,10 +317,14 @@ if ( ! function_exists( 'tutor_course_loop_footer' ) ) {
 	}
 }
 
-// tutor_course_loop_footer
-
-
 if ( ! function_exists( 'tutor_course_loop_start_content_wrap' ) ) {
+	/**
+	 * Tutor course loop start content wrap.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_course_loop_start_content_wrap() {
 		ob_start();
 		tutor_load_template( 'loop.start_content_wrap' );
@@ -275,6 +335,13 @@ if ( ! function_exists( 'tutor_course_loop_start_content_wrap' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_loop_end_content_wrap' ) ) {
+	/**
+	 * Tutor course loop end content wrap.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_course_loop_end_content_wrap() {
 		ob_start();
 		tutor_load_template( 'loop.end_content_wrap' );
@@ -285,6 +352,15 @@ if ( ! function_exists( 'tutor_course_loop_end_content_wrap' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_loop_thumbnail' ) ) {
+	/**
+	 * Tutor course loop thumbnail.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param boolean $echo echo.
+	 *
+	 * @return mixed
+	 */
 	function tutor_course_loop_thumbnail( $echo = true ) {
 		ob_start();
 		tutor_load_template( 'loop.thumbnail' );
@@ -299,6 +375,15 @@ if ( ! function_exists( 'tutor_course_loop_thumbnail' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_loop_wrap_classes' ) ) {
+	/**
+	 * Tutor course loop wrap classes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param boolean $echo echo.
+	 *
+	 * @return mixed
+	 */
 	function tutor_course_loop_wrap_classes( $echo = true ) {
 		$courseID = get_the_ID();
 		$classes  = apply_filters(
@@ -320,6 +405,15 @@ if ( ! function_exists( 'tutor_course_loop_wrap_classes' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_loop_col_classes' ) ) {
+	/**
+	 * Tutor course loop col classes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param boolean $echo echo.
+	 *
+	 * @return mixed
+	 */
 	function tutor_course_loop_col_classes( $echo = true ) {
 		$course_filter      = (bool) tutor_utils()->get_option( 'course_archive_filter', false );
 		$course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
@@ -342,6 +436,15 @@ if ( ! function_exists( 'tutor_course_loop_col_classes' ) ) {
 
 
 if ( ! function_exists( 'tutor_container_classes' ) ) {
+	/**
+	 * Tutor container classes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param boolean $echo echo.
+	 *
+	 * @return mixed
+	 */
 	function tutor_container_classes( $echo = true ) {
 
 		$classes = apply_filters(
@@ -370,6 +473,15 @@ if ( ! function_exists( 'tutor_container_classes' ) ) {
 	}
 }
 if ( ! function_exists( 'tutor_post_class' ) ) {
+	/**
+	 * Tutor post class.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $default default class.
+	 *
+	 * @return void
+	 */
 	function tutor_post_class( $default = '' ) {
 		$classes = apply_filters(
 			'tutor_post_class',
@@ -383,17 +495,16 @@ if ( ! function_exists( 'tutor_post_class' ) ) {
 	}
 }
 
-/**
- *
- * Get classes for widget loop single course wrap
- *
- * @param bool $echo
- *
- * @return string
- *
- * @since v.1.3.1
- */
 if ( ! function_exists( 'tutor_widget_course_loop_classes' ) ) {
+	/**
+	 * Get classes for widget loop single course wrap
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param bool $echo echo.
+	 *
+	 * @return string
+	 */
 	function tutor_widget_course_loop_classes( $echo = true ) {
 
 		$classes = apply_filters(
@@ -414,10 +525,17 @@ if ( ! function_exists( 'tutor_widget_course_loop_classes' ) ) {
 	}
 }
 
-/**
- * Get the post thumbnail
- */
 if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
+	/**
+	 * Get course thumbnail.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string  $size size.
+	 * @param boolean $url url.
+	 *
+	 * @return string
+	 */
 	function get_tutor_course_thumbnail( $size = 'post-thumbnail', $url = false ) {
 		$post_id           = get_the_ID();
 		$size              = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
@@ -434,19 +552,29 @@ if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
         </div>';
 	}
 }
-/**
- * Get the course/post thumbnail src
- */
+
 if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
-	function get_tutor_course_thumbnail_src( $size = 'post-thumbnail' ) {
-		$post_id           = get_the_ID();
+	/**
+	 * Get the course/post thumbnail src.
+	 *
+	 * @since 1.0.0
+	 * @since 2.2.0 $id param added to provide post id to access outside of post loop.
+	 *
+	 * @param string $size size of thumb.
+	 * @param int    $id post id.
+	 *
+	 * @return string src of the post thumbnail | default placeholder
+	 */
+	function get_tutor_course_thumbnail_src( $size = 'post-thumbnail', $id = 0 ) {
+		$post_id           = $id ? $id : get_the_ID();
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 
 		if ( $post_thumbnail_id ) {
 			$size = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
 			$src  = wp_get_attachment_image_url( $post_thumbnail_id, $size, false );
 		} else {
-			$src = tutor()->url . 'assets/images/placeholder.svg';
+			$placeholder_url = tutor()->url . 'assets/images/placeholder.svg';
+			$src             = apply_filters( 'tutor_course_thumbnail_placeholder', $placeholder_url, $post_id );
 		}
 
 		return $src;
@@ -454,6 +582,13 @@ if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
 }
 
 if ( ! function_exists( 'tutor_course_loop_meta' ) ) {
+	/**
+	 * Course loop meta.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_course_loop_meta() {
 		ob_start();
 		tutor_load_template( 'loop.meta' );
@@ -463,13 +598,14 @@ if ( ! function_exists( 'tutor_course_loop_meta' ) ) {
 	}
 }
 
-/**
- * Get course author name in loop
- *
- * @since: v.1.0.0
- */
-
 if ( ! function_exists( 'tutor_course_loop_author' ) ) {
+	/**
+	 * Get course author name in loop
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_course_loop_author() {
 		ob_start();
 		tutor_load_template( 'loop.course-author' );
@@ -479,11 +615,14 @@ if ( ! function_exists( 'tutor_course_loop_author' ) ) {
 	}
 }
 
-/**
- * Get formatted price with cart form
- */
-
 if ( ! function_exists( 'tutor_course_loop_price' ) ) {
+	/**
+	 * Course loop price.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	function tutor_course_loop_price() {
 
 		ob_start();
@@ -491,7 +630,7 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 		$course_id    = get_the_ID();
 		$can_continue = tutor_utils()->is_enrolled( $course_id ) || get_post_meta( $course_id, '_tutor_is_public_course', true ) == 'yes';
 
-		// Check for further access type like course content access settings
+		// Check for further access type like course content access settings.
 		if ( ! $can_continue ) {
 			$can_continue = tutor_utils()->has_user_course_content_access( get_current_user_id(), $course_id );
 		}
@@ -515,14 +654,15 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 	}
 }
 
-/**
- * Get Course rating
- *
- * @since v.1.0.0
- * @updated v.1.4.5
- */
-
 if ( ! function_exists( 'tutor_course_loop_rating' ) ) {
+	/**
+	 * Get Course rating
+	 *
+	 * @since 1.0.0
+	 * @since v1.4.5 updated.
+	 *
+	 * @return void
+	 */
 	function tutor_course_loop_rating() {
 
 		$disable = ! get_tutor_option( 'enable_course_review' );
@@ -1436,5 +1576,38 @@ if ( ! function_exists( 'tutor_enrolled_course_progress' ) ) {
 		if ( isset( $query_vars['tutor_dashboard_page'] ) && 'enrolled-courses' === $query_vars['tutor_dashboard_page'] ) {
 			tutor_load_template_from_custom_path( tutor()->path . 'templates/loop/enrolled-course-progress.php', '', false );
 		}
+	}
+}
+
+if ( ! function_exists( 'tutor_permission_denied_template' ) ) {
+	/**
+	 * Load permission denied template
+	 *
+	 * It will load permission denied template & return so not code
+	 * after this will execute
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param integer $post_id post id if 0 then current post id will be used.
+	 *
+	 * @return void
+	 */
+	function tutor_permission_denied_template( int $post_id = 0 ) {
+		if ( ! $post_id ) {
+			$post_id = get_the_ID();
+		}
+
+		$args = array(
+			'headline'    => __( 'Permission Denied', 'tutor-pro' ),
+			'message'     => __( 'You don\'t have the right to edit this course', 'tutor-pro' ),
+			'description' => __( 'Please make sure you are logged in to correct account', 'tutor-pro' ),
+			'button'      => array(
+				'url'  => get_permalink( $post_id ),
+				'text' => __( 'View Course', 'tutor-pro' ),
+			),
+		);
+
+		tutor_load_template( 'permission-denied', $args );
+		return;
 	}
 }

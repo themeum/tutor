@@ -150,7 +150,7 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
 	}
 
 	/**
@@ -192,7 +192,7 @@ class Assets {
 		 * Enabling Sorting, draggable, droppable...
 		 */
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		wp_enqueue_script( 'jquery-touch-punch', array( 'jquery-ui-sortable' ) );
+		wp_enqueue_script( 'jquery-touch-punch', array( 'jquery-ui-sortable' ) ); //phpcs:ignore
 
 		// Plyr.
 		if ( is_single_course( true ) ) {
@@ -232,7 +232,7 @@ class Assets {
 		 */
 		$should_load_dashboard_styles = apply_filters( 'tutor_should_load_dashboard_styles', tutor_utils()->is_tutor_frontend_dashboard() );
 		if ( $should_load_dashboard_styles ) {
-			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', TUTOR_VERSION );
+			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', array(), TUTOR_VERSION );
 		}
 
 		// Load date picker for announcement at frontend.
@@ -575,13 +575,38 @@ class Assets {
 
 		// Add backend course editor identifier class to body.
 		if ( $course_builder_screen ) {
-			$to_add[] = is_admin() ? 'tutor-backend' : '';
+			$to_add[] = is_admin() ? 'tutor-backend' : 'tutor-frontend';
 			$to_add[] = ' tutor-screen-course-builder tutor-screen-course-builder-' . $course_builder_screen . ' ';
 		}
 
 		// Add frontend course builder identifier class.
 		if ( ! $course_builder_screen && tutor_utils()->is_tutor_frontend_dashboard() ) {
 			$to_add[] = 'tutor-screen-frontend-dashboard';
+		}
+
+		if ( is_post_type_archive( tutor()->course_post_type ) ) {
+			$to_add[] = 'tutor-frontend';
+		}
+
+		if ( tutor_utils()->is_tutor_frontend_dashboard() ) {
+			$to_add[] = 'tutor-frontend';
+		}
+
+		if ( is_single() ) {
+			global $post;
+
+			$post_types = array(
+				tutor()->course_post_type,
+				tutor()->lesson_post_type,
+				tutor()->quiz_post_type,
+				tutor()->assignment_post_type,
+				tutor()->zoom_post_type,
+				tutor()->meet_post_type,
+			);
+
+			if ( isset( $post->post_type ) && in_array( $post->post_type, $post_types, true ) ) {
+				$to_add[] = 'tutor-frontend';
+			}
 		}
 
 		if ( is_admin() ) {

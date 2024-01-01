@@ -81,10 +81,10 @@ $settings = maybe_unserialize( $question->question_settings );
 								<?php
 								$has_tutor_pro = tutor()->has_pro;
 
-								foreach ( $question_types as $type => $question_type ) {
+								foreach ( $question_types as $_type => $question_type ) {
 									?>
 									<p 	class="tutor-select-option" 
-										data-value="<?php echo $type; ?>" <?php echo $question->question_type === $type ? ' data-selected="selected"' : ''; ?> 
+										data-value="<?php echo $_type; ?>" <?php echo $question->question_type === $_type ? ' data-selected="selected"' : ''; ?> 
 										data-is-pro="<?php echo ( ! $has_tutor_pro && $question_type['is_pro'] ) ? 'true' : 'false'; ?>">
 
 										<?php
@@ -144,10 +144,18 @@ $settings = maybe_unserialize( $question->question_settings );
 	<div class="tutor-mb-32">
 		<label class="tutor-form-label"><?php esc_html_e( 'Description', 'tutor' ); ?> <span>(<?php esc_html_e( 'Optional', 'tutor' ); ?>)</span></label>
 		<div class="tutor-mb-16">
-			<?php
-				$field_name = "tutor_quiz_question[{$question_id}][question_description]";
+		<?php
+		if ( tutor()->has_pro ) {
+			do_action( 'tutor_quiz_question_desc_field', $question );
+		} else {
+			$field_name = "tutor_quiz_question[{$question_id}][question_description]";
 			?>
-			<textarea name="<?php echo esc_attr( $field_name ); ?>" id="tutor_quiz_desc_text_editor" class="tutor-form-control"><?php echo wp_kses_post( wp_unslash( $question->question_description ) ); ?></textarea>
+			<textarea name="<?php echo esc_attr( $field_name ); ?>" 
+						id="tutor_quiz_desc_text_editor" 
+						class="tutor-form-control"><?php echo wp_kses_post( wp_unslash( $question->question_description ) ); ?></textarea>
+			<?php
+		}
+		?>
 		</div>
 	</div>
 

@@ -65,6 +65,11 @@
 
 // Sidebar
 .tutor-single-course-sidebar {
+    &.tutor-sidebar-sticky {
+		position: sticky;
+		top: 50px;
+	}
+    
     .tutor-sidebar-card {
         .tutor-card-body {
             background-color: #F4F6F9;
