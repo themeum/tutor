@@ -2,12 +2,13 @@ var gulp = require('gulp'),
 	sass = require('gulp-sass')(require('sass')),
 	sourcemaps = require('gulp-sourcemaps'),
 	rename = require('gulp-rename'),
-	prefix = require('gulp-autoprefixer'),
 	plumber = require('gulp-plumber'),
 	notify = require('gulp-notify'),
 	wpPot = require('gulp-wp-pot'),
 	clean = require('gulp-clean'),
 	zip = require('gulp-zip'),
+	watch = require("gulp-watch"),
+	gulpIf = require("gulp-if"),
 	fs = require('fs'),
 	path = require('path'),
 	versionNumber = '';
@@ -29,12 +30,6 @@ var onError = function(err) {
 	this.emit('end');
 };
 
-var prefixerOptions = {
-	overrideBrowserslist: ['last 2 versions'],
-};
-
-
-
 var scss_blueprints = {
 	tutor_front: { src: 'assets/scss/front/index.scss', mode: 'expanded', destination: 'tutor-front.min.css' },
 
@@ -46,8 +41,9 @@ var scss_blueprints = {
 		destination: 'tutor-setup.min.css',
 	},
 
-	tutor_v2: { src: 'v2-library/_src/scss/tutor-main.scss', mode: 'expanded', destination: 'tutor.min.css' },
+	tutor_v2: { src: 'v2-library/_src/scss/main.scss', mode: 'expanded', destination: 'tutor.min.css' },
 	tutor_v2_rtl: { src: 'v2-library/_src/scss/main.rtl.scss', mode: 'expanded', destination: 'tutor.rtl.min.css' },
+	
 	tutor_icon: {
 		src: 'v2-library/bundle/fonts/tutor-icon/tutor-icon.css',
 		mode: 'expanded',
@@ -65,21 +61,14 @@ var scss_blueprints = {
 		mode: 'expanded',
 		destination: 'tutor-course-builder.min.css',
 	},
-
-	v2_scss: { src: 'v2-library/_src/scss/main.scss', destination: 'main.min.css', dest_path: 'v2-library/bundle' },
-	v2_rtl_scss: { src: 'v2-library/_src/scss/main.rtl.scss', destination: 'main.rtl.min.css', dest_path: 'v2-library/bundle' },
-
-	v2_scss_docz: {
-		src: 'v2-library/_src/scss/main.scss',
-		destination: 'main.min.css',
-		dest_path: '.docz/static/v2-library/bundle',
-	},
 };
 
 var task_keys = Object.keys(scss_blueprints);
 
 for (let task in scss_blueprints) {
 	let blueprint = scss_blueprints[task];
+	const isV2 = blueprint.src === 'v2-library/_src/scss/main.scss'
+	const isV2Rtl = blueprint.src === 'v2-library/_src/scss/main.rtl.scss'
 
 	gulp.task(task, function() {
 		return gulp
@@ -88,25 +77,14 @@ for (let task in scss_blueprints) {
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
 			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }))
 			.pipe(rename(blueprint.destination))
-			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'));
+			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'))
+			.pipe(gulpIf(isV2, rename('main.min.css')))
+			.pipe(gulpIf(isV2, gulp.dest('v2-library/bundle')))
+			.pipe(gulpIf(isV2, gulp.dest('.docz/static/v2-library/bundle')))
+			.pipe(gulpIf(isV2Rtl, rename('main.rtl.min.css')))
+			.pipe(gulpIf(isV2Rtl, gulp.dest('v2-library/bundle')));
 	});
 }
-
-// Add task to add tutor prefix to v2 scss
-// gulp.task('v2_tutor_prefix', function(resolve) {
-// 	var exp = path.resolve(__dirname + '/assets/css/tutor.min.css');
-// 	var min = path.resolve(__dirname + '/assets/css/tutor.min.css');
-// 	var docz = path.resolve(__dirname + '/v2-library/bundle/main.min.css');
-
-// 	[exp, min, docz].forEach((css) => {
-// 		var string = fs.readFileSync(css).toString();
-// 		string = string.replace(/\.tutor\-prefix \./g, '.tutor-');
-// 		fs.writeFileSync(css, string);
-// 	});
-
-// 	resolve();
-// });
-// task_keys.push('v2_tutor_prefix');
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/gi;
@@ -170,8 +148,22 @@ function i18n_makepot(callback, target_dir) {
 	callback ? callback() : 0;
 }
 
-gulp.task('watch', async function() {
-	gulp.watch('./**/*.scss', { interval: 750 }, gulp.parallel(...task_keys));
+gulp.task('watch', function() {
+	return watch('./**/*.scss', function(e) {
+		if (e.history[0].includes('/front/')) {
+			gulp.parallel('tutor_front')();
+		} else if (e.history[0].includes('/admin-dashboard/')) {
+			gulp.parallel('tutor_admin', 'tutor_setup')();
+		} else if (e.history[0].includes('/frontend-dashboard/')) {
+			gulp.parallel('tutor_front_dashboard')();
+		} else if (e.history[0].includes('/course-builder/')) {
+			gulp.parallel('tutor_course_builder')();
+		} else if (e.history[0].includes('v2-library/')) {
+			gulp.parallel('tutor_v2', 'tutor_v2_rtl')();
+		} else {
+			gulp.parallel(...task_keys)();
+		}
+	});
 });
 
 gulp.task('makepot', function() {
