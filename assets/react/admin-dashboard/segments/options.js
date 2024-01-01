@@ -117,10 +117,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				const { target } = e;
 				const min = Number(target.getAttribute('min') || -Infinity);
 				const max = Number(target.getAttribute('max') || Infinity);
+				const numberType = target.getAttribute('data-number-type') || 'decimal';
 				const value = Number(target.value);
-				
+
 				if (min !== -Infinity && value <= min) e.target.value = min;
 				if (max !== Infinity && value >= max) e.target.value = max;
+				if (['integer', 'int'].includes(numberType)) e.target.value = parseInt(e.target.value)
 			};
 		});
 	};
@@ -197,19 +199,18 @@ document.addEventListener('DOMContentLoaded', function () {
 						button.attr('disabled', true);
 					},
 					success: function (resp) {
-						const { data = {}, success } = resp || {};
-						const { message = __('Something Went Wrong!', 'tutor') } = data;
+						const { data = {}, success, message = __('Settings Saved', 'tutor')  } = resp || {};
 
 						if (success) {
 							// Disableing save btn after saved successfully
 							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = true;
 							}
-							tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
-							return;
+							tutor_toast( __('Success!','tutor'), message , 'success');
+							window.dispatchEvent(new CustomEvent('tutor_option_saved', {detail: data}));
+						}else{
+							tutor_toast( __('Warning!','tutor'), message, 'warning');
 						}
-
-						tutor_toast('Error!', message, 'error');
 					},
 					complete: function () {
 						button.removeClass('is-loading');
@@ -392,6 +393,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/**
+	 * Highlight items form query params
+	 */
+	const urlParams = new URLSearchParams(window.location.search);
+	if (urlParams.get('highlight')) {
+		highlightSearchedItem(urlParams.get('highlight'));
+	}
+
+	/**
 	 * Show/Hide setting option
 	 * @param object element			Dom object
 	 * @param string value 				change value
@@ -489,6 +498,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	btnToggles.change(function () {
 		showHideToggleChildren($(this))
+	})
+
+	/**
+	 * Maxlength counter for Textarea and Text field.
+	 * @since 2.2.3
+	 */
+	let maxLengthTargets = $('.tutor-option-field-input textarea[maxlength], .tutor-option-field-input input[maxlength]')
+	maxLengthTargets.each(function () {
+		let el = $(this),
+			max = $(this).attr('maxlength'),
+			len = $(this).val().length,
+			text = `${len}/${max}`;
+
+		el.css('margin-right', 0)
+		$(this).parent().append(`<div class="tutor-field-maxlength-info tutor-mr-4 tutor-fs-8 tutor-color-muted">${text}</div>`)
+	});
+
+	maxLengthTargets.keyup(function () {
+		let el = $(this),
+			max = $(this).attr('maxlength'),
+			len = $(this).val().length,
+			text = `${len}/${max}`;
+
+		el.parent().find('.tutor-field-maxlength-info').text(text)
 	})
 
 });

@@ -32,6 +32,9 @@ class Instructor {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param bool $register_hook register hook or not.
+	 *
 	 * @return void
 	 */
 	public function __construct( $register_hook = true ) {
@@ -171,6 +174,7 @@ class Instructor {
 			if ( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );
 				wp_set_auth_cookie( $user_id );
+				do_action( 'tutor_after_instructor_signup', $user_id );
 			}
 		}
 
@@ -244,7 +248,6 @@ class Instructor {
 				'last_name'             => __( 'Last name field is required', 'tutor' ),
 				'email'                 => __( 'E-Mail field is required', 'tutor' ),
 				'user_login'            => __( 'User Name field is required', 'tutor' ),
-				'phone_number'          => __( 'Phone Number field is required', 'tutor' ),
 				'password'              => __( 'Password field is required', 'tutor' ),
 				'password_confirmation' => __( 'Your passwords should match each other. Please recheck.', 'tutor' ),
 			)
@@ -274,7 +277,7 @@ class Instructor {
 		$user_login              = sanitize_text_field( tutor_utils()->input_old( 'user_login' ) );
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
 		$password                = sanitize_text_field( tutor_utils()->input_old( 'password' ) );
-		$tutor_profile_bio       = wp_kses_post( tutor_utils()->input_old( 'tutor_profile_bio' ) );
+		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
 		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
 
 		$userdata = apply_filters(
@@ -310,6 +313,7 @@ class Instructor {
 
 	/**
 	 * Handle instructor approval action
+	 * This function not used maybe, will be removed
 	 *
 	 * @since 1.0.0
 	 * @return void

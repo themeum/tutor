@@ -9,25 +9,38 @@ jobs:
       steps:
         - uses: actions/checkout@v2
         
-        - name: Fetch all branches
-          run: git fetch --all
+        - name: Fetch All Branches
+          run: git fetch --all --prune
           
-        - name: Check changed files
+        - name: Check Changed Files
           id: changed-files
           run: |
             echo "::set-output name=files::$(git diff --name-only --diff-filter=ACMRTUXB origin/dev...origin/${{ github.head_ref }} | grep \\.php$ | tr '\n' ' ')"
         
         - name: Changed File Print
           run: echo "${{ steps.changed-files.outputs.files }}"
-            
-        - name: WPCS check
-          if: ${{ steps.changed-files.outputs.changed_files > 0 }}
+        
+        - name: Total File Changed
+          id: count-files
+          run: |
+            # Extract the files from the 'changed-files' output variable
+            files="${{ steps.changed-files.outputs.files }}"
+
+            # Count the number of .php files
+            file_count=$(echo "$files" | tr ' ' '\n' | grep -E '\.php$' | wc -l | xargs)
+          
+            echo "$file_count"
+            # Set an environment variable with the total .php file count
+            echo "TOTAL_PHP_FILES=$file_count" >> $GITHUB_ENV
+
+        - name: WPCS Check
+          if: ${{ env.TOTAL_PHP_FILES > 0 }}
           uses: 10up/wpcs-action@stable
           with:
             repo_branch: 'dev' # Branch of Standard repository
             paths: "${{ steps.changed-files.outputs.files }}" # Paths to check, space separated like ./views ./classes ./models
             excludes: '' # Paths to excludes, space separated
-            standard: 'WordPress' # Coding standard
-            enable_warnings: 'false' # Enable checking for warnings (-w)
+            standard: './phpcs.xml.dist' # Coding standard
             use_local_config: 'false' # Use local config if available
+            enable_warnings: 'false' # Enable checking for warnings (-w)
             extra_args: '-d error_reporting="E_ALL&~E_DEPRECATED"'

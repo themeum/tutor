@@ -27,21 +27,42 @@ if ( $product ) {
 			</a>
 		<?php
 	} else {
-		$sale_price    = $product->get_sale_price();
-		$regular_price = $product->get_regular_price();
+		$regular_price = wc_get_price_to_display( $product, array( 'price' => $product->get_regular_price() ) );
+		$sale_price    = wc_get_price_to_display( $product, array( 'price' => $product->get_sale_price() ) );
+		$tax_display   = get_option( 'woocommerce_tax_display_shop' );
 		?>
-		<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-end tutor-justify-between">
-			<?php ob_start(); ?>
-				<div>
-				<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
-					<?php echo wc_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
-				</span>
-				<?php if ( $regular_price && $sale_price && $sale_price != $regular_price ) : ?>
-					<del class="tutor-fs-7 tutor-color-muted tutor-ml-8">
-						<?php echo wc_price( $regular_price ); //phpcs:ignore?>
-					</del>
-				<?php endif; ?>
-				</div>
+		<div>
+			<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-end tutor-justify-between">
+					<?php ob_start(); ?>
+					<div>
+						<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
+							<?php echo wc_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
+						</span>
+						<?php if ( $regular_price && $sale_price && $sale_price !== $regular_price ) : ?>
+							<del class="tutor-fs-7 tutor-color-muted tutor-ml-8">
+							<?php echo wc_price( $regular_price ); //phpcs:ignore?>
+							</del>
+						<?php endif; ?>
+					</div>
+			</div>
+			<div class="tutor-color-muted">
+				<?php
+				if ( 'incl' === $tax_display ) {
+					echo wp_kses(
+						$product->get_price_suffix(),
+						array( 'small' => array( 'class' => true ) )
+					);
+				}
+				?>
+			</div>
+			<?php
+				/**
+				 * Added to show info about price.
+				 *
+				 * @since 2.2.0
+				 */
+				do_action( 'tutor_after_course_details_wc_cart_price', $product, get_the_ID() );
+			?>
             <?php echo apply_filters( 'tutor_course_details_wc_add_to_cart_price', ob_get_clean(), $product ); //phpcs:ignore ?>
 		</div>
 		<form action="<?php echo esc_url( apply_filters( 'tutor_course_add_to_cart_form_action', get_permalink( get_the_ID() ) ) ); ?>" method="post" enctype="multipart/form-data">

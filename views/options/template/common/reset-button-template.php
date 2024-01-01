@@ -17,8 +17,8 @@ $section_slug  = isset( $section['slug'] ) && ! empty( $section['slug'] ) ? esc_
 	<button type="button" data-tutor-modal-target="tutor-modal-bulk-action"
 			class="tutor-btn tutor-btn-ghost modal-reset-open"
 			data-reset="<?php echo esc_attr( $section_slug ); ?>"
-			data-heading="<?php echo esc_html( 'Reset to Default Settings?' ); ?>"
-			data-message="<?php echo esc_html( 'WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution.' ); ?>" disabled>
+			data-heading="<?php esc_html_e( 'Reset to Default Settings?', 'tutor' ); ?>"
+			data-message="<?php esc_html_e( 'WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution.', 'tutor' ); ?>" disabled>
 			<i class="btn-icon tutor-icon-refresh tutor-mr-8" area-hidden="true"></i>
 			<?php esc_html_e( 'Reset to Default', 'tutor' ); ?>
 	</button>

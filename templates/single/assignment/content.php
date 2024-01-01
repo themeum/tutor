@@ -119,7 +119,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 					}
 				}
 
-				$time_duration_in_sec = $time_duration_in_sec * $time_duration['value'];
+				$time_duration_in_sec = $time_duration_in_sec * (int) $time_duration['value'];
 				$remaining_time       = $assignment_created_time + $time_duration_in_sec;
 				$now                  = time();
 				$remaining            = $now - $remaining_time;
@@ -131,7 +131,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 						<div class="tutor-assignment-duration">
 							<span class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
 							<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
-								<?php echo esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . __( $time_duration['time'], 'tutor' ) : __( 'No limit', 'tutor' ) ); ?>
+								<?php echo esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . __( $time_duration['time'], 'tutor' ) : __( 'No limit', 'tutor' ) ); //phpcs:ignore ?>
 							</span>
 						</div>
 						<div class="tutor-assignmetn-deadline">
@@ -241,9 +241,8 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 			<?php if ( ( $is_submitting || isset( $_GET['update-assignment'] ) ) && ( $remaining_time > $now || 0 == $time_duration['value'] ) ) : ?>
 				<div class="tutor-assignment-submission tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
 					<form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
-						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 						<input type="hidden" value="tutor_assignment_submit" name="tutor_action" />
-						<input type="hidden" value="<?php echo esc_url( strtok( tutor()->current_url, '?' ) ); ?>" name="_wp_http_referer" />
 						<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
 						<?php $allowed_upload_files = (int) tutor_utils()->get_assignment_option( get_the_ID(), 'upload_files_limit' ); ?>
@@ -362,7 +361,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 
 				<?php $has_show_more = strlen( $s_content ) > 500 ? true : false; ?>
 
-				<?php if( $s_content ): ?>
+				<?php if ( $s_content ) : ?>
 					<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-32 tutor-pb-sm-44">
 						<div id="content-section" class="tutor-pt-40 tutor-pt-sm-60<?php echo esc_attr( $has_show_more ? ' tutor-toggle-more-content tutor-toggle-more-collapsed' : '' ); ?>"<?php echo $has_show_more ? ' data-tutor-toggle-more-content data-toggle-height="300" style="height: 300px;"' : ''; ?>>
 							<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
@@ -450,14 +449,14 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 													<?php esc_html_e( 'Passed', 'tutor' ); ?>
 												</span>
 											<?php else : ?>
-												<span class="tutor-badge-label label-warning">
+												<span class="tutor-badge-label label-danger">
 													<?php esc_html_e( 'Failed', 'tutor' ); ?>
 												</span>
 											<?php endif; ?>
 										<?php endif; ?>
 
 										<?php if ( ! $is_reviewed_by_instructor ) : ?>
-											<span class="tutor-badge-label label-danger">
+											<span class="tutor-badge-label label-warning">
 												<?php esc_html_e( 'Pending', 'tutor' ); ?>
 											</span>
 										<?php endif; ?>
@@ -516,8 +515,8 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 							</div>
 
 							<?php
-								$evaluated = Assignments::is_evaluated( $post_id );
-							if ( ! $evaluated && ( $remaining_time > $now || 0 == $time_duration['value'] ) ) :
+							$result = Assignments::get_assignment_result( $post_id, $user_id );
+							if ( in_array( $result, array( 'pending', 'fail' ), true ) && ( $remaining_time > $now || 0 == $time_duration['value'] ) ) :
 								?>
 								<div class="tutor-ar-btn">
 									<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>"
@@ -574,7 +573,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 
 					<?php $has_show_more = strlen( $s_content ) > 500 ? true : false; ?>
 
-					<?php if( $s_content ): ?>
+					<?php if ( $s_content ) : ?>
 						<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-32 tutor-pb-sm-44">
 							<div id="content-section" class="tutor-pt-40 tutor-pt-sm-60<?php echo $has_show_more ? ' tutor-toggle-more-content tutor-toggle-more-collapsed' : ''; ?>"<?php echo $has_show_more ? ' data-tutor-toggle-more-content data-toggle-height="300" style="height: 300px;"' : ''; ?>>
 								<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">

@@ -40,9 +40,11 @@ class WithdrawModel {
 		$data = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT ID, display_name, 
-                    total_income,total_withdraw, 
+                    total_income,
+					total_withdraw, 
                     (total_income-total_withdraw) current_balance, 
                     total_matured,
+					total_pending,
                     greatest(0, total_matured - total_withdraw) available_for_withdraw 
                 
                 FROM (
@@ -55,7 +57,14 @@ class WithdrawModel {
                         GROUP BY user_id
                         HAVING user_id=u.ID
                     ),0) total_withdraw,
-                
+					
+					COALESCE((
+                        SELECT sum(amount) total_pending FROM {$wpdb->prefix}tutor_withdraws 
+                        WHERE status='pending'
+                        GROUP BY user_id
+                        HAVING user_id=u.ID
+                    ),0) total_pending,
+
                     COALESCE((
                         SELECT SUM(instructor_amount) FROM(
                             SELECT user_id, instructor_amount, created_at, DATEDIFF(NOW(),created_at) AS days_old FROM {$wpdb->prefix}tutor_earnings WHERE order_status='%s'

@@ -93,18 +93,19 @@ class Lesson extends Tutor_Base {
 	 */
 	public function tutor_single_course_lesson_load_more() {
 		tutor_utils()->checking_nonce();
-		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) ) {
+		$comment = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
 			$comment_data = array(
-				'comment_content' => Input::post( 'comment', '', Input::TYPE_KSES_POST ),
+				'comment_content' => $comment,
 				'comment_post_ID' => Input::post( 'comment_post_ID', 0, Input::TYPE_INT ),
 				'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 			);
 			self::create_comment( $comment_data );
+			do_action( 'tutor_new_comment_added', $comment_data );
 		}
 		ob_start();
 		tutor_load_template( 'single.lesson.comment' );
 		$html = ob_get_clean();
-
 		wp_send_json_success( array( 'html' => $html ) );
 	}
 
@@ -166,7 +167,7 @@ class Lesson extends Tutor_Base {
 	 * @return void
 	 */
 	public function save_lesson_meta( $post_ID ) {
-		$video_source = sanitize_text_field( tutor_utils()->array_get( 'video.source', $_POST ) );
+		$video_source = sanitize_text_field( tutor_utils()->array_get( 'video.source', $_POST ) ); //phpcs:ignore
 		if ( '-1' === $video_source ) {
 			delete_post_meta( $post_ID, '_video' );
 		} elseif ( $video_source ) {
@@ -257,7 +258,7 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		
+
 		/**
 		 * Allow iframe inside lesson content to support
 		 * embed video & other stuff
@@ -271,31 +272,29 @@ class Lesson extends Tutor_Base {
 		$current_topic_id = $topic_id;
 		$course_id        = tutor_utils()->get_course_id_by( 'topic', $topic_id );
 
-		$_lesson_thumbnail_id = Input::post( '_lesson_thumbnail_id', 0, Input::TYPE_INT );
-		$is_html_active       = Input::post( 'is_html_active' ) === 'true' ? true : false;
-		$raw_html_content     = Input::post( 'tutor_lesson_modal_editor', '', Input::TYPE_KSES_POST );
-		$tmce_content         = Input::post( 'lesson_content', '', Input::TYPE_KSES_POST );
-
 		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		$title          = Input::post( 'lesson_title' );
-		$lesson_content = $is_html_active ? $raw_html_content : $tmce_content;
+		$title                = Input::post( 'lesson_title' );
+		$_lesson_thumbnail_id = Input::post( '_lesson_thumbnail_id', 0, Input::TYPE_INT );
+		$lesson_content       = Input::post( 'lesson_content', '', Input::TYPE_KSES_POST );
+		$is_html_active       = Input::post( 'is_html_active' ) === 'true' ? true : false;
+		$raw_html_content     = Input::post( 'tutor_lesson_modal_editor', '', Input::TYPE_KSES_POST );
+		$post_content         = $is_html_active ? $raw_html_content : $lesson_content;
 
 		$lesson_data = array(
 			'post_type'      => $this->lesson_post_type,
 			'post_title'     => $title,
 			'post_name'      => sanitize_title( $title ),
-			'post_content'   => $lesson_content,
+			'post_content'   => $post_content,
 			'post_status'    => 'publish',
 			'comment_status' => 'open',
 			'post_author'    => get_current_user_id(),
 			'post_parent'    => $topic_id,
 		);
 
-		if ( 0 == $lesson_id ) {
-
+		if ( 0 === $lesson_id ) {
 			$lesson_data['menu_order'] = tutor_utils()->get_next_course_content_order_id( $topic_id );
 			$lesson_id                 = wp_insert_post( $lesson_data );
 
@@ -456,6 +455,15 @@ class Lesson extends Tutor_Base {
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
+		if ( ! $lesson_id ) {
+			return;
+		}
+
+		$validated = apply_filters( 'tutor_validate_lesson_complete', true, $user_id, $lesson_id );
+		if ( ! $validated ) {
+			return;
+		}
+
 		do_action( 'tutor_lesson_completed_before', $lesson_id );
 		/**
 		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = tutor_time();
@@ -540,9 +548,9 @@ class Lesson extends Tutor_Base {
 		$contents                = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
 		$autoload_course_content = (bool) get_tutor_option( 'autoload_next_course_content' );
 		if ( $autoload_course_content ) {
-			wp_redirect( get_the_permalink( $contents->next_id ) );
+			wp_safe_redirect( get_the_permalink( $contents->next_id ) );
 		} else {
-			wp_redirect( get_the_permalink( $content_id ) );
+			wp_safe_redirect( get_the_permalink( $content_id ) );
 		}
 		die();
 	}
@@ -556,8 +564,14 @@ class Lesson extends Tutor_Base {
 	 */
 	public function reply_lesson_comment() {
 		tutor_utils()->checking_nonce();
+		$comment = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		if ( 0 === strlen( $comment ) ) {
+			wp_send_json_error();
+			return;
+		}
+
 		$comment_data = array(
-			'comment_content' => Input::post( 'comment', '', Input::TYPE_KSES_POST ),
+			'comment_content' => $comment,
 			'comment_post_ID' => Input::post( 'comment_post_ID', 0, Input::TYPE_INT ),
 			'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 		);
@@ -567,6 +581,8 @@ class Lesson extends Tutor_Base {
 			return;
 		}
 		$reply = get_comment( $comment_id );
+		do_action( 'tutor_reply_lesson_comment_thread', $comment_id, $comment_data );
+
 		ob_start();
 		?>
 		<div class="tutor-comments-list tutor-child-comment tutor-mt-32" id="lesson-comment-<?php echo esc_attr( $reply->comment_ID ); ?>">

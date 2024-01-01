@@ -122,7 +122,7 @@ function tutor_option_history_load(dataset) {
 /* import and list dom */
 
 const export_settings_all = () => {
-	const export_settings = document.querySelector('#export_settings'); //document.querySelector("#export_settings");
+	const export_settings = document.querySelector('#tutor_export_settings');
 	if (export_settings) {
 		export_settings.onclick = (e) => {
 			var formData = new FormData();
@@ -152,7 +152,7 @@ const time_now = () => {
 };
 
 const reset_default_options = () => {
-	const reset_options = document.querySelector('#reset_options');
+	const reset_options = document.querySelector('#tutor_reset_options');
 	if (reset_options) {
 		reset_options.onclick = function() {
 			modalConfirmation(reset_options);
@@ -178,7 +178,7 @@ const reset_all_settings_xhttp = (modalOpener, modalElement) => {
 };
 
 const import_history_data = () => {
-	const import_options = document.querySelector('#import_options');
+	const import_options = document.querySelector('#tutor_import_options');
 	if (import_options) {
 		import_options.onclick = (e) => {
 			modalConfirmation(import_options);
@@ -242,7 +242,6 @@ const export_single_settings = () => {
 
 					xhttp.onreadystatechange = function() {
 						if (xhttp.readyState === 4) {
-							// let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
 							let fileName = export_id;
 							json_download(xhttp.response, fileName);
 						}

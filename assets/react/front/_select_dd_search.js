@@ -14,11 +14,6 @@ window.selectSearchField = (selectElement) => {
 				searchInputWrap = selectElement.querySelector('.tutor-form-select-search');
 				searchInput = searchInputWrap && searchInputWrap.querySelector('input');
 
-				// hide search for less than 10 items
-				if (element.options.length < 10) {
-					searchInputWrap.style.display = 'none';
-				}
-
 				dropDown = selectElement.querySelector('.tutor-form-select-dropdown');
 				const selectLabel = selectElement.querySelector('.tutor-form-select-label');
 				selectLabel.innerText = initialSelectedItem && initialSelectedItem.text;
@@ -148,7 +143,7 @@ window.selectSearchField = (selectElement) => {
 		Array.from(options).forEach((item) => {
 			optionsList += `
             <div class="tutor-form-select-option">
-				<span tutor-dropdown-item data-key="${item.value}" class="tutor-nowrap-ellipsis" title="${item.text}">${item.text}</span>
+				<span tutor-dropdown-item data-key="${tutor_esc_html(item.value)}" class="tutor-nowrap-ellipsis" title="${tutor_esc_html(item.text)}">${tutor_esc_html(item.text)}</span>
             </div>
             `;
 		});

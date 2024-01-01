@@ -188,8 +188,9 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 					</a>
 				</div>
 				<div class="tutor-col-lg-4 tutor-col-xl-3">
-					<a target="_blank" class="tutor-btn tutor-btn-outline-primary tutor-d-block" href="https://www.themeum.com/tutor-lms/pricing/" rel="noreferrer noopener">
-						<?php esc_html_e( 'Get Tutor LMS Pro - 20% off', 'tutor' ); ?>
+					<a target="_blank" class="tutor-btn tutor-btn-outline-primary tutor-d-block" 
+					href="https://www.themeum.com/tutor-lms/pricing/?utm_source=wizard&utm_medium=wp_dashboard&utm_campaign=free_vs_pro#comparison" rel="noreferrer noopener">
+						<?php esc_html_e( 'Compare Free vs Pro', 'tutor' ); ?>
 					</a>
 				</div>
 			</div>

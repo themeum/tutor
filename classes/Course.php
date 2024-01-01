@@ -175,6 +175,7 @@ class Course extends Tutor_Base {
 		 * @since v1.9.7
 		 */
 		add_action( 'wp_footer', array( $this, 'popup_review_form' ) );
+		add_action( 'wp_ajax_tutor_clear_review_popup_data', array( $this, 'clear_review_popup_data' ) );
 
 		/**
 		 * Do enroll after login if guest take enroll attempt
@@ -803,7 +804,7 @@ class Course extends Tutor_Base {
 		}
 
 		$referer_url = wp_get_referer();
-		wp_safe_redirect( $referer_url . '?nocache='. time() );
+		wp_safe_redirect( $referer_url . '?nocache=' . time() );
 		exit;
 	}
 
@@ -835,44 +836,72 @@ class Course extends Tutor_Base {
 		$permalink = get_the_permalink( $course_id );
 
 		// Set temporary identifier to show review pop up.
-		if ( get_tutor_option( 'enable_course_review' ) ) {
-			$rating = tutor_utils()->get_course_rating_by_user( $course_id, $user_id );
-			if ( ! $rating || ( empty( $rating->rating ) && empty( $rating->review ) ) ) {
-				update_option(
-					'tutor_course_complete_popup_' . $user_id,
-					array(
-						'course_id'  => $course_id,
-						'course_url' => $permalink,
-						'expires'    => time() + 10,
-					)
-				);
-			}
-		}
+		self::set_review_popup_data( $user_id, $course_id, $permalink );
 
-		wp_redirect( $permalink );
+		wp_safe_redirect( $permalink );
 		exit;
 	}
 
 	/**
-	 * Popup review form
+	 * Set data for review popup.
+	 *
+	 * @since 2.2.5
+	 * @since 2.4.0 removed $permalink param. store user meta instead of option data.
+	 *
+	 * @param int $user_id user id.
+	 * @param int $course_id course id.
+	 *
+	 * @return void
+	 */
+	public static function set_review_popup_data( $user_id, $course_id ) {
+		if ( get_tutor_option( 'enable_course_review' ) ) {
+			$rating = tutor_utils()->get_course_rating_by_user( $course_id, $user_id );
+			if ( ! $rating || ( empty( $rating->rating ) && empty( $rating->review ) ) ) {
+				$meta_key = User::get_review_popup_meta( $course_id );
+				add_user_meta( $user_id, $meta_key, $course_id, true );
+			}
+		}
+	}
+
+	/**
+	 * Popup review form on course details
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function popup_review_form() {
 		if ( is_user_logged_in() ) {
-			$key   = 'tutor_course_complete_popup_' . get_current_user_id();
-			$popup = get_option( $key );
+			$user_id          = get_current_user_id();
+			$course_id        = get_the_ID();
+			$meta_key         = User::get_review_popup_meta( $course_id );
+			$review_course_id = (int) get_user_meta( $user_id, $meta_key, true );
 
-			if ( is_array( $popup ) ) {
-
-				if ( $popup['expires'] > time() ) {
-					$course_id = $popup['course_id'];
-					include tutor()->path . 'views/modal/review.php';
-				}
-
-				delete_option( $key );
+			if ( is_single() && $course_id === $review_course_id ) {
+				include tutor()->path . 'views/modal/review.php';
 			}
+		}
+	}
+
+	/**
+	 * Review popup data clear
+	 *
+	 * @since 2.4.0
+	 *
+	 * @return void
+	 */
+	public function clear_review_popup_data() {
+		tutils()->checking_nonce();
+
+		if ( is_user_logged_in() ) {
+			$user_id   = get_current_user_id();
+			$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+			if ( $course_id ) {
+				$meta_key = User::get_review_popup_meta( $course_id );
+				delete_user_meta( $user_id, $meta_key, $course_id );
+			}
+
+			wp_send_json_success();
 		}
 	}
 
@@ -1004,35 +1033,12 @@ class Course extends Tutor_Base {
 				}
 
 				$product_obj = wc_get_product( $attached_product_id );
-				$product_obj->set_price( $course_price ); // Set product price.
-				$product_obj->set_regular_price( $course_price ); // Set product regular price.
-
-				if ( $sale_price > 0 ) {
-					$product_obj->set_sale_price( $sale_price );
-				} else {
-					// When use remove sale price ( discounted price ).
-					$product_obj->set_sale_price( null );
-				}
-
-				$product_obj->set_sold_individually( true );
-				$product_id = $product_obj->save();
+				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $attached_product_id );
 				if ( $product_obj->is_type( 'subscription' ) ) {
 					update_post_meta( $attached_product_id, '_subscription_price', $course_price );
 				}
 			} else {
-				$product_obj = new \WC_Product();
-				$product_obj->set_name( $course->post_title );
-				$product_obj->set_status( 'publish' );
-				$product_obj->set_price( $course_price ); // Set product price.
-				$product_obj->set_regular_price( $course_price ); // Set product regular price.
-
-				if ( $sale_price > 0 ) {
-					$product_obj->set_sale_price( $sale_price );
-				}
-
-				$product_obj->set_sold_individually( true );
-
-				$product_id = $product_obj->save();
+				$product_id = self::create_wc_product( $course->post_title, $course_price, $sale_price );
 				if ( $product_id ) {
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 					// Mark product for woocommerce.
@@ -1650,6 +1656,43 @@ class Course extends Tutor_Base {
 				exit;
 			}
 		}
+	}
+
+	/**
+	 * Create or update WooCommerce product
+	 *
+	 * If product id not set it will create new one.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param string $title product title.
+	 * @param string $reg_price product price.
+	 * @param string $sale_price product sale price.
+	 * @param int    $product_id product ID.
+	 * @param string $status product status.
+	 *
+	 * @return integer
+	 */
+	public static function create_wc_product( $title, $reg_price, $sale_price, $product_id = 0, $status = 'publish' ) {
+		$product_obj = new \WC_Product();
+		if ( $product_id ) {
+			$product_obj = wc_get_product( $product_id );
+		}
+
+		$product_obj->set_name( $title );
+		$product_obj->set_status( $status );
+		$product_obj->set_price( $reg_price );
+		$product_obj->set_regular_price( $reg_price );
+
+		if ( $sale_price > 0 ) {
+			$product_obj->set_sale_price( $sale_price );
+		} else {
+			$product_obj->set_sale_price( null );
+		}
+
+		$product_obj->set_sold_individually( true );
+
+		return $product_obj->save();
 	}
 
 }

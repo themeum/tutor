@@ -16,7 +16,7 @@ $course_id         = $post->ID;
 $profile_url       = tutor_utils()->profile_url( $authordata->ID, true );
 $course_categories = get_tutor_course_categories( $course_id );
 $course_duration   = get_tutor_course_duration_context( $course_id, true );
-$course_students   = tutor_utils()->count_enrolled_users_by_course( $course_id );
+$course_students   = apply_filters( 'tutor_course_students', tutor_utils()->count_enrolled_users_by_course( $course_id ), $course_id )
 ?>
 
 <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) || ! empty( $course_duration ) ) : ?>

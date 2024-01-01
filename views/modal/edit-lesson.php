@@ -31,15 +31,18 @@ use TUTOR\Input;
 	<div class="tutor-mb-32">
 		<label class="tutor-form-label">
 			<?php
-				esc_html_e( 'Lesson Content', 'tutor' );
+			esc_html_e( 'Lesson Content', 'tutor' );
 
 			if ( get_tutor_option( 'enable_lesson_classic_editor' ) ) {
 				?>
-						<a class="tutor-btn tutor-btn-link tutor-ml-12" target="_blank" 
-							href="<?php echo esc_url( get_admin_url() . 'post.php?post=' . esc_attr( $post->ID ) . '&action=edit' ); ?>" data-lesson-id="<?php echo esc_attr( $post->ID ); ?>" onclick="tutorLessonWPEditor(event)">
-							<i class="tutor-icon-edit tutor-mr-8"></i> <?php echo esc_html_e( 'WP Editor', 'tutor' ); ?>
-						</a>
-					<?php
+				<a class="tutor-btn tutor-btn-link tutor-ml-12" 
+					target="_blank" 
+					href="<?php echo esc_url( get_admin_url() . 'post.php?post=' . esc_attr( $post->ID ) . '&action=edit' ); ?>" 
+					data-lesson-id="<?php echo esc_attr( $post->ID ); ?>" 
+					onclick="tutorLessonWPEditor(event)">
+					<i class="tutor-icon-edit tutor-mr-8"></i> <?php echo esc_html_e( 'WP Editor', 'tutor' ); ?>
+				</a>
+				<?php
 			}
 			?>
 		</label>
@@ -64,20 +67,20 @@ use TUTOR\Input;
 	<div class="tutor-mb-32">
 		<label class="tutor-form-label"><?php esc_html_e( 'Feature Image', 'tutor' ); ?></label>
 		<?php
-			$lesson_thumbnail_id = '';
+		$lesson_thumbnail_id = '';
 		if ( has_post_thumbnail( $post->ID ) ) {
 			$lesson_thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
 		}
 
-			tutor_load_template_from_custom_path(
-				tutor()->path . '/views/fragments/thumbnail-uploader.php',
-				array(
-					'media_id'   => $lesson_thumbnail_id,
-					'input_name' => '_lesson_thumbnail_id',
-				),
-				false
-			);
-			?>
+		tutor_load_template_from_custom_path(
+			tutor()->path . '/views/fragments/thumbnail-uploader.php',
+			array(
+				'media_id'   => $lesson_thumbnail_id,
+				'input_name' => '_lesson_thumbnail_id',
+			),
+			false
+		);
+		?>
 	</div>
 
 	<?php
@@ -92,8 +95,7 @@ use TUTOR\Input;
 </form>
 <script>
 	/**
-	 * Without lesson id don't redirect user to the
-	 * edit
+	 * Without lesson ID don't redirect user to the edit
 	 * 
 	 * @since v2.1.1
 	 */

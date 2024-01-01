@@ -1,5 +1,6 @@
 import { get_response_message } from '../helper/response';
 import initTinyMCE from '../lib/tinymce';
+import codeSampleLang from "../lib/codesample-lang";
 
 window.jQuery(document).ready(function($) {
 	const { __ } = wp.i18n;
@@ -362,19 +363,21 @@ window.jQuery(document).ready(function($) {
 		}
 	});
 
-	// Add new or edit question button click
+	/**
+	 * Add or edit Quiz question with modal
+	 */
 	$(document).on('click', '.tutor-quiz-open-question-form', function(e) {
 		e.preventDefault();
 
 		// Prepare related data for the question
-		var $that = $(this);
-		var modal = $that.closest('.tutor-modal');
-		var quiz_id = modal.find('[name="quiz_id"]').val();
-		var topic_id = modal.find('[name="topic_id"]').val();
-		var course_id = $('#post_ID').val();
-		var question_id = $that.attr('data-question-id');
+		let $that = $(this),
+			modal = $that.closest('.tutor-modal'),
+			quiz_id = modal.find('[name="quiz_id"]').val(),
+			topic_id = modal.find('[name="topic_id"]').val(),
+			course_id = $('#post_ID').val(),
+			question_id = $that.attr('data-question-id');
 
-		var params = {
+		let data = {
 			quiz_id,
 			topic_id,
 			course_id,
@@ -385,37 +388,59 @@ window.jQuery(document).ready(function($) {
 		$.ajax({
 			url: window._tutorobject.ajaxurl,
 			type: 'POST',
-			data: params,
+			data: data,
 			beforeSend: function() {
 				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function(data) {
-				// Add the question form in modal
+				// Add the question form in modal.
 				modal.find('.tutor-modal-container').html(data.data.output);
 				modal.addClass('tutor-has-question-from');
 
-				// Enable quiz answer sorting for multi/radio select
+				// Enable quiz answer sorting for multi/radio select.
 				enable_quiz_answer_sorting();
-				/**
-				 * If tutor pro active show rich text editor
-				 *
-				 * @since v2.0.9
-				 */
-				if (_tutorobject.tutor_pro_url) {
-					if (data.data.output) {
-						tinyMCE.remove('textarea#tutor_quiz_desc_text_editor');
-						initTinyMCE('textarea#tutor_quiz_desc_text_editor', 'codesample image', 'codesample image');
 
-						/**
-						 * Quiz answer explanation rich text editor
-						 * @since 2.2.0
-						 */
-						if (document.getElementById('tutor_answer_explanation')) {
-							tinyMCE.remove('textarea#tutor_answer_explanation');
-							initTinyMCE('textarea#tutor_answer_explanation', 'codesample image', 'codesample image');
+				/**
+				 * WP editor support to quiz question description for PRO user.
+				 *
+				 * @since 2.0.9 Rich text support.
+				 * @since 2.2.3 WP editor support added to quiz question description.
+				 */
+				if (_tutorobject.tutor_pro_url && data.data.output ) {
+					let id = 'tutor_quiz_desc_text_editor',
+						editor_wrap_selector = '#wp-tutor_quiz_desc_text_editor-wrap',
+						tinymceConfig = tinyMCEPreInit.mceInit.tutor_lesson_editor_config;
+
+					if (tinymceConfig) {
+						if ($(editor_wrap_selector).hasClass('html-active')) {
+							$(editor_wrap_selector).removeClass('html-active');
 						}
+						$(editor_wrap_selector).addClass('tmce-active');
+
+						if (!tinymceConfig.plugins.includes('codesample')) {
+							tinymceConfig.plugins = `${tinymceConfig.plugins}, codesample`;
+							tinymceConfig.codesample_languages = codeSampleLang;
+							tinymceConfig.toolbar1 = `${tinymceConfig.toolbar1}, codesample`;
+						}
+
+						tinymceConfig.wpautop = false;
+						tinymce.init(tinymceConfig);
+						tinymce.execCommand('mceRemoveEditor', false, id);
+						tinymce.execCommand('mceAddEditor', false, id);
+						quicktags({ id: id });
+					}
+
+					/**
+					 * Quiz answer explanation rich text editor
+					 *
+					 * @since 2.2.0
+					 */
+					if (document.getElementById('tutor_answer_explanation')) {
+						tinyMCE.remove('textarea#tutor_answer_explanation');
+						initTinyMCE('textarea#tutor_answer_explanation', 'codesample image', 'codesample image');
 					}
 				}
+
 				window.dispatchEvent(new CustomEvent('tutor_modal_shown', {detail: e.target}));
 			},
 			complete: function() {
@@ -493,18 +518,22 @@ window.jQuery(document).ready(function($) {
 	$(document).on('click', '.quiz-modal-question-save-btn', function(e) {
 		e.preventDefault();
 
-		var $that = $(this);
-		var modal = $that.closest('.tutor-modal');
-		var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
+		let $that = $(this),
+			modal = $that.closest('.tutor-modal'),
+			$formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
+
 		$formInput.action = 'tutor_quiz_modal_update_question';
 		// If pro active then get desc text from tinyMCE editor
 		if (_tutorobject.tutor_pro_url) {
-			const questionId = $formInput.tutor_quiz_question_id;
-			const eidtorId = 'tutor_quiz_desc_text_editor';
-			const ansExplainEidtorId = 'tutor_answer_explanation';
+			const questionId = $formInput.tutor_quiz_question_id,
+				eidtorId = 'tutor_quiz_desc_text_editor',
+				ansExplainEidtorId = 'tutor_answer_explanation',
+				editorWrap = document.getElementById('wp-tutor_quiz_desc_text_editor-wrap'),
+				isHtmlActive = editorWrap.classList.contains('html-active');
+				$formInput.is_html_active = isHtmlActive;
 
 			if (tinyMCE.get(eidtorId)) {
-				$formInput["tutor_quiz_question["+questionId+"][question_description]"] = tinyMCE.get(eidtorId)?.getContent({format: 'raw'})
+				$formInput["tutor_quiz_question["+questionId+"][question_description]"] = tinyMCE.get(eidtorId)?.getContent({format: 'html'})
 			}
 			
 			if (tinyMCE.get(ansExplainEidtorId)) {

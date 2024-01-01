@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -62,13 +63,13 @@ class Course_List {
 		 *
 		 * @since v2.0.0
 		 */
-		add_action( 'wp_ajax_tutor_change_course_status', array( __CLASS__, 'tutor_change_course_status' ) );
+		add_action( 'wp_ajax_tutor_change_course_status', array( $this, 'tutor_change_course_status' ) );
 		/**
 		 * Handle ajax request for delete course
 		 *
 		 * @since v2.0.0
 		 */
-		add_action( 'wp_ajax_tutor_course_delete', array( __CLASS__, 'tutor_course_delete' ) );
+		add_action( 'wp_ajax_tutor_course_delete', array( $this, 'tutor_course_delete' ) );
 	}
 
 	/**
@@ -117,6 +118,8 @@ class Course_List {
 		$draft     = self::count_course( 'draft', $category_slug, $course_id, $date, $search );
 		$pending   = self::count_course( 'pending', $category_slug, $course_id, $date, $search );
 		$trash     = self::count_course( 'trash', $category_slug, $course_id, $date, $search );
+		$private   = self::count_course( 'private', $category_slug, $course_id, $date, $search );
+		$future    = self::count_course( 'future', $category_slug, $course_id, $date, $search );
 
 		$tabs = array(
 			array(
@@ -148,6 +151,18 @@ class Course_List {
 				'title' => __( 'Pending', 'tutor' ),
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
+			),
+			array(
+				'key'   => 'future',
+				'title' => __( 'Scheduled', 'tutor' ),
+				'value' => $future,
+				'url'   => $url . '&data=future',
+			),
+			array(
+				'key'   => 'private',
+				'title' => __( 'Private', 'tutor' ),
+				'value' => $private,
+				'url'   => $url . '&data=private',
 			),
 			array(
 				'key'   => 'trash',
@@ -186,7 +201,7 @@ class Course_List {
 		);
 
 		if ( 'all' === $status || 'mine' === $status ) {
-			$args['post_status'] = array( 'publish', 'pending', 'draft', 'private' );
+			$args['post_status'] = array( 'publish', 'pending', 'draft', 'private', 'future' );
 		} else {
 			$args['post_status'] = array( $status );
 		}
@@ -250,13 +265,12 @@ class Course_List {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
-
 		if ( '' === $action || '' === $bulk_ids ) {
 			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
 			exit;
@@ -305,19 +319,30 @@ class Course_List {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		$status = Input::post( 'status' );
 		$id     = Input::post( 'id' );
+		$course = get_post( $id );
+
+		if ( CourseModel::POST_TYPE !== $course->post_type ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
 
 		$args = array(
 			'ID'          => $id,
 			'post_status' => $status,
 		);
-		wp_update_post( $args );
 
+		if ( CourseModel::STATUS_FUTURE === $course->post_status && CourseModel::STATUS_PUBLISH === $status ) {
+			$args['post_status']   = CourseModel::STATUS_PUBLISH;
+			$args['post_date']     = current_time( 'mysql' );
+			$args['post_date_gmt'] = current_time( 'mysql', 1 );
+		}
+
+		wp_update_post( $args );
 		wp_send_json_success();
 		exit;
 	}
@@ -325,21 +350,28 @@ class Course_List {
 	/**
 	 * Handle ajax request for deleting course
 	 *
-	 * @return json response
 	 * @since 2.0.0
+	 *
+	 * @return void JSON response
 	 */
 	public static function tutor_course_delete() {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) || ! current_user_can( tutor()->instructor_role ) ) {
+		$roles = array( User::ADMIN, User::INSTRUCTOR );
+		if ( ! User::has_any_role( $roles ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		$id     = Input::post( 'id', 0, Input::TYPE_INT );
 		$delete = CourseModel::delete_course( $id );
 
-		return wp_send_json( $delete );
+		if ( $delete ) {
+			wp_send_json_success( __( 'Course has been deleted ', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'Course delete failed ', 'tutor' ) );
+		}
+
 		exit;
 	}
 
@@ -376,9 +408,12 @@ class Course_List {
 		$status     = sanitize_text_field( $status );
 		$bulk_ids   = sanitize_text_field( $bulk_ids );
 
+		$ids       = array_map( 'intval', explode( ',', $bulk_ids ) );
+		$in_clause = QueryHelper::prepare_in_clause( $ids );
+
 		$update = $wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$post_table} SET post_status = %s WHERE ID IN ($bulk_ids)", //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"UPDATE {$post_table} SET post_status = %s WHERE ID IN ($in_clause)", //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$status
 			)
 		);

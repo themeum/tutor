@@ -50,6 +50,7 @@ class Admin {
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
+		add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
 	}
 
 	/**
@@ -102,6 +103,10 @@ class Admin {
 		// Extendable action hook @since 2.2.0.
 		do_action( 'tutor_after_courses_menu' );
 
+		if ( ! $has_pro ) {
+			add_submenu_page( 'tutor', __( 'Email', 'tutor' ), __( 'Email <span class="tutor-badge-new">Hot</span>', 'tutor' ), 'manage_tutor', 'new-key-feature', array( $this, 'feature_promotion_page' ) );
+		}
+
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
 
 		add_submenu_page( 'tutor', __( 'Tags', 'tutor' ), __( 'Tags', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type, null );
@@ -122,7 +127,7 @@ class Admin {
 			add_submenu_page( 'tutor', __( 'Withdraw Requests', 'tutor' ), __( 'Withdraw Requests', 'tutor' ), 'manage_tutor', Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE, array( $this, 'withdraw_requests' ) );
 		}
 
-		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), __( 'Add-ons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
+		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), sprintf( '<span class="tutor-addons-text">%s</span>', __( 'Add-ons', 'tutor' ) ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
 
 		do_action( 'tutor_admin_register' );
 
@@ -130,9 +135,22 @@ class Admin {
 
 		add_submenu_page( 'tutor', __( 'Settings', 'tutor' ), __( 'Settings', 'tutor' ), 'manage_tutor', 'tutor_settings', array( new \TUTOR\Options_V2(), 'load_settings_page' ) );
 
+		do_action( 'tutor_after_settings_menu' );
+
 		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
+			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), sprintf( '<span class="tutor-get-pro-text">%s</span>', __( 'Upgrade to Pro', 'tutor' ) ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
 		}
+	}
+
+	/**
+	 * Show Feature Promotion Page for Free User.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function feature_promotion_page() {
+		include tutor()->path . 'views/pages/feature-promotion.php';
 	}
 
 	/**

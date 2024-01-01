@@ -396,7 +396,16 @@ final class Tutor {
 	 * @var $course_list
 	 * @since 2.0.0
 	 */
-	private $Course_List;
+	public $course_list;
+
+	//phpcs:disable
+	public $q_and_a_list;
+	public $q_attempt;
+	public $rest_api;
+	public $setup;
+	public $private_course_access;
+	public $course_filter;
+	//phpcs:enable
 
 	/**
 	 * Course Embed
@@ -406,6 +415,15 @@ final class Tutor {
 	 * @since 2.1.0
 	 */
 	private $course_embed;
+
+	/**
+	 * Rest Authentication
+	 *
+	 * @var $rest_auth
+	 *
+	 * @since 2.1.0
+	 */
+	private $rest_auth;
 
 	/**
 	 * Run the TUTOR
@@ -515,6 +533,7 @@ final class Tutor {
 		$this->student_list    = new Students_List();
 		$this->instructor_list = new Instructors_List();
 		$this->course_embed    = new Course_Embed();
+		$this->rest_auth       = new RestAuth();
 
 		/**
 		 * Run Method
@@ -547,7 +566,7 @@ final class Tutor {
 	 * @return void
 	 */
 	public function activated_tutor( $plugin, $network_wide = null ) {
-		if ( $plugin == tutor()->basename ) {
+		if ( tutor()->basename === $plugin ) {
 			if ( ( ! get_option( 'tutor_wizard' ) ) && version_compare( TUTOR_VERSION, '1.5.6', '>' ) ) {
 				update_option( 'tutor_wizard', 'active' );
 				wp_safe_redirect( admin_url( 'admin.php?page=tutor-setup' ) );
@@ -561,20 +580,20 @@ final class Tutor {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $className class name to load.
+	 * @param string $class_name class name to load.
 	 *
 	 * @return void
 	 */
-	private function loader( $className ) {
-		if ( ! class_exists( $className ) ) {
-			$className = preg_replace(
+	private function loader( $class_name ) {
+		if ( ! class_exists( $class_name ) ) {
+			$class_name = preg_replace(
 				array( '/([a-z])([A-Z])/', '/\\\/' ),
 				array( '$1$2', DIRECTORY_SEPARATOR ),
-				$className
+				$class_name
 			);
 
-			$className = str_replace( 'TUTOR' . DIRECTORY_SEPARATOR, 'classes' . DIRECTORY_SEPARATOR, $className );
-			$file_name = $this->path . $className . '.php';
+			$class_name = str_replace( 'TUTOR' . DIRECTORY_SEPARATOR, 'classes' . DIRECTORY_SEPARATOR, $class_name );
+			$file_name  = $this->path . $class_name . '.php';
 
 			if ( file_exists( $file_name ) ) {
 				require_once $file_name;
@@ -756,6 +775,7 @@ final class Tutor {
 				quiz_id bigint(20) DEFAULT NULL,
 				question_title text,
 				question_description longtext,
+				answer_explanation longtext DEFAULT '',
 				question_type varchar(50) DEFAULT NULL,
 				question_mark decimal(9,2) DEFAULT NULL,
 				question_settings longtext,

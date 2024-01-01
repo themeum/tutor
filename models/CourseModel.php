@@ -29,6 +29,35 @@ class CourseModel {
 	const STATUS_DRAFT      = 'draft';
 	const STATUS_AUTO_DRAFT = 'auto-draft';
 	const STATUS_PENDING    = 'pending';
+	const STATUS_PRIVATE    = 'private';
+	const STATUS_FUTURE     = 'future';
+
+	/**
+	 * Course completion modes
+	 */
+	const MODE_FLEXIBLE = 'flexible';
+	const MODE_STRICT   = 'strict';
+
+	/**
+	 * Course mapped with the product using this meta key
+	 *
+	 * @var string
+	 */
+	const WC_PRODUCT_META_KEY = '_tutor_course_product_id';
+
+	/**
+	 * Course attachment/downloadable resources meta key
+	 *
+	 * @var string
+	 */
+	const ATTACHMENT_META_KEY = '_tutor_attachments';
+
+	/**
+	 * Course benefits meta key
+	 *
+	 * @var string
+	 */
+	const BENEFITS_META_KEY = '_tutor_course_benefits';
 
 	/**
 	 * Course record count
@@ -101,10 +130,10 @@ class CourseModel {
 
 	/**
 	 * Get course count by instructor
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
-	 * @param $instructor_id
+	 *
+	 * @param int $instructor_id instructor ID.
 	 *
 	 * @return null|string
 	 */
@@ -136,10 +165,10 @@ class CourseModel {
 
 	/**
 	 * Get course by quiz
-	 * 
+	 *
 	 * @since 1.0.0
-	 * 
-	 * @param $quiz_id quiz id.
+	 *
+	 * @param int $quiz_id quiz id.
 	 *
 	 * @return array|bool|null|object|void
 	 */
@@ -150,7 +179,7 @@ class CourseModel {
 		if ( $post ) {
 			$course = get_post( $post->post_parent );
 			if ( $course ) {
-				if ( $course->post_type !== tutor()->course_post_type ) {
+				if ( tutor()->course_post_type !== $course->post_type ) {
 					$course = get_post( $course->post_parent );
 				}
 				return $course;
@@ -165,11 +194,11 @@ class CourseModel {
 	  *
 	  * @since 1.0.0
 	  *
-	  * @param integer $instructor_id
-	  * @param array|string $post_status
-	  * @param integer $offset
-	  * @param integer $limit
-	  * @param boolean $count_only
+	  * @param integer      $instructor_id instructor id.
+	  * @param array|string $post_status post status.
+	  * @param integer      $offset offset.
+	  * @param integer      $limit limit.
+	  * @param boolean      $count_only count or not.
 	  *
 	  * @return array|null|object
 	  */
@@ -180,7 +209,7 @@ class CourseModel {
 		$instructor_id    = tutils()->get_user_id( $instructor_id );
 		$course_post_type = tutor()->course_post_type;
 
-		if ( empty( $post_status ) || $post_status == 'any' ) {
+		if ( empty( $post_status ) || 'any' == $post_status ) {
 			$where_post_status = '';
 		} else {
 			! is_array( $post_status ) ? $post_status = array( $post_status ) : 0;
@@ -191,6 +220,7 @@ class CourseModel {
 		$select_col   = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
 		$limit_offset = $count_only ? '' : " LIMIT $offset, $limit ";
 
+		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT $select_col
 			FROM 	$wpdb->posts
@@ -208,7 +238,9 @@ class CourseModel {
 			$instructor_id,
 			$instructor_id
 		);
+		//phpcs:enable
 
+		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query, OBJECT );
 	}
 
@@ -279,7 +311,7 @@ class CourseModel {
 		 */
 		global $wpdb;
 
-		$date = date( 'Y-m-d H:i:s', tutor_time() );
+		$date = date( 'Y-m-d H:i:s', tutor_time() ); //phpcs:ignore
 
 		// Making sure that, hash is unique.
 		do {
@@ -510,5 +542,188 @@ class CourseModel {
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * Get paid courses
+	 *
+	 * To identify course is connected with any product
+	 * like WC Product or EDD product meta key will be used
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param string $meta_key course product id meta key.
+	 * @param array  $args wp_query args.
+	 *
+	 * @return array
+	 */
+	public static function get_paid_courses( string $meta_key, array $args = array() ): array {
+		$current_user = wp_get_current_user();
+		$default_args = array(
+			'post_type'      => 'courses',
+			'post_status'    => 'publish',
+			'no_found_rows'  => true,
+			'posts_per_page' => -1,
+			'relation'       => 'AND',
+			'meta_query'     => array(
+				array(
+					'key'     => sanitize_text_field( $meta_key ),
+					'value'   => 0,
+					'compare' => '!=',
+					'type'    => 'NUMERIC',
+				),
+			),
+		);
+
+		// Check if the current user is an admin.
+		if ( ! current_user_can( 'administrator' ) ) {
+			$args['author'] = $current_user->ID;
+		}
+
+		$query = new \WP_Query( wp_parse_args( $args, $default_args ) );
+
+		if ( $query->have_posts() ) {
+			return $query->posts;
+		}
+
+		return array();
+	}
+
+	/**
+	 * Check the course is completeable or not
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return boolean
+	 */
+	public static function can_complete_course( $course_id, $user_id ) {
+
+		$mode = tutor_utils()->get_option( 'course_completion_process' );
+		if ( self::MODE_FLEXIBLE === $mode ) {
+			return true;
+		}
+
+		if ( self::MODE_STRICT === $mode ) {
+			$completed_lesson = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
+			$lesson_count     = tutor_utils()->get_lesson_count_by_course( $course_id, $user_id );
+
+			if ( $completed_lesson < $lesson_count ) {
+				return false;
+			}
+
+			$quizzes     = array();
+			$assignments = array();
+
+			$course_contents = tutor_utils()->get_course_contents_by_id( $course_id );
+			if ( tutor_utils()->count( $course_contents ) ) {
+				foreach ( $course_contents as $content ) {
+					if ( 'tutor_quiz' === $content->post_type ) {
+						$quizzes[] = $content;
+					}
+					if ( 'tutor_assignments' === $content->post_type ) {
+						$assignments[] = $content;
+					}
+				}
+			}
+
+			foreach ( $quizzes as $row ) {
+				$result = QuizModel::get_quiz_result( $row->ID );
+				if ( 'pass' !== $result ) {
+					return false;
+				}
+			}
+
+			if ( tutor()->has_pro ) {
+				foreach ( $assignments as $row ) {
+					$result = \TUTOR_ASSIGNMENTS\Assignments::get_assignment_result( $row->ID, $user_id );
+					if ( 'pass' !== $result ) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Check a course can be auto complete by an enrolled student.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return boolean
+	 */
+	public static function can_autocomplete_course( $course_id, $user_id ) {
+		$auto_course_complete_option = (bool) tutor_utils()->get_option( 'auto_course_complete_on_all_lesson_completion' );
+		if ( ! $auto_course_complete_option ) {
+			return false;
+		}
+
+		$is_course_completed = tutor_utils()->is_completed_course( $course_id, $user_id );
+		if ( $is_course_completed ) {
+			return false;
+		}
+
+		$course_stats = tutor_utils()->get_course_completed_percent( $course_id, $user_id, true );
+		if ( $course_stats['total_count'] && $course_stats['completed_count'] === $course_stats['total_count'] ) {
+			return self::can_complete_course( $course_id, $user_id );
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Get review progress link when course progress 100% and
+	 * User has pending or fail quiz or assignment
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
+	 * @return string course content permalink.
+	 */
+	public static function get_review_progress_link( $course_id, $user_id ) {
+		$course_progress   = tutor_utils()->get_course_completed_percent( $course_id, $user_id, true );
+		$completed_percent = (int) $course_progress['completed_percent'];
+		$course_contents   = tutor_utils()->get_course_contents_by_id( $course_id );
+		$permalink         = '';
+
+		if ( tutor_utils()->count( $course_contents ) && 100 === $completed_percent ) {
+			foreach ( $course_contents as $content ) {
+				if ( 'tutor_quiz' === $content->post_type ) {
+					$result = QuizModel::get_quiz_result( $content->ID, $user_id );
+					if ( 'pass' !== $result ) {
+						$permalink = get_the_permalink( $content->ID );
+						break;
+					}
+				}
+
+				if ( tutor()->has_pro && 'tutor_assignments' === $content->post_type ) {
+					$result = \TUTOR_ASSIGNMENTS\Assignments::get_assignment_result( $content->ID, $user_id );
+					if ( 'pass' !== $result ) {
+						$permalink = get_the_permalink( $content->ID );
+						break;
+					}
+				}
+			}
+		}
+
+		// Fallback link.
+		if ( empty( $permalink ) ) {
+			$permalink = tutils()->get_course_first_lesson( $course_id );
+		}
+
+		return $permalink;
 	}
 }

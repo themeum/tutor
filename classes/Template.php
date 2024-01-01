@@ -67,10 +67,14 @@ class Template extends Tutor_Base {
 	public function load_course_archive_template( $template ) {
 		global $wp_query;
 
-		$post_type       = get_query_var( 'post_type' );
+		$post_type = get_query_var( 'post_type' );
+		if ( ! is_array( $post_type ) ) {
+			$post_type = array( $post_type );
+		}
+
 		$course_category = get_query_var( 'course-category' );
 
-		if ( ( $post_type === $this->course_post_type || ! empty( $course_category ) ) && $wp_query->is_archive ) {
+		if ( ( in_array( $this->course_post_type, $post_type, true ) || ! empty( $course_category ) ) && $wp_query->is_archive ) {
 			$template = tutor_get_template( 'archive-course' );
 			return $template;
 		}
@@ -118,6 +122,7 @@ class Template extends Tutor_Base {
 			$course_category = get_query_var( 'course-category' );
 			if ( ( $post_type === $this->course_post_type || ! empty( $course_category ) ) ) {
 				$query->set( 'posts_per_page', $courses_per_page );
+				$query->set( 'post_type', apply_filters( 'tutor_course_archive_post_types', array( $this->course_post_type ) ) );
 
 				$course_filter = 'newest_first';
 				if ( ! empty( Input::get( 'tutor_course_filter', '' ) ) ) {
@@ -462,7 +467,7 @@ class Template extends Tutor_Base {
 			$user      = $wpdb->get_row( $wpdb->prepare( "SELECT display_name from {$wpdb->users} WHERE user_login = %s limit 1; ", $user_name ) );
 
 			if ( ! empty( $user->display_name ) ) {
-				return sprintf( "%s's Profile page ", $user->display_name );
+				return sprintf( "%s's %s", $user->display_name, __( 'Profile Page', 'tutor' ) );
 			}
 		}
 		return '';

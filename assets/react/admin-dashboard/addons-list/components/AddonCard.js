@@ -36,6 +36,8 @@ const AddonCard = ({ addon, addonId }) => {
 									__('Required Plugin(s)', 'tutor')
 								: addon.ext_required?.length > 0 ?
 									__('Required for Push Notification', 'tutor')
+								: addon.required_settings === true ?
+									addon.required_title ? addon.required_title : ''
 								:
 									__('No extra plugin required', 'tutor')
 								}
@@ -67,25 +69,35 @@ const AddonCard = ({ addon, addonId }) => {
 										}
 									</span>
 								</div>
-								: ''
+							: addon.required_settings === true && addon.required_message ?
+								<div className="tooltip-wrap tooltip-icon">
+									<span className="tooltip-txt tooltip-top">
+										<div>
+											<span>{addon.required_message ? addon.required_message : ''}</span>
+										</div>
+									</span>
+								</div>	
+							: ''
 							}
 						</div>
 					</div>
 
-					{!addon.disable_on_off && addon.plugins_required?.length === 0 && (
-						<div className="addon-toggle">
-							<label className="tutor-form-toggle">
-								<input
-									type="checkbox"
-									className="tutor-form-toggle-input"
-									name={addon.basename}
-									checked={addon.is_enabled}
-									onChange={(event) => handleOnChange(event, addon.basename)}
-								/>
-								<span className="tutor-form-toggle-control" area-hidden="true"></span>
-							</label>
-						</div>
-					)}
+					{
+						!addon.disable_on_off && addon.plugins_required?.length === 0 && !addon.required_settings ?
+							<div className="addon-toggle">
+								<label className="tutor-form-toggle">
+									<input
+										type="checkbox"
+										className="tutor-form-toggle-input"
+										name={addon.basename}
+										checked={addon.is_enabled}
+										onChange={(event) => handleOnChange(event, addon.basename)}
+									/>
+									<span className="tutor-form-toggle-control" area-hidden="true"></span>
+								</label>
+							</div>
+						:''
+					}
 				</div>
 			</div>
 		</div>

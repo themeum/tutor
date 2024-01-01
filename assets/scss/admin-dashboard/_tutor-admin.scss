@@ -44,7 +44,6 @@
 		margin-right: auto;
 		padding-left: 30px;
 		padding-right: 30px;
-		overflow-x: auto;
 
 		&-sm {
 			max-width: 760px;
@@ -123,12 +122,6 @@
 
 body.tutor-backend-tutor_settings #wpbody-content {
 	min-height: 100vh;
-
-	@include breakpoint-min(1400) {
-		.tutor-admin-container {
-			overflow-x: unset;
-		}
-	}
 }
 
 .ui-datepicker-buttonpane.ui-widget-content {
@@ -965,8 +958,19 @@ span.filled_dash_unser {
 	height: auto;
 }
 
-.tutor-get-pro-text {
-	color: #e02424;
+a:has(> span.tutor-get-pro-text ) {
+	background-color: orange;
+    font-weight: 600;
+    color: #000 !important;
+
+	&:hover{
+		background-color: orange!important;
+    	color: #000 !important;
+	}
+}
+
+span.tutor-addons-text{
+	color: orange;
 }
 
 .updating-icon:before {
@@ -1765,5 +1769,229 @@ h2.tutor-page-heading {
 #tutor-quiz-question-wrapper {
 	.mce-branding {
 		display: none;
+	}
+}
+
+.tutor-pro-badge{
+	background: #e5803c;
+    color: #fff;
+    font-weight: 400;
+    border-radius: 16px;
+    padding: 1px 6px;
+    font-size: 11px;
+    display: inline-block;
+    line-height: 15px;
+}
+
+.tutor-whats-new-wrapper{
+	max-width: 1080px;
+	background-color: white;
+	margin: 25px auto;
+	border-radius: 8px;
+
+	.tutor-update-available{
+		background: #FFF5E0;
+		border-top-left-radius: 8px;
+    	border-top-right-radius: 8px;
+		padding: 25px;
+
+		.tutor-version-alert{
+			display: flex;
+			gap: 15px;
+			justify-content: center;
+			align-items: center;
+			margin-bottom: 10px;
+			p{
+				font-weight: 500;
+				margin: 0;
+			}
+		}
+
+		.tutor-update-version{
+			border-radius: 6px;
+			background-color: #fff;
+			padding: 20px 25px;
+			display: flex;
+			gap: 25px;
+			align-items: center;
+			width: 410px;
+			margin: 0 auto;
+
+			>div:nth-child(2) {
+				h3,p{
+					margin: 0;
+				}
+				p{
+					margin-top: 5px;
+				}
+				a{
+					color: #00F;
+					text-decoration: none;
+				}
+			}
+
+			.tutor-whats-new-update-now {
+				align-items: center;
+				display: flex;
+				gap: 8px;
+				font-size: 14px;
+				padding: 8px 20px;
+				background: #0049f8;
+				border-radius: 6px;
+				text-decoration: none;
+				color: #fff;
+				margin-left: auto;
+
+				&:focus {
+					box-shadow: none;
+					outline: none;
+				}
+
+				&:hover{
+					background: #0849e1;
+				}
+			}
+		}
+	}
+
+	.tutor-whats-new-header{
+		text-align: center;
+		background-size: contain;
+		background-repeat: no-repeat;
+		min-height: 200px;
+		border-bottom: 1px solid #f0eaea;
+		position: relative;
+		padding-top: 50px;
+
+		h1{
+			font-size: 40px;
+			font-weight:700;
+		}
+
+		p{
+			font-size: 14px;
+		}
+
+		.tutor-logo-head{
+			position: absolute;
+			left: 0;
+			right: 0;
+			width: 40px;
+			bottom: -40px;
+			margin: 0 auto;
+			background: #FFF;
+			padding: 10px;
+		}
+
+		.tutor-whats-new-header-symbols {
+			position: absolute;
+
+			&.tutor-symbol-left-top {
+				top: 75px;
+				left: 100px;
+				height: 20px;
+				width: 20px;
+			}
+			&.tutor-symbol-left-bottom {
+				width: 60px;
+				left: 0;
+				bottom: 20px;
+			}
+			&.tutor-symbol-right-top {
+				top: 30px;
+				right: 0;
+				width: 60px;
+			}
+			&.tutor-symbol-right-bottom {
+				height: 30px;
+				width: 30px;
+				right: 90px;
+				bottom: 60px;
+			}
+
+		}
+
+		@include breakpoint-max(tablet) {
+			h1{
+				font-size: 34px;
+			}
+		}
+
+		@include breakpoint-max(mobile) {
+			h1{
+				font-size: 28px;
+			}
+		}
+	}
+
+	.tutor-changelog-wrapper{
+		width: 75%;
+		margin: 0 auto;
+		padding: 100px 0px 80px 0px;
+
+		h4{
+			font-size: 16px;
+		}
+
+		.tutor-changelog-list{
+			list-style: disc;
+			padding-left: 16px;
+		}
+	}
+
+	.tutor-whats-new-pro-section{
+		padding: 80px 0px;
+		text-align: center;
+
+		&.tutor-pro-section-top {
+			background-color: rgba(204, 219, 254, 0.1);
+		}
+
+		& > div {
+			max-width: 75%;
+			margin: 0 auto;
+		}
+		
+		h2{
+			margin-top: 0;
+			margin-bottom: 30px;
+			font-size: 30px;
+			line-height: 1.3;
+		}
+
+		p {
+			font-size: 18px;
+			font-weight: 500;
+			margin-top: 20px;
+			margin-bottom: 0px;
+		}
+
+		.tutor-whats-new-pro-banner{
+			border-radius: 8px;
+			overflow: hidden;
+			display: flex;
+			img{
+				width: 100%;
+			}
+		}
+
+		.tutor-whats-new-action-btn{
+			display: inline-block;
+			font-size: 15px;
+			padding: 12px 30px;
+			background: #0049F8;
+			border-radius: 6px;
+			text-decoration: none;
+			color: #fff;
+			margin-top: 30px;
+			&:hover{
+				background: #0849e1;
+			}
+
+			.tutor-icon-crown {
+				color: #ED9700;
+				margin-right: 5px;
+			}
+		}
 	}
 }

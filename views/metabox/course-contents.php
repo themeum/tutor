@@ -3,10 +3,13 @@
  * Course contents
  *
  * @package Tutor\Views
+ * @subpackage Metabox
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 1.0.0
  */
+
+use Tutor\Models\CourseModel;
 
 ?>
 <div class="wp_editor_config_example" style="display: none;">
@@ -20,28 +23,39 @@
 <div class="course-contents">
 
 	<?php
+	$query_topics = array();
 
-	$query_topics = new WP_Query(
-		array(
-			'post_type'      => 'topics',
-			'post_parent'    => $course_id,
-			'orderby'        => 'menu_order',
-			'order'          => 'ASC',
-			'posts_per_page' => -1,
-		)
-	);
+	if ( CourseModel::STATUS_AUTO_DRAFT !== get_post_status( $course_id ) ) {
+		$query_topics = new WP_Query(
+			array(
+				'post_type'      => 'topics',
+				'post_parent'    => $course_id,
+				'orderby'        => 'menu_order',
+				'order'          => 'ASC',
+				'posts_per_page' => -1,
+			)
+		);
 
-	$query_topics = $query_topics->posts;
+		$query_topics = $query_topics->posts;
+	}
 
-	// Actually all kind of contents.
-	// This keyword '_tutor_course_id_for_lesson' used just to support backward compatibility.
+	/**
+	 * Actually all kind of contents.
+	 * This keyword '_tutor_course_id_for_lesson' used just to support backward compatibility.
+	 */
 	global $wpdb;
 	$unassigned_contents = $wpdb->get_results(
-		"SELECT content.* FROM {$wpdb->posts} content 
+		$wpdb->prepare(
+			"SELECT content.* FROM {$wpdb->posts} content 
 	        INNER JOIN {$wpdb->postmeta} meta ON content.ID=meta.post_id
-        WHERE content.post_parent=0 
-            AND meta.meta_key='_tutor_course_id_for_lesson' 
-            AND meta.meta_value=" . $course_id
+        	WHERE content.post_parent=%d 
+            AND meta.meta_key=%s 
+            AND meta.meta_value=%d
+		",
+			0,
+			'_tutor_course_id_for_lesson',
+			$course_id
+		)
 	);
 
 	if ( is_array( $unassigned_contents ) && count( $unassigned_contents ) ) {
@@ -98,10 +112,10 @@
 			<div class="tutor-topics-body" style="display: <?php echo ( isset( $current_topic_id ) && $current_topic_id == $topic->ID ) ? 'block' : 'none'; ?>;">
 				<div class="tutor-lessons">
 				<?php
-					$post_type       = apply_filters( 'tutor_course_contents_post_types', array( tutor()->lesson_post_type, 'tutor_quiz' ) );
+					$post_types      = apply_filters( 'tutor_course_contents_post_types', array( tutor()->lesson_post_type, 'tutor_quiz' ) );
 					$course_contents = ! $is_topic ? $topic->contents : get_posts(
 						array(
-							'post_type'      => $post_type,
+							'post_type'      => $post_types,
 							'post_parent'    => $topic->ID,
 							'posts_per_page' => -1,
 							'orderby'        => 'menu_order',
@@ -152,7 +166,7 @@
 								</div>
 							</div>
 							<?php
-						} elseif ( 'lesson' == $content->post_type ) {
+						} elseif ( 'lesson' === $content->post_type ) {
 							$counter['lesson']++;
 							?>
 							<div data-course_content_id="<?php echo esc_attr( $content->ID ); ?>" id="tutor-lesson-<?php echo esc_attr( $content->ID ); ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo esc_attr( $content->ID ); ?>">

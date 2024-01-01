@@ -31,7 +31,7 @@ class QuizAttempts extends AbstractCache {
 	 *
 	 * @since 2.0.6
 	 */
-	private const KEY = 'tutor_quiz_attempts_count';
+	const KEY = 'tutor_quiz_attempts_count';
 
 	/**
 	 * Cache expire time
@@ -40,7 +40,7 @@ class QuizAttempts extends AbstractCache {
 	 *
 	 * @since 2.0.6
 	 */
-	private const HOUR_IN_SECONDS = 1800;
+	const HOUR_IN_SECONDS = 1800;
 
 	/**
 	 * Data for caching

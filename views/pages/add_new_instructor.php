@@ -134,7 +134,7 @@
 				</label>
 			</div>
 			<div class="tutor-option-field">
-				<textarea name="tutor_profile_bio"><?php esc_html_e( tutor_utils()->input_old( 'tutor_profile_bio' ) ); ?></textarea>
+				<textarea name="tutor_profile_bio"><?php echo esc_html( tutor_utils()->input_old( 'tutor_profile_bio' ) ); ?></textarea>
 			</div>
 		</div>
 
@@ -147,7 +147,7 @@
 				<div class="tutor-form-group tutor-reg-form-btn-wrap">
 					<button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-button tutor-button-primary">
 						<i class="tutor-icon-plus-square"></i>
-						<?php echo esc_html( 'Add new instructor', 'tutor' ); ?></button>
+						<?php esc_html_e( 'Add new instructor', 'tutor' ); ?></button>
 				</div>
 			</div>
 		</div>
