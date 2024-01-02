@@ -8,8 +8,6 @@ describe("Tutor Dashboard Quiz Attempts", () => {
     })
 
     it ("should review a quiz", () => {
-        cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.QUIZ_ATTEMPTS}`)
-
         cy.get("body").then(($body) => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
