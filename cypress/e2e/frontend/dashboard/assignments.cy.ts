@@ -1,4 +1,4 @@
-import { frontendUrls } from "../../config/page-urls"
+import { frontendUrls } from "../../../config/page-urls"
 
 describe("Tutor Dashboard Assignments", () => {
     beforeEach(() => {
