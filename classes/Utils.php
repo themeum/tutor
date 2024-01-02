@@ -6217,7 +6217,7 @@ class Utils {
 
 		$value = $this->avalue_dot( $option_key, $get_option_meta );
 
-		if ( $value ) {
+		if ( false !== $value ) {
 			return $value;
 		}
 
