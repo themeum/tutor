@@ -196,6 +196,26 @@ class Course extends Tutor_Base {
 		 * @since 2.1.7
 		 */
 		add_action( 'trashed_post', __CLASS__ . '::redirect_to_course_list_page' );
+
+		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
+	}
+
+	/**
+	 * Add enroll require login class
+	 *
+	 * @since 2.6.0
+	 *
+	 * @param string $class_name css class name.
+	 *
+	 * @return string
+	 */
+	public function add_enroll_required_login_class( $class_name ) {
+		$enabled_tutor_login = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true );
+		if ( ! $enabled_tutor_login ) {
+			return '';
+		}
+
+		return $class_name;
 	}
 
 	/**
