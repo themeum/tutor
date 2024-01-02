@@ -47,7 +47,7 @@
 						</div>
 					</div>
 
-					<div class="tutor-passowrd-strength-hint">
+					<div class="tutor-password-strength-hint">
 						<div class="indicator">
 							<span class="weak"></span>
 							<span class="medium"></span>

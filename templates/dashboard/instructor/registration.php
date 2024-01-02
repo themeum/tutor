@@ -102,11 +102,24 @@
 			<div class="tutor-form-row">
 				<div class="tutor-form-col-6">
 					<div class="tutor-form-group">
-						<label>
-							<?php esc_html_e( 'Password', 'tutor' ); ?>
-						</label>
+						<div class="tutor-password-strength-checker">
+							<div class="tutor-password-field">
+								<label>
+									<?php esc_html_e( 'Password', 'tutor' ); ?>
+								</label>
 
-						<input type="password" name="password" value="<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" required autocomplete="new-password">
+								<input class="password-checker" id="tutor-new-password" type="password" name="password" value="<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" required autocomplete="new-password">
+								<span class="show-hide-btn"></span>
+							</div>
+							<div class="tutor-password-strength-hint">
+								<div class="indicator">
+									<span class="weak"></span>
+									<span class="medium"></span>
+									<span class="strong"></span>
+								</div>
+								<div class="text tutor-fs-7 tutor-color-muted"></div>
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -138,7 +151,7 @@
 			<?php
 				$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
 			?>
-			
+
 			<?php if ( null !== $tutor_toc_page_link ) : ?>
 				<div class="tutor-mb-24">
 					<?php esc_html_e( 'By signing up, I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" title="<?php esc_attr_e( 'Terms and Conditions', 'tutor' ); ?>"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
@@ -149,7 +162,7 @@
 				<button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-btn tutor-btn-primary tutor-btn-block"><?php esc_html_e( 'Register as instructor', 'tutor' ); ?></button>
 			</div>
 			<?php do_action( 'tutor_after_register_button' ); ?>
-			
+
 		</form>
 		<?php do_action( 'tutor_after_registration_form_wrap' ); ?>
 	</div>
