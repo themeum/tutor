@@ -76,6 +76,7 @@ class RestAuth {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_tutor_generate_api_keys', __CLASS__ . '::generate_api_keys' );
+		add_action( 'wp_ajax_tutor_update_api_permission', __CLASS__ . '::update_api_permission' );
 		add_action( 'wp_ajax_tutor_revoke_api_keys', __CLASS__ . '::revoke_api_keys' );
 	}
 
@@ -124,6 +125,51 @@ class RestAuth {
 			wp_send_json_error( tutor_utils()->error_message( '0' ) );
 		}
 
+	}
+
+
+	/**
+	 * Update api permission
+	 *
+	 * @since 2.5.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public static function update_api_permission() {
+		global $wpdb;
+
+		// Validate nonce.
+		tutor_utils()->checking_nonce();
+
+		// Check user permission.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
+		$meta_id     = Input::post( 'meta_id', 0, Input::TYPE_INT );
+		$permission  = Input::post( 'permission' );
+		$description = Input::post( 'description', '', Input::TYPE_TEXTAREA );
+
+		$info       = QueryHelper::get_row( $wpdb->usermeta, array( 'umeta_id' => $meta_id ), 'umeta_id' );
+		$meta_value = json_decode( $info->meta_value );
+
+		$meta_value->permission = $permission;
+		$meta_value->description = $description;
+
+		// Update user meta.
+		try {
+			QueryHelper::update(
+				$wpdb->usermeta,
+				array( 'meta_value' => json_encode( $meta_value ) ),
+				array( 'umeta_id' => $meta_id )
+			);
+
+			$response = self::prepare_response( $meta_id, $meta_value->key, $meta_value->secret, $permission, $description );
+			wp_send_json_success( $response );
+
+		} catch ( \Throwable $th ) {
+			wp_send_json_error( $th->getMessage() );
+		}
 	}
 
 	/**
@@ -239,7 +285,7 @@ class RestAuth {
 		$user_id = get_current_user_id();
 		ob_start();
 		?>
-		<tr>
+		<tr id="<?php echo esc_attr( $meta_id ); ?>">
 			<td>
 				<?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
 			</td>
@@ -275,7 +321,11 @@ class RestAuth {
 					<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
 						<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 					</button>
-					<div class="tutor-dropdown tutor-dropdown-dark tutor-text-left" data-meta-id="<?php echo esc_attr( $meta_id ); ?>">
+					<div class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+						<a href="javascript:void(0)" class="tutor-dropdown-item" data-tutor-modal-target="tutor-update-permission-modal" data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>">
+							<i class="tutor-icon-edit tutor-mr-8" area-hidden="true" data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>"></i>
+							<span data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>"><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
+						</a>
 						<a href="javascript:void(0)" class="tutor-dropdown-item" data-meta-id="<?php echo esc_attr( $meta_id ); ?>">
 							<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true" data-meta-id="<?php echo esc_attr( $meta_id ); ?>"></i>
 							<span data-meta-id="<?php echo esc_attr( $meta_id ); ?>"><?php esc_html_e( 'Revoke', 'tutor' ); ?></span>
