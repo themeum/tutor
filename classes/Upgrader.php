@@ -101,7 +101,7 @@ class Upgrader {
 				$wpdb->update( $wpdb->posts, array( 'post_type' => tutor()->course_post_type ), array( 'post_type' => 'course' ) );
 				update_option( 'is_course_post_type_updated', true );
 				update_option( 'tutor_version', '1.3.1' );
-				flush_rewrite_rules();
+				Permalink::set_permalink_flag();
 			}
 		}
 	}
@@ -113,6 +113,10 @@ class Upgrader {
 	 */
 	public function upgrade_to_2_6_0() {
 		if ( version_compare( $this->installed_version, '2.6.0', '<' ) ) {
+			if ( false === Permalink::update_required() ) {
+				Permalink::set_permalink_flag();
+			}
+
 			do_action( 'before_tutor_version_upgrade_to_2_6_0', $this->installed_version );
 			update_option( 'tutor_version', TUTOR_VERSION );
 		}
