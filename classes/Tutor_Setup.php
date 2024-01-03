@@ -109,6 +109,8 @@ class Tutor_Setup {
 		}
 		update_option( 'tutor_withdraw_options', $payments );
 
+		do_action( 'tutor_setup_finished' );
+
 		// Add wizard flag.
 		wp_send_json_success( array( 'status' => 'success' ) );
 	}
