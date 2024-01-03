@@ -101,7 +101,7 @@ $user        = get_userdata( get_current_user_id() );
 							<?php esc_html_e( 'Permission', 'tutor' ); ?>
 						</label>
 						<div class="tutor-mb-16">
-							<select name="permission" id="permission" class="tutor-form-select tutor-hide-search">
+							<select name="permission" id="permission" class="tutor-form-control" style="max-width: 100%;">
 								<?php foreach ( $permissions as $permission ) : ?>
 								<option value="<?php echo esc_attr( $permission['value'] ); ?>">
 									<?php echo esc_html( $permission['label'] ); ?>
