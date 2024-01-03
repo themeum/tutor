@@ -161,7 +161,7 @@ class Tutor_Setup {
 		$full_width_fields = array( 'rows', 'slider', 'radio', 'range', 'payments', 'dropdown' );
 
 		foreach ( $field_arr as $key_parent => $field_parent ) {
-			$html             .= '<li class="' . ( $i == 1 ? 'active' : '' ) . '">';
+			$html             .= '<li class="' . ( 1 == $i ? 'active' : '' ) . '">';
 				$html         .= '<div class="tutor-setup-content-heading heading">';
 					$html     .= '<div class="setup-section-title tutor-fs-6 tutor-fw-medium tutor-color-black">' . $field_parent['lable'] . '</div>';
 					$html     .= '<div class="step-info">';
@@ -175,7 +175,7 @@ class Tutor_Setup {
 				if ( ! isset( $field['lable'] ) ) {
 					continue; }
 
-				// Generate data attributes if necessary
+				// Generate data attributes if necessary.
 				$data_attr = '';
 				if ( isset( $field['data'] ) && is_array( $field['data'] ) ) {
 					foreach ( $field['data'] as $data_key => $data_value ) {
@@ -217,25 +217,25 @@ class Tutor_Setup {
 							$html             .= '<div class="course-per-row">';
 								$html         .= '<div class="wrapper">';
 									$html     .= '<label for="' . $key . '1">';
-										$html .= '<input type="radio" value="1" name="' . $key . '" class="course" id="' . $key . '1" ' . ( isset( $options[ $key ] ) && $options[ $key ] == 1 ? 'checked' : '' ) . '>';
+										$html .= '<input type="radio" value="1" name="' . $key . '" class="course" id="' . $key . '1" ' . ( isset( $options[ $key ] ) && 1 == $options[ $key ] ? 'checked' : '' ) . '>';
 										$html .= '<span class="span"><span>1</span></span>';
 									$html     .= '</label>';
 								$html         .= '</div>';
 								$html         .= '<div class="wrapper">';
 									$html     .= '<label for="' . $key . '2">';
-										$html .= '<input type="radio" value="2" name="' . $key . '" class="course" id="' . $key . '2" ' . ( isset( $options[ $key ] ) && $options[ $key ] == 2 ? 'checked' : '' ) . '>';
+										$html .= '<input type="radio" value="2" name="' . $key . '" class="course" id="' . $key . '2" ' . ( isset( $options[ $key ] ) && 2 == $options[ $key ] ? 'checked' : '' ) . '>';
 										$html .= '<span class="span"><span>2</span><span>2</span></span>';
 									$html     .= '</label>';
 								$html         .= '</div>';
 								$html         .= '<div class="wrapper">';
 									$html     .= '<label for="' . $key . '3">';
-										$html .= '<input type="radio" value="3" name="' . $key . '" class="course" id="' . $key . '3" ' . ( isset( $options[ $key ] ) && $options[ $key ] == 3 ? 'checked' : '' ) . '>';
+										$html .= '<input type="radio" value="3" name="' . $key . '" class="course" id="' . $key . '3" ' . ( isset( $options[ $key ] ) && 3 == $options[ $key ] ? 'checked' : '' ) . '>';
 										$html .= '<span class="span"><span>3</span><span>3</span><span>3</span></span>';
 									$html     .= '</label>';
 								$html         .= '</div>';
 								$html         .= '<div class="wrapper">';
 									$html     .= '<label for="' . $key . '4">';
-										$html .= '<input type="radio" value="4" name="' . $key . '" class="course" id="' . $key . '4" ' . ( isset( $options[ $key ] ) && $options[ $key ] == 4 ? 'checked' : '' ) . '>';
+										$html .= '<input type="radio" value="4" name="' . $key . '" class="course" id="' . $key . '4" ' . ( isset( $options[ $key ] ) && 4 == $options[ $key ] ? 'checked' : '' ) . '>';
 										$html .= '<span class="span"><span>4</span><span>4</span><span>4</span><span>4</span></span>';
 									$html     .= '</label>';
 								$html         .= '</div>';
@@ -246,7 +246,7 @@ class Tutor_Setup {
 					case 'radio':
 						if ( isset( $field['options'] ) ) {
 							foreach ( $field['options'] as $k => $val ) {
-								$html .= '<label for="' . $key . $k . '" class="time-expires"><input type="radio" id="' . $key . $k . '" name="' . $key . '" value="' . $k . '" ' . ( isset( $options[ $key ] ) && $options[ $key ] == $k ? 'checked' : '' ) . ' /> ' . '<span class="radio-icon"></span>';
+								$html .= '<label for="' . $key . $k . '" class="time-expires"><input type="radio" id="' . $key . $k . '" name="' . $key . '" value="' . $k . '" ' . ( isset( $options[ $key ] ) && $options[ $key ] == $k ? 'checked' : '' ) . ' /> <span class="radio-icon"></span>';
 								$html .= $val . '</label>';
 							}
 						}
@@ -382,7 +382,7 @@ class Tutor_Setup {
 									$html             .= '</div>';
 									$html             .= '<div class="wrapper tutor-unlimited-value">';
 										$html         .= '<label for="attempts-allowed-2">';
-											$html     .= '<input type="radio" name="attempts-allowed" value="unlimited" class="course-p" id="attempts-allowed-2" ' . ( ( ! isset( $options[ $key ] ) ) || $options[ $key ] == 0 ? 'checked' : '' ) . '>';
+											$html     .= '<input type="radio" name="attempts-allowed" value="unlimited" class="course-p" id="attempts-allowed-2" ' . ( ( ! isset( $options[ $key ] ) ) || $options[ $key ] == 0 ? 'checked' : '' ) . '>';//phpcs:ignore
 											$html     .= '<span class="radio-icon"></span>';
 											$html     .= '<span class="label-text">' . __( 'Unlimited', 'tutor' ) . '</span>';
 										$html         .= '</label>';
@@ -414,7 +414,7 @@ class Tutor_Setup {
 				$i++;
 		}
 
-		echo tutor_kses_html( $html );
+		echo tutor_kses_html( $html );//phpcs:ignore
 	}
 
 	/**
@@ -455,7 +455,7 @@ class Tutor_Setup {
 						'type'  => 'text',
 						'max'   => 50,
 						'lable' => __( 'Lesson permalink', 'tutor' ),
-						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/' . tutor()->course_post_type . '/sample-course/<strong>' . ( tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ) ) . '</strong>/sample-lesson/' ),
+						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/' . tutor()->course_post_type . '/sample-course/<strong>' . ( tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ) ) . '</strong>/sample-lesson/' ),//phpcs:ignore
 					),
 				),
 			),
