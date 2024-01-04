@@ -4,9 +4,9 @@
 
 (function tutorPasswordStrengthChecker() {
 	const passwordCheckerInput = document.querySelectorAll('.tutor-password-field input.password-checker');
-	const weak = document.querySelector('.tutor-passowrd-strength-hint .weak');
-	const medium = document.querySelector('.tutor-passowrd-strength-hint .medium');
-	const strong = document.querySelector('.tutor-passowrd-strength-hint .strong');
+	const weak = document.querySelector('.tutor-password-strength-hint .weak');
+	const medium = document.querySelector('.tutor-password-strength-hint .medium');
+	const strong = document.querySelector('.tutor-password-strength-hint .strong');
 
 	let regExpWeak = /[a-z]/;
 	let regExpMedium = /\d+/;
