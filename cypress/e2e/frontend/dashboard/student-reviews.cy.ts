@@ -1,6 +1,6 @@
 import { frontendUrls } from "../../../config/page-urls"
 
-describe("Tutor Dashboard Assignments", () => {
+describe("Tutor Dashboard Student Reviews", () => {
     const randomNumber = Math.floor(Math.random() * 5);
     beforeEach(() => {
         cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.REVIEWS}`)
