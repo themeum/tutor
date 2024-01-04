@@ -4,8 +4,7 @@ describe("Tutor Dashboard Certificate", () => {
     const randomNumber = Math.floor(Math.random() * 11);
     beforeEach(() => {
         cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.CERTIFICATE}`)
-        cy.loginAsAdmin()
-        // cy.loginAsInstructor // Or as an instructor
+        cy.loginAsInstructor()
         cy.url().should("include", frontendUrls.dashboard.DASHBOARD)
     })
 
@@ -20,11 +19,18 @@ describe("Tutor Dashboard Certificate", () => {
     })
 
     it ("should delete a certificate", () => {
+        cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
+
         cy.get(".tutor-card-list-item").eq(0).invoke("attr", "id").then((id) => {
             const certificateId = id.split('-')[4]
             cy.get(`span[data-tutor-modal-target=tutor-modal-tutor-cb-row-del-${certificateId}`).click()
             cy.get(".tutor-modal.tutor-is-active").find("button").contains("Yes, Delete This").click()
-            cy.wait(1000)
+            
+            cy.wait('@ajaxRequest').then((interception) => {
+                cy.log('response', interception.response.body.success)
+                expect(interception.response.body.success).to.equal(true);
+            });
+            
             cy.get(`#tutor-cb-row-id-${certificateId}`).should('not.exist');
         })
     })
