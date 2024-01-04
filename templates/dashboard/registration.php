@@ -102,11 +102,25 @@
 			<div class="tutor-form-row">
 				<div class="tutor-form-col-6">
 					<div class="tutor-form-group">
-						<label>
-							<?php esc_html_e( 'Password', 'tutor' ); ?>
-						</label>
+						<div class="tutor-password-strength-checker">
+							<div class="tutor-password-field">
+								<label>
+									<?php esc_html_e( 'Password', 'tutor' ); ?>
+								</label>
 
-						<input type="password" name="password" value="<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" required autocomplete="new-password">
+								<input class="password-checker" id="tutor-new-password" type="password" name="password" value="<?php echo esc_attr( tutor_utils()->input_old( 'password' ) ); ?>" placeholder="<?php esc_html_e( 'Password', 'tutor' ); ?>" required autocomplete="new-password">
+								<span class="show-hide-btn"></span>
+							</div>
+
+							<div class="tutor-password-strength-hint">
+								<div class="indicator">
+									<span class="weak"></span>
+									<span class="medium"></span>
+									<span class="strong"></span>
+								</div>
+								<div class="text tutor-fs-7 tutor-color-muted"></div>
+							</div>
+						</div>
 					</div>
 				</div>
 
