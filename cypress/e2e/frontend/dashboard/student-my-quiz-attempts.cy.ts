@@ -1,6 +1,6 @@
 import { frontendUrls } from "../../../config/page-urls"
 
-describe("Tutor Dashboard Assignments", () => {
+describe("Tutor Dashboard Student My Quiz Attempts", () => {
     beforeEach(() => {
         cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.MY_QUIZ_ATTEMPTS}`)
         cy.loginAsStudent()
