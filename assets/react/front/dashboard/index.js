@@ -58,12 +58,4 @@ document.addEventListener('DOMContentLoaded', function() {
 		let tableHeight = jQuery('.tutor-table-responsive .tutor-table').height()
 		jQuery('.tutor-table-responsive').css('min-height', tableHeight + 110)
 	}
-
-    jQuery('#tutor-registration-form [name="password_confirmation"]').on('input', function(){
-        let original = jQuery('[name="password"]');
-        let val = (original.val() || '').trim();
-        let matched = val && jQuery(this).val() === val;
-        
-        jQuery(this).parent().find('.tutor-validation-icon')[matched ? 'show' : 'hide']();
-    });
 });
