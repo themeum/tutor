@@ -26,12 +26,11 @@ describe("Tutor Dashboard Certificate", () => {
             cy.get(`span[data-tutor-modal-target=tutor-modal-tutor-cb-row-del-${certificateId}`).click()
             cy.get(".tutor-modal.tutor-is-active").find("button").contains("Yes, Delete This").click()
             
-            cy.wait('@ajaxRequest').then((interception) => {
-                cy.log('response', interception.response.body.success)
+            cy.wait("@ajaxRequest").then((interception) => {
                 expect(interception.response.body.success).to.equal(true);
             });
             
-            cy.get(`#tutor-cb-row-id-${certificateId}`).should('not.exist');
+            cy.get(`#tutor-cb-row-id-${certificateId}`).should("not.exist");
         })
     })
 })
