@@ -41,7 +41,6 @@ class Lesson extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_delete_lesson_by_id', array( $this, 'tutor_delete_lesson_by_id' ) );
 
 		add_filter( 'get_sample_permalink', array( $this, 'change_lesson_permalink' ), 10, 2 );
-		add_action( 'admin_init', array( $this, 'flush_rewrite_rules' ) );
 
 		/**
 		 * Add Column
@@ -375,21 +374,6 @@ class Lesson extends Tutor_Base {
 		}
 
 		return $uri;
-	}
-
-
-	/**
-	 * Flash rewrite rules
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function flush_rewrite_rules() {
-		$is_required_flush = get_option( 'required_rewrite_flush' );
-		if ( $is_required_flush ) {
-			flush_rewrite_rules();
-			delete_option( 'required_rewrite_flush' );
-		}
 	}
 
 	/**
