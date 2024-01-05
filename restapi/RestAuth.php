@@ -352,6 +352,6 @@ class RestAuth {
 				'label' => __( 'Read', 'tutor' ),
 			),
 		);
-		return apply_filters( 'tutor_rest_api_permission', $permissions );
+		return apply_filters( 'tutor_rest_api_permissions', $permissions );
 	}
 }

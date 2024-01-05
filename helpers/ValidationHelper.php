@@ -180,6 +180,8 @@ class ValidationHelper {
 	 * Considered values: array( 1, 0, 'true', 'false', true, false ), any value
 	 * except these will be not counted as boolean
 	 *
+	 * Rules: boolean
+	 *
 	 * @param mixed $value  is the variable that will be checked if it is a boolean value or not.
 	 *
 	 * @return bool A boolean value is being returned, indicating whether the input value is a valid
@@ -206,6 +208,8 @@ class ValidationHelper {
 
 	/**
 	 * The function checks if a given date string is valid according to a specified format in PHP.
+	 *
+	 * Rules: date_format:Y-m-d
 	 *
 	 * @since 2.6.0
 	 *
