@@ -140,7 +140,7 @@ $user        = get_userdata( get_current_user_id() );
 		<form id="tutor-update-permission-form" class="tutor-modal-content" autocomplete="off" method="post">
 			<div class="tutor-modal-header">
 				<div class="tutor-modal-title">
-					<?php esc_html_e( 'Edit API Key, Secret', 'tutor' ); ?>
+					<?php esc_html_e( 'Update API', 'tutor' ); ?>
 				</div>
 				<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
 					<span class="tutor-icon-times" area-hidden="true"></span>
