@@ -351,23 +351,7 @@ class RestAuth {
 				'value' => self::READ,
 				'label' => __( 'Read', 'tutor' ),
 			),
-			array(
-				'value' => self::WRITE,
-				'label' => __( 'Write', 'tutor' ),
-			),
-			array(
-				'value' => self::READ_WRITE,
-				'label' => __( 'Read/Write', 'tutor' ),
-			),
-			array(
-				'value' => self::DELETE,
-				'label' => __( 'Delete', 'tutor' ),
-			),
-			array(
-				'value' => self::ALL,
-				'label' => __( 'All', 'tutor' ),
-			),
 		);
-		return $permissions;
+		return apply_filters( 'tutor_rest_api_permission', $permissions );
 	}
 }
