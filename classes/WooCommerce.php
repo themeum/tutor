@@ -145,7 +145,7 @@ class WooCommerce extends Tutor_Base {
 	public static function hpos_enabled() {
 		$hpos = false;
 
-		if ( version_compare( WC()->version, '8.2.0', '>=' ) ) {
+		if ( tutor_utils()->has_wc() && version_compare( WC()->version, '8.2.0', '>=' ) ) {
 			$hpos = 'yes' === get_option( 'woocommerce_custom_orders_table_enabled' );
 		}
 
