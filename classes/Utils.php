@@ -2446,11 +2446,16 @@ class Utils {
 	 * @param int $order_id order id.
 	 * @param int $user_id user id.
 	 *
-	 * @return bool
+	 * @since 2.6.0
+	 *
+	 * Return enrolled ID
+	 *
+	 * @return int
 	 */
 	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0 ) {
+		$enrolled_id = 0;
 		if ( ! $course_id ) {
-			return false;
+			return $enrolled_id;
 		}
 
 		do_action( 'tutor_before_enroll', $course_id );
@@ -2504,10 +2509,10 @@ class Utils {
 				update_post_meta( $order_id, '_is_tutor_order_for_course', tutor_time() );
 				update_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
 			}
-			return true;
+			$enrolled_id = $is_enrolled;
 		}
 
-		return false;
+		return $enrolled_id;
 	}
 
 	/**
