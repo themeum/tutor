@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     
                 if (success) {
                     listTable.insertAdjacentHTML("afterbegin", `${data}`);
-                    tutor_toast(__("Success", "tutor"), __("API key & secret generated successfully"), "success");
+                    tutor_toast(__("Success", "tutor"), __("API key & secret generated successfully", 'tutor'), "success");
                 } else {
                     tutor_toast(__("Failed", "tutor"), data, "error");
                 }
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     
                 if (success) {
                     document.getElementById(formData.get("meta_id")).innerHTML = data;
-                    tutor_toast(__("Success", "tutor"), __("API key permission updated successfully"), "success");
+                    tutor_toast(__("Success", "tutor"), __("API key permission updated successfully", 'tutor'), "success");
                 } else {
                     tutor_toast(__("Failed", "tutor"), data, "error");
                 }
