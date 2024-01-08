@@ -39,7 +39,6 @@ describe("Tutor Dashboard Student Reviews", () => {
                 cy.get(".tutor-modal.tutor-is-active").find("button").contains("Yes, Delete This").click()
 
                 cy.wait('@ajaxRequest').then((interception) => {
-                    cy.log('response', interception.response.body.success)
                     expect(interception.response.body.success).to.equal(true);
                 });
             }

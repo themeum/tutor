@@ -3,11 +3,13 @@ import { frontendUrls } from "../../../config/page-urls"
 describe("Tutor Dashboard My Bundles", () => {
     beforeEach(() => {
         cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.MY_BUNDLES}`)
-        cy.loginAsAdmin() // Or Instructor
+        cy.loginAsInstructor()
         cy.url().should("include", frontendUrls.dashboard.MY_BUNDLES)
     })
 
     it ("should create a bundle course", () => {
+        cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
+
         cy.get("a.tutor-add-new-course-bundle").click()
 
         cy.getByInputName("title").type("My new bundle course")
@@ -28,6 +30,11 @@ describe("Tutor Dashboard My Bundles", () => {
         })
 
         cy.get("button[name=course_submit_btn]").click()
+
+        cy.wait("@ajaxRequest").then((interception) => {
+            expect(interception.response.body.success).to.equal(true);
+        });
+
         cy.get("body").should("contain.text", "Course bundle updated successfully!")
         cy.get("a[title=Exit]").click()
     })
@@ -48,6 +55,8 @@ describe("Tutor Dashboard My Bundles", () => {
     })
 
     it("should delete a bundle product", () => {
+        cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
+        
         cy.get("body").then(($body) => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
@@ -55,7 +64,10 @@ describe("Tutor Dashboard My Bundles", () => {
                 cy.get(".tutor-course-card button[action-tutor-dropdown=toggle]").eq(0).click()
                 cy.get(".tutor-dropdown-parent.is-open a").contains("Delete").click()
                 cy.get(".tutor-modal.tutor-is-active button").contains("Yes, Delete This").click()
-                // @TODO: Assert if item was actually deleted or not
+
+                cy.wait("@ajaxRequest").then((interception) => {
+                    expect(interception.response.body.success).to.equal(true);
+                });
             }
         })
     })
