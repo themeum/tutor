@@ -9,6 +9,7 @@
  */
 
 use Tutor\Cache\FlashMessage;
+use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -1111,5 +1112,40 @@ if ( ! function_exists( 'tutor_snackbar' ) ) {
 			</div>
 		</div>
 		<?php
+	}
+}
+
+if ( ! function_exists( 'tutor_is_rest' ) ) {
+	/**
+	 * Checks if the current request is a WP REST API request.
+	 *
+	 * @since 2.6.0
+	 *
+	 * Case #1: After WP_REST_Request initialisation
+	 * Case #2: Support "plain" permalink settings and check if `rest_route` starts with `/`
+	 * Case #3: It can happen that WP_Rewrite is not yet initialized,
+	 *          so do this (wp-settings.php)
+	 * Case #4: URL Path begins with wp-json/ (your REST prefix)
+	 *          Also supports WP installations in subfolders
+	 *
+	 * @see https://wordpress.stackexchange.com/questions/221202/does-something-like-is-rest-exist
+	 * @returns boolean
+	 */
+	function tutor_is_rest() {
+		$rest_route = Input::get( 'rest_route' );
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST || $rest_route && strpos( $rest_route, '/', 0 ) === 0 ) {
+			return true;
+		}
+
+		// (#3)
+		global $wp_rewrite;
+		if ( null === $wp_rewrite ) {
+			$wp_rewrite = new WP_Rewrite();
+		}
+
+		// (#4)
+		$rest_url    = wp_parse_url( trailingslashit( rest_url() ) );
+		$current_url = wp_parse_url( add_query_arg( array() ) );
+		return strpos( $current_url['path'] ?? '/', $rest_url['path'], 0 ) === 0;
 	}
 }

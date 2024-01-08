@@ -121,6 +121,90 @@ class Quiz {
 	}
 
 	/**
+	 * Get quiz time units options.
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return array
+	 */
+	public static function quiz_time_units() {
+		$time_units = array(
+			'seconds' => __( 'Seconds', 'tutor' ),
+			'minutes' => __( 'Minutes', 'tutor' ),
+			'hours'   => __( 'Hours', 'tutor' ),
+			'days'    => __( 'Days', 'tutor' ),
+			'weeks'   => __( 'Weeks', 'tutor' ),
+		);
+
+		return apply_filters( 'tutor_quiz_time_units', $time_units );
+	}
+
+	/**
+	 * Get quiz modes
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return array
+	 */
+	public static function quiz_modes() {
+		$modes = array(
+			array(
+				'key'         => 'default',
+				'value'       => __( 'Default', 'tutor' ),
+				'description' => __( 'Answers shown after quiz is finished', 'tutor' ),
+			),
+			array(
+				'key'         => 'reveal',
+				'value'       => __( 'Reveal Mode', 'tutor' ),
+				'description' => __( 'Show result after the attempt.', 'tutor' ),
+			),
+			array(
+				'key'         => 'retry',
+				'value'       => __( 'Retry Mode', 'tutor' ),
+				'description' => __( 'Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor' ),
+			),
+		);
+
+		return apply_filters( 'tutor_quiz_modes', $modes );
+	}
+
+	/**
+	 * Get quiz modes
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return array
+	 */
+	public static function quiz_question_layouts() {
+		$layouts = array(
+			''                          => __( 'Set question layout view', 'tutor' ),
+			'single_question'           => __( 'Single Question', 'tutor' ),
+			'question_pagination'       => __( 'Question Pagination', 'tutor' ),
+			'question_below_each_other' => __( 'Question below each other', 'tutor' ),
+		);
+
+		return apply_filters( 'tutor_quiz_layouts', $layouts );
+	}
+
+	/**
+	 * Get quiz modes
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return array
+	 */
+	public static function quiz_question_orders() {
+		$orders = array(
+            'rand'    => __( 'Random', 'tutor' ),
+            'sorting' => __( 'Sorting', 'tutor' ),
+            'asc'     => __( 'Ascending', 'tutor' ),
+            'desc'    => __( 'Descending', 'tutor' ),
+        );
+
+		return apply_filters( 'tutor_quiz_layouts', $orders );
+	}
+
+	/**
 	 * Prepare allowed HTML
 	 *
 	 * @since 1.0.0

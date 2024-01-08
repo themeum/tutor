@@ -2441,16 +2441,18 @@ class Utils {
 	 * post_parent = enrolled course id
 	 *
 	 * @since 1.0.0
+	 * @since 2.6.0 Return enrolled id
 	 *
 	 * @param int $course_id course id.
 	 * @param int $order_id order id.
 	 * @param int $user_id user id.
 	 *
-	 * @return bool
+	 * @return int enrolled id
 	 */
 	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0 ) {
+		$enrolled_id = 0;
 		if ( ! $course_id ) {
-			return false;
+			return $enrolled_id;
 		}
 
 		do_action( 'tutor_before_enroll', $course_id );
@@ -2458,8 +2460,9 @@ class Utils {
 		$title   = __( 'Course Enrolled', 'tutor' ) . ' &ndash; ' . gmdate( get_option( 'date_format' ) ) . ' @ ' . gmdate( get_option( 'time_format' ) );
 
 		if ( $course_id && $user_id ) {
-			if ( $this->is_enrolled( $course_id, $user_id ) ) {
-				return;
+			$enrolled_info = $this->is_enrolled( $course_id, $user_id );
+			if ( $enrolled_info ) {
+				return $enrolled_info->ID;
 			}
 		}
 
@@ -2514,10 +2517,11 @@ class Utils {
 				}
 			}
 
-			return true;
+			$enrolled_id = $is_enrolled;
+
 		}
 
-		return false;
+		return $enrolled_id;
 	}
 
 	/**

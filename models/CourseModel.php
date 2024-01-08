@@ -601,6 +601,9 @@ class CourseModel {
 	 * @return boolean
 	 */
 	public static function can_complete_course( $course_id, $user_id ) {
+		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+			return false;
+		}
 
 		$mode = tutor_utils()->get_option( 'course_completion_process' );
 		if ( self::MODE_FLEXIBLE === $mode ) {
