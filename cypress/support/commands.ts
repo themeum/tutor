@@ -9,7 +9,7 @@ declare namespace Cypress {
 }
 
 Cypress.Commands.add("getByInputName", (selector) => {
-  return cy.get(`input[name=${selector}]`)
+  return cy.get(`input[name="${selector}"]`)
 })
 
 Cypress.Commands.add("setTinyMceContent", (selector, content) => {

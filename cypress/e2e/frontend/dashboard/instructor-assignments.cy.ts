@@ -3,11 +3,13 @@ import { frontendUrls } from "../../../config/page-urls"
 describe("Tutor Dashboard Assignments", () => {
     beforeEach(() => {
         cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.ASSIGNMENTS}`)
-        cy.loginAsAdmin() // Or Instructor
+        cy.loginAsInstructor()
         cy.url().should("include", frontendUrls.dashboard.ASSIGNMENTS)
     })
 
     it("should evaluate all the assignments", () => {
+        cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
+
         cy.get("body").then(($body) => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
@@ -29,7 +31,10 @@ describe("Tutor Dashboard Assignments", () => {
                                     cy.get("textarea").type("The assignment displays a strong grasp of the subject, excellent organization, and effective communication, reflecting high-level critical thinking.")
                                     cy.get("button").contains("Evaluate this submission").click()
                                     
-                                    cy.wait(2000)
+                                    cy.wait("@ajaxRequest").then((interception) => {
+                                        expect(interception.response.body.success).to.equal(true);
+                                    });
+                                    
                                     cy.get("a").contains("Back").click()
                                     cy.get("a").contains("Back").click()
                                 } else {
