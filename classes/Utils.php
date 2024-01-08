@@ -2441,16 +2441,13 @@ class Utils {
 	 * post_parent = enrolled course id
 	 *
 	 * @since 1.0.0
+	 * @since 2.6.0 Return enrolled id
 	 *
 	 * @param int $course_id course id.
 	 * @param int $order_id order id.
 	 * @param int $user_id user id.
 	 *
-	 * @since 2.6.0
-	 *
-	 * Return enrolled ID
-	 *
-	 * @return int
+	 * @return int enrolled id
 	 */
 	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0 ) {
 		$enrolled_id = 0;
