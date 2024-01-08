@@ -2460,8 +2460,9 @@ class Utils {
 		$title   = __( 'Course Enrolled', 'tutor' ) . ' &ndash; ' . gmdate( get_option( 'date_format' ) ) . ' @ ' . gmdate( get_option( 'time_format' ) );
 
 		if ( $course_id && $user_id ) {
-			if ( $this->is_enrolled( $course_id, $user_id ) ) {
-				return;
+			$enrolled_info = $this->is_enrolled( $course_id, $user_id );
+			if ( $enrolled_info ) {
+				return $enrolled_info->ID;
 			}
 		}
 
