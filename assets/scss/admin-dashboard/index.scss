@@ -1,95 +1,12 @@
 @import '../../../v2-library/_src/scss/reusables.scss';
-@import './registration-notce.scss';
 @import './tutor-admin.scss';
+@import './whats-new.scss';
 @import './v2/admin-v2-markup.scss';
-@import './v2/dashborad-custom.scss';
-@import './segments/withdraw';
+@import './segments/withdraw.scss';
+@import './segments/registration-notice.scss';
 @import '../modules/qna.scss';
 @import '../modules/quiz-attempts.scss';
 @import '../front/select_dd_search';
 @import '../modules/certificate-list.scss';
 @import '../modules/quiz-icons.scss';
 
-table.tutor-table.tutor-table-with-checkbox {
-	.td-checkbox input[type='checkbox'] {
-		margin: 0;
-	}
-}
-// Hide empty text link from dashboard menu.
-#adminmenu {
-	& li a[href=tutor-setup] {
-		display: none;
-	}
-
-	.tutor-badge-new {
-		background: #E5803C;
-		color: #fff;
-		font-weight: 400;
-		border-radius: 16px;
-		padding: 1px 6px;
-		font-size: 11px;
-		display: inline-block;
-		line-height: 15px;
-	}
-}
-
-.tutor-course-bundle{
-	&-wrapper{
-		width: 68%;
-		margin:0 auto;
-		padding: 25px;
-	}
-	
-	&-content{
-		border-top-left-radius: 8px;
-		border-top-right-radius: 8px;
-		background: #fff;
-		img{
-			width: 100%;
-		}
-	}
-
-	&-footer{
-		background-color: white;
-		padding: 25px;
-		padding-top: 16px;
-		text-align: center;
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
-		
-		&-content{
-			width: 62%;
-			margin: 0 auto;
-			h2{
-				font-size: 30px;
-				color: #212327;
-				margin-bottom: 24px;
-			}
-
-			p{
-				font-size: 16px;
-			}
-
-			.tutor-course-bundle-btn{
-				display: inline-block;
-				font-size: 15px;
-				padding: 10px 30px;
-				background: #0049F8;
-				border-radius: 6px;
-				text-decoration: none;
-				color: #fff;
-				margin-bottom: 40px;
-				margin-top: 20px;
-				&:hover{
-					background: #0b51f3;
-				}
-
-				.tutor-icon-crown {
-					color: #ED9700;
-					margin-right: 5px;
-
-				}
-			}
-		}
-	}
-}

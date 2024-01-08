@@ -104,7 +104,7 @@ class Admin {
 		do_action( 'tutor_after_courses_menu' );
 
 		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'Email', 'tutor' ), __( 'Email <span class="tutor-badge-new">Hot</span>', 'tutor' ), 'manage_tutor', 'new-key-feature', array( $this, 'feature_promotion_page' ) );
+			add_submenu_page( 'tutor', __( 'Email', 'tutor' ), __( 'Email <span class="tutor-pro-badge">Hot</span>', 'tutor' ), 'manage_tutor', 'new-key-feature', array( $this, 'feature_promotion_page' ) );
 		}
 
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
