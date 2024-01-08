@@ -161,7 +161,7 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public function declare_tutor_compatibility_with_hpos() {
 		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'tutor/tutor.php', true );
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', TUTOR_FILE, true );
 		}
 	}
 
