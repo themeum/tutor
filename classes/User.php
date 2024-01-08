@@ -349,8 +349,7 @@ class User {
 	 */
 	public function show_registration_disabled() {
 		if ( self::$hide_registration_notice ||
-				! tutor_utils()->is_tutor_dashboard() ||
-				get_option( 'users_can_register' ) ||
+				( '0' !== get_option( 'users_can_register' ) ) ||
 				isset( $_COOKIE['tutor_notice_hide_registration'] ) ||
 				! current_user_can( 'manage_options' )
 			) {
