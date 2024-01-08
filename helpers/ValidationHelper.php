@@ -75,7 +75,7 @@ class ValidationHelper {
 							$strings = explode( ',', $nested_rules[1] );
 							if ( ! self::in_array( $data[ $key ], $strings ) ) {
 								$validation_pass     = false;
-								$validation_errors[] = $key . __( ' string is not valid', 'tutor' );
+								$validation_errors[ $key ] = $key . __( ' string is not valid', 'tutor' );
 							}
 							break;
 						case 'boolean':
