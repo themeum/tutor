@@ -10,14 +10,3 @@
 @import '../modules/certificate-list.scss';
 @import '../modules/quiz-icons.scss';
 
-table.tutor-table.tutor-table-with-checkbox {
-	.td-checkbox input[type='checkbox'] {
-		margin: 0;
-	}
-}
-// Hide empty text link from dashboard menu.
-#adminmenu {
-	& li a[href=tutor-setup] {
-		display: none;
-	}
-}
