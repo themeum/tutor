@@ -601,7 +601,12 @@ class CourseModel {
 	 * @return boolean
 	 */
 	public static function can_complete_course( $course_id, $user_id ) {
-		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+		$is_enrolled = tutor_utils()->is_enrolled( $course_id, $user_id );
+
+		$has_course_access = tutor_utils()->get_option( 'course_content_access_for_ia' );
+		$can_edit_post     = current_user_can( 'edit_posts' );
+
+		if ( ! $is_enrolled && ( ! $has_course_access && ! $can_edit_post ) ) {
 			return false;
 		}
 
