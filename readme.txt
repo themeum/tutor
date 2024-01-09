@@ -4,8 +4,8 @@ Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.4
-Requires PHP: 7.1
-Stable tag: 2.5.0
+Requires PHP: 7.4
+Stable tag: 2.6.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -315,6 +315,28 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.6.0 - January 10, 2024
+
+New: REST API added (Pro)
+New: Automatic permalink update when required
+New: Quiz base permalink update support added
+New: Assignment base permalink update support added (Pro)
+Update: PHP 8.1 and 8.2 compatibility added
+Update: Latest WooCommerce compatibility added
+Update: Placeholder support on email heading (Pro)
+Update: Restore default on the email trigger's data (Pro)
+Fix: Assignment file upload option disappearing even the max file upload is set to zero (Pro)
+Fix: JS side translations issues (Pro)
+Fix: Email logo blurry and logo not appear when hotlink protection enabled (Pro)
+Fix: Category filters not working on the backend course bundle list page (Pro)
+Fix: Password mismatching warning is not showing on registration pages
+Fix: EDD Pro not showing on the Monetization list
+Fix: Blank assignment submission when page load required more time (Pro)
+Fix: Design conflict with the block themes on the course content area
+Fix: Email not triggering when updating course status from the backend course list page (Pro)
+Fix: All the fields are required messages appear when time is not English while creating a Zoom meeting (Pro)
+Fix: Registration related warning not showing if Caching plugin or CDN enabled
 
 = 2.5.0 - December 07, 2023
 
