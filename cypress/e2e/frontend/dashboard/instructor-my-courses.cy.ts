@@ -35,6 +35,17 @@ describe("Tutor Dashboard My Courses", () => {
         cy.url().should("include", "my-courses")
     })
 
+    it("should duplicate a course", () => {
+        let draftAmount = '';
+        cy.get("a.tutor-nav-link").contains("Draft").invoke('text').then((text) => {
+            draftAmount = text;
+        })
+
+        cy.get(".tutor-card-footer button[action-tutor-dropdown=toggle]").eq(0).click()
+        cy.get(".tutor-dropdown-parent.is-open a").contains("Duplicate").click()
+        cy.get("a.tutor-nav-link").contains("Draft").invoke('text').should("not.equal", draftAmount)
+    })
+
     it("should delete a course", () => {
         cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
         
