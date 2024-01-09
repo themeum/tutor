@@ -25,11 +25,11 @@ if ( ! $product_id || ! $product ) {
  *
  * @since 1.5.5
  */
-$isLoggedIn               = is_user_logged_in();
+$is_logged_in             = is_user_logged_in();
 $enable_guest_course_cart = tutor_utils()->get_option( 'enable_guest_course_cart' );
 $required_loggedin_class  = '';
 $ajax_add_to_cart_class   = '';
-if ( ! $isLoggedIn && ! $enable_guest_course_cart ) {
+if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 } else {
 	$ajax_add_to_cart_class = $product->supports( 'ajax_add_to_cart' ) ? 'ajax_add_to_cart' : '';
@@ -42,7 +42,7 @@ $defaults = array(
 		' ',
 		array_filter(
 			array(
-				'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ',
+				'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block tutor-nowrap-ellipsis ',
 				'product_type_' . $product->get_type(),
 				$product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button ' : '',
 				$ajax_add_to_cart_class,
