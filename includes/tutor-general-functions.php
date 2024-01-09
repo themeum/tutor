@@ -10,6 +10,7 @@
 
 use Tutor\Cache\FlashMessage;
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -1175,5 +1176,78 @@ if ( ! function_exists( 'tutor_getallheaders' ) ) {
 		}
 
 		return $headers;
+	}
+}
+
+if ( ! function_exists( 'tutor_conditional_buttons' ) ) {
+	/**
+	 * Tutor conditional buttons for the enrollment box
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return array
+	 */
+	function tutor_enrollment_buttons() {
+		$conditional_buttons = (object) array(
+			'show_enroll_btn'              => false,
+			'show_add_to_cart_btn'         => false,
+			'show_start_learning_btn'      => false,
+			'show_continue_learning_btn'   => false,
+			'show_complete_course_btn'     => false,
+			'show_retake_course_btn'       => false,
+			'show_certificate_view_btn'    => false,
+			'show_course_fully_booked_btn' => false,
+		);
+		
+		$course_id = get_the_ID();
+		$user_id   = get_current_user_id();
+
+		$has_course_access = tutor_utils()->get_option( 'course_content_access_for_ia' );
+		$can_edit_post     = current_user_can( 'edit_posts' );
+
+		$is_public_course = get_post_meta( $course_id, '_tutor_is_public_course', true );
+
+		$is_enabled_retake = tutor_utils()->get_option( 'course_retake_feature' );
+
+		$is_enrolled = tutor_utils()->is_enrolled( $course_id, $user_id );
+
+		if ( 'yes' === $is_public_course ) {
+			$conditional_buttons->show_start_learning_btn = true;
+		} else {
+			// Admin & instructor can manage posts.
+			if ( $is_enrolled || ( $has_course_access && $can_edit_post ) ) {
+				$can_complete_course = CourseModel::can_complete_course( $course_id, $user_id );
+				$is_completed_course = tutor_utils()->is_completed_course( $course_id, $user_id );
+
+				$conditional_buttons->show_start_learning_btn = true;
+				if ( $can_complete_course ) {
+					$conditional_buttons->show_complete_course_btn = true;
+				}
+
+				if ( $is_completed_course ) {
+					$conditional_buttons->show_certificate_view_btn = true;
+				}
+
+				if ( $is_enabled_retake && $is_completed_course ) {
+					$conditional_buttons->show_retake_course_btn = true;
+				}
+			} else {
+				$is_paid_course = tutor_utils()->is_course_purchasable( $course_id );
+				if ( $is_paid_course ) {
+					$conditional_buttons->show_add_to_cart_btn = true;
+				} else {
+					$conditional_buttons->show_enroll_btn = true;
+				}
+			}
+		}
+
+		if ( ! $is_public_course && ! ( $is_enrolled || ( $can_edit_post && $has_course_access ) ) ) {
+			$is_fully_booked = tutor_utils()->is_course_fully_booked( $course_id );
+			if ( $is_fully_booked ) {
+				$conditional_buttons->show_course_fully_booked_btn = true;
+			}
+		}
+
+		return apply_filters( 'tutor_enrollment_buttons', $conditional_buttons );
 	}
 }
