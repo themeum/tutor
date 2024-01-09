@@ -1149,3 +1149,31 @@ if ( ! function_exists( 'tutor_is_rest' ) ) {
 		return strpos( $current_url['path'] ?? '/', $rest_url['path'], 0 ) === 0;
 	}
 }
+
+if ( ! function_exists( 'tutor_getallheaders' ) ) {
+	/**
+	 * Wrapper of PHP getallheaders with a fallback if getallheaders not available
+	 *
+	 * @since 2.6.0
+	 *
+	 * @see https://www.php.net/manual/en/function.getallheaders.php
+	 *
+	 * @return array of headers
+	 */
+	function tutor_getallheaders() {
+		$headers = array();
+		if ( function_exists( 'getallheaders' ) ) {
+			$headers = getallheaders();
+		}
+
+		if ( ! $headers ) {
+			foreach ( $_SERVER as $name => $value ) {
+				if ( substr( $name, 0, 5 ) == 'HTTP_' ) {
+					$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
+				}
+			}
+		}
+
+		return $headers;
+	}
+}
