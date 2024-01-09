@@ -318,25 +318,24 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 = 2.6.0 - January 10, 2024
 
-New: REST API added (Pro)
-New: Automatic permalink update when required
-New: Quiz base permalink update support added
-New: Assignment base permalink update support added (Pro)
-Update: PHP 8.1 and 8.2 compatibility added
-Update: Latest WooCommerce compatibility added
-Update: Placeholder support on email heading (Pro)
-Update: Restore default on the email trigger's data (Pro)
-Fix: Assignment file upload option disappearing even the max file upload is set to zero (Pro)
-Fix: JS side translations issues (Pro)
-Fix: Email logo blurry and logo not appear when hotlink protection enabled (Pro)
-Fix: Category filters not working on the backend course bundle list page (Pro)
-Fix: Password mismatching warning is not showing on registration pages
-Fix: EDD Pro not showing on the Monetization list
-Fix: Blank assignment submission when page load required more time (Pro)
-Fix: Design conflict with the block themes on the course content area
-Fix: Email not triggering when updating course status from the backend course list page (Pro)
-Fix: All the fields are required messages appear when time is not English while creating a Zoom meeting (Pro)
-Fix: Registration related warning not showing if Caching plugin or CDN enabled
+New: Added Write and Delete permissions in REST API (Pro)
+New: Automatic permalink updates when required
+New: Support for quiz base permalink updates
+New: Support for assignment base permalink updates (Pro)
+New: Added placeholder support on email heading (Pro)
+Update: Added PHP 8.1 and 8.2 compatibility
+Update: Updated compatibility with the latest WooCommerce database update
+Update: The "Restore Default" option for the email trigger's data (Pro)
+Fix: Resolved assignment file upload option disappearance when the max file upload option is set to zero (Pro)
+Fix: Resolved issue with JS files translation not working properly (Pro)
+Fix: Fixed email logo blurriness and logo not appear on email when hotlink protection is enabled (Pro)
+Fix: Resolved the category filters not working on the backend course bundle page (Pro)
+Fix: Resolved password strength not showing on registration pages
+Fix: Fixed Easy Digital Downloads (EDD) Pro not appearing on the Monetization dropdown menu
+Fix: Fixed the issues with blank assignment submissions caused by delayed page loading (Pro)
+Fix: Resolved design conflict with block themes in the course content area
+Fix: Fixed email not triggering when updating course status from the backend course list page (Pro)
+Fix: "All fields required" messages when creating a Zoom meeting with non-English time settings (Pro)
 
 = 2.5.0 - December 07, 2023
 
