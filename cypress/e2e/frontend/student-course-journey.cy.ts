@@ -4,6 +4,8 @@ describe('Tutor Student Course Journey', () => {
   })
 
   it('should be able to enroll in a course and complete assignments', () => {
+    cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest")
+
     // Click on enroll course button
     cy.get(".tutor-enroll-course-button").click()
 
@@ -17,14 +19,23 @@ describe('Tutor Student Course Journey', () => {
       // Submit review if already completed
       if ($body.text().includes("How would you rate this course?")) {
         cy.get(".tutor-modal-content .tutor-icon-star-line").eq(4).click()
-        cy.get(".tutor-modal-content textarea[name=review]").type("Just completed [Course Name] on [Platform Name], and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze. The interactive quizzes and discussions keep you engaged, and the user-friendly interface enhances the overall experience. The flexibility to learn at your own pace is a game-changer for busy professionals. Quick responses from the support team and valuable supplementary materials make this course a standout. Highly recommend for a quality online learning journey!")
+        cy.get(".tutor-modal-content textarea[name=review]").type("Just completed a course on TutorLMS, and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze. The interactive quizzes and discussions keep you engaged, and the user-friendly interface enhances the overall experience. The flexibility to learn at your own pace is a game-changer for busy professionals. Quick responses from the support team and valuable supplementary materials make this course a standout. Highly recommend for a quality online learning journey!")
         cy.get(".tutor-modal-content button.tutor_submit_review_btn").click()
+
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.response.body.success).to.equal(true);
+        });
+        cy.wait(5000)
       }
 
       // Start the course
       if ($body.text().includes("Retake This Course")) {
         cy.get("button").contains("Retake This Course").click()
         cy.get("button").contains("Reset Data").click()
+
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.response.body.success).to.equal(true);
+        });
       } else if ($body.text().includes("Continue Learning")) {
         cy.get("a").contains("Continue Learning").click()
       } else if ($body.text().includes("Start Learning")) {
@@ -42,6 +53,7 @@ describe('Tutor Student Course Journey', () => {
           cy.get("body").then(($body) => {
             if ($body.text().includes("Mark as Complete")) {
               cy.get("button").contains("Mark as Complete").click()
+              cy.get("body").should("not.contain", "Mark as Complete")
             }
           })
 
@@ -56,16 +68,22 @@ describe('Tutor Student Course Journey', () => {
 
         if ($url.includes("/assignments")) {
           cy.get("body").then(($body) => {
-            if ($body.text().includes("Start Assignment Submit")) {
-              if ($body.text().includes("You have missed the submission deadline. Please contact the instructor for more information.")) {
-                cy.get("a").contains("Skip To Next").click()
-              } else {
-                cy.get("#tutor_assignment_start_btn").click()
-                cy.url().should('include', "assignments")
+            if ($body.text().includes("You have missed the submission deadline. Please contact the instructor for more information.")) {
+              cy.get("a").contains("Skip To Next").click()
+            }
+          })
 
-                cy.setTinyMceContent(".tutor-assignment-text-area", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sit amet purus lacinia diam pretium interdum. Nullam elementum tincidunt ipsum vel fringilla.")
-                cy.get("#tutor_assignment_submit_btn").click()
-              }
+          cy.get("body").then(($body) => {
+            if ($body.text().includes("Start Assignment Submit")) {
+              cy.get("#tutor_assignment_start_btn").click()
+              cy.wait("@ajaxRequest").then((interception) => {
+                expect(interception.response.statusCode).to.equal(200);
+              });
+              cy.url().should('include', "assignments")
+
+              cy.setTinyMceContent(".tutor-assignment-text-area", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sit amet purus lacinia diam pretium interdum. Nullam elementum tincidunt ipsum vel fringilla.")
+              cy.get("#tutor_assignment_submit_btn").click()
+              cy.get("body").should("contain", "Your Assignment")
             }
           })
 
@@ -73,6 +91,7 @@ describe('Tutor Student Course Journey', () => {
             if ($body.text().includes('Submit Assignment')) {
               cy.setTinyMceContent(".tutor-assignment-text-area", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sit amet purus lacinia diam pretium interdum. Nullam elementum tincidunt ipsum vel fringilla.")
               cy.get("#tutor_assignment_submit_btn").click()
+              cy.get("body").should("contain", "Your Assignment")
             }
           })
 
@@ -94,12 +113,12 @@ describe('Tutor Student Course Journey', () => {
             if ($body.text().includes("Start Quiz") || $body.text().includes("Submit & Next") || $body.text().includes("Submit Quiz")) {
               cy.get(".quiz-attempt-single-question").each(($question, $index) => {
                 if ($question.find("textarea").length) {
-                  cy.wrap($question).find("textarea").type("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sit amet purus lacinia diam pretium interdum. Nullam elementum tincidunt ipsum vel fringilla.")
+                  cy.wrap($question).find("textarea").type("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.")
                 }
 
                 if ($question.find("input[type=text]").length) {
                   cy.wrap($question).find("input[type=text]").each(($input) => {
-                    cy.wrap($input).type("Example answer.")
+                    cy.wrap($input).type("Example question answer.")
                   })
                 }
 
@@ -129,7 +148,7 @@ describe('Tutor Student Course Journey', () => {
               if (isLastItem) {
                 cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click()
               } else {
-                cy.get(".tutor-course-topic-item").eq(index + 1).children("a").click({force: true})
+                cy.get(".tutor-course-topic-item").eq(index).children("a").click({force: true})
               }
             }
           })
@@ -143,7 +162,7 @@ describe('Tutor Student Course Journey', () => {
               if (isLastItem) {
                 cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click()
               } else {
-                cy.get(".tutor-course-topic-item").eq(index + 1).children("a").click({force: true})
+                cy.get(".tutor-course-topic-item").eq(index).children("a").click({force: true})
               }
             }
           })
@@ -161,8 +180,22 @@ describe('Tutor Student Course Journey', () => {
     cy.get("body").then(($body) => {
       if ($body.text().includes("How would you rate this course?")) {
         cy.get(".tutor-modal-content .tutor-icon-star-line").eq(4).click()
-        cy.get(".tutor-modal-content textarea[name=review]").type("Just completed [Course Name] on [Platform Name], and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze. The interactive quizzes and discussions keep you engaged, and the user-friendly interface enhances the overall experience. The flexibility to learn at your own pace is a game-changer for busy professionals.")
+        cy.get(".tutor-modal-content textarea[name=review]").type("Just completed a course on TutorLMS, and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze. The interactive quizzes and discussions keep you engaged, and the user-friendly interface enhances the overall experience. The flexibility to learn at your own pace is a game-changer for busy professionals.")
         cy.get(".tutor-modal-content button.tutor_submit_review_btn").click()
+
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.response.body.success).to.equal(true);
+        });
+        cy.wait(5000)
+      }
+    })
+
+    // View certificate
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("View Certificate")) {
+        cy.get("a").contains("View Certificate").click()
+        cy.url().should("include", "tutor-certificate")
+        cy.wait(5000)
       }
     })
   })
