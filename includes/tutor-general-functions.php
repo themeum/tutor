@@ -1179,15 +1179,18 @@ if ( ! function_exists( 'tutor_getallheaders' ) ) {
 	}
 }
 
-if ( ! function_exists( 'tutor_conditional_buttons' ) ) {
+if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 	/**
 	 * Tutor conditional buttons for the enrollment box
 	 *
 	 * @since 2.6.0
 	 *
+	 * @param int $course_id course id.
+	 * @param int $user_id user id.
+	 *
 	 * @return object
 	 */
-	function tutor_enrollment_buttons() {
+	function tutor_entry_box_buttons( int $course_id = 0, int $user_id = 0 ) {
 		$conditional_buttons = (object) array(
 			'show_enroll_btn'              => false,
 			'show_add_to_cart_btn'         => false,
@@ -1198,12 +1201,11 @@ if ( ! function_exists( 'tutor_conditional_buttons' ) ) {
 			'show_certificate_view_btn'    => false,
 			'show_course_fully_booked_btn' => false,
 		);
-		
-		$course_id = get_the_ID();
-		$user_id   = get_current_user_id();
 
-		$has_course_access = tutor_utils()->get_option( 'course_content_access_for_ia' );
-		$can_edit_post     = current_user_can( 'edit_posts' );
+		$course_id = tutor_utils()->get_post_id( $course_id );
+		$user_id   = tutor_utils()->get_user_id( $user_id );
+
+		$has_course_access = tutor_utils()->has_user_course_content_access( $user_id, $course_id );
 
 		$is_public_course = get_post_meta( $course_id, '_tutor_is_public_course', true );
 
@@ -1215,7 +1217,7 @@ if ( ! function_exists( 'tutor_conditional_buttons' ) ) {
 			$conditional_buttons->show_start_learning_btn = true;
 		} else {
 			// Admin & instructor can manage posts.
-			if ( $is_enrolled || ( $has_course_access && $can_edit_post ) ) {
+			if ( $is_enrolled || $has_course_access ) {
 				$can_complete_course = CourseModel::can_complete_course( $course_id, $user_id );
 				$is_completed_course = tutor_utils()->is_completed_course( $course_id, $user_id );
 
@@ -1241,7 +1243,7 @@ if ( ! function_exists( 'tutor_conditional_buttons' ) ) {
 			}
 		}
 
-		if ( ! $is_public_course && ! ( $is_enrolled || ( $can_edit_post && $has_course_access ) ) ) {
+		if ( ! $is_public_course && ! ( $is_enrolled || $has_course_access ) ) {
 			$is_fully_booked = tutor_utils()->is_course_fully_booked( $course_id );
 			if ( $is_fully_booked ) {
 				$conditional_buttons->show_course_fully_booked_btn = true;
