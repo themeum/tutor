@@ -13,24 +13,24 @@ describe("Tutor Admin Dashboard Journey", () => {
         cy.url().should("include", frontendUrls.dashboard.DASHBOARD)
 
         // Visit dashboard pages 
-        cy.get("a.tutor-dashboard-menu-item-link:not(.is-active)").each((item) => {
-            cy.wrap(item).invoke('attr', 'href').then((link) => {
+        cy.get("a.tutor-dashboard-menu-item-link:not(.is-active)").each(($item) => {
+            cy.wrap($item).invoke('attr', 'href').then((link) => {
                 cy.visit(link)
                 if (!link.endsWith('logout')) {
                     cy.url().should('eq', `${link}${link.endsWith('/') ? '' : '/'}`)
+                    cy.get(`a[href="${link}"]`).parent().should("have.class", "active")
                 }
-                cy.wait(500)
-                cy.window().scrollTo('bottom', { duration: 500, easing: 'linear' })
+                cy.scrollTo("bottom", { ensureScrollable: false, duration: 500, easing: "swing" })
 
                 // Visit nested pages if available 
                 cy.get('body').then(($body) => {
                     if ($body.find(".tutor-nav").length) {
-                        cy.get("a.tutor-nav-link:not(.is-active):not(.tutor-nav-more-item)").each((item) => {
-                            cy.wrap(item).invoke('attr', 'href').then((link) => {
+                        cy.get("a.tutor-nav-link:not(.is-active):not(.tutor-nav-more-item)").each(($item) => {
+                            cy.wrap($item).invoke('attr', 'href').then((link) => {
                                 cy.visit(link)
                                 cy.url().should('eq', `${link}${link.endsWith('/') ? '' : '/'}`)
-                                cy.wait(500)
-                                cy.window().scrollTo('bottom', { duration: 500, easing: 'linear' })
+                                cy.get(`a[href="${link}"]`).should("have.class", "is-active")
+                                cy.scrollTo("bottom", { ensureScrollable: false, duration: 500, easing: "swing" })
                             })
                         })
                     }
