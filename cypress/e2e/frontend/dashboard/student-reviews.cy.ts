@@ -21,7 +21,6 @@ describe("Tutor Dashboard Student Reviews", () => {
                 cy.get(".tutor-modal.tutor-is-active").find(".tutor_submit_review_btn").click()
 
                 cy.wait('@ajaxRequest').then((interception) => {
-                    cy.log('response', interception.response.body.success)
                     expect(interception.response.body.success).to.equal(true);
                 });
             }

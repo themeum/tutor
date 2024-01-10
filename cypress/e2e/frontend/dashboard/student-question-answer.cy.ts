@@ -19,7 +19,6 @@ describe("Tutor Dashboard Student Question and Answers", () => {
                 cy.get("button").contains("Reply").click()
 
                 cy.wait('@ajaxRequest').then((interception) => {
-                    cy.log('response', interception.response.body.success)
                     expect(interception.response.body.success).to.equal(true);
                 });
 
@@ -39,7 +38,6 @@ describe("Tutor Dashboard Student Question and Answers", () => {
                 cy.get(".tutor-dropdown-parent.is-open .tutor-dropdown-item").eq(0).click()
                 
                 cy.wait('@ajaxRequest').then((interception) => {
-                    cy.log('response', interception.response.body.success)
                     expect(interception.response.body.success).to.equal(true);
                 });
             }
@@ -58,7 +56,6 @@ describe("Tutor Dashboard Student Question and Answers", () => {
                 cy.get(".tutor-modal.tutor-is-active").find("button").contains("Yes, Delete This").click()
                 
                 cy.wait('@ajaxRequest').then((interception) => {
-                    cy.log('response', interception.response.body.success)
                     expect(interception.response.body.success).to.equal(true);
                 });
             }
