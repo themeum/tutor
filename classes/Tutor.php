@@ -426,6 +426,13 @@ final class Tutor {
 	private $rest_auth;
 
 	/**
+	 * Permalink
+	 *
+	 * @var Permalink
+	 */
+	private $permalink;
+
+	/**
 	 * Run the TUTOR
 	 *
 	 * @since 1.2.0
@@ -516,6 +523,7 @@ final class Tutor {
 		$this->setup                 = new Tutor_Setup();
 		$this->private_course_access = new Private_Course_Access();
 		$this->course_filter         = new Course_Filter();
+		$this->permalink             = new Permalink();
 
 		// Integrations.
 		$this->woocommerce = new WooCommerce();
@@ -654,7 +662,7 @@ final class Tutor {
 			update_option( 'tutor_option', $options );
 
 			// Rewrite Flush.
-			update_option( 'required_rewrite_flush', tutor_time() );
+			Permalink::set_permalink_flag();
 			self::manage_tutor_roles_and_permissions();
 
 			// Save initial Page.
@@ -678,7 +686,7 @@ final class Tutor {
 			// Update the tutor version.
 			update_option( 'tutor_version', '1.2.0' );
 			// Rewrite Flush.
-			update_option( 'required_rewrite_flush', tutor_time() );
+			Permalink::set_permalink_flag();
 		}
 
 		/**
@@ -691,7 +699,7 @@ final class Tutor {
 				$wpdb->update( $wpdb->posts, array( 'post_type' => tutor()->course_post_type ), array( 'post_type' => 'course' ) );
 				update_option( 'is_course_post_type_updated', true );
 				update_option( 'tutor_version', '1.3.1' );
-				flush_rewrite_rules();
+				Permalink::set_permalink_flag();
 			}
 		}
 
