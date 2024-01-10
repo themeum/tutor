@@ -99,7 +99,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 													?>
 												</div>
 												<div class="tutor-fs-7 tutor-color-secondary">
-													<span class="tutor-fw-medium"><?php esc_html_e( 'Course' ); ?>:</span>
+													<span class="tutor-fw-medium"><?php esc_html_e( 'Course', 'tutor' ); ?>:</span>
 													<span><?php echo esc_html( $qna->post_title ); ?></span>
 												</div>
 											</div>
