@@ -1185,7 +1185,7 @@ if ( ! function_exists( 'tutor_conditional_buttons' ) ) {
 	 *
 	 * @since 2.6.0
 	 *
-	 * @return array
+	 * @return object
 	 */
 	function tutor_enrollment_buttons() {
 		$conditional_buttons = (object) array(
