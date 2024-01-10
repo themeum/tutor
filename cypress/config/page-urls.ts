@@ -11,7 +11,7 @@ export const frontendUrls = {
         MY_QUIZ_ATTEMPTS: '/dashboard/my-quiz-attempts/',
         ORDER_HISTORY: '/dashboard/purchase_history/',
         QUESTION_AND_ANSWER: '/dashboard/question-answer/',
-        CALENDER: '/dashboard/question-answer/',
+        CALENDER: '/dashboard/calendar/',
         MY_COURSES: '/dashboard/my-courses/',
         MY_BUNDLES: '/dashboard/my-bundles/',
         ANNOUNCEMENTS: '/dashboard/announcements/',
