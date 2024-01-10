@@ -477,6 +477,9 @@ class Ajax {
 					do_action( "tutor_addon_after_disable_{$addon_field_name}" );
 				}
 				do_action( 'tutor_addon_after_enable_disable' );
+			} else {
+				$addons_config[ $addon_field_name ]['is_enable'] = $after_status;
+				update_option( 'tutor_addons_config', $addons_config );
 			}
 		}
 
