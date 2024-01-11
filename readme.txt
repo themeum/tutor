@@ -316,7 +316,7 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 == Changelog ==
 
-= 2.6.0 - January 10, 2024
+= 2.6.0 - January 11, 2024
 
 New: Added Write and Delete permissions in REST API (Pro)
 New: Automatic permalink updates when required
