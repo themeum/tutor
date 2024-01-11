@@ -30,9 +30,10 @@ Cypress.Commands.add("setTinyMceContent", (selector, content) => {
 })
 
 Cypress.Commands.add("loginAsAdmin", () => {
+  cy.wait(500)
   cy.getByInputName("log").type(Cypress.env("admin_username"))
   cy.getByInputName("pwd").type(Cypress.env("admin_password"))
-  cy.get("#tutor-login-form button").contains("Sign In").click()
+  cy.get("form#loginform").submit()
 })
 
 Cypress.Commands.add("loginAsInstructor", () => {
