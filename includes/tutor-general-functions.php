@@ -1222,9 +1222,11 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 				$is_completed_course = tutor_utils()->is_completed_course( $course_id, $user_id );
 				$course_progress     = (int) tutor_utils()->get_course_completed_percent( $course_id, $user_id );
 
-				if ( $course_progress > 0 ) {
+				if ( $course_progress > 0 || $course_progress < 100) {
 					$conditional_buttons->show_continue_learning_btn = true;
-				} else {
+				}
+
+				if ( $course_progress === 0 ) {
 					$conditional_buttons->show_start_learning_btn = true;
 				}
 				
@@ -1259,8 +1261,3 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 		return apply_filters( 'tutor_enrollment_buttons', $conditional_buttons );
 	}
 }
-
-
-add_action( 'template_redirect' , function(){
-	tutor_entry_box_buttons();
-});
