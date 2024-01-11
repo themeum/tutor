@@ -28,5 +28,6 @@ export const frontendUrls = {
 }
 
 export const backendUrls = {
-
+    LOGIN: 'wp-login.php',
+    COURSE_BUNDLES: 'wp-admin/admin.php?page=course-bundle'
 }
