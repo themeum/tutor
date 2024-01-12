@@ -29,5 +29,7 @@ export const frontendUrls = {
 
 export const backendUrls = {
     LOGIN: 'wp-login.php',
-    COURSE_BUNDLES: 'wp-admin/admin.php?page=course-bundle'
+    COURSE_BUNDLES: 'wp-admin/admin.php?page=course-bundle',
+    CATEGORIES: 'wp-admin/edit-tags.php?taxonomy=course-category&post_type=courses',
+    TAGS: 'wp-admin/edit-tags.php?taxonomy=course-tag&post_type=courses',
 }
