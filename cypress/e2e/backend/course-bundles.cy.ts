@@ -1,6 +1,6 @@
 import { backendUrls } from "../../config/page-urls"
 
-describe("Tutor Dashboard My Bundles", () => {
+describe("Tutor Admin Course Bundles", () => {
     beforeEach(() => {
         cy.visit(`${Cypress.env("base_url")}/${backendUrls.COURSE_BUNDLES}`)
         cy.loginAsAdmin()
