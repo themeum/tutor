@@ -512,7 +512,7 @@ class Utils {
 	 * @return bool
 	 */
 	public function has_edd() {
-		return $this->is_plugin_active( 'easy-digital-downloads/easy-digital-downloads.php' );
+		return class_exists( 'Easy_Digital_Downloads' );
 	}
 
 	/**
@@ -2441,25 +2441,28 @@ class Utils {
 	 * post_parent = enrolled course id
 	 *
 	 * @since 1.0.0
+	 * @since 2.6.0 Return enrolled id
 	 *
 	 * @param int $course_id course id.
 	 * @param int $order_id order id.
 	 * @param int $user_id user id.
 	 *
-	 * @return bool
+	 * @return int enrolled id
 	 */
 	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0 ) {
+		$enrolled_id = 0;
 		if ( ! $course_id ) {
-			return false;
+			return $enrolled_id;
 		}
 
 		do_action( 'tutor_before_enroll', $course_id );
 		$user_id = $this->get_user_id( $user_id );
-		$title   = __( 'Course Enrolled', 'tutor' ) . ' &ndash; ' . date( get_option( 'date_format' ) ) . ' @ ' . date( get_option( 'time_format' ) );
+		$title   = __( 'Course Enrolled', 'tutor' ) . ' &ndash; ' . gmdate( get_option( 'date_format' ) ) . ' @ ' . gmdate( get_option( 'time_format' ) );
 
 		if ( $course_id && $user_id ) {
-			if ( $this->is_enrolled( $course_id, $user_id ) ) {
-				return;
+			$enrolled_info = $this->is_enrolled( $course_id, $user_id );
+			if ( $enrolled_info ) {
+				return $enrolled_info->ID;
 			}
 		}
 
@@ -2501,13 +2504,24 @@ class Utils {
 				$product_id = $this->get_course_product_id( $course_id );
 				update_post_meta( $is_enrolled, '_tutor_enrolled_by_order_id', $order_id );
 				update_post_meta( $is_enrolled, '_tutor_enrolled_by_product_id', $product_id );
-				update_post_meta( $order_id, '_is_tutor_order_for_course', tutor_time() );
-				update_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
+
+				$monetize_by = $this->get_option( 'monetize_by' );
+				if ( 'wc' === $monetize_by ) {
+					$order = wc_get_order( $order_id );
+					$order->update_meta_data( '_is_tutor_order_for_course', tutor_time() );
+					$order->update_meta_data( '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
+					$order->save();
+				} else {
+					update_post_meta( $order_id, '_is_tutor_order_for_course', tutor_time() );
+					update_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id, $is_enrolled );
+				}
 			}
-			return true;
+
+			$enrolled_id = $is_enrolled;
+
 		}
 
-		return false;
+		return $enrolled_id;
 	}
 
 	/**
@@ -2566,8 +2580,18 @@ class Utils {
 				$order_id = get_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id', true );
 				if ( $order_id ) {
 					delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id' );
-					delete_post_meta( $order_id, '_is_tutor_order_for_course' );
-					delete_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id );
+
+					$monetize_by = $this->get_option( 'monetize_by' );
+					if ( 'wc' === $monetize_by ) {
+						// Delete WC order meta.
+						$order = wc_get_order( $order_id );
+						$order->delete_meta_data( '_is_tutor_order_for_course' );
+						$order->delete_meta_data( '_tutor_order_for_course_id_' . $course_id );
+						$order->save();
+					} else {
+						delete_post_meta( $order_id, '_is_tutor_order_for_course' );
+						delete_post_meta( $order_id, '_tutor_order_for_course_id_' . $course_id );
+					}
 				}
 
 				/**
@@ -2642,17 +2666,30 @@ class Utils {
 	public function get_course_enrolled_ids_by_order_id( $order_id ) {
 		global $wpdb;
 
-		// Getting all of courses ids within this order.
-		$courses_ids = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-			FROM 	{$wpdb->postmeta}
-			WHERE	post_id = %d
-					AND meta_key LIKE '_tutor_order_for_course_id_%'
-			",
-				$order_id
-			)
-		);
+		if ( 'wc' === $this->get_option( 'monetize_by' ) && WooCommerce::hpos_enabled() ) {
+			// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+			$courses_ids = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT *
+					FROM 	{$wpdb->prefix}wc_orders_meta
+					WHERE	order_id = %d
+							AND meta_key LIKE '_tutor_order_for_course_id_%'",
+					$order_id
+				)
+			);
+		} else {
+			$courses_ids = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT *
+					FROM 	{$wpdb->postmeta}
+					WHERE	post_id = %d
+							AND meta_key LIKE '_tutor_order_for_course_id_%'
+				",
+					$order_id
+				)
+			);
+		}
+		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
 
 		if ( is_array( $courses_ids ) && count( $courses_ids ) ) {
 			$course_enrolled_by_order = array();
@@ -2661,7 +2698,7 @@ class Utils {
 				$course_enrolled_by_order[] = array(
 					'course_id'   => $course_id,
 					'enrolled_id' => $courses_id->meta_value,
-					'order_id'    => $courses_id->post_id,
+					'order_id'    => $courses_id->post_id ?? $courses_id->order_id,
 				);
 			}
 			return $course_enrolled_by_order;
@@ -2797,7 +2834,13 @@ class Utils {
 	 * @return mixed
 	 */
 	public function is_tutor_order( $order_id ) {
-		return get_post_meta( $order_id, '_is_tutor_order_for_course', true );
+		$monetize_by = $this->get_option( 'monetize_by' );
+		if ( 'wc' === $monetize_by ) {
+			$order = wc_get_order( $order_id );
+			return $order->get_meta( '_is_tutor_order_for_course', true );
+		} else {
+			return get_post_meta( $order_id, '_is_tutor_order_for_course', true );
+		}
 	}
 
 	/**
@@ -6031,10 +6074,14 @@ class Utils {
 
 		$post_type = '';
 		$user_meta = '';
+		$wc_hpos   = false;
+		$dt_column = 'post_date';
 
 		if ( 'wc' === $monetize_by ) {
 			$post_type = 'shop_order';
 			$user_meta = '_customer_user';
+			$wc_hpos   = WooCommerce::hpos_enabled();
+			$dt_column = $wc_hpos ? 'date_created_gmt' : 'post_date';
 		} elseif ( 'edd' === $monetize_by ) {
 			$post_type = 'edd_payment';
 			$user_meta = '_edd_payment_user_id';
@@ -6044,16 +6091,16 @@ class Utils {
 
 		if ( '' !== $period ) {
 			if ( 'today' === $period ) {
-				$period_query = ' AND  DATE(post_date) = CURDATE() ';
+				$period_query = ' AND  DATE(' . $dt_column . ') = CURDATE() ';
 			} elseif ( 'monthly' === $period ) {
-				$period_query = ' AND  MONTH(post_date) = MONTH(CURDATE()) ';
+				$period_query = ' AND  MONTH(' . $dt_column . ') = MONTH(CURDATE()) ';
 			} else {
-				$period_query = ' AND  YEAR(post_date) = YEAR(CURDATE()) ';
+				$period_query = ' AND  YEAR(' . $dt_column . ') = YEAR(CURDATE()) ';
 			}
 		}
 
 		if ( '' !== $start_date && '' !== $end_date ) {
-			$period_query = " AND  DATE(post_date) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
+			$period_query = " AND  DATE($dt_column) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
 		}
 
 		$offset_limit_query = '';
@@ -6061,26 +6108,44 @@ class Utils {
 			$offset_limit_query = "LIMIT $offset, $per_page";
 		}
 
-		$orders = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT {$wpdb->posts}.*
-			FROM	{$wpdb->posts}
-					INNER JOIN {$wpdb->postmeta} customer
-							ON id = customer.post_id
-						   AND customer.meta_key = '{$user_meta}'
-					INNER JOIN {$wpdb->postmeta} tutor_order
-							ON id = tutor_order.post_id
-						   AND tutor_order.meta_key = '_is_tutor_order_for_course'
-			WHERE	post_type = %s
-					AND customer.meta_value = %d
-					{$period_query}
-			ORDER BY {$wpdb->posts}.id DESC
-			{$offset_limit_query}
-			",
-				$post_type,
-				$user_id
-			)
-		);
+		if ( $wc_hpos ) {
+			$orders = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT orders.id AS ID, orders.status AS post_status, orders.date_created_gmt AS post_date, orders.* 
+					FROM 	{$wpdb->prefix}wc_orders orders 
+					  		INNER JOIN {$wpdb->prefix}wc_orders_meta order_meta 
+									ON orders.id = order_meta.order_id
+					  				AND order_meta.meta_key = '_is_tutor_order_for_course' 
+					WHERE 	orders.type = %s 
+					  		AND orders.customer_id = %d 
+					ORDER BY orders.id DESC
+					{$offset_limit_query}",
+					$post_type,
+					$user_id
+				)
+			);
+		} else {
+			$orders = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT {$wpdb->posts}.*
+				FROM	{$wpdb->posts}
+						INNER JOIN {$wpdb->postmeta} customer
+								ON id = customer.post_id
+							   AND customer.meta_key = '{$user_meta}'
+						INNER JOIN {$wpdb->postmeta} tutor_order
+								ON id = tutor_order.post_id
+							   AND tutor_order.meta_key = '_is_tutor_order_for_course'
+				WHERE	post_type = %s
+						AND customer.meta_value = %d
+						{$period_query}
+				ORDER BY {$wpdb->posts}.id DESC
+				{$offset_limit_query}
+				",
+					$post_type,
+					$user_id
+				)
+			);
+		}
 
 		return $orders;
 	}
@@ -6217,7 +6282,7 @@ class Utils {
 
 		$value = $this->avalue_dot( $option_key, $get_option_meta );
 
-		if ( $value ) {
+		if ( false !== $value ) {
 			return $value;
 		}
 

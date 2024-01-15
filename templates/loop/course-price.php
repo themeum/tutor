@@ -11,24 +11,26 @@
 
 ?>
 <?php
-	$course_id    = get_the_ID();
-	$monetization = tutor_utils()->get_option( 'monetize_by' );
-	/**
-	 * If Monetization is PMPRO then ignore ajax enrolment
-	 * to avoid Paid course enrollment without payment.
-	 *
-	 * Note: There is no mapping between Tutor Course and PMPRO
-	 * That is way there is no way to determine whether course if free
-	 * or paid
-	 *
-	 * @since v2.1.2
-	 */
-	$button_class = 'pmpro' === $monetization ? ' ' : ' tutor-course-list-enroll';
+$course_id    = get_the_ID();
+$monetization = tutor_utils()->get_option( 'monetize_by' );
+/**
+ * If Monetization is PMPRO then ignore ajax enrolment
+ * to avoid Paid course enrollment without payment.
+ *
+ * Note: There is no mapping between Tutor Course and PMPRO
+ * That is way there is no way to determine whether course if free
+ * or paid
+ *
+ * @since v2.1.2
+ */
+$button_class = 'pmpro' === $monetization ? ' ' : ' tutor-course-list-enroll';
 if ( ! is_user_logged_in() ) {
-	$button_class = ' tutor-open-login-modal';
+	$button_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
-	$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
-	$free_html  = $enroll_btn;
+
+$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
+$free_html  = $enroll_btn;
+
 if ( tutor_utils()->is_course_purchasable() ) {
 	$enroll_btn = tutor_course_loop_add_to_cart( false );
 
