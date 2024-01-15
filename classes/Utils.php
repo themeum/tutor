@@ -9061,7 +9061,7 @@ class Utils {
 				'icon'     => 'tutor-icon-bullhorn',
 			),
 			'withdraw'      => array(
-				'title'    => __( 'Withdrawals', 'tutor' ),
+				'title'    => __( 'Withdrawal', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
 				'icon'     => 'tutor-icon-wallet',
 			),
