@@ -32,4 +32,5 @@ export const backendUrls = {
     COURSE_BUNDLES: 'wp-admin/admin.php?page=course-bundle',
     CATEGORIES: 'wp-admin/edit-tags.php?taxonomy=course-category&post_type=courses',
     TAGS: 'wp-admin/edit-tags.php?taxonomy=course-tag&post_type=courses',
+    INSTRUCTORS: 'wp-admin/admin.php?page=tutor-instructors',
 }
