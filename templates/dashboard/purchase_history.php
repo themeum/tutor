@@ -71,7 +71,7 @@ $filter_period_calendar = array(
 
 ?>
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24">
-	<?php esc_html_e( 'Order History', 'tutor-pro' ); ?>
+	<?php esc_html_e( 'Order History', 'tutor' ); ?>
 </div>
 <?php
 
