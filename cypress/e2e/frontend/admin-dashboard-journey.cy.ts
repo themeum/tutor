@@ -19,8 +19,9 @@ describe("Tutor Admin Dashboard Journey", () => {
                 if (!link.endsWith('logout')) {
                     cy.url().should('eq', `${link}${link.endsWith('/') ? '' : '/'}`)
                     cy.get(`a[href="${link}"]`).parent().should("have.class", "active")
+                    cy.title().should('not.include', 'not found');
+                    cy.get(".tutor-dashboard-content").should("include.text", $item.text().trim())
                 }
-                cy.scrollTo("bottom", { ensureScrollable: false, duration: 500, easing: "swing" })
 
                 // Visit nested pages if available 
                 cy.get('body').then(($body) => {
@@ -30,7 +31,6 @@ describe("Tutor Admin Dashboard Journey", () => {
                                 cy.visit(link)
                                 cy.url().should('eq', `${link}${link.endsWith('/') ? '' : '/'}`)
                                 cy.get(`a[href="${link}"]`).should("have.class", "is-active")
-                                cy.scrollTo("bottom", { ensureScrollable: false, duration: 500, easing: "swing" })
                             })
                         })
                     }
