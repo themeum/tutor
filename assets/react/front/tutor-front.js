@@ -928,4 +928,11 @@ jQuery(document).ready(function($) {
 		}, 1000); // Adjust the delay (in milliseconds) as needed
 	}
 	
+	jQuery('#tutor-registration-form [name="password_confirmation"]').on('input', function(){
+        let original = jQuery('[name="password"]');
+        let val = (original.val() || '').trim();
+        let matched = val && jQuery(this).val() === val;
+        
+        jQuery(this).parent().find('.tutor-validation-icon')[matched ? 'show' : 'hide']();
+    });
 });

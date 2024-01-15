@@ -29,6 +29,8 @@ class WooCommerce extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
+		add_action( 'admin_notices', array( $this, 'notice_on_disabled_wc' ) );
+
 		// Add option settings.
 		add_filter( 'tutor_monetization_options', array( $this, 'tutor_monetization_options' ) );
 
@@ -110,6 +112,57 @@ class WooCommerce extends Tutor_Base {
 		 * @since 2.0.7
 		 */
 		add_action( 'delete_post', array( $this, 'clear_course_linked_product' ) );
+
+		add_action( 'before_woocommerce_init', array( $this, 'declare_tutor_compatibility_with_hpos' ) );
+	}
+
+	/**
+	 * Show admin notice if user disable the WC plugin.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function notice_on_disabled_wc() {
+		$show = get_option( 'tutor_show_woocommerce_notice' ) && 'free' === tutor_utils()->get_option( 'monetize_by', 'free' );
+
+		if ( $show ) {
+			$message = __( 'Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce.', 'tutor' );
+			echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
+		}
+	}
+
+	/**
+	 * Check HPOS feature enabled.
+	 * WC declared HPOS (Hight Performance Order Storage) feature stable on october 2023 from WC v8.2
+	 *
+	 * @see https://woo.com/document/high-performance-order-storage
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return bool
+	 */
+	public static function hpos_enabled() {
+		$hpos = false;
+
+		if ( tutor_utils()->has_wc() && version_compare( WC()->version, '8.2.0', '>=' ) ) {
+			$hpos = 'yes' === get_option( 'woocommerce_custom_orders_table_enabled' );
+		}
+
+		return $hpos;
+	}
+
+	/**
+	 * Declare tutor compatibility with WC HPOS feature
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return void
+	 */
+	public function declare_tutor_compatibility_with_hpos() {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', TUTOR_FILE, true );
+		}
 	}
 
 	/**
@@ -342,7 +395,7 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 
-		$enrolled_ids_with_course = $this->get_course_enrolled_ids_by_order_id( $order_id );
+		$enrolled_ids_with_course = tutor_utils()->get_course_enrolled_ids_by_order_id( $order_id );
 
 		if ( $enrolled_ids_with_course ) {
 			$enrolled_ids = wp_list_pluck( $enrolled_ids_with_course, 'enrolled_id' );
@@ -376,37 +429,6 @@ class WooCommerce extends Tutor_Base {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Get enrollment ids by order id
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $order_id WC order id.
-	 *
-	 * @return array|bool
-	 */
-	public function get_course_enrolled_ids_by_order_id( $order_id ) {
-		global $wpdb;
-		// Getting all of courses ids within this order.
-
-		$courses_ids = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key LIKE '_tutor_order_for_course_id_%' ", $order_id ) );
-
-		if ( is_array( $courses_ids ) && count( $courses_ids ) ) {
-			$course_enrolled_by_order = array();
-			foreach ( $courses_ids as $courses_id ) {
-				$course_id = str_replace( '_tutor_order_for_course_id_', '', $courses_id->meta_key );
-
-				$course_enrolled_by_order[] = array(
-					'course_id'   => $course_id,
-					'enrolled_id' => $courses_id->meta_value,
-					'order_id'    => $courses_id->post_id,
-				);
-			}
-			return $course_enrolled_by_order;
-		}
-		return false;
 	}
 
 	/**
@@ -459,7 +481,7 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public function add_earning_data( $item_id, $item, $order_id ) {
 
-		if ( tutor_utils()->get_option( 'monetize_by' ) != 'wc' ) {
+		if ( 'wc' !== tutor_utils()->get_option( 'monetize_by' ) ) {
 			return;
 		}
 
@@ -470,9 +492,10 @@ class WooCommerce extends Tutor_Base {
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
 		if ( $if_has_course ) {
+			$order        = wc_get_order( $order_id );
 			$course_id    = $if_has_course->post_id;
-			$user_id      = $wpdb->get_var( $wpdb->prepare( "SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $course_id ) );
-			$order_status = $wpdb->get_var( $wpdb->prepare( "SELECT post_status from {$wpdb->posts} where ID = %d ", $order_id ) );
+			$user_id      = get_post_field( 'post_author', $course_id );
+			$order_status = "wc-{$order->get_status()}";
 
 			/**
 			 * Return here if already added this product from this order
@@ -511,7 +534,7 @@ class WooCommerce extends Tutor_Base {
 				$fees_type   = tutor_utils()->avalue_dot( 'fees_type', $tutor_earning_fees );
 
 				if ( $fees_amount > 0 ) {
-					if ( $fees_type === 'percent' ) {
+					if ( 'percent' === $fees_type ) {
 						$fees_amount = ( $total_price * $fees_amount ) / 100;
 					}
 
@@ -546,7 +569,7 @@ class WooCommerce extends Tutor_Base {
 				'commission_type'          => $commission_type,
 			);
 			$pro_calculation = apply_filters( 'tutor_pro_earning_calculator', $pro_arg );
-			extract( $pro_calculation );
+			extract( $pro_calculation ); //phpcs:ignore
 			// (Use Pro Filter - End).
 
 			// Prepare insertable earning data.
@@ -731,7 +754,7 @@ class WooCommerce extends Tutor_Base {
 
 			global $wpdb;
 			$table   = $wpdb->base_prefix . 'postmeta';
-			$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$table} WHERE meta_key = '_tutor_course_product_id' AND meta_value = %d ", $woo_product_id ) );
+			$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$table} WHERE meta_key = '_tutor_course_product_id' AND meta_value = %d ", $woo_product_id ) ); //phpcs:ignore
 
 			if ( $post_id ) {
 				$data = get_post_permalink( $post_id );
@@ -793,7 +816,7 @@ class WooCommerce extends Tutor_Base {
 		$order_status    = method_exists( $order, 'get_status' ) ? $order->get_status() : '';
 
 		if ( 'completed' !== $order_status ) {
-			$is_tutor_order = get_post_meta( $order->get_id(), '_is_tutor_order_for_course', true );
+			$is_tutor_order = tutor_utils()->is_tutor_order( $order->get_id() );
 
 			/**
 			 * Is tutor order condition added with other conditions,
@@ -812,16 +835,3 @@ class WooCommerce extends Tutor_Base {
 	}
 }
 
-
-add_action(
-	'admin_notices',
-	function() {
-
-		$show = get_option( 'tutor_show_woocommerce_notice' ) && tutor_utils()->get_option( 'monetize_by', 'free' ) == 'free';
-
-		if ( $show ) {
-			$message = __( 'Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce.', 'tutor' );
-			echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
-		}
-	}
-);

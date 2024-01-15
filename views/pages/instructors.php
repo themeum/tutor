@@ -164,9 +164,10 @@ $filters = array(
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
-									<span class="tutor-color-black tutor-fs-7">
-										<?php echo esc_html( $list->user_email ); ?>
-									</span>
+									<div class="tutor-d-flex tutor-align-center" style="gap: 5px;">
+										<span class="tutor-fs-7"><?php echo esc_html( $list->user_email ); ?></span>
+										<?php do_action( 'tutor_show_email_verified_badge', $list->ID ); ?>
+									</div>
 								</td>
 								</td>
 								<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">

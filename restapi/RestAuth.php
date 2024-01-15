@@ -26,11 +26,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 class RestAuth {
 
 	/**
-	 * Permissions
+	 * Read Permissions
 	 *
 	 * @var string
 	 */
-	const READ = 'read';
+	const READ = 'Read';
+
+	/**
+	 * Write Permissions
+	 *
+	 * @var string
+	 */
+	const WRITE = 'Write';
+
+	/**
+	 * Delete Permissions
+	 *
+	 * @var string
+	 */
+	const DELETE = 'Delete';
+
+	/**
+	 * Read Write Permissions
+	 *
+	 * @var string
+	 */
+	const READ_WRITE = 'Read/Write';
+
+	/**
+	 * All Permissions
+	 *
+	 * @var string
+	 */
+	const ALL = 'All';
 
 	/**
 	 * User meta key to store key, secret, permission info
@@ -48,6 +76,7 @@ class RestAuth {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_tutor_generate_api_keys', __CLASS__ . '::generate_api_keys' );
+		add_action( 'wp_ajax_tutor_update_api_permission', __CLASS__ . '::update_api_permission' );
 		add_action( 'wp_ajax_tutor_revoke_api_keys', __CLASS__ . '::revoke_api_keys' );
 	}
 
@@ -70,13 +99,15 @@ class RestAuth {
 		$api_key    = 'key_' . bin2hex( random_bytes( 16 ) );
 		$api_secret = 'secret_' . bin2hex( random_bytes( 32 ) );
 
-		$permission = Input::post( 'permission' );
+		$permission  = Input::post( 'permission' );
+		$description = Input::post( 'description', '', Input::TYPE_TEXTAREA );
 
 		$info = wp_json_encode(
 			array(
-				'key'        => $api_key,
-				'secret'     => $api_secret,
-				'permission' => $permission,
+				'key'         => $api_key,
+				'secret'      => $api_secret,
+				'permission'  => $permission,
+				'description' => $description,
 			)
 		);
 
@@ -88,12 +119,57 @@ class RestAuth {
 		);
 
 		if ( $add ) {
-			$response = self::prepare_response( $add, $api_key, $api_secret, $permission );
+			$response = self::prepare_response( $add, $api_key, $api_secret, $permission, $description );
 			wp_send_json_success( $response );
 		} else {
 			wp_send_json_error( tutor_utils()->error_message( '0' ) );
 		}
 
+	}
+
+
+	/**
+	 * Update api permission
+	 *
+	 * @since 2.5.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public static function update_api_permission() {
+		global $wpdb;
+
+		// Validate nonce.
+		tutor_utils()->checking_nonce();
+
+		// Check user permission.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
+		$meta_id     = Input::post( 'meta_id', 0, Input::TYPE_INT );
+		$permission  = Input::post( 'permission' );
+		$description = Input::post( 'description', '', Input::TYPE_TEXTAREA );
+
+		$info       = QueryHelper::get_row( $wpdb->usermeta, array( 'umeta_id' => $meta_id ), 'umeta_id' );
+		$meta_value = json_decode( $info->meta_value );
+
+		$meta_value->permission = $permission;
+		$meta_value->description = $description;
+
+		// Update user meta.
+		try {
+			QueryHelper::update(
+				$wpdb->usermeta,
+				array( 'meta_value' => json_encode( $meta_value ) ),
+				array( 'umeta_id' => $meta_id )
+			);
+
+			$response = self::prepare_response( $meta_id, $meta_value->key, $meta_value->secret, $permission, $description );
+			wp_send_json_success( $response );
+
+		} catch ( \Throwable $th ) {
+			wp_send_json_error( $th->getMessage() );
+		}
 	}
 
 	/**
@@ -205,11 +281,11 @@ class RestAuth {
 	 *
 	 * @return string
 	 */
-	public static function prepare_response( $meta_id, $key, $secret, $permission ) {
+	public static function prepare_response( $meta_id, $key, $secret, $permission, $description = '' ) {
 		$user_id = get_current_user_id();
 		ob_start();
 		?>
-		<tr>
+		<tr id="<?php echo esc_attr( $meta_id ); ?>">
 			<td>
 				<?php echo esc_html( tutor_utils()->display_name( $user_id ) ); ?>
 			</td>
@@ -230,7 +306,15 @@ class RestAuth {
 				</a>
 			</td>
 			<td>
-				<?php echo esc_html( ucfirst( $permission ) ); ?>
+				<?php echo esc_html( $permission ); ?>
+				<?php if ( ! empty( $description ) ) : ?>
+				<div class="tooltip-wrap tooltip-icon-custom" >
+					<i class="tutor-fs-7 tutor-icon-circle-info-o tutor-color-muted tutor-ml-4"></i>
+					<span class="tooltip-txt tooltip-bottom">
+						<?php echo esc_textarea( $description ); ?>
+					</span>
+				</div>
+				<?php endif; ?>
 			</td>
 			<td>
 				<div class="tutor-dropdown-parent">
@@ -238,7 +322,11 @@ class RestAuth {
 						<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 					</button>
 					<div class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-						<a href="javascript:void(0)" class="tutor-dropdown-item">
+						<a href="javascript:void(0)" class="tutor-dropdown-item" data-tutor-modal-target="tutor-update-permission-modal" data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>">
+							<i class="tutor-icon-edit tutor-mr-8" area-hidden="true" data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>"></i>
+							<span data-update-id="<?php echo esc_attr( $meta_id ); ?>" data-permission="<?php echo esc_attr( $permission ); ?>" data-description="<?php echo esc_attr( $description ); ?>"><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
+						</a>
+						<a href="javascript:void(0)" class="tutor-dropdown-item" data-meta-id="<?php echo esc_attr( $meta_id ); ?>">
 							<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true" data-meta-id="<?php echo esc_attr( $meta_id ); ?>"></i>
 							<span data-meta-id="<?php echo esc_attr( $meta_id ); ?>"><?php esc_html_e( 'Revoke', 'tutor' ); ?></span>
 						</a>
@@ -264,6 +352,6 @@ class RestAuth {
 				'label' => __( 'Read', 'tutor' ),
 			),
 		);
-		return $permissions;
+		return apply_filters( 'tutor_rest_api_permissions', $permissions );
 	}
 }

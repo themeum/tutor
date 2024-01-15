@@ -11,15 +11,17 @@
 
 ?>
 <?php
-	$course_id                = get_the_ID();
-	$is_logged_in             = is_user_logged_in();
-	$enable_guest_course_cart = tutor_utils()->get_option( 'enable_guest_course_cart' );
-	$required_loggedin_class  = '';
+$course_id                = get_the_ID();
+$is_logged_in             = is_user_logged_in();
+$enable_guest_course_cart = tutor_utils()->get_option( 'enable_guest_course_cart' );
+$required_loggedin_class  = '';
+
 if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
-	$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $required_loggedin_class . '">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
-	$free_html  = $enroll_btn;
+
+$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $required_loggedin_class . '">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
+$free_html  = $enroll_btn;
 
 	// Show purchase button if purchaseable.
 if ( tutor_utils()->is_course_purchasable() ) {

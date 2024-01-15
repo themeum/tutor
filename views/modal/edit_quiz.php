@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+use TUTOR\Quiz;
+
 ?>
 <input type="hidden" name="quiz_id" value="<?php echo esc_attr( $quiz_id ); ?>"/>
 <div id="quiz-builder-tab-quiz-info">
@@ -96,11 +98,11 @@
 			<div class="tutor-col-3">
 				<?php $limit_time_type = tutor_utils()->get_quiz_option( $quiz_id, 'time_limit.time_type', 'minutes' ); ?>
 				<select name="quiz_option[time_limit][time_type]" class="tutor-form-control">
-					<option value="seconds" <?php selected( 'seconds', $limit_time_type ); ?>><?php esc_html_e( 'Seconds', 'tutor' ); ?></option>
-					<option value="minutes" <?php selected( 'minutes', $limit_time_type ); ?>><?php esc_html_e( 'Minutes', 'tutor' ); ?></option>
-					<option value="hours" <?php selected( 'hours', $limit_time_type ); ?>><?php esc_html_e( 'Hours', 'tutor' ); ?></option>
-					<option value="days" <?php selected( 'days', $limit_time_type ); ?>><?php esc_html_e( 'Days', 'tutor' ); ?></option>
-					<option value="weeks" <?php selected( 'weeks', $limit_time_type ); ?>><?php esc_html_e( 'Weeks', 'tutor' ); ?></option>
+					<?php foreach ( Quiz::quiz_time_units() as $key => $value ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $limit_time_type ); ?>>
+							<?php echo esc_html( $value ); ?>
+						</option>
+					<?php endforeach; ?>
 				</select>
 			</div>
 			<div class="tutor-col-6">
@@ -123,30 +125,15 @@
 			<div class="tutor-fs-7 tutor-color-muted tutor-mb-12">
 				(<?php esc_html_e( 'Pick the quiz system"s behaviour on choice based questions.', 'tutor' ); ?>)
 			</div>
-
-			<label class="tutor-radio-select tutor-bg-white tutor-mb-8">
-				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked( 'default', tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 'default' ) ); ?>>
+			<?php foreach ( Quiz::quiz_modes() as $quiz_mode ) : ?>
+				<label class="tutor-radio-select tutor-bg-white tutor-mb-8">
+				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="<?php echo esc_attr( $quiz_mode['key'] ); ?>" <?php checked( $quiz_mode['key'], tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', $quiz_mode['key'] ) ); ?>>
 				<div class="tutor-radio-select-content">
-					<span class="tutor-radio-select-title"><?php esc_html_e( 'Default', 'tutor' ); ?></span>
-					<?php esc_html_e( 'Answers shown after quiz is finished', 'tutor' ); ?>
+					<span class="tutor-radio-select-title"><?php echo esc_html( $quiz_mode['value'] ); ?></span>
+					<?php echo esc_html( $quiz_mode['description'] ); ?>
 				</div>
-			</label>
-
-			<label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
-				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked( 'reveal', tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode' ) ); ?>>
-				<div class="tutor-radio-select-content">
-					<span class="tutor-radio-select-title"><?php esc_html_e( 'Reveal Mode', 'tutor' ); ?></span>
-					<?php esc_html_e( 'Show result after the attempt.', 'tutor' ); ?>
-				</div>
-			</label>
-
-			<label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
-				<input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked( 'retry', tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode' ) ); ?>>
-				<div class="tutor-radio-select-content">
-					<span class="tutor-radio-select-title"><?php esc_html_e( 'Retry Mode', 'tutor' ); ?></span>
-					<?php esc_html_e( 'Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor' ); ?>
-				</div>
-			</label>
+				</label>
+			<?php endforeach; ?>
 		</div>
 	</div>
 
@@ -228,10 +215,11 @@
 						<?php esc_html_e( 'Question Layout', 'tutor' ); ?>
 					</label>
 					<select class="tutor-form-control" name="quiz_option[question_layout_view]">
-						<option value=""><?php esc_html_e( 'Set question layout view', 'tutor' ); ?></option>
-						<option value="single_question" <?php selected( 'single_question', tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' ) ); ?>> <?php esc_html_e( 'Single Question', 'tutor' ); ?> </option>
-						<option value="question_pagination" <?php selected( 'question_pagination', tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' ) ); ?>> <?php esc_html_e( 'Question Pagination', 'tutor' ); ?> </option>
-						<option value="question_below_each_other" <?php selected( 'question_below_each_other', tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' ) ); ?>> <?php esc_html_e( 'Question below each other', 'tutor' ); ?> </option>
+						<?php foreach ( Quiz::quiz_question_layouts() as $key => $value ) : ?>
+							<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' ) ); ?>>
+								<?php echo esc_html( $value ); ?> 
+							</option>
+						<?php endforeach; ?>
 					</select>
 				</div>
 
@@ -240,10 +228,11 @@
 						<?php esc_html_e( 'Questions Order', 'tutor' ); ?>
 					</label>
 					<select class="tutor-form-control" name="quiz_option[questions_order]">
-						<option value="rand" <?php selected( 'rand', tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> <?php esc_html_e( 'Random', 'tutor' ); ?> </option>
-						<option value="sorting" <?php selected( 'sorting', tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> <?php esc_html_e( 'Sorting', 'tutor' ); ?> </option>
-						<option value="asc" <?php selected( 'asc', tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> <?php esc_html_e( 'Ascending', 'tutor' ); ?> </option>
-						<option value="desc" <?php selected( 'desc', tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> <?php esc_html_e( 'Descending', 'tutor' ); ?> </option>
+						<?php foreach ( Quiz::quiz_question_orders() as $key => $value ): ?>
+							<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, tutor_utils()->get_quiz_option( $quiz_id, 'questions_order' ) ); ?>> 
+								<?php echo esc_html( $value ); ?>
+							</option>
+						<?php endforeach; ?>
 					</select>
 				</div>
 

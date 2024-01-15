@@ -152,7 +152,10 @@ class QueryHelper {
 			$column_keys   = rtrim( $column_keys, ',' );
 			$column_values = rtrim( $column_values, ',' );
 			if ( $first_key === $k ) {
-				$sql .= "INSERT INTO {$table} ($column_keys) VALUES ($column_values),";
+				$sql .= "INSERT INTO {$table} ($column_keys) VALUES ($column_values)";
+				if ( count( $request ) > 1 ) {
+					$sql .= ',';
+				}
 			} elseif ( $last_key == $k ) {
 				$sql .= "($column_values)";
 			} else {
@@ -163,7 +166,15 @@ class QueryHelper {
 			$column_keys   = '';
 			$column_values = '';
 		}
-		return $wpdb->query( $sql );
+
+		$wpdb->query( $sql );
+
+		// If error occurred then throw new exception.
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
+		}
+
+		return true;
 	}
 
 	/**
