@@ -17,10 +17,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             const response = await post.json();
             if (response.success && response.data) {
                 const navItems = document.querySelectorAll('.tutor-nav-item .tutor-ml-4');
-                let i = 0;
-                for (let [key, value] of Object.entries(response.data)) {
-                    navItems[i].innerHTML = `(${value})`;
-                    i++;
+                if (navItems.length) {
+                    let i = 0;
+                    for (let [key, value] of Object.entries(response.data)) {
+                        navItems[i].innerHTML = `(${value})`;
+                        i++;
+                    }
                 }
             }
         }
