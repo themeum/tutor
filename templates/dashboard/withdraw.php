@@ -54,7 +54,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal tutor-color-black">
-	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'Withdrawal', 'tutor' ); ?></div>
+	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'Withdrawals', 'tutor' ); ?></div>
 
 	<div class="tutor-card tutor-p-24">
 		<div class="tutor-row tutor-align-lg-center">
