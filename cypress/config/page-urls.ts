@@ -34,4 +34,6 @@ export const backendUrls = {
     TAGS: 'wp-admin/edit-tags.php?taxonomy=course-tag&post_type=courses',
     INSTRUCTORS: 'wp-admin/admin.php?page=tutor-instructors',
     ANNOUNCEMENTS: 'wp-admin/admin.php?page=tutor_announcements',
+    QUESTION_AND_ANSWER: 'wp-admin/admin.php?page=question_answer',
+    QUIZ_ATTEMPTS: 'wp-admin/admin.php?page=tutor_quiz_attempts',
 }
