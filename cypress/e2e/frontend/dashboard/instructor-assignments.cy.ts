@@ -8,8 +8,6 @@ describe("Tutor Dashboard Assignments", () => {
     })
 
     it("should evaluate all the assignments", () => {
-        cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
-
         cy.get("body").then(($body) => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
@@ -26,17 +24,20 @@ describe("Tutor Dashboard Assignments", () => {
                                     cy.get("table td a").contains("Evaluate").click()
                                     cy.url().should("include", "view_assignment")
 
-                                    // Start evaluating
-                                    cy.get("input[type=number]").type("5")
-                                    cy.get("textarea").type("The assignment displays a strong grasp of the subject, excellent organization, and effective communication, reflecting high-level critical thinking.")
-                                    cy.get("button").contains("Evaluate this submission").click()
-                                    
-                                    cy.wait("@ajaxRequest").then((interception) => {
-                                        expect(interception.response.body.success).to.equal(true);
-                                    });
-                                    
-                                    cy.get("a").contains("Back").click()
-                                    cy.get("a").contains("Back").click()
+                                    cy.url().then((url) => {
+                                        cy.intercept("POST", url).as("ajaxRequest")
+
+                                        cy.get("input[type=number]").type("5")
+                                        cy.get("textarea").type("The assignment displays a strong grasp of the subject, excellent organization, and effective communication, reflecting high-level critical thinking.")
+                                        cy.get("button").contains("Evaluate this submission").click()
+                                        
+                                        cy.wait("@ajaxRequest").then((interception) => {
+                                            expect(interception.response.body.success).to.equal(true);
+                                        });
+                                        
+                                        cy.get("a").contains("Back").click()
+                                        cy.get("a").contains("Back").click()
+                                    })
                                 } else {
                                     cy.get("a").contains("Back").click()
                                 }
@@ -44,7 +45,6 @@ describe("Tutor Dashboard Assignments", () => {
                         })
                     }
                 })
-                
             }
         })
     })
