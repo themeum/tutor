@@ -342,8 +342,15 @@ jQuery(document).ready(function($) {
 			beforeSend: function() {
 				$that.find('button').attr('disabled', 'disabled').addClass('is-loading');
 			},
-			success: function() {
-				tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+			success: function(response) {
+				if (response.success) {
+					tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+				} else {
+					tutor_toast(__('Error!', 'tutor'), response.data, 'error');
+				}
+			},
+			error: function(response) {
+				tutor_toast(__('Error!', 'tutor'), response.statusText, 'error');
 			},
 			complete: function() {
 				$that.find('button').removeAttr('disabled').removeClass('is-loading');
