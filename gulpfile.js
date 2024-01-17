@@ -68,7 +68,7 @@ var task_keys = Object.keys(scss_blueprints);
 for (let task in scss_blueprints) {
 	let blueprint = scss_blueprints[task];
 	const isV2 = blueprint.src === 'v2-library/_src/scss/main.scss'
-	const isV2Rtl = blueprint.src === 'v2-library/_src/scss/main.rtl.scss'
+	const isV2RTL = blueprint.src === 'v2-library/_src/scss/main.rtl.scss'
 
 	gulp.task(task, function() {
 		return gulp
@@ -81,8 +81,8 @@ for (let task in scss_blueprints) {
 			.pipe(gulpIf(isV2, rename('main.min.css')))
 			.pipe(gulpIf(isV2, gulp.dest('v2-library/bundle')))
 			.pipe(gulpIf(isV2, gulp.dest('.docz/static/v2-library/bundle')))
-			.pipe(gulpIf(isV2Rtl, rename('main.rtl.min.css')))
-			.pipe(gulpIf(isV2Rtl, gulp.dest('v2-library/bundle')));
+			.pipe(gulpIf(isV2RTL, rename('main.rtl.min.css')))
+			.pipe(gulpIf(isV2RTL, gulp.dest('v2-library/bundle')));
 	});
 }
 
