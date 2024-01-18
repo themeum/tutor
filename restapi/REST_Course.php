@@ -115,6 +115,9 @@ class REST_Course {
 				$author = get_userdata( $post->post_author );
 				is_a( $author, 'WP_User' ) ? $post->post_author = $author->data : new \stdClass();
 
+				$thumbnail_size      = apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' );
+				$post->thumbnail_url = get_the_post_thumbnail_url( $post->ID, $thumbnail_size );
+
 				$post->ratings = tutor_utils()->get_course_rating( $post->ID );
 
 				$post->course_category = $category;
