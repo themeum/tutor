@@ -1,8 +1,12 @@
 <?php
-/*
-@REST API for course announcements
-@author : themeum
-*/
+/**
+ * REST API for course announcements.
+ *
+ * @package Tutor\RestAPI
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.7.1
+ */
 
 namespace TUTOR;
 
@@ -12,18 +16,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class REST_Course_Announcement
+ *
+ * @package Tutor
+ * @since 1.0.0
+ */
 class REST_Course_Announcement {
 
 	use REST_Response;
 
+	/**
+	 * Post parent ID.
+	 *
+	 * @var int $post_parent The ID of the post parent.
+	 */
 	private $post_parent;
+
+	/**
+	 * Post type.
+	 *
+	 * @var string $post_type The post type for announcements.
+	 */
 	private $post_type = 'tutor_announcements';
 
-	/*
-	*require rest request
-	*return accoucement by course id
-	*/
-	public function course_annoucement( WP_REST_Request $request ) {
+	/**
+	 * Retrieve announcements by course ID via REST API.
+	 *
+	 * @since 1.7.1
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 *
+	 * @return mixed
+	 */
+	public function course_announcement( WP_REST_Request $request ) {
 		$this->post_parent = $request->get_param( 'id' );
 
 		global $wpdb;

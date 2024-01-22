@@ -41,8 +41,6 @@ class REST_Author {
 	 * @return mixed
 	 */
 	public function author_detail( WP_REST_Request $request ) {
-		global $wpdb;
-
 		$this->user_id = $request->get_param( 'id' );
 
 		$user_data = get_userdata( $this->user_id );
