@@ -140,22 +140,38 @@ class REST_Quiz {
 		$q_a_t = $wpdb->prefix . $this->t_quiz_ques_ans; // question answer table
 
 		$quizs = $wpdb->get_results(
-			$wpdb->prepare( "SELECT question_id,question_title, question_description, question_type, question_mark, question_settings FROM $q_t WHERE quiz_id = %d", $this->post_parent )
+			$wpdb->prepare( "SELECT
+				question_id,
+				question_title,
+				question_description,
+				question_type,
+				question_mark,
+				question_settings FROM $q_t
+				WHERE quiz_id = %d
+				",
+				$this->post_parent
+			)
 		);
 		$data  = array();
 
 		if ( count( $quizs ) > 0 ) {
 			// get question ans by question_id
 			foreach ( $quizs as $quiz ) {
-				// unserialized question settings
+				// un-serialized question settings.
 				$quiz->question_settings = maybe_unserialize( $quiz->question_settings );
 
-				// question options with correct ans
+				// question options with correct ans.
 				$options = $wpdb->get_results(
-					$wpdb->prepare( "SELECT answer_title,is_correct FROM $q_a_t WHERE belongs_question_id = %d", $quiz->question_id )
+					$wpdb->prepare( "SELECT
+						answer_title,
+						is_correct FROM $q_a_t
+						WHERE belongs_question_id = %d
+						",
+						$quiz->question_id
+					)
 				);
 
-				// set question_answers as quiz property
+				// set question_answers as quiz property.
 				$quiz->question_answers = $options;
 
 				array_push( $data, $quiz );
