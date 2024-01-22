@@ -113,6 +113,13 @@ class REST_Course {
 				$tag = wp_get_post_terms( $post->ID, $this->course_tag_tax );
 
 				$author = get_userdata( $post->post_author );
+
+				if ( $author ) {
+					// Unset user pass & key.
+					unset( $author->data->user_pass );
+					unset( $author->data->user_activation_key );
+				}
+
 				is_a( $author, 'WP_User' ) ? $post->post_author = $author->data : new \stdClass();
 
 				$thumbnail_size      = apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' );
