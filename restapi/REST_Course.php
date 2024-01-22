@@ -118,7 +118,7 @@ class REST_Course {
 				$thumbnail_size      = apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' );
 				$post->thumbnail_url = get_the_post_thumbnail_url( $post->ID, $thumbnail_size );
 
-				$post->intro_video = get_post_meta( $post->ID, '_video', true );
+				$post->additional_info = $this->course_additional_info( $post->ID );
 
 				$post->ratings = tutor_utils()->get_course_rating( $post->ID );
 
@@ -160,6 +160,34 @@ class REST_Course {
 	public function course_detail( WP_REST_Request $request ) {
 		$post_id = $request->get_param( 'id' );
 
+		$detail = $this->course_additional_info( $post_id );
+		if ( $detail ) {
+			$response = array(
+				'status_code' => 'course_detail',
+				'message'     => __( 'Course detail retrieved successfully', 'tutor' ),
+				'data'        => $detail,
+			);
+			return self::send( $response );
+		}
+		$response = array(
+			'status_code' => 'course_detail',
+			'message'     => __( 'Detail not found for given ID', 'tutor' ),
+			'data'        => array(),
+		);
+
+		return self::send( $response );
+	}
+
+	/**
+	 * Get course additional info
+	 *
+	 * @since 2.6.1
+	 *
+	 * @param integer $post_id post id.
+	 *
+	 * @return array
+	 */
+	public function course_additional_info( int $post_id ) {
 		$detail = array(
 
 			'course_settings'          => get_post_meta( $post_id, '_tutor_course_settings', false ),
@@ -183,21 +211,8 @@ class REST_Course {
 			'disable_qa'               => get_post_meta( $post_id, '_tutor_enable_qa', true ) != 'yes',
 		);
 
-		if ( $detail ) {
-			$response = array(
-				'status_code' => 'course_detail',
-				'message'     => __( 'Course detail retrieved successfully', 'tutor' ),
-				'data'        => $detail,
-			);
-			return self::send( $response );
-		}
-		$response = array(
-			'status_code' => 'course_detail',
-			'message'     => __( 'Detail not found for given ID', 'tutor' ),
-			'data'        => array(),
-		);
+		return apply_filters( 'tutor_course_additional_info', $detail );
 
-		return self::send( $response );
 	}
 
 	/**
@@ -247,6 +262,7 @@ class REST_Course {
 			),
 		);
 
+		$args  = apply_filters( 'tutor_rest_course_by_terms_query_args', $args );
 		$query = new WP_Query( $args );
 
 		if ( count( $query->posts ) > 0 ) {
