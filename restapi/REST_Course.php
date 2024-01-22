@@ -118,6 +118,8 @@ class REST_Course {
 				$thumbnail_size      = apply_filters( 'tutor_rest_course_thumbnail_size', 'post-thumbnail' );
 				$post->thumbnail_url = get_the_post_thumbnail_url( $post->ID, $thumbnail_size );
 
+				$post->intro_video = get_post_meta( $post->ID, '_video', true );
+
 				$post->ratings = tutor_utils()->get_course_rating( $post->ID );
 
 				$post->course_category = $category;
