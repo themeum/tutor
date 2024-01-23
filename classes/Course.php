@@ -198,6 +198,63 @@ class Course extends Tutor_Base {
 		add_action( 'trashed_post', __CLASS__ . '::redirect_to_course_list_page' );
 
 		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
+
+		add_action( 'admin_init', array( $this, 'load_course_builder' ) );
+		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
+	}
+
+	/**
+	 * Load course builder.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function load_course_builder() {
+		if ( ! User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) ) ) {
+			wp_die( esc_html( tutor_utils()->error_message() ), esc_html__( 'Access denied!', 'tutor' ) );
+		}
+
+		global $pagenow;
+
+		$has_pro        = tutor()->has_pro;
+		$backend_create = is_admin() && 'post-new.php' === $pagenow && 'courses' === Input::get( 'post_type' );
+		$backend_edit   = is_admin() && 'post.php' === $pagenow && 'tutor' === Input::get( 'action' ) && Input::has( 'post' );
+
+		$is_frontend_builder = tutor_utils()->is_tutor_frontend_dashboard( 'create-course' );
+		$frontend_create     = $is_frontend_builder && false === Input::has( 'course_ID' );
+		$frontend_edit       = $is_frontend_builder && Input::has( 'course_ID' );
+
+		// Create mode.
+		if ( $backend_create || ( $has_pro && $frontend_create ) ) {
+			$this->load_course_builder_view();
+		}
+
+		// Edit mode.
+		if ( $backend_edit || ( $has_pro && $frontend_edit ) ) {
+			$course_id        = Input::get( 'post' ) ?? Input::get( 'course_ID' ) ?? 0;
+			$post_type        = get_post_type( $course_id );
+			$course_author    = (int) get_post_field( 'post_author', $course_id );
+			$is_course_author = get_current_user_id() === $course_author;
+
+			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $is_course_author ) ) {
+				$this->load_course_builder_view();
+			}
+		}
+	}
+
+	/**
+	 * Load view for course builder.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function load_course_builder_view() {
+		do_action( 'tutor_before_course_builder_load' );
+		include_once tutor()->path . 'views/pages/course-builder.php';
+		do_action( 'tutor_after_course_builder_load' );
+		exit( 0 );
 	}
 
 	/**
