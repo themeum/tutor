@@ -222,8 +222,8 @@ class Course extends Tutor_Base {
 		$backend_edit   = is_admin() && 'post.php' === $pagenow && 'tutor' === Input::get( 'action' ) && Input::has( 'post' );
 
 		$is_frontend_builder = tutor_utils()->is_tutor_frontend_dashboard( 'create-course' );
-		$frontend_create     = $is_frontend_builder && false === Input::has( 'course_ID' );
-		$frontend_edit       = $is_frontend_builder && Input::has( 'course_ID' );
+		$frontend_create     = $is_frontend_builder && false === Input::has( 'course_id' );
+		$frontend_edit       = $is_frontend_builder && Input::has( 'course_id' );
 
 		// Create mode.
 		if ( $backend_create || ( $has_pro && $frontend_create ) ) {
@@ -232,7 +232,7 @@ class Course extends Tutor_Base {
 
 		// Edit mode.
 		if ( $backend_edit || ( $has_pro && $frontend_edit ) ) {
-			$course_id        = Input::get( 'post' ) ?? Input::get( 'course_ID' ) ?? 0;
+			$course_id        = Input::get( 'post' ) ?? Input::get( 'course_id' ) ?? 0;
 			$post_type        = get_post_type( $course_id );
 			$course_author    = (int) get_post_field( 'post_author', $course_id );
 			$is_course_author = get_current_user_id() === $course_author;
