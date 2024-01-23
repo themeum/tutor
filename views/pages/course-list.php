@@ -206,6 +206,7 @@ $future_list = array(
 								}
 
 								$author_details = $authors[ $post->post_author ];
+								$edit_link      = admin_url( "post.php?post={$post->ID}&action=tutor" );
 								?>
 								<tr>
 									<td>
@@ -216,7 +217,7 @@ $future_list = array(
 
 									<td>
 										<div class="tutor-d-flex tutor-align-center tutor-gap-2">
-											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-d-block">
+											<a href="<?php echo esc_url( $edit_link ); ?>" class="tutor-d-block">
 												<div style="width: 76px;">
 													<div class="tutor-ratio tutor-ratio-16x9">
 														<img class="tutor-radius-6" src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php the_title(); ?>" loading="lazy">
@@ -225,7 +226,7 @@ $future_list = array(
 											</a>
 
 											<div>
-												<a class="tutor-table-link" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
+												<a class="tutor-table-link" href="<?php echo esc_url( $edit_link ); ?>">
 													<?php echo esc_html( $post->post_title ); ?>
 												</a>
 
