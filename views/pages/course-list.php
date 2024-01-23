@@ -74,6 +74,7 @@ $args = array(
 if ( 'all' === $active_tab || 'mine' === $active_tab ) {
 	$args['post_status'] = array( 'publish', 'pending', 'draft', 'private', 'future' );
 } else {
+	//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	$status              = 'published' === $active_tab ? 'publish' : $active_tab;
 	$args['post_status'] = array( $status );
 }
@@ -83,9 +84,10 @@ if ( 'mine' === $active_tab ) {
 }
 $date_filter = sanitize_text_field( tutor_utils()->array_get( 'date', $_GET, '' ) );
 
-$year  = date( 'Y', strtotime( $date_filter ) );
-$month = date( 'm', strtotime( $date_filter ) );
-$day   = date( 'd', strtotime( $date_filter ) );
+//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+$year  = gmdate( 'Y', strtotime( $date_filter ) );
+$month = gmdate( 'm', strtotime( $date_filter ) );
+$day   = gmdate( 'd', strtotime( $date_filter ) );
 // Add date query.
 if ( '' !== $date_filter ) {
 	$args['date_query'] = array(
@@ -189,6 +191,7 @@ $future_list = array(
 							$course_meta_data = tutor_utils()->get_course_meta_data( $course_ids );
 							$authors          = array();
 
+							//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 							foreach ( $the_query->posts as $key => $post ) :
 								$count_lesson = isset( $course_meta_data[ $post->ID ] ) ? $course_meta_data[ $post->ID ]['lesson'] : 0;
 
@@ -302,6 +305,7 @@ $future_list = array(
 												echo $price; //phpcs:ignore
 											}
 												// Alert class for course status.
+												//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 												$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : ( 'private' === $post->post_status ? 'select-default' : 'select-default' ) ) ) );
 											?>
 										</div>
@@ -349,7 +353,7 @@ $future_list = array(
 												</button>
 												<div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 													<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
-													<a class="tutor-dropdown-item" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
+													<a class="tutor-dropdown-item" href="<?php echo esc_url( $edit_link ); ?>">
 														<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
 														<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 													</a>
