@@ -11,7 +11,7 @@ module.exports = (env, options) => {
 		module: {
 			rules: [
 				{
-					test: /\.js$/,
+					test: /\.(js|ts|tsx)$/,
 					exclude: /node_modules/,
 					use: 'babel-loader',
 				},
@@ -83,6 +83,7 @@ module.exports = (env, options) => {
 				'tutor-setup.min': './assets/react/admin-dashboard/tutor-setup.js',
 				'tutor.min': './assets/react/v2/common.js',
 				'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
+				'tutor-course-builder-v3.min': './assets/react/v3/course-builder/index.tsx',
 			},
 		},
 		{
@@ -110,6 +111,24 @@ module.exports = (env, options) => {
 				output: {
 					path: path.resolve(dest_path),
 					filename: `[name].js`,
+				},
+				resolve: {
+					extensions: [".js", ".jsx", ".ts", ".tsx"],
+					fallback: {
+						fs: false,
+						path: false,
+						os: false,
+					},
+					alias: {
+						'@Atoms': path.resolve(__dirname, './assets/react/v3/atoms/'),
+						'@Molecules': path.resolve(__dirname, './assets/react/v3/molecules/'),
+						'@Components': path.resolve(__dirname, './assets/react/v3/components/'),
+						'@Config': path.resolve(__dirname, './assets/react/v3/config/'),
+						'@Hooks': path.resolve(__dirname, './assets/react/v3/hooks/'),
+						'@Utils': path.resolve(__dirname, './assets/react/v3/utils/'),
+						'@CBComponents': path.resolve(__dirname, './assets/react/v3/course-builder/components/'),
+						'@CBServices': path.resolve(__dirname, './assets/react/v3/course-builder/services/'),
+					}
 				},
 			}),
 		);
