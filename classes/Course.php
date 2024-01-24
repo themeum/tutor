@@ -201,6 +201,7 @@ class Course extends Tutor_Base {
 
 		add_action( 'admin_init', array( $this, 'load_course_builder' ) );
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
+		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
 	}
 
 	/**
@@ -241,6 +242,17 @@ class Course extends Tutor_Base {
 				$this->load_course_builder_view();
 			}
 		}
+	}
+
+	/**
+	 * Enqueue course builder assets like CSS, JS
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function enqueue_course_builder_assets() {
+		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/course-builder-v3.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 	}
 
 	/**
