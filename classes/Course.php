@@ -212,27 +212,24 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function load_course_builder() {
-		if ( ! User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) ) ) {
-			wp_die( esc_html( tutor_utils()->error_message() ), esc_html__( 'Access denied!', 'tutor' ) );
-		}
-
 		global $pagenow;
 
-		$has_pro        = tutor()->has_pro;
-		$backend_create = is_admin() && 'post-new.php' === $pagenow && 'courses' === Input::get( 'post_type' );
-		$backend_edit   = is_admin() && 'post.php' === $pagenow && 'tutor' === Input::get( 'action' ) && Input::has( 'post' );
+		$has_pro         = tutor()->has_pro;
+		$has_access_role = User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) );
+		$backend_create  = is_admin() && 'post-new.php' === $pagenow && 'courses' === Input::get( 'post_type' );
+		$backend_edit    = is_admin() && 'post.php' === $pagenow && 'tutor' === Input::get( 'action' ) && Input::has( 'post' );
 
 		$is_frontend_builder = tutor_utils()->is_tutor_frontend_dashboard( 'create-course' );
 		$frontend_create     = $is_frontend_builder && false === Input::has( 'course_id' );
 		$frontend_edit       = $is_frontend_builder && Input::has( 'course_id' );
 
 		// Create mode.
-		if ( $backend_create || ( $has_pro && $frontend_create ) ) {
+		if ( $has_access_role && ( $backend_create || ( $has_pro && $frontend_create ) ) ) {
 			$this->load_course_builder_view();
 		}
 
 		// Edit mode.
-		if ( $backend_edit || ( $has_pro && $frontend_edit ) ) {
+		if ( $has_access_role && ( $backend_edit || ( $has_pro && $frontend_edit ) ) ) {
 			$course_id        = Input::get( 'post' ) ?? Input::get( 'course_id' ) ?? 0;
 			$post_type        = get_post_type( $course_id );
 			$course_author    = (int) get_post_field( 'post_author', $course_id );
