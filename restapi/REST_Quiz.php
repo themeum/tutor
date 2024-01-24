@@ -163,6 +163,7 @@ class REST_Quiz {
 				// question options with correct ans.
 				$options = $wpdb->get_results(
 					$wpdb->prepare( "SELECT
+						answer_id,
 						answer_title,
 						is_correct FROM $q_a_t
 						WHERE belongs_question_id = %d
