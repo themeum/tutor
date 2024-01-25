@@ -2,12 +2,10 @@ import { rgba } from 'polished';
 
 export const headerHeight = 80;
 export const sidebarWidth = 355;
-export const footerHeight = 54;
+export const footerHeight = 56;
 
 export const fontFamily = {
   roboto: "'Roboto', sans-serif;",
-  robotoMono: "'Roboto Mono', monospace;",
-  sfMono: "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace",
 } as const;
 
 export const colorPalate = {
@@ -505,6 +503,7 @@ export const letterSpacing = {
 } as const;
 
 export const shadow = {
+  focus: '0px 0px 0px 2px rgba(0, 204, 235, 0.60);',
   button: '0px 1px 0.25px rgba(17, 18, 19, 0.08), inset 0px -1px 0.25px rgba(17, 18, 19, 0.24)',
   combinedButton:
     '0px 1px 0px rgba(0, 0, 0, 0.05), inset 0px -1px 0px #bcbfc3, inset 1px 0px 0px #bbbfc3, inset 0px 1px 0px #bbbfc3',

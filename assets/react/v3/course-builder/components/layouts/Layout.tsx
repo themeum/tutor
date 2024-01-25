@@ -51,6 +51,20 @@ const Layout: React.FC = () => {
     return (100 / totalSteps) * (curriculumIndex + 1);
   }
 
+  const handleNextClick = () => {
+    const curriculumIndex = progressSteps.findIndex(item => item.value === activeStep);    
+    if (curriculumIndex < (progressSteps.length - 1)) {
+      setActiveStep(progressSteps[curriculumIndex + 1].value);
+    }
+  }
+
+  const handlePrevClick = () => {
+    const curriculumIndex = progressSteps.findIndex(item => item.value === activeStep);
+    if (curriculumIndex > 0) {
+      setActiveStep(progressSteps[curriculumIndex - 1].value);
+    }
+  }
+
   return (
     <div css={styles.wrapper}>
       <Header />
@@ -63,7 +77,7 @@ const Layout: React.FC = () => {
         />
         <div css={styles.mainContent}>{mainContents[activeStep]}</div>
       </div>
-      <Footer completion={getCompletion()} />
+      <Footer completion={getCompletion()} onNextClick={handleNextClick} onPrevClick={handlePrevClick} />
     </div>
   );
 };

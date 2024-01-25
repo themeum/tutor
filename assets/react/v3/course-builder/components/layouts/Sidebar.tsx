@@ -1,14 +1,5 @@
 import ProgressStep, { ProgressStatus } from "@Atoms/ProgressStep";
-import SVGIcon from "@Atoms/SVGIcon";
-import {
-  colorPalate,
-  colorPalateTutor,
-  fontFamily,
-  fontSize,
-  headerHeight,
-  lineHeight,
-  spacing,
-} from "@Config/styles";
+import { colorPalateTutor, spacing } from "@Config/styles";
 import { CourseProgressSteps, Option } from "@Utils/types";
 import { css } from "@emotion/react";
 import { __ } from "@wordpress/i18n";
@@ -20,7 +11,12 @@ type SidebarProps = {
   completedSteps: CourseProgressSteps[];
 };
 
-const Sidebar = ({ progressSteps, activeStep, setActiveStep, completedSteps }: SidebarProps) => {
+const Sidebar = ({
+  progressSteps,
+  activeStep,
+  setActiveStep,
+  completedSteps,
+}: SidebarProps) => {
   const getStatus = (step: Option<CourseProgressSteps>): ProgressStatus => {
     if (completedSteps.includes(step.value)) {
       return "completed";
@@ -37,7 +33,12 @@ const Sidebar = ({ progressSteps, activeStep, setActiveStep, completedSteps }: S
     <div css={styles.sidebar}>
       <div css={styles.progressWrapper}>
         {progressSteps.map((step, idx) => (
-          <ProgressStep key={idx} step={step} status={getStatus(step)} onClick={setActiveStep} />
+          <ProgressStep
+            key={idx}
+            step={step}
+            status={getStatus(step)}
+            onClick={setActiveStep}
+          />
         ))}
       </div>
     </div>
@@ -48,9 +49,14 @@ export default Sidebar;
 
 const styles = {
   sidebar: css`
-    padding-top: ${spacing[24]};
-    padding-left: ${spacing[56]};
+    padding: ${spacing[24]} 0 0 ${spacing[56]};
     border-right: 1px solid ${colorPalateTutor.stroke.divider};
+
+    html[dir="rtl"] & {
+      padding: ${spacing[24]} ${spacing[56]} 0 0;
+      border-right: 0;
+      border-left: 1px solid ${colorPalateTutor.stroke.divider};
+    }
   `,
   progressWrapper: css`
     display: flex;

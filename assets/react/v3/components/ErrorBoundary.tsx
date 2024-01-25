@@ -222,15 +222,12 @@ export default ErrorBoundary;
 
 const styles = {
   container: css`
-    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
-
     * {
       box-sizing: border-box;
       padding: 0;
       margin: 0;
     }
 
-    font-family: ${fontFamily.robotoMono};
     width: 100%;
     height: 100vh;
     display: flex;
@@ -299,7 +296,6 @@ const styles = {
     font-size: ${fontSize[14]};
     font-weight: ${fontWeight.bold};
     color: ${colorPalate.basic.black.default};
-    font-family: ${fontFamily.sfMono};
     margin-top: ${spacing[4]};
     color: ${colorPalate.text.critical};
   `,
@@ -323,12 +319,10 @@ const styles = {
   functionName: css`
     ${typography.heading6()};
     color: ${colorPalate.text.default};
-    font-family: ${fontFamily.sfMono};
   `,
   filePath: css`
     color: ${colorPalate.text.neutral};
     margin-left: ${spacing[12]};
-    font-family: ${fontFamily.robotoMono};
     font-size: ${fontSize[14]};
   `,
   sourceEditor: css`
