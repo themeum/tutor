@@ -959,6 +959,7 @@ class QuizModel {
 
 		$table_quiz_attempt_answers  = $wpdb->prefix . 'tutor_quiz_attempt_answers';
 		$table_quiz_questions        = $wpdb->prefix . 'tutor_quiz_questions';
+		$table_quiz_attempts         = $wpdb->prefix . 'tutor_quiz_attempts';
 		$table_quiz_question_answers = $wpdb->prefix . 'tutor_quiz_question_answers';
 
 		$query = "SELECT 
@@ -1002,7 +1003,14 @@ class QuizModel {
 				) AS given_answer, 
 				att_ans.question_mark, 
 				att_ans.achieved_mark, 
-				att_ans.is_correct 
+				att_ans.is_correct,
+				(
+					SELECT 
+						attempt_info
+					FROM {$table_quiz_attempts}
+					WHERE attempt_id = {$attempt_id}
+					LIMIT 1
+				)
 			FROM 
 				{$table_quiz_attempt_answers} AS att_ans 
 				JOIN {$table_quiz_questions} AS ques ON ques.question_id = att_ans.question_id 
