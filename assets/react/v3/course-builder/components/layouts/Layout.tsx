@@ -31,12 +31,8 @@ const progressSteps: Option<CourseProgressSteps>[] = [
 ];
 
 const Layout: React.FC = () => {
-  const [activeStep, setActiveStep] = useState<CourseProgressSteps>(
-    "additionals"
-  );
-  const [completedSteps, setCompletedSteps] = useState<CourseProgressSteps[]>([
-    "basic",
-  ]);
+  const [activeStep, setActiveStep] = useState<CourseProgressSteps>("basic");
+  const [completedSteps, setCompletedSteps] = useState<CourseProgressSteps[]>(["basic"]);
 
   const mainContents = {
     basic: <CourseBasic />,

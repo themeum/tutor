@@ -1,7 +1,7 @@
 import React from 'react';
 import Button, { ButtonVariant } from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorPalate, spacing } from '@Config/styles';
+import { borderRadius, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
@@ -20,15 +20,15 @@ const styles = {
   `,
   clearButton: css`
     position: absolute;
-    right: ${spacing[4]};
-    top: ${spacing[6]};
-    width: 26px;
-    height: 26px;
+    right: ${spacing[2]};
+    top: ${spacing[2]};
+    width: 36px;
+    height: 36px;
     border-radius: ${borderRadius[2]};
-    background: 'transparent';
+    background: transparent;
 
-    &:hover {
-      background: ${colorPalate.surface.hover};
+    button {
+      padding: ${spacing[10]};
     }
   `,
 };
@@ -115,7 +115,7 @@ const FormInput = ({
               />
               {isClearable && !!field.value && (
                 <div css={styles.clearButton}>
-                  <Button variant={ButtonVariant.plain} onClick={() => field.onChange(null)}>
+                  <Button variant={ButtonVariant.text} onClick={() => field.onChange(null)}>
                     <SVGIcon name="timesAlt" />
                   </Button>
                 </div>

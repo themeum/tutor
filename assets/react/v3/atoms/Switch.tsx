@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorPalateTutor, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { nanoid } from '@Utils/util';
@@ -10,33 +10,34 @@ const styles = {
   switchStyles: css`
     appearance: none;
     border: 0;
-    width: 28px;
-    height: 12px;
-    background: ${colorPalate.border.disabled};
-    box-shadow: ${shadow.switch};
+    width: 30px;
+    height: 16px;
+    background: ${colorPalateTutor.color.black[8]};
+    border: 1px solid ${colorPalateTutor.stroke.hover};
     border-radius: ${borderRadius[10]};
     position: relative;
     display: inline-block;
     vertical-align: middle;
     cursor: pointer;
-    transition: background-color 0.1s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    transition: background-color 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 
     &:after {
       content: '';
       position: absolute;
-      top: -${spacing[2]};
-      left: -${spacing[2]};
-      width: 16px;
-      height: 16px;
-      background: ${colorPalate.icon.neutral};
+      top: ${spacing[2]};
+      left: ${spacing[2]};
+      width: 10px;
+      height: 10px;
+      background: ${colorPalateTutor.color.black[50]};
       border-radius: ${borderRadius.circle};
-      transition: left 0.1s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+      transition: left 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 0.25s ease;
     }
 
     &:checked {
-      background: ${colorPalate.surface.selected.pressed};
+      background: ${colorPalateTutor.color.success[80]};
+      border-color: ${colorPalateTutor.color.success[80]};
       &:after {
-        background: ${colorPalate.basic.primary.default};
+        background: ${colorPalateTutor.background.white};
         left: ${spacing[16]};
       }
     }
@@ -50,7 +51,7 @@ const styles = {
 
   labelStyles: (isEnabled: boolean) => css`
     ${typography.caption()};
-    color: ${isEnabled ? colorPalate.text.dark : colorPalate.text.disabled};
+    color: ${isEnabled ? colorPalateTutor.text.title : colorPalateTutor.text.subdued};
   `,
 
   wrapperStyle: (labelPosition: labelPositionType) => css`

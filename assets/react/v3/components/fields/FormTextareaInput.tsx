@@ -1,7 +1,7 @@
-import { colorPalate, spacing } from '@Config/styles';
+import React from 'react';
+import { spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
-import { useTranslation } from '@Hooks/useTranslation';
 import { FormControllerProps } from '@Utils/form';
 
 import FormFieldWrapper from './FormFieldWrapper';
@@ -41,8 +41,12 @@ const FormTextareaInput = ({
   isHidden,
   enableResize = false,
 }: FormTextareaInputProps) => {
-  const t = useTranslation();
   const inputValue = field.value ?? '';
+  
+  let characterCount;
+  if (maxLimit) {
+    characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
+  }
 
   return (
     <FormFieldWrapper
@@ -55,6 +59,7 @@ const FormTextareaInput = ({
       placeholder={placeholder}
       helpText={helpText}
       isHidden={isHidden}
+      characterCount={characterCount}
     >
       {(inputProps) => {
         return (
@@ -84,9 +89,6 @@ const FormTextareaInput = ({
                 cols={columns}
               />
             </div>
-            {maxLimit && maxLimit > 0 && (
-              <p css={styles.maxLimit}>{t('COM_SPPAGEBUILDER_STORE_MAX_CHARACTERS', { maxCharacters: maxLimit })}</p>
-            )}
           </>
         );
       }}
@@ -112,10 +114,5 @@ const styles = {
         resize: vertical;
       `}
     }
-  `,
-  maxLimit: css`
-    ${typography.caption()};
-    color: ${colorPalate.text.neutral};
-    text-transform: lowercase;
   `,
 };
