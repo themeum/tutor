@@ -1,26 +1,15 @@
-import Button, { ButtonVariant } from "@Atoms/Button";
-import SVGIcon from "@Atoms/SVGIcon";
-import {
-  colorPalate,
-  colorPalateTutor,
-  headerHeight,
-  spacing,
-} from "@Config/styles";
-import { css } from "@emotion/react";
-import { styleUtils } from "@Utils/style-utils";
-import { __ } from "@wordpress/i18n";
+import Button, { ButtonVariant } from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+import { colorPalate, colorTokens, headerHeight, spacing } from '@Config/styles';
+import { css } from '@emotion/react';
+import { styleUtils } from '@Utils/style-utils';
+import { __ } from '@wordpress/i18n';
 
 const Header = () => {
   return (
     <div css={styles.wrapper}>
       <div>
-        <svg
-          width="96"
-          height="20"
-          viewBox="0 0 96 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg width="96" height="20" viewBox="0 0 96 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clipPath="url(#clip0_32880_20004)">
             <path
               d="M22.9125 16.4205V5.30046H19.5792C19.2025 5.30046 19.0625 5.06046 19.0625 4.47712V3.96046C19.0625 3.37379 19.2025 3.13379 19.5792 3.13379H28.7991C29.1791 3.13379 29.3158 3.37379 29.3158 3.96046V4.47712C29.3158 5.06046 29.1424 5.30046 28.7991 5.30046H25.4958V16.4205C25.4958 16.8005 25.1858 17.0071 24.4625 17.0071H23.9458C23.2225 17.0005 22.9125 16.8005 22.9125 16.4205Z"
@@ -81,18 +70,11 @@ const Header = () => {
         </svg>
       </div>
       <div css={styles.headerRight}>
-        <Button
-          variant={ButtonVariant.text}
-          icon={<SVGIcon name="save" width={24} height={24} />}
-        >
-          {__("Save as Draft", "tutor")}
+        <Button variant={ButtonVariant.text} icon={<SVGIcon name="save" width={24} height={24} />}>
+          {__('Save as Draft', 'tutor')}
         </Button>
-        <Button variant={ButtonVariant.secondary}>
-          {__("Preview", "tutor")}
-        </Button>
-        <Button variant={ButtonVariant.primary}>
-          {__("Publish", "tutor")}
-        </Button>
+        <Button variant={ButtonVariant.secondary}>{__('Preview', 'tutor')}</Button>
+        <Button variant={ButtonVariant.primary}>{__('Publish', 'tutor')}</Button>
         <button
           type="button"
           css={styles.closeButton}
@@ -113,14 +95,14 @@ const styles = {
   wrapper: css`
     height: ${headerHeight}px;
     width: 100%;
-    background-color: ${colorPalateTutor.background.white};
-    border-bottom: 1px solid ${colorPalateTutor.stroke.divider};
+    background-color: ${colorTokens.background.white};
+    border-bottom: 1px solid ${colorTokens.stroke.divider};
     padding: ${spacing[20]} ${spacing[32]} ${spacing[20]} ${spacing[56]};
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    html[dir=rtl] & {
+    html[dir='rtl'] & {
       padding: ${spacing[20]} ${spacing[56]} ${spacing[20]} ${spacing[32]};
     }
   `,

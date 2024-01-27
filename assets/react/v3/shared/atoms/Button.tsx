@@ -1,38 +1,38 @@
-import SVGIcon from "@Atoms/SVGIcon";
+import SVGIcon from '@Atoms/SVGIcon';
 import {
   borderRadius,
   colorPalate,
-  colorPalateTutor,
+  colorTokens,
   fontSize,
   fontWeight,
   lineHeight,
   shadow,
   spacing,
   zIndex,
-} from "@Config/styles";
-import { typography } from "@Config/typography";
-import { css, keyframes, SerializedStyles } from "@emotion/react";
-import { styleUtils } from "@Utils/style-utils";
-import React, { ReactNode } from "react";
+} from '@Config/styles';
+import { typography } from '@Config/typography';
+import { css, keyframes, SerializedStyles } from '@emotion/react';
+import { styleUtils } from '@Utils/style-utils';
+import React, { ReactNode } from 'react';
 
 export enum ButtonVariant {
-  primary = "primary",
-  secondary = "secondary",
-  outlined = "outlined",
-  tertiary = "tertiary",
-  danger = "danger",
-  text = "text",
+  primary = 'primary',
+  secondary = 'secondary',
+  outlined = 'outlined',
+  tertiary = 'tertiary',
+  danger = 'danger',
+  text = 'text',
 }
 
 export enum ButtonSize {
-  large = "large",
-  medium = "medium",
-  small = "small",
+  large = 'large',
+  medium = 'medium',
+  small = 'small',
 }
 
 export enum ButtonIconPosition {
-  left = "left",
-  right = "right",
+  left = 'left',
+  right = 'right',
 }
 
 const spin = keyframes`
@@ -72,197 +72,193 @@ const styles = {
     position: relative;
 
     ${size === ButtonSize.large &&
-      css`
-        padding: ${spacing[12]} ${spacing[32]};
-      `}
+    css`
+      padding: ${spacing[12]} ${spacing[32]};
+    `}
 
     ${size === ButtonSize.small &&
-      css`
-        font-size: ${fontSize[13]};
-        line-height: ${lineHeight[20]};
-        padding: ${spacing[6]} ${spacing[16]};
-      `}
+    css`
+      font-size: ${fontSize[13]};
+      line-height: ${lineHeight[20]};
+      padding: ${spacing[6]} ${spacing[16]};
+    `}
     
     ${variant === ButtonVariant.primary &&
+    css`
+      background-color: ${colorTokens.action.primary.default};
+      color: ${colorTokens.text.white};
+
+      &:hover {
+        background-color: ${colorTokens.action.primary.hover};
+      }
+
+      &:active {
+        background-color: ${colorTokens.action.primary.active};
+      }
+
+      &:focus {
+        box-shadow: ${shadow.focus};
+      }
+
+      ${(disabled || loading) &&
       css`
-        background-color: ${colorPalateTutor.action.primary.default};
-        color: ${colorPalateTutor.text.white};
-
-        &:hover {
-          background-color: ${colorPalateTutor.action.primary.hover};
-        }
-
-        &:active {
-          background-color: ${colorPalateTutor.action.primary.active};
-        }
-
-        &:focus {
-          box-shadow: ${shadow.focus};
-        }
-
-        ${(disabled || loading) &&
-          css`
-            background-color: ${colorPalateTutor.action.primary.disable};
-            color: ${colorPalateTutor.text.disable};
-          `}
+        background-color: ${colorTokens.action.primary.disable};
+        color: ${colorTokens.text.disable};
       `}
+    `}
 
     ${variant === ButtonVariant.secondary &&
+    css`
+      background-color: ${colorTokens.action.secondary.default};
+      color: ${colorTokens.text.brand};
+
+      &:hover {
+        background-color: ${colorTokens.action.secondary.hover};
+      }
+
+      &:active {
+        background-color: ${colorTokens.action.secondary.active};
+      }
+
+      &:focus {
+        box-shadow: ${shadow.focus};
+      }
+
+      ${(disabled || loading) &&
       css`
-        background-color: ${colorPalateTutor.action.secondary.default};
-        color: ${colorPalateTutor.text.brand};
-
-        &:hover {
-          background-color: ${colorPalateTutor.action.secondary.hover};
-        }
-
-        &:active {
-          background-color: ${colorPalateTutor.action.secondary.active};
-        }
-
-        &:focus {
-          box-shadow: ${shadow.focus};
-        }
-
-        ${(disabled || loading) &&
-          css`
-            background-color: ${colorPalateTutor.action.primary.disable};
-            color: ${colorPalateTutor.text.disable};
-          `}
+        background-color: ${colorTokens.action.primary.disable};
+        color: ${colorTokens.text.disable};
       `}
+    `}
 
     ${variant === ButtonVariant.outlined &&
+    css`
+      background-color: ${colorTokens.action.outline.default};
+      color: ${colorTokens.text.brand};
+      box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
+
+      &:hover {
+        background-color: ${colorTokens.action.outline.hover};
+      }
+
+      &:active {
+        background-color: ${colorTokens.action.outline.active};
+      }
+
+      &:focus {
+        box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand}, ${shadow.focus};
+      }
+
+      ${(disabled || loading) &&
       css`
-        background-color: ${colorPalateTutor.action.outline.default};
-        color: ${colorPalateTutor.text.brand};
-        box-shadow: inset 0 0 0 1px ${colorPalateTutor.stroke.brand};
-
-        &:hover {
-          background-color: ${colorPalateTutor.action.outline.hover};
-        }
-
-        &:active {
-          background-color: ${colorPalateTutor.action.outline.active};
-        }
-
-        &:focus {
-          box-shadow: inset 0 0 0 1px ${colorPalateTutor.stroke.brand},
-            ${shadow.focus};
-        }
-
-        ${(disabled || loading) &&
-          css`
-            color: ${colorPalateTutor.text.disable};
-            box-shadow: inset 0 0 0 1px
-              ${colorPalateTutor.action.outline.disable};
-          `}
+        color: ${colorTokens.text.disable};
+        box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
       `}
+    `}
 
     ${variant === ButtonVariant.tertiary &&
+    css`
+      background-color: ${colorTokens.background.white};
+      color: ${colorTokens.text.subdued};
+      box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
+
+      &:hover {
+        background-color: ${colorTokens.background.hover};
+        box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
+      }
+
+      &:active {
+        background-color: ${colorTokens.background.active};
+        box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
+      }
+
+      &:focus {
+        box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default}, ${shadow.focus};
+      }
+
+      ${(disabled || loading) &&
       css`
-        background-color: ${colorPalateTutor.background.white};
-        color: ${colorPalateTutor.text.subdued};
-        box-shadow: inset 0 0 0 1px ${colorPalateTutor.stroke.default};
-
-        &:hover {
-          background-color: ${colorPalateTutor.background.hover};
-          box-shadow: inset 0 0 0 1px ${colorPalateTutor.stroke.hover};
-        }
-
-        &:active {
-          background-color: ${colorPalateTutor.background.active};
-          box-shadow: inset 0 0 0 1px ${colorPalateTutor.stroke.hover};
-        }
-
-        &:focus {
-          box-shadow: inset 0 0 0 1px ${colorPalateTutor.stroke.default},
-            ${shadow.focus};
-        }
-
-        ${(disabled || loading) &&
-          css`
-            color: ${colorPalateTutor.text.disable};
-            box-shadow: inset 0 0 0 1px
-              ${colorPalateTutor.action.outline.disable};
-          `}
+        color: ${colorTokens.text.disable};
+        box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
       `}
+    `}
 
     ${variant === ButtonVariant.danger &&
+    css`
+      background-color: ${colorTokens.background.status.errorFail};
+      color: ${colorTokens.text.error};
+
+      &:hover {
+        background-color: ${colorTokens.background.status.errorFail};
+      }
+
+      &:active {
+        background-color: ${colorTokens.background.status.errorFail};
+      }
+
+      &:focus {
+        box-shadow: ${shadow.focus};
+      }
+
+      ${(disabled || loading) &&
       css`
-        background-color: ${colorPalateTutor.background.status.errorFail};
-        color: ${colorPalateTutor.text.error};
-
-        &:hover {
-          background-color: ${colorPalateTutor.background.status.errorFail};
-        }
-
-        &:active {
-          background-color: ${colorPalateTutor.background.status.errorFail};
-        }
-
-        &:focus {
-          box-shadow: ${shadow.focus};
-        }
-
-        ${(disabled || loading) &&
-          css`
-            background-color: ${colorPalateTutor.action.primary.disable};
-            color: ${colorPalateTutor.text.disable};
-          `}
+        background-color: ${colorTokens.action.primary.disable};
+        color: ${colorTokens.text.disable};
       `}
+    `}
 
     ${variant === ButtonVariant.text &&
+    css`
+      background-color: transparent;
+      color: ${colorTokens.text.title};
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:active {
+        color: ${colorTokens.text.primary};
+      }
+
+      &:focus {
+        color: ${colorTokens.text.primary};
+        box-shadow: ${shadow.focus};
+      }
+
+      svg {
+        color: ${colorTokens.icon.default};
+      }
+
+      ${(disabled || loading) &&
       css`
-        background-color: transparent;
-        color: ${colorPalateTutor.text.title};
-
-        &:hover {
-          text-decoration: underline;
-        }
-
-        &:active {
-          color: ${colorPalateTutor.text.primary};
-        }
-
-        &:focus {
-          color: ${colorPalateTutor.text.primary};
-          box-shadow: ${shadow.focus};
-        }
-
-        svg {
-          color: ${colorPalateTutor.icon.default};
-        }
-
-        ${(disabled || loading) &&
-          css`
-            color: ${colorPalateTutor.text.disable};
-          `}
+        color: ${colorTokens.text.disable};
       `}
+    `}
 
     ${(disabled || loading) &&
-      css`
-        pointer-events: none;
-      `}
+    css`
+      pointer-events: none;
+    `}
   `,
   buttonContent: (loading: boolean, disabled: boolean) => css`
     display: flex;
     align-items: center;
 
     ${loading &&
-      !disabled &&
-      css`
-        color: transparent;
-      `}
+    !disabled &&
+    css`
+      color: transparent;
+    `}
   `,
   buttonIcon: (iconPosition: ButtonIconPosition) => css`
     display: grid;
     place-items: center;
     margin-right: ${spacing[6]};
     ${iconPosition === ButtonIconPosition.right &&
-      css`
-        margin-right: 0;
-        margin-left: ${spacing[6]};
-      `}
+    css`
+      margin-right: 0;
+      margin-left: ${spacing[6]};
+    `}
   `,
   spinner: css`
     position: absolute;
@@ -279,7 +275,7 @@ const styles = {
 interface ButtonProps {
   children?: ReactNode;
   variant?: ButtonVariant;
-  type?: "submit" | "button";
+  type?: 'submit' | 'button';
   size?: ButtonSize;
   icon?: React.ReactNode;
   iconPosition?: ButtonIconPosition;
@@ -294,7 +290,7 @@ interface ButtonProps {
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      type = "button",
+      type = 'button',
       children,
       variant = ButtonVariant.primary,
       size = ButtonSize.medium,
@@ -313,10 +309,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         type={type}
         ref={ref}
-        css={[
-          styles.button(variant, size, iconPosition, loading, disabled),
-          buttonCss,
-        ]}
+        css={[styles.button(variant, size, iconPosition, loading, disabled), buttonCss]}
         onClick={onClick}
         tabIndex={tabIndex}
       >

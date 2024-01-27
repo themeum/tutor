@@ -1,4 +1,4 @@
-import { borderRadius, colorPalateTutor, fontSize, lineHeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import { AnimatedDiv } from '@Hooks/useAnimation';
 import { useSpring } from '@react-spring/web';
@@ -62,8 +62,8 @@ const styles = {
   contentBox: (placement: Placement) => css`
     max-width: 250px;
     width: 100%;
-    background-color: ${colorPalateTutor.color.black.main};
-    color: ${colorPalateTutor.text.white};
+    background-color: ${colorTokens.color.black.main};
+    color: ${colorTokens.text.white};
     border-radius: ${borderRadius[6]};
     padding: ${spacing[4]} ${spacing[8]};
     font-size: ${fontSize[15]};
@@ -74,7 +74,7 @@ const styles = {
       content: '';
       height: 8px;
       width: 8px;
-      background-color: ${colorPalateTutor.color.black.main};
+      background-color: ${colorTokens.color.black.main};
       position: absolute;
       bottom: -4px;
       left: 50%;

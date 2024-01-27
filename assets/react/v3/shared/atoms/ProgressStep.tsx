@@ -1,7 +1,7 @@
 import { CourseProgressSteps, Option } from '@Utils/types';
 import SVGIcon from './SVGIcon';
 import { css } from '@emotion/react';
-import { colorPalateTutor, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { typography } from '@Config/typography';
 
@@ -19,7 +19,7 @@ const ProgressStep = ({ step, status, onClick }: ProgressStep) => {
       <div css={styles.icon(status)}>
         <SVGIcon name={status} width={24} height={24} />
       </div>
-      <button css={styles.button(status)} onClick={() => onClick(step.value)}>
+      <button type="button" css={styles.button(status)} onClick={() => onClick(step.value)}>
         {step.label}
       </button>
     </div>
@@ -39,7 +39,7 @@ const styles = {
       content: '';
       width: 1px;
       height: 40px;
-      background-color: ${status === 'completed' ? colorPalateTutor.brand.blue : colorPalateTutor.color.black[10]};
+      background-color: ${status === 'completed' ? colorTokens.brand.blue : colorTokens.color.black[10]};
       position: absolute;
       left: ${spacing[12]};
       top: ${spacing[20]};
@@ -52,7 +52,7 @@ const styles = {
   `,
   icon: (status: string) => css`
     display: flex;
-    color: ${status === 'inactive' ? colorPalateTutor.color.black[10] : colorPalateTutor.design.brand};
+    color: ${status === 'inactive' ? colorTokens.color.black[10] : colorTokens.design.brand};
 
     svg {
       z-index: 1;
@@ -61,7 +61,7 @@ const styles = {
   button: (status: string) => css`
     ${styleUtils.resetButton};
     ${typography.caption('regular')};
-    color: ${status === 'inactive' ? colorPalateTutor.text.hints : colorPalateTutor.text.primary};
+    color: ${status === 'inactive' ? colorTokens.text.hints : colorTokens.text.primary};
     cursor: pointer;
   `,
 };

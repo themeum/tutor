@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import Header from '@CourseBuilderComponents/layouts/Header';
 import Sidebar from '@CourseBuilderComponents/layouts/Sidebar';
 import Footer from '@CourseBuilderComponents/layouts/Footer';
 import { css } from '@emotion/react';
 import { footerHeight, headerHeight } from '@Config/styles';
-import { CourseProgressSteps, Option } from '@Utils/types';
-import { Outlet } from 'react-router-dom';
+import { Option } from '@Utils/types';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
-import { RouteDefinition } from '@Config/route-configs';
+import { useCurrentPath } from '@Hooks/useCurrentPath';
+import routes from '@CourseBuilderConfig/routes';
 
 const progressSteps: Option<string>[] = [
   {
@@ -30,8 +31,18 @@ const progressSteps: Option<string>[] = [
 ];
 
 const Layout: React.FC = () => {
-  const [activeStep, setActiveStep] = useState<CourseProgressSteps>('basic');
-  const [completedSteps, setCompletedSteps] = useState<CourseProgressSteps[]>(['basic']);
+  const currentPath = useCurrentPath(routes);
+  const navigate = useNavigate();
+
+  const [activeStep, setActiveStep] = useState<string>(currentPath);
+  const [completedSteps, setCompletedSteps] = useState<string[]>([currentPath]);
+
+  useEffect(() => {
+    setActiveStep(currentPath);
+    setCompletedSteps(previous =>
+      previous.includes(currentPath) ? previous.filter(path => path !== currentPath) : [...previous, currentPath]
+    );
+  }, [currentPath]);
 
   const getCompletion = () => {
     const totalSteps = progressSteps.length;
@@ -42,14 +53,16 @@ const Layout: React.FC = () => {
   const handleNextClick = () => {
     const curriculumIndex = progressSteps.findIndex(item => item.value === activeStep);
     if (curriculumIndex < progressSteps.length - 1) {
-      // setActiveStep(progressSteps[curriculumIndex + 1].value);
+      const pagePath = progressSteps[curriculumIndex + 1].value;
+      navigate(pagePath);
     }
   };
 
   const handlePrevClick = () => {
     const curriculumIndex = progressSteps.findIndex(item => item.value === activeStep);
     if (curriculumIndex > 0) {
-      // setActiveStep(progressSteps[curriculumIndex - 1].value);
+      const pagePath = progressSteps[curriculumIndex - 1].value;
+      navigate(pagePath);
     }
   };
 

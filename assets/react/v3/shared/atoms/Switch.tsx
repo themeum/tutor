@@ -1,4 +1,4 @@
-import { borderRadius, colorPalateTutor, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { nanoid } from '@Utils/util';
@@ -12,8 +12,8 @@ const styles = {
     border: 0;
     width: 30px;
     height: 16px;
-    background: ${colorPalateTutor.color.black[8]};
-    border: 1px solid ${colorPalateTutor.stroke.hover};
+    background: ${colorTokens.color.black[8]};
+    border: 1px solid ${colorTokens.stroke.hover};
     border-radius: ${borderRadius[10]};
     position: relative;
     display: inline-block;
@@ -28,16 +28,16 @@ const styles = {
       left: ${spacing[2]};
       width: 10px;
       height: 10px;
-      background: ${colorPalateTutor.color.black[50]};
+      background: ${colorTokens.color.black[50]};
       border-radius: ${borderRadius.circle};
       transition: left 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 0.25s ease;
     }
 
     &:checked {
-      background: ${colorPalateTutor.color.success[80]};
-      border-color: ${colorPalateTutor.color.success[80]};
+      background: ${colorTokens.color.success[80]};
+      border-color: ${colorTokens.color.success[80]};
       &:after {
-        background: ${colorPalateTutor.background.white};
+        background: ${colorTokens.background.white};
         left: ${spacing[16]};
       }
     }
@@ -51,7 +51,7 @@ const styles = {
 
   labelStyles: (isEnabled: boolean) => css`
     ${typography.caption()};
-    color: ${isEnabled ? colorPalateTutor.text.title : colorPalateTutor.text.subdued};
+    color: ${isEnabled ? colorTokens.text.title : colorTokens.text.subdued};
   `,
 
   wrapperStyle: (labelPosition: labelPositionType) => css`

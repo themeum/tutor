@@ -1,18 +1,12 @@
-import LoadingSpinner from "@Atoms/LoadingSpinner";
-import SVGIcon from "@Atoms/SVGIcon";
-import Tooltip from "@Atoms/Tooltip";
-import {
-  borderRadius,
-  colorPalateTutor,
-  lineHeight,
-  shadow,
-  spacing,
-} from "@Config/styles";
-import { typography } from "@Config/typography";
-import { css, SerializedStyles } from "@emotion/react";
-import { FormControllerProps } from "@Utils/form";
-import { nanoid } from "@Utils/util";
-import { ReactNode } from "react";
+import LoadingSpinner from '@Atoms/LoadingSpinner';
+import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import { css, SerializedStyles } from '@emotion/react';
+import { FormControllerProps } from '@Utils/form';
+import { nanoid } from '@Utils/util';
+import { ReactNode } from 'react';
 
 interface InputOptions {
   variant: unknown;
@@ -26,7 +20,7 @@ interface InputProps {
   id: string;
   name: string;
   css: SerializedStyles[];
-  "aria-invalid": "true" | "false";
+  'aria-invalid': 'true' | 'false';
   disabled: boolean;
   readOnly: boolean;
   placeholder?: string;
@@ -48,27 +42,21 @@ interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
 }
 
 const styles = {
-  container: ({
-    disabled,
-    isHidden,
-  }: {
-    disabled: boolean;
-    isHidden: boolean;
-  }) => css`
+  container: ({ disabled, isHidden }: { disabled: boolean; isHidden: boolean }) => css`
     display: flex;
     flex-direction: column;
     position: relative;
     background: inherit;
 
     ${disabled &&
-      css`
-        opacity: 0.5;
-      `}
+    css`
+      opacity: 0.5;
+    `}
 
     ${isHidden &&
-      css`
-        display: none;
-      `}
+    css`
+      display: none;
+    `}
   `,
   inputContainer: (isInlineLabel: boolean) => css`
     display: flex;
@@ -77,33 +65,33 @@ const styles = {
     width: 100%;
 
     ${isInlineLabel &&
-      css`
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: ${spacing[12]};
-      `}
+    css`
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: ${spacing[12]};
+    `}
   `,
   input: (options: InputOptions) => css`
     width: 100%;
     height: 40px;
     border-radius: ${borderRadius[6]};
-    border: 1px solid ${colorPalateTutor.stroke.default};
+    border: 1px solid ${colorTokens.stroke.default};
     padding: ${spacing[8]} ${spacing[16]};
-    color: ${colorPalateTutor.text.title};
+    color: ${colorTokens.text.title};
     appearance: textfield;
 
     ${options.hasHelpText &&
-      css`
-        padding: 0 ${spacing[32]} 0 ${spacing[12]};
-      `}
+    css`
+      padding: 0 ${spacing[32]} 0 ${spacing[12]};
+    `}
 
     ${options.removeBorder &&
-      css`
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-      `}
+    css`
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+    `}
 
     :focus {
       outline: none;
@@ -117,19 +105,19 @@ const styles = {
     }
 
     ::placeholder {
-      color: ${colorPalateTutor.text.subdued};
+      color: ${colorTokens.text.subdued};
     }
 
     ${options.hasFieldError &&
-      css`
-        border: 1px solid ${colorPalateTutor.stroke.danger};
-      `}
+    css`
+      border: 1px solid ${colorTokens.stroke.danger};
+    `}
 
     ${options.readOnly &&
-      css`
-        border: 1px solid ${colorPalateTutor.background.disable};
-        background-color: ${colorPalateTutor.background.disable};
-      `}
+    css`
+      border: 1px solid ${colorTokens.background.disable};
+      background-color: ${colorTokens.background.disable};
+    `}
   `,
   errorLabel: (hasError: boolean) => css`
     ${typography.small()};
@@ -137,9 +125,9 @@ const styles = {
     align-items: center;
     margin-top: ${spacing[4]};
     ${hasError &&
-      css`
-        color: ${colorPalateTutor.color.danger.main};
-      `}
+    css`
+      color: ${colorTokens.color.danger.main};
+    `}
     & svg {
       margin-right: ${spacing[8]};
     }
@@ -151,18 +139,18 @@ const styles = {
 
     > div {
       display: flex;
-      color: ${colorPalateTutor.color.black[30]};
+      color: ${colorTokens.color.black[30]};
     }
   `,
   label: (isInlineLabel: boolean) => css`
     ${typography.caption()}
     line-height: ${lineHeight[24]};
-    color: ${colorPalateTutor.text.title};
+    color: ${colorTokens.text.title};
 
     ${isInlineLabel &&
-      css`
+    css`
       ${typography.caption()}
-      color: ${colorPalateTutor.text.title};
+      color: ${colorTokens.text.title};
     `}
   `,
   inputWrapper: css`
@@ -209,7 +197,7 @@ const FormFieldWrapper = <T,>({
             hasHelpText: !!helpText,
           }),
         ],
-        "aria-invalid": fieldState.error ? "true" : "false",
+        'aria-invalid': fieldState.error ? 'true' : 'false',
         disabled: disabled,
         readOnly: readOnly,
         placeholder,
@@ -217,7 +205,7 @@ const FormFieldWrapper = <T,>({
 
       {loading && (
         <div css={styles.loader}>
-          <LoadingSpinner size={20} color={colorPalateTutor.icon.default} />
+          <LoadingSpinner size={20} color={colorTokens.icon.default} />
         </div>
       )}
     </div>
@@ -243,10 +231,7 @@ const FormFieldWrapper = <T,>({
         )}
 
         {characterCount ? (
-          <Tooltip
-            placement="right"
-            content={characterCount.maxLimit - characterCount.inputCharacter}
-          >
+          <Tooltip placement="right" content={characterCount.maxLimit - characterCount.inputCharacter}>
             {inputContent}
           </Tooltip>
         ) : (
@@ -255,8 +240,7 @@ const FormFieldWrapper = <T,>({
       </div>
       {fieldState.error?.message && (
         <p css={styles.errorLabel(!!fieldState.error)}>
-          <SVGIcon name="alert" width={20} height={20} />{" "}
-          {fieldState.error.message}
+          <SVGIcon name="alert" width={20} height={20} /> {fieldState.error.message}
         </p>
       )}
     </div>

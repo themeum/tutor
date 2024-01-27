@@ -190,7 +190,7 @@ export const colorPalate = {
   },
 };
 
-export const colorPalateTutor = {
+export const colorTokens = {
   brand: {
     blue: '#0049f8',
     black: '#092844',
@@ -213,7 +213,7 @@ export const colorPalateTutor = {
       completed: '#097336',
       onHold: '#ac0640',
       cancelled: '#6f7073',
-    }
+    },
   },
   surface: {
     tutor: '#ffffff',
@@ -281,7 +281,7 @@ export const colorPalateTutor = {
       cancelled: '#e1e1e8',
       refunded: '#ccebea',
       fail: '#fdd9d7',
-    }
+    },
   },
   action: {
     primary: {
@@ -302,16 +302,16 @@ export const colorPalateTutor = {
       hover: '#e9edfb',
       active: '#e1e7fa',
       disable: '#cacfe0',
-    }
+    },
   },
   wordpress: {
-    primary: "#2271b1",
-    primaryLight: "#007cba",
-    hoverShape: "#7faee6",
-    sidebarChildText: "#4ea2e6",
-    childBg: "#2d3337",
-    mainBg: "#1e2327",
-    text: "#b5bcc2"
+    primary: '#2271b1',
+    primaryLight: '#007cba',
+    hoverShape: '#7faee6',
+    sidebarChildText: '#4ea2e6',
+    childBg: '#2d3337',
+    mainBg: '#1e2327',
+    text: '#b5bcc2',
   },
   design: {
     dark: '#1a1b1e',
@@ -407,8 +407,8 @@ export const colorPalateTutor = {
     lightCoffee: '#fcf4ee',
     lightPurple2: '#f7ebfe',
     lightBlue: '#edf1fd',
-  }
-}
+  },
+};
 
 export const spacing = {
   0: '0',
