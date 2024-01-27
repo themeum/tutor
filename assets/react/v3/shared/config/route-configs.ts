@@ -14,7 +14,13 @@ type PathParams<Path extends string> = Path extends `:${infer Param}/${infer Res
 type PathArgs<Path extends string> = {
   [K in PathParams<Path>]: string;
 };
-const defineRoute = <P extends string>(template: P) => {
+
+export interface RouteDefinition<T extends string> {
+  template: T;
+  buildLink: (params: PathParams<T> extends never ? void : PathArgs<T>) => string;
+}
+
+export const defineRoute = <P extends string>(template: P): RouteDefinition<P> => {
   type Params = PathParams<P>;
   return {
     template,

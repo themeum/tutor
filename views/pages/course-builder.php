@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 </head>
 <body>
 
-	<div id="tutor-course-builder">React App Here</div>
+	<div id="tutor-course-builder"></div>
 	<!-- scripts -->
 	<?php //phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript ?>
 	<script src="<?php echo esc_url( tutor()->url . 'assets/js/tutor-course-builder-v3.min.js?v=' . TUTOR_VERSION ); ?>"></script>

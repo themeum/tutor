@@ -2,7 +2,7 @@ import collection from '@Config/icon-list';
 import { AxiosError } from 'axios';
 import { ReactNode } from 'react';
 
-export type CourseProgressSteps = 'basic' | 'curriculum' | 'additionals' | 'certificate';
+export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
 
 export type IconCollection = keyof typeof collection;
 

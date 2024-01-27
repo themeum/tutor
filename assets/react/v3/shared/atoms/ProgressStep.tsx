@@ -1,16 +1,16 @@
-import { CourseProgressSteps, Option } from "@Utils/types";
-import SVGIcon from "./SVGIcon";
-import { css } from "@emotion/react";
-import { colorPalateTutor, spacing } from "@Config/styles";
-import { styleUtils } from "@Utils/style-utils";
-import { typography } from "@Config/typography";
+import { CourseProgressSteps, Option } from '@Utils/types';
+import SVGIcon from './SVGIcon';
+import { css } from '@emotion/react';
+import { colorPalateTutor, spacing } from '@Config/styles';
+import { styleUtils } from '@Utils/style-utils';
+import { typography } from '@Config/typography';
 
-export type ProgressStatus = "inactive" | "active" | "completed";
+export type ProgressStatus = 'inactive' | 'active' | 'completed';
 
 type ProgressStep = {
-  step: Option<CourseProgressSteps>;
+  step: Option<string>;
   status: ProgressStatus;
-  onClick: (step: CourseProgressSteps) => void;
+  onClick: (step: string) => void;
 };
 
 const ProgressStep = ({ step, status, onClick }: ProgressStep) => {
@@ -36,7 +36,7 @@ const styles = {
     position: relative;
 
     &:not(:last-child)::before {
-      content: "";
+      content: '';
       width: 1px;
       height: 40px;
       background-color: ${status === 'completed' ? colorPalateTutor.brand.blue : colorPalateTutor.color.black[10]};
@@ -44,7 +44,7 @@ const styles = {
       left: ${spacing[12]};
       top: ${spacing[20]};
 
-      html[dir=rtl] & {
+      html[dir='rtl'] & {
         left: auto;
         right: ${spacing[12]};
       }
@@ -52,9 +52,7 @@ const styles = {
   `,
   icon: (status: string) => css`
     display: flex;
-    color: ${status === "inactive"
-      ? colorPalateTutor.color.black[10]
-      : colorPalateTutor.design.brand};
+    color: ${status === 'inactive' ? colorPalateTutor.color.black[10] : colorPalateTutor.design.brand};
 
     svg {
       z-index: 1;
@@ -62,10 +60,8 @@ const styles = {
   `,
   button: (status: string) => css`
     ${styleUtils.resetButton};
-    ${typography.caption("regular")};
-    color: ${status === "inactive"
-      ? colorPalateTutor.text.hints
-      : colorPalateTutor.text.primary};
+    ${typography.caption('regular')};
+    color: ${status === 'inactive' ? colorPalateTutor.text.hints : colorPalateTutor.text.primary};
     cursor: pointer;
   `,
 };

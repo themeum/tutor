@@ -37,7 +37,7 @@ const Tooltip = ({ children, content, allowHTML, placement = 'top' }: TooltipPro
   };
   return (
     <Tippy
-      render={(attributes) => {
+      render={attributes => {
         return (
           <AnimatedDiv style={props} hideOnOverflow={false} {...attributes} css={styles.contentBox(placement)}>
             {content}
@@ -71,7 +71,7 @@ const styles = {
     position: relative;
 
     &::before {
-      content: "";
+      content: '';
       height: 8px;
       width: 8px;
       background-color: ${colorPalateTutor.color.black.main};
@@ -80,21 +80,24 @@ const styles = {
       left: 50%;
       transform: translateX(-50%) rotate(45deg);
 
-      ${placement === 'right' && css`
+      ${placement === 'right' &&
+      css`
         bottom: auto;
         left: -4px;
         top: 50%;
         transform: translateY(-50%) rotate(45deg);
       `}
 
-      ${placement === 'bottom' && css`
+      ${placement === 'bottom' &&
+      css`
         bottom: auto;
         top: -4px;
         left: 50%;
         transform: translateX(-50%) rotate(45deg);
       `}
 
-      ${placement === 'left' && css`
+      ${placement === 'left' &&
+      css`
         bottom: auto;
         top: 50%;
         left: auto;

@@ -1,3 +1,4 @@
+import { SerializedStyles } from '@emotion/react';
 import { useSpring, animated, useTransition, easings, EasingFunction } from '@react-spring/web';
 import { ReactNode } from 'react';
 import useMeasure from 'react-use-measure';
@@ -129,11 +130,13 @@ export const useAnimation = <T,>({
 export const AnimatedDiv = ({
   children,
   style,
+  css,
   hideOnOverflow = true,
   ...props
 }: {
   children: ReactNode;
   style: Record<string, unknown>;
+  css?: SerializedStyles;
   hideOnOverflow?: boolean;
 }) => {
   return (

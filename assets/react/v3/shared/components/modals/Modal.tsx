@@ -4,7 +4,7 @@ import { colorPalate, zIndex } from '@Config/styles';
 import { css } from '@emotion/react';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { nanoid, noop } from '@Utils/util';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 
 const styles = {
   backdrop: css`
@@ -52,7 +52,7 @@ const ModalContext = React.createContext<ModalContextType>({
 
 export const useModal = () => useContext(ModalContext);
 
-export const ModalProvider: React.FunctionComponent = ({ children }) => {
+export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = ({ children }) => {
   const [state, setState] = useState<{
     modals: {
       id: string;
@@ -68,8 +68,8 @@ export const ModalProvider: React.FunctionComponent = ({ children }) => {
   });
 
   const showModal = useCallback<ModalContextType['showModal']>(({ component, props, closeOnOutsideClick = false }) => {
-    return new Promise((resolve) => {
-      setState((prevState) => ({
+    return new Promise(resolve => {
+      setState(prevState => ({
         ...prevState,
         modals: [...prevState.modals, { component, props, resolve, closeOnOutsideClick, id: nanoid() }],
       }));
@@ -77,7 +77,7 @@ export const ModalProvider: React.FunctionComponent = ({ children }) => {
   }, []);
 
   const closeModal = useCallback<ModalContextType['closeModal']>((data = { action: 'CLOSE' }) => {
-    setState((prevState) => {
+    setState(prevState => {
       const lastModal = prevState.modals[prevState.modals.length - 1];
       lastModal.resolve(data);
       return {
