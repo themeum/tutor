@@ -88,7 +88,7 @@ class Assets {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	private function get_default_localized_data() {
+	public function get_default_localized_data() {
 		$home_url = get_home_url();
 		$parsed   = parse_url( $home_url );
 
