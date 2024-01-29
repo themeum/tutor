@@ -22,12 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<title><?php esc_html_e( 'Tutor Course Builder', 'tutor' ); ?></title>
 	<?php wp_print_styles(); ?>
 </head>
-<body>
-
-	<div id="tutor-course-builder"></div>
-	<!-- scripts -->
-	<?php //phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript ?>
-	<script src="<?php echo esc_url( tutor()->url . 'assets/js/tutor-course-builder-v3.min.js?v=' . TUTOR_VERSION ); ?>"></script>
+<body data-tutor-context="<?php echo is_admin() ? 'backend' : 'frontend'; ?>">
+	<div id="tutor-course-builder">React App Here</div>
+	<?php wp_print_footer_scripts(); ?>
 </body>
 </html>
 
