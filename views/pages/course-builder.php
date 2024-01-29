@@ -15,11 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html <?php language_attributes(); ?>>
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><?php esc_html_e( 'Tutor Course Builder', 'tutor' ); ?></title>
+	<?php wp_print_styles(); ?>
 </head>
 <body>
 
