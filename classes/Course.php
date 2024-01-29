@@ -252,7 +252,7 @@ class Course extends Tutor_Base {
 		wp_enqueue_media();
 		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/course-builder-v3.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 
-		$default_data = ( new Assets() )->get_default_localized_data();
+		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
 		// If need more data.
 		$new_data = array();
