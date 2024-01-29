@@ -8428,10 +8428,10 @@ class Utils {
 		$addons       = apply_filters( 'tutor_pro_addons_lists_for_display', array() );
 		$plugins_data = $addons;
 
+		$addons_config = get_option( 'tutor_addons_config' );
+
 		if ( is_array( $addons ) && count( $addons ) ) {
 			foreach ( $addons as $base_name => $addon ) {
-
-				$addonConfig = $this->get_addon_config( $base_name );
 
 				$addons_path = trailingslashit( tutor()->path . "assets/addons/{$base_name}" );
 				$addons_url  = trailingslashit( tutor()->url . "assets/addons/{$base_name}" );
@@ -8446,6 +8446,10 @@ class Utils {
 				}
 
 				$plugins_data[ $base_name ]['url'] = $thumbnailURL;
+
+				// Add add-on enable status.
+				$addon_url = "tutor-pro/addons/{$base_name}/{$base_name}.php";
+				$plugins_data[ $base_name ]['is_enabled'] = function_exists( 'tutor_pro' ) ? (int) $addons_config[ $addon_url ][ 'is_enable'] : 0;
 			}
 		}
 
