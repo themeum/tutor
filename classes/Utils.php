@@ -8429,6 +8429,7 @@ class Utils {
 		$plugins_data = $addons;
 
 		$addons_config = get_option( 'tutor_addons_config' );
+		$has_pro       = tutor()->has_pro;
 
 		if ( is_array( $addons ) && count( $addons ) ) {
 			foreach ( $addons as $base_name => $addon ) {
@@ -8449,7 +8450,7 @@ class Utils {
 
 				// Add add-on enable status.
 				$addon_url = "tutor-pro/addons/{$base_name}/{$base_name}.php";
-				$plugins_data[ $base_name ]['is_enabled'] = function_exists( 'tutor_pro' ) ? (int) $addons_config[ $addon_url ][ 'is_enable'] : 0;
+				$plugins_data[ $base_name ]['is_enabled'] = $has_pro ? (int) $addons_config[ $addon_url ][ 'is_enable'] : 0;
 			}
 		}
 

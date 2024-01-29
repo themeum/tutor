@@ -25,9 +25,18 @@ class Assets {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 3.0.0 register hook param added
+	 *
+	 * @param bool $register_hooks param added to enable or disable registering hooks.
+	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
+		if ( ! $register_hooks ) {
+			return;
+		}
+
 		 /**
 		 * Common scripts loading
 		 */
