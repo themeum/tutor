@@ -250,7 +250,7 @@ class Course extends Tutor_Base {
 	 */
 	public function enqueue_course_builder_assets() {
 		wp_enqueue_media();
-		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/course-builder-v3.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/tutor-course-builder-v3.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 

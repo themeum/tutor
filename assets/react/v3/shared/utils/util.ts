@@ -1,0 +1,244 @@
+import collection from '@Config/icon-list';
+import { CategoryNode, CategoryWithChildren } from '@Services/category';
+import { Discount } from '@Services/order';
+import {
+  differenceInDays,
+  endOfMonth,
+  endOfYear,
+  isSameDay,
+  isToday,
+  isYesterday,
+  startOfMonth,
+  startOfYear,
+  subMonths,
+  subYears,
+} from 'date-fns';
+import { DateRange } from 'react-day-picker';
+import { v4 as uuidv4 } from 'uuid';
+
+import { IconCollection, PaginatedParams } from './types';
+
+export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
+  if (val === undefined || val === null) {
+    throw new Error(errorMsg);
+  }
+}
+
+export const noop = () => {};
+
+export const range = (count: number) => Array.from(Array(count).keys());
+
+export const arrayRange = (start: number, end: number) => Array.from({ length: end - start }, (v, k) => k + start);
+
+export const isFileOrBlob = (value: unknown): value is Blob | File => {
+  return value instanceof Blob || value instanceof File;
+};
+
+export const getValueInArray = <T>(value: T | T[] | undefined): T[] => {
+  return Array.isArray(value) ? value : value ? [value] : [];
+};
+
+interface JoomlaStructure {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getOptions: (param: string) => string;
+  pagebuilderBase: string;
+  Text: {
+    _: (text: string) => string;
+  };
+}
+
+export const Joomla: JoomlaStructure = {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+  ...(window as any).Joomla,
+};
+
+export const getIcon = (name: IconCollection) => {
+  return collection[name];
+};
+
+// Generate unique id
+export const nanoid = (): string => uuidv4();
+
+// Generate coupon code
+export const generateCouponCode = (size = 8) => {
+  const urlAlphabet = 'MSOP0123456789ABCDEFGHNRVUKYTJLZXIW';
+  let code = '';
+
+  while (size--) {
+    code += urlAlphabet[(Math.random() * 35) | 0];
+  }
+
+  return code;
+};
+
+// Useful for mock api call
+export const wait = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Move one array item from one index to another index
+ * (don't change the original array) instead return a new one.
+ *
+ * @param arr Array
+ * @param fromIndex Number
+ * @param toIndex Number
+ * @returns new Array
+ */
+export const moveTo = <T>(arr: T[], fromIndex: number, toIndex: number) => {
+  const newArr = [...arr];
+  if (fromIndex < 0) {
+    fromIndex = arr.length + fromIndex;
+  }
+  if (fromIndex >= 0 && fromIndex < arr.length) {
+    if (toIndex < 0) {
+      toIndex = arr.length + toIndex;
+    }
+    const [item] = newArr.splice(fromIndex, 1);
+    item && newArr.splice(toIndex, 0, item);
+  }
+  return newArr;
+};
+
+export const getFileExtensionFromName = (filename: string) => {
+  const chunk = filename.split('.');
+  const extension = chunk.pop();
+
+  return extension ? `.${extension}` : '';
+};
+
+export const hasDuplicateEntries = <T>(items: T[], callback: (item: T) => string | number, caseSensitive = true) => {
+  const counterHash: Record<string | number, number> = {};
+
+  for (const item of items) {
+    let key = callback(item);
+    key = caseSensitive ? key : key.toString().toLowerCase();
+
+    counterHash[key] ||= 0;
+    counterHash[key]++;
+
+    const hash = counterHash[key];
+    if (hash && hash > 1) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+export const generateTree = (data: CategoryNode[], parent_id = 0): CategoryWithChildren[] => {
+  return data
+    .filter((node) => node.parent_id === parent_id)
+    .reduce<CategoryWithChildren[]>((tree, node) => [...tree, { ...node, children: generateTree(data, node.id) }], []);
+};
+
+export const transformParams = (params: PaginatedParams) => {
+  const sortDirection = params.sort?.direction === 'desc' ? '-' : '';
+
+  return {
+    limit: params.limit,
+    offset: params.offset,
+    sort: params.sort?.property && `${sortDirection}${params.sort.property}`,
+    ...params.filter,
+  };
+};
+
+export const getRandom = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min;
+
+export const mapInBetween = (
+  value: number,
+  originalMin: number,
+  originalMax: number,
+  expectedMin: number,
+  expectedMax: number,
+) => {
+  return ((value - originalMin) * (expectedMax - expectedMin)) / (originalMax - originalMin) + expectedMin;
+};
+
+export const getActiveDateRange = (range: DateRange | undefined) => {
+  if (!range || !range.from) {
+    return;
+  }
+
+  if (isToday(range.from) && !range.to) {
+    return 'today';
+  }
+
+  if (isYesterday(range.from) && !range.to) {
+    return 'yesterday';
+  }
+
+  if (range.to) {
+    if (isToday(range.to) && differenceInDays(range.to, range.from) === 6) {
+      return 'last_seven_days';
+    }
+
+    if (isToday(range.to) && differenceInDays(range.to, range.from) === 29) {
+      return 'last_thirty_days';
+    }
+
+    if (isToday(range.to) && differenceInDays(range.to, range.from) === 89) {
+      return 'last_ninety_days';
+    }
+
+    if (
+      isSameDay(startOfMonth(subMonths(new Date(), 1)), range.from) &&
+      isSameDay(endOfMonth(subMonths(new Date(), 1)), range.to)
+    ) {
+      return 'last_month';
+    }
+
+    if (
+      isSameDay(startOfYear(subYears(new Date(), 1)), range.from) &&
+      isSameDay(endOfYear(subYears(new Date(), 1)), range.to)
+    ) {
+      return 'last_year';
+    }
+
+    return;
+  }
+};
+
+export const extractIdOnly = <T extends { id: number }>(data: T[]) => {
+  return data.map((item) => item.id);
+};
+
+export const arrayIntersect = <T>(first: T[], second: T[]) => {
+  const firstSet = new Set(first);
+  const secondSet = new Set(second);
+  const intersect = [];
+
+  for (const element of firstSet) {
+    if (secondSet.has(element)) {
+      intersect.push(element);
+    }
+  }
+
+  return intersect;
+};
+
+export const makeFirstCharacterUpperCase = (word: string) => {
+  const firstCharacterUpperCase = word.charAt(0).toUpperCase();
+  const wordWithoutFirstCharacter = word.slice(1);
+
+  return `${firstCharacterUpperCase}${wordWithoutFirstCharacter}`;
+};
+
+export const calculateDiscount = ({ discount, total }: { discount: Discount; total: number }) => {
+  if (discount.type === 'percent') {
+    return ((discount.amount ?? 0) * total) / 100;
+  }
+  return discount.amount || 0;
+};
+
+export const formatBytes = (bytes: number, decimals = 2) => {
+  if (!bytes || bytes <= 1) {
+    return '0 Bytes';
+  }
+
+  const kilobit = 1024;
+  const decimal = Math.max(0, decimals);
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const index = Math.floor(Math.log(bytes) / Math.log(kilobit));
+
+  return `${parseFloat((bytes / Math.pow(kilobit, index)).toFixed(decimal))} ${sizes[index]}`;
+};
