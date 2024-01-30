@@ -1,33 +1,41 @@
-import { borderRadius, colorPalate, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import React, { ReactNode } from 'react';
+import { borderRadius, colorPalate, colorTokens, fontSize, lineHeight, shadow, spacing } from '@Config/styles';
 import { css, SerializedStyles } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
 import { createRef, useEffect, useRef, useState } from 'react';
 
+type OrientationType = 'horizontal' | 'vertical';
+
 export interface TabItem<T> {
   label: string;
   value: T;
+  icon?: ReactNode;
   count?: number;
   disabled?: boolean;
+  activeBadge?: boolean;
 }
 
 interface TabsProps<T> {
   activeTab: T;
   onChange: (value: T) => void;
   tabList: TabItem<T>[];
+  orientation?: OrientationType;
   disabled?: boolean;
   wrapperCss?: SerializedStyles;
 }
 
 interface ItemProperty {
   width: number;
+  height: number;
   left: number;
+  top: number;
 }
 
 const Tabs = <T extends string | number>({
   activeTab,
   onChange,
   tabList,
+  orientation = 'horizontal',
   disabled = false,
   wrapperCss,
 }: TabsProps<T>) => {
@@ -40,7 +48,9 @@ const Tabs = <T extends string | number>({
 
       const dimension = {
         width: ref.current?.offsetWidth || 0,
+        height: ref.current?.offsetHeight || 0,
         left: ref.current?.offsetLeft || 0,
+        top: ref.current?.offsetTop || 0,
       };
 
       accumulate[current.value] = dimension;
@@ -52,7 +62,7 @@ const Tabs = <T extends string | number>({
 
   return (
     <div css={styles.container}>
-      <div css={[styles.wrapper, wrapperCss]} role="tablist">
+      <div css={[styles.wrapper(orientation), wrapperCss]} role="tablist">
         {tabList.map((tab, index) => {
           return (
             <button
@@ -60,7 +70,7 @@ const Tabs = <T extends string | number>({
               onClick={() => {
                 onChange(tab.value);
               }}
-              css={styles.tabButton({ isActive: activeTab === tab.value })}
+              css={styles.tabButton({ isActive: activeTab === tab.value, orientation })}
               tabIndex={activeTab === tab.value ? 0 : -1}
               disabled={disabled || tab.disabled}
               type="button"
@@ -68,15 +78,17 @@ const Tabs = <T extends string | number>({
               aria-selected={activeTab === tab.value ? 'true' : 'false'}
               ref={refs.current[index]}
             >
+              {tab.icon}
               {tab.label}
               {tab.count !== undefined && (
                 <span> ({tab.count < 10 && tab.count > 0 ? `0${tab.count}` : tab.count})</span>
               )}
+              {tab.activeBadge && <span css={styles.activeBadge} />}
             </button>
           );
         })}
       </div>
-      <span css={styles.indicator(properties?.[activeTab] || { width: 0, left: 0 })} />
+      <span css={styles.indicator(properties?.[activeTab] || { width: 0, height: 0, left: 0, top: 0 }, orientation)} />
     </div>
   );
 };
@@ -88,16 +100,22 @@ const styles = {
     position: relative;
     width: 100%;
   `,
-  wrapper: css`
-    ${typography.body()}
+  wrapper: (orientation: OrientationType) => css`
     width: 100%;
     display: flex;
     justify-items: left;
     align-items: center;
     flex-wrap: wrap;
     box-shadow: ${shadow.tabs};
+
+    ${orientation === 'vertical' &&
+    css`
+      flex-direction: column;
+      align-items: start;
+      box-shadow: none;
+    `}
   `,
-  indicator: (property: ItemProperty) => css`
+  indicator: (property: ItemProperty, orientation: OrientationType) => css`
     width: ${property.width}px;
     height: 3px;
     position: absolute;
@@ -106,21 +124,50 @@ const styles = {
     background: ${colorPalate.actions.primary.default};
     border-radius: ${borderRadius[4]} ${borderRadius[4]} 0 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+    ${orientation === 'vertical' &&
+    css`
+      width: 3px;
+      height: ${property.height}px;
+      top: ${property.top}px;
+      bottom: auto;
+      border-radius: 0 ${borderRadius[4]} ${borderRadius[4]} 0;
+    `}
   `,
-  tabButton: ({ isActive }: { isActive: boolean }) => css`
+  tabButton: ({ isActive, orientation }: { isActive: boolean; orientation: OrientationType }) => css`
     ${styleUtils.resetButton};
-    padding: ${spacing[16]} ${spacing[20]};
-    color: ${colorPalate.text.neutral};
+    font-size: ${fontSize[15]};
+    line-height: ${lineHeight[20]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[6]};
+    padding: ${spacing[14]} ${spacing[20]};
+    color: ${colorTokens.text.subdued};
     min-width: 130px;
     position: relative;
     transition: color 0.3s ease-in-out;
 
+    & > svg {
+      color: ${colorTokens.icon.default};
+    }
+
+    ${orientation === 'vertical' &&
+    css`
+      width: 100%;
+      border-bottom: 1px solid ${colorTokens.stroke.border};
+    `}
+
     ${isActive &&
     css`
-      color: ${colorPalate.text.default};
+      background-color: ${colorTokens.background.white};
+      color: ${colorTokens.text.primary};
 
       & > span {
-        color: ${colorPalate.text.neutral};
+        color: ${colorTokens.text.subdued};
+      }
+
+      & > svg {
+        color: ${colorTokens.icon.brand};
       }
     `}
 
@@ -131,5 +178,12 @@ const styles = {
         background: ${colorPalate.text.neutral};
       }
     }
+  `,
+  activeBadge: css`
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    border-radius: ${borderRadius.circle};
+    background-color: ${colorTokens.color.success[80]};
   `,
 };
