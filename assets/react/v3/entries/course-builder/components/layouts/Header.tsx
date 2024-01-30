@@ -101,10 +101,6 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    html[dir='rtl'] & {
-      padding: ${spacing[20]} ${spacing[56]} ${spacing[20]} ${spacing[32]};
-    }
   `,
   headerRight: css`
     display: flex;

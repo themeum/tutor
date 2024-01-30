@@ -43,11 +43,6 @@ const styles = {
       position: absolute;
       left: ${spacing[12]};
       top: ${spacing[20]};
-
-      html[dir='rtl'] & {
-        left: auto;
-        right: ${spacing[12]};
-      }
     }
   `,
   icon: (status: string) => css`

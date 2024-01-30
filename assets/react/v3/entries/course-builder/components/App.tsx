@@ -4,9 +4,9 @@ import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createGlobalCss } from '@Utils/style-utils';
 import { useState } from 'react';
-import Layout from '@CourseBuilderComponents/layouts/Layout';
 import { useRoutes } from 'react-router-dom';
 import routes from '@CourseBuilderConfig/routes';
+import RTLProvider from './layouts/RTLProvider';
 
 const App = () => {
   const [queryClient] = useState(
@@ -29,14 +29,16 @@ const App = () => {
   const routers = useRoutes(routes);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ToastProvider position="bottom-center">
-        <ModalProvider>
-          <Global styles={createGlobalCss()} />
-          {routers}
-        </ModalProvider>
-      </ToastProvider>
-    </QueryClientProvider>
+    <RTLProvider>
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider position="bottom-center">
+          <ModalProvider>
+            <Global styles={createGlobalCss()} />
+            {routers}
+          </ModalProvider>
+        </ToastProvider>
+      </QueryClientProvider>
+    </RTLProvider>
   );
 };
 

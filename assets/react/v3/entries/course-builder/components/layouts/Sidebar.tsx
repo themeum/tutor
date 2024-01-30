@@ -45,12 +45,6 @@ const styles = {
   sidebar: css`
     padding: ${spacing[24]} 0 0 ${spacing[56]};
     border-right: 1px solid ${colorTokens.stroke.divider};
-
-    html[dir='rtl'] & {
-      padding: ${spacing[24]} ${spacing[56]} 0 0;
-      border-right: 0;
-      border-left: 1px solid ${colorTokens.stroke.divider};
-    }
   `,
   progressWrapper: css`
     display: flex;

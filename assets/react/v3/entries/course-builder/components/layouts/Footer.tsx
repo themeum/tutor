@@ -51,11 +51,6 @@ const styles = {
       height: 2px;
       width: ${completion}%;
       transition: 0.35s ease-in-out;
-
-      html[dir='rtl'] & {
-        left: auto;
-        right: 0;
-      }
     }
   `,
   buttonWrapper: css`

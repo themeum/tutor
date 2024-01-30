@@ -8,6 +8,8 @@ export const ALIAS_PRODUCT_ROUTE_PREFIX = '/product';
 export const ALIAS_CATEGORY_ROUTE_PREFIX = '/category';
 export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 
+export const isRTL = document.dir === 'rtl';
+
 export enum LocalStorage {
   clientId = 'eCommerceClientId',
 }
