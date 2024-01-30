@@ -1,7 +1,7 @@
+import React from 'react';
 import Button, { ButtonVariant } from '@Atoms/Button';
 import FormInput from '@Components/fields/FormInput';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import React from 'react';
 import { Controller } from 'react-hook-form';
 
 import { ModalProps } from './Modal';

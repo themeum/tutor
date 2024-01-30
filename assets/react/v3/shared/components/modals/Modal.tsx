@@ -1,6 +1,4 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-import { colorPalate, zIndex } from '@Config/styles';
+import { colorTokens, zIndex } from '@Config/styles';
 import { css } from '@emotion/react';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { nanoid, noop } from '@Utils/util';
@@ -9,8 +7,8 @@ import React, { ReactNode, useCallback, useContext, useMemo, useState } from 're
 const styles = {
   backdrop: css`
     position: fixed;
-    background-color: ${colorPalate.basic.onSurface};
-    opacity: 0.4;
+    background-color: ${colorTokens.background.modal};
+    opacity: 0.7;
     inset: 0;
     z-index: ${zIndex.negative};
   `,

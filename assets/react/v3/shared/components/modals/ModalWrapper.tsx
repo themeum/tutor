@@ -1,9 +1,9 @@
+import React, { useEffect } from 'react';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, Breakpoint, colorPalate, shadow, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
-import React, { useEffect } from 'react';
 
 interface ModalWrapperProps {
   children: React.ReactNode;
@@ -37,7 +37,7 @@ export default ModalWrapper;
 
 const styles = {
   container: css`
-    background: ${colorPalate.basic.white};
+    background: ${colorTokens.background.white};
     margin: ${spacing[24]};
     max-width: 1236px;
     box-shadow: ${shadow.modal};
@@ -54,7 +54,8 @@ const styles = {
     align-items: center;
     padding: ${spacing[20]};
     width: 100%;
-    background-color: ${colorPalate.surface.selected.neutral};
+    background: ${colorTokens.background.white};
+    border-bottom: 1px solid ${colorTokens.stroke.divider};
   `,
   closeButton: css`
     ${styleUtils.resetButton};
@@ -64,17 +65,21 @@ const styles = {
     width: 32px;
     height: 32px;
     border-radius: ${borderRadius.circle};
-    background-color: ${colorPalate.basic.white};
+    background: ${colorTokens.background.white};
 
     svg {
-      color: ${colorPalate.icon.default};
+      color: ${colorTokens.icon.default};
       transition: color 0.3s ease-in-out;
     }
 
     :hover {
       svg {
-        color: ${colorPalate.icon.hover};
+        color: ${colorTokens.icon.hover};
       }
+    }
+
+    :focus {
+      box-shadow: ${shadow.focus};
     }
   `,
   content: css`

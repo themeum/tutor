@@ -229,6 +229,7 @@ export const styleUtils = {
     margin: 0;
     text-align: inherit;
     font-family: ${fontFamily.roboto};
+    cursor: pointer;
   `,
   cardInnerSection: css`
     padding: ${spacing[24]};
