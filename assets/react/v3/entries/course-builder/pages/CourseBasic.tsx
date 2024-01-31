@@ -8,15 +8,34 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
 import ReferenceModal from '@Components/modals/ReferenceModal';
 import ConfirmationModal from '@Components/modals/ConfirmationModal';
-import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { Controller } from 'react-hook-form';
+import Tabs from '@Molecules/Tabs';
+import { useState } from 'react';
+import SVGIcon from '@Atoms/SVGIcon';
 
 const CourseBasic = () => {
   const form = useFormWithGlobalError();
   const { showModal } = useModal();
+
+  const [activeTab, setActiveTab] = useState('general');
+
+  const tabList = [
+    {
+      label: 'General',
+      value: 'general',
+      icon: <SVGIcon name="settings" width={24} height={24} />,
+    },
+    {
+      label: 'Content Drip',
+      value: 'content_drip',
+      icon: <SVGIcon name="contentDrip" width={24} height={24} />,
+      activeBadge: true,
+    },
+  ];
 
   return (
     <div css={styles.wrapper}>
@@ -33,11 +52,33 @@ const CourseBasic = () => {
               closeOnOutsideClick: true,
             });
             console.log(action);
-            
           }}
         >
           Open Modal
         </Button>
+        <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} />
+
+        <div css={styles.courseSettings}>
+          <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} orientation="vertical" />
+
+          <div css={styles.courseSettingsRight}>
+            <Controller
+              name="title"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInput {...controllerProps} label="Title" placeholder="Course title" maxLimit={245} isClearable />
+              )}
+            />
+
+            <Controller
+              name="description"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormTextareaInput {...controllerProps} label="Course Description" maxLimit={400} />
+              )}
+            />
+          </div>
+        </div>
 
         <form css={styles.form}>
           <Controller
@@ -144,5 +185,18 @@ const styles = {
     padding-left: ${spacing[64]};
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
+  `,
+  courseSettings: css`
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    margin-block: ${spacing[48]};
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius[6]};
+    background-color: ${colorTokens.background.default};
+    overflow: hidden;
+  `,
+  courseSettingsRight: css`
+    padding: ${spacing[16]} ${spacing[32]} ${spacing[32]} ${spacing[32]};
+    background-color: ${colorTokens.background.white};
   `,
 };
