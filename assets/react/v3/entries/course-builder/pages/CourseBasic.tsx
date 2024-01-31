@@ -1,4 +1,4 @@
-import Button from '@Atoms/Button';
+import Button, { ButtonSize, ButtonVariant } from '@Atoms/Button';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
@@ -8,7 +8,7 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
 import ReferenceModal from '@Components/modals/ReferenceModal';
 import ConfirmationModal from '@Components/modals/ConfirmationModal';
-import { borderRadius, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, footerHeight, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
@@ -16,6 +16,9 @@ import { Controller } from 'react-hook-form';
 import Tabs from '@Molecules/Tabs';
 import { useState } from 'react';
 import SVGIcon from '@Atoms/SVGIcon';
+import FormDateInput from '@Components/fields/FormDateInput';
+import FormTimeInput from '@Components/fields/FormTimeInput';
+import { __ } from '@wordpress/i18n';
 
 const CourseBasic = () => {
   const form = useFormWithGlobalError();
@@ -156,6 +159,34 @@ const CourseBasic = () => {
             />
           )}
         />
+
+        <div css={styles.scheduleOptions}>
+          <Controller
+            name="schedule_options"
+            control={form.control}
+            defaultValue={true}
+            render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options')} />}
+          />
+
+          <div css={styles.dateAndTimeWrapper}>
+            <Controller
+              name="schedule_date"
+              control={form.control}
+              render={(controllerProps) => <FormDateInput {...controllerProps} />}
+            />
+
+            <Controller
+              name="schedule_time"
+              control={form.control}
+              render={(controllerProps) => <FormTimeInput {...controllerProps} interval={60} />}
+            />
+          </div>
+
+          <div css={styles.scheduleButtonsWrapper}>
+            <Button variant={ButtonVariant.tertiary} size={ButtonSize.small}>{__('Cancel')}</Button>
+            <Button variant={ButtonVariant.secondary} size={ButtonSize.small}>{__('Save')}</Button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -185,6 +216,62 @@ const styles = {
     padding-left: ${spacing[64]};
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
+
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[24]};
+  `,
+  scheduleOptions: css`
+    padding: ${spacing[12]};
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius[8]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
+  dateAndTimeWrapper: css`
+    display: grid;
+    grid-template-columns: 1fr 130px;
+    gap: 1px;
+    background-image: linear-gradient(to right, transparent, ${colorTokens.stroke.default}, transparent);
+    margin-top: ${spacing[12]};
+
+    > div {
+      &:first-of-type {
+        &:focus-within {
+          z-index: ${zIndex.positive};
+        }
+
+        input:not(:focus) {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          border-right: none;
+        }
+      }
+      &:last-of-type {
+        &:focus-within {
+          z-index: ${zIndex.positive};
+        }
+
+        input:not(:focus) {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left: none;
+        }
+      }
+    }
+  `,
+  scheduleButtonsWrapper: css`
+    display: flex;
+    gap: ${spacing[12]};
+
+    button {
+      width: 100%;
+
+      span {
+        justify-content: center;
+      }
+    }
   `,
   courseSettings: css`
     display: grid;
