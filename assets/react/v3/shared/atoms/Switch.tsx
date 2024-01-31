@@ -1,4 +1,4 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { nanoid } from '@Utils/util';
@@ -13,7 +13,7 @@ const styles = {
     width: 32px;
     height: 20px;
     background: ${colorTokens.color.black[8]};
-    box-shadow: inset 0px 0px 0px 1px ${colorTokens.stroke.hover};
+    box-shadow: ${shadow.switch};
     border-radius: ${borderRadius[10]};
     position: relative;
     display: inline-block;
@@ -39,7 +39,7 @@ const styles = {
       &:after {
         background: ${colorTokens.background.white};
         top: ${spacing[2]};
-        left: ${spacing[14]};
+        left: 14px;
         width: 16px;
         height: 16px;
       }

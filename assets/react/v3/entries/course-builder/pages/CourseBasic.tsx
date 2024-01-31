@@ -165,7 +165,7 @@ const CourseBasic = () => {
             name="schedule_options"
             control={form.control}
             defaultValue={true}
-            render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options')} />}
+            render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
           />
 
           <div css={styles.dateAndTimeWrapper}>
