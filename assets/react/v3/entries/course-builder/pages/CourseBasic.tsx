@@ -189,8 +189,7 @@ const styles = {
   courseSettings: css`
     display: grid;
     grid-template-columns: 200px 1fr;
-    margin-top: ${spacing[48]};
-    margin-bottom: ${spacing[48]};
+    margin-block: ${spacing[48]};
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     background-color: ${colorTokens.background.default};
