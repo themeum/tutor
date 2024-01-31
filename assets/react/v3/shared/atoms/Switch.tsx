@@ -10,10 +10,10 @@ const styles = {
   switchStyles: css`
     appearance: none;
     border: 0;
-    width: 30px;
-    height: 16px;
+    width: 32px;
+    height: 20px;
     background: ${colorTokens.color.black[8]};
-    border: 1px solid ${colorTokens.stroke.hover};
+    box-shadow: inset 0px 0px 0px 1px ${colorTokens.stroke.hover};
     border-radius: ${borderRadius[10]};
     position: relative;
     display: inline-block;
@@ -24,21 +24,24 @@ const styles = {
     &:after {
       content: '';
       position: absolute;
-      top: ${spacing[2]};
-      left: ${spacing[2]};
-      width: 10px;
-      height: 10px;
+      top: ${spacing[4]};
+      left: ${spacing[4]};
+      width: 12px;
+      height: 12px;
       background: ${colorTokens.color.black[50]};
       border-radius: ${borderRadius.circle};
-      transition: left 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86), background-color 0.25s ease;
+      transition: 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86);
     }
 
     &:checked {
       background: ${colorTokens.color.success[80]};
-      border-color: ${colorTokens.color.success[80]};
+      box-shadow: inset 0px 0px 0px 1px ${colorTokens.color.success[80]};
       &:after {
         background: ${colorTokens.background.white};
-        left: ${spacing[16]};
+        top: ${spacing[2]};
+        left: ${spacing[14]};
+        width: 16px;
+        height: 16px;
       }
     }
 
