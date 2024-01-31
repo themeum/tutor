@@ -141,7 +141,7 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[6]};
-    padding: ${spacing[14]} ${spacing[20]};
+    padding: ${spacing[12]} ${spacing[20]};
     color: ${colorTokens.text.subdued};
     min-width: 130px;
     position: relative;
