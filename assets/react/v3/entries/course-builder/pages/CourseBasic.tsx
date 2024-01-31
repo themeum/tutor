@@ -8,7 +8,15 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
 import ReferenceModal from '@Components/modals/ReferenceModal';
 import ConfirmationModal from '@Components/modals/ConfirmationModal';
-import { borderRadius, colorTokens, footerHeight, headerHeight, spacing, zIndex } from '@Config/styles';
+import {
+  borderRadius,
+  colorTokens,
+  footerHeight,
+  headerHeight,
+  shadow,
+  spacing,
+  zIndex,
+} from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
@@ -62,14 +70,25 @@ const CourseBasic = () => {
         <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} />
 
         <div css={styles.courseSettings}>
-          <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} orientation="vertical" />
+          <Tabs
+            tabList={tabList}
+            activeTab={activeTab}
+            onChange={setActiveTab}
+            orientation="vertical"
+          />
 
           <div css={styles.courseSettingsRight}>
             <Controller
               name="title"
               control={form.control}
               render={(controllerProps) => (
-                <FormInput {...controllerProps} label="Title" placeholder="Course title" maxLimit={245} isClearable />
+                <FormInput
+                  {...controllerProps}
+                  label="Title"
+                  placeholder="Course title"
+                  maxLimit={245}
+                  isClearable
+                />
               )}
             />
 
@@ -77,7 +96,11 @@ const CourseBasic = () => {
               name="description"
               control={form.control}
               render={(controllerProps) => (
-                <FormTextareaInput {...controllerProps} label="Course Description" maxLimit={400} />
+                <FormTextareaInput
+                  {...controllerProps}
+                  label="Course Description"
+                  maxLimit={400}
+                />
               )}
             />
           </div>
@@ -88,7 +111,13 @@ const CourseBasic = () => {
             name="title"
             control={form.control}
             render={(controllerProps) => (
-              <FormInput {...controllerProps} label="Title" placeholder="Course title" maxLimit={245} isClearable />
+              <FormInput
+                {...controllerProps}
+                label="Title"
+                placeholder="Course title"
+                maxLimit={245}
+                isClearable
+              />
             )}
           />
 
@@ -96,7 +125,12 @@ const CourseBasic = () => {
             name="price"
             control={form.control}
             render={(controllerProps) => (
-              <FormInputWithContent {...controllerProps} label="Regular Price" placeholder="0.00" content="$" />
+              <FormInputWithContent
+                {...controllerProps}
+                label="Regular Price"
+                placeholder="0.00"
+                content="$"
+              />
             )}
           />
 
@@ -104,7 +138,11 @@ const CourseBasic = () => {
             name="public"
             control={form.control}
             render={(controllerProps) => (
-              <FormSwitch {...controllerProps} label="Public Course" helpText="Public course help text" />
+              <FormSwitch
+                {...controllerProps}
+                label="Public Course"
+                helpText="Public course help text"
+              />
             )}
           />
 
@@ -112,7 +150,11 @@ const CourseBasic = () => {
             name="description"
             control={form.control}
             render={(controllerProps) => (
-              <FormTextareaInput {...controllerProps} label="Course Description" maxLimit={400} />
+              <FormTextareaInput
+                {...controllerProps}
+                label="Course Description"
+                maxLimit={400}
+              />
             )}
           />
 
@@ -165,26 +207,39 @@ const CourseBasic = () => {
             name="schedule_options"
             control={form.control}
             defaultValue={true}
-            render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
+            render={(controllerProps) => (
+              <FormSwitch
+                {...controllerProps}
+                label={__('Schedule Options', 'tutor')}
+              />
+            )}
           />
 
           <div css={styles.dateAndTimeWrapper}>
             <Controller
               name="schedule_date"
               control={form.control}
-              render={(controllerProps) => <FormDateInput {...controllerProps} />}
+              render={(controllerProps) => (
+                <FormDateInput {...controllerProps} isClearable={false} />
+              )}
             />
 
             <Controller
               name="schedule_time"
               control={form.control}
-              render={(controllerProps) => <FormTimeInput {...controllerProps} interval={60} />}
+              render={(controllerProps) => (
+                <FormTimeInput {...controllerProps} interval={60} isClearable={false} />
+              )}
             />
           </div>
 
           <div css={styles.scheduleButtonsWrapper}>
-            <Button variant={ButtonVariant.tertiary} size={ButtonSize.small}>{__('Cancel')}</Button>
-            <Button variant={ButtonVariant.secondary} size={ButtonSize.small}>{__('Save')}</Button>
+            <Button variant={ButtonVariant.tertiary} size={ButtonSize.small}>
+              {__('Cancel')}
+            </Button>
+            <Button variant={ButtonVariant.secondary} size={ButtonSize.small}>
+              {__('Save')}
+            </Button>
           </div>
         </div>
       </div>
@@ -231,32 +286,36 @@ const styles = {
   `,
   dateAndTimeWrapper: css`
     display: grid;
-    grid-template-columns: 1fr 130px;
+    grid-template-columns: 1fr 124px;
     gap: 1px;
-    background-image: linear-gradient(to right, transparent, ${colorTokens.stroke.default}, transparent);
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      ${colorTokens.stroke.default},
+      transparent
+    );
     margin-top: ${spacing[12]};
+    border-radius: ${borderRadius[6]};
+
+    &:focus-within {
+      box-shadow: ${shadow.focus};
+    }
 
     > div {
       &:first-of-type {
-        &:focus-within {
-          z-index: ${zIndex.positive};
-        }
-
-        input:not(:focus) {
+        input {
           border-top-right-radius: 0;
           border-bottom-right-radius: 0;
           border-right: none;
+          box-shadow: none;
         }
       }
       &:last-of-type {
-        &:focus-within {
-          z-index: ${zIndex.positive};
-        }
-
-        input:not(:focus) {
+        input {
           border-top-left-radius: 0;
           border-bottom-left-radius: 0;
           border-left: none;
+          box-shadow: none;
         }
       }
     }
