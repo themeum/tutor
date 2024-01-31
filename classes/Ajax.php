@@ -397,7 +397,7 @@ class Ajax {
 
 		/**
 		 * Keep same sorting order.
-		 * 
+		 *
 		 * @since 2.2.4
 		 */
 		$free_addon_list = apply_filters( 'tutor_pro_addons_lists_for_display', array() );
@@ -446,29 +446,41 @@ class Ajax {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
-		$addons_config     = maybe_unserialize( get_option( 'tutor_addons_config' ) );
-		$addon_field_names = json_decode( stripslashes( ( tutor_utils()->avalue_dot( 'addonFieldNames', $_POST ) ) ), true ); //phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$form_data     = json_decode( Input::post( 'addonFieldNames' ) );
+		$before_config = get_option( 'tutor_addons_config' );
+		$addons_config = array();
 
-		foreach ( $addon_field_names as $addon_field_name => $is_enable ) {
-			do_action( 'tutor_addon_before_enable_disable' );
-			if ( $is_enable ) {
-				do_action( "tutor_addon_before_enable_{$addon_field_name}" );
-				do_action( 'tutor_addon_before_enable', $addon_field_name );
-				$addons_config[ $addon_field_name ]['is_enable'] = 1;
-				update_option( 'tutor_addons_config', $addons_config );
+		foreach ( $form_data as $addon_field_name => $is_enable ) {
 
-				do_action( 'tutor_addon_after_enable', $addon_field_name );
-				do_action( "tutor_addon_after_enable_{$addon_field_name}" );
+			$before_status = ! isset( $before_config[ $addon_field_name ] ) ? 0 : $before_config[ $addon_field_name ]['is_enable'];
+			$after_status  = $is_enable ? 1 : 0;
+
+			if ( $before_status !== $after_status ) {
+				do_action( 'tutor_addon_before_enable_disable' );
+				if ( $is_enable ) {
+					do_action( "tutor_addon_before_enable_{$addon_field_name}" );
+					do_action( 'tutor_addon_before_enable', $addon_field_name );
+
+					$addons_config[ $addon_field_name ]['is_enable'] = 1;
+					update_option( 'tutor_addons_config', $addons_config );
+
+					do_action( 'tutor_addon_after_enable', $addon_field_name );
+					do_action( "tutor_addon_after_enable_{$addon_field_name}" );
+				} else {
+					do_action( "tutor_addon_before_disable_{$addon_field_name}" );
+					do_action( 'tutor_addon_before_disable', $addon_field_name );
+
+					$addons_config[ $addon_field_name ]['is_enable'] = 0;
+					update_option( 'tutor_addons_config', $addons_config );
+
+					do_action( 'tutor_addon_after_disable', $addon_field_name );
+					do_action( "tutor_addon_after_disable_{$addon_field_name}" );
+				}
+				do_action( 'tutor_addon_after_enable_disable' );
 			} else {
-				do_action( "tutor_addon_before_disable_{$addon_field_name}" );
-				do_action( 'tutor_addon_before_disable', $addon_field_name );
-				$addons_config[ $addon_field_name ]['is_enable'] = 0;
+				$addons_config[ $addon_field_name ]['is_enable'] = $after_status;
 				update_option( 'tutor_addons_config', $addons_config );
-
-				do_action( 'tutor_addon_after_disable', $addon_field_name );
-				do_action( "tutor_addon_after_disable_{$addon_field_name}" );
 			}
-			do_action( 'tutor_addon_after_enable_disable' );
 		}
 
 		wp_send_json_success();
