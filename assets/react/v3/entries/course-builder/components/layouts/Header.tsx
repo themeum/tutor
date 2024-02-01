@@ -1,4 +1,4 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { colorPalate, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
@@ -70,11 +70,11 @@ const Header = () => {
         </svg>
       </div>
       <div css={styles.headerRight}>
-        <Button variant={ButtonVariant.text} icon={<SVGIcon name="save" width={24} height={24} />}>
+        <Button variant="text" icon={<SVGIcon name="save" width={24} height={24} />}>
           {__('Save as Draft', 'tutor')}
         </Button>
-        <Button variant={ButtonVariant.secondary}>{__('Preview', 'tutor')}</Button>
-        <Button variant={ButtonVariant.primary}>{__('Publish', 'tutor')}</Button>
+        <Button variant="secondary">{__('Preview', 'tutor')}</Button>
+        <Button variant="primary">{__('Publish', 'tutor')}</Button>
         <button
           type="button"
           css={styles.closeButton}

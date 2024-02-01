@@ -1,4 +1,4 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorPalate, fontSize, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -65,7 +65,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                     />
 
                     <Button
-                      variant={ButtonVariant.secondary}
+                      variant="secondary"
                       buttonCss={styles.saveBtn}
                       onClick={() => {
                         setIsEditing(false);
@@ -75,7 +75,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                       {t('COM_SPPAGEBUILDER_STORE_SAVE')}
                     </Button>
                     <Button
-                      variant={ButtonVariant.plain}
+                      variant="text"
                       buttonCss={styles.cancelBtn}
                       onClick={() => {
                         setIsEditing(false);

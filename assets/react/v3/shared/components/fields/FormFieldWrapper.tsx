@@ -143,15 +143,8 @@ const styles = {
     }
   `,
   label: (isInlineLabel: boolean) => css`
-    ${typography.caption()}
-    line-height: ${lineHeight[24]};
+    ${typography.body()}
     color: ${colorTokens.text.title};
-
-    ${isInlineLabel &&
-    css`
-      ${typography.caption()}
-      color: ${colorTokens.text.title};
-    `}
   `,
   inputWrapper: css`
     position: relative;

@@ -1,4 +1,4 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorPalate, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -60,7 +60,7 @@ const ThreeDots = ({
   const ref = useRef<HTMLButtonElement>(null);
   return (
     <>
-      <Button variant={ButtonVariant.plain} ref={ref} onClick={onClick} buttonCss={styles.button} disabled={disabled}>
+      <Button variant="text" ref={ref} onClick={onClick} buttonCss={styles.button} disabled={disabled}>
         <SVGIcon name="threeDots" width={18} height={18} />
       </Button>
       <Popover

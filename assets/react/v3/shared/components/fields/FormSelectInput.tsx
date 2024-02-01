@@ -1,4 +1,4 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -176,7 +176,7 @@ const FormSelectInput = <T,>({
                       })}
                     >
                       <Button
-                        variant={ButtonVariant.text}
+                        variant="text"
                         disabled={inputValue === ''}
                         icon={<SVGIcon name="delete" />}
                         onClick={() => {
