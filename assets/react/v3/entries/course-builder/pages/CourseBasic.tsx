@@ -16,6 +16,7 @@ import { Controller } from 'react-hook-form';
 import Tabs from '@Molecules/Tabs';
 import { useState } from 'react';
 import SVGIcon from '@Atoms/SVGIcon';
+import FormMedia from '@Components/fields/FormMedia';
 
 const CourseBasic = () => {
   const form = useFormWithGlobalError();
@@ -153,6 +154,18 @@ const CourseBasic = () => {
                   value: 3,
                 },
               ]}
+            />
+          )}
+        />
+
+        <Controller
+          name="image"
+          control={form.control}
+          render={(controllerProps) => (
+            <FormMedia
+              {...controllerProps}
+              label="Visibility Status"
+              helpText="Hello there"
             />
           )}
         />
