@@ -27,7 +27,7 @@ export const typography = {
   `,
   heading4: (typeface: TypefaceKeys = 'regular') => css`
     font-size: ${fontSize[30]};
-    line-height: ${lineHeight[36]};
+    line-height: ${lineHeight[40]};
     color: ${colorPalate.text.default};
     font-weight: ${fontWeight[typeface]};
     font-family: ${fontFamily.roboto};
@@ -55,14 +55,14 @@ export const typography = {
   `,
   caption: (typeface: TypefaceKeys = 'regular') => css`
     font-size: ${fontSize[15]};
-    line-height: ${lineHeight[14]};
+    line-height: ${lineHeight[24]};
     color: ${colorPalate.text.default};
     font-weight: ${fontWeight[typeface]};
     font-family: ${fontFamily.roboto};
   `,
   small: (typeface: TypefaceKeys = 'regular') => css`
     font-size: ${fontSize[13]};
-    line-height: ${lineHeight[21]};
+    line-height: ${lineHeight[18]};
     color: ${colorPalate.text.default};
     font-weight: ${fontWeight[typeface]};
     font-family: ${fontFamily.roboto};
