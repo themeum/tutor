@@ -1,5 +1,5 @@
 import React from 'react';
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -115,7 +115,7 @@ const FormInput = ({
               />
               {isClearable && !!field.value && (
                 <div css={styles.clearButton}>
-                  <Button variant={ButtonVariant.text} onClick={() => field.onChange(null)}>
+                  <Button variant="text" onClick={() => field.onChange(null)}>
                     <SVGIcon name="timesAlt" />
                   </Button>
                 </div>

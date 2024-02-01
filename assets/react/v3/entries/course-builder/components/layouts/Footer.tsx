@@ -13,10 +13,10 @@ const Footer = ({ completion, onNextClick, onPrevClick }: FooterProps) => {
   return (
     <div css={styles.wrapper(completion)}>
       <div css={styles.buttonWrapper}>
-        <Button variant={ButtonVariant.secondary} size={ButtonSize.small} onClick={onPrevClick}>
+        <Button variant="secondary" size="small" onClick={onPrevClick}>
           {__('Previous', 'tutor')}
         </Button>
-        <Button variant={ButtonVariant.secondary} size={ButtonSize.small} onClick={onNextClick}>
+        <Button variant="secondary" size="small" onClick={onNextClick}>
           {__('Next', 'tutor')}
         </Button>
       </div>

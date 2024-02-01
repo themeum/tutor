@@ -1,39 +1,12 @@
 import SVGIcon from '@Atoms/SVGIcon';
-import {
-  borderRadius,
-  colorPalate,
-  colorTokens,
-  fontSize,
-  fontWeight,
-  lineHeight,
-  shadow,
-  spacing,
-  zIndex,
-} from '@Config/styles';
-import { typography } from '@Config/typography';
+import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { css, keyframes, SerializedStyles } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
 import React, { ReactNode } from 'react';
 
-export enum ButtonVariant {
-  primary = 'primary',
-  secondary = 'secondary',
-  outlined = 'outlined',
-  tertiary = 'tertiary',
-  danger = 'danger',
-  text = 'text',
-}
-
-export enum ButtonSize {
-  large = 'large',
-  medium = 'medium',
-  small = 'small',
-}
-
-export enum ButtonIconPosition {
-  left = 'left',
-  right = 'right',
-}
+export type ButtonVariant = 'primary' | 'secondary' | 'outlined' | 'tertiary' | 'danger' | 'text';
+export type ButtonSize = 'large' | 'medium' | 'small';
+type ButtonIconPosition = 'left' | 'right';
 
 const spin = keyframes`
   0% {
@@ -71,19 +44,19 @@ const styles = {
     transition: all 150ms ease-in-out;
     position: relative;
 
-    ${size === ButtonSize.large &&
+    ${size === 'large' &&
     css`
       padding: ${spacing[12]} ${spacing[32]};
     `}
 
-    ${size === ButtonSize.small &&
+    ${size === 'small' &&
     css`
       font-size: ${fontSize[13]};
       line-height: ${lineHeight[20]};
       padding: ${spacing[6]} ${spacing[16]};
     `}
     
-    ${variant === ButtonVariant.primary &&
+    ${variant === 'primary' &&
     css`
       background-color: ${colorTokens.action.primary.default};
       color: ${colorTokens.text.white};
@@ -107,7 +80,7 @@ const styles = {
       `}
     `}
 
-    ${variant === ButtonVariant.secondary &&
+    ${variant === 'secondary' &&
     css`
       background-color: ${colorTokens.action.secondary.default};
       color: ${colorTokens.text.brand};
@@ -131,7 +104,7 @@ const styles = {
       `}
     `}
 
-    ${variant === ButtonVariant.outlined &&
+    ${variant === 'outlined' &&
     css`
       background-color: ${colorTokens.action.outline.default};
       color: ${colorTokens.text.brand};
@@ -156,7 +129,7 @@ const styles = {
       `}
     `}
 
-    ${variant === ButtonVariant.tertiary &&
+    ${variant === 'tertiary' &&
     css`
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
@@ -183,7 +156,7 @@ const styles = {
       `}
     `}
 
-    ${variant === ButtonVariant.danger &&
+    ${variant === 'danger' &&
     css`
       background-color: ${colorTokens.background.status.errorFail};
       color: ${colorTokens.text.error};
@@ -207,7 +180,7 @@ const styles = {
       `}
     `}
 
-    ${variant === ButtonVariant.text &&
+    ${variant === 'text' &&
     css`
       background-color: transparent;
       color: ${colorTokens.text.title};
@@ -254,7 +227,7 @@ const styles = {
     display: grid;
     place-items: center;
     margin-right: ${spacing[6]};
-    ${iconPosition === ButtonIconPosition.right &&
+    ${iconPosition === 'right' &&
     css`
       margin-right: 0;
       margin-left: ${spacing[6]};
@@ -292,10 +265,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     {
       type = 'button',
       children,
-      variant = ButtonVariant.primary,
-      size = ButtonSize.medium,
+      variant = 'primary',
+      size = 'medium',
       icon,
-      iconPosition = ButtonIconPosition.left,
+      iconPosition = 'left',
       loading = false,
       disabled = false,
       tabIndex,
@@ -319,13 +292,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           </span>
         )}
         <span css={[styles.buttonContent(loading, disabled), buttonContentCss]}>
-          {icon && iconPosition === ButtonIconPosition.left && (
-            <span css={styles.buttonIcon(iconPosition)}>{icon}</span>
-          )}
+          {icon && iconPosition === 'left' && <span css={styles.buttonIcon(iconPosition)}>{icon}</span>}
           {children}
-          {icon && iconPosition === ButtonIconPosition.right && (
-            <span css={styles.buttonIcon(iconPosition)}>{icon}</span>
-          )}
+          {icon && iconPosition === 'right' && <span css={styles.buttonIcon(iconPosition)}>{icon}</span>}
         </span>
       </button>
     );

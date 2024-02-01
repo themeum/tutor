@@ -48,7 +48,7 @@ export const typography = {
   `,
   body: (typeface: TypefaceKeys = 'regular') => css`
     font-size: ${fontSize[16]};
-    line-height: ${lineHeight[28]};
+    line-height: ${lineHeight[26]};
     color: ${colorPalate.text.default};
     font-weight: ${fontWeight[typeface]};
     font-family: ${fontFamily.roboto};
