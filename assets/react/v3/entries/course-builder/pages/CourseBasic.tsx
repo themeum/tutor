@@ -16,7 +16,7 @@ import { Controller } from 'react-hook-form';
 import Tabs from '@Molecules/Tabs';
 import { useState } from 'react';
 import SVGIcon from '@Atoms/SVGIcon';
-import FormImageMedia from '@Components/fields/FormImageMedia';
+import FormImageInput from '@Components/fields/FormImageInput';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 import { __ } from '@wordpress/i18n';
@@ -197,7 +197,7 @@ const CourseBasic = () => {
           name="featured_image"
           control={form.control}
           render={(controllerProps) => (
-            <FormImageMedia
+            <FormImageInput
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}

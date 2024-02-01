@@ -15,7 +15,7 @@ type Media = {
   title?: string;
 };
 
-type FormImageMediaProps = {
+type FormImageInputProps = {
   label?: string;
   onChange?: () => void;
   helpText?: string;
@@ -23,14 +23,14 @@ type FormImageMediaProps = {
   infoText?: string;
 } & FormControllerProps<Media | undefined>;
 
-const FormImageMedia = ({
+const FormImageInput = ({
   field,
   fieldState,
   label,
   helpText,
   buttonText = __('Upload Media', 'tutor'),
   infoText,
-}: FormImageMediaProps) => {
+}: FormImageInputProps) => {
   const wpMedia = window.wp.media({
     library: { type: 'image' },
   });
@@ -85,7 +85,7 @@ const FormImageMedia = ({
   );
 };
 
-export default FormImageMedia;
+export default FormImageInput;
 
 const styles = {
   emptyMedia: css`
