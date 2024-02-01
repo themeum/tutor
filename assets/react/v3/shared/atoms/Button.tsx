@@ -183,18 +183,19 @@ const styles = {
     ${variant === 'text' &&
     css`
       background-color: transparent;
-      color: ${colorTokens.text.title};
+      color: ${colorTokens.text.brand};
+      padding: ${spacing[4]} ${spacing[8]};
 
       &:hover {
         text-decoration: underline;
       }
 
       &:active {
-        color: ${colorTokens.text.primary};
+        color: ${colorTokens.text.brand};
       }
 
       &:focus {
-        color: ${colorTokens.text.primary};
+        color: ${colorTokens.text.brand};
         box-shadow: ${shadow.focus};
       }
 
