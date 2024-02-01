@@ -199,6 +199,9 @@ class Course extends Tutor_Base {
 
 		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
 
+		add_action( 'admin_menu', __CLASS__ . '::load_media_scripts' );
+		add_action( 'init', __CLASS__ . '::load_media_scripts' );
+
 		add_action( 'admin_init', array( $this, 'load_course_builder' ) );
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
@@ -1805,6 +1808,24 @@ class Course extends Tutor_Base {
 		$product_obj->set_sold_individually( true );
 
 		return $product_obj->save();
+	}
+
+	/**
+	 * Load media scripts to support wp media lib on the course builder
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public static function load_media_scripts() {
+		add_action(
+			'wp_print_footer_scripts',
+			function () {
+				if ( function_exists( 'wp_print_media_templates' ) ) {
+					wp_print_media_templates();
+				}
+			}
+		);
 	}
 
 }
