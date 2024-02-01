@@ -234,10 +234,10 @@ const CourseBasic = () => {
           </div>
 
           <div css={styles.scheduleButtonsWrapper}>
-            <Button variant={ButtonVariant.tertiary} size={ButtonSize.small}>
+            <Button variant="tertiary" size="small">
               {__('Cancel')}
             </Button>
-            <Button variant={ButtonVariant.secondary} size={ButtonSize.small}>
+            <Button variant="secondary" size="small">
               {__('Save')}
             </Button>
           </div>

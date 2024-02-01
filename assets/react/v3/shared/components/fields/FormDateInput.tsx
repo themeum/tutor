@@ -1,4 +1,4 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
@@ -91,7 +91,7 @@ const FormDateInput = ({
 
               {isClearable && field.value && (
                 <Button
-                  variant={ButtonVariant.text}
+                  variant="text"
                   buttonCss={styles.clearButton}
                   onClick={() => {
                     setInputValue('');

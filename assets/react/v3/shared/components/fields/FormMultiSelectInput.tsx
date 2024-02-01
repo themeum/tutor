@@ -1,4 +1,4 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import Checkbox from '@Atoms/CheckBox';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorPalate, shadow, spacing, zIndex } from '@Config/styles';
@@ -182,7 +182,7 @@ const FormMultiSelectInput = <T,>({
                     {clearable && (
                       <div css={styles.clearButton}>
                         <Button
-                          variant={ButtonVariant.plain}
+                          variant="text"
                           disabled={field.value.length === 0}
                           onClick={() => {
                             field.onChange([]);

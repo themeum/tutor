@@ -7,7 +7,7 @@ import { isBoolean } from '@Utils/types';
 import { nanoid } from '@Utils/util';
 import React, { ReactNode, useState, useCallback, useContext } from 'react';
 
-import Button, { ButtonVariant } from './Button';
+import Button from './Button';
 import SVGIcon from './SVGIcon';
 
 type Position = 'top-left' | 'top-right' | 'top-center' | 'bottom-left' | 'bottom-right' | 'bottom-center';
@@ -85,7 +85,7 @@ const ToastProvider = ({ children, position = 'bottom-right' }: { children: Reac
               <h5 css={styles.message}>{toast.message}</h5>
 
               <Button
-                variant={ButtonVariant.plain}
+                variant="text"
                 onClick={() => {
                   setToastList((prev) => prev.filter((item) => item.id !== toast.id));
                 }}

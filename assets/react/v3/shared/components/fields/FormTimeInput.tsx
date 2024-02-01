@@ -1,4 +1,4 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
@@ -85,7 +85,7 @@ const FormTimeInput = ({
               <SVGIcon name="clock" width={32} height={32} style={styles.icon} />
 
               {isClearable && field.value && (
-                <Button variant={ButtonVariant.text} buttonCss={styles.clearButton} onClick={() => field.onChange('')}>
+                <Button variant="text" buttonCss={styles.clearButton} onClick={() => field.onChange('')}>
                   <SVGIcon name="times" width={12} height={12} />
                 </Button>
               )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import FormInput from '@Components/fields/FormInput';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Controller } from 'react-hook-form';
@@ -26,10 +26,10 @@ const ReferenceModal = ({ closeModal, title }: ReferenceModalProps) => {
         </div>
         <hr css={{ padding: 0, margin: 0 }} />
         <div css={{ display: 'flex', padding: '16px', justifyContent: 'end', gap: 8 }}>
-          <Button variant={ButtonVariant.secondary} onClick={() => closeModal({ action: 'CLOSE' })}>
+          <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
             Close
           </Button>
-          <Button variant={ButtonVariant.primary} onClick={() => closeModal({ action: 'CONFIRM' })}>
+          <Button variant="primary" onClick={() => closeModal({ action: 'CONFIRM' })}>
             Add
           </Button>
         </div>
