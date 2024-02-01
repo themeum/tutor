@@ -11,7 +11,6 @@ import { __ } from '@wordpress/i18n';
 
 type Media = {
   id: number | null;
-  type: string;
   url: string;
   title?: string;
 };
@@ -33,8 +32,9 @@ const FormImageMedia = ({
   infoText,
 }: FormImageMediaProps) => {
   const wpMedia = window.wp.media({
-    library: { type: "image" }
+    library: { type: 'image' },
   });
+
   const fieldValue = field.value;
 
   const uploadHandler = () => {
@@ -43,13 +43,13 @@ const FormImageMedia = ({
 
   wpMedia.on('select', () => {
     const attachment = wpMedia.state().get('selection').first().toJSON();
-    const { id, type, url, title } = attachment;
+    const { id, url, title } = attachment;
 
-    field.onChange({ id, type, url, title });
+    field.onChange({ id, url, title });
   });
 
   const clearHandler = () => {
-    field.onChange({ id: null, type: '', url: '', title: '' });
+    field.onChange({ id: null, url: '', title: '' });
   };
 
   return (
@@ -67,9 +67,7 @@ const FormImageMedia = ({
               </div>
             ) : (
               <div css={styles.previewWrapper}>
-                {fieldValue.type === 'image' && (
-                  <img src={fieldValue.url} alt={fieldValue?.title} css={styles.imagePreview} />
-                )}
+                <img src={fieldValue.url} alt={fieldValue?.title} css={styles.imagePreview} />
                 <div css={styles.hoverPreview} data-hover-buttons-wrapper>
                   <Button variant="outlined" onClick={uploadHandler}>
                     {__('Replace Image', 'tutor')}
