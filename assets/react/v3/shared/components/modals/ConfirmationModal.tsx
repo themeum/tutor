@@ -1,4 +1,4 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import { colorTokens, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 
@@ -16,11 +16,11 @@ const ConfirmationModal = ({ closeModal, title }: ConfirmationModalProps) => {
       <div css={styles.contentWrapper}>
         <p css={styles.content}>{__('Are you sure?', 'tutor')}</p>
         <div css={styles.footerWrapper}>
-          <Button variant={ButtonVariant.secondary} onClick={() => closeModal({ action: 'CLOSE' })}>
+          <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
             {__('Cancel', 'tutor')}
           </Button>
           <Button
-            variant={ButtonVariant.primary}
+            variant="primary"
             onClick={() => {
               closeModal({ action: 'CONFIRM' });
             }}

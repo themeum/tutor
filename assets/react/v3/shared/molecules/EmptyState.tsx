@@ -1,4 +1,4 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import { colorPalate, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
@@ -30,7 +30,7 @@ const EmptyState = ({
         {!!content && <p css={styles.content}>{content}</p>}
         {!!buttonText && (
           <div css={styles.buttonWrapper}>
-            <Button variant={ButtonVariant.primary} onClick={action}>
+            <Button variant="primary" onClick={action}>
               {buttonText}
             </Button>
           </div>

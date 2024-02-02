@@ -1,7 +1,7 @@
-import Button, { ButtonVariant } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { DateFormats } from '@Config/constants';
-import { borderRadius, colorPalate, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
@@ -38,7 +38,7 @@ const FormDateInput = ({
   isClearable = true,
 }: FormDateInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(field.value);
+  const [inputValue, setInputValue] = useState(field.value ?? '');
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -87,11 +87,11 @@ const FormDateInput = ({
                 }}
                 autoComplete="off"
               />
-              <SVGIcon name="calendar" width={18} height={18} style={styles.icon} />
+              <SVGIcon name="calendarLine" width={30} height={32} style={styles.icon} />
 
               {isClearable && field.value && (
                 <Button
-                  variant={ButtonVariant.plain}
+                  variant="text"
                   buttonCss={styles.clearButton}
                   onClick={() => {
                     setInputValue('');
@@ -150,21 +150,27 @@ const styles = {
   icon: css`
     position: absolute;
     top: 50%;
-    left: ${spacing[12]};
+    left: ${spacing[8]};
     transform: translateY(-50%);
+    color: ${colorTokens.icon.default};
   `,
   pickerWrapper: css`
     position: absolute;
-    background-color: ${colorPalate.basic.white};
+    background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
+    color: ${colorTokens.text.primary};
 
-    .rdp-caption_label {
-      ${typography.heading6()};
-    }
-
-    .rdp-day_outside {
-      color: ${colorPalate.text.disabled};
+    .rdp {
+      --rdp-cell-size: 40px; /* Size of the day cells. */
+      --rdp-caption-font-size: ${fontSize[18]}; /* Font size for the caption labels. */
+      --rdp-accent-color: ${colorTokens.action.primary.default}; /* Accent color for the background of selected days. */
+      --rdp-background-color: ${colorTokens.background.hover}; /* Background color for the hovered/focused elements. */
+      --rdp-accent-color-dark: ${colorTokens.action.primary.active}; /* Accent color for the background of selected days (to use in dark-mode). */
+      --rdp-background-color-dark: ${colorTokens.action.primary.hover}; /* Background color for the hovered/focused elements (to use in dark-mode). */
+      --rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
+      --rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
+      --rdp-selected-color: ${colorTokens.text.white}; /* Color of selected day text */
     }
   `,
   clearButton: css`
@@ -179,7 +185,7 @@ const styles = {
     transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
 
     :hover {
-      background-color: ${colorPalate.background.hover};
+      background-color: ${colorTokens.background.hover};
     }
   `,
 };
