@@ -1,13 +1,4 @@
-import {
-  borderRadius,
-  colorPalate,
-  colorTokens,
-  fontSize,
-  fontWeight,
-  lineHeight,
-  shadow,
-  spacing,
-} from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
@@ -67,7 +58,7 @@ const FormInputWithContent = ({
       isHidden={isHidden}
       removeBorder={removeBorder}
     >
-      {inputProps => {
+      {(inputProps) => {
         const { css: inputCss, ...restInputProps } = inputProps;
         return (
           <div css={[styles.inputWrapper(size, !!fieldState.error, removeBorder), wrapperCss]}>
@@ -78,7 +69,7 @@ const FormInputWithContent = ({
               {...restInputProps}
               type="text"
               value={field.value ?? ''}
-              onChange={e => {
+              onChange={(e) => {
                 const value: string | number =
                   type === 'number'
                     ? e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
@@ -90,7 +81,7 @@ const FormInputWithContent = ({
                   onChange(value);
                 }
               }}
-              onKeyDown={event => onKeyDown && onKeyDown(event.key)}
+              onKeyDown={(event) => onKeyDown && onKeyDown(event.key)}
               css={[inputCss, styles.input(contentPosition, showVerticalBar, size)]}
               autoComplete="off"
             />

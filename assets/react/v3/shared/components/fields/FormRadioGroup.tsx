@@ -1,5 +1,5 @@
 import Radio from '@Atoms/Radio';
-import { colorPalate, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
@@ -70,6 +70,6 @@ const styles = {
   radioLegend: css`
     margin-left: ${spacing[28]};
     ${typography.body()};
-    color: ${colorPalate.text.neutral};
+    color: ${colorTokens.text.subdued};
   `,
 };

@@ -1,4 +1,4 @@
-import { colorPalate, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { nanoid } from '@Utils/util';
@@ -36,7 +36,7 @@ const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props: RadioProps,
         disabled={disabled}
         onChange={onChange}
         onBlur={onBlur}
-        css={[styles.radio(label), inputCss]}
+        css={[styles.radio(label)]}
       />
       <span />
       {icon}
@@ -47,7 +47,7 @@ const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props: RadioProps,
 
 const styles = {
   container: (disabled: boolean) => css`
-    ${typography.body()};
+    ${typography.caption()};
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -55,7 +55,7 @@ const styles = {
 
     ${disabled &&
     css`
-      color: ${colorPalate.text.disabled};
+      color: ${colorTokens.text.disable};
     `}
   `,
   radio: (label = '') => css`
@@ -68,10 +68,10 @@ const styles = {
     & + span {
       position: relative;
       cursor: pointer;
-      height: 15px;
-      width: 15px;
-      background-color: ${colorPalate.basic.white};
-      border: 2px solid ${colorPalate.icon.disabled};
+      height: 18px;
+      width: 18px;
+      background-color: ${colorTokens.background.white};
+      border: 2px solid ${colorTokens.stroke.default};
       border-radius: 100%;
       ${label &&
       css`
@@ -81,18 +81,18 @@ const styles = {
     & + span::before {
       content: '';
       position: absolute;
-      left: ${spacing[2]};
-      top: ${spacing[2]};
-      background-color: ${colorPalate.basic.white};
-      width: 7px;
-      height: 7px;
+      left: 3px;
+      top: 3px;
+      background-color: ${colorTokens.background.white};
+      width: 8px;
+      height: 8px;
       border-radius: 100%;
     }
     &:checked + span {
-      border-color: ${colorPalate.basic.primary.default};
+      border-color: ${colorTokens.action.primary.default};
     }
     &:checked + span::before {
-      background-color: ${colorPalate.basic.primary.default};
+      background-color: ${colorTokens.action.primary.default};
     }
   `,
 };
