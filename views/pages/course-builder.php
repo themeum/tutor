@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php wp_print_styles(); ?>
 </head>
 <body data-tutor-context="<?php echo is_admin() ? 'backend' : 'frontend'; ?>">
-	<div id="tutor-course-builder">React App Here</div>
+	<div id="tutor-course-builder"></div>
 	<?php wp_print_footer_scripts(); ?>
 </body>
 </html>
