@@ -150,32 +150,38 @@ const styles = {
     }
   `,
   inputLeftContent: (showVerticalBar: boolean, size: string) => css`
+    display: flex;
     color: ${colorTokens.icon.subdued};
     padding-right: ${spacing[8]};
     font-size: ${fontSize[16]};
     line-height: ${lineHeight[20]};
+
     ${size === 'large' &&
     css`
       padding-right: ${spacing[12]};
       font-size: ${fontSize[24]};
       line-height: ${lineHeight[32]};
     `}
+
     ${showVerticalBar &&
     css`
       border-right: 1px solid ${colorTokens.stroke.default};
     `}
   `,
   inputRightContent: (showVerticalBar: boolean, size: string) => css`
+    display: flex;
     color: ${colorTokens.icon.subdued};
     padding-left: ${spacing[8]};
     font-size: ${fontSize[16]};
     line-height: ${lineHeight[20]};
+
     ${size === 'large' &&
     css`
       padding-left: ${spacing[12]};
       font-size: ${fontSize[24]};
       line-height: ${lineHeight[32]};
     `}
+
     ${showVerticalBar &&
     css`
       border-left: 1px solid ${colorTokens.stroke.default};

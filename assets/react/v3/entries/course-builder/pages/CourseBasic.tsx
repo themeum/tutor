@@ -192,7 +192,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Instructors', 'tutor')}
               placeholder={__('Search to add instructors', 'tutor')}
-              content={<SVGIcon name="search" />}
+              content={<SVGIcon name="search" width={24} height={24} />}
               showVerticalBar={false}
             />
           )}

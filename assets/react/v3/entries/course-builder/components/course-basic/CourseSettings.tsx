@@ -52,10 +52,6 @@ const CourseSettings = () => {
 
   const contentDropOptions = [
     {
-      label: __('None', 'tutor'),
-      value: 0,
-    },
-    {
       label: __('Schedule course contents by date', 'tutor'),
       value: 1,
     },
@@ -70,6 +66,10 @@ const CourseSettings = () => {
     {
       label: __('Course content unlocked after finishing prerequisites', 'tutor'),
       value: 4,
+    },
+    {
+      label: __('None', 'tutor'),
+      value: 0,
     },
   ];
 
