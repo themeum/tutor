@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@Atoms/Button';
 import FormSwitch from '@Components/fields/FormSwitch';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
@@ -7,21 +7,59 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 import { __ } from '@wordpress/i18n';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import SVGIcon from '@Atoms/SVGIcon';
+import { typography } from '@Config/typography';
+import { styleUtils } from '@Utils/style-utils';
+import { DateFormats } from '@Config/constants';
+import { format } from 'date-fns';
+
+interface ScheduleForm {
+  schedule_date: string;
+  schedule_time: string;
+}
 
 const ScheduleOptions = () => {
-  const form = useFormContext();
+  const contextForm = useFormContext();
+  const form = useFormWithGlobalError<ScheduleForm>();
+
+  const [showForm, setShowForm] = useState(true);
 
   const scheduleOptions = useWatch({ name: 'schedule_options' });
+
+  const scheduleDate = form.getValues('schedule_date')
+    ? format(new Date(form.getValues('schedule_date')), DateFormats.monthDayYear)
+    : '';
+  const scheduleTime = form.getValues('schedule_time') ?? '';
+
+  const handleDelete = () => {
+    contextForm.setValue('schedule_options', false);
+    setShowForm(true);
+    form.reset();
+  };
+
+  const handleCancel = () => {
+    contextForm.setValue('schedule_options', false);
+    form.reset();
+  };
+
+  const handleSave = (data: ScheduleForm) => {
+    if (data.schedule_date && data.schedule_time) {
+      setShowForm(false);
+
+      // @TODO: Need to update context form based on course data structure 
+    }
+  };
 
   return (
     <div css={styles.scheduleOptions}>
       <Controller
         name="schedule_options"
-        control={form.control}
+        control={contextForm.control}
         render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
       />
 
-      {scheduleOptions && (
+      {scheduleOptions && showForm && (
         <>
           <div css={styles.dateAndTimeWrapper}>
             <Controller
@@ -38,14 +76,31 @@ const ScheduleOptions = () => {
           </div>
 
           <div css={styles.scheduleButtonsWrapper}>
-            <Button variant="tertiary" size="small">
+            <Button variant="tertiary" size="small" onClick={handleCancel}>
               {__('Cancel')}
             </Button>
-            <Button variant="secondary" size="small">
+            <Button variant="secondary" size="small" onClick={form.handleSubmit(handleSave)}>
               {__('Save')}
             </Button>
           </div>
         </>
+      )}
+
+      {scheduleOptions && !showForm && (
+        <div css={styles.scheduleInfoWrapper}>
+          <div css={styles.scheduledFor}>
+            <div css={styles.scheduleLabel}>{__('Scheduled for', 'tutor')}</div>
+            <div css={styles.scheduleInfoButtons}>
+              <button onClick={handleDelete}>
+                <SVGIcon name="delete" width={24} height={24} />
+              </button>
+              <button onClick={() => setShowForm(true)}>
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+            </div>
+          </div>
+          <div css={styles.scheduleInfo}>{__(`${scheduleDate} at ${scheduleTime}`, 'tutor')}</div>
+        </div>
       )}
     </div>
   );
@@ -104,5 +159,48 @@ const styles = {
         justify-content: center;
       }
     }
+  `,
+  scheduleInfoWrapper: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+    margin-top: ${spacing[12]};
+  `,
+  scheduledFor: css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  `,
+  scheduleLabel: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
+  `,
+  scheduleInfoButtons: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+
+    button {
+      ${styleUtils.resetButton};
+      color: ${colorTokens.icon.default};
+      height: 24px;
+      width: 24px;
+      border-radius: ${borderRadius[2]};
+
+      &:hover {
+        color: ${colorTokens.icon.hover};
+      }
+
+      &:focus {
+        box-shadow: ${shadow.focus};
+      }
+    }
+  `,
+  scheduleInfo: css`
+    ${typography.caption()};
+    background-color: ${colorTokens.background.status.processing};
+    padding: ${spacing[8]};
+    border-radius: ${borderRadius[4]};
+    text-align: center;
   `,
 };
