@@ -1818,6 +1818,27 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public static function load_media_scripts() {
+		// Add style on the head tag.
+		$screen_reader_text_style = '
+			.screen-reader-text
+			{
+				position: absolute;
+				top: -10000em;
+				width: 1px;
+				height: 1px;
+				margin: -1px;
+				padding: 0;
+				overflow: hidden;
+				clip: rect(0,0,0,0);
+				border: 0;
+			}
+		';
+
+		wp_add_inline_style(
+			'media-views',
+			$screen_reader_text_style
+		);
+
 		add_action(
 			'wp_print_footer_scripts',
 			function () {
