@@ -258,7 +258,9 @@ class Course extends Tutor_Base {
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
 		// If need more data.
-		$new_data = array();
+		$new_data = array(
+			'settings' => get_option( 'tutor_option', array() ),
+		);
 
 		$data = array_merge( $default_data, $new_data );
 
