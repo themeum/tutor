@@ -18,6 +18,8 @@ trait JsonResponse {
 	/**
 	 * JSON response
 	 *
+	 * @since 3.0.0
+	 *
 	 * @param string  $message message.
 	 * @param mixed   $data data.
 	 * @param integer $status_code status code.
