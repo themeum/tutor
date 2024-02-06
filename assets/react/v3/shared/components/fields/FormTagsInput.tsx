@@ -61,8 +61,8 @@ const FormTagsInput = ({
 
   const handleAddTag = async () => {
     if (searchText.length) {
-      const tag = await createTagMutation.mutateAsync({ name: searchText });
-      field.onChange([...fieldValue, tag]);
+      const response = await createTagMutation.mutateAsync({ name: searchText });
+      field.onChange([...fieldValue, response.data]);
       setIsOpen(false);
       setSearchText('');
     }

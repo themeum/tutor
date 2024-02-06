@@ -16,6 +16,10 @@ interface CreateTagPayload {
   name: string;
 }
 
+interface CreateTagResponse {
+  data: Tag
+}
+
 const getTagList = (params: getTagListParams) => {
   return authWPApiInstance.get<Tag[]>(endpoints.TAGS, { params });
 };
@@ -28,7 +32,7 @@ export const useTagListQuery = (params: getTagListParams) => {
 };
 
 const createTag = (payload: CreateTagPayload) => {
-  return authWPApiInstance.post<CreateTagPayload, Tag>(endpoints.TAGS, payload);
+  return authWPApiInstance.post<CreateTagPayload, CreateTagResponse>(endpoints.TAGS, payload);
 };
 
 export const useCreateTagMutation = () => {
@@ -42,7 +46,7 @@ export const useCreateTagMutation = () => {
         queryKey: ['TagList'],
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       // @TODO: Need to add proper type definition for wp rest api errors
       showToast({ type: 'danger', message: error.response.data.message });
     },
