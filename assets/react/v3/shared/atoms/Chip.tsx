@@ -1,75 +1,98 @@
-import { borderRadius, colorPalate, letterSpacing, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
-import { rgba } from 'polished';
-import React, { ReactNode } from 'react';
+import { styleUtils } from '@Utils/style-utils';
+import { ReactNode } from 'react';
 
-type Variant = 'regular' | 'outlined';
-type Color = 'default' | 'success' | 'warning' | 'danger';
-type Size = 'regular' | 'small';
+import SVGIcon from './SVGIcon';
+import { noop } from '@Utils/util';
 
-interface ChipProps {
-  children: ReactNode;
-  variant?: Variant;
-  color?: Color;
-  size?: Size;
-}
+type ChipProps = {
+  label: string;
+  onClick?: () => void;
+  showIcon?: boolean;
+  icon?: ReactNode;
+  isClickable?: boolean;
+};
 
-const Chip = ({ children, variant = 'regular', color = 'default', size = 'regular' }: ChipProps) => {
-  return <div css={styles.wrapper({ variant, color, size })}>{children}</div>;
+const Chip = ({
+  label,
+  onClick = noop,
+  showIcon = true,
+  icon = <SVGIcon name="cross" width={20} height={20} />,
+  isClickable,
+}: ChipProps) => {
+  if (isClickable) {
+    return (
+      <button css={styles.wrapper({ hasIcon: showIcon, isClickable: true })} onClick={onClick}>
+        <div css={styles.label}>{label}</div>
+        {showIcon && (
+          <div css={styles.iconWrapper} data-icon-wrapper>
+            {icon}
+          </div>
+        )}
+      </button>
+    );
+  }
+
+  return (
+    <div css={styles.wrapper({ hasIcon: showIcon, isClickable: false })}>
+      <div css={styles.label}>{label}</div>
+      {showIcon && (
+        <button css={styles.iconWrapper} onClick={onClick} data-icon-wrapper>
+          {icon}
+        </button>
+      )}
+    </div>
+  );
 };
 
 export default Chip;
 
-const colorMapping = {
-  default: {
-    border: colorPalate.border.default,
-    background: rgba(colorPalate.border.default, 0.05),
-    color: colorPalate.border.default,
-  },
-  success: {
-    border: colorPalate.border.success.default,
-    background: rgba(colorPalate.border.success.default, 0.1),
-    color: colorPalate.border.success.default,
-  },
-  danger: {
-    border: colorPalate.border.critical.default,
-    background: rgba(colorPalate.border.critical.default, 0.1),
-    color: colorPalate.border.critical.default,
-  },
-  warning: {
-    border: colorPalate.surface.warning.default,
-    background: rgba(colorPalate.surface.warning.default, 0.1),
-    color: colorPalate.text.default,
-  },
-} as const;
-
 const styles = {
-  wrapper: ({ variant, color, size }: { variant: Variant; color: Color; size: Size }) => css`
-    ${typography.body()};
+  wrapper: ({ hasIcon = false, isClickable }: { hasIcon: boolean; isClickable: boolean }) => css`
+    ${styleUtils.resetButton};
+    background-color: #E4E5E7;
+    border-radius: ${borderRadius[24]};
     padding: ${spacing[4]} ${spacing[8]};
-    background-color: ${colorPalate.surface.selected.default};
-    border: 1px solid ${colorPalate.border.disabled};
-    border-radius: ${borderRadius[50]};
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 60px;
+    min-height: 24px;
+    transition: background-color 0.3s ease;
 
-    ${size === 'small' &&
-    css`
-      padding: 0 ${spacing[8]};
-      min-width: 45px;
-      ${typography.tiny()};
-      border-radius: ${borderRadius[14]};
-      letter-spacing: ${letterSpacing.wide};
+    ${!isClickable && css`
+      cursor: inherit;
     `}
 
-    ${variant === 'outlined' &&
+    ${hasIcon &&
     css`
-      background-color: ${colorMapping[color].background};
-      border-color: ${colorMapping[color].border};
-      color: ${colorMapping[color].color};
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: ${spacing[2]};
+      padding: ${spacing[4]} ${spacing[8]} ${spacing[4]} ${spacing[12]};
     `}
+
+    :hover {
+      [data-icon-wrapper] {
+        > svg {
+          color: ${colorTokens.icon.hover};
+        }
+      }
+    }
+  `,
+  label: css`
+    ${typography.caption()}
+  `,
+  iconWrapper: css`
+    ${styleUtils.resetButton};
+    border-radius: ${borderRadius['circle']};
+    transition: background-color 0.3s ease;
+    height: 20px;
+    width: 20px;
+    text-align: center;
+
+    svg {
+      color: ${colorTokens.icon.default};
+      transition: color 0.3s ease;
+    }
   `,
 };

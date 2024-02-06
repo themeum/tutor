@@ -1,3 +1,5 @@
+import { string } from 'prop-types';
+
 export {};
 
 declare global {
@@ -57,6 +59,11 @@ declare global {
       is_ssl: string;
       course_list_page_url: string;
       course_post_type: string;
+    };
+    wpApiSettings: {
+      nonce: string;
+      root: string;
+      versionString: string;
     };
   }
 }

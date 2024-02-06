@@ -184,7 +184,7 @@ const styles = {
     `}
   `,
   message: css`
-    ${typography.heading5()};
+    ${typography.body()};
     color: ${colorPalate.basic.white};
   `,
   timesIcon: css`

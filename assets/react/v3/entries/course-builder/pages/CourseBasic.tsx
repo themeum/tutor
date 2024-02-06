@@ -13,6 +13,7 @@ import FormImageInput from '@Components/fields/FormImageInput';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import SVGIcon from '@Atoms/SVGIcon';
+import FormTagsInput from '@Components/fields/FormTagsInput';
 
 const CourseBasic = () => {
   const form = useFormContext();
@@ -173,15 +174,15 @@ const CourseBasic = () => {
         </div>
 
         <Controller
-          name="tags"
-          control={form.control}
-          render={(controllerProps) => <FormInput {...controllerProps} label={__('Tags', 'tutor')} />}
-        />
-
-        <Controller
           name="categories"
           control={form.control}
           render={(controllerProps) => <FormInput {...controllerProps} label={__('Categories', 'tutor')} />}
+        />
+
+        <Controller
+          name="tags"
+          control={form.control}
+          render={(controllerProps) => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} />}
         />
 
         <Controller

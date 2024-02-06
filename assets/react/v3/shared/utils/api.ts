@@ -22,7 +22,7 @@ authApiInstance.interceptors.request.use(
   (config) => {
     config.headers ||= {};
 
-    config.headers['X-CSRF-Token'] = Joomla.getOptions('csrf.token');
+    // config.headers['X-CSRF-Token'] = Joomla.getOptions('csrf.token');
 
     if (config.method && ['post', 'put', 'patch'].includes(config.method.toLocaleLowerCase())) {
       if (!!config.data) {
@@ -51,4 +51,34 @@ authApiInstance.interceptors.request.use(
 
 authApiInstance.interceptors.response.use((response) => {
   return Promise.resolve<{ data: unknown }>(response).then((res) => res.data);
+});
+
+
+export const authWPApiInstance = axios.create({
+  baseURL: config.WP_API_BASE_URL,
+});
+
+authWPApiInstance.interceptors.request.use(
+  (config) => {
+    config.headers ||= {};
+
+    config.headers['X-WP-Nonce'] = window.wpApiSettings.nonce;
+
+    if (config.params) {
+      config.params = serializeParams(config.params);
+    }
+
+    return config;
+  },
+  (err) => {
+    return Promise.reject(err);
+  },
+);
+
+authWPApiInstance.interceptors.response.use((response) => {
+  return Promise.resolve<{ data: unknown }>(response).then((res) => {
+    return {
+      data: res.data
+    }
+  });
 });
