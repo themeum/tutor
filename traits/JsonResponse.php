@@ -16,6 +16,28 @@ namespace Tutor\Traits;
 trait JsonResponse {
 
 	/**
+	 * JSON response
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string  $message message.
+	 * @param mixed   $data data.
+	 * @param integer $status_code status code.
+	 *
+	 * @return void   JSON data response.
+	 */
+	public function json_response( string $message = '', $data, int $status_code = 200 ) {
+		wp_send_json(
+			array(
+				'status_code' => $status_code,
+				'message'     => $message,
+				'data'        => $data,
+			),
+			$status_code
+		);
+	}
+
+	/**
 	 * Response JSON success message.
 	 *
 	 * @param string $message success message.
