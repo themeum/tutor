@@ -19,28 +19,28 @@ class HttpHelper {
 	/**
 	 * 200 serial HTTP status code constants
 	 */
-	const OK       = 200;
-	const CREATED  = 201;
-	const ACCEPTED = 202;
+	const STATUS_OK       = 200;
+	const STATUS_CREATED  = 201;
+	const STATUS_ACCEPTED = 202;
 
 	/**
 	 * 400 serial HTTP status code constants
 	 */
-	const BAD_REQUEST          = 400;
-	const UNAUTHORIZED         = 401;
-	const FORBIDDEN            = 403;
-	const NOT_FOUND            = 404;
-	const METHOD_NOT_ALLOWED   = 405;
-	const TOO_MANY_REQUESTS    = 429;
-	const UNPROCESSABLE_ENTITY = 422;
+	const STATUS_BAD_REQUEST          = 400;
+	const STATUS_UNAUTHORIZED         = 401;
+	const STATUS_FORBIDDEN            = 403;
+	const STATUS_NOT_FOUND            = 404;
+	const STATUS_METHOD_NOT_ALLOWED   = 405;
+	const STATUS_TOO_MANY_REQUESTS    = 429;
+	const STATUS_UNPROCESSABLE_ENTITY = 422;
 
 	/**
 	 * 500 serial HTTP status code constants
 	 */
-	const INTERNAL_SERVER_ERROR = 500;
-	const SERVICE_UNAVAILABLE   = 503;
-	const BAD_GATEWAY           = 502;
-	const GATEWAY_TIMEOUT       = 504;
+	const STATUS_INTERNAL_SERVER_ERROR = 500;
+	const STATUS_SERVICE_UNAVAILABLE   = 503;
+	const STATUS_BAD_GATEWAY           = 502;
+	const STATUS_GATEWAY_TIMEOUT       = 504;
 
 	/**
 	 * Response body
