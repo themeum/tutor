@@ -39,6 +39,7 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@types/react-router-dom": "^5.3.3",
+    "@types/uuid": "^9.0.8",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",

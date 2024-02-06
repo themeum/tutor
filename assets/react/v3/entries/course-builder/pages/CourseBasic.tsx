@@ -14,6 +14,7 @@ import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormTagsInput from '@Components/fields/FormTagsInput';
+import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 
 const CourseBasic = () => {
   const form = useFormContext();
@@ -176,7 +177,8 @@ const CourseBasic = () => {
         <Controller
           name="categories"
           control={form.control}
-          render={(controllerProps) => <FormInput {...controllerProps} label={__('Categories', 'tutor')} />}
+          defaultValue={[]}
+          render={(controllerProps) => <FormCategoriesInput {...controllerProps} label={__('Categories', 'tutor')} />}
         />
 
         <Controller

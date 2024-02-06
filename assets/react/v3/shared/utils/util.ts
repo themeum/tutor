@@ -1,6 +1,5 @@
 import collection from '@Config/icon-list';
-import { CategoryNode, CategoryWithChildren } from '@Services/category';
-import { Discount } from '@Services/order';
+import { Category, CategoryWithChildren } from '@Services/category';
 import {
   differenceInDays,
   endOfMonth,
@@ -124,9 +123,9 @@ export const hasDuplicateEntries = <T>(items: T[], callback: (item: T) => string
   return false;
 };
 
-export const generateTree = (data: CategoryNode[], parent_id = 0): CategoryWithChildren[] => {
+export const generateTree = (data: Category[], parent = 0): CategoryWithChildren[] => {
   return data
-    .filter((node) => node.parent_id === parent_id)
+    .filter((node) => node.parent === parent)
     .reduce<CategoryWithChildren[]>((tree, node) => [...tree, { ...node, children: generateTree(data, node.id) }], []);
 };
 
@@ -220,13 +219,6 @@ export const makeFirstCharacterUpperCase = (word: string) => {
   const wordWithoutFirstCharacter = word.slice(1);
 
   return `${firstCharacterUpperCase}${wordWithoutFirstCharacter}`;
-};
-
-export const calculateDiscount = ({ discount, total }: { discount: Discount; total: number }) => {
-  if (discount.type === 'percent') {
-    return ((discount.amount ?? 0) * total) / 100;
-  }
-  return discount.amount || 0;
 };
 
 export const formatBytes = (bytes: number, decimals = 2) => {

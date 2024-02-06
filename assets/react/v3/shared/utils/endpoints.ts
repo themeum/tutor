@@ -1,5 +1,6 @@
 const endpoints = {
-  TAGS: 'course-tag'
+  TAGS: 'course-tag',
+  CATEGORIES: 'course-category'
 };
 
 export default endpoints;

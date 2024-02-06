@@ -9,7 +9,7 @@ import { styleUtils } from '@Utils/style-utils';
 
 import FormFieldWrapper from './FormFieldWrapper';
 import { __ } from '@wordpress/i18n';
-import { Tag, useCreateTagMutation, useTagListQuery } from '../../services/tags';
+import { Tag, useCreateTagMutation, useTagListQuery } from '@Services/tags';
 import Chip from '@Atoms/Chip';
 import Checkbox from '@Atoms/CheckBox';
 import { useDebounce } from '@Hooks/useDebounce';
@@ -60,10 +60,12 @@ const FormTagsInput = ({
   };
 
   const handleAddTag = async () => {
-    const tag = await createTagMutation.mutateAsync({ name: searchText });
-    field.onChange([...fieldValue, tag]);
-    setIsOpen(false);
-    setSearchText('');
+    if (searchText.length) {
+      const tag = await createTagMutation.mutateAsync({ name: searchText });
+      field.onChange([...fieldValue, tag]);
+      setIsOpen(false);
+      setSearchText('');
+    }
   };
 
   return (

@@ -138,6 +138,7 @@ module.exports = (env, options) => {
             '@Components': path.resolve(__dirname, './assets/react/v3/shared/components/'),
             '@Config': path.resolve(__dirname, './assets/react/v3/shared/config/'),
             '@Hooks': path.resolve(__dirname, './assets/react/v3/shared/hooks/'),
+            '@Services': path.resolve(__dirname, './assets/react/v3/shared/services/'),
             '@Utils': path.resolve(__dirname, './assets/react/v3/shared/utils/'),
             '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
             '@CourseBuilderServices': path.resolve(__dirname, './assets/react/v3/entries/course-builder/services/'),

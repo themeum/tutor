@@ -26,6 +26,7 @@
       "@Components/*": ["assets/react/v3/shared/components/*"],
       "@Config/*": ["assets/react/v3/shared/config/*"],
       "@Hooks/*": ["assets/react/v3/shared/hooks/*"],
+      "@Services/*": ["assets/react/v3/shared/services/*"],
       "@Utils/*": ["assets/react/v3/shared/utils/*"],
       "@CourseBuilderComponents/*": ["assets/react/v3/entries/course-builder/components/*"],
       "@CourseBuilderServices/*": ["assets/react/v3/entries/course-builder/services/*"],
