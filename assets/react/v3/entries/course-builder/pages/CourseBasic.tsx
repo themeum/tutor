@@ -15,6 +15,7 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
+import FormMultiInstructors from '@Components/fields/FormMultiInstructors';
 
 const CourseBasic = () => {
   const form = useFormContext();
@@ -187,16 +188,17 @@ const CourseBasic = () => {
           render={(controllerProps) => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} />}
         />
 
+        {/* @TODO: Need to add condition based on tutor pro, marketplace, multi instructor addon, and admin role */}
         <Controller
           name="instructors"
           control={form.control}
           render={(controllerProps) => (
-            <FormInputWithContent
+            <FormMultiInstructors
               {...controllerProps}
               label={__('Instructors', 'tutor')}
               placeholder={__('Search to add instructors', 'tutor')}
-              content={<SVGIcon name="search" width={24} height={24} />}
-              showVerticalBar={false}
+              isSearchable
+              leftIcon={<SVGIcon name="search" width={24} height={24} />}
             />
           )}
         />
@@ -227,7 +229,7 @@ const styles = {
     gap: ${spacing[8]};
   `,
   sidebar: css`
-    padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} ${spacing[64]};
+    padding: ${spacing[24]} ${spacing[32]} ${spacing[48]} ${spacing[64]};
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
 
