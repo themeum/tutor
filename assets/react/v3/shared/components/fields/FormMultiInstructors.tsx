@@ -10,13 +10,13 @@ import { styleUtils } from '@Utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
 import { noop } from '@Utils/util';
 import { __ } from '@wordpress/i18n';
-import { Instructor, useInstructorListQuery } from '@Services/instructors';
 import { useDebounce } from '@Hooks/useDebounce';
+import { User, UserParams, useUserListQuery } from '@Services/users';
 
-type FormMultiInstructorsProps<Instructor> = {
+type FormMultiInstructorsProps = {
   label?: string;
   placeholder?: string;
-  onChange?: (selectedOption: Instructor[]) => void;
+  onChange?: (selectedOption: User[]) => void;
   disabled?: boolean;
   readOnly?: boolean;
   loading?: boolean;
@@ -25,7 +25,7 @@ type FormMultiInstructorsProps<Instructor> = {
   responsive?: boolean;
   helpText?: string;
   leftIcon?: ReactNode;
-} & FormControllerProps<Instructor[]>;
+} & FormControllerProps<User[]>;
 
 const FormMultiInstructors = ({
   field,
@@ -39,17 +39,24 @@ const FormMultiInstructors = ({
   isSearchable = false,
   helpText,
   leftIcon,
-}: FormMultiInstructorsProps<Instructor>) => {
+}: FormMultiInstructorsProps) => {
   const inputValue = field.value ?? [];
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
 
-  const instructorListQuery = useInstructorListQuery(
-    debouncedSearchText,
-    inputValue.map((item) => item.id)
-  );
+  const instructorListParams: UserParams = {
+    context: 'edit',
+    roles: ['tutor_instructor'],
+    search: debouncedSearchText ?? '',
+  };
+
+  inputValue.map((item) => item.id)?.forEach((item, idx) => {
+    instructorListParams[`exclude[${idx}]`] = item;
+  });
+
+  const instructorListQuery = useUserListQuery(instructorListParams);
 
   const options =
     instructorListQuery.data?.map((item) => {

@@ -1,7 +1,7 @@
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { borderRadius, colorTokens, footerHeight, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
+import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
@@ -16,6 +16,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormMultiInstructors from '@Components/fields/FormMultiInstructors';
+import { useUserListQuery } from '@Services/users';
 
 const CourseBasic = () => {
   const form = useFormContext();
@@ -45,6 +46,20 @@ const CourseBasic = () => {
       value: 'paid',
     },
   ];
+
+  const instructorListQuery = useUserListQuery({
+    context: 'edit',
+    roles: ['tutor_instructor'],
+  });
+
+  const instructorOptions =
+    instructorListQuery.data?.map((item) => {
+      return {
+        label: item.name,
+        value: item.id,
+        avatar: item.avatar_urls[48],
+      };
+    }) ?? [];
 
   return (
     <div css={styles.wrapper}>
@@ -186,6 +201,19 @@ const CourseBasic = () => {
           name="tags"
           control={form.control}
           render={(controllerProps) => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} />}
+        />
+
+        <Controller
+          name="author"
+          control={form.control}
+          render={(controllerProps) => (
+            <FormSelectInput
+              {...controllerProps}
+              label={__('Author', 'tutor')}
+              isSearchable
+              options={instructorOptions}
+            />
+          )}
         />
 
         {/* @TODO: Need to add condition based on tutor pro, marketplace, multi instructor addon, and admin role */}
