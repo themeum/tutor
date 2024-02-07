@@ -119,12 +119,14 @@ const FormTagsInput = ({
                 ref={popoverRef}
               >
                 <ul css={[styles.options(removeOptionsMinWidth)]}>
-                  <li>
-                    <button css={styles.addTag} onClick={handleAddTag}>
-                      <SVGIcon name="plus" width={24} height={24} />
-                      <strong>{__('Add', 'tutor')}</strong> {searchText}
-                    </button>
-                  </li>
+                  {searchText.length > 0 && (
+                    <li>
+                      <button css={styles.addTag} onClick={handleAddTag}>
+                        <SVGIcon name="plus" width={24} height={24} />
+                        <strong>{__('Add', 'tutor')}</strong> {searchText}
+                      </button>
+                    </li>
+                  )}
                   {tagListQuery.data?.map((tag: Tag) => (
                     <li key={String(tag.id)} css={styles.optionItem}>
                       <Checkbox
