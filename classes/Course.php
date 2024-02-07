@@ -62,7 +62,7 @@ class Course extends Tutor_Base {
 	 * Constructor
 	 *
 	 * @since 1.0.0
-	 * @since 3.0.0 register hooks or not.
+	 * @since 3.0.0 $register_hooks param added to reuse this class.
 	 *
 	 * @param bool $register_hooks register hooks.
 	 *
