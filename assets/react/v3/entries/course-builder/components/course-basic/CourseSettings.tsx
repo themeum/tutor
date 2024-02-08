@@ -9,8 +9,8 @@ import Tabs from '@Molecules/Tabs';
 import { useState } from 'react';
 import SVGIcon from '@Atoms/SVGIcon';
 import { __ } from '@wordpress/i18n';
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import { typography } from '@Config/typography';
+import ContentDropSettings from './ContentDropSettings';
 
 const CourseSettings = () => {
   const form = useFormContext();
@@ -50,32 +50,9 @@ const CourseSettings = () => {
     },
   ];
 
-  const contentDropOptions = [
-    {
-      label: __('Schedule course contents by date', 'tutor'),
-      value: 1,
-    },
-    {
-      label: __('Content available after X days from enrollment', 'tutor'),
-      value: 2,
-    },
-    {
-      label: __('Course content available sequentially', 'tutor'),
-      value: 3,
-    },
-    {
-      label: __('Course content unlocked after finishing prerequisites', 'tutor'),
-      value: 4,
-    },
-    {
-      label: __('None', 'tutor'),
-      value: 0,
-    },
-  ];
-
   return (
     <div>
-      <label css={typography.caption()}>Course Settings</label>
+      <label css={typography.caption()}>{__('Course Settings', 'tutor')}</label>
 
       <div css={styles.courseSettings}>
         <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} orientation="vertical" />
@@ -159,22 +136,7 @@ const CourseSettings = () => {
           </div>
         )}
 
-        {activeTab === 'content_drip' && (
-          <div css={styles.dripWrapper}>
-            <h6 css={styles.dripTitle}>{__('Content Drip Type', 'tutor')}</h6>
-            <p css={styles.dripSubTitle}>
-              {__('You can schedule your course content using the above content drip options', 'tutor')}
-            </p>
-
-            <Controller
-              name="content_drop"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormRadioGroup {...controllerProps} options={contentDropOptions} wrapperCss={styles.radioWrapper} />
-              )}
-            />
-          </div>
-        )}
+        {activeTab === 'content_drip' && <ContentDropSettings />}
       </div>
     </div>
   );
@@ -204,24 +166,5 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[32]};
     margin-top: ${spacing[12]};
-  `,
-  dripWrapper: css`
-    background-color: ${colorTokens.background.white};
-    padding: ${spacing[16]} ${spacing[24]} ${spacing[32]} ${spacing[32]};
-  `,
-  dripTitle: css`
-    ${typography.body('medium')};
-    margin-bottom: ${spacing[4]};
-  `,
-  dripSubTitle: css`
-    ${typography.small()};
-    color: ${colorTokens.text.hints};
-    max-width: 280px;
-    margin-bottom: ${spacing[16]};
-  `,
-  radioWrapper: css`
-    display: flex;
-    flex-direction: column;
-    gap: ${spacing[8]};
   `,
 };

@@ -80,7 +80,7 @@ const ScheduleOptions = () => {
               {__('Cancel')}
             </Button>
             <Button variant="secondary" size="small" onClick={form.handleSubmit(handleSave)}>
-              {__('Save')}
+              {__('Ok')}
             </Button>
           </div>
         </>
