@@ -1086,7 +1086,7 @@ class Utils {
 	 */
 	public function checking_nonce( $request_method = null ) {
 		if ( ! $this->is_nonce_verified( $request_method ) ) {
-			wp_send_json_error( array( 'message' => __( 'Nonce not matched. Action failed!', 'tutor' ) ) );
+			wp_send_json_error( array( 'message' => $this->error_message( 'nonce' ) ) );
 			exit;
 		}
 	}
@@ -9901,6 +9901,7 @@ class Utils {
 			'tutor_default_error_messages',
 			array(
 				'401' => __( 'You are not authorzied to perform this action', 'tutor' ),
+				'nonce' => __( 'Nonce not matched. Action failed!', 'tutor' ),
 			)
 		);
 
