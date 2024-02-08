@@ -229,7 +229,11 @@ const FormFieldWrapper = <T,>({
         )}
 
         {characterCount ? (
-          <Tooltip placement="right" content={characterCount.maxLimit - characterCount.inputCharacter}>
+          <Tooltip
+            placement="right"
+            hideOnClick={false}
+            content={characterCount.maxLimit - characterCount.inputCharacter}
+          >
             {inputContent}
           </Tooltip>
         ) : (
