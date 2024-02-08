@@ -14,7 +14,9 @@ export interface User {
 }
 
 export interface UserParams {
-  [key: string]: number | string | string[]
+  context: string;
+  roles: string[];
+  search?: string;
 }
 
 const getUserList = (params: UserParams) => {

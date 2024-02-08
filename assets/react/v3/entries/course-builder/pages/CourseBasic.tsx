@@ -15,11 +15,14 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
-import FormMultiInstructors from '@Components/fields/FormMultiInstructors';
+import FormSelectUser from '@Components/fields/FormSelectUser';
 import { useUserListQuery } from '@Services/users';
+import { useState } from 'react';
 
 const CourseBasic = () => {
   const form = useFormContext();
+
+  const [instructorSearchText, setInstructorSearchText] = useState('');
 
   const visibilityStatusOptions = [
     {
@@ -49,15 +52,17 @@ const CourseBasic = () => {
 
   const instructorListQuery = useUserListQuery({
     context: 'edit',
-    roles: ['tutor_instructor'],
+    roles: ['administrator', 'tutor_instructor'],
+    search: instructorSearchText,
   });
 
   const instructorOptions =
     instructorListQuery.data?.map((item) => {
       return {
-        label: item.name,
-        value: item.id,
-        avatar: item.avatar_urls[48],
+        id: item.id,
+        name: item.name,
+        email: item.email,
+        avatar_url: item.avatar_urls[48],
       };
     }) ?? [];
 
@@ -110,7 +115,6 @@ const CourseBasic = () => {
         <Controller
           name="visibility_status"
           control={form.control}
-          defaultValue="public"
           render={(controllerProps) => (
             <FormSelectInput
               {...controllerProps}
@@ -120,6 +124,12 @@ const CourseBasic = () => {
             />
           )}
         />
+
+        {/* <Controller
+          name="course_password"
+          control={form.control}
+          render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
+        /> */}
 
         <ScheduleOptions />
 
@@ -206,12 +216,20 @@ const CourseBasic = () => {
         <Controller
           name="author"
           control={form.control}
+          defaultValue={{
+            id: 0,
+            name: 'John Due',
+            email: 'example@example.com',
+            avatar_url: '//www.gravatar.com/avatar/8eb1b522f60d11fa897de1dc6351b7e8?s=48',
+          }}
           render={(controllerProps) => (
-            <FormSelectInput
+            <FormSelectUser
               {...controllerProps}
               label={__('Author', 'tutor')}
-              isSearchable
               options={instructorOptions}
+              placeholder={__('Search to add author', 'tutor')}
+              isSearchable
+              handleSearchOnChange={setInstructorSearchText}
             />
           )}
         />
@@ -221,12 +239,14 @@ const CourseBasic = () => {
           name="instructors"
           control={form.control}
           render={(controllerProps) => (
-            <FormMultiInstructors
+            <FormSelectUser
               {...controllerProps}
               label={__('Instructors', 'tutor')}
+              options={instructorOptions}
               placeholder={__('Search to add instructors', 'tutor')}
               isSearchable
-              leftIcon={<SVGIcon name="search" width={24} height={24} />}
+              handleSearchOnChange={setInstructorSearchText}
+              isMultiSelect
             />
           )}
         />
