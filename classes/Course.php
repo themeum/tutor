@@ -14,8 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Traits\JsonResponse;
 
 /**
  * Course Class
@@ -23,6 +26,17 @@ use Tutor\Models\CourseModel;
  * @since 1.0.0
  */
 class Course extends Tutor_Base {
+	use JsonResponse;
+
+	/**
+	 * Course Price type
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const PRICE_TYPE_FREE = 'free';
+	const PRICE_TYPE_PAID = 'paid';
 
 	/**
 	 * Additional course meta info
@@ -35,13 +49,36 @@ class Course extends Tutor_Base {
 	);
 
 	/**
+	 * Video sources
+	 *
+	 * @since 2.3.0
+	 *
+	 * @var array
+	 */
+	public $supported_video_sources = array(
+		'external_url',
+		'shortcode',
+		'youtube',
+		'vimeo',
+		'embedded',
+	);
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 $register_hooks param added to reuse this class.
+	 *
+	 * @param bool $register_hooks register hooks.
+	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
 		parent::__construct();
+
+		if ( ! $register_hooks ) {
+			return;
+		}
 
 		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ), 10, 2 );
@@ -205,6 +242,227 @@ class Course extends Tutor_Base {
 		add_action( 'admin_init', array( $this, 'load_course_builder' ) );
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
+
+		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
+	}
+
+	/**
+	 * Check if the video source type is valid
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $source_type source type.
+	 *
+	 * @return boolean
+	 */
+	private function is_valid_video_source_type( string $source_type ): bool {
+		return in_array( $source_type, $this->supported_video_sources, true );
+	}
+
+	/**
+	 * Validate video source
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $params array of params.
+	 * @param array $errors array of errors.
+	 *
+	 * @return void
+	 */
+	public function validate_video_source( $params, &$errors ) {
+		if ( isset( $params['video'] ) ) {
+			$video_source_type = isset( $params['video']['source_type'] ) ? $params['video']['source_type'] : '';
+			$video_source      = isset( $params['video']['source'] ) ? $params['video']['source'] : '';
+
+			if ( '' === $video_source_type ) {
+				$errors['video_source_type'] = __( 'Video source type is required', 'tutor' );
+			} else {
+				if ( ! $this->is_valid_video_source_type( $video_source_type ) ) {
+					$errors['video_source_type'] = __( 'Invalid video source type', 'tutor' );
+				}
+			}
+
+			if ( '' === $video_source ) {
+				$errors['video_source'] = __( 'Video source is required', 'tutor' );
+			}
+		}
+	}
+
+	/**
+	 * Prepare course categories & tags
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $params post params.
+	 * @param array $errors array of errors.
+	 *
+	 * @return void
+	 */
+	public function prepare_course_cats_tags( &$params, &$errors ) {
+		if ( isset( $params['course_categories'] ) ) {
+			if ( ! is_array( $params['course_categories'] ) || empty( $params['course_categories'] ) ) {
+				$errors['course_categories'] = __( 'Invalid course categories', 'tutor' );
+			} else {
+				$params['course_categories'] = $params['course_categories'];
+			}
+		}
+
+		if ( isset( $params['course_tags'] ) ) {
+			if ( ! is_array( $params['course_tags'] ) || empty( $params['course_tags'] ) ) {
+				$errors['course_tags'] = __( 'Invalid course tags', 'tutor' );
+			} else {
+				$params['course_tags'] = $params['course_tags'];
+			}
+		}
+	}
+
+	/**
+	 * Setup course categories and tags
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int   $post_id post id.
+	 * @param array $params  array of params.
+	 *
+	 * @return void
+	 */
+	public function setup_course_categories_tags( $post_id, $params ) {
+		if ( ! empty( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
+			$category_names = array();
+
+			foreach ( $params['course_categories'] as $category_id ) {
+				$term = get_term( $category_id, 'course-category' );
+
+				if ( ! is_wp_error( $term ) && $term ) {
+					$category_names[] = $term->name;
+				}
+			}
+
+			// Set category names on the post.
+			wp_set_object_terms( $post_id, $category_names, 'course-category' );
+		}
+
+		if ( ! empty( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
+			$tag_names = array();
+
+			foreach ( $params['course_tags'] as $tag_id ) {
+				$term = get_term( $tag_id, 'course-tag' );
+
+				if ( ! is_wp_error( $term ) && $term ) {
+					$tag_names[] = $term->name;
+				}
+			}
+
+			// Set tag names on the post.
+			wp_set_object_terms( $post_id, $tag_names, 'course-tag' );
+		}
+	}
+
+	/**
+	 * Validate video source
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $params array of params.
+	 * @param array $errors array of errors.
+	 *
+	 * @return void
+	 */
+	public function validate_price( $params, &$errors ) {
+		if ( isset( $params['pricing'] ) ) {
+			$type = $params['pricing']['type'] ?? '';
+			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID ), true ) ) {
+				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
+			} elseif ( self::PRICE_TYPE_PAID === $type ) {
+				$product_id = isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : '';
+				$product    = wc_get_product( $product_id );
+				if ( is_a( $product, 'WC_Product' ) ) {
+					$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+					if ( $is_linked_with_course ) {
+						$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+					}
+				} else {
+					$errors['pricing'] = __( 'Invalid product', 'tutor' );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Create course by ajax request.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_create_course() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$has_access_role = User::is_admin() || User::is_instructor();
+
+		if ( ! $has_access_role ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ),
+				null,
+				HttpHelper::STATUS_UNAUTHORIZED
+			);
+		}
+
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$params = Input::sanitize_array( $_POST, array( 'post_content' => 'wp_kses_post' ), );
+
+		$params['post_type'] = tutor()->course_post_type;
+
+		// Validate inputs.
+		$rules = array(
+			'post_title'  => 'required',
+			'post_author' => 'user_exists',
+			'post_status' => 'required',
+		);
+
+		$errors     = array();
+		$validation = ValidationHelper::validate( $rules, $params );
+		if ( ! $validation->success ) {
+			$errors = $validation->errors;
+		}
+
+		if ( User::is_instructor() ) {
+			$params['post_author'] = get_current_user_id();
+		}
+
+		// Validate video source if user set video.
+		$this->validate_video_source( $params, $errors );
+
+		// Validate WC product.
+		$this->validate_price( $params, $errors );
+
+		// Set course categories and tags.
+		$this->prepare_course_cats_tags( $params, $errors );
+
+		if ( ! empty( $errors ) ) {
+			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
+		}
+
+		$course_id = wp_insert_post( $params );
+		if ( is_wp_error( $course_id ) ) {
+			$this->json_response( $course_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+		}
+
+		// Set course cats & tags.
+		$this->setup_course_categories_tags( $course_id, $params );
+
+		// Update course thumb.
+		if ( isset( $params['thumbnail_id'] ) ) {
+			set_post_thumbnail( $course_id, $params['thumbnail_id'] );
+		}
+
+		$this->json_response(
+			__( 'Course created successfully', 'tutor' ),
+			$course_id,
+			HttpHelper::STATUS_CREATED
+		);
 	}
 
 	/**
@@ -258,7 +516,9 @@ class Course extends Tutor_Base {
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
 		// If need more data.
-		$new_data = array();
+		$new_data = array(
+			'settings' => get_option( 'tutor_option', array() ),
+		);
 
 		$data = array_merge( $default_data, $new_data );
 
