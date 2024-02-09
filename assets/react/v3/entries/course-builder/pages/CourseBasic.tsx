@@ -3,7 +3,7 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
@@ -23,6 +23,9 @@ const CourseBasic = () => {
   const form = useFormContext();
 
   const [instructorSearchText, setInstructorSearchText] = useState('');
+
+  const visibilityStatus = useWatch({ name: 'visibility_status' });
+  const coursePriceType = useWatch({ name: 'course_price_type' });
 
   const visibilityStatusOptions = [
     {
@@ -125,11 +128,13 @@ const CourseBasic = () => {
           )}
         />
 
-        {/* <Controller
-          name="course_password"
-          control={form.control}
-          render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
-        /> */}
+        {visibilityStatus === 'password_protected' && (
+          <Controller
+            name="course_password"
+            control={form.control}
+            render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
+          />
+        )}
 
         <ScheduleOptions />
 
@@ -173,32 +178,34 @@ const CourseBasic = () => {
           )}
         />
 
-        <div css={styles.coursePriceWrapper}>
-          <Controller
-            name="course_price"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInputWithContent
-                {...controllerProps}
-                label={__('Regular Price', 'tutor')}
-                content="$"
-                placeholder={__('0', 'tutor')}
-              />
-            )}
-          />
-          <Controller
-            name="course_sale_price"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInputWithContent
-                {...controllerProps}
-                label={__('Discount Price', 'tutor')}
-                content="$"
-                placeholder={__('0', 'tutor')}
-              />
-            )}
-          />
-        </div>
+        {coursePriceType === 'paid' && (
+          <div css={styles.coursePriceWrapper}>
+            <Controller
+              name="course_price"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  label={__('Regular Price', 'tutor')}
+                  content="$"
+                  placeholder={__('0', 'tutor')}
+                />
+              )}
+            />
+            <Controller
+              name="course_sale_price"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  label={__('Discount Price', 'tutor')}
+                  content="$"
+                  placeholder={__('0', 'tutor')}
+                />
+              )}
+            />
+          </div>
+        )}
 
         <Controller
           name="categories"
