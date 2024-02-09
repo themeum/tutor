@@ -116,7 +116,7 @@ const CourseBasic = () => {
       </div>
       <div css={styles.sidebar}>
         <Controller
-          name="visibility_status"
+          name="post_status"
           control={form.control}
           render={(controllerProps) => (
             <FormSelectInput
@@ -271,6 +271,9 @@ const styles = {
   `,
   mainForm: css`
     padding: ${spacing[24]} ${spacing[64]};
+    align-self: start;
+    position: sticky;
+    top: ${headerHeight}px;
   `,
   fieldsWrapper: css`
     display: flex;
@@ -284,7 +287,7 @@ const styles = {
     gap: ${spacing[8]};
   `,
   sidebar: css`
-    padding: ${spacing[24]} ${spacing[32]} ${spacing[48]} ${spacing[64]};
+    padding: ${spacing[24]} ${spacing[32]};
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
 

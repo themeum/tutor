@@ -1,11 +1,14 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { colorPalate, colorTokens, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, colorTokens, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
+import { useFormContext } from 'react-hook-form';
 
 const Header = () => {
+  const form = useFormContext();
+
   return (
     <div css={styles.wrapper}>
       <div>
@@ -74,7 +77,7 @@ const Header = () => {
           {__('Save as Draft', 'tutor')}
         </Button>
         <Button variant="secondary">{__('Preview', 'tutor')}</Button>
-        <Button variant="primary">{__('Publish', 'tutor')}</Button>
+        <Button variant="primary" onClick={form.handleSubmit((data) => console.log(data))}>{__('Publish', 'tutor')}</Button>
         <button
           type="button"
           css={styles.closeButton}
@@ -101,6 +104,10 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
+    position: sticky;
+    top: 0;
+    z-index: ${zIndex.header};
   `,
   headerRight: css`
     display: flex;
@@ -113,5 +120,10 @@ const styles = {
     display: flex;
     color: ${colorPalate.icon.default};
     margin-left: ${spacing[4]};
+    border-radius: ${borderRadius[4]};
+
+    &:focus {
+      box-shadow: ${shadow.focus};
+    }
   `,
 };

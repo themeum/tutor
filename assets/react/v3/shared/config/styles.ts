@@ -544,6 +544,7 @@ export const zIndex = {
   level: 0,
   sidebar: 9,
   header: 10,
+  footer: 10,
   modal: 25,
   highest: 9999999,
 } as const;
