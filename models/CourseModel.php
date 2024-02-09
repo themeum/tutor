@@ -60,6 +60,24 @@ class CourseModel {
 	const BENEFITS_META_KEY = '_tutor_course_benefits';
 
 	/**
+	 * Get available status list.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_status_list() {
+		return array(
+			self::STATUS_DRAFT,
+			self::STATUS_AUTO_DRAFT,
+			self::STATUS_PUBLISH,
+			self::STATUS_PRIVATE,
+			self::STATUS_FUTURE,
+			self::STATUS_PENDING,
+		);
+	}
+
+	/**
 	 * Course record count
 	 *
 	 * @since 2.0.7
