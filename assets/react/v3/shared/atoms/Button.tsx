@@ -238,8 +238,9 @@ const styles = {
     position: absolute;
     visibility: visible;
     display: flex;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%);
+    transform: translateX(-50%) translateY(-50%);
     & svg {
       animation: ${spin} 1.5s linear infinite;
     }
