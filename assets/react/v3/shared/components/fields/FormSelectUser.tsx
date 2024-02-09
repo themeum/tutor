@@ -142,28 +142,27 @@ const FormSelectUser = ({
               )}
             </div>
 
-            {isMultiSelect && (
+            {isMultiSelect && Array.isArray(inputValue) && inputValue.length > 0 && (
               <div css={styles.instructorList}>
-                {Array.isArray(inputValue) &&
-                  inputValue.map((instructor) => (
-                    <div key={instructor.id} css={styles.instructorItem({ isDefaultItem: false })}>
-                      <div css={styles.instructorInfo}>
-                        <img src={instructor.avatar_url} alt={instructor.name} css={styles.instructorAvatar} />
-                        <div>
-                          <div css={styles.instructorName}>{instructor.name}</div>
-                          <div css={styles.instructorEmail}>{instructor.email}</div>
-                        </div>
+                {inputValue.map((instructor) => (
+                  <div key={instructor.id} css={styles.instructorItem({ isDefaultItem: false })}>
+                    <div css={styles.instructorInfo}>
+                      <img src={instructor.avatar_url} alt={instructor.name} css={styles.instructorAvatar} />
+                      <div>
+                        <div css={styles.instructorName}>{instructor.name}</div>
+                        <div css={styles.instructorEmail}>{instructor.email}</div>
                       </div>
-
-                      <button
-                        onClick={() => handleDeleteSelection(instructor.id)}
-                        css={styles.instructorDeleteButton}
-                        data-instructor-delete-button
-                      >
-                        <SVGIcon name="cross" width={32} height={32} />
-                      </button>
                     </div>
-                  ))}
+
+                    <button
+                      onClick={() => handleDeleteSelection(instructor.id)}
+                      css={styles.instructorDeleteButton}
+                      data-instructor-delete-button
+                    >
+                      <SVGIcon name="cross" width={32} height={32} />
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
 

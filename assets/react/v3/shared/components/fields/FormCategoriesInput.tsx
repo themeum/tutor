@@ -210,7 +210,7 @@ const styles = {
     padding: ${spacing[8]} 0;
   `,
   categoryListWrapper: css`
-    max-height: 340px;
+    max-height: 306px;
     overflow: auto;
   `,
   branchItem: ({ leftBarHeight, hasParent }: { leftBarHeight: string; hasParent: boolean }) => css`
