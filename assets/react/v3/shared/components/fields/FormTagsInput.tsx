@@ -204,7 +204,10 @@ const styles = {
     align-items: center;
     padding: ${spacing[8]};
     transition: background-color 0.3s ease-in-out;
-    cursor: pointer;
+
+    label {
+      width: 100%;
+    }
 
     &:hover {
       background-color: ${colorTokens.background.hover};

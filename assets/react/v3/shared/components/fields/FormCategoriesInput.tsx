@@ -5,9 +5,9 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { css, SerializedStyles } from '@emotion/react';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { CategoryWithChildren, useCategoryListQuery, useCreateTagMutation } from '@Services/category';
+import { CategoryWithChildren, useCategoryListQuery, useCreateCategoryMutation } from '@Services/category';
 import { FormControllerProps } from '@Utils/form';
-import { generateTree } from '@Utils/util';
+import { generateTree, getCategoryLeftBarHeight } from '@Utils/util';
 import { produce } from 'immer';
 
 import FormFieldWrapper from './FormFieldWrapper';
@@ -39,7 +39,7 @@ const FormMultiLevelInput = ({
   optionsWrapperStyle,
 }: FormMultiLevelInputProps) => {
   const categoryListQuery = useCategoryListQuery();
-  const createTagMutation = useCreateTagMutation();
+  const createCategoryMutation = useCreateCategoryMutation();
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useFormWithGlobalError();
@@ -54,17 +54,16 @@ const FormMultiLevelInput = ({
 
   const treeOptions = generateTree(categoryListQuery.data ?? []);
 
-  const handleCreateCategory = async (data: FieldValues) => {
+  const handleCreateCategory = (data: FieldValues) => {
     if (data.name) {
-      const response = await createTagMutation.mutateAsync({
+      createCategoryMutation.mutate({
         name: data.name,
         parent: data.parent,
       });
 
       form.reset();
+      setIsOpen(false);
     }
-
-    setIsOpen(false);
   };
 
   return (
@@ -81,24 +80,26 @@ const FormMultiLevelInput = ({
         return (
           <>
             <div css={[styles.options, optionsWrapperStyle]}>
-              {treeOptions.map((option, index) => (
-                <Branch
-                  key={option.id}
-                  option={option}
-                  value={field.value}
-                  isLastChild={index === treeOptions.length - 1}
-                  onChange={(id) => {
-                    field.onChange(
-                      produce(field.value, (draft) => {
-                        if (Array.isArray(draft)) {
-                          return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
-                        }
-                        return [id];
-                      })
-                    );
-                  }}
-                />
-              ))}
+              <div css={styles.categoryListWrapper}>
+                {treeOptions.map((option, index) => (
+                  <Branch
+                    key={option.id}
+                    option={option}
+                    value={field.value}
+                    isLastChild={index === treeOptions.length - 1}
+                    onChange={(id) => {
+                      field.onChange(
+                        produce(field.value, (draft) => {
+                          if (Array.isArray(draft)) {
+                            return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
+                          }
+                          return [id];
+                        })
+                      );
+                    }}
+                  />
+                ))}
+              </div>
 
               <div ref={triggerRef}>
                 <button css={styles.addNewButton} onClick={() => setIsOpen(true)}>
@@ -137,7 +138,11 @@ const FormMultiLevelInput = ({
                   >
                     {__('Cancel', 'tutor')}
                   </Button>
-                  <Button variant="secondary" onClick={form.handleSubmit(handleCreateCategory)}>
+                  <Button
+                    variant="secondary"
+                    loading={createCategoryMutation.isPending}
+                    onClick={form.handleSubmit(handleCreateCategory)}
+                  >
                     {__('Ok', 'tutor')}
                   </Button>
                 </div>
@@ -160,7 +165,10 @@ interface BranchProps {
 }
 
 export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) => {
-  const hasChildren = option.children.length > 0;
+  const totalChildren = option.children.length;
+  const hasChildren = totalChildren > 0;
+
+  let leftBarHeight = getCategoryLeftBarHeight(isLastChild, totalChildren);
 
   const renderBranches = () => {
     if (!hasChildren) {
@@ -181,7 +189,7 @@ export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) =>
   };
 
   return (
-    <div css={styles.branchItem({ isLastChild, hasChildren, hasParent: option.parent !== 0 })}>
+    <div css={styles.branchItem({ leftBarHeight, hasParent: option.parent !== 0 })}>
       <Checkbox
         checked={Array.isArray(value) ? value.includes(option.id) : value === option.id}
         label={option.name}
@@ -201,39 +209,26 @@ const styles = {
     border-radius: ${borderRadius[8]};
     padding: ${spacing[8]} 0;
   `,
-  branchItem: ({ isLastChild, hasChildren, hasParent }: { isLastChild: boolean; hasChildren: boolean; hasParent: boolean }) => css`
+  categoryListWrapper: css`
+    max-height: 340px;
+    overflow: auto;
+  `,
+  branchItem: ({ leftBarHeight, hasParent }: { leftBarHeight: string; hasParent: boolean }) => css`
     line-height: ${spacing[32]};
     position: relative;
     z-index: ${zIndex.positive};
     margin-left: ${spacing[20]};
 
-    ${!isLastChild &&
-    css`
-      &:after {
-        content: '';
-        position: absolute;
-        height: 100%;
-        width: 1px;
-        left: 9px;
-        top: 25px;
-        background-color: ${colorTokens.stroke.default};
-        z-index: ${zIndex.level};
-      }
-    `}
-
-    ${isLastChild && hasChildren &&
-    css`
-      &:after {
-        content: '';
-        position: absolute;
-        height: calc(100% - 40px);
-        width: 1px;
-        left: 9px;
-        top: 25px;
-        background-color: ${colorTokens.stroke.default};
-        z-index: ${zIndex.level};
-      }
-    `}
+    &:after {
+      content: '';
+      position: absolute;
+      height: ${leftBarHeight};
+      width: 1px;
+      left: 9px;
+      top: 25px;
+      background-color: ${colorTokens.stroke.default};
+      z-index: ${zIndex.level};
+    }
 
     ${hasParent &&
     css`

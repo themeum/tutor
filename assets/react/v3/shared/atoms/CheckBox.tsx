@@ -1,4 +1,4 @@
-import { colorPalate, shadow, spacing } from '@Config/styles';
+import { colorPalate, colorTokens, shadow, spacing } from '@Config/styles';
 import { css, SerializedStyles } from '@emotion/react';
 import { nanoid } from '@Utils/util';
 import React, { ChangeEvent, FocusEventHandler } from 'react';
@@ -64,6 +64,7 @@ const styles = {
     align-items: center;
     cursor: pointer;
     user-select: none;
+    color: ${colorTokens.text.title};
   `,
   checkbox: ({
     label,

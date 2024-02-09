@@ -40,7 +40,7 @@ const createCategory = (payload: CreateCategoryPayload) => {
   return authWPApiInstance.post<CreateCategoryPayload, CreateCategoryResponse>(endpoints.CATEGORIES, payload);
 };
 
-export const useCreateTagMutation = () => {
+export const useCreateCategoryMutation = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 

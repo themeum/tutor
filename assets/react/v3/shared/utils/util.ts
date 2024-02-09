@@ -129,6 +129,20 @@ export const generateTree = (data: Category[], parent = 0): CategoryWithChildren
     .reduce<CategoryWithChildren[]>((tree, node) => [...tree, { ...node, children: generateTree(data, node.id) }], []);
 };
 
+export const getCategoryLeftBarHeight = (isLastChild: boolean, totalChildren: number) => {
+  let height = '0';
+  if (!isLastChild) {
+    height = '100%';
+  } else if (isLastChild && totalChildren > 0) {
+    if (totalChildren > 1) {
+      height = `${24 + 32 * (totalChildren - 1)}px`;
+    } else {
+      height = '24px';
+    }
+  }
+  return height;
+};
+
 export const transformParams = (params: PaginatedParams) => {
   const sortDirection = params.sort?.direction === 'desc' ? '-' : '';
 
@@ -147,7 +161,7 @@ export const mapInBetween = (
   originalMin: number,
   originalMax: number,
   expectedMin: number,
-  expectedMax: number,
+  expectedMax: number
 ) => {
   return ((value - originalMin) * (expectedMax - expectedMin)) / (originalMax - originalMin) + expectedMin;
 };
