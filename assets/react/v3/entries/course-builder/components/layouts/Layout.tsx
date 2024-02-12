@@ -12,6 +12,7 @@ import { useCurrentPath } from '@Hooks/useCurrentPath';
 import routes from '@CourseBuilderConfig/routes';
 import { FormProvider } from 'react-hook-form';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { CourseFormData, courseDefaultData } from '@CourseBuilderServices/course';
 
 const progressSteps: Option<string>[] = [
   {
@@ -36,7 +37,9 @@ const Layout: React.FC = () => {
   const currentPath = useCurrentPath(routes);
   const navigate = useNavigate();
 
-  const courseBasicForm = useFormWithGlobalError();
+  const courseBasicForm = useFormWithGlobalError<CourseFormData>({
+    defaultValues: courseDefaultData,
+  });
 
   const [activeStep, setActiveStep] = useState<string>(currentPath);
   const [completedSteps, setCompletedSteps] = useState<string[]>([currentPath]);

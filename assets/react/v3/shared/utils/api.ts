@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import config from '@Config/config';
-import { Joomla } from '@Utils/util';
 import axios from 'axios';
 import * as querystring from 'querystring';
 
@@ -11,18 +10,18 @@ axios.defaults.paramsSerializer = (params: Record<string, string>) => {
 };
 
 export const publicApiInstance = axios.create({
-  baseURL: config.API_BASE_URL,
+  baseURL: config.TUTOR_API_BASE_URL,
 });
 
 export const authApiInstance = axios.create({
-  baseURL: config.API_BASE_URL,
+  baseURL: config.TUTOR_API_BASE_URL,
 });
 
 authApiInstance.interceptors.request.use(
   (config) => {
     config.headers ||= {};
 
-    // config.headers['X-CSRF-Token'] = Joomla.getOptions('csrf.token');
+    config.data['_tutor_nonce'] = window._tutorobject._tutor_nonce;
 
     if (config.method && ['post', 'put', 'patch'].includes(config.method.toLocaleLowerCase())) {
       if (!!config.data) {
@@ -54,18 +53,32 @@ authApiInstance.interceptors.response.use((response) => {
 });
 
 
-export const authWPApiInstance = axios.create({
+export const wpAuthApiInstance = axios.create({
   baseURL: config.WP_API_BASE_URL,
 });
 
-authWPApiInstance.interceptors.request.use(
+wpAuthApiInstance.interceptors.request.use(
   (config) => {
     config.headers ||= {};
 
     config.headers['X-WP-Nonce'] = window.wpApiSettings.nonce;
 
+    if (config.method && ['post', 'put', 'patch'].includes(config.method.toLocaleLowerCase())) {
+      if (!!config.data) {
+        config.data = convertToFormData(config.data, config.method);
+      }
+
+      if (['put', 'patch'].includes(config.method.toLowerCase())) {
+        config.method = 'POST';
+      }
+    }
+
     if (config.params) {
       config.params = serializeParams(config.params);
+    }
+
+    if (config.method && ['get', 'delete'].includes(config.method.toLowerCase())) {
+      config.params = { ...config.params, _method: config.method };
     }
 
     return config;
@@ -75,10 +88,6 @@ authWPApiInstance.interceptors.request.use(
   },
 );
 
-authWPApiInstance.interceptors.response.use((response) => {
-  return Promise.resolve<{ data: unknown }>(response).then((res) => {
-    return {
-      data: res.data
-    }
-  });
+wpAuthApiInstance.interceptors.response.use((response) => {
+  return Promise.resolve<{ data: unknown }>(response).then((res) => res);
 });

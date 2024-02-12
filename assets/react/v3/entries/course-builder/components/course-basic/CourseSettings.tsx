@@ -11,9 +11,10 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { __ } from '@wordpress/i18n';
 import { typography } from '@Config/typography';
 import ContentDropSettings from './ContentDropSettings';
+import { CourseFormData } from '@CourseBuilderServices/course';
 
 const CourseSettings = () => {
-  const form = useFormContext();
+  const form = useFormContext<CourseFormData>();
   const [activeTab, setActiveTab] = useState('general');
 
   // @TODO: Need to add buddyboss options based on plugin installation
@@ -110,7 +111,7 @@ const CourseSettings = () => {
 
             <div css={styles.courseAndQna}>
               <Controller
-                name="public_course"
+                name="is_public_course"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormSwitch

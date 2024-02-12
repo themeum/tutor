@@ -1,6 +1,6 @@
 import { useToast } from '@Atoms/Toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { authWPApiInstance } from '@Utils/api';
+import { wpAuthApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 
 export interface Category {
@@ -22,7 +22,7 @@ interface CreateCategoryResponse {
 }
 
 const getCategoryList = () => {
-  return authWPApiInstance.get<Category[]>(endpoints.CATEGORIES, {
+  return wpAuthApiInstance.get<Category[]>(endpoints.CATEGORIES, {
     params: {
       per_page: 100,
     },
@@ -37,7 +37,7 @@ export const useCategoryListQuery = () => {
 };
 
 const createCategory = (payload: CreateCategoryPayload) => {
-  return authWPApiInstance.post<CreateCategoryPayload, CreateCategoryResponse>(endpoints.CATEGORIES, payload);
+  return wpAuthApiInstance.post<CreateCategoryPayload, CreateCategoryResponse>(endpoints.CATEGORIES, payload);
 };
 
 export const useCreateCategoryMutation = () => {

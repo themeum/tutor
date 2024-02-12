@@ -10,6 +10,12 @@ export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 
 export const isRTL = document.dir === 'rtl';
 
+export const TutorRoles = {
+  ADMINISTRATOR: 'administrator',
+  TUTOR_INSTRUCTOR: 'tutor_instructor',
+  SUBSCRIBER: 'subscriber',
+};
+
 export enum LocalStorage {
   clientId = 'eCommerceClientId',
 }
@@ -18,6 +24,7 @@ export enum DateFormats {
   yearMonthDay = 'yyyy-LL-dd',
   monthDayYear = 'MMM dd, yyyy',
   hoursMinutes = 'hh:mm a',
+  yearMonthDayHourMinuteSecond = 'yyyy-MM-dd hh:mm:ss',
   monthDayYearHoursMinutes = 'MMM dd, yyyy, hh:mm a',
   localMonthDayYearHoursMinutes = 'PPp',
 }

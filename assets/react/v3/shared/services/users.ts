@@ -1,8 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
-import { authWPApiInstance } from '@Utils/api';
+import { wpAuthApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 
 export interface User {
+  id: number;
+  name: string;
+  email: string;
+  avatar_url: string
+}
+
+export interface UserResponse {
   id: number;
   name: string;
   email: string;
@@ -20,7 +27,7 @@ export interface UserParams {
 }
 
 const getUserList = (params: UserParams) => {
-  return authWPApiInstance.get<User[]>(endpoints.USERS, { params });
+  return wpAuthApiInstance.get<UserResponse[]>(endpoints.USERS, { params });
 };
 
 export const useUserListQuery = (params: UserParams) => {

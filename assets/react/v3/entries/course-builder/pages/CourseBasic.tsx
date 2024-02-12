@@ -18,19 +18,21 @@ import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormSelectUser from '@Components/fields/FormSelectUser';
 import { useUserListQuery } from '@Services/users';
 import { useState } from 'react';
+import { CourseFormData } from '@CourseBuilderServices/course';
+import { TutorRoles } from '@Config/constants';
 
 const CourseBasic = () => {
-  const form = useFormContext();
+  const form = useFormContext<CourseFormData>();
 
   const [instructorSearchText, setInstructorSearchText] = useState('');
 
-  const visibilityStatus = useWatch({ name: 'visibility_status' });
+  const visibilityStatus = useWatch({ name: 'post_status' });
   const coursePriceType = useWatch({ name: 'course_price_type' });
 
   const visibilityStatusOptions = [
     {
       label: __('Public', 'tutor'),
-      value: 'public',
+      value: 'publish',
     },
     {
       label: __('Password Protected', 'tutor'),
@@ -91,7 +93,7 @@ const CourseBasic = () => {
             />
 
             <Controller
-              name="course_slug"
+              name="post_name"
               control={form.control}
               render={(controllerProps) => (
                 <FormEditableAlias
@@ -130,7 +132,7 @@ const CourseBasic = () => {
 
         {visibilityStatus === 'password_protected' && (
           <Controller
-            name="course_password"
+            name="post_password"
             control={form.control}
             render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
           />
@@ -139,7 +141,7 @@ const CourseBasic = () => {
         <ScheduleOptions />
 
         <Controller
-          name="featured_image"
+          name="thumbnail_id"
           control={form.control}
           render={(controllerProps) => (
             <FormImageInput
@@ -151,8 +153,8 @@ const CourseBasic = () => {
           )}
         />
 
-        <Controller
-          name="intro_video"
+        {/* <Controller
+          name="video"
           control={form.control}
           render={(controllerProps) => (
             <FormImageInput
@@ -162,7 +164,7 @@ const CourseBasic = () => {
               infoText={__('Supported file formats .mp4 ', 'tutor')}
             />
           )}
-        />
+        /> */}
 
         {/* @TODO: Add course price options based on monetization setting */}
         <Controller
@@ -208,42 +210,38 @@ const CourseBasic = () => {
         )}
 
         <Controller
-          name="categories"
+          name="course_categories"
           control={form.control}
           defaultValue={[]}
           render={(controllerProps) => <FormCategoriesInput {...controllerProps} label={__('Categories', 'tutor')} />}
         />
 
         <Controller
-          name="tags"
+          name="course_tags"
           control={form.control}
           render={(controllerProps) => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} />}
         />
 
-        <Controller
-          name="author"
-          control={form.control}
-          defaultValue={{
-            id: 0,
-            name: 'John Due',
-            email: 'example@example.com',
-            avatar_url: '//www.gravatar.com/avatar/8eb1b522f60d11fa897de1dc6351b7e8?s=48',
-          }}
-          render={(controllerProps) => (
-            <FormSelectUser
-              {...controllerProps}
-              label={__('Author', 'tutor')}
-              options={instructorOptions}
-              placeholder={__('Search to add author', 'tutor')}
-              isSearchable
-              handleSearchOnChange={setInstructorSearchText}
-            />
-          )}
-        />
+        {window._tutorobject.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
+          <Controller
+            name="post_author"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectUser
+                {...controllerProps}
+                label={__('Author', 'tutor')}
+                options={instructorOptions}
+                placeholder={__('Search to add author', 'tutor')}
+                isSearchable
+                handleSearchOnChange={setInstructorSearchText}
+              />
+            )}
+          />
+        )}
 
         {/* @TODO: Need to add condition based on tutor pro, marketplace, multi instructor addon, and admin role */}
         <Controller
-          name="instructors"
+          name="course_instructors"
           control={form.control}
           render={(controllerProps) => (
             <FormSelectUser

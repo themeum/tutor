@@ -47,7 +47,10 @@ const ScheduleOptions = () => {
     if (data.schedule_date && data.schedule_time) {
       setShowForm(false);
 
-      // @TODO: Need to update context form based on course data structure 
+      contextForm.setValue(
+        'post_date',
+        format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond)
+      );
     }
   };
 

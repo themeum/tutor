@@ -33,7 +33,7 @@ type FormSelectUserProps = {
   isHidden?: boolean;
   responsive?: boolean;
   helpText?: string;
-} & FormControllerProps<User | User[]>;
+} & FormControllerProps<User | User[] | null>;
 
 const userPlaceholderData: User = {
   id: 0,

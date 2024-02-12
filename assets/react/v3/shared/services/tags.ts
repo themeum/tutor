@@ -1,6 +1,6 @@
 import { useToast } from '@Atoms/Toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { authWPApiInstance } from '@Utils/api';
+import { wpAuthApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 
 export interface Tag {
@@ -21,7 +21,7 @@ interface CreateTagResponse {
 }
 
 const getTagList = (params: getTagListParams) => {
-  return authWPApiInstance.get<Tag[]>(endpoints.TAGS, { params });
+  return wpAuthApiInstance.get<Tag[]>(endpoints.TAGS, { params });
 };
 
 export const useTagListQuery = (params: getTagListParams) => {
@@ -32,7 +32,7 @@ export const useTagListQuery = (params: getTagListParams) => {
 };
 
 const createTag = (payload: CreateTagPayload) => {
-  return authWPApiInstance.post<CreateTagPayload, CreateTagResponse>(endpoints.TAGS, payload);
+  return wpAuthApiInstance.post<CreateTagPayload, CreateTagResponse>(endpoints.TAGS, payload);
 };
 
 export const useCreateTagMutation = () => {
