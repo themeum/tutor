@@ -547,6 +547,21 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Prepare course settings meta
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $params params.
+	 *
+	 * @return void
+	 */
+	public function prepare_course_settings( $params ) {
+		if ( isset( $params['course_settings'] ) ) {
+			$_POST['_tutor_course_settings'] = $params['course_settings'];
+		}
+	}
+
+	/**
 	 * Create course by ajax request.
 	 *
 	 * @since 3.0.0
@@ -605,6 +620,8 @@ class Course extends Tutor_Base {
 		if ( ! empty( $errors ) ) {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
+
+		$this->prepare_course_settings( $params );
 
 		try {
 			$this->prepare_create_post_meta( $params );
