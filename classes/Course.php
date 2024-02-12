@@ -263,6 +263,7 @@ class Course extends Tutor_Base {
 
 		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
 		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
+		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
 	}
 
 	/**
@@ -562,13 +563,13 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Create course by ajax request.
+	 * Check access before course builder ajax request.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @return void
 	 */
-	public function ajax_create_course() {
+	private function check_access() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
 			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
@@ -582,15 +583,20 @@ class Course extends Tutor_Base {
 				HttpHelper::STATUS_UNAUTHORIZED
 			);
 		}
+	}
 
-		//phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$params = Input::sanitize_array( $_POST, array( 'post_content' => 'wp_kses_post' ), );
-
-		$params['post_type'] = tutor()->course_post_type;
-
-		// Validate inputs.
+	/**
+	 * Validate request inputs.
+	 *
+	 * @param array $params input params.
+	 * @param array $exclude exclude key from rules.
+	 *
+	 * @return object
+	 */
+	public function validate_inputs( $params, $exclude = array() ) {
 		$status_str = implode( ',', CourseModel::get_status_list() );
 		$rules      = array(
+			'course_id'        => 'required|numeric',
 			'post_title'       => 'required',
 			'post_author'      => 'user_exists',
 			'post_status'      => "required|match_string:{$status_str}",
@@ -598,8 +604,33 @@ class Course extends Tutor_Base {
 			'is_public_course' => 'if_input|match_string:yes,no',
 		);
 
+		foreach ( $exclude as $key ) {
+			if ( isset( $rules[ $key ] ) ) {
+				unset( $rules[ $key ] );
+			}
+		}
+
+		return ValidationHelper::validate( $rules, $params );
+	}
+
+	/**
+	 * Create course by ajax request.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_create_course() {
+		$this->check_access();
+
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$params = Input::sanitize_array( $_POST, array( 'post_content' => 'wp_kses_post' ), );
+
+		$params['post_type'] = tutor()->course_post_type;
+
+		// Validate inputs.
 		$errors     = array();
-		$validation = ValidationHelper::validate( $rules, $params );
+		$validation = $this->validate_inputs( $params, array( 'course_id' ) );
 		if ( ! $validation->success ) {
 			$errors = $validation->errors;
 		}
@@ -650,6 +681,61 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Update course by ajax request.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_update_course() {
+		$this->check_access();
+
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$params = Input::sanitize_array( $_POST, array( 'post_content' => 'wp_kses_post' ), );
+
+		$errors     = array();
+		$validation = $this->validate_inputs( $params );
+		if ( ! $validation->success ) {
+			$errors = $validation->errors;
+		}
+
+		// Validate video source if user set video.
+		$this->validate_video_source( $params, $errors );
+
+		// Validate WC product.
+		$this->validate_price( $params, $errors );
+
+		// Set course categories and tags.
+		$this->prepare_course_cats_tags( $params, $errors );
+
+		$this->prepare_course_settings( $params );
+
+		if ( ! empty( $errors ) ) {
+			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
+		}
+
+		$params['ID'] = $params['course_id'];
+		$update_id    = wp_update_post( $params, false, false );
+		if ( is_wp_error( $update_id ) ) {
+			$this->json_response( $update_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+		}
+
+		$this->setup_course_categories_tags( $update_id, $params );
+		$this->prepare_update_post_meta( $params );
+
+		// Update course thumb.
+		if ( isset( $params['thumbnail_id'] ) ) {
+			set_post_thumbnail( $update_id, $params['thumbnail_id'] );
+		}
+
+		$this->json_response(
+			__( 'Course update successfully', 'tutor' ),
+			$update_id,
+			HttpHelper::STATUS_OK
+		);
+	}
+
+	/**
 	 * Get course details by ID
 	 *
 	 * @since 3.0.0
@@ -657,9 +743,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_course_details() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( __( 'Invalid nonce', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		$this->check_access();
 
 		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$validation = ValidationHelper::validate(
@@ -686,14 +770,14 @@ class Course extends Tutor_Base {
 			'enable_qna'               => get_post_meta( $course_id, '_tutor_enable_qa', true ),
 			'is_public_course'         => get_post_meta( $course_id, '_tutor_is_public_course', true ),
 			'course_level'             => get_post_meta( $course_id, '_tutor_course_level', true ),
-			'video'                    => get_post_meta( $course_id, '_video' ),
-			'course_duration'          => get_post_meta( $course_id, '_course_duration' ),
-			'course_benefits'          => get_post_meta( $course_id, '_tutor_course_benefits' ),
-			'course_requirements'      => get_post_meta( $course_id, '_tutor_course_requirements' ),
-			'course_target_audience'   => get_post_meta( $course_id, '_tutor_course_target_audience' ),
-			'course_material_includes' => get_post_meta( $course_id, '_tutor_course_material_includes' ),
-			'course_price_type'        => get_post_meta( $course_id, '_tutor_course_price_type' ),
-			'course_settings'          => get_post_meta( $course_id, '_tutor_course_settings' ),
+			'video'                    => get_post_meta( $course_id, '_video', true ),
+			'course_duration'          => get_post_meta( $course_id, '_course_duration', true ),
+			'course_benefits'          => get_post_meta( $course_id, '_tutor_course_benefits', true ),
+			'course_requirements'      => get_post_meta( $course_id, '_tutor_course_requirements', true ),
+			'course_target_audience'   => get_post_meta( $course_id, '_tutor_course_target_audience', true ),
+			'course_material_includes' => get_post_meta( $course_id, '_tutor_course_material_includes', true ),
+			'course_price_type'        => get_post_meta( $course_id, '_tutor_course_price_type', true ),
+			'course_settings'          => get_post_meta( $course_id, '_tutor_course_settings', true ),
 		);
 
 		$data = apply_filters( 'tutor_course_data', array_merge( $course, $data ) );
