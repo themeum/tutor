@@ -605,7 +605,7 @@ class Course extends Tutor_Base {
 		);
 
 		foreach ( $exclude as $key ) {
-			if ( isset( $params[ $key ] ) ) {
+			if ( isset( $rules[ $key ] ) ) {
 				unset( $rules[ $key ] );
 			}
 		}
