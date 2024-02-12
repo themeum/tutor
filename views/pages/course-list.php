@@ -40,7 +40,7 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 /**
  * Navbar data to make nav menu
  */
-$add_course_url = esc_url( admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) );
+$add_course_url = esc_url( admin_url( 'admin.php?page=create-course' ) );
 $navbar_data    = array(
 	'page_title'   => $courses->page_title,
 	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
@@ -209,7 +209,7 @@ $future_list = array(
 								}
 
 								$author_details = $authors[ $post->post_author ];
-								$edit_link      = admin_url( "post.php?post={$post->ID}&action=tutor" );
+								$edit_link      = $add_course_url . "&course-id=$post->ID";
 								?>
 								<tr>
 									<td>
