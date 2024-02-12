@@ -457,6 +457,8 @@ class Course extends Tutor_Base {
 		$_POST['course_requirements']      = $course_requirements;
 		$_POST['course_target_audience']   = $course_target_audience;
 		$_POST['course_material_includes'] = $course_materials;
+		$_POST['_tutor_enable_qna']        = $param['enable_qna'] ?? 'yes';
+		$_POST['_tutor_is_public_course']  = $param['is_public_course'] ?? 'no';
 
 		// Set course price.
 		if ( -1 !== $pricing['product_id'] ) {
@@ -574,9 +576,11 @@ class Course extends Tutor_Base {
 		// Validate inputs.
 		$status_str = implode( ',', CourseModel::get_status_list() );
 		$rules      = array(
-			'post_title'  => 'required',
-			'post_author' => 'user_exists',
-			'post_status' => "required|match_string:{$status_str}",
+			'post_title'       => 'required',
+			'post_author'      => 'user_exists',
+			'post_status'      => "required|match_string:{$status_str}",
+			'enable_qna'       => 'if_input|match_string:yes,no',
+			'is_public_course' => 'if_input|match_string:yes,no',
 		);
 
 		$errors     = array();
