@@ -745,15 +745,11 @@ class Course extends Tutor_Base {
 	public function ajax_course_details() {
 		$this->check_access();
 
-		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
-		$validation = ValidationHelper::validate(
-			array( 'course_id' => 'required|numeric' ),
-			array( 'course_id' => $course_id )
-		);
+		$errors    = array();
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		$errors = array();
-		if ( ! $validation->success ) {
-			$errors = $validation->errors;
+		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
+			$errors['course_id'] = __( 'Invalid course id', 'tutor' );
 		}
 
 		if ( ! empty( $errors ) ) {
