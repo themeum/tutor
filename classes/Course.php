@@ -244,6 +244,7 @@ class Course extends Tutor_Base {
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
 
 		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
+		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
 	}
 
 	/**
@@ -467,6 +468,63 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Get course details by ID
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_course_details() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( __( 'Invalid nonce', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$validation = ValidationHelper::validate(
+			array( 'course_id' => 'required|int' ),
+			array( 'course_id' => $course_id )
+		);
+
+		$errors = array();
+		if ( ! $validation->success ) {
+			$errors = $validation->errors;
+		}
+
+		if ( ! empty( $errors ) ) {
+			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
+		}
+
+		$course = get_post( $course_id, ARRAY_A );
+		$data   = array(
+			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
+			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),
+			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),
+			'thumbnail'                => get_the_post_thumbnail_url( $course_id ),
+			'video'                    => get_post_meta( $course_id, '_video' ),
+			'course_duration'          => get_post_meta( $course_id, '_course_duration' ),
+			'course_level'             => get_post_meta( $course_id, '_tutor_course_level' ),
+			'course_benefits'          => get_post_meta( $course_id, '_tutor_course_benefits' ),
+			'course_requirements'      => get_post_meta( $course_id, '_tutor_course_requirements' ),
+			'course_target_audience'   => get_post_meta( $course_id, '_tutor_course_target_audience' ),
+			'course_material_includes' => get_post_meta( $course_id, '_tutor_course_material_includes' ),
+			'course_price_type'        => get_post_meta( $course_id, '_tutor_course_price_type' ),
+
+			'course_settings'          => get_post_meta( $course_id, '_tutor_course_settings' ),
+			'_tutor_enable_qna'        => get_post_meta( $course_id, '_tutor_enable_qa', true ),
+			'_tutor_is_public_course'  => get_post_meta( $course_id, '_tutor_is_public_course', true ),
+			'_tutor_course_level'      => get_post_meta( $course_id, '_tutor_course_level', true ),
+		);
+
+		$data = apply_filters( 'tutor_course_data', array_merge( $course, $data ) );
+
+		$this->json_response(
+			__( 'Data retrieved successfully!' ),
+			$data,
+			HttpHelper::STATUS_OK
+		);
+	}
+
+	/**
 	 * Load course builder.
 	 *
 	 * @since 3.0.0
@@ -516,9 +574,25 @@ class Course extends Tutor_Base {
 
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
+		if ( isset( $default_data['current_user']->data ) ) {
+			$tutor_user = tutor_utils()->get_tutor_user( $default_data['current_user']->data->ID );
+			$default_data['current_user']->data->tutor_profile_photo_url = $tutor_user->tutor_profile_photo_url;
+		}
+
 		// If need more data.
+		$settings        = get_option( 'tutor_option', array() );
+		$remove_settings = array(
+			'chatgpt_api_key',
+			'recaptcha_v2_site_key',
+			'recaptcha_v3_site_key',
+			'twitter_app_key',
+			'twitter_app_key_secret',
+			'google_client_ID',
+			'facebook_app_ID',
+		);
+
 		$new_data = array(
-			'settings' => get_option( 'tutor_option', array() ),
+			'settings' => array_diff_key( $settings, array_flip( $remove_settings ) ),
 		);
 
 		$data = array_merge( $default_data, $new_data );
