@@ -580,7 +580,9 @@ class Course extends Tutor_Base {
 		}
 
 		// If need more data.
-		$settings        = get_option( 'tutor_option', array() );
+		$settings                            = get_option( 'tutor_option', array() );
+		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $settings['tutor_frontend_course_page_logo_id'] ?? 0 );
+
 		$remove_settings = array(
 			'chatgpt_api_key',
 			'recaptcha_v2_site_key',
