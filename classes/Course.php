@@ -64,6 +64,24 @@ class Course extends Tutor_Base {
 	);
 
 	/**
+	 * Video params
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var array
+	 */
+	public $video_params = array(
+		'source'              => '',
+		'source_video_id'     => '',
+		'poster'              => '',
+		'source_external_url' => '',
+		'source_shortcode'    => '',
+		'source_youtube'      => '',
+		'source_vimeo'        => '',
+		'source_embedded'     => '',
+	);
+
+	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
@@ -244,6 +262,7 @@ class Course extends Tutor_Base {
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
 
 		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
+		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
 	}
 
 	/**
@@ -389,6 +408,143 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Prepare course meta data for update
+	 *
+	 * @param array $params params.
+	 *
+	 * @return void
+	 */
+	public function prepare_create_post_meta( $params ) {
+		$additional_content = isset( $params['additional_content'] ) ? $params['additional_content'] : array();
+
+		$course_benefits = isset( $additional_content['course_benefits'] ) ? $additional_content['course_benefits'] : '';
+
+		$course_target_audience = isset( $additional_content['course_target_audience'] ) ? $additional_content['course_target_audience'] : '';
+
+		$course_duration = isset( $additional_content['course_duration'] ) ? array(
+			'hours'   => $additional_content['course_duration']['hours'] ?? '',
+			'minutes' => $additional_content['course_duration']['minutes'] ?? '',
+		) : array();
+
+		$course_materials = isset( $additional_content['course_material_includes'] ) ? $additional_content['course_material_includes'] : '';
+
+		$course_requirements = isset( $additional_content['course_requirements'] ) ? $additional_content['course_requirements'] : '';
+
+		if ( isset( $params['video'] ) ) {
+			$this->video_params['source'] = $params['video']['source_type'];
+
+			$this->video_params[ 'source_' . $params['video']['source_type'] ] = $params['video']['source'];
+			$_POST['video'] = $this->video_params;
+		}
+
+		$pricing = isset( $params['pricing'] ) ? array(
+			'type'       => $params['pricing']['type'] ?? self::PRICE_TYPE_FREE,
+			'product_id' => (int) $params['pricing']['product_id'] ?? -1,
+		) : array(
+			'type'       => self::PRICE_TYPE_FREE,
+			'product_id' => -1,
+		);
+
+		// Setup global $_POST array.
+		$_POST['_tutor_course_additional_data_edit'] = true;
+
+		$_POST['tutor_course_price_type']  = $pricing['type'];
+		$_POST['course_duration']          = $course_duration;
+		$_POST['tutor_course_price_type']  = $pricing['type'];
+		$_POST['_tutor_course_product_id'] = $pricing['product_id'];
+		$_POST['_tutor_course_level']      = $params['course_level'];
+		$_POST['course_benefits']          = $course_benefits;
+		$_POST['course_requirements']      = $course_requirements;
+		$_POST['course_target_audience']   = $course_target_audience;
+		$_POST['course_material_includes'] = $course_materials;
+
+		// Set course price.
+		if ( -1 !== $pricing['product_id'] ) {
+			$product = wc_get_product( $pricing['product_id'] );
+			if ( is_a( $product, 'WC_Product' ) ) {
+				$regular_price = $product->get_regular_price();
+				$sale_price    = $product->get_sale_price();
+
+				$_POST['course_price']      = $regular_price;
+				$_POST['course_sale_price'] = $sale_price;
+			}
+		}
+	}
+
+	/**
+	 * Prepare course meta data for update
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $params params.
+	 *
+	 * @throws \Exception Throw new exception.
+	 *
+	 * @return mixed
+	 */
+	public function prepare_update_post_meta( $params ) {
+		$post_id = (int) $params['ID'];
+
+		$additional_content = isset( $params['additional_content'] ) ? $params['additional_content'] : array();
+
+		if ( ! empty( $additional_content ) ) {
+
+			$course_benefits = isset( $additional_content['course_benefits'] ) ? $additional_content['course_benefits'] : '';
+
+			$course_target_audience = isset( $additional_content['course_target_audience'] ) ? $additional_content['course_target_audience'] : '';
+
+			$course_duration = isset( $additional_content['course_duration'] ) ? array(
+				'hours'   => $additional_content['course_duration']['hours'] ?? '',
+				'minutes' => $additional_content['course_duration']['minutes'] ?? '',
+			) : array();
+
+			$course_materials = isset( $additional_content['course_material_includes'] ) ? $additional_content['course_material_includes'] : '';
+
+			$course_requirements = isset( $additional_content['course_requirements'] ) ? $additional_content['course_requirements'] : '';
+
+			if ( '' !== $course_benefits ) {
+				update_post_meta( $post_id, '_tutor_course_benefits', $course_benefits );
+			}
+
+			if ( '' !== $course_requirements ) {
+				update_post_meta( $post_id, '_tutor_course_requirements', $course_requirements );
+			}
+
+			if ( '' !== $course_target_audience ) {
+				update_post_meta( $post_id, '_tutor_course_target_audience', $course_target_audience );
+			}
+
+			if ( '' !== $course_materials ) {
+				update_post_meta( $post_id, '_tutor_course_material_includes', $course_materials );
+			}
+
+			if ( ! empty( $course_duration ) ) {
+				update_post_meta( $post_id, '_course_duration', $course_duration );
+			}
+		}
+
+		if ( isset( $params['video'] ) ) {
+			$this->video_params['source'] = $params['video']['source_type'];
+
+			$this->video_params[ 'source_' . $params['video']['source_type'] ] = $params['video']['source'];
+			update_post_meta( $post_id, '_video', $this->video_params );
+		}
+
+		if ( isset( $params['pricing'] ) && ! empty( $params['pricing'] ) ) {
+			try {
+				if ( isset( $params['pricing']['type'] ) ) {
+					update_post_meta( $post_id, '_tutor_course_price_type', $params['pricing']['type'] );
+				}
+				if ( isset( $params['pricing']['product_id'] ) ) {
+					update_post_meta( $post_id, '_tutor_course_product_id', $params['pricing']['product_id'] );
+				}
+			} catch ( \Throwable $th ) {
+				throw new \Exception( $th->getMessage() );
+			}
+		}
+	}
+
+	/**
 	 * Create course by ajax request.
 	 *
 	 * @since 3.0.0
@@ -446,6 +602,12 @@ class Course extends Tutor_Base {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
 
+		try {
+			$this->prepare_create_post_meta( $params );
+		} catch ( \Exception $e ) {
+			$this->json_response( $e->getMessage(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+		}
+
 		$course_id = wp_insert_post( $params );
 		if ( is_wp_error( $course_id ) ) {
 			$this->json_response( $course_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
@@ -463,6 +625,62 @@ class Course extends Tutor_Base {
 			__( 'Course created successfully', 'tutor' ),
 			$course_id,
 			HttpHelper::STATUS_CREATED
+		);
+	}
+
+	/**
+	 * Get course details by ID
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_course_details() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( __( 'Invalid nonce', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$validation = ValidationHelper::validate(
+			array( 'course_id' => 'required|numeric' ),
+			array( 'course_id' => $course_id )
+		);
+
+		$errors = array();
+		if ( ! $validation->success ) {
+			$errors = $validation->errors;
+		}
+
+		if ( ! empty( $errors ) ) {
+			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
+		}
+
+		$course = get_post( $course_id, ARRAY_A );
+		$data   = array(
+			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
+			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),
+			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),
+			'thumbnail'                => get_the_post_thumbnail_url( $course_id ),
+
+			'enable_qna'               => get_post_meta( $course_id, '_tutor_enable_qa', true ),
+			'is_public_course'         => get_post_meta( $course_id, '_tutor_is_public_course', true ),
+			'course_level'             => get_post_meta( $course_id, '_tutor_course_level', true ),
+			'video'                    => get_post_meta( $course_id, '_video' ),
+			'course_duration'          => get_post_meta( $course_id, '_course_duration' ),
+			'course_benefits'          => get_post_meta( $course_id, '_tutor_course_benefits' ),
+			'course_requirements'      => get_post_meta( $course_id, '_tutor_course_requirements' ),
+			'course_target_audience'   => get_post_meta( $course_id, '_tutor_course_target_audience' ),
+			'course_material_includes' => get_post_meta( $course_id, '_tutor_course_material_includes' ),
+			'course_price_type'        => get_post_meta( $course_id, '_tutor_course_price_type' ),
+			'course_settings'          => get_post_meta( $course_id, '_tutor_course_settings' ),
+		);
+
+		$data = apply_filters( 'tutor_course_data', array_merge( $course, $data ) );
+
+		$this->json_response(
+			__( 'Data retrieved successfully!' ),
+			$data,
+			HttpHelper::STATUS_OK
 		);
 	}
 
@@ -516,9 +734,27 @@ class Course extends Tutor_Base {
 
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
+		if ( isset( $default_data['current_user']->data ) ) {
+			$tutor_user = tutor_utils()->get_tutor_user( $default_data['current_user']->data->ID );
+			$default_data['current_user']->data->tutor_profile_photo_url = $tutor_user->tutor_profile_photo_url;
+		}
+
 		// If need more data.
+		$settings                            = get_option( 'tutor_option', array() );
+		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $settings['tutor_frontend_course_page_logo_id'] ?? 0 );
+
+		$remove_settings = array(
+			'chatgpt_api_key',
+			'recaptcha_v2_site_key',
+			'recaptcha_v3_site_key',
+			'twitter_app_key',
+			'twitter_app_key_secret',
+			'google_client_ID',
+			'facebook_app_ID',
+		);
+
 		$new_data = array(
-			'settings' => get_option( 'tutor_option', array() ),
+			'settings' => array_diff_key( $settings, array_flip( $remove_settings ) ),
 		);
 
 		$data = array_merge( $default_data, $new_data );

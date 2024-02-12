@@ -3835,6 +3835,7 @@ class Utils {
 	 * Get tutor user.
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 tutor_profile_photo_url property added.
 	 *
 	 * @param int $user_id user id.
 	 *
@@ -3875,6 +3876,10 @@ class Utils {
 				$user_id
 			)
 		);
+
+		if ( $user ) {
+			$user->tutor_profile_photo_url = wp_get_attachment_image_url( $user->tutor_profile_photo );
+		}
 
 		TutorCache::set( $cache_key, $user );
 
