@@ -547,6 +547,21 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Prepare course settings meta
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $params params.
+	 *
+	 * @return void
+	 */
+	public function prepare_course_settings( $params ) {
+		if ( isset( $params['course_settings'] ) ) {
+			$_POST['_tutor_course_settings'] = $params['course_settings'];
+		}
+	}
+
+	/**
 	 * Create course by ajax request.
 	 *
 	 * @since 3.0.0
@@ -605,6 +620,8 @@ class Course extends Tutor_Base {
 		if ( ! empty( $errors ) ) {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
+
+		$this->prepare_course_settings( $params );
 
 		try {
 			$this->prepare_create_post_meta( $params );
@@ -700,8 +717,8 @@ class Course extends Tutor_Base {
 
 		$has_pro         = tutor()->has_pro;
 		$has_access_role = User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) );
-		$backend_create  = is_admin() && 'post-new.php' === $pagenow && 'courses' === Input::get( 'post_type' );
-		$backend_edit    = is_admin() && 'post.php' === $pagenow && 'tutor' === Input::get( 'action' ) && Input::has( 'post' );
+		$backend_create  = is_admin() && 'admin.php' === $pagenow && 'create-course' === Input::get( 'page' );
+		$backend_edit    = $backend_create && Input::has( 'course_id' );
 
 		$is_frontend_builder = tutor_utils()->is_tutor_frontend_dashboard( 'create-course' );
 		$frontend_create     = $is_frontend_builder && false === Input::has( 'course_id' );
@@ -714,7 +731,7 @@ class Course extends Tutor_Base {
 
 		// Edit mode.
 		if ( $has_access_role && ( $backend_edit || ( $has_pro && $frontend_edit ) ) ) {
-			$course_id        = Input::get( 'post' ) ?? Input::get( 'course_id' ) ?? 0;
+			$course_id        = Input::get( 'course_id', 0 );
 			$post_type        = get_post_type( $course_id );
 			$course_author    = (int) get_post_field( 'post_author', $course_id );
 			$is_course_author = get_current_user_id() === $course_author;
