@@ -416,10 +416,11 @@ class Course extends Tutor_Base {
 		$params['post_type'] = tutor()->course_post_type;
 
 		// Validate inputs.
-		$rules = array(
+		$status_str = implode( ',', CourseModel::get_status_list() );
+		$rules      = array(
 			'post_title'  => 'required',
 			'post_author' => 'user_exists',
-			'post_status' => 'required',
+			'post_status' => "required|match_string:{$status_str}",
 		);
 
 		$errors     = array();
