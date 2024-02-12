@@ -210,7 +210,7 @@ const styles = {
     padding: ${spacing[8]} 0;
   `,
   categoryListWrapper: css`
-    max-height: 306px;
+    max-height: 208px;
     overflow: auto;
   `,
   branchItem: ({ leftBarHeight, hasParent }: { leftBarHeight: string; hasParent: boolean }) => css`
@@ -226,7 +226,7 @@ const styles = {
       width: 1px;
       left: 9px;
       top: 25px;
-      background-color: ${colorTokens.stroke.default};
+      background-color: ${colorTokens.stroke.divider};
       z-index: ${zIndex.level};
     }
 
@@ -240,7 +240,7 @@ const styles = {
         left: -10px;
         top: ${spacing[16]};
 
-        background-color: ${colorTokens.stroke.default};
+        background-color: ${colorTokens.stroke.divider};
         z-index: ${zIndex.level};
       }
     `}
