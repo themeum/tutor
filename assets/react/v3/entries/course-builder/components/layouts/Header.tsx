@@ -1,7 +1,8 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorPalate, colorTokens, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { convertCourseDataToPayload, CourseFormData, useCreateCourseMutation } from '@CourseBuilderServices/course';
+import { CourseFormData, useCreateCourseMutation } from '@CourseBuilderServices/course';
+import { convertCourseDataToPayload } from '@CourseBuilderUtils/utils';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';

@@ -12,6 +12,8 @@ import { noop } from '@Utils/util';
 import { __ } from '@wordpress/i18n';
 import { useDebounce } from '@Hooks/useDebounce';
 
+import profileImage from '@Images/profile-photo.png';
+
 interface User {
   id: number;
   name: string;
@@ -110,7 +112,11 @@ const FormSelectUser = ({
                   disabled={readOnly || options.length === 0}
                 >
                   <div css={styles.instructorInfo}>
-                    <img src={inputValue.avatar_url} alt={inputValue.name} css={styles.instructorAvatar} />
+                    <img
+                      src={inputValue.avatar_url ? inputValue.avatar_url : profileImage}
+                      alt={inputValue.name}
+                      css={styles.instructorAvatar}
+                    />
                     <div>
                       <div css={styles.instructorName}>{inputValue.name}</div>
                       <div css={styles.instructorEmail}>{inputValue.email}</div>
@@ -147,7 +153,11 @@ const FormSelectUser = ({
                 {inputValue.map((instructor) => (
                   <div key={instructor.id} css={styles.instructorItem({ isDefaultItem: false })}>
                     <div css={styles.instructorInfo}>
-                      <img src={instructor.avatar_url} alt={instructor.name} css={styles.instructorAvatar} />
+                      <img
+                        src={instructor.avatar_url ? instructor.avatar_url : profileImage}
+                        alt={instructor.name}
+                        css={styles.instructorAvatar}
+                      />
                       <div>
                         <div css={styles.instructorName}>{instructor.name}</div>
                         <div css={styles.instructorEmail}>{instructor.email}</div>
@@ -220,7 +230,11 @@ const FormSelectUser = ({
                             setIsOpen(false);
                           }}
                         >
-                          <img src={instructor.avatar_url} alt={instructor.name} css={styles.instructorAvatar} />
+                          <img
+                            src={instructor.avatar_url ? instructor.avatar_url : profileImage}
+                            alt={instructor.name}
+                            css={styles.instructorAvatar}
+                          />
                           <div>
                             <div css={styles.instructorName}>{instructor.name}</div>
                             <div css={styles.instructorEmail}>{instructor.email}</div>

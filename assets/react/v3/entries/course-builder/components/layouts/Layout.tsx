@@ -12,7 +12,8 @@ import { useCurrentPath } from '@Hooks/useCurrentPath';
 import routes from '@CourseBuilderConfig/routes';
 import { FormProvider } from 'react-hook-form';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { CourseFormData, courseDefaultData } from '@CourseBuilderServices/course';
+import { CourseFormData, courseDefaultData, useCourseDetailsQuery } from '@CourseBuilderServices/course';
+import { convertCourseDataToFormData } from '@CourseBuilderUtils/utils';
 
 const progressSteps: Option<string>[] = [
   {
@@ -34,6 +35,9 @@ const progressSteps: Option<string>[] = [
 ];
 
 const Layout: React.FC = () => {
+  const params = new URLSearchParams(window.location.href);
+  const courseId = params.get('course-id')?.split('#')[0];
+
   const currentPath = useCurrentPath(routes);
   const navigate = useNavigate();
 
@@ -43,6 +47,17 @@ const Layout: React.FC = () => {
 
   const [activeStep, setActiveStep] = useState<string>(currentPath);
   const [completedSteps, setCompletedSteps] = useState<string[]>([currentPath]);
+
+  const courseDetailsQuery = useCourseDetailsQuery({
+    action: 'tutor_course_details',
+    course_id: Number(courseId),
+  });
+
+  useEffect(() => {
+    if (courseDetailsQuery.data) {
+      courseBasicForm.reset(convertCourseDataToFormData(courseDetailsQuery.data));
+    }
+  }, [courseDetailsQuery.data]);
 
   useEffect(() => {
     setActiveStep(currentPath);

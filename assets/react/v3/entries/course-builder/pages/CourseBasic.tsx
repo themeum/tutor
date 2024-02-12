@@ -141,7 +141,7 @@ const CourseBasic = () => {
         <ScheduleOptions />
 
         <Controller
-          name="thumbnail_id"
+          name="thumbnail"
           control={form.control}
           render={(controllerProps) => (
             <FormImageInput
@@ -285,7 +285,7 @@ const styles = {
     gap: ${spacing[8]};
   `,
   sidebar: css`
-    padding: ${spacing[24]} ${spacing[32]};
+    padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} ${spacing[64]};
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
 

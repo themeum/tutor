@@ -63,7 +63,7 @@ module.exports = (env, options) => {
       minimizer: [
         // we specify a custom UglifyJsPlugin here to get source maps in production
         new TerserPlugin({
-          cache: true,
+          // cache: true,
           parallel: true,
           terserOptions: {
             compress: false,
@@ -140,10 +140,12 @@ module.exports = (env, options) => {
             '@Hooks': path.resolve(__dirname, './assets/react/v3/shared/hooks/'),
             '@Services': path.resolve(__dirname, './assets/react/v3/shared/services/'),
             '@Utils': path.resolve(__dirname, './assets/react/v3/shared/utils/'),
+            '@Images': path.resolve(__dirname, './assets/images/'),
             '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
             '@CourseBuilderServices': path.resolve(__dirname, './assets/react/v3/entries/course-builder/services/'),
             '@CourseBuilderConfig': path.resolve(__dirname, './assets/react/v3/entries/course-builder/config/'),
             '@CourseBuilderPages': path.resolve(__dirname, './assets/react/v3/entries/course-builder/pages/'),
+            '@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
           },
         },
       })
