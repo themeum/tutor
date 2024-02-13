@@ -515,7 +515,7 @@ export const shadow = {
   modal: '0px 0px 2px rgba(17, 18, 19, 0.2), 0px 30px 72px rgba(17, 18, 19, 0.2)',
   base: '0px 1px 3px rgba(17, 18, 19, 0.15)',
   input: '0px 1px 0px rgba(17, 18, 19, 0.05)',
-  switch: 'inset 0px 0px 0px 1px #9095a3',
+  switch: '0px 2px 4px 0px #0000002A',
   tabs: 'inset 0px -1px 0px #dbdcdf',
   dividerTop: 'inset 0px 1px 0px #E4E5E7',
   underline: '0px 1px 0px #C9CBCF',
@@ -544,6 +544,7 @@ export const zIndex = {
   level: 0,
   sidebar: 9,
   header: 10,
+  footer: 10,
   modal: 25,
   highest: 9999999,
 } as const;

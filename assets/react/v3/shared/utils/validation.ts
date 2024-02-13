@@ -13,9 +13,9 @@ export const requiredRule = (): Rule => ({
 });
 
 export const maxValueRule = ({ maxValue, message }: { maxValue: number; message?: string }): Rule => ({
-  max: {
+  maxLength: {
     value: maxValue,
-    message: message || translateText('COM_SPPAGEBUILDER_STORE_ERROR_MSG_FIELD_MAX_VALUE', { maxValue }),
+    message: message || __(`Max. value should be ${maxValue}`),
   },
 });
 

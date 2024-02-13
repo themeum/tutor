@@ -26,11 +26,14 @@
       "@Components/*": ["assets/react/v3/shared/components/*"],
       "@Config/*": ["assets/react/v3/shared/config/*"],
       "@Hooks/*": ["assets/react/v3/shared/hooks/*"],
+      "@Services/*": ["assets/react/v3/shared/services/*"],
       "@Utils/*": ["assets/react/v3/shared/utils/*"],
+      "@Images/*": ["assets/images/*"],
       "@CourseBuilderComponents/*": ["assets/react/v3/entries/course-builder/components/*"],
       "@CourseBuilderServices/*": ["assets/react/v3/entries/course-builder/services/*"],
       "@CourseBuilderConfig/*": ["assets/react/v3/entries/course-builder/config/*"],
-      "@CourseBuilderPages/*": ["assets/react/v3/entries/course-builder/pages/*"]
+      "@CourseBuilderPages/*": ["assets/react/v3/entries/course-builder/pages/*"],
+      "@CourseBuilderUtils/*": ["assets/react/v3/entries/course-builder/utils/*"]
     }
   },
   "include": ["./assets/react/v3"],

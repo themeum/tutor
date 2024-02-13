@@ -9,7 +9,7 @@ import { typography } from '@Config/typography';
 import { rgba } from 'polished';
 import { __ } from '@wordpress/i18n';
 
-type Media = {
+export type Media = {
   id: number | null;
   url: string;
   title?: string;
@@ -21,7 +21,7 @@ type FormImageInputProps = {
   helpText?: string;
   buttonText?: string;
   infoText?: string;
-} & FormControllerProps<Media | undefined>;
+} & FormControllerProps<Media | null>;
 
 const FormImageInput = ({
   field,

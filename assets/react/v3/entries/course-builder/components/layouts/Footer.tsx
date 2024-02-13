@@ -1,5 +1,5 @@
 import Button, { ButtonSize, ButtonVariant } from '@Atoms/Button';
-import { colorPalate, colorTokens, spacing } from '@Config/styles';
+import { colorPalate, colorTokens, spacing, zIndex } from '@Config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -30,7 +30,9 @@ const styles = {
   wrapper: (completion: number) => css`
     background-color: ${colorTokens.primary[30]};
     padding: ${spacing[12]} ${spacing[16]};
-    position: relative;
+    position: sticky;
+    bottom: 0;
+    z-index: ${zIndex.footer};
 
     &::before {
       content: '';

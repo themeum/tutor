@@ -1,7 +1,8 @@
-import { Joomla } from '@Utils/util';
+export const tutorConfig = window._tutorobject;
 
 const config = {
-  API_BASE_URL: `${Joomla.pagebuilderBase}index.php?option=com_sppagebuilder&task=`,
+  TUTOR_API_BASE_URL: tutorConfig.home_url,
+  WP_API_BASE_URL: `${window.wpApiSettings.root}${window.wpApiSettings.versionString}`,
 };
 
 export default config;

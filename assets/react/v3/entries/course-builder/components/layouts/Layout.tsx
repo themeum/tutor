@@ -10,6 +10,10 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import { useCurrentPath } from '@Hooks/useCurrentPath';
 import routes from '@CourseBuilderConfig/routes';
+import { FormProvider } from 'react-hook-form';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { CourseFormData, courseDefaultData, useCourseDetailsQuery } from '@CourseBuilderServices/course';
+import { convertCourseDataToFormData } from '@CourseBuilderUtils/utils';
 
 const progressSteps: Option<string>[] = [
   {
@@ -31,27 +35,42 @@ const progressSteps: Option<string>[] = [
 ];
 
 const Layout: React.FC = () => {
+  const params = new URLSearchParams(window.location.href);
+  const courseId = params.get('course-id')?.split('#')[0];
+
   const currentPath = useCurrentPath(routes);
   const navigate = useNavigate();
+
+  const form = useFormWithGlobalError<CourseFormData>({
+    defaultValues: courseDefaultData,
+  });
 
   const [activeStep, setActiveStep] = useState<string>(currentPath);
   const [completedSteps, setCompletedSteps] = useState<string[]>([currentPath]);
 
+  const courseDetailsQuery = useCourseDetailsQuery(Number(courseId));
+
+  useEffect(() => {
+    if (courseDetailsQuery.data) {
+      form.reset(convertCourseDataToFormData(courseDetailsQuery.data));
+    }
+  }, [courseDetailsQuery.data]);
+
   useEffect(() => {
     setActiveStep(currentPath);
-    setCompletedSteps(previous =>
-      previous.includes(currentPath) ? previous.filter(path => path !== currentPath) : [...previous, currentPath]
+    setCompletedSteps((previous) =>
+      previous.includes(currentPath) ? previous.filter((path) => path !== currentPath) : [...previous, currentPath]
     );
   }, [currentPath]);
 
   const getCompletion = () => {
     const totalSteps = progressSteps.length;
-    const curriculumIndex = progressSteps.findIndex(item => item.value === activeStep);
+    const curriculumIndex = progressSteps.findIndex((item) => item.value === activeStep);
     return (100 / totalSteps) * (curriculumIndex + 1);
   };
 
   const handleNextClick = () => {
-    const curriculumIndex = progressSteps.findIndex(item => item.value === activeStep);
+    const curriculumIndex = progressSteps.findIndex((item) => item.value === activeStep);
     if (curriculumIndex < progressSteps.length - 1) {
       const pagePath = progressSteps[curriculumIndex + 1].value;
       navigate(pagePath);
@@ -59,7 +78,7 @@ const Layout: React.FC = () => {
   };
 
   const handlePrevClick = () => {
-    const curriculumIndex = progressSteps.findIndex(item => item.value === activeStep);
+    const curriculumIndex = progressSteps.findIndex((item) => item.value === activeStep);
     if (curriculumIndex > 0) {
       const pagePath = progressSteps[curriculumIndex - 1].value;
       navigate(pagePath);
@@ -67,21 +86,23 @@ const Layout: React.FC = () => {
   };
 
   return (
-    <div css={styles.wrapper}>
-      <Header />
-      <div css={styles.contentWrapper}>
-        <Sidebar
-          progressSteps={progressSteps}
-          activeStep={activeStep}
-          setActiveStep={setActiveStep}
-          completedSteps={completedSteps}
-        />
-        <div css={styles.mainContent}>
-          <Outlet />
+    <FormProvider {...form}>
+      <div css={styles.wrapper}>
+        <Header />
+        <div css={styles.contentWrapper}>
+          <Sidebar
+            progressSteps={progressSteps}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            completedSteps={completedSteps}
+          />
+          <div css={styles.mainContent}>
+            <Outlet />
+          </div>
         </div>
+        <Footer completion={getCompletion()} onNextClick={handleNextClick} onPrevClick={handlePrevClick} />
       </div>
-      <Footer completion={getCompletion()} onNextClick={handleNextClick} onPrevClick={handlePrevClick} />
-    </div>
+    </FormProvider>
   );
 };
 
@@ -95,6 +116,6 @@ const styles = {
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
   `,
   mainContent: css`
-    max-width: 1140px;
+    max-width: 1170px;
   `,
 };

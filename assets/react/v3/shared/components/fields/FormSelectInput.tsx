@@ -1,3 +1,4 @@
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
@@ -7,7 +8,6 @@ import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { Option } from '@Utils/types';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import FormFieldWrapper from './FormFieldWrapper';
 import { noop } from '@Utils/util';
@@ -33,6 +33,7 @@ type FormSelectInputProps<T> = {
   showArrowUpDown?: boolean;
   helpText?: string;
   removeOptionsMinWidth?: boolean;
+  leftIcon?: ReactNode;
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
@@ -49,13 +50,14 @@ const FormSelectInput = <T,>({
   isInlineLabel,
   hideCaret,
   listLabel,
-  isClearable = true,
+  isClearable = false,
   showArrowUpDown = false,
   helpText,
   removeOptionsMinWidth = false,
+  leftIcon,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = useCallback(() => {
-    return options.find(item => item.value === field.value)?.label || '';
+    return options.find((item) => item.value === field.value)?.label || '';
   }, [options, field.value]);
 
   const [inputValue, setInputValue] = useState(getInitialValue);
@@ -96,21 +98,22 @@ const FormSelectInput = <T,>({
       isInlineLabel={isInlineLabel}
       helpText={helpText}
     >
-      {inputProps => {
+      {(inputProps) => {
         const { css: inputCss, ...restInputProps } = inputProps;
 
         return (
           <div css={styles.mainWrapper}>
             <div css={styles.inputWrapper} ref={triggerRef}>
+              <div css={styles.leftIcon}>{leftIcon}</div>
               <input
                 {...restInputProps}
-                onClick={() => setIsOpen(previousState => !previousState)}
-                css={[inputCss, styles.input]}
+                onClick={() => setIsOpen((previousState) => !previousState)}
+                css={[inputCss, styles.input(!!leftIcon)]}
                 autoComplete="off"
                 readOnly={readOnly || !isSearchable}
                 placeholder={placeholder}
                 value={inputValue}
-                onChange={event => {
+                onChange={(event) => {
                   setInputValue(event.target.value);
                   setSearchText(event.target.value);
                 }}
@@ -121,7 +124,7 @@ const FormSelectInput = <T,>({
                   type="button"
                   css={styles.caretButton}
                   onClick={() => {
-                    setIsOpen(previousState => !previousState);
+                    setIsOpen((previousState) => !previousState);
                   }}
                   disabled={readOnly || options.length === 0}
                 >
@@ -148,7 +151,7 @@ const FormSelectInput = <T,>({
               >
                 <ul css={[styles.options(removeOptionsMinWidth)]}>
                   {!!listLabel && <li css={styles.listLabel}>{listLabel}</li>}
-                  {selections.map(option => (
+                  {selections.map((option) => (
                     <li
                       key={String(option.value)}
                       css={styles.optionItem({
@@ -213,12 +216,23 @@ const styles = {
     align-items: center;
     position: relative;
   `,
-  input: css`
+  leftIcon: css`
+    position: absolute;
+    left: ${spacing[8]};
+    top: ${spacing[4]};
+    color: ${colorTokens.icon.default};
+  `,
+  input: (hasLeftIcon: boolean) => css`
     ${typography.body()};
     width: 100%;
     cursor: pointer;
     padding-right: ${spacing[32]};
     ${styleUtils.textEllipsis};
+
+    ${hasLeftIcon &&
+    css`
+      padding-left: ${spacing[48]};
+    `}
 
     :focus {
       outline: none;

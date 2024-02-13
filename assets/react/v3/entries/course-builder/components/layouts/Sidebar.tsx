@@ -1,6 +1,6 @@
 import ProgressStep, { ProgressStatus } from '@Atoms/ProgressStep';
 import { defineRoute } from '@Config/route-configs';
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, headerHeight, spacing } from '@Config/styles';
 import { CourseProgressSteps, Option } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -50,5 +50,8 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[32]};
+
+    position: sticky;
+    top: ${headerHeight + 24}px;
   `,
 };

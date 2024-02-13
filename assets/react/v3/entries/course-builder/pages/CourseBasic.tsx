@@ -1,200 +1,150 @@
-import Button, { ButtonSize, ButtonVariant } from '@Atoms/Button';
 import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSwitch from '@Components/fields/FormSwitch';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { useModal } from '@Components/modals/Modal';
-import ReferenceModal from '@Components/modals/ReferenceModal';
-import ConfirmationModal from '@Components/modals/ConfirmationModal';
-import { borderRadius, colorTokens, footerHeight, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
-import { Controller } from 'react-hook-form';
-import Tabs from '@Molecules/Tabs';
-import { useState } from 'react';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormImageInput from '@Components/fields/FormImageInput';
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormTimeInput from '@Components/fields/FormTimeInput';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import FormEditableAlias from '@Components/fields/FormEditableAlias';
+import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
+import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
+import FormImageInput from '@Components/fields/FormImageInput';
+import FormRadioGroup from '@Components/fields/FormRadioGroup';
+import FormInputWithContent from '@Components/fields/FormInputWithContent';
+import SVGIcon from '@Atoms/SVGIcon';
+import FormTagsInput from '@Components/fields/FormTagsInput';
+import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
+import FormSelectUser from '@Components/fields/FormSelectUser';
+import { useUserListQuery } from '@Services/users';
+import { useState } from 'react';
+import { CourseFormData } from '@CourseBuilderServices/course';
+import { TutorRoles } from '@Config/constants';
+import { tutorConfig } from '@Config/config';
+import { maxValueRule, requiredRule } from '@Utils/validation';
 
 const CourseBasic = () => {
-  const form = useFormWithGlobalError();
-  const { showModal } = useModal();
+  const form = useFormContext<CourseFormData>();
 
-  const [activeTab, setActiveTab] = useState('general');
+  const [instructorSearchText, setInstructorSearchText] = useState('');
 
-  const tabList = [
+  const visibilityStatus = useWatch({ control: form.control, name: 'post_status' });
+  const coursePriceType = useWatch({ control: form.control, name: 'course_price_type' });
+
+  const visibilityStatusOptions = [
     {
-      label: 'General',
-      value: 'general',
-      icon: <SVGIcon name="settings" width={24} height={24} />,
+      label: __('Public', 'tutor'),
+      value: 'publish',
     },
     {
-      label: 'Content Drip',
-      value: 'content_drip',
-      icon: <SVGIcon name="contentDrip" width={24} height={24} />,
-      activeBadge: true,
+      label: __('Password Protected', 'tutor'),
+      value: 'password_protected',
+    },
+    {
+      label: __('Private', 'tutor'),
+      value: 'private',
     },
   ];
+
+  const coursePriceOptions = [
+    {
+      label: __('Free', 'tutor'),
+      value: 'free',
+    },
+    {
+      label: __('Paid', 'tutor'),
+      value: 'paid',
+    },
+  ];
+
+  const instructorListQuery = useUserListQuery({
+    context: 'edit',
+    roles: ['administrator', 'tutor_instructor'],
+    search: instructorSearchText,
+  });
+
+  const instructorOptions =
+    instructorListQuery.data?.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        email: item.email,
+        avatar_url: item.avatar_urls[48],
+      };
+    }) ?? [];
 
   return (
     <div css={styles.wrapper}>
       <div css={styles.mainForm}>
-        <h6 css={styles.title}>Course Basic</h6>
+        <CanvasHead title={__('Course Basic', 'tutor')} />
 
-        <Button
-          onClick={async () => {
-            const { action } = await showModal({
-              component: ConfirmationModal,
-              props: {
-                title: 'Modal',
-              },
-              closeOnOutsideClick: true,
-            });
-            console.log(action);
-          }}
-        >
-          Open Modal
-        </Button>
-        <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} />
-
-        <div css={styles.courseSettings}>
-          <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} orientation="vertical" />
-
-          <div css={styles.courseSettingsRight}>
+        <div css={styles.fieldsWrapper}>
+          <div css={styles.titleAndSlug}>
             <Controller
-              name="title"
+              name="post_title"
               control={form.control}
+              rules={{...requiredRule(), ...maxValueRule({ maxValue: 255 })}}
               render={(controllerProps) => (
-                <FormInput {...controllerProps} label="Title" placeholder="Course title" maxLimit={245} isClearable />
+                <FormInput
+                  {...controllerProps}
+                  label={__('Course Title', 'tutor')}
+                  maxLimit={255}
+                  placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
+                  isClearable
+                />
               )}
             />
 
             <Controller
-              name="description"
+              name="post_name"
               control={form.control}
               render={(controllerProps) => (
-                <FormTextareaInput {...controllerProps} label="Course Description" maxLimit={400} />
+                <FormEditableAlias
+                  {...controllerProps}
+                  label={__('Course URL', 'tutor')}
+                  baseURL={`${tutorConfig.home_url}/courses`}
+                />
               )}
             />
           </div>
+
+          <Controller
+            name="post_content"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormTextareaInput {...controllerProps} label={__('Description', 'tutor')} />
+            )}
+          />
+
+          <CourseSettings />
         </div>
-
-        <form css={styles.form}>
-          <Controller
-            name="title"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput {...controllerProps} label="Title" placeholder="Course title" maxLimit={245} isClearable />
-            )}
-          />
-
-          <Controller
-            name="price"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInputWithContent {...controllerProps} label="Regular Price" placeholder="0.00" content="$" />
-            )}
-          />
-
-          <Controller
-            name="public"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormSwitch {...controllerProps} label="Public Course" helpText="Public course help text" />
-            )}
-          />
-
-          <Controller
-            name="description"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormTextareaInput {...controllerProps} label="Course Description" maxLimit={400} />
-            )}
-          />
-
-          <Controller
-            name="has_price"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormRadioGroup
-                {...controllerProps}
-                label="Price"
-                options={[
-                  { label: 'Free', value: 0 },
-                  { label: 'Paid', value: 1 },
-                ]}
-              />
-            )}
-          />
-        </form>
       </div>
       <div css={styles.sidebar}>
         <Controller
-          name="level"
+          name="post_status"
           control={form.control}
-          defaultValue={2}
           render={(controllerProps) => (
             <FormSelectInput
               {...controllerProps}
-              label="Visibility Status"
-              helpText="Hello there"
-              options={[
-                {
-                  label: 'One',
-                  value: 1,
-                },
-                {
-                  label: 'Two',
-                  value: 2,
-                },
-                {
-                  label: 'Three',
-                  value: 3,
-                },
-              ]}
+              label={__('Visibility Status', 'tutor')}
+              options={visibilityStatusOptions}
+              leftIcon={<SVGIcon name="eye" width={32} height={32} />}
             />
           )}
         />
 
-        <div css={styles.scheduleOptions}>
+        {visibilityStatus === 'password_protected' && (
           <Controller
-            name="schedule_options"
+            name="post_password"
             control={form.control}
-            defaultValue={true}
-            render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
+            render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
           />
+        )}
 
-          <div css={styles.dateAndTimeWrapper}>
-            <Controller
-              name="schedule_date"
-              control={form.control}
-              render={(controllerProps) => <FormDateInput {...controllerProps} isClearable={false} />}
-            />
-
-            <Controller
-              name="schedule_time"
-              control={form.control}
-              render={(controllerProps) => <FormTimeInput {...controllerProps} interval={60} isClearable={false} />}
-            />
-          </div>
-
-          <div css={styles.scheduleButtonsWrapper}>
-            <Button variant="tertiary" size="small">
-              {__('Cancel')}
-            </Button>
-            <Button variant="secondary" size="small">
-              {__('Save')}
-            </Button>
-          </div>
-        </div>
+        <ScheduleOptions />
 
         <Controller
-          name="featured_image"
+          name="thumbnail"
           control={form.control}
           render={(controllerProps) => (
             <FormImageInput
@@ -202,6 +152,109 @@ const CourseBasic = () => {
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
               infoText={__('Size: 700x430 pixels', 'tutor')}
+            />
+          )}
+        />
+
+        {/* <Controller
+          name="video"
+          control={form.control}
+          render={(controllerProps) => (
+            <FormImageInput
+              {...controllerProps}
+              label={__('Intro Video', 'tutor')}
+              buttonText={__('Upload Video', 'tutor')}
+              infoText={__('Supported file formats .mp4 ', 'tutor')}
+            />
+          )}
+        /> */}
+
+        {/* @TODO: Add course price options based on monetization setting */}
+        <Controller
+          name="course_price_type"
+          control={form.control}
+          render={(controllerProps) => (
+            <FormRadioGroup
+              {...controllerProps}
+              label={__('Price', 'tutor')}
+              options={coursePriceOptions}
+              wrapperCss={styles.priceRadioGroup}
+            />
+          )}
+        />
+
+        {coursePriceType === 'paid' && (
+          <div css={styles.coursePriceWrapper}>
+            <Controller
+              name="course_price"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  label={__('Regular Price', 'tutor')}
+                  content="$"
+                  placeholder={__('0', 'tutor')}
+                />
+              )}
+            />
+            <Controller
+              name="course_sale_price"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  label={__('Discount Price', 'tutor')}
+                  content="$"
+                  placeholder={__('0', 'tutor')}
+                />
+              )}
+            />
+          </div>
+        )}
+
+        <Controller
+          name="course_categories"
+          control={form.control}
+          defaultValue={[]}
+          render={(controllerProps) => <FormCategoriesInput {...controllerProps} label={__('Categories', 'tutor')} />}
+        />
+
+        <Controller
+          name="course_tags"
+          control={form.control}
+          render={(controllerProps) => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} />}
+        />
+
+        {tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
+          <Controller
+            name="post_author"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectUser
+                {...controllerProps}
+                label={__('Author', 'tutor')}
+                options={instructorOptions}
+                placeholder={__('Search to add author', 'tutor')}
+                isSearchable
+                handleSearchOnChange={setInstructorSearchText}
+              />
+            )}
+          />
+        )}
+
+        {/* @TODO: Need to add condition based on tutor pro, marketplace, multi instructor addon, and admin role */}
+        <Controller
+          name="course_instructors"
+          control={form.control}
+          render={(controllerProps) => (
+            <FormSelectUser
+              {...controllerProps}
+              label={__('Instructors', 'tutor')}
+              options={instructorOptions}
+              placeholder={__('Search to add instructors', 'tutor')}
+              isSearchable
+              handleSearchOnChange={setInstructorSearchText}
+              isMultiSelect
             />
           )}
         />
@@ -215,23 +268,27 @@ export default CourseBasic;
 const styles = {
   wrapper: css`
     display: grid;
-    grid-template-columns: 1fr 370px;
+    grid-template-columns: 1fr 402px;
   `,
   mainForm: css`
     padding: ${spacing[24]} ${spacing[64]};
+    align-self: start;
+    position: sticky;
+    top: ${headerHeight}px;
   `,
-  title: css`
-    ${typography.heading6('medium')};
-    margin-bottom: ${spacing[40]};
-  `,
-  form: css`
+  fieldsWrapper: css`
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
+    margin-top: ${spacing[40]};
+  `,
+  titleAndSlug: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
   `,
   sidebar: css`
-    padding-top: ${spacing[24]};
-    padding-left: ${spacing[64]};
+    padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} ${spacing[64]};
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
 
@@ -239,68 +296,14 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[24]};
   `,
-  scheduleOptions: css`
-    padding: ${spacing[12]};
-    border: 1px solid ${colorTokens.stroke.default};
-    border-radius: ${borderRadius[8]};
+  priceRadioGroup: css`
     display: flex;
-    flex-direction: column;
-    gap: ${spacing[8]};
+    align-items: center;
+    gap: ${spacing[36]};
   `,
-  dateAndTimeWrapper: css`
-    display: grid;
-    grid-template-columns: 1fr 124px;
-    gap: 1px;
-    background-image: linear-gradient(to right, transparent, ${colorTokens.stroke.default}, transparent);
-    margin-top: ${spacing[12]};
-    border-radius: ${borderRadius[6]};
-
-    &:focus-within {
-      box-shadow: ${shadow.focus};
-    }
-
-    > div {
-      &:first-of-type {
-        input {
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-          border-right: none;
-          box-shadow: none;
-        }
-      }
-      &:last-of-type {
-        input {
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-          border-left: none;
-          box-shadow: none;
-        }
-      }
-    }
-  `,
-  scheduleButtonsWrapper: css`
+  coursePriceWrapper: css`
     display: flex;
-    gap: ${spacing[12]};
-
-    button {
-      width: 100%;
-
-      span {
-        justify-content: center;
-      }
-    }
-  `,
-  courseSettings: css`
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    margin-block: ${spacing[48]};
-    border: 1px solid ${colorTokens.stroke.default};
-    border-radius: ${borderRadius[6]};
-    background-color: ${colorTokens.background.default};
-    overflow: hidden;
-  `,
-  courseSettingsRight: css`
-    padding: ${spacing[16]} ${spacing[32]} ${spacing[32]} ${spacing[32]};
-    background-color: ${colorTokens.background.white};
+    align-items: center;
+    gap: ${spacing[16]};
   `,
 };

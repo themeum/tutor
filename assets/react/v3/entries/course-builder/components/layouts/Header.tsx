@@ -1,11 +1,37 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { colorPalate, colorTokens, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, colorTokens, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
+import { CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
+import { convertCourseDataToPayload } from '@CourseBuilderUtils/utils';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
+import { useFormContext } from 'react-hook-form';
 
 const Header = () => {
+  const params = new URLSearchParams(window.location.href);
+  const courseId = params.get('course-id')?.split('#')[0];
+
+  const form = useFormContext<CourseFormData>();
+
+  const createCourseMutation = useCreateCourseMutation();
+  const updateCourseMutation = useUpdateCourseMutation();
+
+  const handleSubmit = async (data: CourseFormData) => {
+    const payload = convertCourseDataToPayload(data);
+
+    if (courseId) {
+      updateCourseMutation.mutate({ course_id: Number(courseId), ...payload });
+    } else {
+      const response = await createCourseMutation.mutateAsync(payload);
+
+      if (response.data) {
+        // @TODO: Redirect to edit page url
+        console.log(response);
+      }
+    }
+  };
+
   return (
     <div css={styles.wrapper}>
       <div>
@@ -74,7 +100,13 @@ const Header = () => {
           {__('Save as Draft', 'tutor')}
         </Button>
         <Button variant="secondary">{__('Preview', 'tutor')}</Button>
-        <Button variant="primary">{__('Publish', 'tutor')}</Button>
+        <Button
+          variant="primary"
+          loading={createCourseMutation.isPending || updateCourseMutation.isPending}
+          onClick={form.handleSubmit(handleSubmit)}
+        >
+          {__('Publish', 'tutor')}
+        </Button>
         <button
           type="button"
           css={styles.closeButton}
@@ -101,6 +133,10 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    position: sticky;
+    top: 0;
+    z-index: ${zIndex.header};
   `,
   headerRight: css`
     display: flex;
@@ -113,5 +149,10 @@ const styles = {
     display: flex;
     color: ${colorPalate.icon.default};
     margin-left: ${spacing[4]};
+    border-radius: ${borderRadius[4]};
+
+    &:focus {
+      box-shadow: ${shadow.focus};
+    }
   `,
 };

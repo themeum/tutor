@@ -13,12 +13,13 @@ interface TooltipProps {
   content: string | ReactNode;
   allowHTML?: boolean;
   placement?: Placement;
+  hideOnClick?: boolean;
 }
 
 const initialStyles = { opacity: 0, transform: 'scale(0.8)' };
 const config = { tension: 300, friction: 15 };
 
-const Tooltip = ({ children, content, allowHTML, placement = 'top' }: TooltipProps) => {
+const Tooltip = ({ children, content, allowHTML, placement = 'top', hideOnClick }: TooltipProps) => {
   const [props, setSpring] = useSpring(() => initialStyles);
 
   const onMount = () => {
@@ -49,6 +50,7 @@ const Tooltip = ({ children, content, allowHTML, placement = 'top' }: TooltipPro
       onHide={onHide}
       allowHTML={allowHTML}
       delay={[0, 100]}
+      hideOnClick={hideOnClick}
       placement={placement}
     >
       <div>{children}</div>

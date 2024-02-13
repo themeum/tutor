@@ -143,8 +143,13 @@ const styles = {
     }
   `,
   label: (isInlineLabel: boolean) => css`
-    ${typography.body()}
+    ${typography.body()};
     color: ${colorTokens.text.title};
+
+    ${isInlineLabel &&
+    css`
+      ${typography.caption()};
+    `}
   `,
   inputWrapper: css`
     position: relative;
@@ -224,7 +229,11 @@ const FormFieldWrapper = <T,>({
         )}
 
         {characterCount ? (
-          <Tooltip placement="right" content={characterCount.maxLimit - characterCount.inputCharacter}>
+          <Tooltip
+            placement="right"
+            hideOnClick={false}
+            content={characterCount.maxLimit - characterCount.inputCharacter}
+          >
             {inputContent}
           </Tooltip>
         ) : (

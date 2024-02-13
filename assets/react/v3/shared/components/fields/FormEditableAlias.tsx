@@ -1,15 +1,16 @@
+import React from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorPalate, fontSize, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
-import { useTranslation } from '@Hooks/useTranslation';
 import { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import { __ } from '@wordpress/i18n';
 
 interface FormEditableAliasProps extends FormControllerProps<string> {
   label?: string;
@@ -18,13 +19,12 @@ interface FormEditableAliasProps extends FormControllerProps<string> {
 }
 
 const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEditableAliasProps) => {
-  const { value } = field;
+  const { value = '' } = field;
   const fullUrl = `${baseURL}/${value}`;
   const [isEditing, setIsEditing] = useState(false);
   const [fieldValue, setFieldValue] = useState(fullUrl);
   const prefix = `${baseURL}/`;
   const [editValue, setEditValue] = useState(value);
-  const t = useTranslation();
 
   useEffect(() => {
     if (baseURL) {
@@ -44,9 +44,9 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
             <div css={styles.linkWrapper}>
               {!isEditing ? (
                 <>
-                  <Link to={value} css={styles.link}>
+                  <a href={fieldValue} target="_blank" css={styles.link}>
                     {fieldValue}
-                  </Link>
+                  </a>
                   <button css={styles.iconWrapper} type="button" onClick={() => setIsEditing((prev) => !prev)}>
                     <SVGIcon name="edit" width={24} height={24} style={styles.editIcon} />
                   </button>
@@ -65,24 +65,25 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                     />
 
                     <Button
-                      variant="secondary"
+                      variant="outlined"
+                      size="small"
                       buttonCss={styles.saveBtn}
                       onClick={() => {
                         setIsEditing(false);
                         field.onChange(editValue);
                       }}
                     >
-                      {t('COM_SPPAGEBUILDER_STORE_SAVE')}
+                      {__('Save', 'tutor')}
                     </Button>
                     <Button
                       variant="text"
-                      buttonCss={styles.cancelBtn}
+                      size="small"
                       onClick={() => {
                         setIsEditing(false);
                         setEditValue(value);
                       }}
                     >
-                      {t('COM_SPPAGEBUILDER_STORE_VARIATION_OPTION_CANCEL_BUTTON')}
+                      {__('Cancel', 'tutor')}
                     </Button>
                   </div>
                 </>
@@ -98,13 +99,13 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
 const styles = {
   aliasWrapper: css`
     display: flex;
-    min-height: 36px;
+    min-height: 32px;
     align-items: center;
     gap: ${spacing[4]};
   `,
   label: css`
-    ${typography.body()};
-    color: ${colorPalate.text.neutral};
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
   `,
   linkWrapper: css`
     display: flex;
@@ -113,23 +114,31 @@ const styles = {
     font-size: ${fontSize[14]};
   `,
   link: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
     text-decoration: none;
   `,
   iconWrapper: css`
     ${styleUtils.resetButton}
     margin-left: ${spacing[8]};
-    background-color: ${colorPalate.surface.hover};
+    height: 24px;
+    width: 24px;
+    background-color: ${colorTokens.background.white};
     border-radius: ${borderRadius[4]};
+
+    :focus {
+      box-shadow: ${shadow.focus};
+    }
   `,
   editIcon: css`
-    color: ${colorPalate.icon.default};
+    color: ${colorTokens.icon.default};
     :hover {
-      color: ${colorPalate.basic.interactive};
+      color: ${colorTokens.icon.brand};
     }
   `,
   prefix: css`
-    ${typography.body()}
-    color: ${colorPalate.text.neutral};
+    ${typography.caption()}
+    color: ${colorTokens.text.subdued};
   `,
   editWrapper: css`
     display: flex;
@@ -137,25 +146,22 @@ const styles = {
     width: fit-content;
   `,
   editable: css`
-    ${typography.body()}
-    background: ${colorPalate.surface.default};
+    ${typography.caption()}
+    background: ${colorTokens.background.white};
     width: 208px;
-    height: 36px;
-    border: 1px solid ${colorPalate.border.neutral};
+    height: 32px;
+    border: 1px solid ${colorTokens.stroke.default};
     padding: ${spacing[8]} ${spacing[12]};
     border-radius: ${borderRadius[6]};
-    margin-right: ${spacing[16]};
+    margin-right: ${spacing[8]};
     outline: none;
-    active: {
-      border: 1px solid ${colorPalate.border.neutral};
+
+    :focus {
+      box-shadow: ${shadow.focus};
     }
   `,
   saveBtn: css`
-    padding: ${spacing[8]} ${spacing[20]};
-    box-shadow: none;
-  `,
-  cancelBtn: css`
-    padding: ${spacing[8]} ${spacing[20]};
+    margin-right: ${spacing[8]};
   `,
 };
 
