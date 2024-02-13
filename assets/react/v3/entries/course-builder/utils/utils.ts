@@ -2,7 +2,6 @@ import { CourseFormData, CoursePayload, GetCourseDetailsResponse } from '@Course
 
 export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
   return {
-    action: 'tutor_create_course',
     post_date: data.post_date,
     post_title: data.post_title,
     post_name: data.post_name,

@@ -68,7 +68,6 @@ export interface CourseFormData {
 }
 
 export interface CoursePayload {
-  action: string;
   post_date: string;
   post_title: string;
   post_name: string;
@@ -205,7 +204,10 @@ interface CreateCourseResponse {
 }
 
 const createCourse = (payload: CoursePayload) => {
-  return authApiInstance.post<CoursePayload, CreateCourseResponse>(endpoints.ADMIN_AJAX, payload);
+  return authApiInstance.post<CoursePayload, CreateCourseResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_create_course',
+    ...payload
+  });
 };
 
 export const useCreateCourseMutation = () => {
