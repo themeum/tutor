@@ -61,7 +61,9 @@ class Q_and_A {
 	public function tutor_qna_create_update() {
 		tutor_utils()->checking_nonce();
 		global $wpdb;
-		$qna_text = Input::post( 'answer', '', Input::TYPE_KSES_POST );
+
+		$qna_text = Input::post( 'answer', '', tutor()->has_pro ? Input::TYPE_KSES_POST : Input::TYPE_TEXTAREA );
+
 		if ( ! $qna_text ) {
 			// Content validation.
 			wp_send_json_error( array( 'message' => __( 'Empty Content Not Allowed!', 'tutor' ) ) );
