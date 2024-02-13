@@ -2724,11 +2724,9 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course id.
-	 *
 	 * @return array|null|object
 	 */
-	public function get_wc_products_db( $course_id ) {
+	public function get_wc_products_db() {
 		global $wpdb;
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
