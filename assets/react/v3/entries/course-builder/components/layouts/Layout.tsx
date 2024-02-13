@@ -41,7 +41,7 @@ const Layout: React.FC = () => {
   const currentPath = useCurrentPath(routes);
   const navigate = useNavigate();
 
-  const courseBasicForm = useFormWithGlobalError<CourseFormData>({
+  const form = useFormWithGlobalError<CourseFormData>({
     defaultValues: courseDefaultData,
   });
 
@@ -52,7 +52,7 @@ const Layout: React.FC = () => {
 
   useEffect(() => {
     if (courseDetailsQuery.data) {
-      courseBasicForm.reset(convertCourseDataToFormData(courseDetailsQuery.data));
+      form.reset(convertCourseDataToFormData(courseDetailsQuery.data));
     }
   }, [courseDetailsQuery.data]);
 
@@ -86,7 +86,7 @@ const Layout: React.FC = () => {
   };
 
   return (
-    <FormProvider {...courseBasicForm}>
+    <FormProvider {...form}>
       <div css={styles.wrapper}>
         <Header />
         <div css={styles.contentWrapper}>

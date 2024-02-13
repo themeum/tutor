@@ -13,34 +13,36 @@ import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import { DateFormats } from '@Config/constants';
 import { format } from 'date-fns';
+import { CourseFormData } from '@CourseBuilderServices/course';
 
 interface ScheduleForm {
   schedule_date: string;
   schedule_time: string;
+  schedule_options: boolean;
 }
 
 const ScheduleOptions = () => {
-  const contextForm = useFormContext();
-  const form = useFormWithGlobalError<ScheduleForm>();
+  const form = useFormContext<CourseFormData>();
+  const scheduleForm = useFormWithGlobalError<ScheduleForm>();
 
   const [showForm, setShowForm] = useState(true);
 
-  const scheduleOptions = useWatch({ control: contextForm.control, name: 'schedule_options' });
+  const scheduleOptions = useWatch({ control: scheduleForm.control, name: 'schedule_options' });
 
-  const scheduleDate = form.getValues('schedule_date')
-    ? format(new Date(form.getValues('schedule_date')), DateFormats.monthDayYear)
+  const scheduleDate = scheduleForm.getValues('schedule_date')
+    ? format(new Date(scheduleForm.getValues('schedule_date')), DateFormats.monthDayYear)
     : '';
-  const scheduleTime = form.getValues('schedule_time') ?? '';
+  const scheduleTime = scheduleForm.getValues('schedule_time') ?? '';
 
   const handleDelete = () => {
-    contextForm.setValue('schedule_options', false);
+    scheduleForm.setValue('schedule_options', false);
     setShowForm(true);
-    form.reset();
+    scheduleForm.reset();
   };
 
   const handleCancel = () => {
-    contextForm.setValue('schedule_options', false);
-    form.reset();
+    scheduleForm.setValue('schedule_options', false);
+    scheduleForm.reset();
   };
 
   const handleSave = (data: ScheduleForm) => {
@@ -49,7 +51,7 @@ const ScheduleOptions = () => {
     }
 
     setShowForm(false);
-    contextForm.setValue(
+    form.setValue(
       'post_date',
       format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond)
     );
@@ -59,7 +61,7 @@ const ScheduleOptions = () => {
     <div css={styles.scheduleOptions}>
       <Controller
         name="schedule_options"
-        control={contextForm.control}
+        control={scheduleForm.control}
         render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
       />
 
@@ -68,13 +70,13 @@ const ScheduleOptions = () => {
           <div css={styles.dateAndTimeWrapper}>
             <Controller
               name="schedule_date"
-              control={form.control}
+              control={scheduleForm.control}
               render={(controllerProps) => <FormDateInput {...controllerProps} isClearable={false} />}
             />
 
             <Controller
               name="schedule_time"
-              control={form.control}
+              control={scheduleForm.control}
               render={(controllerProps) => <FormTimeInput {...controllerProps} interval={60} isClearable={false} />}
             />
           </div>
@@ -83,7 +85,7 @@ const ScheduleOptions = () => {
             <Button variant="tertiary" size="small" onClick={handleCancel}>
               {__('Cancel', 'tutor')}
             </Button>
-            <Button variant="secondary" size="small" onClick={form.handleSubmit(handleSave)}>
+            <Button variant="secondary" size="small" onClick={scheduleForm.handleSubmit(handleSave)}>
               {__('Ok', 'tutor')}
             </Button>
           </div>
