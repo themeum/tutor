@@ -107,6 +107,7 @@ const FormSelectUser = ({
             <div ref={triggerRef}>
               {!isMultiSelect && !Array.isArray(inputValue) && (
                 <button
+                  type="button"
                   css={styles.instructorItem({ isDefaultItem: true })}
                   onClick={() => setIsOpen((previousState) => !previousState)}
                   disabled={readOnly || options.length === 0}
@@ -165,6 +166,7 @@ const FormSelectUser = ({
                     </div>
 
                     <button
+                      type="button"
                       onClick={() => handleDeleteSelection(instructor.id)}
                       css={styles.instructorDeleteButton}
                       data-instructor-delete-button
@@ -222,6 +224,7 @@ const FormSelectUser = ({
                     .map((instructor) => (
                       <li key={String(instructor.id)} css={styles.optionItem}>
                         <button
+                          type="button"
                           css={styles.label}
                           onClick={() => {
                             field.onChange(Array.isArray(inputValue) ? [...inputValue, instructor] : instructor);
