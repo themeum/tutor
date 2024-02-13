@@ -21,6 +21,7 @@ import { useState } from 'react';
 import { CourseFormData } from '@CourseBuilderServices/course';
 import { TutorRoles } from '@Config/constants';
 import { tutorConfig } from '@Config/config';
+import { maxValueRule, requiredRule } from '@Utils/validation';
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
@@ -75,18 +76,19 @@ const CourseBasic = () => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.mainForm}>
-        <CanvasHead title="Course Basic" />
+        <CanvasHead title={__('Course Basic', 'tutor')} />
 
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
             <Controller
               name="post_title"
               control={form.control}
+              rules={{...requiredRule(), ...maxValueRule({ maxValue: 255 })}}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
                   label={__('Course Title', 'tutor')}
-                  maxLimit={245}
+                  maxLimit={255}
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                 />
@@ -110,7 +112,7 @@ const CourseBasic = () => {
             name="post_content"
             control={form.control}
             render={(controllerProps) => (
-              <FormTextareaInput {...controllerProps} label={__('Description', 'tutor')} maxLimit={400} />
+              <FormTextareaInput {...controllerProps} label={__('Description', 'tutor')} />
             )}
           />
 

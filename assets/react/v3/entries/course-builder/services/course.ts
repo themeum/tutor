@@ -68,6 +68,7 @@ export interface CourseFormData {
 }
 
 export interface CoursePayload {
+  course_id?: number;
   post_date: string;
   post_title: string;
   post_name: string;
@@ -197,14 +198,14 @@ export interface GetCourseDetailsResponse {
   };
 }
 
-interface CreateCourseResponse {
+interface CourseResponse {
   data: number;
   message: string;
   status_code: number;
 }
 
 const createCourse = (payload: CoursePayload) => {
-  return authApiInstance.post<CoursePayload, CreateCourseResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<CoursePayload, CourseResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_create_course',
     ...payload
   });
@@ -215,6 +216,27 @@ export const useCreateCourseMutation = () => {
 
   return useMutation({
     mutationFn: createCourse,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: response.message });
+    },
+    onError: (error: any) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
+  });
+};
+
+const updateCourse = (payload: CoursePayload) => {
+  return authApiInstance.post<CoursePayload, CourseResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_update_course',
+    ...payload
+  });
+};
+
+export const useUpdateCourseMutation = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: updateCourse,
     onSuccess: (response) => {
       showToast({ type: 'success', message: response.message });
     },

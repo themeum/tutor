@@ -61,7 +61,7 @@ const CourseSettings = () => {
         {activeTab === 'general' && (
           <div css={styles.settingsOptions}>
             <Controller
-              name="maximum_student"
+              name="maximum_students"
               control={form.control}
               render={(controllerProps) => (
                 <FormInput
