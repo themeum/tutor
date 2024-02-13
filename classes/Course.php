@@ -241,7 +241,8 @@ class Course extends Tutor_Base {
 
 		add_action( 'wp_ajax_tutor_update_course_content_order', array( $this, 'tutor_update_course_content_order' ) );
 
-		add_action( 'wp_ajax_tutor_get_wc_product', array( $this, 'tutor_get_wc_product' ) );
+		add_action( 'wp_ajax_tutor_get_wc_product', array( $this, 'get_wc_product' ) );
+		add_action( 'wp_ajax_tutor_get_wc_products', array( $this, 'get_wc_products' ) );
 
 		add_action( 'wp_ajax_tutor_course_enrollment', array( $this, 'course_enrollment' ) );
 
@@ -896,24 +897,41 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Get list of WC products.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function get_wc_products() {
+		$this->json_response(
+			__( 'Products retrieved successfully!', 'tutor' ),
+			tutor_utils()->get_wc_products_db(),
+			HttpHelper::STATUS_OK
+		);
+	}
+
+	/**
 	 * Get course associate WC product info by Ajax request
 	 *
 	 * @since 2.0.7
+	 *
 	 * @return void
 	 */
-	public function tutor_get_wc_product() {
+	public function get_wc_product() {
 		tutor_utils()->checking_nonce();
 		$product_id = Input::post( 'product_id' );
 		$product    = wc_get_product( $product_id );
 		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+
 		/**
 		 * If selected product is already linked with
 		 * a course & it is not the current course the
 		 * return error
 		 *
-		 * @since v2.1.0
+		 * @since 2.1.0
 		 */
 		if ( is_object( $is_linked_with_course ) && $is_linked_with_course->post_id != $course_id ) {
 			wp_send_json_error(
