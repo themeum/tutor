@@ -1583,7 +1583,7 @@ if ( ! function_exists( 'tutor_permission_denied_template' ) ) {
 	/**
 	 * Load permission denied template
 	 *
-	 * It will load permission denied template & return so not code
+	 * It will load permission denied template & die so no code
 	 * after this will execute
 	 *
 	 * @since 2.2.0
@@ -1608,6 +1608,6 @@ if ( ! function_exists( 'tutor_permission_denied_template' ) ) {
 		);
 
 		tutor_load_template( 'permission-denied', $args );
-		return;
+		die();
 	}
 }
