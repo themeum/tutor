@@ -25,7 +25,7 @@ const ScheduleOptions = () => {
 
   const [showForm, setShowForm] = useState(true);
 
-  const scheduleOptions = useWatch({ name: 'schedule_options' });
+  const scheduleOptions = useWatch({ control: contextForm.control, name: 'schedule_options' });
 
   const scheduleDate = form.getValues('schedule_date')
     ? format(new Date(form.getValues('schedule_date')), DateFormats.monthDayYear)
@@ -44,14 +44,15 @@ const ScheduleOptions = () => {
   };
 
   const handleSave = (data: ScheduleForm) => {
-    if (data.schedule_date && data.schedule_time) {
-      setShowForm(false);
-
-      contextForm.setValue(
-        'post_date',
-        format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond)
-      );
+    if (!data.schedule_date || !data.schedule_time) {
+      return;
     }
+
+    setShowForm(false);
+    contextForm.setValue(
+      'post_date',
+      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond)
+    );
   };
 
   return (
@@ -80,10 +81,10 @@ const ScheduleOptions = () => {
 
           <div css={styles.scheduleButtonsWrapper}>
             <Button variant="tertiary" size="small" onClick={handleCancel}>
-              {__('Cancel')}
+              {__('Cancel', 'tutor')}
             </Button>
             <Button variant="secondary" size="small" onClick={form.handleSubmit(handleSave)}>
-              {__('Ok')}
+              {__('Ok', 'tutor')}
             </Button>
           </div>
         </>

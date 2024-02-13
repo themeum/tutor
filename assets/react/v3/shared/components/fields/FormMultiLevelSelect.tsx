@@ -64,8 +64,8 @@ const FormMultiLevelSelect = ({
           <>
             <div css={styles.inputWrapper} ref={triggerRef}>
               <input
-                type="text"
                 {...inputProps}
+                type="text"
                 onFocus={() => setIsOpen(true)}
                 autoComplete="off"
                 readOnly={true}

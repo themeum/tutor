@@ -7,6 +7,7 @@ import { __ } from '@wordpress/i18n';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import { typography } from '@Config/typography';
 import Button from '@Atoms/Button';
+import { tutorConfig } from '@Config/config';
 
 const ContentDropSettings = () => {
   const form = useFormContext();
@@ -34,7 +35,7 @@ const ContentDropSettings = () => {
     },
   ];
 
-  if (!window._tutorobject.tutor_pro_url) {
+  if (!tutorConfig.tutor_pro_url) {
     return (
       <div css={styles.dripNoProWrapper}>
         <SVGIcon name="crown" width={72} height={72} />
@@ -48,7 +49,7 @@ const ContentDropSettings = () => {
     );
   }
 
-  if (!window._tutorobject.addons_data.find((addon) => addon.name === 'Content Drip')?.is_enabled) {
+  if (!tutorConfig.addons_data.find((addon) => addon.name === 'Content Drip')?.is_enabled) {
     return (
       <div css={styles.dripNoProWrapper}>
         <SVGIcon name="contentDrip" width={72} height={72} style={styles.dripIcon} />

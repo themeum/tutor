@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import config from '@Config/config';
+import config, { tutorConfig } from '@Config/config';
 import axios from 'axios';
 import * as querystring from 'querystring';
 
@@ -21,7 +21,7 @@ authApiInstance.interceptors.request.use(
   (config) => {
     config.headers ||= {};
 
-    config.data['_tutor_nonce'] = window._tutorobject._tutor_nonce;
+    config.data['_tutor_nonce'] = tutorConfig._tutor_nonce;
 
     if (config.method && ['post', 'put', 'patch'].includes(config.method.toLocaleLowerCase())) {
       if (!!config.data) {

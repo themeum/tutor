@@ -1,5 +1,6 @@
 import { useToast } from '@Atoms/Toast';
 import { Media } from '@Components/fields/FormImageInput';
+import { tutorConfig } from '@Config/config';
 import { Tag } from '@Services/tags';
 import { User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
@@ -7,7 +8,7 @@ import endpoints from '@Utils/endpoints';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 
-const currentUser = window._tutorobject.current_user.data;
+const currentUser = tutorConfig.current_user.data;
 
 export const courseDefaultData: CourseFormData = {
   post_date: '',
@@ -221,17 +222,20 @@ export const useCreateCourseMutation = () => {
   });
 };
 
-const getCourseDetails = (payload: GetCourseDetailsPayload) => {
+const getCourseDetails = (courseId: number) => {
   return authApiInstance.post<GetCourseDetailsPayload, AxiosResponse<GetCourseDetailsResponse>>(
     endpoints.ADMIN_AJAX,
-    payload
+    {
+      action: 'tutor_course_details',
+      course_id: courseId,
+    }
   );
 };
 
-export const useCourseDetailsQuery = (payload: GetCourseDetailsPayload) => {
+export const useCourseDetailsQuery = (courseId: number) => {
   return useQuery({
-    queryKey: [payload.course_id],
-    queryFn: () => getCourseDetails(payload).then((res) => res.data),
-    enabled: !!payload.course_id,
+    queryKey: ['CourseDetails', courseId],
+    queryFn: () => getCourseDetails(courseId).then((res) => res.data),
+    enabled: !!courseId,
   });
 };

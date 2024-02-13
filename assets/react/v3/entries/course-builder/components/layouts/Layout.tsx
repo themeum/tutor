@@ -48,10 +48,7 @@ const Layout: React.FC = () => {
   const [activeStep, setActiveStep] = useState<string>(currentPath);
   const [completedSteps, setCompletedSteps] = useState<string[]>([currentPath]);
 
-  const courseDetailsQuery = useCourseDetailsQuery({
-    action: 'tutor_course_details',
-    course_id: Number(courseId),
-  });
+  const courseDetailsQuery = useCourseDetailsQuery(Number(courseId));
 
   useEffect(() => {
     if (courseDetailsQuery.data) {

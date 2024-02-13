@@ -20,14 +20,15 @@ import { useUserListQuery } from '@Services/users';
 import { useState } from 'react';
 import { CourseFormData } from '@CourseBuilderServices/course';
 import { TutorRoles } from '@Config/constants';
+import { tutorConfig } from '@Config/config';
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
 
   const [instructorSearchText, setInstructorSearchText] = useState('');
 
-  const visibilityStatus = useWatch({ name: 'post_status' });
-  const coursePriceType = useWatch({ name: 'course_price_type' });
+  const visibilityStatus = useWatch({ control: form.control, name: 'post_status' });
+  const coursePriceType = useWatch({ control: form.control, name: 'course_price_type' });
 
   const visibilityStatusOptions = [
     {
@@ -99,7 +100,7 @@ const CourseBasic = () => {
                 <FormEditableAlias
                   {...controllerProps}
                   label={__('Course URL', 'tutor')}
-                  baseURL={`${window._tutorobject.home_url}/courses`}
+                  baseURL={`${tutorConfig.home_url}/courses`}
                 />
               )}
             />
@@ -222,7 +223,7 @@ const CourseBasic = () => {
           render={(controllerProps) => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} />}
         />
 
-        {window._tutorobject.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
+        {tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
           <Controller
             name="post_author"
             control={form.control}
