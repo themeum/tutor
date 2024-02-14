@@ -318,10 +318,10 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 = 2.6.1 - February 15, 2024
 
-New: API to submit & fetch a list of quizzes (Pro)
-Improvement: Security Improved to submit questions & answers safely (Free)
-Improvement: All the APIs available with the Tutor Free plugin have improved response data, extendability, and performance.
-Fix: Resource not found - ChatGPT
+New: Added API functionality for submitting and retrieving list of quizzes (Pro)
+Update: Improved security to ensure safe submission of questions and answers (Free)
+Update: Improved response data, extendability, and performance across all APIs within the Tutor LMS Free plugin
+Fix: Fixed issue causing "Resource not found" error related to ChatGPT
 
 = 2.6.0 - January 11, 2024
 
