@@ -52,6 +52,26 @@ class Q_and_A {
 	}
 
 	/**
+	 * Check user has access to QnA.
+	 *
+	 * @since 2.6.1
+	 *
+	 * @param int $user_id user id.
+	 * @param int $course_id course id.
+	 *
+	 * @return boolean
+	 */
+	public static function has_qna_access( $user_id, $course_id ) {
+		$is_public_course = Course_List::is_public( $course_id );
+
+		$has_access = $is_public_course
+						|| User::is_admin()
+						|| tutor_utils()->is_instructor_of_this_course( $user_id, $course_id )
+						|| tutor_utils()->is_enrolled( $course_id );
+		return $has_access;
+	}
+
+	/**
 	 * Undocumented function
 	 *
 	 * @since v1.0.0
@@ -60,8 +80,17 @@ class Q_and_A {
 	 */
 	public function tutor_qna_create_update() {
 		tutor_utils()->checking_nonce();
+
+		$user_id   = get_current_user_id();
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		if ( ! $this->has_qna_access( $user_id, $course_id ) ) {
+			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+		}
+
 		global $wpdb;
-		$qna_text = Input::post( 'answer', '', Input::TYPE_KSES_POST );
+		$qna_text = Input::post( 'answer', '', tutor()->has_pro ? Input::TYPE_KSES_POST : Input::TYPE_TEXTAREA );
+
 		if ( ! $qna_text ) {
 			// Content validation.
 			wp_send_json_error( array( 'message' => __( 'Empty Content Not Allowed!', 'tutor' ) ) );
@@ -73,9 +102,8 @@ class Q_and_A {
 		$context     = Input::post( 'context' );
 
 		// Prepare user info.
-		$user_id = get_current_user_id();
-		$user    = get_userdata( $user_id );
-		$date    = gmdate( 'Y-m-d H:i:s', tutor_time() );
+		$user = get_userdata( $user_id );
+		$date = gmdate( 'Y-m-d H:i:s', tutor_time() );
 
 		// Insert data prepare.
 		$data = apply_filters(
