@@ -950,6 +950,8 @@ class QuizModel {
 	/**
 	 * Get quiz attempt details
 	 *
+	 * @since 2.6.1
+	 *
 	 * @param integer $attempt_id attempt id.
 	 *
 	 * @return mixed
@@ -987,7 +989,7 @@ class QuizModel {
 						SELECT
 						answer_title
 						FROM
-						wp_xtutor_quiz_question_answers
+						{$table_quiz_question_answers}
 						WHERE
 						answer_id = CAST(att_ans.given_answer AS UNSIGNED)
 					)
@@ -1010,7 +1012,7 @@ class QuizModel {
 					FROM {$table_quiz_attempts}
 					WHERE attempt_id = {$attempt_id}
 					LIMIT 1
-				)
+				) AS attempt_info
 			FROM 
 				{$table_quiz_attempt_answers} AS att_ans 
 				JOIN {$table_quiz_questions} AS ques ON ques.question_id = att_ans.question_id 
