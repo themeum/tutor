@@ -321,7 +321,7 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 New: Added API functionality for submitting and retrieving list of quizzes (Pro)
 Update: Improved security to ensure safe submission of questions and answers
 Update: Improved response data, extendability, and performance across all APIs within the Tutor LMS Free plugin
-Fix: Fixed issue causing "Resource not found" error related to ChatGPT
+Fix: Fixed issue causing "Resource not found" error related to ChatGPT (Pro)
 
 = 2.6.0 - January 11, 2024
 
