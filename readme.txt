@@ -316,7 +316,7 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 == Changelog ==
 
-= 2.6.1 - February 15, 2024
+= 2.6.1 - February 19, 2024
 
 New: Added API functionality for submitting and retrieving list of quizzes (Pro)
 Update: Improved security to ensure safe submission of questions and answers (Free)
