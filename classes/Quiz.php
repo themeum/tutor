@@ -195,11 +195,11 @@ class Quiz {
 	 */
 	public static function quiz_question_orders() {
 		$orders = array(
-            'rand'    => __( 'Random', 'tutor' ),
-            'sorting' => __( 'Sorting', 'tutor' ),
-            'asc'     => __( 'Ascending', 'tutor' ),
-            'desc'    => __( 'Descending', 'tutor' ),
-        );
+			'rand'    => __( 'Random', 'tutor' ),
+			'sorting' => __( 'Sorting', 'tutor' ),
+			'asc'     => __( 'Ascending', 'tutor' ),
+			'desc'    => __( 'Descending', 'tutor' ),
+		);
 
 		return apply_filters( 'tutor_quiz_layouts', $orders );
 	}
@@ -317,8 +317,6 @@ class Quiz {
 			die( 'Please sign in to do this operation' );
 		}
 
-		global $wpdb;
-
 		$user_id = get_current_user_id();
 		$user    = get_userdata( $user_id );
 
@@ -326,7 +324,27 @@ class Quiz {
 
 		$quiz   = get_post( $quiz_id );
 		$course = CourseModel::get_course_by_quiz( $quiz_id );
-		if ( empty( $course->ID ) ) {
+
+		self::quiz_attempt( $course->ID, $quiz_id, $user_id );
+		wp_safe_redirect( get_permalink( $quiz_id ) );
+		die();
+	}
+
+	/**
+	 * Manage quiz attempt
+	 *
+	 * @since 2.6.1
+	 *
+	 * @param integer $course_id course id.
+	 * @param integer $quiz_id quiz id.
+	 * @param integer $user_id user id.
+	 *
+	 * @return int inserted id|0
+	 */
+	public static function quiz_attempt( int $course_id, int $quiz_id, int $user_id, $attempt_status = 'attempt_started' ) {
+		global $wpdb;
+
+		if ( ! $course_id ) {
 			die( 'There is something went wrong with course, please check if quiz attached with a course' );
 		}
 
@@ -366,13 +384,13 @@ class Quiz {
 		$tutor_quiz_option['time_limit']['time_limit_seconds'] = $time_limit_seconds;
 
 		$attempt_data = array(
-			'course_id'                => $course->ID,
+			'course_id'                => $course_id,
 			'quiz_id'                  => $quiz_id,
 			'user_id'                  => $user_id,
 			'total_questions'          => $max_question_allowed,
 			'total_answered_questions' => 0,
 			'attempt_info'             => maybe_serialize( $tutor_quiz_option ),
-			'attempt_status'           => 'attempt_started',
+			'attempt_status'           => $attempt_status,
 			'attempt_ip'               => tutor_utils()->get_ip(),
 			'attempt_started_at'       => $date,
 		);
@@ -380,10 +398,12 @@ class Quiz {
 		$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempts', $attempt_data );
 		$attempt_id = (int) $wpdb->insert_id;
 
-		do_action( 'tutor_quiz/start/after', $quiz_id, $user_id, $attempt_id );
-
-		wp_safe_redirect( get_permalink( $quiz_id ) );
-		die();
+		if ( $attempt_id ) {
+			do_action( 'tutor_quiz/start/after', $quiz_id, $user_id, $attempt_id );
+			return $attempt_id;
+		} else {
+			return 0;
+		}
 	}
 
 	/**
@@ -442,7 +462,6 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		// Prepare attempt info.
-		global $wpdb;
 		$user_id    = get_current_user_id();
 		$attempt_id = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$attempt    = tutor_utils()->get_attempt( $attempt_id );
@@ -456,17 +475,33 @@ class Quiz {
 		if ( ! $attempt || $user_id != $attempt->user_id ) {
 			die( 'Operation not allowed, attempt not found or permission denied' );
 		}
+		self::manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $course_id, $user_id );
+		return true;
+	}
 
-		// Before ook.
+	/**
+	 * Manage attempt answers
+	 *
+	 * Evaluate each attempt answer and update the attempts table & insert in the attempt_answers table.
+	 *
+	 * @since 2.6.1
+	 *
+	 * @param array  $attempt_answers attempt answers.
+	 * @param object $attempt single attempt.
+	 * @param int    $attempt_id attempt id.
+	 * @param int    $course_id course id.
+	 * @param int    $user_id user id.
+	 *
+	 * @return void
+	 */
+	public static function manage_attempt_answers( $attempt_answers, $attempt, $attempt_id, $course_id, $user_id ) {
+		global $wpdb;
+		// Before hook.
 		do_action( 'tutor_quiz/attempt_analysing/before', $attempt_id );
 
-		// Loop through every single attempt answer
 		// Single quiz can have multiple question. So multiple answer should be saved.
 		foreach ( $attempt_answers as $attempt_id => $attempt_answer ) {
-
-			/**
-			 * Get total marks of all question comes
-			 */
+			// Get total marks of all question comes.
 			$question_ids = tutor_utils()->avalue_dot( 'quiz_question_ids', $attempt_answer );
 			$question_ids = array_filter(
 				$question_ids,
@@ -710,8 +745,6 @@ class Quiz {
 
 		// After hook.
 		do_action( 'tutor_quiz/attempt_ended', $attempt_id, $course_id, $user_id );
-
-		return true;
 	}
 
 

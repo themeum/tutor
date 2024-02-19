@@ -946,4 +946,99 @@ class QuizModel {
 
 		return $result;
 	}
+
+	/**
+	 * Get quiz attempt details
+	 *
+	 * @since 2.6.1
+	 *
+	 * @param integer $attempt_id attempt id.
+	 *
+	 * @return mixed
+	 */
+	public static function quiz_attempt_details( int $attempt_id ) {
+		global $wpdb;
+
+		$table_quiz_attempt_answers  = $wpdb->prefix . 'tutor_quiz_attempt_answers';
+		$table_quiz_questions        = $wpdb->prefix . 'tutor_quiz_questions';
+		$table_quiz_attempts         = $wpdb->prefix . 'tutor_quiz_attempts';
+		$table_quiz_question_answers = $wpdb->prefix . 'tutor_quiz_question_answers';
+
+		$query = "SELECT 
+				ques.question_id, 
+				ques.question_title, 
+				ques.question_type, 
+				(
+				SELECT 
+					GROUP_CONCAT(answer_title) 
+				FROM 
+					{$table_quiz_question_answers} 
+				WHERE 
+					belongs_question_id = ques.question_id 
+					AND is_correct = 1
+				) AS correct_answers,
+				
+				(
+			
+				SELECT
+			
+				CASE
+					WHEN CHAR_LENGTH(att_ans.given_answer) = 1 AND att_ans.given_answer REGEXP '^[0-9]$' THEN
+					-- If given_answer is a single digit integer
+					(
+						SELECT
+						answer_title
+						FROM
+						{$table_quiz_question_answers}
+						WHERE
+						answer_id = CAST(att_ans.given_answer AS UNSIGNED)
+					)
+					WHEN CHAR_LENGTH(att_ans.given_answer) > 1 AND SUBSTRING(att_ans.given_answer, 1, 2) = 'a:' THEN
+					-- If given_answer is serialized array
+					(
+						att_ans.given_answer
+					)
+					ELSE
+					-- If given_answer is a serialized string
+					att_ans.given_answer
+				END
+				) AS given_answer, 
+				att_ans.question_mark, 
+				att_ans.achieved_mark, 
+				att_ans.is_correct,
+				(
+					SELECT 
+						attempt_info
+					FROM {$table_quiz_attempts}
+					WHERE attempt_id = {$attempt_id}
+					LIMIT 1
+				) AS attempt_info
+			FROM 
+				{$table_quiz_attempt_answers} AS att_ans 
+				JOIN {$table_quiz_questions} AS ques ON ques.question_id = att_ans.question_id 
+				JOIN {$table_quiz_question_answers} AS ans ON ans.answer_id = att_ans.attempt_answer_id 
+			WHERE 
+				quiz_attempt_id = %d
+			LIMIT 
+				50		
+		";
+
+		$result = $wpdb->get_results( $wpdb->prepare( $query, $attempt_id ) );
+
+		// If array and count result then loop with each result and prepare given answer.
+		if ( is_array( $result ) && count( $result ) ) {
+			foreach ( $result as $key => $value ) {
+				// Check if given answer is a serialized string.
+				if ( is_serialized( $value->given_answer ) ) {
+					$given_answers                = tutor_utils()->get_answer_by_id( maybe_unserialize( $value->given_answer ) );
+					$result[ $key ]->given_answer = array_column( $given_answers, 'answer_title' );
+				} elseif ( is_numeric( $value->given_answer ) ) {
+					$given_answers                = tutor_utils()->get_answer_by_id( maybe_unserialize( $value->given_answer ) );
+					$result[ $key ]->given_answer = array_column( $given_answers, 'answer_title' );
+				}
+			}
+		}
+
+		return $result;
+	}
 }
