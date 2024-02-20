@@ -278,7 +278,7 @@ class RestAPI {
 				'methods'             => 'GET',
 				'callback'            => array(
 					$this->announcement_obj,
-					'course_annoucement',
+					'course_announcement',
 				),
 				'args'                => array(
 					'id' => array(
