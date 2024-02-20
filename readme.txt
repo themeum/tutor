@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 2.6.0
+Stable tag: 2.6.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -315,6 +315,13 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.6.1 - February 19, 2024
+
+New: Added API functionality for submitting and retrieving list of quizzes (Pro)
+Update: Improved security to ensure safe submission of questions and answers
+Update: Improved response data, extendability, and performance across all APIs within the Tutor LMS Free plugin
+Fix: Fixed issue causing "Resource not found" error related to ChatGPT (Pro)
 
 = 2.6.0 - January 11, 2024
 

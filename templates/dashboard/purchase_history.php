@@ -69,6 +69,12 @@ $filter_period_calendar = array(
 	'filter_calendar' => true,
 );
 
+?>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24">
+	<?php esc_html_e( 'Order History', 'tutor' ); ?>
+</div>
+<?php
+
 $filter_period_calendar_template = tutor()->path . 'views/elements/purchase-history-filter.php';
 tutor_load_template_from_custom_path( $filter_period_calendar_template, $filter_period_calendar );
 

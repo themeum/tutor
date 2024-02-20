@@ -7,6 +7,10 @@ body {
 			box-sizing: border-box;
 		}
 	}
+
+	.media-modal * {
+		box-sizing: content-box;
+	}
 }
 
 //common and reset css
