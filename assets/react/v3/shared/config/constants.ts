@@ -10,6 +10,11 @@ export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 
 export const isRTL = document.dir === 'rtl';
 
+export const MODAL = {
+  HEADER_HEIGHT: 72,
+  MARGIN_TOP: 60,
+};
+
 export const TutorRoles = {
   ADMINISTRATOR: 'administrator',
   TUTOR_INSTRUCTOR: 'tutor_instructor',

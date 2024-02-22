@@ -4,6 +4,7 @@ import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
+import { MODAL } from '@Config/constants';
 import Show from '@Controls/Show';
 
 interface ModalWrapperProps {
@@ -33,14 +34,7 @@ const ModalWrapper = ({ children, onClose, title, subtitle, icon, entireHeader, 
           fallback={
             <>
               <div css={styles.headerContent}>
-                <div
-                  css={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: spacing[4],
-                    color: colorTokens.icon.default,
-                  }}
-                >
+                <div css={styles.iconWithTitle}>
                   {icon && icon}
                   {title && <h6 css={styles.title}>{title}</h6>}
                 </div>
@@ -76,9 +70,9 @@ const styles = {
     position: relative;
     background: ${colorTokens.background.white};
     margin: ${spacing[24]};
-    margin-top: 150px;
-    max-width: 1472px;
+    margin-top: 60px;
     height: 100%;
+    max-width: 1472px;
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
@@ -112,6 +106,12 @@ const styles = {
         border-radius: ${borderRadius[14]};
       }
     }
+  `,
+  iconWithTitle: css`
+    display: inline-flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    color: ${colorTokens.icon.default};
   `,
   title: css`
     ${typography.heading6('medium')};
@@ -151,8 +151,7 @@ const styles = {
     }
   `,
   content: css`
-    overflow: hidden;
-    height: 100%;
-    max-height: calc(100vh - (150px + 72px)); // top-margin: 150px + header height: 72px
+    height: calc(100% - ${MODAL.HEADER_HEIGHT + MODAL.MARGIN_TOP}px);
+    overflow: auto;
   `,
 };
