@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import Show from '@Controls/Show';
 
 const styles = {
-  container: css`
+  container: (isClearable: boolean) => css`
     position: relative;
     display: flex;
 
     & input {
+      ${isClearable && `padding-right: ${spacing[36]};`};
       ${typography.body()}
       width: 100%;
     }
@@ -31,6 +33,18 @@ const styles = {
       padding: ${spacing[10]};
     }
   `,
+  unit: css`
+    ${typography.small()}
+    color: ${colorTokens.text.hints};
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-inline: ${spacing[8]};
+  `,
 };
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
@@ -46,6 +60,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   onKeyDown?: (keyName: string) => void;
   isHidden?: boolean;
   isClearable?: boolean;
+  unit?: string;
 }
 
 const FormInput = ({
@@ -63,7 +78,11 @@ const FormInput = ({
   onKeyDown,
   isHidden,
   isClearable = false,
+  unit,
 }: FormInputProps) => {
+  const unitRef = useRef<HTMLDivElement>(null);
+  const inputContainerRef = useRef<HTMLInputElement>(null);
+  const closeButtonRef = useRef<HTMLDivElement>(null);
   let inputValue = field.value ?? '';
   let characterCount;
 
@@ -73,6 +92,17 @@ const FormInput = ({
   if (maxLimit) {
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
   }
+
+  useEffect(() => {
+    if (unitRef.current && inputContainerRef.current && field.value) {
+      const input = inputContainerRef.current;
+      const unit = unitRef.current;
+      const closeButton = closeButtonRef.current;
+
+      input.children[0].setAttribute('style', `padding-right: ${unit.offsetWidth + (isClearable ? 36 : 0)}px`);
+      closeButton?.setAttribute('style', `right: ${unit.offsetWidth}px`);
+    }
+  }, [unitRef.current, inputContainerRef.current, field.value]);
 
   return (
     <FormFieldWrapper
@@ -90,11 +120,11 @@ const FormInput = ({
       {(inputProps) => {
         return (
           <>
-            <div css={styles.container}>
+            <div ref={inputContainerRef} css={styles.container(isClearable)}>
               <input
                 {...field}
                 {...inputProps}
-                type="text"
+                type='text'
                 value={inputValue}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -111,15 +141,20 @@ const FormInput = ({
                 onKeyDown={(event) => {
                   onKeyDown && onKeyDown(event.key);
                 }}
-                autoComplete="off"
+                autoComplete='off'
               />
-              {isClearable && !!field.value && (
-                <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange(null)}>
-                    <SVGIcon name="timesAlt" />
+              <Show when={isClearable && !!field.value}>
+                <div ref={closeButtonRef} css={styles.clearButton}>
+                  <Button variant='text' onClick={() => field.onChange(null)}>
+                    <SVGIcon name='timesAlt' />
                   </Button>
                 </div>
-              )}
+              </Show>
+              <Show when={unit}>
+                <div ref={unitRef} css={styles.unit}>
+                  {unit}
+                </div>
+              </Show>
             </div>
           </>
         );
