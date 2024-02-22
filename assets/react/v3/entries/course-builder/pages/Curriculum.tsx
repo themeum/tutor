@@ -5,6 +5,8 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { spacing } from '@Config/styles';
 import SVGIcon from '@Atoms/SVGIcon';
+import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
+import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
 
 const Curriculum = () => {
   return (
@@ -13,7 +15,8 @@ const Curriculum = () => {
 
       <div css={styles.topicsWrapper}>
         <EmptyState
-          emptyStateImage='https://s3-alpha-sig.figma.com/img/0c34/4cc3/a96680ac703fe93a2a04958b75d9f8f2?Expires=1709510400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=nqocug~SIKom1VO2aN9vnsEwTxtVBK10htc1MkSyVXqU7nDplqbHs~3GSGlJHbVYCtpPQUcM3k48ldDRFDybKJx5rgiYaFQeNMNEreRYQ1YrmhiIozN0dRkqEWZEKVxsbT9N9xF0IxpuOnbE1lxwmWbOQn7xIAE6Z67fpdVAB8O7quBRV-59VJJm1znVOpDlRu-ztn~QLNDh~Y5d16BFGbsYawRBYOJOHtiVMyWSFCC9I77cd~gTtXJYKdaNSekfE0IgiZnJSg8QXWyo6NPbhDDSnuz~AcbX~mKDER317kX10xa9J~InN4tTsGU6uVpU1polBjiH7pivQqFH4HAG9A__'
+          emptyStateImage={emptyStateImage}
+          emptyStateImage2x={emptyStateImage2x}
           imageAltText='Empty State Image'
           title='Create the course journey from here!'
           description='when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries'

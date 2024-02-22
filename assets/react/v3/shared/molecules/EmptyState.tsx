@@ -1,24 +1,36 @@
-import Button from '@Atoms/Button';
 import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 
 interface EmptyStateProps {
   emptyStateImage: string;
+  emptyStateImage2x?: string;
   imageAltText: string;
   title: string;
   description?: string;
-  actions: React.ReactNode;
+  actions?: React.ReactNode;
 }
 
-const EmptyState = ({ emptyStateImage, imageAltText, title, description, actions }: EmptyStateProps) => {
+const EmptyState = ({
+  emptyStateImage,
+  emptyStateImage2x,
+  imageAltText,
+  title,
+  description,
+  actions,
+}: EmptyStateProps) => {
   return (
     <div css={styles.bannerWrapper}>
-      <img src={emptyStateImage} alt={imageAltText} />
+      <img src={emptyStateImage} alt={imageAltText} srcSet={emptyStateImage2x ? `${emptyStateImage2x} 2x` : ''} />
       <div css={styles.messageWrapper}>
         <h5 css={styles.title}>{title}</h5>
-        {!!description && <p css={styles.description}>{description}</p>}
-        <div css={styles.actionWrapper}>{actions}</div>
+        <Show when={description}>
+          <p css={styles.description}>{description}</p>
+        </Show>
+        <Show when={actions}>
+          <div css={styles.actionWrapper}>{actions}</div>
+        </Show>
       </div>
     </div>
   );
@@ -35,10 +47,8 @@ const styles = {
     padding-block: ${spacing[20]};
 
     & img {
-      max-width: 412px;
-      max-height: 140px;
-      width: 100%;
-      height: 100%;
+      width: 412px;
+      height: 140px;
       border-radius: ${borderRadius[10]};
       overflow: hidden;
       object-position: center;
@@ -61,7 +71,7 @@ const styles = {
     color: ${colorTokens.text.hints};
   `,
   actionWrapper: css`
-    margin-top: ${spacing[32]};
+    margin-top: ${spacing[20]};
     display: flex;
     justify-content: center;
     align-items: center;
