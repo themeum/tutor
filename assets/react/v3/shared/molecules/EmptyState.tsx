@@ -1,40 +1,24 @@
 import Button from '@Atoms/Button';
-import { colorPalate, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 
 interface EmptyStateProps {
   emptyStateImage: string;
   imageAltText: string;
-  title?: string;
-  content?: string;
-  buttonText?: string;
-  action?: () => void;
-  orientation?: 'horizontal' | 'vertical';
+  title: string;
+  description?: string;
+  actions: React.ReactNode;
 }
 
-const EmptyState = ({
-  emptyStateImage,
-  imageAltText,
-  title,
-  content,
-  buttonText,
-  action,
-  orientation = 'horizontal',
-}: EmptyStateProps) => {
+const EmptyState = ({ emptyStateImage, imageAltText, title, description, actions }: EmptyStateProps) => {
   return (
-    <div css={styles.bannerWrapper({ orientation })}>
+    <div css={styles.bannerWrapper}>
       <img src={emptyStateImage} alt={imageAltText} />
-      <div css={styles.messageWrapper({ orientation })}>
-        {!!title && <h5 css={styles.title}>{title}</h5>}
-        {!!content && <p css={styles.content}>{content}</p>}
-        {!!buttonText && (
-          <div css={styles.buttonWrapper}>
-            <Button variant="primary" onClick={action}>
-              {buttonText}
-            </Button>
-          </div>
-        )}
+      <div css={styles.messageWrapper}>
+        <h5 css={styles.title}>{title}</h5>
+        {!!description && <p css={styles.description}>{description}</p>}
+        <div css={styles.actionWrapper}>{actions}</div>
       </div>
     </div>
   );
@@ -43,46 +27,43 @@ const EmptyState = ({
 export default EmptyState;
 
 const styles = {
-  bannerWrapper: ({ orientation }: { orientation: 'horizontal' | 'vertical' }) => css`
+  bannerWrapper: css`
     display: grid;
     place-items: center;
     justify-content: center;
-    ${orientation === 'horizontal' &&
-    css`
-      grid-template-columns: 278px auto;
-      gap: ${spacing[56]};
-      justify-content: start;
-    `}
+    gap: ${spacing[36]};
+    padding-block: ${spacing[20]};
 
     & img {
-      max-width: 272px;
-      max-height: 272px;
+      max-width: 412px;
+      max-height: 140px;
       width: 100%;
+      border-radius: ${borderRadius[10]};
+      overflow: hidden;
+      object-position: center;
+      object-fit: cover;
     }
   `,
-  messageWrapper: ({ orientation }: { orientation: 'horizontal' | 'vertical' }) => css`
+  messageWrapper: css`
     display: flex;
     flex-direction: column;
-    max-width: 432px;
-    gap: ${spacing[8]};
-
-    ${orientation === 'horizontal' &&
-    css`
-      max-width: 364px;
-    `}
-    ${orientation === 'vertical' &&
-    css`
-      text-align: center;
-    `}
+    max-width: 566px;
+    gap: ${spacing[12]};
+    text-align: center;
   `,
   title: css`
     ${typography.heading5()};
+    color: ${colorTokens.text.primary};
   `,
-  content: css`
+  description: css`
     ${typography.body()};
-    color: ${colorPalate.text.neutral};
+    color: ${colorTokens.text.hints};
   `,
-  buttonWrapper: css`
+  actionWrapper: css`
     margin-top: ${spacing[32]};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: ${spacing[12]};
   `,
 };
