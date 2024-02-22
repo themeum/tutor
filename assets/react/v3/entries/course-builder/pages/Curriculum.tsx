@@ -1,32 +1,43 @@
+import React from 'react';
 import Button from '@Atoms/Button';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import EmptyState from '@Molecules/EmptyState';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { spacing } from '@Config/styles';
 import SVGIcon from '@Atoms/SVGIcon';
-import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
-import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
+import { useModal } from '@Components/modals/Modal';
+import ReferenceModal from '@Components/modals/ReferenceModal';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import { __ } from '@wordpress/i18n';
+import { css } from '@emotion/react';
+import { spacing } from '@Config/styles';
 
 const Curriculum = () => {
+  const { showModal, closeModal } = useModal();
   return (
     <div css={styles.wrapper}>
       <CanvasHead title={__('Curriculum', 'tutor')} rightButton={<Button variant='text'>Expand All</Button>} />
 
-      <div css={styles.topicsWrapper}>
-        <EmptyState
-          emptyStateImage={emptyStateImage}
-          emptyStateImage2x={emptyStateImage2x}
-          imageAltText='Empty State Image'
-          title='Create the course journey from here!'
-          description='when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries'
-          actions={
-            <Button variant='secondary' icon={<SVGIcon name='plusSquare' />}>
-              Add Topic
-            </Button>
-          }
-        />
-      </div>
+      <Button
+        onClick={() =>
+          showModal({
+            component: ReferenceModal,
+            props: {
+              icon: <SVGIcon name='note' height={24} width={24} />,
+              title: 'Title',
+              subtitle: 'Subtitle',
+              actions: (
+                <>
+                  <Button variant='secondary' onClick={() => closeModal({ action: 'CLOSE' })}>
+                    Cancel
+                  </Button>
+                  <Button variant='primary' onClick={() => closeModal({ action: 'CONFIRM' })}>
+                    Save
+                  </Button>
+                </>
+              ),
+            },
+          })
+        }
+      >
+        Show Modal
+      </Button>
     </div>
   );
 };
