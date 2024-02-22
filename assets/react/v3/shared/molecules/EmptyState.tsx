@@ -38,6 +38,7 @@ const styles = {
       max-width: 412px;
       max-height: 140px;
       width: 100%;
+      height: 100%;
       border-radius: ${borderRadius[10]};
       overflow: hidden;
       object-position: center;
