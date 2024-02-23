@@ -7,6 +7,7 @@ import { css } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import { parseNumberOnly } from '@Utils/util';
 
 const styles = {
   container: css`
@@ -68,7 +69,7 @@ const FormInput = ({
   let characterCount;
 
   if (type === 'number') {
-    inputValue = `${inputValue}`.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
   }
   if (maxLimit) {
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
@@ -94,13 +95,12 @@ const FormInput = ({
               <input
                 {...field}
                 {...inputProps}
-                type="text"
+                type='text'
                 value={inputValue}
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  const fieldValue: string | number =
-                    type === 'number' ? value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1') : value;
+                  const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
 
                   field.onChange(fieldValue);
 
@@ -111,12 +111,12 @@ const FormInput = ({
                 onKeyDown={(event) => {
                   onKeyDown && onKeyDown(event.key);
                 }}
-                autoComplete="off"
+                autoComplete='off'
               />
               {isClearable && !!field.value && (
                 <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange(null)}>
-                    <SVGIcon name="timesAlt" />
+                  <Button variant='text' onClick={() => field.onChange(null)}>
+                    <SVGIcon name='timesAlt' />
                   </Button>
                 </div>
               )}

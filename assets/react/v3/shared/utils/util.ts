@@ -248,3 +248,7 @@ export const formatBytes = (bytes: number, decimals = 2) => {
 
   return `${parseFloat((bytes / Math.pow(kilobit, index)).toFixed(decimal))} ${sizes[index]}`;
 };
+
+export const parseNumberOnly = (value: string) => {
+  return value.replace(/[^-0-9.]/g, '');
+};
