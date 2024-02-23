@@ -64,7 +64,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
                 <FormInput
                   {...controllerProps}
                   label={__('Lesson Name', 'tutor')}
-                  placeholder={__('Enter Lesson name', 'tutor')}
+                  placeholder={__('Enter Lesson Name', 'tutor')}
                   maxLimit={245}
                   isClearable
                 />
@@ -77,7 +77,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
                 <FormTextareaInput
                   {...controllerProps}
                   label={__('Description', 'tutor')}
-                  placeholder={__('Enter Lesson name', 'tutor')}
+                  placeholder={__('Enter Lesson Description', 'tutor')}
                 />
               )}
             />
@@ -196,11 +196,10 @@ const styles = {
   `,
   lessonInfo: css`
     padding-block: ${spacing[24]};
-    padding-left: ${spacing[24]};
-    padding-right: ${spacing[64]};
+    padding-inline: ${spacing[24]} ${spacing[64]};
     display: flex;
     flex-direction: column;
-    row-gap: ${spacing[24]};
+    gap: ${spacing[24]};
     align-self: start;
     position: sticky;
     top: 0;
@@ -209,7 +208,7 @@ const styles = {
     border-left: 1px solid ${colorTokens.stroke.divider};
     display: flex;
     flex-direction: column;
-    row-gap: ${spacing[16]};
+    gap: ${spacing[16]};
     padding-block: ${spacing[24]};
     padding-right: ${spacing[24]};
     padding-left: ${spacing[64]};
@@ -217,7 +216,7 @@ const styles = {
   duration: css`
     display: flex;
     align-items: flex-end;
-    column-gap: ${spacing[8]};
+    gap: ${spacing[8]};
   `,
   durationContent: css`
     ${typography.small()};
@@ -227,7 +226,7 @@ const styles = {
   uploadAttachment: css`
     display: flex;
     flex-direction: column;
-    row-gap: ${spacing[8]};
+    gap: ${spacing[8]};
   `,
   uploadLabel: css`
     ${typography.body()}
