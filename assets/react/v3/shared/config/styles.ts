@@ -535,6 +535,7 @@ export const borderRadius = {
   40: '40px',
   50: '50px',
   circle: '50%',
+  card: '8px',
 } as const;
 
 export const zIndex = {

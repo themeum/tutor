@@ -20,7 +20,7 @@ module.exports = (env, options) => {
           use: 'babel-loader',
         },
         {
-          test: /\.(png|jp(e*)g|svg|gif)$/,
+          test: /\.(png|jp(e*)g|svg|gif|webp)$/,
           use: [
             {
               loader: 'file-loader',
@@ -141,12 +141,14 @@ module.exports = (env, options) => {
             '@Services': path.resolve(__dirname, './assets/react/v3/shared/services/'),
             '@Utils': path.resolve(__dirname, './assets/react/v3/shared/utils/'),
             '@Images': path.resolve(__dirname, './assets/images/'),
+            '@Controls': path.resolve(__dirname, './assets/react/v3/shared/controls/'),
             '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
             '@CourseBuilderServices': path.resolve(__dirname, './assets/react/v3/entries/course-builder/services/'),
             '@CourseBuilderConfig': path.resolve(__dirname, './assets/react/v3/entries/course-builder/config/'),
             '@CourseBuilderPages': path.resolve(__dirname, './assets/react/v3/entries/course-builder/pages/'),
             '@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
             '@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
+            '@CourseBuilderPublic': path.resolve(__dirname, './assets/react/v3/entries/course-builder/public/'),
           },
         },
       })

@@ -1,4 +1,4 @@
-import { CourseFormData, CoursePayload, GetCourseDetailsResponse } from '@CourseBuilderServices/course';
+import { CourseFormData, CoursePayload, CourseDetailsResponse } from '@CourseBuilderServices/course';
 
 export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
   return {
@@ -14,7 +14,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
       source: '',
     }),
     course_categories: data.course_categories,
-    course_tags: data.course_tags.map((item) => item.id),
+    course_tags: data.course_tags.map(item => item.id),
     thumbnail_id: data.thumbnail?.id ?? null,
     enable_qna: data.enable_qna ? 'yes' : 'no',
     is_public_course: data.is_public_course ? 'yes' : 'no',
@@ -27,7 +27,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
   };
 };
 
-export const convertCourseDataToFormData = (courseDetails: GetCourseDetailsResponse): CourseFormData => {
+export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
@@ -52,8 +52,8 @@ export const convertCourseDataToFormData = (courseDetails: GetCourseDetailsRespo
     course_price_type: courseDetails.course_price_type,
     course_price: courseDetails.course_price,
     course_sale_price: courseDetails.course_sale_price,
-    course_categories: courseDetails.course_categories.map((item) => item.term_id),
-    course_tags: courseDetails.course_tags.map((item) => {
+    course_categories: courseDetails.course_categories.map(item => item.term_id),
+    course_tags: courseDetails.course_tags.map(item => {
       return {
         id: item.term_id,
         name: item.name,
@@ -66,4 +66,10 @@ export const convertCourseDataToFormData = (courseDetails: GetCourseDetailsRespo
     maximum_students: courseDetails.course_settings.maximum_students,
     enrollment_expiration: '',
   };
+};
+
+export const getCourseId = () => {
+  const params = new URLSearchParams(window.location.search);
+  const courseId = params.get('course_id');
+  return Number(courseId);
 };

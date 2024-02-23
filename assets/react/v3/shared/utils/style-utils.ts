@@ -286,4 +286,45 @@ export const styleUtils = {
     overflow: hidden;
     white-space: nowrap;
   `,
+  display: {
+    flex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
+      display: flex;
+      flex-direction: ${direction};
+    `,
+    inlineFlex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
+      display: inline-flex;
+      flex-direction: ${direction};
+    `,
+    none: css`
+      display: none;
+    `,
+    block: css`
+      display: block;
+    `,
+    inlineBlock: css`
+      display: inline-block;
+    `,
+  },
+  text: {
+    ellipsis: (lines = 1) => css`
+      display: -webkit-box;
+      -webkit-line-clamp: ${lines};
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    `,
+    align: {
+      center: css`
+        text-align: center;
+      `,
+      left: css`
+        text-align: left;
+      `,
+      right: css`
+        text-align: right;
+      `,
+      justify: css`
+        text-align: justify;
+      `,
+    },
+  },
 };
