@@ -10,7 +10,7 @@ import { spacing } from '@Config/styles';
 import AddLessonModal from '@Components/modals/AddLessonModal';
 
 const Curriculum = () => {
-  const { showModal, closeModal } = useModal();
+  const { showModal } = useModal();
   return (
     <div css={styles.wrapper}>
       <CanvasHead title={__('Curriculum', 'tutor')} rightButton={<Button variant='text'>Expand All</Button>} />
@@ -23,16 +23,6 @@ const Curriculum = () => {
               icon: <SVGIcon name='note' height={24} width={24} />,
               title: 'Lesson',
               subtitle: 'Topic: Learn to use ChatGPT effectively',
-              actions: (
-                <>
-                  <Button variant='secondary' onClick={() => closeModal({ action: 'CLOSE' })}>
-                    Cancel
-                  </Button>
-                  <Button variant='primary' onClick={() => closeModal({ action: 'CONFIRM' })}>
-                    Save
-                  </Button>
-                </>
-              ),
             },
           })
         }

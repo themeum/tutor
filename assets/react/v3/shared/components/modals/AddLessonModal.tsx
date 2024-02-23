@@ -7,19 +7,35 @@ import { Controller } from 'react-hook-form';
 import FormInput from '@Components/fields/FormInput';
 import { __ } from '@wordpress/i18n';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import FormImageInput from '@Components/fields/FormImageInput';
+import FormImageInput, { Media } from '@Components/fields/FormImageInput';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { typography } from '@Config/typography';
 import FormSwitch from '@Components/fields/FormSwitch';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import FormInputWithContent from '@Components/fields/FormInputWithContent';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
 }
 
-const AddLessonModal = ({ closeModal, icon, title, subtitle, actions }: AddLessonModalProps) => {
-  const form = useFormWithGlobalError();
+interface AddLessonForm {
+  lesson_name: string;
+  description: string;
+  featured_image: Media | null;
+  duration_hour: number;
+  duration_min: number;
+  duration_sec: number;
+  lesson_preview: boolean;
+}
+
+const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalProps) => {
+  const form = useFormWithGlobalError<AddLessonForm>();
+
+  const onSubmit = (data: AddLessonForm) => {
+    console.log(data);
+    closeModal({ action: 'CONFIRM' });
+  };
 
   return (
     <ModalWrapper
@@ -27,7 +43,16 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle, actions }: AddLesso
       icon={icon}
       title={title}
       subtitle={subtitle}
-      actions={actions}
+      actions={
+        <>
+          <Button variant='text' onClick={() => closeModal({ action: 'CLOSE' })}>
+            Cancel
+          </Button>
+          <Button variant='primary' onClick={form.handleSubmit(onSubmit)}>
+            Save
+          </Button>
+        </>
+      }
     >
       <div css={{ width: '1472px', height: '100%' }}>
         <div css={styles.wrapper}>
@@ -41,12 +66,12 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle, actions }: AddLesso
                   label={__('Lesson Name', 'tutor')}
                   placeholder={__('Enter Lesson name', 'tutor')}
                   maxLimit={245}
+                  isClearable
                 />
               )}
             />
-
             <Controller
-              name='lesson_description'
+              name='description'
               control={form.control}
               render={(controllerProps) => (
                 <FormTextareaInput
@@ -57,9 +82,10 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle, actions }: AddLesso
               )}
             />
           </div>
+
           <div css={styles.rightPanel}>
             <Controller
-              name='thumbnail'
+              name='featured_image'
               control={form.control}
               render={(controllerProps) => (
                 <FormImageInput
@@ -70,8 +96,8 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle, actions }: AddLesso
                 />
               )}
             />
-
-            <Controller
+            {/* // @TODO: Need to add FormVideo component when its implemented*/}
+            {/* <Controller
               name='thumbnail'
               control={form.control}
               render={(controllerProps) => (
@@ -82,31 +108,57 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle, actions }: AddLesso
                   infoText={__('Size: 700x430 pixels', 'tutor')}
                 />
               )}
-            />
-
+            /> */}
             <div css={styles.duration}>
               <Controller
                 name='duration_hour'
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormInput {...controllerProps} label={__('Duration', 'tutor')} placeholder={__('hour', 'tutor')} />
+                  <FormInputWithContent
+                    {...controllerProps}
+                    type='number'
+                    content={<span css={styles.durationContent}>{__('hour', 'tutor')}</span>}
+                    contentPosition='right'
+                    label={__('Duration', 'tutor')}
+                    placeholder='0'
+                    showVerticalBar={false}
+                  />
                 )}
               />
               <Controller
-                name='duration_hour'
+                name='duration_min'
                 control={form.control}
-                render={(controllerProps) => <FormInput {...controllerProps} placeholder={__('min', 'tutor')} />}
+                render={(controllerProps) => (
+                  <FormInputWithContent
+                    {...controllerProps}
+                    type='number'
+                    content={<span css={styles.durationContent}>{__('min', 'tutor')}</span>}
+                    contentPosition='right'
+                    placeholder='0'
+                    showVerticalBar={false}
+                  />
+                )}
               />
               <Controller
-                name='duration_hour'
+                name='duration_sec'
                 control={form.control}
-                render={(controllerProps) => <FormInput {...controllerProps} placeholder={__('sec', 'tutor')} />}
+                render={(controllerProps) => (
+                  <FormInputWithContent
+                    {...controllerProps}
+                    type='number'
+                    content={<span css={styles.durationContent}>{__('sec', 'tutor')}</span>}
+                    contentPosition='right'
+                    placeholder='0'
+                    showVerticalBar={false}
+                  />
+                )}
               />
             </div>
+
             <div css={styles.uploadAttachment}>
               <span css={styles.uploadLabel}>Exercise Files</span>
               <Button
-                icon={<SVGIcon name='attach' />}
+                icon={<SVGIcon name='attach' height={24} width={24} />}
                 variant='secondary'
                 buttonContentCss={css`
                   justify-content: center;
@@ -166,8 +218,12 @@ const styles = {
     display: flex;
     align-items: flex-end;
     column-gap: ${spacing[8]};
-    /* max-height: 62px; */
   `,
+  durationContent: css`
+    ${typography.small()};
+    color: ${colorTokens.text.hints};
+  `,
+
   uploadAttachment: css`
     display: flex;
     flex-direction: column;

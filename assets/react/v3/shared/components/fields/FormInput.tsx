@@ -33,18 +33,6 @@ const styles = {
       padding: ${spacing[10]};
     }
   `,
-  unit: css`
-    ${typography.small()}
-    color: ${colorTokens.text.hints};
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-inline: ${spacing[8]};
-  `,
 };
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
@@ -60,7 +48,6 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   onKeyDown?: (keyName: string) => void;
   isHidden?: boolean;
   isClearable?: boolean;
-  unit?: string;
 }
 
 const FormInput = ({
@@ -78,7 +65,6 @@ const FormInput = ({
   onKeyDown,
   isHidden,
   isClearable = false,
-  unit,
 }: FormInputProps) => {
   let inputValue = field.value ?? '';
   let characterCount;
@@ -135,9 +121,6 @@ const FormInput = ({
                     <SVGIcon name='timesAlt' />
                   </Button>
                 </div>
-              </Show>
-              <Show when={unit}>
-                <div css={styles.unit}>{unit}</div>
               </Show>
             </div>
           </>
