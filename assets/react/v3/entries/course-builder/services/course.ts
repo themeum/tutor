@@ -97,12 +97,12 @@ export interface CoursePayload {
   };
 }
 
-interface GetCourseDetailsPayload {
+interface CourseDetailsPayload {
   action: string;
   course_id: number;
 }
-
-export interface GetCourseDetailsResponse {
+export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
+export interface CourseDetailsResponse {
   ID: number;
   post_author: {
     ID: string;
@@ -196,6 +196,7 @@ export interface GetCourseDetailsResponse {
     content_drip_type: string;
     enable_content_drip: number;
   };
+  step_completion_status: Record<CourseBuilderSteps, boolean>;
 }
 
 interface CourseResponse {
@@ -207,7 +208,7 @@ interface CourseResponse {
 const createCourse = (payload: CoursePayload) => {
   return authApiInstance.post<CoursePayload, CourseResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_create_course',
-    ...payload
+    ...payload,
   });
 };
 
@@ -216,7 +217,7 @@ export const useCreateCourseMutation = () => {
 
   return useMutation({
     mutationFn: createCourse,
-    onSuccess: (response) => {
+    onSuccess: response => {
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: any) => {
@@ -228,7 +229,7 @@ export const useCreateCourseMutation = () => {
 const updateCourse = (payload: CoursePayload) => {
   return authApiInstance.post<CoursePayload, CourseResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_update_course',
-    ...payload
+    ...payload,
   });
 };
 
@@ -237,7 +238,7 @@ export const useUpdateCourseMutation = () => {
 
   return useMutation({
     mutationFn: updateCourse,
-    onSuccess: (response) => {
+    onSuccess: response => {
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: any) => {
@@ -247,19 +248,16 @@ export const useUpdateCourseMutation = () => {
 };
 
 const getCourseDetails = (courseId: number) => {
-  return authApiInstance.post<GetCourseDetailsPayload, AxiosResponse<GetCourseDetailsResponse>>(
-    endpoints.ADMIN_AJAX,
-    {
-      action: 'tutor_course_details',
-      course_id: courseId,
-    }
-  );
+  return authApiInstance.post<CourseDetailsPayload, AxiosResponse<CourseDetailsResponse>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_course_details',
+    course_id: courseId,
+  });
 };
 
 export const useCourseDetailsQuery = (courseId: number) => {
   return useQuery({
     queryKey: ['CourseDetails', courseId],
-    queryFn: () => getCourseDetails(courseId).then((res) => res.data),
+    queryFn: () => getCourseDetails(courseId).then(res => res.data),
     enabled: !!courseId,
   });
 };

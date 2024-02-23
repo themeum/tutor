@@ -33,7 +33,8 @@
       "@CourseBuilderServices/*": ["assets/react/v3/entries/course-builder/services/*"],
       "@CourseBuilderConfig/*": ["assets/react/v3/entries/course-builder/config/*"],
       "@CourseBuilderPages/*": ["assets/react/v3/entries/course-builder/pages/*"],
-      "@CourseBuilderUtils/*": ["assets/react/v3/entries/course-builder/utils/*"]
+      "@CourseBuilderUtils/*": ["assets/react/v3/entries/course-builder/utils/*"],
+      "@CourseBuilderContexts/*": ["assets/react/v3/entries/course-builder/contexts/*"]
     }
   },
   "include": ["./assets/react/v3"],

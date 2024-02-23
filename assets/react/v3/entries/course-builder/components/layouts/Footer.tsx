@@ -1,22 +1,92 @@
 import Button, { ButtonSize, ButtonVariant } from '@Atoms/Button';
 import { colorPalate, colorTokens, spacing, zIndex } from '@Config/styles';
+import routes from '@CourseBuilderConfig/routes';
+import { useSidebar } from '@CourseBuilderContexts/SidebarContext';
+import { useCurrentPath } from '@Hooks/useCurrentPath';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-type FooterProps = {
-  completion: number;
-  onNextClick: () => void;
-  onPrevClick: () => void;
-};
+const Footer = () => {
+  const { steps, setSteps } = useSidebar();
+  const currentPath = useCurrentPath(routes);
+  const navigate = useNavigate();
 
-const Footer = ({ completion, onNextClick, onPrevClick }: FooterProps) => {
+  const completion = useMemo(() => {
+    const totalSteps = steps.length;
+    const curriculumIndex = steps.findIndex(item => item.path === currentPath);
+    return (100 / totalSteps) * (curriculumIndex + 1);
+  }, [steps, currentPath]);
+
+  const handlePreviousClick = () => {
+    const currentIndex = steps.findIndex(item => item.path === currentPath);
+    const previousIndex = Math.max(0, currentIndex - 1);
+    const previousStep = steps[previousIndex];
+
+    setSteps(previous => {
+      return [...previous].map((item, index) => {
+        if (index === currentIndex) {
+          return {
+            ...item,
+            isVisited: true,
+            isActive: false,
+          };
+        }
+
+        if (index === previousIndex) {
+          return {
+            ...item,
+            isVisited: true,
+            isActive: true,
+          };
+        }
+
+        return item;
+      });
+    });
+
+    navigate(previousStep.path);
+  };
+
+  const handleNextClick = () => {
+    const currentIndex = steps.findIndex(item => item.path === currentPath);
+    const nextIndex = Math.min(steps.length - 1, currentIndex + 1);
+    const nextStep = steps[nextIndex];
+
+    setSteps(previous => {
+      return [...previous].map((item, index) => {
+        if (index === currentIndex) {
+          return {
+            ...item,
+            isVisited: true,
+            isCompleted: true,
+            isActive: false,
+          };
+        }
+
+        if (index === nextIndex) {
+          return {
+            ...item,
+            isVisited: true,
+            isActive: true,
+          };
+        }
+
+        return item;
+      });
+    });
+
+    navigate(nextStep.path);
+  };
+
   return (
     <div css={styles.wrapper(completion)}>
       <div css={styles.buttonWrapper}>
-        <Button variant="secondary" size="small" onClick={onPrevClick}>
+        <Button variant="secondary" size="small" onClick={handlePreviousClick}>
           {__('Previous', 'tutor')}
         </Button>
-        <Button variant="secondary" size="small" onClick={onNextClick}>
+        <Button variant="secondary" size="small" onClick={handleNextClick}>
           {__('Next', 'tutor')}
         </Button>
       </div>

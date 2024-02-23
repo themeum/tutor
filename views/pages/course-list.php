@@ -209,7 +209,7 @@ $future_list = array(
 								}
 
 								$author_details = $authors[ $post->post_author ];
-								$edit_link      = $add_course_url . "&course-id=$post->ID";
+								$edit_link      = $add_course_url . "&course_id=$post->ID";
 								?>
 								<tr>
 									<td>

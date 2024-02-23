@@ -775,6 +775,12 @@ class Course extends Tutor_Base {
 			'course_material_includes' => get_post_meta( $course_id, '_tutor_course_material_includes', true ),
 			'course_price_type'        => get_post_meta( $course_id, '_tutor_course_price_type', true ),
 			'course_settings'          => get_post_meta( $course_id, '_tutor_course_settings', true ),
+			'step_completion_status'   => [
+				'basic' => true,
+				'curriculum' => false,
+				'additional' => false,
+				'certificate' => false,
+			],
 		);
 
 		$data = apply_filters( 'tutor_course_data', array_merge( $course, $data ) );

@@ -1,38 +1,37 @@
-import ProgressStep, { ProgressStatus } from '@Atoms/ProgressStep';
+import ProgressStep from '@Atoms/ProgressStep';
 import { defineRoute } from '@Config/route-configs';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
-import { CourseProgressSteps, Option } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useNavigate } from 'react-router-dom';
+import { Step, useSidebar } from '../../contexts/SidebarContext';
 
-type SidebarProps = {
-  progressSteps: Option<string>[];
-  activeStep: string;
-  setActiveStep: (step: CourseProgressSteps) => void;
-  completedSteps: string[];
-};
-
-const Sidebar = ({ progressSteps, activeStep, setActiveStep, completedSteps }: SidebarProps) => {
+const Sidebar = () => {
   const navigate = useNavigate();
-
-  const getStatus = (step: Option<string>): ProgressStatus => {
-    if (step.value === activeStep) {
-      return 'active';
-    }
-
-    if (completedSteps.includes(step.value)) {
-      return 'completed';
-    }
-
-    return 'inactive';
-  };
+  const { steps, setSteps } = useSidebar();
 
   return (
     <div css={styles.sidebar}>
       <div css={styles.progressWrapper}>
-        {progressSteps.map((step, idx) => (
-          <ProgressStep key={idx} step={step} status={getStatus(step)} onClick={() => navigate(step.value)} />
+        {steps.map((step, idx) => (
+          <ProgressStep
+            key={idx}
+            step={step}
+            index={idx}
+            onClick={() => {
+              setSteps(previous =>
+                [...previous].map((item, index) => {
+                  return {
+                    ...item,
+                    isActive: idx === index ? true : item.isActive,
+                    isVisited: idx === index ? true : item.isVisited,
+                  };
+                })
+              );
+
+              navigate(step.path);
+            }}
+          />
         ))}
       </div>
     </div>
