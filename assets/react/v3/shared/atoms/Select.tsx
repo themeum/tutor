@@ -3,7 +3,6 @@ import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { useDebounce } from '@Hooks/useDebounce';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { useTranslation } from '@Hooks/useTranslation';
 import { styleUtils } from '@Utils/style-utils';
 import { Option } from '@Utils/types';
 import { nanoid, noop } from '@Utils/util';
@@ -13,6 +12,7 @@ import Button from './Button';
 import LoadingSpinner from './LoadingSpinner';
 import SVGIcon from './SVGIcon';
 import useIntersectionObserver from '@Hooks/useIntersectionObserver';
+import { __ } from '@wordpress/i18n';
 
 type OptionsStyleVariant = 'regular' | 'small';
 
@@ -58,7 +58,6 @@ const Select = <T,>({
   disabled,
   optionsStyleVariant = 'regular',
 }: SelectProps<T>) => {
-  const t = useTranslation();
   const id = nanoid();
 
   const [inputValue, setInputValue] = useState('');
@@ -187,7 +186,7 @@ const Select = <T,>({
               <Button
                 variant='text'
                 disabled={inputValue === ''}
-                icon={<SVGIcon name='cross' />}
+                icon={<SVGIcon name='delete' />}
                 onClick={() => {
                   clearOption();
                   setInputValue('');
@@ -195,7 +194,7 @@ const Select = <T,>({
                   setIsOpen(false);
                 }}
               >
-                {t('COM_SPPAGEBUILDER_EDITOR_FORM_SELECT_CLEAR')}
+                {__('Clear', 'tutor')}
               </Button>
             </div>
           )}
@@ -244,11 +243,11 @@ const styles = {
   input: ({ isSearchable }: { isSearchable: boolean }) => css`
     ${typography.body()};
     width: 100%;
-    height: 32px;
-    border-radius: ${borderRadius[5]};
-    border: 1px solid ${colorTokens.stroke.neutral};
+    height: 40px;
+    border-radius: ${borderRadius[6]};
+    border: 1px solid ${colorTokens.stroke.default};
     box-shadow: ${shadow.input};
-    padding: 0 ${spacing[32]} 0 ${spacing[12]};
+    padding: ${spacing[8]} ${spacing[32]} ${spacing[8]} ${spacing[16]};
     color: ${colorPalate.text.default};
     appearance: textfield;
 
@@ -259,7 +258,7 @@ const styles = {
 
     :focus {
       outline: none;
-      box-shadow: ${shadow.input};
+      box-shadow: ${shadow.focus};
     }
 
     ::-webkit-outer-spin-button,
@@ -274,7 +273,7 @@ const styles = {
   `,
   clearButton: ({ isDisabled = false }: { isDisabled: boolean }) => css`
     padding: ${spacing[4]} ${spacing[8]};
-    border-top: 1px solid ${colorTokens.stroke.neutral};
+    border-top: 1px solid ${colorTokens.stroke.default};
     display: flex;
     justify-content: center;
     min-height: 40px;
@@ -290,7 +289,7 @@ const styles = {
 
       ${!isDisabled &&
       css`
-        color: ${colorTokens.text.primary};
+        color: ${colorTokens.text.title};
 
         &:hover {
           text-decoration: underline;
@@ -302,7 +301,7 @@ const styles = {
     position: absolute;
     width: 100%;
     z-index: ${zIndex.dropdown};
-    background-color: ${colorPalate.basic.white};
+    background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
   `,
@@ -341,7 +340,7 @@ const styles = {
     `}
 
     &:hover {
-      background-color: ${colorPalate.background.hover};
+      background-color: ${colorTokens.background.hover};
     }
 
     ${optionsStyleVariant === 'small' &&
@@ -370,11 +369,15 @@ const styles = {
   `,
   optionButton: ({ fontWeight = 'inherit' }: { fontWeight: string | number }) => css`
     width: 100%;
-    padding: ${spacing[8]} ${spacing[12]};
+    padding: ${spacing[0]} ${spacing[12]};
     font-weight: ${fontWeight};
+    color: ${colorTokens.text.title};
+    :hover {
+      text-decoration: none;
+    }
   `,
   toggleIcon: ({ isOpen = false }: { isOpen: boolean }) => css`
-    color: ${colorPalate.icon.default};
+    color: ${colorTokens.icon.default};
     transition: transform 0.3s ease-in-out;
 
     ${isOpen &&
@@ -397,6 +400,8 @@ const styles = {
     bottom: 0;
     right: ${spacing[8]};
     margin: auto 0;
+    display: flex;
+    align-items: center;
   `,
   spinnerWrapper: ({ isVisible = false }: { isVisible: boolean }) => css`
     width: 100%;
