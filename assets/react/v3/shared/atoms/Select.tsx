@@ -268,7 +268,7 @@ const styles = {
     }
 
     ::placeholder {
-      color: ${colorTokens.text.hints};
+      color: ${colorTokens.text.subdued};
     }
   `,
   clearButton: ({ isDisabled = false }: { isDisabled: boolean }) => css`

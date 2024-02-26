@@ -155,17 +155,16 @@ const styles = {
     ${typography.body()}
 
     width: 100%;
-    height: 32px;
+    height: 40px;
     border-radius: ${borderRadius[5]};
-    border: 1px solid ${colorTokens.stroke.neutral};
-    box-shadow: ${shadow.input};
+    border: 1px solid ${colorTokens.stroke.default};
     padding: 0 ${spacing[32]} 0 ${spacing[12]};
     color: ${colorPalate.text.default};
     appearance: textfield;
 
     :focus {
       outline: none;
-      box-shadow: none;
+      box-shadow: ${shadow.focus};
     }
 
     ::-webkit-outer-spin-button,
@@ -175,7 +174,7 @@ const styles = {
     }
 
     ::placeholder {
-      color: ${colorTokens.text.hints};
+      color: ${colorTokens.text.subdued};
     }
 
     ${variant === 'search' &&
