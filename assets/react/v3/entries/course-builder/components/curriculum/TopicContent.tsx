@@ -8,7 +8,7 @@ import { IconCollection } from '@Utils/types';
 import { css } from '@emotion/react';
 import React from 'react';
 
-type ContentType = 'lesson' | 'quiz' | 'assignment';
+type ContentType = 'lesson' | 'quiz' | 'assignment' | 'zoom' | 'meet';
 interface TopicContentProps {
   type: ContentType;
   content: TopicContentType;
@@ -26,6 +26,14 @@ const icons = {
   assignment: {
     name: 'assignment',
     color: colorTokens.icon.processing,
+  },
+  zoom: {
+    name: 'zoomColorize',
+    color: '',
+  },
+  meet: {
+    name: 'googleMeetColorize',
+    color: '',
   },
 } as const;
 
@@ -119,6 +127,7 @@ const styles = {
 
     :hover {
       border-color: ${colorTokens.stroke.border};
+      background-color: ${colorTokens.background.white};
 
       [data-content-icon] {
         display: none;

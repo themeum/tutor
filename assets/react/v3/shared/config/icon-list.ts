@@ -120,8 +120,12 @@ const collection = {
     viewBox: '0 0 20 20',
   },
   threeDots: {
-    icon: '<path d="M3 2a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" stroke="#5C5E62" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
-    viewBox: '0 0 20 4',
+    icon: '<circle cx="9.5" cy="16" r="1.75" transform="rotate(-90 9.5 16)" fill="currentColor"/><circle cx="16" cy="16" r="1.75" transform="rotate(-90 16 16)" fill="currentColor"/><circle cx="22.5" cy="16" r="1.75" transform="rotate(-90 22.5 16)" fill="currentColor"/>',
+    viewBox: '0 0 32 32',
+  },
+  threeDotsVertical: {
+    icon: '<circle cx="16" cy="9.5" r="1.75" fill="currentColor"/><circle cx="16" cy="16" r="1.75" fill="currentColor"/><circle cx="16" cy="22.5" r="1.75" fill="currentColor"/>',
+    viewBox: '0 0 32 32',
   },
   plusSquare: {
     icon: '<path d="M8 4.625v6.75M11.375 8h-6.75m-2.41 6.75h11.57a.964.964 0 0 0 .965-.964V2.214a.964.964 0 0 0-.964-.964H2.214a.964.964 0 0 0-.964.964v11.572c0 .532.432.964.964.964Z" stroke="#5C5E62" stroke-linecap="round" stroke-linejoin="round" fill="none" />',
@@ -355,8 +359,20 @@ const collection = {
     icon: '<path d="M4 5h16M4 11.75h16M4 18.5h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
     viewBox: '0 0 24 24',
   },
-  threeDotsVertical: {
-    icon: '<path fill-rule="evenodd" clip-rule="evenodd" d="M10.375 12a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM10.375 18a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM10.375 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" fill="currentColor"/>',
+  googleMeet: {
+    icon: '<path fill-rule="evenodd" clip-rule="evenodd" d="M4 9.32 7.748 5.5h7.862c.606 0 1.097.5 1.097 1.118v2.5l2.395-2c.36-.3.898-.04.898.432v9.409c0 .467-.527.728-.887.442l-2.406-2.01v2.406c0 .618-.49 1.118-1.097 1.118H5.097c-.606 0-1.097-.5-1.097-1.118V9.32Zm9.05 2.888V9.32H7.748v5.776h5.302v-2.888Z" fill="currentColor"/>',
+    viewBox: '0 0 24 24',
+  },
+  zoom: {
+    icon: '<path fill-rule="evenodd" clip-rule="evenodd" d="M21 12.004A9 9 0 0 0 11.996 3C7.028 3 3 7.028 3 12.004A8.997 8.997 0 0 0 11.996 21C16.973 21 21 16.972 21 12.004ZM6.857 9h5.91s1.443.147 1.492 1.35v4.643h-5.72s-1.632.198-1.682-1.55V9Zm10.286 6V9l-2.545 1.799v2.446l2.545 1.754Z" fill="currentColor"/>',
+    viewBox: '0 0 24 24',
+  },
+  googleMeetColorize: {
+    icon: '<path d="m13.26 12.01 1.851 2.114 2.503 1.603.44-3.7-.44-3.613-2.538 1.41-1.815 2.185Z" fill="#00832D"/><path d="M2.476 15.375v3.154c0 .723.581 1.304 1.304 1.304h3.154l.652-2.379-.634-2.08-2.168-.651-2.308.652Z" fill="#0066DA"/><path d="M6.952 4.167 2.476 8.626l2.29.652 2.168-.652.635-2.045-.617-2.414Z" fill="#E94235"/><path d="M6.952 8.626H2.476v6.75h4.458v-6.75h.018Z" fill="#2684FC"/><path d="m20.451 6.053-2.855 2.344v7.33l2.855 2.345a.654.654 0 0 0 1.058-.512V6.564c.017-.547-.617-.864-1.058-.511Zm-7.19 5.956v3.366H6.952v4.459h9.358c.722 0 1.304-.582 1.304-1.304v-2.802l-4.353-3.719Z" fill="#00AC47"/><path d="M16.31 4.167H6.952v4.459h6.31v3.366l4.352-3.613V5.47c0-.722-.582-1.304-1.304-1.304Z" fill="#FFBA00"/>',
+    viewBox: '0 0 24 24',
+  },
+  zoomColorize: {
+    icon: '<path d="M22.234 12.004A9.732 9.732 0 0 0 12.5 2.269c-5.373 0-9.728 4.355-9.728 9.735 0 5.371 4.356 9.727 9.728 9.727 5.38 0 9.735-4.356 9.735-9.727Z" fill="#2D8CFF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.373 8.454H6.208v5.185c.06 2.04 2.04 1.808 2.04 1.808h6.934v-5.416c-.06-1.405-1.809-1.577-1.809-1.577Zm5.306 7v-7l-3.086 2.1v2.854l3.085 2.047Z" fill="#fff"/>',
     viewBox: '0 0 24 24',
   },
 } as const;

@@ -9,23 +9,29 @@ import { css } from '@emotion/react';
 import React, { useEffect, useRef, useState } from 'react';
 import TopicContent from './TopicContent';
 import Show from '@Controls/Show';
-import { noop } from '@Utils/util';
+import { noop, transformParams } from '@Utils/util';
 import { isDefined } from '@Utils/types';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Controller } from 'react-hook-form';
 import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { __ } from '@wordpress/i18n';
+import ThreeDots from '@Molecules/ThreeDots';
 
 interface TopicProps {
   topic: CurriculumTopic;
   allCollapsed: boolean;
 }
 
+// @TODO: will be come from app config api later.
+const hasLiveAddons = true;
+
 const Topic = ({ topic, allCollapsed }: TopicProps) => {
   const [isCollapsed, setIsCollapsed] = useState(allCollapsed);
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const form = useFormWithGlobalError<{ title: string; summary: string }>({
     defaultValues: {
@@ -158,6 +164,8 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
             <TopicContent type="lesson" content={{ title: 'Lesson: topic 1' }} />
             <TopicContent type="quiz" content={{ title: 'Quiz' }} />
             <TopicContent type="assignment" content={{ title: 'Assignments' }} />
+            <TopicContent type="zoom" content={{ title: 'Zoom live lesson' }} />
+            <TopicContent type="meet" content={{ title: 'Google meet live lesson' }} />
           </div>
           <div css={styles.contentButtons}>
             <div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
@@ -189,16 +197,42 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
                 {__('Assignment', 'tutor')}
               </Button>
             </div>
-            <div>
-              <Button
-                variant="tertiary"
-                icon={<SVGIcon name="download" width={24} height={24} />}
-                onClick={() => {
-                  alert('@TODO: will be implemented later');
-                }}
+            <div css={styles.footerButtons}>
+              <Show
+                when={hasLiveAddons}
+                fallback={
+                  <Button
+                    variant="tertiary"
+                    icon={<SVGIcon name="download" width={24} height={24} />}
+                    onClick={() => {
+                      alert('@TODO: will be implemented later');
+                    }}
+                  >
+                    {__('Import Quiz', 'tutor')}
+                  </Button>
+                }
               >
-                {__('Import Quiz', 'tutor')}
-              </Button>
+                <ThreeDots
+                  isOpen={isOpen}
+                  onClick={() => setIsOpen(true)}
+                  closePopover={() => setIsOpen(false)}
+                  dotsOrientation="vertical"
+                  maxWidth="220px"
+                >
+                  <ThreeDots.Option
+                    text={__('Meet live lesson', 'tutor')}
+                    icon={<SVGIcon width={24} height={24} name="googleMeet" />}
+                  />
+                  <ThreeDots.Option
+                    text={__('Zoom live lesson', 'tutor')}
+                    icon={<SVGIcon width={24} height={24} name="zoom" />}
+                  />
+                  <ThreeDots.Option
+                    text={__('Import Quiz', 'tutor')}
+                    icon={<SVGIcon name="download" width={24} height={24} />}
+                  />
+                </ThreeDots>
+              </Show>
             </div>
           </div>
         </div>
@@ -317,5 +351,9 @@ const styles = {
     ${styleUtils.display.flex()};
     gap: ${spacing[8]};
     justify-content: end;
+  `,
+  footerButtons: css`
+    display: flex;
+    align-items: center;
   `,
 };
