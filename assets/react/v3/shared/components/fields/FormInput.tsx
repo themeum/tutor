@@ -46,6 +46,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   onKeyDown?: (keyName: string) => void;
   isHidden?: boolean;
   isClearable?: boolean;
+  isSecondary?: boolean;
 }
 
 const FormInput = ({
@@ -63,6 +64,7 @@ const FormInput = ({
   onKeyDown,
   isHidden,
   isClearable = false,
+  isSecondary = false,
 }: FormInputProps) => {
   let inputValue = field.value ?? '';
   let characterCount;
@@ -86,8 +88,9 @@ const FormInput = ({
       helpText={helpText}
       isHidden={isHidden}
       characterCount={characterCount}
+      isSecondary={isSecondary}
     >
-      {(inputProps) => {
+      {inputProps => {
         return (
           <>
             <div css={styles.container}>
@@ -96,7 +99,7 @@ const FormInput = ({
                 {...inputProps}
                 type="text"
                 value={inputValue}
-                onChange={(event) => {
+                onChange={event => {
                   const { value } = event.target;
 
                   const fieldValue: string | number =
@@ -108,7 +111,7 @@ const FormInput = ({
                     onChange(fieldValue);
                   }
                 }}
-                onKeyDown={(event) => {
+                onKeyDown={event => {
                   onKeyDown && onKeyDown(event.key);
                 }}
                 autoComplete="off"

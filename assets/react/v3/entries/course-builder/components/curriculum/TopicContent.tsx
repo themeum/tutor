@@ -57,16 +57,40 @@ const TopicContent = ({ type, content }: TopicContentProps) => {
       </div>
 
       <div css={styles.actions} data-actions>
-        <button type="button" css={styles.actionButton}>
+        <button
+          type="button"
+          css={styles.actionButton}
+          onClick={() => {
+            alert('@TODO: will be implemented later');
+          }}
+        >
           <SVGIcon name="edit" width={24} height={24} />
         </button>
-        <button type="button" css={styles.actionButton}>
+        <button
+          type="button"
+          css={styles.actionButton}
+          onClick={() => {
+            alert('@TODO: will be implemented later');
+          }}
+        >
           <SVGIcon name="copyPaste" width={24} height={24} />
         </button>
-        <button type="button" css={styles.actionButton}>
+        <button
+          type="button"
+          css={styles.actionButton}
+          onClick={() => {
+            alert('@TODO: will be implemented later');
+          }}
+        >
           <SVGIcon name="delete" width={24} height={24} />
         </button>
-        <button type="button" css={styles.actionButton}>
+        <button
+          type="button"
+          css={styles.actionButton}
+          onClick={() => {
+            alert('@TODO: will be implemented later');
+          }}
+        >
           <SVGIcon name="threeDotsVertical" width={24} height={24} />
         </button>
       </div>

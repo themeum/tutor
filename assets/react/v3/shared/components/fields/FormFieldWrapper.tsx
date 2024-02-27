@@ -14,6 +14,7 @@ interface InputOptions {
   removeBorder: boolean;
   readOnly: boolean;
   hasHelpText: boolean;
+  isSecondary: boolean;
 }
 
 interface InputProps {
@@ -39,6 +40,7 @@ interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
   isHidden?: boolean;
   removeBorder?: boolean;
   characterCount?: { maxLimit: number; inputCharacter: number };
+  isSecondary?: boolean;
 }
 
 const styles = {
@@ -47,6 +49,7 @@ const styles = {
     flex-direction: column;
     position: relative;
     background: inherit;
+    width: 100%;
 
     ${disabled &&
     css`
@@ -93,6 +96,11 @@ const styles = {
       box-shadow: none;
     `}
 
+    ${options.isSecondary &&
+    css`
+      border-color: transparent;
+    `}
+
     :focus {
       outline: none;
       box-shadow: ${shadow.focus};
@@ -105,7 +113,13 @@ const styles = {
     }
 
     ::placeholder {
+      ${typography.caption('regular')};
       color: ${colorTokens.text.subdued};
+
+      ${options.isSecondary &&
+      css`
+        color: ${colorTokens.text.hints};
+      `}
     }
 
     ${options.hasFieldError &&
@@ -178,6 +192,7 @@ const FormFieldWrapper = <T,>({
   isHidden = false,
   removeBorder = false,
   characterCount,
+  isSecondary = false,
 }: FormFieldWrapperProps<T>) => {
   const id = nanoid();
 
@@ -193,6 +208,7 @@ const FormFieldWrapper = <T,>({
             removeBorder,
             readOnly,
             hasHelpText: !!helpText,
+            isSecondary,
           }),
         ],
         'aria-invalid': fieldState.error ? 'true' : 'false',

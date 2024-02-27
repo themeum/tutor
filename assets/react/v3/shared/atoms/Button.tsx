@@ -183,29 +183,41 @@ const styles = {
     ${variant === 'text' &&
     css`
       background-color: transparent;
-      color: ${colorTokens.text.brand};
+      color: ${colorTokens.text.subdued};
       padding: ${spacing[4]} ${spacing[8]};
-
-      &:hover {
-        text-decoration: underline;
-      }
-
-      &:active {
-        color: ${colorTokens.text.brand};
-      }
-
-      &:focus {
-        color: ${colorTokens.text.brand};
-        box-shadow: ${shadow.focus};
-      }
 
       svg {
         color: ${colorTokens.icon.default};
       }
 
+      &:hover {
+        text-decoration: underline;
+        color: ${colorTokens.text.primary};
+
+        svg {
+          color: ${colorTokens.icon.brand};
+        }
+      }
+
+      &:active {
+        color: ${colorTokens.text.title};
+      }
+
+      &:focus {
+        color: ${colorTokens.text.title};
+        box-shadow: ${shadow.focus};
+        svg {
+          color: ${colorTokens.icon.brand};
+        }
+      }
+
       ${(disabled || loading) &&
       css`
         color: ${colorTokens.text.disable};
+
+        svg {
+          color: ${colorTokens.icon.disable};
+        }
       `}
     `}
 

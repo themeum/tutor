@@ -311,6 +311,7 @@ export const styleUtils = {
       -webkit-line-clamp: ${lines};
       -webkit-box-orient: vertical;
       overflow: hidden;
+      -webkit-box-pack: end;
     `,
     align: {
       center: css`

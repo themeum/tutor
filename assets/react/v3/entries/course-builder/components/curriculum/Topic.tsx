@@ -6,67 +6,203 @@ import { CurriculumTopic } from '@CourseBuilderServices/curriculum';
 
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TopicContent from './TopicContent';
+import Show from '@Controls/Show';
+import { noop } from '@Utils/util';
+import { isDefined } from '@Utils/types';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { Controller } from 'react-hook-form';
+import FormInput from '@Components/fields/FormInput';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import { __ } from '@wordpress/i18n';
 
 interface TopicProps {
   topic: CurriculumTopic;
-  isCollapsed: boolean;
-  onToggle: () => void;
+  allCollapsed: boolean;
 }
 
-const Topic = ({ topic }: TopicProps) => {
+const Topic = ({ topic, allCollapsed }: TopicProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(allCollapsed);
+  const [isActive, setIsActive] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const form = useFormWithGlobalError<{ title: string; summary: string }>({
+    defaultValues: {
+      title: topic.title,
+      summary: topic.summary,
+    },
+  });
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLDivElement)) {
+        setIsActive(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
+
+  useEffect(() => {
+    setIsCollapsed(allCollapsed);
+  }, [allCollapsed]);
+
   return (
-    <div css={styles.wrapper}>
-      <div css={styles.header}>
+    <div
+      css={styles.wrapper({ isActive: isActive || isEdit })}
+      onClick={() => setIsActive(true)}
+      onKeyDown={noop}
+      tabIndex={-1}
+      ref={wrapperRef}
+    >
+      <div css={styles.header({ isCollapsed, isEdit })}>
         <div css={styles.headerContent}>
           <div css={styles.grabberInput}>
             <SVGIcon name="dragVertical" width={24} height={24} />
-            <div css={styles.title}>{topic.title}</div>
+            <Show
+              when={isEdit}
+              fallback={
+                <div css={styles.title({ isEdit })} title={topic.title}>
+                  {topic.title}
+                </div>
+              }
+            >
+              <div css={styles.title({ isEdit })}>
+                <Controller
+                  control={form.control}
+                  name="title"
+                  render={controllerProps => (
+                    <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
+                  )}
+                />
+              </div>
+            </Show>
           </div>
           <div css={styles.actions}>
-            <button type="button" css={styles.actionButton}>
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
-            <button type="button" css={styles.actionButton}>
+            <Show when={!isEdit}>
+              <button type="button" css={styles.actionButton} data-visually-hidden onClick={() => setIsEdit(true)}>
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+            </Show>
+            <button
+              type="button"
+              css={styles.actionButton}
+              data-visually-hidden
+              onClick={() => {
+                alert('@TODO: will be implemented later');
+              }}
+            >
               <SVGIcon name="copyPaste" width={24} height={24} />
             </button>
-            <button type="button" css={styles.actionButton}>
+            <button
+              type="button"
+              css={styles.actionButton}
+              data-visually-hidden
+              onClick={() => {
+                alert('@TODO: will be implemented later');
+              }}
+            >
               <SVGIcon name="delete" width={24} height={24} />
             </button>
-            <button type="button" css={styles.actionButton}>
-              <SVGIcon name="chevronUp" />
+            <button type="button" css={styles.actionButton} onClick={() => setIsCollapsed(previous => !previous)}>
+              <SVGIcon name={isCollapsed ? 'chevronDown' : 'chevronUp'} />
             </button>
           </div>
         </div>
 
-        <div css={styles.description}>{topic.summary}</div>
-      </div>
-      <div css={styles.content}>
-        <div>
-          <TopicContent type="lesson" content={{ title: 'Lesson: topic 1' }} />
-          <TopicContent type="quiz" content={{ title: 'Quiz' }} />
-          <TopicContent type="assignment" content={{ title: 'Assignments' }} />
-        </div>
-        <div css={styles.contentButtons}>
-          <div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
-            <Button variant="tertiary" icon={<SVGIcon name="plus" />}>
-              Lesson
+        <Show when={!isCollapsed}>
+          <Show when={isEdit} fallback={<div css={styles.description({ isEdit })}>{topic.summary}</div>}>
+            <div css={styles.description({ isEdit })}>
+              <Controller
+                control={form.control}
+                name="summary"
+                render={controllerProps => (
+                  <FormTextareaInput
+                    {...controllerProps}
+                    placeholder={__('Add a summary', 'tutor')}
+                    isSecondary
+                    rows={2}
+                    enableResize
+                  />
+                )}
+              />
+            </div>
+          </Show>
+        </Show>
+
+        <Show when={isEdit}>
+          <div css={styles.footer}>
+            <Button variant="text" onClick={() => setIsEdit(false)}>
+              {__('Cancel', 'tutor')}
             </Button>
-            <Button variant="tertiary" icon={<SVGIcon name="plus" />}>
-              Quiz
-            </Button>
-            <Button variant="tertiary" icon={<SVGIcon name="plus" />}>
-              Assignment
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={form.handleSubmit(async values => {
+                //@TODO: will be implemented later
+                console.log({ values });
+                setIsEdit(false);
+              })}
+            >
+              {__('Ok', 'tutor')}
             </Button>
           </div>
+        </Show>
+      </div>
+      <Show when={!isCollapsed}>
+        <div css={styles.content}>
           <div>
-            <Button variant="tertiary" icon={<SVGIcon name="download" width={24} height={24} />}>
-              Import Quiz
-            </Button>
+            <TopicContent type="lesson" content={{ title: 'Lesson: topic 1' }} />
+            <TopicContent type="quiz" content={{ title: 'Quiz' }} />
+            <TopicContent type="assignment" content={{ title: 'Assignments' }} />
+          </div>
+          <div css={styles.contentButtons}>
+            <div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
+              <Button
+                variant="tertiary"
+                icon={<SVGIcon name="plus" />}
+                onClick={() => {
+                  alert('@TODO: will be implemented later');
+                }}
+              >
+                {__('Lesson', 'tutor')}
+              </Button>
+              <Button
+                variant="tertiary"
+                icon={<SVGIcon name="plus" />}
+                onClick={() => {
+                  alert('@TODO: will be implemented later');
+                }}
+              >
+                {__('Quiz', 'tutor')}
+              </Button>
+              <Button
+                variant="tertiary"
+                icon={<SVGIcon name="plus" />}
+                onClick={() => {
+                  alert('@TODO: will be implemented later');
+                }}
+              >
+                {__('Assignment', 'tutor')}
+              </Button>
+            </div>
+            <div>
+              <Button
+                variant="tertiary"
+                icon={<SVGIcon name="download" width={24} height={24} />}
+                onClick={() => {
+                  alert('@TODO: will be implemented later');
+                }}
+              >
+                {__('Import Quiz', 'tutor')}
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </Show>
     </div>
   );
 };
@@ -74,17 +210,49 @@ const Topic = ({ topic }: TopicProps) => {
 export default Topic;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({ isActive = false }) => css`
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+
+    ${isActive &&
+    css`
+      border-color: ${colorTokens.stroke.brand};
+      background-color: ${colorTokens.background.hover};
+    `}
+
+    :hover {
+      background-color: ${colorTokens.background.hover};
+    }
   `,
-  header: css`
+  header: ({ isCollapsed, isEdit }: { isCollapsed: boolean; isEdit: boolean }) => css`
     padding: ${spacing[12]} ${spacing[16]};
-    border-bottom: 1px solid ${colorTokens.stroke.divider};
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[12]};
+
+    ${!isCollapsed &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
+
+    ${!isEdit &&
+    css`
+      [data-visually-hidden] {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+
+      :hover {
+        [data-visually-hidden] {
+          opacity: 1;
+        }
+      }
+    `}
   `,
   headerContent: css`
     display: grid;
-    grid-template-columns: auto 144px;
+    grid-template-columns: 8fr 1fr;
+    gap: ${spacing[12]};
   `,
   grabberInput: css`
     ${styleUtils.display.flex()};
@@ -93,6 +261,7 @@ const styles = {
 
     svg {
       color: ${colorTokens.color.black[40]};
+      flex-shrink: 0;
     }
   `,
   actions: css`
@@ -105,6 +274,7 @@ const styles = {
     ${styleUtils.resetButton};
     color: ${colorTokens.icon.default};
     display: flex;
+    cursor: pointer;
   `,
   content: css`
     padding: ${spacing[16]};
@@ -115,14 +285,37 @@ const styles = {
     ${styleUtils.display.flex()};
     justify-content: space-between;
   `,
-  title: css`
+  title: ({ isEdit }: { isEdit: boolean }) => css`
     ${typography.body()};
     color: ${colorTokens.text.hints};
+    width: 100%;
+    ${!isEdit &&
+    css`
+      ${styleUtils.text.ellipsis(1)};
+    `}
   `,
-  description: css`
+  description: ({ isEdit }: { isEdit: boolean }) => css`
     ${typography.caption()};
     color: ${colorTokens.text.hints};
+    padding-inline: ${spacing[8]};
     margin-left: ${spacing[24]};
-    padding: ${spacing[8]} ${spacing[10]};
+    margin-bottom: ${spacing[8]};
+
+    ${!isEdit &&
+    css`
+      ${styleUtils.text.ellipsis(2)};
+    `}
+
+    ${isEdit &&
+    css`
+      padding-right: 0;
+    `}
+  `,
+  footer: css`
+    width: 100%;
+    text-align: right;
+    ${styleUtils.display.flex()};
+    gap: ${spacing[8]};
+    justify-content: end;
   `,
 };

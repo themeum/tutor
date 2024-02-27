@@ -14,10 +14,13 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import For from '@Controls/For';
 import { styleUtils } from '@Utils/style-utils';
+import { useState } from 'react';
 
 const Curriculum = () => {
   const courseId = getCourseId();
   const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
+  const [allCollapsed, setAllCollapsed] = useState(false);
+
   if (courseCurriculumQuery.isLoading) {
     return <LoadingOverlay />;
   }
@@ -27,14 +30,20 @@ const Curriculum = () => {
   }
 
   const content = courseCurriculumQuery.data;
-  console.log({ content });
 
   return (
     <div css={styles.container}>
       <div css={styles.wrapper}>
-        <CanvasHead title={__('Curriculum', 'tutor')} rightButton={<Button variant="text">Expand All</Button>} />
+        <CanvasHead
+          title={__('Curriculum', 'tutor')}
+          rightButton={
+            <Button variant="text" onClick={() => setAllCollapsed(previous => !previous)}>
+              {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
+            </Button>
+          }
+        />
 
-        <div css={styles.content}>
+        <div>
           <Show
             when={content}
             fallback={
@@ -46,7 +55,7 @@ const Curriculum = () => {
                 description="when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
                 actions={
                   <Button variant="secondary" icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}>
-                    Add Topic
+                    {__('Add Topic', 'tutor')}
                   </Button>
                 }
               />
@@ -55,7 +64,7 @@ const Curriculum = () => {
             <div css={styles.topicWrapper}>
               <For each={content}>
                 {(topic, index) => {
-                  return <Topic key={index} topic={topic} onToggle={() => {}} isCollapsed={false} />;
+                  return <Topic key={index} topic={topic} allCollapsed={allCollapsed} />;
                 }}
               </For>
             </div>
@@ -75,10 +84,10 @@ const styles = {
   wrapper: css`
     max-width: 1076px;
     width: 100%;
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[32]};
   `,
-  content: css`
-    padding: ${spacing[20]} 0;
-  `,
+
   topicWrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
