@@ -46,6 +46,7 @@ export interface Option<T> {
   label: string;
   value: T;
   icon?: ReactNode | string;
+  disabled?: boolean;
 }
 export type CouponStatus = 'active' | 'inactive';
 export type ProductStatus = 'draft' | 'published' | 'trashed';
