@@ -118,7 +118,7 @@ const FormSelectInput = <T,>({
                 {...attribute}
                 onClick={() => setIsOpen((previousState) => !previousState)}
                 css={[inputCss, styles.input(!!leftIcon)]}
-                autoComplete='off'
+                autoComplete="off"
                 readOnly={readOnly || !isSearchable}
                 placeholder={placeholder}
                 value={inputValue}
@@ -130,7 +130,7 @@ const FormSelectInput = <T,>({
 
               {!hideCaret && (
                 <button
-                  type='button'
+                  type="button"
                   css={styles.caretButton}
                   onClick={() => {
                     setIsOpen((previousState) => !previousState);
@@ -138,9 +138,9 @@ const FormSelectInput = <T,>({
                   disabled={readOnly || options.length === 0}
                 >
                   {showArrowUpDown ? (
-                    <SVGIcon name='chevronDown' width={20} height={20} style={styles.arrowUpDown} />
+                    <SVGIcon name="chevronDown" width={20} height={20} style={styles.arrowUpDown} />
                   ) : (
-                    <SVGIcon name='chevronDown' width={20} height={20} style={styles.toggleIcon({ isOpen })} />
+                    <SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon({ isOpen })} />
                   )}
                 </button>
               )}
@@ -188,9 +188,9 @@ const FormSelectInput = <T,>({
                       })}
                     >
                       <Button
-                        variant='text'
+                        variant="text"
                         disabled={inputValue === ''}
-                        icon={<SVGIcon name='delete' />}
+                        icon={<SVGIcon name="delete" />}
                         onClick={() => {
                           field.onChange(null);
                           setInputValue('');
