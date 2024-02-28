@@ -12,7 +12,10 @@ const Curriculum = () => {
   const { showModal, closeModal } = useModal();
   return (
     <div css={styles.wrapper}>
-      <CanvasHead title={__('Curriculum', 'tutor')} rightButton={<Button variant='text'>Expand All</Button>} />
+      <CanvasHead
+        title={__('Curriculum', 'tutor')}
+        rightButton={<Button variant='text'>{__('Expand All', 'tutor')}</Button>}
+      />
 
       <Button
         onClick={() =>
@@ -20,15 +23,15 @@ const Curriculum = () => {
             component: ReferenceModal,
             props: {
               icon: <SVGIcon name='note' height={24} width={24} />,
-              title: 'Title',
-              subtitle: 'Subtitle',
+              title: __('Title', 'tutor'),
+              subtitle: __('Subtitle', 'tutor'),
               actions: (
                 <>
                   <Button variant='secondary' onClick={() => closeModal({ action: 'CLOSE' })}>
-                    Cancel
+                    {__('Cancel', 'tutor')}
                   </Button>
                   <Button variant='primary' onClick={() => closeModal({ action: 'CONFIRM' })}>
-                    Save
+                    {__('Confirm', 'tutor')}
                   </Button>
                 </>
               ),

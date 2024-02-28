@@ -70,20 +70,20 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
 
   const showModal = useCallback<ModalContextType['showModal']>(({ component, props, closeOnOutsideClick = false }) => {
     return new Promise((resolve) => {
-      setState((prevState) => ({
-        ...prevState,
-        modals: [...prevState.modals, { component, props, resolve, closeOnOutsideClick, id: nanoid() }],
+      setState((previousState) => ({
+        ...previousState,
+        modals: [...previousState.modals, { component, props, resolve, closeOnOutsideClick, id: nanoid() }],
       }));
     });
   }, []);
 
   const closeModal = useCallback<ModalContextType['closeModal']>((data = { action: 'CLOSE' }) => {
-    setState((prevState) => {
-      const lastModal = prevState.modals[prevState.modals.length - 1];
+    setState((previousState) => {
+      const lastModal = previousState.modals[previousState.modals.length - 1];
       lastModal.resolve(data);
       return {
-        ...prevState,
-        modals: prevState.modals.slice(0, prevState.modals.length - 1),
+        ...previousState,
+        modals: previousState.modals.slice(0, previousState.modals.length - 1),
       };
     });
   }, []);

@@ -4,7 +4,7 @@ import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
-import { MODAL } from '@Config/constants';
+import { modal } from '@Config/constants';
 import Show from '@Controls/Show';
 
 interface ModalWrapperProps {
@@ -151,7 +151,7 @@ const styles = {
     }
   `,
   content: css`
-    height: calc(100% - ${MODAL.HEADER_HEIGHT + MODAL.MARGIN_TOP}px);
+    height: calc(100% - ${modal.HEADER_HEIGHT + modal.MARGIN_TOP}px);
     overflow: auto;
   `,
 };
