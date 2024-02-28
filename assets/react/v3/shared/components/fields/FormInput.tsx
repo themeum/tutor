@@ -106,7 +106,7 @@ const FormInput = ({
                 {...field}
                 {...inputProps}
                 {...attribute}
-                type='text'
+                type="text"
                 value={inputValue}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -122,12 +122,12 @@ const FormInput = ({
                 onKeyDown={(event) => {
                   onKeyDown && onKeyDown(event.key);
                 }}
-                autoComplete='off'
+                autoComplete="off"
               />
               {isClearable && !!field.value && (
                 <div css={styles.clearButton}>
-                  <Button variant='text' onClick={() => field.onChange(null)}>
-                    <SVGIcon name='timesAlt' />
+                  <Button variant="text" onClick={() => field.onChange(null)}>
+                    <SVGIcon name="timesAlt" />
                   </Button>
                 </div>
               )}
