@@ -12,11 +12,12 @@ import { isDefined } from '@Utils/types';
 import Show from '@Controls/Show';
 
 const styles = {
-  container: css`
+  container: (isClearable: boolean) => css`
     position: relative;
     display: flex;
 
     & input {
+      ${isClearable && `padding-right: ${spacing[36]};`};
       ${typography.body()}
       width: 100%;
     }
@@ -102,7 +103,7 @@ const FormInput = ({
       {(inputProps) => {
         return (
           <>
-            <div css={styles.container}>
+            <div css={styles.container(isClearable)}>
               <input
                 {...field}
                 {...inputProps}
