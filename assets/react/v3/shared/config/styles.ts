@@ -519,6 +519,7 @@ export const shadow = {
   tabs: 'inset 0px -1px 0px #dbdcdf',
   dividerTop: 'inset 0px 1px 0px #E4E5E7',
   underline: '0px 1px 0px #C9CBCF',
+  drag: '3px 7px 8px 0px #00000014',
 } as const;
 
 export const borderRadius = {

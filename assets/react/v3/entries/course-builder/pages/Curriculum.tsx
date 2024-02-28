@@ -14,12 +14,61 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import For from '@Controls/For';
 import { styleUtils } from '@Utils/style-utils';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { moveTo, noop } from '@Utils/util';
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  MeasuringStrategy,
+  PointerSensor,
+  UniqueIdentifier,
+  closestCenter,
+  defaultDropAnimationSideEffects,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { createPortal } from 'react-dom';
 
 const Curriculum = () => {
   const courseId = getCourseId();
   const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
-  const [allCollapsed, setAllCollapsed] = useState(false);
+  const [allCollapsed, setAllCollapsed] = useState(true);
+  const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
+
+  // @TODO: temporary code for handling sorting functionalities. Will be updated later once the API will be ready.
+  const curriculumData = useMemo(() => {
+    if (!courseCurriculumQuery.data) {
+      return [];
+    }
+    return courseCurriculumQuery.data;
+  }, [courseCurriculumQuery.data]);
+
+  const [content, setContent] = useState(curriculumData);
+
+  useEffect(() => {
+    setContent(curriculumData);
+  }, [curriculumData]);
+
+  // @TODO: __^__ temporary code ends.
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  const activeSortItem = useMemo(() => {
+    if (!activeSortId) {
+      return null;
+    }
+
+    return content.find(item => item.ID === activeSortId);
+  }, [activeSortId, content]);
 
   if (courseCurriculumQuery.isLoading) {
     return <LoadingOverlay />;
@@ -28,8 +77,6 @@ const Curriculum = () => {
   if (!courseCurriculumQuery.data) {
     return null;
   }
-
-  const content = courseCurriculumQuery.data;
 
   return (
     <div css={styles.container}>
@@ -61,13 +108,76 @@ const Curriculum = () => {
               />
             }
           >
-            <div css={styles.topicWrapper}>
-              <For each={content}>
-                {(topic, index) => {
-                  return <Topic key={index} topic={topic} allCollapsed={allCollapsed} />;
-                }}
-              </For>
-            </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              measuring={{
+                droppable: {
+                  strategy: MeasuringStrategy.Always,
+                },
+              }}
+              onDragStart={event => {
+                setActiveSortId(event.active.id);
+                setAllCollapsed(true);
+              }}
+              onDragEnd={event => {
+                const { active, over } = event;
+                if (!over) {
+                  return;
+                }
+
+                if (active.id !== over.id) {
+                  const activeIndex = content.findIndex(item => item.ID === active.id);
+                  const overIndex = content.findIndex(item => item.ID === over.id);
+
+                  setContent(previous => {
+                    return moveTo(previous, activeIndex, overIndex);
+                  });
+                }
+              }}
+            >
+              <SortableContext
+                items={content.map(item => ({ ...item, id: item.ID }))}
+                strategy={verticalListSortingStrategy}
+              >
+                <div css={styles.topicWrapper}>
+                  <For each={content}>
+                    {(topic, index) => {
+                      return (
+                        <Topic
+                          key={topic.ID}
+                          topic={topic}
+                          allCollapsed={allCollapsed}
+                          onSort={(activeIndex, overIndex) => {
+                            // @TODO: will be implemented with real scenario later
+                            setContent(previous => {
+                              return previous.map((item, idx) => {
+                                if (idx === index) {
+                                  return { ...item, content: moveTo(item.content, activeIndex, overIndex) };
+                                }
+
+                                return item;
+                              });
+                            });
+                          }}
+                        />
+                      );
+                    }}
+                  </For>
+                </div>
+              </SortableContext>
+
+              {createPortal(
+                <DragOverlay adjustScale>
+                  <Show when={activeSortItem}>
+                    {item => {
+                      return <Topic topic={item} allCollapsed={allCollapsed} onSort={noop} isOverlay />;
+                    }}
+                  </Show>
+                </DragOverlay>,
+                document.body
+              )}
+            </DndContext>
           </Show>
         </div>
       </div>
