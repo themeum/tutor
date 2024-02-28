@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import Show from '@Controls/Show';
 
 const styles = {
-  container: css`
+  container: (isClearable: boolean) => css`
     position: relative;
     display: flex;
 
     & input {
+      ${isClearable && `padding-right: ${spacing[36]};`};
       ${typography.body()}
       width: 100%;
     }
@@ -90,11 +92,11 @@ const FormInput = ({
       {(inputProps) => {
         return (
           <>
-            <div css={styles.container}>
+            <div css={styles.container(isClearable)}>
               <input
                 {...field}
                 {...inputProps}
-                type="text"
+                type='text'
                 value={inputValue}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -111,15 +113,15 @@ const FormInput = ({
                 onKeyDown={(event) => {
                   onKeyDown && onKeyDown(event.key);
                 }}
-                autoComplete="off"
+                autoComplete='off'
               />
-              {isClearable && !!field.value && (
+              <Show when={isClearable && !!field.value}>
                 <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange(null)}>
-                    <SVGIcon name="timesAlt" />
+                  <Button variant='text' onClick={() => field.onChange(null)}>
+                    <SVGIcon name='timesAlt' />
                   </Button>
                 </div>
-              )}
+              </Show>
             </div>
           </>
         );
