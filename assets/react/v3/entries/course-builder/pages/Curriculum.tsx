@@ -7,22 +7,34 @@ import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import { __ } from '@wordpress/i18n';
 import { css } from '@emotion/react';
 import { spacing } from '@Config/styles';
-import AddLessonModal from '@Components/modals/AddLessonModal';
 
 const Curriculum = () => {
-  const { showModal } = useModal();
+  const { showModal, closeModal } = useModal();
   return (
     <div css={styles.wrapper}>
-      <CanvasHead title={__('Curriculum', 'tutor')} rightButton={<Button variant='text'>Expand All</Button>} />
+      <CanvasHead
+        title={__('Curriculum', 'tutor')}
+        rightButton={<Button variant="text">{__('Expand All', 'tutor')}</Button>}
+      />
 
       <Button
         onClick={() =>
           showModal({
-            component: AddLessonModal,
+            component: ReferenceModal,
             props: {
-              icon: <SVGIcon name='note' height={24} width={24} />,
-              title: 'Lesson',
-              subtitle: 'Topic: Learn to use ChatGPT effectively',
+              icon: <SVGIcon name="note" height={24} width={24} />,
+              title: __('Title', 'tutor'),
+              subtitle: __('Subtitle', 'tutor'),
+              actions: (
+                <>
+                  <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
+                    {__('Cancel', 'tutor')}
+                  </Button>
+                  <Button variant="primary" onClick={() => closeModal({ action: 'CONFIRM' })}>
+                    {__('Confirm', 'tutor')}
+                  </Button>
+                </>
+              ),
             },
           })
         }
