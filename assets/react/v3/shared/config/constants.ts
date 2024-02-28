@@ -10,7 +10,7 @@ export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 
 export const isRTL = document.dir === 'rtl';
 
-export const MODAL = {
+export const modal = {
   HEADER_HEIGHT: 72,
   MARGIN_TOP: 60,
 };

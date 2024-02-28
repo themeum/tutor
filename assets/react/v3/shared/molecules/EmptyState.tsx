@@ -59,6 +59,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     max-width: 566px;
+    width: 100%;
     gap: ${spacing[12]};
     text-align: center;
   `,
