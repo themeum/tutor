@@ -80,7 +80,7 @@ const FormInput = ({
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
   }
 
-  const attribute = {
+  const additionalAttributes = {
     ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
   };
 
@@ -105,7 +105,7 @@ const FormInput = ({
               <input
                 {...field}
                 {...inputProps}
-                {...attribute}
+                {...additionalAttributes}
                 type="text"
                 value={inputValue}
                 onChange={(event) => {

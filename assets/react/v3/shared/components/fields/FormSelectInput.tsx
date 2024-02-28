@@ -80,7 +80,7 @@ const FormSelectInput = <T,>({
     isDropdown: true,
   });
 
-  const attribute = {
+  const additionalAttributes = {
     ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
   };
 
@@ -115,7 +115,7 @@ const FormSelectInput = <T,>({
               <div css={styles.leftIcon}>{leftIcon}</div>
               <input
                 {...restInputProps}
-                {...attribute}
+                {...additionalAttributes}
                 onClick={() => setIsOpen((previousState) => !previousState)}
                 css={[inputCss, styles.input(!!leftIcon)]}
                 autoComplete="off"
