@@ -8,6 +8,7 @@ import { FormControllerProps } from '@Utils/form';
 
 import FormFieldWrapper from './FormFieldWrapper';
 import { parseNumberOnly } from '@Utils/util';
+import { isDefined } from '@Utils/types';
 
 const styles = {
   container: css`
@@ -47,6 +48,8 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   onKeyDown?: (keyName: string) => void;
   isHidden?: boolean;
   isClearable?: boolean;
+  removeBorder?: boolean;
+  dataAttribute?: string;
 }
 
 const FormInput = ({
@@ -64,6 +67,8 @@ const FormInput = ({
   onKeyDown,
   isHidden,
   isClearable = false,
+  removeBorder,
+  dataAttribute,
 }: FormInputProps) => {
   let inputValue = field.value ?? '';
   let characterCount;
@@ -74,6 +79,10 @@ const FormInput = ({
   if (maxLimit) {
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
   }
+
+  const attribute = {
+    ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
+  };
 
   return (
     <FormFieldWrapper
@@ -87,6 +96,7 @@ const FormInput = ({
       helpText={helpText}
       isHidden={isHidden}
       characterCount={characterCount}
+      removeBorder={removeBorder}
     >
       {(inputProps) => {
         return (
@@ -95,6 +105,7 @@ const FormInput = ({
               <input
                 {...field}
                 {...inputProps}
+                {...attribute}
                 type='text'
                 value={inputValue}
                 onChange={(event) => {

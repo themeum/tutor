@@ -7,7 +7,7 @@ import { css } from '@emotion/react';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
-import { Option } from '@Utils/types';
+import { Option, isDefined } from '@Utils/types';
 
 import FormFieldWrapper from './FormFieldWrapper';
 import { noop } from '@Utils/util';
@@ -34,6 +34,7 @@ type FormSelectInputProps<T> = {
   helpText?: string;
   removeOptionsMinWidth?: boolean;
   leftIcon?: ReactNode;
+  dataAttribute?: string;
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
@@ -55,6 +56,8 @@ const FormSelectInput = <T,>({
   helpText,
   removeOptionsMinWidth = false,
   leftIcon,
+  removeBorder,
+  dataAttribute,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = useCallback(() => {
     return options.find((item) => item.value === field.value)?.label || '';
@@ -77,6 +80,10 @@ const FormSelectInput = <T,>({
     isDropdown: true,
   });
 
+  const attribute = {
+    ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
+  };
+
   useEffect(() => {
     setInputValue(getInitialValue);
   }, [field.value, getInitialValue]);
@@ -97,6 +104,7 @@ const FormSelectInput = <T,>({
       loading={loading}
       isInlineLabel={isInlineLabel}
       helpText={helpText}
+      removeBorder={removeBorder}
     >
       {(inputProps) => {
         const { css: inputCss, ...restInputProps } = inputProps;
@@ -107,9 +115,10 @@ const FormSelectInput = <T,>({
               <div css={styles.leftIcon}>{leftIcon}</div>
               <input
                 {...restInputProps}
+                {...attribute}
                 onClick={() => setIsOpen((previousState) => !previousState)}
                 css={[inputCss, styles.input(!!leftIcon)]}
-                autoComplete="off"
+                autoComplete='off'
                 readOnly={readOnly || !isSearchable}
                 placeholder={placeholder}
                 value={inputValue}
@@ -121,7 +130,7 @@ const FormSelectInput = <T,>({
 
               {!hideCaret && (
                 <button
-                  type="button"
+                  type='button'
                   css={styles.caretButton}
                   onClick={() => {
                     setIsOpen((previousState) => !previousState);
@@ -129,9 +138,9 @@ const FormSelectInput = <T,>({
                   disabled={readOnly || options.length === 0}
                 >
                   {showArrowUpDown ? (
-                    <SVGIcon name="chevronDown" width={20} height={20} style={styles.arrowUpDown} />
+                    <SVGIcon name='chevronDown' width={20} height={20} style={styles.arrowUpDown} />
                   ) : (
-                    <SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon({ isOpen })} />
+                    <SVGIcon name='chevronDown' width={20} height={20} style={styles.toggleIcon({ isOpen })} />
                   )}
                 </button>
               )}
@@ -179,9 +188,9 @@ const FormSelectInput = <T,>({
                       })}
                     >
                       <Button
-                        variant="text"
+                        variant='text'
                         disabled={inputValue === ''}
-                        icon={<SVGIcon name="delete" />}
+                        icon={<SVGIcon name='delete' />}
                         onClick={() => {
                           field.onChange(null);
                           setInputValue('');
