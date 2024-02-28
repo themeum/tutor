@@ -9,6 +9,7 @@ import { FormControllerProps } from '@Utils/form';
 import FormFieldWrapper from './FormFieldWrapper';
 import { parseNumberOnly } from '@Utils/util';
 import { isDefined } from '@Utils/types';
+import Show from '@Controls/Show';
 
 const styles = {
   container: css`
@@ -131,6 +132,13 @@ const FormInput = ({
                   </Button>
                 </div>
               )}
+              <Show when={isClearable && !!field.value}>
+                <div css={styles.clearButton}>
+                  <Button variant="text" onClick={() => field.onChange(null)}>
+                    <SVGIcon name="timesAlt" />
+                  </Button>
+                </div>
+              </Show>
             </div>
           </>
         );

@@ -9,7 +9,7 @@ import Show from '@Controls/Show';
 
 interface ModalWrapperProps {
   children: React.ReactNode;
-  onClose?: () => void;
+  onClose: () => void;
   icon?: React.ReactNode;
   title?: string;
   subtitle?: string;
@@ -88,7 +88,7 @@ const styles = {
     align-items: center;
     padding: ${spacing[20]};
     width: 100%;
-    max-height: 72px;
+    height: 72px;
     background: ${colorTokens.background.white};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     position: sticky;
@@ -101,7 +101,7 @@ const styles = {
     & span {
       ::before {
         content: '';
-        border: 0.5px solid ${colorTokens.icon.hints};
+        border-left: 1px solid ${colorTokens.icon.hints};
         margin-right: ${spacing[12]};
         border-radius: ${borderRadius[14]};
       }
