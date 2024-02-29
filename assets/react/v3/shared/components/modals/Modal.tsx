@@ -17,7 +17,6 @@ const styles = {
     position: fixed;
     display: flex;
     justify-content: center;
-    align-items: center;
     top: 0;
     left: 0;
     width: 100%;
@@ -27,7 +26,11 @@ const styles = {
 
 export type ModalProps = {
   closeModal: (param?: PromiseResolvePayload<'CLOSE'>) => void;
+  icon?: React.ReactNode;
   title?: string;
+  subtitle?: string;
+  entireHeader?: React.ReactNode;
+  actions?: React.ReactNode;
 };
 
 type PromiseResolvePayload<A extends string = string> = { action: A; [key: string]: unknown };
@@ -66,21 +69,21 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   });
 
   const showModal = useCallback<ModalContextType['showModal']>(({ component, props, closeOnOutsideClick = false }) => {
-    return new Promise(resolve => {
-      setState(prevState => ({
-        ...prevState,
-        modals: [...prevState.modals, { component, props, resolve, closeOnOutsideClick, id: nanoid() }],
+    return new Promise((resolve) => {
+      setState((previousState) => ({
+        ...previousState,
+        modals: [...previousState.modals, { component, props, resolve, closeOnOutsideClick, id: nanoid() }],
       }));
     });
   }, []);
 
   const closeModal = useCallback<ModalContextType['closeModal']>((data = { action: 'CLOSE' }) => {
-    setState(prevState => {
-      const lastModal = prevState.modals[prevState.modals.length - 1];
+    setState((previousState) => {
+      const lastModal = previousState.modals[previousState.modals.length - 1];
       lastModal.resolve(data);
       return {
-        ...prevState,
-        modals: prevState.modals.slice(0, prevState.modals.length - 1),
+        ...previousState,
+        modals: previousState.modals.slice(0, previousState.modals.length - 1),
       };
     });
   }, []);

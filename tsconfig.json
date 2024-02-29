@@ -29,12 +29,13 @@
       "@Services/*": ["assets/react/v3/shared/services/*"],
       "@Utils/*": ["assets/react/v3/shared/utils/*"],
       "@Images/*": ["assets/images/*"],
+      "@Controls/*": ["assets/react/v3/shared/controls/*"],
       "@CourseBuilderComponents/*": ["assets/react/v3/entries/course-builder/components/*"],
       "@CourseBuilderServices/*": ["assets/react/v3/entries/course-builder/services/*"],
       "@CourseBuilderConfig/*": ["assets/react/v3/entries/course-builder/config/*"],
       "@CourseBuilderPages/*": ["assets/react/v3/entries/course-builder/pages/*"],
       "@CourseBuilderUtils/*": ["assets/react/v3/entries/course-builder/utils/*"],
-      "@CourseBuilderContexts/*": ["assets/react/v3/entries/course-builder/contexts/*"]
+      "@CourseBuilderPublic/*": ["assets/react/v3/entries/course-builder/public/*"]
     }
   },
   "include": ["./assets/react/v3"],

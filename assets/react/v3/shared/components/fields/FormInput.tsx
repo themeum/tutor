@@ -7,13 +7,17 @@ import { css } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import { parseNumberOnly } from '@Utils/util';
+import { isDefined } from '@Utils/types';
+import Show from '@Controls/Show';
 
 const styles = {
-  container: css`
+  container: (isClearable: boolean) => css`
     position: relative;
     display: flex;
 
     & input {
+      ${isClearable && `padding-right: ${spacing[36]};`};
       ${typography.body()}
       width: 100%;
     }
@@ -46,6 +50,8 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   onKeyDown?: (keyName: string) => void;
   isHidden?: boolean;
   isClearable?: boolean;
+  removeBorder?: boolean;
+  dataAttribute?: string;
 }
 
 const FormInput = ({
@@ -63,16 +69,22 @@ const FormInput = ({
   onKeyDown,
   isHidden,
   isClearable = false,
+  removeBorder,
+  dataAttribute,
 }: FormInputProps) => {
   let inputValue = field.value ?? '';
   let characterCount;
 
   if (type === 'number') {
-    inputValue = `${inputValue}`.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
   }
   if (maxLimit) {
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
   }
+
+  const additionalAttributes = {
+    ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
+  };
 
   return (
     <FormFieldWrapper
@@ -86,21 +98,22 @@ const FormInput = ({
       helpText={helpText}
       isHidden={isHidden}
       characterCount={characterCount}
+      removeBorder={removeBorder}
     >
       {(inputProps) => {
         return (
           <>
-            <div css={styles.container}>
+            <div css={styles.container(isClearable)}>
               <input
                 {...field}
                 {...inputProps}
+                {...additionalAttributes}
                 type="text"
                 value={inputValue}
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  const fieldValue: string | number =
-                    type === 'number' ? value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1') : value;
+                  const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
 
                   field.onChange(fieldValue);
 
@@ -120,6 +133,13 @@ const FormInput = ({
                   </Button>
                 </div>
               )}
+              <Show when={isClearable && !!field.value}>
+                <div css={styles.clearButton}>
+                  <Button variant="text" onClick={() => field.onChange(null)}>
+                    <SVGIcon name="timesAlt" />
+                  </Button>
+                </div>
+              </Show>
             </div>
           </>
         );
