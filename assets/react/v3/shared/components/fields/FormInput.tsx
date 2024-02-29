@@ -50,6 +50,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   onKeyDown?: (keyName: string) => void;
   isHidden?: boolean;
   isClearable?: boolean;
+  isSecondary?: boolean;
   removeBorder?: boolean;
   dataAttribute?: string;
 }
@@ -69,6 +70,7 @@ const FormInput = ({
   onKeyDown,
   isHidden,
   isClearable = false,
+  isSecondary = false,
   removeBorder,
   dataAttribute,
 }: FormInputProps) => {
@@ -98,9 +100,10 @@ const FormInput = ({
       helpText={helpText}
       isHidden={isHidden}
       characterCount={characterCount}
+      isSecondary={isSecondary}
       removeBorder={removeBorder}
     >
-      {(inputProps) => {
+      {inputProps => {
         return (
           <>
             <div css={styles.container(isClearable)}>
@@ -110,7 +113,7 @@ const FormInput = ({
                 {...additionalAttributes}
                 type="text"
                 value={inputValue}
-                onChange={(event) => {
+                onChange={event => {
                   const { value } = event.target;
 
                   const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
@@ -121,7 +124,7 @@ const FormInput = ({
                     onChange(fieldValue);
                   }
                 }}
-                onKeyDown={(event) => {
+                onKeyDown={event => {
                   onKeyDown && onKeyDown(event.key);
                 }}
                 autoComplete="off"

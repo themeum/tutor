@@ -1,6 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorPalate, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { AnimationType } from '@Hooks/useAnimation';
@@ -8,6 +8,8 @@ import { styleUtils } from '@Utils/style-utils';
 import React, { MouseEvent, ReactNode, useRef } from 'react';
 
 import Popover from './Popover';
+import Show from '@Controls/Show';
+import { rgba } from 'polished';
 
 interface ThreeDotsOptionProps {
   text: string | ReactNode;
@@ -22,7 +24,7 @@ export const ThreeDotsOption = ({ text, icon, onClick, onClosePopover, isTrash =
     <button
       type="button"
       css={styles.option(isTrash)}
-      onClick={(event) => {
+      onClick={event => {
         if (onClick) {
           onClick(event);
         }
@@ -38,6 +40,7 @@ export const ThreeDotsOption = ({ text, icon, onClick, onClosePopover, isTrash =
 };
 
 export type ArrowPosition = 'top' | 'bottom' | 'left' | 'right';
+export type DotsOrientation = 'vertical' | 'horizontal';
 interface ThreeDotsProps {
   isOpen: boolean;
   disabled?: boolean;
@@ -46,6 +49,8 @@ interface ThreeDotsProps {
   children: ReactNode;
   arrowPosition?: ArrowPosition;
   animationType?: AnimationType;
+  dotsOrientation?: DotsOrientation;
+  maxWidth?: string;
 }
 
 const ThreeDots = ({
@@ -56,16 +61,18 @@ const ThreeDots = ({
   arrowPosition = 'top',
   children,
   animationType = AnimationType.slideLeft,
+  dotsOrientation = 'horizontal',
+  maxWidth = '148px',
 }: ThreeDotsProps) => {
   const ref = useRef<HTMLButtonElement>(null);
   return (
     <>
-      <Button variant="text" ref={ref} onClick={onClick} buttonCss={styles.button} disabled={disabled}>
-        <SVGIcon name="threeDots" width={18} height={18} />
-      </Button>
+      <button type="button" ref={ref} onClick={onClick} css={styles.button({ isOpen })} disabled={disabled}>
+        <SVGIcon name={dotsOrientation === 'horizontal' ? 'threeDots' : 'threeDotsVertical'} width={32} height={32} />
+      </button>
       <Popover
         gap={13}
-        maxWidth="148px"
+        maxWidth={maxWidth}
         arrow={arrowPosition}
         triggerRef={ref}
         isOpen={isOpen}
@@ -73,7 +80,7 @@ const ThreeDots = ({
         animationType={animationType}
       >
         <div css={styles.wrapper}>
-          {React.Children.map(children, (child) => {
+          {React.Children.map(children, child => {
             if (React.isValidElement(child)) {
               const props = {
                 onClosePopover: closePopover,
@@ -96,10 +103,12 @@ export default ThreeDots;
 const styles = {
   wrapper: css`
     padding-block: ${spacing[8]};
+    position: relative;
   `,
   option: (isTrash: boolean) => css`
     ${styleUtils.resetButton};
     ${typography.body()};
+
     width: 100%;
     padding: ${spacing[10]} ${spacing[20]};
     transition: background-color 0.3s ease-in-out;
@@ -108,16 +117,26 @@ const styles = {
     align-items: center;
     gap: ${spacing[8]};
 
+    svg {
+      flex-shrink: 0;
+      color: ${colorTokens.icon.default};
+    }
+
     :hover {
-      background-color: ${colorPalate.surface.hover};
+      background-color: ${colorTokens.background.hover};
+      color: ${colorTokens.text.title};
+
+      svg {
+        color: ${colorTokens.icon.hover};
+      }
     }
 
     ${isTrash &&
     css`
-      color: ${colorPalate.text.critical};
+      color: ${colorTokens.text.error};
 
       &:hover {
-        background-color: ${colorPalate.surface.critical.neutralHover};
+        background-color: ${rgba(colorTokens.bg.error, 0.1)};
       }
 
       &:active {
@@ -125,7 +144,8 @@ const styles = {
       }
     `}
   `,
-  button: css`
+  button: ({ isOpen = false }) => css`
+    ${styleUtils.resetButton};
     width: 32px;
     height: 32px;
     border-radius: ${borderRadius.circle};
@@ -134,8 +154,24 @@ const styles = {
     align-items: center;
     transition: background-color 0.3s ease-in-out;
 
-    :hover {
-      background-color: ${colorPalate.surface.selected.default};
+    svg {
+      color: ${colorTokens.icon.default};
     }
+
+    :hover {
+      background-color: ${colorTokens.background.hover};
+
+      svg {
+        color: ${colorTokens.icon.default};
+      }
+    }
+
+    ${isOpen &&
+    css`
+      background-color: ${colorTokens.background.hover};
+      svg {
+        color: ${colorTokens.icon.brand};
+      }
+    `}
   `,
 };

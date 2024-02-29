@@ -201,7 +201,7 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
             {children}
           </div>
         </AnimatedDiv>,
-        document.body,
+        document.body
       );
     }
   });

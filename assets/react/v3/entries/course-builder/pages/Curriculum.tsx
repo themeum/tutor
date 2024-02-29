@@ -7,40 +7,73 @@ import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import { __ } from '@wordpress/i18n';
 import { css } from '@emotion/react';
 import { spacing } from '@Config/styles';
+import Show from '@Controls/Show';
+import Topic from '@CourseBuilderComponents/curriculum/Topic';
+import { useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import For from '@Controls/For';
+import { styleUtils } from '@Utils/style-utils';
+import { useState } from 'react';
+import EmptyState from '@Molecules/EmptyState';
+import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
+import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
 
 const Curriculum = () => {
-  const { showModal, closeModal } = useModal();
-  return (
-    <div css={styles.wrapper}>
-      <CanvasHead
-        title={__('Curriculum', 'tutor')}
-        rightButton={<Button variant="text">{__('Expand All', 'tutor')}</Button>}
-      />
+  const courseId = getCourseId();
+  const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
+  const [allCollapsed, setAllCollapsed] = useState(false);
 
-      <Button
-        onClick={() =>
-          showModal({
-            component: ReferenceModal,
-            props: {
-              icon: <SVGIcon name="note" height={24} width={24} />,
-              title: __('Title', 'tutor'),
-              subtitle: __('Subtitle', 'tutor'),
-              actions: (
-                <>
-                  <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
-                    {__('Cancel', 'tutor')}
+  if (courseCurriculumQuery.isLoading) {
+    return <LoadingOverlay />;
+  }
+
+  if (!courseCurriculumQuery.data) {
+    return null;
+  }
+
+  const content = courseCurriculumQuery.data;
+
+  return (
+    <div css={styles.container}>
+      <div css={styles.wrapper}>
+        <CanvasHead
+          title={__('Curriculum', 'tutor')}
+          rightButton={
+            <Button variant="text" onClick={() => setAllCollapsed(previous => !previous)}>
+              {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
+            </Button>
+          }
+        />
+
+        <div>
+          <Show
+            when={content}
+            fallback={
+              <EmptyState
+                emptyStateImage={emptyStateImage}
+                emptyStateImage2x={emptyStateImage2x}
+                imageAltText="Empty State Image"
+                title="Create the course journey from here!"
+                description="when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
+                actions={
+                  <Button variant="secondary" icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}>
+                    {__('Add Topic', 'tutor')}
                   </Button>
-                  <Button variant="primary" onClick={() => closeModal({ action: 'CONFIRM' })}>
-                    {__('Confirm', 'tutor')}
-                  </Button>
-                </>
-              ),
-            },
-          })
-        }
-      >
-        Show Modal
-      </Button>
+                }
+              />
+            }
+          >
+            <div css={styles.topicWrapper}>
+              <For each={content}>
+                {(topic, index) => {
+                  return <Topic key={index} topic={topic} allCollapsed={allCollapsed} />;
+                }}
+              </For>
+            </div>
+          </Show>
+        </div>
+      </div>
     </div>
   );
 };
@@ -48,10 +81,18 @@ const Curriculum = () => {
 export default Curriculum;
 
 const styles = {
-  wrapper: css`
-    padding: ${spacing[24]} ${spacing[64]};
+  container: css`
+    padding: ${spacing[32]} ${spacing[64]};
   `,
-  topicsWrapper: css`
-    margin-top: ${spacing[32]};
+  wrapper: css`
+    max-width: 1076px;
+    width: 100%;
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[32]};
+  `,
+
+  topicWrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[16]};
   `,
 };

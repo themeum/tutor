@@ -20,6 +20,7 @@ interface FormTextareaInputProps extends FormControllerProps<string | null> {
   onKeyDown?: (keyName: string) => void;
   isHidden?: boolean;
   enableResize?: boolean;
+  isSecondary?: boolean;
 }
 
 const DEFAULT_ROWS = 6;
@@ -40,9 +41,10 @@ const FormTextareaInput = ({
   onKeyDown,
   isHidden,
   enableResize = false,
+  isSecondary = false,
 }: FormTextareaInputProps) => {
   const inputValue = field.value ?? '';
-  
+
   let characterCount;
   if (maxLimit) {
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
@@ -60,8 +62,9 @@ const FormTextareaInput = ({
       helpText={helpText}
       isHidden={isHidden}
       characterCount={characterCount}
+      isSecondary={isSecondary}
     >
-      {(inputProps) => {
+      {inputProps => {
         return (
           <>
             <div css={styles.container(enableResize)}>
@@ -69,7 +72,7 @@ const FormTextareaInput = ({
                 {...field}
                 {...inputProps}
                 value={inputValue}
-                onChange={(event) => {
+                onChange={event => {
                   const { value } = event.target;
                   if (maxLimit && value.trim().length > maxLimit) {
                     return;
@@ -81,7 +84,7 @@ const FormTextareaInput = ({
                     onChange(value);
                   }
                 }}
-                onKeyDown={(event) => {
+                onKeyDown={event => {
                   onKeyDown && onKeyDown(event.key);
                 }}
                 autoComplete="off"
