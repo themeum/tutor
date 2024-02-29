@@ -81,9 +81,9 @@ const CourseBasic = () => {
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
             <Controller
-              name="post_title"
+              name='post_title'
               control={form.control}
-              rules={{...requiredRule(), ...maxValueRule({ maxValue: 255 })}}
+              rules={{ ...requiredRule(), ...maxValueRule({ maxValue: 255 }) }}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
@@ -96,7 +96,7 @@ const CourseBasic = () => {
             />
 
             <Controller
-              name="post_name"
+              name='post_name'
               control={form.control}
               render={(controllerProps) => (
                 <FormEditableAlias
@@ -109,11 +109,9 @@ const CourseBasic = () => {
           </div>
 
           <Controller
-            name="post_content"
+            name='post_content'
             control={form.control}
-            render={(controllerProps) => (
-              <FormTextareaInput {...controllerProps} label={__('Description', 'tutor')} />
-            )}
+            render={(controllerProps) => <FormTextareaInput {...controllerProps} label={__('Description', 'tutor')} />}
           />
 
           <CourseSettings />
@@ -121,21 +119,21 @@ const CourseBasic = () => {
       </div>
       <div css={styles.sidebar}>
         <Controller
-          name="post_status"
+          name='post_status'
           control={form.control}
           render={(controllerProps) => (
             <FormSelectInput
               {...controllerProps}
               label={__('Visibility Status', 'tutor')}
               options={visibilityStatusOptions}
-              leftIcon={<SVGIcon name="eye" width={32} height={32} />}
+              leftIcon={<SVGIcon name='eye' width={32} height={32} />}
             />
           )}
         />
 
         {visibilityStatus === 'password_protected' && (
           <Controller
-            name="post_password"
+            name='post_password'
             control={form.control}
             render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
           />
@@ -144,7 +142,7 @@ const CourseBasic = () => {
         <ScheduleOptions />
 
         <Controller
-          name="thumbnail"
+          name='thumbnail'
           control={form.control}
           render={(controllerProps) => (
             <FormImageInput
@@ -171,7 +169,7 @@ const CourseBasic = () => {
 
         {/* @TODO: Add course price options based on monetization setting */}
         <Controller
-          name="course_price_type"
+          name='course_price_type'
           control={form.control}
           render={(controllerProps) => (
             <FormRadioGroup
@@ -186,25 +184,25 @@ const CourseBasic = () => {
         {coursePriceType === 'paid' && (
           <div css={styles.coursePriceWrapper}>
             <Controller
-              name="course_price"
+              name='course_price'
               control={form.control}
               render={(controllerProps) => (
                 <FormInputWithContent
                   {...controllerProps}
                   label={__('Regular Price', 'tutor')}
-                  content="$"
+                  content='$'
                   placeholder={__('0', 'tutor')}
                 />
               )}
             />
             <Controller
-              name="course_sale_price"
+              name='course_sale_price'
               control={form.control}
               render={(controllerProps) => (
                 <FormInputWithContent
                   {...controllerProps}
                   label={__('Discount Price', 'tutor')}
-                  content="$"
+                  content='$'
                   placeholder={__('0', 'tutor')}
                 />
               )}
@@ -213,21 +211,21 @@ const CourseBasic = () => {
         )}
 
         <Controller
-          name="course_categories"
+          name='course_categories'
           control={form.control}
           defaultValue={[]}
           render={(controllerProps) => <FormCategoriesInput {...controllerProps} label={__('Categories', 'tutor')} />}
         />
 
         <Controller
-          name="course_tags"
+          name='course_tags'
           control={form.control}
           render={(controllerProps) => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} />}
         />
 
         {tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
           <Controller
-            name="post_author"
+            name='post_author'
             control={form.control}
             render={(controllerProps) => (
               <FormSelectUser
@@ -244,7 +242,7 @@ const CourseBasic = () => {
 
         {/* @TODO: Need to add condition based on tutor pro, marketplace, multi instructor addon, and admin role */}
         <Controller
-          name="course_instructors"
+          name='course_instructors'
           control={form.control}
           render={(controllerProps) => (
             <FormSelectUser

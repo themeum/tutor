@@ -113,7 +113,7 @@ export const SidebarProvider = ({ children }: SidebarProviderProps) => {
 
   useEffect(() => {
     setSteps(previous =>
-      [...previous].map((step, index) => {
+      previous.map((step, index) => {
         return {
           ...step,
           isActive: index === currentIndex,
@@ -127,7 +127,7 @@ export const SidebarProvider = ({ children }: SidebarProviderProps) => {
       return;
     }
     setSteps(previous =>
-      [...previous].map(step => {
+      previous.map(step => {
         return {
           ...step,
           isCompleted: courseContent.step_completion_status[step.id],

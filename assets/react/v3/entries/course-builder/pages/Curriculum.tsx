@@ -1,12 +1,12 @@
+import React from 'react';
 import Button from '@Atoms/Button';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import EmptyState from '@Molecules/EmptyState';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { colorTokens, spacing } from '@Config/styles';
 import SVGIcon from '@Atoms/SVGIcon';
-import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
-import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
+import { useModal } from '@Components/modals/Modal';
+import ReferenceModal from '@Components/modals/ReferenceModal';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import { __ } from '@wordpress/i18n';
+import { css } from '@emotion/react';
+import { colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import { CourseTopic, useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
@@ -30,6 +30,9 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { createPortal } from 'react-dom';
 import { droppableMeasuringStrategy } from '@Utils/dndkit';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import EmptyState from '@Molecules/EmptyState';
+import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
+import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
 
 const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean };

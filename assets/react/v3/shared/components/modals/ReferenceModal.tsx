@@ -12,27 +12,25 @@ interface ReferenceModalProps extends ModalProps {
 }
 
 // @TODO: will be removed later
-const ReferenceModal = ({ closeModal, title }: ReferenceModalProps) => {
+const ReferenceModal = ({ closeModal, icon, title, subtitle, actions }: ReferenceModalProps) => {
   const form = useFormWithGlobalError<{ url: string }>();
   return (
-    <ModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
-      <div css={{ width: '620px' }}>
+    <ModalWrapper
+      onClose={() => closeModal({ action: 'CLOSE' })}
+      icon={icon}
+      title={title}
+      subtitle={subtitle}
+      actions={actions}
+    >
+      <div css={{ width: '1472px' }}>
         <div css={{ padding: '20px' }}>
           <Controller
             control={form.control}
-            name="url"
-            render={(props) => <FormInput {...props} label="Images, YouTube, or Vimeo URL" placeholder="https://" />}
+            name='url'
+            render={(props) => <FormInput {...props} label='Images, YouTube, or Vimeo URL' placeholder='https://' />}
           />
         </div>
         <hr css={{ padding: 0, margin: 0 }} />
-        <div css={{ display: 'flex', padding: '16px', justifyContent: 'end', gap: 8 }}>
-          <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={() => closeModal({ action: 'CONFIRM' })}>
-            Add
-          </Button>
-        </div>
       </div>
     </ModalWrapper>
   );
