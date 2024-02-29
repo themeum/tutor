@@ -2,11 +2,11 @@ import React from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
+import ReferenceModal from '@Components/modals/ReferenceModal';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import { __ } from '@wordpress/i18n';
 import { css } from '@emotion/react';
 import { spacing } from '@Config/styles';
-import AddAssignmentModal from '@Components/modals/AddAssignmentModal';
 
 const Curriculum = () => {
   const { showModal, closeModal } = useModal();
@@ -20,11 +20,21 @@ const Curriculum = () => {
       <Button
         onClick={() =>
           showModal({
-            component: AddAssignmentModal,
+            component: ReferenceModal,
             props: {
-              icon: <SVGIcon name="report" height={24} width={24} />,
-              title: __('Assignment', 'tutor'),
-              subtitle: __('Topic: Learn to use ChatGPT effectively', 'tutor'),
+              icon: <SVGIcon name="note" height={24} width={24} />,
+              title: __('Title', 'tutor'),
+              subtitle: __('Subtitle', 'tutor'),
+              actions: (
+                <>
+                  <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
+                    {__('Cancel', 'tutor')}
+                  </Button>
+                  <Button variant="primary" onClick={() => closeModal({ action: 'CONFIRM' })}>
+                    {__('Confirm', 'tutor')}
+                  </Button>
+                </>
+              ),
             },
           })
         }
