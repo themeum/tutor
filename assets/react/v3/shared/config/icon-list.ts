@@ -252,11 +252,11 @@ const collection = {
     viewBox: '0 0 22 16',
   },
   inactive: {
-    icon: '<circle cx="12" cy="12" r="7.5" fill="#FFFFFF" stroke="currentColor"/>',
+    icon: '<circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor"/>',
     viewBox: '0 0 24 24',
   },
   active: {
-    icon: '<circle cx="12" cy="12" r="7.5" fill="#FFFFFF" stroke="currentColor"/><circle cx="12" cy="12" r="3" fill="currentColor"/>',
+    icon: '<circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor"/><circle cx="12" cy="12" r="3" fill="currentColor"/>',
     viewBox: '0 0 24 24',
   },
   completed: {
@@ -264,7 +264,7 @@ const collection = {
     viewBox: '0 0 24 24',
   },
   visited: {
-    icon: '<circle cx="12" cy="12" r="7.5" fill="#FFFFFF" stroke="currentColor"/>',
+    icon: '<circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor"/>',
     viewBox: '0 0 24 24',
   },
   save: {

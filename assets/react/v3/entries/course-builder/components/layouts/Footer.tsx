@@ -2,6 +2,7 @@ import Button, { ButtonSize, ButtonVariant } from '@Atoms/Button';
 import { colorPalate, colorTokens, spacing, zIndex } from '@Config/styles';
 import routes from '@CourseBuilderConfig/routes';
 import { useSidebar } from '@CourseBuilderContexts/SidebarContext';
+
 import { useCurrentPath } from '@Hooks/useCurrentPath';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -25,7 +26,7 @@ const Footer = () => {
     const previousStep = steps[previousIndex];
 
     setSteps(previous => {
-      return [...previous].map((item, index) => {
+      return previous.map((item, index) => {
         if (index === currentIndex) {
           return {
             ...item,
@@ -55,7 +56,7 @@ const Footer = () => {
     const nextStep = steps[nextIndex];
 
     setSteps(previous => {
-      return [...previous].map((item, index) => {
+      return previous.map((item, index) => {
         if (index === currentIndex) {
           return {
             ...item,
