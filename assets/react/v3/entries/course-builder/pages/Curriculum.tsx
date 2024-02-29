@@ -1,12 +1,12 @@
+import React from 'react';
 import Button from '@Atoms/Button';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import EmptyState from '@Molecules/EmptyState';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { spacing } from '@Config/styles';
 import SVGIcon from '@Atoms/SVGIcon';
-import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
-import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
+import { useModal } from '@Components/modals/Modal';
+import ReferenceModal from '@Components/modals/ReferenceModal';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import { __ } from '@wordpress/i18n';
+import { css } from '@emotion/react';
+import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import { useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
@@ -15,6 +15,9 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import For from '@Controls/For';
 import { styleUtils } from '@Utils/style-utils';
 import { useState } from 'react';
+import EmptyState from '@Molecules/EmptyState';
+import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
+import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
 
 const Curriculum = () => {
   const courseId = getCourseId();

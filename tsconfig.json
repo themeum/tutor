@@ -35,6 +35,7 @@
       "@CourseBuilderConfig/*": ["assets/react/v3/entries/course-builder/config/*"],
       "@CourseBuilderPages/*": ["assets/react/v3/entries/course-builder/pages/*"],
       "@CourseBuilderUtils/*": ["assets/react/v3/entries/course-builder/utils/*"],
+      "@CourseBuilderPublic/*": ["assets/react/v3/entries/course-builder/public/*"],
       "@CourseBuilderContexts/*": ["assets/react/v3/entries/course-builder/contexts/*"]
     }
   },
