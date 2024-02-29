@@ -98,7 +98,6 @@ const styles = {
   inputWrapper: (size: string, hasFieldError: boolean, removeBorder: boolean) => css`
     display: flex;
     align-items: center;
-    padding: ${spacing[6]} ${spacing[12]};
 
     ${!removeBorder &&
     css`
@@ -107,11 +106,6 @@ const styles = {
       box-shadow: ${shadow.input};
       background-color: ${colorTokens.background.white};
     `}
-
-    ${size === 'large' &&
-    css`
-      padding: ${spacing[10]} ${spacing[16]};
-    `};
 
     ${hasFieldError &&
     css`
@@ -124,10 +118,9 @@ const styles = {
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
     ${typography.body()};
-    height: 26px;
     border: none;
     box-shadow: none;
-    padding: 0;
+    padding-inline: ${spacing[12]};
     background-color: transparent;
     ${showVerticalBar &&
     css`
@@ -137,6 +130,7 @@ const styles = {
     ${size === 'large' &&
     css`
       font-size: ${fontSize[24]};
+      padding-inline: ${spacing[16]};
       font-weight: ${fontWeight.medium};
       height: 34px;
       ${showVerticalBar &&
@@ -150,17 +144,17 @@ const styles = {
     }
   `,
   inputLeftContent: (showVerticalBar: boolean, size: string) => css`
+    ${typography.small()}
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
     color: ${colorTokens.icon.subdued};
-    padding-right: ${spacing[8]};
-    font-size: ${fontSize[16]};
-    line-height: ${lineHeight[20]};
+    padding-inline: ${spacing[12]};
 
     ${size === 'large' &&
     css`
-      padding-right: ${spacing[12]};
-      font-size: ${fontSize[24]};
-      line-height: ${lineHeight[32]};
+      ${typography.body()}
     `}
 
     ${showVerticalBar &&
@@ -169,17 +163,17 @@ const styles = {
     `}
   `,
   inputRightContent: (showVerticalBar: boolean, size: string) => css`
+    ${typography.small()}
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
     color: ${colorTokens.icon.subdued};
-    padding-left: ${spacing[8]};
-    font-size: ${fontSize[16]};
-    line-height: ${lineHeight[20]};
+    padding-inline: ${spacing[12]};
 
     ${size === 'large' &&
     css`
-      padding-left: ${spacing[12]};
-      font-size: ${fontSize[24]};
-      line-height: ${lineHeight[32]};
+      ${typography.body()}
     `}
 
     ${showVerticalBar &&
