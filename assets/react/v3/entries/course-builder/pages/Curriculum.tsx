@@ -3,55 +3,54 @@ import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import EmptyState from '@Molecules/EmptyState';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import SVGIcon from '@Atoms/SVGIcon';
 import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
 import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
 import Show from '@Controls/Show';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
-import { useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
+import { CourseTopic, useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import For from '@Controls/For';
 import { styleUtils } from '@Utils/style-utils';
 import { useEffect, useMemo, useState } from 'react';
-import { moveTo, noop } from '@Utils/util';
+import { moveTo, nanoid, noop } from '@Utils/util';
 import {
   DndContext,
   DragOverlay,
   KeyboardSensor,
-  MeasuringStrategy,
   PointerSensor,
   UniqueIdentifier,
   closestCenter,
-  defaultDropAnimationSideEffects,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
+import { droppableMeasuringStrategy } from '@Utils/dndkit';
+import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+
+const courseId = getCourseId();
+export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean };
 
 const Curriculum = () => {
-  const courseId = getCourseId();
-  const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
   const [allCollapsed, setAllCollapsed] = useState(true);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
+  const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
 
-  // @TODO: temporary code for handling sorting functionalities. Will be updated later once the API will be ready.
-  const curriculumData = useMemo(() => {
-    if (!courseCurriculumQuery.data) {
-      return [];
-    }
-    return courseCurriculumQuery.data;
-  }, [courseCurriculumQuery.data]);
-
-  const [content, setContent] = useState(curriculumData);
+  const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
 
   useEffect(() => {
-    setContent(curriculumData);
-  }, [curriculumData]);
+    if (!courseCurriculumQuery.data) {
+      return;
+    }
+    setContent(courseCurriculumQuery.data.map((item, index) => ({ ...item, isCollapsed: index > 0 })));
+  }, [courseCurriculumQuery.data]);
 
-  // @TODO: __^__ temporary code ends.
+  useEffect(() => {
+    setContent(previous => previous.map(item => ({ ...item, isCollapsed: allCollapsed })));
+  }, [allCollapsed]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -90,7 +89,7 @@ const Curriculum = () => {
           }
         />
 
-        <div>
+        <div css={styles.content}>
           <Show
             when={content}
             fallback={
@@ -111,11 +110,8 @@ const Curriculum = () => {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
-              measuring={{
-                droppable: {
-                  strategy: MeasuringStrategy.Always,
-                },
-              }}
+              measuring={droppableMeasuringStrategy}
+              modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
               onDragStart={event => {
                 setActiveSortId(event.active.id);
                 setAllCollapsed(true);
@@ -123,6 +119,7 @@ const Curriculum = () => {
               onDragEnd={event => {
                 const { active, over } = event;
                 if (!over) {
+                  setActiveSortId(null);
                   return;
                 }
 
@@ -134,6 +131,7 @@ const Curriculum = () => {
                     return moveTo(previous, activeIndex, overIndex);
                   });
                 }
+                setActiveSortId(null);
               }}
             >
               <SortableContext
@@ -149,7 +147,6 @@ const Curriculum = () => {
                           topic={topic}
                           allCollapsed={allCollapsed}
                           onSort={(activeIndex, overIndex) => {
-                            // @TODO: will be implemented with real scenario later
                             setContent(previous => {
                               return previous.map((item, idx) => {
                                 if (idx === index) {
@@ -168,10 +165,10 @@ const Curriculum = () => {
               </SortableContext>
 
               {createPortal(
-                <DragOverlay adjustScale>
+                <DragOverlay>
                   <Show when={activeSortItem}>
                     {item => {
-                      return <Topic topic={item} allCollapsed={allCollapsed} onSort={noop} isOverlay />;
+                      return <Topic topic={item} allCollapsed={allCollapsed} onSort={noop} />;
                     }}
                   </Show>
                 </DragOverlay>,
@@ -179,6 +176,30 @@ const Curriculum = () => {
               )}
             </DndContext>
           </Show>
+        </div>
+        <div css={styles.addButtonWrapper}>
+          <Button
+            variant="secondary"
+            icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
+            onClick={() => {
+              // @TODO: will be updated later.
+              setContent(previous => {
+                return [
+                  ...previous.map(item => ({ ...item, isCollapsed: true })),
+                  {
+                    ID: nanoid(),
+                    post_title: 'New Course Topic',
+                    post_content: '',
+                    post_name: '',
+                    content: [],
+                    isCollapsed: false,
+                  },
+                ];
+              });
+            }}
+          >
+            {__('Add Topic', 'tutor')}
+          </Button>
         </div>
       </div>
     </div>
@@ -195,11 +216,19 @@ const styles = {
     max-width: 1076px;
     width: 100%;
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[32]};
+    gap: ${spacing[16]};
+  `,
+  content: css`
+    margin-top: ${spacing[16]};
   `,
 
   topicWrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
+  `,
+  addButtonWrapper: css`
+    path {
+      stroke: ${colorTokens.icon.brand};
+    }
   `,
 };
