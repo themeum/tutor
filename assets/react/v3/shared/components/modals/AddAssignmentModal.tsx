@@ -1,20 +1,22 @@
 import React from 'react';
-import ModalWrapper from './ModalWrapper';
-import { ModalProps } from './Modal';
 import { css } from '@emotion/react';
-import { borderRadius, colorTokens, fontWeight, spacing, zIndex } from '@Config/styles';
-import { Controller } from 'react-hook-form';
-import FormInput from '@Components/fields/FormInput';
 import { __ } from '@wordpress/i18n';
+import { Controller } from 'react-hook-form';
+
+import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import FormImageInput, { Media } from '@Components/fields/FormImageInput';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+
+import { borderRadius, colorTokens, fontWeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
-import FormSwitch from '@Components/fields/FormSwitch';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+
+import ModalWrapper from './ModalWrapper';
+import { ModalProps } from './Modal';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -91,31 +93,34 @@ const AddAssignmentModal = ({ closeModal, icon, title, subtitle }: AddLessonModa
     >
       <div css={{ width: '1472px', height: '100%' }}>
         <div css={styles.wrapper}>
-          <div css={styles.assignmentInfo}>
-            <Controller
-              name="assignment_title"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInput
-                  {...controllerProps}
-                  label={__('Assignment Title', 'tutor')}
-                  placeholder={__('Enter Assignment Title', 'tutor')}
-                  maxLimit={245}
-                  isClearable
-                />
-              )}
-            />
-            <Controller
-              name="summary"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  label={__('Summary', 'tutor')}
-                  placeholder={__('Enter Assignment Summary', 'tutor')}
-                />
-              )}
-            />
+          <div>
+            <div css={styles.assignmentInfo}>
+              <Controller
+                name="assignment_title"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Assignment Title', 'tutor')}
+                    placeholder={__('Enter Assignment Title', 'tutor')}
+                    maxLimit={245}
+                    isClearable
+                  />
+                )}
+              />
+
+              <Controller
+                name="summary"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormTextareaInput
+                    {...controllerProps}
+                    label={__('Summary', 'tutor')}
+                    placeholder={__('Enter Assignment Summary', 'tutor')}
+                  />
+                )}
+              />
+            </div>
           </div>
 
           <div css={styles.rightPanel}>
@@ -206,22 +211,21 @@ const AddAssignmentModal = ({ closeModal, icon, title, subtitle }: AddLessonModa
               )}
             />
 
-            <div css={styles.maximumFilesizeLimit}>
-              <Controller
-                name="maximum_filesize_limit"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormInput
-                    {...controllerProps}
-                    type="number"
-                    label={__('Maximum file size limit', 'tutor')}
-                    placeholder="0"
-                    helpText={__('Set the maximum file size limit for the assignment', 'tutor')}
-                  />
-                )}
-              />
-              <div css={styles.maximumFilesizeLimitContent}>{__('MB', 'tutor')}</div>
-            </div>
+            <Controller
+              name="maximum_filesize_limit"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  type="number"
+                  label={__('Maximum file size limit', 'tutor')}
+                  placeholder="0"
+                  content={__('MB', 'tutor')}
+                  contentPosition="right"
+                  helpText={__('Set the maximum file size limit for the assignment', 'tutor')}
+                />
+              )}
+            />
           </div>
         </div>
       </div>
@@ -245,7 +249,6 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
-    align-self: start;
     position: sticky;
     top: 0;
   `,
@@ -255,8 +258,7 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[16]};
     padding-block: ${spacing[24]};
-    padding-right: ${spacing[24]};
-    padding-left: ${spacing[64]};
+    padding-inline: ${spacing[24]} ${spacing[64]};
   `,
   timeLimit: css`
     display: grid;
@@ -288,25 +290,5 @@ const styles = {
   uploadLabel: css`
     ${typography.body()}
     color: ${colorTokens.text.title};
-  `,
-  maximumFilesizeLimit: css`
-    display: grid;
-    grid-template-columns: 1fr 48px;
-    align-items: end;
-
-    & input {
-      border-radius: ${borderRadius[6]} 0 0 ${borderRadius[6]};
-    }
-  `,
-  maximumFilesizeLimitContent: css`
-    ${typography.small()}
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: ${spacing[8]} ${spacing[12]};
-    border: 1px solid ${colorTokens.stroke.default};
-    border-left: none;
-    border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
   `,
 };
