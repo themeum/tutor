@@ -1,25 +1,35 @@
-import { CourseProgressSteps, Option } from '@Utils/types';
+import { CourseProgressSteps, IconCollection, Option } from '@Utils/types';
 import SVGIcon from './SVGIcon';
 import { css } from '@emotion/react';
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, spacing, zIndex } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { typography } from '@Config/typography';
+import { Step, useSidebar } from '@CourseBuilderContexts/SidebarContext';
 
 export type ProgressStatus = 'inactive' | 'active' | 'completed';
 
 type ProgressStep = {
-  step: Option<string>;
-  status: ProgressStatus;
+  step: Step;
+  index: number;
   onClick: (step: string) => void;
 };
 
-const ProgressStep = ({ step, status, onClick }: ProgressStep) => {
+const ProgressStep = ({ step, index, onClick }: ProgressStep) => {
+  const { currentIndex } = useSidebar();
+  const statusIcon = step.isActive ? 'active' : step.isCompleted ? 'completed' : 'inactive';
+  const isActive = step.isActive || step.isCompleted || step.isVisited;
+
   return (
-    <div css={styles.wrapper(status)}>
-      <div css={styles.icon(status)}>
-        <SVGIcon name={status} width={24} height={24} />
+    <div css={styles.wrapper({ isActive: index < currentIndex })}>
+      <div css={styles.icon({ isActive })}>
+        <SVGIcon name={(statusIcon ?? 'inactive') as IconCollection} width={24} height={24} />
       </div>
-      <button type="button" css={styles.button(status)} onClick={() => onClick(step.value)}>
+      <button
+        type="button"
+        css={styles.button({ isActive })}
+        onClick={() => onClick(step.path)}
+        disabled={step.isDisabled}
+      >
         {step.label}
       </button>
     </div>
@@ -29,7 +39,7 @@ const ProgressStep = ({ step, status, onClick }: ProgressStep) => {
 export default ProgressStep;
 
 const styles = {
-  wrapper: (status: string) => css`
+  wrapper: ({ isActive }: { isActive: boolean }) => css`
     display: flex;
     align-items: center;
     gap: ${spacing[4]};
@@ -39,24 +49,24 @@ const styles = {
       content: '';
       width: 1px;
       height: 40px;
-      background-color: ${status === 'completed' ? colorTokens.brand.blue : colorTokens.color.black[10]};
+      background-color: ${isActive ? colorTokens.brand.blue : colorTokens.color.black[10]};
       position: absolute;
       left: ${spacing[12]};
       top: ${spacing[20]};
     }
   `,
-  icon: (status: string) => css`
+  icon: ({ isActive }: { isActive: boolean }) => css`
     display: flex;
-    color: ${status === 'inactive' ? colorTokens.color.black[10] : colorTokens.design.brand};
+    color: ${!isActive ? colorTokens.color.black[10] : colorTokens.design.brand};
 
     svg {
-      z-index: 1;
+      z-index: ${zIndex.positive};
     }
   `,
-  button: (status: string) => css`
+  button: ({ isActive }: { isActive: boolean }) => css`
     ${styleUtils.resetButton};
     ${typography.caption('regular')};
-    color: ${status === 'inactive' ? colorTokens.text.hints : colorTokens.text.primary};
+    color: ${!isActive ? colorTokens.text.hints : colorTokens.text.primary};
     cursor: pointer;
   `,
 };

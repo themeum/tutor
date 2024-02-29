@@ -38,23 +38,23 @@ module.exports = (env, options) => {
   if ('production' === mode) {
     var minimizer = !env.build
       ? new TerserPlugin({
-        terserOptions: {},
-        minify: file => {
-          const uglifyJsOptions = {
-            sourceMap: true,
-          };
-          return require('uglify-js').minify(file, uglifyJsOptions);
-        },
-      })
+          terserOptions: {},
+          minify: file => {
+            const uglifyJsOptions = {
+              sourceMap: true,
+            };
+            return require('uglify-js').minify(file, uglifyJsOptions);
+          },
+        })
       : new TerserPlugin({
-        terserOptions: {},
-        minify: file => {
-          const uglifyJsOptions = {
-            sourceMap: false,
-          };
-          return require('uglify-js').minify(file, uglifyJsOptions);
-        },
-      });
+          terserOptions: {},
+          minify: file => {
+            const uglifyJsOptions = {
+              sourceMap: false,
+            };
+            return require('uglify-js').minify(file, uglifyJsOptions);
+          },
+        });
 
     config.devtool = false;
     config.optimization = {
@@ -147,6 +147,7 @@ module.exports = (env, options) => {
             '@CourseBuilderConfig': path.resolve(__dirname, './assets/react/v3/entries/course-builder/config/'),
             '@CourseBuilderPages': path.resolve(__dirname, './assets/react/v3/entries/course-builder/pages/'),
             '@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
+            '@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
             '@CourseBuilderPublic': path.resolve(__dirname, './assets/react/v3/entries/course-builder/public/'),
           },
         },
