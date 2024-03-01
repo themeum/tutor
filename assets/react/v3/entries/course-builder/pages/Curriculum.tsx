@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
@@ -14,7 +14,7 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import For from '@Controls/For';
 import { styleUtils } from '@Utils/style-utils';
-import { useEffect, useMemo, useState } from 'react';
+
 import { moveTo, nanoid, noop } from '@Utils/util';
 import {
   DndContext,
@@ -148,7 +148,21 @@ const Curriculum = () => {
                         <Topic
                           key={topic.ID}
                           topic={topic}
-                          allCollapsed={allCollapsed}
+                          onDelete={() => setContent(previous => previous.filter((_, idx) => idx !== index))}
+                          onCollapse={() =>
+                            setContent(previous =>
+                              previous.map((item, idx) => {
+                                if (idx === index) {
+                                  return {
+                                    ...item,
+                                    isCollapsed: !item.isCollapsed,
+                                  };
+                                }
+
+                                return item;
+                              })
+                            )
+                          }
                           onSort={(activeIndex, overIndex) => {
                             setContent(previous => {
                               return previous.map((item, idx) => {
@@ -171,7 +185,7 @@ const Curriculum = () => {
                 <DragOverlay>
                   <Show when={activeSortItem}>
                     {item => {
-                      return <Topic topic={item} allCollapsed={allCollapsed} onSort={noop} />;
+                      return <Topic topic={item} />;
                     }}
                   </Show>
                 </DragOverlay>,

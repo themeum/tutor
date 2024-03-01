@@ -16,7 +16,7 @@ export const useGenericMutation = <TData = unknown, TVariables = void>({
     onSuccess: () => {
       if (invalidateKeys?.length) {
         for (const queryKey of invalidateKeys) {
-          queryClient.invalidateQueries(queryKey);
+          queryClient.invalidateQueries({ queryKey });
         }
       }
     },

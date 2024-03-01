@@ -17,6 +17,8 @@ import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { __ } from '@wordpress/i18n';
 import ThreeDots from '@Molecules/ThreeDots';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import { AnimationType } from '@Hooks/useAnimation';
 import For from '@Controls/For';
 import {
   useSensors,
@@ -29,9 +31,7 @@ import {
   DragOverlay,
 } from '@dnd-kit/core';
 import {
-  AnimateLayoutChanges,
   SortableContext,
-  defaultAnimateLayoutChanges,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
@@ -46,22 +46,26 @@ import { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
-  allCollapsed: boolean;
-  onSort: (activeIndex: number, overIndex: number) => void;
+  onDelete?: () => void;
+  onCopy?: () => void;
+  onSort?: (activeIndex: number, overIndex: number) => void;
+  onCollapse?: () => void;
   isOverlay?: boolean;
 }
 
 const hasLiveAddons = true;
 
-const Topic = ({ topic, allCollapsed, onSort, isOverlay = false }: TopicProps) => {
+const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false }: TopicProps) => {
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
   const topicRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const deleteRef = useRef<HTMLButtonElement>(null);
 
   const collapseAnimation = useCollapseExpandAnimation({ ref: topicRef, isOpen: !topic.isCollapsed });
   const collapseAnimationDescription = useCollapseExpandAnimation({
@@ -132,7 +136,7 @@ const Topic = ({ topic, allCollapsed, onSort, isOverlay = false }: TopicProps) =
       ref={combinedRef}
       style={style}
     >
-      <div css={styles.header({ isCollapsed: topic.isCollapsed, isEdit })}>
+      <div css={styles.header({ isCollapsed: topic.isCollapsed, isEdit, isDeletePopoverOpen })}>
         <div css={styles.headerContent}>
           <div {...listeners} css={styles.grabberInput({ isOverlay })}>
             <SVGIcon name="dragVertical" width={24} height={24} />
@@ -183,17 +187,42 @@ const Topic = ({ topic, allCollapsed, onSort, isOverlay = false }: TopicProps) =
               type="button"
               css={styles.actionButton}
               data-visually-hidden
+              ref={deleteRef}
               onClick={() => {
-                alert('@TODO: will be implemented later');
+                setIsDeletePopoverOpen(true);
               }}
             >
               <SVGIcon name="delete" width={24} height={24} />
             </button>
+            <ConfirmationPopover
+              isOpen={isDeletePopoverOpen}
+              triggerRef={deleteRef}
+              closePopover={() => setIsDeletePopoverOpen(false)}
+              maxWidth="258px"
+              title={`Delete topic "${topic.post_title}"`}
+              message="Are you sure you want to delete this content from your course? This cannot be undone."
+              animationType={AnimationType.slideUp}
+              arrow="top"
+              hideArrow
+              confirmButton={{
+                text: __('Delete', 'tutor'),
+                variant: 'text',
+                isDelete: true,
+              }}
+              cancelButton={{
+                text: __('Cancel', 'tutor'),
+                variant: 'text',
+              }}
+              onConfirmation={() => {
+                onDelete && onDelete();
+              }}
+            />
+
             <button
               type="button"
               css={styles.actionButton}
               onClick={() => {
-                //@TODO: set is collapsed state.
+                onCollapse && onCollapse();
               }}
             >
               <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
@@ -265,7 +294,7 @@ const Topic = ({ topic, allCollapsed, onSort, isOverlay = false }: TopicProps) =
               if (active.id !== over.id) {
                 const activeIndex = topic.content.findIndex(item => item.ID === active.id);
                 const overIndex = topic.content.findIndex(item => item.ID === over.id);
-                onSort(activeIndex, overIndex);
+                onSort && onSort(activeIndex, overIndex);
               }
             }}
           >
@@ -409,7 +438,15 @@ const styles = {
     `}
   `,
 
-  header: ({ isCollapsed, isEdit }: { isCollapsed: boolean; isEdit: boolean }) => css`
+  header: ({
+    isCollapsed,
+    isEdit,
+    isDeletePopoverOpen,
+  }: {
+    isCollapsed: boolean;
+    isEdit: boolean;
+    isDeletePopoverOpen: boolean;
+  }) => css`
     padding: ${spacing[12]} ${spacing[16]};
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
@@ -425,6 +462,7 @@ const styles = {
     `}
 
     ${!isEdit &&
+    !isDeletePopoverOpen &&
     css`
       [data-visually-hidden] {
         opacity: 0;
