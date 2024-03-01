@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { css } from '@emotion/react';
 import { borderRadius, colorTokens, fontWeight, footerHeight, headerHeight, shadow, spacing } from '@Config/styles';
 import { Controller, useFormContext } from 'react-hook-form';
-import { CourseFormData, GetCourseDetailsResponse } from '@CourseBuilderServices/course';
+import { CourseFormData, CourseDetailsResponse } from '@CourseBuilderServices/course';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
@@ -17,7 +17,7 @@ import For from '@Controls/For';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CourseCard from '@CourseBuilderComponents/additional/CourseCard';
 
-type PartialCourseDetails = Pick<GetCourseDetailsResponse, 'ID' | 'post_title' | 'thumbnail'>;
+type PartialCourseDetails = Pick<CourseDetailsResponse, 'ID' | 'post_title' | 'thumbnail'>;
 
 const courses: PartialCourseDetails[] = [
   {
