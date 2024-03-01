@@ -1,17 +1,20 @@
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { TopicContent as TopicContentType } from '@CourseBuilderServices/curriculum';
+import { ID, TopicContent as TopicContentType } from '@CourseBuilderServices/curriculum';
 import { styleUtils } from '@Utils/style-utils';
 import { IconCollection } from '@Utils/types';
+import { AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import React from 'react';
 
 type ContentType = 'lesson' | 'quiz' | 'assignment' | 'zoom' | 'meet';
 interface TopicContentProps {
   type: ContentType;
-  content: TopicContentType;
+  content: { id: ID; title: string; questionCount?: number };
+  isDragging?: boolean;
 }
 
 const icons = {
@@ -37,12 +40,22 @@ const icons = {
   },
 } as const;
 
-const TopicContent = ({ type, content }: TopicContentProps) => {
+const animateLayoutChanges: AnimateLayoutChanges = args => defaultAnimateLayoutChanges({ ...args, wasDragging: true });
+
+const TopicContent = ({ type, content, isDragging = false }: TopicContentProps) => {
   const icon = icons[type];
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: content.id,
+    animateLayoutChanges,
+  });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   return (
-    <div css={styles.wrapper}>
-      <div css={styles.iconAndTitle}>
+    <div css={styles.wrapper({ isDragging })} ref={setNodeRef} style={style} {...attributes}>
+      <div css={styles.iconAndTitle({ isDragging })} {...listeners}>
         <div data-content-icon>
           <SVGIcon
             name={icon.name as IconCollection}
@@ -57,9 +70,9 @@ const TopicContent = ({ type, content }: TopicContentProps) => {
           <SVGIcon name="bars" width={24} height={24} />
         </div>
         <p css={styles.title}>
-          <span>{content.title}</span>
-          <Show when={type === 'quiz'}>
-            <span data-question-count>(21 Questions)</span>
+          <span dangerouslySetInnerHTML={{ __html: content.title }}></span>
+          <Show when={type === 'quiz' && !!content.questionCount}>
+            <span data-question-count>({content.questionCount} Questions)</span>
           </Show>
         </p>
       </div>
@@ -109,7 +122,7 @@ const TopicContent = ({ type, content }: TopicContentProps) => {
 export default TopicContent;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({ isDragging = false }) => css`
     width: 100%;
     padding: ${spacing[10]} ${spacing[8]};
     cursor: pointer;
@@ -140,6 +153,11 @@ const styles = {
         display: flex;
       }
     }
+
+    ${isDragging &&
+    css`
+      box-shadow: ${shadow.drag};
+    `}
   `,
   title: css`
     ${typography.caption()};
@@ -151,7 +169,7 @@ const styles = {
       color: ${colorTokens.text.hints};
     }
   `,
-  iconAndTitle: css`
+  iconAndTitle: ({ isDragging = false }) => css`
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
@@ -159,6 +177,7 @@ const styles = {
     [data-bar-icon] {
       display: none;
     }
+    cursor: ${isDragging ? 'grabbing' : 'grab'};
   `,
   actions: css`
     display: none;
