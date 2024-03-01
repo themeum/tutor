@@ -121,7 +121,6 @@ class Ajax {
 	 * @return void
 	 */
 	public function sync_video_playback_noprev() {
-
 	}
 
 	/**
@@ -133,21 +132,35 @@ class Ajax {
 	public function tutor_place_rating() {
 		tutor_utils()->checking_nonce();
 
-		global $wpdb;
-
-		$moderation = tutor_utils()->get_option( 'enable_course_review_moderation', false, true, true );
-		$rating     = Input::post( 'tutor_rating_gen_input', 0, Input::TYPE_INT );
-		$course_id  = Input::post( 'course_id' );
-		$review     = Input::post( 'review', '', Input::TYPE_TEXTAREA );
+		$user_id   = get_current_user_id();
+		$course_id = Input::post( 'course_id' );
+		$rating    = Input::post( 'tutor_rating_gen_input', 0, Input::TYPE_INT );
+		$review    = Input::post( 'review', '', Input::TYPE_TEXTAREA );
 
 		$rating <= 0 ? $rating = 1 : 0;
 		$rating > 5 ? $rating  = 5 : 0;
 
-		$user_id = get_current_user_id();
-		$user    = get_userdata( $user_id );
+		$this->add_or_update_review( $user_id, $course_id, $rating, $review );
+	}
+
+	/**
+	 * Add/Update rating
+	 *
+	 * @param int    $user_id the user id.
+	 * @param int    $course_id the course id.
+	 * @param int    $rating rating star number.
+	 * @param string $review review description.
+	 * 
+	 * @return void|string
+	 */
+	public function add_or_update_review( $user_id, $course_id, $rating, $review ) {
+		global $wpdb;
+
+		$moderation = tutor_utils()->get_option( 'enable_course_review_moderation', false, true, true );
+		$user       = get_userdata( $user_id );
 		$date    = date( 'Y-m-d H:i:s', tutor_time() ); //phpcs:ignore
 
-		if ( ! tutor_utils()->has_enrolled_content_access( 'course', $course_id ) ) {
+		if ( ! tutor_is_rest() && ! tutor_utils()->has_enrolled_content_access( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 			exit;
 		}
@@ -241,12 +254,16 @@ class Ajax {
 			}
 		}
 
-		wp_send_json_success(
-			array(
-				'message'   => __( 'Rating placed successsully!', 'tutor' ),
-				'review_id' => $review_id,
-			)
-		);
+		if ( ! tutor_is_rest() ) {
+			wp_send_json_success(
+				array(
+					'message'   => __( 'Rating placed successsully!', 'tutor' ),
+					'review_id' => $review_id,
+				)
+			);
+		} else {
+			return $previous_rating_id ? 'updated' : 'created';
+		}
 	}
 
 	/**
