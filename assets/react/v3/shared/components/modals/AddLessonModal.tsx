@@ -175,7 +175,11 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
                 name="lesson_preview"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormSwitch {...controllerProps} label={__('Lesson preview', 'tutor')} helpText="Show preview" />
+                  <FormSwitch
+                    {...controllerProps}
+                    label={__('Lesson preview', 'tutor')}
+                    helpText={__('Show preview', 'tutor')}
+                  />
                 )}
               />
             </div>

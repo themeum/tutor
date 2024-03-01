@@ -120,7 +120,6 @@ const styles = {
     ${typography.body()};
     border: none;
     box-shadow: none;
-    padding-inline: ${spacing[12]};
     background-color: transparent;
     ${showVerticalBar &&
     css`
@@ -130,7 +129,6 @@ const styles = {
     ${size === 'large' &&
     css`
       font-size: ${fontSize[24]};
-      padding-inline: ${spacing[16]};
       font-weight: ${fontWeight.medium};
       height: 34px;
       ${showVerticalBar &&
