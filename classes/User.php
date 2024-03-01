@@ -99,7 +99,7 @@ class User {
 	 * @since 2.6.2 $user_id param added.
 	 *
 	 * @param array $roles roles.
-	 * @param int $user_id user id.
+	 * @param int   $user_id user id.
 	 *
 	 * @return boolean
 	 */
