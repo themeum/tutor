@@ -76,7 +76,14 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
             <Button variant={cancelButton?.variant ?? 'text'} onClick={() => closePopover()}>
               {cancelButton?.text ?? __('Cancel', 'tutor')}
             </Button>
-            <Button variant={confirmButton?.variant ?? 'text'} onClick={onConfirmation} loading={isLoading}>
+            <Button
+              variant={confirmButton?.variant ?? 'text'}
+              onClick={() => {
+                onConfirmation();
+                closePopover();
+              }}
+              loading={isLoading}
+            >
               {confirmButton?.text ?? __('Ok', 'tutor')}
             </Button>
           </div>

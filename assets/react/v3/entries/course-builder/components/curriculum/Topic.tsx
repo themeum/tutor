@@ -23,12 +23,14 @@ import { AnimationType } from '@Hooks/useAnimation';
 interface TopicProps {
   topic: CurriculumTopic;
   allCollapsed: boolean;
+  onDelete?: () => void;
+  onCopy?: () => void;
 }
 
 // @TODO: will be come from app config api later.
 const hasLiveAddons = true;
 
-const Topic = ({ topic, allCollapsed }: TopicProps) => {
+const Topic = ({ topic, allCollapsed, onDelete, onCopy }: TopicProps) => {
   const [isCollapsed, setIsCollapsed] = useState(allCollapsed);
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -139,7 +141,7 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
                 variant: 'text',
               }}
               onConfirmation={() => {
-                //
+                onDelete && onDelete();
               }}
             />
 

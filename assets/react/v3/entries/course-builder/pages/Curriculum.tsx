@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
@@ -9,7 +9,7 @@ import { css } from '@emotion/react';
 import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
-import { useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
+import { CurriculumTopic, useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import For from '@Controls/For';
@@ -23,6 +23,15 @@ const Curriculum = () => {
   const courseId = getCourseId();
   const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
   const [allCollapsed, setAllCollapsed] = useState(false);
+  const [content, setContent] = useState<CurriculumTopic[]>([]);
+
+  useEffect(() => {
+    if (!courseCurriculumQuery.data) {
+      return;
+    }
+
+    setContent(courseCurriculumQuery.data);
+  }, [courseCurriculumQuery.data]);
 
   if (courseCurriculumQuery.isLoading) {
     return <LoadingOverlay />;
@@ -31,8 +40,6 @@ const Curriculum = () => {
   if (!courseCurriculumQuery.data) {
     return null;
   }
-
-  const content = courseCurriculumQuery.data;
 
   return (
     <div css={styles.container}>
@@ -67,7 +74,14 @@ const Curriculum = () => {
             <div css={styles.topicWrapper}>
               <For each={content}>
                 {(topic, index) => {
-                  return <Topic key={index} topic={topic} allCollapsed={allCollapsed} />;
+                  return (
+                    <Topic
+                      key={index}
+                      topic={topic}
+                      allCollapsed={allCollapsed}
+                      onDelete={() => setContent(previous => previous.filter((_, idx) => idx !== index))}
+                    />
+                  );
                 }}
               </For>
             </div>
