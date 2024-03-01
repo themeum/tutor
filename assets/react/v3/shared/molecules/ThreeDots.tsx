@@ -2,7 +2,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
 import React, { MouseEvent, ReactNode, useRef } from 'react';
@@ -17,13 +17,21 @@ interface ThreeDotsOptionProps {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   onClosePopover?: () => void;
   isTrash?: boolean;
+  css?: SerializedStyles;
 }
 
-export const ThreeDotsOption = ({ text, icon, onClick, onClosePopover, isTrash = false }: ThreeDotsOptionProps) => {
+export const ThreeDotsOption = ({
+  text,
+  icon,
+  onClick,
+  onClosePopover,
+  isTrash = false,
+  css,
+}: ThreeDotsOptionProps) => {
   return (
     <button
       type="button"
-      css={styles.option(isTrash)}
+      css={[styles.option(isTrash), css]}
       onClick={event => {
         if (onClick) {
           onClick(event);
@@ -51,6 +59,7 @@ interface ThreeDotsProps {
   animationType?: AnimationType;
   dotsOrientation?: DotsOrientation;
   maxWidth?: string;
+  isInverse?: boolean;
 }
 
 const ThreeDots = ({
@@ -63,11 +72,12 @@ const ThreeDots = ({
   animationType = AnimationType.slideLeft,
   dotsOrientation = 'horizontal',
   maxWidth = '148px',
+  isInverse = false,
 }: ThreeDotsProps) => {
   const ref = useRef<HTMLButtonElement>(null);
   return (
     <>
-      <button type="button" ref={ref} onClick={onClick} css={styles.button({ isOpen })} disabled={disabled}>
+      <button type="button" ref={ref} onClick={onClick} css={styles.button({ isOpen, isInverse })} disabled={disabled}>
         <SVGIcon name={dotsOrientation === 'horizontal' ? 'threeDots' : 'threeDotsVertical'} width={32} height={32} />
       </button>
       <Popover
@@ -128,6 +138,7 @@ const styles = {
 
       svg {
         color: ${colorTokens.icon.hover};
+        filter: grayscale(0%);
       }
     }
 
@@ -144,7 +155,7 @@ const styles = {
       }
     `}
   `,
-  button: ({ isOpen = false }) => css`
+  button: ({ isOpen = false, isInverse = false }) => css`
     ${styleUtils.resetButton};
     width: 32px;
     height: 32px;
@@ -171,6 +182,17 @@ const styles = {
       background-color: ${colorTokens.background.hover};
       svg {
         color: ${colorTokens.icon.brand};
+      }
+    `}
+
+    ${isInverse &&
+    css`
+      background-color: ${colorTokens.background.white};
+      :hover {
+        background-color: ${colorTokens.background.white};
+        svg {
+          color: ${colorTokens.icon.brand};
+        }
       }
     `}
   `,
