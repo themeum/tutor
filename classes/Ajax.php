@@ -121,7 +121,6 @@ class Ajax {
 	 * @return void
 	 */
 	public function sync_video_playback_noprev() {
-
 	}
 
 	/**
@@ -276,7 +275,7 @@ class Ajax {
 	 * Add course in wishlist
 	 *
 	 * @since 1.0.0
-	 * @return void
+	 * @return void|string
 	 */
 	public function tutor_course_add_to_wishlist() {
 		tutor_utils()->checking_nonce();
@@ -290,9 +289,39 @@ class Ajax {
 			);
 		}
 
-		global $wpdb;
 		$user_id   = get_current_user_id();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		$result = $this->add_or_delete_wishlist( $user_id, $course_id );
+
+		if ( tutor_is_rest() ) {
+			return $result;
+		} elseif ( 'added' === $result ) {
+			wp_send_json_success(
+				array(
+					'status'  => 'added',
+					'message' => __( 'Course added to wish list', 'tutor' ),
+				)
+			);
+		} else {
+			wp_send_json_success(
+				array(
+					'status'  => 'removed',
+					'message' => __( 'Course removed from wish list', 'tutor' ),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Add or Delete wishlist by user_id and course_id
+	 *
+	 * @param int $user_id the user id.
+	 * @param int $course_id the course_id to add to the wishlist.
+	 * @return string
+	 */
+	public function add_or_delete_wishlist( $user_id, $course_id ) {
+		global $wpdb;
 
 		$if_added_to_list = $wpdb->get_row(
 			$wpdb->prepare(
@@ -305,6 +334,8 @@ class Ajax {
 			)
 		);
 
+		$result = '';
+
 		if ( $if_added_to_list ) {
 			$wpdb->delete(
 				$wpdb->usermeta,
@@ -314,21 +345,15 @@ class Ajax {
 					'meta_value' => $course_id,
 				)
 			);
-			wp_send_json_success(
-				array(
-					'status'  => 'removed',
-					'message' => __( 'Course removed from wish list', 'tutor' ),
-				)
-			);
+
+			$result = 'removed';
 		} else {
 			add_user_meta( $user_id, '_tutor_course_wishlist', $course_id );
-			wp_send_json_success(
-				array(
-					'status'  => 'added',
-					'message' => __( 'Course added to wish list', 'tutor' ),
-				)
-			);
+
+			$result = 'added';
 		}
+
+		return $result;
 	}
 
 	/**
