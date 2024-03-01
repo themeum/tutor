@@ -150,7 +150,7 @@ class Ajax {
 	 * @param int    $course_id the course id.
 	 * @param int    $rating rating star number.
 	 * @param string $review review description.
-	 * 
+	 *
 	 * @return void|string
 	 */
 	public function add_or_update_review( $user_id, $course_id, $rating, $review ) {
@@ -270,14 +270,18 @@ class Ajax {
 	 * Delete a review
 	 *
 	 * @since 1.0.0
-	 * @return void
+	 * @since 2.6.2 added params user_id.
+	 * @param int $user_id the user id.
+	 * @return void|bool
 	 */
-	public function delete_tutor_review() {
-		tutor_utils()->checking_nonce();
+	public function delete_tutor_review( $user_id = 0 ) {
+		if ( ! tutor_is_rest() ) {
+			tutor_utils()->checking_nonce();
+		}
 
 		$review_id = Input::post( 'review_id' );
 
-		if ( ! tutor_utils()->can_user_manage( 'review', $review_id, get_current_user_id() ) ) {
+		if ( ! tutor_utils()->can_user_manage( 'review', $review_id, tutils()->get_user_id( $user_id ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permissioned Denied!', 'tutor' ) ) );
 			exit;
 		}
@@ -285,6 +289,10 @@ class Ajax {
 		global $wpdb;
 		$wpdb->delete( $wpdb->commentmeta, array( 'comment_id' => $review_id ) );
 		$wpdb->delete( $wpdb->comments, array( 'comment_ID' => $review_id ) );
+
+		if ( tutor_is_rest() ) {
+			return true;
+		}
 
 		wp_send_json_success();
 	}
