@@ -17,6 +17,8 @@ import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { __ } from '@wordpress/i18n';
 import ThreeDots from '@Molecules/ThreeDots';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import { AnimationType } from '@Hooks/useAnimation';
 
 interface TopicProps {
   topic: CurriculumTopic;
@@ -31,8 +33,11 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const deleteRef = useRef<HTMLButtonElement>(null);
+
   const form = useFormWithGlobalError<{ title: string; summary: string }>({
     defaultValues: {
       title: topic.title,
@@ -64,7 +69,7 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
       tabIndex={-1}
       ref={wrapperRef}
     >
-      <div css={styles.header({ isCollapsed, isEdit })}>
+      <div css={styles.header({ isCollapsed, isEdit, isDeletePopoverOpen })}>
         <div css={styles.headerContent}>
           <div css={styles.grabberInput}>
             <SVGIcon name="dragVertical" width={24} height={24} />
@@ -107,12 +112,37 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
               type="button"
               css={styles.actionButton}
               data-visually-hidden
+              ref={deleteRef}
               onClick={() => {
-                alert('@TODO: will be implemented later');
+                setIsDeletePopoverOpen(true);
               }}
             >
               <SVGIcon name="delete" width={24} height={24} />
             </button>
+            <ConfirmationPopover
+              isOpen={isDeletePopoverOpen}
+              triggerRef={deleteRef}
+              closePopover={() => setIsDeletePopoverOpen(false)}
+              maxWidth="258px"
+              title={`Delete topic "${topic.title}"`}
+              message="Are you sure you want to delete this content from your course? This cannot be undone."
+              animationType={AnimationType.slideUp}
+              arrow="top"
+              hideArrow
+              confirmButton={{
+                text: __('Delete', 'tutor'),
+                variant: 'text',
+                isDelete: true,
+              }}
+              cancelButton={{
+                text: __('Cancel', 'tutor'),
+                variant: 'text',
+              }}
+              onConfirmation={() => {
+                //
+              }}
+            />
+
             <button type="button" css={styles.actionButton} onClick={() => setIsCollapsed(previous => !previous)}>
               <SVGIcon name={isCollapsed ? 'chevronDown' : 'chevronUp'} />
             </button>
@@ -259,7 +289,15 @@ const styles = {
       background-color: ${colorTokens.background.hover};
     }
   `,
-  header: ({ isCollapsed, isEdit }: { isCollapsed: boolean; isEdit: boolean }) => css`
+  header: ({
+    isCollapsed,
+    isEdit,
+    isDeletePopoverOpen,
+  }: {
+    isCollapsed: boolean;
+    isEdit: boolean;
+    isDeletePopoverOpen: boolean;
+  }) => css`
     padding: ${spacing[12]} ${spacing[16]};
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
@@ -270,6 +308,7 @@ const styles = {
     `}
 
     ${!isEdit &&
+    !isDeletePopoverOpen &&
     css`
       [data-visually-hidden] {
         opacity: 0;
