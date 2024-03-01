@@ -67,12 +67,8 @@ const styles = {
   `,
   cardTitle: css`
     ${typography.small()};
+    ${styleUtils.text.ellipsis(1)};
     font-weight: ${fontWeight.medium};
-    line-clamp: 1;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    overflow: hidden;
   `,
   removeButton: css`
     ${styleUtils.resetButton};
