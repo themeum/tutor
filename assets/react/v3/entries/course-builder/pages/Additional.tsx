@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { css } from '@emotion/react';
 import { borderRadius, colorTokens, fontWeight, footerHeight, headerHeight, shadow, spacing } from '@Config/styles';
 import { Controller, useFormContext } from 'react-hook-form';
-import { CourseFormData } from '@CourseBuilderServices/course';
+import { CourseFormData, GetCourseDetailsResponse } from '@CourseBuilderServices/course';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
@@ -15,37 +15,40 @@ import { styleUtils } from '@Utils/style-utils';
 import Button from '@Atoms/Button';
 import For from '@Controls/For';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
+import CourseCard from '@CourseBuilderComponents/additional/CourseCard';
 
-const courses = [
+type PartialCourseDetails = Pick<GetCourseDetailsResponse, 'ID' | 'post_title' | 'thumbnail'>;
+
+const courses: PartialCourseDetails[] = [
   {
-    id: 1,
-    title: 'Digital Fantasy Portra...with Photoshop',
-    image: 'https://via.placeholder.com/76x76',
+    ID: 1,
+    post_title: 'Digital Fantasy Portra...with Photoshop',
+    thumbnail: 'https://via.placeholder.com/76x76',
   },
   {
-    id: 2,
-    title: 'Portrait Sketchbooking: Explore the Human Face',
-    image: 'https://via.placeholder.com/76x76',
+    ID: 2,
+    post_title: 'Portrait Sketchbooking: Explore the Human Face',
+    thumbnail: 'https://via.placeholder.com/76x76',
   },
   {
-    id: 3,
-    title: 'Portrait Sketchbooking: Explore the Human Face',
-    image: 'https://via.placeholder.com/76x76',
+    ID: 3,
+    post_title: 'Portrait Sketchbooking: Explore the Human Face',
+    thumbnail: 'https://via.placeholder.com/76x76',
   },
   {
-    id: 4,
-    title: 'Portrait Sketchbooking: Explore the Human Face',
-    image: 'https://via.placeholder.com/76x76',
+    ID: 4,
+    post_title: 'Portrait Sketchbooking: Explore the Human Face',
+    thumbnail: 'https://via.placeholder.com/76x76',
   },
   {
-    id: 5,
-    title: 'Digital Fantasy Portra...with Photoshop',
-    image: 'https://via.placeholder.com/76x76',
+    ID: 5,
+    post_title: 'Digital Fantasy Portra...with Photoshop',
+    thumbnail: 'https://via.placeholder.com/76x76',
   },
   {
-    id: 6,
-    title: 'Digital Fantasy Portra...with Photoshop',
-    image: 'https://via.placeholder.com/76x76',
+    ID: 6,
+    post_title: 'Digital Fantasy Portra...with Photoshop',
+    thumbnail: 'https://via.placeholder.com/76x76',
   },
 ];
 
@@ -161,18 +164,7 @@ const Additional = () => {
           <div css={styles.courses}>
             <For each={courses}>
               {(course) => (
-                <div key={course.id} css={styles.courseCard}>
-                  <div css={styles.imageWrapper}>
-                    <img src={course.image} alt={course.title} css={styles.image} />
-                  </div>
-                  <div css={styles.cardContent}>
-                    <span css={styles.cardTitle}>{course.title}</span>
-                    <p css={typography.tiny()}>{course.id}</p>
-                  </div>
-                  <button css={styles.removeButton}>
-                    <SVGIcon name="times" width={14} height={14} />
-                  </button>
-                </div>
+                <CourseCard key={course.ID} id={course.ID} title={course.post_title} image={course.thumbnail} />
               )}
             </For>
           </div>
@@ -185,8 +177,11 @@ const Additional = () => {
               buttonContentCss={css`
                 justify-content: center;
               `}
+              onClick={() => {
+                alert('@TODO: Will be implemented in future');
+              }}
             >
-              Upload Attachment
+              {__('Upload Attachment', 'tutor')}
             </Button>
           </div>
 
