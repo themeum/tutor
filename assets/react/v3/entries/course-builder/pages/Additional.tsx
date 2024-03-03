@@ -11,7 +11,6 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import SVGIcon from '@Atoms/SVGIcon';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
 import Button from '@Atoms/Button';
 import For from '@Controls/For';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
@@ -64,7 +63,7 @@ const Additional = () => {
           <Controller
             name="course_benefits"
             control={form.control}
-            render={(controllerProps) => (
+            render={controllerProps => (
               <FormInput
                 {...controllerProps}
                 label={__('What Will I Learn?', 'tutor')}
@@ -77,7 +76,7 @@ const Additional = () => {
           <Controller
             name="course_target_audience"
             control={form.control}
-            render={(controllerProps) => (
+            render={controllerProps => (
               <FormInput
                 {...controllerProps}
                 label={__('Targeted Audience', 'tutor')}
@@ -90,7 +89,7 @@ const Additional = () => {
             <Controller
               name="course_duration_hours"
               control={form.control}
-              render={(controllerProps) => (
+              render={controllerProps => (
                 <FormInputWithContent
                   {...controllerProps}
                   type="number"
@@ -104,7 +103,7 @@ const Additional = () => {
             <Controller
               name="course_duration_minutes"
               control={form.control}
-              render={(controllerProps) => (
+              render={controllerProps => (
                 <FormInputWithContent
                   {...controllerProps}
                   type="number"
@@ -119,7 +118,7 @@ const Additional = () => {
           <Controller
             name="course_material_includes"
             control={form.control}
-            render={(controllerProps) => (
+            render={controllerProps => (
               <FormTextareaInput
                 {...controllerProps}
                 label={__('Materials Included', 'tutor')}
@@ -136,7 +135,7 @@ const Additional = () => {
           <Controller
             name="course_requirements"
             control={form.control}
-            render={(controllerProps) => (
+            render={controllerProps => (
               <FormInput
                 {...controllerProps}
                 label={__('Requirements/Instructions', 'tutor')}
@@ -146,12 +145,13 @@ const Additional = () => {
           />
         </div>
       </div>
+
       <div css={styles.sidebar}>
         <div css={styles.coursePrerequisite}>
           <Controller
             name="course_price_type"
             control={searchForm.control}
-            render={(controllerProps) => (
+            render={controllerProps => (
               <FormInputWithContent
                 {...controllerProps}
                 label={__('Course prerequisites', 'tutor')}
@@ -163,7 +163,7 @@ const Additional = () => {
           />
           <div css={styles.courses}>
             <For each={courses}>
-              {(course) => (
+              {course => (
                 <CourseCard key={course.ID} id={course.ID} title={course.post_title} image={course.thumbnail} />
               )}
             </For>

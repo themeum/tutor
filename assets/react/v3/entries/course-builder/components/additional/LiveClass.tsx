@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
@@ -7,12 +7,15 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import Show from '@Controls/Show';
 import EmptyState from '@Molecules/EmptyState';
+import MeetingForm, { MeetingType } from './MeetingForm';
 
 // @TODO: will come from app config api later.
 const isPro = true;
 const hasLiveAddons = true;
 
 const LiveClass = () => {
+  const [showMeetingForm, setShowMeetingForm] = useState<MeetingType | null>(null);
+
   return (
     <div css={styles.liveClass}>
       <span css={styles.label}>
@@ -73,42 +76,61 @@ const LiveClass = () => {
             />
           }
         >
-          <Button
-            variant="secondary"
-            icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
-            buttonContentCss={css`
-              justify-content: center;
-            `}
-            onClick={() => {
-              alert('@TODO: Will be implemented in future');
-            }}
+          <Show
+            when={showMeetingForm === 'zoom'}
+            fallback={
+              <Button
+                variant="secondary"
+                icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
+                buttonContentCss={css`
+                  justify-content: center;
+                `}
+                onClick={() => setShowMeetingForm('zoom')}
+              >
+                {__('Create a Zoom meeting', 'tutor')}
+              </Button>
+            }
           >
-            {__('Create a Zoom meeting', 'tutor')}
-          </Button>
-          <Button
-            variant="secondary"
-            icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
-            buttonContentCss={css`
-              justify-content: center;
-            `}
-            onClick={() => {
-              alert('@TODO: Will be implemented in future');
-            }}
+            <MeetingForm type="zoom" setShowMeetingForm={setShowMeetingForm} />
+          </Show>
+
+          <Show
+            when={showMeetingForm === 'google_meet'}
+            fallback={
+              <Button
+                variant="secondary"
+                icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
+                buttonContentCss={css`
+                  justify-content: center;
+                `}
+                onClick={() => setShowMeetingForm('google_meet')}
+              >
+                {__('Create a Google Meet', 'tutor')}
+              </Button>
+            }
           >
-            {__('Create a Google Meet', 'tutor')}
-          </Button>
-          <Button
-            variant="secondary"
-            icon={<SVGIcon name="jitsiColorize" width={24} height={24} />}
-            buttonContentCss={css`
-              justify-content: center;
-            `}
-            onClick={() => {
-              alert('@TODO: Will be implemented in future');
-            }}
+            <MeetingForm type="google_meet" setShowMeetingForm={setShowMeetingForm} />
+          </Show>
+
+          <Show
+            when={showMeetingForm === 'jitsi'}
+            fallback={
+              <Button
+                variant="secondary"
+                icon={<SVGIcon name="jitsiColorize" width={24} height={24} />}
+                buttonContentCss={css`
+                  justify-content: center;
+                `}
+                onClick={() => {
+                  alert('@TODO: Will be implemented in future');
+                }}
+              >
+                {__('Create a Jitsi meeting', 'tutor')}
+              </Button>
+            }
           >
-            {__('Create a Jitsi Meet', 'tutor')}
-          </Button>
+            <MeetingForm type="jitsi" setShowMeetingForm={setShowMeetingForm} />
+          </Show>
         </Show>
       </Show>
     </div>

@@ -41,7 +41,7 @@ const styles = {
     gap: ${spacing[10]};
     align-items: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: border 0.3s ease;
 
     &:hover {
       border-color: ${colorTokens.stroke.default};
