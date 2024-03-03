@@ -1,9 +1,12 @@
 import React from 'react';
+import { css } from '@emotion/react';
+
+import SVGIcon from '@Atoms/SVGIcon';
+
 import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import SVGIcon from '@Atoms/SVGIcon';
 
 interface CourseCardProps {
   id: number;
@@ -21,7 +24,7 @@ const CourseCard = ({ id, title, image }: CourseCardProps) => {
         <span css={styles.cardTitle}>{title}</span>
         <p css={typography.tiny()}>{id}</p>
       </div>
-      <button css={styles.removeButton}>
+      <button css={styles.removeButton} data-visually-hidden>
         <SVGIcon name="times" width={14} height={14} />
       </button>
     </div>
@@ -42,13 +45,16 @@ const styles = {
     align-items: center;
     cursor: pointer;
     transition: border 0.3s ease;
+    [data-visually-hidden] {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
 
     &:hover {
       border-color: ${colorTokens.stroke.default};
-    }
-
-    &:hover button {
-      opacity: 1;
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
   `,
   imageWrapper: css`
@@ -83,7 +89,6 @@ const styles = {
     height: 32px;
     border-radius: ${borderRadius.circle};
     background: ${colorTokens.background.white};
-    opacity: 0;
     transition: opacity 0.3s ease-in-out;
 
     svg {

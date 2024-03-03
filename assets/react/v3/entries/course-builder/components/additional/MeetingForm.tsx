@@ -1,17 +1,24 @@
+import React from 'react';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { Controller } from 'react-hook-form';
+
 import Button from '@Atoms/Button';
+
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import FormTimeInput from '@Components/fields/FormTimeInput';
+
 import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import React from 'react';
-import { Controller } from 'react-hook-form';
+
+import { Meeting } from './LiveClass';
+import { styleUtils } from '@Utils/style-utils';
 
 export type MeetingType = 'zoom' | 'google_meet' | 'jitsi';
 
@@ -21,13 +28,7 @@ interface MeetingFormFieldProps {
   meeting_date: string;
   meeting_time_from: string;
   meeting_time_to: string;
-}
-
-interface GoogleMeetFormProps extends MeetingFormFieldProps {
   meeting_enrolledAsAttendee: boolean;
-}
-
-interface ZoomFormProps extends MeetingFormFieldProps {
   meeting_autoRecording: boolean;
   meeting_password: string;
   meeting_host: string;
@@ -36,17 +37,52 @@ interface ZoomFormProps extends MeetingFormFieldProps {
 interface MeetingFormProps {
   type: MeetingType;
   setShowMeetingForm: React.Dispatch<React.SetStateAction<MeetingType | null>>;
+  setMeetings: React.Dispatch<React.SetStateAction<Meeting[]>>;
 }
 
-const MeetingForm = ({ type, setShowMeetingForm }: MeetingFormProps) => {
-  const meetingForm = useFormWithGlobalError<GoogleMeetFormProps | ZoomFormProps>();
+const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps) => {
+  const meetingForm = useFormWithGlobalError<MeetingFormFieldProps>();
 
   const onCancel = () => {
     setShowMeetingForm(null);
   };
 
-  const onSubmit = (data: GoogleMeetFormProps | ZoomFormProps) => {
-    alert(JSON.stringify(data, null, 2));
+  const onSubmit = (data: MeetingFormFieldProps) => {
+    setShowMeetingForm(null);
+    meetingForm.reset();
+    let dataToSubmit: Omit<Meeting, 'id'>;
+
+    if (!data.meeting_date || !data.meeting_time_from || !data.meeting_time_to) {
+      return;
+    }
+
+    if (type === 'google_meet') {
+      dataToSubmit = {
+        type: type,
+        meeting_title: data.meeting_name,
+        meeting_date: data.meeting_date,
+        meeting_start_time: data.meeting_time_from,
+        meeting_link: 'https://meet.google.com/abc-xyz',
+      };
+    } else if (type === 'zoom') {
+      dataToSubmit = {
+        type: type,
+        meeting_title: data.meeting_name,
+        meeting_date: data.meeting_date,
+        meeting_start_time: data.meeting_time_from,
+        meeting_link: 'https://meet.google.com/abc-xyz',
+        meeting_token: 'abc-xyz',
+        meeting_password: data.meeting_password,
+      };
+    }
+
+    setMeetings(prev => [
+      ...prev,
+      {
+        id: prev.length + 1,
+        ...dataToSubmit,
+      },
+    ]);
   };
 
   return (
@@ -95,9 +131,7 @@ const MeetingForm = ({ type, setShowMeetingForm }: MeetingFormProps) => {
             <Controller
               name="meeting_time_from"
               control={meetingForm.control}
-              render={controllerProps => (
-                <FormTimeInput {...controllerProps} placeholder={__('Enter meeting start time', 'tutor')} />
-              )}
+              render={controllerProps => <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />}
             />
             <div
               css={{
@@ -109,9 +143,7 @@ const MeetingForm = ({ type, setShowMeetingForm }: MeetingFormProps) => {
             <Controller
               name="meeting_time_to"
               control={meetingForm.control}
-              render={controllerProps => (
-                <FormTimeInput {...controllerProps} placeholder={__('Enter meeting end time', 'tutor')} />
-              )}
+              render={controllerProps => <FormTimeInput {...controllerProps} placeholder={__('End time', 'tutor')} />}
             />
           </div>
         </div>
@@ -175,8 +207,7 @@ export default MeetingForm;
 
 const styles = {
   container: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[16]};
     padding: ${spacing[12]};
     border-radius: ${borderRadius.card};
@@ -189,23 +220,21 @@ const styles = {
     }
   `,
   formWrapper: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[12]};
   `,
   meetingDateTimeWrapper: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[6]};
   `,
   meetingTimeWrapper: css`
-    display: flex;
+    ${styleUtils.display.flex()}
     justify-content: space-between;
     align-items: center;
     gap: ${spacing[6]};
   `,
   buttonWrapper: css`
-    display: flex;
+    ${styleUtils.display.flex()}
     justify-content: flex-end;
     gap: ${spacing[8]};
   `,

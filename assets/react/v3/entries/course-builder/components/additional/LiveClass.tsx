@@ -1,13 +1,31 @@
 import React, { useState } from 'react';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import Show from '@Controls/Show';
+
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+
 import EmptyState from '@Molecules/EmptyState';
+
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
+import For from '@Controls/For';
+
 import MeetingForm, { MeetingType } from './MeetingForm';
+import MeetingCard from './MeetingCard';
+import { styleUtils } from '@Utils/style-utils';
+
+export interface Meeting {
+  type: MeetingType;
+  id: number;
+  meeting_title: string;
+  meeting_date: string;
+  meeting_start_time: string;
+  meeting_link: string;
+  meeting_token?: string;
+  meeting_password?: string;
+}
 
 // @TODO: will come from app config api later.
 const isPro = true;
@@ -15,6 +33,10 @@ const hasLiveAddons = true;
 
 const LiveClass = () => {
   const [showMeetingForm, setShowMeetingForm] = useState<MeetingType | null>(null);
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
+
+  const zoomMeetings = meetings.filter(meeting => meeting.type === 'zoom');
+  const googleMeetMeetings = meetings.filter(meeting => meeting.type === 'google_meet');
 
   return (
     <div css={styles.liveClass}>
@@ -79,37 +101,111 @@ const LiveClass = () => {
           <Show
             when={showMeetingForm === 'zoom'}
             fallback={
-              <Button
-                variant="secondary"
-                icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
-                buttonContentCss={css`
-                  justify-content: center;
-                `}
-                onClick={() => setShowMeetingForm('zoom')}
+              <Show
+                when={zoomMeetings.length !== 0}
+                fallback={
+                  <Button
+                    variant="secondary"
+                    icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
+                    buttonContentCss={css`
+                      justify-content: center;
+                    `}
+                    onClick={() => setShowMeetingForm('zoom')}
+                  >
+                    {__('Create a Zoom meeting', 'tutor')}
+                  </Button>
+                }
               >
-                {__('Create a Zoom meeting', 'tutor')}
-              </Button>
+                <div css={styles.meetingsWrapper}>
+                  <For each={zoomMeetings}>
+                    {meeting => (
+                      <div key={meeting.id} css={styles.meeting}>
+                        <MeetingCard
+                          meeting_title={meeting.meeting_title}
+                          meeting_date={meeting.meeting_date}
+                          meeting_start_time={meeting.meeting_start_time}
+                          meeting_link={meeting.meeting_link}
+                          meeting_token={meeting.meeting_token}
+                          meeting_password={meeting.meeting_password}
+                        />
+                      </div>
+                    )}
+                  </For>
+                  <div css={styles.meetingsFooter}>
+                    <Button
+                      variant="secondary"
+                      icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
+                      buttonContentCss={css`
+                        justify-content: center;
+                      `}
+                      buttonCss={css`
+                        width: 100%;
+                      `}
+                      onClick={() => setShowMeetingForm('zoom')}
+                    >
+                      {__('Create a Zoom meeting', 'tutor')}
+                    </Button>
+                  </div>
+                </div>
+              </Show>
             }
           >
-            <MeetingForm type="zoom" setShowMeetingForm={setShowMeetingForm} />
+            <MeetingForm type="zoom" setShowMeetingForm={setShowMeetingForm} setMeetings={setMeetings} />
           </Show>
 
           <Show
             when={showMeetingForm === 'google_meet'}
             fallback={
-              <Button
-                variant="secondary"
-                icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
-                buttonContentCss={css`
-                  justify-content: center;
-                `}
-                onClick={() => setShowMeetingForm('google_meet')}
+              <Show
+                when={googleMeetMeetings.length !== 0}
+                fallback={
+                  <Button
+                    variant="secondary"
+                    icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
+                    buttonContentCss={css`
+                      justify-content: center;
+                    `}
+                    onClick={() => setShowMeetingForm('google_meet')}
+                  >
+                    {__('Create a Google Meet', 'tutor')}
+                  </Button>
+                }
               >
-                {__('Create a Google Meet', 'tutor')}
-              </Button>
+                <div css={styles.meetingsWrapper}>
+                  <For each={googleMeetMeetings}>
+                    {meeting => (
+                      <div key={meeting.id} css={styles.meeting}>
+                        <MeetingCard
+                          meeting_title={meeting.meeting_title}
+                          meeting_date={meeting.meeting_date}
+                          meeting_start_time={meeting.meeting_start_time}
+                          meeting_link={meeting.meeting_link}
+                          meeting_token={meeting.meeting_token}
+                          meeting_password={meeting.meeting_password}
+                        />
+                      </div>
+                    )}
+                  </For>
+                  <div css={styles.meetingsFooter}>
+                    <Button
+                      variant="secondary"
+                      icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
+                      buttonContentCss={css`
+                        justify-content: center;
+                      `}
+                      buttonCss={css`
+                        width: 100%;
+                      `}
+                      onClick={() => setShowMeetingForm('google_meet')}
+                    >
+                      {__('Create a Google Meet', 'tutor')}
+                    </Button>
+                  </div>
+                </div>
+              </Show>
             }
           >
-            <MeetingForm type="google_meet" setShowMeetingForm={setShowMeetingForm} />
+            <MeetingForm type="google_meet" setShowMeetingForm={setShowMeetingForm} setMeetings={setMeetings} />
           </Show>
 
           <Show
@@ -129,7 +225,7 @@ const LiveClass = () => {
               </Button>
             }
           >
-            <MeetingForm type="jitsi" setShowMeetingForm={setShowMeetingForm} />
+            <MeetingForm type="jitsi" setShowMeetingForm={setShowMeetingForm} setMeetings={setMeetings} />
           </Show>
         </Show>
       </Show>
@@ -141,15 +237,27 @@ export default LiveClass;
 
 const styles = {
   label: css`
-    display: inline-flex;
+    ${styleUtils.display.inlineFlex()}
     align-items: center;
     gap: ${spacing[2]};
     ${typography.body()}
     color: ${colorTokens.text.title};
   `,
   liveClass: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
+  `,
+  meetingsWrapper: css`
+    ${styleUtils.display.flex('column')}
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius.card};
+  `,
+  meeting: css`
+    padding: ${spacing[8]} ${spacing[8]} ${spacing[12]} ${spacing[8]};
+    border-bottom: 1px solid ${colorTokens.stroke.divider};
+  `,
+  meetingsFooter: css`
+    width: 100%;
+    padding: ${spacing[12]} ${spacing[8]};
   `,
 };

@@ -1,20 +1,25 @@
 import React from 'react';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import { __ } from '@wordpress/i18n';
 import { css } from '@emotion/react';
-import { borderRadius, colorTokens, fontWeight, footerHeight, headerHeight, shadow, spacing } from '@Config/styles';
 import { Controller, useFormContext } from 'react-hook-form';
-import { CourseFormData, CourseDetailsResponse } from '@CourseBuilderServices/course';
+
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import SVGIcon from '@Atoms/SVGIcon';
-import { typography } from '@Config/typography';
-import Button from '@Atoms/Button';
-import For from '@Controls/For';
+
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import { CourseFormData, CourseDetailsResponse } from '@CourseBuilderServices/course';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CourseCard from '@CourseBuilderComponents/additional/CourseCard';
+
+import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import For from '@Controls/For';
+import { styleUtils } from '@Utils/style-utils';
 
 type PartialCourseDetails = Pick<CourseDetailsResponse, 'ID' | 'post_title' | 'thumbnail'>;
 
@@ -205,44 +210,39 @@ const styles = {
   fieldsWrapper: css`
     position: sticky;
     top: 0;
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[24]};
     margin-top: ${spacing[40]};
   `,
   totalCourseDuration: css`
-    display: flex;
-    gap: ${spacing[8]};
+    ${styleUtils.display.flex()}
     align-items: end;
+    gap: ${spacing[8]};
 
     & > div {
       flex: 1;
     }
   `,
   sidebar: css`
+    ${styleUtils.display.flex('column')}
     padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} ${spacing[64]};
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
-    display: flex;
-    flex-direction: column;
     gap: ${spacing[16]};
   `,
   coursePrerequisite: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
   `,
   courses: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
     max-height: 256px;
     height: 100%;
     overflow-y: auto;
   `,
   uploadAttachment: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
   `,
   uploadLabel: css`
@@ -250,8 +250,7 @@ const styles = {
     color: ${colorTokens.text.title};
   `,
   liveClass: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
   `,
 };
