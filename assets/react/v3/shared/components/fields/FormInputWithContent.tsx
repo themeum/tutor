@@ -5,6 +5,7 @@ import { FormControllerProps } from '@Utils/form';
 import { ReactNode } from 'react';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import { styleUtils } from '@Utils/style-utils';
 
 interface FormInputWithContentProps extends FormControllerProps<string | number | null | undefined> {
   content: string | ReactNode;
@@ -58,10 +59,10 @@ const FormInputWithContent = ({
       isHidden={isHidden}
       removeBorder={removeBorder}
     >
-      {(inputProps) => {
+      {inputProps => {
         const { css: inputCss, ...restInputProps } = inputProps;
         return (
-          <div css={[styles.inputWrapper(size, !!fieldState.error, removeBorder), wrapperCss]}>
+          <div css={[styles.inputWrapper(!!fieldState.error, removeBorder), wrapperCss]}>
             {contentPosition === 'left' && <div css={styles.inputLeftContent(showVerticalBar, size)}>{content}</div>}
 
             <input
@@ -69,7 +70,7 @@ const FormInputWithContent = ({
               {...restInputProps}
               type="text"
               value={field.value ?? ''}
-              onChange={(e) => {
+              onChange={e => {
                 const value: string | number =
                   type === 'number'
                     ? e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
@@ -81,7 +82,7 @@ const FormInputWithContent = ({
                   onChange(value);
                 }
               }}
-              onKeyDown={(event) => onKeyDown && onKeyDown(event.key)}
+              onKeyDown={event => onKeyDown && onKeyDown(event.key)}
               css={[inputCss, styles.input(contentPosition, showVerticalBar, size)]}
               autoComplete="off"
             />
@@ -95,14 +96,14 @@ const FormInputWithContent = ({
 };
 
 const styles = {
-  inputWrapper: (size: string, hasFieldError: boolean, removeBorder: boolean) => css`
+  inputWrapper: (hasFieldError: boolean, removeBorder: boolean) => css`
     display: flex;
     align-items: center;
 
     ${!removeBorder &&
     css`
       border: 1px solid ${colorTokens.stroke.default};
-      border-radius: ${borderRadius[5]};
+      border-radius: ${borderRadius[6]};
       box-shadow: ${shadow.input};
       background-color: ${colorTokens.background.white};
     `}
@@ -143,9 +144,7 @@ const styles = {
   `,
   inputLeftContent: (showVerticalBar: boolean, size: string) => css`
     ${typography.small()}
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ${styleUtils.flexCenter()}
     height: 40px;
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
@@ -162,9 +161,7 @@ const styles = {
   `,
   inputRightContent: (showVerticalBar: boolean, size: string) => css`
     ${typography.small()}
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ${styleUtils.flexCenter()}
     height: 40px;
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
