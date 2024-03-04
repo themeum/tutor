@@ -153,7 +153,7 @@ class RestAuth {
 		$info       = QueryHelper::get_row( $wpdb->usermeta, array( 'umeta_id' => $meta_id ), 'umeta_id' );
 		$meta_value = json_decode( $info->meta_value );
 
-		$meta_value->permission = $permission;
+		$meta_value->permission  = $permission;
 		$meta_value->description = $description;
 
 		// Update user meta.
