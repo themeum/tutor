@@ -5,6 +5,7 @@ import { FormControllerProps } from '@Utils/form';
 import { ReactNode } from 'react';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import { styleUtils } from '@Utils/style-utils';
 
 interface FormInputWithContentProps extends FormControllerProps<string | number | null | undefined> {
   content: string | ReactNode;
@@ -58,10 +59,10 @@ const FormInputWithContent = ({
       isHidden={isHidden}
       removeBorder={removeBorder}
     >
-      {(inputProps) => {
+      {inputProps => {
         const { css: inputCss, ...restInputProps } = inputProps;
         return (
-          <div css={[styles.inputWrapper(size, !!fieldState.error, removeBorder), wrapperCss]}>
+          <div css={[styles.inputWrapper(!!fieldState.error, removeBorder), wrapperCss]}>
             {contentPosition === 'left' && <div css={styles.inputLeftContent(showVerticalBar, size)}>{content}</div>}
 
             <input
@@ -69,7 +70,7 @@ const FormInputWithContent = ({
               {...restInputProps}
               type="text"
               value={field.value ?? ''}
-              onChange={(e) => {
+              onChange={e => {
                 const value: string | number =
                   type === 'number'
                     ? e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
@@ -81,7 +82,7 @@ const FormInputWithContent = ({
                   onChange(value);
                 }
               }}
-              onKeyDown={(event) => onKeyDown && onKeyDown(event.key)}
+              onKeyDown={event => onKeyDown && onKeyDown(event.key)}
               css={[inputCss, styles.input(contentPosition, showVerticalBar, size)]}
               autoComplete="off"
             />
@@ -95,23 +96,17 @@ const FormInputWithContent = ({
 };
 
 const styles = {
-  inputWrapper: (size: string, hasFieldError: boolean, removeBorder: boolean) => css`
+  inputWrapper: (hasFieldError: boolean, removeBorder: boolean) => css`
     display: flex;
     align-items: center;
-    padding: ${spacing[6]} ${spacing[12]};
 
     ${!removeBorder &&
     css`
       border: 1px solid ${colorTokens.stroke.default};
-      border-radius: ${borderRadius[5]};
+      border-radius: ${borderRadius[6]};
       box-shadow: ${shadow.input};
       background-color: ${colorTokens.background.white};
     `}
-
-    ${size === 'large' &&
-    css`
-      padding: ${spacing[10]} ${spacing[16]};
-    `};
 
     ${hasFieldError &&
     css`
@@ -124,10 +119,8 @@ const styles = {
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
     ${typography.body()};
-    height: 26px;
     border: none;
     box-shadow: none;
-    padding: 0;
     background-color: transparent;
     ${showVerticalBar &&
     css`
@@ -150,17 +143,15 @@ const styles = {
     }
   `,
   inputLeftContent: (showVerticalBar: boolean, size: string) => css`
-    display: flex;
+    ${typography.small()}
+    ${styleUtils.flexCenter()}
+    height: 40px;
     color: ${colorTokens.icon.subdued};
-    padding-right: ${spacing[8]};
-    font-size: ${fontSize[16]};
-    line-height: ${lineHeight[20]};
+    padding-inline: ${spacing[12]};
 
     ${size === 'large' &&
     css`
-      padding-right: ${spacing[12]};
-      font-size: ${fontSize[24]};
-      line-height: ${lineHeight[32]};
+      ${typography.body()}
     `}
 
     ${showVerticalBar &&
@@ -169,17 +160,15 @@ const styles = {
     `}
   `,
   inputRightContent: (showVerticalBar: boolean, size: string) => css`
-    display: flex;
+    ${typography.small()}
+    ${styleUtils.flexCenter()}
+    height: 40px;
     color: ${colorTokens.icon.subdued};
-    padding-left: ${spacing[8]};
-    font-size: ${fontSize[16]};
-    line-height: ${lineHeight[20]};
+    padding-inline: ${spacing[12]};
 
     ${size === 'large' &&
     css`
-      padding-left: ${spacing[12]};
-      font-size: ${fontSize[24]};
-      line-height: ${lineHeight[32]};
+      ${typography.body()}
     `}
 
     ${showVerticalBar &&
