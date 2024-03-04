@@ -1,60 +1,84 @@
 <?php
-/*
-@REST API for course annoucements
-@author : themeum
-*/
-
+/**
+ * REST API for course ratings.
+ *
+ * @package Tutor\RestAPI
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 1.7.1
+ */
 
 namespace TUTOR;
+
 use WP_REST_Request;
-use WP_Comment_Query;
 
-if(!defined( 'ABSPATH' ))
-exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
+/**
+ * Class REST_Rating
+ *
+ * @package Tutor
+ * @since 1.0.0
+ */
 class REST_Rating {
+
+	/**
+	 * Course response trait
+	 *
+	 * @since 1.7.1
+	 */
 	use REST_Response;
 
+	/**
+	 * Course ID.
+	 *
+	 * @since 1.7.1
+	 *
+	 * @var int $post_id The ID of the course.
+	 */
 	private $post_id;
-	private $post_type = "tutor_course_rating";
 
-	/*
-	*require course id
-	*return comment/review with meta by course id and post type  
-	*/
-	public function course_rating(WP_REST_Request $request) {
-		$this->post_id = $request->get_param('id');
+	/**
+	 * Post type for course ratings.
+	 *
+	 * @since 1.7.1
+	 *
+	 * @var string $post_type The post type for course ratings.
+	 */
+	private $post_type = 'tutor_course_rating';
 
-		global $wpdb;
-		$t_comment = $wpdb->prefix."comments";
-		$t_commentmeta = $wpdb->prefix."commentmeta";
+	/**
+	 * Retrieve course ratings via REST API.
+	 *
+	 * @since 1.7.1
+	 *
+	 * @param WP_REST_Request $request The REST request object.
+	 *
+	 * @return mixed
+	 */
+	public function course_rating( WP_REST_Request $request ) {
+		$this->post_id = $request->get_param( 'id' );
 
-		$ratings = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT c.comment_author,c.comment_author_email,comment_date,
-					comment_content,comment_approved, cm.meta_value as rating 
-					FROM $t_comment as c JOIN $t_commentmeta as cm ON cm.comment_id = c.comment_ID 
-					WHERE c.comment_post_ID = %d AND c.comment_type = %s ",
-					$this->post_id,$this->post_type
-				));
+		$ratings = tutor_utils()->get_course_rating( $this->post_id );
 
-		if (count($ratings)>0) {
-
+		if ( count( $ratings ) > 0 ) {
 			$response = array(
-				'status_code'=> 'success',
-				'message'=> __('Course rating retrieved successfully','tutor'),
-				'data'=> $ratings
+				'status_code' => 'success',
+				'message'     => __( 'Course rating retrieved successfully', 'tutor' ),
+				'data'        => $ratings,
 			);
 
-			return self::send($response);
+			return self::send( $response );
 		}
-		
+
 		$response = array(
-			'status_code'=> 'not_found',
-			'message'=> __('Rating not found for given ID','tutor'),
-			'data'=> []
+			'status_code' => 'not_found',
+			'message'     => __( 'Rating not found for given ID', 'tutor' ),
+			'data'        => array(),
 		);
 
-		return self::send($response);		
+		return self::send( $response );
 	}
 }
