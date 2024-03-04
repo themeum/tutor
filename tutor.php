@@ -143,9 +143,14 @@ if ( ! function_exists( 'tutils' ) ) {
  * Do some task during activation
  *
  * @since 1.5.2
+ *
+ * @since 2.6.2
+ *
+ * Uninstall hook registered
  */
 register_activation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_activate' ) );
 register_deactivation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_deactivation' ) );
+register_uninstall_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_uninstall' ) );
 
 if ( ! function_exists( 'tutor_lms' ) ) {
 	/**
