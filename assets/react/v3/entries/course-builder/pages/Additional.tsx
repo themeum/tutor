@@ -22,7 +22,7 @@ import For from '@Controls/For';
 import { styleUtils } from '@Utils/style-utils';
 
 type PartialCourseDetails = Pick<CourseDetailsResponse, 'ID' | 'post_title' | 'thumbnail'>;
-
+// @TODO: will come from app config api later.
 const courses: PartialCourseDetails[] = [
   {
     ID: 1,

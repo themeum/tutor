@@ -17,8 +17,8 @@ import MeetingCard from './MeetingCard';
 import { styleUtils } from '@Utils/style-utils';
 
 export interface Meeting {
-  type: MeetingType;
   id: number;
+  type: MeetingType;
   meeting_title: string;
   meeting_date: string;
   meeting_start_time: string;
@@ -33,6 +33,7 @@ const hasLiveAddons = true;
 
 const LiveClass = () => {
   const [showMeetingForm, setShowMeetingForm] = useState<MeetingType | null>(null);
+  // @TODO: will come from app config api later.
   const [meetings, setMeetings] = useState<Meeting[]>([]);
 
   const zoomMeetings = meetings.filter(meeting => meeting.type === 'zoom');

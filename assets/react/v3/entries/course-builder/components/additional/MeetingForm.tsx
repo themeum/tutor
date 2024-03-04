@@ -47,6 +47,7 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
     setShowMeetingForm(null);
   };
 
+  // @TODO: will come from app config api later.
   const onSubmit = (data: MeetingFormFieldProps) => {
     setShowMeetingForm(null);
     meetingForm.reset();
