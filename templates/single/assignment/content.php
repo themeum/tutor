@@ -165,11 +165,10 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 			<?php endif; ?>
 
 			<?php
-			/*
-			*time_duration[value]==0 means no limit
-			*if have unlimited time then no msg should
-			*appear
-			*/
+			/**
+			 * Time_duration[value]==0 means no limit
+			 * if have unlimited time then no msg should appear
+			 */
 			if ( ( 0 != $time_duration['value'] ) && ( $now > $remaining_time && false == $is_submitted ) ) :
 				?>
 				<div class="quiz-flash-message tutor-mt-24 tutor-mt-sm-32">

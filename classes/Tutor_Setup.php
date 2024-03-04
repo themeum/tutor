@@ -470,7 +470,7 @@ class Tutor_Setup {
 					),
 					'enable_q_and_a_on_course'   => array(
 						'type'  => 'switch',
-						'lable' => __( 'Question and Anwser', 'tutor' ),
+						'lable' => __( 'Question and Answer', 'tutor' ),
 						'desc'  => __( 'Allows a Q&A forum on each course.', 'tutor' ),
 					),
 					'courses_col_per_row'        => array(
