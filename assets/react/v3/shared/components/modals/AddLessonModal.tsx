@@ -45,10 +45,10 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
       subtitle={subtitle}
       actions={
         <>
-          <Button variant='text' onClick={() => closeModal({ action: 'CLOSE' })}>
+          <Button variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
             Cancel
           </Button>
-          <Button variant='primary' onClick={form.handleSubmit(onSubmit)}>
+          <Button variant="primary" onClick={form.handleSubmit(onSubmit)}>
             Save
           </Button>
         </>
@@ -56,36 +56,38 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
     >
       <div css={{ width: '1472px', height: '100%' }}>
         <div css={styles.wrapper}>
-          <div css={styles.lessonInfo}>
-            <Controller
-              name='lesson_name'
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInput
-                  {...controllerProps}
-                  label={__('Lesson Name', 'tutor')}
-                  placeholder={__('Enter Lesson Name', 'tutor')}
-                  maxLimit={245}
-                  isClearable
-                />
-              )}
-            />
-            <Controller
-              name='description'
-              control={form.control}
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  label={__('Description', 'tutor')}
-                  placeholder={__('Enter Lesson Description', 'tutor')}
-                />
-              )}
-            />
+          <div>
+            <div css={styles.lessonInfo}>
+              <Controller
+                name="lesson_name"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Lesson Name', 'tutor')}
+                    placeholder={__('Enter Lesson Name', 'tutor')}
+                    maxLimit={245}
+                    isClearable
+                  />
+                )}
+              />
+              <Controller
+                name="description"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormTextareaInput
+                    {...controllerProps}
+                    label={__('Description', 'tutor')}
+                    placeholder={__('Enter Lesson Description', 'tutor')}
+                  />
+                )}
+              />
+            </div>
           </div>
 
           <div css={styles.rightPanel}>
             <Controller
-              name='featured_image'
+              name="featured_image"
               control={form.control}
               render={(controllerProps) => (
                 <FormImageInput
@@ -111,44 +113,44 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
             /> */}
             <div css={styles.duration}>
               <Controller
-                name='duration_hour'
+                name="duration_hour"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInputWithContent
                     {...controllerProps}
-                    type='number'
+                    type="number"
                     content={<span css={styles.durationContent}>{__('hour', 'tutor')}</span>}
-                    contentPosition='right'
+                    contentPosition="right"
                     label={__('Duration', 'tutor')}
-                    placeholder='0'
+                    placeholder="0"
                     showVerticalBar={false}
                   />
                 )}
               />
               <Controller
-                name='duration_min'
+                name="duration_min"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInputWithContent
                     {...controllerProps}
-                    type='number'
+                    type="number"
                     content={<span css={styles.durationContent}>{__('min', 'tutor')}</span>}
-                    contentPosition='right'
-                    placeholder='0'
+                    contentPosition="right"
+                    placeholder="0"
                     showVerticalBar={false}
                   />
                 )}
               />
               <Controller
-                name='duration_sec'
+                name="duration_sec"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInputWithContent
                     {...controllerProps}
-                    type='number'
+                    type="number"
                     content={<span css={styles.durationContent}>{__('sec', 'tutor')}</span>}
-                    contentPosition='right'
-                    placeholder='0'
+                    contentPosition="right"
+                    placeholder="0"
                     showVerticalBar={false}
                   />
                 )}
@@ -158,8 +160,8 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
             <div css={styles.uploadAttachment}>
               <span css={styles.uploadLabel}>Exercise Files</span>
               <Button
-                icon={<SVGIcon name='attach' height={24} width={24} />}
-                variant='secondary'
+                icon={<SVGIcon name="attach" height={24} width={24} />}
+                variant="secondary"
                 buttonContentCss={css`
                   justify-content: center;
                 `}
@@ -170,10 +172,14 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
 
             <div css={styles.lessonPreview}>
               <Controller
-                name='lesson_preview'
+                name="lesson_preview"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormSwitch {...controllerProps} label={__('Lesson preview', 'tutor')} helpText='Show preview' />
+                  <FormSwitch
+                    {...controllerProps}
+                    label={__('Lesson preview', 'tutor')}
+                    helpText={__('Show preview', 'tutor')}
+                  />
                 )}
               />
             </div>
@@ -200,7 +206,6 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
-    align-self: start;
     position: sticky;
     top: 0;
   `,
@@ -210,8 +215,7 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[16]};
     padding-block: ${spacing[24]};
-    padding-right: ${spacing[24]};
-    padding-left: ${spacing[64]};
+    padding-inline: ${spacing[24]} ${spacing[64]};
   `,
   duration: css`
     display: flex;

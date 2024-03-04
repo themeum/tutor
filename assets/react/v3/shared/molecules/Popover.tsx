@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { css } from '@emotion/react';
 import { AnimationType } from '@Hooks/useAnimation';
 import { Portal, usePortalPopover, arrowPosition } from '@Hooks/usePortalPopover';

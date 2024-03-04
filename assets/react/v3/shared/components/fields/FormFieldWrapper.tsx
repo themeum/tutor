@@ -238,7 +238,7 @@ const FormFieldWrapper = <T,>({
 
             {helpText && (
               <Tooltip content={helpText} placement="top" allowHTML>
-                <SVGIcon name="info" width={18} height={18} />
+                <SVGIcon name="info" width={20} height={20} />
               </Tooltip>
             )}
           </div>

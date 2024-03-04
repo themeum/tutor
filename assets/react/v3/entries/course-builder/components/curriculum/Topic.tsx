@@ -1,12 +1,12 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { CurriculumTopic } from '@CourseBuilderServices/curriculum';
+import { CourseTopic } from '@CourseBuilderServices/curriculum';
 
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TopicContent from './TopicContent';
 import Show from '@Controls/Show';
 import { noop, transformParams } from '@Utils/util';
@@ -17,26 +17,67 @@ import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { __ } from '@wordpress/i18n';
 import ThreeDots from '@Molecules/ThreeDots';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import { AnimationType } from '@Hooks/useAnimation';
+import For from '@Controls/For';
+import {
+  useSensors,
+  useSensor,
+  PointerSensor,
+  KeyboardSensor,
+  DndContext,
+  closestCenter,
+  UniqueIdentifier,
+  DragOverlay,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { createPortal } from 'react-dom';
+import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
+import { animated } from '@react-spring/web';
+import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
 interface TopicProps {
-  topic: CurriculumTopic;
-  allCollapsed: boolean;
+  topic: CourseTopicWithCollapse;
+  onDelete?: () => void;
+  onCopy?: () => void;
+  onSort?: (activeIndex: number, overIndex: number) => void;
+  onCollapse?: () => void;
+  isOverlay?: boolean;
 }
 
-// @TODO: will be come from app config api later.
 const hasLiveAddons = true;
 
-const Topic = ({ topic, allCollapsed }: TopicProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(allCollapsed);
+const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false }: TopicProps) => {
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
+  const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
+  const topicRef = useRef<HTMLDivElement>(null);
+  const descriptionRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const deleteRef = useRef<HTMLButtonElement>(null);
+
+  const collapseAnimation = useCollapseExpandAnimation({ ref: topicRef, isOpen: !topic.isCollapsed });
+  const collapseAnimationDescription = useCollapseExpandAnimation({
+    ref: descriptionRef,
+    isOpen: !topic.isCollapsed,
+    heightCalculator: 'client',
+  });
+
   const form = useFormWithGlobalError<{ title: string; summary: string }>({
     defaultValues: {
-      title: topic.title,
-      summary: topic.summary,
+      title: topic.post_title,
+      summary: topic.post_content,
     },
   });
 
@@ -52,27 +93,59 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
     return () => document.removeEventListener('click', handleOutsideClick);
   }, []);
 
-  useEffect(() => {
-    setIsCollapsed(allCollapsed);
-  }, [allCollapsed]);
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  const activeSortItem = useMemo(() => {
+    return topic.content.find(item => item.ID === activeSortId);
+  }, [activeSortId, topic.content]);
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: topic.ID,
+    animateLayoutChanges,
+  });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : undefined,
+  };
+
+  const combinedRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (node) {
+        setNodeRef(node);
+        (wrapperRef as any).current = node;
+      }
+    },
+    [setNodeRef, wrapperRef]
+  );
 
   return (
     <div
-      css={styles.wrapper({ isActive: isActive || isEdit })}
+      {...attributes}
+      css={styles.wrapper({ isActive: isActive || isEdit, isOverlay })}
       onClick={() => setIsActive(true)}
       onKeyDown={noop}
       tabIndex={-1}
-      ref={wrapperRef}
+      ref={combinedRef}
+      style={style}
     >
-      <div css={styles.header({ isCollapsed, isEdit })}>
+      <div css={styles.header({ isCollapsed: topic.isCollapsed, isEdit, isDeletePopoverOpen })}>
         <div css={styles.headerContent}>
-          <div css={styles.grabberInput}>
+          <div {...listeners} css={styles.grabberInput({ isOverlay })}>
             <SVGIcon name="dragVertical" width={24} height={24} />
+
             <Show
               when={isEdit}
               fallback={
-                <div css={styles.title({ isEdit })} title={topic.title}>
-                  {topic.title}
+                <div css={styles.title({ isEdit })} title={topic.post_title}>
+                  {topic.post_title}
                 </div>
               }
             >
@@ -89,7 +162,14 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
           </div>
           <div css={styles.actions}>
             <Show when={!isEdit}>
-              <button type="button" css={styles.actionButton} data-visually-hidden onClick={() => setIsEdit(true)}>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                onClick={() => {
+                  setIsEdit(true);
+                }}
+              >
                 <SVGIcon name="edit" width={24} height={24} />
               </button>
             </Show>
@@ -107,36 +187,74 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
               type="button"
               css={styles.actionButton}
               data-visually-hidden
+              ref={deleteRef}
               onClick={() => {
-                alert('@TODO: will be implemented later');
+                setIsDeletePopoverOpen(true);
               }}
             >
               <SVGIcon name="delete" width={24} height={24} />
             </button>
-            <button type="button" css={styles.actionButton} onClick={() => setIsCollapsed(previous => !previous)}>
-              <SVGIcon name={isCollapsed ? 'chevronDown' : 'chevronUp'} />
+            <ConfirmationPopover
+              isOpen={isDeletePopoverOpen}
+              triggerRef={deleteRef}
+              closePopover={() => setIsDeletePopoverOpen(false)}
+              maxWidth="258px"
+              title={`Delete topic "${topic.post_title}"`}
+              message="Are you sure you want to delete this content from your course? This cannot be undone."
+              animationType={AnimationType.slideUp}
+              arrow="top"
+              hideArrow
+              confirmButton={{
+                text: __('Delete', 'tutor'),
+                variant: 'text',
+                isDelete: true,
+              }}
+              cancelButton={{
+                text: __('Cancel', 'tutor'),
+                variant: 'text',
+              }}
+              onConfirmation={() => {
+                onDelete && onDelete();
+              }}
+            />
+
+            <button
+              type="button"
+              css={styles.actionButton}
+              onClick={() => {
+                onCollapse && onCollapse();
+              }}
+            >
+              <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
             </button>
           </div>
         </div>
 
-        <Show when={!isCollapsed}>
-          <Show when={isEdit} fallback={<div css={styles.description({ isEdit })}>{topic.summary}</div>}>
-            <div css={styles.description({ isEdit })}>
-              <Controller
-                control={form.control}
-                name="summary"
-                render={controllerProps => (
-                  <FormTextareaInput
-                    {...controllerProps}
-                    placeholder={__('Add a summary', 'tutor')}
-                    isSecondary
-                    rows={2}
-                    enableResize
-                  />
-                )}
-              />
-            </div>
-          </Show>
+        <Show
+          when={isEdit}
+          fallback={
+            <animated.div style={{ ...collapseAnimationDescription }}>
+              <div css={styles.description({ isEdit })} ref={descriptionRef}>
+                {topic.post_content}
+              </div>
+            </animated.div>
+          }
+        >
+          <div css={styles.description({ isEdit })}>
+            <Controller
+              control={form.control}
+              name="summary"
+              render={controllerProps => (
+                <FormTextareaInput
+                  {...controllerProps}
+                  placeholder={__('Add a summary', 'tutor')}
+                  isSecondary
+                  rows={2}
+                  enableResize
+                />
+              )}
+            />
+          </div>
         </Show>
 
         <Show when={isEdit}>
@@ -158,15 +276,67 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
           </div>
         </Show>
       </div>
-      <Show when={!isCollapsed}>
-        <div css={styles.content}>
-          <div>
-            <TopicContent type="lesson" content={{ title: 'Lesson: topic 1' }} />
-            <TopicContent type="quiz" content={{ title: 'Quiz' }} />
-            <TopicContent type="assignment" content={{ title: 'Assignments' }} />
-            <TopicContent type="zoom" content={{ title: 'Zoom live lesson' }} />
-            <TopicContent type="meet" content={{ title: 'Google meet live lesson' }} />
-          </div>
+      <animated.div style={{ ...collapseAnimation }}>
+        <div css={styles.content} ref={topicRef}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+            onDragStart={event => {
+              setActiveSortId(event.active.id);
+            }}
+            onDragEnd={event => {
+              const { active, over } = event;
+              if (!over) {
+                return;
+              }
+
+              if (active.id !== over.id) {
+                const activeIndex = topic.content.findIndex(item => item.ID === active.id);
+                const overIndex = topic.content.findIndex(item => item.ID === over.id);
+                onSort && onSort(activeIndex, overIndex);
+              }
+            }}
+          >
+            <SortableContext
+              items={topic.content.map(item => ({ ...item, id: item.ID }))}
+              strategy={verticalListSortingStrategy}
+            >
+              <div>
+                <For each={topic.content}>
+                  {content => {
+                    return (
+                      <TopicContent
+                        key={content.ID}
+                        type={content.type}
+                        content={{
+                          id: content.ID,
+                          title: content.post_title,
+                          questionCount: content.type === 'quiz' ? content.questions.length : undefined,
+                        }}
+                      />
+                    );
+                  }}
+                </For>
+              </div>
+            </SortableContext>
+
+            {createPortal(
+              <DragOverlay>
+                <Show when={activeSortItem}>
+                  {item => (
+                    <TopicContent
+                      content={{ id: item.ID, title: item.post_title, questionCount: 0 }}
+                      type={item.type}
+                      isDragging
+                    />
+                  )}
+                </Show>
+              </DragOverlay>,
+              document.body
+            )}
+          </DndContext>
+
           <div css={styles.contentButtons}>
             <div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
               <Button
@@ -218,14 +388,15 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
                   closePopover={() => setIsOpen(false)}
                   dotsOrientation="vertical"
                   maxWidth="220px"
+                  isInverse
                 >
                   <ThreeDots.Option
                     text={__('Meet live lesson', 'tutor')}
-                    icon={<SVGIcon width={24} height={24} name="googleMeet" />}
+                    icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
                   />
                   <ThreeDots.Option
                     text={__('Zoom live lesson', 'tutor')}
-                    icon={<SVGIcon width={24} height={24} name="zoom" />}
+                    icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
                   />
                   <ThreeDots.Option
                     text={__('Import Quiz', 'tutor')}
@@ -236,7 +407,7 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
             </div>
           </div>
         </div>
-      </Show>
+      </animated.div>
     </div>
   );
 };
@@ -244,10 +415,12 @@ const Topic = ({ topic, allCollapsed }: TopicProps) => {
 export default Topic;
 
 const styles = {
-  wrapper: ({ isActive = false }) => css`
+  wrapper: ({ isActive = false, isOverlay = false }) => css`
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
     transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    background-color: ${colorTokens.bg.white};
+    width: 100%;
 
     ${isActive &&
     css`
@@ -258,8 +431,22 @@ const styles = {
     :hover {
       background-color: ${colorTokens.background.hover};
     }
+
+    ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+    `}
   `,
-  header: ({ isCollapsed, isEdit }: { isCollapsed: boolean; isEdit: boolean }) => css`
+
+  header: ({
+    isCollapsed,
+    isEdit,
+    isDeletePopoverOpen,
+  }: {
+    isCollapsed: boolean;
+    isEdit: boolean;
+    isDeletePopoverOpen: boolean;
+  }) => css`
     padding: ${spacing[12]} ${spacing[16]};
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
@@ -269,7 +456,13 @@ const styles = {
       border-bottom: 1px solid ${colorTokens.stroke.divider};
     `}
 
+    ${isCollapsed &&
+    css`
+      padding-bottom: 0;
+    `}
+
     ${!isEdit &&
+    !isDeletePopoverOpen &&
     css`
       [data-visually-hidden] {
         opacity: 0;
@@ -287,8 +480,9 @@ const styles = {
     display: grid;
     grid-template-columns: 8fr 1fr;
     gap: ${spacing[12]};
+    width: 100%;
   `,
-  grabberInput: css`
+  grabberInput: ({ isOverlay = false }) => css`
     ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[8]};
@@ -297,6 +491,7 @@ const styles = {
       color: ${colorTokens.color.black[40]};
       flex-shrink: 0;
     }
+    cursor: ${isOverlay ? 'grabbing' : 'grab'};
   `,
   actions: css`
     ${styleUtils.display.flex()};
