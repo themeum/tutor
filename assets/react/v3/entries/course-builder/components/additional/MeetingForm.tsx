@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject, useEffect, useRef } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
@@ -19,6 +19,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
 import { Meeting } from './LiveClass';
 import { styleUtils } from '@Utils/style-utils';
+import FormSelectInput from '@Components/fields/FormSelectInput';
 
 export type MeetingType = 'zoom' | 'google_meet' | 'jitsi';
 
@@ -29,7 +30,7 @@ interface MeetingFormFieldProps {
   meeting_time_from: string;
   meeting_time_to: string;
   meeting_enrolledAsAttendee: boolean;
-  meeting_autoRecording: boolean;
+  meeting_autoRecording: string;
   meeting_password: string;
   meeting_host: string;
 }
@@ -41,7 +42,19 @@ interface MeetingFormProps {
 }
 
 const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps) => {
-  const meetingForm = useFormWithGlobalError<MeetingFormFieldProps>();
+  const meetingForm = useFormWithGlobalError<MeetingFormFieldProps>({
+    defaultValues: {
+      meeting_name: '',
+      meeting_summary: '',
+      meeting_date: '',
+      meeting_time_from: '',
+      meeting_time_to: '',
+      meeting_enrolledAsAttendee: false,
+      meeting_autoRecording: 'disabled',
+      meeting_password: '',
+      meeting_host: '',
+    },
+  });
 
   const onCancel = () => {
     setShowMeetingForm(null);
@@ -71,7 +84,7 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
         meeting_title: data.meeting_name,
         meeting_date: data.meeting_date,
         meeting_start_time: data.meeting_time_from,
-        meeting_link: 'https://meet.google.com/abc-xyz',
+        meeting_link: 'https://zoom.us/abc-xyz',
         meeting_token: 'abc-xyz',
         meeting_password: data.meeting_password,
       };
@@ -163,7 +176,18 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
           <Controller
             name="meeting_autoRecording"
             control={meetingForm.control}
-            render={controllerProps => <FormCheckbox {...controllerProps} label={__('Auto recording', 'tutor')} />}
+            render={controllerProps => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Auto recording', 'tutor')}
+                placeholder="Select auto recording option"
+                options={[
+                  { label: 'Disabled', value: 'disabled' },
+                  { label: 'Local', value: 'local' },
+                  { label: 'Cloud', value: 'cloud' },
+                ]}
+              />
+            )}
           />
 
           <Controller
@@ -205,12 +229,12 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
 };
 
 export default MeetingForm;
-
 const styles = {
   container: css`
     ${styleUtils.display.flex('column')}
+    background: ${colorTokens.background.white};
     gap: ${spacing[16]};
-    padding: ${spacing[12]};
+    padding-block: ${spacing[12]};
     border-radius: ${borderRadius.card};
     box-shadow: ${shadow.popover};
     ${typography.caption('regular')};
@@ -222,7 +246,11 @@ const styles = {
   `,
   formWrapper: css`
     ${styleUtils.display.flex('column')}
+    padding-inline: ${spacing[12]};
+    padding-bottom: ${spacing[8]};
     gap: ${spacing[12]};
+    max-height: 400px;
+    overflow-y: auto;
   `,
   meetingDateTimeWrapper: css`
     ${styleUtils.display.flex('column')}
@@ -236,6 +264,8 @@ const styles = {
   `,
   buttonWrapper: css`
     ${styleUtils.display.flex()}
+    padding-top: ${spacing[8]};
+    padding-inline: ${spacing[12]};
     justify-content: flex-end;
     gap: ${spacing[8]};
   `,

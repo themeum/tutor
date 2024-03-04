@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -15,6 +15,9 @@ import For from '@Controls/For';
 import MeetingForm, { MeetingType } from './MeetingForm';
 import MeetingCard from './MeetingCard';
 import { styleUtils } from '@Utils/style-utils';
+import Popover from '@Molecules/Popover';
+import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import { element } from 'prop-types';
 
 export interface Meeting {
   id: number;
@@ -38,6 +41,10 @@ const LiveClass = () => {
 
   const zoomMeetings = meetings.filter(meeting => meeting.type === 'zoom');
   const googleMeetMeetings = meetings.filter(meeting => meeting.type === 'google_meet');
+
+  const zoomBtnRef = useRef<HTMLButtonElement>(null);
+  const googleMeetBtnRef = useRef<HTMLButtonElement>(null);
+  const jitsiBtnRef = useRef<HTMLButtonElement>(null);
 
   return (
     <div css={styles.liveClass}>
@@ -99,137 +106,150 @@ const LiveClass = () => {
             />
           }
         >
-          <Show
-            when={showMeetingForm === 'zoom'}
-            fallback={
-              <Show
-                when={zoomMeetings.length !== 0}
-                fallback={
-                  <Button
-                    variant="secondary"
-                    icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
-                    buttonContentCss={css`
-                      justify-content: center;
-                    `}
-                    onClick={() => setShowMeetingForm('zoom')}
-                  >
-                    {__('Create a Zoom meeting', 'tutor')}
-                  </Button>
-                }
-              >
-                <div css={styles.meetingsWrapper}>
-                  <For each={zoomMeetings}>
-                    {meeting => (
-                      <div key={meeting.id} css={styles.meeting}>
-                        <MeetingCard
-                          meeting_title={meeting.meeting_title}
-                          meeting_date={meeting.meeting_date}
-                          meeting_start_time={meeting.meeting_start_time}
-                          meeting_link={meeting.meeting_link}
-                          meeting_token={meeting.meeting_token}
-                          meeting_password={meeting.meeting_password}
-                        />
-                      </div>
-                    )}
-                  </For>
-                  <div css={styles.meetingsFooter}>
-                    <Button
-                      variant="secondary"
-                      icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
-                      buttonContentCss={css`
-                        justify-content: center;
-                      `}
-                      buttonCss={css`
-                        width: 100%;
-                      `}
-                      onClick={() => setShowMeetingForm('zoom')}
-                    >
-                      {__('Create a Zoom meeting', 'tutor')}
-                    </Button>
-                  </div>
-                </div>
-              </Show>
-            }
+          <div
+            css={styles.meetingsWrapper({
+              isMultiple: zoomMeetings.length > 0,
+            })}
           >
-            <MeetingForm type="zoom" setShowMeetingForm={setShowMeetingForm} setMeetings={setMeetings} />
-          </Show>
-
-          <Show
-            when={showMeetingForm === 'google_meet'}
-            fallback={
-              <Show
-                when={googleMeetMeetings.length !== 0}
-                fallback={
-                  <Button
-                    variant="secondary"
-                    icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
-                    buttonContentCss={css`
-                      justify-content: center;
-                    `}
-                    onClick={() => setShowMeetingForm('google_meet')}
-                  >
-                    {__('Create a Google Meet', 'tutor')}
-                  </Button>
-                }
-              >
-                <div css={styles.meetingsWrapper}>
-                  <For each={googleMeetMeetings}>
-                    {meeting => (
-                      <div key={meeting.id} css={styles.meeting}>
-                        <MeetingCard
-                          meeting_title={meeting.meeting_title}
-                          meeting_date={meeting.meeting_date}
-                          meeting_start_time={meeting.meeting_start_time}
-                          meeting_link={meeting.meeting_link}
-                          meeting_token={meeting.meeting_token}
-                          meeting_password={meeting.meeting_password}
-                        />
-                      </div>
-                    )}
-                  </For>
-                  <div css={styles.meetingsFooter}>
-                    <Button
-                      variant="secondary"
-                      icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
-                      buttonContentCss={css`
-                        justify-content: center;
-                      `}
-                      buttonCss={css`
-                        width: 100%;
-                      `}
-                      onClick={() => setShowMeetingForm('google_meet')}
-                    >
-                      {__('Create a Google Meet', 'tutor')}
-                    </Button>
-                  </div>
+            <For each={zoomMeetings}>
+              {meeting => (
+                <div
+                  key={meeting.id}
+                  css={styles.meeting({
+                    isMultiple: zoomMeetings.length > 0,
+                  })}
+                >
+                  <MeetingCard
+                    meeting_title={meeting.meeting_title}
+                    meeting_date={meeting.meeting_date}
+                    meeting_start_time={meeting.meeting_start_time}
+                    meeting_link={meeting.meeting_link}
+                    meeting_token={meeting.meeting_token}
+                    meeting_password={meeting.meeting_password}
+                  />
                 </div>
-              </Show>
-            }
-          >
-            <MeetingForm type="google_meet" setShowMeetingForm={setShowMeetingForm} setMeetings={setMeetings} />
-          </Show>
-
-          <Show
-            when={showMeetingForm === 'jitsi'}
-            fallback={
+              )}
+            </For>
+            <div
+              css={styles.meetingsFooter({
+                isMultiple: zoomMeetings.length > 0,
+              })}
+            >
               <Button
                 variant="secondary"
-                icon={<SVGIcon name="jitsiColorize" width={24} height={24} />}
+                icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
                 buttonContentCss={css`
                   justify-content: center;
                 `}
-                onClick={() => {
-                  alert('@TODO: Will be implemented in future');
-                }}
+                buttonCss={css`
+                  width: 100%;
+                `}
+                onClick={() => setShowMeetingForm('zoom')}
+                ref={zoomBtnRef}
               >
-                {__('Create a Jitsi meeting', 'tutor')}
+                {__('Create a Zoom meeting', 'tutor')}
               </Button>
-            }
+            </div>
+          </div>
+
+          <div
+            css={styles.meetingsWrapper({
+              isMultiple: googleMeetMeetings.length > 0,
+            })}
           >
-            <MeetingForm type="jitsi" setShowMeetingForm={setShowMeetingForm} setMeetings={setMeetings} />
-          </Show>
+            <For each={googleMeetMeetings}>
+              {meeting => (
+                <div
+                  key={meeting.id}
+                  css={styles.meeting({
+                    isMultiple: googleMeetMeetings.length > 0,
+                  })}
+                >
+                  <MeetingCard
+                    meeting_title={meeting.meeting_title}
+                    meeting_date={meeting.meeting_date}
+                    meeting_start_time={meeting.meeting_start_time}
+                    meeting_link={meeting.meeting_link}
+                    meeting_token={meeting.meeting_token}
+                    meeting_password={meeting.meeting_password}
+                  />
+                </div>
+              )}
+            </For>
+            <div
+              css={styles.meetingsFooter({
+                isMultiple: googleMeetMeetings.length > 0,
+              })}
+            >
+              <Button
+                variant="secondary"
+                icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
+                buttonContentCss={css`
+                  justify-content: center;
+                `}
+                buttonCss={css`
+                  width: 100%;
+                `}
+                onClick={() => setShowMeetingForm('google_meet')}
+                ref={googleMeetBtnRef}
+              >
+                {__('Create a Google Meet', 'tutor')}
+              </Button>
+            </div>
+          </div>
+
+          <Button
+            variant="secondary"
+            icon={<SVGIcon name="jitsiColorize" width={24} height={24} />}
+            buttonContentCss={css`
+              justify-content: center;
+            `}
+            onClick={() => {
+              alert('@TODO: Will be implemented in future');
+            }}
+            ref={jitsiBtnRef}
+          >
+            {__('Create a Jitsi meeting', 'tutor')}
+          </Button>
         </Show>
       </Show>
+
+      <Popover
+        triggerRef={zoomBtnRef}
+        isOpen={showMeetingForm === 'zoom'}
+        arrow="auto"
+        closePopover={() => setShowMeetingForm(null)}
+      >
+        <MeetingForm
+          type={showMeetingForm as MeetingType}
+          setShowMeetingForm={setShowMeetingForm}
+          setMeetings={setMeetings}
+        />
+      </Popover>
+      <Popover
+        triggerRef={googleMeetBtnRef}
+        isOpen={showMeetingForm === 'google_meet'}
+        arrow="auto"
+        closePopover={() => setShowMeetingForm(null)}
+      >
+        <MeetingForm
+          type={showMeetingForm as MeetingType}
+          setShowMeetingForm={setShowMeetingForm}
+          setMeetings={setMeetings}
+        />
+      </Popover>
+      <Popover
+        triggerRef={jitsiBtnRef}
+        isOpen={showMeetingForm === 'jitsi'}
+        arrow="auto"
+        closePopover={() => setShowMeetingForm(null)}
+      >
+        <MeetingForm
+          type={showMeetingForm as MeetingType}
+          setShowMeetingForm={setShowMeetingForm}
+          setMeetings={setMeetings}
+        />
+      </Popover>
     </div>
   );
 };
@@ -248,17 +268,26 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
   `,
-  meetingsWrapper: css`
+  meetingsWrapper: ({ isMultiple }: { isMultiple: boolean }) => css`
     ${styleUtils.display.flex('column')}
-    border: 1px solid ${colorTokens.stroke.default};
+    ${isMultiple &&
+    css`
+      border: 1px solid ${colorTokens.stroke.default};
+    `}
     border-radius: ${borderRadius.card};
   `,
-  meeting: css`
+  meeting: ({ isMultiple }: { isMultiple: boolean }) => css`
     padding: ${spacing[8]} ${spacing[8]} ${spacing[12]} ${spacing[8]};
-    border-bottom: 1px solid ${colorTokens.stroke.divider};
+    ${isMultiple &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
   `,
-  meetingsFooter: css`
+  meetingsFooter: ({ isMultiple }: { isMultiple: boolean }) => css`
     width: 100%;
-    padding: ${spacing[12]} ${spacing[8]};
+    ${isMultiple &&
+    css`
+      padding: ${spacing[12]} ${spacing[8]};
+    `}
   `,
 };
