@@ -2,7 +2,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { CourseTopic } from '@CourseBuilderServices/curriculum';
+import { CourseTopic, TopicContent as TopicContentType } from '@CourseBuilderServices/curriculum';
 
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -67,6 +67,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const deleteRef = useRef<HTMLButtonElement>(null);
 
+  // @TODO: will be controlled by the API
+  const [content, setContent] = useState<TopicContentType[]>(topic.content);
+
   const collapseAnimation = useCollapseExpandAnimation({ ref: topicRef, isOpen: !topic.isCollapsed });
   const collapseAnimationDescription = useCollapseExpandAnimation({
     ref: descriptionRef,
@@ -80,6 +83,14 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
       summary: topic.post_content,
     },
   });
+
+  const createDuplicateContent = (data: TopicContentType) => {
+    console.log({ data });
+    setContent(previousContent => {
+      const newContent = { ...data, ID: Math.random() };
+      return [...previousContent, newContent];
+    });
+  };
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -173,14 +184,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 <SVGIcon name="edit" width={24} height={24} />
               </button>
             </Show>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={() => {
-                alert('@TODO: will be implemented later');
-              }}
-            >
+            <button type="button" css={styles.actionButton} data-visually-hidden onClick={onCopy}>
               <SVGIcon name="copyPaste" width={24} height={24} />
             </button>
             <button
@@ -299,11 +303,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             }}
           >
             <SortableContext
-              items={topic.content.map(item => ({ ...item, id: item.ID }))}
+              items={content.map(item => ({ ...item, id: item.ID }))}
               strategy={verticalListSortingStrategy}
             >
               <div>
-                <For each={topic.content}>
+                <For each={content}>
                   {content => {
                     return (
                       <TopicContent
@@ -314,6 +318,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                           title: content.post_title,
                           questionCount: content.type === 'quiz' ? content.questions.length : undefined,
                         }}
+                        onCopy={() => createDuplicateContent(content)}
                       />
                     );
                   }}
