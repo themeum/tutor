@@ -217,7 +217,6 @@ const LiveClass = () => {
       <Popover
         triggerRef={zoomBtnRef}
         isOpen={showMeetingForm === 'zoom'}
-        arrow="auto"
         closePopover={() => setShowMeetingForm(null)}
       >
         <MeetingForm
@@ -229,7 +228,6 @@ const LiveClass = () => {
       <Popover
         triggerRef={googleMeetBtnRef}
         isOpen={showMeetingForm === 'google_meet'}
-        arrow="auto"
         closePopover={() => setShowMeetingForm(null)}
       >
         <MeetingForm
@@ -241,7 +239,6 @@ const LiveClass = () => {
       <Popover
         triggerRef={jitsiBtnRef}
         isOpen={showMeetingForm === 'jitsi'}
-        arrow="auto"
         closePopover={() => setShowMeetingForm(null)}
       >
         <MeetingForm
