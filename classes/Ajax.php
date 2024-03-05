@@ -28,42 +28,47 @@ class Ajax {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 * @since 2.6.2 added allow_hooks param.
+	 *
+	 * @param bool $allow_hooks default value true.
+	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $allow_hooks = true ) {
+		if ( $allow_hooks ) {
+			add_action( 'wp_ajax_sync_video_playback', array( $this, 'sync_video_playback' ) );
+			add_action( 'wp_ajax_nopriv_sync_video_playback', array( $this, 'sync_video_playback_noprev' ) );
+			add_action( 'wp_ajax_tutor_place_rating', array( $this, 'tutor_place_rating' ) );
+			add_action( 'wp_ajax_delete_tutor_review', array( $this, 'delete_tutor_review' ) );
 
-		add_action( 'wp_ajax_sync_video_playback', array( $this, 'sync_video_playback' ) );
-		add_action( 'wp_ajax_nopriv_sync_video_playback', array( $this, 'sync_video_playback_noprev' ) );
-		add_action( 'wp_ajax_tutor_place_rating', array( $this, 'tutor_place_rating' ) );
-		add_action( 'wp_ajax_delete_tutor_review', array( $this, 'delete_tutor_review' ) );
+			add_action( 'wp_ajax_tutor_course_add_to_wishlist', array( $this, 'tutor_course_add_to_wishlist' ) );
+			add_action( 'wp_ajax_nopriv_tutor_course_add_to_wishlist', array( $this, 'tutor_course_add_to_wishlist' ) );
 
-		add_action( 'wp_ajax_tutor_course_add_to_wishlist', array( $this, 'tutor_course_add_to_wishlist' ) );
-		add_action( 'wp_ajax_nopriv_tutor_course_add_to_wishlist', array( $this, 'tutor_course_add_to_wishlist' ) );
+			/**
+			 * Get all addons
+			 */
+			add_action( 'wp_ajax_tutor_get_all_addons', array( $this, 'tutor_get_all_addons' ) );
 
-		/**
-		 * Get all addons
-		 */
-		add_action( 'wp_ajax_tutor_get_all_addons', array( $this, 'tutor_get_all_addons' ) );
+			/**
+			 * Addon Enable Disable Control
+			 */
+			add_action( 'wp_ajax_addon_enable_disable', array( $this, 'addon_enable_disable' ) );
 
-		/**
-		 * Addon Enable Disable Control
-		 */
-		add_action( 'wp_ajax_addon_enable_disable', array( $this, 'addon_enable_disable' ) );
+			/**
+			 * Ajax login
+			 *
+			 * @since  v.1.6.3
+			 */
+			add_action( 'tutor_action_tutor_user_login', array( $this, 'process_tutor_login' ) );
 
-		/**
-		 * Ajax login
-		 *
-		 * @since  v.1.6.3
-		 */
-		add_action( 'tutor_action_tutor_user_login', array( $this, 'process_tutor_login' ) );
-
-		/**
-		 * Announcement
-		 *
-		 * @since  v.1.7.9
-		 */
-		add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_annoucement' ) );
-		add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_annoucement' ) );
+			/**
+			 * Announcement
+			 *
+			 * @since  v.1.7.9
+			 */
+			add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_annoucement' ) );
+			add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_annoucement' ) );
+		}
 	}
 
 
@@ -316,23 +321,17 @@ class Ajax {
 	/**
 	 * Add or Delete wishlist by user_id and course_id
 	 *
+	 * @since 2.6.2
+	 *
 	 * @param int $user_id the user id.
 	 * @param int $course_id the course_id to add to the wishlist.
+	 *
 	 * @return string
 	 */
 	public function add_or_delete_wishlist( $user_id, $course_id ) {
 		global $wpdb;
 
-		$if_added_to_list = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * from {$wpdb->usermeta}
-			WHERE user_id = %d
-				AND meta_key = '_tutor_course_wishlist'
-				AND meta_value = %d;",
-				$user_id,
-				$course_id
-			)
-		);
+		$if_added_to_list = tutor_utils()->is_added_to_wishlist( $user_id, $course_id );
 
 		$result = '';
 

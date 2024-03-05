@@ -5452,6 +5452,33 @@ class Utils {
 	}
 
 	/**
+	 * Function to check if already added to wishlist
+	 *
+	 * @since 2.6.2
+	 *
+	 * @param int $user_id user id.
+	 * @param int $course_id course id.
+	 *
+	 * @return boolean
+	 */
+	public function is_added_to_wishlist( $user_id, $course_id ) {
+		global $wpdb;
+
+		$if_added_to_list = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * from {$wpdb->usermeta}
+			WHERE user_id = %d
+				AND meta_key = '_tutor_course_wishlist'
+				AND meta_value = %d;",
+				$user_id,
+				$course_id
+			)
+		);
+
+		return $if_added_to_list ? true : false;
+	}
+
+	/**
 	 * Getting popular courses
 	 *
 	 * @since 1.0.0
