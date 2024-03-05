@@ -327,11 +327,32 @@ class Q_and_A {
 		}
 
 		// Get who asked the question.
-		$context      = Input::post( 'context', '' );
-		$asker_prefix = 'frontend-dashboard-qna-table-student' === $context ? '_' . get_current_user_id() : '';
+		$context = Input::post( 'context', '' );
+		$user_id = get_current_user_id();
 
 		// Get the existing value from meta.
 		$action = Input::post( 'qna_action', '' );
+
+		$new_value = $this->trigger_qna_action( $question_id, $action, $context, $user_id );
+
+		// Transfer the new status.
+		wp_send_json_success( array( 'new_value' => $new_value ) );
+	}
+
+	/**
+	 * Function to update Q&A action
+	 *
+	 * @since 2.6.2
+	 *
+	 * @param int    $question_id question id.
+	 * @param string $action action name.
+	 * @param string $context context name.
+	 * @param int    $user_id user id.
+	 *
+	 * @return int
+	 */
+	public function trigger_qna_action( $question_id, $action, $context, $user_id ) {
+		$asker_prefix = 'frontend-dashboard-qna-table-student' === $context ? '_' . $user_id : '';
 
 		// If current user asker, then make it unread for self.
 		// If it is instructor, then make unread for instructor side.
@@ -344,8 +365,7 @@ class Q_and_A {
 		// Update the reverted value.
 		update_comment_meta( $question_id, $meta_key, $new_value );
 
-		// Transfer the new status.
-		wp_send_json_success( array( 'new_value' => $new_value ) );
+		return $new_value;
 	}
 
 	/**
