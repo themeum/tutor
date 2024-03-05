@@ -3777,10 +3777,11 @@ class Utils {
 	 *
 	 * @param integer|object $user user id or object.
 	 * @param string         $size size of avatar like sm, md, lg.
+	 * @param bool           $echo whether to echo or return.
 	 *
 	 * @return string
 	 */
-	public function get_tutor_avatar( $user = null, $size = '' ) {
+	public function get_tutor_avatar( $user = null, $size = '', $echo = false ) {
 
 		if ( ! $user ) {
 			return '';
@@ -3815,7 +3816,11 @@ class Utils {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		return apply_filters( 'tutor_text_avatar', $output );
+		if ( $echo ) {
+			echo wp_kses( $output, $this->allowed_avatar_tags() );
+		} else {
+			return apply_filters( 'tutor_text_avatar', $output );
+		}
 	}
 
 	/**
