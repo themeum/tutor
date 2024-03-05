@@ -4704,6 +4704,39 @@ class Utils {
 	}
 
 	/**
+	 * Funcion to check if a user can delete qa by id
+	 *
+	 * @param int $user_id
+	 * @param int $question_id
+	 * @return boolean
+	 */
+	public function can_delete_qa( $user_id, $question_id ) {
+		global $wpdb;
+
+		$is_admin = $this->has_user_role( 'administrator', $user_id);
+
+		if ($is_admin) {
+			return true;
+		}
+
+		$result = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT  *
+				FROM 	{$wpdb->comments} qa
+				WHERE 	qa.comment_ID = %d
+			",
+				$question_id
+			)
+		);
+
+		if ( $result && (int) $result->user_id === $user_id) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get total number of un-answered question.
 	 *
 	 * @since 1.0.0
