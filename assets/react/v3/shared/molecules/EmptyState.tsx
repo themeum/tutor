@@ -1,8 +1,8 @@
-import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import { css } from '@emotion/react';
-import { size } from 'polished';
+
+import Show from '@Controls/Show';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
 
 type EmptyStateSize = 'small' | 'medium';
 
@@ -67,18 +67,16 @@ const styles = {
     `}
 
     & img {
-      max-width: 412px;
+      max-width: 640px;
       width: 100%;
-      height: 140px;
+      height: auto;
       border-radius: ${borderRadius[10]};
       overflow: hidden;
       object-position: center;
       object-fit: cover;
-
       ${size === 'small' &&
       css`
         max-width: 282px;
-        height: 112px;
       `}
     }
   `,
