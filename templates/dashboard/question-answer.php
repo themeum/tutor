@@ -13,10 +13,10 @@ use TUTOR\Input;
 use TUTOR\Instructor;
 use TUTOR\Q_and_A;
 
-if ( Input::has( 'question_id' ) ) {
-	$question_id = Input::get( 'question_id' );
-	$question    = tutor_utils()->get_qa_question( $question_id );
-	$user_id     = get_current_user_id();
+$question_id = Input::get( 'question_id', null, Input::TYPE_INT );
+if ( $question_id ) {
+	$question = tutor_utils()->get_qa_question( $question_id );
+	$user_id  = get_current_user_id();
 
 	if ( $question && ! Q_and_A::has_qna_access( $user_id, $question->comment_post_ID ) ) {
 		tutor_utils()->tutor_empty_state( tutor_utils()->error_message() );
