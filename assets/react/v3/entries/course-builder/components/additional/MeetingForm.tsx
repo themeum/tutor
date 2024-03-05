@@ -250,6 +250,7 @@ const styles = {
     padding-bottom: ${spacing[8]};
     gap: ${spacing[12]};
     max-height: 400px;
+    height: 100%;
     overflow-y: auto;
   `,
   meetingDateTimeWrapper: css`
