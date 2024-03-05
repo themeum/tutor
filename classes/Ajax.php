@@ -150,10 +150,11 @@ class Ajax {
 	 * @param int    $course_id the course id.
 	 * @param int    $rating rating star number.
 	 * @param string $review review description.
+	 * @param int    $review_id review id needed for api update.
 	 *
 	 * @return void|string
 	 */
-	public function add_or_update_review( $user_id, $course_id, $rating, $review ) {
+	public function add_or_update_review( $user_id, $course_id, $rating, $review, $review_id = 0 ) {
 		global $wpdb;
 
 		$moderation = tutor_utils()->get_option( 'enable_course_review_moderation', false, true, true );
@@ -167,21 +168,24 @@ class Ajax {
 
 		do_action( 'tutor_before_rating_placed' );
 
-		$previous_rating_id = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT comment_ID
-			from {$wpdb->comments}
-			WHERE comment_post_ID = %d AND
-				user_id = %d AND
-				comment_type = 'tutor_course_rating'
-			LIMIT 1;",
-				$course_id,
-				$user_id
-			)
-		);
+		if ( empty( $review_id ) ) {
+			$previous_rating_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT comment_ID
+				from {$wpdb->comments}
+				WHERE comment_post_ID = %d AND
+					user_id = %d AND
+					comment_type = 'tutor_course_rating'
+				LIMIT 1;",
+					$course_id,
+					$user_id
+				)
+			);
 
-		$review_id = $previous_rating_id;
-		if ( $previous_rating_id ) {
+			$review_id = $previous_rating_id;
+		}
+
+		if ( $review_id ) {
 			$wpdb->update(
 				$wpdb->comments,
 				array(
@@ -190,7 +194,7 @@ class Ajax {
 					'comment_date'     => $date,
 					'comment_date_gmt' => get_gmt_from_date( $date ),
 				),
-				array( 'comment_ID' => $previous_rating_id )
+				array( 'comment_ID' => $review_id )
 			);
 
 			$rating_info = $wpdb->get_row(
@@ -198,7 +202,7 @@ class Ajax {
 					"SELECT * FROM {$wpdb->commentmeta} 
 				WHERE comment_id = %d 
 					AND meta_key = 'tutor_rating'; ",
-					$previous_rating_id
+					$review_id
 				)
 			);
 
@@ -207,7 +211,7 @@ class Ajax {
 					$wpdb->commentmeta,
 					array( 'meta_value' => $rating ),
 					array(
-						'comment_id' => $previous_rating_id,
+						'comment_id' => $review_id,
 						'meta_key'   => 'tutor_rating',
 					)
 				);
@@ -215,7 +219,7 @@ class Ajax {
 				$wpdb->insert(
 					$wpdb->commentmeta,
 					array(
-						'comment_id' => $previous_rating_id,
+						'comment_id' => $review_id,
 						'meta_key'   => 'tutor_rating',
 						'meta_value' => $rating,
 					)
@@ -262,7 +266,7 @@ class Ajax {
 				)
 			);
 		} else {
-			return $previous_rating_id ? 'updated' : 'created';
+			return $review_id ? 'updated' : 'created';
 		}
 	}
 
