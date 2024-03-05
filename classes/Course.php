@@ -54,7 +54,6 @@ class Course extends Tutor_Base {
 		add_action( "manage_{$this->course_post_type}_posts_custom_column", array( $this, 'custom_lesson_column' ), 10, 2 );
 
 		add_action( 'wp_ajax_tutor_delete_topic', array( $this, 'tutor_delete_topic' ) );
-		add_action( 'admin_action_tutor_delete_announcement', array( $this, 'tutor_delete_announcement' ) );
 
 		/**
 		 * Frontend Action
@@ -771,21 +770,6 @@ class Course extends Tutor_Base {
 		wp_delete_post( $topic_id );
 
 		wp_send_json_success();
-	}
-
-	/**
-	 * Delete announcement
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function tutor_delete_announcement() {
-		tutor_utils()->checking_nonce( 'get' );
-
-		$announcement_id = Input::get( 'topic_id', 0, Input::TYPE_INT );
-
-		wp_delete_post( $announcement_id );
-		wp_safe_redirect( wp_get_referer() );
 	}
 
 	/**
