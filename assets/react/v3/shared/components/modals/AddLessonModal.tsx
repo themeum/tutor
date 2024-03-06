@@ -61,7 +61,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
               <Controller
                 name="lesson_name"
                 control={form.control}
-                render={(controllerProps) => (
+                render={controllerProps => (
                   <FormInput
                     {...controllerProps}
                     label={__('Lesson Name', 'tutor')}
@@ -74,7 +74,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
               <Controller
                 name="description"
                 control={form.control}
-                render={(controllerProps) => (
+                render={controllerProps => (
                   <FormTextareaInput
                     {...controllerProps}
                     label={__('Description', 'tutor')}
@@ -89,7 +89,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
             <Controller
               name="featured_image"
               control={form.control}
-              render={(controllerProps) => (
+              render={controllerProps => (
                 <FormImageInput
                   {...controllerProps}
                   label={__('Featured Image', 'tutor')}
@@ -115,7 +115,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
               <Controller
                 name="duration_hour"
                 control={form.control}
-                render={(controllerProps) => (
+                render={controllerProps => (
                   <FormInputWithContent
                     {...controllerProps}
                     type="number"
@@ -130,7 +130,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
               <Controller
                 name="duration_min"
                 control={form.control}
-                render={(controllerProps) => (
+                render={controllerProps => (
                   <FormInputWithContent
                     {...controllerProps}
                     type="number"
@@ -144,7 +144,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
               <Controller
                 name="duration_sec"
                 control={form.control}
-                render={(controllerProps) => (
+                render={controllerProps => (
                   <FormInputWithContent
                     {...controllerProps}
                     type="number"
@@ -174,7 +174,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
               <Controller
                 name="lesson_preview"
                 control={form.control}
-                render={(controllerProps) => (
+                render={controllerProps => (
                   <FormSwitch
                     {...controllerProps}
                     label={__('Lesson preview', 'tutor')}
@@ -215,7 +215,7 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[16]};
     padding-block: ${spacing[24]};
-    padding-inline: ${spacing[24]} ${spacing[64]};
+    padding-inline: ${spacing[64]} ${spacing[24]};
   `,
   duration: css`
     display: flex;
