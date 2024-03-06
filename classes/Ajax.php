@@ -137,42 +137,60 @@ class Ajax {
 	public function tutor_place_rating() {
 		tutor_utils()->checking_nonce();
 
-		global $wpdb;
-
-		$moderation = tutor_utils()->get_option( 'enable_course_review_moderation', false, true, true );
-		$rating     = Input::post( 'tutor_rating_gen_input', 0, Input::TYPE_INT );
-		$course_id  = Input::post( 'course_id' );
-		$review     = Input::post( 'review', '', Input::TYPE_TEXTAREA );
+		$user_id   = get_current_user_id();
+		$course_id = Input::post( 'course_id' );
+		$rating    = Input::post( 'tutor_rating_gen_input', 0, Input::TYPE_INT );
+		$review    = Input::post( 'review', '', Input::TYPE_TEXTAREA );
 
 		$rating <= 0 ? $rating = 1 : 0;
 		$rating > 5 ? $rating  = 5 : 0;
 
-		$user_id = get_current_user_id();
-		$user    = get_userdata( $user_id );
+		$this->add_or_update_review( $user_id, $course_id, $rating, $review );
+	}
+
+	/**
+	 * Add/Update rating
+	 *
+	 * @param int    $user_id the user id.
+	 * @param int    $course_id the course id.
+	 * @param int    $rating rating star number.
+	 * @param string $review review description.
+	 * @param int    $review_id review id needed for api update.
+	 *
+	 * @return void|string
+	 */
+	public function add_or_update_review( $user_id, $course_id, $rating, $review, $review_id = 0 ) {
+		global $wpdb;
+
+		$moderation = tutor_utils()->get_option( 'enable_course_review_moderation', false, true, true );
+		$user       = get_userdata( $user_id );
 		$date    = date( 'Y-m-d H:i:s', tutor_time() ); //phpcs:ignore
 
-		if ( ! tutor_utils()->has_enrolled_content_access( 'course', $course_id ) ) {
+		if ( ! tutor_is_rest() && ! tutor_utils()->has_enrolled_content_access( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 			exit;
 		}
 
 		do_action( 'tutor_before_rating_placed' );
 
-		$previous_rating_id = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT comment_ID
-			from {$wpdb->comments}
-			WHERE comment_post_ID = %d AND
-				user_id = %d AND
-				comment_type = 'tutor_course_rating'
-			LIMIT 1;",
-				$course_id,
-				$user_id
-			)
-		);
+		if ( empty( $review_id ) ) {
+			$previous_rating_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT comment_ID
+				from {$wpdb->comments}
+				WHERE comment_post_ID = %d AND
+					user_id = %d AND
+					comment_type = 'tutor_course_rating'
+				LIMIT 1;",
+					$course_id,
+					$user_id
+				)
+			);
 
-		$review_id = $previous_rating_id;
-		if ( $previous_rating_id ) {
+			$review_id = $previous_rating_id;
+		}
+
+		if ( $review_id ) {
 			$wpdb->update(
 				$wpdb->comments,
 				array(
@@ -181,7 +199,7 @@ class Ajax {
 					'comment_date'     => $date,
 					'comment_date_gmt' => get_gmt_from_date( $date ),
 				),
-				array( 'comment_ID' => $previous_rating_id )
+				array( 'comment_ID' => $review_id )
 			);
 
 			$rating_info = $wpdb->get_row(
@@ -189,7 +207,7 @@ class Ajax {
 					"SELECT * FROM {$wpdb->commentmeta} 
 				WHERE comment_id = %d 
 					AND meta_key = 'tutor_rating'; ",
-					$previous_rating_id
+					$review_id
 				)
 			);
 
@@ -198,7 +216,7 @@ class Ajax {
 					$wpdb->commentmeta,
 					array( 'meta_value' => $rating ),
 					array(
-						'comment_id' => $previous_rating_id,
+						'comment_id' => $review_id,
 						'meta_key'   => 'tutor_rating',
 					)
 				);
@@ -206,7 +224,7 @@ class Ajax {
 				$wpdb->insert(
 					$wpdb->commentmeta,
 					array(
-						'comment_id' => $previous_rating_id,
+						'comment_id' => $review_id,
 						'meta_key'   => 'tutor_rating',
 						'meta_value' => $rating,
 					)
@@ -245,26 +263,34 @@ class Ajax {
 			}
 		}
 
-		wp_send_json_success(
-			array(
-				'message'   => __( 'Rating placed successsully!', 'tutor' ),
-				'review_id' => $review_id,
-			)
-		);
+		if ( ! tutor_is_rest() ) {
+			wp_send_json_success(
+				array(
+					'message'   => __( 'Rating placed successsully!', 'tutor' ),
+					'review_id' => $review_id,
+				)
+			);
+		} else {
+			return $review_id ? 'updated' : 'created';
+		}
 	}
 
 	/**
 	 * Delete a review
 	 *
 	 * @since 1.0.0
-	 * @return void
+	 * @since 2.6.2 added params user_id.
+	 * @param int $user_id the user id.
+	 * @return void|bool
 	 */
-	public function delete_tutor_review() {
-		tutor_utils()->checking_nonce();
+	public function delete_tutor_review( $user_id = 0 ) {
+		if ( ! tutor_is_rest() ) {
+			tutor_utils()->checking_nonce();
+		}
 
 		$review_id = Input::post( 'review_id' );
 
-		if ( ! tutor_utils()->can_user_manage( 'review', $review_id, get_current_user_id() ) ) {
+		if ( ! tutor_utils()->can_user_manage( 'review', $review_id, tutils()->get_user_id( $user_id ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permissioned Denied!', 'tutor' ) ) );
 			exit;
 		}
@@ -272,6 +298,10 @@ class Ajax {
 		global $wpdb;
 		$wpdb->delete( $wpdb->commentmeta, array( 'comment_id' => $review_id ) );
 		$wpdb->delete( $wpdb->comments, array( 'comment_ID' => $review_id ) );
+
+		if ( tutor_is_rest() ) {
+			return true;
+		}
 
 		wp_send_json_success();
 	}
