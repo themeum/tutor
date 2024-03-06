@@ -21,12 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class Q_and_A {
+class Q_And_A {
 
 	/**
 	 * Register hooks
 	 *
-	 * @param boolean $allow_hooks true/false to execute the hooks
+	 * @param boolean $allow_hooks true/false to execute the hooks.
 	 */
 	public function __construct( $allow_hooks = true ) {
 		if ( $allow_hooks ) {
@@ -140,7 +140,7 @@ class Q_and_A {
 	/**
 	 * Function to insert Q&A
 	 *
-	 * @param object $qna_object
+	 * @param object $qna_object the object to insert.
 	 * @return void|bool
 	 */
 	public function inset_qna( $qna_object ) {
@@ -229,9 +229,10 @@ class Q_and_A {
 				$wpdb->prepare(
 					"DELETE
 						FROM {$wpdb->comments}
-						WHERE {$wpdb->comments}.comment_ID IN($question_ids)
+						WHERE {$wpdb->comments}.comment_ID IN(%s)
 							AND 1 = %d
 					",
+					$question_ids,
 					1
 				)
 			);
@@ -240,9 +241,10 @@ class Q_and_A {
 				$wpdb->prepare(
 					"DELETE
 						FROM {$wpdb->comments}
-						WHERE {$wpdb->comments}.comment_parent IN($question_ids)
+						WHERE {$wpdb->comments}.comment_parent IN(%s)
 							AND 1 = %d
 					",
+					$question_ids,
 					1
 				)
 			);
@@ -251,9 +253,10 @@ class Q_and_A {
 				$wpdb->prepare(
 					"DELETE
 						FROM {$wpdb->commentmeta} 
-						WHERE {$wpdb->commentmeta}.comment_id IN($question_ids)
+						WHERE {$wpdb->commentmeta}.comment_id IN(%s)
 							AND 1 = %d
 					",
+					$question_ids,
 					1
 				)
 			);
