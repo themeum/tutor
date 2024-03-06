@@ -1128,7 +1128,7 @@ final class Tutor {
 	 *
 	 * @return void
 	 */
-	public function erase_tutor_data() {
+	public static function erase_tutor_data() {
 		global $wpdb;
 
 		$is_erase_data = tutor_utils()->get_option( 'delete_on_uninstall' );
