@@ -389,6 +389,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                   dotsOrientation="vertical"
                   maxWidth="220px"
                   isInverse
+                  arrowPosition="auto"
+                  hideArrow
                 >
                   <ThreeDots.Option
                     text={__('Meet live lesson', 'tutor')}
