@@ -63,8 +63,8 @@ class REST_Rating {
 		$offset        = (int) sanitize_text_field( $request->get_param( 'offset' ) );
 		$limit         = (int) sanitize_text_field( $request->get_param( 'limit' ) );
 
-		$offset = !empty( $offset ) ? $offset : 0;
-		$limit  = !empty( $limit ) ? $limit : 10;
+		$offset = ! empty( $offset ) ? $offset : 0;
+		$limit  = ! empty( $limit ) ? $limit : 10;
 
 		$ratings          = tutor_utils()->get_course_rating( $this->post_id );
 		$ratings->reviews = tutor_utils()->get_course_reviews( $this->post_id, $offset, $limit, false, array( 'approved' ) );
