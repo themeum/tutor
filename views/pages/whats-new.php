@@ -90,16 +90,22 @@ use TUTOR\WhatsNew;
 				<h3><strong>Changelog (v<?php echo esc_html( $installed_version ); ?>)</strong></h3>
 				<ul class="tutor-changelog-list">
 					<?php
-					foreach ( $changelogs['new'] as $log ) {
-						WhatsNew::render_item( 'New', $log );
+					if ( isset( $changelogs['new'] ) ) {
+						foreach ( $changelogs['new'] as $log ) {
+							WhatsNew::render_item( 'New', $log );
+						}
 					}
 
-					foreach ( $changelogs['update'] as $log ) {
-						WhatsNew::render_item( 'Update', $log );
+					if ( isset( $changelogs['update'] ) ) {
+						foreach ( $changelogs['update'] as $log ) {
+							WhatsNew::render_item( 'Update', $log );
+						}
 					}
 
-					foreach ( $changelogs['fix'] as $log ) {
-						WhatsNew::render_item( 'Fix', $log );
+					if ( isset( $changelogs['fix'] ) ) {
+						foreach ( $changelogs['fix'] as $log ) {
+							WhatsNew::render_item( 'Fix', $log );
+						}
 					}
 					?>
 				</ul>
