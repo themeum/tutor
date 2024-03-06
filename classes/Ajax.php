@@ -331,7 +331,7 @@ class Ajax {
 	public function add_or_delete_wishlist( $user_id, $course_id ) {
 		global $wpdb;
 
-		$if_added_to_list = tutor_utils()->is_added_to_wishlist( $user_id, $course_id );
+		$if_added_to_list = tutor_utils()->is_wishlisted( $course_id, $user_id );
 
 		$result = '';
 
