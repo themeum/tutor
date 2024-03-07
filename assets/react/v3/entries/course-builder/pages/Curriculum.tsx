@@ -76,11 +76,6 @@ const Curriculum = () => {
     return <LoadingOverlay />;
   }
 
-  if (!courseCurriculumQuery.data) {
-    //@TODO: will be updated later.
-    // return null;
-  }
-
   return (
     <div css={styles.container}>
       <div css={styles.wrapper}>
