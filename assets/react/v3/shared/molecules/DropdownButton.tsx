@@ -27,7 +27,13 @@ export const DropdownItem = ({
   buttonContentCss,
 }: DropdownOptionProps) => {
   return (
-    <button type={type} css={styles.dropdownOption(disabled)} onClick={onClick}>
+    <button
+      type={type}
+      css={styles.dropdownOption({
+        disabled,
+      })}
+      onClick={onClick}
+    >
       <span css={[styles.dropdownOptionContent, buttonContentCss]}>{text}</span>
     </button>
   );
@@ -74,7 +80,15 @@ const DropdownButton = ({
       <div css={styles.wrapper}>
         <button
           type={type}
-          css={[styles.button(variant, size, loading, disabled), buttonCss]}
+          css={[
+            styles.button({
+              variant,
+              size,
+              loading,
+              disabled,
+            }),
+            buttonCss,
+          ]}
           onClick={onClick}
           tabIndex={tabIndex}
         >
@@ -83,16 +97,51 @@ const DropdownButton = ({
               <SVGIcon name="spinner" width={18} height={18} />
             </span>
           )}
-          <span css={[styles.buttonContent(loading, disabled), buttonContentCss]}>
-            {icon && iconPosition === 'left' && <span css={styles.buttonIcon(iconPosition)}>{icon}</span>}
+          <span
+            css={[
+              styles.buttonContent({
+                loading,
+                disabled,
+              }),
+              buttonContentCss,
+            ]}
+          >
+            {icon && iconPosition === 'left' && (
+              <span
+                css={styles.buttonIcon({
+                  iconPosition,
+                })}
+              >
+                {icon}
+              </span>
+            )}
             {text}
-            {icon && iconPosition === 'right' && <span css={styles.buttonIcon(iconPosition)}>{icon}</span>}
+            {icon && iconPosition === 'right' && (
+              <span
+                css={styles.buttonIcon({
+                  iconPosition,
+                })}
+              >
+                {icon}
+              </span>
+            )}
           </span>
         </button>
         <button
           ref={dropdownTriggerRef}
           type="button"
-          css={[styles.button(variant, size, (loading = false), disabled), styles.dropdownButton(variant, disabled)]}
+          css={[
+            styles.button({
+              variant,
+              size,
+              loading,
+              disabled,
+            }),
+            styles.dropdownButton({
+              variant,
+              disabled,
+            }),
+          ]}
           onClick={() => setIsOpen(!isOpen)}
         >
           <SVGIcon name="chevronDown" width={24} height={24} />
@@ -146,7 +195,17 @@ const styles = {
     ${styleUtils.display.inlineFlex()};
     align-items: center;
   `,
-  button: (variant: ButtonVariant, size: ButtonSize, loading: boolean, disabled: boolean) => css`
+  button: ({
+    variant,
+    size,
+    loading,
+    disabled,
+  }: {
+    variant: ButtonVariant;
+    size: ButtonSize;
+    loading: boolean;
+    disabled: boolean;
+  }) => css`
     ${styleUtils.resetButton};
     ${typography.caption('medium')}
     display: inline-block;
@@ -350,7 +409,7 @@ const styles = {
       pointer-events: none;
     `}
   `,
-  buttonContent: (loading: boolean, disabled: boolean) => css`
+  buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
     display: flex;
     align-items: center;
 
@@ -360,7 +419,7 @@ const styles = {
       color: transparent;
     `}
   `,
-  buttonIcon: (iconPosition: ButtonIconPosition) => css`
+  buttonIcon: ({ iconPosition }: { iconPosition: ButtonIconPosition }) => css`
     display: grid;
     place-items: center;
     margin-right: ${spacing[6]};
@@ -381,7 +440,7 @@ const styles = {
       animation: ${spin} 1.5s linear infinite;
     }
   `,
-  dropdownButton: (variant: ButtonVariant, disabled: boolean | undefined) => css`
+  dropdownButton: ({ variant, disabled }: { variant: ButtonVariant; disabled: boolean }) => css`
     ${styleUtils.flexCenter()}
     padding: ${spacing[8]};
     border-left: 1px solid ${colorTokens.stroke.brand};
@@ -414,7 +473,7 @@ const styles = {
     flex-direction: column;
     padding-block: ${spacing[6]};
   `,
-  dropdownOption: (disabled: boolean | undefined) => css`
+  dropdownOption: ({ disabled }: { disabled: boolean }) => css`
     ${styleUtils.resetButton};
     width: 100%;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
