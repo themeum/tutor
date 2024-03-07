@@ -134,7 +134,7 @@ const DropdownButton = ({
             styles.button({
               variant,
               size,
-              loading,
+              loading: false,
               disabled,
             }),
             styles.dropdownButton({
