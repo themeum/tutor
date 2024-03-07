@@ -108,7 +108,7 @@ const LiveClass = () => {
         >
           <div
             css={styles.meetingsWrapper({
-              haveMeetings: zoomMeetings.length > 0,
+              hasMeeting: zoomMeetings.length > 0,
             })}
           >
             <For each={zoomMeetings}>
@@ -116,7 +116,7 @@ const LiveClass = () => {
                 <div
                   key={meeting.id}
                   css={styles.meeting({
-                    haveMeetings: zoomMeetings.length > 0,
+                    hasMeeting: zoomMeetings.length > 0,
                   })}
                 >
                   <MeetingCard
@@ -132,7 +132,7 @@ const LiveClass = () => {
             </For>
             <div
               css={styles.meetingsFooter({
-                haveMeetings: zoomMeetings.length > 0,
+                hasMeeting: zoomMeetings.length > 0,
               })}
             >
               <Button
@@ -154,7 +154,7 @@ const LiveClass = () => {
 
           <div
             css={styles.meetingsWrapper({
-              haveMeetings: googleMeetMeetings.length > 0,
+              hasMeeting: googleMeetMeetings.length > 0,
             })}
           >
             <For each={googleMeetMeetings}>
@@ -162,7 +162,7 @@ const LiveClass = () => {
                 <div
                   key={meeting.id}
                   css={styles.meeting({
-                    haveMeetings: googleMeetMeetings.length > 0,
+                    hasMeeting: googleMeetMeetings.length > 0,
                   })}
                 >
                   <MeetingCard
@@ -178,7 +178,7 @@ const LiveClass = () => {
             </For>
             <div
               css={styles.meetingsFooter({
-                haveMeetings: googleMeetMeetings.length > 0,
+                hasMeeting: googleMeetMeetings.length > 0,
               })}
             >
               <Button
@@ -265,24 +265,24 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
   `,
-  meetingsWrapper: ({ haveMeetings }: { haveMeetings: boolean }) => css`
+  meetingsWrapper: ({ hasMeeting }: { hasMeeting: boolean }) => css`
     ${styleUtils.display.flex('column')}
-    ${haveMeetings &&
+    ${hasMeeting &&
     css`
       border: 1px solid ${colorTokens.stroke.default};
     `}
     border-radius: ${borderRadius.card};
   `,
-  meeting: ({ haveMeetings }: { haveMeetings: boolean }) => css`
+  meeting: ({ hasMeeting }: { hasMeeting: boolean }) => css`
     padding: ${spacing[8]} ${spacing[8]} ${spacing[12]} ${spacing[8]};
-    ${haveMeetings &&
+    ${hasMeeting &&
     css`
       border-bottom: 1px solid ${colorTokens.stroke.divider};
     `}
   `,
-  meetingsFooter: ({ haveMeetings }: { haveMeetings: boolean }) => css`
+  meetingsFooter: ({ hasMeeting }: { hasMeeting: boolean }) => css`
     width: 100%;
-    ${haveMeetings &&
+    ${hasMeeting &&
     css`
       padding: ${spacing[12]} ${spacing[8]};
     `}
