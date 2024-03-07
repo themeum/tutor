@@ -42,9 +42,9 @@ const LiveClass = () => {
   const zoomMeetings = meetings.filter(meeting => meeting.type === 'zoom');
   const googleMeetMeetings = meetings.filter(meeting => meeting.type === 'google_meet');
 
-  const zoomBtnRef = useRef<HTMLButtonElement>(null);
-  const googleMeetBtnRef = useRef<HTMLButtonElement>(null);
-  const jitsiBtnRef = useRef<HTMLButtonElement>(null);
+  const zoomButtonRef = useRef<HTMLButtonElement>(null);
+  const googleMeetButtonRef = useRef<HTMLButtonElement>(null);
+  const jitsiButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <div css={styles.liveClass}>
@@ -60,7 +60,7 @@ const LiveClass = () => {
             removeBorder={false}
             emptyStateImage="https://via.placeholder.com/360x360"
             emptyStateImage2x="https://via.placeholder.com/760x760"
-            imageAltText="No live class addons found"
+            imageAltText={__('No live class addons found', 'tutor')}
             title={__('Make the learning more interactive and fun using Live class feature! ', 'tutor')}
             description={__(
               'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
@@ -108,7 +108,7 @@ const LiveClass = () => {
         >
           <div
             css={styles.meetingsWrapper({
-              isMultiple: zoomMeetings.length > 0,
+              haveMeetings: zoomMeetings.length > 0,
             })}
           >
             <For each={zoomMeetings}>
@@ -116,23 +116,23 @@ const LiveClass = () => {
                 <div
                   key={meeting.id}
                   css={styles.meeting({
-                    isMultiple: zoomMeetings.length > 0,
+                    haveMeetings: zoomMeetings.length > 0,
                   })}
                 >
                   <MeetingCard
-                    meeting_title={meeting.meeting_title}
-                    meeting_date={meeting.meeting_date}
-                    meeting_start_time={meeting.meeting_start_time}
-                    meeting_link={meeting.meeting_link}
-                    meeting_token={meeting.meeting_token}
-                    meeting_password={meeting.meeting_password}
+                    meetingTitle={meeting.meeting_title}
+                    meetingDate={meeting.meeting_date}
+                    meetingStartTime={meeting.meeting_start_time}
+                    meetingLink={meeting.meeting_link}
+                    meetingToken={meeting.meeting_token}
+                    meetingPassword={meeting.meeting_password}
                   />
                 </div>
               )}
             </For>
             <div
               css={styles.meetingsFooter({
-                isMultiple: zoomMeetings.length > 0,
+                haveMeetings: zoomMeetings.length > 0,
               })}
             >
               <Button
@@ -145,7 +145,7 @@ const LiveClass = () => {
                   width: 100%;
                 `}
                 onClick={() => setShowMeetingForm('zoom')}
-                ref={zoomBtnRef}
+                ref={zoomButtonRef}
               >
                 {__('Create a Zoom meeting', 'tutor')}
               </Button>
@@ -154,7 +154,7 @@ const LiveClass = () => {
 
           <div
             css={styles.meetingsWrapper({
-              isMultiple: googleMeetMeetings.length > 0,
+              haveMeetings: googleMeetMeetings.length > 0,
             })}
           >
             <For each={googleMeetMeetings}>
@@ -162,23 +162,23 @@ const LiveClass = () => {
                 <div
                   key={meeting.id}
                   css={styles.meeting({
-                    isMultiple: googleMeetMeetings.length > 0,
+                    haveMeetings: googleMeetMeetings.length > 0,
                   })}
                 >
                   <MeetingCard
-                    meeting_title={meeting.meeting_title}
-                    meeting_date={meeting.meeting_date}
-                    meeting_start_time={meeting.meeting_start_time}
-                    meeting_link={meeting.meeting_link}
-                    meeting_token={meeting.meeting_token}
-                    meeting_password={meeting.meeting_password}
+                    meetingTitle={meeting.meeting_title}
+                    meetingDate={meeting.meeting_date}
+                    meetingStartTime={meeting.meeting_start_time}
+                    meetingLink={meeting.meeting_link}
+                    meetingToken={meeting.meeting_token}
+                    meetingPassword={meeting.meeting_password}
                   />
                 </div>
               )}
             </For>
             <div
               css={styles.meetingsFooter({
-                isMultiple: googleMeetMeetings.length > 0,
+                haveMeetings: googleMeetMeetings.length > 0,
               })}
             >
               <Button
@@ -191,7 +191,7 @@ const LiveClass = () => {
                   width: 100%;
                 `}
                 onClick={() => setShowMeetingForm('google_meet')}
-                ref={googleMeetBtnRef}
+                ref={googleMeetButtonRef}
               >
                 {__('Create a Google Meet', 'tutor')}
               </Button>
@@ -207,7 +207,7 @@ const LiveClass = () => {
             onClick={() => {
               alert('@TODO: Will be implemented in future');
             }}
-            ref={jitsiBtnRef}
+            ref={jitsiButtonRef}
           >
             {__('Create a Jitsi meeting', 'tutor')}
           </Button>
@@ -215,7 +215,7 @@ const LiveClass = () => {
       </Show>
 
       <Popover
-        triggerRef={zoomBtnRef}
+        triggerRef={zoomButtonRef}
         isOpen={showMeetingForm === 'zoom'}
         closePopover={() => setShowMeetingForm(null)}
       >
@@ -226,7 +226,7 @@ const LiveClass = () => {
         />
       </Popover>
       <Popover
-        triggerRef={googleMeetBtnRef}
+        triggerRef={googleMeetButtonRef}
         isOpen={showMeetingForm === 'google_meet'}
         closePopover={() => setShowMeetingForm(null)}
       >
@@ -237,7 +237,7 @@ const LiveClass = () => {
         />
       </Popover>
       <Popover
-        triggerRef={jitsiBtnRef}
+        triggerRef={jitsiButtonRef}
         isOpen={showMeetingForm === 'jitsi'}
         closePopover={() => setShowMeetingForm(null)}
       >
@@ -265,24 +265,24 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
   `,
-  meetingsWrapper: ({ isMultiple }: { isMultiple: boolean }) => css`
+  meetingsWrapper: ({ haveMeetings }: { haveMeetings: boolean }) => css`
     ${styleUtils.display.flex('column')}
-    ${isMultiple &&
+    ${haveMeetings &&
     css`
       border: 1px solid ${colorTokens.stroke.default};
     `}
     border-radius: ${borderRadius.card};
   `,
-  meeting: ({ isMultiple }: { isMultiple: boolean }) => css`
+  meeting: ({ haveMeetings }: { haveMeetings: boolean }) => css`
     padding: ${spacing[8]} ${spacing[8]} ${spacing[12]} ${spacing[8]};
-    ${isMultiple &&
+    ${haveMeetings &&
     css`
       border-bottom: 1px solid ${colorTokens.stroke.divider};
     `}
   `,
-  meetingsFooter: ({ isMultiple }: { isMultiple: boolean }) => css`
+  meetingsFooter: ({ haveMeetings }: { haveMeetings: boolean }) => css`
     width: 100%;
-    ${isMultiple &&
+    ${haveMeetings &&
     css`
       padding: ${spacing[12]} ${spacing[8]};
     `}

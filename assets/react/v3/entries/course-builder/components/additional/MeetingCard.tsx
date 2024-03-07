@@ -13,31 +13,31 @@ import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
 
 interface MeetingCardProps {
-  meeting_title: string;
-  meeting_date: string;
-  meeting_start_time: string;
-  meeting_token?: string;
-  meeting_password?: string;
-  meeting_link: string;
+  meetingTitle: string;
+  meetingDate: string;
+  meetingStartTime: string;
+  meetingToken?: string;
+  meetingPassword?: string;
+  meetingLink: string;
 }
 
 const MeetingCard = ({
-  meeting_title,
-  meeting_date,
-  meeting_start_time,
-  meeting_token,
-  meeting_password,
-  meeting_link,
+  meetingTitle,
+  meetingDate,
+  meetingStartTime,
+  meetingToken,
+  meetingPassword,
+  meetingLink,
 }: MeetingCardProps) => {
-  const dayOfMonths = format(new Date(meeting_date), 'dd');
-  const month = format(new Date(meeting_date), 'MMM');
-  const year = format(new Date(meeting_date), 'yyyy');
-  const time = meeting_start_time.split(' ')[0];
-  const ampm = meeting_start_time.split(' ')[1];
+  const dayOfMonths = format(new Date(meetingDate), 'dd');
+  const month = format(new Date(meetingDate), 'MMM');
+  const year = format(new Date(meetingDate), 'yyyy');
+  const time = meetingStartTime.split(' ')[0];
+  const meridiem = meetingStartTime.split(' ')[1];
 
   return (
     <div css={styles.card}>
-      <div css={styles.cardTitle}>{meeting_title}</div>
+      <div css={styles.cardTitle}>{meetingTitle}</div>
 
       <div css={styles.cardContent}>
         <span css={styles.inlineContent}>
@@ -49,41 +49,40 @@ const MeetingCard = ({
                 fontWeight: fontWeight.medium,
               }}
             >
-              {dayOfMonths}
-            </span>{' '}
-            <span>{month}</span>{' '}
-            <span
-              css={{
-                fontWeight: fontWeight.medium,
-              }}
-            >
-              {year}
+              {`${dayOfMonths} `}
             </span>
-            ,{' '}
+            <span>{`${month} `}</span>
             <span
               css={{
                 fontWeight: fontWeight.medium,
               }}
             >
-              {time}
-            </span>{' '}
-            <span>{ampm}</span>
+              {`${year}, `}
+            </span>
+            <span
+              css={{
+                fontWeight: fontWeight.medium,
+              }}
+            >
+              {`${time} `}
+            </span>
+            <span>{`${meridiem} `}</span>
           </div>
         </span>
 
-        <Show when={meeting_token}>
+        <Show when={meetingToken}>
           <div css={styles.inlineContent}>
             {__('Meeting Token', 'tutor')}
             <div css={styles.hyphen} />
-            <div>{meeting_token}</div>
+            <div>{meetingToken}</div>
           </div>
         </Show>
 
-        <Show when={meeting_password}>
+        <Show when={meetingPassword}>
           <div css={styles.inlineContent}>
             {__('Password', 'tutor')}
             <div css={styles.hyphen} />
-            <div>{meeting_password}</div>
+            <div>{meetingPassword}</div>
           </div>
         </Show>
 
@@ -93,7 +92,7 @@ const MeetingCard = ({
             size="small"
             type="button"
             onClick={() => {
-              window.open(meeting_link, '_blank');
+              window.open(meetingLink, '_blank');
             }}
           >
             {__('Start Meeting', 'tutor')}

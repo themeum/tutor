@@ -64,31 +64,22 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
   const onSubmit = (data: MeetingFormFieldProps) => {
     setShowMeetingForm(null);
     meetingForm.reset();
-    let dataToSubmit: Omit<Meeting, 'id'>;
 
     if (!data.meeting_date || !data.meeting_time_from || !data.meeting_time_to) {
       return;
     }
 
-    if (type === 'google_meet') {
-      dataToSubmit = {
-        type: type,
-        meeting_title: data.meeting_name,
-        meeting_date: data.meeting_date,
-        meeting_start_time: data.meeting_time_from,
-        meeting_link: 'https://meet.google.com/abc-xyz',
-      };
-    } else if (type === 'zoom') {
-      dataToSubmit = {
-        type: type,
-        meeting_title: data.meeting_name,
-        meeting_date: data.meeting_date,
-        meeting_start_time: data.meeting_time_from,
-        meeting_link: 'https://zoom.us/abc-xyz',
+    const dataToSubmit: Omit<Meeting, 'id'> = {
+      type: type,
+      meeting_title: data.meeting_name,
+      meeting_date: data.meeting_date,
+      meeting_start_time: data.meeting_time_from,
+      meeting_link: type === 'zoom' ? 'https://zoom.us/abc-xyz' : 'https://meet.google.com/abc-xyz',
+      ...(type === 'zoom' && {
         meeting_token: 'abc-xyz',
         meeting_password: data.meeting_password,
-      };
-    }
+      }),
+    };
 
     setMeetings(prev => [
       ...prev,
