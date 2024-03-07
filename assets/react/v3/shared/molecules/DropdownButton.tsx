@@ -9,17 +9,25 @@ import { styleUtils } from '@Utils/style-utils';
 import { AnimationType } from '@Hooks/useAnimation';
 
 import Popover from './Popover';
+import { typography } from '@Config/typography';
 
 interface DropdownOptionProps {
+  type?: 'button' | 'submit';
   text: string | ReactNode;
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   buttonContentCss?: SerializedStyles;
 }
 
-export const DropdownItem = ({ text, disabled = false, onClick, buttonContentCss }: DropdownOptionProps) => {
+export const DropdownItem = ({
+  text,
+  type = 'button',
+  disabled = false,
+  onClick,
+  buttonContentCss,
+}: DropdownOptionProps) => {
   return (
-    <button type="button" css={styles.dropdownOption(disabled)} onClick={onClick}>
+    <button type={type} css={styles.dropdownOption(disabled)} onClick={onClick}>
       <span css={[styles.dropdownOptionContent, buttonContentCss]}>{text}</span>
     </button>
   );
@@ -52,7 +60,7 @@ const DropdownButton = ({
   iconPosition = 'left',
   loading = false,
   disabled = false,
-  tabIndex,
+  tabIndex = -1,
   onClick,
   buttonCss,
   buttonContentCss,
@@ -83,7 +91,7 @@ const DropdownButton = ({
         </button>
         <button
           ref={dropdownTriggerRef}
-          type={'button'}
+          type="button"
           css={[styles.button(variant, size, (loading = false), disabled), styles.dropdownButton(variant, disabled)]}
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -104,9 +112,9 @@ const DropdownButton = ({
             if (React.isValidElement(child)) {
               const childProps: DropdownOptionProps = {
                 ...child.props,
-                onClick: (e: MouseEvent<HTMLButtonElement>) => {
+                onClick: (event: MouseEvent<HTMLButtonElement>) => {
                   setIsOpen(false);
-                  child.props.onClick && child.props.onClick(e);
+                  child.props.onClick && child.props.onClick(event);
                 },
               };
               return React.cloneElement(child, childProps);
@@ -140,10 +148,8 @@ const styles = {
   `,
   button: (variant: ButtonVariant, size: ButtonSize, loading: boolean, disabled: boolean) => css`
     ${styleUtils.resetButton};
+    ${typography.caption('medium')}
     display: inline-block;
-    font-size: ${fontSize[15]};
-    line-height: ${lineHeight[24]};
-    font-weight: ${fontWeight.medium};
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
