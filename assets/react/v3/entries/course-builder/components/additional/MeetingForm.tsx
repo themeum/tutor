@@ -23,7 +23,7 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 
 export type MeetingType = 'zoom' | 'google_meet' | 'jitsi';
 
-interface MeetingFormFieldProps {
+interface MeetingFormField {
   meeting_name: string;
   meeting_summary: string;
   meeting_date: string;
@@ -42,7 +42,7 @@ interface MeetingFormProps {
 }
 
 const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps) => {
-  const meetingForm = useFormWithGlobalError<MeetingFormFieldProps>({
+  const meetingForm = useFormWithGlobalError<MeetingFormField>({
     defaultValues: {
       meeting_name: '',
       meeting_summary: '',
@@ -61,7 +61,7 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
   };
 
   // @TODO: will come from app config api later.
-  const onSubmit = (data: MeetingFormFieldProps) => {
+  const onSubmit = (data: MeetingFormField) => {
     setShowMeetingForm(null);
     meetingForm.reset();
 
