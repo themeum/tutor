@@ -1,12 +1,127 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { css, keyframes, SerializedStyles } from '@emotion/react';
-import { styleUtils } from '@Utils/style-utils';
-import React, { ReactNode } from 'react';
+import React, { MouseEvent, ReactNode, useRef, useState } from 'react';
+import { SerializedStyles, css, keyframes } from '@emotion/react';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outlined' | 'tertiary' | 'danger' | 'text';
-export type ButtonSize = 'large' | 'medium' | 'small';
-export type ButtonIconPosition = 'left' | 'right';
+import { ButtonIconPosition, ButtonSize, ButtonVariant } from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+
+import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
+import { styleUtils } from '@Utils/style-utils';
+import { AnimationType } from '@Hooks/useAnimation';
+
+import Popover from './Popover';
+
+interface DropdownOptionProps {
+  text: string | ReactNode;
+  disabled?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  buttonContentCss?: SerializedStyles;
+}
+
+export const DropdownItem = ({ text, disabled = false, onClick, buttonContentCss }: DropdownOptionProps) => {
+  return (
+    <button type="button" css={styles.dropdownOption(disabled)} onClick={onClick}>
+      <span css={[styles.dropdownOptionContent, buttonContentCss]}>{text}</span>
+    </button>
+  );
+};
+
+interface DropdownButtonProps {
+  text: string | ReactNode;
+  children: ReactNode;
+  variant?: ButtonVariant;
+  type?: 'submit' | 'button';
+  size?: ButtonSize;
+  icon?: React.ReactNode;
+  iconPosition?: ButtonIconPosition;
+  disabled?: boolean;
+  loading?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  tabIndex?: number;
+  buttonCss?: SerializedStyles;
+  buttonContentCss?: SerializedStyles;
+  dropdownMaxWidth?: string;
+}
+
+const DropdownButton = ({
+  type = 'button',
+  text,
+  children,
+  variant = 'primary',
+  size = 'medium',
+  icon,
+  iconPosition = 'left',
+  loading = false,
+  disabled = false,
+  tabIndex,
+  onClick,
+  buttonCss,
+  buttonContentCss,
+  dropdownMaxWidth = '140px',
+}: DropdownButtonProps) => {
+  const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <div css={styles.wrapper}>
+        <button
+          type={type}
+          css={[styles.button(variant, size, loading, disabled), buttonCss]}
+          onClick={onClick}
+          tabIndex={tabIndex}
+        >
+          {loading && !disabled && (
+            <span css={styles.spinner}>
+              <SVGIcon name="spinner" width={18} height={18} />
+            </span>
+          )}
+          <span css={[styles.buttonContent(loading, disabled), buttonContentCss]}>
+            {icon && iconPosition === 'left' && <span css={styles.buttonIcon(iconPosition)}>{icon}</span>}
+            {text}
+            {icon && iconPosition === 'right' && <span css={styles.buttonIcon(iconPosition)}>{icon}</span>}
+          </span>
+        </button>
+        <button
+          ref={dropdownTriggerRef}
+          type={'button'}
+          css={[styles.button(variant, size, (loading = false), disabled), styles.dropdownButton(variant, disabled)]}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <SVGIcon name="chevronDown" width={24} height={24} />
+        </button>
+      </div>
+      <Popover
+        gap={13}
+        maxWidth={dropdownMaxWidth}
+        arrow="top"
+        triggerRef={dropdownTriggerRef}
+        isOpen={isOpen}
+        closePopover={() => setIsOpen(false)}
+        animationType={AnimationType.slideUp}
+      >
+        <div css={styles.dropdownWrapper}>
+          {React.Children.map(children, child => {
+            if (React.isValidElement(child)) {
+              const childProps: DropdownOptionProps = {
+                ...child.props,
+                onClick: (e: MouseEvent<HTMLButtonElement>) => {
+                  setIsOpen(false);
+                  child.props.onClick && child.props.onClick(e);
+                },
+              };
+              return React.cloneElement(child, childProps);
+            }
+
+            return child;
+          })}
+        </div>
+      </Popover>
+    </>
+  );
+};
+
+DropdownButton.Item = DropdownItem;
+export default DropdownButton;
 
 const spin = keyframes`
   0% {
@@ -19,13 +134,11 @@ const spin = keyframes`
 `;
 
 const styles = {
-  button: (
-    variant: ButtonVariant,
-    size: ButtonSize,
-    iconPosition: ButtonIconPosition | undefined,
-    loading: boolean,
-    disabled: boolean
-  ) => css`
+  wrapper: css`
+    ${styleUtils.display.inlineFlex()};
+    align-items: center;
+  `,
+  button: (variant: ButtonVariant, size: ButtonSize, loading: boolean, disabled: boolean) => css`
     ${styleUtils.resetButton};
     display: inline-block;
     font-size: ${fontSize[15]};
@@ -39,10 +152,15 @@ const styles = {
     background-color: transparent;
     border: 0;
     padding: ${spacing[8]} ${spacing[16]};
-    border-radius: ${borderRadius[6]};
+    border-radius: ${borderRadius[6]} 0 0 ${borderRadius[6]};
     z-index: ${zIndex.level};
     transition: all 150ms ease-in-out;
     position: relative;
+
+    &:focus,
+    &:active {
+      z-index: ${zIndex.positive};
+    }
 
     ${size === 'large' &&
     css`
@@ -257,62 +375,68 @@ const styles = {
       animation: ${spin} 1.5s linear infinite;
     }
   `,
+  dropdownButton: (variant: ButtonVariant, disabled: boolean | undefined) => css`
+    ${styleUtils.flexCenter()}
+    padding: ${spacing[8]};
+    border-left: 1px solid ${colorTokens.stroke.brand};
+    border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
+
+    ${variant === 'outlined' ||
+    variant === 'tertiary' ||
+    (variant === 'text' &&
+      css`
+        border-left: none;
+      `)}
+
+    ${variant === 'danger' &&
+    css`
+      border-color: ${colorTokens.stroke.danger};
+    `}
+
+    ${variant === 'secondary' &&
+    css`
+      border-color: ${colorTokens.stroke.default};
+    `}
+
+    ${disabled &&
+    css`
+      border-color: ${colorTokens.stroke.disable};
+    `}
+  `,
+  dropdownWrapper: css`
+    display: flex;
+    flex-direction: column;
+    padding-block: ${spacing[6]};
+  `,
+  dropdownOption: (disabled: boolean | undefined) => css`
+    ${styleUtils.resetButton};
+    width: 100%;
+    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+    border: 2px solid transparent;
+
+    :hover {
+      background-color: ${colorTokens.background.hover};
+      color: ${colorTokens.text.title};
+    }
+
+    :focus,
+    :active {
+      border-color: ${colorTokens.stroke.brand};
+    }
+
+    ${disabled &&
+    css`
+      pointer-events: none;
+      color: ${colorTokens.text.disable};
+    `}
+  `,
+  dropdownOptionContent: css`
+    display: flex;
+    align-items: center;
+  `,
 };
-
-interface ButtonProps {
-  children?: ReactNode;
-  variant?: ButtonVariant;
-  type?: 'submit' | 'button';
-  size?: ButtonSize;
-  icon?: React.ReactNode;
-  iconPosition?: ButtonIconPosition;
-  disabled?: boolean;
-  loading?: boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  tabIndex?: number;
-  buttonCss?: SerializedStyles;
-  buttonContentCss?: SerializedStyles;
-}
-
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      type = 'button',
-      children,
-      variant = 'primary',
-      size = 'medium',
-      icon,
-      iconPosition = 'left',
-      loading = false,
-      disabled = false,
-      tabIndex,
-      onClick,
-      buttonCss,
-      buttonContentCss,
-    },
-    ref
-  ) => {
-    return (
-      <button
-        type={type}
-        ref={ref}
-        css={[styles.button(variant, size, iconPosition, loading, disabled), buttonCss]}
-        onClick={onClick}
-        tabIndex={tabIndex}
-      >
-        {loading && !disabled && (
-          <span css={styles.spinner}>
-            <SVGIcon name="spinner" width={18} height={18} />
-          </span>
-        )}
-        <span css={[styles.buttonContent(loading, disabled), buttonContentCss]}>
-          {icon && iconPosition === 'left' && <span css={styles.buttonIcon(iconPosition)}>{icon}</span>}
-          {children}
-          {icon && iconPosition === 'right' && <span css={styles.buttonIcon(iconPosition)}>{icon}</span>}
-        </span>
-      </button>
-    );
-  }
-);
-
-export default Button;
