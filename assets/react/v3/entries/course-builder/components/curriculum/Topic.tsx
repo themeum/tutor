@@ -2,14 +2,14 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { CourseTopic, TopicContent as TopicContentType } from '@CourseBuilderServices/curriculum';
+import { TopicContent as TopicContentType } from '@CourseBuilderServices/curriculum';
 
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TopicContent from './TopicContent';
 import Show from '@Controls/Show';
-import { noop, transformParams } from '@Utils/util';
+import { nanoid, noop } from '@Utils/util';
 import { isDefined } from '@Utils/types';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Controller } from 'react-hook-form';
@@ -85,9 +85,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
   });
 
   const createDuplicateContent = (data: TopicContentType) => {
-    console.log({ data });
     setContent(previousContent => {
-      const newContent = { ...data, ID: Math.random() };
+      const newContent = { ...data, ID: nanoid() };
       return [...previousContent, newContent];
     });
   };
