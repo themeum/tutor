@@ -173,7 +173,9 @@ class Ajax {
 
 		do_action( 'tutor_before_rating_placed' );
 
-		if ( empty( $review_id ) ) {
+		$is_edit = 0 === $review_id ? false : true;
+
+		if ( ! tutor_is_rest() ) {
 			$previous_rating_id = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT comment_ID
@@ -187,10 +189,13 @@ class Ajax {
 				)
 			);
 
-			$review_id = $previous_rating_id;
+			if ( ! empty( $previous_rating_id ) ) {
+				$review_id = $previous_rating_id;
+				$is_edit   = true;
+			}
 		}
 
-		if ( $review_id ) {
+		if ( $is_edit ) {
 			$wpdb->update(
 				$wpdb->comments,
 				array(
@@ -271,7 +276,7 @@ class Ajax {
 				)
 			);
 		} else {
-			return $review_id ? 'updated' : 'created';
+			return $is_edit ? 'updated' : 'created';
 		}
 	}
 
