@@ -13,6 +13,7 @@ interface PopoverProps<T> {
   maxWidth?: string;
   closePopover: () => void;
   animationType?: AnimationType;
+  hideArrow?: boolean;
 }
 
 const Popover = <T extends HTMLElement>({
@@ -24,6 +25,7 @@ const Popover = <T extends HTMLElement>({
   maxWidth,
   closePopover,
   animationType = AnimationType.slideLeft,
+  hideArrow,
 }: PopoverProps<T>) => {
   const { position, triggerWidth, popoverRef } = usePortalPopover<T, HTMLDivElement>({
     triggerRef,
@@ -36,7 +38,7 @@ const Popover = <T extends HTMLElement>({
     <Portal isOpen={isOpen} onClickOutside={closePopover} animationType={animationType}>
       <div
         css={[
-          styles.wrapper(arrow ? position.arrowPlacement : undefined),
+          styles.wrapper(arrow ? position.arrowPlacement : undefined, hideArrow),
           { left: position.left, top: position.top, maxWidth: maxWidth ?? triggerWidth },
         ]}
         ref={popoverRef}
@@ -48,13 +50,14 @@ const Popover = <T extends HTMLElement>({
 };
 
 const styles = {
-  wrapper: (arrow: arrowPosition | undefined) => css`
+  wrapper: (arrow: arrowPosition | undefined, hideArrow: boolean | undefined) => css`
     position: absolute;
     width: 100%;
     z-index: ${zIndex.dropdown};
 
     &::before {
       ${arrow &&
+      !hideArrow &&
       css`
         content: '';
         position: absolute;

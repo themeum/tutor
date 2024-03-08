@@ -47,7 +47,7 @@ export const ThreeDotsOption = ({
   );
 };
 
-export type ArrowPosition = 'top' | 'bottom' | 'left' | 'right';
+export type ArrowPosition = 'top' | 'bottom' | 'left' | 'right' | 'auto';
 export type DotsOrientation = 'vertical' | 'horizontal';
 interface ThreeDotsProps {
   isOpen: boolean;
@@ -60,6 +60,7 @@ interface ThreeDotsProps {
   dotsOrientation?: DotsOrientation;
   maxWidth?: string;
   isInverse?: boolean;
+  hideArrow?: boolean;
 }
 
 const ThreeDots = ({
@@ -73,6 +74,7 @@ const ThreeDots = ({
   dotsOrientation = 'horizontal',
   maxWidth = '148px',
   isInverse = false,
+  hideArrow = false,
 }: ThreeDotsProps) => {
   const ref = useRef<HTMLButtonElement>(null);
   return (
@@ -88,6 +90,7 @@ const ThreeDots = ({
         isOpen={isOpen}
         closePopover={closePopover}
         animationType={animationType}
+        hideArrow={hideArrow}
       >
         <div css={styles.wrapper}>
           {React.Children.map(children, child => {
