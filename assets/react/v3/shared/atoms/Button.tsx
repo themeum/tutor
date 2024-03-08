@@ -443,7 +443,7 @@ const styles = {
 
     ${loading &&
     css`
-      display: none;
+      opacity: 0;
     `}
   `,
   spinner: css`
