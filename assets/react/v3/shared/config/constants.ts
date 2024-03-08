@@ -26,6 +26,9 @@ export enum LocalStorage {
 }
 
 export enum DateFormats {
+  day = 'dd',
+  month = 'MMM',
+  year = 'yyyy',
   yearMonthDay = 'yyyy-LL-dd',
   monthDayYear = 'MMM dd, yyyy',
   hoursMinutes = 'hh:mm a',

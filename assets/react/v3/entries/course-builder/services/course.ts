@@ -39,6 +39,12 @@ export const courseDefaultData: CourseFormData = {
   course_level: 'beginner',
   maximum_students: null,
   enrollment_expiration: '',
+  course_benefits: '',
+  course_requirements: '',
+  course_target_audience: '',
+  course_material_includes: '',
+  course_duration_hours: 0,
+  course_duration_minutes: 0,
 };
 
 export interface CourseFormData {
@@ -65,6 +71,12 @@ export interface CourseFormData {
   course_level: string;
   maximum_students: number | null;
   enrollment_expiration: string;
+  course_benefits: string;
+  course_requirements: string;
+  course_target_audience: string;
+  course_material_includes: string;
+  course_duration_hours: number;
+  course_duration_minutes: number;
 }
 
 export interface CoursePayload {
