@@ -11,6 +11,7 @@ import Show from '@Controls/Show';
 
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
+import { DateFormats } from '@Config/constants';
 
 interface MeetingCardProps {
   meetingTitle: string;
@@ -29,11 +30,10 @@ const MeetingCard = ({
   meetingPassword,
   meetingLink,
 }: MeetingCardProps) => {
-  const dayOfMonths = format(new Date(meetingDate), 'dd');
-  const month = format(new Date(meetingDate), 'MMM');
-  const year = format(new Date(meetingDate), 'yyyy');
-  const time = meetingStartTime.split(' ')[0];
-  const meridiem = meetingStartTime.split(' ')[1];
+  const day = format(new Date(meetingDate), DateFormats.day);
+  const month = format(new Date(meetingDate), DateFormats.month);
+  const year = format(new Date(meetingDate), DateFormats.year);
+  const [time, meridiem = ''] = meetingStartTime.split(' ');
 
   return (
     <div css={styles.card}>
@@ -46,22 +46,22 @@ const MeetingCard = ({
           <div css={styles.meetingDateTime} className="date-time">
             <span
               css={{
-                fontWeight: fontWeight.medium,
+                fontWeight: fontWeight.semiBold,
               }}
             >
-              {`${dayOfMonths} `}
+              {`${day} `}
             </span>
             <span>{`${month} `}</span>
             <span
               css={{
-                fontWeight: fontWeight.medium,
+                fontWeight: fontWeight.semiBold,
               }}
             >
               {`${year}, `}
             </span>
             <span
               css={{
-                fontWeight: fontWeight.medium,
+                fontWeight: fontWeight.semiBold,
               }}
             >
               {`${time} `}
