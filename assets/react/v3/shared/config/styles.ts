@@ -6,6 +6,7 @@ export const footerHeight = 56;
 
 export const fontFamily = {
   roboto: "'Roboto', sans-serif;",
+  sfProDisplay: "'SF Pro Display', sans-serif;",
 } as const;
 
 export const colorPalate = {

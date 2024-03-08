@@ -10,14 +10,15 @@ import {
   spacing,
   zIndex,
 } from '@Config/styles';
+import { typography } from '@Config/typography';
+import Logo from '@CourseBuilderPublic/images/logo.svg';
 import { CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
 import { convertCourseDataToPayload } from '@CourseBuilderUtils/utils';
-import { css } from '@emotion/react';
+import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
-import Logo from '@CourseBuilderPublic/images/logo.svg';
-import { typography } from '@Config/typography';
 import Tracker from './Tracker';
 
 const Header = () => {
@@ -55,23 +56,28 @@ const Header = () => {
           <Tracker />
         </div>
         <div css={styles.headerRight}>
-          <Button variant="secondary">{__('Preview', 'tutor')}</Button>
           <Button
+            variant="text"
+            buttonCss={styles.previewButton}
+            icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+            iconPosition="right"
+          >
+            {__('Preview', 'tutor')}
+          </Button>
+          <DropdownButton
+            text="Publish"
             variant="primary"
             loading={createCourseMutation.isPending || updateCourseMutation.isPending}
             onClick={form.handleSubmit(handleSubmit)}
+            dropdownMaxWidth="144px"
           >
-            {__('Publish', 'tutor')}
-          </Button>
-          <button
-            type="button"
-            css={styles.closeButton}
-            onClick={() => {
-              window.history.back();
-            }}
-          >
-            <SVGIcon name="cross" width={32} height={32} />
-          </button>
+            <DropdownButton.Item text="Save as Draft" onClick={() => alert('@TODO: will be implemented later.')} />
+            <DropdownButton.Item
+              text="Move to trash"
+              onClick={() => alert('@TODO: will be implemented later.')}
+              isDanger
+            />
+          </DropdownButton>
         </div>
       </div>
       <div />
@@ -126,5 +132,10 @@ const styles = {
       box-shadow: ${shadow.focus};
     }
   `,
-  tracker: css``,
+  previewButton: css`
+    color: ${colorTokens.text.title};
+    svg {
+      color: ${colorTokens.icon.default};
+    }
+  `,
 };

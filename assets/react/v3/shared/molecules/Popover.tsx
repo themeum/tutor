@@ -1,7 +1,7 @@
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { css } from '@emotion/react';
 import { AnimationType } from '@Hooks/useAnimation';
-import { Portal, usePortalPopover, arrowPosition } from '@Hooks/usePortalPopover';
+import { arrowPosition, Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import React, { RefObject } from 'react';
 
 interface PopoverProps<T> {
