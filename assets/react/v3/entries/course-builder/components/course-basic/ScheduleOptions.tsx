@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
 import Button from '@Atoms/Button';
-import FormSwitch from '@Components/fields/FormSwitch';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { css } from '@emotion/react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormTimeInput from '@Components/fields/FormTimeInput';
-import { __ } from '@wordpress/i18n';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import SVGIcon from '@Atoms/SVGIcon';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import FormDateInput from '@Components/fields/FormDateInput';
+import FormSwitch from '@Components/fields/FormSwitch';
+import FormTimeInput from '@Components/fields/FormTimeInput';
 import { DateFormats } from '@Config/constants';
-import { format } from 'date-fns';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
 import { CourseFormData } from '@CourseBuilderServices/course';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { format } from 'date-fns';
+import { useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 interface ScheduleForm {
   schedule_date: string;
@@ -62,7 +62,7 @@ const ScheduleOptions = () => {
       <Controller
         name="schedule_options"
         control={scheduleForm.control}
-        render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
+        render={controllerProps => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
       />
 
       {scheduleOptions && showForm && (
@@ -71,13 +71,13 @@ const ScheduleOptions = () => {
             <Controller
               name="schedule_date"
               control={scheduleForm.control}
-              render={(controllerProps) => <FormDateInput {...controllerProps} isClearable={false} />}
+              render={controllerProps => <FormDateInput {...controllerProps} isClearable={false} />}
             />
 
             <Controller
               name="schedule_time"
               control={scheduleForm.control}
-              render={(controllerProps) => <FormTimeInput {...controllerProps} interval={60} isClearable={false} />}
+              render={controllerProps => <FormTimeInput {...controllerProps} interval={60} isClearable={false} />}
             />
           </div>
 
@@ -122,6 +122,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[8]};
+    background-color: ${colorTokens.bg.white};
   `,
   dateAndTimeWrapper: css`
     display: grid;

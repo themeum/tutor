@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, fontFamily, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorPalate, containerMaxWidth, fontFamily, shadow, spacing, zIndex } from '@Config/styles';
 import { css } from '@emotion/react';
 
 export const createGlobalCss = () => css`
@@ -285,6 +285,10 @@ export const styleUtils = {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+  `,
+  container: css`
+    width: ${containerMaxWidth}px;
+    margin: 0 auto;
   `,
   display: {
     flex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`

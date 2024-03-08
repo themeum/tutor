@@ -6,7 +6,7 @@ import ReferenceModal from '@Components/modals/ReferenceModal';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import { __ } from '@wordpress/i18n';
 import { css } from '@emotion/react';
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import { CourseTopic, useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
@@ -33,6 +33,7 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import EmptyState from '@Molecules/EmptyState';
 import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
 import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
 const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean };
@@ -219,6 +220,11 @@ const Curriculum = () => {
           </Button>
         </div>
       </div>
+      <Navigator
+        styleModifier={css`
+          margin-block: 40px;
+        `}
+      />
     </div>
   );
 };
@@ -227,10 +233,10 @@ export default Curriculum;
 
 const styles = {
   container: css`
-    padding: ${spacing[32]} ${spacing[64]};
+    margin-top: ${spacing[32]};
   `,
   wrapper: css`
-    max-width: 1076px;
+    max-width: ${containerMaxWidth}px;
     width: 100%;
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};

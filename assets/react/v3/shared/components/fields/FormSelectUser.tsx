@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
+import { useEffect, useState } from 'react';
 
-import FormFieldWrapper from './FormFieldWrapper';
+import { useDebounce } from '@Hooks/useDebounce';
 import { noop } from '@Utils/util';
 import { __ } from '@wordpress/i18n';
-import { useDebounce } from '@Hooks/useDebounce';
+import FormFieldWrapper from './FormFieldWrapper';
 
 import profileImage from '@Images/profile-photo.png';
 
@@ -60,7 +60,7 @@ const FormSelectUser = ({
   helpText,
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
-  const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => item.id) : [inputValue.id];
+  const selectedIds = Array.isArray(inputValue) ? inputValue.map(item => item.id) : [inputValue.id];
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -82,7 +82,7 @@ const FormSelectUser = ({
 
   const handleDeleteSelection = (id: number) => {
     if (Array.isArray(inputValue)) {
-      const updatedValue = inputValue.filter((item) => item.id !== id);
+      const updatedValue = inputValue.filter(item => item.id !== id);
 
       field.onChange(updatedValue);
       onChange(updatedValue);
@@ -99,7 +99,7 @@ const FormSelectUser = ({
       loading={loading}
       helpText={helpText}
     >
-      {(inputProps) => {
+      {inputProps => {
         const { css: inputCss, ...restInputProps } = inputProps;
 
         return (
@@ -109,7 +109,7 @@ const FormSelectUser = ({
                 <button
                   type="button"
                   css={styles.instructorItem({ isDefaultItem: true })}
-                  onClick={() => setIsOpen((previousState) => !previousState)}
+                  onClick={() => setIsOpen(previousState => !previousState)}
                   disabled={readOnly || options.length === 0}
                 >
                   <div css={styles.instructorInfo}>
@@ -135,13 +135,13 @@ const FormSelectUser = ({
                   </div>
                   <input
                     {...restInputProps}
-                    onClick={() => setIsOpen((previousState) => !previousState)}
+                    onClick={() => setIsOpen(previousState => !previousState)}
                     css={[inputCss, styles.input]}
                     autoComplete="off"
                     readOnly={readOnly || !isSearchable}
                     placeholder={placeholder}
                     value={searchText}
-                    onChange={(event) => {
+                    onChange={event => {
                       setSearchText(event.target.value);
                     }}
                   />
@@ -151,7 +151,7 @@ const FormSelectUser = ({
 
             {isMultiSelect && Array.isArray(inputValue) && inputValue.length > 0 && (
               <div css={styles.instructorList}>
-                {inputValue.map((instructor) => (
+                {inputValue.map(instructor => (
                   <div key={instructor.id} css={styles.instructorItem({ isDefaultItem: false })}>
                     <div css={styles.instructorInfo}>
                       <img
@@ -211,7 +211,7 @@ const FormSelectUser = ({
                           readOnly={readOnly || !isSearchable}
                           placeholder={placeholder}
                           value={searchText}
-                          onChange={(event) => {
+                          onChange={event => {
                             setSearchText(event.target.value);
                           }}
                         />
@@ -220,8 +220,8 @@ const FormSelectUser = ({
                   )}
 
                   {options
-                    .filter((item) => !selectedIds.includes(item.id))
-                    .map((instructor) => (
+                    .filter(item => !selectedIds.includes(item.id))
+                    .map(instructor => (
                       <li key={String(instructor.id)} css={styles.optionItem}>
                         <button
                           type="button"
@@ -269,7 +269,7 @@ const styles = {
     position: relative;
   `,
   inputWrapperListItem: css`
-    padding: ${spacing[4]} ${spacing[8]};
+    padding: 0px;
   `,
   leftIcon: css`
     position: absolute;
@@ -284,10 +284,11 @@ const styles = {
     padding-right: ${spacing[32]};
     padding-left: ${spacing[36]};
     ${styleUtils.textEllipsis};
+    border-color: transparent;
 
     :focus {
       outline: none;
-      box-shadow: ${shadow.focus};
+      box-shadow: none;
     }
   `,
   instructorList: css`
@@ -305,6 +306,7 @@ const styles = {
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[12]};
     border: 1px solid transparent;
     border-radius: ${borderRadius[4]};
+    background-color: ${colorTokens.bg.white};
 
     ${isDefaultItem &&
     css`

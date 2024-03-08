@@ -1,6 +1,6 @@
 import { rgba } from 'polished';
 
-export const headerHeight = 80;
+export const headerHeight = 64;
 export const sidebarWidth = 355;
 export const footerHeight = 56;
 
@@ -218,6 +218,8 @@ export const colorTokens = {
   surface: {
     tutor: '#ffffff',
     wordpress: '#f1f1f1',
+    navbar: '#F5F5F5',
+    courseBuilder: '#F8F8F8',
   },
   background: {
     brand: '#3e64de',
@@ -520,6 +522,7 @@ export const shadow = {
   dividerTop: 'inset 0px 1px 0px #E4E5E7',
   underline: '0px 1px 0px #C9CBCF',
   drag: '3px 7px 8px 0px #00000014',
+  scrollable: '0px -1px 4px 0px #00000014',
 } as const;
 
 export const borderRadius = {
@@ -564,4 +567,4 @@ export const Breakpoint = {
   desktop: `@media(min-width: ${DesktopBreakpoint}px)`,
 };
 
-export const containerMaxWidth = 1320;
+export const containerMaxWidth = 1176;
