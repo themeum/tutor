@@ -6,7 +6,7 @@ import React, { ReactNode } from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outlined' | 'tertiary' | 'danger' | 'text';
 export type ButtonSize = 'large' | 'medium' | 'small';
-type ButtonIconPosition = 'left' | 'right';
+export type ButtonIconPosition = 'left' | 'right';
 
 const spin = keyframes`
   0% {

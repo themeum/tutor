@@ -202,7 +202,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               title={`Delete topic "${topic.post_title}"`}
               message="Are you sure you want to delete this content from your course? This cannot be undone."
               animationType={AnimationType.slideUp}
-              arrow="top"
+              arrow="auto"
               hideArrow
               confirmButton={{
                 text: __('Delete', 'tutor'),
@@ -389,6 +389,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                   dotsOrientation="vertical"
                   maxWidth="220px"
                   isInverse
+                  arrowPosition="auto"
+                  hideArrow
                 >
                   <ThreeDots.Option
                     text={__('Meet live lesson', 'tutor')}
