@@ -97,3 +97,32 @@ body.tutor-screen-course-builder {
         }
     }
 }
+
+#tutor-lesson-videos {
+    // Course segments only for Lessons on Wp Editor
+    @import './segments/video.scss';
+
+    .tutor-dropdown-icon-pack {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+
+        &+select {
+            padding-left: 35px !important;
+        }
+
+        [data-for] {
+            display: none;
+        }
+
+        &[data-video_source=html5] [data-for=html5], 
+        &[data-video_source=youtube] [data-for=youtube], 
+        &[data-video_source=vimeo] [data-for=vimeo],
+        &[data-video_source=external_url] [data-for=external_url],
+        &[data-video_source=embedded] [data-for=embedded],
+        &[data-video_source=shortcode] [data-for=shortcode]
+        {
+            display: block;
+        }
+    }
+}
