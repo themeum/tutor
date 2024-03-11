@@ -316,7 +316,7 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 == Changelog ==
 
-= 2.6.2 - March 8, 2024
+= 2.6.2 - March 11, 2024
 
 New: Introduced Assignment submission APIs to enable students to submit assignments (Pro)
 New: Introduced Course Wishlist APIs to allow students to add courses to their wishlists (Pro)
