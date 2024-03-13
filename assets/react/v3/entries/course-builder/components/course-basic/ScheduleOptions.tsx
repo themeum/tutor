@@ -71,13 +71,13 @@ const ScheduleOptions = () => {
             <Controller
               name="schedule_date"
               control={scheduleForm.control}
-              render={controllerProps => <FormDateInput {...controllerProps} isClearable={false} />}
+              render={controllerProps => <FormDateInput {...controllerProps} isClearable={false} placeholder='yyyy-mm-dd' />}
             />
 
             <Controller
               name="schedule_time"
               control={scheduleForm.control}
-              render={controllerProps => <FormTimeInput {...controllerProps} interval={60} isClearable={false} />}
+              render={controllerProps => <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder='hh:mm A' />}
             />
           </div>
 

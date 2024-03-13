@@ -222,7 +222,7 @@ const CourseBasic = () => {
         <Controller
           name="course_tags"
           control={form.control}
-          render={controllerProps => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} />}
+          render={controllerProps => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} placeholder='Add tags' />}
         />
 
         {tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
