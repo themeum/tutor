@@ -104,7 +104,7 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 56px;
+    height: ${modal.HEADER_HEIGHT}px;
     background: ${colorTokens.background.white};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     position: sticky;
