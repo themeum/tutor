@@ -119,7 +119,7 @@ const styles = {
     display: inline-flex;
     align-items: center;
     gap: ${spacing[12]};
-    padding-inline: ${spacing[20]} 0;
+    padding-inline: ${spacing[24]} 0;
 
     & span {
       ::before {
@@ -147,7 +147,7 @@ const styles = {
   actionsWrapper: css`
     display: inline-flex;
     gap: ${spacing[16]};
-    padding-inline: 0 ${spacing[20]};
+    padding-inline: 0 ${spacing[24]};
   `,
   closeButton: css`
     ${styleUtils.resetButton};
