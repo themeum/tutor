@@ -277,12 +277,7 @@ const styles = {
     position: sticky;
     top: ${headerHeight}px;
   `,
-  separator: css`
-    width: 1px;
-    height: 100%;
-    min-height: calc(100vh - ${headerHeight}px);
-    background-color: ${colorTokens.stroke.default};
-  `,
+  
   fieldsWrapper: css`
     display: flex;
     flex-direction: column;
