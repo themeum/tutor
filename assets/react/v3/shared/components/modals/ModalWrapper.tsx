@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
-import { modal } from '@Config/constants';
-import Show from '@Controls/Show';
+import React, { useEffect } from 'react';
 
 interface ModalWrapperProps {
   children: React.ReactNode;
@@ -70,9 +69,9 @@ const styles = {
     position: relative;
     background: ${colorTokens.background.white};
     margin: ${spacing[24]};
-    margin-top: 60px;
+    margin-top: 88px;
     height: 100%;
-    max-width: 1472px;
+    max-width: 1218px;
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
@@ -88,7 +87,7 @@ const styles = {
     align-items: center;
     padding: ${spacing[20]};
     width: 100%;
-    height: 72px;
+    height: 56px;
     background: ${colorTokens.background.white};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     position: sticky;
@@ -151,7 +150,7 @@ const styles = {
     }
   `,
   content: css`
-    height: calc(100% - ${modal.HEADER_HEIGHT + modal.MARGIN_TOP}px);
+    height: 100%;
     overflow: auto;
   `,
 };

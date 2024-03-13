@@ -4,32 +4,33 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { TopicContent as TopicContentType } from '@CourseBuilderServices/curriculum';
 
-import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import TopicContent from './TopicContent';
-import Show from '@Controls/Show';
-import { nanoid, noop } from '@Utils/util';
-import { isDefined } from '@Utils/types';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { Controller } from 'react-hook-form';
 import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { __ } from '@wordpress/i18n';
-import ThreeDots from '@Molecules/ThreeDots';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import { AnimationType } from '@Hooks/useAnimation';
+import { useModal } from '@Components/modals/Modal';
 import For from '@Controls/For';
+import Show from '@Controls/Show';
+import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
+import { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
+import { AnimationType } from '@Hooks/useAnimation';
+import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import ThreeDots from '@Molecules/ThreeDots';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
+import { nanoid, noop } from '@Utils/util';
 import {
-  useSensors,
-  useSensor,
-  PointerSensor,
-  KeyboardSensor,
   DndContext,
-  closestCenter,
-  UniqueIdentifier,
   DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  UniqueIdentifier,
+  closestCenter,
+  useSensor,
+  useSensors,
 } from '@dnd-kit/core';
+import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import {
   SortableContext,
   sortableKeyboardCoordinates,
@@ -37,12 +38,13 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { createPortal } from 'react-dom';
-import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
+import { css } from '@emotion/react';
 import { animated } from '@react-spring/web';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
+import { __ } from '@wordpress/i18n';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Controller } from 'react-hook-form';
+import TopicContent from './TopicContent';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -61,14 +63,14 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
   const [isOpen, setIsOpen] = useState(false);
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
+  // @TODO: will be controlled by the API
+  const [content, setContent] = useState<TopicContentType[]>(topic.content);
 
   const topicRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const deleteRef = useRef<HTMLButtonElement>(null);
 
-  // @TODO: will be controlled by the API
-  const [content, setContent] = useState<TopicContentType[]>(topic.content);
 
   const collapseAnimation = useCollapseExpandAnimation({ ref: topicRef, isOpen: !topic.isCollapsed });
   const collapseAnimationDescription = useCollapseExpandAnimation({
@@ -84,13 +86,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     },
   });
 
-  const createDuplicateContent = (data: TopicContentType) => {
-    setContent(previousContent => {
-      const newContent = { ...data, ID: nanoid() };
-      return [...previousContent, newContent];
-    });
-  };
+  const { showModal } = useModal();
 
+  
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLDivElement)) {
@@ -120,11 +118,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     id: topic.ID,
     animateLayoutChanges,
   });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.3 : undefined,
-  };
 
   const combinedRef = useCallback(
     (node: HTMLDivElement) => {
@@ -135,6 +128,21 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     },
     [setNodeRef, wrapperRef]
   );
+
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : undefined,
+  };
+
+  const createDuplicateContent = (data: TopicContentType) => {
+    setContent(previousContent => {
+      const newContent = { ...data, ID: nanoid() };
+      return [...previousContent, newContent];
+    });
+  };
+
 
   return (
     <div
@@ -356,7 +364,20 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 variant="tertiary"
                 icon={<SVGIcon name="plus" />}
                 onClick={() => {
-                  alert('@TODO: will be implemented later');
+                  showModal({
+                    component: QuizModal,
+                    props: {
+                      title: __('Quiz', 'tutor'),
+                      icon: <SVGIcon name="quiz" width={24} height={24} />,
+                      subtitle: __(`Topic: ${topic.post_title}`, 'tutor'),
+                      actions: 
+                        <>
+                          <Button variant='text' size='small'>Cancel</Button>
+                          <Button variant='primary' size='small'>Next</Button>
+                        </>
+                      
+                    }
+                  });
                 }}
               >
                 {__('Quiz', 'tutor')}
