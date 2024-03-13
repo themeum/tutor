@@ -59,9 +59,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           </span>
         )}
         <span css={[styles.buttonContent({ loading, disabled }), buttonContentCss]}>
-          {icon && iconPosition === 'left' && <span css={styles.buttonIcon({ iconPosition, loading })}>{icon}</span>}
+          {icon && iconPosition === 'left' && (
+            <span css={styles.buttonIcon({ iconPosition, loading, hasChildren: !!children })}>{icon}</span>
+          )}
           {children}
-          {icon && iconPosition === 'right' && <span css={styles.buttonIcon({ iconPosition, loading })}>{icon}</span>}
+          {icon && iconPosition === 'right' && (
+            <span css={styles.buttonIcon({ iconPosition, loading, hasChildren: !!children })}>{icon}</span>
+          )}
         </span>
       </button>
     );
@@ -431,7 +435,15 @@ const styles = {
       color: transparent;
     `}
   `,
-  buttonIcon: ({ iconPosition, loading }: { iconPosition: ButtonIconPosition; loading: boolean }) => css`
+  buttonIcon: ({
+    iconPosition,
+    loading,
+    hasChildren = true,
+  }: {
+    iconPosition: ButtonIconPosition;
+    loading: boolean;
+    hasChildren: boolean;
+  }) => css`
     display: grid;
     place-items: center;
     margin-right: ${spacing[4]};
@@ -444,6 +456,11 @@ const styles = {
     ${loading &&
     css`
       opacity: 0;
+    `}
+
+    ${!hasChildren &&
+    css`
+      margin-inline: 0;
     `}
   `,
   spinner: css`
