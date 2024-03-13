@@ -44,6 +44,13 @@ const Curriculum = () => {
 
   const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
 
+  const createDuplicateTopic = (data: CourseTopic) => {
+    setContent(previousTopic => {
+      const newTopic = { ...data, ID: nanoid(), isCollapsed: false };
+      return [...previousTopic, newTopic];
+    });
+  };
+
   useEffect(() => {
     if (!courseCurriculumQuery.data) {
       return;
@@ -178,6 +185,9 @@ const Curriculum = () => {
                               })
                             )
                           }
+                          onCopy={() => {
+                            createDuplicateTopic(topic);
+                          }}
                           onSort={(activeIndex, overIndex) => {
                             setContent(previous => {
                               return previous.map((item, idx) => {
