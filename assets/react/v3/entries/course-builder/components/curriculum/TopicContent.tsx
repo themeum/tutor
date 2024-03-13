@@ -157,6 +157,12 @@ const styles = {
     ${isDragging &&
     css`
       box-shadow: ${shadow.drag};
+      border-color: ${colorTokens.stroke.border};
+      background-color: ${colorTokens.background.white};
+
+      [data-actions] {
+        display: flex;
+      }
     `}
   `,
   title: css`
@@ -173,11 +179,21 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
+    cursor: grab;
 
     [data-bar-icon] {
       display: none;
     }
-    cursor: ${isDragging ? 'grabbing' : 'grab'};
+    ${isDragging &&
+    css`
+      [data-content-icon] {
+        display: none;
+      }
+      [data-bar-icon] {
+        display: block;
+      }
+      cursor: grabbing;
+    `}
   `,
   actions: css`
     display: none;

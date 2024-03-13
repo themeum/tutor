@@ -144,7 +144,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             <Show
               when={isEdit}
               fallback={
-                <div css={styles.title({ isEdit })} title={topic.post_title}>
+                <div css={styles.title({ isEdit })} title={topic.post_title} onDoubleClick={() => setIsEdit(true)}>
                   {topic.post_title}
                 </div>
               }
@@ -234,7 +234,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           when={isEdit}
           fallback={
             <animated.div style={{ ...collapseAnimationDescription }}>
-              <div css={styles.description({ isEdit })} ref={descriptionRef}>
+              <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
                 {topic.post_content}
               </div>
             </animated.div>
@@ -459,6 +459,7 @@ const styles = {
     `}
 
     ${isCollapsed &&
+    !isEdit &&
     css`
       padding-bottom: 0;
     `}
