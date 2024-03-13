@@ -14,10 +14,20 @@ interface ModalWrapperProps {
   title?: string;
   subtitle?: string;
   actions?: React.ReactNode;
+  headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
 }
 
-const ModalWrapper = ({ children, onClose, title, subtitle, icon, entireHeader, actions }: ModalWrapperProps) => {
+const ModalWrapper = ({
+  children,
+  onClose,
+  title,
+  subtitle,
+  icon,
+  headerChildren,
+  entireHeader,
+  actions,
+}: ModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 
@@ -35,17 +45,24 @@ const ModalWrapper = ({ children, onClose, title, subtitle, icon, entireHeader, 
             <>
               <div css={styles.headerContent}>
                 <div css={styles.iconWithTitle}>
-                  {icon && icon}
-                  {title && <h6 css={styles.title}>{title}</h6>}
+                  <Show when={icon}>{icon}</Show>
+                  <Show when={title}>
+                    <h6 css={styles.title}>{title}</h6>
+                  </Show>
                 </div>
-                {subtitle && <span css={styles.subtitle}>{subtitle}</span>}
+                <Show when={subtitle}>
+                  <span css={styles.subtitle}>{subtitle}</span>
+                </Show>
               </div>
+              <Show when={headerChildren}>
+                <div css={styles.haederChildren}>{headerChildren}</div>
+              </Show>
               <div css={styles.actionsWrapper}>
                 <Show
                   when={actions}
                   fallback={
-                    <button type='button' css={styles.closeButton} onClick={onClose}>
-                      <SVGIcon name='times' width={14} height={14} />
+                    <button type="button" css={styles.closeButton} onClick={onClose}>
+                      <SVGIcon name="times" width={14} height={14} />
                     </button>
                   }
                 >
@@ -86,17 +103,23 @@ const styles = {
     display: inline-flex;
     justify-content: space-between;
     align-items: center;
-    padding: ${spacing[20]};
     width: 100%;
-    height: 72px;
+    height: 56px;
     background: ${colorTokens.background.white};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     position: sticky;
+  `,
+  haederChildren: css`
+    flex: 0 1 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   `,
   headerContent: css`
     display: inline-flex;
     align-items: center;
     gap: ${spacing[12]};
+    padding-inline: ${spacing[20]} 0;
 
     & span {
       ::before {
@@ -124,6 +147,7 @@ const styles = {
   actionsWrapper: css`
     display: inline-flex;
     gap: ${spacing[16]};
+    padding-inline: 0 ${spacing[20]};
   `,
   closeButton: css`
     ${styleUtils.resetButton};
