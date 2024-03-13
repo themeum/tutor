@@ -51,8 +51,9 @@ const Header = () => {
         <Logo width={108} height={24} />
       </div>
       <div css={styles.container}>
-        <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
-        <div css={styles.tracker}>
+        <div css={styles.titleAndTacker}>
+          <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
+          <span css={styles.divider} />
           <Tracker />
         </div>
         <div css={styles.headerRight}>
@@ -110,6 +111,17 @@ const styles = {
   `,
   logo: css`
     padding-left: ${spacing[32]};
+  `,
+  titleAndTacker: css`
+    ${styleUtils.display.flex()};
+    gap: ${spacing[20]};
+    align-items: center;
+  `,
+  divider: css`
+    width: 2px;
+    height: 16px;
+    background-color: ${colorTokens.stroke.divider};
+    border-radius: ${borderRadius[20]};
   `,
   title: css`
     ${typography.heading6('medium')};

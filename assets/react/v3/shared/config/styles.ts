@@ -568,4 +568,4 @@ export const Breakpoint = {
   desktop: `@media(min-width: ${DesktopBreakpoint}px)`,
 };
 
-export const containerMaxWidth = 1176;
+export const containerMaxWidth = 1006;
