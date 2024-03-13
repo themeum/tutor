@@ -1,22 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { __ } from '@wordpress/i18n';
+import { colorTokens, containerMaxWidth, headerHeight } from '@Config/styles';
 import Header from '@CourseBuilderComponents/layouts/Header';
-import Sidebar from '@CourseBuilderComponents/layouts/Sidebar';
-import Footer from '@CourseBuilderComponents/layouts/Footer';
-import { css } from '@emotion/react';
-import { footerHeight, headerHeight } from '@Config/styles';
-import { Option } from '@Utils/types';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
-import { useCurrentPath } from '@Hooks/useCurrentPath';
-import routes from '@CourseBuilderConfig/routes';
-import { FormProvider } from 'react-hook-form';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { CourseNavigatorProvider } from '@CourseBuilderContexts/CourseNavigatorContext';
 import { CourseFormData, courseDefaultData, useCourseDetailsQuery } from '@CourseBuilderServices/course';
 import { convertCourseDataToFormData } from '@CourseBuilderUtils/utils';
-import { SidebarProvider, useSidebar } from '../../contexts/SidebarContext';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { css } from '@emotion/react';
+import { useEffect } from 'react';
+import { FormProvider } from 'react-hook-form';
+import { Outlet } from 'react-router-dom';
 
-const Layout: React.FC = () => {
+const Layout = () => {
   const params = new URLSearchParams(window.location.search);
   const courseId = params.get('course_id');
 
@@ -34,18 +27,20 @@ const Layout: React.FC = () => {
 
   return (
     <FormProvider {...form}>
-      <SidebarProvider>
+      <CourseNavigatorProvider>
         <div css={styles.wrapper}>
           <Header />
           <div css={styles.contentWrapper}>
-            <Sidebar />
-            <div css={styles.mainContent}>
-              <Outlet />
-            </div>
+            {/* Placeholder div for allocating the 1fr space */}
+            <div />
+
+            <Outlet />
+
+            {/* Placeholder div for allocating the 1fr space */}
+            <div />
           </div>
-          <Footer />
         </div>
-      </SidebarProvider>
+      </CourseNavigatorProvider>
     </FormProvider>
   );
 };
@@ -53,13 +48,12 @@ const Layout: React.FC = () => {
 export default Layout;
 
 const styles = {
-  wrapper: {},
+  wrapper: css`
+    background-color: ${colorTokens.surface.courseBuilder};
+  `,
   contentWrapper: css`
     display: grid;
-    grid-template-columns: 320px 1fr;
-    min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
-  `,
-  mainContent: css`
-    max-width: 1170px;
+    grid-template-columns: 1fr ${containerMaxWidth}px 1fr;
+    min-height: calc(100vh - ${headerHeight}px);
   `,
 };

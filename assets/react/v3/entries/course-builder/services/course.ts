@@ -113,7 +113,7 @@ interface CourseDetailsPayload {
   action: string;
   course_id: number;
 }
-export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
+export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional';
 export interface CourseDetailsResponse {
   ID: number;
   post_author: {

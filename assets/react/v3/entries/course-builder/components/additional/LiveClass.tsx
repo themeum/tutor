@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -9,15 +9,14 @@ import EmptyState from '@Molecules/EmptyState';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import For from '@Controls/For';
+import Show from '@Controls/Show';
 
-import MeetingForm, { MeetingType } from './MeetingForm';
-import MeetingCard from './MeetingCard';
-import { styleUtils } from '@Utils/style-utils';
+import { AnimationType } from '@Hooks/useAnimation';
 import Popover from '@Molecules/Popover';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { element } from 'prop-types';
+import { styleUtils } from '@Utils/style-utils';
+import MeetingCard from './MeetingCard';
+import MeetingForm, { MeetingType } from './MeetingForm';
 
 export interface Meeting {
   id: number;
@@ -218,6 +217,7 @@ const LiveClass = () => {
         triggerRef={zoomButtonRef}
         isOpen={showMeetingForm === 'zoom'}
         closePopover={() => setShowMeetingForm(null)}
+        animationType={AnimationType.slideUp}
       >
         <MeetingForm
           type={showMeetingForm as MeetingType}
@@ -229,6 +229,7 @@ const LiveClass = () => {
         triggerRef={googleMeetButtonRef}
         isOpen={showMeetingForm === 'google_meet'}
         closePopover={() => setShowMeetingForm(null)}
+        animationType={AnimationType.slideUp}
       >
         <MeetingForm
           type={showMeetingForm as MeetingType}
@@ -240,6 +241,7 @@ const LiveClass = () => {
         triggerRef={jitsiButtonRef}
         isOpen={showMeetingForm === 'jitsi'}
         closePopover={() => setShowMeetingForm(null)}
+        animationType={AnimationType.slideUp}
       >
         <MeetingForm
           type={showMeetingForm as MeetingType}

@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, fontFamily, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorPalate, containerMaxWidth, fontFamily, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 
 export const createGlobalCss = () => css`
@@ -8,7 +8,7 @@ export const createGlobalCss = () => css`
   ::after,
   ::before {
     box-sizing: border-box;
-    font-family: ${fontFamily.roboto};
+    font-family: ${fontFamily.sfProDisplay};
   }
 
   html {
@@ -17,7 +17,7 @@ export const createGlobalCss = () => css`
   }
   body {
     margin: 0;
-    font-family: ${fontFamily.roboto};
+    font-family: ${fontFamily.sfProDisplay};
   }
 
   main {
@@ -228,7 +228,7 @@ export const styleUtils = {
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.roboto};
+    font-family: ${fontFamily.sfProDisplay};
     cursor: pointer;
   `,
   cardInnerSection: css`
@@ -249,7 +249,7 @@ export const styleUtils = {
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.roboto};
+    font-family: ${fontFamily.sfProDisplay};
     display: flex;
     gap: ${spacing[8]};
     align-items: end;
@@ -285,6 +285,10 @@ export const styleUtils = {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+  `,
+  container: css`
+    width: ${containerMaxWidth}px;
+    margin: 0 auto;
   `,
   display: {
     flex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`

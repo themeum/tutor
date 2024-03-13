@@ -1,6 +1,5 @@
-import React from 'react';
-import { __ } from '@wordpress/i18n';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -10,15 +9,16 @@ import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import { CourseFormData, CourseDetailsResponse } from '@CourseBuilderServices/course';
-import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CourseCard from '@CourseBuilderComponents/additional/CourseCard';
+import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 
 import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import For from '@Controls/For';
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 
 type PartialCourseDetails = Pick<CourseDetailsResponse, 'ID' | 'post_title' | 'thumbnail'>;
@@ -149,6 +149,7 @@ const Additional = () => {
             )}
           />
         </div>
+        <Navigator styleModifier={styles.navigator} />
       </div>
 
       <div css={styles.sidebar}>
@@ -205,7 +206,7 @@ const styles = {
     grid-template-columns: 1fr 402px;
   `,
   mainForm: css`
-    padding: ${spacing[24]} ${spacing[64]};
+    padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} 0;
   `,
   fieldsWrapper: css`
     position: sticky;
@@ -225,7 +226,7 @@ const styles = {
   `,
   sidebar: css`
     ${styleUtils.display.flex('column')}
-    padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} ${spacing[64]};
+    padding: ${spacing[24]} 0 ${spacing[24]} ${spacing[32]};
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
     gap: ${spacing[16]};
@@ -252,5 +253,8 @@ const styles = {
   liveClass: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
+  `,
+  navigator: css`
+    margin-block: ${spacing[40]};
   `,
 };

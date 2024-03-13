@@ -11,6 +11,7 @@ export type StepStatus = 'active' | 'completed' | 'inactive' | 'visited';
 export type CompletionStatus = 'incomplete' | 'complete';
 
 export interface Step {
+  indicator: number;
   id: CourseBuilderSteps;
   label: string;
   path: string;
@@ -20,7 +21,7 @@ export interface Step {
   isVisited: boolean;
 }
 
-interface SidebarContextType {
+interface CourseNavigatorContextType {
   steps: Step[];
   currentIndex: number;
   courseContent: CourseDetailsResponse | null;
@@ -30,6 +31,7 @@ interface SidebarContextType {
 
 const defaultSteps: Step[] = [
   {
+    indicator: 1,
     id: 'basic',
     label: __('Course Basic', 'tutor'),
     path: CourseBuilderRouteConfigs.CourseBasics.buildLink(),
@@ -39,6 +41,7 @@ const defaultSteps: Step[] = [
     isActive: true,
   },
   {
+    indicator: 2,
     id: 'curriculum',
     label: __('Curriculum', 'tutor'),
     path: CourseBuilderRouteConfigs.CourseCurriculum.buildLink(),
@@ -48,6 +51,7 @@ const defaultSteps: Step[] = [
     isActive: false,
   },
   {
+    indicator: 3,
     id: 'additional',
     label: __('Additional', 'tutor'),
     path: CourseBuilderRouteConfigs.CourseAdditional.buildLink(),
@@ -56,18 +60,9 @@ const defaultSteps: Step[] = [
     isVisited: false,
     isActive: false,
   },
-  {
-    id: 'certificate',
-    label: __('Certificate', 'tutor'),
-    path: CourseBuilderRouteConfigs.CourseCertificate.buildLink(),
-    isDisabled: true,
-    isCompleted: false,
-    isVisited: false,
-    isActive: false,
-  },
 ];
 
-const SidebarContext = React.createContext<SidebarContextType>({
+const CourseNavigatorContext = React.createContext<CourseNavigatorContextType>({
   steps: defaultSteps,
   setSteps: noop,
   updateStepByIndex: noop,
@@ -75,13 +70,13 @@ const SidebarContext = React.createContext<SidebarContextType>({
   courseContent: null,
 });
 
-export const useSidebar = () => useContext(SidebarContext);
+export const useCourseNavigator = () => useContext(CourseNavigatorContext);
 
-interface SidebarProviderProps {
+interface CourseNavigatorProviderProps {
   children: React.ReactNode;
 }
 
-export const SidebarProvider = ({ children }: SidebarProviderProps) => {
+export const CourseNavigatorProvider = ({ children }: CourseNavigatorProviderProps) => {
   const [steps, setSteps] = useState<Step[]>(defaultSteps);
   const currentPath = useCurrentPath(routes);
   const params = new URLSearchParams(window.location.search);
@@ -138,8 +133,8 @@ export const SidebarProvider = ({ children }: SidebarProviderProps) => {
   }, [courseContent]);
 
   return (
-    <SidebarContext.Provider value={{ steps, setSteps, updateStepByIndex, currentIndex, courseContent }}>
+    <CourseNavigatorContext.Provider value={{ steps, setSteps, updateStepByIndex, currentIndex, courseContent }}>
       {children}
-    </SidebarContext.Provider>
+    </CourseNavigatorContext.Provider>
   );
 };

@@ -1,6 +1,6 @@
-import React, { RefObject, useEffect, useRef } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -11,15 +11,16 @@ import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 
-import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
-import { Meeting } from './LiveClass';
-import { styleUtils } from '@Utils/style-utils';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import { useIsScrolling } from '@Hooks/useIsScrolling';
+import { styleUtils } from '@Utils/style-utils';
+import { Meeting } from './LiveClass';
 
 export type MeetingType = 'zoom' | 'google_meet' | 'jitsi';
 
@@ -42,6 +43,7 @@ interface MeetingFormProps {
 }
 
 const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps) => {
+  const { ref, isScrolling } = useIsScrolling({ defaultValue: true });
   const meetingForm = useFormWithGlobalError<MeetingFormField>({
     defaultValues: {
       meeting_name: '',
@@ -92,7 +94,7 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
 
   return (
     <div css={styles.container}>
-      <div css={styles.formWrapper}>
+      <div css={styles.formWrapper} ref={ref}>
         <Controller
           name="meeting_name"
           control={meetingForm.control}
@@ -207,7 +209,7 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
         </Show>
       </div>
 
-      <div css={styles.buttonWrapper}>
+      <div css={styles.buttonWrapper({ isScrolling })}>
         <Button variant="text" size="small" onClick={onCancel}>
           {__('Cancel', 'tutor')}
         </Button>
@@ -224,7 +226,6 @@ const styles = {
   container: css`
     ${styleUtils.display.flex('column')}
     background: ${colorTokens.background.white};
-    gap: ${spacing[16]};
     padding-block: ${spacing[12]};
     border-radius: ${borderRadius.card};
     box-shadow: ${shadow.popover};
@@ -254,11 +255,16 @@ const styles = {
     align-items: center;
     gap: ${spacing[6]};
   `,
-  buttonWrapper: css`
+  buttonWrapper: ({ isScrolling = false }) => css`
     ${styleUtils.display.flex()}
     padding-top: ${spacing[8]};
     padding-inline: ${spacing[12]};
     justify-content: flex-end;
     gap: ${spacing[8]};
+    z-index: ${zIndex.positive};
+    ${isScrolling &&
+    css`
+      box-shadow: ${shadow.scrollable};
+    `}
   `,
 };

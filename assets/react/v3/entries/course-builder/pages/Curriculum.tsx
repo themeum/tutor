@@ -1,21 +1,24 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import Button from '@Atoms/Button';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
-import ReferenceModal from '@Components/modals/ReferenceModal';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import { __ } from '@wordpress/i18n';
-import { css } from '@emotion/react';
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
+import For from '@Controls/For';
 import Show from '@Controls/Show';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import { CourseTopic, useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import For from '@Controls/For';
 import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useMemo, useState } from 'react';
 
-import { moveTo, nanoid, noop } from '@Utils/util';
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
+import EmptyState from '@Molecules/EmptyState';
+import { droppableMeasuringStrategy } from '@Utils/dndkit';
+import { moveTo, nanoid } from '@Utils/util';
 import {
   DndContext,
   DragOverlay,
@@ -26,13 +29,9 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
+import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
-import { droppableMeasuringStrategy } from '@Utils/dndkit';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
-import EmptyState from '@Molecules/EmptyState';
-import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
-import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
 
 const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean };
@@ -246,6 +245,11 @@ const Curriculum = () => {
           </div>
         </Show>
       </div>
+      <Navigator
+        styleModifier={css`
+          margin-block: 40px;
+        `}
+      />
     </div>
   );
 };
@@ -254,10 +258,10 @@ export default Curriculum;
 
 const styles = {
   container: css`
-    padding: ${spacing[32]} ${spacing[64]};
+    margin-top: ${spacing[32]};
   `,
   wrapper: css`
-    max-width: 1076px;
+    max-width: ${containerMaxWidth}px;
     width: 100%;
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};

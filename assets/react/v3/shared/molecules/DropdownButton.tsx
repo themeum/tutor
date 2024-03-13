@@ -1,15 +1,15 @@
-import React, { MouseEvent, ReactNode, useRef, useState } from 'react';
 import { SerializedStyles, css, keyframes } from '@emotion/react';
+import React, { MouseEvent, ReactNode, useRef, useState } from 'react';
 
 import { ButtonIconPosition, ButtonSize, ButtonVariant } from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { AnimationType } from '@Hooks/useAnimation';
+import { styleUtils } from '@Utils/style-utils';
 
-import Popover from './Popover';
 import { typography } from '@Config/typography';
+import Popover from './Popover';
 
 interface DropdownOptionProps {
   type?: 'button' | 'submit';
@@ -17,6 +17,7 @@ interface DropdownOptionProps {
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   buttonContentCss?: SerializedStyles;
+  isDanger?: boolean;
 }
 
 export const DropdownItem = ({
@@ -25,12 +26,14 @@ export const DropdownItem = ({
   disabled = false,
   onClick,
   buttonContentCss,
+  isDanger = false,
 }: DropdownOptionProps) => {
   return (
     <button
       type={type}
       css={styles.dropdownOption({
         disabled,
+        isDanger,
       })}
       onClick={onClick}
     >
@@ -148,13 +151,14 @@ const DropdownButton = ({
         </button>
       </div>
       <Popover
-        gap={13}
+        gap={4}
         maxWidth={dropdownMaxWidth}
         arrow="top"
         triggerRef={dropdownTriggerRef}
         isOpen={isOpen}
         closePopover={() => setIsOpen(false)}
         animationType={AnimationType.slideUp}
+        hideArrow
       >
         <div css={styles.dropdownWrapper}>
           {React.Children.map(children, child => {
@@ -473,7 +477,7 @@ const styles = {
     flex-direction: column;
     padding-block: ${spacing[6]};
   `,
-  dropdownOption: ({ disabled }: { disabled: boolean }) => css`
+  dropdownOption: ({ disabled, isDanger }: { disabled: boolean; isDanger: boolean }) => css`
     ${styleUtils.resetButton};
     width: 100%;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
@@ -484,9 +488,14 @@ const styles = {
     gap: ${spacing[8]};
     border: 2px solid transparent;
 
+    ${isDanger &&
+    css`
+      color: ${colorTokens.text.error};
+    `}
+
     :hover {
       background-color: ${colorTokens.background.hover};
-      color: ${colorTokens.text.title};
+      color: ${isDanger ? colorTokens.text.error : colorTokens.text.title};
     }
 
     :focus,

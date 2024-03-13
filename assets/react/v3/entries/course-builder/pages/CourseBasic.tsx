@@ -1,27 +1,28 @@
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
-import { css } from '@emotion/react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import { __ } from '@wordpress/i18n';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import SVGIcon from '@Atoms/SVGIcon';
+import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
+import FormImageInput from '@Components/fields/FormImageInput';
+import FormInput from '@Components/fields/FormInput';
+import FormInputWithContent from '@Components/fields/FormInputWithContent';
+import FormRadioGroup from '@Components/fields/FormRadioGroup';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormSelectUser from '@Components/fields/FormSelectUser';
+import FormTagsInput from '@Components/fields/FormTagsInput';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import { tutorConfig } from '@Config/config';
+import { TutorRoles } from '@Config/constants';
+import { colorTokens, headerHeight, spacing } from '@Config/styles';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
-import FormImageInput from '@Components/fields/FormImageInput';
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormTagsInput from '@Components/fields/FormTagsInput';
-import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
-import FormSelectUser from '@Components/fields/FormSelectUser';
-import { useUserListQuery } from '@Services/users';
-import { useState } from 'react';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { CourseFormData } from '@CourseBuilderServices/course';
-import { TutorRoles } from '@Config/constants';
-import { tutorConfig } from '@Config/config';
+import { useUserListQuery } from '@Services/users';
 import { maxValueRule, requiredRule } from '@Utils/validation';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
@@ -64,7 +65,7 @@ const CourseBasic = () => {
   });
 
   const instructorOptions =
-    instructorListQuery.data?.map((item) => {
+    instructorListQuery.data?.map(item => {
       return {
         id: item.id,
         name: item.name,
@@ -81,10 +82,10 @@ const CourseBasic = () => {
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
             <Controller
-              name='post_title'
+              name="post_title"
               control={form.control}
               rules={{ ...requiredRule(), ...maxValueRule({ maxValue: 255 }) }}
-              render={(controllerProps) => (
+              render={controllerProps => (
                 <FormInput
                   {...controllerProps}
                   label={__('Course Title', 'tutor')}
@@ -96,9 +97,9 @@ const CourseBasic = () => {
             />
 
             <Controller
-              name='post_name'
+              name="post_name"
               control={form.control}
-              render={(controllerProps) => (
+              render={controllerProps => (
                 <FormEditableAlias
                   {...controllerProps}
                   label={__('Course URL', 'tutor')}
@@ -109,42 +110,43 @@ const CourseBasic = () => {
           </div>
 
           <Controller
-            name='post_content'
+            name="post_content"
             control={form.control}
-            render={(controllerProps) => <FormTextareaInput {...controllerProps} label={__('Description', 'tutor')} />}
+            render={controllerProps => <FormTextareaInput {...controllerProps} label={__('Description', 'tutor')} />}
           />
 
           <CourseSettings />
         </div>
+        <Navigator styleModifier={styles.navigator} />
       </div>
       <div css={styles.sidebar}>
         <Controller
-          name='post_status'
+          name="post_status"
           control={form.control}
-          render={(controllerProps) => (
+          render={controllerProps => (
             <FormSelectInput
               {...controllerProps}
               label={__('Visibility Status', 'tutor')}
               options={visibilityStatusOptions}
-              leftIcon={<SVGIcon name='eye' width={32} height={32} />}
+              leftIcon={<SVGIcon name="eye" width={32} height={32} />}
             />
           )}
         />
 
         {visibilityStatus === 'password_protected' && (
           <Controller
-            name='post_password'
+            name="post_password"
             control={form.control}
-            render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
+            render={controllerProps => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
           />
         )}
 
         <ScheduleOptions />
 
         <Controller
-          name='thumbnail'
+          name="thumbnail"
           control={form.control}
-          render={(controllerProps) => (
+          render={controllerProps => (
             <FormImageInput
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
@@ -169,9 +171,9 @@ const CourseBasic = () => {
 
         {/* @TODO: Add course price options based on monetization setting */}
         <Controller
-          name='course_price_type'
+          name="course_price_type"
           control={form.control}
-          render={(controllerProps) => (
+          render={controllerProps => (
             <FormRadioGroup
               {...controllerProps}
               label={__('Price', 'tutor')}
@@ -184,25 +186,25 @@ const CourseBasic = () => {
         {coursePriceType === 'paid' && (
           <div css={styles.coursePriceWrapper}>
             <Controller
-              name='course_price'
+              name="course_price"
               control={form.control}
-              render={(controllerProps) => (
+              render={controllerProps => (
                 <FormInputWithContent
                   {...controllerProps}
                   label={__('Regular Price', 'tutor')}
-                  content='$'
+                  content="$"
                   placeholder={__('0', 'tutor')}
                 />
               )}
             />
             <Controller
-              name='course_sale_price'
+              name="course_sale_price"
               control={form.control}
-              render={(controllerProps) => (
+              render={controllerProps => (
                 <FormInputWithContent
                   {...controllerProps}
                   label={__('Discount Price', 'tutor')}
-                  content='$'
+                  content="$"
                   placeholder={__('0', 'tutor')}
                 />
               )}
@@ -211,23 +213,23 @@ const CourseBasic = () => {
         )}
 
         <Controller
-          name='course_categories'
+          name="course_categories"
           control={form.control}
           defaultValue={[]}
-          render={(controllerProps) => <FormCategoriesInput {...controllerProps} label={__('Categories', 'tutor')} />}
+          render={controllerProps => <FormCategoriesInput {...controllerProps} label={__('Categories', 'tutor')} />}
         />
 
         <Controller
-          name='course_tags'
+          name="course_tags"
           control={form.control}
-          render={(controllerProps) => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} />}
+          render={controllerProps => <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} placeholder='Add tags' />}
         />
 
         {tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
           <Controller
-            name='post_author'
+            name="post_author"
             control={form.control}
-            render={(controllerProps) => (
+            render={controllerProps => (
               <FormSelectUser
                 {...controllerProps}
                 label={__('Author', 'tutor')}
@@ -242,9 +244,9 @@ const CourseBasic = () => {
 
         {/* @TODO: Need to add condition based on tutor pro, marketplace, multi instructor addon, and admin role */}
         <Controller
-          name='course_instructors'
+          name="course_instructors"
           control={form.control}
-          render={(controllerProps) => (
+          render={controllerProps => (
             <FormSelectUser
               {...controllerProps}
               label={__('Instructors', 'tutor')}
@@ -266,14 +268,16 @@ export default CourseBasic;
 const styles = {
   wrapper: css`
     display: grid;
-    grid-template-columns: 1fr 402px;
+    grid-template-columns: 1fr 370px;
+    gap: ${spacing[32]};
   `,
   mainForm: css`
-    padding: ${spacing[24]} ${spacing[64]};
+    padding-block: ${spacing[24]};
     align-self: start;
     position: sticky;
     top: ${headerHeight}px;
   `,
+  
   fieldsWrapper: css`
     display: flex;
     flex-direction: column;
@@ -286,9 +290,10 @@ const styles = {
     gap: ${spacing[8]};
   `,
   sidebar: css`
-    padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} ${spacing[64]};
     border-left: 1px solid ${colorTokens.stroke.default};
-    min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
+    min-height: calc(100vh - ${headerHeight}px);
+    padding-left: ${spacing[32]};
+    padding-block: ${spacing[24]};
 
     display: flex;
     flex-direction: column;
@@ -303,5 +308,8 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[16]};
+  `,
+  navigator: css`
+    margin-top: ${spacing[40]};
   `,
 };

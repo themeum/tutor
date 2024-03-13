@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
 import Button from '@Atoms/Button';
 import Checkbox from '@Atoms/CheckBox';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { css, SerializedStyles } from '@emotion/react';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import { CategoryWithChildren, useCategoryListQuery, useCreateCategoryMutation } from '@Services/category';
 import { FormControllerProps } from '@Utils/form';
 import { generateTree, getCategoryLeftBarHeight } from '@Utils/util';
+import { SerializedStyles, css } from '@emotion/react';
 import { produce } from 'immer';
+import { useState } from 'react';
 
-import FormFieldWrapper from './FormFieldWrapper';
+import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { useIsScrolling } from '@Hooks/useIsScrolling';
+import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
 import { Controller, FieldValues } from 'react-hook-form';
+import FormFieldWrapper from './FormFieldWrapper';
 import FormInput from './FormInput';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import FormMultiLevelSelect from './FormMultiLevelSelect';
-import { styleUtils } from '@Utils/style-utils';
-import LoadingSpinner from '@Atoms/LoadingSpinner';
 
 interface FormMultiLevelInputProps extends FormControllerProps<number[]> {
   label?: string;
@@ -41,6 +42,7 @@ const FormMultiLevelInput = ({
   const categoryListQuery = useCategoryListQuery();
   const createCategoryMutation = useCreateCategoryMutation();
   const [isOpen, setIsOpen] = useState(false);
+  const { ref: scrollElementRef, isScrolling } = useIsScrolling<HTMLDivElement>();
 
   const form = useFormWithGlobalError();
 
@@ -80,18 +82,18 @@ const FormMultiLevelInput = ({
         return (
           <>
             <div css={[styles.options, optionsWrapperStyle]}>
-              <div css={styles.categoryListWrapper}>
+              <div css={styles.categoryListWrapper} ref={scrollElementRef}>
                 {treeOptions.map((option, index) => (
                   <Branch
                     key={option.id}
                     option={option}
                     value={field.value}
                     isLastChild={index === treeOptions.length - 1}
-                    onChange={(id) => {
+                    onChange={id => {
                       field.onChange(
-                        produce(field.value, (draft) => {
+                        produce(field.value, draft => {
                           if (Array.isArray(draft)) {
-                            return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
+                            return draft.includes(id) ? draft.filter(item => item !== id) : [...draft, id];
                           }
                           return [id];
                         })
@@ -101,9 +103,9 @@ const FormMultiLevelInput = ({
                 ))}
               </div>
 
-              <div ref={triggerRef}>
+              <div ref={triggerRef} css={styles.addButtonWrapper({ isActive: isScrolling })}>
                 <button css={styles.addNewButton} onClick={() => setIsOpen(true)}>
-                  <SVGIcon width={24} height={24} name="plus" /> {__('Add new', 'tutor')}
+                  <SVGIcon width={24} height={24} name="plus" /> {__('Add', 'tutor')}
                 </button>
               </div>
             </div>
@@ -113,12 +115,12 @@ const FormMultiLevelInput = ({
                 <Controller
                   name="name"
                   control={form.control}
-                  render={(controllerProps) => <FormInput {...controllerProps} placeholder="Category name" />}
+                  render={controllerProps => <FormInput {...controllerProps} placeholder="Category name" />}
                 />
                 <Controller
                   name="parent"
                   control={form.control}
-                  render={(controllerProps) => (
+                  render={controllerProps => (
                     <FormMultiLevelSelect
                       {...controllerProps}
                       placeholder="Select parent"
@@ -208,6 +210,7 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.disable};
     border-radius: ${borderRadius[8]};
     padding: ${spacing[8]} 0;
+    background-color: ${colorTokens.bg.white};
   `,
   categoryListWrapper: css`
     max-height: 208px;
@@ -268,5 +271,12 @@ const styles = {
     display: flex;
     justify-content: end;
     gap: ${spacing[8]};
+  `,
+  addButtonWrapper: ({ isActive = false }) => css`
+    transition: box-shadow 0.3s ease-in-out;
+    ${isActive &&
+    css`
+      box-shadow: ${shadow.scrollable};
+    `}
   `,
 };
