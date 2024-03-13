@@ -44,6 +44,13 @@ const Curriculum = () => {
 
   const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
 
+  const createDuplicateTopic = (data: CourseTopic) => {
+    setContent(previousTopic => {
+      const newTopic = { ...data, ID: nanoid(), isCollapsed: false };
+      return [...previousTopic, newTopic];
+    });
+  };
+
   useEffect(() => {
     if (!courseCurriculumQuery.data) {
       return;
@@ -76,10 +83,6 @@ const Curriculum = () => {
     return <LoadingOverlay />;
   }
 
-  if (!courseCurriculumQuery.data) {
-    return null;
-  }
-
   return (
     <div css={styles.container}>
       <div css={styles.wrapper}>
@@ -94,7 +97,7 @@ const Curriculum = () => {
 
         <div css={styles.content}>
           <Show
-            when={content}
+            when={content.length > 0}
             fallback={
               <EmptyState
                 emptyStateImage={emptyStateImage}
@@ -103,7 +106,26 @@ const Curriculum = () => {
                 title="Create the course journey from here!"
                 description="when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
                 actions={
-                  <Button variant="secondary" icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}>
+                  <Button
+                    variant="secondary"
+                    icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
+                    onClick={() => {
+                      // @TODO: will be updated later.
+                      setContent(previous => {
+                        return [
+                          ...previous.map(item => ({ ...item, isCollapsed: true })),
+                          {
+                            ID: nanoid(),
+                            post_title: 'New Course Topic',
+                            post_content: '',
+                            post_name: '',
+                            content: [],
+                            isCollapsed: false,
+                          },
+                        ];
+                      });
+                    }}
+                  >
                     {__('Add Topic', 'tutor')}
                   </Button>
                 }
@@ -163,6 +185,9 @@ const Curriculum = () => {
                               })
                             )
                           }
+                          onCopy={() => {
+                            createDuplicateTopic(topic);
+                          }}
                           onSort={(activeIndex, overIndex) => {
                             setContent(previous => {
                               return previous.map((item, idx) => {
@@ -194,30 +219,32 @@ const Curriculum = () => {
             </DndContext>
           </Show>
         </div>
-        <div css={styles.addButtonWrapper}>
-          <Button
-            variant="secondary"
-            icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
-            onClick={() => {
-              // @TODO: will be updated later.
-              setContent(previous => {
-                return [
-                  ...previous.map(item => ({ ...item, isCollapsed: true })),
-                  {
-                    ID: nanoid(),
-                    post_title: 'New Course Topic',
-                    post_content: '',
-                    post_name: '',
-                    content: [],
-                    isCollapsed: false,
-                  },
-                ];
-              });
-            }}
-          >
-            {__('Add Topic', 'tutor')}
-          </Button>
-        </div>
+        <Show when={content.length > 0}>
+          <div css={styles.addButtonWrapper}>
+            <Button
+              variant="secondary"
+              icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
+              onClick={() => {
+                // @TODO: will be updated later.
+                setContent(previous => {
+                  return [
+                    ...previous.map(item => ({ ...item, isCollapsed: true })),
+                    {
+                      ID: nanoid(),
+                      post_title: 'New Course Topic',
+                      post_content: '',
+                      post_name: '',
+                      content: [],
+                      isCollapsed: false,
+                    },
+                  ];
+                });
+              }}
+            >
+              {__('Add Topic', 'tutor')}
+            </Button>
+          </div>
+        </Show>
       </div>
     </div>
   );

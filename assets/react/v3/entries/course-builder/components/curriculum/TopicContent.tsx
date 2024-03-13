@@ -15,6 +15,8 @@ interface TopicContentProps {
   type: ContentType;
   content: { id: ID; title: string; questionCount?: number };
   isDragging?: boolean;
+  onDelete?: () => void;
+  onCopy?: () => void;
 }
 
 const icons = {
@@ -42,7 +44,7 @@ const icons = {
 
 const animateLayoutChanges: AnimateLayoutChanges = args => defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
-const TopicContent = ({ type, content, isDragging = false }: TopicContentProps) => {
+const TopicContent = ({ type, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
   const icon = icons[type];
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: content.id,
@@ -87,13 +89,7 @@ const TopicContent = ({ type, content, isDragging = false }: TopicContentProps) 
         >
           <SVGIcon name="edit" width={24} height={24} />
         </button>
-        <button
-          type="button"
-          css={styles.actionButton}
-          onClick={() => {
-            alert('@TODO: will be implemented later');
-          }}
-        >
+        <button type="button" css={styles.actionButton} onClick={onCopy}>
           <SVGIcon name="copyPaste" width={24} height={24} />
         </button>
         <button

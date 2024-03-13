@@ -258,7 +258,7 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[16]};
     padding-block: ${spacing[24]};
-    padding-inline: ${spacing[24]} ${spacing[64]};
+    padding-inline: ${spacing[64]} ${spacing[24]};
   `,
   timeLimit: css`
     display: grid;
