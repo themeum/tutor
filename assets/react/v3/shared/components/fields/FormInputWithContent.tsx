@@ -1,11 +1,11 @@
-import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
 import { ReactNode } from 'react';
 
-import FormFieldWrapper from './FormFieldWrapper';
 import { styleUtils } from '@Utils/style-utils';
+import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormInputWithContentProps extends FormControllerProps<string | number | null | undefined> {
   content: string | ReactNode;
@@ -122,6 +122,7 @@ const styles = {
     border: none;
     box-shadow: none;
     background-color: transparent;
+    padding-${contentPosition}: 0;
     ${showVerticalBar &&
     css`
         padding-${contentPosition}: ${spacing[10]};

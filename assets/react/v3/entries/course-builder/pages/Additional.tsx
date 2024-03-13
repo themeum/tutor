@@ -206,7 +206,7 @@ const styles = {
     grid-template-columns: 1fr 402px;
   `,
   mainForm: css`
-    padding: ${spacing[24]} ${spacing[64]};
+    padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} 0;
   `,
   fieldsWrapper: css`
     position: sticky;
@@ -226,7 +226,7 @@ const styles = {
   `,
   sidebar: css`
     ${styleUtils.display.flex('column')}
-    padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} ${spacing[64]};
+    padding: ${spacing[24]} 0 ${spacing[24]} ${spacing[32]};
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
     gap: ${spacing[16]};

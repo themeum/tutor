@@ -1,7 +1,7 @@
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
-import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
@@ -114,7 +114,7 @@ const styles = {
 
     ::placeholder {
       ${typography.caption('regular')};
-      color: ${colorTokens.text.subdued};
+      color: ${colorTokens.text.hints};
 
       ${options.isSecondary &&
       css`

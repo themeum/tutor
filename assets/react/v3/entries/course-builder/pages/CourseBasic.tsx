@@ -1,28 +1,28 @@
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
-import { css } from '@emotion/react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import { __ } from '@wordpress/i18n';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import SVGIcon from '@Atoms/SVGIcon';
+import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
+import FormImageInput from '@Components/fields/FormImageInput';
+import FormInput from '@Components/fields/FormInput';
+import FormInputWithContent from '@Components/fields/FormInputWithContent';
+import FormRadioGroup from '@Components/fields/FormRadioGroup';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormSelectUser from '@Components/fields/FormSelectUser';
+import FormTagsInput from '@Components/fields/FormTagsInput';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import { tutorConfig } from '@Config/config';
+import { TutorRoles } from '@Config/constants';
+import { colorTokens, headerHeight, spacing } from '@Config/styles';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
-import FormImageInput from '@Components/fields/FormImageInput';
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormTagsInput from '@Components/fields/FormTagsInput';
-import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
-import FormSelectUser from '@Components/fields/FormSelectUser';
-import { useUserListQuery } from '@Services/users';
-import { useState } from 'react';
-import { CourseFormData } from '@CourseBuilderServices/course';
-import { TutorRoles } from '@Config/constants';
-import { tutorConfig } from '@Config/config';
-import { maxValueRule, requiredRule } from '@Utils/validation';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import { CourseFormData } from '@CourseBuilderServices/course';
+import { useUserListQuery } from '@Services/users';
+import { maxValueRule, requiredRule } from '@Utils/validation';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
@@ -269,7 +269,7 @@ const styles = {
   wrapper: css`
     display: grid;
     grid-template-columns: 1fr 370px;
-    gap: ${spacing[64]};
+    gap: ${spacing[32]};
   `,
   mainForm: css`
     padding-block: ${spacing[24]};
@@ -297,7 +297,7 @@ const styles = {
   sidebar: css`
     border-left: 1px solid ${colorTokens.stroke.default};
     min-height: calc(100vh - ${headerHeight}px);
-    padding-left: ${spacing[64]};
+    padding-left: ${spacing[32]};
     padding-block: ${spacing[24]};
 
     display: flex;
