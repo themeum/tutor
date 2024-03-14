@@ -45,7 +45,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller } from 'react-hook-form';
 import TopicContent from './TopicContent';
-import Tabs from '@Molecules/Tabs';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -86,7 +85,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     },
   });
 
-  const { showModal, closeModal } = useModal();
+  const { showModal } = useModal();
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {

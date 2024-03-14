@@ -13,7 +13,6 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import Tabs from '@Molecules/Tabs';
 import { styleUtils } from '@Utils/style-utils';
 import { Option } from '@Utils/types';
-import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
@@ -215,7 +214,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
               />
             </div>
           </div>
-          S
         </div>
       </div>
     </ModalWrapper>
