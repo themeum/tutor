@@ -195,9 +195,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                       <ThreeDots.Option text="Duplicate" icon={<SVGIcon name="duplicate" width={24} height={24} />} />
                       <ThreeDots.Option text="Delete" icon={<SVGIcon name="delete" width={24} height={24} />} />
                     </ThreeDots>
-                    {/* <button type="button" css={styles.threeDotsButton} data-three-dots>
-                      <SVGIcon name="threeDotsVertical" width={32} height={32} />
-                    </button> */}
                   </div>
                 )}
               </For>
