@@ -1,16 +1,20 @@
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
-import { colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { Option } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 interface QuizModalProps extends ModalProps {
@@ -30,6 +34,8 @@ export type QuestionType =
   | 'ordering';
 
 interface QuizForm {
+  quiz_title: string;
+  quiz_description: string;
   question_type: QuestionType;
   answer_required: boolean;
   randomize: boolean;
@@ -40,6 +46,8 @@ interface QuizForm {
 const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProps) => {
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {
+      quiz_title: '',
+      quiz_description: '',
       question_type: 'true-false',
       answer_required: false,
       randomize: false,
@@ -47,6 +55,13 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
       display_point: true,
     },
   });
+  const [isEdit, setIsEdit] = useState<boolean>(!!form.getValues('quiz_title'));
+
+  const onQuizFormSubmit = (data: QuizForm) => {
+    // @TODO: will be implemented later
+    alert(JSON.stringify(data, null, 2));
+    setIsEdit(false);
+  };
 
   const questionTypeOptions: Option<QuestionType>[] = [
     {
@@ -111,7 +126,51 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
     >
       <div css={styles.wrapper}>
         <div css={styles.left}>
-          <div css={styles.quizName}>General Knowledge</div>
+          <div css={styles.quizTitleWrapper}>
+            <Show
+              when={isEdit}
+              fallback={
+                <div css={styles.quizNameWithButton}>
+                  <span css={styles.quizTitle}>General knowledge</span>
+                  <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
+                    <SVGIcon name="edit" width={24} height={24} />
+                  </Button>
+                </div>
+              }
+            >
+              <div css={styles.quizForm}>
+                <Controller
+                  control={form.control}
+                  name="quiz_title"
+                  rules={{ required: __('Quiz title is required', 'tutor') }}
+                  render={controllerProps => (
+                    <FormInput {...controllerProps} placeholder={__('Add quiz title', 'tutor')} />
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="quiz_description"
+                  render={controllerProps => (
+                    <FormTextareaInput
+                      {...controllerProps}
+                      placeholder={__('Add a summary', 'tutor')}
+                      enableResize
+                      rows={2}
+                    />
+                  )}
+                />
+
+                <div css={styles.quizFormButtonWrapper}>
+                  <Button variant="text" type="button" onClick={() => setIsEdit(false)} size="small">
+                    {__('Cancel', 'tutor')}
+                  </Button>
+                  <Button variant="secondary" type="submit" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
+                    {__('Save', 'tutor')}
+                  </Button>
+                </div>
+              </div>
+            </Show>
+          </div>
           <div css={styles.questionsLabel}>
             <span>Questions</span>
             <button type="button" onClick={() => alert('@TODO: will be implemented later')}>
@@ -192,11 +251,43 @@ const styles = {
     gap: ${spacing[16]};
     border-left: 1px solid ${colorTokens.stroke.divider};
   `,
-  quizName: css`
+  quizTitleWrapper: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
     padding: ${spacing[16]} ${spacing[32]} ${spacing[16]} ${spacing[28]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
+  `,
+  quizNameWithButton: css`
+    display: inline-flex;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+
+    button {
+      display: none;
+    }
+
+    :hover {
+      button {
+        display: block;
+      }
+    }
+  `,
+  quizTitle: css`
+    flex: 1;
+    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[8]};
+    background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius[6]};
+  `,
+  quizForm: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
+  quizFormButtonWrapper: css`
+    display: flex;
+    justify-content: end;
+    margin-top: ${spacing[4]};
+    gap: ${spacing[8]};
   `,
   questionsLabel: css`
     display: flex;
