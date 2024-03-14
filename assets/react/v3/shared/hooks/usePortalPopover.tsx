@@ -25,6 +25,10 @@ interface PopoverHookArgs<T> {
   arrow?: arrowPosition;
   gap?: number;
   isDropdown?: boolean;
+  positionModifier?: {
+    top: number;
+    left: number;
+  };
 }
 
 interface PopoverPosition {
@@ -39,6 +43,10 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
   arrow = ArrowPosition.auto,
   gap = 10,
   isDropdown = false,
+  positionModifier = {
+    top: 0,
+    left: 0,
+  },
 }: PopoverHookArgs<T>) => {
   const triggerRef = useMemo(() => {
     return popoverTriggerRef || { current: null };
@@ -87,26 +95,27 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
         return Math.floor(triggerRect.right - popoverWidth);
       }
 
-      return Math.floor(triggerRect.left - (popoverWidth - triggerWidth) / 2);
+      return Math.floor(triggerRect.left - (popoverWidth - triggerWidth) / 2) + positionModifier.left;
     };
-    const getTopForLeftRight = () => Math.floor(triggerRect.top - popoverHeight / 2 + triggerRect.height / 2);
+    const getTopForLeftRight = () =>
+      Math.floor(triggerRect.top - popoverHeight / 2 + triggerRect.height / 2) + positionModifier.top;
 
     const positions = {
       top: {
-        top: Math.floor(triggerRect.top - popoverHeight - gap),
+        top: Math.floor(triggerRect.top - popoverHeight - gap + positionModifier.top),
         left: getLeftForTopBottom(),
       },
       bottom: {
-        top: Math.floor(triggerRect.bottom + gap),
+        top: Math.floor(triggerRect.bottom + gap + positionModifier.top),
         left: getLeftForTopBottom(),
       },
       left: {
         top: getTopForLeftRight(),
-        left: Math.floor(triggerRect.left - popoverWidth - gap),
+        left: Math.floor(triggerRect.left - popoverWidth - gap + positionModifier.left),
       },
       right: {
         top: getTopForLeftRight(),
-        left: Math.floor(triggerRect.right + gap),
+        left: Math.floor(triggerRect.right + gap + positionModifier.left),
       },
       middle: {
         top: heightDifference < 0 ? 0 : heightDifference / 2,
