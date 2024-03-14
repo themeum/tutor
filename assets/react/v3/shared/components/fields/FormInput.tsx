@@ -1,15 +1,14 @@
-import React from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
+import { SerializedStyles, css } from '@emotion/react';
 
-import FormFieldWrapper from './FormFieldWrapper';
-import { parseNumberOnly } from '@Utils/util';
-import { isDefined } from '@Utils/types';
 import Show from '@Controls/Show';
+import { isDefined } from '@Utils/types';
+import { parseNumberOnly } from '@Utils/util';
+import FormFieldWrapper from './FormFieldWrapper';
 
 const styles = {
   container: (isClearable: boolean) => css`
@@ -53,6 +52,8 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   isSecondary?: boolean;
   removeBorder?: boolean;
   dataAttribute?: string;
+  isInlineLabel?: boolean;
+  style?: SerializedStyles;
 }
 
 const FormInput = ({
@@ -73,6 +74,8 @@ const FormInput = ({
   isSecondary = false,
   removeBorder,
   dataAttribute,
+  isInlineLabel = false,
+  style,
 }: FormInputProps) => {
   let inputValue = field.value ?? '';
   let characterCount;
@@ -102,6 +105,8 @@ const FormInput = ({
       characterCount={characterCount}
       isSecondary={isSecondary}
       removeBorder={removeBorder}
+      isInlineLabel={isInlineLabel}
+      inputStyle={style}
     >
       {inputProps => {
         return (

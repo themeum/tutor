@@ -1,17 +1,18 @@
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
-import { Option, isDefined } from '@Utils/types';
+import { IconCollection, Option, isDefined } from '@Utils/types';
+import { css } from '@emotion/react';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
-import FormFieldWrapper from './FormFieldWrapper';
+import Show from '@Controls/Show';
 import { noop } from '@Utils/util';
 import { __ } from '@wordpress/i18n';
+import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {
   label?: string;
@@ -60,7 +61,7 @@ const FormSelectInput = <T,>({
   dataAttribute,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = useCallback(() => {
-    return options.find((item) => item.value === field.value)?.label || '';
+    return options.find(item => item.value === field.value)?.label || '';
   }, [options, field.value]);
 
   const [inputValue, setInputValue] = useState(getInitialValue);
@@ -74,6 +75,10 @@ const FormSelectInput = <T,>({
 
     return options;
   }, [searchText, isSearchable, options]);
+
+  const selectedItem = useMemo(() => {
+    return options.find(item => item.value === field.value);
+  }, [field.value, options]);
 
   const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -106,23 +111,28 @@ const FormSelectInput = <T,>({
       helpText={helpText}
       removeBorder={removeBorder}
     >
-      {(inputProps) => {
+      {inputProps => {
         const { css: inputCss, ...restInputProps } = inputProps;
 
         return (
           <div css={styles.mainWrapper}>
             <div css={styles.inputWrapper} ref={triggerRef}>
-              <div css={styles.leftIcon}>{leftIcon}</div>
+              <div css={styles.leftIcon}>
+                <Show when={leftIcon}>{leftIcon}</Show>
+                <Show when={selectedItem?.icon}>
+                  {iconName => <SVGIcon name={iconName as IconCollection} width={32} height={32} />}
+                </Show>
+              </div>
               <input
                 {...restInputProps}
                 {...additionalAttributes}
-                onClick={() => setIsOpen((previousState) => !previousState)}
-                css={[inputCss, styles.input(!!leftIcon)]}
+                onClick={() => setIsOpen(previousState => !previousState)}
+                css={[inputCss, styles.input(!!leftIcon || !!selectedItem?.icon)]}
                 autoComplete="off"
                 readOnly={readOnly || !isSearchable}
                 placeholder={placeholder}
                 value={inputValue}
-                onChange={(event) => {
+                onChange={event => {
                   setInputValue(event.target.value);
                   setSearchText(event.target.value);
                 }}
@@ -133,7 +143,7 @@ const FormSelectInput = <T,>({
                   type="button"
                   css={styles.caretButton}
                   onClick={() => {
-                    setIsOpen((previousState) => !previousState);
+                    setIsOpen(previousState => !previousState);
                   }}
                   disabled={readOnly || options.length === 0}
                 >
@@ -160,7 +170,7 @@ const FormSelectInput = <T,>({
               >
                 <ul css={[styles.options(removeOptionsMinWidth)]}>
                   {!!listLabel && <li css={styles.listLabel}>{listLabel}</li>}
-                  {selections.map((option) => (
+                  {selections.map(option => (
                     <li
                       key={String(option.value)}
                       css={styles.optionItem({
@@ -176,7 +186,10 @@ const FormSelectInput = <T,>({
                           setIsOpen(false);
                         }}
                       >
-                        {option.label}
+                        <Show when={option.icon}>
+                          <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
+                        </Show>
+                        <span>{option.label}</span>
                       </button>
                     </li>
                   ))}
@@ -335,6 +348,7 @@ const styles = {
     width: 100%;
     height: 100%;
     display: flex;
+    align-items: center;
     gap: ${spacing[8]};
     margin: 0 ${spacing[12]};
     padding: ${spacing[6]} 0;
@@ -342,6 +356,10 @@ const styles = {
     line-height: ${lineHeight[24]};
     word-break: break-all;
     cursor: pointer;
+
+    span {
+      flex-shrink: 0;
+    }
   `,
   toggleIcon: ({ isOpen = false }: { isOpen: boolean }) => css`
     color: ${colorTokens.icon.default};

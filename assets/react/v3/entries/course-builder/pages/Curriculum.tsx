@@ -42,13 +42,7 @@ const Curriculum = () => {
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
 
   const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
-
-  const createDuplicateTopic = (data: CourseTopic) => {
-    setContent(previousTopic => {
-      const newTopic = { ...data, ID: nanoid(), isCollapsed: false };
-      return [...previousTopic, newTopic];
-    });
-  };
+  
 
   useEffect(() => {
     if (!courseCurriculumQuery.data) {
@@ -61,6 +55,14 @@ const Curriculum = () => {
     setContent(previous => previous.map(item => ({ ...item, isCollapsed: allCollapsed })));
   }, [allCollapsed]);
 
+  const activeSortItem = useMemo(() => {
+    if (!activeSortId) {
+      return null;
+    }
+
+    return content.find(item => item.ID === activeSortId);
+  }, [activeSortId, content]);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -70,17 +72,16 @@ const Curriculum = () => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const activeSortItem = useMemo(() => {
-    if (!activeSortId) {
-      return null;
-    }
-
-    return content.find(item => item.ID === activeSortId);
-  }, [activeSortId, content]);
-
   if (courseCurriculumQuery.isLoading) {
     return <LoadingOverlay />;
   }
+
+  const createDuplicateTopic = (data: CourseTopic) => {
+    setContent(previousTopic => {
+      const newTopic = { ...data, ID: nanoid(), isCollapsed: false };
+      return [...previousTopic, newTopic];
+    });
+  };
 
   return (
     <div css={styles.container}>
