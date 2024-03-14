@@ -54,9 +54,9 @@ const ModalWrapper = ({
                   <span css={styles.subtitle}>{subtitle}</span>
                 </Show>
               </div>
-              <Show when={headerChildren}>
-                <div css={styles.haederChildren}>{headerChildren}</div>
-              </Show>
+              <div css={styles.headerChildren}>
+                <Show when={headerChildren}>{headerChildren}</Show>
+              </div>
               <div css={styles.actionsWrapper}>
                 <Show
                   when={actions}
@@ -100,20 +100,16 @@ const styles = {
     }
   `,
   header: css`
-    display: inline-flex;
-    justify-content: space-between;
+    /* display: flex;
+    justify-content: space-between; */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     width: 100%;
     height: ${modal.HEADER_HEIGHT}px;
     background: ${colorTokens.background.white};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     position: sticky;
-  `,
-  haederChildren: css`
-    flex: 0 1 auto;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
   `,
   headerContent: css`
     display: inline-flex;
@@ -130,6 +126,10 @@ const styles = {
       }
     }
   `,
+  headerChildren: css`
+    place-self: center center;
+  `,
+
   iconWithTitle: css`
     display: inline-flex;
     align-items: center;
@@ -145,6 +145,7 @@ const styles = {
     color: ${colorTokens.text.hints};
   `,
   actionsWrapper: css`
+    place-self: center end;
     display: inline-flex;
     gap: ${spacing[16]};
     padding-right: ${spacing[24]};
