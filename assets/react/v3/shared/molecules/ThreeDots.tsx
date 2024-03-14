@@ -1,4 +1,3 @@
-import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -7,9 +6,8 @@ import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
 import React, { MouseEvent, ReactNode, useRef } from 'react';
 
-import Popover from './Popover';
-import Show from '@Controls/Show';
 import { rgba } from 'polished';
+import Popover from './Popover';
 
 interface ThreeDotsOptionProps {
   text: string | ReactNode;
@@ -75,11 +73,19 @@ const ThreeDots = ({
   maxWidth = '148px',
   isInverse = false,
   hideArrow = false,
+  ...props
 }: ThreeDotsProps) => {
   const ref = useRef<HTMLButtonElement>(null);
   return (
     <>
-      <button type="button" ref={ref} onClick={onClick} css={styles.button({ isOpen, isInverse })} disabled={disabled}>
+      <button
+        type="button"
+        ref={ref}
+        onClick={onClick}
+        css={styles.button({ isOpen, isInverse })}
+        disabled={disabled}
+        {...props}
+      >
         <SVGIcon name={dotsOrientation === 'horizontal' ? 'threeDots' : 'threeDotsVertical'} width={32} height={32} />
       </button>
       <Popover
