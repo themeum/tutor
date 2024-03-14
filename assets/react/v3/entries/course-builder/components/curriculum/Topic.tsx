@@ -45,6 +45,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller } from 'react-hook-form';
 import TopicContent from './TopicContent';
+import Tabs from '@Molecules/Tabs';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -366,26 +367,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                       title: __('Quiz', 'tutor'),
                       icon: <SVGIcon name="quiz" width={24} height={24} />,
                       subtitle: __(`Topic: ${topic.post_title}`, 'tutor'),
-                      actions: (
-                        <>
-                          <Button
-                            variant="text"
-                            size="small"
-                            onClick={() => {
-                              closeModal();
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            variant="primary"
-                            size="small"
-                            onClick={() => alert('@TODO: will be implemented later')}
-                          >
-                            Next
-                          </Button>
-                        </>
-                      ),
                     },
                   });
                 }}

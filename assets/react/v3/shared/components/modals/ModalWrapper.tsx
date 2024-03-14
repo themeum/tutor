@@ -5,7 +5,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 interface ModalWrapperProps {
   children: React.ReactNode;

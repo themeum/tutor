@@ -1,16 +1,22 @@
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
+import { modal } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import Tabs from '@Molecules/Tabs';
 import { styleUtils } from '@Utils/style-utils';
 import { Option } from '@Utils/types';
+import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 interface QuizModalProps extends ModalProps {
@@ -47,6 +53,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
       display_point: true,
     },
   });
+  const [activeTab, setActiveTab] = useState<'questions' | 'settings'>('questions');
 
   const questionTypeOptions: Option<QuestionType>[] = [
     {
@@ -107,7 +114,47 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
       icon={icon}
       title={title}
       subtitle={subtitle}
-      actions={actions}
+      headerChildren={
+        <Tabs
+          wrapperCss={css`
+            height: ${modal.HEADER_HEIGHT}px;
+          `}
+          activeTab={activeTab}
+          tabList={[
+            {
+              label: __('Questions', 'tutor'),
+              value: 'questions',
+            },
+            { label: __('Settings', 'tutor'), value: 'settings' },
+          ]}
+          onChange={tab => setActiveTab(tab)}
+        />
+      }
+      actions={
+        <>
+          <Button
+            variant="text"
+            size="small"
+            onClick={() => {
+              closeModal();
+            }}
+          >
+            Cancel
+          </Button>
+          <Show
+            when={activeTab === 'settings'}
+            fallback={
+              <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                Next
+              </Button>
+            }
+          >
+            <Button variant="primary" size="small" onClick={() => alert('@TODO: will be implemenetd later')}>
+              Save
+            </Button>
+          </Show>
+        </>
+      }
     >
       <div css={styles.wrapper}>
         <div css={styles.left}>
@@ -120,7 +167,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
           </div>
           <div css={styles.questionList}>@TODO: Question list</div>
         </div>
-        <div css={styles.content}>@TODO: Question content</div>
+        <Show when={activeTab === 'settings'} fallback={<div css={styles.content}>@TODO: Question content</div>}>
+          <div css={styles.content}>@TODO: Setting content</div>
+        </Show>
         <div css={styles.right}>
           <div css={styles.questionTypeWrapper}>
             <Controller
@@ -166,6 +215,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
               />
             </div>
           </div>
+          S
         </div>
       </div>
     </ModalWrapper>
