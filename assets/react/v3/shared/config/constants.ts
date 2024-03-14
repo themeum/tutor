@@ -12,7 +12,7 @@ export const isRTL = document.dir === 'rtl';
 
 export const modal = {
   HEADER_HEIGHT: 56,
-  MARGIN_TOP: 60,
+  MARGIN_TOP: 88,
 };
 
 export const TutorRoles = {

@@ -87,7 +87,7 @@ const styles = {
     position: relative;
     background: ${colorTokens.background.white};
     margin: ${spacing[24]};
-    margin-top: 60px;
+    margin-top: ${modal.MARGIN_TOP}px;
     height: 100%;
     max-width: 1472px;
     box-shadow: ${shadow.modal};
@@ -119,7 +119,7 @@ const styles = {
     display: inline-flex;
     align-items: center;
     gap: ${spacing[12]};
-    padding-inline: ${spacing[24]} 0;
+    padding-left: ${spacing[24]};
 
     & span {
       ::before {
@@ -147,7 +147,7 @@ const styles = {
   actionsWrapper: css`
     display: inline-flex;
     gap: ${spacing[16]};
-    padding-inline: 0 ${spacing[24]};
+    padding-right: ${spacing[24]};
   `,
   closeButton: css`
     ${styleUtils.resetButton};
