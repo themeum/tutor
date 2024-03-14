@@ -55,7 +55,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
       display_point: true,
     },
   });
-  const [isEdit, setIsEdit] = useState<boolean>(!!form.getValues('quiz_title'));
+
+  // @TODO: isEdit will be calculated based on the quiz data form API
+  const [isEdit, setIsEdit] = useState<boolean>(true);
 
   const onQuizFormSubmit = (data: QuizForm) => {
     // @TODO: will be implemented later
