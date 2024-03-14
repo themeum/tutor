@@ -100,8 +100,6 @@ const styles = {
     }
   `,
   header: css`
-    /* display: flex;
-    justify-content: space-between; */
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
@@ -112,6 +110,7 @@ const styles = {
     position: sticky;
   `,
   headerContent: css`
+    place-self: center start;
     display: inline-flex;
     align-items: center;
     gap: ${spacing[12]};
