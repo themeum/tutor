@@ -101,7 +101,7 @@ const styles = {
   `,
   header: css`
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     width: 100%;
     height: ${modal.HEADER_HEIGHT}px;
