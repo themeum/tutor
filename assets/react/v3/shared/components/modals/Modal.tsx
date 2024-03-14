@@ -29,6 +29,7 @@ export type ModalProps = {
   icon?: React.ReactNode;
   title?: string;
   subtitle?: string;
+  headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
   actions?: React.ReactNode;
 };
@@ -69,8 +70,8 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   });
 
   const showModal = useCallback<ModalContextType['showModal']>(({ component, props, closeOnOutsideClick = false }) => {
-    return new Promise((resolve) => {
-      setState((previousState) => ({
+    return new Promise(resolve => {
+      setState(previousState => ({
         ...previousState,
         modals: [...previousState.modals, { component, props, resolve, closeOnOutsideClick, id: nanoid() }],
       }));
@@ -78,7 +79,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   }, []);
 
   const closeModal = useCallback<ModalContextType['closeModal']>((data = { action: 'CLOSE' }) => {
-    setState((previousState) => {
+    setState(previousState => {
       const lastModal = previousState.modals[previousState.modals.length - 1];
       lastModal.resolve(data);
       return {

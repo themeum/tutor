@@ -1,4 +1,5 @@
 import SVGIcon from '@Atoms/SVGIcon';
+import { modal } from '@Config/constants';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -13,10 +14,20 @@ interface ModalWrapperProps {
   title?: string;
   subtitle?: string;
   actions?: React.ReactNode;
+  headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
 }
 
-const ModalWrapper = ({ children, onClose, title, subtitle, icon, entireHeader, actions }: ModalWrapperProps) => {
+const ModalWrapper = ({
+  children,
+  onClose,
+  title,
+  subtitle,
+  icon,
+  headerChildren,
+  entireHeader,
+  actions,
+}: ModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 
@@ -34,17 +45,24 @@ const ModalWrapper = ({ children, onClose, title, subtitle, icon, entireHeader, 
             <>
               <div css={styles.headerContent}>
                 <div css={styles.iconWithTitle}>
-                  {icon && icon}
-                  {title && <h6 css={styles.title}>{title}</h6>}
+                  <Show when={icon}>{icon}</Show>
+                  <Show when={title}>
+                    <h6 css={styles.title}>{title}</h6>
+                  </Show>
                 </div>
-                {subtitle && <span css={styles.subtitle}>{subtitle}</span>}
+                <Show when={subtitle}>
+                  <span css={styles.subtitle}>{subtitle}</span>
+                </Show>
+              </div>
+              <div css={styles.headerChildren}>
+                <Show when={headerChildren}>{headerChildren}</Show>
               </div>
               <div css={styles.actionsWrapper}>
                 <Show
                   when={actions}
                   fallback={
-                    <button type='button' css={styles.closeButton} onClick={onClose}>
-                      <SVGIcon name='times' width={14} height={14} />
+                    <button type="button" css={styles.closeButton} onClick={onClose}>
+                      <SVGIcon name="times" width={14} height={14} />
                     </button>
                   }
                 >
@@ -69,7 +87,7 @@ const styles = {
     position: relative;
     background: ${colorTokens.background.white};
     margin: ${spacing[24]};
-    margin-top: 88px;
+    margin-top: ${modal.MARGIN_TOP}px;
     height: 100%;
     max-width: 1218px;
     box-shadow: ${shadow.modal};
@@ -82,20 +100,21 @@ const styles = {
     }
   `,
   header: css`
-    display: inline-flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    padding: ${spacing[20]};
     width: 100%;
-    height: 56px;
+    height: ${modal.HEADER_HEIGHT}px;
     background: ${colorTokens.background.white};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     position: sticky;
   `,
   headerContent: css`
+    place-self: center start;
     display: inline-flex;
     align-items: center;
     gap: ${spacing[12]};
+    padding-left: ${spacing[24]};
 
     & span {
       ::before {
@@ -106,6 +125,10 @@ const styles = {
       }
     }
   `,
+  headerChildren: css`
+    place-self: center center;
+  `,
+
   iconWithTitle: css`
     display: inline-flex;
     align-items: center;
@@ -121,8 +144,10 @@ const styles = {
     color: ${colorTokens.text.hints};
   `,
   actionsWrapper: css`
+    place-self: center end;
     display: inline-flex;
     gap: ${spacing[16]};
+    padding-right: ${spacing[24]};
   `,
   closeButton: css`
     ${styleUtils.resetButton};
