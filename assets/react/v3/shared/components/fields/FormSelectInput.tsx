@@ -118,13 +118,16 @@ const FormSelectInput = <T,>({
           <div css={styles.mainWrapper}>
             <div css={styles.inputWrapper} ref={triggerRef}>
               <div css={styles.leftIcon}>
-                {leftIcon || <SVGIcon name={selectedItem?.icon as IconCollection} width={32} height={32} />}
+                <Show when={leftIcon}>{leftIcon}</Show>
+                <Show when={selectedItem?.icon}>
+                  {iconName => <SVGIcon name={iconName as IconCollection} width={32} height={32} />}
+                </Show>
               </div>
               <input
                 {...restInputProps}
                 {...additionalAttributes}
                 onClick={() => setIsOpen(previousState => !previousState)}
-                css={[inputCss, styles.input(!!leftIcon)]}
+                css={[inputCss, styles.input(!!leftIcon || !!selectedItem?.icon)]}
                 autoComplete="off"
                 readOnly={readOnly || !isSearchable}
                 placeholder={placeholder}

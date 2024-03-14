@@ -5,6 +5,7 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { FormControllerProps } from '@Utils/form';
+import { isDefined } from '@Utils/types';
 import { nanoid } from '@Utils/util';
 import { ReactNode } from 'react';
 
@@ -41,6 +42,7 @@ interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
   removeBorder?: boolean;
   characterCount?: { maxLimit: number; inputCharacter: number };
   isSecondary?: boolean;
+  inputStyle?: SerializedStyles;
 }
 
 const styles = {
@@ -193,24 +195,31 @@ const FormFieldWrapper = <T,>({
   removeBorder = false,
   characterCount,
   isSecondary = false,
+  inputStyle,
 }: FormFieldWrapperProps<T>) => {
   const id = nanoid();
+
+  const inputCss = [
+    styles.input({
+      variant,
+      hasFieldError: !!fieldState.error,
+      removeBorder,
+      readOnly,
+      hasHelpText: !!helpText,
+      isSecondary,
+    }),
+  ];
+
+  if (isDefined(inputStyle)) {
+    inputCss.push(inputStyle);
+  }
 
   const inputContent = (
     <div css={styles.inputWrapper}>
       {children({
         id,
         name: field.name,
-        css: [
-          styles.input({
-            variant,
-            hasFieldError: !!fieldState.error,
-            removeBorder,
-            readOnly,
-            hasHelpText: !!helpText,
-            isSecondary,
-          }),
-        ],
+        css: inputCss,
         'aria-invalid': fieldState.error ? 'true' : 'false',
         disabled: disabled,
         readOnly: readOnly,

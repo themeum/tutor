@@ -1,5 +1,7 @@
 import SVGIcon from '@Atoms/SVGIcon';
+import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormSwitch from '@Components/fields/FormSwitch';
 import { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 import { colorTokens, spacing } from '@Config/styles';
@@ -15,7 +17,7 @@ interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
 }
 
-export type QuizType =
+export type QuestionType =
   | 'true-false'
   | 'single-choice'
   | 'multiple-choice'
@@ -28,7 +30,7 @@ export type QuizType =
   | 'ordering';
 
 interface QuizForm {
-  quiz_type: QuizType;
+  question_type: QuestionType;
   answer_required: boolean;
   randomize: boolean;
   point: number;
@@ -38,7 +40,7 @@ interface QuizForm {
 const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProps) => {
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {
-      quiz_type: 'true-false',
+      question_type: 'true-false',
       answer_required: false,
       randomize: false,
       point: 0,
@@ -46,7 +48,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
     },
   });
 
-  const quizTypeOptions: Option<QuizType>[] = [
+  const questionTypeOptions: Option<QuestionType>[] = [
     {
       label: __('True/ False', 'tutor'),
       value: 'true-false',
@@ -112,24 +114,58 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
           <div css={styles.quizName}>General Knowledge</div>
           <div css={styles.questionsLabel}>
             <span>Questions</span>
-            <button type="button">
+            <button type="button" onClick={() => alert('@TODO: will be implemented later')}>
               <SVGIcon name="plusSquareBrand" />
             </button>
           </div>
           <div css={styles.questionList}>@TODO: Question list</div>
         </div>
-        <div css={styles.content}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil autem totam amet sequi reprehenderit numquam
-          nostrum cumque ex ad earum! Nesciunt alias voluptate, quibusdam expedita delectus rerum ducimus et at.
-        </div>
+        <div css={styles.content}>@TODO: Question content</div>
         <div css={styles.right}>
-          <Controller
-            control={form.control}
-            name="quiz_type"
-            render={controllerProps => (
-              <FormSelectInput {...controllerProps} label="Quiz Type" options={quizTypeOptions} />
-            )}
-          />
+          <div css={styles.questionTypeWrapper}>
+            <Controller
+              control={form.control}
+              name="question_type"
+              render={controllerProps => (
+                <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
+              )}
+            />
+          </div>
+          <div css={styles.conditions}>
+            <p>{__('Conditions', 'tutor')}</p>
+            <div css={styles.conditionControls}>
+              <Controller
+                control={form.control}
+                name="answer_required"
+                render={controllerProps => <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />}
+              />
+              <Controller
+                control={form.control}
+                name="randomize"
+                render={controllerProps => <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />}
+              />
+              <Controller
+                control={form.control}
+                name="point"
+                render={controllerProps => (
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Point For This Answer', 'tutor')}
+                    type="number"
+                    isInlineLabel
+                    style={css`
+                      max-width: 72px;
+                    `}
+                  />
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="display_point"
+                render={controllerProps => <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </ModalWrapper>
@@ -152,8 +188,9 @@ const styles = {
     padding: ${spacing[32]};
   `,
   right: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[16]};
     border-left: 1px solid ${colorTokens.stroke.divider};
-    padding: ${spacing[8]} ${spacing[32]};
   `,
   quizName: css`
     ${typography.caption()};
@@ -186,5 +223,21 @@ const styles = {
   `,
   questionList: css`
     padding: ${spacing[8]} ${spacing[20]};
+  `,
+  questionTypeWrapper: css`
+    padding: ${spacing[8]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
+    border-bottom: 1px solid ${colorTokens.stroke.divider};
+  `,
+  conditions: css`
+    padding: ${spacing[8]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
+    p {
+      ${typography.body('medium')};
+      color: ${colorTokens.text.primary};
+    }
+  `,
+  conditionControls: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[16]};
+    margin-top: ${spacing[16]};
   `,
 };

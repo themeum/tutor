@@ -71,7 +71,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const deleteRef = useRef<HTMLButtonElement>(null);
 
-
   const collapseAnimation = useCollapseExpandAnimation({ ref: topicRef, isOpen: !topic.isCollapsed });
   const collapseAnimationDescription = useCollapseExpandAnimation({
     ref: descriptionRef,
@@ -86,9 +85,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     },
   });
 
-  const { showModal } = useModal();
+  const { showModal, closeModal } = useModal();
 
-  
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLDivElement)) {
@@ -129,7 +127,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     [setNodeRef, wrapperRef]
   );
 
-
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -142,7 +139,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
       return [...previousContent, newContent];
     });
   };
-
 
   return (
     <div
@@ -370,13 +366,27 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                       title: __('Quiz', 'tutor'),
                       icon: <SVGIcon name="quiz" width={24} height={24} />,
                       subtitle: __(`Topic: ${topic.post_title}`, 'tutor'),
-                      actions: 
+                      actions: (
                         <>
-                          <Button variant='text' size='small'>Cancel</Button>
-                          <Button variant='primary' size='small'>Next</Button>
+                          <Button
+                            variant="text"
+                            size="small"
+                            onClick={() => {
+                              closeModal();
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="primary"
+                            size="small"
+                            onClick={() => alert('@TODO: will be implemented later')}
+                          >
+                            Next
+                          </Button>
                         </>
-                      
-                    }
+                      ),
+                    },
                   });
                 }}
               >
