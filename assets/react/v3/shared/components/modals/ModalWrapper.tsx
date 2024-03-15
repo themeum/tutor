@@ -1,89 +1,90 @@
 import SVGIcon from '@Atoms/SVGIcon';
 import { modal } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
+import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
-import React, { useEffect } from 'react';
+import { css } from '@emotion/react';
+import type React from 'react';
+import { useEffect } from 'react';
 
 interface ModalWrapperProps {
-  children: React.ReactNode;
-  onClose: () => void;
-  icon?: React.ReactNode;
-  title?: string;
-  subtitle?: string;
-  actions?: React.ReactNode;
-  headerChildren?: React.ReactNode;
-  entireHeader?: React.ReactNode;
+	children: React.ReactNode;
+	onClose: () => void;
+	icon?: React.ReactNode;
+	title?: string;
+	subtitle?: string;
+	actions?: React.ReactNode;
+	headerChildren?: React.ReactNode;
+	entireHeader?: React.ReactNode;
 }
 
 const ModalWrapper = ({
-  children,
-  onClose,
-  title,
-  subtitle,
-  icon,
-  headerChildren,
-  entireHeader,
-  actions,
+	children,
+	onClose,
+	title,
+	subtitle,
+	icon,
+	headerChildren,
+	entireHeader,
+	actions,
 }: ModalWrapperProps) => {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
+	useEffect(() => {
+		document.body.style.overflow = 'hidden';
 
-    return () => {
-      document.body.style.overflow = 'initial';
-    };
-  }, []);
+		return () => {
+			document.body.style.overflow = 'initial';
+		};
+	}, []);
 
-  return (
-    <div css={styles.container}>
-      <div css={styles.header}>
-        <Show
-          when={entireHeader}
-          fallback={
-            <>
-              <div css={styles.headerContent}>
-                <div css={styles.iconWithTitle}>
-                  <Show when={icon}>{icon}</Show>
-                  <Show when={title}>
-                    <h6 css={styles.title}>{title}</h6>
-                  </Show>
-                </div>
-                <Show when={subtitle}>
-                  <span css={styles.subtitle}>{subtitle}</span>
-                </Show>
-              </div>
-              <div css={styles.headerChildren}>
-                <Show when={headerChildren}>{headerChildren}</Show>
-              </div>
-              <div css={styles.actionsWrapper}>
-                <Show
-                  when={actions}
-                  fallback={
-                    <button type="button" css={styles.closeButton} onClick={onClose}>
-                      <SVGIcon name="times" width={14} height={14} />
-                    </button>
-                  }
-                >
-                  {actions}
-                </Show>
-              </div>
-            </>
-          }
-        >
-          {entireHeader}
-        </Show>
-      </div>
-      <div css={styles.content}>{children}</div>
-    </div>
-  );
+	return (
+		<div css={styles.container}>
+			<div css={styles.header}>
+				<Show
+					when={entireHeader}
+					fallback={
+						<>
+							<div css={styles.headerContent}>
+								<div css={styles.iconWithTitle}>
+									<Show when={icon}>{icon}</Show>
+									<Show when={title}>
+										<h6 css={styles.title}>{title}</h6>
+									</Show>
+								</div>
+								<Show when={subtitle}>
+									<span css={styles.subtitle}>{subtitle}</span>
+								</Show>
+							</div>
+							<div css={styles.headerChildren}>
+								<Show when={headerChildren}>{headerChildren}</Show>
+							</div>
+							<div css={styles.actionsWrapper}>
+								<Show
+									when={actions}
+									fallback={
+										<button type="button" css={styles.closeButton} onClick={onClose}>
+											<SVGIcon name="times" width={14} height={14} />
+										</button>
+									}
+								>
+									{actions}
+								</Show>
+							</div>
+						</>
+					}
+				>
+					{entireHeader}
+				</Show>
+			</div>
+			<div css={styles.content}>{children}</div>
+		</div>
+	);
 };
 
 export default ModalWrapper;
 
 const styles = {
-  container: css`
+	container: css`
     position: relative;
     background: ${colorTokens.background.white};
     margin: ${spacing[24]};
@@ -99,7 +100,7 @@ const styles = {
       width: 90%;
     }
   `,
-  header: css`
+	header: css`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
@@ -109,7 +110,7 @@ const styles = {
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     position: sticky;
   `,
-  headerContent: css`
+	headerContent: css`
     place-self: center start;
     display: inline-flex;
     align-items: center;
@@ -125,30 +126,30 @@ const styles = {
       }
     }
   `,
-  headerChildren: css`
+	headerChildren: css`
     place-self: center center;
   `,
-  iconWithTitle: css`
+	iconWithTitle: css`
     display: inline-flex;
     align-items: center;
     gap: ${spacing[4]};
     color: ${colorTokens.icon.default};
   `,
-  title: css`
+	title: css`
     ${typography.heading6('medium')};
     color: ${colorTokens.text.title};
   `,
-  subtitle: css`
+	subtitle: css`
     ${typography.caption()};
     color: ${colorTokens.text.hints};
   `,
-  actionsWrapper: css`
+	actionsWrapper: css`
     place-self: center end;
     display: inline-flex;
     gap: ${spacing[16]};
     padding-right: ${spacing[24]};
   `,
-  closeButton: css`
+	closeButton: css`
     ${styleUtils.resetButton};
     display: inline-flex;
     align-items: center;
@@ -173,7 +174,7 @@ const styles = {
       box-shadow: ${shadow.focus};
     }
   `,
-  content: css`
+	content: css`
     height: calc(100% - ${modal.HEADER_HEIGHT + modal.MARGIN_TOP}px);
     background-color: ${colorTokens.surface.courseBuilder};
     overflow: auto;

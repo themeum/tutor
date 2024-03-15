@@ -8,40 +8,43 @@ import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 
 const Tracker = () => {
-  const { steps } = useCourseNavigator();
-  const navigate = useNavigate();
-  return (
-    <div css={styles.wrapper}>
-      <For each={steps}>
-        {step => (
-          <button
-            type="button"
-            key={step.id}
-            css={styles.element({ isActive: step.isActive, isCompleted: step.isCompleted })}
-            onClick={() => {
-              navigate(step.path);
-            }}
-          >
-            <span data-element-id>{step.indicator}</span>
-            <span>{step.label}</span>
-            <Show when={step.indicator < 3}>
-              <span data-element-indicator />
-            </Show>
-          </button>
-        )}
-      </For>
-    </div>
-  );
+	const { steps } = useCourseNavigator();
+	const navigate = useNavigate();
+	return (
+		<div css={styles.wrapper}>
+			<For each={steps}>
+				{(step) => (
+					<button
+						type="button"
+						key={step.id}
+						css={styles.element({
+							isActive: step.isActive,
+							isCompleted: step.isCompleted,
+						})}
+						onClick={() => {
+							navigate(step.path);
+						}}
+					>
+						<span data-element-id>{step.indicator}</span>
+						<span>{step.label}</span>
+						<Show when={step.indicator < 3}>
+							<span data-element-indicator />
+						</Show>
+					</button>
+				)}
+			</For>
+		</div>
+	);
 };
 
 export default Tracker;
 
 const styles = {
-  wrapper: css`
+	wrapper: css`
     display: flex;
     align-items: center;
   `,
-  element: ({ isActive = false, isCompleted = false }) => css`
+	element: ({ isActive = false, isCompleted = false }) => css`
     ${styleUtils.resetButton};
     ${styleUtils.display.flex()};
     ${typography.small()};
@@ -49,10 +52,12 @@ const styles = {
     gap: ${spacing[8]};
     align-items: center;
 
-    ${(isActive || isCompleted) &&
-    css`
+    ${
+			(isActive || isCompleted) &&
+			css`
       color: ${colorTokens.text.primary};
-    `}
+    `
+		}
 
     [data-element-id] {
       ${styleUtils.display.flex()};
@@ -66,19 +71,23 @@ const styles = {
       border: 1px solid ${colorTokens.color.black[10]};
       color: ${colorTokens.text.hints};
 
-      ${isActive &&
-      css`
+      ${
+				isActive &&
+				css`
         border-color: ${colorTokens.stroke.brand};
         color: ${colorTokens.text.brand};
-      `}
+      `
+			}
 
-      ${isCompleted &&
-      !isActive &&
-      css`
+      ${
+				isCompleted &&
+				!isActive &&
+				css`
         border-color: ${colorTokens.stroke.brand};
         background-color: ${colorTokens.design.brand};
         color: ${colorTokens.text.white};
-      `}
+      `
+			}
     }
 
     [data-element-indicator] {

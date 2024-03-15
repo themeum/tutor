@@ -1,13 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
 interface OrderRouteGuardProps {
-  children: ReactNode;
+	children: ReactNode;
 }
 
 // @TODO: will be implemented later.
 
 const OrderRouteGuard = ({ children }: OrderRouteGuardProps) => {
-  return <div>{children}</div>;
+	return <div>{children}</div>;
 };
 
 export default OrderRouteGuard;

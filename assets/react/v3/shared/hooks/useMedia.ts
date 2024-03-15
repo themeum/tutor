@@ -1,9 +1,9 @@
 import useWindowDimensions from '@Hooks/useWindowDimensions';
 
 const useMedia = (dimensions: number) => {
-  const { innerWidth } = useWindowDimensions();
+	const { innerWidth } = useWindowDimensions();
 
-  return innerWidth < dimensions;
+	return innerWidth < dimensions;
 };
 
 export default useMedia;

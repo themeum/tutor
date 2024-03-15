@@ -4,20 +4,20 @@ import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 
 interface EmptyImageCardProps {
-  placeholder?: string;
+	placeholder?: string;
 }
 
 const EmptyImageCard = ({ placeholder }: EmptyImageCardProps) => {
-  return (
-    <span css={styles.container}>
-      <SVGIcon name="storeImage" width={26} height={20} />
-      {placeholder && <span css={styles.text}>{placeholder}</span>}
-    </span>
-  );
+	return (
+		<span css={styles.container}>
+			<SVGIcon name="storeImage" width={26} height={20} />
+			{placeholder && <span css={styles.text}>{placeholder}</span>}
+		</span>
+	);
 };
 
 const styles = {
-  container: css`
+	container: css`
     background: ${colorPalate.surface.neutral.default};
     border: 1px dashed ${colorPalate.border.neutral};
     border-radius: ${borderRadius[8]};
@@ -28,7 +28,7 @@ const styles = {
     height: 64px;
     width: 64px;
   `,
-  text: css`
+	text: css`
     color: ${colorPalate.interactive.default};
     ${typography.body()}
     margin-top: ${spacing[12]};
