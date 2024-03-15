@@ -148,16 +148,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   // @TODO: Remove this when the API is ready
   useEffect(() => {
     if (getQuizQuestionsQuery.data) {
-      return setQuestionsData(questions);
+      return setQuestionsData(getQuizQuestionsQuery.data);
     }
-  }, [getQuizQuestionsQuery.data]);
-
-  const questions = useMemo(() => {
-    if (!getQuizQuestionsQuery.data) {
-      return [];
-    }
-
-    return getQuizQuestionsQuery.data;
   }, [getQuizQuestionsQuery.data]);
 
   const { isDirty } = form.formState;
@@ -206,7 +198,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
           </div>
 
           <div css={styles.questionList}>
-            <Show when={questions.length > 0} fallback={<div>No question!</div>}>
+            <Show when={questionsData.length > 0} fallback={<div>No question!</div>}>
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -223,8 +215,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                   }
 
                   if (active.id !== over.id) {
-                    const activeIndex = questions.findIndex(item => item.ID === active.id);
-                    const overIndex = questions.findIndex(item => item.ID === over.id);
+                    const activeIndex = questionsData.findIndex(item => item.ID === active.id);
+                    const overIndex = questionsData.findIndex(item => item.ID === over.id);
 
                     setQuestionsData(previous => {
                       return moveTo(previous, activeIndex, overIndex);
@@ -235,7 +227,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                 }}
               >
                 <SortableContext
-                  items={questions.map(item => ({ ...item, id: item.ID }))}
+                  items={questionsData.map(item => ({ ...item, id: item.ID }))}
                   strategy={verticalListSortingStrategy}
                 >
                   <For each={questionsData}>
