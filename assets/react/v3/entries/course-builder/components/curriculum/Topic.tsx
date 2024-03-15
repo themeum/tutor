@@ -85,7 +85,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     },
   });
 
-  const { showModal, closeModal } = useModal();
+  const { showModal } = useModal();
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
