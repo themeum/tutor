@@ -1,15 +1,12 @@
 import Button, { ButtonVariant } from '@Atoms/Button';
-import { useToast } from '@Atoms/Toast';
-import { borderRadius, colorPalate, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { AnimationType } from '@Hooks/useAnimation';
-import { useGenericMutation } from '@Hooks/useGenericMutation';
-import { Portal, usePortalPopover, arrowPosition } from '@Hooks/usePortalPopover';
-import { MutationFunction, QueryKey } from '@tanstack/react-query';
+import { arrowPosition, Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
-import React, { ReactNode, RefObject } from 'react';
+import { ReactNode, RefObject } from 'react';
 
 interface ConfirmationPopoverProps<TRef> {
   triggerRef: RefObject<TRef>;
@@ -24,6 +21,10 @@ interface ConfirmationPopoverProps<TRef> {
   closePopover: () => void;
   animationType?: AnimationType;
   hideArrow?: boolean;
+  positionModifier?: {
+    top: number;
+    left: number;
+  };
   confirmButton?: {
     text: string;
     variant: ButtonVariant;
@@ -50,12 +51,14 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
   hideArrow = false,
   confirmButton,
   cancelButton,
+  positionModifier,
 }: ConfirmationPopoverProps<TRef>) => {
   const { position, triggerWidth, popoverRef } = usePortalPopover<TRef, HTMLDivElement>({
     triggerRef,
     isOpen,
     arrow,
     gap,
+    positionModifier,
   });
 
   return (
@@ -73,7 +76,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
             <p css={styles.description}>{message}</p>
           </div>
           <div css={styles.footer({ isDelete: confirmButton?.isDelete ?? false })}>
-            <Button variant={cancelButton?.variant ?? 'text'} onClick={() => closePopover()}>
+            <Button variant={cancelButton?.variant ?? 'text'} size="small" onClick={() => closePopover()}>
               {cancelButton?.text ?? __('Cancel', 'tutor')}
             </Button>
             <Button
@@ -83,6 +86,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
                 closePopover();
               }}
               loading={isLoading}
+              size="small"
             >
               {confirmButton?.text ?? __('Ok', 'tutor')}
             </Button>

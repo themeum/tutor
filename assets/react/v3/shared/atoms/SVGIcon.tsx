@@ -12,11 +12,12 @@ interface SVGIconProps {
   isColorIcon?: boolean;
 }
 
-const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false }: SVGIconProps) => {
+const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ...rest }: SVGIconProps) => {
   const icon = getIcon(name);
 
   const additionalAttributes = {
     ...(isColorIcon && { 'data-colorize': true }),
+    ...rest,
   };
 
   return (

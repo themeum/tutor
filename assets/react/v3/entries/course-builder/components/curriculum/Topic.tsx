@@ -85,7 +85,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     },
   });
 
-  const { showModal, closeModal } = useModal();
+  const { showModal } = useModal();
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -206,10 +206,14 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               triggerRef={deleteRef}
               closePopover={() => setIsDeletePopoverOpen(false)}
               maxWidth="258px"
-              title={`Delete topic "${topic.post_title}"`}
-              message="Are you sure you want to delete this content from your course? This cannot be undone."
+              title={__('Delete topic ', 'tutor') + `"${topic.post_title}"`}
+              message={__(
+                'Are you sure you want to delete this content from your course? This cannot be undone.',
+                'tutor'
+              )}
               animationType={AnimationType.slideUp}
-              arrow="auto"
+              arrow="top"
+              positionModifier={{ top: 0, left: -78 }}
               hideArrow
               confirmButton={{
                 text: __('Delete', 'tutor'),
@@ -366,26 +370,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                       title: __('Quiz', 'tutor'),
                       icon: <SVGIcon name="quiz" width={24} height={24} />,
                       subtitle: __(`Topic: ${topic.post_title}`, 'tutor'),
-                      actions: (
-                        <>
-                          <Button
-                            variant="text"
-                            size="small"
-                            onClick={() => {
-                              closeModal();
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            variant="primary"
-                            size="small"
-                            onClick={() => alert('@TODO: will be implemented later')}
-                          >
-                            Next
-                          </Button>
-                        </>
-                      ),
                     },
                   });
                 }}
