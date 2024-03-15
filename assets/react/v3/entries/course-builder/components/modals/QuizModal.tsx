@@ -167,7 +167,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, actions }: QuizModalProp
                     {__('Cancel', 'tutor')}
                   </Button>
                   <Button variant="secondary" type="submit" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
-                    {__('Save', 'tutor')}
+                    {__('Ok', 'tutor')}
                   </Button>
                 </div>
               </div>
