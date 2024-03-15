@@ -1,13 +1,13 @@
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css, SerializedStyles } from '@emotion/react';
 import { nanoid } from '@Utils/util';
-import React, { ChangeEvent } from 'react';
+import { type SerializedStyles, css } from '@emotion/react';
+import React, { type ChangeEvent } from 'react';
 
 type labelPositionType = 'left' | 'right';
 
 const styles = {
-  switchStyles: css`
+	switchStyles: css`
     appearance: none;
     border: 0;
     width: 40px;
@@ -47,12 +47,12 @@ const styles = {
     }
   `,
 
-  labelStyles: (isEnabled: boolean) => css`
+	labelStyles: (isEnabled: boolean) => css`
     ${typography.caption()};
     color: ${isEnabled ? colorTokens.text.title : colorTokens.text.subdued};
   `,
 
-  wrapperStyle: (labelPosition: labelPositionType) => css`
+	wrapperStyle: (labelPosition: labelPositionType) => css`
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -63,44 +63,44 @@ const styles = {
 };
 
 interface SwitchProps {
-  id?: string;
-  name?: string;
-  label?: string;
-  value?: boolean;
-  checked?: boolean;
-  onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
-  disabled?: boolean;
-  labelPosition?: labelPositionType;
-  labelCss?: SerializedStyles;
+	id?: string;
+	name?: string;
+	label?: string;
+	value?: boolean;
+	checked?: boolean;
+	onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
+	disabled?: boolean;
+	labelPosition?: labelPositionType;
+	labelCss?: SerializedStyles;
 }
 
 const Switch = React.forwardRef<HTMLInputElement, SwitchProps>((props: SwitchProps, ref) => {
-  const { id = nanoid(), name, label, value, checked, disabled, onChange, labelPosition = 'left', labelCss } = props;
+	const { id = nanoid(), name, label, value, checked, disabled, onChange, labelPosition = 'left', labelCss } = props;
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange && onChange(event.target.checked, event);
-  };
+	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+		onChange?.(event.target.checked, event);
+	};
 
-  return (
-    <div css={styles.wrapperStyle(labelPosition)}>
-      {label && (
-        <label css={[styles.labelStyles(checked || false), labelCss]} htmlFor={id}>
-          {label}
-        </label>
-      )}
-      <input
-        ref={ref}
-        value={value ? String(value) : undefined}
-        type="checkbox"
-        name={name}
-        id={id}
-        checked={!!checked}
-        disabled={disabled}
-        css={styles.switchStyles}
-        onChange={handleChange}
-      />
-    </div>
-  );
+	return (
+		<div css={styles.wrapperStyle(labelPosition)}>
+			{label && (
+				<label css={[styles.labelStyles(checked || false), labelCss]} htmlFor={id}>
+					{label}
+				</label>
+			)}
+			<input
+				ref={ref}
+				value={value ? String(value) : undefined}
+				type="checkbox"
+				name={name}
+				id={id}
+				checked={!!checked}
+				disabled={disabled}
+				css={styles.switchStyles}
+				onChange={handleChange}
+			/>
+		</div>
+	);
 });
 
 export default Switch;

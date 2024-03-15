@@ -1,227 +1,228 @@
-import { borderRadius, colorPalate, fontFamily, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import type { AnyObject } from '@Utils/form';
 import { css } from '@emotion/react';
-import { AnyObject } from '@Utils/form';
 import ErrorStackParser from 'error-stack-parser';
-import React, { Component, ErrorInfo } from 'react';
+import type React from 'react';
+import { Component, type ErrorInfo } from 'react';
 import { SourceMapConsumer } from 'source-map';
 
 const errorDisplayWindowWidth = 960;
 
 interface ErrorBoundaryProps {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }
 
 interface ErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-  errorInfo?: ErrorInfo;
-  stack: ErrorStackParser.StackFrame[];
-  source: string[];
-  position: {
-    line: number | null;
-    column: number | null;
-    source: string | null;
-    startLine: number | null;
-  };
+	hasError: boolean;
+	error?: Error;
+	errorInfo?: ErrorInfo;
+	stack: ErrorStackParser.StackFrame[];
+	source: string[];
+	position: {
+		line: number | null;
+		column: number | null;
+		source: string | null;
+		startLine: number | null;
+	};
 }
 
 const cleanPath = (path: string) => {
-  const parts = path.split('?');
-  return parts[0];
+	const parts = path.split('?');
+	return parts[0];
 };
 
 const getMapFile = (path: string) => `${cleanPath(path)}.map`;
 
 interface SourceMap {
-  file: string;
-  mappings: string;
-  names: string[];
-  sourceRoot: string;
-  sources: string[];
-  sourcesContent: string[];
-  version: number;
+	file: string;
+	mappings: string;
+	names: string[];
+	sourceRoot: string;
+	sources: string[];
+	sourcesContent: string[];
+	version: number;
 }
 
 const getRelativePath = (path: string) => {
-  const index = path.indexOf('store');
-  return index > -1 ? path.slice(index) : '';
+	const index = path.indexOf('store');
+	return index > -1 ? path.slice(index) : '';
 };
 
 const getFilenameFromPath = (path: string) => {
-  const parts = path.split('/');
-  return parts.length === 0 ? '' : parts[parts.length - 1];
+	const parts = path.split('/');
+	return parts.length === 0 ? '' : parts[parts.length - 1];
 };
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = {
-      hasError: false,
-      error: undefined,
-      errorInfo: undefined,
-      stack: [],
-      source: [],
-      position: { line: null, column: null, startLine: null, source: '' },
-    };
+	constructor(props: ErrorBoundaryProps) {
+		super(props);
+		this.state = {
+			hasError: false,
+			error: undefined,
+			errorInfo: undefined,
+			stack: [],
+			source: [],
+			position: { line: null, column: null, startLine: null, source: '' },
+		};
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    (SourceMapConsumer as AnyObject).initialize({
-      'lib/mappings.wasm': 'https://unpkg.com/source-map@0.7.3/lib/mappings.wasm',
-    });
-  }
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		(SourceMapConsumer as AnyObject).initialize({
+			'lib/mappings.wasm': 'https://unpkg.com/source-map@0.7.3/lib/mappings.wasm',
+		});
+	}
 
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
+	static getDerivedStateFromError() {
+		return { hasError: true };
+	}
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    setTimeout(() => {
-      const stackArray = ErrorStackParser.parse(error);
-      const mapFileSource = getMapFile(stackArray[0].fileName || '');
+	componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+		setTimeout(() => {
+			const stackArray = ErrorStackParser.parse(error);
+			const mapFileSource = getMapFile(stackArray[0].fileName || '');
 
-      fetch(mapFileSource)
-        .then((res) => res.json())
-        .then(async (source: SourceMap) => {
-          const consumer = await new SourceMapConsumer(source);
-          const file = stackArray[0];
+			fetch(mapFileSource)
+				.then((res) => res.json())
+				.then(async (source: SourceMap) => {
+					const consumer = await new SourceMapConsumer(source);
+					const file = stackArray[0];
 
-          const position = consumer.originalPositionFor({
-            line: Number(file.lineNumber),
-            column: Number(file.columnNumber),
-          });
+					const position = consumer.originalPositionFor({
+						line: Number(file.lineNumber),
+						column: Number(file.columnNumber),
+					});
 
-          let sourceIndex = -1;
+					let sourceIndex = -1;
 
-          if (position.source) {
-            const parts = position.source.split('/');
-            const fileName = parts[parts.length - 1] || '';
-            sourceIndex = source.sources.findIndex((s) => s.endsWith(fileName));
-          }
+					if (position.source) {
+						const parts = position.source.split('/');
+						const fileName = parts[parts.length - 1] || '';
+						sourceIndex = source.sources.findIndex((s) => s.endsWith(fileName));
+					}
 
-          if (sourceIndex > -1) {
-            const lines = source.sourcesContent[sourceIndex].split(/\r?\n/);
+					if (sourceIndex > -1) {
+						const lines = source.sourcesContent[sourceIndex].split(/\r?\n/);
 
-            const { line } = position;
+						const { line } = position;
 
-            const startLineNumber = Math.max(0, (line || 0) - 3);
-            const endLineNumber = Math.min(lines.length - 1, (line || 0) + 4);
+						const startLineNumber = Math.max(0, (line || 0) - 3);
+						const endLineNumber = Math.min(lines.length - 1, (line || 0) + 4);
 
-            const sourceCode = lines.slice(startLineNumber, endLineNumber + 1);
-            const sourcePath = position.source?.slice(position.source.indexOf('src'));
+						const sourceCode = lines.slice(startLineNumber, endLineNumber + 1);
+						const sourcePath = position.source?.slice(position.source.indexOf('src'));
 
-            this.setState({
-              source: sourceCode,
-              position: {
-                line: position.line,
-                column: position.column,
-                source: sourcePath || '',
-                startLine: startLineNumber,
-              },
-            });
-          }
-        });
+						this.setState({
+							source: sourceCode,
+							position: {
+								line: position.line,
+								column: position.column,
+								source: sourcePath || '',
+								startLine: startLineNumber,
+							},
+						});
+					}
+				});
 
-      this.setState({
-        error,
-        errorInfo,
-        stack: stackArray,
-      });
-    }, 100);
-  }
+			this.setState({
+				error,
+				errorInfo,
+				stack: stackArray,
+			});
+		}, 100);
+	}
 
-  renderErrorSource() {
-    const { position } = this.state;
+	renderErrorSource() {
+		const { position } = this.state;
 
-    if (!position.line && !position.column) {
-      return <p css={styles.consoleMessage}>Please open the browser console for more information!</p>;
-    }
+		if (!position.line && !position.column) {
+			return <p css={styles.consoleMessage}>Please open the browser console for more information!</p>;
+		}
 
-    return (
-      <div css={styles.titleAndContent}>
-        <h4 css={styles.callStack}>Source</h4>
-        <div css={styles.sourceWrapper}>
-          <p css={styles.sourceFilePath}>
-            {position.source} ({position.line}:{position.column})
-          </p>
-          <div css={styles.sourceEditor}>
-            <div css={styles.sourceLinesWrapper}>
-              {this.state.source.map((line, index) => {
-                const lineNumber = index + (position.startLine || 0) + 1;
-                const isErrorLine = lineNumber === (position.line || 0);
-                const lineNumberLength = this.state.source.length + (position.startLine || 0);
+		return (
+			<div css={styles.titleAndContent}>
+				<h4 css={styles.callStack}>Source</h4>
+				<div css={styles.sourceWrapper}>
+					<p css={styles.sourceFilePath}>
+						{position.source} ({position.line}:{position.column})
+					</p>
+					<div css={styles.sourceEditor}>
+						<div css={styles.sourceLinesWrapper}>
+							{this.state.source.map((line, index) => {
+								const lineNumber = index + (position.startLine || 0) + 1;
+								const isErrorLine = lineNumber === (position.line || 0);
+								const lineNumberLength = this.state.source.length + (position.startLine || 0);
 
-                return (
-                  <div key={index} css={styles.sourceLine(isErrorLine)}>
-                    <div>
-                      <span css={styles.angleRight}>{isErrorLine && '>'}</span>
-                      <span css={styles.lineNumber}>{lineNumber} | </span>
-                      <span css={styles.line}>{line}</span>
-                    </div>
+								return (
+									<div key={index} css={styles.sourceLine(isErrorLine)}>
+										<div>
+											<span css={styles.angleRight}>{isErrorLine && '>'}</span>
+											<span css={styles.lineNumber}>{lineNumber} | </span>
+											<span css={styles.line}>{line}</span>
+										</div>
 
-                    {isErrorLine && (
-                      <div>
-                        <span css={styles.angleRight}> </span>
-                        <span css={styles.lineNumber}>{' '.repeat(lineNumberLength.toString().length)} | </span>
-                        <span css={[styles.line, { color: colorPalate.text.critical }]}>
-                          {' '.repeat(position.column || 0)}^
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+										{isErrorLine && (
+											<div>
+												<span css={styles.angleRight}> </span>
+												<span css={styles.lineNumber}>{' '.repeat(lineNumberLength.toString().length)} | </span>
+												<span css={[styles.line, { color: colorPalate.text.critical }]}>
+													{' '.repeat(position.column || 0)}^
+												</span>
+											</div>
+										)}
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
-  render() {
-    if (this.state.hasError) {
-      const { error, position, stack } = this.state;
+	render() {
+		if (this.state.hasError) {
+			const { error, position, stack } = this.state;
 
-      return (
-        <div css={styles.container}>
-          <div css={styles.wrapper}>
-            <div css={styles.scrollWrapper}>
-              <div css={styles.indicator}></div>
-              <h2 css={styles.errorHeading}>Unhandled Runtime Error</h2>
-              <p css={styles.errorMessage}>{error?.toString() || 'Something Went Wrong!'}</p>
+			return (
+				<div css={styles.container}>
+					<div css={styles.wrapper}>
+						<div css={styles.scrollWrapper}>
+							<div css={styles.indicator} />
+							<h2 css={styles.errorHeading}>Unhandled Runtime Error</h2>
+							<p css={styles.errorMessage}>{error?.toString() || 'Something Went Wrong!'}</p>
 
-              {this.renderErrorSource()}
+							{this.renderErrorSource()}
 
-              <div css={styles.callStackWrapper}>
-                <h4 css={styles.callStack}>Call Stack</h4>
+							<div css={styles.callStackWrapper}>
+								<h4 css={styles.callStack}>Call Stack</h4>
 
-                {stack.map((info, index) => {
-                  return (
-                    <div key={index} css={styles.stackItem}>
-                      <h6 css={styles.functionName}>
-                        {info.functionName || getFilenameFromPath(position.source || '')}
-                      </h6>
-                      <p css={styles.filePath}>
-                        {cleanPath(getRelativePath(info.fileName || ''))} ({info.lineNumber}:{info.columnNumber})
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
+								{stack.map((info, index) => {
+									return (
+										<div key={index} css={styles.stackItem}>
+											<h6 css={styles.functionName}>
+												{info.functionName || getFilenameFromPath(position.source || '')}
+											</h6>
+											<p css={styles.filePath}>
+												{cleanPath(getRelativePath(info.fileName || ''))} ({info.lineNumber}:{info.columnNumber})
+											</p>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					</div>
+				</div>
+			);
+		}
 
-    return this.props.children;
-  }
+		return this.props.children;
+	}
 }
 
 export default ErrorBoundary;
 
 const styles = {
-  container: css`
+	container: css`
     * {
       box-sizing: border-box;
       padding: 0;
@@ -235,36 +236,38 @@ const styles = {
     align-items: center;
     background: ${colorPalate.basic.white};
   `,
-  sourceLinesWrapper: css`
+	sourceLinesWrapper: css`
     display: flex;
     flex-direction: column;
   `,
-  consoleMessage: css`
+	consoleMessage: css`
     ${typography.heading6('bold')};
     margin-top: ${spacing[24]};
     color: ${colorPalate.text.success};
   `,
-  sourceLine: (isErrorLine: boolean) => css`
+	sourceLine: (isErrorLine: boolean) => css`
     white-space: pre-wrap;
 
-    ${isErrorLine &&
-    css`
+    ${
+			isErrorLine &&
+			css`
       color: ${colorPalate.text.critical};
-    `}
+    `
+		}
   `,
-  angleRight: css`
+	angleRight: css`
     min-width: 20px;
     display: inline-block;
     margin-right: 12px;
   `,
-  lineNumber: css`
+	lineNumber: css`
     min-width: 50px;
     display: inline-block;
   `,
-  line: css`
+	line: css`
     width: 100%;
   `,
-  wrapper: css`
+	wrapper: css`
     max-width: ${errorDisplayWindowWidth}px;
     width: 100%;
     background: ${colorPalate.basic.white};
@@ -274,11 +277,11 @@ const styles = {
     position: relative;
     overflow: hidden;
   `,
-  scrollWrapper: css`
+	scrollWrapper: css`
     height: 80vh;
     overflow-y: auto;
   `,
-  indicator: css`
+	indicator: css`
     width: 100%;
     height: 5px;
     background: ${colorPalate.basic.critical};
@@ -286,61 +289,61 @@ const styles = {
     top: 0;
     left: 0;
   `,
-  errorHeading: css`
+	errorHeading: css`
     font-size: ${fontSize[20]};
     font-weight: ${fontWeight.bold};
     margin-bottom: ${spacing[4]};
     color: ${colorPalate.text.default};
   `,
-  errorMessage: css`
+	errorMessage: css`
     font-size: ${fontSize[14]};
     font-weight: ${fontWeight.bold};
     color: ${colorPalate.basic.black.default};
     margin-top: ${spacing[4]};
     color: ${colorPalate.text.critical};
   `,
-  callStack: css`
+	callStack: css`
     ${typography.heading6('bold')};
     color: ${colorPalate.text.default};
   `,
-  callStackWrapper: css`
+	callStackWrapper: css`
     margin-top: ${spacing[48]};
     font-size: ${fontSize[18]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[20]};
   `,
-  stackItem: css`
+	stackItem: css`
     font-size: ${fontSize[18]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[4]};
   `,
-  functionName: css`
+	functionName: css`
     ${typography.heading6()};
     color: ${colorPalate.text.default};
   `,
-  filePath: css`
+	filePath: css`
     color: ${colorPalate.text.neutral};
     margin-left: ${spacing[12]};
     font-size: ${fontSize[14]};
   `,
-  sourceEditor: css`
+	sourceEditor: css`
     padding: ${spacing[8]} ${spacing[32]};
   `,
-  sourceWrapper: css`
+	sourceWrapper: css`
     margin-top: ${spacing[4]};
 
     background-color: #292929;
     border-radius: ${borderRadius[6]};
     color: ${colorPalate.basic.highlight};
   `,
-  sourceFilePath: css`
+	sourceFilePath: css`
     padding: ${spacing[8]} ${spacing[16]};
     border-bottom: 1px solid #cccccc;
     color: #cccccc;
   `,
-  titleAndContent: css`
+	titleAndContent: css`
     margin-top: ${spacing[24]};
   `,
 };
