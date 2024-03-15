@@ -284,7 +284,6 @@ const styles = {
     display: grid;
     grid-template-columns: 352px 1fr 352px;
     height: 100%;
-    background-color: ${colorTokens.surface.courseBuilder};
   `,
 
   questionItem: ({ isActive = false }) => css`
