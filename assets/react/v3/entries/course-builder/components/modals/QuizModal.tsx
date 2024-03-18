@@ -6,6 +6,8 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
+import { modal } from '@Config/constants';
+import Tabs from '@Molecules/Tabs';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -103,6 +105,7 @@ const questionTypeOptions: Option<QuizQuestionType>[] = [
 const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 	const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 	const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<'questions' | 'settings'>('questions');
 
 	const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -137,6 +140,22 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 			icon={icon}
 			title={title}
 			subtitle={subtitle}
+      headerChildren={
+        <Tabs
+          wrapperCss={css`
+            height: ${modal.HEADER_HEIGHT}px;
+          `}
+          activeTab={activeTab}
+          tabList={[
+            {
+              label: __('Questions', 'tutor'),
+              value: 'questions',
+            },
+            { label: __('Settings', 'tutor'), value: 'settings' },
+          ]}
+          onChange={tab => setActiveTab(tab)}
+        />
+      }
 			actions={
 				<>
 					<Button
@@ -154,9 +173,18 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 					>
 						{__('Cancel', 'tutor')}
 					</Button>
-					<Button variant="primary" size="small" onClick={() => alert('@TODO: will be implemented later')}>
-						{__('Next', 'tutor')}
-					</Button>
+					<Show
+            when={activeTab === 'settings'}
+            fallback={
+              <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                Next
+              </Button>
+            }
+          >
+            <Button variant="primary" size="small" onClick={() => alert('@TODO: will be implemenetd later')}>
+              Save
+            </Button>
+          </Show>
 				</>
 			}
 		>

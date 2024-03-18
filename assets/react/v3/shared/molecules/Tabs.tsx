@@ -145,6 +145,7 @@ const styles = {
     font-size: ${fontSize[15]};
     line-height: ${lineHeight[20]};
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: ${spacing[6]};
     padding: ${spacing[12]} ${spacing[20]};
@@ -162,8 +163,8 @@ const styles = {
 			css`
       width: 100%;
       border-bottom: 1px solid ${colorTokens.stroke.border};
-    `
-		}
+      justify-content: flex-start;
+    `}
 
     ${
 			isActive &&
