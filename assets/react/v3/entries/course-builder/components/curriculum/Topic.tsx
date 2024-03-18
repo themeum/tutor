@@ -167,80 +167,82 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 					<div {...listeners} css={styles.grabberInput({ isOverlay })}>
 						<SVGIcon name="dragVertical" width={24} height={24} />
 
-						<Show
-							when={isEdit}
-							fallback={
-								<div css={styles.title({ isEdit })} title={topic.post_title}>
-									{topic.post_title}
-								</div>
-							}
-						>
-							<div css={styles.title({ isEdit })}>
-								<Controller
-									control={form.control}
-									name="title"
-									render={(controllerProps) => (
-										<FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
-									)}
-								/>
-							</div>
-						</Show>
-					</div>
-					<div css={styles.actions}>
-						<Show when={!isEdit}>
-							<button
-								type="button"
-								css={styles.actionButton}
-								data-visually-hidden
-								onClick={() => {
-									setIsEdit(true);
-								}}
-							>
-								<SVGIcon name="edit" width={24} height={24} />
-							</button>
-						</Show>
-						<button type="button" css={styles.actionButton} data-visually-hidden onClick={onCopy}>
-							<SVGIcon name="copyPaste" width={24} height={24} />
-						</button>
-						<button
-							type="button"
-							css={styles.actionButton}
-							data-visually-hidden
-							ref={deleteRef}
-							onClick={() => {
-								setIsDeletePopoverOpen(true);
-							}}
-						>
-							<SVGIcon name="delete" width={24} height={24} />
-						</button>
-						<ConfirmationPopover
-							isOpen={isDeletePopoverOpen}
-							triggerRef={deleteRef}
-							closePopover={() => setIsDeletePopoverOpen(false)}
-							maxWidth="258px"
-							// biome-ignore lint/style/useTemplate: <explanation>
-							title={__('Delete topic ', 'tutor') + `"${topic.post_title}"`}
-							message={__(
-								'Are you sure you want to delete this content from your course? This cannot be undone.',
-								'tutor'
-							)}
-							animationType={AnimationType.slideUp}
-							arrow="top"
-							positionModifier={{ top: 0, left: -78 }}
-							hideArrow
-							confirmButton={{
-								text: __('Delete', 'tutor'),
-								variant: 'text',
-								isDelete: true,
-							}}
-							cancelButton={{
-								text: __('Cancel', 'tutor'),
-								variant: 'text',
-							}}
-							onConfirmation={() => {
-								onDelete?.();
-							}}
-						/>
+            <Show
+              when={isEdit}
+              fallback={
+                <div css={styles.title({ isEdit })} title={topic.post_title} onDoubleClick={() => setIsEdit(true)}>
+                  {topic.post_title}
+                </div>
+              }
+            >
+              <div css={styles.title({ isEdit })}>
+                <Controller
+                  control={form.control}
+                  name="title"
+                  render={controllerProps => (
+                    <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
+                  )}
+                />
+              </div>
+            </Show>
+          </div>
+          <div css={styles.actions}>
+            <Show when={!isEdit}>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                onClick={() => {
+                  setIsEdit(true);
+                }}
+              >
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+            </Show>
+            <button
+              type="button"
+              css={styles.actionButton}
+              data-visually-hidden
+              onClick={() => {
+                alert('@TODO: will be implemented later');
+              }}
+            >
+              <SVGIcon name="copyPaste" width={24} height={24} />
+            </button>
+            <button
+              type="button"
+              css={styles.actionButton}
+              data-visually-hidden
+              ref={deleteRef}
+              onClick={() => {
+                setIsDeletePopoverOpen(true);
+              }}
+            >
+              <SVGIcon name="delete" width={24} height={24} />
+            </button>
+            <ConfirmationPopover
+              isOpen={isDeletePopoverOpen}
+              triggerRef={deleteRef}
+              closePopover={() => setIsDeletePopoverOpen(false)}
+              maxWidth="258px"
+              title={`Delete topic "${topic.post_title}"`}
+              message="Are you sure you want to delete this content from your course? This cannot be undone."
+              animationType={AnimationType.slideUp}
+              arrow="auto"
+              hideArrow
+              confirmButton={{
+                text: __('Delete', 'tutor'),
+                variant: 'text',
+                isDelete: true,
+              }}
+              cancelButton={{
+                text: __('Cancel', 'tutor'),
+                variant: 'text',
+              }}
+              onConfirmation={() => {
+                onDelete && onDelete();
+              }}
+            />
 
 						<button
 							type="button"
@@ -254,32 +256,32 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 					</div>
 				</div>
 
-				<Show
-					when={isEdit}
-					fallback={
-						<animated.div style={{ ...collapseAnimationDescription }}>
-							<div css={styles.description({ isEdit })} ref={descriptionRef}>
-								{topic.post_content}
-							</div>
-						</animated.div>
-					}
-				>
-					<div css={styles.description({ isEdit })}>
-						<Controller
-							control={form.control}
-							name="summary"
-							render={(controllerProps) => (
-								<FormTextareaInput
-									{...controllerProps}
-									placeholder={__('Add a summary', 'tutor')}
-									isSecondary
-									rows={2}
-									enableResize
-								/>
-							)}
-						/>
-					</div>
-				</Show>
+        <Show
+          when={isEdit}
+          fallback={
+            <animated.div style={{ ...collapseAnimationDescription }}>
+              <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
+                {topic.post_content}
+              </div>
+            </animated.div>
+          }
+        >
+          <div css={styles.description({ isEdit })}>
+            <Controller
+              control={form.control}
+              name="summary"
+              render={controllerProps => (
+                <FormTextareaInput
+                  {...controllerProps}
+                  placeholder={__('Add a summary', 'tutor')}
+                  isSecondary
+                  rows={2}
+                  enableResize
+                />
+              )}
+            />
+          </div>
+        </Show>
 
 				<Show when={isEdit}>
 					<div css={styles.footer}>
@@ -287,7 +289,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 							{__('Cancel', 'tutor')}
 						</Button>
 						<Button
-							variant="outlined"
+							variant="tertiary"
 							size="small"
 							onClick={form.handleSubmit(async (values) => {
 								//@TODO: will be implemented later
@@ -500,9 +502,9 @@ const styles = {
     `
 		}
 
-    ${
-			isCollapsed &&
-			css`
+    ${isCollapsed &&
+    !isEdit &&
+    css`
       padding-bottom: 0;
     `
 		}
