@@ -38,7 +38,7 @@ import {
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { moveTo } from '@Utils/util';
 import { createPortal } from 'react-dom';
-import { Question } from './Question';
+import { Question } from '@CourseBuilderComponents/curriculum/Question';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -110,6 +110,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [questionsData, setQuestionsData] = useState<QuizQuestion[]>([]);
+  const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -205,8 +206,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                 }}
                 onDragEnd={event => {
                   const { active, over } = event;
-                  console.log('active', active);
-                  console.log('over', over);
                   if (!over) {
                     return;
                   }
@@ -233,6 +232,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                         key={question.ID}
                         question={question}
                         index={index}
+                        activeQuestionId={activeQuestionId}
+                        setActiveQuestionId={setActiveQuestionId}
                         selectedQuestionId={selectedQuestionId}
                         setSelectedQuestionId={setSelectedQuestionId}
                       />
@@ -250,6 +251,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                             key={item.ID}
                             question={item}
                             index={index}
+                            activeQuestionId={activeQuestionId}
+                            setActiveQuestionId={setActiveQuestionId}
                             selectedQuestionId={selectedQuestionId}
                             setSelectedQuestionId={setSelectedQuestionId}
                           />

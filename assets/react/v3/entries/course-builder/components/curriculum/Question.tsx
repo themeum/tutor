@@ -9,10 +9,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { __ } from '@wordpress/i18n';
+import { styleUtils } from '@Utils/style-utils';
 
 interface QuestionProps {
   question: QuizQuestion;
   index: number;
+  activeQuestionId: number | null;
+  setActiveQuestionId: (id: number | null) => void;
   selectedQuestionId: number | null;
   setSelectedQuestionId: (id: number | null) => void;
 }
@@ -30,36 +34,11 @@ const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
   ordering: 'quizOrdering',
 };
 
-export const Question = ({ question, index, selectedQuestionId, setSelectedQuestionId }: QuestionProps) => {
-  const [isActive, setIsActive] = useState<boolean>(index === 0);
+export const Question = ({ question, index, activeQuestionId, setActiveQuestionId, selectedQuestionId, setSelectedQuestionId }: QuestionProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.ID,
     animateLayoutChanges,
   });
-
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLDivElement)) {
-        setIsActive(false);
-      }
-    };
-
-    document.addEventListener('click', handleOutsideClick);
-
-    return () => document.removeEventListener('click', handleOutsideClick);
-  }, []);
-
-  const combinedRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (node) {
-        setNodeRef(node);
-        (wrapperRef as any).current = node;
-      }
-    },
-    [setNodeRef, wrapperRef]
-  );
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -68,12 +47,13 @@ export const Question = ({ question, index, selectedQuestionId, setSelectedQuest
   };
 
   return (
-    <div {...attributes} key={question.ID} css={styles.questionItem({ isActive, isDragging })} ref={combinedRef} style={style} onClick={() => setIsActive(true)}>
+    <div {...attributes} key={question.ID} css={styles.questionItem({ isActive: activeQuestionId === question.ID, isDragging })} ref={setNodeRef} style={style} onClick={() => setActiveQuestionId(question.ID)}>
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
         <SVGIcon name={questionTypeIconMap[question.type]} width={24} height={24} data-question-icon />
-        <div {...listeners} role="button">
+        <button {...listeners} type='button' css={styleUtils.resetButton
+        }>
           <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
-        </div>
+        </button>
         <span data-serial>{index + 1}</span>
       </div>
       <span css={styles.questionTitle}>{question.title}</span>
@@ -88,8 +68,8 @@ export const Question = ({ question, index, selectedQuestionId, setSelectedQuest
         hideArrow
         data-three-dots
       >
-        <ThreeDots.Option text="Duplicate" icon={<SVGIcon name="duplicate" width={24} height={24} />} />
-        <ThreeDots.Option text="Delete" icon={<SVGIcon name="delete" width={24} height={24} />} />
+        <ThreeDots.Option text={__('Duplicate', 'tutor')} icon={<SVGIcon name="duplicate" width={24} height={24} />} />
+        <ThreeDots.Option text={__('Delete', 'tutor')} icon={<SVGIcon name="delete" width={24} height={24} />} />
       </ThreeDots>
     </div>
   );
