@@ -506,7 +506,7 @@ export const letterSpacing = {
 } as const;
 
 export const shadow = {
-  focus: '0px 0px 0px 1px #FFFFFF, 0px 0px 0px 3px #0049f8',
+  focus: '0px 0px 0px 0px rgba(255, 255, 255, 1), 0px 0px 0px 3px rgba(0, 73, 248, 0.9)',
   button: '0px 1px 0.25px rgba(17, 18, 19, 0.08), inset 0px -1px 0.25px rgba(17, 18, 19, 0.24)',
   combinedButton:
     '0px 1px 0px rgba(0, 0, 0, 0.05), inset 0px -1px 0px #bcbfc3, inset 1px 0px 0px #bbbfc3, inset 0px 1px 0px #bbbfc3',
@@ -523,7 +523,6 @@ export const shadow = {
   dividerTop: 'inset 0px 1px 0px #E4E5E7',
   underline: '0px 1px 0px #C9CBCF',
   drag: '3px 7px 8px 0px #00000014',
-  scrollable: '0px -1px 4px 0px #00000014',
 } as const;
 
 export const borderRadius = {
@@ -541,6 +540,7 @@ export const borderRadius = {
   50: '50px',
   circle: '50%',
   card: '8px',
+  min: '4px',
 } as const;
 
 export const zIndex = {
