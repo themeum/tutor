@@ -1,5 +1,5 @@
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import ThreeDots from '@Molecules/ThreeDots';
@@ -68,8 +68,8 @@ export const Question = ({ question, index, selectedQuestionId, setSelectedQuest
   };
 
   return (
-    <div {...attributes} key={question.ID} css={styles.questionItem({ isActive })} ref={combinedRef} style={style} onClick={() => setIsActive(true)}>
-      <div css={styles.iconAndSerial} data-icon-serial>
+    <div {...attributes} key={question.ID} css={styles.questionItem({ isActive, isDragging })} ref={combinedRef} style={style} onClick={() => setIsActive(true)}>
+      <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
         <SVGIcon name={questionTypeIconMap[question.type]} width={24} height={24} data-question-icon />
         <div {...listeners} role="button">
           <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
@@ -96,7 +96,10 @@ export const Question = ({ question, index, selectedQuestionId, setSelectedQuest
 };
 
 const styles = {
-  questionItem: ({ isActive = false }) => css`
+  questionItem: ({ isActive = false, isDragging = false }: {
+    isActive: boolean;
+    isDragging: boolean;
+  }) => css`
     padding: ${spacing[10]} ${spacing[8]};
     display: flex;
     align-items: center;
@@ -145,8 +148,16 @@ const styles = {
         opacity: 1;
       }
     }
+
+    ${isDragging &&
+    css`
+      box-shadow: ${shadow.drag};
+      background-color: ${colorTokens.background.white};
+    `}
   `,
-  iconAndSerial: css`
+  iconAndSerial: ({isDragging = false}: {
+    isDragging: boolean;
+  }) => css`
     display: flex;
     align-items: center;
     background-color: ${colorTokens.bg.white};
@@ -159,7 +170,7 @@ const styles = {
     [data-drag-icon] {
       display: none;
       color: ${colorTokens.icon.hints};
-      cursor: grab;
+      cursor: ${isDragging ? 'grabbing' : 'grab'};
     }
 
     svg {
