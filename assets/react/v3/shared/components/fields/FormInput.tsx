@@ -1,18 +1,17 @@
-import React from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
-import { FormControllerProps } from '@Utils/form';
+import type { FormControllerProps } from '@Utils/form';
+import { type SerializedStyles, css } from '@emotion/react';
 
-import FormFieldWrapper from './FormFieldWrapper';
-import { parseNumberOnly } from '@Utils/util';
-import { isDefined } from '@Utils/types';
 import Show from '@Controls/Show';
+import { isDefined } from '@Utils/types';
+import { parseNumberOnly } from '@Utils/util';
+import FormFieldWrapper from './FormFieldWrapper';
 
 const styles = {
-  container: (isClearable: boolean) => css`
+	container: (isClearable: boolean) => css`
     position: relative;
     display: flex;
 
@@ -22,7 +21,7 @@ const styles = {
       width: 100%;
     }
   `,
-  clearButton: css`
+	clearButton: css`
     position: absolute;
     right: ${spacing[2]};
     top: ${spacing[2]};
@@ -38,117 +37,129 @@ const styles = {
 };
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
-  label?: string;
-  type?: 'number' | 'text';
-  maxLimit?: number;
-  disabled?: boolean;
-  readOnly?: boolean;
-  loading?: boolean;
-  placeholder?: string;
-  helpText?: string;
-  onChange?: (value: string | number) => void;
-  onKeyDown?: (keyName: string) => void;
-  isHidden?: boolean;
-  isClearable?: boolean;
-  isSecondary?: boolean;
-  removeBorder?: boolean;
-  dataAttribute?: string;
+	label?: string;
+	type?: 'number' | 'text';
+	maxLimit?: number;
+	disabled?: boolean;
+	readOnly?: boolean;
+	loading?: boolean;
+	placeholder?: string;
+	helpText?: string;
+	onChange?: (value: string | number) => void;
+	onKeyDown?: (keyName: string) => void;
+	isHidden?: boolean;
+	isClearable?: boolean;
+	isSecondary?: boolean;
+	removeBorder?: boolean;
+	dataAttribute?: string;
+	isInlineLabel?: boolean;
+	style?: SerializedStyles;
 }
 
 const FormInput = ({
-  label,
-  type = 'text',
-  maxLimit,
-  field,
-  fieldState,
-  disabled,
-  readOnly,
-  loading,
-  placeholder,
-  helpText,
-  onChange,
-  onKeyDown,
-  isHidden,
-  isClearable = false,
-  isSecondary = false,
-  removeBorder,
-  dataAttribute,
+	label,
+	type = 'text',
+	maxLimit,
+	field,
+	fieldState,
+	disabled,
+	readOnly,
+	loading,
+	placeholder,
+	helpText,
+	onChange,
+	onKeyDown,
+	isHidden,
+	isClearable = false,
+	isSecondary = false,
+	removeBorder,
+	dataAttribute,
+	isInlineLabel = false,
+	style,
 }: FormInputProps) => {
-  let inputValue = field.value ?? '';
-  let characterCount;
+	let inputValue = field.value ?? '';
+	let characterCount:
+		| {
+				maxLimit: number;
+				inputCharacter: number;
+		  }
+		| undefined = undefined;
 
-  if (type === 'number') {
-    inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
-  }
-  if (maxLimit) {
-    characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
-  }
+	if (type === 'number') {
+		inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
+	}
 
-  const additionalAttributes = {
-    ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
-  };
+	if (maxLimit) {
+		characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
+	}
 
-  return (
-    <FormFieldWrapper
-      label={label}
-      field={field}
-      fieldState={fieldState}
-      disabled={disabled}
-      readOnly={readOnly}
-      loading={loading}
-      placeholder={placeholder}
-      helpText={helpText}
-      isHidden={isHidden}
-      characterCount={characterCount}
-      isSecondary={isSecondary}
-      removeBorder={removeBorder}
-    >
-      {inputProps => {
-        return (
-          <>
-            <div css={styles.container(isClearable)}>
-              <input
-                {...field}
-                {...inputProps}
-                {...additionalAttributes}
-                type="text"
-                value={inputValue}
-                onChange={event => {
-                  const { value } = event.target;
+	const additionalAttributes = {
+		...(isDefined(dataAttribute) && { [dataAttribute]: true }),
+	};
 
-                  const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
+	return (
+		<FormFieldWrapper
+			label={label}
+			field={field}
+			fieldState={fieldState}
+			disabled={disabled}
+			readOnly={readOnly}
+			loading={loading}
+			placeholder={placeholder}
+			helpText={helpText}
+			isHidden={isHidden}
+			characterCount={characterCount}
+			isSecondary={isSecondary}
+			removeBorder={removeBorder}
+			isInlineLabel={isInlineLabel}
+			inputStyle={style}
+		>
+			{(inputProps) => {
+				return (
+					<>
+						<div css={styles.container(isClearable)}>
+							<input
+								{...field}
+								{...inputProps}
+								{...additionalAttributes}
+								type="text"
+								value={inputValue}
+								onChange={(event) => {
+									const { value } = event.target;
 
-                  field.onChange(fieldValue);
+									const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
 
-                  if (onChange) {
-                    onChange(fieldValue);
-                  }
-                }}
-                onKeyDown={event => {
-                  onKeyDown && onKeyDown(event.key);
-                }}
-                autoComplete="off"
-              />
-              {isClearable && !!field.value && (
-                <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange(null)}>
-                    <SVGIcon name="timesAlt" />
-                  </Button>
-                </div>
-              )}
-              <Show when={isClearable && !!field.value}>
-                <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange(null)}>
-                    <SVGIcon name="timesAlt" />
-                  </Button>
-                </div>
-              </Show>
-            </div>
-          </>
-        );
-      }}
-    </FormFieldWrapper>
-  );
+									field.onChange(fieldValue);
+
+									if (onChange) {
+										onChange(fieldValue);
+									}
+								}}
+								onKeyDown={(event) => {
+									onKeyDown?.(event.key);
+								}}
+								autoComplete="off"
+							/>
+							{isClearable && !!field.value && (
+								<div css={styles.clearButton}>
+									<Button variant="text" onClick={() => field.onChange(null)}>
+										<SVGIcon name="timesAlt" />
+									</Button>
+								</div>
+							)}
+							<Show when={isClearable && !!field.value}>
+								<div css={styles.clearButton}>
+									<Button variant="text" onClick={() => field.onChange(null)}>
+										<SVGIcon name="timesAlt" />
+									</Button>
+								</div>
+							</Show>
+						</div>
+					</>
+				);
+			}}
+		</FormFieldWrapper>
+	);
 };
 
 export default FormInput;

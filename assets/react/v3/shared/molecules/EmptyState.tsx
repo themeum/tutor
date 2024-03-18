@@ -1,70 +1,74 @@
 import { css } from '@emotion/react';
 
-import Show from '@Controls/Show';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 
 type EmptyStateSize = 'small' | 'medium';
 
 interface EmptyStateProps {
-  emptyStateImage: string;
-  emptyStateImage2x?: string;
-  imageAltText: string;
-  title: string;
-  size?: EmptyStateSize;
-  description?: string;
-  actions?: React.ReactNode;
-  removeBorder?: boolean;
+	emptyStateImage: string;
+	emptyStateImage2x?: string;
+	imageAltText: string;
+	title: string;
+	size?: EmptyStateSize;
+	description?: string;
+	actions?: React.ReactNode;
+	removeBorder?: boolean;
 }
 
 const EmptyState = ({
-  emptyStateImage,
-  emptyStateImage2x,
-  imageAltText,
-  title,
-  size = 'medium',
-  description,
-  actions,
-  removeBorder = true,
+	emptyStateImage,
+	emptyStateImage2x,
+	imageAltText,
+	title,
+	size = 'medium',
+	description,
+	actions,
+	removeBorder = true,
 }: EmptyStateProps) => {
-  return (
-    <div css={styles.bannerWrapper(size, removeBorder)}>
-      <img src={emptyStateImage} alt={imageAltText} srcSet={emptyStateImage2x ? `${emptyStateImage2x} 2x` : ''} />
-      <div css={styles.messageWrapper(size)}>
-        <h5 css={styles.title(size)}>{title}</h5>
-        <Show when={description}>
-          <p css={styles.description(size)}>{description}</p>
-        </Show>
-        <Show when={actions}>
-          <div css={styles.actionWrapper(size)}>{actions}</div>
-        </Show>
-      </div>
-    </div>
-  );
+	return (
+		<div css={styles.bannerWrapper(size, removeBorder)}>
+			<img src={emptyStateImage} alt={imageAltText} srcSet={emptyStateImage2x ? `${emptyStateImage2x} 2x` : ''} />
+			<div css={styles.messageWrapper(size)}>
+				<h5 css={styles.title(size)}>{title}</h5>
+				<Show when={description}>
+					<p css={styles.description(size)}>{description}</p>
+				</Show>
+				<Show when={actions}>
+					<div css={styles.actionWrapper(size)}>{actions}</div>
+				</Show>
+			</div>
+		</div>
+	);
 };
 
 export default EmptyState;
 
 const styles = {
-  bannerWrapper: (size: EmptyStateSize, removeBorder: boolean) => css`
+	bannerWrapper: (size: EmptyStateSize, removeBorder: boolean) => css`
     display: grid;
     place-items: center;
     justify-content: center;
     gap: ${spacing[36]};
     padding: ${spacing[16]} ${spacing[20]};
 
-    ${!removeBorder &&
-    css`
+    ${
+			!removeBorder &&
+			css`
       border: 1px solid ${colorTokens.stroke.divider};
       border-radius: ${borderRadius.card};
-    `}
+    `
+		}
 
-    ${size === 'small' &&
-    css`
+    ${
+			size === 'small' &&
+			css`
       gap: ${spacing[12]};
       padding: ${spacing[12]};
       padding-bottom: ${spacing[24]};
-    `}
+    `
+		}
 
     & img {
       max-width: 640px;
@@ -74,13 +78,15 @@ const styles = {
       overflow: hidden;
       object-position: center;
       object-fit: cover;
-      ${size === 'small' &&
-      css`
+      ${
+				size === 'small' &&
+				css`
         max-width: 282px;
-      `}
+      `
+			}
     }
   `,
-  messageWrapper: (size: EmptyStateSize) => css`
+	messageWrapper: (size: EmptyStateSize) => css`
     display: flex;
     flex-direction: column;
     max-width: 566px;
@@ -88,42 +94,50 @@ const styles = {
     gap: ${spacing[12]};
     text-align: center;
 
-    ${size === 'small' &&
-    css`
+    ${
+			size === 'small' &&
+			css`
       gap: ${spacing[8]};
-    `}
+    `
+		}
   `,
-  title: (size: EmptyStateSize) => css`
+	title: (size: EmptyStateSize) => css`
     ${typography.heading5()};
     color: ${colorTokens.text.primary};
 
-    ${size === 'small' &&
-    css`
+    ${
+			size === 'small' &&
+			css`
       ${typography.caption('medium')};
       color: ${colorTokens.text.primary};
-    `}
+    `
+		}
   `,
-  description: (size: EmptyStateSize) => css`
+	description: (size: EmptyStateSize) => css`
     ${typography.body()};
     color: ${colorTokens.text.hints};
 
-    ${size === 'small' &&
-    css`
+    ${
+			size === 'small' &&
+			css`
       ${typography.tiny()};
       color: ${colorTokens.text.hints};
-    `}
+    `
+		}
   `,
-  actionWrapper: (size: EmptyStateSize) => css`
+	actionWrapper: (size: EmptyStateSize) => css`
     margin-top: ${spacing[20]};
     display: flex;
     justify-content: center;
     align-items: center;
     gap: ${spacing[12]};
 
-    ${size === 'small' &&
-    css`
+    ${
+			size === 'small' &&
+			css`
       gap: ${spacing[8]};
       margin-top: ${spacing[8]};
-    `}
+    `
+		}
   `,
 };

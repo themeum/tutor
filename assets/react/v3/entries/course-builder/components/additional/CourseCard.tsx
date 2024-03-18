@@ -1,4 +1,3 @@
-import React from 'react';
 import { css } from '@emotion/react';
 
 import SVGIcon from '@Atoms/SVGIcon';
@@ -9,32 +8,32 @@ import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 
 interface CourseCardProps {
-  id: number;
-  title: string;
-  image: string;
+	id: number;
+	title: string;
+	image: string;
 }
 
 const CourseCard = ({ id, title, image }: CourseCardProps) => {
-  return (
-    <div key={id} css={styles.courseCard}>
-      <div css={styles.imageWrapper}>
-        <img src={image} alt={title} css={styles.image} />
-      </div>
-      <div css={styles.cardContent}>
-        <span css={styles.cardTitle}>{title}</span>
-        <p css={typography.tiny()}>{id}</p>
-      </div>
-      <button css={styles.removeButton} data-visually-hidden>
-        <SVGIcon name="times" width={14} height={14} />
-      </button>
-    </div>
-  );
+	return (
+		<div key={id} css={styles.courseCard}>
+			<div css={styles.imageWrapper}>
+				<img src={image} alt={title} css={styles.image} />
+			</div>
+			<div css={styles.cardContent}>
+				<span css={styles.cardTitle}>{title}</span>
+				<p css={typography.tiny()}>{id}</p>
+			</div>
+			<button type="button" css={styles.removeButton} data-visually-hidden>
+				<SVGIcon name="times" width={14} height={14} />
+			</button>
+		</div>
+	);
 };
 
 export default CourseCard;
 
 const styles = {
-  courseCard: css`
+	courseCard: css`
     position: relative;
     padding: ${spacing[8]};
     border: 1px solid transparent;
@@ -57,26 +56,26 @@ const styles = {
       }
     }
   `,
-  imageWrapper: css`
+	imageWrapper: css`
     height: 42px;
   `,
-  image: css`
+	image: css`
     width: 100%;
     height: 100%;
     border-radius: ${borderRadius.card};
     object-fit: cover;
     object-position: center;
   `,
-  cardContent: css`
+	cardContent: css`
     display: flex;
     flex-direction: column;
   `,
-  cardTitle: css`
+	cardTitle: css`
     ${typography.small()};
     ${styleUtils.text.ellipsis(1)};
     font-weight: ${fontWeight.medium};
   `,
-  removeButton: css`
+	removeButton: css`
     ${styleUtils.resetButton};
     position: absolute;
     top: 50%;

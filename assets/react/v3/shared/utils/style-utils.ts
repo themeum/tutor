@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, fontFamily, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorPalate, containerMaxWidth, fontFamily, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 
 export const createGlobalCss = () => css`
@@ -8,7 +8,7 @@ export const createGlobalCss = () => css`
   ::after,
   ::before {
     box-sizing: border-box;
-    font-family: ${fontFamily.roboto};
+    font-family: ${fontFamily.sfProDisplay};
   }
 
   html {
@@ -17,7 +17,7 @@ export const createGlobalCss = () => css`
   }
   body {
     margin: 0;
-    font-family: ${fontFamily.roboto};
+    font-family: ${fontFamily.sfProDisplay};
   }
 
   main {
@@ -198,58 +198,60 @@ export const createGlobalCss = () => css`
 `;
 
 export const styleUtils = {
-  centeredFlex: css`
+	centeredFlex: css`
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
   `,
-  flexCenter: (direction: 'row' | 'column' = 'row') => css`
+	flexCenter: (direction: 'row' | 'column' = 'row') => css`
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: row;
 
-    ${direction === 'column' &&
-    css`
+    ${
+			direction === 'column' &&
+			css`
       flex-direction: column;
-    `}
+    `
+		}
   `,
-  ulReset: css`
+	ulReset: css`
     list-style: none;
     padding: 0;
     margin: 0;
   `,
-  resetButton: css`
+	resetButton: css`
     background: none;
     border: none;
     outline: none;
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.roboto};
+    font-family: ${fontFamily.sfProDisplay};
     cursor: pointer;
   `,
-  cardInnerSection: css`
+	cardInnerSection: css`
     padding: ${spacing[24]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
   `,
-  fieldGroups: (gap: keyof typeof spacing) => css`
+	fieldGroups: (gap: keyof typeof spacing) => css`
     display: flex;
     flex-direction: column;
     gap: ${spacing[gap]};
   `,
-  addAnotherOptionButton: css`
+	addAnotherOptionButton: css`
     background: none;
     border: none;
     outline: none;
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.roboto};
+    font-family: ${fontFamily.sfProDisplay};
     display: flex;
     gap: ${spacing[8]};
     align-items: end;
@@ -258,17 +260,17 @@ export const styleUtils = {
       text-decoration: underline;
     }
   `,
-  titleAliasWrapper: css`
+	titleAliasWrapper: css`
     display: flex;
     flex-direction: column;
     gap: ${spacing[12]};
   `,
-  inlineSwitch: css`
+	inlineSwitch: css`
     display: flex;
     justify-content: space-between;
     align-items: center;
   `,
-  overflowYAuto: css`
+	overflowYAuto: css`
     overflow-y: auto;
 
     ::-webkit-scrollbar {
@@ -281,51 +283,55 @@ export const styleUtils = {
       border-radius: ${borderRadius[6]};
     }
   `,
-  textEllipsis: css`
+	textEllipsis: css`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
   `,
-  display: {
-    flex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
+	container: css`
+    width: ${containerMaxWidth}px;
+    margin: 0 auto;
+  `,
+	display: {
+		flex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
       display: flex;
       flex-direction: ${direction};
     `,
-    inlineFlex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
+		inlineFlex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
       display: inline-flex;
       flex-direction: ${direction};
     `,
-    none: css`
+		none: css`
       display: none;
     `,
-    block: css`
+		block: css`
       display: block;
     `,
-    inlineBlock: css`
+		inlineBlock: css`
       display: inline-block;
     `,
-  },
-  text: {
-    ellipsis: (lines = 1) => css`
+	},
+	text: {
+		ellipsis: (lines = 1) => css`
       display: -webkit-box;
       -webkit-line-clamp: ${lines};
       -webkit-box-orient: vertical;
       overflow: hidden;
       -webkit-box-pack: end;
     `,
-    align: {
-      center: css`
+		align: {
+			center: css`
         text-align: center;
       `,
-      left: css`
+			left: css`
         text-align: left;
       `,
-      right: css`
+			right: css`
         text-align: right;
       `,
-      justify: css`
+			justify: css`
         text-align: justify;
       `,
-    },
-  },
+		},
+	},
 };

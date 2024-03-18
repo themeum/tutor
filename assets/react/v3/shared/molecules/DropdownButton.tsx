@@ -1,180 +1,184 @@
-import React, { MouseEvent, ReactNode, useRef, useState } from 'react';
-import { SerializedStyles, css, keyframes } from '@emotion/react';
+import { type SerializedStyles, css, keyframes } from '@emotion/react';
+import React, { useRef, useState, type MouseEvent, type ReactNode } from 'react';
 
-import { ButtonIconPosition, ButtonSize, ButtonVariant } from '@Atoms/Button';
+import type { ButtonIconPosition, ButtonSize, ButtonVariant } from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { AnimationType } from '@Hooks/useAnimation';
+import { styleUtils } from '@Utils/style-utils';
 
-import Popover from './Popover';
 import { typography } from '@Config/typography';
+import Popover from './Popover';
 
 interface DropdownOptionProps {
-  type?: 'button' | 'submit';
-  text: string | ReactNode;
-  disabled?: boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  buttonContentCss?: SerializedStyles;
+	type?: 'button' | 'submit';
+	text: string | ReactNode;
+	disabled?: boolean;
+	onClick?: React.MouseEventHandler<HTMLButtonElement>;
+	buttonContentCss?: SerializedStyles;
+	isDanger?: boolean;
 }
 
 export const DropdownItem = ({
-  text,
-  type = 'button',
-  disabled = false,
-  onClick,
-  buttonContentCss,
+	text,
+	type = 'button',
+	disabled = false,
+	onClick,
+	buttonContentCss,
+	isDanger = false,
 }: DropdownOptionProps) => {
-  return (
-    <button
-      type={type}
-      css={styles.dropdownOption({
-        disabled,
-      })}
-      onClick={onClick}
-    >
-      <span css={[styles.dropdownOptionContent, buttonContentCss]}>{text}</span>
-    </button>
-  );
+	return (
+		<button
+			type={type}
+			css={styles.dropdownOption({
+				disabled,
+				isDanger,
+			})}
+			onClick={onClick}
+		>
+			<span css={[styles.dropdownOptionContent, buttonContentCss]}>{text}</span>
+		</button>
+	);
 };
 
 interface DropdownButtonProps {
-  text: string | ReactNode;
-  children: ReactNode;
-  variant?: ButtonVariant;
-  type?: 'submit' | 'button';
-  size?: ButtonSize;
-  icon?: React.ReactNode;
-  iconPosition?: ButtonIconPosition;
-  disabled?: boolean;
-  loading?: boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  tabIndex?: number;
-  buttonCss?: SerializedStyles;
-  buttonContentCss?: SerializedStyles;
-  dropdownMaxWidth?: string;
+	text: string | ReactNode;
+	children: ReactNode;
+	variant?: ButtonVariant;
+	type?: 'submit' | 'button';
+	size?: ButtonSize;
+	icon?: React.ReactNode;
+	iconPosition?: ButtonIconPosition;
+	disabled?: boolean;
+	loading?: boolean;
+	onClick?: React.MouseEventHandler<HTMLButtonElement>;
+	tabIndex?: number;
+	buttonCss?: SerializedStyles;
+	buttonContentCss?: SerializedStyles;
+	dropdownMaxWidth?: string;
 }
 
 const DropdownButton = ({
-  type = 'button',
-  text,
-  children,
-  variant = 'primary',
-  size = 'medium',
-  icon,
-  iconPosition = 'left',
-  loading = false,
-  disabled = false,
-  tabIndex = -1,
-  onClick,
-  buttonCss,
-  buttonContentCss,
-  dropdownMaxWidth = '140px',
+	type = 'button',
+	text,
+	children,
+	variant = 'primary',
+	size = 'medium',
+	icon,
+	iconPosition = 'left',
+	loading = false,
+	disabled = false,
+	tabIndex = -1,
+	onClick,
+	buttonCss,
+	buttonContentCss,
+	dropdownMaxWidth = '140px',
 }: DropdownButtonProps) => {
-  const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
-  const [isOpen, setIsOpen] = useState(false);
+	const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
+	const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <>
-      <div css={styles.wrapper}>
-        <button
-          type={type}
-          css={[
-            styles.button({
-              variant,
-              size,
-              loading,
-              disabled,
-            }),
-            buttonCss,
-          ]}
-          onClick={onClick}
-          tabIndex={tabIndex}
-        >
-          {loading && !disabled && (
-            <span css={styles.spinner}>
-              <SVGIcon name="spinner" width={18} height={18} />
-            </span>
-          )}
-          <span
-            css={[
-              styles.buttonContent({
-                loading,
-                disabled,
-              }),
-              buttonContentCss,
-            ]}
-          >
-            {icon && iconPosition === 'left' && (
-              <span
-                css={styles.buttonIcon({
-                  iconPosition,
-                })}
-              >
-                {icon}
-              </span>
-            )}
-            {text}
-            {icon && iconPosition === 'right' && (
-              <span
-                css={styles.buttonIcon({
-                  iconPosition,
-                })}
-              >
-                {icon}
-              </span>
-            )}
-          </span>
-        </button>
-        <button
-          ref={dropdownTriggerRef}
-          type="button"
-          css={[
-            styles.button({
-              variant,
-              size,
-              loading: false,
-              disabled,
-            }),
-            styles.dropdownButton({
-              variant,
-              disabled,
-            }),
-          ]}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <SVGIcon name="chevronDown" width={24} height={24} />
-        </button>
-      </div>
-      <Popover
-        gap={13}
-        maxWidth={dropdownMaxWidth}
-        arrow="top"
-        triggerRef={dropdownTriggerRef}
-        isOpen={isOpen}
-        closePopover={() => setIsOpen(false)}
-        animationType={AnimationType.slideUp}
-      >
-        <div css={styles.dropdownWrapper}>
-          {React.Children.map(children, child => {
-            if (React.isValidElement(child)) {
-              const childProps: DropdownOptionProps = {
-                ...child.props,
-                onClick: (event: MouseEvent<HTMLButtonElement>) => {
-                  setIsOpen(false);
-                  child.props.onClick && child.props.onClick(event);
-                },
-              };
-              return React.cloneElement(child, childProps);
-            }
+	return (
+		<>
+			<div css={styles.wrapper}>
+				<button
+					type={type}
+					css={[
+						styles.button({
+							variant,
+							size,
+							loading,
+							disabled,
+						}),
+						buttonCss,
+					]}
+					onClick={onClick}
+					tabIndex={tabIndex}
+				>
+					{loading && !disabled && (
+						<span css={styles.spinner}>
+							<SVGIcon name="spinner" width={18} height={18} />
+						</span>
+					)}
+					<span
+						css={[
+							styles.buttonContent({
+								loading,
+								disabled,
+							}),
+							buttonContentCss,
+						]}
+					>
+						{icon && iconPosition === 'left' && (
+							<span
+								css={styles.buttonIcon({
+									iconPosition,
+								})}
+							>
+								{icon}
+							</span>
+						)}
+						{text}
+						{icon && iconPosition === 'right' && (
+							<span
+								css={styles.buttonIcon({
+									iconPosition,
+								})}
+							>
+								{icon}
+							</span>
+						)}
+					</span>
+				</button>
+				<button
+					ref={dropdownTriggerRef}
+					type="button"
+					css={[
+						styles.button({
+							variant,
+							size,
+							loading: false,
+							disabled,
+						}),
+						styles.dropdownButton({
+							variant,
+							disabled,
+						}),
+					]}
+					onClick={() => setIsOpen(!isOpen)}
+				>
+					<SVGIcon name="chevronDown" width={24} height={24} />
+				</button>
+			</div>
+			<Popover
+				gap={4}
+				maxWidth={dropdownMaxWidth}
+				arrow="top"
+				triggerRef={dropdownTriggerRef}
+				isOpen={isOpen}
+				closePopover={() => setIsOpen(false)}
+				animationType={AnimationType.slideUp}
+				hideArrow
+			>
+				<div css={styles.dropdownWrapper}>
+					{React.Children.map(children, (child) => {
+						if (React.isValidElement(child)) {
+							const childProps: DropdownOptionProps = {
+								...child.props,
+								onClick: (event: MouseEvent<HTMLButtonElement>) => {
+									setIsOpen(false);
+									child.props?.onClick(event);
+								},
+							};
+							return React.cloneElement(child, childProps);
+						}
 
-            return child;
-          })}
-        </div>
-      </Popover>
-    </>
-  );
+						return child;
+					})}
+				</div>
+			</Popover>
+		</>
+	);
 };
 
 DropdownButton.Item = DropdownItem;
@@ -191,21 +195,21 @@ const spin = keyframes`
 `;
 
 const styles = {
-  wrapper: css`
+	wrapper: css`
     ${styleUtils.display.inlineFlex()};
     align-items: center;
   `,
-  button: ({
-    variant,
-    size,
-    loading,
-    disabled,
-  }: {
-    variant: ButtonVariant;
-    size: ButtonSize;
-    loading: boolean;
-    disabled: boolean;
-  }) => css`
+	button: ({
+		variant,
+		size,
+		loading,
+		disabled,
+	}: {
+		variant: ButtonVariant;
+		size: ButtonSize;
+		loading: boolean;
+		disabled: boolean;
+	}) => css`
     ${styleUtils.resetButton};
     ${typography.caption('medium')}
     display: inline-block;
@@ -227,20 +231,25 @@ const styles = {
       z-index: ${zIndex.positive};
     }
 
-    ${size === 'large' &&
-    css`
+    ${
+			size === 'large' &&
+			css`
       padding: ${spacing[12]} ${spacing[32]};
-    `}
+    `
+		}
 
-    ${size === 'small' &&
-    css`
+    ${
+			size === 'small' &&
+			css`
       font-size: ${fontSize[13]};
       line-height: ${lineHeight[20]};
       padding: ${spacing[6]} ${spacing[16]};
-    `}
+    `
+		}
     
-    ${variant === 'primary' &&
-    css`
+    ${
+			variant === 'primary' &&
+			css`
       background-color: ${colorTokens.action.primary.default};
       color: ${colorTokens.text.white};
 
@@ -256,15 +265,19 @@ const styles = {
         box-shadow: ${shadow.focus};
       }
 
-      ${(disabled || loading) &&
-      css`
+      ${
+				(disabled || loading) &&
+				css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
-      `}
-    `}
+      `
+			}
+    `
+		}
 
-    ${variant === 'secondary' &&
-    css`
+    ${
+			variant === 'secondary' &&
+			css`
       background-color: ${colorTokens.action.secondary.default};
       color: ${colorTokens.text.brand};
 
@@ -280,15 +293,19 @@ const styles = {
         box-shadow: ${shadow.focus};
       }
 
-      ${(disabled || loading) &&
-      css`
+      ${
+				(disabled || loading) &&
+				css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
-      `}
-    `}
+      `
+			}
+    `
+		}
 
-    ${variant === 'outlined' &&
-    css`
+    ${
+			variant === 'outlined' &&
+			css`
       background-color: ${colorTokens.action.outline.default};
       color: ${colorTokens.text.brand};
       box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
@@ -305,15 +322,19 @@ const styles = {
         box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand}, ${shadow.focus};
       }
 
-      ${(disabled || loading) &&
-      css`
+      ${
+				(disabled || loading) &&
+				css`
         color: ${colorTokens.text.disable};
         box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
-      `}
-    `}
+      `
+			}
+    `
+		}
 
-    ${variant === 'tertiary' &&
-    css`
+    ${
+			variant === 'tertiary' &&
+			css`
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
       box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
@@ -332,15 +353,19 @@ const styles = {
         box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default}, ${shadow.focus};
       }
 
-      ${(disabled || loading) &&
-      css`
+      ${
+				(disabled || loading) &&
+				css`
         color: ${colorTokens.text.disable};
         box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
-      `}
-    `}
+      `
+			}
+    `
+		}
 
-    ${variant === 'danger' &&
-    css`
+    ${
+			variant === 'danger' &&
+			css`
       background-color: ${colorTokens.background.status.errorFail};
       color: ${colorTokens.text.error};
 
@@ -356,15 +381,19 @@ const styles = {
         box-shadow: ${shadow.focus};
       }
 
-      ${(disabled || loading) &&
-      css`
+      ${
+				(disabled || loading) &&
+				css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
-      `}
-    `}
+      `
+			}
+    `
+		}
 
-    ${variant === 'text' &&
-    css`
+    ${
+			variant === 'text' &&
+			css`
       background-color: transparent;
       color: ${colorTokens.text.subdued};
       padding: ${spacing[4]} ${spacing[8]};
@@ -394,42 +423,51 @@ const styles = {
         }
       }
 
-      ${(disabled || loading) &&
-      css`
+      ${
+				(disabled || loading) &&
+				css`
         color: ${colorTokens.text.disable};
 
         svg {
           color: ${colorTokens.icon.disable};
         }
-      `}
-    `}
+      `
+			}
+    `
+		}
 
-    ${(disabled || loading) &&
-    css`
+    ${
+			(disabled || loading) &&
+			css`
       pointer-events: none;
-    `}
+    `
+		}
   `,
-  buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
+	buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
     display: flex;
     align-items: center;
 
-    ${loading &&
-    !disabled &&
-    css`
+    ${
+			loading &&
+			!disabled &&
+			css`
       color: transparent;
-    `}
+    `
+		}
   `,
-  buttonIcon: ({ iconPosition }: { iconPosition: ButtonIconPosition }) => css`
+	buttonIcon: ({ iconPosition }: { iconPosition: ButtonIconPosition }) => css`
     display: grid;
     place-items: center;
     margin-right: ${spacing[6]};
-    ${iconPosition === 'right' &&
-    css`
+    ${
+			iconPosition === 'right' &&
+			css`
       margin-right: 0;
       margin-left: ${spacing[6]};
-    `}
+    `
+		}
   `,
-  spinner: css`
+	spinner: css`
     position: absolute;
     visibility: visible;
     display: flex;
@@ -440,40 +478,48 @@ const styles = {
       animation: ${spin} 1.5s linear infinite;
     }
   `,
-  dropdownButton: ({ variant, disabled }: { variant: ButtonVariant; disabled: boolean }) => css`
+	dropdownButton: ({ variant, disabled }: { variant: ButtonVariant; disabled: boolean }) => css`
     ${styleUtils.flexCenter()}
     padding: ${spacing[8]};
     border-left: 1px solid ${colorTokens.stroke.brand};
     border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
 
-    ${variant === 'outlined' ||
-    variant === 'tertiary' ||
-    (variant === 'text' &&
-      css`
+    ${
+			variant === 'outlined' ||
+			variant === 'tertiary' ||
+			(variant === 'text' &&
+				css`
         border-left: none;
-      `)}
+      `)
+		}
 
-    ${variant === 'danger' &&
-    css`
+    ${
+			variant === 'danger' &&
+			css`
       border-color: ${colorTokens.stroke.danger};
-    `}
+    `
+		}
 
-    ${variant === 'secondary' &&
-    css`
+    ${
+			variant === 'secondary' &&
+			css`
       border-color: ${colorTokens.stroke.default};
-    `}
+    `
+		}
 
-    ${disabled &&
-    css`
+    ${
+			disabled &&
+			css`
       border-color: ${colorTokens.stroke.disable};
-    `}
+    `
+		}
   `,
-  dropdownWrapper: css`
+	dropdownWrapper: css`
     display: flex;
     flex-direction: column;
     padding-block: ${spacing[6]};
   `,
-  dropdownOption: ({ disabled }: { disabled: boolean }) => css`
+	dropdownOption: ({ disabled, isDanger }: { disabled: boolean; isDanger: boolean }) => css`
     ${styleUtils.resetButton};
     width: 100%;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
@@ -484,9 +530,16 @@ const styles = {
     gap: ${spacing[8]};
     border: 2px solid transparent;
 
+    ${
+			isDanger &&
+			css`
+      color: ${colorTokens.text.error};
+    `
+		}
+
     :hover {
       background-color: ${colorTokens.background.hover};
-      color: ${colorTokens.text.title};
+      color: ${isDanger ? colorTokens.text.error : colorTokens.text.title};
     }
 
     :focus,
@@ -494,13 +547,15 @@ const styles = {
       border-color: ${colorTokens.stroke.brand};
     }
 
-    ${disabled &&
-    css`
+    ${
+			disabled &&
+			css`
       pointer-events: none;
       color: ${colorTokens.text.disable};
-    `}
+    `
+		}
   `,
-  dropdownOptionContent: css`
+	dropdownOptionContent: css`
     display: flex;
     align-items: center;
   `,
