@@ -4,11 +4,12 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
-import type { ModalProps } from '@Components/modals/Modal';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { modal } from '@Config/constants';
 import Tabs from '@Molecules/Tabs';
-import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -47,11 +48,13 @@ interface QuizModalProps extends ModalProps {
 }
 
 interface QuizForm {
-	question_type: QuizQuestionType;
-	answer_required: boolean;
-	randomize: boolean;
-	point: number;
-	display_point: boolean;
+	quiz_title: string;
+  quiz_description: string;
+  question_type: QuizQuestionType;
+  answer_required: boolean;
+  randomize: boolean;
+  point: number;
+  display_point: boolean;
 }
 
 const questionTypeOptions: Option<QuizQuestionType>[] = [
@@ -114,11 +117,14 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [questionsData, setQuestionsData] = useState<QuizQuestion[]>([]);
   const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'questions' | 'settings'>('questions');
+  // @TODO: isEdit will be calculated based on the quiz data form API
+  const [isEdit, setIsEdit] = useState<boolean>(true);
 
 	const cancelRef = useRef<HTMLButtonElement>(null);
 
 	const form = useFormWithGlobalError<QuizForm>({
 		defaultValues: {
+
 			question_type: 'true-false',
 			answer_required: false,
 			randomize: false,
@@ -145,6 +151,12 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   }, [activeSortId, questionsData]);
 
   const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
+  
+  const onQuizFormSubmit = (data: QuizForm) => {
+    // @TODO: will be implemented later
+    alert(JSON.stringify(data, null, 2));
+    setIsEdit(false);
+  };
 
   // @TODO: Remove this when the API is ready
   useEffect(() => {
@@ -215,7 +227,51 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 		>
 			<div css={styles.wrapper}>
 				<div css={styles.left}>
-					<div css={styles.quizName}>General Knowledge</div>
+        <div css={styles.quizTitleWrapper}>
+            <Show
+              when={isEdit}
+              fallback={
+                <div css={styles.quizNameWithButton}>
+                  <span css={styles.quizTitle}>General knowledge</span>
+                  <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
+                    <SVGIcon name="edit" width={24} height={24} />
+                  </Button>
+                </div>
+              }
+            >
+              <div css={styles.quizForm}>
+                <Controller
+                  control={form.control}
+                  name="quiz_title"
+                  rules={{ required: __('Quiz title is required', 'tutor') }}
+                  render={controllerProps => (
+                    <FormInput {...controllerProps} placeholder={__('Add quiz title', 'tutor')} />
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="quiz_description"
+                  render={controllerProps => (
+                    <FormTextareaInput
+                      {...controllerProps}
+                      placeholder={__('Add a summary', 'tutor')}
+                      enableResize
+                      rows={2}
+                    />
+                  )}
+                />
+
+                <div css={styles.quizFormButtonWrapper}>
+                  <Button variant="text" type="button" onClick={() => setIsEdit(false)} size="small">
+                    {__('Cancel', 'tutor')}
+                  </Button>
+                  <Button variant="secondary" type="submit" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
+                    {__('Ok', 'tutor')}
+                  </Button>
+                </div>
+              </div>
+            </Show>
+          </div>
 					<div css={styles.questionsLabel}>
 						<span>Questions</span>
 						<button type="button" onClick={() => alert('@TODO: will be implemented later')}>
@@ -389,13 +445,45 @@ const styles = {
     gap: ${spacing[16]};
     border-left: 1px solid ${colorTokens.stroke.divider};
   `,
-	quizName: css`
+  quizTitleWrapper: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
     padding: ${spacing[16]} ${spacing[32]} ${spacing[16]} ${spacing[28]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
   `,
-	questionsLabel: css`
+  quizNameWithButton: css`
+    display: inline-flex;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+
+    button {
+      display: none;
+    }
+
+    :hover {
+      button {
+        display: block;
+      }
+    }
+  `,
+  quizTitle: css`
+    flex: 1;
+    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[8]};
+    background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius[6]};
+  `,
+  quizForm: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
+  quizFormButtonWrapper: css`
+    display: flex;
+    justify-content: end;
+    margin-top: ${spacing[4]};
+    gap: ${spacing[8]};
+  `,
+  questionsLabel: css`
     display: flex;
     gap: ${spacing[4]};
     align-items: center;
