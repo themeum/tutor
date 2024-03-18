@@ -1,9 +1,9 @@
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css, keyframes, SerializedStyles } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
-import React, { ReactNode } from 'react';
+import { type SerializedStyles, css, keyframes } from '@emotion/react';
+import React, { type ReactNode } from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'text';
 export type ButtonSize = 'large' | 'regular' | 'small';
@@ -126,10 +126,12 @@ const styles = {
     css`
       ${typography.small('medium')};
       padding: ${spacing[6]} ${spacing[16]};
-    `}
+    `
+		}
     
-    ${variant === 'primary' &&
-    css`
+    ${
+			variant === 'primary' &&
+			css`
       background-color: ${colorTokens.action.primary.default};
       color: ${colorTokens.text.white};
 
@@ -186,8 +188,9 @@ const styles = {
         }
       `}
 
-      ${(disabled || loading) &&
-      css`
+      ${
+				(disabled || loading) &&
+				css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
         svg {
@@ -206,8 +209,9 @@ const styles = {
       `}
     `}
 
-    ${variant === 'secondary' &&
-    css`
+    ${
+			variant === 'secondary' &&
+			css`
       background-color: ${colorTokens.action.secondary.default};
       color: ${colorTokens.text.brand};
 
@@ -327,8 +331,9 @@ const styles = {
       `}
     `}
 
-    ${variant === 'danger' &&
-    css`
+    ${
+			variant === 'danger' &&
+			css`
       background-color: ${colorTokens.background.status.errorFail};
       color: ${colorTokens.text.error};
 
@@ -355,8 +360,9 @@ const styles = {
         box-shadow: inset 0 0 0 1px ${colorTokens.stroke.danger};
       `}
 
-      ${(disabled || loading) &&
-      css`
+      ${
+				(disabled || loading) &&
+				css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
 
@@ -376,8 +382,9 @@ const styles = {
       `}
     `}
 
-    ${variant === 'text' &&
-    css`
+    ${
+			variant === 'text' &&
+			css`
       background-color: transparent;
       color: ${colorTokens.text.subdued};
       padding: ${spacing[8]};
@@ -410,30 +417,37 @@ const styles = {
         }
       }
 
-      ${(disabled || loading) &&
-      css`
+      ${
+				(disabled || loading) &&
+				css`
         color: ${colorTokens.text.disable};
 
         svg {
           color: ${colorTokens.icon.disable.default};
         }
-      `}
-    `}
+      `
+			}
+    `
+		}
 
-    ${(disabled || loading) &&
-    css`
+    ${
+			(disabled || loading) &&
+			css`
       pointer-events: none;
-    `}
+    `
+		}
   `,
   buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
     ${styleUtils.display.flex()};
     align-items: center;
 
-    ${loading &&
-    !disabled &&
-    css`
+    ${
+			loading &&
+			!disabled &&
+			css`
       color: transparent;
-    `}
+    `
+		}
   `,
   buttonIcon: ({
     iconPosition,
@@ -463,7 +477,7 @@ const styles = {
       margin-inline: 0;
     `}
   `,
-  spinner: css`
+	spinner: css`
     position: absolute;
     visibility: visible;
     display: flex;

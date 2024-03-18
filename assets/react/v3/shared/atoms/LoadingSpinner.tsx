@@ -26,14 +26,14 @@ const dashKeyframes = keyframes`
 `;
 
 const styles = {
-  fullscreen: css`
+	fullscreen: css`
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
     width: 100vw;
   `,
-  loadingOverlay: css`
+	loadingOverlay: css`
     position: absolute;
     top: 0;
     bottom: 0;
@@ -43,17 +43,17 @@ const styles = {
     align-items: center;
     justify-content: center;
   `,
-  loadingSection: css`
+	loadingSection: css`
     width: 100%;
     height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
   `,
-  svg: css`
+	svg: css`
     animation: ${rotatorKeyframes} 1.4s linear infinite;
   `,
-  spinnerPath: css`
+	spinnerPath: css`
     stroke-dasharray: 180;
     stroke-dashoffset: 0;
     transform-origin: center;
@@ -62,49 +62,50 @@ const styles = {
 };
 
 interface LoadingSpinnerProps {
-  size?: number;
-  color?: string;
+	size?: number;
+	color?: string;
 }
 
 const LoadingSpinner = ({ size = 30, color = colorPalate.icon.disabled }: LoadingSpinnerProps) => {
-  return (
-    <svg width={size} height={size} css={styles.svg} viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg">
-      <circle
-        css={styles.spinnerPath}
-        fill="none"
-        stroke={color}
-        strokeWidth="6"
-        strokeLinecap="round"
-        cx="43"
-        cy="43"
-        r="30"
-      />
-    </svg>
-  );
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg width={size} height={size} css={styles.svg} viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg">
+			<circle
+				css={styles.spinnerPath}
+				fill="none"
+				stroke={color}
+				strokeWidth="6"
+				strokeLinecap="round"
+				cx="43"
+				cy="43"
+				r="30"
+			/>
+		</svg>
+	);
 };
 
 export const LoadingOverlay = () => {
-  return (
-    <div css={styles.loadingOverlay}>
-      <LoadingSpinner />
-    </div>
-  );
+	return (
+		<div css={styles.loadingOverlay}>
+			<LoadingSpinner />
+		</div>
+	);
 };
 
 export const LoadingSection = () => {
-  return (
-    <div css={styles.loadingSection}>
-      <LoadingSpinner />
-    </div>
-  );
+	return (
+		<div css={styles.loadingSection}>
+			<LoadingSpinner />
+		</div>
+	);
 };
 
 export const FullscreenLoadingSpinner = () => {
-  return (
-    <div css={styles.fullscreen}>
-      <LoadingSpinner />
-    </div>
-  );
+	return (
+		<div css={styles.fullscreen}>
+			<LoadingSpinner />
+		</div>
+	);
 };
 
 export default LoadingSpinner;

@@ -1,11 +1,12 @@
 import { rgba } from 'polished';
 
-export const headerHeight = 80;
+export const headerHeight = 64;
 export const sidebarWidth = 355;
 export const footerHeight = 56;
 
 export const fontFamily = {
   roboto: "'Roboto', sans-serif;",
+  sfProDisplay: "'SF Pro Display', sans-serif;",
 } as const;
 
 export const colorPalate = {
@@ -218,6 +219,8 @@ export const colorTokens = {
   surface: {
     tutor: '#ffffff',
     wordpress: '#f1f1f1',
+    navbar: '#F5F5F5',
+    courseBuilder: '#F8F8F8',
   },
   background: {
     brand: '#3e64de',
@@ -537,6 +540,7 @@ export const borderRadius = {
   50: '50px',
   circle: '50%',
   card: '8px',
+  min: '4px',
 } as const;
 
 export const zIndex = {
@@ -564,4 +568,4 @@ export const Breakpoint = {
   desktop: `@media(min-width: ${DesktopBreakpoint}px)`,
 };
 
-export const containerMaxWidth = 1320;
+export const containerMaxWidth = 1006;

@@ -1,6 +1,7 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const webpack = require('webpack');
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = (env, options) => {
@@ -20,7 +21,7 @@ module.exports = (env, options) => {
           use: 'babel-loader',
         },
         {
-          test: /\.(png|jp(e*)g|svg|gif|webp)$/,
+          test: /\.(png|jp(e*)g|gif|webp)$/,
           use: [
             {
               loader: 'file-loader',
@@ -30,8 +31,14 @@ module.exports = (env, options) => {
             },
           ],
         },
+        {
+          test: /\.svg$/i,
+          issuer: /\.[jt]sx?$/,
+          use: ['@svgr/webpack'],
+        },
       ],
     },
+    plugins: [new webpack.ProvidePlugin({ React: 'react' })],
     devtool: 'source-map',
   };
 

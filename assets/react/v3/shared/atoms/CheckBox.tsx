@@ -1,80 +1,80 @@
 import { colorPalate, colorTokens, shadow, spacing } from '@Config/styles';
-import { css, SerializedStyles } from '@emotion/react';
 import { nanoid } from '@Utils/util';
-import React, { ChangeEvent, FocusEventHandler } from 'react';
+import { type SerializedStyles, css } from '@emotion/react';
+import React, { type ChangeEvent, type FocusEventHandler } from 'react';
 
 interface CheckboxProps {
-  id?: string;
-  checked?: boolean;
-  label?: string;
-  value?: string;
-  name?: string;
-  disabled?: boolean;
-  'aria-invalid'?: 'true' | 'false';
-  labelCss?: SerializedStyles;
-  inputCss?: SerializedStyles[];
-  onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: FocusEventHandler<HTMLInputElement> | undefined;
-  isIndeterminate?: boolean;
+	id?: string;
+	checked?: boolean;
+	label?: string;
+	value?: string;
+	name?: string;
+	disabled?: boolean;
+	'aria-invalid'?: 'true' | 'false';
+	labelCss?: SerializedStyles;
+	inputCss?: SerializedStyles[];
+	onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
+	onBlur?: FocusEventHandler<HTMLInputElement> | undefined;
+	isIndeterminate?: boolean;
 }
 
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: CheckboxProps, ref) => {
-  const {
-    id = nanoid(),
-    name,
-    labelCss,
-    inputCss,
-    label = '',
-    checked,
-    value,
-    disabled = false,
-    onChange,
-    onBlur,
-    isIndeterminate = false,
-  } = props;
+	const {
+		id = nanoid(),
+		name,
+		labelCss,
+		inputCss,
+		label = '',
+		checked,
+		value,
+		disabled = false,
+		onChange,
+		onBlur,
+		isIndeterminate = false,
+	} = props;
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange && onChange(!isIndeterminate ? event.target.checked : true, event);
-  };
+	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+		onChange?.(!isIndeterminate ? event.target.checked : true, event);
+	};
 
-  return (
-    <label htmlFor={id} css={[styles.container, labelCss]}>
-      <input
-        ref={ref}
-        id={id}
-        name={name}
-        type="checkbox"
-        value={value}
-        checked={!!checked}
-        disabled={disabled}
-        aria-invalid={props['aria-invalid']}
-        onChange={handleChange}
-        onBlur={onBlur}
-        css={[inputCss, styles.checkbox({ label, isIndeterminate, disabled })]}
-      />
-      <span />
-      {label}
-    </label>
-  );
+	return (
+		<label htmlFor={id} css={[styles.container, labelCss]}>
+			<input
+				ref={ref}
+				id={id}
+				name={name}
+				type="checkbox"
+				value={value}
+				checked={!!checked}
+				disabled={disabled}
+				aria-invalid={props['aria-invalid']}
+				onChange={handleChange}
+				onBlur={onBlur}
+				css={[inputCss, styles.checkbox({ label, isIndeterminate, disabled })]}
+			/>
+			<span />
+			{label}
+		</label>
+	);
 });
 
 const styles = {
-  container: css`
+	container: css`
     display: flex;
     align-items: center;
     cursor: pointer;
     user-select: none;
     color: ${colorTokens.text.title};
   `,
-  checkbox: ({
-    label,
-    isIndeterminate,
-    disabled,
-  }: {
-    label: string;
-    isIndeterminate: boolean;
-    disabled: boolean;
-  }) => css`
+	checkbox: ({
+		label,
+		isIndeterminate,
+		disabled,
+	}: {
+		label: string;
+		isIndeterminate: boolean;
+		disabled: boolean;
+	}) => css`
     position: absolute;
     opacity: 0;
     height: 0;
@@ -86,10 +86,12 @@ const styles = {
       font-size: 14px;
       display: inline-flex;
       align-items: center;
-      ${label &&
-      css`
+      ${
+				label &&
+				css`
         margin-right: ${spacing[10]};
-      `}
+      `
+			}
     }
     & + span::before {
       content: '';
@@ -111,14 +113,17 @@ const styles = {
       background-color: ${colorPalate.basic.primary.default};
       border: 0.5px solid ${colorPalate.basic.surface};
 
-      ${disabled &&
-      css`
+      ${
+				disabled &&
+				css`
         background-color: ${colorPalate.icon.disabled};
-      `}
+      `
+			}
     }
 
-    ${isIndeterminate &&
-    css`
+    ${
+			isIndeterminate &&
+			css`
       & + span::before {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='2' fill='none'%3E%3Crect width='10' height='1.5' y='.25' fill='%23fff' rx='.75'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
@@ -127,7 +132,8 @@ const styles = {
         background-color: ${colorPalate.basic.primary.default};
         border: 0.5px solid ${colorPalate.basic.surface};
       }
-    `}
+    `
+		}
   `,
 };
 

@@ -1,22 +1,21 @@
 import { borderRadius } from '@Config/styles';
-import { css, keyframes } from '@emotion/react';
 import { isNumber } from '@Utils/types';
-import React from 'react';
+import { css, keyframes } from '@emotion/react';
 
 interface SkeletonProps {
-  width?: number | string;
-  height?: number | string;
-  animation?: boolean;
+	width?: number | string;
+	height?: number | string;
+	animation?: boolean;
 }
 
 const Skeleton = ({ width = '100%', height = 16, animation = false }: SkeletonProps) => {
-  return <span css={styles.skeleton(width, height, animation)} />;
+	return <span css={styles.skeleton(width, height, animation)} />;
 };
 
 export default Skeleton;
 
 const animations = {
-  wave: keyframes`
+	wave: keyframes`
     0% {
       transform: translateX(-100%);
     }
@@ -30,7 +29,7 @@ const animations = {
 };
 
 const styles = {
-  skeleton: (width: number | string, height: number | string, animation: boolean) => css`
+	skeleton: (width: number | string, height: number | string, animation: boolean) => css`
     display: block;
     width: ${isNumber(width) ? `${width}px` : width};
     height: ${isNumber(height) ? `${height}px` : height};
@@ -40,8 +39,9 @@ const styles = {
     -webkit-mask-image: -webkit-radial-gradient(center, white, black);
     overflow: hidden;
 
-    ${animation &&
-    css`
+    ${
+			animation &&
+			css`
       :after {
         content: '';
         background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
@@ -50,6 +50,7 @@ const styles = {
         inset: 0;
         animation: 1.6s linear 0.5s infinite normal none running ${animations.wave};
       }
-    `}
+    `
+		}
   `,
 };

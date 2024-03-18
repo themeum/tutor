@@ -1,6 +1,6 @@
 import React from 'react';
-import ModalWrapper from './ModalWrapper';
-import { ModalProps } from './Modal';
+import ModalWrapper from '@Components/modals/ModalWrapper';
+import { ModalProps } from '@Components/modals/Modal';
 import { css } from '@emotion/react';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { Controller } from 'react-hook-form';

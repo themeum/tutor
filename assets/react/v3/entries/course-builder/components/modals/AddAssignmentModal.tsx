@@ -14,8 +14,8 @@ import { borderRadius, colorTokens, fontWeight, spacing, zIndex } from '@Config/
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
-import ModalWrapper from './ModalWrapper';
-import { ModalProps } from './Modal';
+import ModalWrapper from '@Components/modals/ModalWrapper';
+import { ModalProps } from '@Components/modals/Modal';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 
 interface AddLessonModalProps extends ModalProps {
