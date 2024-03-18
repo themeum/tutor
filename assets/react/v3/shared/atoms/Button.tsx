@@ -6,7 +6,7 @@ import { styleUtils } from '@Utils/style-utils';
 import React, { ReactNode } from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'text';
-export type ButtonSize = 'large' | 'medium' | 'small';
+export type ButtonSize = 'large' | 'regular' | 'small';
 export type ButtonIconPosition = 'left' | 'right';
 
 interface ButtonProps {
