@@ -8,21 +8,39 @@ import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 import { modal } from '@Config/constants';
 import Tabs from '@Molecules/Tabs';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { type QuizQuestionType, useGetQuizQuestionsQuery } from '@CourseBuilderServices/quiz';
+import { type QuizQuestion, QuizQuestionType, useGetQuizQuestionsQuery } from '@CourseBuilderServices/quiz';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import ThreeDots from '@Molecules/ThreeDots';
 import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection, Option } from '@Utils/types';
+import type { Option } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  UniqueIdentifier,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { moveTo } from '@Utils/util';
+import { createPortal } from 'react-dom';
+import { Question } from '@CourseBuilderComponents/curriculum/Question';
 
 interface QuizModalProps extends ModalProps {
 	closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -35,19 +53,6 @@ interface QuizForm {
 	point: number;
 	display_point: boolean;
 }
-
-const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
-	'true-false': 'quizTrueFalse',
-	'single-choice': 'quizSingleChoice',
-	'multiple-choice': 'quizMultiChoice',
-	'open-ended': 'quizEssay',
-	'fill-in-the-blanks': 'quizFillInTheBlanks',
-	'short-answer': 'quizShortAnswer',
-	matching: 'quizMatching',
-	'image-matching': 'quizImageMatching',
-	'image-answering': 'quizImageAnswer',
-	ordering: 'quizOrdering',
-};
 
 const questionTypeOptions: Option<QuizQuestionType>[] = [
 	{
@@ -105,6 +110,9 @@ const questionTypeOptions: Option<QuizQuestionType>[] = [
 const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 	const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 	const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+  const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
+  const [questionsData, setQuestionsData] = useState<QuizQuestion[]>([]);
+  const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'questions' | 'settings'>('questions');
 
 	const cancelRef = useRef<HTMLButtonElement>(null);
@@ -119,14 +127,31 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 		},
 	});
 
-	const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
-	const questions = useMemo(() => {
-		if (!getQuizQuestionsQuery.data) {
-			return [];
-		}
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
-		return getQuizQuestionsQuery.data;
-	}, [getQuizQuestionsQuery.data]);
+  const activeSortItem = useMemo(() => {
+    if (!activeSortId) {
+      return null;
+    }
+
+    return questionsData.find(item => item.ID === activeSortId);
+  }, [activeSortId, questionsData]);
+
+  const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
+
+  // @TODO: Remove this when the API is ready
+  useEffect(() => {
+    if (getQuizQuestionsQuery.data) {
+      return setQuestionsData(getQuizQuestionsQuery.data);
+    }
+  }, [getQuizQuestionsQuery.data]);
 
 	const { isDirty } = form.formState;
 
@@ -198,73 +223,111 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 						</button>
 					</div>
 
-					<div css={styles.questionList}>
-						<Show when={questions.length > 0} fallback={<div>No question!</div>}>
-							<For each={questions}>
-								{(question, index) => (
-									<div key={question.ID} css={styles.questionItem({ isActive: index === 0 })}>
-										<div css={styles.iconAndSerial} data-icon-serial>
-											<SVGIcon name={questionTypeIconMap[question.type]} width={24} height={24} data-question-icon />
-											<SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
-											<span data-serial>{index + 1}</span>
-										</div>
-										<span css={styles.questionTitle}>{question.title}</span>
-										<ThreeDots
-											isOpen={selectedQuestionId === question.ID}
-											onClick={() => setSelectedQuestionId(question.ID)}
-											closePopover={() => setSelectedQuestionId(null)}
-											dotsOrientation="vertical"
-											maxWidth="220px"
-											isInverse
-											arrowPosition="auto"
-											hideArrow
-											data-three-dots
-										>
-											<ThreeDots.Option text="Duplicate" icon={<SVGIcon name="duplicate" width={24} height={24} />} />
-											<ThreeDots.Option text="Delete" icon={<SVGIcon name="delete" width={24} height={24} />} />
-										</ThreeDots>
-									</div>
-								)}
-							</For>
-						</Show>
-					</div>
-				</div>
-				<div css={styles.content}>@TODO: Question content</div>
-				<div css={styles.right}>
-					<div css={styles.questionTypeWrapper}>
-						<Controller
-							control={form.control}
-							name="question_type"
-							render={(controllerProps) => (
-								<FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
-							)}
-						/>
-					</div>
-					<div css={styles.conditions}>
-						<p>{__('Conditions', 'tutor')}</p>
-						<div css={styles.conditionControls}>
-							<Controller
-								control={form.control}
-								name="answer_required"
-								render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />}
-							/>
-							<Controller
-								control={form.control}
-								name="randomize"
-								render={(controllerProps) => (
-									<FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />
-								)}
-							/>
-							<Controller
-								control={form.control}
-								name="point"
-								render={(controllerProps) => (
-									<FormInput
-										{...controllerProps}
-										label={__('Point For This Answer', 'tutor')}
-										type="number"
-										isInlineLabel
-										style={css`
+          <div css={styles.questionList}>
+            <Show when={questionsData.length > 0} fallback={<div>No question!</div>}>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                onDragStart={event => {
+                  setActiveSortId(event.active.id);
+                }}
+                onDragEnd={event => {
+                  const { active, over } = event;
+                  if (!over) {
+                    return;
+                  }
+
+                  if (active.id !== over.id) {
+                    const activeIndex = questionsData.findIndex(item => item.ID === active.id);
+                    const overIndex = questionsData.findIndex(item => item.ID === over.id);
+
+                    setQuestionsData(previous => {
+                      return moveTo(previous, activeIndex, overIndex);
+                    });
+                  }
+
+                  setActiveSortId(null);
+                }}
+              >
+                <SortableContext
+                  items={questionsData.map(item => ({ ...item, id: item.ID }))}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <For each={questionsData}>
+                    {(question, index) => (
+                      <Question
+                        key={question.ID}
+                        question={question}
+                        index={index}
+                        activeQuestionId={activeQuestionId}
+                        setActiveQuestionId={setActiveQuestionId}
+                        selectedQuestionId={selectedQuestionId}
+                        setSelectedQuestionId={setSelectedQuestionId}
+                      />
+                    )}
+                  </For>
+                </SortableContext>
+
+                {createPortal(
+                  <DragOverlay>
+                    <Show when={activeSortItem}>
+                      {item => {
+                        const index = questionsData.findIndex(question => question.ID === item.ID);
+                        return (
+                          <Question
+                            key={item.ID}
+                            question={item}
+                            index={index}
+                            activeQuestionId={activeQuestionId}
+                            setActiveQuestionId={setActiveQuestionId}
+                            selectedQuestionId={selectedQuestionId}
+                            setSelectedQuestionId={setSelectedQuestionId}
+                          />
+                        );
+                      }}
+                    </Show>
+                  </DragOverlay>,
+                  document.body
+                )}
+              </DndContext>
+            </Show>
+          </div>
+        </div>
+        <div css={styles.content}>@TODO: Question content</div>
+        <div css={styles.right}>
+          <div css={styles.questionTypeWrapper}>
+            <Controller
+              control={form.control}
+              name="question_type"
+              render={controllerProps => (
+                <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
+              )}
+            />
+          </div>
+          <div css={styles.conditions}>
+            <p>{__('Conditions', 'tutor')}</p>
+            <div css={styles.conditionControls}>
+              <Controller
+                control={form.control}
+                name="answer_required"
+                render={controllerProps => <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />}
+              />
+              <Controller
+                control={form.control}
+                name="randomize"
+                render={controllerProps => <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />}
+              />
+              <Controller
+                control={form.control}
+                name="point"
+                render={controllerProps => (
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Point For This Answer', 'tutor')}
+                    type="number"
+                    isInlineLabel
+                    style={css`
                       max-width: 72px;
                     `}
 									/>
@@ -315,90 +378,7 @@ const styles = {
     grid-template-columns: 352px 1fr 352px;
     height: 100%;
   `,
-
-	questionItem: ({ isActive = false }) => css`
-    padding: ${spacing[10]} ${spacing[8]};
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: ${spacing[12]};
-    border: 1px solid transparent;
-    border-radius: ${borderRadius.min};
-    cursor: pointer;
-    transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
-
-    [data-three-dots] {
-      opacity: 0;
-      svg {
-        color: ${colorTokens.icon.default};
-      }
-    }
-
-    ${
-			isActive &&
-			css`
-      border-color: ${colorTokens.stroke.brand};
-      background-color: ${colorTokens.background.active};
-      [data-icon-serial] {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        border-color: transparent;
-      }
-    `
-		}
-    :hover {
-      background-color: ${colorTokens.background.white};
-
-      [data-question-icon] {
-        display: none;
-      }
-
-      [data-drag-icon] {
-        display: block;
-      }
-
-      [data-icon-serial] {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        border-color: transparent;
-      }
-
-      [data-three-dots] {
-        opacity: 1;
-      }
-    }
-  `,
-	iconAndSerial: css`
-    display: flex;
-    align-items: center;
-    background-color: ${colorTokens.bg.white};
-    border-radius: 3px 0 0 3px;
-    width: 56px;
-    padding: ${spacing[4]} ${spacing[8]} ${spacing[4]} ${spacing[4]};
-    border-right: 1px solid ${colorTokens.stroke.divider};
-    flex-shrink: 0;
-
-    [data-drag-icon] {
-      display: none;
-      color: ${colorTokens.icon.hints};
-    }
-
-    svg {
-      flex-shrink: 0;
-    }
-
-    [data-serial] {
-      ${typography.caption('medium')}
-      text-align: right;
-      width: 100%;
-    }
-  `,
-	questionTitle: css`
-    ${typography.small()};
-    max-width: 170px;
-    width: 100%;
-  `,
-	left: css`
+  left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
   `,
 	content: css`
