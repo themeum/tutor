@@ -6,7 +6,7 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -14,9 +14,8 @@ import { QuizQuestion, QuizQuestionType, useGetQuizQuestionsQuery } from '@Cours
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import ThreeDots from '@Molecules/ThreeDots';
 import { styleUtils } from '@Utils/style-utils';
-import { IconCollection, Option } from '@Utils/types';
+import { Option } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -34,13 +33,11 @@ import {
 import {
   SortableContext,
   sortableKeyboardCoordinates,
-  useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { moveTo } from '@Utils/util';
 import { createPortal } from 'react-dom';
-import { animateLayoutChanges } from '@Utils/dndkit';
 import { Question } from './Question';
 
 interface QuizModalProps extends ModalProps {

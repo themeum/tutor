@@ -3,9 +3,9 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import ThreeDots from '@Molecules/ThreeDots';
-import { IconCollection } from '@Utils/types';
+import { IconCollection, isDefined } from '@Utils/types';
 import { css } from '@emotion/react';
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -37,6 +37,30 @@ export const Question = ({ question, index, selectedQuestionId, setSelectedQuest
     animateLayoutChanges,
   });
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLDivElement)) {
+        setIsActive(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
+
+  const combinedRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (node) {
+        setNodeRef(node);
+        (wrapperRef as any).current = node;
+      }
+    },
+    [setNodeRef, wrapperRef]
+  );
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -44,7 +68,7 @@ export const Question = ({ question, index, selectedQuestionId, setSelectedQuest
   };
 
   return (
-    <div {...attributes} key={question.ID} css={styles.questionItem({ isActive })} ref={setNodeRef} style={style}>
+    <div {...attributes} key={question.ID} css={styles.questionItem({ isActive })} ref={combinedRef} style={style} onClick={() => setIsActive(true)}>
       <div css={styles.iconAndSerial} data-icon-serial>
         <SVGIcon name={questionTypeIconMap[question.type]} width={24} height={24} data-question-icon />
         <div {...listeners} role="button">
