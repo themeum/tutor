@@ -47,12 +47,12 @@ const FormQuestionTitle = ({
 	isInlineLabel = false,
 	style,
 }: FormQuestionTitleProps) => {
-	const [isEdit, setIsEdit] = useState<boolean>(false);
-	const [previousValue, setPreviousValue] = useState<string | null>(null);
-
+	const inputValue = field.value ?? '';
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const inputValue = field.value ?? '';
+	const [isEdit, setIsEdit] = useState<boolean>(false);
+	const [previousValue, setPreviousValue] = useState<string>(inputValue);
+
 	let characterCount:
 		| {
 				maxLimit: number;
@@ -138,7 +138,7 @@ const FormQuestionTitle = ({
 					}}
 				</FormFieldWrapper>
 			</Show>
-			<div data-action-buttons css={styles.actionButtonWrapper}>
+			<div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
 				<Show
 					when={isEdit}
 					fallback={
@@ -255,12 +255,24 @@ const styles = {
     ${typography.heading6()}
     color: ${colorTokens.text.hints};
   `,
-	actionButtonWrapper: css`
+	actionButtonWrapper: ({
+		isEdit,
+	}: {
+		isEdit: boolean;
+	}) => css`
     display: flex;
 		align-items: center;
 		gap: ${spacing[8]};
     opacity: 0;
     transition: opacity 0.15s ease-in-out;
+
+		${
+			isEdit &&
+			css`
+				opacity: 1;
+			`
+		}
+
   `,
 	actionButton: css`
 		padding-inline: 0;
