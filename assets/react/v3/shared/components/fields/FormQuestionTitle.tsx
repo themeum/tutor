@@ -13,7 +13,6 @@ import Show from '@Controls/Show';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormQuestionTitleProps extends FormControllerProps<string | null> {
-	label?: string;
 	maxLimit?: number;
 	disabled?: boolean;
 	readOnly?: boolean;
@@ -31,7 +30,6 @@ interface FormQuestionTitleProps extends FormControllerProps<string | null> {
 }
 
 const FormQuestionTitle = ({
-	label,
 	maxLimit,
 	field,
 	fieldState,
@@ -88,7 +86,6 @@ const FormQuestionTitle = ({
 
 			<Show when={isEdit}>
 				<FormFieldWrapper
-					label={label}
 					field={field}
 					fieldState={fieldState}
 					disabled={disabled}
@@ -200,7 +197,7 @@ const styles = {
     gap: ${spacing[8]};
 		height: 46px;
     width: 100%;
-    padding: 0 ${spacing[16]} 0 ${spacing[8]};
+    padding-inline: ${spacing[8]} ${spacing[16]};
     border-radius: ${borderRadius[6]};
 		transition: all 0.15s ease-in-out;
 
@@ -280,5 +277,6 @@ const styles = {
   `,
 	actionButton: css`
 		padding-inline: 0;
+		color: ${colorTokens.icon.subdued};
 	`,
 };
