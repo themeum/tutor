@@ -18,6 +18,15 @@
       },
       "suspicious": {
         "noArrayIndexKey": "off"
+      },
+      "correctness": {
+        "noUnusedImports": "warn"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "off"
+      },
+      "complexity": {
+        "useLiteralKeys": "warn"
       }
     }
   },
