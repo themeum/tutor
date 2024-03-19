@@ -46,7 +46,6 @@ interface QuizModalProps extends ModalProps {
 interface QuizForm {
 	quiz_title: string;
 	quiz_description: string;
-	question: string;
 	question_type: QuizQuestionType;
 	answer_required: boolean;
 	randomize: boolean;

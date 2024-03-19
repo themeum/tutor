@@ -4,7 +4,7 @@ import { type SerializedStyles, css } from '@emotion/react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
@@ -202,6 +202,7 @@ const styles = {
     width: 100%;
     padding: 0 ${spacing[16]} 0 ${spacing[8]};
     border-radius: ${borderRadius[6]};
+		transition: all 0.15s ease-in-out;
 
     &:hover {
       background-color: ${colorTokens.background.white};
@@ -218,6 +219,7 @@ const styles = {
 			css`
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
+			box-shadow: ${shadow.focus};
     `
 		}
   `,
