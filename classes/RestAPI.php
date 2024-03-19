@@ -395,5 +395,26 @@ class RestAPI {
 				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
 			)
 		);
+
+		// Get course content by id.
+		register_rest_route(
+			$this->namespace,
+			'/course/contents/(?P<id>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array(
+					$this->course_obj,
+					'course_contents',
+				),
+				'args'                => array(
+					'id' => array(
+						'validate_callback' => function ( $param ) {
+							return is_numeric( $param );
+						},
+					),
+				),
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+			)
+		);
 	}
 }
