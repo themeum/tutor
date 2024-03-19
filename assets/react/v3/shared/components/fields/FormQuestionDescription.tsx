@@ -76,13 +76,14 @@ const FormQuestionDescription = ({
 
 	return (
 		<div css={styles.container({ isEdit })}>
-			<Show when={!isEdit}>
-				<div css={styles.placeholder} onClick={() => setIsEdit(true)} role="button">
-					{field.value || placeholder}
-				</div>
-			</Show>
-
-			<Show when={isEdit}>
+			<Show
+				when={isEdit}
+				fallback={
+					<div css={styles.placeholder} onClick={() => setIsEdit(true)} role="button">
+						{field.value || placeholder}
+					</div>
+				}
+			>
 				<FormFieldWrapper
 					label={label}
 					field={field}
@@ -132,33 +133,29 @@ const FormQuestionDescription = ({
 						);
 					}}
 				</FormFieldWrapper>
+				<div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
+					<Button
+						variant="text"
+						size="small"
+						onClick={() => {
+							field.onChange(previousValue);
+							setIsEdit(false);
+						}}
+					>
+						Cancel
+					</Button>
+					<Button
+						variant="secondary"
+						size="small"
+						onClick={() => {
+							setIsEdit(false);
+						}}
+						disabled={field.value === previousValue}
+					>
+						Ok
+					</Button>
+				</div>
 			</Show>
-			<div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
-				<Show when={isEdit}>
-					<>
-						<Button
-							variant="text"
-							size="small"
-							onClick={() => {
-								field.onChange(previousValue);
-								setIsEdit(false);
-							}}
-						>
-							Cancel
-						</Button>
-						<Button
-							variant="secondary"
-							size="small"
-							onClick={() => {
-								setIsEdit(false);
-							}}
-							disabled={field.value === previousValue}
-						>
-							Ok
-						</Button>
-					</>
-				</Show>
-			</div>
 		</div>
 	);
 };
