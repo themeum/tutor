@@ -38,7 +38,6 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import { moveTo } from '@Utils/util';
 import { createPortal } from 'react-dom';
 import { Question } from '@CourseBuilderComponents/curriculum/Question';
-import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
 
 interface QuizModalProps extends ModalProps {
 	closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -347,13 +346,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 						</Show>
 					</div>
 				</div>
-				<div css={styles.content}>
-					<Controller
-						control={form.control}
-						name="question"
-						render={(controllerProps) => <FormQuestionTitle {...controllerProps} placeholder="This is placeholder" />}
-					/>
-				</div>
+				<div css={styles.content}>@TODO: will be implemented later</div>
 				<div css={styles.right}>
 					<div css={styles.questionTypeWrapper}>
 						<Controller
