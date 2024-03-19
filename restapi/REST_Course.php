@@ -444,7 +444,7 @@ class REST_Course {
 		}
 		$response = array(
 			'status'  => 'not_found',
-			'message' => __( 'Topic for this course with the given course id not found', 'tutor' ),
+			'message' => __( 'Contents for this course with the given course id not found', 'tutor' ),
 			'data'    => array(),
 		);
 		return self::send( $response );
