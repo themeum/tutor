@@ -77,7 +77,7 @@ const FormQuestionTitle = ({
 	}, [isEdit, inputRef.current]);
 
 	return (
-		<div css={styles.container({ isEdit })}>
+		<div data-container css={styles.container({ isEdit })}>
 			<Show when={!isEdit}>
 				<div css={styles.placeholder} onClick={() => setIsEdit(true)} role="button">
 					{field.value || placeholder}
@@ -211,12 +211,15 @@ const styles = {
 			}
     };
 
+		&:focus-within {
+      box-shadow: ${shadow.focus};
+    }
+
     ${
 			isEdit &&
 			css`
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
-			box-shadow: ${shadow.focus};
     `
 		}
   `,
@@ -236,6 +239,7 @@ const styles = {
 
 			&:focus {
 				box-shadow: none;
+
 			}
     }
   `,
