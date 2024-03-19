@@ -74,14 +74,15 @@ class REST_Course {
 	 * @return WP_REST_Response
 	 */
 	public function course( WP_REST_Request $request ) {
-		$order   = sanitize_text_field( $request->get_param( 'order' ) );
-		$orderby = sanitize_text_field( $request->get_param( 'orderby' ) );
-		$paged   = sanitize_text_field( $request->get_param( 'paged' ) );
+		$order         = sanitize_text_field( $request->get_param( 'order' ) );
+		$orderby       = sanitize_text_field( $request->get_param( 'orderby' ) );
+		$paged         = sanitize_text_field( $request->get_param( 'paged' ) );
+		$post_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 
 		$args = array(
 			'post_type'      => $this->post_type,
 			'post_status'    => 'publish',
-			'posts_per_page' => 10,
+			'posts_per_page' => $post_per_page,
 			'paged'          => $paged ? $paged : 1,
 			'order'          => $order ? $order : 'ASC',
 			'orderby'        => $orderby ? $orderby : 'title',
@@ -336,13 +337,14 @@ class REST_Course {
 		$order = $request->get_param( 'order' );
 		$paged = $request->get_param( 'page' );
 
-		$order = sanitize_text_field( $order );
-		$paged = sanitize_text_field( $paged );
+		$order         = sanitize_text_field( $order );
+		$paged         = sanitize_text_field( $paged );
+		$post_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 
 		$args = array(
 			'post_type'      => 'product',
 			'post_status'    => 'publish',
-			'posts_per_page' => 10,
+			'posts_per_page' => $post_per_page,
 			'paged'          => $paged ? $paged : 1,
 
 			'meta_key'       => '_regular_price',
