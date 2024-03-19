@@ -95,7 +95,7 @@ class REST_Course {
 		if ( count( $query->posts ) > 0 ) {
 			// unset filter property.
 			array_map(
-				function( $post ) {
+				function ( $post ) {
 					unset( $post->filter );
 				},
 				$query->posts
@@ -219,7 +219,6 @@ class REST_Course {
 		);
 
 		return apply_filters( 'tutor_course_additional_info', $detail );
-
 	}
 
 	/**
@@ -275,7 +274,7 @@ class REST_Course {
 		if ( count( $query->posts ) > 0 ) {
 			// unset filter property.
 			array_map(
-				function( $post ) {
+				function ( $post ) {
 					unset( $post->filter );
 				},
 				$query->posts
@@ -365,7 +364,7 @@ class REST_Course {
 		if ( count( $query->posts ) > 0 ) {
 			// unset filter property.
 			array_map(
-				function( $post ) {
+				function ( $post ) {
 					unset( $post->filter );
 				},
 				$query->posts
@@ -396,6 +395,56 @@ class REST_Course {
 		$response = array(
 			'status'  => 'not_found',
 			'message' => __( 'Course not found', 'tutor' ),
+			'data'    => array(),
+		);
+		return self::send( $response );
+	}
+
+	/**
+	 * Retreive the course contents for a given course id
+	 *
+	 * @since 2.6.3
+	 *
+	 * @param WP_REST_Request $request request params.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function course_contents( WP_REST_Request $request ) {
+		$course_id = $request->get_param( 'id' );
+		$topics    = tutor_utils()->get_topics( $course_id );
+
+		if ( $topics->have_posts() ) {
+			$data = array();
+			foreach ( $topics->get_posts() as $post ) {
+				$current_topic = array(
+					'topic' => array(
+						'id'       => $post->ID,
+						'summary'  => $post->post_content,
+						'contents' => array(),
+					),
+				);
+
+				$topic_contents = tutor_utils()->get_course_contents_by_topic( $post->ID, -1 );
+
+				if ( $topic_contents->have_posts() ) {
+					foreach ( $topic_contents->get_posts() as $post ) {
+						array_push( $current_topic['topic']['contents'], $post );
+					}
+				}
+
+				array_push( $data, $current_topic );
+			}
+
+			$response = array(
+				'status'  => 'success',
+				'message' => __( 'Course contents retreived sucessfully', 'tutor' ),
+				'data'    => $data,
+			);
+			return self::send( $response );
+		}
+		$response = array(
+			'status'  => 'not_found',
+			'message' => __( 'Topic for this course with the given course id not found', 'tutor' ),
 			'data'    => array(),
 		);
 		return self::send( $response );
