@@ -15,7 +15,7 @@ interface AlertProps {
 	icon?: IconCollection;
 }
 
-const alert = {
+const alertStyles = {
 	text: {
 		warning: '#D47E00',
 		success: '#D47E00',
@@ -65,8 +65,8 @@ const styles = {
     width: 100%;
     border-radius: ${borderRadius.card};
     gap: ${spacing[4]};
-    background-color: ${alert.background[type]};
-    color: ${alert.text[type]};
+    background-color: ${alertStyles.background[type]};
+    color: ${alertStyles.text[type]};
   `,
 
 	icon: ({
@@ -74,7 +74,7 @@ const styles = {
 	}: {
 		type: AlertType;
 	}) => css`
-    color: ${alert.icon[type]};
+    color: ${alertStyles.icon[type]};
     flex-shrink: 0;
   `,
 };
