@@ -1,8 +1,10 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
-import SVGIcon from './SVGIcon';
+
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import type { IconCollection } from '@Utils/types';
 import { typography } from '@Config/typography';
+
+import SVGIcon from './SVGIcon';
 
 type AlertType = 'success' | 'warning' | 'danger' | 'info' | 'primary';
 
@@ -31,7 +33,6 @@ const styles = {
 	}) => css`
     ${typography.caption()};
     display: flex;
-    
     align-items: start;
     padding: ${spacing[8]} ${spacing[12]};
     width: 100%;
