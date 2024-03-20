@@ -1,21 +1,17 @@
+import { useState } from 'react';
+import { css } from '@emotion/react';
+
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
+
+import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { useState } from 'react';
-
-import Checkbox from '@Atoms/CheckBox';
-import Chip from '@Atoms/Chip';
-import { useDebounce } from '@Hooks/useDebounce';
-import { type Tag, useCreateTagMutation, useTagListQuery } from '@Services/tags';
-import { __ } from '@wordpress/i18n';
-import FormFieldWrapper from './FormFieldWrapper';
 import type { IconCollection, Option } from '@Utils/types';
 import Show from '@Controls/Show';
-import Button from '@Atoms/Button';
+
+import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
 	label?: string;
@@ -28,7 +24,6 @@ interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
 	removeOptionsMinWidth?: boolean;
 	onChange?: (value: string) => void;
 	presetOptions?: Option<string>[];
-	isClearable?: boolean;
 }
 
 const FormInputWithPresets = ({
@@ -43,7 +38,6 @@ const FormInputWithPresets = ({
 	removeOptionsMinWidth = true,
 	onChange,
 	presetOptions = [],
-	isClearable = false,
 }: FormInputWithPresetsProps) => {
 	const fieldValue = field.value ?? '';
 

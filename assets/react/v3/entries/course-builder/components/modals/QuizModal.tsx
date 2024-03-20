@@ -38,7 +38,6 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import { moveTo } from '@Utils/util';
 import { createPortal } from 'react-dom';
 import { Question } from '@CourseBuilderComponents/curriculum/Question';
-import FormInputWithPresets from '@Components/fields/FormInputWithPresets';
 
 interface QuizModalProps extends ModalProps {
 	closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -52,7 +51,6 @@ interface QuizForm {
 	randomize: boolean;
 	point: number;
 	display_point: boolean;
-	answer: string;
 }
 
 const questionTypeOptions: Option<QuizQuestionType>[] = [
@@ -347,28 +345,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 						</Show>
 					</div>
 				</div>
-				<div css={styles.content}>
-					<Controller
-						control={form.control}
-						name="answer"
-						render={(controllerProps) => (
-							<FormInputWithPresets
-								{...controllerProps}
-								label="Question Type"
-								presetOptions={[
-									{
-										label: 'Answer 1',
-										value: 'answer1',
-									},
-									{
-										label: 'Answer 2',
-										value: 'answer2',
-									},
-								]}
-							/>
-						)}
-					/>
-				</div>
+				<div css={styles.content}>@TODO: will be implemented later</div>
 				<div css={styles.right}>
 					<div css={styles.questionTypeWrapper}>
 						<Controller
