@@ -215,6 +215,13 @@ export const colorTokens = {
       onHold: '#ac0640',
       cancelled: '#6f7073',
     },
+    alert: {
+      warning: '#D47E00',
+      success: '#D47E00', // will be updated later
+      danger: '#D47E00', // will be updated later
+      info: '#D47E00', // will be updated later
+      primary: '#D47E00', // will be updated later
+    }
   },
   surface: {
     tutor: '#ffffff',
@@ -244,6 +251,13 @@ export const colorTokens = {
       cancelled: '#eceef2',
       refunded: '#e5f5f5',
     },
+    alert: {
+      warning: '#FBFAE9',
+      success: '#D47E00', // will be updated later
+      danger: '#D47E00', // will be updated later
+      info: '#D47E00', // will be updated later
+      primary: '#D47E00', // will be updated later
+    }
   },
   icon: {
     default: '#9197a8',
@@ -262,6 +276,13 @@ export const colorTokens = {
     success: '#22a848',
     drop: '#4761b8',
     processing: '#00a388',
+    alert: {
+      warning: '#FAB000',
+      success: '#D47E00', // will be updated later
+      danger: '#D47E00', // will be updated later
+      info: '#D47E00', // will be updated later
+      primary: '#D47E00', // will be updated later
+    }
   },
   stroke: {
     default: '#c3c5cb',
