@@ -5,6 +5,7 @@ import type { IconCollection } from '@Utils/types';
 import { typography } from '@Config/typography';
 
 import SVGIcon from './SVGIcon';
+import Show from '@Controls/Show';
 
 type AlertType = 'success' | 'warning' | 'danger' | 'info' | 'primary';
 
@@ -14,10 +15,36 @@ interface AlertProps {
 	icon?: IconCollection;
 }
 
+const alert = {
+	text: {
+		warning: '#D47E00',
+		success: '#D47E00',
+		danger: '#D47E00',
+		info: '#D47E00',
+		primary: '#D47E00',
+	},
+	icon: {
+		warning: '#FAB000',
+		success: '#FAB000',
+		danger: '#FAB000',
+		info: '#FAB000',
+		primary: '#FAB000',
+	},
+	background: {
+		warning: '#FBFAE9',
+		success: '#FBFAE9',
+		danger: '#FBFAE9',
+		info: '#FBFAE9',
+		primary: '#FBFAE9',
+	},
+};
+
 const Alert = ({ children, type = 'warning', icon }: AlertProps) => {
 	return (
 		<div css={styles.wrapper({ type })}>
-			<SVGIcon style={styles.icon({ type })} name={icon as IconCollection} height={24} width={24} />
+			<Show when={icon}>
+				<SVGIcon style={styles.icon({ type })} name={icon as IconCollection} height={24} width={24} />
+			</Show>
 			<span>{children}</span>
 		</div>
 	);
@@ -38,8 +65,8 @@ const styles = {
     width: 100%;
     border-radius: ${borderRadius.card};
     gap: ${spacing[4]};
-    background-color: ${colorTokens.background.alert[type]};
-    color: ${colorTokens.text.alert[type]};
+    background-color: ${alert.background[type]};
+    color: ${alert.text[type]};
   `,
 
 	icon: ({
@@ -47,7 +74,7 @@ const styles = {
 	}: {
 		type: AlertType;
 	}) => css`
-    color: ${colorTokens.icon.alert[type]};
+    color: ${alert.icon[type]};
     flex-shrink: 0;
   `,
 };
