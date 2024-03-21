@@ -79,7 +79,16 @@ const FormQuestionDescription = ({
 			<Show
 				when={isEdit}
 				fallback={
-					<div css={styles.placeholder} onClick={() => setIsEdit(true)} role="button">
+					<div
+						css={styles.placeholder}
+						role="button"
+						onClick={() => setIsEdit(true)}
+						onKeyDown={(event) => {
+							if (event.key === 'Enter' || event.key === ' ') {
+								setIsEdit(true);
+							}
+						}}
+					>
 						{field.value || placeholder}
 					</div>
 				}
