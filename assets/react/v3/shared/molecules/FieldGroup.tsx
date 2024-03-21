@@ -5,41 +5,41 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { Children, type ReactNode } from 'react';
 
 interface FieldGroupProps {
-	children: ReactNode;
-	fullWidth?: boolean;
-	onRemove: () => void;
+  children: ReactNode;
+  fullWidth?: boolean;
+  onRemove: () => void;
 }
 
 const FieldGroup = ({ children, fullWidth, onRemove }: FieldGroupProps) => {
-	const totalChildren = Children.count(children);
+  const totalChildren = Children.count(children);
 
-	return (
-		<div css={styles.wrapper(fullWidth)}>
-			{Children.map(children, (child, index) => {
-				return <div css={styles.fieldItemWrapper({ isLastChild: totalChildren === index + 1 })}>{child}</div>;
-			})}
+  return (
+    <div css={styles.wrapper(fullWidth)}>
+      {Children.map(children, (child, index) => {
+        return <div css={styles.fieldItemWrapper({ isLastChild: totalChildren === index + 1 })}>{child}</div>;
+      })}
 
-			<button type="button" data-clear css={styles.closeButton} onClick={onRemove}>
-				<SVGIcon name="times" width={12} height={12} />
-			</button>
-		</div>
-	);
+      <button type="button" data-clear css={styles.closeButton} onClick={onRemove}>
+        <SVGIcon name="times" width={12} height={12} />
+      </button>
+    </div>
+  );
 };
 
 interface FieldGroupItemProps {
-	children: ReactNode;
-	itemStyles?: SerializedStyles;
+  children: ReactNode;
+  itemStyles?: SerializedStyles;
 }
 
 const FieldGroupItem = ({ children, itemStyles }: FieldGroupItemProps) => {
-	return <div css={itemStyles}>{children}</div>;
+  return <div css={itemStyles}>{children}</div>;
 };
 
 FieldGroup.Item = FieldGroupItem;
 export default FieldGroup;
 
 const styles = {
-	wrapper: (fullWidth = false) => css`
+  wrapper: (fullWidth = false) => css`
     display: grid;
     grid-template-columns: auto 80px auto;
     position: relative;
@@ -52,11 +52,11 @@ const styles = {
     width: fit-content;
 
     ${
-			fullWidth &&
-			css`
+      fullWidth &&
+      css`
       width: 100%;
     `
-		}
+    }
 
     &,
     input {
@@ -77,7 +77,7 @@ const styles = {
     }
   `,
 
-	closeButton: css`
+  closeButton: css`
     ${styleUtils.resetButton};
     display: grid;
     place-items: center;
@@ -93,7 +93,7 @@ const styles = {
       color: ${colorPalate.icon.default};
     }
   `,
-	fieldItemWrapper: ({ isLastChild }: { isLastChild: boolean }) => css`
+  fieldItemWrapper: ({ isLastChild }: { isLastChild: boolean }) => css`
     border-left: 1px solid ${colorPalate.border.neutral};
     padding: 0 ${spacing[2]};
     ${styleUtils.flexCenter()};
@@ -103,10 +103,10 @@ const styles = {
     }
 
     ${
-			isLastChild &&
-			css`
+      isLastChild &&
+      css`
       padding: 0 ${spacing[40]} 0 ${spacing[12]};
     `
-		}
+    }
   `,
 };

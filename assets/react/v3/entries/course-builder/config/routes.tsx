@@ -9,32 +9,32 @@ const CourseAdditionalPage = React.lazy(() => import('@CourseBuilderPages/Additi
 const CourseCertificatePage = React.lazy(() => import('@CourseBuilderPages/Certificate'));
 
 const routes: RouteObject[] = [
-	{
-		path: CourseBuilderRouteConfigs.Home.template,
-		element: <Layout />,
-		children: [
-			{
-				index: true,
-				element: <Navigate to={CourseBuilderRouteConfigs.CourseBasics.template} replace />,
-			},
-			{
-				path: CourseBuilderRouteConfigs.CourseBasics.template,
-				element: <RouteSuspense component={<CourseBasicPage />} />,
-			},
-			{
-				path: CourseBuilderRouteConfigs.CourseCurriculum.template,
-				element: <RouteSuspense component={<CourseCurriculumPage />} />,
-			},
-			{
-				path: CourseBuilderRouteConfigs.CourseAdditional.template,
-				element: <RouteSuspense component={<CourseAdditionalPage />} />,
-			},
-			{
-				path: CourseBuilderRouteConfigs.CourseCertificate.template,
-				element: <RouteSuspense component={<CourseCertificatePage />} />,
-			},
-		],
-	},
+  {
+    path: CourseBuilderRouteConfigs.Home.template,
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to={CourseBuilderRouteConfigs.CourseBasics.template} replace />,
+      },
+      {
+        path: CourseBuilderRouteConfigs.CourseBasics.template,
+        element: <RouteSuspense component={<CourseBasicPage />} />,
+      },
+      {
+        path: CourseBuilderRouteConfigs.CourseCurriculum.template,
+        element: <RouteSuspense component={<CourseCurriculumPage />} />,
+      },
+      {
+        path: CourseBuilderRouteConfigs.CourseAdditional.template,
+        element: <RouteSuspense component={<CourseAdditionalPage />} />,
+      },
+      {
+        path: CourseBuilderRouteConfigs.CourseCertificate.template,
+        element: <RouteSuspense component={<CourseCertificatePage />} />,
+      },
+    ],
+  },
 ];
 
 export default routes;
