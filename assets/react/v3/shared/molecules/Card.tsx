@@ -53,7 +53,7 @@ const Card = ({
 						<Show when={actionTray}>{actionTray}</Show>
 						<button css={styles.collapseButton} type="button" onClick={() => setIsCollapsed(!isCollapsed)}>
 							<SVGIcon
-								name={!isCollapsed ? 'chevronDown' : 'chevronUp'}
+								name={isCollapsed ? 'chevronDown' : 'chevronUp'}
 								width={24}
 								height={24}
 								style={styles.arrowUpDown}
