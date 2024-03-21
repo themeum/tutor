@@ -1,16 +1,19 @@
+import { __ } from '@wordpress/i18n';
+import { Controller } from 'react-hook-form';
 import FormInput from '@Components/fields/FormInput';
+import { css } from '@emotion/react';
+
+import Card from '@Molecules/Card';
+
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
-import { spacing } from '@Config/styles';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
+
+import { spacing } from '@Config/styles';
 import type { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
-import Card from '@Molecules/Card';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import React from 'react';
-import { Controller } from 'react-hook-form';
+import SVGIcon from '@Atoms/SVGIcon';
 
 interface QuizSettingsProps {
 	form: FormWithGlobalErrorType<QuizForm>;
@@ -71,10 +74,23 @@ const QuizSettings = ({ form }: QuizSettingsProps) => {
 							<FormSelectInput
 								{...controllerProps}
 								label={__('Feedback Mode', 'tutor')}
+								leftIcon={<SVGIcon name="eye" width={32} height={32} />}
 								options={[
-									{ label: __('Default', 'tutor'), value: 'default' },
-									{ label: __('Reveal Mode', 'tutor'), value: 'reveal' },
-									{ label: __('Retry', 'tutor'), value: 'retry' },
+									{
+										label: __('Default', 'tutor'),
+										value: 'default',
+										description: __('Answers shown after quiz is finished', 'tutor'),
+									},
+									{
+										label: __('Reveal Mode', 'tutor'),
+										value: 'reveal',
+										description: __('Show result after the attempt.', 'tutor'),
+									},
+									{
+										label: __('Retry', 'tutor'),
+										value: 'retry',
+										description: __('Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor'),
+									},
 								]}
 							/>
 						)}

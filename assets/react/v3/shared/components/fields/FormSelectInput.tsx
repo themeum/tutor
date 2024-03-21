@@ -61,10 +61,11 @@ const FormSelectInput = <T,>({
 	dataAttribute,
 }: FormSelectInputProps<T>) => {
 	const getInitialValue = useCallback(() => {
-		return options.find((item) => item.value === field.value)?.label || '';
+		return options.find((item) => item.value === field.value);
 	}, [options, field.value]);
+	const hasDescription = useMemo(() => options.some((option) => isDefined(option.description)), [options]);
 
-	const [inputValue, setInputValue] = useState(getInitialValue);
+	const [inputValue, setInputValue] = useState(getInitialValue()?.label);
 	const [searchText, setSearchText] = useState('');
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -91,12 +92,12 @@ const FormSelectInput = <T,>({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		setInputValue(getInitialValue);
+		setInputValue(getInitialValue()?.label);
 	}, [field.value, getInitialValue]);
 
 	useEffect(() => {
 		if (isOpen) {
-			setInputValue(getInitialValue);
+			setInputValue(getInitialValue()?.label);
 		}
 	}, [getInitialValue, isOpen]);
 
@@ -116,9 +117,9 @@ const FormSelectInput = <T,>({
 				const { css: inputCss, ...restInputProps } = inputProps;
 
 				return (
-					<div css={styles.mainWrapper}>
-						<div css={styles.inputWrapper} ref={triggerRef}>
-							<div css={styles.leftIcon}>
+					<div css={styles.mainWrapper({ hasDescription })}>
+						<div css={styles.inputWrapper({ hasDescription })} ref={triggerRef}>
+							<div css={styles.leftIcon({ hasDescription })}>
 								<Show when={leftIcon}>{leftIcon}</Show>
 								<Show when={selectedItem?.icon}>
 									{(iconName) => <SVGIcon name={iconName as IconCollection} width={32} height={32} />}
@@ -155,6 +156,9 @@ const FormSelectInput = <T,>({
 									)}
 								</button>
 							)}
+							<Show when={hasDescription}>
+								<span css={styles.decription({ hasLeftIcon: !!leftIcon })}>{getInitialValue()?.description}</span>
+							</Show>
 						</div>
 
 						<Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
@@ -230,21 +234,51 @@ const FormSelectInput = <T,>({
 export default FormSelectInput;
 
 const styles = {
-	mainWrapper: css`
+	mainWrapper: ({
+		hasDescription = false,
+	}: {
+		hasDescription: boolean;
+	}) => css`
     width: 100%;
   `,
-	inputWrapper: css`
+	inputWrapper: ({
+		hasDescription = false,
+	}: {
+		hasDescription: boolean;
+	}) => css`
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
+
+		${
+			hasDescription &&
+			css`
+			input {
+				height: 58px;
+				padding-bottom: ${spacing[24]}
+			};
+		`
+		}
   `,
-	leftIcon: css`
+	leftIcon: ({
+		hasDescription = false,
+	}: {
+		hasDescription: boolean;
+	}) => css`
     position: absolute;
     left: ${spacing[8]};
     top: ${spacing[4]};
     color: ${colorTokens.icon.default};
+
+		${
+			hasDescription &&
+			css`
+			top: ${spacing[12]};
+		`
+		}
+		
   `,
 	input: (hasLeftIcon: boolean) => css`
     ${typography.body()};
@@ -265,6 +299,25 @@ const styles = {
       box-shadow: ${shadow.focus};
     }
   `,
+	decription: ({
+		hasLeftIcon,
+	}: {
+		hasLeftIcon: boolean;
+	}) => css`
+		${typography.small()};
+		${styleUtils.text.ellipsis(1)}
+		color: ${colorTokens.text.hints};
+		position: absolute;
+		bottom: ${spacing[8]};
+		padding-inline: ${spacing[16]} ${spacing[32]};
+
+		${
+			hasLeftIcon &&
+			css`
+			padding-left: ${spacing[48]};
+		`
+		}
+	`,
 	listLabel: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
