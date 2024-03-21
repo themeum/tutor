@@ -82,12 +82,30 @@ const FormAnswerExplanation = ({
 					<Show
 						when={inputValue}
 						fallback={
-							<div css={styles.placeholder} onClick={() => setIsEdit(true)} role="button">
+							<div
+								css={styles.placeholder}
+								role="button"
+								onClick={() => setIsEdit(true)}
+								onKeyDown={(event) => {
+									if (event.key === 'Enter' || event.key === ' ') {
+										setIsEdit(true);
+									}
+								}}
+							>
 								{placeholder}
 							</div>
 						}
 					>
-						<div css={styles.answer} onClick={() => setIsEdit(true)} role="button">
+						<div
+							css={styles.answer}
+							role="button"
+							onClick={() => setIsEdit(true)}
+							onKeyDown={(event) => {
+								if (event.key === 'Enter' || event.key === ' ') {
+									setIsEdit(true);
+								}
+							}}
+						>
 							<div css={styles.answerLabel}>{__('Answer explanation', 'tutor')}</div>
 							{inputValue}
 						</div>
