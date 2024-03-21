@@ -7,6 +7,7 @@ import { css } from '@emotion/react';
 import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { isDefined } from '@Utils/types';
 import { noop } from '@Utils/util';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
 import { usePrevious } from './usePrevious';
@@ -49,17 +50,23 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     left: 0,
   },
 }: PopoverHookArgs<T>) => {
+  const fallbackRef = useRef<T>(null);
   const triggerRef = useMemo(() => {
-    return popoverTriggerRef || { current: null };
+    if (!isDefined(popoverTriggerRef)) {
+      return fallbackRef;
+    }
+
+    return popoverTriggerRef;
   }, [popoverTriggerRef]);
+
   const popoverRef = useRef<D>(null);
   const previousPopoverRect = usePrevious(popoverRef.current?.getBoundingClientRect());
+
   const [triggerWidth, setTriggerWidth] = useState(0);
   const [position, setPosition] = useState<PopoverPosition>({ left: 0, top: 0, arrowPlacement: ArrowPosition.bottom });
 
   useEffect(() => {
     if (!triggerRef.current) return;
-
     const triggerRect = triggerRef.current.getBoundingClientRect();
     setTriggerWidth(triggerRect.width);
   }, [triggerRef]);
