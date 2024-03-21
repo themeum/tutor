@@ -275,7 +275,7 @@ const styles = {
 		${
 			hasDescription &&
 			css`
-			top: ${spacing[12]};
+			top: calc(${spacing[12]} + 1px);
 		`
 		}
 		
@@ -309,12 +309,12 @@ const styles = {
 		color: ${colorTokens.text.hints};
 		position: absolute;
 		bottom: ${spacing[8]};
-		padding-inline: ${spacing[16]} ${spacing[32]};
+		padding-inline: calc(${spacing[16]} + 1px) ${spacing[32]};
 
 		${
 			hasLeftIcon &&
 			css`
-			padding-left: ${spacing[48]};
+			padding-left: calc(${spacing[48]} + 1px);
 		`
 		}
 	`,
