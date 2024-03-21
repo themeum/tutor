@@ -10,6 +10,8 @@ import { createPortal } from 'react-dom';
 import { noop } from '@Utils/util';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
 import { usePrevious } from './usePrevious';
+import useMeasure from 'react-use-measure';
+import { isDefined } from '@Utils/types';
 
 enum ArrowPosition {
 	left = 'left',
@@ -49,17 +51,23 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
 		left: 0,
 	},
 }: PopoverHookArgs<T>) => {
+	const [fallbackRef] = useMeasure();
 	const triggerRef = useMemo(() => {
-		return popoverTriggerRef || { current: null };
-	}, [popoverTriggerRef]);
+		if (!isDefined(popoverTriggerRef)) {
+			return { current: fallbackRef } as unknown as RefObject<T>;
+		}
+
+		return popoverTriggerRef;
+	}, [popoverTriggerRef, fallbackRef]);
+
 	const popoverRef = useRef<D>(null);
 	const previousPopoverRect = usePrevious(popoverRef.current?.getBoundingClientRect());
+
 	const [triggerWidth, setTriggerWidth] = useState(0);
 	const [position, setPosition] = useState<PopoverPosition>({ left: 0, top: 0, arrowPlacement: ArrowPosition.bottom });
 
 	useEffect(() => {
 		if (!triggerRef.current) return;
-
 		const triggerRect = triggerRef.current.getBoundingClientRect();
 		setTriggerWidth(triggerRect.width);
 	}, [triggerRef]);
