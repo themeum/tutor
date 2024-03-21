@@ -41,8 +41,13 @@ const Card = ({
 	return (
 		<div css={styles.wrapper(hasBorder)}>
 			<div css={styles.headerWrapper(isCollapsed || noSeparator)}>
-				<div css={styles.titleAndAction}>
-					<h5 css={styles.title}>{title}</h5>
+				<div css={styles.headerAndAction}>
+					<div css={styles.header}>
+						<h5 css={styles.title}>{title}</h5>
+						<Show when={subtitle}>
+							<p css={styles.subtitle}>{subtitle}</p>
+						</Show>
+					</div>
 
 					<div css={styles.actions}>
 						<Show when={actionTray}>{actionTray}</Show>
@@ -56,9 +61,6 @@ const Card = ({
 						</button>
 					</div>
 				</div>
-				<Show when={subtitle}>
-					<p css={styles.subtitle}>{subtitle}</p>
-				</Show>
 			</div>
 			<animated.div style={{ ...collapseAnimation }}>
 				<div ref={cardRef} css={styles.cardBody}>
@@ -100,21 +102,25 @@ const styles = {
 			`
 		}
 	`,
-	titleAndAction: css`
+	headerAndAction: css`
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	`,
+	header: css`
+		display: flex;
+		flex-direction: column;
+		padding: ${spacing[4]} ${spacing[16]};
+	`,
 	subtitle: css`
-		${typography.body()};
-		color: ${colorPalate.text.neutral};
+		${typography.caption()};
+		color: ${colorTokens.text.subdued};
 	`,
 	title: css`
 		${typography.body('medium')};
 		color: ${colorTokens.text.primary};
 		display: flex;
 		align-items: center;
-		padding: ${spacing[4]} ${spacing[16]};
 	`,
 	collapseButton: css`
 		${styleUtils.resetButton};
