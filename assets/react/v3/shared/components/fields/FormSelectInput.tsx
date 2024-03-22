@@ -117,7 +117,7 @@ const FormSelectInput = <T,>({
 				const { css: inputCss, ...restInputProps } = inputProps;
 
 				return (
-					<div css={styles.mainWrapper({ hasDescription })}>
+					<div css={styles.mainWrapper}>
 						<div css={styles.inputWrapper({ hasDescription })} ref={triggerRef}>
 							<div css={styles.leftIcon({ hasDescription })}>
 								<Show when={leftIcon}>{leftIcon}</Show>
@@ -134,6 +134,7 @@ const FormSelectInput = <T,>({
 								readOnly={readOnly || !isSearchable}
 								placeholder={placeholder}
 								value={inputValue}
+								title={inputValue}
 								onChange={(event) => {
 									setInputValue(event.target.value);
 									setSearchText(event.target.value);
@@ -191,11 +192,19 @@ const FormSelectInput = <T,>({
 													onChange(option);
 													setIsOpen(false);
 												}}
+												title={option.label}
 											>
 												<Show when={option.icon}>
 													<SVGIcon name={option.icon as IconCollection} width={32} height={32} />
 												</Show>
-												<span>{option.label}</span>
+												<span
+													css={css`
+														${styleUtils.text.ellipsis(1)};
+														width: 100%;
+													`}
+												>
+													{option.label}
+												</span>
 											</button>
 										</li>
 									))}
@@ -234,11 +243,7 @@ const FormSelectInput = <T,>({
 export default FormSelectInput;
 
 const styles = {
-	mainWrapper: ({
-		hasDescription = false,
-	}: {
-		hasDescription: boolean;
-	}) => css`
+	mainWrapper: css`
     width: 100%;
   `,
 	inputWrapper: ({
@@ -256,7 +261,7 @@ const styles = {
 			hasDescription &&
 			css`
 			input {
-				height: 58px;
+				height: 56px;
 				padding-bottom: ${spacing[24]}
 			};
 		`
@@ -275,7 +280,7 @@ const styles = {
 		${
 			hasDescription &&
 			css`
-			top: calc(${spacing[12]} + 1px);
+			top: calc(${spacing[12]});
 		`
 		}
 		
@@ -408,6 +413,7 @@ const styles = {
   `,
 	label: css`
     ${styleUtils.resetButton};
+		${styleUtils.text.ellipsis(1)}
     width: 100%;
     height: 100%;
     display: flex;
