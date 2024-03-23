@@ -21,7 +21,7 @@ import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import {
 	DndContext,
@@ -38,6 +38,7 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import { moveTo } from '@Utils/util';
 import { createPortal } from 'react-dom';
 import { Question } from '@CourseBuilderComponents/curriculum/Question';
+import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 
 interface QuizModalProps extends ModalProps {
 	closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -145,6 +146,32 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 		return questionsData.find((item) => item.ID === activeSortId);
 	}, [activeSortId, questionsData]);
 
+	const getQuestionForm = useCallback(() => {
+		const questionType = form.watch('question_type');
+		switch (questionType) {
+			case 'true-false':
+				return <TrueFalse />;
+			case 'single-choice':
+				return 'SingleChoiceQuestionForm';
+			case 'multiple-choice':
+				return 'MultipleChoiceQuestionForm';
+			case 'open-ended':
+				return 'OpenEndedQuestionForm';
+			case 'fill-in-the-blanks':
+				return 'FillInTheBlanksQuestionForm';
+			case 'short-answer':
+				return 'ShortAnswerQuestionForm';
+			case 'matching':
+				return 'MatchingQuestionForm';
+			case 'image-matching':
+				return 'ImageMatchingQuestionForm';
+			case 'image-answering':
+				return 'ImageAnsweringQuestionForm';
+			case 'ordering':
+				return 'OrderingQuestionForm';
+		}
+	}, [form]);
+
 	const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
 
 	const onQuizFormSubmit = (data: QuizForm) => {
@@ -213,7 +240,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 							</Button>
 						}
 					>
-						<Button variant="primary" size="small" onClick={() => alert('@TODO: will be implemenetd later')}>
+						<Button variant="primary" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
 							Save
 						</Button>
 					</Show>
@@ -345,7 +372,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 						</Show>
 					</div>
 				</div>
-				<div css={styles.content}>@TODO: will be implemented later</div>
+
+				<div css={styles.content}>{getQuestionForm()}</div>
+
 				<div css={styles.right}>
 					<div css={styles.questionTypeWrapper}>
 						<Controller
@@ -435,7 +464,7 @@ const styles = {
     border-right: 1px solid ${colorTokens.stroke.divider};
   `,
 	content: css`
-    padding: ${spacing[32]};
+    padding: ${spacing[32]} ${spacing[48]} ${spacing[48]} ${spacing[6]};
   `,
 	right: css`
     ${styleUtils.display.flex('column')};
