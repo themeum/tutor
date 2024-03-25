@@ -51,13 +51,12 @@ const Card = ({
 
 					<div css={styles.actions}>
 						<Show when={actionTray}>{actionTray}</Show>
-						<button css={styles.collapseButton} type="button" onClick={() => setIsCollapsed(!isCollapsed)}>
-							<SVGIcon
-								name={isCollapsed ? 'chevronDown' : 'chevronUp'}
-								width={24}
-								height={24}
-								style={styles.arrowUpDown}
-							/>
+						<button
+							css={styles.collapseButton({ isCollapsed })}
+							type="button"
+							onClick={() => setIsCollapsed(!isCollapsed)}
+						>
+							<SVGIcon name="chevronDown" width={24} height={24} style={styles.arrowUpDown} />
 						</button>
 					</div>
 				</div>
@@ -122,10 +121,22 @@ const styles = {
 		display: flex;
 		align-items: center;
 	`,
-	collapseButton: css`
+	collapseButton: ({
+		isCollapsed,
+	}: {
+		isCollapsed: boolean;
+	}) => css`
 		${styleUtils.resetButton};
 		display: flex;
 		align-items: center;
+		transition: transform 0.3s ease-in-out;
+
+		${
+			isCollapsed &&
+			css`
+			transform: rotate(180deg);
+		`
+		}
 	`,
 	arrowUpDown: css`
     color: ${colorTokens.icon.default};

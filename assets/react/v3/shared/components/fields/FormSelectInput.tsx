@@ -7,7 +7,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { type IconCollection, type Option, isDefined } from '@Utils/types';
 import { css } from '@emotion/react';
-import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useState, useRef } from 'react';
 
 import Show from '@Controls/Show';
 import { noop } from '@Utils/util';
@@ -31,7 +31,6 @@ type FormSelectInputProps<T> = {
 	removeBorder?: boolean;
 	isClearable?: boolean;
 	responsive?: boolean;
-	showArrowUpDown?: boolean;
 	helpText?: string;
 	removeOptionsMinWidth?: boolean;
 	leftIcon?: ReactNode;
@@ -53,7 +52,6 @@ const FormSelectInput = <T,>({
 	hideCaret,
 	listLabel,
 	isClearable = false,
-	showArrowUpDown = false,
 	helpText,
 	removeOptionsMinWidth = false,
 	leftIcon,
@@ -68,6 +66,8 @@ const FormSelectInput = <T,>({
 	const [inputValue, setInputValue] = useState(getInitialValue()?.label);
 	const [searchText, setSearchText] = useState('');
 	const [isOpen, setIsOpen] = useState(false);
+
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	const selections = useMemo(() => {
 		if (isSearchable) {
@@ -125,41 +125,58 @@ const FormSelectInput = <T,>({
 									{(iconName) => <SVGIcon name={iconName as IconCollection} width={32} height={32} />}
 								</Show>
 							</div>
-							<input
-								{...restInputProps}
-								{...additionalAttributes}
-								onClick={() => setIsOpen((previousState) => !previousState)}
-								css={[inputCss, styles.input(!!leftIcon || !!selectedItem?.icon)]}
-								autoComplete="off"
-								readOnly={readOnly || !isSearchable}
-								placeholder={placeholder}
-								value={inputValue}
-								title={inputValue}
-								onChange={(event) => {
-									setInputValue(event.target.value);
-									setSearchText(event.target.value);
+
+							<div
+								css={{
+									width: '100%',
 								}}
-							/>
+								onClick={() => {
+									setIsOpen((previousState) => !previousState);
+									inputRef.current?.focus();
+								}}
+								onKeyDown={(event) => {
+									if (event.key === 'Enter' || event.key === '') {
+										setIsOpen((previousState) => !previousState);
+										inputRef.current?.focus();
+									}
+								}}
+							>
+								<input
+									{...restInputProps}
+									{...additionalAttributes}
+									ref={inputRef}
+									css={[inputCss, styles.input(!!leftIcon || !!selectedItem?.icon)]}
+									autoComplete="off"
+									readOnly={readOnly || !isSearchable}
+									placeholder={placeholder}
+									value={inputValue}
+									title={inputValue}
+									onChange={(event) => {
+										setInputValue(event.target.value);
+										setSearchText(event.target.value);
+									}}
+								/>
+
+								<Show when={hasDescription}>
+									<span css={styles.decription({ hasLeftIcon: !!leftIcon })} title={getInitialValue()?.description}>
+										{getInitialValue()?.description}
+									</span>
+								</Show>
+							</div>
 
 							{!hideCaret && (
 								<button
 									type="button"
-									css={styles.caretButton}
+									css={styles.caretButton({ isOpen })}
 									onClick={() => {
 										setIsOpen((previousState) => !previousState);
+										inputRef.current?.focus();
 									}}
 									disabled={readOnly || options.length === 0}
 								>
-									{showArrowUpDown ? (
-										<SVGIcon name="chevronDown" width={20} height={20} style={styles.arrowUpDown} />
-									) : (
-										<SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon({ isOpen })} />
-									)}
+									<SVGIcon name="chevronDown" width={20} height={20} />
 								</button>
 							)}
-							<Show when={hasDescription}>
-								<span css={styles.decription({ hasLeftIcon: !!leftIcon })}>{getInitialValue()?.description}</span>
-							</Show>
 						</div>
 
 						<Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
@@ -430,17 +447,6 @@ const styles = {
       flex-shrink: 0;
     }
   `,
-	toggleIcon: ({ isOpen = false }: { isOpen: boolean }) => css`
-    color: ${colorTokens.icon.default};
-    transition: transform 0.3s ease-in-out;
-
-    ${
-			isOpen &&
-			css`
-      transform: rotate(180deg);
-    `
-		}
-  `,
 	arrowUpDown: css`
     color: ${colorTokens.icon.default};
     display: flex;
@@ -456,7 +462,7 @@ const styles = {
     max-width: calc(100% - 32px);
     max-height: calc(100% - 32px);
   `,
-	caretButton: css`
+	caretButton: ({ isOpen = false }: { isOpen: boolean }) => css`
     ${styleUtils.resetButton};
     position: absolute;
     top: 0;
@@ -465,5 +471,14 @@ const styles = {
     margin: auto 0;
     display: flex;
     align-items: center;
+		transition: transform 0.3s ease-in-out;
+		color: ${colorTokens.icon.default};
+		
+		${
+			isOpen &&
+			css`
+      transform: rotate(180deg);
+    `
+		}
   `,
 };
