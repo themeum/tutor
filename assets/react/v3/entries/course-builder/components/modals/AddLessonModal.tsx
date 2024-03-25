@@ -46,10 +46,10 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
 			subtitle={subtitle}
 			actions={
 				<>
-					<Button variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
+					<Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
 						Cancel
 					</Button>
-					<Button variant="primary" onClick={form.handleSubmit(onSubmit)}>
+					<Button variant="primary" size="small" onClick={form.handleSubmit(onSubmit)}>
 						Save
 					</Button>
 				</>
@@ -112,7 +112,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
               )}
             /> */}
 					<div css={styles.durationWrapper}>
-						<span css={styles.uploadLabel}>{__('Video playback time', 'tutor')}</span>
+						<span css={styles.additoinLabel}>{__('Video playback time', 'tutor')}</span>
 						<div css={styles.duration}>
 							<Controller
 								name="duration_hour"
@@ -167,20 +167,15 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
 								{...controllerProps}
 								type="number"
 								label={__('Available after days', 'tutor')}
+								helpText={__('Set the number of days after which the lesson will be available', 'tutor')}
 								placeholder="0"
 							/>
 						)}
 					/>
 
 					<div css={styles.uploadAttachment}>
-						<span css={styles.uploadLabel}>{__('Exercise Files', 'tutor')}</span>
-						<Button
-							icon={<SVGIcon name="attach" height={24} width={24} />}
-							variant="secondary"
-							buttonContentCss={css`
-                  justify-content: center;
-                `}
-						>
+						<span css={styles.additoinLabel}>{__('Exercise Files', 'tutor')}</span>
+						<Button icon={<SVGIcon name="attach" height={24} width={24} />} variant="secondary">
 							Upload Attachment
 						</Button>
 					</div>
@@ -252,7 +247,7 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[8]};
   `,
-	uploadLabel: css`
+	additoinLabel: css`
     ${typography.body()}
     color: ${colorTokens.text.title};
   `,

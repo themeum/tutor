@@ -46,6 +46,7 @@ import { createPortal } from 'react-dom';
 import { Controller } from 'react-hook-form';
 import TopicContent from './TopicContent';
 import AddLessonModal from '@CourseBuilderComponents/modals/AddLessonModal';
+import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
 
 interface TopicProps {
 	topic: CourseTopicWithCollapse;
@@ -407,7 +408,14 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 								variant="tertiary"
 								icon={<SVGIcon name="plus" />}
 								onClick={() => {
-									alert('@TODO: will be implemented later');
+									showModal({
+										component: AddAssignmentModal,
+										props: {
+											title: __('Assignment', 'tutor'),
+											icon: <SVGIcon name="assignment" width={24} height={24} />,
+											subtitle: __(`Topic: ${topic.post_title}`, 'tutor'),
+										},
+									});
 								}}
 							>
 								{__('Assignment', 'tutor')}
