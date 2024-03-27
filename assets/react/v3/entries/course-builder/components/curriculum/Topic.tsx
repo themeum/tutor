@@ -287,11 +287,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 
 				<Show when={isEdit}>
 					<div css={styles.footer}>
-						<Button variant="text" onClick={() => setIsEdit(false)}>
+						<Button variant="text" size="small" onClick={() => setIsEdit(false)}>
 							{__('Cancel', 'tutor')}
 						</Button>
 						<Button
-							variant="tertiary"
+							variant="secondary"
 							size="small"
 							onClick={form.handleSubmit(async (values) => {
 								//@TODO: will be implemented later
@@ -374,7 +374,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 						<div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
 							<Button
 								variant="tertiary"
-								icon={<SVGIcon name="plus" />}
+								isOutlined
+								size="small"
+								icon={<SVGIcon name="plus" width={24} height={24} />}
 								onClick={() => {
 									showModal({
 										component: AddLessonModal,
@@ -390,7 +392,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 							</Button>
 							<Button
 								variant="tertiary"
-								icon={<SVGIcon name="plus" />}
+								isOutlined
+								size="small"
+								icon={<SVGIcon name="plus" width={24} height={24} />}
 								onClick={() => {
 									showModal({
 										component: QuizModal,
@@ -406,7 +410,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 							</Button>
 							<Button
 								variant="tertiary"
-								icon={<SVGIcon name="plus" />}
+								isOutlined
+								size="small"
+								icon={<SVGIcon name="plus" width={24} height={24} />}
 								onClick={() => {
 									showModal({
 										component: AddAssignmentModal,
@@ -427,6 +433,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 								fallback={
 									<Button
 										variant="tertiary"
+										isOutlined
+										size="small"
 										icon={<SVGIcon name="download" width={24} height={24} />}
 										onClick={() => {
 											alert('@TODO: will be implemented later');

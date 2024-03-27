@@ -254,3 +254,18 @@ export const formatBytes = (bytes: number, decimals = 2) => {
 export const parseNumberOnly = (value: string) => {
 	return value.replace(/[^-0-9.]/g, '');
 };
+
+export const throttle = <T extends (...args: never[]) => void>(func: T, limit: number) => {
+	let inThrottle = false;
+
+	return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+		if (!inThrottle) {
+			func.apply(this, args);
+			inThrottle = true;
+
+			setTimeout(() => {
+				inThrottle = false;
+			}, limit);
+		}
+	};
+};
