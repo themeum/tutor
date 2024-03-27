@@ -10,87 +10,87 @@ import type React from 'react';
 import { useRef } from 'react';
 
 interface UploaderProps {
-	onUpload: (files: File[]) => void;
-	onError: (errorMessage: string[]) => void;
-	acceptedTypes: string[];
-	multiple?: boolean;
-	fullWidth?: boolean;
-	disabled?: boolean;
+  onUpload: (files: File[]) => void;
+  onError: (errorMessage: string[]) => void;
+  acceptedTypes: string[];
+  multiple?: boolean;
+  fullWidth?: boolean;
+  disabled?: boolean;
 }
 
 interface FileUploaderProps extends UploaderProps {
-	label: string;
+  label: string;
 }
 
 interface UseFileUploaderProps {
-	acceptedTypes: string[];
-	onUpload: (files: File[]) => void;
-	onError: (errorMessage: string[]) => void;
+  acceptedTypes: string[];
+  onUpload: (files: File[]) => void;
+  onError: (errorMessage: string[]) => void;
 }
 const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUploaderProps) => {
-	const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const { files } = event.target;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.target;
 
-		if (!files) {
-			return;
-		}
+    if (!files) {
+      return;
+    }
 
-		const errorMessages: string[] = [];
-		const validFiles: File[] = [];
+    const errorMessages: string[] = [];
+    const validFiles: File[] = [];
 
-		for (const file of [...files]) {
-			if (!acceptedTypes.includes(getFileExtensionFromName(file.name))) {
-				errorMessages.push('Invalid image type');
-			} else if (file.size > MAX_FILE_SIZE) {
-				errorMessages.push('Maximum upload size exceeded');
-			} else {
-				validFiles.push(file);
-			}
-		}
+    for (const file of [...files]) {
+      if (!acceptedTypes.includes(getFileExtensionFromName(file.name))) {
+        errorMessages.push('Invalid image type');
+      } else if (file.size > MAX_FILE_SIZE) {
+        errorMessages.push('Maximum upload size exceeded');
+      } else {
+        validFiles.push(file);
+      }
+    }
 
-		if (validFiles.length) {
-			onUpload(validFiles);
-		}
+    if (validFiles.length) {
+      onUpload(validFiles);
+    }
 
-		if (errorMessages.length) {
-			onError(errorMessages);
-		}
-	};
+    if (errorMessages.length) {
+      onError(errorMessages);
+    }
+  };
 
-	return { fileInputRef, handleChange };
+  return { fileInputRef, handleChange };
 };
 
 const FileUploader = ({
-	onUpload,
-	onError,
-	acceptedTypes,
-	label,
-	multiple = false,
-	disabled = false,
+  onUpload,
+  onError,
+  acceptedTypes,
+  label,
+  multiple = false,
+  disabled = false,
 }: FileUploaderProps) => {
-	const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError });
+  const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError });
 
-	return (
-		<button type="button" css={styles.uploadButton} onClick={() => fileInputRef.current?.click()} disabled={disabled}>
-			<input
-				ref={fileInputRef}
-				type="file"
-				css={styles.fileInput}
-				accept={acceptedTypes.join(',')}
-				onChange={handleChange}
-				multiple={multiple}
-				disabled={disabled}
-			/>
-			<SVGIcon name="storeImage" width={26} height={20} />
-			<span css={styles.text}>{label}</span>
-		</button>
-	);
+  return (
+    <button type="button" css={styles.uploadButton} onClick={() => fileInputRef.current?.click()} disabled={disabled}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        css={styles.fileInput}
+        accept={acceptedTypes.join(',')}
+        onChange={handleChange}
+        multiple={multiple}
+        disabled={disabled}
+      />
+      <SVGIcon name="storeImage" width={26} height={20} />
+      <span css={styles.text}>{label}</span>
+    </button>
+  );
 };
 
 const styles = {
-	uploadButton: css`
+  uploadButton: css`
     ${styleUtils.resetButton}
     background: ${colorPalate.surface.neutral.default};
     border: 1px dashed ${colorPalate.border.neutral};
@@ -102,52 +102,52 @@ const styles = {
     flex: 1;
     gap: ${spacing[12]}; ;
   `,
-	fileInput: css`
+  fileInput: css`
     display: none;
   `,
-	text: css`
+  text: css`
     color: ${colorPalate.interactive.default};
     ${typography.body()}
   `,
 };
 
 interface UploadButtonProps extends UploaderProps {
-	children?: React.ReactNode;
-	variant?: ButtonVariant;
-	type?: 'submit' | 'button';
-	size?: ButtonSize;
-	icon?: React.ReactNode;
-	iconPosition?: ButtonIconPosition;
-	disabled?: boolean;
-	loading?: boolean;
-	tabIndex?: number;
+  children?: React.ReactNode;
+  variant?: ButtonVariant;
+  type?: 'submit' | 'button';
+  size?: ButtonSize;
+  icon?: React.ReactNode;
+  iconPosition?: ButtonIconPosition;
+  disabled?: boolean;
+  loading?: boolean;
+  tabIndex?: number;
 }
 
 export const UploadButton = ({
-	onUpload,
-	onError,
-	acceptedTypes,
-	multiple = false,
-	disabled = false,
-	children,
-	...buttonProps
+  onUpload,
+  onError,
+  acceptedTypes,
+  multiple = false,
+  disabled = false,
+  children,
+  ...buttonProps
 }: UploadButtonProps) => {
-	const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError });
+  const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError });
 
-	return (
-		<Button {...buttonProps} onClick={() => fileInputRef.current?.click()} disabled={disabled}>
-			<input
-				ref={fileInputRef}
-				type="file"
-				css={styles.fileInput}
-				accept={acceptedTypes.join(',')}
-				onChange={handleChange}
-				multiple={multiple}
-				disabled={disabled}
-			/>
-			{children}
-		</Button>
-	);
+  return (
+    <Button {...buttonProps} onClick={() => fileInputRef.current?.click()} disabled={disabled}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        css={styles.fileInput}
+        accept={acceptedTypes.join(',')}
+        onChange={handleChange}
+        multiple={multiple}
+        disabled={disabled}
+      />
+      {children}
+    </Button>
+  );
 };
 
 export default FileUploader;

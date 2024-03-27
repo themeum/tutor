@@ -11,28 +11,28 @@ export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 export const isRTL = document.dir === 'rtl';
 
 export const modal = {
-	HEADER_HEIGHT: 56,
-	MARGIN_TOP: 88,
+  HEADER_HEIGHT: 56,
+  MARGIN_TOP: 88,
 };
 
 export const TutorRoles = {
-	ADMINISTRATOR: 'administrator',
-	TUTOR_INSTRUCTOR: 'tutor_instructor',
-	SUBSCRIBER: 'subscriber',
+  ADMINISTRATOR: 'administrator',
+  TUTOR_INSTRUCTOR: 'tutor_instructor',
+  SUBSCRIBER: 'subscriber',
 };
 
 export enum LocalStorage {
-	clientId = 'eCommerceClientId',
+  clientId = 'eCommerceClientId',
 }
 
 export enum DateFormats {
-	day = 'dd',
-	month = 'MMM',
-	year = 'yyyy',
-	yearMonthDay = 'yyyy-LL-dd',
-	monthDayYear = 'MMM dd, yyyy',
-	hoursMinutes = 'hh:mm a',
-	yearMonthDayHourMinuteSecond = 'yyyy-MM-dd hh:mm:ss',
-	monthDayYearHoursMinutes = 'MMM dd, yyyy, hh:mm a',
-	localMonthDayYearHoursMinutes = 'PPp',
+  day = 'dd',
+  month = 'MMM',
+  year = 'yyyy',
+  yearMonthDay = 'yyyy-LL-dd',
+  monthDayYear = 'MMM dd, yyyy',
+  hoursMinutes = 'hh:mm a',
+  yearMonthDayHourMinuteSecond = 'yyyy-MM-dd hh:mm:ss',
+  monthDayYearHoursMinutes = 'MMM dd, yyyy, hh:mm a',
+  localMonthDayYearHoursMinutes = 'PPp',
 }

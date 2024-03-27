@@ -234,6 +234,10 @@ export const colorTokens = {
     dark20: '#31343b',
     dark30: '#41454f',
     null: '#ffffff',
+    success: {
+      fill30: '#F5FBF7',
+      fill40: '#E5F5EB',
+    },
     status: {
       success: '#e5f5eb',
       warning: '#fdf4e3',
