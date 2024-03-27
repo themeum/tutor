@@ -5,48 +5,48 @@ import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEventHandler, type FocusEventHandler, type ReactNode } from 'react';
 
 interface RadioProps {
-	id?: string;
-	label?: string;
-	icon?: ReactNode;
-	value?: string | number;
-	name?: string;
-	checked?: boolean;
-	readOnly?: boolean;
-	disabled?: boolean;
-	labelCss?: SerializedStyles;
-	inputCss?: SerializedStyles[];
-	onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
-	onBlur?: FocusEventHandler<HTMLInputElement> | undefined;
+  id?: string;
+  label?: string;
+  icon?: ReactNode;
+  value?: string | number;
+  name?: string;
+  checked?: boolean;
+  readOnly?: boolean;
+  disabled?: boolean;
+  labelCss?: SerializedStyles;
+  inputCss?: SerializedStyles[];
+  onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
+  onBlur?: FocusEventHandler<HTMLInputElement> | undefined;
 }
 
 const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props: RadioProps, ref) => {
-	const { name, checked, readOnly, disabled = false, labelCss, inputCss, label, icon, value, onChange, onBlur } = props;
-	const id = nanoid();
+  const { name, checked, readOnly, disabled = false, labelCss, inputCss, label, icon, value, onChange, onBlur } = props;
+  const id = nanoid();
 
-	return (
-		<label htmlFor={id} css={[styles.container(disabled), labelCss]}>
-			<input
-				ref={ref}
-				id={id}
-				name={name}
-				type="radio"
-				checked={checked}
-				readOnly={readOnly}
-				value={value}
-				disabled={disabled}
-				onChange={onChange}
-				onBlur={onBlur}
-				css={[styles.radio(label)]}
-			/>
-			<span />
-			{icon}
-			{label}
-		</label>
-	);
+  return (
+    <label htmlFor={id} css={[styles.container(disabled), labelCss]}>
+      <input
+        ref={ref}
+        id={id}
+        name={name}
+        type="radio"
+        checked={checked}
+        readOnly={readOnly}
+        value={value}
+        disabled={disabled}
+        onChange={onChange}
+        onBlur={onBlur}
+        css={[styles.radio(label)]}
+      />
+      <span />
+      {icon}
+      {label}
+    </label>
+  );
 });
 
 const styles = {
-	container: (disabled: boolean) => css`
+  container: (disabled: boolean) => css`
     ${typography.caption()};
     display: flex;
     align-items: center;
@@ -54,13 +54,13 @@ const styles = {
     user-select: none;
 
     ${
-			disabled &&
-			css`
+      disabled &&
+      css`
       color: ${colorTokens.text.disable};
     `
-		}
+    }
   `,
-	radio: (label = '') => css`
+  radio: (label = '') => css`
     position: absolute;
     opacity: 0;
     height: 0;
@@ -76,11 +76,11 @@ const styles = {
       border: 2px solid ${colorTokens.stroke.default};
       border-radius: 100%;
       ${
-				label &&
-				css`
+        label &&
+        css`
         margin-right: ${spacing[10]};
       `
-			}
+      }
     }
     & + span::before {
       content: '';

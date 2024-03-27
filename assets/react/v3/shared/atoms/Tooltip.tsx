@@ -9,59 +9,59 @@ import type { ReactNode } from 'react';
 type Placement = 'top' | 'right' | 'bottom' | 'left';
 
 interface TooltipProps {
-	children: ReactNode;
-	content: string | ReactNode;
-	allowHTML?: boolean;
-	placement?: Placement;
-	hideOnClick?: boolean;
+  children: ReactNode;
+  content: string | ReactNode;
+  allowHTML?: boolean;
+  placement?: Placement;
+  hideOnClick?: boolean;
 }
 
 const initialStyles = { opacity: 0, transform: 'scale(0.8)' };
 const config = { tension: 300, friction: 15 };
 
 const Tooltip = ({ children, content, allowHTML, placement = 'top', hideOnClick }: TooltipProps) => {
-	const [props, setSpring] = useSpring(() => initialStyles);
+  const [props, setSpring] = useSpring(() => initialStyles);
 
-	const onMount = () => {
-		setSpring.start({
-			opacity: 1,
-			transform: 'scale(1)',
-			config,
-		});
-	};
-	const onHide = ({ unmount }: AnyObject) => {
-		setSpring.start({
-			...initialStyles,
-			onRest: unmount,
-			config: { ...config, clamp: true },
-		});
-	};
-	return (
-		<Tippy
-			render={(attributes) => {
-				return (
-					<AnimatedDiv style={props} hideOnOverflow={false} {...attributes} css={styles.contentBox(placement)}>
-						{content}
-					</AnimatedDiv>
-				);
-			}}
-			animation
-			onMount={onMount}
-			onHide={onHide}
-			allowHTML={allowHTML}
-			delay={[0, 100]}
-			hideOnClick={hideOnClick}
-			placement={placement}
-		>
-			<div>{children}</div>
-		</Tippy>
-	);
+  const onMount = () => {
+    setSpring.start({
+      opacity: 1,
+      transform: 'scale(1)',
+      config,
+    });
+  };
+  const onHide = ({ unmount }: AnyObject) => {
+    setSpring.start({
+      ...initialStyles,
+      onRest: unmount,
+      config: { ...config, clamp: true },
+    });
+  };
+  return (
+    <Tippy
+      render={(attributes) => {
+        return (
+          <AnimatedDiv style={props} hideOnOverflow={false} {...attributes} css={styles.contentBox(placement)}>
+            {content}
+          </AnimatedDiv>
+        );
+      }}
+      animation
+      onMount={onMount}
+      onHide={onHide}
+      allowHTML={allowHTML}
+      delay={[0, 100]}
+      hideOnClick={hideOnClick}
+      placement={placement}
+    >
+      <div>{children}</div>
+    </Tippy>
+  );
 };
 
 export default Tooltip;
 
 const styles = {
-	contentBox: (placement: Placement) => css`
+  contentBox: (placement: Placement) => css`
     max-width: 250px;
     width: 100%;
     background-color: ${colorTokens.color.black.main};
@@ -83,35 +83,35 @@ const styles = {
       transform: translateX(-50%) rotate(45deg);
 
       ${
-				placement === 'right' &&
-				css`
+        placement === 'right' &&
+        css`
         bottom: auto;
         left: -4px;
         top: 50%;
         transform: translateY(-50%) rotate(45deg);
       `
-			}
+      }
 
       ${
-				placement === 'bottom' &&
-				css`
+        placement === 'bottom' &&
+        css`
         bottom: auto;
         top: -4px;
         left: 50%;
         transform: translateX(-50%) rotate(45deg);
       `
-			}
+      }
 
       ${
-				placement === 'left' &&
-				css`
+        placement === 'left' &&
+        css`
         bottom: auto;
         top: 50%;
         left: auto;
         right: -4px;
         transform: translateY(-50%) rotate(45deg);
       `
-			}
+      }
     }
   `,
 };

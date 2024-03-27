@@ -2,13 +2,13 @@ import { easings, update, useSpring } from '@react-spring/web';
 import { useEffect, type RefObject, useState } from 'react';
 
 export const useCollapseExpandAnimation = <T extends HTMLElement>({
-	ref,
-	isOpen,
-	heightCalculator = 'scroll',
+  ref,
+  isOpen,
+  heightCalculator = 'scroll',
 }: {
-	ref: RefObject<T>;
-	isOpen: boolean;
-	heightCalculator?: 'scroll' | 'client';
+  ref: RefObject<T>;
+  isOpen: boolean;
+  heightCalculator?: 'scroll' | 'client';
 }) => {
 	const [height, setHeight] = useState<number | undefined>(
 		heightCalculator === 'scroll' ? ref.current?.scrollHeight : ref.current?.clientHeight
@@ -31,5 +31,5 @@ export const useCollapseExpandAnimation = <T extends HTMLElement>({
 		},
 	});
 
-	return heightAnimation;
+  return heightAnimation;
 };

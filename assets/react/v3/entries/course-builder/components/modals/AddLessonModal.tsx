@@ -1,19 +1,19 @@
-import React from 'react';
-import ModalWrapper from '@Components/modals/ModalWrapper';
-import { ModalProps } from '@Components/modals/Modal';
-import { css } from '@emotion/react';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { Controller } from 'react-hook-form';
-import FormInput from '@Components/fields/FormInput';
-import { __ } from '@wordpress/i18n';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import FormImageInput, { Media } from '@Components/fields/FormImageInput';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { typography } from '@Config/typography';
-import FormSwitch from '@Components/fields/FormSwitch';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
+import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
+import FormSwitch from '@Components/fields/FormSwitch';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import type { ModalProps } from '@Components/modals/Modal';
+import ModalWrapper from '@Components/modals/ModalWrapper';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import React from 'react';
+import { Controller } from 'react-hook-form';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

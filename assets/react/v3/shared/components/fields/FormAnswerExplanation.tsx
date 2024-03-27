@@ -1,201 +1,201 @@
-import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
+import { useEffect, useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
-import Show from '@Controls/Show';
 
-import FormFieldWrapper from './FormFieldWrapper';
 import { __ } from '@wordpress/i18n';
+import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormAnswerExplanationProps extends FormControllerProps<string | null> {
-	label?: string;
-	rows?: number;
-	columns?: number;
-	maxLimit?: number;
-	disabled?: boolean;
-	readOnly?: boolean;
-	loading?: boolean;
-	placeholder?: string;
-	helpText?: string;
-	onChange?: (value: string | number) => void;
-	onKeyDown?: (keyName: string) => void;
-	isHidden?: boolean;
-	enableResize?: boolean;
-	isSecondary?: boolean;
+  label?: string;
+  rows?: number;
+  columns?: number;
+  maxLimit?: number;
+  disabled?: boolean;
+  readOnly?: boolean;
+  loading?: boolean;
+  placeholder?: string;
+  helpText?: string;
+  onChange?: (value: string | number) => void;
+  onKeyDown?: (keyName: string) => void;
+  isHidden?: boolean;
+  enableResize?: boolean;
+  isSecondary?: boolean;
 }
 
 const DEFAULT_ROWS = 6;
 
 const FormAnswerExplanation = ({
-	label,
-	rows = DEFAULT_ROWS,
-	columns,
-	maxLimit,
-	field,
-	fieldState,
-	disabled,
-	readOnly,
-	loading,
-	placeholder,
-	helpText,
-	onChange,
-	onKeyDown,
-	isHidden,
-	enableResize = false,
-	isSecondary = false,
+  label,
+  rows = DEFAULT_ROWS,
+  columns,
+  maxLimit,
+  field,
+  fieldState,
+  disabled,
+  readOnly,
+  loading,
+  placeholder,
+  helpText,
+  onChange,
+  onKeyDown,
+  isHidden,
+  enableResize = false,
+  isSecondary = false,
 }: FormAnswerExplanationProps) => {
-	const inputValue = field.value ?? '';
-	const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const inputValue = field.value ?? '';
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-	const [isEdit, setIsEdit] = useState<boolean>(false);
-	const [previousValue, setPreviousValue] = useState<string>(inputValue);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [previousValue, setPreviousValue] = useState<string>(inputValue);
 
-	let characterCount:
-		| {
-				maxLimit: number;
-				inputCharacter: number;
-		  }
-		| undefined = undefined;
+  let characterCount:
+    | {
+        maxLimit: number;
+        inputCharacter: number;
+      }
+    | undefined = undefined;
 
-	if (maxLimit) {
-		characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
-	}
+  if (maxLimit) {
+    characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
+  }
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		if (isDefined(textareaRef.current)) {
-			textareaRef.current.focus();
-			setPreviousValue(inputValue);
-		}
-	}, [isEdit, textareaRef.current]);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isDefined(textareaRef.current)) {
+      textareaRef.current.focus();
+      setPreviousValue(inputValue);
+    }
+  }, [isEdit, textareaRef.current]);
 
-	return (
-		<div css={styles.container({ isEdit: isEdit || !!inputValue })}>
-			<Show
-				when={isEdit}
-				fallback={
-					<Show
-						when={inputValue}
-						fallback={
-							<div
-								css={styles.placeholder}
-								role="button"
-								onClick={() => setIsEdit(true)}
-								onKeyDown={(event) => {
-									if (event.key === 'Enter' || event.key === ' ') {
-										setIsEdit(true);
-									}
-								}}
-							>
-								{placeholder}
-							</div>
-						}
-					>
-						<div
-							css={styles.answer}
-							role="button"
-							onClick={() => setIsEdit(true)}
-							onKeyDown={(event) => {
-								if (event.key === 'Enter' || event.key === ' ') {
-									setIsEdit(true);
-								}
-							}}
-						>
-							<div css={styles.answerLabel}>{__('Answer explanation', 'tutor')}</div>
-							{inputValue}
-						</div>
-					</Show>
-				}
-			>
-				<FormFieldWrapper
-					label={label}
-					field={field}
-					fieldState={fieldState}
-					disabled={disabled}
-					readOnly={readOnly}
-					loading={loading}
-					helpText={helpText}
-					isHidden={isHidden}
-					characterCount={characterCount}
-					isSecondary={isSecondary}
-				>
-					{(inputProps) => {
-						return (
-							<>
-								<div css={styles.inputContainer(enableResize)}>
-									<textarea
-										{...field}
-										{...inputProps}
-										ref={textareaRef}
-										value={inputValue}
-										onChange={(event) => {
-											const { value } = event.target;
-											if (maxLimit && value.trim().length > maxLimit) {
-												return;
-											}
+  return (
+    <div css={styles.container({ isEdit: isEdit || !!inputValue })}>
+      <Show
+        when={isEdit}
+        fallback={
+          <Show
+            when={inputValue}
+            fallback={
+              <div
+                css={styles.placeholder}
+                role="button"
+                onClick={() => setIsEdit(true)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    setIsEdit(true);
+                  }
+                }}
+              >
+                {placeholder}
+              </div>
+            }
+          >
+            <div
+              css={styles.answer}
+              role="button"
+              onClick={() => setIsEdit(true)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  setIsEdit(true);
+                }
+              }}
+            >
+              <div css={styles.answerLabel}>{__('Answer explanation', 'tutor')}</div>
+              {inputValue}
+            </div>
+          </Show>
+        }
+      >
+        <FormFieldWrapper
+          label={label}
+          field={field}
+          fieldState={fieldState}
+          disabled={disabled}
+          readOnly={readOnly}
+          loading={loading}
+          helpText={helpText}
+          isHidden={isHidden}
+          characterCount={characterCount}
+          isSecondary={isSecondary}
+        >
+          {(inputProps) => {
+            return (
+              <>
+                <div css={styles.inputContainer(enableResize)}>
+                  <textarea
+                    {...field}
+                    {...inputProps}
+                    ref={textareaRef}
+                    value={inputValue}
+                    onChange={(event) => {
+                      const { value } = event.target;
+                      if (maxLimit && value.trim().length > maxLimit) {
+                        return;
+                      }
 
-											field.onChange(value);
+                      field.onChange(value);
 
-											if (onChange) {
-												onChange(value);
-											}
-										}}
-										onKeyDown={(event) => {
-											if (event.key === 'Escape') {
-												field.onChange(previousValue);
-												setIsEdit(false);
-											}
-											onKeyDown?.(event.key);
-										}}
-										autoComplete="off"
-										rows={rows}
-										cols={columns}
-									/>
-								</div>
-							</>
-						);
-					}}
-				</FormFieldWrapper>
-				<div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
-					<Button
-						variant="text"
-						size="small"
-						onClick={() => {
-							field.onChange(previousValue);
-							setIsEdit(false);
-						}}
-					>
-						Cancel
-					</Button>
-					<Button
-						variant="secondary"
-						size="small"
-						onClick={() => {
-							setIsEdit(false);
-						}}
-						disabled={field.value === previousValue}
-					>
-						Ok
-					</Button>
-				</div>
-			</Show>
-		</div>
-	);
+                      if (onChange) {
+                        onChange(value);
+                      }
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Escape') {
+                        field.onChange(previousValue);
+                        setIsEdit(false);
+                      }
+                      onKeyDown?.(event.key);
+                    }}
+                    autoComplete="off"
+                    rows={rows}
+                    cols={columns}
+                  />
+                </div>
+              </>
+            );
+          }}
+        </FormFieldWrapper>
+        <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
+          <Button
+            variant="text"
+            size="small"
+            onClick={() => {
+              field.onChange(previousValue);
+              setIsEdit(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="secondary"
+            size="small"
+            onClick={() => {
+              setIsEdit(false);
+            }}
+            disabled={field.value === previousValue}
+          >
+            Ok
+          </Button>
+        </div>
+      </Show>
+    </div>
+  );
 };
 
 export default FormAnswerExplanation;
 
 const styles = {
-	container: ({
-		isEdit,
-	}: {
-		isEdit: boolean;
-	}) => css`
+  container: ({
+    isEdit,
+  }: {
+    isEdit: boolean;
+  }) => css`
     position: relative;
     display: flex;
     flex-direction: column;
@@ -212,11 +212,11 @@ const styles = {
     }
 
     ${
-			isEdit &&
-			css`
+      isEdit &&
+      css`
       padding: 0;
     `
-		}
+    }
 
     &:hover {
       background-color: ${colorTokens.background.white};
@@ -228,15 +228,15 @@ const styles = {
 			}
 
       ${
-				isEdit &&
-				css`
+        isEdit &&
+        css`
         background-color: transparent;
       `
-			}
+      }
       
     };
   `,
-	inputContainer: (enableResize: boolean) => css`
+  inputContainer: (enableResize: boolean) => css`
     position: relative;
     display: flex;
 
@@ -248,14 +248,14 @@ const styles = {
       resize: none;
 
       ${
-				enableResize &&
-				css`
+        enableResize &&
+        css`
         resize: vertical;
       `
-			}
+      }
     }
   `,
-	clearButton: css`
+  clearButton: css`
     position: absolute;
     right: ${spacing[2]};
     top: ${spacing[2]};
@@ -268,7 +268,7 @@ const styles = {
       padding: ${spacing[10]};
     }
   `,
-	placeholder: css`
+  placeholder: css`
     padding: ${spacing[12]} ${spacing[24]};
     ${typography.heading6()}
     color: ${colorTokens.text.hints};
@@ -276,11 +276,11 @@ const styles = {
     align-items: center;
     height: 100%;
   `,
-	actionButtonWrapper: ({
-		isEdit,
-	}: {
-		isEdit: boolean;
-	}) => css`
+  actionButtonWrapper: ({
+    isEdit,
+  }: {
+    isEdit: boolean;
+  }) => css`
     display: flex;
 		justify-content: flex-end;
 		gap: ${spacing[8]};
@@ -288,14 +288,14 @@ const styles = {
     transition: opacity 0.15s ease-in-out;
 
 		${
-			isEdit &&
-			css`
+      isEdit &&
+      css`
 				opacity: 1;
 			`
-		}
+    }
 
   `,
-	answer: css`
+  answer: css`
     padding: ${spacing[12]} ${spacing[24]};
     border-radius: ${borderRadius.card};
     display: flex;
@@ -309,7 +309,7 @@ const styles = {
       background-color: ${colorTokens.background.success.fill40};
     }
   `,
-	answerLabel: css`
+  answerLabel: css`
     ${typography.caption()}
     color: ${colorTokens.text.title};
   `,

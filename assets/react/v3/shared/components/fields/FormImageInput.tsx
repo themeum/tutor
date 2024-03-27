@@ -10,92 +10,92 @@ import { rgba } from 'polished';
 import FormFieldWrapper from './FormFieldWrapper';
 
 export type Media = {
-	id: number | null;
-	url: string;
-	title?: string;
+  id: number | null;
+  url: string;
+  title?: string;
 };
 
 type FormImageInputProps = {
-	label?: string;
-	onChange?: () => void;
-	helpText?: string;
-	buttonText?: string;
-	infoText?: string;
+  label?: string;
+  onChange?: () => void;
+  helpText?: string;
+  buttonText?: string;
+  infoText?: string;
 } & FormControllerProps<Media | null>;
 
 const FormImageInput = ({
-	field,
-	fieldState,
-	label,
-	helpText,
-	buttonText = __('Upload Media', 'tutor'),
-	infoText,
+  field,
+  fieldState,
+  label,
+  helpText,
+  buttonText = __('Upload Media', 'tutor'),
+  infoText,
 }: FormImageInputProps) => {
-	const wpMedia = window.wp.media({
-		library: { type: 'image' },
-	});
+  const wpMedia = window.wp.media({
+    library: { type: 'image' },
+  });
 
-	const fieldValue = field.value;
+  const fieldValue = field.value;
 
-	const uploadHandler = () => {
-		wpMedia.open();
-	};
+  const uploadHandler = () => {
+    wpMedia.open();
+  };
 
-	wpMedia.on('select', () => {
-		const attachment = wpMedia.state().get('selection').first().toJSON();
-		const { id, url, title } = attachment;
+  wpMedia.on('select', () => {
+    const attachment = wpMedia.state().get('selection').first().toJSON();
+    const { id, url, title } = attachment;
 
-		field.onChange({ id, url, title });
-	});
+    field.onChange({ id, url, title });
+  });
 
-	const clearHandler = () => {
-		field.onChange({ id: null, url: '', title: '' });
-	};
+  const clearHandler = () => {
+    field.onChange({ id: null, url: '', title: '' });
+  };
 
-	return (
-		<FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
-			{() => {
-				return (
-					<div>
-						<Show
-							when={fieldValue?.url}
-							fallback={
-								<div css={styles.emptyMedia}>
-									<SVGIcon name="addImage" width={32} height={32} />
-									<Button variant="text" onClick={uploadHandler}>
-										{buttonText}
-									</Button>
-									<p css={styles.infoTexts}>{infoText}</p>
-								</div>
-							}
-						>
-							{(url) => {
-								return (
-									<div css={styles.previewWrapper}>
-										<img src={url} alt={fieldValue?.title} css={styles.imagePreview} />
-										<div css={styles.hoverPreview} data-hover-buttons-wrapper>
-											<Button variant="outlined" onClick={uploadHandler}>
-												{__('Replace Image', 'tutor')}
-											</Button>
-											<Button variant="text" onClick={clearHandler}>
-												{__('Remove', 'tutor')}
-											</Button>
-										</div>
-									</div>
-								);
-							}}
-						</Show>
-					</div>
-				);
-			}}
-		</FormFieldWrapper>
-	);
+  return (
+    <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
+      {() => {
+        return (
+          <div>
+            <Show
+              when={fieldValue?.url}
+              fallback={
+                <div css={styles.emptyMedia}>
+                  <SVGIcon name="addImage" width={32} height={32} />
+                  <Button variant="text" onClick={uploadHandler}>
+                    {buttonText}
+                  </Button>
+                  <p css={styles.infoTexts}>{infoText}</p>
+                </div>
+              }
+            >
+              {(url) => {
+                return (
+                  <div css={styles.previewWrapper}>
+                    <img src={url} alt={fieldValue?.title} css={styles.imagePreview} />
+                    <div css={styles.hoverPreview} data-hover-buttons-wrapper>
+                      <Button variant="outlined" onClick={uploadHandler}>
+                        {__('Replace Image', 'tutor')}
+                      </Button>
+                      <Button variant="text" onClick={clearHandler}>
+                        {__('Remove', 'tutor')}
+                      </Button>
+                    </div>
+                  </div>
+                );
+              }}
+            </Show>
+          </div>
+        );
+      }}
+    </FormFieldWrapper>
+  );
 };
 
 export default FormImageInput;
 
 const styles = {
-	emptyMedia: css`
+  emptyMedia: css`
     width: 100%;
     height: 168px;
     display: flex;
@@ -115,11 +115,11 @@ const styles = {
       color: ${colorTokens.brand.blue};
     }
   `,
-	infoTexts: css`
+  infoTexts: css`
     ${typography.small()};
     color: ${colorTokens.text.subdued};
   `,
-	previewWrapper: css`
+  previewWrapper: css`
     width: 100%;
     height: 168px;
     border: 1px solid ${colorTokens.stroke.default};
@@ -134,12 +134,12 @@ const styles = {
       }
     }
   `,
-	imagePreview: css`
+  imagePreview: css`
     height: 100%;
     width: 100%;
     object-fit: cover;
   `,
-	hoverPreview: css`
+  hoverPreview: css`
     display: flex;
     flex-direction: column;
     justify-content: center;
