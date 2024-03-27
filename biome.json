@@ -38,7 +38,7 @@
       "arrowParentheses": "always",
       "bracketSameLine": false,
       "lineEnding": "lf",
-      "indentStyle": "tab",
+      "indentStyle": "space",
       "indentWidth": 2,
       "lineWidth": 120
     },

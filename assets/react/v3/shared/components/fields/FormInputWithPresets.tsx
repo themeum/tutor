@@ -1,149 +1,149 @@
-import { useState } from 'react';
 import { css } from '@emotion/react';
+import { useState } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
 import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection, Option } from '@Utils/types';
-import Show from '@Controls/Show';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
-	label?: string;
-	placeholder?: string;
-	disabled?: boolean;
-	readOnly?: boolean;
-	loading?: boolean;
-	isHidden?: boolean;
-	helpText?: string;
-	removeOptionsMinWidth?: boolean;
-	onChange?: (value: string) => void;
-	presetOptions?: Option<string>[];
+  label?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
+  loading?: boolean;
+  isHidden?: boolean;
+  helpText?: string;
+  removeOptionsMinWidth?: boolean;
+  onChange?: (value: string) => void;
+  presetOptions?: Option<string>[];
 }
 
 const FormInputWithPresets = ({
-	field,
-	fieldState,
-	label,
-	placeholder = '',
-	disabled,
-	readOnly,
-	loading,
-	helpText,
-	removeOptionsMinWidth = true,
-	onChange,
-	presetOptions = [],
+  field,
+  fieldState,
+  label,
+  placeholder = '',
+  disabled,
+  readOnly,
+  loading,
+  helpText,
+  removeOptionsMinWidth = true,
+  onChange,
+  presetOptions = [],
 }: FormInputWithPresetsProps) => {
-	const fieldValue = field.value ?? '';
+  const fieldValue = field.value ?? '';
 
-	const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-	const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-		isOpen,
-		isDropdown: true,
-	});
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+    isOpen,
+    isDropdown: true,
+  });
 
-	return (
-		<FormFieldWrapper
-			fieldState={fieldState}
-			field={field}
-			label={label}
-			disabled={disabled}
-			readOnly={readOnly}
-			loading={loading}
-			helpText={helpText}
-		>
-			{(inputProps) => {
-				const { css: inputCss, ...restInputProps } = inputProps;
+  return (
+    <FormFieldWrapper
+      fieldState={fieldState}
+      field={field}
+      label={label}
+      disabled={disabled}
+      readOnly={readOnly}
+      loading={loading}
+      helpText={helpText}
+    >
+      {(inputProps) => {
+        const { css: inputCss, ...restInputProps } = inputProps;
 
-				return (
-					<div css={styles.mainWrapper}>
-						<div css={styles.inputWrapper} ref={triggerRef}>
-							<input
-								{...restInputProps}
-								css={[inputCss, styles.input]}
-								onClick={() => setIsOpen(true)}
-								autoComplete="off"
-								readOnly={readOnly}
-								placeholder={placeholder}
-								value={fieldValue}
-								onChange={(event) => {
-									const { value } = event.target;
+        return (
+          <div css={styles.mainWrapper}>
+            <div css={styles.inputWrapper} ref={triggerRef}>
+              <input
+                {...restInputProps}
+                css={[inputCss, styles.input]}
+                onClick={() => setIsOpen(true)}
+                autoComplete="off"
+                readOnly={readOnly}
+                placeholder={placeholder}
+                value={fieldValue}
+                onChange={(event) => {
+                  const { value } = event.target;
 
-									field.onChange(value);
+                  field.onChange(value);
 
-									if (onChange) {
-										onChange(value);
-									}
-								}}
-							/>
-						</div>
+                  if (onChange) {
+                    onChange(value);
+                  }
+                }}
+              />
+            </div>
 
-						<Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
-							<div
-								css={[
-									styles.optionsWrapper,
-									{
-										left: position.left,
-										top: position.top,
-										maxWidth: triggerWidth,
-									},
-								]}
-								ref={popoverRef}
-							>
-								<ul css={[styles.options(removeOptionsMinWidth)]}>
-									{presetOptions.map((option) => (
-										<li
-											key={String(option.value)}
-											css={styles.optionItem({
-												isSelected: option.value === field.value,
-											})}
-										>
-											<button
-												type="button"
-												css={styles.label}
-												onClick={() => {
-													field.onChange(option.value);
-													onChange && onChange(option.value);
-													setIsOpen(false);
-												}}
-											>
-												<Show when={option.icon}>
-													<SVGIcon name={option.icon as IconCollection} width={32} height={32} />
-												</Show>
-												<span>{option.label}</span>
-											</button>
-										</li>
-									))}
-								</ul>
-							</div>
-						</Portal>
-					</div>
-				);
-			}}
-		</FormFieldWrapper>
-	);
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+              <div
+                css={[
+                  styles.optionsWrapper,
+                  {
+                    left: position.left,
+                    top: position.top,
+                    maxWidth: triggerWidth,
+                  },
+                ]}
+                ref={popoverRef}
+              >
+                <ul css={[styles.options(removeOptionsMinWidth)]}>
+                  {presetOptions.map((option) => (
+                    <li
+                      key={String(option.value)}
+                      css={styles.optionItem({
+                        isSelected: option.value === field.value,
+                      })}
+                    >
+                      <button
+                        type="button"
+                        css={styles.label}
+                        onClick={() => {
+                          field.onChange(option.value);
+                          onChange?.(option.value);
+                          setIsOpen(false);
+                        }}
+                      >
+                        <Show when={option.icon}>
+                          <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
+                        </Show>
+                        <span>{option.label}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Portal>
+          </div>
+        );
+      }}
+    </FormFieldWrapper>
+  );
 };
 
 export default FormInputWithPresets;
 
 const styles = {
-	mainWrapper: css`
+  mainWrapper: css`
     width: 100%;
   `,
-	inputWrapper: css`
+  inputWrapper: css`
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
   `,
-	input: css`
+  input: css`
     ${typography.body()};
     width: 100%;
     ${styleUtils.textEllipsis};
@@ -153,7 +153,7 @@ const styles = {
       box-shadow: ${shadow.focus};
     }
   `,
-	label: css`
+  label: css`
     ${styleUtils.resetButton};
     width: 100%;
     height: 100%;
@@ -171,11 +171,11 @@ const styles = {
       flex-shrink: 0;
     }
   `,
-	optionsWrapper: css`
+  optionsWrapper: css`
 		position: absolute;
 		width: 100%;
 	`,
-	options: (removeOptionsMinWidth: boolean) => css`
+  options: (removeOptionsMinWidth: boolean) => css`
 		z-index: ${zIndex.dropdown};
 		background-color: ${colorTokens.background.white};
 		list-style-type: none;
@@ -187,13 +187,13 @@ const styles = {
 		${styleUtils.overflowYAuto};
 
 		${
-			!removeOptionsMinWidth &&
-			css`
+      !removeOptionsMinWidth &&
+      css`
 				min-width: 200px;
 			`
-		}
+    }
 	`,
-	optionItem: ({ isSelected = false }: { isSelected: boolean }) => css`
+  optionItem: ({ isSelected = false }: { isSelected: boolean }) => css`
 		${typography.body()};
 		min-height: 36px;
 		height: 100%;
@@ -208,8 +208,8 @@ const styles = {
 		}
 
 		${
-			isSelected &&
-			css`
+      isSelected &&
+      css`
 				background-color: ${colorTokens.background.active};
 				position: relative;
 
@@ -224,6 +224,6 @@ const styles = {
 					border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
 				}
 			`
-		}
+    }
 	`,
 };

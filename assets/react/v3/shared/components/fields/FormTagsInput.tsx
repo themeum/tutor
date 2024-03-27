@@ -15,153 +15,153 @@ import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTagsInputProps extends FormControllerProps<Tag[] | null> {
-	label?: string;
-	placeholder?: string;
-	disabled?: boolean;
-	readOnly?: boolean;
-	loading?: boolean;
-	isHidden?: boolean;
-	helpText?: string;
-	removeOptionsMinWidth?: boolean;
+  label?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
+  loading?: boolean;
+  isHidden?: boolean;
+  helpText?: string;
+  removeOptionsMinWidth?: boolean;
 }
 
 const FormTagsInput = ({
-	field,
-	fieldState,
-	label,
-	placeholder = '',
-	disabled,
-	readOnly,
-	loading,
-	helpText,
-	removeOptionsMinWidth = false,
+  field,
+  fieldState,
+  label,
+  placeholder = '',
+  disabled,
+  readOnly,
+  loading,
+  helpText,
+  removeOptionsMinWidth = false,
 }: FormTagsInputProps) => {
-	const fieldValue = field.value ?? [];
+  const fieldValue = field.value ?? [];
 
-	const [searchText, setSearchText] = useState('');
-	const debouncedSearchText = useDebounce(searchText);
+  const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText);
 
-	const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-	const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-		isOpen,
-		isDropdown: true,
-	});
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+    isOpen,
+    isDropdown: true,
+  });
 
-	const tagListQuery = useTagListQuery({ search: debouncedSearchText });
-	const createTagMutation = useCreateTagMutation();
+  const tagListQuery = useTagListQuery({ search: debouncedSearchText });
+  const createTagMutation = useCreateTagMutation();
 
-	const handleCheckboxChange = (checked: boolean, tag: Tag) => {
-		if (checked) {
-			field.onChange([...fieldValue, tag]);
-		} else {
-			field.onChange(fieldValue.filter((item) => item.id !== tag.id));
-		}
-	};
+  const handleCheckboxChange = (checked: boolean, tag: Tag) => {
+    if (checked) {
+      field.onChange([...fieldValue, tag]);
+    } else {
+      field.onChange(fieldValue.filter((item) => item.id !== tag.id));
+    }
+  };
 
-	const handleAddTag = async () => {
-		if (searchText.length) {
-			const response = await createTagMutation.mutateAsync({
-				name: searchText,
-			});
-			field.onChange([...fieldValue, response.data]);
-			setIsOpen(false);
-			setSearchText('');
-		}
-	};
+  const handleAddTag = async () => {
+    if (searchText.length) {
+      const response = await createTagMutation.mutateAsync({
+        name: searchText,
+      });
+      field.onChange([...fieldValue, response.data]);
+      setIsOpen(false);
+      setSearchText('');
+    }
+  };
 
-	return (
-		<FormFieldWrapper
-			fieldState={fieldState}
-			field={field}
-			label={label}
-			disabled={disabled}
-			readOnly={readOnly}
-			loading={loading}
-			helpText={helpText}
-		>
-			{(inputProps) => {
-				const { css: inputCss, ...restInputProps } = inputProps;
+  return (
+    <FormFieldWrapper
+      fieldState={fieldState}
+      field={field}
+      label={label}
+      disabled={disabled}
+      readOnly={readOnly}
+      loading={loading}
+      helpText={helpText}
+    >
+      {(inputProps) => {
+        const { css: inputCss, ...restInputProps } = inputProps;
 
-				return (
-					<div css={styles.mainWrapper}>
-						<div css={styles.inputWrapper} ref={triggerRef}>
-							<input
-								{...restInputProps}
-								css={[inputCss, styles.input]}
-								onClick={() => setIsOpen(true)}
-								autoComplete="off"
-								readOnly={readOnly}
-								placeholder={placeholder}
-								value={searchText}
-								onChange={(event) => {
-									setSearchText(event.target.value);
-								}}
-							/>
-						</div>
+        return (
+          <div css={styles.mainWrapper}>
+            <div css={styles.inputWrapper} ref={triggerRef}>
+              <input
+                {...restInputProps}
+                css={[inputCss, styles.input]}
+                onClick={() => setIsOpen(true)}
+                autoComplete="off"
+                readOnly={readOnly}
+                placeholder={placeholder}
+                value={searchText}
+                onChange={(event) => {
+                  setSearchText(event.target.value);
+                }}
+              />
+            </div>
 
-						{fieldValue.length > 0 && (
-							<div css={styles.tagsWrapper}>
-								{fieldValue.map((tag: Tag) => (
-									<Chip key={tag.id} label={tag.name} onClick={() => handleCheckboxChange(false, tag)} />
-								))}
-							</div>
-						)}
+            {fieldValue.length > 0 && (
+              <div css={styles.tagsWrapper}>
+                {fieldValue.map((tag: Tag) => (
+                  <Chip key={tag.id} label={tag.name} onClick={() => handleCheckboxChange(false, tag)} />
+                ))}
+              </div>
+            )}
 
-						<Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
-							<div
-								css={[
-									styles.optionsWrapper,
-									{
-										left: position.left,
-										top: position.top,
-										maxWidth: triggerWidth,
-									},
-								]}
-								ref={popoverRef}
-							>
-								<ul css={[styles.options(removeOptionsMinWidth)]}>
-									{searchText.length > 0 && (
-										<li>
-											<button type="button" css={styles.addTag} onClick={handleAddTag}>
-												<SVGIcon name="plus" width={24} height={24} />
-												<strong>{__('Add', 'tutor')}</strong> {searchText}
-											</button>
-										</li>
-									)}
-									{tagListQuery.data?.map((tag: Tag) => (
-										<li key={String(tag.id)} css={styles.optionItem}>
-											<Checkbox
-												label={tag.name}
-												checked={!!fieldValue.find((item) => item.id === tag.id)}
-												onChange={(checked) => handleCheckboxChange(checked, tag)}
-											/>
-										</li>
-									))}
-								</ul>
-							</div>
-						</Portal>
-					</div>
-				);
-			}}
-		</FormFieldWrapper>
-	);
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+              <div
+                css={[
+                  styles.optionsWrapper,
+                  {
+                    left: position.left,
+                    top: position.top,
+                    maxWidth: triggerWidth,
+                  },
+                ]}
+                ref={popoverRef}
+              >
+                <ul css={[styles.options(removeOptionsMinWidth)]}>
+                  {searchText.length > 0 && (
+                    <li>
+                      <button type="button" css={styles.addTag} onClick={handleAddTag}>
+                        <SVGIcon name="plus" width={24} height={24} />
+                        <strong>{__('Add', 'tutor')}</strong> {searchText}
+                      </button>
+                    </li>
+                  )}
+                  {tagListQuery.data?.map((tag: Tag) => (
+                    <li key={String(tag.id)} css={styles.optionItem}>
+                      <Checkbox
+                        label={tag.name}
+                        checked={!!fieldValue.find((item) => item.id === tag.id)}
+                        onChange={(checked) => handleCheckboxChange(checked, tag)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Portal>
+          </div>
+        );
+      }}
+    </FormFieldWrapper>
+  );
 };
 
 export default FormTagsInput;
 
 const styles = {
-	mainWrapper: css`
+  mainWrapper: css`
     width: 100%;
   `,
-	inputWrapper: css`
+  inputWrapper: css`
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
   `,
-	input: css`
+  input: css`
     ${typography.body()};
     width: 100%;
     ${styleUtils.textEllipsis};
@@ -171,18 +171,18 @@ const styles = {
       box-shadow: ${shadow.focus};
     }
   `,
-	tagsWrapper: css`
+  tagsWrapper: css`
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: ${spacing[4]};
     margin-top: ${spacing[8]};
   `,
-	optionsWrapper: css`
+  optionsWrapper: css`
     position: absolute;
     width: 100%;
   `,
-	options: (removeOptionsMinWidth: boolean) => css`
+  options: (removeOptionsMinWidth: boolean) => css`
     z-index: ${zIndex.dropdown};
     background-color: ${colorTokens.background.white};
     list-style-type: none;
@@ -194,13 +194,13 @@ const styles = {
     ${styleUtils.overflowYAuto};
 
     ${
-			!removeOptionsMinWidth &&
-			css`
+      !removeOptionsMinWidth &&
+      css`
       min-width: 200px;
     `
-		}
+    }
   `,
-	optionItem: css`
+  optionItem: css`
     min-height: 40px;
     height: 100%;
     width: 100%;
@@ -217,7 +217,7 @@ const styles = {
       background-color: ${colorTokens.background.hover};
     }
   `,
-	addTag: css`
+  addTag: css`
     ${styleUtils.resetButton};
     ${typography.body()}
     line-height: ${lineHeight[24]};
