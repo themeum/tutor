@@ -43,7 +43,7 @@ const Alert = ({ children, type = 'warning', icon }: AlertProps) => {
 	return (
 		<div css={styles.wrapper({ type })}>
 			<Show when={icon}>
-				<SVGIcon style={styles.icon({ type })} name={icon as IconCollection} height={24} width={24} />
+				{(iconName) => <SVGIcon style={styles.icon({ type })} name={iconName} height={24} width={24} />}
 			</Show>
 			<span>{children}</span>
 		</div>
