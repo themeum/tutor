@@ -179,7 +179,7 @@ const styles = {
     }
   `,
 	label: (isInlineLabel: boolean) => css`
-    ${typography.body()};
+    ${typography.caption()};
     color: ${colorTokens.text.title};
 
     ${

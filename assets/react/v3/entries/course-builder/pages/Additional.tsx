@@ -14,7 +14,7 @@ import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 
-import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
@@ -62,92 +62,100 @@ const Additional = () => {
 
 	return (
 		<div css={styles.wrapper}>
-			<div css={styles.mainForm}>
+			<div css={styles.leftSide}>
 				<CanvasHead title={__('Additionals', 'tutor')} />
-				<div css={styles.fieldsWrapper}>
-					<Controller
-						name="course_benefits"
-						control={form.control}
-						render={(controllerProps) => (
-							<FormInput
-								{...controllerProps}
-								label={__('What Will I Learn?', 'tutor')}
-								placeholder={__('Write here the course benefits', 'tutor')}
-								maxLimit={245}
-							/>
-						)}
-					/>
-
-					<Controller
-						name="course_target_audience"
-						control={form.control}
-						render={(controllerProps) => (
-							<FormInput
-								{...controllerProps}
-								label={__('Targeted Audience', 'tutor')}
-								placeholder={__('Specify the target audience that will benefit the most from the course', 'tutor')}
-							/>
-						)}
-					/>
-
-					<div css={styles.totalCourseDuration}>
+				<div css={styles.informationForm}>
+					<div css={styles.titleAndSub}>
+						<div css={styles.title}>{__('Information', 'tutor')}</div>
+						<div css={styles.subtitle}>
+							{__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
+						</div>
+					</div>
+					<div css={styles.fieldsWrapper}>
 						<Controller
-							name="course_duration_hours"
+							name="course_benefits"
 							control={form.control}
 							render={(controllerProps) => (
-								<FormInputWithContent
+								<FormInput
 									{...controllerProps}
-									type="number"
-									label={__('Total Course Duration', 'tutor')}
-									placeholder="0"
-									contentPosition="right"
-									content={__('hour', 'tutor')}
+									label={__('What Will I Learn?', 'tutor')}
+									placeholder={__('Write here the course benefits', 'tutor')}
+									maxLimit={245}
 								/>
 							)}
 						/>
+
 						<Controller
-							name="course_duration_minutes"
+							name="course_target_audience"
 							control={form.control}
 							render={(controllerProps) => (
-								<FormInputWithContent
+								<FormInput
 									{...controllerProps}
-									type="number"
-									placeholder="0"
-									contentPosition="right"
-									content={__('min', 'tutor')}
+									label={__('Targeted Audience', 'tutor')}
+									placeholder={__('Specify the target audience that will benefit the most from the course', 'tutor')}
+								/>
+							)}
+						/>
+
+						<div css={styles.totalCourseDuration}>
+							<Controller
+								name="course_duration_hours"
+								control={form.control}
+								render={(controllerProps) => (
+									<FormInputWithContent
+										{...controllerProps}
+										type="number"
+										label={__('Total Course Duration', 'tutor')}
+										placeholder="0"
+										contentPosition="right"
+										content={__('hour', 'tutor')}
+									/>
+								)}
+							/>
+							<Controller
+								name="course_duration_minutes"
+								control={form.control}
+								render={(controllerProps) => (
+									<FormInputWithContent
+										{...controllerProps}
+										type="number"
+										placeholder="0"
+										contentPosition="right"
+										content={__('min', 'tutor')}
+									/>
+								)}
+							/>
+						</div>
+
+						<Controller
+							name="course_material_includes"
+							control={form.control}
+							render={(controllerProps) => (
+								<FormTextareaInput
+									{...controllerProps}
+									label={__('Materials Included', 'tutor')}
+									placeholder={__(
+										'A list of assets you will be providing for the students in this course (One per line)',
+										'tutor'
+									)}
+									rows={3}
+									enableResize
+								/>
+							)}
+						/>
+
+						<Controller
+							name="course_requirements"
+							control={form.control}
+							render={(controllerProps) => (
+								<FormInput
+									{...controllerProps}
+									label={__('Requirements/Instructions', 'tutor')}
+									placeholder={__('Additional requirements or special instructions for the students', 'tutor')}
 								/>
 							)}
 						/>
 					</div>
-
-					<Controller
-						name="course_material_includes"
-						control={form.control}
-						render={(controllerProps) => (
-							<FormTextareaInput
-								{...controllerProps}
-								label={__('Materials Included', 'tutor')}
-								placeholder={__(
-									'A list of assets you will be providing for the students in this course (One per line)',
-									'tutor'
-								)}
-								rows={3}
-								enableResize
-							/>
-						)}
-					/>
-
-					<Controller
-						name="course_requirements"
-						control={form.control}
-						render={(controllerProps) => (
-							<FormInput
-								{...controllerProps}
-								label={__('Requirements/Instructions', 'tutor')}
-								placeholder={__('Additional requirements or special instructions for the students', 'tutor')}
-							/>
-						)}
-					/>
 				</div>
 				<Navigator styleModifier={styles.navigator} />
 			</div>
@@ -203,17 +211,38 @@ export default Additional;
 const styles = {
 	wrapper: css`
     display: grid;
-    grid-template-columns: 1fr 402px;
+    grid-template-columns: 1fr 338px;
   `,
-	mainForm: css`
-    padding: ${spacing[24]} ${spacing[32]} ${spacing[24]} 0;
+	leftSide: css`
+    padding: ${spacing[24]} ${spacing[36]} ${spacing[24]} 0;
+		${styleUtils.display.flex('column')}
+		gap: ${spacing[24]};
   `,
+	informationForm: css`
+		${styleUtils.display.flex('column')}
+		gap: ${spacing[20]};
+		border: 1px solid ${colorTokens.stroke.default};
+		border-radius: ${borderRadius.card};
+		background-color: ${colorTokens.background.white};
+		padding: ${spacing[12]} ${spacing[20]} ${spacing[20]} ${spacing[20]};
+	`,
+	titleAndSub: css`
+		${styleUtils.display.flex('column')}
+		gap: ${spacing[4]};
+	`,
+	title: css`
+		${typography.body('medium')};
+		color: ${colorTokens.text.primary};
+	`,
+	subtitle: css`
+		${typography.caption()};
+		color: ${colorTokens.text.hints};
+	`,
 	fieldsWrapper: css`
     position: sticky;
     top: 0;
     ${styleUtils.display.flex('column')}
     gap: ${spacing[24]};
-    margin-top: ${spacing[40]};
   `,
 	totalCourseDuration: css`
     ${styleUtils.display.flex()}
@@ -227,7 +256,7 @@ const styles = {
 	sidebar: css`
     ${styleUtils.display.flex('column')}
     padding: ${spacing[24]} 0 ${spacing[24]} ${spacing[32]};
-    border-left: 1px solid ${colorTokens.stroke.default};
+    border-left: 1px solid ${colorTokens.stroke.divider};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
     gap: ${spacing[16]};
   `,

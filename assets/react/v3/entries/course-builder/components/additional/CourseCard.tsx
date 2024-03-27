@@ -44,6 +44,7 @@ const styles = {
     align-items: center;
     cursor: pointer;
     transition: border 0.3s ease;
+    background-color: ${colorTokens.background.white};
     [data-visually-hidden] {
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
