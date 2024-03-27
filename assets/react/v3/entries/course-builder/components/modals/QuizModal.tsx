@@ -46,25 +46,6 @@ interface QuizModalProps extends ModalProps {
 
 export type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
 
-export interface QuizOption {
-  time_limit: {
-    time_value: number;
-    time_type: QuizTimeLimit;
-  };
-  hide_quiz_time_display: boolean;
-  feedback_mode: 'default' | 'reveal' | 'retry';
-  attempts_allowed: number;
-  passing_grade: number;
-  max_questions_for_answer: number;
-  available_after_days: number;
-  quiz_auto_start: boolean;
-  question_layout_view: '' | 'single_question' | 'question_pagination' | 'question_below_each_other';
-  questions_order: 'rand' | 'sorting' | 'asc' | 'desc';
-  hide_question_number_overview: boolean;
-  short_answer_characters_limit: number;
-  open_ended_answer_characters_limit: number;
-}
-
 export interface QuizForm {
   quiz_title: string;
   quiz_description: string;
@@ -73,7 +54,24 @@ export interface QuizForm {
   randomize: boolean;
   point: number;
   display_point: boolean;
-  quiz_option: QuizOption;
+  quiz_option: {
+    time_limit: {
+      time_value: number;
+      time_type: QuizTimeLimit;
+    };
+    hide_quiz_time_display: boolean;
+    feedback_mode: 'default' | 'reveal' | 'retry';
+    attempts_allowed: number;
+    passing_grade: number;
+    max_questions_for_answer: number;
+    available_after_days: number;
+    quiz_auto_start: boolean;
+    question_layout_view: '' | 'single_question' | 'question_pagination' | 'question_below_each_other';
+    questions_order: 'rand' | 'sorting' | 'asc' | 'desc';
+    hide_question_number_overview: boolean;
+    short_answer_characters_limit: number;
+    open_ended_answer_characters_limit: number;
+  };
 }
 
 const questionTypeOptions: Option<QuizQuestionType>[] = [
@@ -150,20 +148,24 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
       randomize: false,
       point: 0,
       display_point: true,
-      'quiz_option[time_limit][time_value]': 0,
-      'quiz_option[time_limit][time_type]': 'days',
-      'quiz_option[hide_quiz_time_display]': false,
-      'quiz_option[feedback_mode]': 'default',
-      'quiz_option[attempts_allowed]': 0,
-      'quiz_option[passing_grade]': 0,
-      'quiz_option[max_questions_for_answer]': 0,
-      'quiz_option[available_after_days]': 0,
-      'quiz_option[quiz_auto_start]': false,
-      'quiz_option[question_layout_view]': '',
-      'quiz_option[questions_order]': 'rand',
-      'quiz_option[hide_question_number_overview]': false,
-      'quiz_option[short_answer_characters_limit]': 0,
-      'quiz_option[open_ended_answer_characters_limit]': 0,
+      quiz_option: {
+        time_limit: {
+          time_value: 0,
+          time_type: 'minutes',
+        },
+        hide_quiz_time_display: false,
+        feedback_mode: 'default',
+        attempts_allowed: 0,
+        passing_grade: 0,
+        max_questions_for_answer: 0,
+        available_after_days: 0,
+        quiz_auto_start: false,
+        question_layout_view: '',
+        questions_order: 'rand',
+        hide_question_number_overview: false,
+        short_answer_characters_limit: 0,
+        open_ended_answer_characters_limit: 0,
+      },
     },
   });
 

@@ -58,10 +58,9 @@ const FormSelectInput = <T,>({
   removeBorder,
   dataAttribute,
 }: FormSelectInputProps<T>) => {
-  const getInitialValue = useCallback(() => {
-    return options.find((item) => item.value === field.value);
-  }, [options, field.value]);
-  const hasDescription = useMemo(() => options.some((option) => isDefined(option.description)), [options]);
+  const getInitialValue = () => options.find((item) => item.value === field.value);
+
+  const hasDescription = options.some((option) => isDefined(option.description));
 
   const [inputValue, setInputValue] = useState(getInitialValue()?.label);
   const [searchText, setSearchText] = useState('');
@@ -214,14 +213,7 @@ const FormSelectInput = <T,>({
                         <Show when={option.icon}>
                           <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
                         </Show>
-                        <span
-                          css={css`
-														${styleUtils.text.ellipsis(1)};
-														width: 100%;
-													`}
-                        >
-                          {option.label}
-                        </span>
+                        <span>{option.label}</span>
                       </button>
                     </li>
                   ))}
@@ -445,6 +437,8 @@ const styles = {
 
     span {
       flex-shrink: 0;
+      ${styleUtils.text.ellipsis(1)}
+      width: 100%;
     }
   `,
   arrowUpDown: css`
