@@ -15,14 +15,20 @@ export const modal = {
 	MARGIN_TOP: 88,
 };
 
+export const notebook = {
+	MIN_NOTEBOOK_HEIGHT: 430,
+	MIN_NOTEBOOK_WIDTH: 360,
+	NOTEBOOK_HEADER: 50,
+};
+
 export const TutorRoles = {
 	ADMINISTRATOR: 'administrator',
 	TUTOR_INSTRUCTOR: 'tutor_instructor',
 	SUBSCRIBER: 'subscriber',
 };
 
-export enum LocalStorage {
-	clientId = 'eCommerceClientId',
+export enum LocalStorageKeys {
+	notebook = 'notebook',
 }
 
 export enum DateFormats {

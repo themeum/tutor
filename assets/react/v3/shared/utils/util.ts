@@ -255,7 +255,7 @@ export const parseNumberOnly = (value: string) => {
 	return value.replace(/[^-0-9.]/g, '');
 };
 
-export const throttle = <T extends (...args: never[]) => void>(func: T, limit: number) => {
+export const throttle = <T extends (args: MouseEvent) => void>(func: T, limit: number) => {
 	let inThrottle = false;
 
 	return function (this: ThisParameterType<T>, ...args: Parameters<T>) {

@@ -12,17 +12,24 @@ import { throttle } from '@Utils/util';
 import { styleUtils } from '@Utils/style-utils';
 import Show from '@Controls/Show';
 
-import { useLocalStorage } from '@Hooks/useLocalStorage';
 import { type TResizeType, useResize } from '@Hooks/useResize';
+import { getFromLocalStorage, setToLocalStorage } from '@Utils/localstorage';
+import { LocalStorageKeys, notebook } from '@Config/constants';
 
 interface Position {
 	x: number;
 	y: number;
 }
 
-const MIN_NOTEBOOK_HEIGHT = 430;
-const MIN_NOTEBOOK_WIDTH = 360;
-const NOTEBOOK_HEADER = 50;
+interface NotebookData {
+	position: {
+		left: string;
+		top: string;
+		height: string;
+		width: string;
+	};
+	notes: string;
+}
 
 const Notebook = () => {
 	const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
@@ -35,45 +42,34 @@ const Notebook = () => {
 	const wrapperRef = useRef<HTMLDivElement>(null);
 
 	const expandAnimation = useSpring({
-		height: !isCollapsed ? MIN_NOTEBOOK_HEIGHT : NOTEBOOK_HEADER,
-		opacity: 1,
+		height: !isCollapsed ? notebook.MIN_NOTEBOOK_HEIGHT : notebook.NOTEBOOK_HEADER,
 		config: {
 			duration: 300,
 			easing: (t) => t * (2 - t),
 		},
 	});
 
-	const [notebookData, setNotebookData] = useLocalStorage<{
-		left: string;
-		top: string;
-		height?: string;
-		width?: string;
-		notes?: string;
-	}>('notebook', {
-		left: `${window.innerWidth - MIN_NOTEBOOK_WIDTH}px`,
-		top: `${window.innerHeight - MIN_NOTEBOOK_HEIGHT}px`,
-		width: `${MIN_NOTEBOOK_WIDTH}px`,
-		height: `${MIN_NOTEBOOK_HEIGHT}px`,
-	});
-
 	const { handleResize, isResizing, size } = useResize({
 		resizeDivRef: wrapperRef,
 		options: {
-			minHeight: MIN_NOTEBOOK_HEIGHT,
-			minWidth: MIN_NOTEBOOK_WIDTH,
+			minHeight: notebook.MIN_NOTEBOOK_HEIGHT,
+			minWidth: notebook.MIN_NOTEBOOK_WIDTH,
 		},
 	});
 
 	const onContentBlur = (event: React.FocusEvent) => {
-		setContent(event.currentTarget.innerHTML);
 		setContentEditable(false);
-		setNotebookData({
-			left: notebookData?.left || `${window.innerWidth - MIN_NOTEBOOK_WIDTH}px`,
-			top: notebookData?.top || `${window.innerHeight - MIN_NOTEBOOK_HEIGHT}px`,
-			height: notebookData?.height,
-			width: notebookData?.width,
-			notes: event.currentTarget.innerHTML,
-		});
+		const notebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
+		const tempDiv = document.createElement('div');
+		tempDiv.innerHTML = event.currentTarget.innerHTML;
+		const text = tempDiv.innerText || '';
+		setToLocalStorage(
+			LocalStorageKeys.notebook,
+			JSON.stringify({
+				...notebookData,
+				notes: text,
+			})
+		);
 	};
 
 	const handleMouseDown = (event: React.MouseEvent) => {
@@ -92,11 +88,9 @@ const Notebook = () => {
 		}
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const handleMouseMove = throttle((event: MouseEvent) => {
 			if (!isDragging || !isDefined(wrapperRef.current)) return;
-
 			setIsFloating(true);
 
 			const warpper = wrapperRef.current;
@@ -108,17 +102,29 @@ const Notebook = () => {
 
 			warpper.style.left = `${newX}px`;
 			warpper.style.top = `${newY}px`;
-
-			setNotebookData({
-				left: warpper.style.left,
-				top: warpper.style.top,
-				height: notebookData?.height,
-				width: notebookData?.width,
-			});
 		}, 10);
 
 		const handleMouseUp = () => {
 			setIsDragging(false);
+
+			if (isDefined(wrapperRef.current)) {
+				const wrapper = wrapperRef.current;
+				const { left, top, height, width } = wrapper.style;
+				const currentNotebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
+				if (left === 'auto' || top === 'auto') return;
+				setToLocalStorage(
+					LocalStorageKeys.notebook,
+					JSON.stringify({
+						...currentNotebookData,
+						position: {
+							left,
+							top,
+							height,
+							width,
+						},
+					})
+				);
+			}
 		};
 
 		document.addEventListener('mousemove', handleMouseMove);
@@ -135,12 +141,22 @@ const Notebook = () => {
 		if (isResizing && isDefined(wrapperRef.current)) {
 			const wrapper = wrapperRef.current;
 			const { left, top, height, width } = wrapper.style;
-
-			setNotebookData({ left, top, height, width });
+			const notebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
+			setToLocalStorage(
+				LocalStorageKeys.notebook,
+				JSON.stringify({
+					...notebookData,
+					position: {
+						left,
+						top,
+						height,
+						width,
+					},
+				})
+			);
 		}
 	}, [isResizing, size]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (isCollapsed && isDefined(wrapperRef.current) && !isFloating) {
 			setIsFloating(false);
@@ -152,13 +168,17 @@ const Notebook = () => {
 		}
 
 		if (!isCollapsed && isFloating && isDefined(wrapperRef.current)) {
-			const { left, top, height, width } = notebookData || {};
+			const notebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
+			const { left, top, height, width } = notebookData.position || {
+				left: 'auto',
+				top: 'auto',
+			};
 
 			if (left && top) {
 				const wrapper = wrapperRef.current;
 
-				wrapper.style.left = left === 'auto' ? `${window.innerWidth - MIN_NOTEBOOK_WIDTH}px` : left;
-				wrapper.style.top = top === 'auto' ? `${window.innerHeight - MIN_NOTEBOOK_HEIGHT}px` : top;
+				wrapper.style.left = left === 'auto' ? `${window.innerWidth - notebook.MIN_NOTEBOOK_WIDTH}px` : left;
+				wrapper.style.top = top === 'auto' ? `${window.innerHeight - notebook.MIN_NOTEBOOK_HEIGHT}px` : top;
 				if (isDefined(height)) {
 					wrapper.style.height = height;
 				}
@@ -170,10 +190,11 @@ const Notebook = () => {
 	}, [isCollapsed, isFloating]);
 
 	useEffect(() => {
-		if (notebookData?.notes) {
+		const notebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
+		if (notebookData.notes) {
 			setContent(notebookData.notes);
 		}
-	}, [notebookData]);
+	}, []);
 
 	return (
 		<animated.div ref={wrapperRef} css={styles.wrapper({ isCollapsed, isFloating })} style={{ ...expandAnimation }}>
@@ -239,32 +260,13 @@ const Notebook = () => {
 			/>
 
 			<Show when={isFloating && !isCollapsed}>
-				<SVGIcon name="textFieldExpand" height={16} width={16} style={styles.textFieldExpand} />
-			</Show>
-			<Show when={isFloating}>
-				<div css={styles.resizeHandle({ direction: 'left' })} onMouseDown={(event) => handleResize(event, 'left')} />
-				<div css={styles.resizeHandle({ direction: 'right' })} onMouseDown={(event) => handleResize(event, 'right')} />
-				<div
-					css={styles.resizeHandle({ direction: 'bottom' })}
-					onMouseDown={(event) => handleResize(event, 'bottom')}
-				/>
-				<div css={styles.resizeHandle({ direction: 'top' })} onMouseDown={(event) => handleResize(event, 'top')} />
-				<div
-					css={styles.resizeHandle({ direction: 'bottom-right' })}
+				<button
+					type="button"
+					css={[styleUtils.resetButton, styles.textFieldExpand]}
 					onMouseDown={(event) => handleResize(event, 'bottom-right')}
-				/>
-				<div
-					css={styles.resizeHandle({ direction: 'bottom-left' })}
-					onMouseDown={(event) => handleResize(event, 'bottom-left')}
-				/>
-				<div
-					css={styles.resizeHandle({ direction: 'top-right' })}
-					onMouseDown={(event) => handleResize(event, 'top-right')}
-				/>
-				<div
-					css={styles.resizeHandle({ direction: 'top-left' })}
-					onMouseDown={(event) => handleResize(event, 'top-left')}
-				/>
+				>
+					<SVGIcon name="textFieldExpand" height={16} width={16} />
+				</button>
 			</Show>
 		</animated.div>
 	);
@@ -351,6 +353,7 @@ const styles = {
 		height: calc(100% - 50px);
 		background: url('data:image/svg+xml,<svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23D9D9D9"/></svg>') repeat;
 		outline: none;
+		word-wrap: break-word;
 	`,
 	textFieldExpand: css`
 		position: absolute;
@@ -358,99 +361,6 @@ const styles = {
 		right: 10px;
 		user-select: none;
 		color: ${colorTokens.icon.hints};
-	`,
-	resizeHandle: ({
-		direction,
-	}: {
-		direction: TResizeType;
-	}) => css`
-		position: absolute;
-		${
-			direction === 'top' &&
-			css`
-				height: 2px;
-				width: 100%;
-				top: 0;
-				left: 0;
-				cursor: ns-resize;
-			`
-		}
-
-		${
-			direction === 'bottom' &&
-			css`
-				height: 2px;
-				width: 100%;
-				bottom: 0;
-				left: 0;
-				cursor: ns-resize;
-			`
-		}
-
-		${
-			direction === 'left' &&
-			css`
-				height: 100%;
-				width: 2px;
-				top: 0;
-				left: 0;
-				cursor: ew-resize;
-			`
-		}
-
-		${
-			direction === 'right' &&
-			css`
-				height: 100%;
-				width: 2px;
-				top: 0;
-				right: 0;
-				cursor: ew-resize;
-			`
-		}
-
-		${
-			direction === 'bottom-right' &&
-			css`
-				height: 6px;
-				width: 6px;
-				bottom: 0;
-				right: 0;
-				cursor: nwse-resize;
-			`
-		}
-
-		${
-			direction === 'bottom-left' &&
-			css`
-				height: 6px;
-				width: 6px;
-				bottom: 0;
-				left: 0;
-				cursor: nesw-resize;
-			`
-		}
-
-		${
-			direction === 'top-right' &&
-			css`
-				height: 6px;
-				width: 6px;
-				top: 0;
-				right: 0;
-				cursor: nesw-resize;
-			`
-		}
-
-		${
-			direction === 'top-left' &&
-			css`
-				height: 6px;
-				width: 6px;
-				top: 0;
-				left: 0;
-				cursor: nwse-resize;
-			`
-		}
+		cursor: nwse-resize;
 	`,
 };
