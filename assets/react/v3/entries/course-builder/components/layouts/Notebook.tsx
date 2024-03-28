@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
 
@@ -8,13 +8,15 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { isDefined } from '@Utils/types';
-import { throttle } from '@Utils/util';
+import { jsonParse, throttle } from '@Utils/util';
 import { styleUtils } from '@Utils/style-utils';
 import Show from '@Controls/Show';
 
-import { type TResizeType, useResize } from '@Hooks/useResize';
-import { getFromLocalStorage, setToLocalStorage } from '@Utils/localstorage';
+import { useResize } from '@Hooks/useResize';
+import { getFromLocalStorage, setToLocalStorage } from '@Utils/localStorage';
 import { LocalStorageKeys, notebook } from '@Config/constants';
+import { __ } from '@wordpress/i18n';
+import { useDebounce } from '@Hooks/useDebounce';
 
 interface Position {
 	x: number;
@@ -28,16 +30,16 @@ interface NotebookData {
 		height: string;
 		width: string;
 	};
-	notes: string;
+	content: string;
 }
 
 const Notebook = () => {
-	const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
-	const [isDragging, setIsDragging] = useState<boolean>(false);
-	const [isFloating, setIsFloating] = useState<boolean>(false);
+	const [isCollapsed, setIsCollapsed] = useState(true);
+	const [isDragging, setIsDragging] = useState(false);
+	const [isFloating, setIsFloating] = useState(false);
 	const [offset, setOffset] = useState<Position>({ x: 0, y: 0 });
-	const [contentEditable, setContentEditable] = useState<boolean>(false);
-	const [content, setContent] = useState<string>('');
+	const [contentEditable, setContentEditable] = useState(false);
+	const [content, setContent] = useState('');
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +51,7 @@ const Notebook = () => {
 		},
 	});
 
-	const { handleResize, isResizing, size } = useResize({
+	const { handleResize } = useResize({
 		resizeDivRef: wrapperRef,
 		options: {
 			minHeight: notebook.MIN_NOTEBOOK_HEIGHT,
@@ -59,15 +61,33 @@ const Notebook = () => {
 
 	const onContentBlur = (event: React.FocusEvent) => {
 		setContentEditable(false);
-		const notebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
+		const notebookData = jsonParse<NotebookData>(getFromLocalStorage(LocalStorageKeys.notebook) ?? '{}');
 		const tempDiv = document.createElement('div');
 		tempDiv.innerHTML = event.currentTarget.innerHTML;
-		const text = tempDiv.innerText || '';
+		const text = tempDiv.innerText ?? '';
 		setToLocalStorage(
 			LocalStorageKeys.notebook,
 			JSON.stringify({
 				...notebookData,
-				notes: text,
+				content: text,
+			})
+		);
+		setContent(text);
+	};
+
+	const onContentPaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+		const notebookData = jsonParse<NotebookData>(getFromLocalStorage(LocalStorageKeys.notebook) ?? '{}');
+		const tempDiv = document.createElement('div');
+		tempDiv.innerHTML = event.currentTarget.innerHTML;
+		const text = tempDiv.innerText ?? '';
+		setContent((previous) => {
+			return previous + text;
+		});
+		setToLocalStorage(
+			LocalStorageKeys.notebook,
+			JSON.stringify({
+				...notebookData,
+				content: notebookData.content + text,
 			})
 		);
 	};
@@ -76,7 +96,9 @@ const Notebook = () => {
 		event.preventDefault();
 		event.stopPropagation();
 
-		if (isCollapsed) return;
+		if (isCollapsed) {
+			return;
+		}
 
 		setIsDragging(true);
 		const { clientX, clientY } = event;
@@ -88,9 +110,33 @@ const Notebook = () => {
 		}
 	};
 
+	const saveAfterResize = () => {
+		if (isDefined(wrapperRef.current)) {
+			const wrapper = wrapperRef.current;
+			const { left, top, height, width } = wrapper.style;
+			const notebookData: NotebookData = jsonParse<NotebookData>(
+				getFromLocalStorage(LocalStorageKeys.notebook) || '{}'
+			);
+			setToLocalStorage(
+				LocalStorageKeys.notebook,
+				JSON.stringify({
+					...notebookData,
+					position: {
+						left,
+						top,
+						height,
+						width,
+					},
+				})
+			);
+		}
+	};
+
 	useEffect(() => {
 		const handleMouseMove = throttle((event: MouseEvent) => {
-			if (!isDragging || !isDefined(wrapperRef.current)) return;
+			if (!isDragging || !isDefined(wrapperRef.current)) {
+				return;
+			}
 			setIsFloating(true);
 
 			const warpper = wrapperRef.current;
@@ -107,24 +153,28 @@ const Notebook = () => {
 		const handleMouseUp = () => {
 			setIsDragging(false);
 
-			if (isDefined(wrapperRef.current)) {
-				const wrapper = wrapperRef.current;
-				const { left, top, height, width } = wrapper.style;
-				const currentNotebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
-				if (left === 'auto' || top === 'auto') return;
-				setToLocalStorage(
-					LocalStorageKeys.notebook,
-					JSON.stringify({
-						...currentNotebookData,
-						position: {
-							left,
-							top,
-							height,
-							width,
-						},
-					})
-				);
+			if (!isDefined(wrapperRef.current)) {
+				return;
 			}
+
+			const wrapper = wrapperRef.current;
+			const { left, top, height, width } = wrapper.style;
+			const currentNotebookData = jsonParse<NotebookData>(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
+			if (left === 'auto' || top === 'auto') {
+				return;
+			}
+			setToLocalStorage(
+				LocalStorageKeys.notebook,
+				JSON.stringify({
+					...currentNotebookData,
+					position: {
+						left,
+						top,
+						height,
+						width,
+					},
+				})
+			);
 		};
 
 		document.addEventListener('mousemove', handleMouseMove);
@@ -136,29 +186,11 @@ const Notebook = () => {
 		};
 	}, [isDragging, offset]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		if (isResizing && isDefined(wrapperRef.current)) {
-			const wrapper = wrapperRef.current;
-			const { left, top, height, width } = wrapper.style;
-			const notebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
-			setToLocalStorage(
-				LocalStorageKeys.notebook,
-				JSON.stringify({
-					...notebookData,
-					position: {
-						left,
-						top,
-						height,
-						width,
-					},
-				})
-			);
+		if (!isDefined(wrapperRef.current)) {
+			return;
 		}
-	}, [isResizing, size]);
-
-	useEffect(() => {
-		if (isCollapsed && isDefined(wrapperRef.current) && !isFloating) {
+		if (isCollapsed && !isFloating) {
 			setIsFloating(false);
 			const wrapper = wrapperRef.current;
 
@@ -167,45 +199,45 @@ const Notebook = () => {
 			wrapper.style.width = '360px';
 		}
 
-		if (!isCollapsed && isFloating && isDefined(wrapperRef.current)) {
-			const notebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
+		if (!isCollapsed && isFloating) {
+			const notebookData = jsonParse<NotebookData>(getFromLocalStorage(LocalStorageKeys.notebook) ?? '{}');
 			const { left, top, height, width } = notebookData.position || {
 				left: 'auto',
 				top: 'auto',
 			};
 
-			if (left && top) {
-				const wrapper = wrapperRef.current;
+			const wrapper = wrapperRef.current;
 
-				wrapper.style.left = left === 'auto' ? `${window.innerWidth - notebook.MIN_NOTEBOOK_WIDTH}px` : left;
-				wrapper.style.top = top === 'auto' ? `${window.innerHeight - notebook.MIN_NOTEBOOK_HEIGHT}px` : top;
-				if (isDefined(height)) {
-					wrapper.style.height = height;
-				}
-				if (isDefined(width)) {
-					wrapper.style.width = width;
-				}
+			wrapper.style.left = left === 'auto' ? `${window.innerWidth - notebook.MIN_NOTEBOOK_WIDTH}px` : left;
+			wrapper.style.top = top === 'auto' ? `${window.innerHeight - notebook.MIN_NOTEBOOK_HEIGHT}px` : top;
+			if (isDefined(height)) {
+				wrapper.style.height = height;
+			}
+			if (isDefined(width)) {
+				wrapper.style.width = width;
 			}
 		}
 	}, [isCollapsed, isFloating]);
 
 	useEffect(() => {
-		const notebookData: NotebookData = JSON.parse(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
-		if (notebookData.notes) {
-			setContent(notebookData.notes);
+		const notebookData = jsonParse<NotebookData>(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
+
+		if (notebookData.content) {
+			setContent(notebookData.content);
 		}
 	}, []);
 
 	return (
 		<animated.div ref={wrapperRef} css={styles.wrapper({ isCollapsed, isFloating })} style={{ ...expandAnimation }}>
 			<div css={styles.header({ isCollapsed })} onMouseDown={handleMouseDown}>
-				<span css={styleUtils.text.ellipsis(1)}>Notebook</span>
+				<span css={styleUtils.text.ellipsis(1)}>{__('Notebook', 'tutor')}</span>
+
 				<div css={styles.actions}>
 					<Button
 						variant="text"
 						size="small"
 						onClick={() => {
-							setIsCollapsed(!isCollapsed);
+							setIsCollapsed((previous) => !previous);
 							setIsFloating(false);
 						}}
 						buttonCss={styles.collapseButton({ isCollapsed })}
@@ -220,13 +252,10 @@ const Notebook = () => {
 								if (isFloating) {
 									return true;
 								}
-								if (previouState) {
-									return false;
-								}
 
-								return previouState;
+								return previouState ? false : previouState;
 							});
-							setIsFloating(!isFloating);
+							setIsFloating((previous) => !previous);
 						}}
 					>
 						<SVGIcon name="arrowsIn" height={24} width={24} />
@@ -245,25 +274,29 @@ const Notebook = () => {
 					</Show>
 				</div>
 			</div>
-			<div
-				css={styles.notebook}
-				contentEditable={contentEditable}
-				onBlur={(event) => onContentBlur(event)}
-				onClick={() => setContentEditable(true)}
-				onKeyDown={(event) => {
-					if (event.key === 'Escape') {
-						event.preventDefault();
-						event.currentTarget.blur();
-					}
-				}}
-				dangerouslySetInnerHTML={{ __html: content }}
-			/>
+			<div css={styles.notebookWrapper}>
+				<div
+					css={styles.notebook}
+					contentEditable={contentEditable}
+					onBlur={(event) => onContentBlur(event)}
+					onPaste={(event) => onContentPaste(event)}
+					onClick={() => setContentEditable(true)}
+					onKeyDown={(event) => {
+						if (event.key === 'Escape') {
+							event.preventDefault();
+							event.currentTarget.blur();
+						}
+					}}
+					dangerouslySetInnerHTML={{ __html: content }}
+				/>
+			</div>
 
 			<Show when={isFloating && !isCollapsed}>
 				<button
 					type="button"
 					css={[styleUtils.resetButton, styles.textFieldExpand]}
 					onMouseDown={(event) => handleResize(event, 'bottom-right')}
+					onMouseUp={saveAfterResize}
 				>
 					<SVGIcon name="textFieldExpand" height={16} width={16} />
 				</button>
@@ -289,7 +322,7 @@ const styles = {
 		width: 360px;
 		border-radius: ${borderRadius.card} 0 ${borderRadius.card} 0;
 		transition: box-shadow background 0.3s ease-in-out;
-		box-shadow: 0 0 4px 0 rgba(0, 30, 43, 0.16);
+		box-shadow: ${shadow.notebook};
 		z-index: ${zIndex.highest};
 		
 		${
@@ -342,18 +375,23 @@ const styles = {
 		${
 			!isCollapsed &&
 			css`
-			transform: rotate(180deg);
-	
+				transform: rotate(180deg);
 			`
 		}
 	`,
-	notebook: css`
-		padding: ${spacing[16]};
+	notebookWrapper: css`
+	padding-block: ${spacing[16]};
 		width: 100%;
 		height: calc(100% - 50px);
 		background: url('data:image/svg+xml,<svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23D9D9D9"/></svg>') repeat;
+	`,
+	notebook: css`
+		padding-inline: ${spacing[16]};
 		outline: none;
 		word-wrap: break-word;
+		overflow-y: auto;
+		height: 100%;
+
 	`,
 	textFieldExpand: css`
 		position: absolute;

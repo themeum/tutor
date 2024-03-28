@@ -28,7 +28,7 @@ export const TutorRoles = {
 };
 
 export enum LocalStorageKeys {
-	notebook = 'notebook',
+	notebook = 'tutor_course_builder_notebook',
 }
 
 export enum DateFormats {

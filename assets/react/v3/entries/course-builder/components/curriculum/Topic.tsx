@@ -242,7 +242,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 								variant: 'text',
 							}}
 							onConfirmation={() => {
-								onDelete ? onDelete() : null;
+								onDelete?.();
 							}}
 						/>
 
@@ -383,7 +383,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 										props: {
 											title: __('Lesson', 'tutor'),
 											icon: <SVGIcon name="lesson" width={24} height={24} />,
-											subtitle: __(`Topic: ${topic.post_title}`, 'tutor'),
+											subtitle: `${__('Topic:', 'tutor')}  ${topic.post_title}`,
 										},
 									});
 								}}
@@ -401,7 +401,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 										props: {
 											title: __('Quiz', 'tutor'),
 											icon: <SVGIcon name="quiz" width={24} height={24} />,
-											subtitle: __(`Topic: ${topic.post_title}`, 'tutor'),
+											subtitle: `${__('Topic:', 'tutor')}  ${topic.post_title}`,
 										},
 									});
 								}}
@@ -419,7 +419,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 										props: {
 											title: __('Assignment', 'tutor'),
 											icon: <SVGIcon name="assignment" width={24} height={24} />,
-											subtitle: __(`Topic: ${topic.post_title}`, 'tutor'),
+											subtitle: `${__('Topic:', 'tutor')}  ${topic.post_title}`,
 										},
 									});
 								}}

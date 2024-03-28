@@ -269,3 +269,7 @@ export const throttle = <T extends (args: MouseEvent) => void>(func: T, limit: n
 		}
 	};
 };
+
+export const jsonParse = <T>(data: string): T => {
+	return JSON.parse(data) as T;
+};

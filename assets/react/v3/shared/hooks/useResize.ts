@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { isDefined } from '@Utils/types';
 import { throttle } from '@Utils/util';
 
-interface IResizeProps {
+interface ResizeProps {
 	resizeDivRef?: React.RefObject<HTMLDivElement>;
 	options?: {
 		minWidth?: number;
@@ -13,17 +13,17 @@ interface IResizeProps {
 	};
 }
 
-interface IPosition {
+interface Position {
 	x: number;
 	y: number;
 }
 
-interface ISize {
+interface Size {
 	width: number;
 	height: number;
 }
 
-export type TResizeType =
+export type ResizeType =
 	| 'top'
 	| 'bottom'
 	| 'left'
@@ -33,22 +33,24 @@ export type TResizeType =
 	| 'bottom-left'
 	| 'bottom-right';
 
-export const useResize = ({ resizeDivRef, options }: IResizeProps) => {
-	const [isResizing, setIsResizing] = useState<boolean>(false);
-	const [resizeType, setResizeType] = useState<TResizeType | null>(null);
-	const [position, setPosition] = useState<IPosition>({
+export const useResize = ({ resizeDivRef, options }: ResizeProps) => {
+	const [isResizing, setIsResizing] = useState(false);
+	const [resizeType, setResizeType] = useState<ResizeType | null>(null);
+	const [position, setPosition] = useState<Position>({
 		x: 0,
 		y: 0,
 	});
-	const [size, setSize] = useState<ISize>({ width: 0, height: 0 });
+	const [size, setSize] = useState<Size>({ width: 0, height: 0 });
 
-	const handleResize = (e: React.MouseEvent, type: TResizeType) => {
-		e.preventDefault();
-		e.stopPropagation();
+	const handleResize = (event: React.MouseEvent, type: ResizeType) => {
+		event.preventDefault();
+		event.stopPropagation();
 
 		setIsResizing(true);
 
-		if (!isDefined(resizeDivRef?.current)) return;
+		if (!isDefined(resizeDivRef?.current)) {
+			return;
+		}
 
 		const resizeDivRect = resizeDivRef.current?.getBoundingClientRect();
 		const maxSize = {
@@ -70,18 +72,18 @@ export const useResize = ({ resizeDivRef, options }: IResizeProps) => {
 			};
 		};
 
-		const currentPositon: IPosition = {
-			x: resizeDivRect.x || 0,
-			y: resizeDivRect.y || 0,
+		const currentPositon: Position = {
+			x: resizeDivRect.x ?? 0,
+			y: resizeDivRect.y ?? 0,
 		};
 
-		const startSize: ISize = {
-			width: resizeDivRect.width || 0,
-			height: resizeDivRect.height || 0,
+		const startSize: Size = {
+			width: resizeDivRect.width ?? 0,
+			height: resizeDivRect.height ?? 0,
 		};
 		const startPosition = {
-			x: e.pageX,
-			y: e.pageY,
+			x: event.pageX,
+			y: event.pageY,
 		};
 
 		const handleMouseMove = throttle((e: MouseEvent) => {
@@ -93,16 +95,16 @@ export const useResize = ({ resizeDivRef, options }: IResizeProps) => {
 			switch (type) {
 				case 'top':
 					if (minSize.height > startSize.height - deltaY) {
-						setPosition((prev) => ({
-							x: prev.x,
+						setPosition((previous) => ({
+							x: previous.x,
 							y: resizeDivRect.bottom - minSize.height,
 						}));
 						setSize(getBoundedSize(startSize.width, minSize.height));
 						return;
 					}
 					if (e.pageY < resizeDivRect.top - maxSize.height) {
-						setPosition((prev) => ({
-							x: prev.x,
+						setPosition((previous) => ({
+							x: previous.x,
 							y: resizeDivRect.bottom - maxSize.height,
 						}));
 					}
@@ -111,7 +113,7 @@ export const useResize = ({ resizeDivRef, options }: IResizeProps) => {
 						y: currentPositon.y + deltaY,
 					});
 					setSize(getBoundedSize(startSize.width, startSize.height - deltaY));
-					break;
+					return;
 
 				case 'bottom':
 					if (minSize.height > startSize.height + deltaY) {
@@ -119,13 +121,13 @@ export const useResize = ({ resizeDivRef, options }: IResizeProps) => {
 					}
 
 					setSize(getBoundedSize(startSize.width, startSize.height + deltaY));
-					break;
+					return;
 
 				case 'left':
 					if (e.pageX > resizeDivRect.right - minSize.width) {
-						setPosition((prev) => ({
+						setPosition((previous) => ({
 							x: resizeDivRect.right - minSize.width,
-							y: prev.y,
+							y: previous.y,
 						}));
 						setSize(getBoundedSize(minSize.width, startSize.height));
 						return;
@@ -147,11 +149,11 @@ export const useResize = ({ resizeDivRef, options }: IResizeProps) => {
 
 				case 'top-left':
 					if (e.pageX > resizeDivRect.right - minSize.width) {
-						setPosition((prev) => ({
+						setPosition((previous) => ({
 							x: resizeDivRect.right - minSize.width,
-							y: prev.y,
+							y: previous.y,
 						}));
-						setSize((prev) => getBoundedSize(minSize.width, prev.height));
+						setSize((previous) => getBoundedSize(minSize.width, previous.height));
 					} else {
 						setPosition({
 							x: currentPositon.x + deltaX,
@@ -160,11 +162,11 @@ export const useResize = ({ resizeDivRef, options }: IResizeProps) => {
 						setSize(getBoundedSize(startSize.width - deltaX, startSize.height - deltaY));
 					}
 					if (minSize.height > startSize.height - deltaY) {
-						setPosition((prev) => ({
-							x: prev.x,
+						setPosition((previous) => ({
+							x: previous.x,
 							y: resizeDivRect.bottom - minSize.height,
 						}));
-						setSize((prev) => getBoundedSize(prev.width, minSize.height));
+						setSize((previous) => getBoundedSize(previous.width, minSize.height));
 					} else {
 						setPosition({
 							x: Math.min(currentPositon.x + deltaX, resizeDivRect.right - minSize.width),
@@ -176,8 +178,8 @@ export const useResize = ({ resizeDivRef, options }: IResizeProps) => {
 
 				case 'top-right':
 					if (minSize.height > startSize.height - deltaY) {
-						setPosition((prev) => ({
-							x: prev.x,
+						setPosition((previous) => ({
+							x: previous.x,
 							y: resizeDivRect.bottom - minSize.height,
 						}));
 						setSize(getBoundedSize(startSize.width + deltaX, minSize.height));
@@ -189,8 +191,8 @@ export const useResize = ({ resizeDivRef, options }: IResizeProps) => {
 						setSize(getBoundedSize(startSize.width + deltaX, startSize.height - deltaY));
 					}
 					if (e.pageY < resizeDivRect.top - maxSize.height) {
-						setPosition((prev) => ({
-							x: prev.x,
+						setPosition((previous) => ({
+							x: previous.x,
 							y: resizeDivRect.bottom - maxSize.height,
 						}));
 					}
