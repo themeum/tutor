@@ -199,6 +199,7 @@ const QuizSettings = ({ form }: QuizSettingsProps) => {
                 <FormSelectInput
                   {...controllerProps}
                   label={__('Question Order', 'tutor')}
+                  placeholder="Select an option"
                   options={[
                     { label: __('Random', 'tutor'), value: 'rand' },
                     { label: __('Sorting', 'tutor'), value: 'sorting' },
