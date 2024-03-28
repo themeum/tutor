@@ -156,7 +156,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 	// @TODO: Remove this when the API is ready
 	useEffect(() => {
 		if (getQuizQuestionsQuery.data) {
-			return setQuestionsData(getQuizQuestionsQuery.data);
+			setQuestionsData(getQuizQuestionsQuery.data);
 		}
 	}, [getQuizQuestionsQuery.data]);
 
@@ -352,7 +352,11 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 							control={form.control}
 							name="question_type"
 							render={(controllerProps) => (
-								<FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
+								<FormSelectInput
+									{...controllerProps}
+									label={__('Question Type', 'tutor')}
+									options={questionTypeOptions}
+								/>
 							)}
 						/>
 					</div>
