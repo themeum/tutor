@@ -20,7 +20,6 @@ import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import Tabs from '@Molecules/Tabs';
 import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
-import { moveTo } from '@Utils/util';
 import {
   DndContext,
   DragOverlay,
@@ -37,7 +36,9 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
+import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
+import { moveTo } from '@Utils/util';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -114,7 +115,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'questions' | 'settings'>('questions');
   // @TODO: isEdit will be calculated based on the quiz data form API
-  const [isEdit, setIsEdit] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState(true);
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -137,6 +138,11 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  const questionType = useWatch({
+    control: form.control,
+    name: 'question_type',
+  });
+
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
@@ -144,6 +150,19 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 
     return questionsData.find((item) => item.ID === activeSortId);
   }, [activeSortId, questionsData]);
+
+  const questionTypeForm = {
+    'true-false': <TrueFalse />,
+    'single-choice': 'Single Choice',
+    'multiple-choice': 'Multiple Choice',
+    'open-ended': 'Open Ended/ Essay',
+    'fill-in-the-blanks': 'Fill in the Blanks',
+    'short-answer': 'Short Answer',
+    matching: 'Matching',
+    'image-matching': 'Image Matching',
+    'image-answering': 'Image Answering',
+    ordering: 'Ordering',
+  };
 
   const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
 
@@ -213,7 +232,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
               </Button>
             }
           >
-            <Button variant="primary" size="small" onClick={() => alert('@TODO: will be implemenetd later')}>
+            <Button variant="primary" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
               Save
             </Button>
           </Show>
@@ -345,7 +364,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
             </Show>
           </div>
         </div>
-        <div css={styles.content}>@TODO: will be implemented later</div>
+
+        <div css={styles.content}>{questionTypeForm[questionType]}</div>
+
         <div css={styles.right}>
           <div css={styles.questionTypeWrapper}>
             <Controller
@@ -435,7 +456,7 @@ const styles = {
     border-right: 1px solid ${colorTokens.stroke.divider};
   `,
   content: css`
-    padding: ${spacing[32]};
+    padding: ${spacing[32]} ${spacing[48]} ${spacing[48]} ${spacing[6]};
   `,
   right: css`
     ${styleUtils.display.flex('column')};
