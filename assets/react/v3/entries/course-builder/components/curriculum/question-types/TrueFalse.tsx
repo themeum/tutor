@@ -20,7 +20,7 @@ const TrueFalse = () => {
             setSelectedAnswer(true);
           }}
           onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
+            if (event.key === 'Enter') {
               setSelectedAnswer(true);
             }
           }}
@@ -37,7 +37,7 @@ const TrueFalse = () => {
             setSelectedAnswer(false);
           }}
           onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
+            if (event.key === 'Enter') {
               setSelectedAnswer(false);
             }
           }}

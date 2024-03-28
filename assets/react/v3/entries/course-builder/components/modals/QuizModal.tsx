@@ -34,7 +34,7 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useWatch } from 'react-hook-form';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
@@ -115,7 +115,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'questions' | 'settings'>('questions');
   // @TODO: isEdit will be calculated based on the quiz data form API
-  const [isEdit, setIsEdit] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState(true);
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
