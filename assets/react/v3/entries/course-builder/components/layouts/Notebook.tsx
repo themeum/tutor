@@ -16,7 +16,6 @@ import { useResize } from '@Hooks/useResize';
 import { getFromLocalStorage, setToLocalStorage } from '@Utils/localStorage';
 import { LocalStorageKeys, notebook } from '@Config/constants';
 import { __ } from '@wordpress/i18n';
-import { useDebounce } from '@Hooks/useDebounce';
 
 interface Position {
 	x: number;
