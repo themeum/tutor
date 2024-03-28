@@ -156,7 +156,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   // @TODO: Remove this when the API is ready
   useEffect(() => {
     if (getQuizQuestionsQuery.data) {
-      return setQuestionsData(getQuizQuestionsQuery.data);
+      setQuestionsData(getQuizQuestionsQuery.data);
     }
   }, [getQuizQuestionsQuery.data]);
 
@@ -345,7 +345,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
             </Show>
           </div>
         </div>
-        <div css={styles.content}>@TODO: will be implemented later</div>
+        <div css={styles.content}>@TODO: Question content</div>
         <div css={styles.right}>
           <div css={styles.questionTypeWrapper}>
             <Controller
