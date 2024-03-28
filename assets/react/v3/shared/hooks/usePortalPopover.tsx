@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useModal } from '@Components/modals/Modal';
 import { zIndex } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
@@ -50,23 +48,17 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     left: 0,
   },
 }: PopoverHookArgs<T>) => {
-  const fallbackRef = useRef<T>(null);
   const triggerRef = useMemo(() => {
-    if (!isDefined(popoverTriggerRef)) {
-      return fallbackRef;
-    }
-
-    return popoverTriggerRef;
+    return popoverTriggerRef || { current: null };
   }, [popoverTriggerRef]);
-
   const popoverRef = useRef<D>(null);
   const previousPopoverRect = usePrevious(popoverRef.current?.getBoundingClientRect());
-
   const [triggerWidth, setTriggerWidth] = useState(0);
   const [position, setPosition] = useState<PopoverPosition>({ left: 0, top: 0, arrowPlacement: ArrowPosition.bottom });
 
   useEffect(() => {
     if (!triggerRef.current) return;
+
     const triggerRect = triggerRef.current.getBoundingClientRect();
     setTriggerWidth(triggerRect.width);
   }, [triggerRef]);

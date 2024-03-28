@@ -38,12 +38,15 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller } from 'react-hook-form';
+import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
 }
 
-interface QuizForm {
+export type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
+
+export interface QuizForm {
   quiz_title: string;
   quiz_description: string;
   question_type: QuizQuestionType;
@@ -51,6 +54,24 @@ interface QuizForm {
   randomize: boolean;
   point: number;
   display_point: boolean;
+  quiz_option: {
+    time_limit: {
+      time_value: number;
+      time_type: QuizTimeLimit;
+    };
+    hide_quiz_time_display: boolean;
+    feedback_mode: 'default' | 'reveal' | 'retry';
+    attempts_allowed: number;
+    passing_grade: number;
+    max_questions_for_answer: number;
+    available_after_days: number;
+    quiz_auto_start: boolean;
+    question_layout_view: '' | 'single_question' | 'question_pagination' | 'question_below_each_other';
+    questions_order: 'rand' | 'sorting' | 'asc' | 'desc';
+    hide_question_number_overview: boolean;
+    short_answer_characters_limit: number;
+    open_ended_answer_characters_limit: number;
+  };
 }
 
 const questionTypeOptions: Option<QuizQuestionType>[] = [
@@ -106,13 +127,15 @@ const questionTypeOptions: Option<QuizQuestionType>[] = [
   },
 ];
 
+type QuizTabs = 'questions' | 'settings';
+
 const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [questionsData, setQuestionsData] = useState<QuizQuestion[]>([]);
   const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<'questions' | 'settings'>('questions');
+  const [activeTab, setActiveTab] = useState<QuizTabs>('questions');
   // @TODO: isEdit will be calculated based on the quiz data form API
   const [isEdit, setIsEdit] = useState<boolean>(true);
 
@@ -125,6 +148,24 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
       randomize: false,
       point: 0,
       display_point: true,
+      quiz_option: {
+        time_limit: {
+          time_value: 0,
+          time_type: 'minutes',
+        },
+        hide_quiz_time_display: false,
+        feedback_mode: 'default',
+        attempts_allowed: 0,
+        passing_grade: 0,
+        max_questions_for_answer: 0,
+        available_after_days: 0,
+        quiz_auto_start: false,
+        question_layout_view: '',
+        questions_order: 'rand',
+        hide_question_number_overview: false,
+        short_answer_characters_limit: 0,
+        open_ended_answer_characters_limit: 0,
+      },
     },
   });
 
@@ -221,179 +262,198 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
       }
     >
       <div css={styles.wrapper}>
-        <div css={styles.left}>
-          <div css={styles.quizTitleWrapper}>
-            <Show
-              when={isEdit}
-              fallback={
-                <div css={styles.quizNameWithButton}>
-                  <span css={styles.quizTitle}>General knowledge</span>
-                  <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
-                    <SVGIcon name="edit" width={24} height={24} />
-                  </Button>
-                </div>
-              }
-            >
-              <div css={styles.quizForm}>
-                <Controller
-                  control={form.control}
-                  name="quiz_title"
-                  rules={{ required: __('Quiz title is required', 'tutor') }}
-                  render={(controllerProps) => (
-                    <FormInput {...controllerProps} placeholder={__('Add quiz title', 'tutor')} />
-                  )}
-                />
-                <Controller
-                  control={form.control}
-                  name="quiz_description"
-                  render={(controllerProps) => (
-                    <FormTextareaInput
-                      {...controllerProps}
-                      placeholder={__('Add a summary', 'tutor')}
-                      enableResize
-                      rows={2}
-                    />
-                  )}
-                />
-
-                <div css={styles.quizFormButtonWrapper}>
-                  <Button variant="text" type="button" onClick={() => setIsEdit(false)} size="small">
-                    {__('Cancel', 'tutor')}
-                  </Button>
-                  <Button variant="secondary" type="submit" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
-                    {__('Ok', 'tutor')}
-                  </Button>
-                </div>
-              </div>
-            </Show>
-          </div>
-          <div css={styles.questionsLabel}>
-            <span>Questions</span>
-            <button type="button" onClick={() => alert('@TODO: will be implemented later')}>
-              <SVGIcon name="plusSquareBrand" />
-            </button>
-          </div>
-
-          <div css={styles.questionList}>
-            <Show when={questionsData.length > 0} fallback={<div>No question!</div>}>
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-                onDragStart={(event) => {
-                  setActiveSortId(event.active.id);
-                }}
-                onDragEnd={(event) => {
-                  const { active, over } = event;
-                  if (!over) {
-                    return;
+        <Show when={activeTab === 'questions'} fallback={<div />}>
+          <div css={styles.left}>
+            <Show when={activeTab === 'questions'}>
+              <div css={styles.quizTitleWrapper}>
+                <Show
+                  when={isEdit}
+                  fallback={
+                    <div css={styles.quizNameWithButton}>
+                      <span css={styles.quizTitle}>General knowledge</span>
+                      <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
+                        <SVGIcon name="edit" width={24} height={24} />
+                      </Button>
+                    </div>
                   }
-
-                  if (active.id !== over.id) {
-                    const activeIndex = questionsData.findIndex((item) => item.ID === active.id);
-                    const overIndex = questionsData.findIndex((item) => item.ID === over.id);
-
-                    setQuestionsData((previous) => {
-                      return moveTo(previous, activeIndex, overIndex);
-                    });
-                  }
-
-                  setActiveSortId(null);
-                }}
-              >
-                <SortableContext
-                  items={questionsData.map((item) => ({ ...item, id: item.ID }))}
-                  strategy={verticalListSortingStrategy}
                 >
-                  <For each={questionsData}>
-                    {(question, index) => (
-                      <Question
-                        key={question.ID}
-                        question={question}
-                        index={index}
-                        activeQuestionId={activeQuestionId}
-                        setActiveQuestionId={setActiveQuestionId}
-                        selectedQuestionId={selectedQuestionId}
-                        setSelectedQuestionId={setSelectedQuestionId}
-                      />
-                    )}
-                  </For>
-                </SortableContext>
+                  <div css={styles.quizForm}>
+                    <Controller
+                      control={form.control}
+                      name="quiz_title"
+                      rules={{ required: __('Quiz title is required', 'tutor') }}
+                      render={(controllerProps) => (
+                        <FormInput {...controllerProps} placeholder={__('Add quiz title', 'tutor')} />
+                      )}
+                    />
+                    <Controller
+                      control={form.control}
+                      name="quiz_description"
+                      render={(controllerProps) => (
+                        <FormTextareaInput
+                          {...controllerProps}
+                          placeholder={__('Add a summary', 'tutor')}
+                          enableResize
+                          rows={2}
+                        />
+                      )}
+                    />
 
-                {createPortal(
-                  <DragOverlay>
-                    <Show when={activeSortItem}>
-                      {(item) => {
-                        const index = questionsData.findIndex((question) => question.ID === item.ID);
-                        return (
+                    <div css={styles.quizFormButtonWrapper}>
+                      <Button variant="text" type="button" onClick={() => setIsEdit(false)} size="small">
+                        {__('Cancel', 'tutor')}
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        type="submit"
+                        size="small"
+                        onClick={form.handleSubmit(onQuizFormSubmit)}
+                      >
+                        {__('Ok', 'tutor')}
+                      </Button>
+                    </div>
+                  </div>
+                </Show>
+              </div>
+              <div css={styles.questionsLabel}>
+                <span>Questions</span>
+                <button type="button" onClick={() => alert('@TODO: will be implemented later')}>
+                  <SVGIcon name="plusSquareBrand" />
+                </button>
+              </div>
+
+              <div css={styles.questionList}>
+                <Show when={questionsData.length > 0} fallback={<div>No question!</div>}>
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                    onDragStart={(event) => {
+                      setActiveSortId(event.active.id);
+                    }}
+                    onDragEnd={(event) => {
+                      const { active, over } = event;
+                      if (!over) {
+                        return;
+                      }
+
+                      if (active.id !== over.id) {
+                        const activeIndex = questionsData.findIndex((item) => item.ID === active.id);
+                        const overIndex = questionsData.findIndex((item) => item.ID === over.id);
+
+                        setQuestionsData((previous) => {
+                          return moveTo(previous, activeIndex, overIndex);
+                        });
+                      }
+
+                      setActiveSortId(null);
+                    }}
+                  >
+                    <SortableContext
+                      items={questionsData.map((item) => ({ ...item, id: item.ID }))}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      <For each={questionsData}>
+                        {(question, index) => (
                           <Question
-                            key={item.ID}
-                            question={item}
+                            key={question.ID}
+                            question={question}
                             index={index}
                             activeQuestionId={activeQuestionId}
                             setActiveQuestionId={setActiveQuestionId}
                             selectedQuestionId={selectedQuestionId}
                             setSelectedQuestionId={setSelectedQuestionId}
                           />
-                        );
-                      }}
-                    </Show>
-                  </DragOverlay>,
-                  document.body
-                )}
-              </DndContext>
+                        )}
+                      </For>
+                    </SortableContext>
+
+                    {createPortal(
+                      <DragOverlay>
+                        <Show when={activeSortItem}>
+                          {(item) => {
+                            const index = questionsData.findIndex((question) => question.ID === item.ID);
+                            return (
+                              <Question
+                                key={item.ID}
+                                question={item}
+                                index={index}
+                                activeQuestionId={activeQuestionId}
+                                setActiveQuestionId={setActiveQuestionId}
+                                selectedQuestionId={selectedQuestionId}
+                                setSelectedQuestionId={setSelectedQuestionId}
+                              />
+                            );
+                          }}
+                        </Show>
+                      </DragOverlay>,
+                      document.body
+                    )}
+                  </DndContext>
+                </Show>
+              </div>
             </Show>
           </div>
+        </Show>
+        <div css={styles.content({ activeTab })}>
+          <Show when={activeTab === 'settings'} fallback={<div>@TODO: will be implemented later</div>}>
+            <QuizSettings form={form} />
+          </Show>
         </div>
-        <div css={styles.content}>@TODO: Question content</div>
-        <div css={styles.right}>
-          <div css={styles.questionTypeWrapper}>
-            <Controller
-              control={form.control}
-              name="question_type"
-              render={(controllerProps) => (
-                <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
-              )}
-            />
-          </div>
-          <div css={styles.conditions}>
-            <p>{__('Conditions', 'tutor')}</p>
-            <div css={styles.conditionControls}>
+        <Show when={activeTab === 'questions'} fallback={<div />}>
+          <div css={styles.right}>
+            <div css={styles.questionTypeWrapper}>
               <Controller
                 control={form.control}
-                name="answer_required"
-                render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />}
-              />
-              <Controller
-                control={form.control}
-                name="randomize"
+                name="question_type"
                 render={(controllerProps) => (
-                  <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />
+                  <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
                 )}
-              />
-              <Controller
-                control={form.control}
-                name="point"
-                render={(controllerProps) => (
-                  <FormInput
-                    {...controllerProps}
-                    label={__('Point For This Answer', 'tutor')}
-                    type="number"
-                    isInlineLabel
-                    style={css`
-                      max-width: 72px;
-                    `}
-                  />
-                )}
-              />
-              <Controller
-                control={form.control}
-                name="display_point"
-                render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />}
               />
             </div>
+            <div css={styles.conditions}>
+              <p>{__('Conditions', 'tutor')}</p>
+              <div css={styles.conditionControls}>
+                <Controller
+                  control={form.control}
+                  name="answer_required"
+                  render={(controllerProps) => (
+                    <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="randomize"
+                  render={(controllerProps) => (
+                    <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="point"
+                  render={(controllerProps) => (
+                    <FormInput
+                      {...controllerProps}
+                      label={__('Point For This Answer', 'tutor')}
+                      type="number"
+                      isInlineLabel
+                      style={css`
+                      max-width: 72px;
+                    `}
+                    />
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="display_point"
+                  render={(controllerProps) => (
+                    <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />
+                  )}
+                />
+              </div>
+            </div>
           </div>
-        </div>
+        </Show>
       </div>
       <ConfirmationPopover
         isOpen={isConfirmationOpen}
@@ -434,8 +494,19 @@ const styles = {
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
   `,
-  content: css`
+  content: ({
+    activeTab,
+  }: {
+    activeTab: QuizTabs;
+  }) => css`
     padding: ${spacing[32]};
+
+		${
+      activeTab === 'settings' &&
+      css`
+			padding-top: ${spacing[24]};
+		`
+    }
   `,
   right: css`
     ${styleUtils.display.flex('column')};
