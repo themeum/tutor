@@ -9,37 +9,37 @@ import { useRoutes } from 'react-router-dom';
 import RTLProvider from './layouts/RTLProvider';
 
 const App = () => {
-	const [queryClient] = useState(
-		() =>
-			new QueryClient({
-				defaultOptions: {
-					queries: {
-						retry: false,
-						refetchOnWindowFocus: false,
-						networkMode: 'always',
-					},
-					mutations: {
-						retry: false,
-						networkMode: 'always',
-					},
-				},
-			})
-	);
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+            refetchOnWindowFocus: false,
+            networkMode: 'always',
+          },
+          mutations: {
+            retry: false,
+            networkMode: 'always',
+          },
+        },
+      })
+  );
 
-	const routers = useRoutes(routes);
+  const routers = useRoutes(routes);
 
-	return (
-		<RTLProvider>
-			<QueryClientProvider client={queryClient}>
-				<ToastProvider position="bottom-center">
-					<ModalProvider>
-						<Global styles={createGlobalCss()} />
-						{routers}
-					</ModalProvider>
-				</ToastProvider>
-			</QueryClientProvider>
-		</RTLProvider>
-	);
+  return (
+    <RTLProvider>
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider position="bottom-center">
+          <ModalProvider>
+            <Global styles={createGlobalCss()} />
+            {routers}
+          </ModalProvider>
+        </ToastProvider>
+      </QueryClientProvider>
+    </RTLProvider>
+  );
 };
 
 export default App;

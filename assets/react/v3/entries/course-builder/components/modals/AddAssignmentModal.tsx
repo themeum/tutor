@@ -1,11 +1,11 @@
-import React from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import React from 'react';
 import { Controller } from 'react-hook-form';
 
 import FormInput from '@Components/fields/FormInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -14,9 +14,9 @@ import { borderRadius, colorTokens, fontWeight, spacing, zIndex } from '@Config/
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
-import ModalWrapper from '@Components/modals/ModalWrapper';
-import { ModalProps } from '@Components/modals/Modal';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
+import type { ModalProps } from '@Components/modals/Modal';
+import ModalWrapper from '@Components/modals/ModalWrapper';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

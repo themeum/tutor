@@ -8,7 +8,7 @@ import { RichTextEditor } from '@mantine/rte';
 import FormFieldWrapper from './FormFieldWrapper';
 
 const styles = {
-	container: (hasError: boolean) => css`
+  container: (hasError: boolean) => css`
     position: relative;
     display: flex;
 
@@ -19,22 +19,22 @@ const styles = {
     .mantine-RichTextEditor-root {
       width: 100%;
       ${
-				hasError &&
-				css`
+        hasError &&
+        css`
         border-color: ${colorPalate.basic.critical};
       `
-			}
+      }
     }
     .mantine-RichTextEditor-toolbar {
       background-color: #eff1f7;
 
       ${
-				hasError &&
-				css`
+        hasError &&
+        css`
         background-color: ${colorPalate.surface.critical.neutral};
         border-color: ${colorPalate.basic.critical};
       `
-			}
+      }
     }
 
     .mantine-UnstyledButton-root {
@@ -55,12 +55,12 @@ const styles = {
       color: ${colorPalate.text.default};
     }
   `,
-	maxLimit: css`
+  maxLimit: css`
     ${typography.caption()};
     color: ${colorPalate.text.neutral};
     text-transform: lowercase;
   `,
-	clearButton: css`
+  clearButton: css`
     position: absolute;
     right: ${spacing[4]};
     top: ${spacing[6]};
@@ -73,54 +73,54 @@ const styles = {
       background: ${colorPalate.surface.hover};
     }
   `,
-	editorCss: css`
+  editorCss: css`
     padding: ${spacing[16]};
     min-height: 130px;
   `,
 };
 
 interface FormEditorProps extends FormControllerProps<string> {
-	label?: string;
-	disabled?: boolean;
-	loading?: boolean;
-	placeholder?: string;
-	helpText?: string;
+  label?: string;
+  disabled?: boolean;
+  loading?: boolean;
+  placeholder?: string;
+  helpText?: string;
 }
 
 const FormEditor = ({ label, field, fieldState, disabled, loading, placeholder, helpText }: FormEditorProps) => {
-	return (
-		<FormFieldWrapper
-			label={label}
-			field={field}
-			fieldState={fieldState}
-			disabled={disabled}
-			loading={loading}
-			placeholder={placeholder}
-			helpText={helpText}
-		>
-			{() => {
-				return (
-					<div css={styles.container(!!fieldState.error)}>
-						<RichTextEditor
-							value={field.value}
-							onChange={field.onChange}
-							controls={[
-								['bold', 'italic', 'underline', 'strike'],
-								['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
-								['unorderedList', 'orderedList'],
-								['link', 'image', 'video', 'blockquote', 'code'],
-								['alignLeft', 'alignCenter', 'alignRight'],
-								['sup', 'sub'],
-							]}
-							id="rte"
-							sticky={false}
-							placeholder={placeholder}
-						/>
-					</div>
-				);
-			}}
-		</FormFieldWrapper>
-	);
+  return (
+    <FormFieldWrapper
+      label={label}
+      field={field}
+      fieldState={fieldState}
+      disabled={disabled}
+      loading={loading}
+      placeholder={placeholder}
+      helpText={helpText}
+    >
+      {() => {
+        return (
+          <div css={styles.container(!!fieldState.error)}>
+            <RichTextEditor
+              value={field.value}
+              onChange={field.onChange}
+              controls={[
+                ['bold', 'italic', 'underline', 'strike'],
+                ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+                ['unorderedList', 'orderedList'],
+                ['link', 'image', 'video', 'blockquote', 'code'],
+                ['alignLeft', 'alignCenter', 'alignRight'],
+                ['sup', 'sub'],
+              ]}
+              id="rte"
+              sticky={false}
+              placeholder={placeholder}
+            />
+          </div>
+        );
+      }}
+    </FormFieldWrapper>
+  );
 };
 
 export default FormEditor;

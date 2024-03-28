@@ -5,133 +5,133 @@ import { useState } from 'react';
 import { useIsShiftHolding } from './useIsShiftHolding';
 
 interface OnSelectItem {
-	itemId: number;
-	itemIndex: number;
-	isChecked: boolean;
+  itemId: number;
+  itemIndex: number;
+  isChecked: boolean;
 }
 
 interface UseTableItemsSelectionProps<T> {
-	totalItemsList: T[] | undefined;
+  totalItemsList: T[] | undefined;
 }
 
 const initialSelectedTableItems: TableSelectedItems = {
-	ids: [],
-	indexes: [],
+  ids: [],
+  indexes: [],
 };
 
 export const useTableItemsSelection = <T extends { id?: number }>({
-	totalItemsList = [],
+  totalItemsList = [],
 }: UseTableItemsSelectionProps<T>) => {
-	const [selectedItems, setSelectedItems] = useState<TableSelectedItems>(initialSelectedTableItems);
-	const [lastSelectedIndex, setLastSelectedIndex] = useState(-1);
+  const [selectedItems, setSelectedItems] = useState<TableSelectedItems>(initialSelectedTableItems);
+  const [lastSelectedIndex, setLastSelectedIndex] = useState(-1);
 
-	const isShiftHolding = useIsShiftHolding();
+  const isShiftHolding = useIsShiftHolding();
 
-	const totalSelected = selectedItems.indexes.length;
-	const totalItems = totalItemsList.length || 0;
+  const totalSelected = selectedItems.indexes.length;
+  const totalItems = totalItemsList.length || 0;
 
-	const onSelectItem = ({ itemId, itemIndex, isChecked }: OnSelectItem) => {
-		let updatedItemIds: number[] = [];
-		let updatedItemIndexes: number[] = [];
+  const onSelectItem = ({ itemId, itemIndex, isChecked }: OnSelectItem) => {
+    let updatedItemIds: number[] = [];
+    let updatedItemIndexes: number[] = [];
 
-		if (!isShiftHolding || lastSelectedIndex === -1) {
-			if (!isChecked) {
-				updatedItemIds = selectedItems.ids.filter((productId) => productId !== itemId);
-				updatedItemIndexes = selectedItems.indexes.filter((productIndex) => productIndex !== itemIndex);
+    if (!isShiftHolding || lastSelectedIndex === -1) {
+      if (!isChecked) {
+        updatedItemIds = selectedItems.ids.filter((productId) => productId !== itemId);
+        updatedItemIndexes = selectedItems.indexes.filter((productIndex) => productIndex !== itemIndex);
 
-				setSelectedItems({
-					ids: updatedItemIds,
-					indexes: updatedItemIndexes,
-				});
-				setLastSelectedIndex(itemIndex);
-				return;
-			}
+        setSelectedItems({
+          ids: updatedItemIds,
+          indexes: updatedItemIndexes,
+        });
+        setLastSelectedIndex(itemIndex);
+        return;
+      }
 
-			updatedItemIds = [...selectedItems.ids, itemId];
-			updatedItemIndexes = [...selectedItems.indexes, itemIndex];
+      updatedItemIds = [...selectedItems.ids, itemId];
+      updatedItemIndexes = [...selectedItems.indexes, itemIndex];
 
-			setSelectedItems({
-				ids: updatedItemIds,
-				indexes: updatedItemIndexes,
-			});
-			setLastSelectedIndex(itemIndex);
-			return;
-		}
+      setSelectedItems({
+        ids: updatedItemIds,
+        indexes: updatedItemIndexes,
+      });
+      setLastSelectedIndex(itemIndex);
+      return;
+    }
 
-		const minimumIndex = Math.min(lastSelectedIndex, itemIndex);
-		const maximumIndex = Math.max(lastSelectedIndex, itemIndex);
+    const minimumIndex = Math.min(lastSelectedIndex, itemIndex);
+    const maximumIndex = Math.max(lastSelectedIndex, itemIndex);
 
-		const itemIds = totalItemsList.slice(minimumIndex, maximumIndex + 1).map((item) => item.id);
-		const itemIndexes = range(maximumIndex + 1).filter((itemIndex) => itemIndex >= minimumIndex);
+    const itemIds = totalItemsList.slice(minimumIndex, maximumIndex + 1).map((item) => item.id);
+    const itemIndexes = range(maximumIndex + 1).filter((itemIndex) => itemIndex >= minimumIndex);
 
-		if (!isChecked) {
-			updatedItemIds = selectedItems.ids.filter((item) => !itemIds.includes(item));
-			updatedItemIndexes = selectedItems.indexes.filter((itemIndex) => !itemIndexes.includes(itemIndex));
+    if (!isChecked) {
+      updatedItemIds = selectedItems.ids.filter((item) => !itemIds.includes(item));
+      updatedItemIndexes = selectedItems.indexes.filter((itemIndex) => !itemIndexes.includes(itemIndex));
 
-			setSelectedItems({
-				ids: updatedItemIds,
-				indexes: updatedItemIndexes,
-			});
-			setLastSelectedIndex(itemIndex);
-			return;
-		}
+      setSelectedItems({
+        ids: updatedItemIds,
+        indexes: updatedItemIndexes,
+      });
+      setLastSelectedIndex(itemIndex);
+      return;
+    }
 
-		updatedItemIds = [...new Set([...selectedItems.ids, ...itemIds])] as number[];
-		updatedItemIndexes = [...new Set([...selectedItems.indexes, ...itemIndexes])];
+    updatedItemIds = [...new Set([...selectedItems.ids, ...itemIds])] as number[];
+    updatedItemIndexes = [...new Set([...selectedItems.indexes, ...itemIndexes])];
 
-		setSelectedItems({
-			ids: updatedItemIds,
-			indexes: updatedItemIndexes,
-		});
-		setLastSelectedIndex(itemIndex);
-	};
+    setSelectedItems({
+      ids: updatedItemIds,
+      indexes: updatedItemIndexes,
+    });
+    setLastSelectedIndex(itemIndex);
+  };
 
-	const onFireSingleItemAction = ({ itemId, itemIndex }: { itemId: number; itemIndex: number }) => {
-		const updatedItemIds = selectedItems.ids.filter((previousSelectedId) => previousSelectedId !== itemId);
-		const updatedItemIndexes = [];
+  const onFireSingleItemAction = ({ itemId, itemIndex }: { itemId: number; itemIndex: number }) => {
+    const updatedItemIds = selectedItems.ids.filter((previousSelectedId) => previousSelectedId !== itemId);
+    const updatedItemIndexes = [];
 
-		for (const currentIndex of selectedItems.indexes) {
-			if (currentIndex === itemIndex) {
-				continue;
-			}
+    for (const currentIndex of selectedItems.indexes) {
+      if (currentIndex === itemIndex) {
+        continue;
+      }
 
-			const updatedIndex = currentIndex > itemIndex ? currentIndex - 1 : currentIndex;
+      const updatedIndex = currentIndex > itemIndex ? currentIndex - 1 : currentIndex;
 
-			updatedItemIndexes.push(updatedIndex);
-		}
+      updatedItemIndexes.push(updatedIndex);
+    }
 
-		setSelectedItems({
-			ids: updatedItemIds,
-			indexes: updatedItemIndexes,
-		});
-		setLastSelectedIndex(itemIndex);
-	};
+    setSelectedItems({
+      ids: updatedItemIds,
+      indexes: updatedItemIndexes,
+    });
+    setLastSelectedIndex(itemIndex);
+  };
 
-	const toggleAllItems = () => {
-		const selectedItemsIds =
-			totalSelected === totalItems ? [] : totalItemsList.map((item, index) => (isDefined(item.id) ? item.id : index));
+  const toggleAllItems = () => {
+    const selectedItemsIds =
+      totalSelected === totalItems ? [] : totalItemsList.map((item, index) => (isDefined(item.id) ? item.id : index));
 
-		const selectedIndex = totalSelected === totalItems ? [] : range(totalItems);
+    const selectedIndex = totalSelected === totalItems ? [] : range(totalItems);
 
-		setSelectedItems({
-			ids: selectedItemsIds,
-			indexes: selectedIndex,
-		});
-		setLastSelectedIndex(-1);
-	};
+    setSelectedItems({
+      ids: selectedItemsIds,
+      indexes: selectedIndex,
+    });
+    setLastSelectedIndex(-1);
+  };
 
-	const resetSelections = () => {
-		setSelectedItems(initialSelectedTableItems);
-		setLastSelectedIndex(-1);
-	};
+  const resetSelections = () => {
+    setSelectedItems(initialSelectedTableItems);
+    setLastSelectedIndex(-1);
+  };
 
-	return {
-		selectedItems,
-		totalItems,
-		totalSelected,
-		onSelectItem,
-		onFireSingleItemAction,
-		toggleAllItems,
-		resetSelections,
-	};
+  return {
+    selectedItems,
+    totalItems,
+    totalSelected,
+    onSelectItem,
+    onFireSingleItemAction,
+    toggleAllItems,
+    resetSelections,
+  };
 };
