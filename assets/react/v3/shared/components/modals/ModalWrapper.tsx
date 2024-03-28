@@ -140,6 +140,7 @@ const styles = {
     color: ${colorTokens.text.title};
   `,
   subtitle: css`
+    ${styleUtils.text.ellipsis(1)}
     ${typography.caption()};
     color: ${colorTokens.text.hints};
   `,

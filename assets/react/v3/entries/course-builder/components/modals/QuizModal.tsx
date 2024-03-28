@@ -197,7 +197,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   // @TODO: Remove this when the API is ready
   useEffect(() => {
     if (getQuizQuestionsQuery.data) {
-      return setQuestionsData(getQuizQuestionsQuery.data);
+      setQuestionsData(getQuizQuestionsQuery.data);
     }
   }, [getQuizQuestionsQuery.data]);
 
