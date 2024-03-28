@@ -8,66 +8,59 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 
 const TrueFalse = () => {
-	const [selectedAnswer, setSelectedAnswer] = useState<'true' | 'false' | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
 
-	return (
-		<div css={styles.optionWrapper}>
-			<div css={styles.option({ isSelected: selectedAnswer === 'true' })}>
-				<SVGIcon data-check-icon name={selectedAnswer === 'true' ? 'checkFilled' : 'check'} height={32} width={32} />
-				<div
-					css={styles.optionLabel({ isSelected: selectedAnswer === 'true' })}
-					onClick={() => {
-						setSelectedAnswer('true');
-					}}
-					onKeyDown={(event) => {
-						if (event.key === 'Enter' || event.key === ' ') {
-							setSelectedAnswer('true');
-						}
-					}}
-				>
-					{__('True', 'tutor')}
-				</div>
-			</div>
+  return (
+    <div css={styles.optionWrapper}>
+      <div css={styles.option({ isSelected: selectedAnswer === true })}>
+        <SVGIcon data-check-icon name={selectedAnswer === true ? 'checkFilled' : 'check'} height={32} width={32} />
+        <div
+          css={styles.optionLabel({ isSelected: selectedAnswer === true })}
+          onClick={() => {
+            setSelectedAnswer(true);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              setSelectedAnswer(true);
+            }
+          }}
+        >
+          {__('True', 'tutor')}
+        </div>
+      </div>
 
-			<div css={styles.option({ isSelected: selectedAnswer === 'false' })}>
-				<SVGIcon
-					data-check-icon
-					name={selectedAnswer === 'false' ? 'checkFilled' : 'check'}
-					height={32}
-					width={32}
-					style={css`
-            `}
-				/>
-				<div
-					css={styles.optionLabel({ isSelected: selectedAnswer === 'false' })}
-					onClick={() => {
-						setSelectedAnswer('false');
-					}}
-					onKeyDown={(event) => {
-						if (event.key === 'Enter' || event.key === ' ') {
-							setSelectedAnswer('false');
-						}
-					}}
-				>
-					{__('False', 'tutor')}
-				</div>
-			</div>
-		</div>
-	);
+      <div css={styles.option({ isSelected: selectedAnswer === false })}>
+        <SVGIcon data-check-icon name={selectedAnswer === false ? 'checkFilled' : 'check'} height={32} width={32} />
+        <div
+          css={styles.optionLabel({ isSelected: selectedAnswer === false })}
+          onClick={() => {
+            setSelectedAnswer(false);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              setSelectedAnswer(false);
+            }
+          }}
+        >
+          {__('False', 'tutor')}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default TrueFalse;
 
 const styles = {
-	optionWrapper: css`
+  optionWrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
   `,
-	option: ({
-		isSelected,
-	}: {
-		isSelected: boolean;
-	}) => css`
+  option: ({
+    isSelected,
+  }: {
+    isSelected: boolean;
+  }) => css`
     ${styleUtils.display.flex()};
     ${typography.caption('medium')};
     align-items: center;
@@ -90,20 +83,20 @@ const styles = {
 
 
     ${
-			isSelected &&
-			css`
+      isSelected &&
+      css`
         [data-check-icon] {
           opacity: 1;
           fill: ${colorTokens.bg.success};
         }
       `
-		}
+    }
   `,
-	optionLabel: ({
-		isSelected,
-	}: {
-		isSelected: boolean;
-	}) => css`
+  optionLabel: ({
+    isSelected,
+  }: {
+    isSelected: boolean;
+  }) => css`
     width: 100%;
     border-radius: ${borderRadius.card};
     padding: ${spacing[12]} ${spacing[16]};
@@ -116,8 +109,8 @@ const styles = {
     }
 
     ${
-			isSelected &&
-			css`
+      isSelected &&
+      css`
         background-color: ${colorTokens.background.success.fill40};
         color: ${colorTokens.text.primary};
 
@@ -125,6 +118,6 @@ const styles = {
           box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
         }
       `
-		}
+    }
   `,
 };

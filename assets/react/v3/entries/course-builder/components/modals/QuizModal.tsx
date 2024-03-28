@@ -36,8 +36,9 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
+import { moveTo } from '@Utils/util';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -137,6 +138,11 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  const questionType = useWatch({
+    control: form.control,
+    name: 'question_type',
+  });
+
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
@@ -145,31 +151,18 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     return questionsData.find((item) => item.ID === activeSortId);
   }, [activeSortId, questionsData]);
 
-  const getQuestionForm = useCallback(() => {
-    const questionType = form.watch('question_type');
-    switch (questionType) {
-      case 'true-false':
-        return <TrueFalse />;
-      case 'single-choice':
-        return 'SingleChoiceQuestionForm';
-      case 'multiple-choice':
-        return 'MultipleChoiceQuestionForm';
-      case 'open-ended':
-        return 'OpenEndedQuestionForm';
-      case 'fill-in-the-blanks':
-        return 'FillInTheBlanksQuestionForm';
-      case 'short-answer':
-        return 'ShortAnswerQuestionForm';
-      case 'matching':
-        return 'MatchingQuestionForm';
-      case 'image-matching':
-        return 'ImageMatchingQuestionForm';
-      case 'image-answering':
-        return 'ImageAnsweringQuestionForm';
-      case 'ordering':
-        return 'OrderingQuestionForm';
-    }
-  }, [form]);
+  const questionTypeForm = {
+    'true-false': <TrueFalse />,
+    'single-choice': 'Single Choice',
+    'multiple-choice': 'Multiple Choice',
+    'open-ended': 'Open Ended/ Essay',
+    'fill-in-the-blanks': 'Fill in the Blanks',
+    'short-answer': 'Short Answer',
+    matching: 'Matching',
+    'image-matching': 'Image Matching',
+    'image-answering': 'Image Answering',
+    ordering: 'Ordering',
+  };
 
   const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
 
@@ -372,7 +365,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
           </div>
         </div>
 
-        <div css={styles.content}>{getQuestionForm()}</div>
+        <div css={styles.content}>{questionTypeForm[questionType]}</div>
 
         <div css={styles.right}>
           <div css={styles.questionTypeWrapper}>
