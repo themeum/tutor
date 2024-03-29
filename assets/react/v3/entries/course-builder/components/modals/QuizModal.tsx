@@ -162,7 +162,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     'image-matching': 'Image Matching',
     'image-answering': 'Image Answering',
     ordering: 'Ordering',
-  };
+  } as const;
 
   const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
 
