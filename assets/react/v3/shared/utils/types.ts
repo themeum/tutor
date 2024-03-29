@@ -43,10 +43,11 @@ export function isObject<T>(value: T): value is T {
 }
 
 export interface Option<T> {
-  label: string;
-  value: T;
-  icon?: ReactNode | string;
-  disabled?: boolean;
+	label: string;
+	value: T;
+	icon?: ReactNode | string;
+	disabled?: boolean;
+	description?: string;
 }
 export type CouponStatus = 'active' | 'inactive';
 export type ProductStatus = 'draft' | 'published' | 'trashed';
