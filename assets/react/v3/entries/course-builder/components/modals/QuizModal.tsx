@@ -20,7 +20,6 @@ import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import Tabs from '@Molecules/Tabs';
 import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
-import { moveTo } from '@Utils/util';
 import {
   DndContext,
   DragOverlay,
@@ -39,6 +38,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller } from 'react-hook-form';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
+import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
+import { moveTo } from '@Utils/util';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -137,7 +138,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<QuizTabs>('questions');
   // @TODO: isEdit will be calculated based on the quiz data form API
-  const [isEdit, setIsEdit] = useState<boolean>(true);
+  const [isEdit, setIsEdit] = useState(true);
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -178,6 +179,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  const questionType = form.watch('question_type');
+
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
@@ -185,6 +188,19 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 
     return questionsData.find((item) => item.ID === activeSortId);
   }, [activeSortId, questionsData]);
+
+  const questionTypeForm = {
+    'true-false': <TrueFalse />,
+    'single-choice': 'Single Choice',
+    'multiple-choice': 'Multiple Choice',
+    'open-ended': 'Open Ended/ Essay',
+    'fill-in-the-blanks': 'Fill in the Blanks',
+    'short-answer': 'Short Answer',
+    matching: 'Matching',
+    'image-matching': 'Image Matching',
+    'image-answering': 'Image Answering',
+    ordering: 'Ordering',
+  } as const;
 
   const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
 
@@ -254,7 +270,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
               </Button>
             }
           >
-            <Button variant="primary" size="small" onClick={() => alert('@TODO: will be implemenetd later')}>
+            <Button variant="primary" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
               Save
             </Button>
           </Show>
@@ -396,7 +412,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
           </div>
         </Show>
         <div css={styles.content({ activeTab })}>
-          <Show when={activeTab === 'settings'} fallback={<div>@TODO: will be implemented later</div>}>
+          <Show when={activeTab === 'settings'} fallback={questionTypeForm[questionType]}>
             <QuizSettings form={form} />
           </Show>
         </div>
@@ -499,7 +515,7 @@ const styles = {
   }: {
     activeTab: QuizTabs;
   }) => css`
-    padding: ${spacing[32]};
+    padding: ${spacing[32]} ${spacing[48]} ${spacing[48]} ${spacing[6]};
 
 		${
       activeTab === 'settings' &&
