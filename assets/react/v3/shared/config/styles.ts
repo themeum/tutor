@@ -277,7 +277,7 @@ export const colorTokens = {
     white: '#ffffff',
     brand: '#577fff',
     neutral: '#7391f0',
-    success: { default: '#0a8d5d', fill70: '#6AC088' },
+    success: { default: '#4eba6d', fill70: '#6AC088' },
     warning: '#f5ba63',
     danger: '#ff9f99',
     status: {
