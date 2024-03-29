@@ -74,8 +74,6 @@ const Notebook = () => {
         content: text,
       })
     );
-
-    setContent(text);
   };
 
   const onContentPaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
