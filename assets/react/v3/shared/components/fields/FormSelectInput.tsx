@@ -7,7 +7,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { type IconCollection, type Option, isDefined } from '@Utils/types';
 import { css } from '@emotion/react';
-import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useState, useRef } from 'react';
 
 import Show from '@Controls/Show';
 import { noop } from '@Utils/util';
@@ -15,238 +15,286 @@ import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {
-	label?: string;
-	options: Option<T>[];
-	placeholder?: string;
-	onChange?: (selectedOption: Option<T>) => void;
-	disabled?: boolean;
-	readOnly?: boolean;
-	loading?: boolean;
-	isSearchable?: boolean;
-	isHidden?: boolean;
-	showRadio?: boolean;
-	isInlineLabel?: boolean;
-	hideCaret?: boolean;
-	listLabel?: string;
-	removeBorder?: boolean;
-	isClearable?: boolean;
-	responsive?: boolean;
-	showArrowUpDown?: boolean;
-	helpText?: string;
-	removeOptionsMinWidth?: boolean;
-	leftIcon?: ReactNode;
-	dataAttribute?: string;
+  label?: string;
+  options: Option<T>[];
+  placeholder?: string;
+  onChange?: (selectedOption: Option<T>) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
+  loading?: boolean;
+  isSearchable?: boolean;
+  isHidden?: boolean;
+  showRadio?: boolean;
+  isInlineLabel?: boolean;
+  hideCaret?: boolean;
+  listLabel?: string;
+  removeBorder?: boolean;
+  isClearable?: boolean;
+  responsive?: boolean;
+  helpText?: string;
+  removeOptionsMinWidth?: boolean;
+  leftIcon?: ReactNode;
+  dataAttribute?: string;
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
-	options,
-	field,
-	fieldState,
-	onChange = noop,
-	label,
-	placeholder = '',
-	disabled,
-	readOnly,
-	loading,
-	isSearchable = false,
-	isInlineLabel,
-	hideCaret,
-	listLabel,
-	isClearable = false,
-	showArrowUpDown = false,
-	helpText,
-	removeOptionsMinWidth = false,
-	leftIcon,
-	removeBorder,
-	dataAttribute,
+  options,
+  field,
+  fieldState,
+  onChange = noop,
+  label,
+  placeholder = '',
+  disabled,
+  readOnly,
+  loading,
+  isSearchable = false,
+  isInlineLabel,
+  hideCaret,
+  listLabel,
+  isClearable = false,
+  helpText,
+  removeOptionsMinWidth = false,
+  leftIcon,
+  removeBorder,
+  dataAttribute,
 }: FormSelectInputProps<T>) => {
-	const getInitialValue = useCallback(() => {
-		return options.find((item) => item.value === field.value)?.label || '';
-	}, [options, field.value]);
+  const getInitialValue = () => options.find((item) => item.value === field.value);
 
-	const [inputValue, setInputValue] = useState(getInitialValue);
-	const [searchText, setSearchText] = useState('');
-	const [isOpen, setIsOpen] = useState(false);
+  const hasDescription = options.some((option) => isDefined(option.description));
 
-	const selections = useMemo(() => {
-		if (isSearchable) {
-			return options.filter(({ label }) => label.toLowerCase().startsWith(searchText.toLowerCase()));
-		}
+  const [inputValue, setInputValue] = useState(getInitialValue()?.label);
+  const [searchText, setSearchText] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
-		return options;
-	}, [searchText, isSearchable, options]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-	const selectedItem = useMemo(() => {
-		return options.find((item) => item.value === field.value);
-	}, [field.value, options]);
+  const selections = useMemo(() => {
+    if (isSearchable) {
+      return options.filter(({ label }) => label.toLowerCase().startsWith(searchText.toLowerCase()));
+    }
 
-	const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-		isOpen,
-		isDropdown: true,
-	});
+    return options;
+  }, [searchText, isSearchable, options]);
 
-	const additionalAttributes = {
-		...(isDefined(dataAttribute) && { [dataAttribute]: true }),
-	};
+  const selectedItem = useMemo(() => {
+    return options.find((item) => item.value === field.value);
+  }, [field.value, options]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		setInputValue(getInitialValue);
-	}, [field.value, getInitialValue]);
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+    isOpen,
+    isDropdown: true,
+  });
 
-	useEffect(() => {
-		if (isOpen) {
-			setInputValue(getInitialValue);
-		}
-	}, [getInitialValue, isOpen]);
+  const additionalAttributes = {
+    ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
+  };
 
-	return (
-		<FormFieldWrapper
-			fieldState={fieldState}
-			field={field}
-			label={label}
-			disabled={disabled || options.length === 0}
-			readOnly={readOnly}
-			loading={loading}
-			isInlineLabel={isInlineLabel}
-			helpText={helpText}
-			removeBorder={removeBorder}
-		>
-			{(inputProps) => {
-				const { css: inputCss, ...restInputProps } = inputProps;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    setInputValue(getInitialValue()?.label);
+  }, [field.value, getInitialValue]);
 
-				return (
-					<div css={styles.mainWrapper}>
-						<div css={styles.inputWrapper} ref={triggerRef}>
-							<div css={styles.leftIcon}>
-								<Show when={leftIcon}>{leftIcon}</Show>
-								<Show when={selectedItem?.icon}>
-									{(iconName) => <SVGIcon name={iconName as IconCollection} width={32} height={32} />}
-								</Show>
-							</div>
-							<input
-								{...restInputProps}
-								{...additionalAttributes}
-								onClick={() => setIsOpen((previousState) => !previousState)}
-								css={[inputCss, styles.input(!!leftIcon || !!selectedItem?.icon)]}
-								autoComplete="off"
-								readOnly={readOnly || !isSearchable}
-								placeholder={placeholder}
-								value={inputValue}
-								onChange={(event) => {
-									setInputValue(event.target.value);
-									setSearchText(event.target.value);
-								}}
-							/>
+  useEffect(() => {
+    if (isOpen) {
+      setInputValue(getInitialValue()?.label);
+    }
+  }, [getInitialValue, isOpen]);
 
-							{!hideCaret && (
-								<button
-									type="button"
-									css={styles.caretButton}
-									onClick={() => {
-										setIsOpen((previousState) => !previousState);
-									}}
-									disabled={readOnly || options.length === 0}
-								>
-									{showArrowUpDown ? (
-										<SVGIcon name="chevronDown" width={20} height={20} style={styles.arrowUpDown} />
-									) : (
-										<SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon({ isOpen })} />
-									)}
-								</button>
-							)}
-						</div>
+  return (
+    <FormFieldWrapper
+      fieldState={fieldState}
+      field={field}
+      label={label}
+      disabled={disabled || options.length === 0}
+      readOnly={readOnly}
+      loading={loading}
+      isInlineLabel={isInlineLabel}
+      helpText={helpText}
+      removeBorder={removeBorder}
+    >
+      {(inputProps) => {
+        const { css: inputCss, ...restInputProps } = inputProps;
 
-						<Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
-							<div
-								css={[
-									styles.optionsWrapper,
-									{
-										left: position.left,
-										top: position.top,
-										maxWidth: triggerWidth,
-									},
-								]}
-								ref={popoverRef}
-							>
-								<ul css={[styles.options(removeOptionsMinWidth)]}>
-									{!!listLabel && <li css={styles.listLabel}>{listLabel}</li>}
-									{selections.map((option) => (
-										<li
-											key={String(option.value)}
-											css={styles.optionItem({
-												isSelected: option.value === field.value,
-											})}
-										>
-											<button
-												type="button"
-												css={styles.label}
-												onClick={() => {
-													field.onChange(option.value);
-													setSearchText('');
-													onChange(option);
-													setIsOpen(false);
-												}}
-											>
-												<Show when={option.icon}>
-													<SVGIcon name={option.icon as IconCollection} width={32} height={32} />
-												</Show>
-												<span>{option.label}</span>
-											</button>
-										</li>
-									))}
+        return (
+          <div css={styles.mainWrapper}>
+            <div css={styles.inputWrapper({ hasDescription })} ref={triggerRef}>
+              <div css={styles.leftIcon({ hasDescription })}>
+                <Show when={leftIcon}>{leftIcon}</Show>
+                <Show when={selectedItem?.icon}>
+                  {(iconName) => <SVGIcon name={iconName as IconCollection} width={32} height={32} />}
+                </Show>
+              </div>
 
-									{isClearable && (
-										<div
-											css={styles.clearButton({
-												isDisabled: inputValue === '',
-											})}
-										>
-											<Button
-												variant="text"
-												disabled={inputValue === ''}
-												icon={<SVGIcon name="delete" />}
-												onClick={() => {
-													field.onChange(null);
-													setInputValue('');
-													setSearchText('');
-													setIsOpen(false);
-												}}
-											>
-												{__('Clear', 'tutor')}
-											</Button>
-										</div>
-									)}
-								</ul>
-							</div>
-						</Portal>
-					</div>
-				);
-			}}
-		</FormFieldWrapper>
-	);
+              <div
+                css={{
+                  width: '100%',
+                }}
+                onClick={() => {
+                  setIsOpen((previousState) => !previousState);
+                  inputRef.current?.focus();
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === '') {
+                    setIsOpen((previousState) => !previousState);
+                    inputRef.current?.focus();
+                  }
+                }}
+              >
+                <input
+                  {...restInputProps}
+                  {...additionalAttributes}
+                  ref={inputRef}
+                  css={[inputCss, styles.input(!!leftIcon || !!selectedItem?.icon)]}
+                  autoComplete="off"
+                  readOnly={readOnly || !isSearchable}
+                  placeholder={placeholder}
+                  value={inputValue}
+                  title={inputValue}
+                  onChange={(event) => {
+                    setInputValue(event.target.value);
+                    setSearchText(event.target.value);
+                  }}
+                />
+
+                <Show when={hasDescription}>
+                  <span css={styles.decription({ hasLeftIcon: !!leftIcon })} title={getInitialValue()?.description}>
+                    {getInitialValue()?.description}
+                  </span>
+                </Show>
+              </div>
+
+              {!hideCaret && (
+                <button
+                  type="button"
+                  css={styles.caretButton({ isOpen })}
+                  onClick={() => {
+                    setIsOpen((previousState) => !previousState);
+                    inputRef.current?.focus();
+                  }}
+                  disabled={readOnly || options.length === 0}
+                >
+                  <SVGIcon name="chevronDown" width={20} height={20} />
+                </button>
+              )}
+            </div>
+
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+              <div
+                css={[
+                  styles.optionsWrapper,
+                  {
+                    left: position.left,
+                    top: position.top,
+                    maxWidth: triggerWidth,
+                  },
+                ]}
+                ref={popoverRef}
+              >
+                <ul css={[styles.options(removeOptionsMinWidth)]}>
+                  {!!listLabel && <li css={styles.listLabel}>{listLabel}</li>}
+                  {selections.map((option) => (
+                    <li
+                      key={String(option.value)}
+                      css={styles.optionItem({
+                        isSelected: option.value === field.value,
+                      })}
+                    >
+                      <button
+                        type="button"
+                        css={styles.label}
+                        onClick={() => {
+                          field.onChange(option.value);
+                          setSearchText('');
+                          onChange(option);
+                          setIsOpen(false);
+                        }}
+                        title={option.label}
+                      >
+                        <Show when={option.icon}>
+                          <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
+                        </Show>
+                        <span>{option.label}</span>
+                      </button>
+                    </li>
+                  ))}
+
+                  {isClearable && (
+                    <div
+                      css={styles.clearButton({
+                        isDisabled: inputValue === '',
+                      })}
+                    >
+                      <Button
+                        variant="text"
+                        disabled={inputValue === ''}
+                        icon={<SVGIcon name="delete" />}
+                        onClick={() => {
+                          field.onChange(null);
+                          setInputValue('');
+                          setSearchText('');
+                          setIsOpen(false);
+                        }}
+                      >
+                        {__('Clear', 'tutor')}
+                      </Button>
+                    </div>
+                  )}
+                </ul>
+              </div>
+            </Portal>
+          </div>
+        );
+      }}
+    </FormFieldWrapper>
+  );
 };
 
 export default FormSelectInput;
 
 const styles = {
-	mainWrapper: css`
+  mainWrapper: css`
     width: 100%;
   `,
-	inputWrapper: css`
+  inputWrapper: ({
+    hasDescription = false,
+  }: {
+    hasDescription: boolean;
+  }) => css`
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
+
+		${
+      hasDescription &&
+      css`
+			input {
+				height: 56px;
+				padding-bottom: ${spacing[24]}
+			};
+		`
+    }
   `,
-	leftIcon: css`
+  leftIcon: ({
+    hasDescription = false,
+  }: {
+    hasDescription: boolean;
+  }) => css`
     position: absolute;
     left: ${spacing[8]};
     top: ${spacing[4]};
     color: ${colorTokens.icon.default};
+
+		${
+      hasDescription &&
+      css`
+			top: calc(${spacing[12]});
+		`
+    }
+		
   `,
-	input: (hasLeftIcon: boolean) => css`
+  input: (hasLeftIcon: boolean) => css`
     ${typography.body()};
     width: 100%;
     cursor: pointer;
@@ -254,18 +302,37 @@ const styles = {
     ${styleUtils.textEllipsis};
 
     ${
-			hasLeftIcon &&
-			css`
+      hasLeftIcon &&
+      css`
       padding-left: ${spacing[48]};
     `
-		}
+    }
 
     :focus {
       outline: none;
       box-shadow: ${shadow.focus};
     }
   `,
-	listLabel: css`
+  decription: ({
+    hasLeftIcon,
+  }: {
+    hasLeftIcon: boolean;
+  }) => css`
+		${typography.small()};
+		${styleUtils.text.ellipsis(1)}
+		color: ${colorTokens.text.hints};
+		position: absolute;
+		bottom: ${spacing[8]};
+		padding-inline: calc(${spacing[16]} + 1px) ${spacing[32]};
+
+		${
+      hasLeftIcon &&
+      css`
+			padding-left: calc(${spacing[48]} + 1px);
+		`
+    }
+	`,
+  listLabel: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     min-height: 40px;
@@ -273,7 +340,7 @@ const styles = {
     align-items: center;
     padding-left: ${spacing[16]};
   `,
-	clearButton: ({ isDisabled = false }: { isDisabled: boolean }) => css`
+  clearButton: ({ isDisabled = false }: { isDisabled: boolean }) => css`
     padding: ${spacing[4]} ${spacing[8]};
     border-top: 1px solid ${colorTokens.stroke.default};
 
@@ -287,22 +354,22 @@ const styles = {
       }
 
       ${
-				!isDisabled &&
-				css`
+        !isDisabled &&
+        css`
         color: ${colorTokens.text.title};
 
         &:hover {
           text-decoration: underline;
         }
       `
-			}
+      }
     }
   `,
-	optionsWrapper: css`
+  optionsWrapper: css`
     position: absolute;
     width: 100%;
   `,
-	options: (removeOptionsMinWidth: boolean) => css`
+  options: (removeOptionsMinWidth: boolean) => css`
     z-index: ${zIndex.dropdown};
     background-color: ${colorTokens.background.white};
     list-style-type: none;
@@ -314,13 +381,13 @@ const styles = {
     ${styleUtils.overflowYAuto};
 
     ${
-			!removeOptionsMinWidth &&
-			css`
+      !removeOptionsMinWidth &&
+      css`
       min-width: 200px;
     `
-		}
+    }
   `,
-	optionItem: ({ isSelected = false }: { isSelected: boolean }) => css`
+  optionItem: ({ isSelected = false }: { isSelected: boolean }) => css`
     ${typography.body()};
     min-height: 36px;
     height: 100%;
@@ -335,8 +402,8 @@ const styles = {
     }
 
     ${
-			isSelected &&
-			css`
+      isSelected &&
+      css`
       background-color: ${colorTokens.background.active};
       position: relative;
 
@@ -351,10 +418,11 @@ const styles = {
         border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
       }
     `
-		}
+    }
   `,
-	label: css`
+  label: css`
     ${styleUtils.resetButton};
+		${styleUtils.text.ellipsis(1)}
     width: 100%;
     height: 100%;
     display: flex;
@@ -369,27 +437,18 @@ const styles = {
 
     span {
       flex-shrink: 0;
+      ${styleUtils.text.ellipsis(1)}
+      width: 100%;
     }
   `,
-	toggleIcon: ({ isOpen = false }: { isOpen: boolean }) => css`
-    color: ${colorTokens.icon.default};
-    transition: transform 0.3s ease-in-out;
-
-    ${
-			isOpen &&
-			css`
-      transform: rotate(180deg);
-    `
-		}
-  `,
-	arrowUpDown: css`
+  arrowUpDown: css`
     color: ${colorTokens.icon.default};
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: ${spacing[2]};
   `,
-	optionsContainer: css`
+  optionsContainer: css`
     position: absolute;
     overflow: hidden auto;
     min-width: 16px;
@@ -397,7 +456,7 @@ const styles = {
     max-width: calc(100% - 32px);
     max-height: calc(100% - 32px);
   `,
-	caretButton: css`
+  caretButton: ({ isOpen = false }: { isOpen: boolean }) => css`
     ${styleUtils.resetButton};
     position: absolute;
     top: 0;
@@ -406,5 +465,14 @@ const styles = {
     margin: auto 0;
     display: flex;
     align-items: center;
+		transition: transform 0.3s ease-in-out;
+		color: ${colorTokens.icon.default};
+		
+		${
+      isOpen &&
+      css`
+      transform: rotate(180deg);
+    `
+    }
   `,
 };

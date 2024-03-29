@@ -11,34 +11,34 @@ export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 export const isRTL = document.dir === 'rtl';
 
 export const modal = {
-	HEADER_HEIGHT: 56,
-	MARGIN_TOP: 88,
+  HEADER_HEIGHT: 56,
+  MARGIN_TOP: 88,
 };
 
 export const notebook = {
-	MIN_NOTEBOOK_HEIGHT: 430,
-	MIN_NOTEBOOK_WIDTH: 360,
-	NOTEBOOK_HEADER: 50,
+  MIN_NOTEBOOK_HEIGHT: 430,
+  MIN_NOTEBOOK_WIDTH: 360,
+  NOTEBOOK_HEADER: 50,
 };
 
 export const TutorRoles = {
-	ADMINISTRATOR: 'administrator',
-	TUTOR_INSTRUCTOR: 'tutor_instructor',
-	SUBSCRIBER: 'subscriber',
+  ADMINISTRATOR: 'administrator',
+  TUTOR_INSTRUCTOR: 'tutor_instructor',
+  SUBSCRIBER: 'subscriber',
 };
 
 export enum LocalStorageKeys {
-	notebook = 'tutor_course_builder_notebook',
+  notebook = 'tutor_course_builder_notebook',
 }
 
 export enum DateFormats {
-	day = 'dd',
-	month = 'MMM',
-	year = 'yyyy',
-	yearMonthDay = 'yyyy-LL-dd',
-	monthDayYear = 'MMM dd, yyyy',
-	hoursMinutes = 'hh:mm a',
-	yearMonthDayHourMinuteSecond = 'yyyy-MM-dd hh:mm:ss',
-	monthDayYearHoursMinutes = 'MMM dd, yyyy, hh:mm a',
-	localMonthDayYearHoursMinutes = 'PPp',
+  day = 'dd',
+  month = 'MMM',
+  year = 'yyyy',
+  yearMonthDay = 'yyyy-LL-dd',
+  monthDayYear = 'MMM dd, yyyy',
+  hoursMinutes = 'hh:mm a',
+  yearMonthDayHourMinuteSecond = 'yyyy-MM-dd hh:mm:ss',
+  monthDayYearHoursMinutes = 'MMM dd, yyyy, hh:mm a',
+  localMonthDayYearHoursMinutes = 'PPp',
 }

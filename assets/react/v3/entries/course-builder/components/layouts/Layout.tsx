@@ -9,52 +9,51 @@ import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
 import Notebook from '@CourseBuilderComponents/layouts/Notebook';
-import { DndContext } from '@dnd-kit/core';
 
 const Layout = () => {
-	const params = new URLSearchParams(window.location.search);
-	const courseId = params.get('course_id');
+  const params = new URLSearchParams(window.location.search);
+  const courseId = params.get('course_id');
 
-	const form = useFormWithGlobalError<CourseFormData>({
-		defaultValues: courseDefaultData,
-	});
+  const form = useFormWithGlobalError<CourseFormData>({
+    defaultValues: courseDefaultData,
+  });
 
-	const courseDetailsQuery = useCourseDetailsQuery(Number(courseId));
+  const courseDetailsQuery = useCourseDetailsQuery(Number(courseId));
 
-	useEffect(() => {
-		if (courseDetailsQuery.data) {
-			form.reset.call(null, convertCourseDataToFormData(courseDetailsQuery.data));
-		}
-	}, [courseDetailsQuery.data, form.reset]);
+  useEffect(() => {
+    if (courseDetailsQuery.data) {
+      form.reset.call(null, convertCourseDataToFormData(courseDetailsQuery.data));
+    }
+  }, [courseDetailsQuery.data, form.reset]);
 
-	return (
-		<FormProvider {...form}>
-			<CourseNavigatorProvider>
-				<div css={styles.wrapper}>
-					<Header />
-					<div css={styles.contentWrapper}>
-						{/* Placeholder div for allocating the 1fr space */}
-						<div />
+  return (
+    <FormProvider {...form}>
+      <CourseNavigatorProvider>
+        <div css={styles.wrapper}>
+          <Header />
+          <div css={styles.contentWrapper}>
+            {/* Placeholder div for allocating the 1fr space */}
+            <div />
 
-						<Outlet />
+            <Outlet />
 
-						{/* Placeholder div for allocating the 1fr space */}
-						<div />
-					</div>
-					<Notebook />
-				</div>
-			</CourseNavigatorProvider>
-		</FormProvider>
-	);
+            {/* Placeholder div for allocating the 1fr space */}
+            <div />
+          </div>
+          <Notebook />
+        </div>
+      </CourseNavigatorProvider>
+    </FormProvider>
+  );
 };
 
 export default Layout;
 
 const styles = {
-	wrapper: css`
+  wrapper: css`
     background-color: ${colorTokens.surface.courseBuilder};
   `,
-	contentWrapper: css`
+  contentWrapper: css`
     display: grid;
     grid-template-columns: 1fr ${containerMaxWidth}px 1fr;
     min-height: calc(100vh - ${headerHeight}px);

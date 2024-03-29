@@ -9,37 +9,37 @@ import SVGIcon from './SVGIcon';
 export type ProgressStatus = 'inactive' | 'active' | 'completed';
 
 type ProgressStep = {
-	step: Step;
-	index: number;
-	onClick: (step: string) => void;
+  step: Step;
+  index: number;
+  onClick: (step: string) => void;
 };
 
 const ProgressStep = ({ step, index, onClick }: ProgressStep) => {
-	const { currentIndex } = useSidebar();
-	const statusIcon = step.isActive ? 'active' : step.isCompleted ? 'completed' : 'inactive';
-	const isActive = step.isActive || step.isCompleted || step.isVisited;
+  const { currentIndex } = useSidebar();
+  const statusIcon = step.isActive ? 'active' : step.isCompleted ? 'completed' : 'inactive';
+  const isActive = step.isActive || step.isCompleted || step.isVisited;
 
-	return (
-		<div css={styles.wrapper({ isActive: index < currentIndex })}>
-			<div css={styles.icon({ isActive })}>
-				<SVGIcon name={(statusIcon ?? 'inactive') as IconCollection} width={24} height={24} />
-			</div>
-			<button
-				type="button"
-				css={styles.button({ isActive })}
-				onClick={() => onClick(step.path)}
-				disabled={step.isDisabled}
-			>
-				{step.label}
-			</button>
-		</div>
-	);
+  return (
+    <div css={styles.wrapper({ isActive: index < currentIndex })}>
+      <div css={styles.icon({ isActive })}>
+        <SVGIcon name={(statusIcon ?? 'inactive') as IconCollection} width={24} height={24} />
+      </div>
+      <button
+        type="button"
+        css={styles.button({ isActive })}
+        onClick={() => onClick(step.path)}
+        disabled={step.isDisabled}
+      >
+        {step.label}
+      </button>
+    </div>
+  );
 };
 
 export default ProgressStep;
 
 const styles = {
-	wrapper: ({ isActive }: { isActive: boolean }) => css`
+  wrapper: ({ isActive }: { isActive: boolean }) => css`
     display: flex;
     align-items: center;
     gap: ${spacing[4]};
@@ -55,7 +55,7 @@ const styles = {
       top: ${spacing[20]};
     }
   `,
-	icon: ({ isActive }: { isActive: boolean }) => css`
+  icon: ({ isActive }: { isActive: boolean }) => css`
     display: flex;
     color: ${!isActive ? colorTokens.color.black[10] : colorTokens.design.brand};
 
@@ -63,7 +63,7 @@ const styles = {
       z-index: ${zIndex.positive};
     }
   `,
-	button: ({ isActive }: { isActive: boolean }) => css`
+  button: ({ isActive }: { isActive: boolean }) => css`
     ${styleUtils.resetButton};
     ${typography.caption('regular')};
     color: ${!isActive ? colorTokens.text.hints : colorTokens.text.primary};

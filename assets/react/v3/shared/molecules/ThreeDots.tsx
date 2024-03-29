@@ -10,121 +10,121 @@ import { rgba } from 'polished';
 import Popover from './Popover';
 
 interface ThreeDotsOptionProps {
-	text: string | ReactNode;
-	icon?: ReactNode;
-	onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
-	onClosePopover?: () => void;
-	isTrash?: boolean;
-	css?: SerializedStyles;
+  text: string | ReactNode;
+  icon?: ReactNode;
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+  onClosePopover?: () => void;
+  isTrash?: boolean;
+  css?: SerializedStyles;
 }
 
 export const ThreeDotsOption = ({
-	text,
-	icon,
-	onClick,
-	onClosePopover,
-	isTrash = false,
-	css,
+  text,
+  icon,
+  onClick,
+  onClosePopover,
+  isTrash = false,
+  css,
 }: ThreeDotsOptionProps) => {
-	return (
-		<button
-			type="button"
-			css={[styles.option(isTrash), css]}
-			onClick={(event) => {
-				if (onClick) {
-					onClick(event);
-				}
-				if (onClosePopover) {
-					onClosePopover();
-				}
-			}}
-		>
-			{icon && icon}
-			<span>{text}</span>
-		</button>
-	);
+  return (
+    <button
+      type="button"
+      css={[styles.option(isTrash), css]}
+      onClick={(event) => {
+        if (onClick) {
+          onClick(event);
+        }
+        if (onClosePopover) {
+          onClosePopover();
+        }
+      }}
+    >
+      {icon && icon}
+      <span>{text}</span>
+    </button>
+  );
 };
 
 export type ArrowPosition = 'top' | 'bottom' | 'left' | 'right' | 'auto';
 export type DotsOrientation = 'vertical' | 'horizontal';
 interface ThreeDotsProps {
-	isOpen: boolean;
-	disabled?: boolean;
-	onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
-	closePopover: () => void;
-	children: ReactNode;
-	arrowPosition?: ArrowPosition;
-	animationType?: AnimationType;
-	dotsOrientation?: DotsOrientation;
-	maxWidth?: string;
-	isInverse?: boolean;
-	hideArrow?: boolean;
+  isOpen: boolean;
+  disabled?: boolean;
+  onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  closePopover: () => void;
+  children: ReactNode;
+  arrowPosition?: ArrowPosition;
+  animationType?: AnimationType;
+  dotsOrientation?: DotsOrientation;
+  maxWidth?: string;
+  isInverse?: boolean;
+  hideArrow?: boolean;
 }
 
 const ThreeDots = ({
-	onClick,
-	isOpen,
-	disabled = false,
-	closePopover,
-	arrowPosition = 'top',
-	children,
-	animationType = AnimationType.slideLeft,
-	dotsOrientation = 'horizontal',
-	maxWidth = '148px',
-	isInverse = false,
-	hideArrow = false,
-	...props
+  onClick,
+  isOpen,
+  disabled = false,
+  closePopover,
+  arrowPosition = 'top',
+  children,
+  animationType = AnimationType.slideLeft,
+  dotsOrientation = 'horizontal',
+  maxWidth = '148px',
+  isInverse = false,
+  hideArrow = false,
+  ...props
 }: ThreeDotsProps) => {
-	const ref = useRef<HTMLButtonElement>(null);
-	return (
-		<>
-			<button
-				type="button"
-				ref={ref}
-				onClick={onClick}
-				css={styles.button({ isOpen, isInverse })}
-				disabled={disabled}
-				{...props}
-			>
-				<SVGIcon name={dotsOrientation === 'horizontal' ? 'threeDots' : 'threeDotsVertical'} width={32} height={32} />
-			</button>
-			<Popover
-				gap={13}
-				maxWidth={maxWidth}
-				arrow={arrowPosition}
-				triggerRef={ref}
-				isOpen={isOpen}
-				closePopover={closePopover}
-				animationType={animationType}
-				hideArrow={hideArrow}
-			>
-				<div css={styles.wrapper}>
-					{React.Children.map(children, (child) => {
-						if (React.isValidElement(child)) {
-							const props = {
-								onClosePopover: closePopover,
-							};
+  const ref = useRef<HTMLButtonElement>(null);
+  return (
+    <>
+      <button
+        type="button"
+        ref={ref}
+        onClick={onClick}
+        css={styles.button({ isOpen, isInverse })}
+        disabled={disabled}
+        {...props}
+      >
+        <SVGIcon name={dotsOrientation === 'horizontal' ? 'threeDots' : 'threeDotsVertical'} width={32} height={32} />
+      </button>
+      <Popover
+        gap={13}
+        maxWidth={maxWidth}
+        arrow={arrowPosition}
+        triggerRef={ref}
+        isOpen={isOpen}
+        closePopover={closePopover}
+        animationType={animationType}
+        hideArrow={hideArrow}
+      >
+        <div css={styles.wrapper}>
+          {React.Children.map(children, (child) => {
+            if (React.isValidElement(child)) {
+              const props = {
+                onClosePopover: closePopover,
+              };
 
-							return React.cloneElement(child, props);
-						}
+              return React.cloneElement(child, props);
+            }
 
-						return child;
-					})}
-				</div>
-			</Popover>
-		</>
-	);
+            return child;
+          })}
+        </div>
+      </Popover>
+    </>
+  );
 };
 
 ThreeDots.Option = ThreeDotsOption;
 export default ThreeDots;
 
 const styles = {
-	wrapper: css`
+  wrapper: css`
     padding-block: ${spacing[8]};
     position: relative;
   `,
-	option: (isTrash: boolean) => css`
+  option: (isTrash: boolean) => css`
     ${styleUtils.resetButton};
     ${typography.body()};
 
@@ -152,8 +152,8 @@ const styles = {
     }
 
     ${
-			isTrash &&
-			css`
+      isTrash &&
+      css`
       color: ${colorTokens.text.error};
 
       &:hover {
@@ -164,9 +164,9 @@ const styles = {
         background-color: ${colorPalate.surface.critical.neutralPressed};
       }
     `
-		}
+    }
   `,
-	button: ({ isOpen = false, isInverse = false }) => css`
+  button: ({ isOpen = false, isInverse = false }) => css`
     ${styleUtils.resetButton};
     width: 32px;
     height: 32px;
@@ -189,18 +189,18 @@ const styles = {
     }
 
     ${
-			isOpen &&
-			css`
+      isOpen &&
+      css`
       background-color: ${colorTokens.background.hover};
       svg {
         color: ${colorTokens.icon.brand};
       }
     `
-		}
+    }
 
     ${
-			isInverse &&
-			css`
+      isInverse &&
+      css`
       background-color: ${colorTokens.background.white};
       :hover {
         background-color: ${colorTokens.background.white};
@@ -209,6 +209,6 @@ const styles = {
         }
       }
     `
-		}
+    }
   `,
 };
