@@ -221,14 +221,10 @@ const Notebook = () => {
 
       const wrapper = wrapperRef.current;
 
-      wrapper.style.left = left === 'auto' ? `${window.innerWidth - notebook.MIN_NOTEBOOK_WIDTH}px` : left;
-      wrapper.style.top = top === 'auto' ? `${window.innerHeight - notebook.MIN_NOTEBOOK_HEIGHT}px` : top;
-      if (isDefined(height)) {
-        wrapper.style.height = height;
-      }
-      if (isDefined(width)) {
-        wrapper.style.width = width;
-      }
+      wrapper.style.left = left === 'auto' ? `${window.innerWidth / 2 - notebook.MIN_NOTEBOOK_WIDTH}px` : left;
+      wrapper.style.top = top === 'auto' ? `${window.innerHeight / 2 - notebook.MIN_NOTEBOOK_HEIGHT}px` : top;
+      wrapper.style.height = isDefined(height) ? height : `${2 * notebook.MIN_NOTEBOOK_HEIGHT}px`;
+      wrapper.style.width = isDefined(width) ? width : `${2 * notebook.MIN_NOTEBOOK_WIDTH}px`;
     }
   }, [isCollapsed, isFloating]);
 
@@ -241,7 +237,11 @@ const Notebook = () => {
   }, []);
 
   return (
-    <animated.div ref={wrapperRef} css={styles.wrapper({ isCollapsed, isFloating })} style={{ ...expandAnimation }}>
+    <animated.div
+      ref={wrapperRef}
+      css={styles.wrapper({ isCollapsed, isFloating })}
+      style={!isFloating ? { ...expandAnimation } : {}}
+    >
       <div css={styles.header({ isCollapsed })} onMouseDown={handleMouseDown}>
         <span css={styleUtils.text.ellipsis(1)}>{__('Notebook', 'tutor')}</span>
 
