@@ -409,8 +409,8 @@ const styles = {
 	`,
   textFieldExpand: css`
 		position: absolute;
-		bottom: 10px;
-		right: 10px;
+		bottom: 4px;
+		right: 4px;
 		user-select: none;
 		color: ${colorTokens.icon.hints};
 		cursor: nwse-resize;
