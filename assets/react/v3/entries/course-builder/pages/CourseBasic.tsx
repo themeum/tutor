@@ -133,6 +133,7 @@ const CourseBasic = () => {
             <FormSelectInput
               {...controllerProps}
               label={__('Visibility Status', 'tutor')}
+              placeholder="Select visibility status"
               options={visibilityStatusOptions}
               leftIcon={<SVGIcon name="eye" width={32} height={32} />}
             />

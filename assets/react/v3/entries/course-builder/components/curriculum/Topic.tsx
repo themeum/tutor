@@ -45,6 +45,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller } from 'react-hook-form';
 import TopicContent from './TopicContent';
+import AddLessonModal from '@CourseBuilderComponents/modals/AddLessonModal';
+import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -167,82 +169,82 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           <div {...listeners} css={styles.grabberInput({ isOverlay })}>
             <SVGIcon name="dragVertical" width={24} height={24} />
 
-            <Show
-              when={isEdit}
-              fallback={
-                <div css={styles.title({ isEdit })} title={topic.post_title} onDoubleClick={() => setIsEdit(true)}>
-                  {topic.post_title}
-                </div>
-              }
-            >
-              <div css={styles.title({ isEdit })}>
-                <Controller
-                  control={form.control}
-                  name="title"
-                  render={(controllerProps) => (
-                    <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
-                  )}
-                />
-              </div>
-            </Show>
-          </div>
-          <div css={styles.actions}>
-            <Show when={!isEdit}>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-visually-hidden
-                onClick={() => {
-                  setIsEdit(true);
-                }}
-              >
-                <SVGIcon name="edit" width={24} height={24} />
-              </button>
-            </Show>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={() => {
-                alert('@TODO: will be implemented later');
-              }}
-            >
-              <SVGIcon name="copyPaste" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              ref={deleteRef}
-              onClick={() => {
-                setIsDeletePopoverOpen(true);
-              }}
-            >
-              <SVGIcon name="delete" width={24} height={24} />
-            </button>
-            <ConfirmationPopover
-              isOpen={isDeletePopoverOpen}
-              triggerRef={deleteRef}
-              closePopover={() => setIsDeletePopoverOpen(false)}
-              maxWidth="258px"
-              title={`Delete topic "${topic.post_title}"`}
-              message="Are you sure you want to delete this content from your course? This cannot be undone."
-              animationType={AnimationType.slideUp}
-              arrow="auto"
-              hideArrow
-              confirmButton={{
-                text: __('Delete', 'tutor'),
-                variant: 'text',
-                isDelete: true,
-              }}
-              cancelButton={{
-                text: __('Cancel', 'tutor'),
-                variant: 'text',
-              }}
-              onConfirmation={() => {
-                onDelete?.();
-              }}
-            />
+						<Show
+							when={isEdit}
+							fallback={
+								<div css={styles.title({ isEdit })} title={topic.post_title} onDoubleClick={() => setIsEdit(true)}>
+									{topic.post_title}
+								</div>
+							}
+						>
+							<div css={styles.title({ isEdit })}>
+								<Controller
+									control={form.control}
+									name="title"
+									render={(controllerProps) => (
+										<FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
+									)}
+								/>
+							</div>
+						</Show>
+					</div>
+					<div css={styles.actions}>
+						<Show when={!isEdit}>
+							<button
+								type="button"
+								css={styles.actionButton}
+								data-visually-hidden
+								onClick={() => {
+									setIsEdit(true);
+								}}
+							>
+								<SVGIcon name="edit" width={24} height={24} />
+							</button>
+						</Show>
+						<button
+							type="button"
+							css={styles.actionButton}
+							data-visually-hidden
+							onClick={() => {
+								alert('@TODO: will be implemented later');
+							}}
+						>
+							<SVGIcon name="copyPaste" width={24} height={24} />
+						</button>
+						<button
+							type="button"
+							css={styles.actionButton}
+							data-visually-hidden
+							ref={deleteRef}
+							onClick={() => {
+								setIsDeletePopoverOpen(true);
+							}}
+						>
+							<SVGIcon name="delete" width={24} height={24} />
+						</button>
+						<ConfirmationPopover
+							isOpen={isDeletePopoverOpen}
+							triggerRef={deleteRef}
+							closePopover={() => setIsDeletePopoverOpen(false)}
+							maxWidth="258px"
+							title={`Delete topic "${topic.post_title}"`}
+							message="Are you sure you want to delete this content from your course? This cannot be undone."
+							animationType={AnimationType.slideUp}
+							arrow="auto"
+							hideArrow
+							confirmButton={{
+								text: __('Delete', 'tutor'),
+								variant: 'text',
+								isDelete: true,
+							}}
+							cancelButton={{
+								text: __('Cancel', 'tutor'),
+								variant: 'text',
+							}}
+							onConfirmation={() => {
+								onDelete?.();
+							}}
+						/>
 
             <button
               type="button"
@@ -256,66 +258,66 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           </div>
         </div>
 
-        <Show
-          when={isEdit}
-          fallback={
-            <animated.div style={{ ...collapseAnimationDescription }}>
-              <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
-                {topic.post_content}
-              </div>
-            </animated.div>
-          }
-        >
-          <div css={styles.description({ isEdit })}>
-            <Controller
-              control={form.control}
-              name="summary"
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  placeholder={__('Add a summary', 'tutor')}
-                  isSecondary
-                  rows={2}
-                  enableResize
-                />
-              )}
-            />
-          </div>
-        </Show>
+				<Show
+					when={isEdit}
+					fallback={
+						<animated.div style={{ ...collapseAnimationDescription }}>
+							<div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
+								{topic.post_content}
+							</div>
+						</animated.div>
+					}
+				>
+					<div css={styles.description({ isEdit })}>
+						<Controller
+							control={form.control}
+							name="summary"
+							render={(controllerProps) => (
+								<FormTextareaInput
+									{...controllerProps}
+									placeholder={__('Add a summary', 'tutor')}
+									isSecondary
+									rows={2}
+									enableResize
+								/>
+							)}
+						/>
+					</div>
+				</Show>
 
-        <Show when={isEdit}>
-          <div css={styles.footer}>
-            <Button variant="text" onClick={() => setIsEdit(false)}>
-              {__('Cancel', 'tutor')}
-            </Button>
-            <Button
-              variant="tertiary"
-              size="small"
-              onClick={form.handleSubmit(async (values) => {
-                //@TODO: will be implemented later
-                console.log({ values });
-                setIsEdit(false);
-              })}
-            >
-              {__('Ok', 'tutor')}
-            </Button>
-          </div>
-        </Show>
-      </div>
-      <animated.div style={{ ...collapseAnimation }}>
-        <div css={styles.content} ref={topicRef}>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-            onDragStart={(event) => {
-              setActiveSortId(event.active.id);
-            }}
-            onDragEnd={(event) => {
-              const { active, over } = event;
-              if (!over) {
-                return;
-              }
+				<Show when={isEdit}>
+					<div css={styles.footer}>
+						<Button variant="text" size="small" onClick={() => setIsEdit(false)}>
+							{__('Cancel', 'tutor')}
+						</Button>
+						<Button
+							variant="secondary"
+							size="small"
+							onClick={form.handleSubmit(async (values) => {
+								//@TODO: will be implemented later
+								console.log({ values });
+								setIsEdit(false);
+							})}
+						>
+							{__('Ok', 'tutor')}
+						</Button>
+					</div>
+				</Show>
+			</div>
+			<animated.div style={{ ...collapseAnimation }}>
+				<div css={styles.content} ref={topicRef}>
+					<DndContext
+						sensors={sensors}
+						collisionDetection={closestCenter}
+						modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+						onDragStart={(event) => {
+							setActiveSortId(event.active.id);
+						}}
+						onDragEnd={(event) => {
+							const { active, over } = event;
+							if (!over) {
+								return;
+							}
 
               if (active.id !== over.id) {
                 const activeIndex = topic.content.findIndex((item) => item.ID === active.id);
@@ -368,88 +370,110 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             )}
           </DndContext>
 
-          <div css={styles.contentButtons}>
-            <div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
-              <Button
-                variant="tertiary"
-                icon={<SVGIcon name="plus" />}
-                onClick={() => {
-                  alert('@TODO: will be implemented later');
-                }}
-              >
-                {__('Lesson', 'tutor')}
-              </Button>
-              <Button
-                variant="tertiary"
-                icon={<SVGIcon name="plus" />}
-                onClick={() => {
-                  showModal({
-                    component: QuizModal,
-                    props: {
-                      title: __('Quiz', 'tutor'),
-                      icon: <SVGIcon name="quiz" width={24} height={24} />,
-                      subtitle: __(`Topic: ${topic.post_title}`, 'tutor'),
-                    },
-                  });
-                }}
-              >
-                {__('Quiz', 'tutor')}
-              </Button>
-              <Button
-                variant="tertiary"
-                icon={<SVGIcon name="plus" />}
-                onClick={() => {
-                  alert('@TODO: will be implemented later');
-                }}
-              >
-                {__('Assignment', 'tutor')}
-              </Button>
-            </div>
-            <div css={styles.footerButtons}>
-              <Show
-                when={hasLiveAddons}
-                fallback={
-                  <Button
-                    variant="tertiary"
-                    icon={<SVGIcon name="download" width={24} height={24} />}
-                    onClick={() => {
-                      alert('@TODO: will be implemented later');
-                    }}
-                  >
-                    {__('Import Quiz', 'tutor')}
-                  </Button>
-                }
-              >
-                <ThreeDots
-                  isOpen={isOpen}
-                  onClick={() => setIsOpen(true)}
-                  closePopover={() => setIsOpen(false)}
-                  dotsOrientation="vertical"
-                  maxWidth="220px"
-                  isInverse
-                  arrowPosition="auto"
-                  hideArrow
-                >
-                  <ThreeDots.Option
-                    text={__('Meet live lesson', 'tutor')}
-                    icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
-                  />
-                  <ThreeDots.Option
-                    text={__('Zoom live lesson', 'tutor')}
-                    icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
-                  />
-                  <ThreeDots.Option
-                    text={__('Import Quiz', 'tutor')}
-                    icon={<SVGIcon name="download" width={24} height={24} />}
-                  />
-                </ThreeDots>
-              </Show>
-            </div>
-          </div>
-        </div>
-      </animated.div>
-    </div>
-  );
+					<div css={styles.contentButtons}>
+						<div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
+							<Button
+								variant="tertiary"
+								isOutlined
+								size="small"
+								icon={<SVGIcon name="plus" width={24} height={24} />}
+								onClick={() => {
+									showModal({
+										component: AddLessonModal,
+										props: {
+											title: __('Lesson', 'tutor'),
+											icon: <SVGIcon name="lesson" width={24} height={24} />,
+											subtitle: `${__('Topic:', 'tutor')}  ${topic.post_title}`,
+										},
+									});
+								}}
+							>
+								{__('Lesson', 'tutor')}
+							</Button>
+							<Button
+								variant="tertiary"
+								isOutlined
+								size="small"
+								icon={<SVGIcon name="plus" width={24} height={24} />}
+								onClick={() => {
+									showModal({
+										component: QuizModal,
+										props: {
+											title: __('Quiz', 'tutor'),
+											icon: <SVGIcon name="quiz" width={24} height={24} />,
+											subtitle: `${__('Topic:', 'tutor')}  ${topic.post_title}`,
+										},
+									});
+								}}
+							>
+								{__('Quiz', 'tutor')}
+							</Button>
+							<Button
+								variant="tertiary"
+								isOutlined
+								size="small"
+								icon={<SVGIcon name="plus" width={24} height={24} />}
+								onClick={() => {
+									showModal({
+										component: AddAssignmentModal,
+										props: {
+											title: __('Assignment', 'tutor'),
+											icon: <SVGIcon name="assignment" width={24} height={24} />,
+											subtitle: `${__('Topic:', 'tutor')}  ${topic.post_title}`,
+										},
+									});
+								}}
+							>
+								{__('Assignment', 'tutor')}
+							</Button>
+						</div>
+						<div css={styles.footerButtons}>
+							<Show
+								when={hasLiveAddons}
+								fallback={
+									<Button
+										variant="tertiary"
+										isOutlined
+										size="small"
+										icon={<SVGIcon name="download" width={24} height={24} />}
+										onClick={() => {
+											alert('@TODO: will be implemented later');
+										}}
+									>
+										{__('Import Quiz', 'tutor')}
+									</Button>
+								}
+							>
+								<ThreeDots
+									isOpen={isOpen}
+									onClick={() => setIsOpen(true)}
+									closePopover={() => setIsOpen(false)}
+									dotsOrientation="vertical"
+									maxWidth="220px"
+									isInverse
+									arrowPosition="auto"
+									hideArrow
+								>
+									<ThreeDots.Option
+										text={__('Meet live lesson', 'tutor')}
+										icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
+									/>
+									<ThreeDots.Option
+										text={__('Zoom live lesson', 'tutor')}
+										icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
+									/>
+									<ThreeDots.Option
+										text={__('Import Quiz', 'tutor')}
+										icon={<SVGIcon name="download" width={24} height={24} />}
+									/>
+								</ThreeDots>
+							</Show>
+						</div>
+					</div>
+				</div>
+			</animated.div>
+		</div>
+	);
 };
 
 export default Topic;
@@ -503,9 +527,9 @@ const styles = {
     }
 
     ${
-      isCollapsed &&
-      !isEdit &&
-      css`
+			isCollapsed &&
+			!isEdit &&
+			css`
       padding-bottom: 0;
     `
     }
