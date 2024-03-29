@@ -138,10 +138,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const questionType = useWatch({
-    control: form.control,
-    name: 'question_type',
-  });
+  const questionType = form.watch('question_type');
 
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
