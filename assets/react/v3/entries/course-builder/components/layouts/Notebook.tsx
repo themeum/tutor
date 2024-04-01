@@ -271,7 +271,7 @@ const Notebook = () => {
               setIsFloating((previous) => !previous);
             }}
           >
-            <SVGIcon name="arrowsIn" height={24} width={24} />
+            <SVGIcon name={isFloating ? 'arrowsIn' : 'arrowsOut'} height={24} width={24} />
           </Button>
           <Show when={isFloating}>
             <Button
