@@ -13,7 +13,18 @@ const TrueFalse = () => {
   return (
     <div css={styles.optionWrapper}>
       <div css={styles.option({ isSelected: selectedAnswer === true })}>
-        <SVGIcon data-check-icon name={selectedAnswer === true ? 'checkFilled' : 'check'} height={32} width={32} />
+        <div
+          onClick={() => {
+            setSelectedAnswer(true);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              setSelectedAnswer(true);
+            }
+          }}
+        >
+          <SVGIcon data-check-icon name={selectedAnswer === true ? 'checkFilled' : 'check'} height={32} width={32} />
+        </div>
         <div
           css={styles.optionLabel({ isSelected: selectedAnswer === true })}
           onClick={() => {
@@ -30,7 +41,18 @@ const TrueFalse = () => {
       </div>
 
       <div css={styles.option({ isSelected: selectedAnswer === false })}>
-        <SVGIcon data-check-icon name={selectedAnswer === false ? 'checkFilled' : 'check'} height={32} width={32} />
+        <div
+          onClick={() => {
+            setSelectedAnswer(false);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              setSelectedAnswer(false);
+            }
+          }}
+        >
+          <SVGIcon data-check-icon name={selectedAnswer === false ? 'checkFilled' : 'check'} height={32} width={32} />
+        </div>
         <div
           css={styles.optionLabel({ isSelected: selectedAnswer === false })}
           onClick={() => {
