@@ -103,7 +103,7 @@ const Notebook = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (isCollapsed) {
+    if (isCollapsed || !isFloating) {
       return;
     }
 
@@ -242,7 +242,7 @@ const Notebook = () => {
       css={styles.wrapper({ isCollapsed, isFloating })}
       style={!isFloating ? { ...expandAnimation } : {}}
     >
-      <div css={styles.header({ isCollapsed })} onMouseDown={handleMouseDown}>
+      <div css={styles.header({ isCollapsed, isFloating })} onMouseDown={handleMouseDown}>
         <span css={styleUtils.text.ellipsis(1)}>{__('Notebook', 'tutor')}</span>
 
         <div css={styles.actions}>
@@ -357,8 +357,10 @@ const styles = {
 	`,
   header: ({
     isCollapsed,
+    isFloating,
   }: {
     isCollapsed: boolean;
+    isFloating: boolean;
   }) => css`
 		display: flex;
 		justify-content: space-between;
@@ -367,12 +369,18 @@ const styles = {
 		${typography.body('medium')};
 		color: ${colorTokens.text.title};
 
+    ${
+      isFloating &&
+      css`
+        cursor: grab;
+      `
+    }
+
 		${
       !isCollapsed &&
       css`
 				border-bottom: 1px solid ${colorTokens.stroke.divider};
 				padding: ${spacing[8]} ${spacing[12]};
-				cursor: grab;
 			`
     }
 	`,
