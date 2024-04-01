@@ -12,7 +12,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { Question } from '@CourseBuilderComponents/curriculum/Question';
+import Question from '@CourseBuilderComponents/curriculum/Question';
 import { type QuizQuestion, type QuizQuestionType, useGetQuizQuestionsQuery } from '@CourseBuilderServices/quiz';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -40,6 +40,7 @@ import { Controller } from 'react-hook-form';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import { moveTo } from '@Utils/util';
+import SingleChoice from '@CourseBuilderComponents/curriculum/question-types/SingleChoice';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -191,7 +192,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 
   const questionTypeForm = {
     'true-false': <TrueFalse />,
-    'single-choice': 'Single Choice',
+    'single-choice': <SingleChoice />,
     'multiple-choice': 'Multiple Choice',
     'open-ended': 'Open Ended/ Essay',
     'fill-in-the-blanks': 'Fill in the Blanks',
