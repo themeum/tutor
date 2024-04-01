@@ -103,7 +103,9 @@ const Curriculum = () => {
 
         <div css={styles.content}>
           <Show
-            when={content.length > 0}
+            when={
+              !courseCurriculumQuery.isLoading && courseCurriculumQuery.data && courseCurriculumQuery.data.length > 0
+            }
             fallback={
               <EmptyState
                 emptyStateImage={emptyStateImage}
