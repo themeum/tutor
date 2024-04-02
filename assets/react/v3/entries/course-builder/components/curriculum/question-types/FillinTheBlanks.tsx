@@ -12,9 +12,12 @@ import For from '@Controls/For';
 
 const FillinTheBlanks = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [data, setData] = useState({
-    title: 'This is {dash} ok',
-    correctAnswers: ['not', 'ha'],
+  const [data, setData] = useState<{
+    title: string;
+    correctAnswers: string[];
+  }>({
+    title: '', // That is {dash} a good idea.
+    correctAnswers: [], // That is | a | good | idea.
   });
 
   return (
