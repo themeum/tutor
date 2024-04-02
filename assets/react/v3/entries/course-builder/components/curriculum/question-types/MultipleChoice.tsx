@@ -43,7 +43,14 @@ const MultipleChoice = () => {
           }}
         >
           <div css={styles.optionHeader}>
-            <div css={styles.optionCounter({ isSelected: selectedAnswer === true, isEditing })}>A</div>
+            <div css={styles.optionCounterAndButton}>
+              <div css={styles.optionCounter({ isSelected: selectedAnswer === true, isEditing })}>A</div>
+              <Show when={isEditing}>
+                <Button variant="text" icon={<SVGIcon name="addImage" width={24} height={24} />}>
+                  Add Image
+                </Button>
+              </Show>
+            </div>
 
             <button type="button" css={styles.optionDragButton} data-visually-hidden>
               <SVGIcon name="dragVertical" height={24} width={24} />
@@ -246,6 +253,15 @@ const styles = {
     justify-content: space-between;
     align-items: center;
   `,
+  optionCounterAndButton: css`
+    display: flex;
+    gap: ${spacing[8]};
+    align-items: center;
+
+    button {
+      padding: 0;
+    }
+  `,
   optionCounter: ({
     isSelected,
     isEditing,
@@ -320,11 +336,12 @@ const styles = {
     flex: 1;
     color: ${colorTokens.text.subdued};
     padding: ${spacing[4]} ${spacing[10]};
-    border: 1px solid ${colorTokens.stroke.default};
+    box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
+    resize: vertical;
 
-    &:placeholder-shown {
-      color: ${colorTokens.text.subdued};
+    &:focus {
+      box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
     }
   `,
   optionInputButtons: css`
