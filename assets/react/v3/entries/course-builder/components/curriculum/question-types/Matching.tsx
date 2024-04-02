@@ -9,7 +9,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Show from '@Controls/Show';
 import Button from '@Atoms/Button';
 
-const SingleChoice = () => {
+const Matching = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -38,14 +38,7 @@ const SingleChoice = () => {
           }}
         >
           <div css={styles.optionHeader}>
-            <div css={styles.optionCounterAndButton}>
-              <div css={styles.optionCounter({ isSelected: selectedAnswer === true, isEditing })}>A</div>
-              <Show when={isEditing}>
-                <Button variant="text" icon={<SVGIcon name="addImage" width={24} height={24} />}>
-                  Add Image
-                </Button>
-              </Show>
-            </div>
+            <div css={styles.optionCounter({ isSelected: selectedAnswer === true, isEditing })}>A</div>
 
             <button type="button" css={styles.optionDragButton} data-visually-hidden>
               <SVGIcon name="dragVertical" height={24} width={24} />
@@ -90,10 +83,16 @@ const SingleChoice = () => {
           <div css={styles.optionBody}>
             <Show
               when={isEditing}
-              fallback={<div css={styles.optionPlaceholder}>{__('Write answer option...', 'tutor')}</div>}
+              fallback={
+                <div css={styles.placeholderWrapper}>
+                  <div css={styles.optionPlaceholder}>{__('Answer title...', 'tutor')}</div>
+                  <div css={styles.optionPlaceholder}>{__('Matched answer titile...', 'tutor')}</div>
+                </div>
+              }
             >
               <div css={styles.optionInputWrapper}>
-                <textarea css={styles.optionInput} placeholder="Write anything" />
+                <input css={styles.optionInput} placeholder="Write anything" />
+                <input css={styles.optionInput} placeholder="Write anything" />
                 <div css={styles.optionInputButtons}>
                   <Button
                     variant="text"
@@ -125,7 +124,7 @@ const SingleChoice = () => {
   );
 };
 
-export default SingleChoice;
+export default Matching;
 
 const styles = {
   optionWrapper: css`
@@ -251,15 +250,6 @@ const styles = {
     justify-content: space-between;
     align-items: center;
   `,
-  optionCounterAndButton: css`
-    display: flex;
-    gap: ${spacing[8]};
-    align-items: center;
-
-    button {
-      padding: 0;
-    }
-  `,
   optionCounter: ({
     isSelected,
     isEditing,
@@ -305,6 +295,10 @@ const styles = {
   `,
   optionBody: css`
     display: flex;
+  `,
+  placeholderWrapper: css`
+    display: flex;
+    flex-direction: column;
   `,
   optionPlaceholder: css`
     ${typography.body()};

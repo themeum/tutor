@@ -42,6 +42,7 @@ import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFa
 import { moveTo } from '@Utils/util';
 import SingleChoice from '@CourseBuilderComponents/curriculum/question-types/SingleChoice';
 import MultipleChoice from '@CourseBuilderComponents/curriculum/question-types/MultipleChoice';
+import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -198,7 +199,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     'open-ended': 'Open Ended/ Essay',
     'fill-in-the-blanks': 'Fill in the Blanks',
     'short-answer': 'Short Answer',
-    matching: 'Matching',
+    matching: <Matching />,
     'image-matching': 'Image Matching',
     'image-answering': 'Image Answering',
     ordering: 'Ordering',
