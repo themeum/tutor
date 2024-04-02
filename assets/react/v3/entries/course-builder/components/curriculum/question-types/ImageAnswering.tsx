@@ -2,15 +2,14 @@ import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
+import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@Atoms/Button';
+import ImageInput from '@Atoms/ImageInput';
+
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
-import SVGIcon from '@Atoms/SVGIcon';
 import Show from '@Controls/Show';
-import Button from '@Atoms/Button';
-
-import quizOptionEmptyImage from '@CourseBuilderPublic/images/question-option-empty-image-1x.webp';
-import quizOptionEmptyImage2x from '@CourseBuilderPublic/images/question-option-empty-image-2x.webp';
 
 const ImageAnswering = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
@@ -95,17 +94,23 @@ const ImageAnswering = () => {
               when={isEditing}
               fallback={
                 <div css={styles.placeholderWrapper}>
-                  <img
-                    src={quizOptionEmptyImage}
-                    alt={__('Quiz Image Placeholder', 'tutor')}
-                    srcSet={quizOptionEmptyImage2x ? `${quizOptionEmptyImage2x} 2x` : ''}
-                  />
+                  <div css={styles.imagePlaceholder}>
+                    <SVGIcon name="imagePreview" height={48} width={48} />
+                  </div>
                   <div css={styles.optionPlaceholder}>{__('Write answer option...', 'tutor')}</div>
                 </div>
               }
             >
               <div css={styles.optionInputWrapper}>
-                {/* @TODO: image input will be added later */}
+                <ImageInput
+                  value={null}
+                  buttonText={__('Upload Image', 'tutor')}
+                  infoText={__('Size: 700x430 pixels', 'tutor')}
+                  uploadHandler={() => {}}
+                  clearHandler={() => {}}
+                  emptyImageCss={styles.emptyImageInput}
+                  previewImageCss={styles.previewImageInput}
+                />
                 <div css={styles.inputWithHints}>
                   <input type="text" css={styles.optionInput} placeholder={__('Answer input value...', 'tutor')} />
                   <div css={styles.inputHints}>
@@ -230,8 +235,7 @@ const styles = {
     isSelected: boolean;
     isEditing: boolean;
   }) => css`
-      display: flex;
-      flex-direction: column;
+      ${styleUtils.display.flex('column')}
       gap: ${spacing[20]};
       width: 100%;
       border-radius: ${borderRadius.card};
@@ -269,14 +273,14 @@ const styles = {
       }
     `,
   optionHeader: css`
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
   `,
   optionCounterAndButton: css`
-    display: flex;
+    ${styleUtils.display.flex()}
     gap: ${spacing[8]};
-    align-items: center;
+    place-self: center start;
 
     button {
       padding: 0;
@@ -307,31 +311,48 @@ const styles = {
   `,
   optionDragButton: css`
     ${styleUtils.resetButton}
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ${styleUtils.flexCenter()}
     transform: rotate(90deg);
     color: ${colorTokens.icon.default};
     cursor: grab;
+    place-self: center center;
   `,
   optionActions: css`
-    display: flex;
+    ${styleUtils.display.flex()}
     gap: ${spacing[8]};
-    align-items: center;
+    place-self: center end;
   `,
   actionButton: css`
     ${styleUtils.resetButton};
     color: ${colorTokens.icon.default};
-    display: flex;
+    ${styleUtils.display.flex()}
     cursor: pointer;
   `,
   optionBody: css`
-    display: flex;
+    ${styleUtils.display.flex()}
   `,
   placeholderWrapper: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[12]};
+    width: 100%;
+  `,
+  imagePlaceholder: css`
+    ${styleUtils.flexCenter()};
+    height: 210px;
+    width: 100%;
+    background-color: ${colorTokens.background.default};
+    border-radius: ${borderRadius.card};
+
+    svg {
+      color: ${colorTokens.icon.hints};
+    }
+  `,
+  emptyImageInput: css`
+    background-color: ${colorTokens.background.default};
+    height: 210px;
+  `,
+  previewImageInput: css`
+    height: 210px;
   `,
   optionPlaceholder: css`
     ${typography.body()};
@@ -339,18 +360,16 @@ const styles = {
     padding-block: ${spacing[4]};
   `,
   optionInputWrapper: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     width: 100%;
     gap: ${spacing[12]};
   `,
   inputWithHints: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
   `,
   inputHints: css`
-    display: flex;
+    ${styleUtils.display.flex()}
     gap: ${spacing[4]};
     ${typography.small()};
     color: ${colorTokens.text.hints};
@@ -375,7 +394,7 @@ const styles = {
     }
   `,
   optionInputButtons: css`
-    display: flex;
+    ${styleUtils.display.flex()}
     justify-content: flex-end;
     gap: ${spacing[8]};
   `,

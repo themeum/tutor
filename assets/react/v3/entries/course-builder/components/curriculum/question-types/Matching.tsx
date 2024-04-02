@@ -246,8 +246,8 @@ const styles = {
       }
     `,
   optionHeader: css`
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
   `,
   optionCounter: ({
@@ -264,6 +264,7 @@ const styles = {
     color: ${colorTokens.text.subdued};
     background-color: ${colorTokens.background.default};
     text-align: center;
+    place-self: center start;
 
     ${
       isSelected &&
@@ -275,30 +276,28 @@ const styles = {
   `,
   optionDragButton: css`
     ${styleUtils.resetButton}
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ${styleUtils.flexCenter()}
     transform: rotate(90deg);
     color: ${colorTokens.icon.default};
     cursor: grab;
+    place-self: center center;
   `,
   optionActions: css`
-    display: flex;
+    ${styleUtils.display.flex()}
     gap: ${spacing[8]};
-    align-items: center;
+    place-self: center end;
   `,
   actionButton: css`
     ${styleUtils.resetButton};
+    ${styleUtils.display.flex()}
     color: ${colorTokens.icon.default};
-    display: flex;
     cursor: pointer;
   `,
   optionBody: css`
-    display: flex;
+    ${styleUtils.display.flex()}
   `,
   placeholderWrapper: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
   `,
   optionPlaceholder: css`
     ${typography.body()};
@@ -306,8 +305,7 @@ const styles = {
     padding-block: ${spacing[4]};
   `,
   optionInputWrapper: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')}
     width: 100%;
     gap: ${spacing[12]};
   `,
@@ -326,7 +324,7 @@ const styles = {
     }
   `,
   optionInputButtons: css`
-    display: flex;
+    ${styleUtils.display.flex()}
     justify-content: flex-end;
     gap: ${spacing[8]};
   `,
