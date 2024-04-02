@@ -10,12 +10,19 @@ import Show from '@Controls/Show';
 import Button from '@Atoms/Button';
 
 const MultipleChoice = () => {
+  const [hasMultipleCorrectAnswers, setHasMultipleCorrectAnswers] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   return (
     <div css={styles.optionWrapper}>
-      <div css={styles.option({ isSelected: selectedAnswer === true, isEditing })}>
+      <div
+        css={styles.option({
+          isSelected: selectedAnswer === true,
+          isEditing,
+          isMultipleChoice: hasMultipleCorrectAnswers,
+        })}
+      >
         <div
           onClick={() => setSelectedAnswer(true)}
           onKeyDown={(event) => {
@@ -24,12 +31,24 @@ const MultipleChoice = () => {
             }
           }}
         >
-          <SVGIcon
-            data-check-icon
-            name={selectedAnswer === true ? 'checkSquareFilled' : 'checkSquare'}
-            height={32}
-            width={32}
-          />
+          <Show
+            when={hasMultipleCorrectAnswers}
+            fallback={
+              <SVGIcon
+                data-check-icon
+                name={selectedAnswer === true ? 'checkFilled' : 'check'}
+                height={32}
+                width={32}
+              />
+            }
+          >
+            <SVGIcon
+              data-check-icon
+              name={selectedAnswer === true ? 'checkSquareFilled' : 'checkSquare'}
+              height={32}
+              width={32}
+            />
+          </Show>
         </div>
         <div
           css={styles.optionLabel({ isSelected: selectedAnswer === true, isEditing })}
@@ -138,9 +157,11 @@ const styles = {
   option: ({
     isSelected,
     isEditing,
+    isMultipleChoice,
   }: {
     isSelected: boolean;
     isEditing: boolean;
+    isMultipleChoice: boolean;
   }) => css`
       ${styleUtils.display.flex()};
       ${typography.caption('medium')};
@@ -152,6 +173,13 @@ const styles = {
       [data-check-icon] {
         opacity: 0;
         transition: opacity 0.15s ease-in-out;
+
+        ${
+          !isMultipleChoice &&
+          css`
+            fill: none;
+          `
+        }
       }
 
       [data-visually-hidden] {
@@ -190,6 +218,13 @@ const styles = {
           [data-check-icon] {
             opacity: 1;
             color: ${colorTokens.bg.success};
+
+            ${
+              !isMultipleChoice &&
+              css`
+                fill: ${colorTokens.bg.success};
+              `
+            }
           }
         `
       }

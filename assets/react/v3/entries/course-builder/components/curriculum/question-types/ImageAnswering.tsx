@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -12,7 +12,7 @@ import Button from '@Atoms/Button';
 import quizOptionEmptyImage from '@CourseBuilderPublic/images/question-option-empty-image-1x.webp';
 import quizOptionEmptyImage2x from '@CourseBuilderPublic/images/question-option-empty-image-2x.webp';
 
-const ImageMatching = () => {
+const ImageAnswering = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -106,7 +106,16 @@ const ImageMatching = () => {
             >
               <div css={styles.optionInputWrapper}>
                 {/* @TODO: image input will be added later */}
-                <input css={styles.optionInput} placeholder="Write anything" />
+                <div css={styles.inputWithHints}>
+                  <input type="text" css={styles.optionInput} placeholder={__('Answer input value...', 'tutor')} />
+                  <div css={styles.inputHints}>
+                    <SVGIcon name="info" height={20} width={20} />
+                    <p>
+                      {__('The answers that students enter should match with this text. Write in ', 'tutor')}
+                      <span css={{ fontWeight: fontWeight.semiBold }}>{__('small caps', 'tutor')}</span>
+                    </p>
+                  </div>
+                </div>
                 <div css={styles.optionInputButtons}>
                   <Button
                     variant="text"
@@ -138,7 +147,7 @@ const ImageMatching = () => {
   );
 };
 
-export default ImageMatching;
+export default ImageAnswering;
 
 const styles = {
   optionWrapper: css`
@@ -334,6 +343,22 @@ const styles = {
     flex-direction: column;
     width: 100%;
     gap: ${spacing[12]};
+  `,
+  inputWithHints: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
+  inputHints: css`
+    display: flex;
+    gap: ${spacing[4]};
+    ${typography.small()};
+    color: ${colorTokens.text.hints};
+    align-items: flex-start;
+
+    svg {
+      flex-shrink: 0;
+    }
   `,
   optionInput: css`
     ${styleUtils.resetButton};

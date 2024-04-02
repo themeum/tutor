@@ -40,11 +40,11 @@ import { Controller } from 'react-hook-form';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import { moveTo } from '@Utils/util';
-import SingleChoice from '@CourseBuilderComponents/curriculum/question-types/SingleChoice';
 import MultipleChoice from '@CourseBuilderComponents/curriculum/question-types/MultipleChoice';
 import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
-import ImageMatching from '@CourseBuilderComponents/curriculum/question-types/ImageMatching';
+import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
 import OpenEnded from '@CourseBuilderComponents/curriculum/question-types/OpenEnded';
+import FillinTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -196,15 +196,15 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 
   const questionTypeForm = {
     'true-false': <TrueFalse />,
-    'single-choice': <SingleChoice />,
+    'single-choice': 'SingleChoice is deprecated.',
     'multiple-choice': <MultipleChoice />,
     'open-ended': <OpenEnded />,
-    'fill-in-the-blanks': 'Fill in the Blanks',
-    'short-answer': 'Short Answer',
+    'fill-in-the-blanks': <FillinTheBlanks />,
+    'short-answer': <OpenEnded />,
     matching: <Matching />,
-    'image-matching': <ImageMatching />,
-    'image-answering': 'Image Answering',
-    ordering: 'Ordering',
+    'image-matching': 'ImageMatching is deprecated.',
+    'image-answering': <ImageAnswering />,
+    ordering: <MultipleChoice />,
   } as const;
 
   const getQuizQuestionsQuery = useGetQuizQuestionsQuery();

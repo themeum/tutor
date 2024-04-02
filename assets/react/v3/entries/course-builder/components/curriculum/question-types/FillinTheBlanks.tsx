@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -8,41 +8,28 @@ import { styleUtils } from '@Utils/style-utils';
 import SVGIcon from '@Atoms/SVGIcon';
 import Show from '@Controls/Show';
 import Button from '@Atoms/Button';
+import For from '@Controls/For';
 
-const Matching = () => {
-  const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
+const FillinTheBlanks = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [data, setData] = useState({
+    title: 'This is {dash} ok',
+    correctAnswers: ['not', 'ha'],
+  });
 
   return (
     <div css={styles.optionWrapper}>
-      <div css={styles.option({ isSelected: selectedAnswer === true, isEditing })}>
+      <div css={styles.option({ isEditing })}>
         <div
-          onClick={() => setSelectedAnswer(true)}
+          css={styles.optionLabel({ isEditing })}
+          onClick={() => {}}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              setSelectedAnswer(true);
-            }
-          }}
-        >
-          <SVGIcon data-check-icon name={selectedAnswer === true ? 'checkFilled' : 'check'} height={32} width={32} />
-        </div>
-        <div
-          css={styles.optionLabel({ isSelected: selectedAnswer === true, isEditing })}
-          onClick={() => {
-            setSelectedAnswer(true);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              setSelectedAnswer(true);
             }
           }}
         >
           <div css={styles.optionHeader}>
-            <div css={styles.optionCounter({ isSelected: selectedAnswer === true, isEditing })}>A</div>
-
-            <button type="button" css={styles.optionDragButton} data-visually-hidden>
-              <SVGIcon name="dragVertical" height={24} width={24} />
-            </button>
+            <div css={styles.optionTitle}>Fill in the blanks</div>
 
             <div css={styles.optionActions}>
               <button
@@ -85,14 +72,53 @@ const Matching = () => {
               when={isEditing}
               fallback={
                 <div css={styles.placeholderWrapper}>
-                  <div css={styles.optionPlaceholder}>{__('Answer title...', 'tutor')}</div>
-                  <div css={styles.optionPlaceholder}>{__('Matched answer titile...', 'tutor')}</div>
+                  <div css={styles.optionPlaceholder({ isTitle: !!data.title })}>
+                    {data.title ? data.title.replace(/{dash}/g, '_____') : __('Question title...', 'tutor')}
+                  </div>
+                  <div css={styles.optionPlaceholder({ isCorrectAnswer: data.correctAnswers.length })}>
+                    {data.correctAnswers.length > 0 ? (
+                      <For each={data.correctAnswers}>
+                        {(answer, index) => (
+                          <Fragment key={index}>
+                            {answer}
+                            <Show when={index < data.correctAnswers.length - 1}>
+                              <span>|</span>
+                            </Show>
+                          </Fragment>
+                        )}
+                      </For>
+                    ) : (
+                      __('Correct Answer(s)...', 'tutor')
+                    )}
+                  </div>
                 </div>
               }
             >
               <div css={styles.optionInputWrapper}>
-                <input type="text" css={styles.optionInput} placeholder="Write anything" />
-                <input type="text" css={styles.optionInput} placeholder="Write anything" />
+                <div css={styles.inputWithHints}>
+                  <input type="text" css={styles.optionInput} placeholder={__('Question title...', 'tutor')} />
+                  <div css={styles.inputHints}>
+                    <SVGIcon name="info" height={20} width={20} />
+                    <p>
+                      {__(
+                        'Please make sure to use the {dash} variable in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
+                        'tutor'
+                      )}
+                    </p>
+                  </div>
+                </div>
+                <div css={styles.inputWithHints}>
+                  <input type="text" css={styles.optionInput} placeholder={__('Correct Answer(s)...')} />
+                  <div css={styles.inputHints}>
+                    <SVGIcon name="info" height={20} width={20} />
+                    <p>
+                      {__(
+                        'Separate multiple answers by a vertical bar |. 1 answer per {dash} variable is defined in the question. Example: Apple | Banana | Orange',
+                        'tutor'
+                      )}
+                    </p>
+                  </div>
+                </div>
                 <div css={styles.optionInputButtons}>
                   <Button
                     variant="text"
@@ -124,18 +150,16 @@ const Matching = () => {
   );
 };
 
-export default Matching;
+export default FillinTheBlanks;
 
 const styles = {
   optionWrapper: css`
       ${styleUtils.display.flex('column')};
-      gap: ${spacing[12]};
+      padding-left: 42px;
     `,
   option: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
       ${styleUtils.display.flex()};
@@ -179,17 +203,6 @@ const styles = {
         `
         }
       }
-  
-  
-      ${
-        isSelected &&
-        css`
-          [data-check-icon] {
-            opacity: 1;
-            fill: ${colorTokens.bg.success};
-          }
-        `
-      }
 
       ${
         isEditing &&
@@ -201,10 +214,8 @@ const styles = {
       }
     `,
   optionLabel: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
       display: flex;
@@ -220,27 +231,15 @@ const styles = {
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
       }
-  
-      ${
-        isSelected &&
-        css`
-          background-color: ${colorTokens.background.success.fill40};
-          color: ${colorTokens.text.primary};
-  
-          &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
-          }
-        `
-      }
 
       ${
         isEditing &&
         css`
           background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
 
           &:hover {
-            box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+            box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
           }
         `
       }
@@ -250,37 +249,9 @@ const styles = {
     justify-content: space-between;
     align-items: center;
   `,
-  optionCounter: ({
-    isSelected,
-    isEditing,
-  }: {
-    isSelected: boolean;
-    isEditing: boolean;
-  }) => css`
-    height: ${spacing[24]};
-    width: ${spacing[24]};
-    border-radius: ${borderRadius.min};
+  optionTitle: css`
     ${typography.caption('medium')};
     color: ${colorTokens.text.subdued};
-    background-color: ${colorTokens.background.default};
-    text-align: center;
-
-    ${
-      isSelected &&
-      !isEditing &&
-      css`
-        background-color: ${colorTokens.bg.white};
-      `
-    }
-  `,
-  optionDragButton: css`
-    ${styleUtils.resetButton}
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: rotate(90deg);
-    color: ${colorTokens.icon.default};
-    cursor: grab;
   `,
   optionActions: css`
     display: flex;
@@ -300,16 +271,60 @@ const styles = {
     display: flex;
     flex-direction: column;
   `,
-  optionPlaceholder: css`
+  optionPlaceholder: ({
+    isTitle,
+    isCorrectAnswer,
+  }: {
+    isTitle?: boolean;
+    isCorrectAnswer?: number;
+  }) =>
+    css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     padding-block: ${spacing[4]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+
+    ${
+      isTitle &&
+      css`
+        color: ${colorTokens.text.hints};
+      `
+    }
+
+    ${
+      isCorrectAnswer &&
+      css`
+        color: ${colorTokens.text.success};
+
+        span {
+          color: ${colorTokens.stroke.border};
+        }
+      `
+    }
   `,
   optionInputWrapper: css`
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: ${spacing[12]};
+    gap: ${spacing[16]};
+  `,
+  inputWithHints: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
+  inputHints: css`
+    display: flex;
+    gap: ${spacing[4]};
+    ${typography.small()};
+    color: ${colorTokens.text.hints};
+    align-items: flex-start;
+
+    svg {
+      flex-shrink: 0;
+    }
   `,
   optionInput: css`
     ${styleUtils.resetButton};
