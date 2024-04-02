@@ -6,7 +6,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 
-import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import Show from '@Controls/Show';
@@ -390,7 +390,7 @@ const styles = {
     resize: vertical;
 
     &:focus {
-      box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
+      box-shadow: ${shadow.focus};
     }
   `,
   optionInputButtons: css`

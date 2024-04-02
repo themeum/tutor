@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -374,7 +374,7 @@ const styles = {
     resize: vertical;
 
     &:focus {
-      box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
+      box-shadow: ${shadow.focus};
     }
   `,
   optionInputButtons: css`
