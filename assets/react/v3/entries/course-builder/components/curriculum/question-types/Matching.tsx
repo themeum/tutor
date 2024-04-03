@@ -2,16 +2,20 @@ import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
+import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@Atoms/Button';
+import ImageInput from '@Atoms/ImageInput';
+
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
-import SVGIcon from '@Atoms/SVGIcon';
 import Show from '@Controls/Show';
-import Button from '@Atoms/Button';
+import { noop } from '@Utils/util';
 
 const Matching = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isImageMatching, setIsImageMatching] = useState(false);
 
   return (
     <div css={styles.optionWrapper}>
@@ -84,14 +88,33 @@ const Matching = () => {
             <Show
               when={isEditing}
               fallback={
-                <div css={styles.placeholderWrapper}>
-                  <div css={styles.optionPlaceholder}>{__('Answer title...', 'tutor')}</div>
+                <div css={styles.placeholderWrapper({ isImageMatching })}>
+                  <Show
+                    when={isImageMatching}
+                    fallback={<div css={styles.optionPlaceholder}>{__('Answer title...', 'tutor')}</div>}
+                  >
+                    <div css={styles.imagePlaceholder}>
+                      <SVGIcon name="imagePreview" height={48} width={48} />
+                    </div>
+                  </Show>
                   <div css={styles.optionPlaceholder}>{__('Matched answer titile...', 'tutor')}</div>
                 </div>
               }
             >
               <div css={styles.optionInputWrapper}>
-                <input type="text" css={styles.optionInput} placeholder="Write anything" />
+                <Show
+                  when={isImageMatching}
+                  fallback={<input type="text" css={styles.optionInput} placeholder="Write anything" />}
+                >
+                  <ImageInput
+                    value={null}
+                    infoText={__('Size: 700x430 pixels', 'tutor')}
+                    uploadHandler={noop}
+                    clearHandler={noop}
+                    emptyImageCss={styles.emptyImageInput}
+                    previewImageCss={styles.previewImageInput}
+                  />
+                </Show>
                 <input type="text" css={styles.optionInput} placeholder="Write anything" />
                 <div css={styles.optionInputButtons}>
                   <Button
@@ -296,8 +319,38 @@ const styles = {
   optionBody: css`
     ${styleUtils.display.flex()}
   `,
-  placeholderWrapper: css`
+  placeholderWrapper: ({
+    isImageMatching,
+  }: {
+    isImageMatching: boolean;
+  }) => css`
     ${styleUtils.display.flex('column')}
+    width: 100%;
+
+    ${
+      isImageMatching &&
+      css`
+        gap: ${spacing[12]};
+      `
+    }
+  `,
+  imagePlaceholder: css`
+    ${styleUtils.flexCenter()};
+    height: 210px;
+    width: 100%;
+    background-color: ${colorTokens.background.default};
+    border-radius: ${borderRadius.card};
+
+    svg {
+      color: ${colorTokens.icon.hints};
+    }
+  `,
+  emptyImageInput: css`
+    background-color: ${colorTokens.background.default};
+    height: 210px;
+  `,
+  previewImageInput: css`
+    height: 210px;
   `,
   optionPlaceholder: css`
     ${typography.body()};

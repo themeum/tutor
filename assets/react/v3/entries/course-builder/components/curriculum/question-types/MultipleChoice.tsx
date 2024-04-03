@@ -2,17 +2,21 @@ import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
+import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@Atoms/Button';
+import ImageInput from '@Atoms/ImageInput';
+
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import Show from '@Controls/Show';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
-import SVGIcon from '@Atoms/SVGIcon';
-import Show from '@Controls/Show';
-import Button from '@Atoms/Button';
+import { noop } from '@Utils/util';
 
 const MultipleChoice = () => {
   const [hasMultipleCorrectAnswers, setHasMultipleCorrectAnswers] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isUploadImageVisible, setIsUploadImageVisible] = useState(false);
 
   return (
     <div css={styles.optionWrapper}>
@@ -65,9 +69,26 @@ const MultipleChoice = () => {
             <div css={styles.optionCounterAndButton}>
               <div css={styles.optionCounter({ isSelected: selectedAnswer === true, isEditing })}>A</div>
               <Show when={isEditing}>
-                <Button variant="text" icon={<SVGIcon name="addImage" width={24} height={24} />}>
-                  Add Image
-                </Button>
+                <Show
+                  when={!isUploadImageVisible}
+                  fallback={
+                    <Button
+                      variant="text"
+                      icon={<SVGIcon name="removeImage" width={24} height={24} />}
+                      onClick={() => setIsUploadImageVisible(false)}
+                    >
+                      Remove Image
+                    </Button>
+                  }
+                >
+                  <Button
+                    variant="text"
+                    icon={<SVGIcon name="addImage" width={24} height={24} />}
+                    onClick={() => setIsUploadImageVisible(true)}
+                  >
+                    Add Image
+                  </Button>
+                </Show>
               </Show>
             </div>
 
@@ -115,6 +136,16 @@ const MultipleChoice = () => {
             <div css={styles.optionPlaceholder({ isEditing })}>{__('Write answer option...', 'tutor')}</div>
             <Show when={isEditing}>
               <div css={styles.optionInputWrapper}>
+                <Show when={isUploadImageVisible}>
+                  <ImageInput
+                    value={null}
+                    infoText={__('Size: 700x430 pixels', 'tutor')}
+                    uploadHandler={noop}
+                    clearHandler={noop}
+                    emptyImageCss={styles.emptyImageInput}
+                    previewImageCss={styles.previewImageInput}
+                  />
+                </Show>
                 <textarea css={styles.optionInput} placeholder="Write anything" />
                 <div css={styles.optionInputButtons}>
                   <Button
@@ -341,6 +372,13 @@ const styles = {
   `,
   optionBody: css`
     ${styleUtils.display.flex()}
+  `,
+  emptyImageInput: css`
+    background-color: ${colorTokens.background.default};
+    height: 210px;
+  `,
+  previewImageInput: css`
+    height: 210px;
   `,
   optionPlaceholder: ({
     isEditing,
