@@ -75,7 +75,10 @@ const MultipleChoice = () => {
                     <Button
                       variant="text"
                       icon={<SVGIcon name="removeImage" width={24} height={24} />}
-                      onClick={() => setIsUploadImageVisible(false)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setIsUploadImageVisible(false);
+                      }}
                     >
                       Remove Image
                     </Button>
@@ -84,7 +87,10 @@ const MultipleChoice = () => {
                   <Button
                     variant="text"
                     icon={<SVGIcon name="addImage" width={24} height={24} />}
-                    onClick={() => setIsUploadImageVisible(true)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setIsUploadImageVisible(true);
+                    }}
                   >
                     Add Image
                   </Button>
@@ -133,8 +139,19 @@ const MultipleChoice = () => {
             </div>
           </div>
           <div css={styles.optionBody}>
-            <div css={styles.optionPlaceholder({ isEditing })}>{__('Write answer option...', 'tutor')}</div>
-            <Show when={isEditing}>
+            <Show
+              when={isEditing}
+              fallback={
+                <div css={styles.placeholderWrapper}>
+                  <Show when={isUploadImageVisible}>
+                    <div css={styles.imagePlaceholder}>
+                      <SVGIcon name="imagePreview" height={48} width={48} />
+                    </div>
+                  </Show>
+                  <div css={styles.optionPlaceholder}>{__('Write answer option...', 'tutor')}</div>
+                </div>
+              }
+            >
               <div css={styles.optionInputWrapper}>
                 <Show when={isUploadImageVisible}>
                   <ImageInput
@@ -373,6 +390,22 @@ const styles = {
   optionBody: css`
     ${styleUtils.display.flex()}
   `,
+  placeholderWrapper: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[12]};
+    width: 100%;
+  `,
+  imagePlaceholder: css`
+    ${styleUtils.flexCenter()};
+    height: 210px;
+    width: 100%;
+    background-color: ${colorTokens.background.default};
+    border-radius: ${borderRadius.card};
+
+    svg {
+      color: ${colorTokens.icon.hints};
+    }
+  `,
   emptyImageInput: css`
     background-color: ${colorTokens.background.default};
     height: 210px;
@@ -380,21 +413,10 @@ const styles = {
   previewImageInput: css`
     height: 210px;
   `,
-  optionPlaceholder: ({
-    isEditing,
-  }: {
-    isEditing: boolean;
-  }) => css`
+  optionPlaceholder: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     padding-block: ${spacing[4]};
-
-    ${
-      isEditing &&
-      css`
-        display: none;
-      `
-    }
   `,
   optionInputWrapper: css`
     ${styleUtils.display.flex('column')}
