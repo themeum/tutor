@@ -57,6 +57,8 @@ export interface QuizForm {
   quiz_description: string;
   question_type: QuizQuestionType;
   answer_required: boolean;
+  muliple_correct_answer: boolean;
+  image_matching: boolean;
   randomize: boolean;
   point: number;
   display_point: boolean;
@@ -87,11 +89,6 @@ const questionTypeOptions: Option<QuizQuestionType>[] = [
     icon: 'quizTrueFalse',
   },
   {
-    label: __('Single Choice', 'tutor'),
-    value: 'single-choice',
-    icon: 'quizSingleChoice',
-  },
-  {
     label: __('Multiple Choice', 'tutor'),
     value: 'multiple-choice',
     icon: 'quizMultiChoice',
@@ -114,11 +111,6 @@ const questionTypeOptions: Option<QuizQuestionType>[] = [
   {
     label: __('Matching', 'tutor'),
     value: 'matching',
-    icon: 'quizMatching',
-  },
-  {
-    label: __('Image Matching', 'tutor'),
-    value: 'image-matching',
     icon: 'quizImageMatching',
   },
   {
@@ -151,6 +143,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     defaultValues: {
       question_type: 'true-false',
       answer_required: false,
+      muliple_correct_answer: false,
+      image_matching: false,
       randomize: false,
       point: 0,
       display_point: true,
@@ -196,13 +190,11 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 
   const questionTypeForm = {
     'true-false': <TrueFalse />,
-    'single-choice': 'SingleChoice is deprecated.',
     'multiple-choice': <MultipleChoice />,
     'open-ended': <OpenEnded />,
     'fill-in-the-blanks': <FillinTheBlanks />,
     'short-answer': <OpenEnded />,
     matching: <Matching />,
-    'image-matching': 'ImageMatching is deprecated.',
     'image-answering': <ImageAnswering />,
     ordering: <MultipleChoice />,
   } as const;
@@ -435,6 +427,24 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
             <div css={styles.conditions}>
               <p>{__('Conditions', 'tutor')}</p>
               <div css={styles.conditionControls}>
+                <Show when={questionType === 'multiple-choice'}>
+                  <Controller
+                    control={form.control}
+                    name="muliple_correct_answer"
+                    render={(controllerProps) => (
+                      <FormSwitch {...controllerProps} label={__('Multiple Correct Answer', 'tutor')} />
+                    )}
+                  />
+                </Show>
+                <Show when={questionType === 'matching'}>
+                  <Controller
+                    control={form.control}
+                    name="image_matching"
+                    render={(controllerProps) => (
+                      <FormSwitch {...controllerProps} label={__('Image Matching', 'tutor')} />
+                    )}
+                  />
+                </Show>
                 <Controller
                   control={form.control}
                   name="answer_required"

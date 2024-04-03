@@ -2,13 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 
 export type QuizQuestionType =
   | 'true-false'
-  | 'single-choice'
   | 'multiple-choice'
   | 'open-ended'
   | 'fill-in-the-blanks'
   | 'short-answer'
   | 'matching'
-  | 'image-matching'
   | 'image-answering'
   | 'ordering';
 
@@ -23,11 +21,6 @@ const mockQuizQuestions: QuizQuestion[] = [
     ID: 1,
     type: 'true-false',
     title: 'Trust me I am True / False',
-  },
-  {
-    ID: 2,
-    type: 'single-choice',
-    title: 'I am definitely single choice',
   },
   {
     ID: 3,
@@ -53,11 +46,6 @@ const mockQuizQuestions: QuizQuestion[] = [
     ID: 7,
     type: 'matching',
     title: 'Matching matching matching',
-  },
-  {
-    ID: 8,
-    type: 'image-matching',
-    title: 'Match the images see if it seems right',
   },
   {
     ID: 9,

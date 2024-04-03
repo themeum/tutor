@@ -22,13 +22,11 @@ interface QuestionProps {
 
 const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
   'true-false': 'quizTrueFalse',
-  'single-choice': 'quizSingleChoice',
   'multiple-choice': 'quizMultiChoice',
   'open-ended': 'quizEssay',
   'fill-in-the-blanks': 'quizFillInTheBlanks',
   'short-answer': 'quizShortAnswer',
-  matching: 'quizMatching',
-  'image-matching': 'quizImageMatching',
+  matching: 'quizImageMatching',
   'image-answering': 'quizImageAnswer',
   ordering: 'quizOrdering',
 };
