@@ -337,7 +337,7 @@ const styles = {
 		border-radius: ${borderRadius.card} 0 ${borderRadius.card} 0;
 		transition: box-shadow background 0.3s ease-in-out;
 		box-shadow: ${shadow.notebook};
-		z-index: ${zIndex.highest};
+		z-index: ${zIndex.notebook};
 		
 		${
       !isCollapsed &&
