@@ -21,34 +21,38 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class Q_and_A {
+class Q_And_A {
 
 	/**
 	 * Register hooks
+	 *
+	 * @param boolean $allow_hooks true/false to execute the hooks.
 	 */
-	public function __construct() {
-		add_action( 'wp_ajax_tutor_qna_create_update', array( $this, 'tutor_qna_create_update' ) );
+	public function __construct( $allow_hooks = true ) {
+		if ( $allow_hooks ) {
+			add_action( 'wp_ajax_tutor_qna_create_update', array( $this, 'tutor_qna_create_update' ) );
 
-		/**
-		 * Delete question
-		 *
-		 * @since  v.1.6.4
-		 */
-		add_action( 'wp_ajax_tutor_delete_dashboard_question', array( $this, 'tutor_delete_dashboard_question' ) );
+			/**
+			 * Delete question
+			 *
+			 * @since  v.1.6.4
+			 */
+			add_action( 'wp_ajax_tutor_delete_dashboard_question', array( $this, 'tutor_delete_dashboard_question' ) );
 
-		/**
-		 * Take action against single qna
-		 *
-		 * @since v2.0.0
-		 */
-		add_action( 'wp_ajax_tutor_qna_single_action', array( $this, 'tutor_qna_single_action' ) );
-		add_action( 'wp_ajax_tutor_qna_bulk_action', array( $this, 'process_bulk_action' ) );
-		/**
-		 * Q & A load more
-		 *
-		 * @since v2.0.6
-		 */
-		add_action( 'wp_ajax_tutor_q_and_a_load_more', __CLASS__ . '::load_more' );
+			/**
+			 * Take action against single qna
+			 *
+			 * @since v2.0.0
+			 */
+			add_action( 'wp_ajax_tutor_qna_single_action', array( $this, 'tutor_qna_single_action' ) );
+			add_action( 'wp_ajax_tutor_qna_bulk_action', array( $this, 'process_bulk_action' ) );
+			/**
+			 * Q & A load more
+			 *
+			 * @since v2.0.6
+			 */
+			add_action( 'wp_ajax_tutor_q_and_a_load_more', __CLASS__ . '::load_more' );
+		}
 	}
 
 	/**
@@ -67,7 +71,7 @@ class Q_and_A {
 		$has_access = $is_public_course
 						|| User::is_admin()
 						|| tutor_utils()->is_instructor_of_this_course( $user_id, $course_id )
-						|| tutor_utils()->is_enrolled( $course_id );
+						|| tutor_utils()->is_enrolled( $course_id, $user_id );
 		return $has_access;
 	}
 
@@ -88,7 +92,6 @@ class Q_and_A {
 			wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 		}
 
-		global $wpdb;
 		$qna_text = Input::post( 'answer', '', tutor()->has_pro ? Input::TYPE_KSES_POST : Input::TYPE_TEXTAREA );
 
 		if ( ! $qna_text ) {
@@ -104,6 +107,49 @@ class Q_and_A {
 		// Prepare user info.
 		$user = get_userdata( $user_id );
 		$date = gmdate( 'Y-m-d H:i:s', tutor_time() );
+
+		$qna_object              = new \stdClass();
+		$qna_object->user_id     = $user_id;
+		$qna_object->course_id   = $course_id;
+		$qna_object->question_id = $question_id;
+		$qna_object->qna_text    = $qna_text;
+		$qna_object->user        = $user;
+		$qna_object->date        = $date;
+
+		$this->inset_qna( $qna_object );
+
+		// Provide the html now.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		ob_start();
+		tutor_load_template_from_custom_path(
+			tutor()->path . '/views/qna/qna-single.php',
+			array(
+				'question_id' => $question_id,
+				'back_url'    => isset( $_POST['back_url'] ) ? esc_url_raw( wp_unslash( $_POST['back_url'] ) ) : '',
+				'context'     => $context,
+			)
+		);
+		wp_send_json_success(
+			array(
+				'html'      => ob_get_clean(),
+				'editor_id' => 'tutor_qna_reply_editor_' . $question_id,
+			)
+		);
+	}
+
+	/**
+	 * Function to insert Q&A
+	 *
+	 * @param object $qna_object the object to insert.
+	 * @return void|bool
+	 */
+	public function inset_qna( $qna_object ) {
+		$course_id   = $qna_object->course_id;
+		$question_id = $qna_object->question_id;
+		$qna_text    = $qna_object->qna_text;
+		$user_id     = $qna_object->user_id;
+		$user        = $qna_object->user;
+		$date        = $qna_object->date;
 
 		// Insert data prepare.
 		$data = apply_filters(
@@ -121,6 +167,8 @@ class Q_and_A {
 				'user_id'          => $user_id,
 			)
 		);
+
+		global $wpdb;
 
 		// Insert new question/answer.
 		$wpdb->insert( $wpdb->comments, $data );
@@ -140,23 +188,9 @@ class Q_and_A {
 			do_action( 'tutor_after_answer_to_question', $answer_id );
 		}
 
-		// Provide the html now.
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
-		ob_start();
-		tutor_load_template_from_custom_path(
-			tutor()->path . '/views/qna/qna-single.php',
-			array(
-				'question_id' => $question_id,
-				'back_url'    => isset( $_POST['back_url'] ) ? esc_url_raw( wp_unslash( $_POST['back_url'] ) ) : '',
-				'context'     => $context,
-			)
-		);
-		wp_send_json_success(
-			array(
-				'html'      => ob_get_clean(),
-				'editor_id' => 'tutor_qna_reply_editor_' . $question_id,
-			)
-		);
+		if ( tutor_is_rest() ) {
+			return ! empty( $question_id ) ? true : false;
+		}
 	}
 
 	/**
@@ -184,7 +218,7 @@ class Q_and_A {
 	 *
 	 * @return void
 	 */
-	private function delete_qna_permanently( $question_ids ) {
+	public function delete_qna_permanently( $question_ids ) {
 		if ( is_array( $question_ids ) && count( $question_ids ) ) {
 			global $wpdb;
 			// Prepare in clause.
@@ -195,9 +229,10 @@ class Q_and_A {
 				$wpdb->prepare(
 					"DELETE
 						FROM {$wpdb->comments}
-						WHERE {$wpdb->comments}.comment_ID IN($question_ids)
+						WHERE {$wpdb->comments}.comment_ID IN(%s)
 							AND 1 = %d
 					",
+					$question_ids,
 					1
 				)
 			);
@@ -206,9 +241,10 @@ class Q_and_A {
 				$wpdb->prepare(
 					"DELETE
 						FROM {$wpdb->comments}
-						WHERE {$wpdb->comments}.comment_parent IN($question_ids)
+						WHERE {$wpdb->comments}.comment_parent IN(%s)
 							AND 1 = %d
 					",
+					$question_ids,
 					1
 				)
 			);
@@ -217,9 +253,10 @@ class Q_and_A {
 				$wpdb->prepare(
 					"DELETE
 						FROM {$wpdb->commentmeta} 
-						WHERE {$wpdb->commentmeta}.comment_id IN($question_ids)
+						WHERE {$wpdb->commentmeta}.comment_id IN(%s)
 							AND 1 = %d
 					",
+					$question_ids,
 					1
 				)
 			);
@@ -245,7 +282,7 @@ class Q_and_A {
 				$qa_ids = explode( ',', $qa_ids );
 				$qa_ids = array_filter(
 					$qa_ids,
-					function( $id ) use ( $user_id ) {
+					function ( $id ) use ( $user_id ) {
 						return is_numeric( $id ) && tutor_utils()->can_user_manage( 'qa_question', $id, $user_id );
 					}
 				);
@@ -293,11 +330,32 @@ class Q_and_A {
 		}
 
 		// Get who asked the question.
-		$context      = Input::post( 'context', '' );
-		$asker_prefix = 'frontend-dashboard-qna-table-student' === $context ? '_' . get_current_user_id() : '';
+		$context = Input::post( 'context', '' );
+		$user_id = get_current_user_id();
 
 		// Get the existing value from meta.
 		$action = Input::post( 'qna_action', '' );
+
+		$new_value = $this->trigger_qna_action( $question_id, $action, $context, $user_id );
+
+		// Transfer the new status.
+		wp_send_json_success( array( 'new_value' => $new_value ) );
+	}
+
+	/**
+	 * Function to update Q&A action
+	 *
+	 * @since 2.6.2
+	 *
+	 * @param int    $question_id question id.
+	 * @param string $action action name.
+	 * @param string $context context name.
+	 * @param int    $user_id user id.
+	 *
+	 * @return int
+	 */
+	public function trigger_qna_action( $question_id, $action, $context, $user_id ) {
+		$asker_prefix = 'frontend-dashboard-qna-table-student' === $context ? '_' . $user_id : '';
 
 		// If current user asker, then make it unread for self.
 		// If it is instructor, then make unread for instructor side.
@@ -310,8 +368,7 @@ class Q_and_A {
 		// Update the reverted value.
 		update_comment_meta( $question_id, $meta_key, $new_value );
 
-		// Transfer the new status.
-		wp_send_json_success( array( 'new_value' => $new_value ) );
+		return $new_value;
 	}
 
 	/**
@@ -335,7 +392,7 @@ class Q_and_A {
 
 		// Assign value, url etc to the tab array.
 		$tabs = array_map(
-			function( $tab ) use ( $stats ) {
+			function ( $tab ) use ( $stats ) {
 				return array(
 					'key'   => $tab,
 					'title' => tutor_utils()->translate_dynamic_text( $tab ),
