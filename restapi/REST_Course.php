@@ -419,18 +419,16 @@ class REST_Course {
 			$data = array();
 			foreach ( $topics->get_posts() as $post ) {
 				$current_topic = array(
-					'topic' => array(
-						'id'       => $post->ID,
-						'summary'  => $post->post_content,
-						'contents' => array(),
-					),
+					'id'       => $post->ID,
+					'summary'  => $post->post_content,
+					'contents' => array(),
 				);
 
 				$topic_contents = tutor_utils()->get_course_contents_by_topic( $post->ID, -1 );
 
 				if ( $topic_contents->have_posts() ) {
 					foreach ( $topic_contents->get_posts() as $post ) {
-						array_push( $current_topic['topic']['contents'], $post );
+						array_push( $current_topic['contents'], $post );
 					}
 				}
 
@@ -439,16 +437,18 @@ class REST_Course {
 
 			$response = array(
 				'status'  => 'success',
-				'message' => __( 'Course contents retreived sucessfully', 'tutor' ),
+				'message' => __( 'Course contents retrieved successfully', 'tutor' ),
 				'data'    => $data,
 			);
 			return self::send( $response );
 		}
+
 		$response = array(
 			'status'  => 'not_found',
 			'message' => __( 'Contents for this course with the given course id not found', 'tutor' ),
 			'data'    => array(),
 		);
+
 		return self::send( $response );
 	}
 }
