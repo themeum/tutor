@@ -399,7 +399,7 @@ class RestAPI {
 		// Get course content by id.
 		register_rest_route(
 			$this->namespace,
-			'/course/contents/(?P<id>\d+)',
+			'/course-contents/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array(
