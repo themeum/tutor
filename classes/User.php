@@ -333,14 +333,16 @@ class User {
 	public function hide_notices() {
 		$hide_notice         = Input::get( 'tutor-hide-notice', '' );
 		$is_register_enabled = Input::get( 'tutor-registration', '' );
-		if ( is_admin() && 'registration' === $hide_notice ) {
+		$has_manage_cap      = current_user_can( 'manage_options' );
+
+		if ( $has_manage_cap && is_admin() && 'registration' === $hide_notice ) {
 			tutor_utils()->checking_nonce( 'get' );
 
 			if ( 'enable' === $is_register_enabled ) {
 				update_option( 'users_can_register', 1 );
 			} else {
 				self::$hide_registration_notice = true;
-				setcookie( 'tutor_notice_hide_registration', 1, time() + ( 86400 * 30 ), tutor()->basepath );
+				setcookie( 'tutor_notice_hide_registration', 1, time() + MONTH_IN_SECONDS, tutor()->basepath );
 			}
 		}
 	}
