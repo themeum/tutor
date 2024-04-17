@@ -403,7 +403,7 @@ class REST_Course {
 	}
 
 	/**
-	 * Retreive the course contents for a given course id
+	 * Retrieve the course contents for a given course id
 	 *
 	 * @since 2.6.3
 	 *
