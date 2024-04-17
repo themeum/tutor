@@ -420,6 +420,7 @@ class REST_Course {
 			foreach ( $topics->get_posts() as $post ) {
 				$current_topic = array(
 					'id'       => $post->ID,
+					'title'    => $post->post_title,
 					'summary'  => $post->post_content,
 					'contents' => array(),
 				);
