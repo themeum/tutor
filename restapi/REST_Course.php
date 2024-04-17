@@ -395,9 +395,9 @@ class REST_Course {
 		}
 
 		$response = array(
-			'status'  => 'not_found',
-			'message' => __( 'Course not found', 'tutor' ),
-			'data'    => array(),
+			'status_code' => 'not_found',
+			'message'     => __( 'Course not found', 'tutor' ),
+			'data'        => array(),
 		);
 		return self::send( $response );
 	}
@@ -436,17 +436,17 @@ class REST_Course {
 			}
 
 			$response = array(
-				'status'  => 'success',
-				'message' => __( 'Course contents retrieved successfully', 'tutor' ),
-				'data'    => $data,
+				'status_code' => 'success',
+				'message'     => __( 'Course contents retrieved successfully', 'tutor' ),
+				'data'        => $data,
 			);
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status'  => 'not_found',
-			'message' => __( 'Contents for this course with the given course id not found', 'tutor' ),
-			'data'    => array(),
+			'status_code' => 'not_found',
+			'message'     => __( 'Contents for this course with the given course id not found', 'tutor' ),
+			'data'        => array(),
 		);
 
 		return self::send( $response );
