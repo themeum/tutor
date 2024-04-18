@@ -88,6 +88,21 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
     });
   };
 
+  const handleCorrectAnswer = () => {
+    if (hasMultipleCorrectAnswers) {
+      const isAlreadyMarked =
+        (markAsCorrect as string[]).length > 1 && (markAsCorrect as string[])?.some((item) => item === field.value.ID);
+      form.setValue(
+        `questions.${activeQuestionIndex}.markAsCorrect`,
+        isAlreadyMarked
+          ? (markAsCorrect as string[]).filter((item) => item !== field.value.ID)
+          : [...(markAsCorrect as string[]), field.value.ID]
+      );
+    } else {
+      form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+    }
+  };
+
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
       inputRef.current.focus();
@@ -106,26 +121,10 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
       style={style}
     >
       <div
-        onClick={() => {
-          if (hasMultipleCorrectAnswers) {
-            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, [
-              ...(markAsCorrect as string[]),
-              field.value.ID,
-            ]);
-          } else {
-            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-          }
-        }}
+        onClick={handleCorrectAnswer}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
-            if (hasMultipleCorrectAnswers) {
-              form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, [
-                ...(markAsCorrect as string[]),
-                field.value.ID,
-              ]);
-            } else {
-              form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-            }
+            handleCorrectAnswer();
           }
         }}
       >
@@ -138,28 +137,10 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
       </div>
       <div
         css={styles.optionLabel({ isSelected: isCorrect, isEditing })}
-        onClick={() => {
-          if (hasMultipleCorrectAnswers) {
-            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, [
-              ...(markAsCorrect as string[]),
-              field.value.ID,
-            ]);
-          } else {
-            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-          }
-        }}
+        onClick={handleCorrectAnswer}
         onKeyDown={(event) => {
           event.stopPropagation();
-          if (event.key === 'Enter') {
-            if (hasMultipleCorrectAnswers) {
-              form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, [
-                ...(markAsCorrect as string[]),
-                field.value.ID,
-              ]);
-            } else {
-              form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-            }
-          }
+          handleCorrectAnswer();
         }}
       >
         <div css={styles.optionHeader}>

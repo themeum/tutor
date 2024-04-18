@@ -44,6 +44,17 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
   const [isEditing, setIsEditing] = useState(false);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: field.value?.ID || 0,
+    animateLayoutChanges,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : undefined,
+  };
+
   const wpMedia = window.wp.media({
     library: { type: 'image' },
   });
@@ -73,15 +84,8 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
     });
   };
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: field.value?.ID || 0,
-    animateLayoutChanges,
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.3 : undefined,
+  const handleCorrectAnswer = () => {
+    form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
   };
 
   useEffect(() => {
@@ -93,12 +97,10 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
   return (
     <div {...attributes} css={styles.option({ isSelected: isCorrect, isEditing })} ref={setNodeRef} style={style}>
       <div
-        onClick={() => {
-          form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-        }}
+        onClick={handleCorrectAnswer}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
-            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+            handleCorrectAnswer();
           }
         }}
       >
@@ -106,12 +108,10 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
       </div>
       <div
         css={styles.optionLabel({ isSelected: isCorrect, isEditing })}
-        onClick={() => {
-          form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-        }}
+        onClick={handleCorrectAnswer}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
-            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+            handleCorrectAnswer();
           }
         }}
       >
