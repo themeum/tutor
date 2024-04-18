@@ -46,6 +46,7 @@ import OpenEnded from '@CourseBuilderComponents/curriculum/question-types/OpenEn
 import FillinTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
 import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
 import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
+import { nanoid } from '@Utils/util';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -124,9 +125,9 @@ type QuizTabs = 'questions' | 'settings';
 
 const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
-  const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
+  const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<QuizTabs>('questions');
   // @TODO: isEdit will be calculated based on the quiz data form API
   const [isEdit, setIsEdit] = useState(true);
@@ -191,9 +192,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const activeQuestionIdIndex = form.watch('questions').findIndex((question) => question.ID === activeQuestionId);
 
   const {
-    append,
-    remove,
-    move,
+    append: addQuestion,
+    remove: removeQustion,
+    move: moveQuestion,
     fields: questionFields,
   } = useFieldArray({
     control: form.control,
@@ -355,7 +356,37 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
               </div>
               <div css={styles.questionsLabel}>
                 <span>{__('Questions', 'tutor')}</span>
-                <button type="button" onClick={() => alert('@TODO: will be implemented later')}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const questionId = nanoid();
+                    addQuestion({
+                      ID: questionId,
+                      title: 'Write anything here..',
+                      description: '',
+                      type: 'true-false',
+                      answer_required: true,
+                      image_matching: false,
+                      muliple_correct_answer: false,
+                      options: [
+                        {
+                          ID: nanoid(),
+                          title: 'True',
+                          isCorrect: true,
+                        },
+                        {
+                          ID: nanoid(),
+                          title: 'False',
+                          isCorrect: false,
+                        },
+                      ],
+                      question_mark: 1,
+                      randomize_question: false,
+                      show_question_mark: false,
+                    });
+                    setActiveQuestionId(questionId);
+                  }}
+                >
                   <SVGIcon name="plusSquareBrand" />
                 </button>
               </div>
@@ -379,7 +410,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                         const activeIndex = questionFields.findIndex((item) => item.ID === active.id);
                         const overIndex = questionFields.findIndex((item) => item.ID === over.id);
 
-                        move(activeIndex, overIndex);
+                        moveQuestion(activeIndex, overIndex);
                       }
 
                       setActiveSortId(null);
@@ -399,7 +430,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                             setActiveQuestionId={setActiveQuestionId}
                             selectedQuestionId={selectedQuestionId}
                             setSelectedQuestionId={setSelectedQuestionId}
-                            onRemoveQuestion={() => remove(index)}
+                            onRemoveQuestion={() => removeQustion(index)}
                           />
                         )}
                       </For>
@@ -419,7 +450,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                                 setActiveQuestionId={setActiveQuestionId}
                                 selectedQuestionId={selectedQuestionId}
                                 setSelectedQuestionId={setSelectedQuestionId}
-                                onRemoveQuestion={() => remove(index)}
+                                onRemoveQuestion={() => removeQustion(index)}
                               />
                             );
                           }}

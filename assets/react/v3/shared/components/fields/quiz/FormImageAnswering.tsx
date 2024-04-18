@@ -16,6 +16,7 @@ import { isDefined } from '@Utils/types';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { animateLayoutChanges } from '@Utils/dndkit';
+import { nanoid } from '@Utils/util';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption | null> {
   index: number;
@@ -24,7 +25,7 @@ interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption
 
 const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnsweringProps) => {
   const inputValue = field.value ?? {
-    ID: 0,
+    ID: nanoid(),
     title: '',
   };
   const inputRef = useRef<HTMLInputElement>(null);

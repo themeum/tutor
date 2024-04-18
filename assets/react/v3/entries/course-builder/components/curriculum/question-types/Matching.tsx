@@ -138,11 +138,7 @@ const Matching = ({ form, activeQuestionIndex }: MatchingProps) => {
         )}
       </DndContext>
 
-      <button
-        type="button"
-        onClick={() => appendOption({ ID: Number.parseInt(nanoid()), title: '' })}
-        css={styles.addOptionButton}
-      >
+      <button type="button" onClick={() => appendOption({ ID: nanoid(), title: '' })} css={styles.addOptionButton}>
         <SVGIcon name="plus" height={24} width={24} />
         {__('Add Option', 'tutor')}
       </button>

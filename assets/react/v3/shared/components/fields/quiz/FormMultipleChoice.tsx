@@ -16,6 +16,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import { nanoid } from '@Utils/util';
 
 interface FormMultipleChoiceProps extends FormControllerProps<QuizQuestionOption | null> {
   index: number;
@@ -25,7 +26,7 @@ interface FormMultipleChoiceProps extends FormControllerProps<QuizQuestionOption
 
 const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, index }: FormMultipleChoiceProps) => {
   const inputValue = field.value ?? {
-    ID: 0,
+    ID: nanoid(),
     title: '',
   };
   const inputRef = useRef<HTMLTextAreaElement>(null);

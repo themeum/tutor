@@ -14,10 +14,10 @@ import { styleUtils } from '@Utils/style-utils';
 interface QuestionProps {
   question: QuizQuestion;
   index: number;
-  activeQuestionId: number | null;
-  setActiveQuestionId: (id: number | null) => void;
-  selectedQuestionId: number | null;
-  setSelectedQuestionId: (id: number | null) => void;
+  activeQuestionId: string | null;
+  setActiveQuestionId: (id: string | null) => void;
+  selectedQuestionId: string | null;
+  setSelectedQuestionId: (id: string | null) => void;
   onRemoveQuestion: () => void;
 }
 

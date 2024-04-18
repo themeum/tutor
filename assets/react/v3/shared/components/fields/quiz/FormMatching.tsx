@@ -25,7 +25,7 @@ interface FormMatchingProps extends FormControllerProps<QuizQuestionOption | nul
 
 const FormMatching = ({ index, imageMatching, onRemoveOption, field }: FormMatchingProps) => {
   const inputValue = field.value ?? {
-    ID: 0,
+    ID: '',
     title: '',
   };
   const inputRef = useRef<HTMLInputElement>(null);
