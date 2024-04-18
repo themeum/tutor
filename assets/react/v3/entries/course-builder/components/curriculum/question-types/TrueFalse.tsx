@@ -6,45 +6,110 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { typography } from '@Config/typography';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
+import type { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
+import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
+import { Controller, useWatch } from 'react-hook-form';
 
-const TrueFalse = () => {
-  const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
+interface TrueFalseProps {
+  form: FormWithGlobalErrorType<QuizForm>;
+  activeQuestionIndex: number;
+}
+
+const TrueFalse = ({ form, activeQuestionIndex }: TrueFalseProps) => {
+  const trueOptionData = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.options.0`,
+  });
+  const falseOptionData = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.options.1`,
+  });
 
   return (
     <div css={styles.optionWrapper}>
-      <div css={styles.option({ isSelected: selectedAnswer === true })}>
-        <SVGIcon data-check-icon name={selectedAnswer === true ? 'checkFilled' : 'check'} height={32} width={32} />
-        <div
-          css={styles.optionLabel({ isSelected: selectedAnswer === true })}
-          onClick={() => {
-            setSelectedAnswer(true);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              setSelectedAnswer(true);
-            }
-          }}
-        >
-          {__('True', 'tutor')}
-        </div>
-      </div>
+      <Controller
+        control={form.control}
+        name={`questions.${activeQuestionIndex}.options.0`}
+        render={({ field }) => (
+          <div css={styles.option({ isSelected: trueOptionData.isCorrect === true })}>
+            <SVGIcon
+              data-check-icon
+              name={trueOptionData.isCorrect === true ? 'checkFilled' : 'check'}
+              height={32}
+              width={32}
+            />
+            <div
+              css={styles.optionLabel({ isSelected: trueOptionData.isCorrect === true })}
+              onClick={() => {
+                field.onChange({
+                  ...field.value,
+                  isCorrect: true,
+                });
+                form.setValue(`questions.${activeQuestionIndex}.options.1`, {
+                  ...falseOptionData,
+                  isCorrect: false,
+                });
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  field.onChange({
+                    ...field.value,
+                    isCorrect: true,
+                  });
+                }
+                form.setValue(`questions.${activeQuestionIndex}.options.1`, {
+                  ...falseOptionData,
+                  isCorrect: false,
+                });
+              }}
+            >
+              {__('True', 'tutor')}
+            </div>
+          </div>
+        )}
+      />
 
-      <div css={styles.option({ isSelected: selectedAnswer === false })}>
-        <SVGIcon data-check-icon name={selectedAnswer === false ? 'checkFilled' : 'check'} height={32} width={32} />
-        <div
-          css={styles.optionLabel({ isSelected: selectedAnswer === false })}
-          onClick={() => {
-            setSelectedAnswer(false);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              setSelectedAnswer(false);
-            }
-          }}
-        >
-          {__('False', 'tutor')}
-        </div>
-      </div>
+      <Controller
+        control={form.control}
+        name={`questions.${activeQuestionIndex}.options.1`}
+        render={({ field }) => (
+          <div css={styles.option({ isSelected: falseOptionData.isCorrect === true })}>
+            <SVGIcon
+              data-check-icon
+              name={falseOptionData.isCorrect === true ? 'checkFilled' : 'check'}
+              height={32}
+              width={32}
+            />
+            <div
+              css={styles.optionLabel({ isSelected: falseOptionData.isCorrect === true })}
+              onClick={() => {
+                field.onChange({
+                  ...field.value,
+                  isCorrect: true,
+                });
+                form.setValue(`questions.${activeQuestionIndex}.options.0`, {
+                  ...trueOptionData,
+                  isCorrect: false,
+                });
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  field.onChange({
+                    ...field.value,
+                    isCorrect: true,
+                  });
+                  form.setValue(`questions.${activeQuestionIndex}.options.0`, {
+                    ...trueOptionData,
+                    isCorrect: false,
+                  });
+                }
+              }}
+            >
+              {__('False', 'tutor')}
+            </div>
+          </div>
+        )}
+      />
     </div>
   );
 };
@@ -73,6 +138,7 @@ const styles = {
       opacity: 0;
       transition: opacity 0.15s ease-in-out;
       fill: none;
+      flex-shrink: 0;
     }
 
     &:hover {

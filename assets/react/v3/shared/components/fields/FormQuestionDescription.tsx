@@ -1,8 +1,7 @@
-import { type SerializedStyles, css } from '@emotion/react';
+import { css } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -181,7 +180,8 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[16]};
-    height: 64px;
+    min-height: 64px;
+    height: 100%;
     width: 100%;
     padding-inline: ${spacing[8]} ${spacing[16]};
     border-radius: ${borderRadius[6]};
@@ -205,11 +205,18 @@ const styles = {
       ${
         isEdit &&
         css`
-        background-color: transparent;
-      `
+          background-color: transparent;
+        `
       }
       
     };
+
+    ${
+      isEdit &&
+      css`
+        padding-inline: 0;
+      `
+    }
   `,
   inputContainer: (enableResize: boolean) => css`
     position: relative;

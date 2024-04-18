@@ -18,6 +18,7 @@ interface QuestionProps {
   setActiveQuestionId: (id: number | null) => void;
   selectedQuestionId: number | null;
   setSelectedQuestionId: (id: number | null) => void;
+  onRemoveQuestion: () => void;
 }
 
 const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
@@ -38,6 +39,7 @@ const Question = ({
   setActiveQuestionId,
   selectedQuestionId,
   setSelectedQuestionId,
+  onRemoveQuestion,
 }: QuestionProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.ID,
@@ -79,7 +81,11 @@ const Question = ({
         data-three-dots
       >
         <ThreeDots.Option text={__('Duplicate', 'tutor')} icon={<SVGIcon name="duplicate" width={24} height={24} />} />
-        <ThreeDots.Option text={__('Delete', 'tutor')} icon={<SVGIcon name="delete" width={24} height={24} />} />
+        <ThreeDots.Option
+          text={__('Delete', 'tutor')}
+          icon={<SVGIcon name="delete" width={24} height={24} />}
+          onClick={onRemoveQuestion}
+        />
       </ThreeDots>
     </div>
   );

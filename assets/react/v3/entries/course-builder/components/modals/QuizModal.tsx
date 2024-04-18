@@ -36,15 +36,16 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Controller } from 'react-hook-form';
+import { Controller, useFieldArray } from 'react-hook-form';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
-import { moveTo } from '@Utils/util';
 import MultipleChoice from '@CourseBuilderComponents/curriculum/question-types/MultipleChoice';
 import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
 import OpenEnded from '@CourseBuilderComponents/curriculum/question-types/OpenEnded';
 import FillinTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
+import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
+import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -55,13 +56,6 @@ export type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
 export interface QuizForm {
   quiz_title: string;
   quiz_description: string;
-  question_type: QuizQuestionType;
-  answer_required: boolean;
-  muliple_correct_answer: boolean;
-  image_matching: boolean;
-  randomize: boolean;
-  point: number;
-  display_point: boolean;
   quiz_option: {
     time_limit: {
       time_value: number;
@@ -80,6 +74,7 @@ export interface QuizForm {
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
   };
+  questions: QuizQuestion[];
 }
 
 const questionTypeOptions: Option<QuizQuestionType>[] = [
@@ -131,7 +126,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
-  const [questionsData, setQuestionsData] = useState<QuizQuestion[]>([]);
   const [activeQuestionId, setActiveQuestionId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<QuizTabs>('questions');
   // @TODO: isEdit will be calculated based on the quiz data form API
@@ -139,15 +133,16 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
+  const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
+
+  useEffect(() => {
+    if (getQuizQuestionsQuery.data) {
+      setActiveQuestionId(getQuizQuestionsQuery.data[0].ID);
+    }
+  }, [getQuizQuestionsQuery.data]);
+
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {
-      question_type: 'true-false',
-      answer_required: false,
-      muliple_correct_answer: false,
-      image_matching: false,
-      randomize: false,
-      point: 0,
-      display_point: true,
       quiz_option: {
         time_limit: {
           time_value: 0,
@@ -166,7 +161,43 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
         short_answer_characters_limit: 0,
         open_ended_answer_characters_limit: 0,
       },
+      questions: [],
     },
+    values: {
+      quiz_title: 'New Quiz',
+      quiz_description: 'Quiz description',
+      quiz_option: {
+        time_limit: {
+          time_value: 0,
+          time_type: 'minutes',
+        },
+        hide_quiz_time_display: false,
+        feedback_mode: 'default',
+        attempts_allowed: 0,
+        passing_grade: 0,
+        max_questions_for_answer: 0,
+        available_after_days: 0,
+        quiz_auto_start: false,
+        question_layout_view: '',
+        questions_order: 'rand',
+        hide_question_number_overview: false,
+        short_answer_characters_limit: 0,
+        open_ended_answer_characters_limit: 0,
+      },
+      questions: getQuizQuestionsQuery.data || [],
+    },
+  });
+
+  const activeQuestionIdIndex = form.watch('questions').findIndex((question) => question.ID === activeQuestionId);
+
+  const {
+    append,
+    remove,
+    move,
+    fields: questionFields,
+  } = useFieldArray({
+    control: form.control,
+    name: 'questions',
   });
 
   const sensors = useSensors(
@@ -178,41 +209,35 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const questionType = form.watch('question_type');
-
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
     }
 
-    return questionsData.find((item) => item.ID === activeSortId);
-  }, [activeSortId, questionsData]);
+    return questionFields.find((item) => item.ID === activeSortId);
+  }, [activeSortId, questionFields]);
 
   const questionTypeForm = {
-    'true-false': <TrueFalse />,
-    'multiple-choice': <MultipleChoice />,
-    'open-ended': <OpenEnded />,
-    'fill-in-the-blanks': <FillinTheBlanks />,
-    'short-answer': <OpenEnded />,
-    matching: <Matching />,
-    'image-answering': <ImageAnswering />,
-    ordering: <MultipleChoice />,
+    'true-false': <TrueFalse key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />,
+    'multiple-choice': (
+      <MultipleChoice key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />
+    ),
+    'open-ended': <OpenEnded key={activeQuestionId} />,
+    'fill-in-the-blanks': (
+      <FillinTheBlanks key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />
+    ),
+    'short-answer': <OpenEnded key={activeQuestionId} />,
+    matching: <Matching key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />,
+    'image-answering': (
+      <ImageAnswering key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />
+    ),
+    ordering: <MultipleChoice key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />,
   } as const;
-
-  const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
 
   const onQuizFormSubmit = (data: QuizForm) => {
     // @TODO: will be implemented later
-    alert(JSON.stringify(data, null, 2));
     setIsEdit(false);
   };
-
-  // @TODO: Remove this when the API is ready
-  useEffect(() => {
-    if (getQuizQuestionsQuery.data) {
-      setQuestionsData(getQuizQuestionsQuery.data);
-    }
-  }, [getQuizQuestionsQuery.data]);
 
   const { isDirty } = form.formState;
 
@@ -283,7 +308,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                   when={isEdit}
                   fallback={
                     <div css={styles.quizNameWithButton}>
-                      <span css={styles.quizTitle}>General knowledge</span>
+                      <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
                       <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
                         <SVGIcon name="edit" width={24} height={24} />
                       </Button>
@@ -329,14 +354,14 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                 </Show>
               </div>
               <div css={styles.questionsLabel}>
-                <span>Questions</span>
+                <span>{__('Questions', 'tutor')}</span>
                 <button type="button" onClick={() => alert('@TODO: will be implemented later')}>
                   <SVGIcon name="plusSquareBrand" />
                 </button>
               </div>
 
               <div css={styles.questionList}>
-                <Show when={questionsData.length > 0} fallback={<div>No question!</div>}>
+                <Show when={questionFields.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
                   <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -351,22 +376,20 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                       }
 
                       if (active.id !== over.id) {
-                        const activeIndex = questionsData.findIndex((item) => item.ID === active.id);
-                        const overIndex = questionsData.findIndex((item) => item.ID === over.id);
+                        const activeIndex = questionFields.findIndex((item) => item.ID === active.id);
+                        const overIndex = questionFields.findIndex((item) => item.ID === over.id);
 
-                        setQuestionsData((previous) => {
-                          return moveTo(previous, activeIndex, overIndex);
-                        });
+                        move(activeIndex, overIndex);
                       }
 
                       setActiveSortId(null);
                     }}
                   >
                     <SortableContext
-                      items={questionsData.map((item) => ({ ...item, id: item.ID }))}
+                      items={questionFields.map((item) => ({ ...item, id: item.ID }))}
                       strategy={verticalListSortingStrategy}
                     >
-                      <For each={questionsData}>
+                      <For each={form.getValues('questions')}>
                         {(question, index) => (
                           <Question
                             key={question.ID}
@@ -376,6 +399,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                             setActiveQuestionId={setActiveQuestionId}
                             selectedQuestionId={selectedQuestionId}
                             setSelectedQuestionId={setSelectedQuestionId}
+                            onRemoveQuestion={() => remove(index)}
                           />
                         )}
                       </For>
@@ -385,7 +409,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                       <DragOverlay>
                         <Show when={activeSortItem}>
                           {(item) => {
-                            const index = questionsData.findIndex((question) => question.ID === item.ID);
+                            const index = questionFields.findIndex((question) => question.ID === item.ID);
                             return (
                               <Question
                                 key={item.ID}
@@ -395,6 +419,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                                 setActiveQuestionId={setActiveQuestionId}
                                 selectedQuestionId={selectedQuestionId}
                                 setSelectedQuestionId={setSelectedQuestionId}
+                                onRemoveQuestion={() => remove(index)}
                               />
                             );
                           }}
@@ -409,7 +434,44 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
           </div>
         </Show>
         <div css={styles.content({ activeTab })}>
-          <Show when={activeTab === 'settings'} fallback={questionTypeForm[questionType]}>
+          <Show
+            when={activeTab === 'settings'}
+            fallback={
+              <Show when={activeQuestionId}>
+                <div css={styles.questionForm}>
+                  <div css={styles.questionTitleAndDesc}>
+                    <Controller
+                      key={`${activeQuestionId}-title`}
+                      control={form.control}
+                      name={`questions.${activeQuestionIdIndex}.title`}
+                      render={(controllerProps) => (
+                        <FormQuestionTitle
+                          {...controllerProps}
+                          placeholder={__('Write your question here..', 'tutor')}
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      key={`${activeQuestionId}-description`}
+                      control={form.control}
+                      name={`questions.${activeQuestionIdIndex}.description`}
+                      render={(controllerProps) => (
+                        <FormQuestionDescription
+                          {...controllerProps}
+                          placeholder={__('Description (optional)', 'tutor')}
+                          enableResize
+                          rows={2}
+                        />
+                      )}
+                    />
+                  </div>
+
+                  {questionTypeForm[form.watch(`questions.${activeQuestionIdIndex}.type`)]}
+                </div>
+              </Show>
+            }
+          >
             <QuizSettings form={form} />
           </Show>
         </div>
@@ -417,8 +479,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
           <div css={styles.right}>
             <div css={styles.questionTypeWrapper}>
               <Controller
+                key={`${activeQuestionId}-type`}
                 control={form.control}
-                name="question_type"
+                name={`questions.${activeQuestionIdIndex}.type`}
                 render={(controllerProps) => (
                   <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
                 )}
@@ -427,41 +490,46 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
             <div css={styles.conditions}>
               <p>{__('Conditions', 'tutor')}</p>
               <div css={styles.conditionControls}>
-                <Show when={questionType === 'multiple-choice'}>
+                <Show when={form.watch(`questions.${activeQuestionIdIndex}.type`) === 'multiple-choice'}>
                   <Controller
+                    key={`${activeQuestionId}-muliple_correct_answer`}
                     control={form.control}
-                    name="muliple_correct_answer"
+                    name={`questions.${activeQuestionIdIndex}.muliple_correct_answer`}
                     render={(controllerProps) => (
                       <FormSwitch {...controllerProps} label={__('Multiple Correct Answer', 'tutor')} />
                     )}
                   />
                 </Show>
-                <Show when={questionType === 'matching'}>
+                <Show when={form.watch(`questions.${activeQuestionIdIndex}.type`) === 'matching'}>
                   <Controller
+                    key={`${activeQuestionId}-image_matching`}
                     control={form.control}
-                    name="image_matching"
+                    name={`questions.${activeQuestionIdIndex}.image_matching`}
                     render={(controllerProps) => (
                       <FormSwitch {...controllerProps} label={__('Image Matching', 'tutor')} />
                     )}
                   />
                 </Show>
                 <Controller
+                  key={`${activeQuestionId}-answer_required`}
                   control={form.control}
-                  name="answer_required"
+                  name={`questions.${activeQuestionIdIndex}.answer_required`}
                   render={(controllerProps) => (
                     <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />
                   )}
                 />
                 <Controller
+                  key={`${activeQuestionId}-randomize_question`}
                   control={form.control}
-                  name="randomize"
+                  name={`questions.${activeQuestionIdIndex}.randomize_question`}
                   render={(controllerProps) => (
                     <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />
                   )}
                 />
                 <Controller
+                  key={`${activeQuestionId}-question_mark`}
                   control={form.control}
-                  name="point"
+                  name={`questions.${activeQuestionIdIndex}.question_mark`}
                   render={(controllerProps) => (
                     <FormInput
                       {...controllerProps}
@@ -475,8 +543,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                   )}
                 />
                 <Controller
+                  key={`${activeQuestionId}-show_question_mark`}
                   control={form.control}
-                  name="display_point"
+                  name={`questions.${activeQuestionIdIndex}.show_question_mark`}
                   render={(controllerProps) => (
                     <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />
                   )}
@@ -486,6 +555,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
           </div>
         </Show>
       </div>
+
       <ConfirmationPopover
         isOpen={isConfirmationOpen}
         triggerRef={cancelRef}
@@ -538,6 +608,15 @@ const styles = {
 			padding-top: ${spacing[24]};
 		`
     }
+  `,
+  questionForm: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[16]};
+  `,
+  questionTitleAndDesc: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
+    padding-left: 42px; // This is outside of the design
   `,
   right: css`
     ${styleUtils.display.flex('column')};
