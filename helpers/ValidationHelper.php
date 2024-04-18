@@ -106,6 +106,18 @@ class ValidationHelper {
 								$validation_errors[ $key ][] = $key . __( ' invalid date format', 'tutor' );
 							}
 							break;
+
+						case 'has_record':
+							list( $table, $column ) = explode( ',', $nested_rules[1], 2 );
+
+							$value      = $data[ $key ];
+							$has_record = self::has_record( $table, $column, $value );
+							if ( ! $has_record ) {
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' record not found', 'tutor' );
+							}
+							break;
+
 						case 'user_exists':
 							$user_id   = (int) $data[ $key ];
 							$is_exists = self::is_user_exists( $user_id );
@@ -252,5 +264,27 @@ class ValidationHelper {
 	public static function is_user_exists( int $user_id ): bool {
 		$user = get_user_by( 'id', $user_id );
 		return $user ? true : false;
+	}
+
+	/**
+	 * Check a table has record.
+	 *
+	 * @since 2.7.0
+	 *
+	 * @param string $table table name with prefix or without.
+	 * @param string $column table column name.
+	 * @param mixed  $value table column value.
+	 *
+	 * @return boolean
+	 */
+	public static function has_record( $table, $column, $value ) {
+		global $wpdb;
+		$table_prefix = $wpdb->prefix;
+		if ( strpos( $table, $table_prefix ) !== 0 ) {
+			$table = $table_prefix . $table;
+		}
+
+		$record = QueryHelper::get_row( $table, array( $column => $value ), $column );
+		return $record ? true : false;
 	}
 }
