@@ -44,6 +44,15 @@ class ValidationHelper {
 			foreach ( $rules as $rule ) {
 				$nested_rules = explode( ':', $rule );
 
+				/**
+				 * Optional input validation.
+				 */
+				if ( isset( $nested_rules[0] ) && 'if_input' === $nested_rules[0] ) {
+					if ( ! self::has_key( $key, $data ) ) {
+						break;
+					}
+				}
+
 				foreach ( $nested_rules as $nested_rule ) {
 					switch ( $nested_rule ) {
 						case 'required':
