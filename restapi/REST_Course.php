@@ -405,7 +405,7 @@ class REST_Course {
 	/**
 	 * Retrieve the course contents for a given course id
 	 *
-	 * @since 2.6.3
+	 * @since 2.7.0
 	 *
 	 * @param WP_REST_Request $request request params.
 	 *
