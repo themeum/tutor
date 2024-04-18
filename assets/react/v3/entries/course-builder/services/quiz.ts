@@ -14,7 +14,6 @@ export type QuizQuestionType =
 export interface QuizQuestionOption {
   ID: string;
   title: string;
-  isCorrect?: boolean;
   image?: Media;
   matchedTitle?: string;
   fillinTheBlanksCorrectAnswer?: string[];
@@ -30,6 +29,7 @@ export interface QuizQuestion {
   show_question_mark: boolean;
   muliple_correct_answer: boolean;
   image_matching: boolean;
+  markAsCorrect?: string | string[];
   options?: QuizQuestionOption[];
 }
 
@@ -40,7 +40,7 @@ const mockQuizQuestions: QuizQuestion[] = [
     title: 'Trust me I am True / False',
     description: 'This is a true false question',
     options: [
-      { ID: '1', title: 'True', isCorrect: true},
+      { ID: '1', title: 'True'},
       { ID: '2', title: 'False' },
     ],
     answer_required: false,
@@ -49,6 +49,7 @@ const mockQuizQuestions: QuizQuestion[] = [
     show_question_mark: true,
     muliple_correct_answer: false,
     image_matching: false,
+    markAsCorrect: '1',
   },
   {
     ID: '3',
@@ -58,7 +59,7 @@ const mockQuizQuestions: QuizQuestion[] = [
     options: [
       { ID: '1', title: 'Option 1' },
       { ID: '2', title: 'Option 2' },
-      { ID: '3', title: 'Option 3', isCorrect: true},
+      { ID: '3', title: 'Option 3',},
       { ID: '4', title: 'Option 4' },
     ],
     answer_required: false,
@@ -67,6 +68,7 @@ const mockQuizQuestions: QuizQuestion[] = [
     show_question_mark: false,
     muliple_correct_answer: false,
     image_matching: false,
+    markAsCorrect: '3',
   },
   {
     ID: '4',
@@ -123,7 +125,8 @@ const mockQuizQuestions: QuizQuestion[] = [
       { ID: '2', title: 'Option 2', matchedTitle: 'Matched Option 2' },
       { ID: '3', title: 'Option 3', matchedTitle: 'Matched Option 3' },
       { ID: '4', title: 'Option 4', matchedTitle: 'Matched Option 4' },
-    ]
+    ],
+    markAsCorrect: '1'
   },
   {
     ID: '9',
@@ -139,9 +142,10 @@ const mockQuizQuestions: QuizQuestion[] = [
     options: [
       { ID: '1', title: 'Option 1' },
       { ID: '2', title: 'Option 2' },
-      { ID: '3', title: 'Option 3', isCorrect: true},
+      { ID: '3', title: 'Option 3',},
       { ID: '4', title: 'Option 4' },
-    ]
+    ],
+    markAsCorrect: '3'
   },
   {
     ID: '10',
@@ -149,7 +153,7 @@ const mockQuizQuestions: QuizQuestion[] = [
     title: 'Order is not chaos!',
     description: 'This is an ordering question',
     options: [
-      { ID: '1', title: 'Option 5', isCorrect: true },
+      { ID: '1', title: 'Option 5', },
       { ID: '2', title: 'Option 6' },
       { ID: '3', title: 'Option 7'},
       { ID: '4', title: 'Option 8' },
@@ -160,6 +164,7 @@ const mockQuizQuestions: QuizQuestion[] = [
     show_question_mark: true,
     muliple_correct_answer: false,
     image_matching: false,
+    markAsCorrect: '3'
   },
 ];
 

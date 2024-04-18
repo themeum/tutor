@@ -14,26 +14,23 @@ import {
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { createPortal } from 'react-dom';
-import { Controller, useFieldArray } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import FormMatching from '@Components/fields/quiz/FormMatching';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
-import type { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { nanoid } from '@Utils/util';
 import { styleUtils } from '@Utils/style-utils';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-interface MatchingProps {
-  form: FormWithGlobalErrorType<QuizForm>;
-  activeQuestionIndex: number;
-}
-
-const Matching = ({ form, activeQuestionIndex }: MatchingProps) => {
+const Matching = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
+  const form = useFormContext<QuizForm>();
+  const { activeQuestionIndex } = useQuizModalContext();
 
   const {
     fields: optionsFields,

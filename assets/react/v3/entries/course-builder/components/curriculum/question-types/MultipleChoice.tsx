@@ -6,9 +6,8 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
-import type { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-import { Controller, useFieldArray } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import For from '@Controls/For';
 import FormMultipleChoice from '@Components/fields/quiz/FormMultipleChoice';
 import {
@@ -26,14 +25,12 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Show from '@Controls/Show';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-interface MultipleChoiceProps {
-  form: FormWithGlobalErrorType<QuizForm>;
-  activeQuestionIndex: number;
-}
-
-const MultipleChoice = ({ form, activeQuestionIndex }: MultipleChoiceProps) => {
+const MultipleChoice = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
+  const form = useFormContext<QuizForm>();
+  const { activeQuestionIndex } = useQuizModalContext();
 
   const {
     fields: optionsFields,

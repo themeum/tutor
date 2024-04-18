@@ -1,16 +1,14 @@
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
-import type { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import FormFillinTheBlanks from '@Components/fields/quiz/FormFillinTheBlanks';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-interface FillinTheBlanksProps {
-  form: FormWithGlobalErrorType<QuizForm>;
-  activeQuestionIndex: number;
-}
+const FillinTheBlanks = () => {
+  const form = useFormContext<QuizForm>();
+  const { activeQuestionIndex } = useQuizModalContext();
 
-const FillinTheBlanks = ({ form, activeQuestionIndex }: FillinTheBlanksProps) => {
   return (
     <div css={styles.optionWrapper}>
       <Controller

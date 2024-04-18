@@ -16,8 +16,11 @@ import { isDefined } from '@Utils/types';
 import { useSortable } from '@dnd-kit/sortable';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { CSS } from '@dnd-kit/utilities';
+import { useFormContext } from 'react-hook-form';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
-interface FormMatchingProps extends FormControllerProps<QuizQuestionOption | null> {
+interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   imageMatching: boolean;
   onRemoveOption: () => void;
@@ -30,7 +33,14 @@ const FormMatching = ({ index, imageMatching, onRemoveOption, field }: FormMatch
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
+  const form = useFormContext<QuizForm>();
+  const { activeQuestionIndex } = useQuizModalContext();
+  const markAsCorrect = form.watch(`questions.${activeQuestionIndex}.markAsCorrect`);
+
+  const isCorrect = Array.isArray(markAsCorrect)
+    ? markAsCorrect.some((item) => item === inputValue.ID)
+    : markAsCorrect === inputValue.ID;
+
   const [isEditing, setIsEditing] = useState(false);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
@@ -81,46 +91,31 @@ const FormMatching = ({ index, imageMatching, onRemoveOption, field }: FormMatch
   }, [isEditing]);
 
   return (
-    <div
-      {...attributes}
-      css={styles.option({ isSelected: selectedAnswer === true, isEditing })}
-      ref={setNodeRef}
-      style={style}
-    >
+    <div {...attributes} css={styles.option({ isSelected: isCorrect, isEditing })} ref={setNodeRef} style={style}>
       <div
-        onClick={() => setSelectedAnswer((previous) => !previous)}
+        onClick={() => form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID)}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
-            setSelectedAnswer((previous) => !previous);
+            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
           }
         }}
       >
-        <SVGIcon data-check-icon name={selectedAnswer === true ? 'checkFilled' : 'check'} height={32} width={32} />
+        <SVGIcon data-check-icon name={isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />
       </div>
       <div
-        css={styles.optionLabel({ isSelected: selectedAnswer === true, isEditing })}
+        css={styles.optionLabel({ isSelected: isCorrect, isEditing })}
         onClick={() => {
-          setSelectedAnswer((previous) => !previous);
-          field.onChange({
-            ...inputValue,
-            isCorrect: !selectedAnswer,
-          });
+          form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
         }}
         onKeyDown={(event) => {
           event.stopPropagation();
           if (event.key === 'Enter') {
-            setSelectedAnswer((previous) => !previous);
-            field.onChange({
-              ...inputValue,
-              isCorrect: !selectedAnswer,
-            });
+            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
           }
         }}
       >
         <div css={styles.optionHeader}>
-          <div css={styles.optionCounter({ isSelected: selectedAnswer === true, isEditing })}>
-            {String.fromCharCode(65 + index)}
-          </div>
+          <div css={styles.optionCounter({ isSelected: isCorrect, isEditing })}>{String.fromCharCode(65 + index)}</div>
 
           <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
             <SVGIcon name="dragVertical" height={24} width={24} />

@@ -36,7 +36,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Controller, useFieldArray } from 'react-hook-form';
+import { Controller, FormProvider, useFieldArray } from 'react-hook-form';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import MultipleChoice from '@CourseBuilderComponents/curriculum/question-types/MultipleChoice';
@@ -47,6 +47,7 @@ import FillinTheBlanks from '@CourseBuilderComponents/curriculum/question-types/
 import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
 import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
 import { nanoid } from '@Utils/util';
+import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -136,12 +137,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 
   const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
 
-  useEffect(() => {
-    if (getQuizQuestionsQuery.data) {
-      setActiveQuestionId(getQuizQuestionsQuery.data[0].ID);
-    }
-  }, [getQuizQuestionsQuery.data]);
-
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {
       quiz_option: {
@@ -189,6 +184,12 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     },
   });
 
+  useEffect(() => {
+    if (getQuizQuestionsQuery.data) {
+      setActiveQuestionId(getQuizQuestionsQuery.data[0].ID);
+    }
+  }, [getQuizQuestionsQuery.data]);
+
   const activeQuestionIdIndex = form.watch('questions').findIndex((question) => question.ID === activeQuestionId);
 
   const {
@@ -219,20 +220,14 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   }, [activeSortId, questionFields]);
 
   const questionTypeForm = {
-    'true-false': <TrueFalse key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />,
-    'multiple-choice': (
-      <MultipleChoice key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />
-    ),
+    'true-false': <TrueFalse key={activeQuestionId} activeQuestionIndex={activeQuestionIdIndex} />,
+    'multiple-choice': <MultipleChoice key={activeQuestionId} />,
     'open-ended': <OpenEnded key={activeQuestionId} />,
-    'fill-in-the-blanks': (
-      <FillinTheBlanks key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />
-    ),
+    'fill-in-the-blanks': <FillinTheBlanks key={activeQuestionId} />,
     'short-answer': <OpenEnded key={activeQuestionId} />,
-    matching: <Matching key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />,
-    'image-answering': (
-      <ImageAnswering key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />
-    ),
-    ordering: <MultipleChoice key={activeQuestionId} form={form} activeQuestionIndex={activeQuestionIdIndex} />,
+    matching: <Matching key={activeQuestionId} />,
+    'image-answering': <ImageAnswering key={activeQuestionId} />,
+    ordering: <MultipleChoice key={activeQuestionId} />,
   } as const;
 
   const onQuizFormSubmit = (data: QuizForm) => {
@@ -247,204 +242,188 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   }
 
   return (
-    <ModalWrapper
-      onClose={() => closeModal({ action: 'CLOSE' })}
-      icon={icon}
-      title={title}
-      subtitle={subtitle}
-      headerChildren={
-        <Tabs
-          wrapperCss={css`
+    <QuizModalContextProvider activeQuestionIndex={activeQuestionIdIndex}>
+      <FormProvider {...form}>
+        <ModalWrapper
+          onClose={() => closeModal({ action: 'CLOSE' })}
+          icon={icon}
+          title={title}
+          subtitle={subtitle}
+          headerChildren={
+            <Tabs
+              wrapperCss={css`
             height: ${modal.HEADER_HEIGHT}px;
           `}
-          activeTab={activeTab}
-          tabList={[
-            {
-              label: __('Questions', 'tutor'),
-              value: 'questions',
-            },
-            { label: __('Settings', 'tutor'), value: 'settings' },
-          ]}
-          onChange={(tab) => setActiveTab(tab)}
-        />
-      }
-      actions={
-        <>
-          <Button
-            variant="text"
-            size="small"
-            onClick={() => {
-              if (isDirty) {
-                setIsConfirmationOpen(true);
-                return;
-              }
-
-              closeModal();
-            }}
-            ref={cancelRef}
-          >
-            {__('Cancel', 'tutor')}
-          </Button>
-          <Show
-            when={activeTab === 'settings'}
-            fallback={
-              <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
-                Next
-              </Button>
-            }
-          >
-            <Button variant="primary" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
-              Save
-            </Button>
-          </Show>
-        </>
-      }
-    >
-      <div css={styles.wrapper}>
-        <Show when={activeTab === 'questions'} fallback={<div />}>
-          <div css={styles.left}>
-            <Show when={activeTab === 'questions'}>
-              <div css={styles.quizTitleWrapper}>
-                <Show
-                  when={isEdit}
-                  fallback={
-                    <div css={styles.quizNameWithButton}>
-                      <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
-                      <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
-                        <SVGIcon name="edit" width={24} height={24} />
-                      </Button>
-                    </div>
+              activeTab={activeTab}
+              tabList={[
+                {
+                  label: __('Questions', 'tutor'),
+                  value: 'questions',
+                },
+                { label: __('Settings', 'tutor'), value: 'settings' },
+              ]}
+              onChange={(tab) => setActiveTab(tab)}
+            />
+          }
+          actions={
+            <>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  if (isDirty) {
+                    setIsConfirmationOpen(true);
+                    return;
                   }
-                >
-                  <div css={styles.quizForm}>
-                    <Controller
-                      control={form.control}
-                      name="quiz_title"
-                      rules={{ required: __('Quiz title is required', 'tutor') }}
-                      render={(controllerProps) => (
-                        <FormInput {...controllerProps} placeholder={__('Add quiz title', 'tutor')} />
-                      )}
-                    />
-                    <Controller
-                      control={form.control}
-                      name="quiz_description"
-                      render={(controllerProps) => (
-                        <FormTextareaInput
-                          {...controllerProps}
-                          placeholder={__('Add a summary', 'tutor')}
-                          enableResize
-                          rows={2}
-                        />
-                      )}
-                    />
 
-                    <div css={styles.quizFormButtonWrapper}>
-                      <Button variant="text" type="button" onClick={() => setIsEdit(false)} size="small">
-                        {__('Cancel', 'tutor')}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        type="submit"
-                        size="small"
-                        onClick={form.handleSubmit(onQuizFormSubmit)}
-                      >
-                        {__('Ok', 'tutor')}
-                      </Button>
-                    </div>
-                  </div>
-                </Show>
-              </div>
-              <div css={styles.questionsLabel}>
-                <span>{__('Questions', 'tutor')}</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const questionId = nanoid();
-                    addQuestion({
-                      ID: questionId,
-                      title: 'Write anything here..',
-                      description: '',
-                      type: 'true-false',
-                      answer_required: true,
-                      image_matching: false,
-                      muliple_correct_answer: false,
-                      options: [
-                        {
-                          ID: nanoid(),
-                          title: 'True',
-                          isCorrect: true,
-                        },
-                        {
-                          ID: nanoid(),
-                          title: 'False',
-                          isCorrect: false,
-                        },
-                      ],
-                      question_mark: 1,
-                      randomize_question: false,
-                      show_question_mark: false,
-                    });
-                    setActiveQuestionId(questionId);
-                  }}
-                >
-                  <SVGIcon name="plusSquareBrand" />
-                </button>
-              </div>
-
-              <div css={styles.questionList}>
-                <Show when={questionFields.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
-                  <DndContext
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-                    onDragStart={(event) => {
-                      setActiveSortId(event.active.id);
-                    }}
-                    onDragEnd={(event) => {
-                      const { active, over } = event;
-                      if (!over) {
-                        return;
+                  closeModal();
+                }}
+                ref={cancelRef}
+              >
+                {__('Cancel', 'tutor')}
+              </Button>
+              <Show
+                when={activeTab === 'settings'}
+                fallback={
+                  <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                    Next
+                  </Button>
+                }
+              >
+                <Button variant="primary" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
+                  Save
+                </Button>
+              </Show>
+            </>
+          }
+        >
+          <div css={styles.wrapper}>
+            <Show when={activeTab === 'questions'} fallback={<div />}>
+              <div css={styles.left}>
+                <Show when={activeTab === 'questions'}>
+                  <div css={styles.quizTitleWrapper}>
+                    <Show
+                      when={isEdit}
+                      fallback={
+                        <div css={styles.quizNameWithButton}>
+                          <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
+                          <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
+                            <SVGIcon name="edit" width={24} height={24} />
+                          </Button>
+                        </div>
                       }
-
-                      if (active.id !== over.id) {
-                        const activeIndex = questionFields.findIndex((item) => item.ID === active.id);
-                        const overIndex = questionFields.findIndex((item) => item.ID === over.id);
-
-                        moveQuestion(activeIndex, overIndex);
-                      }
-
-                      setActiveSortId(null);
-                    }}
-                  >
-                    <SortableContext
-                      items={questionFields.map((item) => ({ ...item, id: item.ID }))}
-                      strategy={verticalListSortingStrategy}
                     >
-                      <For each={form.getValues('questions')}>
-                        {(question, index) => (
-                          <Question
-                            key={question.ID}
-                            question={question}
-                            index={index}
-                            activeQuestionId={activeQuestionId}
-                            setActiveQuestionId={setActiveQuestionId}
-                            selectedQuestionId={selectedQuestionId}
-                            setSelectedQuestionId={setSelectedQuestionId}
-                            onRemoveQuestion={() => removeQustion(index)}
-                          />
-                        )}
-                      </For>
-                    </SortableContext>
+                      <div css={styles.quizForm}>
+                        <Controller
+                          control={form.control}
+                          name="quiz_title"
+                          rules={{ required: __('Quiz title is required', 'tutor') }}
+                          render={(controllerProps) => (
+                            <FormInput {...controllerProps} placeholder={__('Add quiz title', 'tutor')} />
+                          )}
+                        />
+                        <Controller
+                          control={form.control}
+                          name="quiz_description"
+                          render={(controllerProps) => (
+                            <FormTextareaInput
+                              {...controllerProps}
+                              placeholder={__('Add a summary', 'tutor')}
+                              enableResize
+                              rows={2}
+                            />
+                          )}
+                        />
 
-                    {createPortal(
-                      <DragOverlay>
-                        <Show when={activeSortItem}>
-                          {(item) => {
-                            const index = questionFields.findIndex((question) => question.ID === item.ID);
-                            return (
+                        <div css={styles.quizFormButtonWrapper}>
+                          <Button variant="text" type="button" onClick={() => setIsEdit(false)} size="small">
+                            {__('Cancel', 'tutor')}
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            type="submit"
+                            size="small"
+                            onClick={form.handleSubmit(onQuizFormSubmit)}
+                          >
+                            {__('Ok', 'tutor')}
+                          </Button>
+                        </div>
+                      </div>
+                    </Show>
+                  </div>
+                  <div css={styles.questionsLabel}>
+                    <span>{__('Questions', 'tutor')}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const questionId = nanoid();
+                        addQuestion({
+                          ID: questionId,
+                          title: 'Write anything here..',
+                          description: '',
+                          type: 'true-false',
+                          answer_required: true,
+                          image_matching: false,
+                          muliple_correct_answer: false,
+                          options: [
+                            {
+                              ID: nanoid(),
+                              title: 'True',
+                            },
+                            {
+                              ID: nanoid(),
+                              title: 'False',
+                            },
+                          ],
+                          question_mark: 1,
+                          randomize_question: false,
+                          show_question_mark: false,
+                          markAsCorrect: '1',
+                        });
+                        setActiveQuestionId(questionId);
+                      }}
+                    >
+                      <SVGIcon name="plusSquareBrand" />
+                    </button>
+                  </div>
+
+                  <div css={styles.questionList}>
+                    <Show
+                      when={questionFields.length > 0}
+                      fallback={<div>{__('No questions added yet.', 'tutor')}</div>}
+                    >
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                        onDragStart={(event) => {
+                          setActiveSortId(event.active.id);
+                        }}
+                        onDragEnd={(event) => {
+                          const { active, over } = event;
+                          if (!over) {
+                            return;
+                          }
+
+                          if (active.id !== over.id) {
+                            const activeIndex = questionFields.findIndex((item) => item.ID === active.id);
+                            const overIndex = questionFields.findIndex((item) => item.ID === over.id);
+
+                            moveQuestion(activeIndex, overIndex);
+                          }
+
+                          setActiveSortId(null);
+                        }}
+                      >
+                        <SortableContext
+                          items={questionFields.map((item) => ({ ...item, id: item.ID }))}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          <For each={form.getValues('questions')}>
+                            {(question, index) => (
                               <Question
-                                key={item.ID}
-                                question={item}
+                                key={question.ID}
+                                question={question}
                                 index={index}
                                 activeQuestionId={activeQuestionId}
                                 setActiveQuestionId={setActiveQuestionId}
@@ -452,168 +431,190 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                                 setSelectedQuestionId={setSelectedQuestionId}
                                 onRemoveQuestion={() => removeQustion(index)}
                               />
-                            );
-                          }}
-                        </Show>
-                      </DragOverlay>,
-                      document.body
-                    )}
-                  </DndContext>
+                            )}
+                          </For>
+                        </SortableContext>
+
+                        {createPortal(
+                          <DragOverlay>
+                            <Show when={activeSortItem}>
+                              {(item) => {
+                                const index = questionFields.findIndex((question) => question.ID === item.ID);
+                                return (
+                                  <Question
+                                    key={item.ID}
+                                    question={item}
+                                    index={index}
+                                    activeQuestionId={activeQuestionId}
+                                    setActiveQuestionId={setActiveQuestionId}
+                                    selectedQuestionId={selectedQuestionId}
+                                    setSelectedQuestionId={setSelectedQuestionId}
+                                    onRemoveQuestion={() => removeQustion(index)}
+                                  />
+                                );
+                              }}
+                            </Show>
+                          </DragOverlay>,
+                          document.body
+                        )}
+                      </DndContext>
+                    </Show>
+                  </div>
                 </Show>
               </div>
             </Show>
-          </div>
-        </Show>
-        <div css={styles.content({ activeTab })}>
-          <Show
-            when={activeTab === 'settings'}
-            fallback={
-              <Show when={activeQuestionId}>
-                <div css={styles.questionForm}>
-                  <div css={styles.questionWithIndex}>
-                    <div css={styles.questionIndex}>{activeQuestionIdIndex + 1}.</div>
-                    <div css={styles.questionTitleAndDesc}>
-                      <Controller
-                        key={`${activeQuestionId}-title`}
-                        control={form.control}
-                        name={`questions.${activeQuestionIdIndex}.title`}
-                        render={(controllerProps) => (
-                          <FormQuestionTitle
-                            {...controllerProps}
-                            placeholder={__('Write your question here..', 'tutor')}
+            <div css={styles.content({ activeTab })}>
+              <Show
+                when={activeTab === 'settings'}
+                fallback={
+                  <Show when={activeQuestionId}>
+                    <div css={styles.questionForm}>
+                      <div css={styles.questionWithIndex}>
+                        <div css={styles.questionIndex}>{activeQuestionIdIndex + 1}.</div>
+                        <div css={styles.questionTitleAndDesc}>
+                          <Controller
+                            key={`${activeQuestionId}-title`}
+                            control={form.control}
+                            name={`questions.${activeQuestionIdIndex}.title`}
+                            render={(controllerProps) => (
+                              <FormQuestionTitle
+                                {...controllerProps}
+                                placeholder={__('Write your question here..', 'tutor')}
+                              />
+                            )}
                           />
-                        )}
-                      />
 
-                      <Controller
-                        key={`${activeQuestionId}-description`}
-                        control={form.control}
-                        name={`questions.${activeQuestionIdIndex}.description`}
-                        render={(controllerProps) => (
-                          <FormQuestionDescription
-                            {...controllerProps}
-                            placeholder={__('Description (optional)', 'tutor')}
-                            enableResize
-                            rows={2}
+                          <Controller
+                            key={`${activeQuestionId}-description`}
+                            control={form.control}
+                            name={`questions.${activeQuestionIdIndex}.description`}
+                            render={(controllerProps) => (
+                              <FormQuestionDescription
+                                {...controllerProps}
+                                placeholder={__('Description (optional)', 'tutor')}
+                                enableResize
+                                rows={2}
+                              />
+                            )}
                           />
-                        )}
-                      />
+                        </div>
+                      </div>
+
+                      {questionTypeForm[form.watch(`questions.${activeQuestionIdIndex}.type`)]}
                     </div>
-                  </div>
-
-                  {questionTypeForm[form.watch(`questions.${activeQuestionIdIndex}.type`)]}
-                </div>
+                  </Show>
+                }
+              >
+                <QuizSettings form={form} />
               </Show>
-            }
-          >
-            <QuizSettings form={form} />
-          </Show>
-        </div>
-        <Show when={activeTab === 'questions'} fallback={<div />}>
-          <div css={styles.right}>
-            <div css={styles.questionTypeWrapper}>
-              <Controller
-                key={`${activeQuestionId}-type`}
-                control={form.control}
-                name={`questions.${activeQuestionIdIndex}.type`}
-                render={(controllerProps) => (
-                  <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
-                )}
-              />
             </div>
-            <div css={styles.conditions}>
-              <p>{__('Conditions', 'tutor')}</p>
-              <div css={styles.conditionControls}>
-                <Show when={form.watch(`questions.${activeQuestionIdIndex}.type`) === 'multiple-choice'}>
+            <Show when={activeTab === 'questions'} fallback={<div />}>
+              <div css={styles.right}>
+                <div css={styles.questionTypeWrapper}>
                   <Controller
-                    key={`${activeQuestionId}-muliple_correct_answer`}
+                    key={`${activeQuestionId}-type`}
                     control={form.control}
-                    name={`questions.${activeQuestionIdIndex}.muliple_correct_answer`}
+                    name={`questions.${activeQuestionIdIndex}.type`}
                     render={(controllerProps) => (
-                      <FormSwitch {...controllerProps} label={__('Multiple Correct Answer', 'tutor')} />
+                      <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
                     )}
                   />
-                </Show>
-                <Show when={form.watch(`questions.${activeQuestionIdIndex}.type`) === 'matching'}>
-                  <Controller
-                    key={`${activeQuestionId}-image_matching`}
-                    control={form.control}
-                    name={`questions.${activeQuestionIdIndex}.image_matching`}
-                    render={(controllerProps) => (
-                      <FormSwitch {...controllerProps} label={__('Image Matching', 'tutor')} />
-                    )}
-                  />
-                </Show>
-                <Controller
-                  key={`${activeQuestionId}-answer_required`}
-                  control={form.control}
-                  name={`questions.${activeQuestionIdIndex}.answer_required`}
-                  render={(controllerProps) => (
-                    <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />
-                  )}
-                />
-                <Controller
-                  key={`${activeQuestionId}-randomize_question`}
-                  control={form.control}
-                  name={`questions.${activeQuestionIdIndex}.randomize_question`}
-                  render={(controllerProps) => (
-                    <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />
-                  )}
-                />
-                <Controller
-                  key={`${activeQuestionId}-question_mark`}
-                  control={form.control}
-                  name={`questions.${activeQuestionIdIndex}.question_mark`}
-                  render={(controllerProps) => (
-                    <FormInput
-                      {...controllerProps}
-                      label={__('Point For This Answer', 'tutor')}
-                      type="number"
-                      isInlineLabel
-                      style={css`
+                </div>
+                <div css={styles.conditions}>
+                  <p>{__('Conditions', 'tutor')}</p>
+                  <div css={styles.conditionControls}>
+                    <Show when={form.watch(`questions.${activeQuestionIdIndex}.type`) === 'multiple-choice'}>
+                      <Controller
+                        key={`${activeQuestionId}-muliple_correct_answer`}
+                        control={form.control}
+                        name={`questions.${activeQuestionIdIndex}.muliple_correct_answer`}
+                        render={(controllerProps) => (
+                          <FormSwitch {...controllerProps} label={__('Multiple Correct Answer', 'tutor')} />
+                        )}
+                      />
+                    </Show>
+                    <Show when={form.watch(`questions.${activeQuestionIdIndex}.type`) === 'matching'}>
+                      <Controller
+                        key={`${activeQuestionId}-image_matching`}
+                        control={form.control}
+                        name={`questions.${activeQuestionIdIndex}.image_matching`}
+                        render={(controllerProps) => (
+                          <FormSwitch {...controllerProps} label={__('Image Matching', 'tutor')} />
+                        )}
+                      />
+                    </Show>
+                    <Controller
+                      key={`${activeQuestionId}-answer_required`}
+                      control={form.control}
+                      name={`questions.${activeQuestionIdIndex}.answer_required`}
+                      render={(controllerProps) => (
+                        <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />
+                      )}
+                    />
+                    <Controller
+                      key={`${activeQuestionId}-randomize_question`}
+                      control={form.control}
+                      name={`questions.${activeQuestionIdIndex}.randomize_question`}
+                      render={(controllerProps) => (
+                        <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />
+                      )}
+                    />
+                    <Controller
+                      key={`${activeQuestionId}-question_mark`}
+                      control={form.control}
+                      name={`questions.${activeQuestionIdIndex}.question_mark`}
+                      render={(controllerProps) => (
+                        <FormInput
+                          {...controllerProps}
+                          label={__('Point For This Answer', 'tutor')}
+                          type="number"
+                          isInlineLabel
+                          style={css`
                       max-width: 72px;
                     `}
+                        />
+                      )}
                     />
-                  )}
-                />
-                <Controller
-                  key={`${activeQuestionId}-show_question_mark`}
-                  control={form.control}
-                  name={`questions.${activeQuestionIdIndex}.show_question_mark`}
-                  render={(controllerProps) => (
-                    <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />
-                  )}
-                />
+                    <Controller
+                      key={`${activeQuestionId}-show_question_mark`}
+                      control={form.control}
+                      name={`questions.${activeQuestionIdIndex}.show_question_mark`}
+                      render={(controllerProps) => (
+                        <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />
+                      )}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
+            </Show>
           </div>
-        </Show>
-      </div>
 
-      <ConfirmationPopover
-        isOpen={isConfirmationOpen}
-        triggerRef={cancelRef}
-        closePopover={() => setIsConfirmationOpen(false)}
-        maxWidth="258px"
-        title={__('Do you want to cancel the progress without saving?', 'tutor')}
-        message="There is unsaved changes."
-        animationType={AnimationType.slideUp}
-        arrow="top"
-        positionModifier={{ top: -50, left: 0 }}
-        hideArrow
-        confirmButton={{
-          text: __('Yes', 'tutor'),
-          variant: 'primary',
-        }}
-        cancelButton={{
-          text: __('No', 'tutor'),
-          variant: 'text',
-        }}
-        onConfirmation={() => {
-          closeModal();
-        }}
-      />
-    </ModalWrapper>
+          <ConfirmationPopover
+            isOpen={isConfirmationOpen}
+            triggerRef={cancelRef}
+            closePopover={() => setIsConfirmationOpen(false)}
+            maxWidth="258px"
+            title={__('Do you want to cancel the progress without saving?', 'tutor')}
+            message="There is unsaved changes."
+            animationType={AnimationType.slideUp}
+            arrow="top"
+            positionModifier={{ top: -50, left: 0 }}
+            hideArrow
+            confirmButton={{
+              text: __('Yes', 'tutor'),
+              variant: 'primary',
+            }}
+            cancelButton={{
+              text: __('No', 'tutor'),
+              variant: 'text',
+            }}
+            onConfirmation={() => {
+              closeModal();
+            }}
+          />
+        </ModalWrapper>
+      </FormProvider>
+    </QuizModalContextProvider>
   );
 };
 

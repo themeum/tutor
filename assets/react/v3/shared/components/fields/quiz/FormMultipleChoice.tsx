@@ -17,8 +17,11 @@ import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { nanoid } from '@Utils/util';
+import { useFormContext } from 'react-hook-form';
+import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-interface FormMultipleChoiceProps extends FormControllerProps<QuizQuestionOption | null> {
+interface FormMultipleChoiceProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   hasMultipleCorrectAnswers: boolean;
   onRemoveOption: () => void;
@@ -31,7 +34,14 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
   };
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(inputValue.isCorrect || null);
+  const form = useFormContext<QuizForm>();
+  const { activeQuestionIndex } = useQuizModalContext();
+  const markAsCorrect = form.watch(`questions.${activeQuestionIndex}.markAsCorrect`);
+
+  const isCorrect = Array.isArray(markAsCorrect)
+    ? markAsCorrect.some((item) => item === inputValue.ID)
+    : markAsCorrect === inputValue.ID;
+
   const [isEditing, setIsEditing] = useState(false);
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
     isDefined(inputValue.image) && isDefined(inputValue.image.url)
@@ -88,7 +98,7 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
     <div
       {...attributes}
       css={styles.option({
-        isSelected: selectedAnswer === true,
+        isSelected: isCorrect,
         isEditing,
         isMultipleChoice: hasMultipleCorrectAnswers,
       })}
@@ -97,59 +107,64 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
     >
       <div
         onClick={() => {
-          setSelectedAnswer((previous) => !previous);
-          field.onChange({
-            ...inputValue,
-            isCorrect: !selectedAnswer,
-          });
+          if (hasMultipleCorrectAnswers) {
+            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, [
+              ...(markAsCorrect as string[]),
+              field.value.ID,
+            ]);
+          } else {
+            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+          }
         }}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
-            setSelectedAnswer((previous) => !previous);
-            field.onChange({
-              ...inputValue,
-              isCorrect: !selectedAnswer,
-            });
+            if (hasMultipleCorrectAnswers) {
+              form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, [
+                ...(markAsCorrect as string[]),
+                field.value.ID,
+              ]);
+            } else {
+              form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+            }
           }
         }}
       >
         <Show
           when={hasMultipleCorrectAnswers}
-          fallback={
-            <SVGIcon data-check-icon name={selectedAnswer === true ? 'checkFilled' : 'check'} height={32} width={32} />
-          }
+          fallback={<SVGIcon data-check-icon name={isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />}
         >
-          <SVGIcon
-            data-check-icon
-            name={selectedAnswer === true ? 'checkSquareFilled' : 'checkSquare'}
-            height={32}
-            width={32}
-          />
+          <SVGIcon data-check-icon name={isCorrect ? 'checkSquareFilled' : 'checkSquare'} height={32} width={32} />
         </Show>
       </div>
       <div
-        css={styles.optionLabel({ isSelected: selectedAnswer === true, isEditing })}
+        css={styles.optionLabel({ isSelected: isCorrect, isEditing })}
         onClick={() => {
-          setSelectedAnswer((previous) => !previous);
-          field.onChange({
-            ...inputValue,
-            isCorrect: !selectedAnswer,
-          });
+          if (hasMultipleCorrectAnswers) {
+            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, [
+              ...(markAsCorrect as string[]),
+              field.value.ID,
+            ]);
+          } else {
+            form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+          }
         }}
         onKeyDown={(event) => {
           event.stopPropagation();
           if (event.key === 'Enter') {
-            setSelectedAnswer((previous) => !previous);
-            field.onChange({
-              ...inputValue,
-              isCorrect: !selectedAnswer,
-            });
+            if (hasMultipleCorrectAnswers) {
+              form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, [
+                ...(markAsCorrect as string[]),
+                field.value.ID,
+              ]);
+            } else {
+              form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+            }
           }
         }}
       >
         <div css={styles.optionHeader}>
           <div css={styles.optionCounterAndButton}>
-            <div css={styles.optionCounter({ isSelected: selectedAnswer === true, isEditing })}>
+            <div css={styles.optionCounter({ isSelected: isCorrect, isEditing })}>
               {String.fromCharCode(65 + index)}
             </div>
             <Show when={isEditing}>

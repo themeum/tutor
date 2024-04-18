@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { Controller, useFieldArray } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
@@ -8,7 +8,6 @@ import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import For from '@Controls/For';
 import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
 
-import type { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
@@ -27,14 +26,12 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { createPortal } from 'react-dom';
 import Show from '@Controls/Show';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-interface ImageAnsweringProps {
-  form: FormWithGlobalErrorType<QuizForm>;
-  activeQuestionIndex: number;
-}
-
-const ImageAnswering = ({ form, activeQuestionIndex }: ImageAnsweringProps) => {
+const ImageAnswering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
+  const form = useFormContext<QuizForm>();
+  const { activeQuestionIndex } = useQuizModalContext();
   const {
     fields: optionsFields,
     append: appendOption,

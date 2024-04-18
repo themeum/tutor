@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -6,23 +5,18 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { typography } from '@Config/typography';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
-import type { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-import { Controller, useWatch } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 interface TrueFalseProps {
-  form: FormWithGlobalErrorType<QuizForm>;
   activeQuestionIndex: number;
 }
 
-const TrueFalse = ({ form, activeQuestionIndex }: TrueFalseProps) => {
-  const trueOptionData = useWatch({
+const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
+  const form = useFormContext<QuizForm>();
+  const markAsCorrect = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.options.0`,
-  });
-  const falseOptionData = useWatch({
-    control: form.control,
-    name: `questions.${activeQuestionIndex}.options.1`,
+    name: `questions.${activeQuestionIndex}.markAsCorrect`,
   });
 
   return (
@@ -31,36 +25,22 @@ const TrueFalse = ({ form, activeQuestionIndex }: TrueFalseProps) => {
         control={form.control}
         name={`questions.${activeQuestionIndex}.options.0`}
         render={({ field }) => (
-          <div css={styles.option({ isSelected: trueOptionData.isCorrect === true })}>
+          <div css={styles.option({ isSelected: markAsCorrect === field.value.ID })}>
             <SVGIcon
               data-check-icon
-              name={trueOptionData.isCorrect === true ? 'checkFilled' : 'check'}
+              name={markAsCorrect === field.value.ID ? 'checkFilled' : 'check'}
               height={32}
               width={32}
             />
             <div
-              css={styles.optionLabel({ isSelected: trueOptionData.isCorrect === true })}
+              css={styles.optionLabel({ isSelected: markAsCorrect === '0' })}
               onClick={() => {
-                field.onChange({
-                  ...field.value,
-                  isCorrect: true,
-                });
-                form.setValue(`questions.${activeQuestionIndex}.options.1`, {
-                  ...falseOptionData,
-                  isCorrect: false,
-                });
+                form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
               }}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
-                  field.onChange({
-                    ...field.value,
-                    isCorrect: true,
-                  });
+                  form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
                 }
-                form.setValue(`questions.${activeQuestionIndex}.options.1`, {
-                  ...falseOptionData,
-                  isCorrect: false,
-                });
               }}
             >
               {__('True', 'tutor')}
@@ -73,24 +53,21 @@ const TrueFalse = ({ form, activeQuestionIndex }: TrueFalseProps) => {
         control={form.control}
         name={`questions.${activeQuestionIndex}.options.1`}
         render={({ field }) => (
-          <div css={styles.option({ isSelected: falseOptionData.isCorrect === true })}>
+          <div css={styles.option({ isSelected: markAsCorrect === field.value.ID })}>
             <SVGIcon
               data-check-icon
-              name={falseOptionData.isCorrect === true ? 'checkFilled' : 'check'}
+              name={markAsCorrect === field.value.ID ? 'checkFilled' : 'check'}
               height={32}
               width={32}
             />
             <div
-              css={styles.optionLabel({ isSelected: falseOptionData.isCorrect === true })}
+              css={styles.optionLabel({ isSelected: markAsCorrect === '0' })}
               onClick={() => {
                 field.onChange({
                   ...field.value,
                   isCorrect: true,
                 });
-                form.setValue(`questions.${activeQuestionIndex}.options.0`, {
-                  ...trueOptionData,
-                  isCorrect: false,
-                });
+                form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
               }}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
@@ -98,10 +75,7 @@ const TrueFalse = ({ form, activeQuestionIndex }: TrueFalseProps) => {
                     ...field.value,
                     isCorrect: true,
                   });
-                  form.setValue(`questions.${activeQuestionIndex}.options.0`, {
-                    ...trueOptionData,
-                    isCorrect: false,
-                  });
+                  form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
                 }
               }}
             >
