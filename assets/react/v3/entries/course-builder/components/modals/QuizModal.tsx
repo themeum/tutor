@@ -439,32 +439,35 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
             fallback={
               <Show when={activeQuestionId}>
                 <div css={styles.questionForm}>
-                  <div css={styles.questionTitleAndDesc}>
-                    <Controller
-                      key={`${activeQuestionId}-title`}
-                      control={form.control}
-                      name={`questions.${activeQuestionIdIndex}.title`}
-                      render={(controllerProps) => (
-                        <FormQuestionTitle
-                          {...controllerProps}
-                          placeholder={__('Write your question here..', 'tutor')}
-                        />
-                      )}
-                    />
+                  <div css={styles.questionWithIndex}>
+                    <div css={styles.questionIndex}>{activeQuestionIdIndex + 1}.</div>
+                    <div css={styles.questionTitleAndDesc}>
+                      <Controller
+                        key={`${activeQuestionId}-title`}
+                        control={form.control}
+                        name={`questions.${activeQuestionIdIndex}.title`}
+                        render={(controllerProps) => (
+                          <FormQuestionTitle
+                            {...controllerProps}
+                            placeholder={__('Write your question here..', 'tutor')}
+                          />
+                        )}
+                      />
 
-                    <Controller
-                      key={`${activeQuestionId}-description`}
-                      control={form.control}
-                      name={`questions.${activeQuestionIdIndex}.description`}
-                      render={(controllerProps) => (
-                        <FormQuestionDescription
-                          {...controllerProps}
-                          placeholder={__('Description (optional)', 'tutor')}
-                          enableResize
-                          rows={2}
-                        />
-                      )}
-                    />
+                      <Controller
+                        key={`${activeQuestionId}-description`}
+                        control={form.control}
+                        name={`questions.${activeQuestionIdIndex}.description`}
+                        render={(controllerProps) => (
+                          <FormQuestionDescription
+                            {...controllerProps}
+                            placeholder={__('Description (optional)', 'tutor')}
+                            enableResize
+                            rows={2}
+                          />
+                        )}
+                      />
+                    </div>
                   </div>
 
                   {questionTypeForm[form.watch(`questions.${activeQuestionIdIndex}.type`)]}
@@ -613,10 +616,21 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
   `,
+  questionWithIndex: css`
+    ${styleUtils.display.flex('row')};
+    align-items: flex-start;
+    padding-left: 42px; // This is outside of the design
+    gap: ${spacing[4]};
+  `,
+  questionIndex: css`
+    margin-top: ${spacing[8]};
+    ${typography.heading6()};
+    color: ${colorTokens.text.hints};
+  `,
   questionTitleAndDesc: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[8]};
-    padding-left: 42px; // This is outside of the design
+    width: 100%;
   `,
   right: css`
     ${styleUtils.display.flex('column')};

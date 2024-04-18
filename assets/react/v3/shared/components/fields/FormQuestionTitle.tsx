@@ -208,8 +208,9 @@ const styles = {
     height: 100%;
     width: 100%;
     padding-inline: ${spacing[8]} ${spacing[16]};
+    padding-block: ${spacing[8]};
     border-radius: ${borderRadius[6]};
-		transition: all 0.15s ease-in-out;
+		transition: box-shadow 0.15s ease-in-out;
 
     &:hover {
       background-color: ${colorTokens.background.white};
@@ -228,9 +229,10 @@ const styles = {
     ${
       isEdit &&
       css`
-      background-color: ${colorTokens.background.white};
-      color: ${colorTokens.text.subdued};
-    `
+        background-color: ${colorTokens.background.white};
+        color: ${colorTokens.text.subdued};  
+        padding-block: ${spacing[4]};
+      `
     }
   `,
   inputContainer: (isClearable: boolean) => css`

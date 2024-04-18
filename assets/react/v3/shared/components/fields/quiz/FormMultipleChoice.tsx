@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
@@ -12,6 +14,7 @@ import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
+import { animateLayoutChanges } from '@Utils/dndkit';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 
 interface FormMultipleChoiceProps extends FormControllerProps<QuizQuestionOption | null> {
@@ -33,6 +36,17 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
     isDefined(inputValue.image) && isDefined(inputValue.image.url)
   );
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: field.value?.ID || 0,
+    animateLayoutChanges,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : undefined,
+  };
 
   const wpMedia = window.wp.media({
     library: { type: 'image' },
@@ -71,11 +85,14 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
 
   return (
     <div
+      {...attributes}
       css={styles.option({
         isSelected: selectedAnswer === true,
         isEditing,
         isMultipleChoice: hasMultipleCorrectAnswers,
       })}
+      ref={setNodeRef}
+      style={style}
     >
       <div
         onClick={() => {
@@ -164,7 +181,7 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
             </Show>
           </div>
 
-          <button type="button" css={styles.optionDragButton} data-visually-hidden>
+          <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
             <SVGIcon name="dragVertical" height={24} width={24} />
           </button>
 

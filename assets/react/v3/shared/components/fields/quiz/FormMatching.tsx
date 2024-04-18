@@ -13,6 +13,9 @@ import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { isDefined } from '@Utils/types';
+import { useSortable } from '@dnd-kit/sortable';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import { CSS } from '@dnd-kit/utilities';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption | null> {
   index: number;
@@ -60,6 +63,17 @@ const FormMatching = ({ index, imageMatching, onRemoveOption, field }: FormMatch
     });
   };
 
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: field.value?.ID || 0,
+    animateLayoutChanges,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : undefined,
+  };
+
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
       inputRef.current.focus();
@@ -67,7 +81,12 @@ const FormMatching = ({ index, imageMatching, onRemoveOption, field }: FormMatch
   }, [isEditing]);
 
   return (
-    <div css={styles.option({ isSelected: selectedAnswer === true, isEditing })}>
+    <div
+      {...attributes}
+      css={styles.option({ isSelected: selectedAnswer === true, isEditing })}
+      ref={setNodeRef}
+      style={style}
+    >
       <div
         onClick={() => setSelectedAnswer((previous) => !previous)}
         onKeyDown={(event) => {
@@ -103,7 +122,7 @@ const FormMatching = ({ index, imageMatching, onRemoveOption, field }: FormMatch
             {String.fromCharCode(65 + index)}
           </div>
 
-          <button type="button" css={styles.optionDragButton} data-visually-hidden>
+          <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
             <SVGIcon name="dragVertical" height={24} width={24} />
           </button>
 
