@@ -1,12 +1,4 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
+import { createPortal } from 'react-dom';
 import {
   DndContext,
   DragOverlay,
@@ -23,8 +15,19 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useMemo, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import Question from './Question';
-import { createPortal } from 'react-dom';
+
+import SVGIcon from '@Atoms/SVGIcon';
+
+import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import Question from '@CourseBuilderComponents/curriculum/Question';
+
+import { colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+import { styleUtils } from '@Utils/style-utils';
+import { nanoid } from '@Utils/util';
 
 const QuestionList = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
