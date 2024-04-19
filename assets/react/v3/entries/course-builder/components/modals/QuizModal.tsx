@@ -372,30 +372,4 @@ const styles = {
     margin-top: ${spacing[4]};
     gap: ${spacing[8]};
   `,
-  questionsLabel: css`
-    display: flex;
-    gap: ${spacing[4]};
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid ${colorTokens.stroke.divider};
-    padding: ${spacing[16]} ${spacing[16]} ${spacing[16]} ${spacing[28]};
-
-    ${typography.caption('medium')};
-    color: ${colorTokens.text.subdued};
-
-    button {
-      ${styleUtils.resetButton};
-      width: 32px;
-      height: 32px;
-
-      svg {
-        color: ${colorTokens.action.primary.default};
-        width: 100%;
-        height: 100%;
-      }
-    }
-  `,
-  questionList: css`
-    padding: ${spacing[8]} ${spacing[20]};
-  `,
 };
