@@ -22,7 +22,7 @@ import {
 } from '@dnd-kit/core';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
@@ -57,6 +57,16 @@ const MultipleChoice = () => {
 
     return optionsFields.find((item) => item.ID === activeSortId);
   }, [activeSortId, optionsFields]);
+
+  const hasMultipleCorrectAnswers = form.watch(`questions.${activeQuestionIndex}.muliple_correct_answer`) || false;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!hasMultipleCorrectAnswers) {
+      const markAsCorrect = form.watch(`questions.${activeQuestionIndex}.markAsCorrect`) as string[];
+      form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, markAsCorrect[markAsCorrect.length - 1]);
+    }
+  }, [hasMultipleCorrectAnswers]);
 
   return (
     <div css={styles.optionWrapper}>
@@ -96,7 +106,7 @@ const MultipleChoice = () => {
                 render={({ field, fieldState }) => (
                   <FormMultipleChoice
                     field={field}
-                    hasMultipleCorrectAnswers={form.watch(`questions.${activeQuestionIndex}.muliple_correct_answer`)}
+                    hasMultipleCorrectAnswers={hasMultipleCorrectAnswers}
                     fieldState={fieldState}
                     onRemoveOption={() => removeOption(index)}
                     index={index}
@@ -120,9 +130,7 @@ const MultipleChoice = () => {
                     render={({ field, fieldState }) => (
                       <FormMultipleChoice
                         field={field}
-                        hasMultipleCorrectAnswers={form.watch(
-                          `questions.${activeQuestionIndex}.muliple_correct_answer`
-                        )}
+                        hasMultipleCorrectAnswers={hasMultipleCorrectAnswers}
                         fieldState={fieldState}
                         onRemoveOption={() => removeOption(index)}
                         index={index}

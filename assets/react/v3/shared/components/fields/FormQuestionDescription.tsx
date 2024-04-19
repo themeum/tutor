@@ -183,6 +183,7 @@ const styles = {
     min-height: 64px;
     height: 100%;
     width: 100%;
+    inset: 0;
     padding-inline: ${spacing[8]} ${spacing[16]};
     border-radius: ${borderRadius[6]};
     transition: background 0.15s ease-in-out;
@@ -253,6 +254,7 @@ const styles = {
     ${typography.heading6()}
     color: ${colorTokens.text.hints};
     height: 100%;
+    inset: 0;
   `,
   actionButtonWrapper: ({
     isEdit,

@@ -63,18 +63,10 @@ const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
             <div
               css={styles.optionLabel({ isSelected: markAsCorrect === '0' })}
               onClick={() => {
-                field.onChange({
-                  ...field.value,
-                  isCorrect: true,
-                });
                 form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
               }}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
-                  field.onChange({
-                    ...field.value,
-                    isCorrect: true,
-                  });
                   form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
                 }
               }}

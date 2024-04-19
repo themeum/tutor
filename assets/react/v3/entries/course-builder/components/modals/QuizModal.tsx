@@ -1,25 +1,3 @@
-import Button from '@Atoms/Button';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import type { ModalProps } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
-import { modal } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import Question from '@CourseBuilderComponents/curriculum/Question';
-import { type QuizQuestion, type QuizQuestionType, useGetQuizQuestionsQuery } from '@CourseBuilderServices/quiz';
-import { AnimationType } from '@Hooks/useAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import Tabs from '@Molecules/Tabs';
-import { styleUtils } from '@Utils/style-utils';
-import type { Option } from '@Utils/types';
 import {
   DndContext,
   DragOverlay,
@@ -37,17 +15,36 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, FormProvider, useFieldArray } from 'react-hook-form';
+
+import Button from '@Atoms/Button';
+import { LoadingSection } from '@Atoms/LoadingSpinner';
+import SVGIcon from '@Atoms/SVGIcon';
+
+import FormInput from '@Components/fields/FormInput';
+import type { ModalProps } from '@Components/modals/Modal';
+import ModalWrapper from '@Components/modals/ModalWrapper';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import Tabs from '@Molecules/Tabs';
+
+import Question from '@CourseBuilderComponents/curriculum/Question';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
-import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
-import MultipleChoice from '@CourseBuilderComponents/curriculum/question-types/MultipleChoice';
-import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
-import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
-import OpenEnded from '@CourseBuilderComponents/curriculum/question-types/OpenEnded';
-import FillinTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
-import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
-import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
-import { nanoid } from '@Utils/util';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
+import QuestionCondition from '@CourseBuilderComponents/curriculum/QuestionCondition';
+import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
+import { type QuizQuestion, useGetQuizQuestionsQuery } from '@CourseBuilderServices/quiz';
+
+import { modal } from '@Config/constants';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+import { styleUtils } from '@Utils/style-utils';
+import { nanoid } from '@Utils/util';
+
+import { AnimationType } from '@Hooks/useAnimation';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -78,49 +75,6 @@ export interface QuizForm {
   };
   questions: QuizQuestion[];
 }
-
-const questionTypeOptions: Option<QuizQuestionType>[] = [
-  {
-    label: __('True/ False', 'tutor'),
-    value: 'true-false',
-    icon: 'quizTrueFalse',
-  },
-  {
-    label: __('Multiple Choice', 'tutor'),
-    value: 'multiple-choice',
-    icon: 'quizMultiChoice',
-  },
-  {
-    label: __('Open Ended/ Essay', 'tutor'),
-    value: 'open-ended',
-    icon: 'quizEssay',
-  },
-  {
-    label: __('Fill in the Blanks', 'tutor'),
-    value: 'fill-in-the-blanks',
-    icon: 'quizFillInTheBlanks',
-  },
-  {
-    label: __('Short Answer', 'tutor'),
-    value: 'short-answer',
-    icon: 'quizShortAnswer',
-  },
-  {
-    label: __('Matching', 'tutor'),
-    value: 'matching',
-    icon: 'quizImageMatching',
-  },
-  {
-    label: __('Image Answering', 'tutor'),
-    value: 'image-answering',
-    icon: 'quizImageAnswer',
-  },
-  {
-    label: __('Ordering', 'tutor'),
-    value: 'ordering',
-    icon: 'quizOrdering',
-  },
-];
 
 type QuizTabs = 'questions' | 'settings';
 
@@ -190,7 +144,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     }
   }, [getQuizQuestionsQuery.data]);
 
-  const activeQuestionIdIndex = form.watch('questions').findIndex((question) => question.ID === activeQuestionId);
+  const activeQuestionIndex = form.watch('questions').findIndex((question) => question.ID === activeQuestionId);
 
   const {
     append: addQuestion,
@@ -219,17 +173,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     return questionFields.find((item) => item.ID === activeSortId);
   }, [activeSortId, questionFields]);
 
-  const questionTypeForm = {
-    'true-false': <TrueFalse key={activeQuestionId} activeQuestionIndex={activeQuestionIdIndex} />,
-    'multiple-choice': <MultipleChoice key={activeQuestionId} />,
-    'open-ended': <OpenEnded key={activeQuestionId} />,
-    'fill-in-the-blanks': <FillinTheBlanks key={activeQuestionId} />,
-    'short-answer': <OpenEnded key={activeQuestionId} />,
-    matching: <Matching key={activeQuestionId} />,
-    'image-answering': <ImageAnswering key={activeQuestionId} />,
-    ordering: <MultipleChoice key={activeQuestionId} />,
-  } as const;
-
   const onQuizFormSubmit = (data: QuizForm) => {
     // @TODO: will be implemented later
     setIsEdit(false);
@@ -242,7 +185,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   }
 
   return (
-    <QuizModalContextProvider activeQuestionIndex={activeQuestionIdIndex}>
+    <QuizModalContextProvider activeQuestionIndex={activeQuestionIndex}>
       <FormProvider {...form}>
         <ModalWrapper
           onClose={() => closeModal({ action: 'CLOSE' })}
@@ -363,8 +306,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                           description: '',
                           type: 'true-false',
                           answer_required: true,
-                          image_matching: false,
-                          muliple_correct_answer: false,
                           options: [
                             {
                               ID: nanoid(),
@@ -379,6 +320,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                           randomize_question: false,
                           show_question_mark: false,
                           markAsCorrect: '1',
+                          answerExplanation: '',
                         });
                         setActiveQuestionId(questionId);
                       }}
@@ -468,124 +410,19 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                 when={activeTab === 'settings'}
                 fallback={
                   <Show when={activeQuestionId}>
-                    <div css={styles.questionForm}>
-                      <div css={styles.questionWithIndex}>
-                        <div css={styles.questionIndex}>{activeQuestionIdIndex + 1}.</div>
-                        <div css={styles.questionTitleAndDesc}>
-                          <Controller
-                            key={`${activeQuestionId}-title`}
-                            control={form.control}
-                            name={`questions.${activeQuestionIdIndex}.title`}
-                            render={(controllerProps) => (
-                              <FormQuestionTitle
-                                {...controllerProps}
-                                placeholder={__('Write your question here..', 'tutor')}
-                              />
-                            )}
-                          />
-
-                          <Controller
-                            key={`${activeQuestionId}-description`}
-                            control={form.control}
-                            name={`questions.${activeQuestionIdIndex}.description`}
-                            render={(controllerProps) => (
-                              <FormQuestionDescription
-                                {...controllerProps}
-                                placeholder={__('Description (optional)', 'tutor')}
-                                enableResize
-                                rows={2}
-                              />
-                            )}
-                          />
-                        </div>
-                      </div>
-
-                      {questionTypeForm[form.watch(`questions.${activeQuestionIdIndex}.type`)]}
-                    </div>
+                    {(activeQuestionId) => <QuestionForm key={activeQuestionId} activeQuestionId={activeQuestionId} />}
                   </Show>
                 }
               >
                 <QuizSettings form={form} />
               </Show>
             </div>
-            <Show when={activeTab === 'questions'} fallback={<div />}>
-              <div css={styles.right}>
-                <div css={styles.questionTypeWrapper}>
-                  <Controller
-                    key={`${activeQuestionId}-type`}
-                    control={form.control}
-                    name={`questions.${activeQuestionIdIndex}.type`}
-                    render={(controllerProps) => (
-                      <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
-                    )}
-                  />
+            <Show when={activeTab === 'questions' && activeQuestionId} fallback={<div />}>
+              {(activeQuestionId) => (
+                <div css={styles.right}>
+                  <QuestionCondition key={activeQuestionId} activeQuestionId={activeQuestionId} />
                 </div>
-                <div css={styles.conditions}>
-                  <p>{__('Conditions', 'tutor')}</p>
-                  <div css={styles.conditionControls}>
-                    <Show when={form.watch(`questions.${activeQuestionIdIndex}.type`) === 'multiple-choice'}>
-                      <Controller
-                        key={`${activeQuestionId}-muliple_correct_answer`}
-                        control={form.control}
-                        name={`questions.${activeQuestionIdIndex}.muliple_correct_answer`}
-                        render={(controllerProps) => (
-                          <FormSwitch {...controllerProps} label={__('Multiple Correct Answer', 'tutor')} />
-                        )}
-                      />
-                    </Show>
-                    <Show when={form.watch(`questions.${activeQuestionIdIndex}.type`) === 'matching'}>
-                      <Controller
-                        key={`${activeQuestionId}-image_matching`}
-                        control={form.control}
-                        name={`questions.${activeQuestionIdIndex}.image_matching`}
-                        render={(controllerProps) => (
-                          <FormSwitch {...controllerProps} label={__('Image Matching', 'tutor')} />
-                        )}
-                      />
-                    </Show>
-                    <Controller
-                      key={`${activeQuestionId}-answer_required`}
-                      control={form.control}
-                      name={`questions.${activeQuestionIdIndex}.answer_required`}
-                      render={(controllerProps) => (
-                        <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />
-                      )}
-                    />
-                    <Controller
-                      key={`${activeQuestionId}-randomize_question`}
-                      control={form.control}
-                      name={`questions.${activeQuestionIdIndex}.randomize_question`}
-                      render={(controllerProps) => (
-                        <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />
-                      )}
-                    />
-                    <Controller
-                      key={`${activeQuestionId}-question_mark`}
-                      control={form.control}
-                      name={`questions.${activeQuestionIdIndex}.question_mark`}
-                      render={(controllerProps) => (
-                        <FormInput
-                          {...controllerProps}
-                          label={__('Point For This Answer', 'tutor')}
-                          type="number"
-                          isInlineLabel
-                          style={css`
-                      max-width: 72px;
-                    `}
-                        />
-                      )}
-                    />
-                    <Controller
-                      key={`${activeQuestionId}-show_question_mark`}
-                      control={form.control}
-                      name={`questions.${activeQuestionIdIndex}.show_question_mark`}
-                      render={(controllerProps) => (
-                        <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />
-                      )}
-                    />
-                  </div>
-                </div>
-              </div>
+              )}
             </Show>
           </div>
 
@@ -643,26 +480,6 @@ const styles = {
 			padding-top: ${spacing[24]};
 		`
     }
-  `,
-  questionForm: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[16]};
-  `,
-  questionWithIndex: css`
-    ${styleUtils.display.flex('row')};
-    align-items: flex-start;
-    padding-left: 42px; // This is outside of the design
-    gap: ${spacing[4]};
-  `,
-  questionIndex: css`
-    margin-top: ${spacing[8]};
-    ${typography.heading6()};
-    color: ${colorTokens.text.hints};
-  `,
-  questionTitleAndDesc: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[8]};
-    width: 100%;
   `,
   right: css`
     ${styleUtils.display.flex('column')};
@@ -732,21 +549,5 @@ const styles = {
   `,
   questionList: css`
     padding: ${spacing[8]} ${spacing[20]};
-  `,
-  questionTypeWrapper: css`
-    padding: ${spacing[8]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
-    border-bottom: 1px solid ${colorTokens.stroke.divider};
-  `,
-  conditions: css`
-    padding: ${spacing[8]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
-    p {
-      ${typography.body('medium')};
-      color: ${colorTokens.text.primary};
-    }
-  `,
-  conditionControls: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[16]};
-    margin-top: ${spacing[16]};
   `,
 };
