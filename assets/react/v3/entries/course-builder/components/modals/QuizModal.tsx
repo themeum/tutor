@@ -1,20 +1,7 @@
-import {
-  DndContext,
-  DragOverlay,
-  KeyboardSensor,
-  PointerSensor,
-  type UniqueIdentifier,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { Controller, FormProvider, useFieldArray } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
+import { Controller, FormProvider } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
@@ -28,7 +15,6 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import Tabs from '@Molecules/Tabs';
 
-import Question from '@CourseBuilderComponents/curriculum/Question';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 import QuestionCondition from '@CourseBuilderComponents/curriculum/QuestionCondition';
@@ -38,13 +24,12 @@ import { type QuizQuestion, useGetQuizQuestionsQuery } from '@CourseBuilderServi
 import { modal } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
 
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -80,8 +65,6 @@ type QuizTabs = 'questions' | 'settings';
 
 const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
-  const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<QuizTabs>('questions');
   // @TODO: isEdit will be calculated based on the quiz data form API
@@ -144,35 +127,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     }
   }, [getQuizQuestionsQuery.data]);
 
-  const activeQuestionIndex = form.watch('questions').findIndex((question) => question.ID === activeQuestionId);
-
-  const {
-    append: addQuestion,
-    remove: removeQustion,
-    move: moveQuestion,
-    fields: questionFields,
-  } = useFieldArray({
-    control: form.control,
-    name: 'questions',
-  });
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
-
-  const activeSortItem = useMemo(() => {
-    if (!activeSortId) {
-      return null;
-    }
-
-    return questionFields.find((item) => item.ID === activeSortId);
-  }, [activeSortId, questionFields]);
-
   const onQuizFormSubmit = (data: QuizForm) => {
     // @TODO: will be implemented later
     setIsEdit(false);
@@ -185,8 +139,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   }
 
   return (
-    <QuizModalContextProvider activeQuestionIndex={activeQuestionIndex}>
-      <FormProvider {...form}>
+    <FormProvider {...form}>
+      <QuizModalContextProvider activeQuestionId={activeQuestionId} setActiveQuestionId={setActiveQuestionId}>
         <ModalWrapper
           onClose={() => closeModal({ action: 'CLOSE' })}
           icon={icon}
@@ -294,114 +248,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                       </div>
                     </Show>
                   </div>
-                  <div css={styles.questionsLabel}>
-                    <span>{__('Questions', 'tutor')}</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const questionId = nanoid();
-                        addQuestion({
-                          ID: questionId,
-                          title: 'Write anything here..',
-                          description: '',
-                          type: 'true-false',
-                          answer_required: true,
-                          options: [
-                            {
-                              ID: nanoid(),
-                              title: 'True',
-                            },
-                            {
-                              ID: nanoid(),
-                              title: 'False',
-                            },
-                          ],
-                          question_mark: 1,
-                          randomize_question: false,
-                          show_question_mark: false,
-                          markAsCorrect: '1',
-                          answerExplanation: '',
-                        });
-                        setActiveQuestionId(questionId);
-                      }}
-                    >
-                      <SVGIcon name="plusSquareBrand" />
-                    </button>
-                  </div>
 
-                  <div css={styles.questionList}>
-                    <Show
-                      when={questionFields.length > 0}
-                      fallback={<div>{__('No questions added yet.', 'tutor')}</div>}
-                    >
-                      <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-                        onDragStart={(event) => {
-                          setActiveSortId(event.active.id);
-                        }}
-                        onDragEnd={(event) => {
-                          const { active, over } = event;
-                          if (!over) {
-                            return;
-                          }
-
-                          if (active.id !== over.id) {
-                            const activeIndex = questionFields.findIndex((item) => item.ID === active.id);
-                            const overIndex = questionFields.findIndex((item) => item.ID === over.id);
-
-                            moveQuestion(activeIndex, overIndex);
-                          }
-
-                          setActiveSortId(null);
-                        }}
-                      >
-                        <SortableContext
-                          items={questionFields.map((item) => ({ ...item, id: item.ID }))}
-                          strategy={verticalListSortingStrategy}
-                        >
-                          <For each={form.getValues('questions')}>
-                            {(question, index) => (
-                              <Question
-                                key={question.ID}
-                                question={question}
-                                index={index}
-                                activeQuestionId={activeQuestionId}
-                                setActiveQuestionId={setActiveQuestionId}
-                                selectedQuestionId={selectedQuestionId}
-                                setSelectedQuestionId={setSelectedQuestionId}
-                                onRemoveQuestion={() => removeQustion(index)}
-                              />
-                            )}
-                          </For>
-                        </SortableContext>
-
-                        {createPortal(
-                          <DragOverlay>
-                            <Show when={activeSortItem}>
-                              {(item) => {
-                                const index = questionFields.findIndex((question) => question.ID === item.ID);
-                                return (
-                                  <Question
-                                    key={item.ID}
-                                    question={item}
-                                    index={index}
-                                    activeQuestionId={activeQuestionId}
-                                    setActiveQuestionId={setActiveQuestionId}
-                                    selectedQuestionId={selectedQuestionId}
-                                    setSelectedQuestionId={setSelectedQuestionId}
-                                    onRemoveQuestion={() => removeQustion(index)}
-                                  />
-                                );
-                              }}
-                            </Show>
-                          </DragOverlay>,
-                          document.body
-                        )}
-                      </DndContext>
-                    </Show>
-                  </div>
+                  <QuestionList />
                 </Show>
               </div>
             </Show>
@@ -450,8 +298,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
             }}
           />
         </ModalWrapper>
-      </FormProvider>
-    </QuizModalContextProvider>
+      </QuizModalContextProvider>
+    </FormProvider>
   );
 };
 

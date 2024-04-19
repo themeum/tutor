@@ -10,14 +10,12 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { __ } from '@wordpress/i18n';
 import { styleUtils } from '@Utils/style-utils';
+import { useState } from 'react';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 interface QuestionProps {
   question: QuizQuestion;
   index: number;
-  activeQuestionId: string | null;
-  setActiveQuestionId: (id: string | null) => void;
-  selectedQuestionId: string | null;
-  setSelectedQuestionId: (id: string | null) => void;
   onRemoveQuestion: () => void;
 }
 
@@ -32,15 +30,10 @@ const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
   ordering: 'quizOrdering',
 };
 
-const Question = ({
-  question,
-  index,
-  activeQuestionId,
-  setActiveQuestionId,
-  selectedQuestionId,
-  setSelectedQuestionId,
-  onRemoveQuestion,
-}: QuestionProps) => {
+const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
+  const { activeQuestionId, setActiveQuestionId } = useQuizModalContext();
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.ID,
     animateLayoutChanges,
