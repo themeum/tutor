@@ -22,7 +22,7 @@ readyState_complete(() => {
 jQuery(document).ready(function($) {
 	'use strict';
 	/**
-	 * wp.i18n translateable functions
+	 * wp.i18n translatable functions
 	 * @since 1.9.0
 	 */
 	const { __, _x, _n, _nx } = wp.i18n;
@@ -293,7 +293,7 @@ jQuery(document).ready(function($) {
 			if (completedPercentage < required_percentage) {
 				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
 				complete_lesson_btn.attr('disabled', true);
-				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">Watch at least ${video_data.required_percentage}% to complete the lesson.</span>`);
+				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">${__(`Watch at least ${video_data.required_percentage}% to complete the lesson.`, 'tutor')}</span>`);
 			}
 		},
 		getPercentage: function(value, total) {
