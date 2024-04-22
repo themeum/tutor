@@ -71,18 +71,18 @@ class REST_Rating {
 
 		if ( ! empty( $ratings ) ) {
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Course rating retrieved successfully', 'tutor' ),
-				'data'        => $ratings,
+				'code'    => 'success',
+				'message' => __( 'Course rating retrieved successfully', 'tutor' ),
+				'data'    => $ratings,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Rating not found for given ID', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Rating not found for given ID', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );

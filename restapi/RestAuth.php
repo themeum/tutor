@@ -278,6 +278,7 @@ class RestAuth {
 	 * @param string $key api key.
 	 * @param string $secret api secret.
 	 * @param string $permission authorization permission.
+	 * @param string $description description.
 	 *
 	 * @return string
 	 */

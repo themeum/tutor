@@ -10,7 +10,7 @@
 
 namespace TUTOR;
 
-use Themeum\Products\Helpers\QueryHelper;
+use Tutor\Helpers\QueryHelper;
 use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -80,8 +80,6 @@ class REST_Quiz {
 
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'posts';
-
 		$quizs = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT 
@@ -89,7 +87,7 @@ class REST_Quiz {
 					post_title,
 					post_content,
 					post_name
-				FROM $table
+				FROM {$wpdb->posts}
 				WHERE post_type = %s 
 					AND post_parent = %d
 				",
@@ -107,18 +105,18 @@ class REST_Quiz {
 				array_push( $data, $quiz );
 
 				$response = array(
-					'status_code' => 'success',
-					'message'     => __( 'Quiz retrieved successfully', 'tutor' ),
-					'data'        => $data,
+					'code'    => 'success',
+					'message' => __( 'Quiz retrieved successfully', 'tutor' ),
+					'data'    => $data,
 				);
 			}
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Quiz not found for given ID', 'tutor' ),
-			'data'        => $data,
+			'code'    => 'not_found',
+			'message' => __( 'Quiz not found for given ID', 'tutor' ),
+			'data'    => $data,
 		);
 		return self::send( $response );
 	}
@@ -135,18 +133,19 @@ class REST_Quiz {
 
 		$this->post_parent = $request->get_param( 'id' );
 
-		$q_t = $wpdb->prefix . $this->t_quiz_question; // question table
+		$wpdb->q_t = $wpdb->prefix . $this->t_quiz_question; // Question table.
 
-		$q_a_t = $wpdb->prefix . $this->t_quiz_ques_ans; // question answer table
+		$wpdb->q_a_t = $wpdb->prefix . $this->t_quiz_ques_ans; // Question answer table.
 
 		$quizs = $wpdb->get_results(
-			$wpdb->prepare( "SELECT
+			$wpdb->prepare(
+				"SELECT
 				question_id,
 				question_title,
 				question_description,
 				question_type,
 				question_mark,
-				question_settings FROM $q_t
+				question_settings FROM {$wpdb->q_t}
 				WHERE quiz_id = %d
 				",
 				$this->post_parent
@@ -155,17 +154,18 @@ class REST_Quiz {
 		$data  = array();
 
 		if ( count( $quizs ) > 0 ) {
-			// get question ans by question_id
+			// Get question ans by question_id.
 			foreach ( $quizs as $quiz ) {
-				// un-serialized question settings.
+				// Un-serialized question settings.
 				$quiz->question_settings = maybe_unserialize( $quiz->question_settings );
 
 				// question options with correct ans.
 				$options = $wpdb->get_results(
-					$wpdb->prepare( "SELECT
+					$wpdb->prepare(
+						"SELECT
 						answer_id,
 						answer_title,
-						is_correct FROM $q_a_t
+						is_correct FROM {$wpdb->q_a_t}
 						WHERE belongs_question_id = %d
 						",
 						$quiz->question_id
@@ -179,18 +179,18 @@ class REST_Quiz {
 			}
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Question retrieved successfully', 'tutor' ),
-				'data'        => $data,
+				'code'    => 'success',
+				'message' => __( 'Question retrieved successfully', 'tutor' ),
+				'data'    => $data,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Question not found for given ID', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Question not found for given ID', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );
@@ -210,7 +210,7 @@ class REST_Quiz {
 
 		$quiz_id = $request->get_param( 'id' );
 
-		$quiz_attempt = $wpdb->prefix . $this->t_quiz_attempt;
+		$wpdb->quiz_attempt = $wpdb->prefix . $this->t_quiz_attempt;
 
 		$attempts = $wpdb->get_results(
 			$wpdb->prepare(
@@ -226,7 +226,7 @@ class REST_Quiz {
 				att.attempt_ended_at,
 				att.is_manually_reviewed,
 				att.manually_reviewed_at 
-			FROM $quiz_attempt att 
+			FROM {$wpdb->quiz_attempt} att 
 				WHERE att.quiz_id = %d
 			",
 				$quiz_id
@@ -248,18 +248,18 @@ class REST_Quiz {
 			}
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Quiz attempts retrieved successfully', 'tutor' ),
-				'data'        => $attempts,
+				'code'    => 'success',
+				'message' => __( 'Quiz attempts retrieved successfully', 'tutor' ),
+				'data'    => $attempts,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Quiz attempts not found for given ID', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Quiz attempts not found for given ID', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );
@@ -276,8 +276,8 @@ class REST_Quiz {
 	 */
 	protected function get_quiz_attempt_ans( $quiz_id ) {
 		global $wpdb;
-		$quiz_attempt_ans = $wpdb->prefix . $this->t_quiz_attempt_ans;
-		$quiz_question    = $wpdb->prefix . $this->t_quiz_question;
+		$wpdb->quiz_attempt_ans = $wpdb->prefix . $this->t_quiz_attempt_ans;
+		$wpdb->quiz_question    = $wpdb->prefix . $this->t_quiz_question;
 
 		// get attempt answers.
 		$answers = $wpdb->get_results(
@@ -288,8 +288,8 @@ class REST_Quiz {
 				att_ans.question_mark,
 				att_ans.achieved_mark,
 				att_ans.minus_mark,
-				att_ans.is_correct FROM $quiz_attempt_ans as att_ans
-			JOIN $quiz_question q ON q.question_id = att_ans.question_id 
+				att_ans.is_correct FROM {$wpdb->quiz_attempt_ans} as att_ans
+			JOIN {$wpdb->quiz_question} q ON q.question_id = att_ans.question_id 
 			WHERE att_ans.quiz_id = %d
 			",
 				$quiz_id
@@ -324,24 +324,27 @@ class REST_Quiz {
 	 */
 	protected function answer_titles_by_id( $id ) {
 		global $wpdb;
-		$table = $wpdb->prefix . $this->t_quiz_ques_ans;
+		$wpdb->t_quiz_ques_ans = $wpdb->prefix . $this->t_quiz_ques_ans;
 
 		if ( is_array( $id ) ) {
-			$array  = QueryHelper::prepare_in_clause( $id );
+			$array = QueryHelper::prepare_in_clause( $id );
 
 			$results = $wpdb->get_results(
 				"SELECT
 					answer_title
-				FROM $table 
+				FROM {$wpdb->t_quiz_ques_ans} 
 				WHERE 
-				answer_id IN ('" . $array . "')"
+				answer_id IN ('" . $array . "')"//phpcs:ignore
 			);
 		} else {
 			$results = $wpdb->get_results(
-				"SELECT
+				$wpdb->prepare(
+					"SELECT
 					answer_title
-				FROM $table
-				WHERE answer_id = {$id}"
+				FROM {$wpdb->t_quiz_ques_ans}
+				WHERE answer_id = %d",
+					$id
+				)
 			);
 		}
 
