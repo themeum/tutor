@@ -139,18 +139,18 @@ class REST_Course {
 			}
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Course retrieved successfully', 'tutor' ),
-				'data'        => $data,
+				'code'    => 'success',
+				'message' => __( 'Course retrieved successfully', 'tutor' ),
+				'data'    => $data,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Course not found', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Course not found', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );
@@ -171,16 +171,16 @@ class REST_Course {
 		$detail = $this->course_additional_info( $post_id );
 		if ( $detail ) {
 			$response = array(
-				'status_code' => 'course_detail',
-				'message'     => __( 'Course detail retrieved successfully', 'tutor' ),
-				'data'        => $detail,
+				'code'    => 'course_detail',
+				'message' => __( 'Course detail retrieved successfully', 'tutor' ),
+				'data'    => $detail,
 			);
 			return self::send( $response );
 		}
 		$response = array(
-			'status_code' => 'course_detail',
-			'message'     => __( 'Detail not found for given ID', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'course_detail',
+			'message' => __( 'Detail not found for given ID', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );
@@ -238,9 +238,9 @@ class REST_Course {
 		// check array or not.
 		if ( count( $validate_err ) > 0 ) {
 			$response = array(
-				'status_code' => 'validation_error',
-				'message'     => $validate_err,
-				'data'        => array(),
+				'code'    => 'validation_error',
+				'message' => $validate_err,
+				'data'    => array(),
 			);
 
 			return self::send( $response );
@@ -282,18 +282,18 @@ class REST_Course {
 			);
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Course retrieved successfully', 'tutor' ),
-				'data'        => $query->posts,
+				'code'    => 'success',
+				'message' => __( 'Course retrieved successfully', 'tutor' ),
+				'data'    => $query->posts,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Course not found for given terms', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Course not found for given terms', 'tutor' ),
+			'data'    => array(),
 		);
 		return self::send( $response );
 	}
@@ -386,18 +386,18 @@ class REST_Course {
 			);
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Course retrieved successfully', 'tutor' ),
-				'data'        => $data,
+				'code'    => 'success',
+				'message' => __( 'Course retrieved successfully', 'tutor' ),
+				'data'    => $data,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Course not found', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Course not found', 'tutor' ),
+			'data'    => array(),
 		);
 		return self::send( $response );
 	}
@@ -437,17 +437,17 @@ class REST_Course {
 			}
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Course contents retrieved successfully', 'tutor' ),
-				'data'        => $data,
+				'code'    => 'success',
+				'message' => __( 'Course contents retrieved successfully', 'tutor' ),
+				'data'    => $data,
 			);
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Contents for this course with the given course id not found', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Contents for this course with the given course id not found', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );

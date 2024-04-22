@@ -25,15 +25,15 @@ class REST_Lesson {
 	use REST_Response;
 
 	/**
-     * Post type
-     *
+	 * Post type
+	 *
 	 * @var string $post_type
 	 */
 	private $post_type;
 
 	/**
-     * Post parent ID
-     *
+	 * Post parent ID
+	 *
 	 * @var int $post_parent
 	 */
 	private $post_parent;
@@ -94,18 +94,18 @@ class REST_Lesson {
 			}
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Lesson retrieved successfully', 'tutor' ),
-				'data'        => $data,
+				'code'    => 'success',
+				'message' => __( 'Lesson retrieved successfully', 'tutor' ),
+				'data'    => $data,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Lesson not found for the given topic ID', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Lesson not found for the given topic ID', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );
