@@ -314,6 +314,7 @@ const styles = {
   `,
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
+    overflow-y: auto;
   `,
   content: ({
     activeTab,
@@ -321,6 +322,7 @@ const styles = {
     activeTab: QuizTabs;
   }) => css`
     padding: ${spacing[32]} ${spacing[48]} ${spacing[48]} ${spacing[6]};
+    overflow-y: auto;
 
 		${
       activeTab === 'settings' &&
@@ -333,6 +335,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
     border-left: 1px solid ${colorTokens.stroke.divider};
+    overflow-y: auto;
   `,
   quizTitleWrapper: css`
     ${typography.caption()};

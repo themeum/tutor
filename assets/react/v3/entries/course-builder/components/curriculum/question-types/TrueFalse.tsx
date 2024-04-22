@@ -33,7 +33,7 @@ const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
               width={32}
             />
             <div
-              css={styles.optionLabel({ isSelected: markAsCorrect === '0' })}
+              css={styles.optionLabel({ isSelected: markAsCorrect === field.value.ID })}
               onClick={() => {
                 form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
               }}
@@ -61,7 +61,7 @@ const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
               width={32}
             />
             <div
-              css={styles.optionLabel({ isSelected: markAsCorrect === '0' })}
+              css={styles.optionLabel({ isSelected: markAsCorrect === field.value.ID })}
               onClick={() => {
                 form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
               }}
