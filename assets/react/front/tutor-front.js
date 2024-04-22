@@ -5,6 +5,7 @@ import './dashboard/export-csv';
 import './pages/course-landing';
 import './pages/instructor-list-filter';
 import './_select_dd_search';
+import sprintf from '../helper/sprintf';
 /**
  * Codes from this file should be decentralized according to relavent file/folder structure.
  * It's a legacy file.
@@ -153,7 +154,7 @@ jQuery(document).ready(function($) {
 								// Disallow moving forward
 								if (newTime > max_seek_time) {
 									e.preventDefault();
-									tutor_toast(__('Warning', 'tutor'), __(`Forward seeking is disabled.`, 'tutor'), 'error');
+									tutor_toast(__('Warning', 'tutor'), __('Forward seeking is disabled', 'tutor'), 'error');
 									return false;
 								}
 								return true;
@@ -293,7 +294,7 @@ jQuery(document).ready(function($) {
 			if (completedPercentage < required_percentage) {
 				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
 				complete_lesson_btn.attr('disabled', true);
-				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">${__(`Watch at least ${video_data.required_percentage}% to complete the lesson.`, 'tutor')}</span>`);
+				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">${ sprintf( __( 'Watch at least %s% to complete the lesson.', 'tutor' ), video_data.required_percentage ) }</span>`);
 			}
 		},
 		getPercentage: function(value, total) {
