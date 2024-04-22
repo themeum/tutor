@@ -33,7 +33,7 @@ foreach ( $attributes as $key => $value ) {
 	if ( is_array( $value ) ) {
 		continue;
 	}
-	echo esc_attr( 'data-' . $key . '="' . $value . '" ' );
+	echo 'data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '" ';
 }
 ?>
 >

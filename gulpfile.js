@@ -88,7 +88,7 @@ for (let task in scss_blueprints) {
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/gi;
-const js_files = ['tutor-front', 'tutor-admin', 'tutor-course-builder', 'tutor-setup']
+const js_files = [ 'tutor', 'tutor-front', 'tutor-admin', 'tutor-course-builder', 'tutor-setup']
 	.map((f) => 'assets/js/' + f + '.js:1')
 	.join(', ');
 function i18n_makepot(callback, target_dir) {
@@ -110,7 +110,12 @@ function i18n_makepot(callback, target_dir) {
 		}
 
 		// Make sure only js extension file to process
-		if (stat.isFile() && path.extname(file_name) == '.js' && full_path.indexOf('assets/react') > -1) {
+		if (stat.isFile() && path.extname(file_name) == '.js' && 
+			( 	full_path.indexOf('assets/react') > -1 
+				|| full_path.indexOf('v2-library/_src/js') > -1
+				|| full_path.indexOf('v2-library/src/components') > -1 
+			) 
+		) {
 			var codes = fs.readFileSync(full_path).toString();
 			var lines = codes.split('\n');
 

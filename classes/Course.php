@@ -1499,15 +1499,17 @@ class Course extends Tutor_Base {
 			$assignment_str = _n( 'assignment', 'assignments', $required_assignment_pass, 'tutor' );
 
 			if ( ! $is_quiz_pass && 0 == $required_assignment_pass ) {
-				/* translators: %s: number of quiz pass required */
+				/* translators: %1$s: number of quiz/assignment pass required; %2$s: quiz/assignment string */
 				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str );
 			}
+
 			if ( $is_quiz_pass && $required_assignment_pass > 0 ) {
-				/* translators: %s: number of assignment pass required */
+				//phpcs:ignore
 				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_assignment_pass, $assignment_str );
 			}
+
 			if ( ! $is_quiz_pass && $required_assignment_pass > 0 ) {
-				/* translators: %s: number of quiz pass required */
+				/* translators: %1$s: number of quiz pass required; %2$s: quiz string; %3$s: number of assignment pass required; %4$s: assignment string */
 				$_msg = sprintf( __( 'You have to pass %1$s %2$s and %3$s %4$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str, $required_assignment_pass, $assignment_str );
 			}
 
