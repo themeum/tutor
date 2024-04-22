@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.6.2
+Stable tag: 2.7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -315,6 +315,24 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.7.0 - April 23, 2024
+
+New: API for course content
+New: API for student dashboard (Pro)
+New: API for student calendar event list (Pro)
+New: API for student enrolled courses (Pro)
+New: API for quiz attempt list (Pro)
+New: API for enrolled student list on a course (Pro)
+New: API for become an instructor (Pro)
+New: API for student order history (Pro)
+New: APIs for profile management (Pro)
+New: APIs for Q&A manage (Pro)
+Update: WordPress 6.5 compatibility added
+Update: Some enhancements to improve the overall experience
+Fix: Duplicate H1 tag on each single page
+Fix: Various translation related issues
+Fix: Resolved known security issues
 
 = 2.6.2 - March 11, 2024
 
