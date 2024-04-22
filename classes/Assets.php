@@ -183,9 +183,10 @@ class Assets {
 		/**
 		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
 		 * condition updated @since v.1.7.4
+		 *
+		 * @since 2.7.0 is_user_logged_in() check added to remove duplicate H1 tag on each single post.
 		 */
-
-		if ( is_single() ) {
+		if ( is_single() && is_user_logged_in() ) {
 			if ( function_exists( 'et_pb_is_pagebuilder_used' ) ) {
 				$is_page_builder_used = et_pb_is_pagebuilder_used( get_the_ID() );
 				if ( ! $is_page_builder_used ) {

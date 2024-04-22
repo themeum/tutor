@@ -7,6 +7,7 @@
 	const weak = document.querySelector('.tutor-password-strength-hint .weak');
 	const medium = document.querySelector('.tutor-password-strength-hint .medium');
 	const strong = document.querySelector('.tutor-password-strength-hint .strong');
+	const { __, _x, _n, _nx } = wp.i18n;
 
 	let regExpWeak = /[a-z]/;
 	let regExpMedium = /\d+/;
@@ -53,15 +54,13 @@
 						weak.classList.add('active');
 						if (noticeText) {
 							noticeText.style.display = 'block';
-							noticeText.textContent = 'weak';
-							// noticeText.classList.add('weak');
+							noticeText.textContent = __('weak','tutor');
 						}
 					}
 					if (no == 2) {
 						medium.classList.add('active');
 						if (noticeText) {
-							noticeText.textContent = 'medium';
-							// noticeText.classList.add('medium');
+							noticeText.textContent = __('medium','tutor');
 						}
 					} else {
 						medium.classList.remove('active');
@@ -74,7 +73,7 @@
 						medium.classList.add('active');
 						strong.classList.add('active');
 						if (noticeText) {
-							noticeText.textContent = 'strong';
+							noticeText.textContent = __('strong','tutor');
 							// noticeText.classList.add('strong');
 						}
 					} else {
