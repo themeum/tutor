@@ -6,7 +6,7 @@ import { typography } from '@Config/typography';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 interface TrueFalseProps {
   activeQuestionIndex: number;
@@ -19,63 +19,42 @@ const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
     name: `questions.${activeQuestionIndex}.markAsCorrect`,
   });
 
+  const { fields: options } = useFieldArray({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.options`,
+  });
+
   return (
     <div css={styles.optionWrapper}>
-      <Controller
-        control={form.control}
-        name={`questions.${activeQuestionIndex}.options.0`}
-        render={({ field }) => (
-          <div css={styles.option({ isSelected: markAsCorrect === field.value.ID })}>
-            <SVGIcon
-              data-check-icon
-              name={markAsCorrect === field.value.ID ? 'checkFilled' : 'check'}
-              height={32}
-              width={32}
-            />
-            <div
-              css={styles.optionLabel({ isSelected: markAsCorrect === field.value.ID })}
-              onClick={() => {
-                form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
+      {options.map((option, index) => (
+        <Controller
+          control={form.control}
+          name={`questions.${activeQuestionIndex}.options.${index}`}
+          render={({ field }) => (
+            <div css={styles.option({ isSelected: markAsCorrect === field.value.ID })}>
+              <SVGIcon
+                data-check-icon
+                name={markAsCorrect === field.value.ID ? 'checkFilled' : 'check'}
+                height={32}
+                width={32}
+              />
+              <div
+                css={styles.optionLabel({ isSelected: markAsCorrect === field.value.ID })}
+                onClick={() => {
                   form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-                }
-              }}
-            >
-              {__('True', 'tutor')}
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+                  }
+                }}
+              >
+                {__(option.title, 'tutor')}
+              </div>
             </div>
-          </div>
-        )}
-      />
-
-      <Controller
-        control={form.control}
-        name={`questions.${activeQuestionIndex}.options.1`}
-        render={({ field }) => (
-          <div css={styles.option({ isSelected: markAsCorrect === field.value.ID })}>
-            <SVGIcon
-              data-check-icon
-              name={markAsCorrect === field.value.ID ? 'checkFilled' : 'check'}
-              height={32}
-              width={32}
-            />
-            <div
-              css={styles.optionLabel({ isSelected: markAsCorrect === field.value.ID })}
-              onClick={() => {
-                form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-                }
-              }}
-            >
-              {__('False', 'tutor')}
-            </div>
-          </div>
-        )}
-      />
+          )}
+        />
+      ))}
     </div>
   );
 };
