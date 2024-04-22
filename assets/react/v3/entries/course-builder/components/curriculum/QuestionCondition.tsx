@@ -15,10 +15,6 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { Option } from '@Utils/types';
 import type { QuizQuestionType } from '@CourseBuilderServices/quiz';
 
-interface QuestionCondiotnProps {
-  activeQuestionId: string;
-}
-
 export const questionTypeOptions: Option<QuizQuestionType>[] = [
   {
     label: __('True/ False', 'tutor'),
@@ -62,8 +58,8 @@ export const questionTypeOptions: Option<QuizQuestionType>[] = [
   },
 ];
 
-const QuestionCondition = ({ activeQuestionId }: QuestionCondiotnProps) => {
-  const { activeQuestionIndex } = useQuizModalContext();
+const QuestionCondition = () => {
+  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.type`);

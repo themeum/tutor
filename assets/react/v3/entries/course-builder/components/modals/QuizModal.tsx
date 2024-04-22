@@ -20,6 +20,7 @@ import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContex
 import QuestionCondition from '@CourseBuilderComponents/curriculum/QuestionCondition';
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
 import { type QuizQuestion, useGetQuizQuestionsQuery } from '@CourseBuilderServices/quiz';
+import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 
 import { modal } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
@@ -29,7 +30,6 @@ import { styleUtils } from '@Utils/style-utils';
 
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 
 interface QuizModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -257,9 +257,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
               <Show
                 when={activeTab === 'settings'}
                 fallback={
-                  <Show when={activeQuestionId}>
-                    {(activeQuestionId) => <QuestionForm key={activeQuestionId} activeQuestionId={activeQuestionId} />}
-                  </Show>
+                  <Show when={activeQuestionId}>{(activeQuestionId) => <QuestionForm key={activeQuestionId} />}</Show>
                 }
               >
                 <QuizSettings form={form} />
@@ -268,7 +266,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
             <Show when={activeTab === 'questions' && activeQuestionId} fallback={<div />}>
               {(activeQuestionId) => (
                 <div css={styles.right}>
-                  <QuestionCondition key={activeQuestionId} activeQuestionId={activeQuestionId} />
+                  <QuestionCondition key={activeQuestionId} />
                 </div>
               )}
             </Show>

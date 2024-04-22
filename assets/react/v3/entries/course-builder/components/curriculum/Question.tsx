@@ -1,17 +1,20 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
-import ThreeDots from '@Molecules/ThreeDots';
-import type { IconCollection } from '@Utils/types';
-import { css } from '@emotion/react';
-import { animateLayoutChanges } from '@Utils/dndkit';
+import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { __ } from '@wordpress/i18n';
-import { styleUtils } from '@Utils/style-utils';
-import { useState } from 'react';
+import { css } from '@emotion/react';
+
+import SVGIcon from '@Atoms/SVGIcon';
+import ThreeDots from '@Molecules/ThreeDots';
+
+import type { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import type { IconCollection } from '@Utils/types';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import { styleUtils } from '@Utils/style-utils';
 
 interface QuestionProps {
   question: QuizQuestion;

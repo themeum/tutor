@@ -19,12 +19,8 @@ import { styleUtils } from '@Utils/style-utils';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 
-interface QuestionFormProps {
-  activeQuestionId: string;
-}
-
-const QuestionForm = ({ activeQuestionId }: QuestionFormProps) => {
-  const { activeQuestionIndex } = useQuizModalContext();
+const QuestionForm = () => {
+  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.type`);
