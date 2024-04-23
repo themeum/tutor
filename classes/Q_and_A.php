@@ -2,8 +2,7 @@
 /**
  * Manage Q & A
  *
- * @package Tutor\Q_and_A
- * @category Q_and_A
+ * @package Tutor\Q_And_A
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 1.0.0
@@ -26,33 +25,35 @@ class Q_And_A {
 	/**
 	 * Register hooks
 	 *
-	 * @param boolean $allow_hooks true/false to execute the hooks.
+	 * @param boolean $register_hooks true/false to execute the hooks.
 	 */
-	public function __construct( $allow_hooks = true ) {
-		if ( $allow_hooks ) {
-			add_action( 'wp_ajax_tutor_qna_create_update', array( $this, 'tutor_qna_create_update' ) );
-
-			/**
-			 * Delete question
-			 *
-			 * @since  v.1.6.4
-			 */
-			add_action( 'wp_ajax_tutor_delete_dashboard_question', array( $this, 'tutor_delete_dashboard_question' ) );
-
-			/**
-			 * Take action against single qna
-			 *
-			 * @since v2.0.0
-			 */
-			add_action( 'wp_ajax_tutor_qna_single_action', array( $this, 'tutor_qna_single_action' ) );
-			add_action( 'wp_ajax_tutor_qna_bulk_action', array( $this, 'process_bulk_action' ) );
-			/**
-			 * Q & A load more
-			 *
-			 * @since v2.0.6
-			 */
-			add_action( 'wp_ajax_tutor_q_and_a_load_more', __CLASS__ . '::load_more' );
+	public function __construct( $register_hooks = true ) {
+		if ( ! $register_hooks ) {
+			return;
 		}
+
+		add_action( 'wp_ajax_tutor_qna_create_update', array( $this, 'tutor_qna_create_update' ) );
+
+		/**
+		 * Delete question
+		 *
+		 * @since  v.1.6.4
+		 */
+		add_action( 'wp_ajax_tutor_delete_dashboard_question', array( $this, 'tutor_delete_dashboard_question' ) );
+
+		/**
+		 * Take action against single qna
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'wp_ajax_tutor_qna_single_action', array( $this, 'tutor_qna_single_action' ) );
+		add_action( 'wp_ajax_tutor_qna_bulk_action', array( $this, 'process_bulk_action' ) );
+		/**
+		 * Q & A load more
+		 *
+		 * @since v2.0.6
+		 */
+		add_action( 'wp_ajax_tutor_q_and_a_load_more', __CLASS__ . '::load_more' );
 	}
 
 	/**
@@ -116,7 +117,7 @@ class Q_And_A {
 		$qna_object->user        = $user;
 		$qna_object->date        = $date;
 
-		$this->inset_qna( $qna_object );
+		$question_id = $this->inset_qna( $qna_object );
 
 		// Provide the html now.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -141,7 +142,7 @@ class Q_And_A {
 	 * Function to insert Q&A
 	 *
 	 * @param object $qna_object the object to insert.
-	 * @return void|bool
+	 * @return int
 	 */
 	public function inset_qna( $qna_object ) {
 		$course_id   = $qna_object->course_id;
@@ -188,9 +189,7 @@ class Q_And_A {
 			do_action( 'tutor_after_answer_to_question', $answer_id );
 		}
 
-		if ( tutor_is_rest() ) {
-			return ! empty( $question_id ) ? true : false;
-		}
+		return $question_id;
 	}
 
 	/**

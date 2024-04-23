@@ -47,7 +47,7 @@ if ( Input::has( 'question_id' ) ) {
 
 	$navbar_data = array(
 		'page_title' => __( 'Question & Answer', 'tutor' ),
-		'tabs'       => \Tutor\Q_and_A::tabs_key_value(),
+		'tabs'       => \Tutor\Q_And_A::tabs_key_value(),
 		'active'     => $active_tab,
 	);
 	?>
