@@ -202,7 +202,7 @@ final class Tutor {
 	private $student;
 
 	/**
-	 * Q_and_A class object
+	 * Q_And_A class object
 	 *
 	 * @since 1.1.0
 	 *
@@ -504,7 +504,7 @@ final class Tutor {
 		$this->template              = new Template();
 		$this->instructor            = new Instructor();
 		$this->student               = new Student();
-		$this->q_and_a               = new Q_and_A();
+		$this->q_and_a               = new Q_And_A();
 		$this->q_and_a_list          = new Question_Answers_List();
 		$this->q_attempt             = new Quiz_Attempts_List();
 		$this->quiz                  = new Quiz();

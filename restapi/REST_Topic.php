@@ -54,25 +54,23 @@ class REST_Topic {
 
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'posts';
-
 		$result = $wpdb->get_results(
-			$wpdb->prepare( "SELECT ID, post_title, post_content, post_name FROM $table WHERE post_type = %s AND post_parent = %d", $this->post_type, $this->post_parent )
+			$wpdb->prepare( "SELECT ID, post_title, post_content, post_name FROM {$wpdb->posts} WHERE post_type = %s AND post_parent = %d", $this->post_type, $this->post_parent )
 		);
 
 		if ( count( $result ) > 0 ) {
 			$response = array(
-				'status_code' => 'get_topic',
-				'message'     => __( 'Topic retrieved successfully', 'tutor' ),
-				'data'        => $result,
+				'code'    => 'get_topic',
+				'message' => __( 'Topic retrieved successfully', 'tutor' ),
+				'data'    => $result,
 			);
 
 			return self::send( $response );
 		}
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Topic not found for given ID', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Topic not found for given ID', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );
