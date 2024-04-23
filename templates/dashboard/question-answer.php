@@ -11,14 +11,14 @@
 
 use TUTOR\Input;
 use TUTOR\Instructor;
-use TUTOR\Q_and_A;
+use TUTOR\Q_And_A;
 
 $question_id = Input::get( 'question_id', null, Input::TYPE_INT );
 if ( $question_id ) {
 	$question = tutor_utils()->get_qa_question( $question_id );
 	$user_id  = get_current_user_id();
 
-	if ( $question && ! Q_and_A::has_qna_access( $user_id, $question->comment_post_ID ) ) {
+	if ( $question && ! Q_And_A::has_qna_access( $user_id, $question->comment_post_ID ) ) {
 		tutor_utils()->tutor_empty_state( tutor_utils()->error_message() );
 		return;
 	}
@@ -42,7 +42,7 @@ $view_option       = get_user_meta( get_current_user_id(), 'tutor_qa_view_as', t
 $view_as           = $is_instructor ? ( $view_option ? $view_option : 'instructor' ) : 'student';
 $as_instructor_url = add_query_arg( array( 'view_as' => 'instructor' ), tutor()->current_url );
 $as_student_url    = add_query_arg( array( 'view_as' => 'student' ), tutor()->current_url );
-$qna_tabs          = \Tutor\Q_and_A::tabs_key_value( 'student' == $view_as ? get_current_user_id() : null );
+$qna_tabs          = \Tutor\Q_And_A::tabs_key_value( 'student' == $view_as ? get_current_user_id() : null );
 $active_tab        = Input::get( 'tab', 'all' );
 ?>
 
