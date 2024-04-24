@@ -316,23 +316,23 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 
 == Changelog ==
 
-= 2.7.0 - April 23, 2024
+= 2.7.0 - April 24, 2024
 
-New: API for course content
-New: API for student dashboard (Pro)
-New: API for student calendar event list (Pro)
-New: API for student enrolled courses (Pro)
-New: API for quiz attempt list (Pro)
-New: API for enrolled student list on a course (Pro)
-New: API for become an instructor (Pro)
-New: API for student order history (Pro)
-New: APIs for profile management (Pro)
-New: APIs for Q&A manage (Pro)
-Update: WordPress 6.5 compatibility added
-Update: Some enhancements to improve the overall experience
-Fix: Duplicate H1 tag on each single page
-Fix: Various translation related issues
-Fix: Resolved known security issues
+New: Introduced API for accessing course content
+New: Added API for student dashboard functionality (Pro)
+New: Implemented API for student calendar event list (Pro)
+New: Added API for accessing the student's enrolled courses (Pro)
+New: Introduced API for retrieving quiz attempt lists (Pro)
+New: Added API for accessing enrolled student lists on a course (Pro)
+New: Implemented API for accepting instructor registration applications (Pro)
+New: Added API for viewing student order history (Pro)
+New: Introduced APIs for profile management (Pro)
+New: Implemented APIs for Q&A management (Pro)
+Update: Compatibility with WordPress 6.5
+Update: Implemented various enhancements to improve the overall user experience
+Fix: Fixed the duplicate H1 tags issue on every single page
+Fix: Resolved various translation-related issues
+Fix: Enhanced security by solving a few vulnerabilities
 
 = 2.6.2 - March 11, 2024
 
