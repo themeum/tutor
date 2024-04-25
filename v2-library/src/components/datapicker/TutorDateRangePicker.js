@@ -2,6 +2,7 @@ import { differenceInDays } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import DatePicker, { CalendarContainer } from 'react-datepicker';
 import { CustomInput } from '../CustomInput';
+const { __, _x, _n, _nx } = wp.i18n;
 
 
 const TutorDateRangePicker = () => {
@@ -56,7 +57,7 @@ const TutorDateRangePicker = () => {
 					{children}
 					<div className="react-datepicker__custom-footer">
 						<div className="react-datepicker__selected-days-count">
-							{dayCount ? (dayCount > 1 ? `${dayCount} days selected` : `${dayCount} day selected`) : '0 day selected'}
+							{dayCount ? (dayCount > 1 ? `${dayCount} days selected` : `${dayCount} day selected`) : __( '0 day selected', 'tutor' )}
 						</div>
 						<div className="tutor-btns">
 							<button
@@ -64,7 +65,7 @@ const TutorDateRangePicker = () => {
 								className="tutor-btn tutor-btn-outline-primary"
 								onClick={applyDateRange}
 							>
-								Apply
+							{__('Apply', 'tutor')}
 							</button>
 						</div>
 					</div>

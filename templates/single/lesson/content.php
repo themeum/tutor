@@ -88,7 +88,7 @@ tutor_load_template(
 
 	<?php
 	$referer_url        = wp_get_referer();
-	$referer_comment_id = explode( '#', filter_input( INPUT_SERVER, 'REQUEST_URI' ) );
+	$referer_comment_id = explode( '#', filter_input( INPUT_SERVER, 'REQUEST_URI' ) ?? '' );
 	$url_components     = parse_url( $referer_url );
 	$page_tab           = \TUTOR\Input::get( 'page_tab', 'overview' );
 

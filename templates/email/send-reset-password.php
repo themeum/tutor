@@ -14,14 +14,25 @@ defined( 'ABSPATH' ) || exit;
 
 
 <p>
-	<?php printf( esc_html__( 'Hi %s,', 'tutor' ), esc_html( $user_login ) ); ?>
+	<?php
+		/* translators: %s: user login */
+		printf( esc_html__( 'Hi %s,', 'tutor' ), esc_html( $user_login ) );
+	?>
 </p>
 
 <p>
-	<?php printf( esc_html__( 'Someone has requested a new password for the following account on %s:', 'tutor' ), esc_html( wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) ) ); ?>
+	<?php
+		/* translators: %s: site name */
+		printf( esc_html__( 'Someone has requested a new password for the following account on %s:', 'tutor' ), esc_html( wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) ) );
+	?>
 </p>
 
-<p><?php printf( esc_html__( 'Username: %s', 'tutor' ), esc_html( $user_login ) ); ?></p>
+<p>
+<?php
+	/* translators: %s: user login */
+	printf( esc_html__( 'Username: %s', 'tutor' ), esc_html( $user_login ) );
+?>
+</p>
 <p>
 	<?php esc_html_e( 'If you didn\'t make this request, just ignore this email. If you\'d like to proceed:', 'tutor' ); ?>
 </p>

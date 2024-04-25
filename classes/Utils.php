@@ -3777,10 +3777,11 @@ class Utils {
 	 *
 	 * @param integer|object $user user id or object.
 	 * @param string         $size size of avatar like sm, md, lg.
+	 * @param bool           $echo whether to echo or return.
 	 *
 	 * @return string
 	 */
-	public function get_tutor_avatar( $user = null, $size = '' ) {
+	public function get_tutor_avatar( $user = null, $size = '', $echo = false ) {
 
 		if ( ! $user ) {
 			return '';
@@ -3815,7 +3816,11 @@ class Utils {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		return apply_filters( 'tutor_text_avatar', $output );
+		if ( $echo ) {
+			echo wp_kses( $output, $this->allowed_avatar_tags() );
+		} else {
+			return apply_filters( 'tutor_text_avatar', $output );
+		}
 	}
 
 	/**
@@ -4698,6 +4703,39 @@ class Utils {
 
 		if ( $answer ) {
 			return $answer;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Funcion to check if a user can delete qa by id
+	 *
+	 * @param int $user_id
+	 * @param int $question_id
+	 * @return boolean
+	 */
+	public function can_delete_qa( $user_id, $question_id ) {
+		global $wpdb;
+
+		$is_admin = $this->has_user_role( 'administrator', $user_id);
+
+		if ($is_admin) {
+			return true;
+		}
+
+		$result = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT  *
+				FROM 	{$wpdb->comments} qa
+				WHERE 	qa.comment_ID = %d
+			",
+				$question_id
+			)
+		);
+
+		if ( $result && (int) $result->user_id === $user_id) {
+			return true;
 		}
 
 		return false;

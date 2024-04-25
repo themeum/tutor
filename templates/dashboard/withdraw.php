@@ -66,18 +66,30 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 
 			<?php //phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment ?>
 			<div class="tutor-col tutor-mb-16 tutor-mb-lg-0">
-				<div class="tutor-fs-6 tutor-color-muted tutor-mb-4"><?php echo wp_kses_post( sprintf( esc_html__( 'Current Balance is %s', 'tutor' ), $current_balance_formated ) ); ?></div>
+				<div class="tutor-fs-6 tutor-color-muted tutor-mb-4">
+					<?php
+						/* translators: %s: current balance */
+						echo wp_kses_post( sprintf( esc_html__( 'Current Balance is %s', 'tutor' ), $current_balance_formated ) );
+					?>
+				</div>
 				<div class="tutor-fs-5 tutor-color-black">
 					<?php
 					if ( $is_balance_sufficient ) {
-						echo wp_kses_post( sprintf( __( 'You have %1$s %2$s %3$s ready to withdraw now', 'tutor' ), "<strong class='available_balance'>", $available_for_withdraw_formatted, '</strong>' ) );
+						/* translators: %s: available balance */
+						echo wp_kses_post( sprintf( __( 'You have %s ready to withdraw now', 'tutor' ), "<strong class='available_balance'>" . $available_for_withdraw_formatted . '</strong>' ) );
 					} else {
-						echo wp_kses_post( sprintf( __( 'You have %1$s %2$s %3$s and this is insufficient balance to withdraw', 'tutor' ), "<strong class='available_balance'>", $available_for_withdraw_formatted, '</strong>' ) );
+						/* translators: %s: available balance */
+						echo wp_kses_post( sprintf( __( 'You have %s and this is insufficient balance to withdraw', 'tutor' ), "<strong class='available_balance'>" . $available_for_withdraw_formatted . '</strong>' ) );
 					}
 					?>
 				</div>
 				<?php if ( $summary_data->total_pending > 0 ) : ?>
-				<div class="tutor-badge-label label-warning	 tutor-mt-4" style="display: inline-flex; gap: 3px"><?php echo wp_kses_post( sprintf( esc_html__( 'Total Pending Withdrawal %s', 'tutor' ), tutor_utils()->tutor_price( $summary_data->total_pending ) ) ); ?></div>
+				<div class="tutor-badge-label label-warning	 tutor-mt-4" style="display: inline-flex; gap: 3px">
+					<?php
+						/* translators: %s: total pending withdrawal */
+						echo wp_kses_post( sprintf( esc_html__( 'Total Pending Withdrawal %s', 'tutor' ), tutor_utils()->tutor_price( $summary_data->total_pending ) ) ); 
+					?>
+				</div>
 				<?php endif; ?>
 			</div>
 
@@ -102,8 +114,10 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 		<span class="tutor-fs-7 tutor-mt-4">
 			<?php
 			$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/withdraw-settings' );
+			/* translators: %s: Withdraw Method Name */
 			echo esc_html( $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), $withdraw_method_name ) : '' );
 			echo wp_kses(
+				/* translators: %1$s: a tag start, %2$s: a tag end */
 				sprintf( __( 'You can change your %1$s Withdraw Preference %2$s', 'tutor' ), "<a href='{$my_profile_url}'>", '</a>' ),
 				array(
 					'a' => array( 'href' => true ),
