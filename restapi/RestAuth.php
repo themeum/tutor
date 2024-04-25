@@ -91,14 +91,26 @@ class RestAuth {
 	 * @return mixed
 	 */
 	public function api_auth( $user_id ) {
-		if ( $this->is_tutor_api_request() ) {
-			$api_key    = $_SERVER['PHP_AUTH_USER'];
-			$api_secret = $_SERVER['PHP_AUTH_PW'];
-			$record     = self::validate_api_key_secret( $api_key, $api_secret, true );
-			if ( $record ) {
-				return $record->user_id;
-			}
+		// Don't authenticate twice.
+		if ( ! empty( $user_id ) || ! $this->is_tutor_api_request() ) {
+			return $user_id;
 		}
+
+		if ( ! wp_is_application_passwords_available() ) {
+			return $user_id;
+		}
+
+		if ( ! isset( $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] ) ) {
+			return $user_id;
+		}
+
+		$api_key    = $_SERVER['PHP_AUTH_USER']; //phpcs:ignore sanitization ok
+		$api_secret = $_SERVER['PHP_AUTH_PW']; //phpcs:ignore sanitization ok
+		$record     = self::validate_api_key_secret( $api_key, $api_secret, true );
+		if ( $record ) {
+			return $record->user_id;
+		}
+
 		return $user_id;
 	}
 
@@ -111,7 +123,7 @@ class RestAuth {
 	 */
 	public static function is_tutor_api_request() {
 		$rest_prefix = trailingslashit( rest_get_url_prefix() );
-		$request_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+		$request_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) );
 
 		$is_tutor_api = ( false !== strpos( $request_uri, $rest_prefix . 'tutor/' ) );
 
