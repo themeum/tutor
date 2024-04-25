@@ -177,12 +177,12 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                 when={activeTab === 'settings'}
                 fallback={
                   <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
-                    Next
+                    {__('Next', 'tutor')}
                   </Button>
                 }
               >
                 <Button variant="primary" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
-                  Save
+                  {__('Save', 'tutor')}
                 </Button>
               </Show>
             </>

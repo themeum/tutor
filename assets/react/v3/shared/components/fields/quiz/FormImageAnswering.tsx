@@ -266,18 +266,15 @@ const styles = {
   
       [data-check-icon] {
         opacity: 0;
-        transition: opacity 0.15s ease-in-out;
         fill: none;
       }
 
       [data-visually-hidden] {
         opacity: 0;
-        transition: opacity 0.3s ease-in-out;
       }
 
       [data-edit-button] {
         opacity: 0;
-        transition: opacity 0.3s ease-in-out;
       }
   
       &:hover {

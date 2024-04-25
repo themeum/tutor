@@ -318,7 +318,6 @@ const styles = {
   
       [data-check-icon] {
         opacity: 0;
-        transition: opacity 0.15s ease-in-out;
         ${
           !isMultipleChoice &&
           css`
@@ -328,11 +327,9 @@ const styles = {
       }
       [data-visually-hidden] {
         opacity: 0;
-        transition: opacity 0.3s ease-in-out;
       }
       [data-edit-button] {
         opacity: 0;
-        transition: opacity 0.3s ease-in-out;
       }
   
       &:hover {
