@@ -80,9 +80,8 @@ const MultipleChoiceAndOrdering = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const optionFieldsWithoutId = optionsFields.map(({ id, ...rest }) => rest);
     if (!hasMultipleCorrectAnswers && !isInitialRenderRef.current) {
-      const resetOptions = optionFieldsWithoutId.map((option) => ({ ...option, isCorrect: false }));
+      const resetOptions = optionsFields.map((option) => ({ ...option, isCorrect: false }));
       form.setValue(`questions.${activeQuestionIndex}.options`, resetOptions);
     }
     isInitialRenderRef.current = false;
