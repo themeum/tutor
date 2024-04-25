@@ -29,6 +29,22 @@ const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    form.setValue(`questions.${activeQuestionIndex}.options`, [
+      {
+        ID: 'true',
+        title: __('True', 'tutor'),
+        isCorrect: false,
+      },
+      {
+        ID: 'false',
+        title: __('False', 'tutor'),
+        isCorrect: false,
+      },
+    ]);
+  }, []);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
       const index = optionsFields.findIndex((item) => item.ID === option.ID);
       const previousOption = optionsFields[index];
@@ -54,7 +70,7 @@ const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
 
   return (
     <div css={styles.optionWrapper}>
-      {optionsFields.slice(0, 2).map((option, index) => (
+      {optionsFields.map((option, index) => (
         <Controller
           key={option.id}
           control={form.control}
