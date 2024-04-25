@@ -59,24 +59,30 @@ class REST_Rating {
 	 * @return mixed
 	 */
 	public function course_rating( WP_REST_Request $request ) {
-		$this->post_id = $request->get_param( 'id' );
+		$this->post_id = (int) $request->get_param( 'id' );
+		$offset        = (int) sanitize_text_field( $request->get_param( 'offset' ) );
+		$limit         = (int) sanitize_text_field( $request->get_param( 'limit' ) );
 
-		$ratings = tutor_utils()->get_course_rating( $this->post_id );
+		$offset = ! empty( $offset ) ? $offset : 0;
+		$limit  = ! empty( $limit ) ? $limit : 10;
 
-		if ( count( $ratings ) > 0 ) {
+		$ratings          = tutor_utils()->get_course_rating( $this->post_id );
+		$ratings->reviews = tutor_utils()->get_course_reviews( $this->post_id, $offset, $limit, false, array( 'approved' ) );
+
+		if ( ! empty( $ratings ) ) {
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Course rating retrieved successfully', 'tutor' ),
-				'data'        => $ratings,
+				'code'    => 'success',
+				'message' => __( 'Course rating retrieved successfully', 'tutor' ),
+				'data'    => $ratings,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Rating not found for given ID', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Rating not found for given ID', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );

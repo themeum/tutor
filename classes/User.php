@@ -96,13 +96,15 @@ class User {
 	 * Check user has any role.
 	 *
 	 * @since 2.2.0
+	 * @since 2.6.2 $user_id param added.
 	 *
 	 * @param array $roles roles.
+	 * @param int   $user_id user id.
 	 *
 	 * @return boolean
 	 */
-	public static function has_any_role( array $roles ) {
-		$user = wp_get_current_user();
+	public static function has_any_role( array $roles, $user_id = 0 ) {
+		$user = get_userdata( tutor_utils()->get_user_id( $user_id ) );
 		if ( empty( $user->roles ) || empty( $roles ) ) {
 			return false;
 		}
@@ -121,11 +123,14 @@ class User {
 	 * Check user is student.
 	 *
 	 * @since 2.2.0
+	 * @since 2.6.2 $user_id param added.
+	 *
+	 * @param int $user_id user id.
 	 *
 	 * @return boolean
 	 */
-	public static function is_student() {
-		return current_user_can( self::STUDENT );
+	public static function is_student( $user_id = 0 ) {
+		return self::has_any_role( array( self::STUDENT ), $user_id );
 	}
 
 	/**
@@ -328,14 +333,16 @@ class User {
 	public function hide_notices() {
 		$hide_notice         = Input::get( 'tutor-hide-notice', '' );
 		$is_register_enabled = Input::get( 'tutor-registration', '' );
-		if ( is_admin() && 'registration' === $hide_notice ) {
+		$has_manage_cap      = current_user_can( 'manage_options' );
+
+		if ( $has_manage_cap && is_admin() && 'registration' === $hide_notice ) {
 			tutor_utils()->checking_nonce( 'get' );
 
 			if ( 'enable' === $is_register_enabled ) {
 				update_option( 'users_can_register', 1 );
 			} else {
 				self::$hide_registration_notice = true;
-				setcookie( 'tutor_notice_hide_registration', 1, time() + ( 86400 * 30 ), tutor()->basepath );
+				setcookie( 'tutor_notice_hide_registration', 1, time() + MONTH_IN_SECONDS, tutor()->basepath );
 			}
 		}
 	}
@@ -391,5 +398,4 @@ class User {
 	public function update_user_last_login( $user_login, $user ) {
 		update_user_meta( $user->ID, self::LAST_LOGIN_META, time() );
 	}
-
 }
