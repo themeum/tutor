@@ -207,6 +207,7 @@ const styles = {
 		min-height: 46px;
     height: 100%;
     width: 100%;
+    cursor: text;
     padding-inline: ${spacing[8]} ${spacing[16]};
     padding-block: ${spacing[8]};
     border-radius: ${borderRadius[6]};
@@ -215,7 +216,6 @@ const styles = {
     &:hover {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
-      cursor: text;
 
 			[data-action-buttons] {
 				opacity: 1;
@@ -232,6 +232,7 @@ const styles = {
         background-color: ${colorTokens.background.white};
         color: ${colorTokens.text.subdued};  
         padding-block: ${spacing[4]};
+        cursor: default;
       `
     }
   `,

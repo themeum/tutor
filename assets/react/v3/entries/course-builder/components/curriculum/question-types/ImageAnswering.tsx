@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
@@ -11,7 +11,7 @@ import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
 import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   KeyboardSensor,
   PointerSensor,
@@ -50,6 +50,12 @@ const ImageAnswering = () => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  const currentOptions = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.options`,
+    defaultValue: [],
+  });
+
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
@@ -57,6 +63,31 @@ const ImageAnswering = () => {
 
     return optionsFields.find((item) => item.ID === activeSortId);
   }, [activeSortId, optionsFields]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const changedOptions = currentOptions.filter((option) => {
+      const index = optionsFields.findIndex((item) => item.ID === option.ID);
+      const previousOption = optionsFields[index];
+      return option.isCorrect !== previousOption.isCorrect;
+    });
+
+    if (changedOptions.length === 0) {
+      return;
+    }
+
+    const changedOptionIndex = optionsFields.findIndex((item) => item.ID === changedOptions[0].ID);
+
+    const updatedOptions = [...optionsFields];
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
+    updatedOptions.forEach((_, index) => {
+      if (index !== changedOptionIndex) {
+        updatedOptions[index] = Object.assign({}, updatedOptions[index], { isCorrect: false });
+      }
+    });
+
+    form.setValue(`questions.${activeQuestionIndex}.options`, updatedOptions);
+  }, [currentOptions]);
 
   return (
     <div css={styles.optionWrapper}>
@@ -92,7 +123,7 @@ const ImageAnswering = () => {
               <Controller
                 key={option.id}
                 control={form.control}
-                name={`questions.${activeQuestionIndex}.options.${index}`}
+                name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
                 render={({ field, fieldState }) => (
                   <FormImageAnswering
                     field={field}
@@ -115,7 +146,7 @@ const ImageAnswering = () => {
                   <Controller
                     key={activeSortId}
                     control={form.control}
-                    name={`questions.${activeQuestionIndex}.options.${index}`}
+                    name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
                     render={({ field, fieldState }) => (
                       <FormImageAnswering
                         field={field}

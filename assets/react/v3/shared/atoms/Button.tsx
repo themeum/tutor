@@ -467,8 +467,9 @@ const styles = {
     ${
       (disabled || loading) &&
       css`
-      pointer-events: none;
-    `
+        pointer-events: none;
+        cursor: not-allowed;
+      `
     }
   `,
   buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`

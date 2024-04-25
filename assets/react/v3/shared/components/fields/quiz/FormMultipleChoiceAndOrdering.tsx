@@ -17,30 +17,24 @@ import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { nanoid } from '@Utils/util';
-import { useFormContext } from 'react-hook-form';
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-interface FormMultipleChoiceProps extends FormControllerProps<QuizQuestionOption> {
+interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   hasMultipleCorrectAnswers: boolean;
   onRemoveOption: () => void;
 }
 
-const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, index }: FormMultipleChoiceProps) => {
+const FormMultipleChoiceAndOrdering = ({
+  field,
+  hasMultipleCorrectAnswers,
+  onRemoveOption,
+  index,
+}: FormMultipleChoiceAndOrderingProps) => {
   const inputValue = field.value ?? {
     ID: nanoid(),
     title: '',
   };
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex } = useQuizModalContext();
-  const markAsCorrect = form.watch(`questions.${activeQuestionIndex}.markAsCorrect`);
-
-  const isCorrect = Array.isArray(markAsCorrect)
-    ? markAsCorrect.some((item) => item === inputValue.ID)
-    : markAsCorrect === inputValue.ID;
 
   const [isEditing, setIsEditing] = useState(false);
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
@@ -89,18 +83,10 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
   };
 
   const handleCorrectAnswer = () => {
-    if (hasMultipleCorrectAnswers) {
-      const isAlreadyMarked =
-        (markAsCorrect as string[]).length > 1 && (markAsCorrect as string[])?.some((item) => item === field.value.ID);
-      form.setValue(
-        `questions.${activeQuestionIndex}.markAsCorrect`,
-        isAlreadyMarked
-          ? (markAsCorrect as string[]).filter((item) => item !== field.value.ID)
-          : [...(markAsCorrect as string[]), field.value.ID]
-      );
-    } else {
-      form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
-    }
+    field.onChange({
+      ...inputValue,
+      isCorrect: hasMultipleCorrectAnswers ? !inputValue.isCorrect : true,
+    });
   };
 
   useEffect(() => {
@@ -113,30 +99,30 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
     <div
       {...attributes}
       css={styles.option({
-        isSelected: isCorrect,
+        isSelected: !!inputValue.isCorrect,
         isEditing,
         isMultipleChoice: hasMultipleCorrectAnswers,
       })}
       ref={setNodeRef}
       style={style}
     >
-      <div
-        onClick={handleCorrectAnswer}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleCorrectAnswer();
-          }
-        }}
-      >
+      <button css={styleUtils.resetButton} type="button" onClick={handleCorrectAnswer}>
         <Show
           when={hasMultipleCorrectAnswers}
-          fallback={<SVGIcon data-check-icon name={isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />}
+          fallback={
+            <SVGIcon data-check-icon name={inputValue.isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />
+          }
         >
-          <SVGIcon data-check-icon name={isCorrect ? 'checkSquareFilled' : 'checkSquare'} height={32} width={32} />
+          <SVGIcon
+            data-check-icon
+            name={inputValue.isCorrect ? 'checkSquareFilled' : 'checkSquare'}
+            height={32}
+            width={32}
+          />
         </Show>
-      </div>
+      </button>
       <div
-        css={styles.optionLabel({ isSelected: isCorrect, isEditing })}
+        css={styles.optionLabel({ isSelected: !!inputValue.isCorrect, isEditing })}
         onClick={handleCorrectAnswer}
         onKeyDown={(event) => {
           event.stopPropagation();
@@ -145,7 +131,7 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
       >
         <div css={styles.optionHeader}>
           <div css={styles.optionCounterAndButton}>
-            <div css={styles.optionCounter({ isSelected: isCorrect, isEditing })}>
+            <div css={styles.optionCounter({ isSelected: !!inputValue.isCorrect, isEditing })}>
               {String.fromCharCode(65 + index)}
             </div>
             <Show when={isEditing}>
@@ -270,6 +256,9 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
                 }}
                 onKeyDown={(event) => {
                   event.stopPropagation();
+                  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                    setIsEditing(false);
+                  }
                 }}
               />
 
@@ -304,7 +293,7 @@ const FormMultipleChoice = ({ field, hasMultipleCorrectAnswers, onRemoveOption, 
   );
 };
 
-export default FormMultipleChoice;
+export default FormMultipleChoiceAndOrdering;
 
 const styles = {
   optionWrapper: css`
@@ -401,7 +390,6 @@ const styles = {
       width: 100%;
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
-      transition: box-shadow 0.15s ease-in-out;
       background-color: ${colorTokens.background.white};
       cursor: pointer;
   

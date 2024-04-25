@@ -7,6 +7,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { useEffect } from 'react';
 
 interface TrueFalseProps {
   activeQuestionIndex: number;
@@ -14,42 +15,87 @@ interface TrueFalseProps {
 
 const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
   const form = useFormContext<QuizForm>();
-  const markAsCorrect = useWatch({
-    control: form.control,
-    name: `questions.${activeQuestionIndex}.markAsCorrect`,
-  });
 
-  const { fields: options } = useFieldArray({
+  const { fields: optionsFields } = useFieldArray({
     control: form.control,
     name: `questions.${activeQuestionIndex}.options`,
   });
 
+  const currentOptions = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.options`,
+    defaultValue: [],
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const changedOptions = currentOptions.filter((option) => {
+      const index = optionsFields.findIndex((item) => item.ID === option.ID);
+      const previousOption = optionsFields[index];
+      return option.isCorrect !== previousOption.isCorrect;
+    });
+
+    if (changedOptions.length === 0) {
+      return;
+    }
+
+    const changedOptionIndex = optionsFields.findIndex((item) => item.ID === changedOptions[0].ID);
+
+    const updatedOptions = [...optionsFields];
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
+    updatedOptions.forEach((_, index) => {
+      if (index !== changedOptionIndex) {
+        updatedOptions[index] = Object.assign({}, updatedOptions[index], { isCorrect: false });
+      }
+    });
+
+    form.setValue(`questions.${activeQuestionIndex}.options`, updatedOptions);
+  }, [currentOptions]);
+
   return (
     <div css={styles.optionWrapper}>
-      {options.map((option, index) => (
+      {optionsFields.slice(0, 2).map((option, index) => (
         <Controller
+          key={option.id}
           control={form.control}
-          name={`questions.${activeQuestionIndex}.options.${index}`}
+          name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
           render={({ field }) => (
-            <div css={styles.option({ isSelected: markAsCorrect === field.value.ID })}>
-              <SVGIcon
-                data-check-icon
-                name={markAsCorrect === field.value.ID ? 'checkFilled' : 'check'}
-                height={32}
-                width={32}
-              />
-              <div
-                css={styles.optionLabel({ isSelected: markAsCorrect === field.value.ID })}
+            <div css={styles.option({ isSelected: !!field.value.isCorrect })}>
+              <button
+                type="button"
+                css={styleUtils.resetButton}
                 onClick={() => {
-                  form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+                  field.onChange({
+                    ...field.value,
+                    isCorrect: !field.value.isCorrect,
+                  });
+                }}
+              >
+                <SVGIcon
+                  data-check-icon
+                  name={field.value.isCorrect ? 'checkFilled' : 'check'}
+                  height={32}
+                  width={32}
+                />
+              </button>
+              <div
+                css={styles.optionLabel({ isSelected: !!field.value.isCorrect })}
+                onClick={() => {
+                  field.onChange({
+                    ...field.value,
+                    isCorrect: !field.value.isCorrect,
+                  });
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
-                    form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+                    field.onChange({
+                      ...field.value,
+                      isCorrect: !field.value.isCorrect,
+                    });
                   }
                 }}
               >
-                {__(option.title, 'tutor')}
+                {index === 0 ? __('True', 'tutor') : __('False', 'tutor')}
               </div>
             </div>
           )}
@@ -111,7 +157,6 @@ const styles = {
     width: 100%;
     border-radius: ${borderRadius.card};
     padding: ${spacing[12]} ${spacing[16]};
-    transition: box-shadow 0.15s ease-in-out;
     background-color: ${colorTokens.background.white};
     cursor: pointer;
 

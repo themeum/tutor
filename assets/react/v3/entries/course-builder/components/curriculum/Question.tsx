@@ -80,7 +80,10 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
         <ThreeDots.Option
           text={__('Delete', 'tutor')}
           icon={<SVGIcon name="delete" width={24} height={24} />}
-          onClick={onRemoveQuestion}
+          onClick={(event) => {
+            event.stopPropagation();
+            onRemoveQuestion();
+          }}
         />
       </ThreeDots>
     </div>

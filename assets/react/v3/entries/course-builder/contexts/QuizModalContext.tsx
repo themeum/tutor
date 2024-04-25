@@ -1,5 +1,5 @@
-import { createContext, useContext } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
@@ -24,17 +24,25 @@ export const useQuizModalContext = () => {
 };
 
 export const QuizModalContextProvider = ({
-  activeQuestionId,
-  setActiveQuestionId,
   children,
 }: {
-  activeQuestionId: string | null;
-  setActiveQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
   children: React.ReactNode;
 }) => {
+  const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
   const form = useFormContext<QuizForm>();
+  const questions = useWatch({ control: form.control, name: 'questions', defaultValue: [] });
 
-  const activeQuestionIndex = form.watch('questions').findIndex((question) => question.ID === activeQuestionId);
+  const activeQuestionIndex = questions.findIndex((question) => question.ID === activeQuestionId);
+
+  useEffect(() => {
+    if (questions.length > 0 && !activeQuestionId) {
+      setActiveQuestionId(questions[0].ID);
+    }
+
+    if (activeQuestionIndex === -1 && questions.length === 0) {
+      setActiveQuestionId(null);
+    }
+  }, [questions, activeQuestionId, activeQuestionIndex]);
 
   return (
     <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId }}>

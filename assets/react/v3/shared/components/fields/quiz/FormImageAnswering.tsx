@@ -1,25 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
+import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { isDefined } from '@Utils/types';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { nanoid } from '@Utils/util';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { useFormContext } from 'react-hook-form';
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -32,14 +29,6 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
     title: '',
   };
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex } = useQuizModalContext();
-  const markAsCorrect = form.watch(`questions.${activeQuestionIndex}.markAsCorrect`);
-
-  const isCorrect = Array.isArray(markAsCorrect)
-    ? markAsCorrect.some((item) => item === inputValue.ID)
-    : markAsCorrect === inputValue.ID;
 
   const [isEditing, setIsEditing] = useState(false);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
@@ -85,7 +74,10 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
   };
 
   const handleCorrectAnswer = () => {
-    form.setValue(`questions.${activeQuestionIndex}.markAsCorrect`, field.value.ID);
+    field.onChange({
+      ...inputValue,
+      isCorrect: true,
+    });
   };
 
   useEffect(() => {
@@ -95,19 +87,17 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
   }, [isEditing]);
 
   return (
-    <div {...attributes} css={styles.option({ isSelected: isCorrect, isEditing })} ref={setNodeRef} style={style}>
+    <div
+      {...attributes}
+      css={styles.option({ isSelected: !!inputValue.isCorrect, isEditing })}
+      ref={setNodeRef}
+      style={style}
+    >
+      <button type="button" css={styleUtils.resetButton} onClick={handleCorrectAnswer}>
+        <SVGIcon data-check-icon name={inputValue.isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />
+      </button>
       <div
-        onClick={handleCorrectAnswer}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleCorrectAnswer();
-          }
-        }}
-      >
-        <SVGIcon data-check-icon name={isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />
-      </div>
-      <div
-        css={styles.optionLabel({ isSelected: isCorrect, isEditing })}
+        css={styles.optionLabel({ isSelected: !!inputValue.isCorrect, isEditing })}
         onClick={handleCorrectAnswer}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
@@ -116,7 +106,9 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
         }}
       >
         <div css={styles.optionHeader}>
-          <div css={styles.optionCounter({ isSelected: isCorrect, isEditing })}>{String.fromCharCode(65 + index)}</div>
+          <div css={styles.optionCounter({ isSelected: !!inputValue.isCorrect, isEditing })}>
+            {String.fromCharCode(65 + index)}
+          </div>
 
           <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
             <SVGIcon name="dragVertical" height={24} width={24} />
@@ -199,6 +191,9 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
                   css={styles.optionInput}
                   placeholder={__('Answer input value...', 'tutor')}
                   value={inputValue.title}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
@@ -207,6 +202,9 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
                   }}
                   onKeyDown={(event) => {
                     event.stopPropagation();
+                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                      setIsEditing(false);
+                    }
                   }}
                 />
 
@@ -333,7 +331,6 @@ const styles = {
       width: 100%;
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
-      transition: box-shadow 0.15s ease-in-out;
       background-color: ${colorTokens.background.white};
       cursor: pointer;
   
@@ -480,6 +477,7 @@ const styles = {
     box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     resize: vertical;
+    cursor: text;
 
     &:focus {
       box-shadow: ${shadow.focus};

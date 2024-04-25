@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -17,7 +17,7 @@ import Tabs from '@Molecules/Tabs';
 
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
-import QuestionCondition from '@CourseBuilderComponents/curriculum/QuestionCondition';
+import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionConditions';
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
 import { type QuizQuestion, useGetQuizQuestionsQuery } from '@CourseBuilderServices/quiz';
 import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
@@ -65,10 +65,7 @@ type QuizTabs = 'questions' | 'settings';
 
 const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<QuizTabs>('questions');
-  // @TODO: isEdit will be calculated based on the quiz data form API
-  const [isEdit, setIsEdit] = useState(true);
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -121,11 +118,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
     },
   });
 
-  useEffect(() => {
-    if (getQuizQuestionsQuery.data) {
-      setActiveQuestionId(getQuizQuestionsQuery.data[0].ID);
-    }
-  }, [getQuizQuestionsQuery.data]);
+  // @TODO: isEdit will be calculated based on the quiz data form API
+  const [isEdit, setIsEdit] = useState(true);
 
   const onQuizFormSubmit = (data: QuizForm) => {
     // @TODO: will be implemented later
@@ -140,7 +134,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
 
   return (
     <FormProvider {...form}>
-      <QuizModalContextProvider activeQuestionId={activeQuestionId} setActiveQuestionId={setActiveQuestionId}>
+      <QuizModalContextProvider>
         <ModalWrapper
           onClose={() => closeModal({ action: 'CLOSE' })}
           icon={icon}
@@ -149,8 +143,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
           headerChildren={
             <Tabs
               wrapperCss={css`
-            height: ${modal.HEADER_HEIGHT}px;
-          `}
+                height: ${modal.HEADER_HEIGHT}px;
+              `}
               activeTab={activeTab}
               tabList={[
                 {
@@ -254,21 +248,14 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
               </div>
             </Show>
             <div css={styles.content({ activeTab })}>
-              <Show
-                when={activeTab === 'settings'}
-                fallback={
-                  <Show when={activeQuestionId}>{(activeQuestionId) => <QuestionForm key={activeQuestionId} />}</Show>
-                }
-              >
-                <QuizSettings form={form} />
+              <Show when={activeTab === 'settings'} fallback={<QuestionForm />}>
+                <QuizSettings />
               </Show>
             </div>
-            <Show when={activeTab === 'questions' && activeQuestionId} fallback={<div />}>
-              {(activeQuestionId) => (
-                <div css={styles.right}>
-                  <QuestionCondition key={activeQuestionId} />
-                </div>
-              )}
+            <Show when={activeTab === 'questions'} fallback={<div />}>
+              <div css={styles.right}>
+                <QuestionConditions />
+              </div>
             </Show>
           </div>
 

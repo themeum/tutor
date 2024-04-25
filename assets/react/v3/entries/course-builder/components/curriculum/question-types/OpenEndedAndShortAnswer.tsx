@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 
 import Alert from '@Atoms/Alert';
 
-const OpenEnded = () => {
+const OpenEndedAndShortAnswer = () => {
   return (
     <div css={styles.optionWrapper}>
       <Alert icon="bulb">{__('No option is necessary for this answer type', 'tutor')}</Alert>
@@ -11,7 +11,7 @@ const OpenEnded = () => {
   );
 };
 
-export default OpenEnded;
+export default OpenEndedAndShortAnswer;
 
 const styles = {
   optionWrapper: css`

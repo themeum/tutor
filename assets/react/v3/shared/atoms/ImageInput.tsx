@@ -38,9 +38,21 @@ const ImageInput = ({
     <Show
       when={value?.url}
       fallback={
-        <div css={[styles.emptyMedia, emptyImageCss]}>
+        <div
+          css={[styles.emptyMedia, emptyImageCss]}
+          onClick={(event) => {
+            event.stopPropagation();
+            uploadHandler();
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              uploadHandler();
+            }
+          }}
+        >
           <SVGIcon name="addImage" width={32} height={32} />
-          <Button variant="text" onClick={uploadHandler} buttonContentCss={styles.buttonText}>
+          <Button variant="text" buttonContentCss={styles.buttonText}>
             {buttonText}
           </Button>
           <Show when={infoText}>
@@ -54,10 +66,22 @@ const ImageInput = ({
           <div css={[styles.previewWrapper, previewImageCss]}>
             <img src={url} alt={value?.title} css={styles.imagePreview} />
             <div css={styles.hoverPreview} data-hover-buttons-wrapper>
-              <Button variant="secondary" onClick={uploadHandler}>
+              <Button
+                variant="secondary"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  uploadHandler();
+                }}
+              >
                 {__('Replace Image', 'tutor')}
               </Button>
-              <Button variant="text" onClick={clearHandler}>
+              <Button
+                variant="text"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  clearHandler();
+                }}
+              >
                 {__('Remove', 'tutor')}
               </Button>
             </div>
@@ -82,6 +106,7 @@ const styles = {
     border: 1px dashed ${colorTokens.stroke.border};
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.bg.white};
+    cursor: pointer;
 
     svg {
       color: ${colorTokens.icon.default};

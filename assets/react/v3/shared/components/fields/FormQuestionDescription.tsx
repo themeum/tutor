@@ -74,24 +74,20 @@ const FormQuestionDescription = ({
   }, [isEdit, textareaRef.current]);
 
   return (
-    <div css={styles.container({ isEdit })}>
-      <Show
-        when={isEdit}
-        fallback={
-          <div
-            css={styles.placeholder}
-            role="button"
-            onClick={() => setIsEdit(true)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                setIsEdit(true);
-              }
-            }}
-          >
-            {field.value || placeholder}
-          </div>
+    <div
+      css={styles.container({ isEdit })}
+      onClick={() => {
+        if (!isEdit) {
+          setIsEdit(true);
         }
-      >
+      }}
+      onKeyDown={(event) => {
+        if ((event.key === 'Enter' || event.key === ' ') && !isEdit) {
+          setIsEdit(true);
+        }
+      }}
+    >
+      <Show when={isEdit} fallback={<div css={styles.placeholder}>{field.value || placeholder}</div>}>
         <FormFieldWrapper
           label={label}
           field={field}
@@ -197,7 +193,6 @@ const styles = {
     &:hover {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
-      cursor: text;
 
 			[data-action-buttons] {
 				opacity: 1;
@@ -222,6 +217,7 @@ const styles = {
   inputContainer: (enableResize: boolean) => css`
     position: relative;
     display: flex;
+    cursor: text;
 
     & textarea {
       ${typography.heading6()}

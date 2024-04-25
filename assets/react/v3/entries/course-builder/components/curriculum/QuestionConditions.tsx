@@ -58,18 +58,26 @@ export const questionTypeOptions: Option<QuizQuestionType>[] = [
   },
 ];
 
-const QuestionCondition = () => {
+const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.type`);
 
+  if (!activeQuestionId) {
+    return (
+      <p css={styles.questionTypeWrapper}>
+        {__('Question Type', 'tutor')} (<span css={{ color: colorTokens.text.error }}>{__('Pending', 'tutor')}</span>)
+      </p>
+    );
+  }
+
   return (
-    <>
+    <div key={`${activeQuestionId}-${activeQuestionIndex}`}>
       <div css={styles.questionTypeWrapper}>
         <Controller
           control={form.control}
-          name={`questions.${activeQuestionIndex}.type`}
+          name={`questions.${activeQuestionIndex}.type` as 'questions.0.type'}
           render={(controllerProps) => (
             <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
           )}
@@ -83,7 +91,7 @@ const QuestionCondition = () => {
           <Show when={activeQuestionType === 'multiple-choice'}>
             <Controller
               control={form.control}
-              name={`questions.${activeQuestionIndex}.muliple_correct_answer`}
+              name={`questions.${activeQuestionIndex}.multipleCorrectAnswer` as 'questions.0.multipleCorrectAnswer'}
               render={(controllerProps) => (
                 <FormSwitch {...controllerProps} label={__('Multiple Correct Answer', 'tutor')} />
               )}
@@ -93,26 +101,26 @@ const QuestionCondition = () => {
           <Show when={activeQuestionType === 'matching'}>
             <Controller
               control={form.control}
-              name={`questions.${activeQuestionIndex}.image_matching`}
+              name={`questions.${activeQuestionIndex}.imageMatching` as 'questions.0.imageMatching'}
               render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Image Matching', 'tutor')} />}
             />
           </Show>
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.answer_required`}
+            name={`questions.${activeQuestionIndex}.answerRequired` as 'questions.0.answerRequired'}
             render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />}
           />
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.randomize_question`}
+            name={`questions.${activeQuestionIndex}.randomizeQuestion` as 'questions.0.randomizeQuestion'}
             render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />}
           />
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.question_mark`}
+            name={`questions.${activeQuestionIndex}.questionMark` as 'questions.0.questionMark'}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
@@ -128,16 +136,16 @@ const QuestionCondition = () => {
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.show_question_mark`}
+            name={`questions.${activeQuestionIndex}.showQuestionMark` as 'questions.0.showQuestionMark'}
             render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />}
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default QuestionCondition;
+export default QuestionConditions;
 
 const styles = {
   questionTypeWrapper: css`

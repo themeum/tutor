@@ -9,8 +9,8 @@ import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
-import MultipleChoice from '@CourseBuilderComponents/curriculum/question-types/MultipleChoice';
-import OpenEnded from '@CourseBuilderComponents/curriculum/question-types/OpenEnded';
+import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/question-types/MultipleChoiceAndOrdering';
+import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/question-types/OpenEndedAndShortAnswer';
 import FillinTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
 import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
@@ -18,6 +18,7 @@ import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/I
 import { styleUtils } from '@Utils/style-utils';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import EmptyState from '@Molecules/EmptyState';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
@@ -27,17 +28,32 @@ const QuestionForm = () => {
 
   const questionTypeForm = {
     'true-false': <TrueFalse key={activeQuestionId} activeQuestionIndex={activeQuestionIndex} />,
-    'multiple-choice': <MultipleChoice key={activeQuestionId} />,
-    'open-ended': <OpenEnded key={activeQuestionId} />,
+    'multiple-choice': <MultipleChoiceAndOrdering key={activeQuestionId} />,
+    'open-ended': <OpenEndedAndShortAnswer key={activeQuestionId} />,
     'fill-in-the-blanks': <FillinTheBlanks key={activeQuestionId} />,
-    'short-answer': <OpenEnded key={activeQuestionId} />,
+    'short-answer': <OpenEndedAndShortAnswer key={activeQuestionId} />,
     matching: <Matching key={activeQuestionId} />,
     'image-answering': <ImageAnswering key={activeQuestionId} />,
-    ordering: <MultipleChoice key={activeQuestionId} />,
+    ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
   } as const;
 
+  if (!activeQuestionId) {
+    return (
+      <div css={styles.emptyState}>
+        <EmptyState
+          emptyStateImage="https://placehold.co/200x200"
+          emptyStateImage2x="https://placehold.co/400x200"
+          title={__('Write the quiz name to start creating questions', 'tutor')}
+          description={__('You can add questions to the quiz once you have written the quiz name.', 'tutor')}
+          imageAltText={__('No Question Image', 'tutor')}
+          size="small"
+        />
+      </div>
+    );
+  }
+
   return (
-    <div css={styles.questionForm}>
+    <div key={activeQuestionId} css={styles.questionForm}>
       <div css={styles.questionWithIndex}>
         <div css={styles.questionIndex}>{activeQuestionIndex + 1}.</div>
         <div css={styles.questionTitleAndDesc}>
@@ -51,7 +67,7 @@ const QuestionForm = () => {
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.description`}
+            name={`questions.${activeQuestionIndex}.description` as 'questions.0.description'}
             render={(controllerProps) => (
               <FormQuestionDescription
                 {...controllerProps}
@@ -69,7 +85,7 @@ const QuestionForm = () => {
       <div css={styles.questionAnswer}>
         <Controller
           control={form.control}
-          name={`questions.${activeQuestionIndex}.answerExplanation`}
+          name={`questions.${activeQuestionIndex}.answerExplanation` as 'questions.0.answerExplanation'}
           render={(controllerProps) => (
             <FormAnswerExplanation {...controllerProps} placeholder={__('Write answer explanation...', 'tutor')} />
           )}
@@ -103,6 +119,9 @@ const styles = {
     width: 100%;
   `,
   questionAnswer: css`
-    padding-left: 42px;
+    padding-left: 42px; // This is outside of the design
+  `,
+  emptyState: css`
+    padding-left: 42px; // This is outside of the design
   `,
 };

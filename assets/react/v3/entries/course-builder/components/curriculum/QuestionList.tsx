@@ -14,7 +14,7 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useMemo, useState } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
@@ -34,6 +34,9 @@ const QuestionList = () => {
 
   const form = useFormContext<QuizForm>();
   const { setActiveQuestionId } = useQuizModalContext();
+
+  const quizTitle = useWatch({ control: form.control, name: 'quiz_title', defaultValue: '' });
+  const quizDescription = useWatch({ control: form.control, name: 'quiz_description', defaultValue: '' });
 
   const {
     append: addQuestion,
@@ -62,6 +65,10 @@ const QuestionList = () => {
     return questionFields.find((item) => item.ID === activeSortId);
   }, [activeSortId, questionFields]);
 
+  if (!quizTitle || !quizDescription) {
+    return null;
+  }
+
   return (
     <>
       <div css={styles.questionsLabel}>
@@ -75,7 +82,7 @@ const QuestionList = () => {
               title: 'Write anything here..',
               description: '',
               type: 'true-false',
-              answer_required: false,
+              answerRequired: false,
               options: [
                 {
                   ID: nanoid(),
@@ -86,10 +93,9 @@ const QuestionList = () => {
                   title: 'False',
                 },
               ],
-              question_mark: 1,
-              randomize_question: false,
-              show_question_mark: false,
-              markAsCorrect: '1',
+              questionMark: 1,
+              randomizeQuestion: false,
+              showQuestionMark: false,
               answerExplanation: '',
             });
             setActiveQuestionId(questionId);
@@ -134,7 +140,10 @@ const QuestionList = () => {
                     key={question.ID}
                     question={question}
                     index={index}
-                    onRemoveQuestion={() => removeQustion(index)}
+                    onRemoveQuestion={() => {
+                      removeQustion(index);
+                      setActiveQuestionId(null);
+                    }}
                   />
                 )}
               </For>
@@ -150,7 +159,10 @@ const QuestionList = () => {
                         key={item.ID}
                         question={item}
                         index={index}
-                        onRemoveQuestion={() => removeQustion(index)}
+                        onRemoveQuestion={() => {
+                          removeQustion(index);
+                          setActiveQuestionId(null);
+                        }}
                       />
                     );
                   }}

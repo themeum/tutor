@@ -17,8 +17,9 @@ interface FormFillinTheBlanksProps extends FormControllerProps<QuizQuestionOptio
 
 const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
   const inputValue = field.value ?? {
-    ID: 0,
+    ID: '',
     title: '',
+    fillinTheBlanksCorrectAnswer: [],
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -33,16 +34,9 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
 
   return (
     <div css={styles.option({ isEditing })}>
-      <div
-        css={styles.optionLabel({ isEditing })}
-        onClick={() => {}}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-          }
-        }}
-      >
+      <div css={styles.optionLabel({ isEditing })}>
         <div css={styles.optionHeader}>
-          <div css={styles.optionTitle}>Fill in the blanks</div>
+          <div css={styles.optionTitle}>{__('Fill in the blanks', 'tutor')}</div>
 
           <div css={styles.optionActions}>
             <button
@@ -125,6 +119,9 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
                   css={styles.optionInput}
                   placeholder={__('Question title...', 'tutor')}
                   value={inputValue.title}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
@@ -133,6 +130,9 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
                   }}
                   onKeyDown={(event) => {
                     event.stopPropagation();
+                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                      setIsEditing(false);
+                    }
                   }}
                 />
 
@@ -152,12 +152,20 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
                   type="text"
                   css={styles.optionInput}
                   placeholder={__('Correct Answer(s)...')}
-                  value={inputValue.fillinTheBlanksCorrectAnswer?.join(' | ')}
+                  value={inputValue.fillinTheBlanksCorrectAnswer?.join('|')}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
-                      fillinTheBlanksCorrectAnswer: event.target.value.split(' | '),
+                      fillinTheBlanksCorrectAnswer: event.target.value.split('|'),
                     });
+                  }}
+                  onKeyDown={(event) => {
+                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                      setIsEditing(false);
+                    }
                   }}
                 />
                 <div css={styles.inputHints}>

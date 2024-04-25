@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -14,7 +14,7 @@ import {
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { createPortal } from 'react-dom';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import FormMatching from '@Components/fields/quiz/FormMatching';
@@ -50,6 +50,12 @@ const Matching = () => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  const currentOptions = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.options`,
+    defaultValue: [],
+  });
+
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
@@ -57,6 +63,31 @@ const Matching = () => {
 
     return optionsFields.find((item) => item.ID === activeSortId);
   }, [activeSortId, optionsFields]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const changedOptions = currentOptions.filter((option) => {
+      const index = optionsFields.findIndex((item) => item.ID === option.ID);
+      const previousOption = optionsFields[index];
+      return option.isCorrect !== previousOption.isCorrect;
+    });
+
+    if (changedOptions.length === 0) {
+      return;
+    }
+
+    const changedOptionIndex = optionsFields.findIndex((item) => item.ID === changedOptions[0].ID);
+
+    const updatedOptions = [...optionsFields];
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
+    updatedOptions.forEach((_, index) => {
+      if (index !== changedOptionIndex) {
+        updatedOptions[index] = Object.assign({}, updatedOptions[index], { isCorrect: false });
+      }
+    });
+
+    form.setValue(`questions.${activeQuestionIndex}.options`, updatedOptions);
+  }, [currentOptions]);
 
   return (
     <div css={styles.optionWrapper}>
@@ -92,14 +123,14 @@ const Matching = () => {
               <Controller
                 key={option.id}
                 control={form.control}
-                name={`questions.${activeQuestionIndex}.options.${index}`}
+                name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
                 render={({ field, fieldState }) => (
                   <FormMatching
                     field={field}
                     fieldState={fieldState}
                     onRemoveOption={() => removeOption(index)}
                     index={index}
-                    imageMatching={form.watch(`questions.${activeQuestionIndex}.image_matching`)}
+                    imageMatching={form.watch(`questions.${activeQuestionIndex}.imageMatching`)}
                   />
                 )}
               />
@@ -116,14 +147,14 @@ const Matching = () => {
                   <Controller
                     key={activeSortId}
                     control={form.control}
-                    name={`questions.${activeQuestionIndex}.options.${index}`}
+                    name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
                     render={({ field, fieldState }) => (
                       <FormMatching
                         field={field}
                         fieldState={fieldState}
                         onRemoveOption={() => removeOption(index)}
                         index={index}
-                        imageMatching={form.watch(`questions.${activeQuestionIndex}.image_matching`)}
+                        imageMatching={form.watch(`questions.${activeQuestionIndex}.imageMatching`)}
                       />
                     )}
                   />
