@@ -86,9 +86,9 @@ class RestAuth {
 	 *
 	 * @since 2.7.1
 	 *
-	 * @param int $user_id user id.
+	 * @param int|false $user_id user id.
 	 *
-	 * @return mixed
+	 * @return int|false
 	 */
 	public function api_auth( $user_id ) {
 		// Don't authenticate twice.
