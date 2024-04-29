@@ -29,6 +29,10 @@ const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (optionsFields.length === 2) {
+      return;
+    }
+
     form.setValue(`questions.${activeQuestionIndex}.options`, [
       {
         ID: 'true',

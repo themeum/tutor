@@ -65,6 +65,32 @@ const QuestionList = () => {
     return questionFields.find((item) => item.ID === activeSortId);
   }, [activeSortId, questionFields]);
 
+  const handleAddQuestion = () => {
+    const questionId = nanoid();
+    addQuestion({
+      ID: questionId,
+      title: 'Write anything here..',
+      description: '',
+      type: 'true-false',
+      answerRequired: false,
+      options: [
+        {
+          ID: nanoid(),
+          title: 'True',
+        },
+        {
+          ID: nanoid(),
+          title: 'False',
+        },
+      ],
+      questionMark: 1,
+      randomizeQuestion: false,
+      showQuestionMark: false,
+      answerExplanation: '',
+    });
+    setActiveQuestionId(questionId);
+  };
+
   if (!quizTitle || !quizDescription) {
     return null;
   }
@@ -73,34 +99,7 @@ const QuestionList = () => {
     <>
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
-        <button
-          type="button"
-          onClick={() => {
-            const questionId = nanoid();
-            addQuestion({
-              ID: questionId,
-              title: 'Write anything here..',
-              description: '',
-              type: 'true-false',
-              answerRequired: false,
-              options: [
-                {
-                  ID: nanoid(),
-                  title: 'True',
-                },
-                {
-                  ID: nanoid(),
-                  title: 'False',
-                },
-              ],
-              questionMark: 1,
-              randomizeQuestion: false,
-              showQuestionMark: false,
-              answerExplanation: '',
-            });
-            setActiveQuestionId(questionId);
-          }}
-        >
+        <button type="button" onClick={handleAddQuestion}>
           <SVGIcon name="plusSquareBrand" />
         </button>
       </div>

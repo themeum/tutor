@@ -101,6 +101,16 @@ const styles = {
   questionForm: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
+    animation: fadeIn 0.25s ease-in-out;
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
   `,
   questionWithIndex: css`
     ${styleUtils.display.flex('row')};

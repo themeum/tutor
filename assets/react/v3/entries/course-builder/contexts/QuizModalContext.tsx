@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
@@ -30,7 +30,7 @@ export const QuizModalContextProvider = ({
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
   const form = useFormContext<QuizForm>();
-  const questions = useWatch({ control: form.control, name: 'questions', defaultValue: [] });
+  const questions = form.watch('questions');
 
   const activeQuestionIndex = questions.findIndex((question) => question.ID === activeQuestionId);
 
@@ -38,11 +38,13 @@ export const QuizModalContextProvider = ({
     if (questions.length > 0 && !activeQuestionId) {
       setActiveQuestionId(questions[0].ID);
     }
+  }, [questions, activeQuestionId]);
 
-    if (activeQuestionIndex === -1 && questions.length === 0) {
+  useEffect(() => {
+    if (activeQuestionIndex === -1 && activeQuestionId) {
       setActiveQuestionId(null);
     }
-  }, [questions, activeQuestionId, activeQuestionIndex]);
+  }, [activeQuestionIndex, activeQuestionId]);
 
   return (
     <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId }}>

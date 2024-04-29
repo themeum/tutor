@@ -76,9 +76,9 @@ const ImageAnswering = () => {
       return;
     }
 
-    const changedOptionIndex = optionsFields.findIndex((item) => item.ID === changedOptions[0].ID);
+    const changedOptionIndex = currentOptions.findIndex((item) => item.ID === changedOptions[0].ID);
 
-    const updatedOptions = [...optionsFields];
+    const updatedOptions = [...currentOptions];
     updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
     updatedOptions.forEach((_, index) => {
       if (index !== changedOptionIndex) {
