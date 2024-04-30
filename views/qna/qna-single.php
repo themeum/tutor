@@ -132,7 +132,10 @@ if ( property_exists( $question, 'user_id' ) ) {
 									</div>
 
 									<div class="tutor-qna-text tutor-fs-7">
-										<?php echo wp_kses_post( stripslashes( $answer->comment_content ) ); ?>
+										<?php
+											$content = stripslashes( $answer->comment_content );
+											echo tutor()->has_pro ? wp_kses_post( $content ) : esc_textarea( $content );
+										?>
 									</div>
 
 								<?php if ( $is_single && 0 == $answer->comment_parent ) : ?>

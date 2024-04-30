@@ -48,7 +48,6 @@ class Shortcode {
 		add_shortcode( 'tutor_course', array( $this, 'tutor_course' ) );
 
 		add_shortcode( 'tutor_instructor_list', array( $this, 'tutor_instructor_list' ) );
-		add_action( 'tutor_options_after_instructors', array( $this, 'tutor_instructor_layout' ) );
 		add_action( 'wp_ajax_load_filtered_instructor', array( $this, 'load_filtered_instructor' ) );
 		add_action( 'wp_ajax_nopriv_load_filtered_instructor', array( $this, 'load_filtered_instructor' ) );
 
@@ -459,16 +458,5 @@ class Shortcode {
 		tutor_load_template( 'shortcode.tutor-instructor', $data );
 		wp_send_json_success( array( 'html' => ob_get_clean() ) );
 		exit;
-	}
-
-	/**
-	 * Show layout selection dashboard in instructor setting
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function tutor_instructor_layout() {
-		tutor_load_template( 'instructor-setting', array( 'templates' => $this->instructor_layout ) );
 	}
 }
