@@ -74,14 +74,15 @@ class REST_Course {
 	 * @return WP_REST_Response
 	 */
 	public function course( WP_REST_Request $request ) {
-		$order   = sanitize_text_field( $request->get_param( 'order' ) );
-		$orderby = sanitize_text_field( $request->get_param( 'orderby' ) );
-		$paged   = sanitize_text_field( $request->get_param( 'paged' ) );
+		$order         = sanitize_text_field( $request->get_param( 'order' ) );
+		$orderby       = sanitize_text_field( $request->get_param( 'orderby' ) );
+		$paged         = sanitize_text_field( $request->get_param( 'paged' ) );
+		$post_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 
 		$args = array(
 			'post_type'      => $this->post_type,
 			'post_status'    => 'publish',
-			'posts_per_page' => 10,
+			'posts_per_page' => $post_per_page,
 			'paged'          => $paged ? $paged : 1,
 			'order'          => $order ? $order : 'ASC',
 			'orderby'        => $orderby ? $orderby : 'title',
@@ -95,7 +96,7 @@ class REST_Course {
 		if ( count( $query->posts ) > 0 ) {
 			// unset filter property.
 			array_map(
-				function( $post ) {
+				function ( $post ) {
 					unset( $post->filter );
 				},
 				$query->posts
@@ -138,18 +139,18 @@ class REST_Course {
 			}
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Course retrieved successfully', 'tutor' ),
-				'data'        => $data,
+				'code'    => 'success',
+				'message' => __( 'Course retrieved successfully', 'tutor' ),
+				'data'    => $data,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Course not found', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Course not found', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );
@@ -170,16 +171,16 @@ class REST_Course {
 		$detail = $this->course_additional_info( $post_id );
 		if ( $detail ) {
 			$response = array(
-				'status_code' => 'course_detail',
-				'message'     => __( 'Course detail retrieved successfully', 'tutor' ),
-				'data'        => $detail,
+				'code'    => 'course_detail',
+				'message' => __( 'Course detail retrieved successfully', 'tutor' ),
+				'data'    => $detail,
 			);
 			return self::send( $response );
 		}
 		$response = array(
-			'status_code' => 'course_detail',
-			'message'     => __( 'Detail not found for given ID', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'course_detail',
+			'message' => __( 'Detail not found for given ID', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );
@@ -219,7 +220,6 @@ class REST_Course {
 		);
 
 		return apply_filters( 'tutor_course_additional_info', $detail );
-
 	}
 
 	/**
@@ -238,9 +238,9 @@ class REST_Course {
 		// check array or not.
 		if ( count( $validate_err ) > 0 ) {
 			$response = array(
-				'status_code' => 'validation_error',
-				'message'     => $validate_err,
-				'data'        => array(),
+				'code'    => 'validation_error',
+				'message' => $validate_err,
+				'data'    => array(),
 			);
 
 			return self::send( $response );
@@ -275,25 +275,25 @@ class REST_Course {
 		if ( count( $query->posts ) > 0 ) {
 			// unset filter property.
 			array_map(
-				function( $post ) {
+				function ( $post ) {
 					unset( $post->filter );
 				},
 				$query->posts
 			);
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Course retrieved successfully', 'tutor' ),
-				'data'        => $query->posts,
+				'code'    => 'success',
+				'message' => __( 'Course retrieved successfully', 'tutor' ),
+				'data'    => $query->posts,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'not_found',
-			'message'     => __( 'Course not found for given terms', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'not_found',
+			'message' => __( 'Course not found for given terms', 'tutor' ),
+			'data'    => array(),
 		);
 		return self::send( $response );
 	}
@@ -337,13 +337,14 @@ class REST_Course {
 		$order = $request->get_param( 'order' );
 		$paged = $request->get_param( 'page' );
 
-		$order = sanitize_text_field( $order );
-		$paged = sanitize_text_field( $paged );
+		$order         = sanitize_text_field( $order );
+		$paged         = sanitize_text_field( $paged );
+		$post_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 
 		$args = array(
 			'post_type'      => 'product',
 			'post_status'    => 'publish',
-			'posts_per_page' => 10,
+			'posts_per_page' => $post_per_page,
 			'paged'          => $paged ? $paged : 1,
 
 			'meta_key'       => '_regular_price',
@@ -365,7 +366,7 @@ class REST_Course {
 		if ( count( $query->posts ) > 0 ) {
 			// unset filter property.
 			array_map(
-				function( $post ) {
+				function ( $post ) {
 					unset( $post->filter );
 				},
 				$query->posts
@@ -385,19 +386,70 @@ class REST_Course {
 			);
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Course retrieved successfully', 'tutor' ),
-				'data'        => $data,
+				'code'    => 'success',
+				'message' => __( 'Course retrieved successfully', 'tutor' ),
+				'data'    => $data,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status'  => 'not_found',
+			'code'    => 'not_found',
 			'message' => __( 'Course not found', 'tutor' ),
 			'data'    => array(),
 		);
+		return self::send( $response );
+	}
+
+	/**
+	 * Retrieve the course contents for a given course id
+	 *
+	 * @since 2.7.0
+	 *
+	 * @param WP_REST_Request $request request params.
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function course_contents( WP_REST_Request $request ) {
+		$course_id = $request->get_param( 'id' );
+		$topics    = tutor_utils()->get_topics( $course_id );
+
+		if ( $topics->have_posts() ) {
+			$data = array();
+			foreach ( $topics->get_posts() as $post ) {
+				$current_topic = array(
+					'id'       => $post->ID,
+					'title'    => $post->post_title,
+					'summary'  => $post->post_content,
+					'contents' => array(),
+				);
+
+				$topic_contents = tutor_utils()->get_course_contents_by_topic( $post->ID, -1 );
+
+				if ( $topic_contents->have_posts() ) {
+					foreach ( $topic_contents->get_posts() as $post ) {
+						array_push( $current_topic['contents'], $post );
+					}
+				}
+
+				array_push( $data, $current_topic );
+			}
+
+			$response = array(
+				'code'    => 'success',
+				'message' => __( 'Course contents retrieved successfully', 'tutor' ),
+				'data'    => $data,
+			);
+			return self::send( $response );
+		}
+
+		$response = array(
+			'code'    => 'not_found',
+			'message' => __( 'Contents for this course with the given course id not found', 'tutor' ),
+			'data'    => array(),
+		);
+
 		return self::send( $response );
 	}
 }

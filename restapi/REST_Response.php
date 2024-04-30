@@ -22,6 +22,7 @@ trait REST_Response {
 	 * Send response
 	 *
 	 * @since 1.7.1
+	 * @since 2.7.0 renamed filter to tutor_rest_api_response like as pro API response.
 	 *
 	 * @param array $response The response data.
 	 *
@@ -29,6 +30,6 @@ trait REST_Response {
 	 */
 	public static function send( array $response ) {
 		$response = new WP_REST_Response( $response );
-		return apply_filters( 'tutor_rest_response', $response );
+		return rest_ensure_response( apply_filters( 'tutor_rest_api_response', $response ) );
 	}
 }

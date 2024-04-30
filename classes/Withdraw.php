@@ -236,6 +236,7 @@ class Withdraw {
 			wp_send_json_error(
 				array(
 					'msg' => wp_sprintf(
+						/* translators: 1: total pending withdraw request 2: available for withdraw */
 						__( "You have total %1\$s pending withdraw request. You can't make more than %2\$s withdraw request at a time", 'tutor' ),
 						$earning_summary->total_pending,
 						$earning_summary->available_for_withdraw
@@ -253,7 +254,7 @@ class Withdraw {
 		}
 
 		if ( ( ! is_numeric( $withdraw_amount ) && ! is_float( $withdraw_amount ) ) || $withdraw_amount < $min_withdraw ) {
-			//phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+			/* translators: 1: strong tag start 2: min withdrawal amount 3: strong tag end */
 			$required_min_withdraw = apply_filters( 'tutor_required_min_amount_msg', sprintf( __( 'Minimum withdrawal amount is %1$s %2$s %3$s ', 'tutor' ), '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
 			wp_send_json_error( array( 'msg' => $required_min_withdraw ) );
 		}

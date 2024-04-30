@@ -57,18 +57,18 @@ class REST_Author {
 			$author->courses = get_user_meta( $this->user_id, '_tutor_instructor_course_id', false );
 
 			$response = array(
-				'status_code' => 'success',
-				'message'     => __( 'Author details retrieved successfully', 'tutor' ),
-				'data'        => $author,
+				'code'    => 'success',
+				'message' => __( 'Author details retrieved successfully', 'tutor' ),
+				'data'    => $author,
 			);
 
 			return self::send( $response );
 		}
 
 		$response = array(
-			'status_code' => 'invalid_id',
-			'message'     => __( 'Author not found', 'tutor' ),
-			'data'        => array(),
+			'code'    => 'invalid_id',
+			'message' => __( 'Author not found', 'tutor' ),
+			'data'    => array(),
 		);
 
 		return self::send( $response );
