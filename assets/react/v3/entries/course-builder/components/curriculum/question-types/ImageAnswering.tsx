@@ -35,6 +35,7 @@ const ImageAnswering = () => {
   const {
     fields: optionsFields,
     append: appendOption,
+    insert: insertOption,
     remove: removeOption,
     move: moveOption,
   } = useFieldArray({
@@ -124,10 +125,18 @@ const ImageAnswering = () => {
                 key={option.id}
                 control={form.control}
                 name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
-                render={({ field, fieldState }) => (
+                render={(controllerProps) => (
                   <FormImageAnswering
-                    field={field}
-                    fieldState={fieldState}
+                    {...controllerProps}
+                    onDuplicateOption={() => {
+                      const duplicateOption = {
+                        ...option,
+                        ID: nanoid(),
+                        isCorrect: false,
+                      };
+                      const duplicateIndex = index + 1;
+                      insertOption(duplicateIndex, duplicateOption);
+                    }}
                     onRemoveOption={() => removeOption(index)}
                     index={index}
                   />
@@ -147,10 +156,18 @@ const ImageAnswering = () => {
                     key={activeSortId}
                     control={form.control}
                     name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
-                    render={({ field, fieldState }) => (
+                    render={(controllerProps) => (
                       <FormImageAnswering
-                        field={field}
-                        fieldState={fieldState}
+                        {...controllerProps}
+                        onDuplicateOption={() => {
+                          const duplicateOption = {
+                            ...item,
+                            ID: nanoid(),
+                            isCorrect: false,
+                          };
+                          const duplicateIndex = index + 1;
+                          insertOption(duplicateIndex, duplicateOption);
+                        }}
                         onRemoveOption={() => removeOption(index)}
                         index={index}
                       />

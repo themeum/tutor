@@ -21,12 +21,14 @@ import { nanoid } from '@Utils/util';
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   hasMultipleCorrectAnswers: boolean;
+  onDuplicateOption: () => void;
   onRemoveOption: () => void;
 }
 
 const FormMultipleChoiceAndOrdering = ({
   field,
   hasMultipleCorrectAnswers,
+  onDuplicateOption,
   onRemoveOption,
   index,
 }: FormMultipleChoiceAndOrderingProps) => {
@@ -186,7 +188,7 @@ const FormMultipleChoiceAndOrdering = ({
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
-                alert('@TODO: will be implemented later');
+                onDuplicateOption();
               }}
             >
               <SVGIcon name="copyPaste" width={24} height={24} />

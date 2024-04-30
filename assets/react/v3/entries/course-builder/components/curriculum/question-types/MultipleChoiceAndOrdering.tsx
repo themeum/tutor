@@ -36,6 +36,7 @@ const MultipleChoiceAndOrdering = () => {
   const {
     fields: optionsFields,
     append: appendOption,
+    insert: insertOption,
     remove: removeOption,
     move: moveOption,
   } = useFieldArray({
@@ -155,6 +156,15 @@ const MultipleChoiceAndOrdering = () => {
                   <FormMultipleChoiceAndOrdering
                     {...controllerProps}
                     hasMultipleCorrectAnswers={hasMultipleCorrectAnswers}
+                    onDuplicateOption={() => {
+                      const duplicateOption = {
+                        ...option,
+                        ID: nanoid(),
+                        isCorrect: false,
+                      };
+                      const duplicateIndex = index + 1;
+                      insertOption(duplicateIndex, duplicateOption);
+                    }}
                     onRemoveOption={() => removeOption(index)}
                     index={index}
                   />
@@ -178,6 +188,16 @@ const MultipleChoiceAndOrdering = () => {
                       <FormMultipleChoiceAndOrdering
                         {...controllerProps}
                         hasMultipleCorrectAnswers={hasMultipleCorrectAnswers}
+                        onDuplicateOption={() => {
+                          const duplicateOption = {
+                            ...item,
+                            ID: nanoid(),
+                            isCorrect: false,
+                          };
+                          console.log(duplicateOption);
+                          const duplicateIndex = index + 1;
+                          insertOption(duplicateIndex, duplicateOption);
+                        }}
                         onRemoveOption={() => removeOption(index)}
                         index={index}
                       />

@@ -35,6 +35,7 @@ const Matching = () => {
   const {
     fields: optionsFields,
     append: appendOption,
+    insert: insertOption,
     remove: removeOption,
     move: moveOption,
   } = useFieldArray({
@@ -124,12 +125,20 @@ const Matching = () => {
                 key={option.id}
                 control={form.control}
                 name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
-                render={({ field, fieldState }) => (
+                render={(controllerProps) => (
                   <FormMatching
-                    field={field}
-                    fieldState={fieldState}
-                    onRemoveOption={() => removeOption(index)}
+                    {...controllerProps}
                     index={index}
+                    onRemoveOption={() => removeOption(index)}
+                    onDuplicateOption={() => {
+                      const duplicateOption = {
+                        ...option,
+                        ID: nanoid(),
+                        isCorrect: false,
+                      };
+                      const duplicateIndex = index + 1;
+                      insertOption(duplicateIndex, duplicateOption);
+                    }}
                     imageMatching={form.watch(`questions.${activeQuestionIndex}.imageMatching`)}
                   />
                 )}
@@ -148,12 +157,20 @@ const Matching = () => {
                     key={activeSortId}
                     control={form.control}
                     name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
-                    render={({ field, fieldState }) => (
+                    render={(controllerProps) => (
                       <FormMatching
-                        field={field}
-                        fieldState={fieldState}
-                        onRemoveOption={() => removeOption(index)}
+                        {...controllerProps}
                         index={index}
+                        onDuplicateOption={() => {
+                          const duplicateOption = {
+                            ...item,
+                            ID: nanoid(),
+                            isCorrect: false,
+                          };
+                          const duplicateIndex = index + 1;
+                          insertOption(duplicateIndex, duplicateOption);
+                        }}
+                        onRemoveOption={() => removeOption(index)}
                         imageMatching={form.watch(`questions.${activeQuestionIndex}.imageMatching`)}
                       />
                     )}

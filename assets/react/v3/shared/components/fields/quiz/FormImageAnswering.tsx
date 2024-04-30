@@ -20,10 +20,11 @@ import { nanoid } from '@Utils/util';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
+  onDuplicateOption: () => void;
   onRemoveOption: () => void;
 }
 
-const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnsweringProps) => {
+const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
   const inputValue = field.value ?? {
     ID: nanoid(),
     title: '',
@@ -132,7 +133,7 @@ const FormImageAnswering = ({ index, onRemoveOption, field }: FormImageAnswering
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
-                alert('@TODO: will be implemented later');
+                onDuplicateOption();
               }}
             >
               <SVGIcon name="copyPaste" width={24} height={24} />
