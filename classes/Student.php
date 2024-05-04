@@ -211,16 +211,6 @@ class Student {
 			update_user_meta( $user_id, 'phone_number', $phone_number );
 			update_user_meta( $user_id, '_tutor_profile_bio', $tutor_profile_bio );
 			update_user_meta( $user_id, '_tutor_profile_job_title', $tutor_profile_job_title );
-
-			$tutor_user_social = tutor_utils()->tutor_user_social_icons();
-			foreach ( $tutor_user_social as $key => $social ) {
-				$user_social_value = sanitize_text_field( tutor_utils()->input_old( $key ) );
-				if ( $user_social_value ) {
-					update_user_meta( $user_id, $key, $user_social_value );
-				} else {
-					delete_user_meta( $user_id, $key );
-				}
-			}
 		}
 		do_action( 'tutor_profile_update_after', $user_id );
 
