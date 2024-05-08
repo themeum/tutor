@@ -8977,11 +8977,11 @@ class Utils {
 		$user_id   = get_current_user_id();
 		$completed = 0;
 
-		$lesson_post_type      = 'lesson';
-		$quiz_post_type        = 'tutor_quiz';
-		$assignment_post_type  = 'tutor_assignments';
-		$zoom_lesson_post_type = 'tutor_zoom_meeting';
-		$google_meet_post_type = 'tutor-google-meet';
+		$lesson_post_type      = tutor()->lesson_post_type;
+		$quiz_post_type        = tutor()->quiz_post_type;
+		$assignment_post_type  = tutor()->assignment_post_type;
+		$zoom_lesson_post_type = tutor()->zoom_post_type;
+		$google_meet_post_type = tutor()->meet_post_type;
 
 		if ( $contents ) {
 			foreach ( $contents as $content ) {
