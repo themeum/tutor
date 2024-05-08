@@ -50,7 +50,7 @@ class REST_Topic {
 	 * @return mixed
 	 */
 	public function course_topic( WP_REST_Request $request ) {
-		$this->post_parent = $request->get_param( 'id' );
+		$this->post_parent = $request->get_param( 'course_id' );
 
 		global $wpdb;
 

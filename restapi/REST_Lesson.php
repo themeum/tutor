@@ -53,7 +53,7 @@ class REST_Lesson {
 	 * @return mixed
 	 */
 	public function topic_lesson( WP_REST_Request $request ) {
-		$this->post_parent = $request->get_param( 'id' );
+		$this->post_parent = $request->get_param( 'topic_id' );
 
 		$args = array(
 			'post_type'      => $this->post_type,
@@ -110,5 +110,4 @@ class REST_Lesson {
 
 		return self::send( $response );
 	}
-
 }

@@ -77,6 +77,8 @@ class REST_Course {
 		$order         = sanitize_text_field( $request->get_param( 'order' ) );
 		$orderby       = sanitize_text_field( $request->get_param( 'orderby' ) );
 		$paged         = sanitize_text_field( $request->get_param( 'paged' ) );
+		$categories    = sanitize_term( $request['categories'], $this->course_cat_tax, $context = 'db' );
+		$tags          = sanitize_term( $request['tags'], $this->course_tag_tax, $context = 'db' );
 		$post_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 
 		$args = array(
@@ -87,6 +89,35 @@ class REST_Course {
 			'order'          => $order ? $order : 'ASC',
 			'orderby'        => $orderby ? $orderby : 'title',
 		);
+
+		if ( $request->get_param( 'categories' ) || $request->get_param( 'tags' ) ) {
+			$args['tax_query'] = array(
+				'relation' => 'OR',
+				array(
+					'taxonomy' => $this->course_cat_tax,
+					'field'    => 'name',
+					'terms'    => $categories,
+				),
+				array(
+					'taxonomy' => $this->course_tag_tax,
+					'field'    => 'name',
+					'terms'    => $tags,
+
+				),
+			);
+		}
+
+		if ( 'meta_value_num' === $orderby ) {
+			$args['post_type']  = 'product';
+			$args['meta_key']   = '_regular_price';
+			$args['meta_query'] = array(
+				'relation' => 'AND',
+				array(
+					'key'   => '_tutor_product',
+					'value' => 'yes',
+				),
+			);
+		}
 
 		$args = apply_filters( 'tutor_rest_course_query_args', $args );
 
@@ -134,7 +165,10 @@ class REST_Course {
 
 				$post->course_tag = $tag;
 
+				$post->price = get_post_meta( $post->ID, '_regular_price', true );
+
 				$post = apply_filters( 'tutor_rest_course_single_post', $post );
+
 				array_push( $data['posts'], $post );
 			}
 
@@ -231,72 +265,72 @@ class REST_Course {
 	 *
 	 * @return WP_REST_Response
 	 */
-	public function course_by_terms( WP_REST_Request $request ) {
-		$post_fields  = $request->get_params();
-		$validate_err = $this->validate_terms( $post_fields );
+	// public function course_by_terms( WP_REST_Request $request ) {
+	// $post_fields  = $request->get_params();
+	// $validate_err = $this->validate_terms( $post_fields );
 
-		// check array or not.
-		if ( count( $validate_err ) > 0 ) {
-			$response = array(
-				'code'    => 'validation_error',
-				'message' => $validate_err,
-				'data'    => array(),
-			);
+	// check array or not.
+	// if ( count( $validate_err ) > 0 ) {
+	// $response = array(
+	// 'code'    => 'validation_error',
+	// 'message' => $validate_err,
+	// 'data'    => array(),
+	// );
 
-			return self::send( $response );
-		}
+	// return self::send( $response );
+	// }
 
-		// sanitize terms.
-		$categories = sanitize_term( $request['categories'], $this->course_cat_tax, $context = 'db' );
+	// sanitize terms.
+	// $categories = sanitize_term( $request['categories'], $this->course_cat_tax, $context = 'db' );
 
-		$tags = sanitize_term( $request['tags'], $this->course_tag_tax, $context = 'db' );
+	// $tags = sanitize_term( $request['tags'], $this->course_tag_tax, $context = 'db' );
 
-		$args = array(
-			'post_type' => $this->post_type,
-			'tax_query' => array(
-				'relation' => 'OR',
-				array(
-					'taxonomy' => $this->course_cat_tax,
-					'field'    => 'name',
-					'terms'    => $categories,
-				),
-				array(
-					'taxonomy' => $this->course_tag_tax,
-					'field'    => 'name',
-					'terms'    => $tags,
+	// $args = array(
+	// 'post_type' => $this->post_type,
+	// 'tax_query' => array(
+	// 'relation' => 'OR',
+	// array(
+	// 'taxonomy' => $this->course_cat_tax,
+	// 'field'    => 'name',
+	// 'terms'    => $categories,
+	// ),
+	// array(
+	// 'taxonomy' => $this->course_tag_tax,
+	// 'field'    => 'name',
+	// 'terms'    => $tags,
 
-				),
-			),
-		);
+	// ),
+	// ),
+	// );
 
-		$args  = apply_filters( 'tutor_rest_course_by_terms_query_args', $args );
-		$query = new WP_Query( $args );
+	// $args  = apply_filters( 'tutor_rest_course_by_terms_query_args', $args );
+	// $query = new WP_Query( $args );
 
-		if ( count( $query->posts ) > 0 ) {
-			// unset filter property.
-			array_map(
-				function ( $post ) {
-					unset( $post->filter );
-				},
-				$query->posts
-			);
+	// if ( count( $query->posts ) > 0 ) {
+	// unset filter property.
+	// array_map(
+	// function ( $post ) {
+	// unset( $post->filter );
+	// },
+	// $query->posts
+	// );
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Course retrieved successfully', 'tutor' ),
-				'data'    => $query->posts,
-			);
+	// $response = array(
+	// 'code'    => 'success',
+	// 'message' => __( 'Course retrieved successfully', 'tutor' ),
+	// 'data'    => $query->posts,
+	// );
 
-			return self::send( $response );
-		}
+	// return self::send( $response );
+	// }
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Course not found for given terms', 'tutor' ),
-			'data'    => array(),
-		);
-		return self::send( $response );
-	}
+	// $response = array(
+	// 'code'    => 'not_found',
+	// 'message' => __( 'Course not found for given terms', 'tutor' ),
+	// 'data'    => array(),
+	// );
+	// return self::send( $response );
+	// }
 
 	/**
 	 * Validate terms
@@ -333,74 +367,74 @@ class REST_Course {
 	 *
 	 * @return WP_REST_Response
 	 */
-	public function course_sort_by_price( WP_REST_Request $request ) {
-		$order = $request->get_param( 'order' );
-		$paged = $request->get_param( 'page' );
+	// public function course_sort_by_price( WP_REST_Request $request ) {
+	// $order = $request->get_param( 'order' );
+	// $paged = $request->get_param( 'page' );
 
-		$order         = sanitize_text_field( $order );
-		$paged         = sanitize_text_field( $paged );
-		$post_per_page = tutor_utils()->get_option( 'pagination_per_page' );
+	// $order         = sanitize_text_field( $order );
+	// $paged         = sanitize_text_field( $paged );
+	// $post_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 
-		$args = array(
-			'post_type'      => 'product',
-			'post_status'    => 'publish',
-			'posts_per_page' => $post_per_page,
-			'paged'          => $paged ? $paged : 1,
+	// $args = array(
+	// 'post_type'      => 'product',
+	// 'post_status'    => 'publish',
+	// 'posts_per_page' => $post_per_page,
+	// 'paged'          => $paged ? $paged : 1,
 
-			'meta_key'       => '_regular_price',
-			'orderby'        => 'meta_value_num',
-			'order'          => $order,
-			'meta_query'     => array(
-				'relation' => 'AND',
-				array(
-					'key'   => '_tutor_product',
-					'value' => 'yes',
+	// 'meta_key'       => '_regular_price',
+	// 'orderby'        => 'meta_value_num',
+	// 'order'          => $order,
+	// 'meta_query'     => array(
+	// 'relation' => 'AND',
+	// array(
+	// 'key'   => '_tutor_product',
+	// 'value' => 'yes',
 
-				),
-			),
-		);
-		$args = apply_filters( 'tutor_rest_course_sort_by_price_args', $args );
+	// ),
+	// ),
+	// );
+	// $args = apply_filters( 'tutor_rest_course_sort_by_price_args', $args );
 
-		$query = new WP_Query( $args );
+	// $query = new WP_Query( $args );
 
-		if ( count( $query->posts ) > 0 ) {
-			// unset filter property.
-			array_map(
-				function ( $post ) {
-					unset( $post->filter );
-				},
-				$query->posts
-			);
+	// if ( count( $query->posts ) > 0 ) {
+	// unset filter property.
+	// array_map(
+	// function ( $post ) {
+	// unset( $post->filter );
+	// },
+	// $query->posts
+	// );
 
-			$posts = array();
+	// $posts = array();
 
-			foreach ( $query->posts as $post ) {
-				$post->price = get_post_meta( $post->ID, '_regular_price', true );
-				array_push( $posts, $post );
-			}
+	// foreach ( $query->posts as $post ) {
+	// $post->price = get_post_meta( $post->ID, '_regular_price', true );
+	// array_push( $posts, $post );
+	// }
 
-			$data = array(
-				'posts'        => $posts,
-				'total_course' => $query->found_posts,
-				'total_page'   => $query->max_num_pages,
-			);
+	// $data = array(
+	// 'posts'        => $posts,
+	// 'total_course' => $query->found_posts,
+	// 'total_page'   => $query->max_num_pages,
+	// );
 
-			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Course retrieved successfully', 'tutor' ),
-				'data'    => $data,
-			);
+	// $response = array(
+	// 'code'    => 'success',
+	// 'message' => __( 'Course retrieved successfully', 'tutor' ),
+	// 'data'    => $data,
+	// );
 
-			return self::send( $response );
-		}
+	// return self::send( $response );
+	// }
 
-		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Course not found', 'tutor' ),
-			'data'    => array(),
-		);
-		return self::send( $response );
-	}
+	// $response = array(
+	// 'code'    => 'not_found',
+	// 'message' => __( 'Course not found', 'tutor' ),
+	// 'data'    => array(),
+	// );
+	// return self::send( $response );
+	// }
 
 	/**
 	 * Retrieve the course contents for a given course id
