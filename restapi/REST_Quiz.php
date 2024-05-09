@@ -67,11 +67,11 @@ class REST_Quiz {
 	private $t_quiz_attempt_ans = 'tutor_quiz_attempt_answers';
 
 	/**
-	 * Obtain quiz detail for a single quiz
+	 * Obtain quiz detail for a single quiz.
 	 *
 	 * @since 2.7.1
 	 *
-	 * @param WP_REST_Request $request REST request object
+	 * @param WP_REST_Request $request REST request object.
 	 *
 	 * @return void
 	 */
