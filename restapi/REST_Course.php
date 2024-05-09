@@ -74,11 +74,18 @@ class REST_Course {
 	 * @return WP_REST_Response
 	 */
 	public function course( WP_REST_Request $request ) {
-		$order         = sanitize_text_field( $request->get_param( 'order' ) );
-		$orderby       = sanitize_text_field( $request->get_param( 'orderby' ) );
-		$paged         = sanitize_text_field( $request->get_param( 'paged' ) );
-		$categories    = sanitize_term( $request['categories'], $this->course_cat_tax, $context = 'db' );
-		$tags          = sanitize_term( $request['tags'], $this->course_tag_tax, $context = 'db' );
+		$order      = sanitize_text_field( $request->get_param( 'order' ) );
+		$orderby    = sanitize_text_field( $request->get_param( 'orderby' ) );
+		$paged      = sanitize_text_field( $request->get_param( 'paged' ) );
+		$categories = null;
+		if ( isset( $request['categories'] ) ) {
+			$categories = sanitize_term( explode( ',', $request['categories'] ), $this->course_cat_tax, $context = 'db' );
+		}
+		$tags = null;
+		if ( isset( $request['tags'] ) ) {
+			$tags = sanitize_term( explode( ',', $request['tags'] ), $this->course_tag_tax, $context = 'db' );
+		}
+
 		$post_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 
 		$args = array(
@@ -90,7 +97,7 @@ class REST_Course {
 			'orderby'        => $orderby ? $orderby : 'title',
 		);
 
-		if ( $request->get_param( 'categories' ) || $request->get_param( 'tags' ) ) {
+		if ( isset( $categories ) || isset( $tags ) ) {
 			$args['tax_query'] = array(
 				'relation' => 'OR',
 				array(
@@ -107,7 +114,7 @@ class REST_Course {
 			);
 		}
 
-		if ( 'meta_value_num' === $orderby ) {
+		if ( 'price' === $orderby ) {
 			$args['post_type']  = 'product';
 			$args['meta_key']   = '_regular_price';
 			$args['meta_query'] = array(
