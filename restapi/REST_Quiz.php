@@ -78,12 +78,12 @@ class REST_Quiz {
 	public function get_quiz( WP_REST_Request $request ) {
 		global $wpdb;
 
-		$quiz_id   = $request->get_param( 'id' );
+		$quiz_id   = Input::sanitize( $request->get_param( 'id' ), 0, Input::TYPE_INT );
 		$wpdb->q_t = $wpdb->prefix . $this->t_quiz_question; // Question table.
 
 		$wpdb->q_a_t = $wpdb->prefix . $this->t_quiz_ques_ans; // Question answer table.
 
-		$quizzes = $wpdb->get_results(
+		$quiz = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT 
 					ID,
@@ -99,58 +99,59 @@ class REST_Quiz {
 			)
 		);
 
-		if ( count( $quizzes ) > 0 ) {
-			foreach ( $quizzes as $quiz ) {
-				$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
-				$questions           = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT
-						question_id,
-						question_title,
-						question_description,
-						question_type,
-						question_mark,
-						question_settings FROM {$wpdb->q_t}
-						WHERE quiz_id = %d
-						",
-						$quiz->ID
-					)
-				);
-
-				foreach ( $questions as $question ) {
-					$question->question_settings = maybe_unserialize( $quiz->question_settings );
-					// question options with correct ans.
-					$options                    = $wpdb->get_results(
-						$wpdb->prepare(
-							"SELECT
-							answer_id,
-							answer_title,
-							is_correct FROM {$wpdb->q_a_t}
-							WHERE belongs_question_id = %d
-							",
-							$question->question_id
-						)
-					);
-					$question->question_answers = $options;
-
-				}
-				$quiz->quiz_questions = $questions;
-
-			}
+		if ( ! isset( $quiz ) ) {
 			$response = array(
-				'code'    => 'success',
-				'message' => __( 'Quiz retrieved successfully', 'tutor' ),
-				'data'    => $quizzes[0],
+				'code'    => 'not_found',
+				'message' => __( 'Quiz not found for given ID', 'tutor' ),
+				'data'    => array(),
 			);
-
 			return self::send( $response );
+		}
+
+		$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
+		$questions           = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT
+				question_id,
+				question_title,
+				question_description,
+				question_type,
+				question_mark,
+				question_settings FROM {$wpdb->q_t}
+				WHERE quiz_id = %d
+				",
+				$quiz->ID
+			)
+		);
+
+		foreach ( $questions as $question ) {
+			if ( isset( $quiz->question_settings ) ) {
+				$question->question_settings = maybe_unserialize( $quiz->question_settings );
+			}
+
+			// question options with correct ans.
+			$options                    = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT
+					answer_id,
+					answer_title,
+					is_correct FROM {$wpdb->q_a_t}
+					WHERE belongs_question_id = %d
+					",
+					$question->question_id
+				)
+			);
+			$question->question_answers = $options;
 
 		}
+		$quiz->quiz_questions = $questions;
+
 		$response = array(
-			'code'    => 'not_found',
-			'message' => __( 'Quiz not found for given ID', 'tutor' ),
-			'data'    => array(),
+			'code'    => 'success',
+			'message' => __( 'Quiz retrieved successfully', 'tutor' ),
+			'data'    => $quiz,
 		);
+
 		return self::send( $response );
 	}
 
