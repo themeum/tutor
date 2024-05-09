@@ -73,7 +73,7 @@ class REST_Quiz {
 	 *
 	 * @param WP_REST_Request $request REST request object.
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function get_quiz( WP_REST_Request $request ) {
 		global $wpdb;
@@ -135,8 +135,6 @@ class REST_Quiz {
 
 				}
 				$quiz->quiz_questions = $questions;
-
-				// array_push( $data, $quiz );
 
 			}
 			$response = array(
