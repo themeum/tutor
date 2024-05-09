@@ -88,11 +88,13 @@ class REST_Lesson {
 
 				$attachments    = array();
 				$attachments_id = get_post_meta( $lesson->ID, '_tutor_attachments', false );
-				$attachments_id = $attachments_id[0];
+				if ( is_array( $attachments_id ) && count( $attachments_id ) > 0 ) {
+					$attachments_id = $attachments_id[0];
 
-				foreach ( $attachments_id as $id ) {
-					$guid = get_the_guid( $id );
-					array_push( $attachments, $guid );
+					foreach ( $attachments_id as $id ) {
+						$guid = get_the_guid( $id );
+						array_push( $attachments, $guid );
+					}
 				}
 
 				$lesson->attachments = $attachments;
