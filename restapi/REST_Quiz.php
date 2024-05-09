@@ -67,6 +67,95 @@ class REST_Quiz {
 	private $t_quiz_attempt_ans = 'tutor_quiz_attempt_answers';
 
 	/**
+	 * Obtain quiz detail for a single quiz.
+	 *
+	 * @since 2.7.1
+	 *
+	 * @param WP_REST_Request $request REST request object.
+	 *
+	 * @return mixed
+	 */
+	public function get_quiz( WP_REST_Request $request ) {
+		global $wpdb;
+
+		$quiz_id   = Input::sanitize( $request->get_param( 'id' ), 0, Input::TYPE_INT );
+		$wpdb->q_t = $wpdb->prefix . $this->t_quiz_question; // Question table.
+
+		$wpdb->q_a_t = $wpdb->prefix . $this->t_quiz_ques_ans; // Question answer table.
+
+		$quiz = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT 
+					ID,
+					post_title,
+					post_content,
+					post_name
+				FROM {$wpdb->posts}
+				WHERE post_type = %s 
+					AND ID = %d
+				",
+				$this->post_type,
+				$quiz_id
+			)
+		);
+
+		if ( ! isset( $quiz ) ) {
+			$response = array(
+				'code'    => 'not_found',
+				'message' => __( 'Quiz not found for given ID', 'tutor' ),
+				'data'    => array(),
+			);
+			return self::send( $response );
+		}
+
+		$quiz->quiz_settings = get_post_meta( $quiz->ID, 'tutor_quiz_option', false );
+		$questions           = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT
+				question_id,
+				question_title,
+				question_description,
+				question_type,
+				question_mark,
+				question_settings FROM {$wpdb->q_t}
+				WHERE quiz_id = %d
+				",
+				$quiz->ID
+			)
+		);
+
+		foreach ( $questions as $question ) {
+			if ( isset( $quiz->question_settings ) ) {
+				$question->question_settings = maybe_unserialize( $quiz->question_settings );
+			}
+
+			// question options with correct ans.
+			$options                    = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT
+					answer_id,
+					answer_title,
+					is_correct FROM {$wpdb->q_a_t}
+					WHERE belongs_question_id = %d
+					",
+					$question->question_id
+				)
+			);
+			$question->question_answers = $options;
+
+		}
+		$quiz->quiz_questions = $questions;
+
+		$response = array(
+			'code'    => 'success',
+			'message' => __( 'Quiz retrieved successfully', 'tutor' ),
+			'data'    => $quiz,
+		);
+
+		return self::send( $response );
+	}
+
+	/**
 	 * Get quiz with settings.
 	 *
 	 * @since 1.7.1
@@ -76,7 +165,7 @@ class REST_Quiz {
 	 * @return mixed
 	 */
 	public function quiz_with_settings( WP_REST_Request $request ) {
-		$this->post_parent = $request->get_param( 'id' );
+		$this->post_parent = $request->get_param( 'topic_id' );
 
 		global $wpdb;
 
