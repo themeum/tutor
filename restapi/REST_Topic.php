@@ -52,7 +52,7 @@ class REST_Topic {
 	public function course_topic( WP_REST_Request $request ) {
 		$this->post_parent = $request->get_param( 'course_id' );
 
-		if(!isset($this->post_parent)){
+		if ( ! isset( $this->post_parent ) ) {
 			$response = array(
 				'code'    => 'get_topic',
 				'message' => __( 'course_id is required', 'tutor' ),
