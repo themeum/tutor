@@ -166,47 +166,6 @@ class RestAPI {
 			)
 		);
 
-		// Courses by terms cat and tag.
-		// register_rest_route(
-		// $this->namespace,
-		// '/course-by-terms',
-		// array(
-		// 'methods'             => 'POST',
-		// 'callback'            => array(
-		// $this->course_obj,
-		// 'course_by_terms',
-		// ),
-		// 'permission_callback' => array( RestAuth::class, 'process_api_request' ),
-		// )
-		// );
-
-		// Courses by terms cat and tag.
-		// register_rest_route(
-		// $this->namespace,
-		// '/course-sorting-by-price',
-		// array(
-		// 'methods'             => 'GET',
-		// 'callback'            => array(
-		// $this->course_obj,
-		// 'course_sort_by_price',
-		// ),
-		// 'args'                => array(
-		// 'order' => array(
-		// 'required'          => true,
-		// 'type'              => 'string',
-		// 'validate_callback' => function ( $order ) {
-		// return $this->validate_order( $order );
-		// },
-		// ),
-		// 'page'  => array(
-		// 'required' => false,
-		// 'type'     => 'number',
-		// ),
-		// ),
-		// 'permission_callback' => array( RestAuth::class, 'process_api_request' ),
-		// )
-		// );
-
 		// Course details.
 		register_rest_route(
 			$this->namespace,
