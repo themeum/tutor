@@ -52,6 +52,15 @@ class REST_Topic {
 	public function course_topic( WP_REST_Request $request ) {
 		$this->post_parent = $request->get_param( 'course_id' );
 
+		if(!isset($this->post_parent)){
+			$response = array(
+				'code'    => 'get_topic',
+				'message' => __( 'course_id is required', 'tutor' ),
+				'data'    => array(),
+			);
+			return self::send( $response );
+		}
+
 		global $wpdb;
 
 		$result = $wpdb->get_results(
@@ -69,7 +78,7 @@ class REST_Topic {
 		}
 		$response = array(
 			'code'    => 'not_found',
-			'message' => __( 'Topic not found for given ID', 'tutor' ),
+			'message' => __( 'Topic not found for given course ID', 'tutor' ),
 			'data'    => array(),
 		);
 
