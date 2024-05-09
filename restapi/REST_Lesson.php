@@ -55,6 +55,15 @@ class REST_Lesson {
 	public function topic_lesson( WP_REST_Request $request ) {
 		$this->post_parent = $request->get_param( 'topic_id' );
 
+		if ( ! isset( $this->post_parent ) ) {
+			$response = array(
+				'code'    => 'not_found',
+				'message' => __( 'topic_id is required', 'tutor' ),
+				'data'    => array(),
+			);
+			return self::send( $response );
+		}
+
 		$args = array(
 			'post_type'      => $this->post_type,
 			'post_parent'    => $this->post_parent,
@@ -66,16 +75,16 @@ class REST_Lesson {
 		$data = array();
 
 		if ( $lessons_query->have_posts() ) {
-			while ( $lessons_query->have_posts() ) {
-				$lessons_query->the_post();
+			$posts = $lessons_query->get_posts();
+			foreach ( $posts as $post ) {
 
 				$lesson = new \stdClass();
 
-				$lesson->ID           = get_the_ID();
-				$lesson->post_title   = get_the_title();
-				$lesson->post_content = get_the_content();
+				$lesson->ID           = $post->ID;
+				$lesson->post_title   = $post->post_title;
+				$lesson->post_content = $post->post_content;
 				$lesson->post_name    = $post->post_name;
-				$lesson->course_id    = wp_get_post_parent_id( $lesson->ID );
+				$lesson->topic_id     = wp_get_post_parent_id( $lesson->ID );
 
 				$attachments    = array();
 				$attachments_id = get_post_meta( $lesson->ID, '_tutor_attachments', false );
