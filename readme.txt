@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.7.0
+Stable tag: 2.7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -315,6 +315,16 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.7.1 - May 14, 2024
+
+New: Added Quiz Details API
+Update: Updated several API endpoints and fortified the API infrastructure
+Update: Enriched user experience through multiple enhancements
+Fix: Fixed WooCommerce conflicts with Tutor LMS API
+Fix: Resolved critical security vulnerabilities
+Fix: Fixed “Class Not Found” errors in some scenarios
+Fix: Resolved various translation-related issues
 
 = 2.7.0 - April 24, 2024
 
