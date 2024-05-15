@@ -103,23 +103,37 @@ const getImageAsDataURL = (file, imgSrc) => {
 const insInput = document.querySelector('input[type=number]#revenue-instructor');
 const adminInput = document.querySelector('input[type=number]#revenue-admin');
 const revenueInputs = document.querySelectorAll('.revenue-percentage input[type=number]');
+const save_button = document.getElementById('save_tutor_option');
+
+const disableSaveButton = (time) => {
+	setTimeout(() => {
+		if (save_button) save_button.disabled = true;
+	}, time)
+}
 
 if (insInput && adminInput && revenueInputs) {
 	insInput.addEventListener('input', (e) => {
-		e.target.value <= 100 && (adminInput.value = 100 - e.target.value);
-		revenueInputValidation(e.target.value);
+
+		if (e.target.value <= 100) {
+			adminInput.value = 100 - e.target.value;
+		}
+		else {
+			adminInput.value = 0;
+			disableSaveButton(50);
+		}
 	});
 
 	adminInput.addEventListener('input', (e) => {
-		e.target.value <= 100 && (insInput.value = 100 - e.target.value);
-		revenueInputValidation(e.target.value);
+
+		if (e.target.value <= 100) {
+			insInput.value = 100 - e.target.value;
+		}
+		else {
+			insInput.value = 0;
+			disableSaveButton(50);
+		}
 	});
 }
-const revenueInputValidation = (value) => {
-	value > 100
-		? revenueInputs.forEach((input) => input.classList.add('warning'))
-		: revenueInputs.forEach((input) => input.classList.remove('warning'));
-};
 
 /**
  * Copy to clipboard : Email > Server Cron
