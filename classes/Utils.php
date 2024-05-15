@@ -5347,6 +5347,19 @@ class Utils {
 	}
 
 	/**
+	 * Generate cache busting URL
+	 *
+	 * @since 2.8.0
+	 *
+	 * @param string $url url.
+	 *
+	 * @return string
+	 */
+	public function get_nocache_url( $url ) {
+		return add_query_arg( 'nocache', time(), $url );
+	}
+
+	/**
 	 * Student registration form
 	 *
 	 * @since 1.0.0
@@ -5371,7 +5384,7 @@ class Utils {
 	 * @return bool|false|string
 	 */
 	public function instructor_register_url() {
-		 $instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
+		$instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
 
 		if ( $instructor_register_page ) {
 			return apply_filters( 'tutor_instructor_register_url', get_the_permalink( $instructor_register_page ) );
