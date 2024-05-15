@@ -43,7 +43,7 @@ describe("Tutor Admin Announcements", () => {
 
   it ("should view and delete an announcement", () => {
       cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`, (req) => {
-          console.log(req)
+          
           if (req.body.includes("tutor_announcement_delete")) {
               req.alias = "ajaxRequest"
           }
@@ -65,13 +65,17 @@ describe("Tutor Admin Announcements", () => {
   })
 
 
-  it("should be able to search any course", () => {
+  it("should be able to search any announcement", () => {
     const searchInputSelector = "#tutor-backend-filter-search";
-    const searchQuery = "test";
+    const searchQuery = "Important Announcement";
     const courseLinkSelector = ".td-course.tutor-color-black.tutor-fs-6.tutor-fw-medium";
+    const submitButtonSelector=""
+    const submitWithButton=false;
 
-    cy.search(searchInputSelector, searchQuery, courseLinkSelector);
+    cy.search(searchInputSelector, searchQuery, courseLinkSelector,submitButtonSelector,submitWithButton);
+
   });
+
 
   it("should perform bulk action on all annoucements", () => {
     cy.get("#tutor-bulk-checkbox-all").click();

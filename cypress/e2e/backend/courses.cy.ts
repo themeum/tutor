@@ -21,8 +21,10 @@ describe("Tutor Admin Courses", () => {
     const searchInputSelector = "#tutor-backend-filter-search";
     const searchQuery = "js";
     const courseLinkSelector = ".tutor-table-link";
+    const submitButtonSelector=""
+    const submitWithButton=false;
 
-    cy.search(searchInputSelector, searchQuery, courseLinkSelector);
+    cy.search(searchInputSelector, searchQuery, courseLinkSelector,submitButtonSelector,submitWithButton);
   });
 
   it("should be able to duplicate a course successfully", () => {

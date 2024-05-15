@@ -7,7 +7,7 @@ declare namespace Cypress {
     loginAsStudent(): Chainable<JQuery<HTMLElement>>
     performBulkAction(option: string): Chainable<JQuery<HTMLElement>>
     performBulkActionOnSelectedCourses(option: string): Chainable<JQuery<HTMLElement>>
-    search(searchInputSelector: string, searchQuery: string, courseLinkSelector: string): Chainable<JQuery<HTMLElement>>
+    search(searchInputSelector: string, searchQuery: string, courseLinkSelector: string,submitButtonSelector:string, submitWithButton: boolean): Chainable<JQuery<HTMLElement>>
   }
 }
 
@@ -86,8 +86,12 @@ Cypress.Commands.add("performBulkAction", (option) => {
     });
 });
 
-Cypress.Commands.add("search", (searchInputSelector, searchQuery, courseLinkSelector) => {
+Cypress.Commands.add("search", (searchInputSelector, searchQuery, courseLinkSelector,submitButtonSelector,submitWithButton = false) => {
   cy.get(searchInputSelector).type(`${searchQuery}{enter}`);
+  if (submitWithButton) {
+    cy.get(searchInputSelector).clear()
+    cy.get(submitButtonSelector).click();
+  } 
   let count = 0;
   cy.get(courseLinkSelector)
     .eq(0)
@@ -110,8 +114,3 @@ Cypress.Commands.add("search", (searchInputSelector, searchQuery, courseLinkSele
       }
     });
 });
-
-
-
-
-

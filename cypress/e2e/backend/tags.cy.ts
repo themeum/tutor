@@ -44,6 +44,16 @@ describe("Tutor Admin Tags", () => {
         cy.get(".wp-list-table tbody .column-description").should("include.text", "Blockchain tag for courses updated")
     })
 
+    it("should be able to search any tag", () => {
+        const searchInputSelector = "#tag-search-input";
+        const searchQuery = "Blockchain";
+        const courseLinkSelector = ".row-title";
+        const submitButtonSelector="#search-submit";
+        const submitWithButton=true;
+    
+        cy.search(searchInputSelector, searchQuery, courseLinkSelector,submitButtonSelector,submitWithButton);
+      });
+
     it ("should delete a tag successfully", () => {
         cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`, (req) => {
             if (req.body.includes("delete-tag")) {
