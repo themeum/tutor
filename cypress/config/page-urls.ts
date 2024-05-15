@@ -37,4 +37,5 @@ export const backendUrls = {
     QUESTION_AND_ANSWER: 'wp-admin/admin.php?page=question_answer',
     QUIZ_ATTEMPTS: 'wp-admin/admin.php?page=tutor_quiz_attempts',
     ASSIGNMENTS: 'wp-admin/admin.php?page=tutor-assignments',
+    COURSES:"wp-admin/admin.php?page=tutor"
 }

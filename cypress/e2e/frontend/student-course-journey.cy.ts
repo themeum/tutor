@@ -7,7 +7,9 @@ describe('Tutor Student Course Journey', () => {
     cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest")
 
     // Click on enroll course button
-    cy.get(".tutor-enroll-course-button").click()
+    // cy.get(".tutor-enroll-course-button").click()
+    cy.get('.tutor-btn.tutor-btn-primary.tutor-btn-block').click();
+
 
     // Login as a student
     cy.getByInputName("log").type(Cypress.env("student_username"))
@@ -45,7 +47,9 @@ describe('Tutor Student Course Journey', () => {
 
     cy.url().should("include", Cypress.env("single_course_slug"))
 
+    
     cy.get(".tutor-course-topic-item").each(($topic, index, $list) => {
+      
       const isLastItem = index === $list.length - 1;
 
       cy.url().then(($url) => {
@@ -53,6 +57,7 @@ describe('Tutor Student Course Journey', () => {
           cy.get("body").then(($body) => {
             if ($body.text().includes("Mark as Complete")) {
               cy.get("button").contains("Mark as Complete").click()
+              cy.wait(1000); 
               cy.get("body").should("not.contain", "Mark as Complete")
             }
           })
@@ -154,6 +159,7 @@ describe('Tutor Student Course Journey', () => {
           })
         }
 
+
         if ($url.includes("/zoom-lessons")) {
           cy.get("body").then(($body) => {
             if ($body.text().includes("Mark as Complete")) {
@@ -186,6 +192,7 @@ describe('Tutor Student Course Journey', () => {
         cy.wait("@ajaxRequest").then((interception) => {
           expect(interception.response.body.success).to.equal(true);
         });
+        
         cy.wait(5000)
       }
     })

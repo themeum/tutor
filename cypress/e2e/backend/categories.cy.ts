@@ -33,6 +33,7 @@ describe("Tutor Admin Categories", () => {
         })
     })
 
+
     it ("should update a category successfully", () => {
         cy.get(".wp-list-table tbody tr").eq(0).find("a").contains("Edit").click({ force: true })
         cy.get("textarea[name=description]").clear().type("Blockchain category for courses updated")
@@ -57,4 +58,36 @@ describe("Tutor Admin Categories", () => {
             expect(interception.response.body).to.equal("1");
         });
     })
+
+    it("should be able to search any category", () => {
+        const searchQuery = "test"
+        // cy.get('#tag-search-input').type(`${searchQuery}{enter}`);
+        // cy.get("#search-submit").click()
+
+    cy.get('#tag-search-input')
+      .type(searchQuery)
+      .then(($input) => {
+        if (Cypress.dom.isFocused($input)) {
+          cy.get('#tag-search-input').type('{enter}');
+        } else {
+          cy.get("#search-submit").click();
+        }
+      });
+  
+        let count = 0;
+  
+        cy.get('.row-title').each(($link) => {
+            const courseName = $link.text().trim();
+  
+            if (courseName.includes(searchQuery)) {
+                count++;
+                expect(courseName.toLowerCase()).to.include(searchQuery.toLowerCase());
+                cy.get('.tutor-table-link').eq(0).its('length').then((totalVisibleCourses) => {
+                    expect(count).to.eq(totalVisibleCourses);
+                });
+            }
+        });
+    });
+
+    
 })

@@ -24,7 +24,7 @@ describe("Tutor Student registration", () => {
 
     it('should display errors for incomplete form submission', () => {
         cy.get("button[name=tutor_register_student_btn]").contains("Register").click()
-        cy.location("pathname").should("eq", "/student-registration/")
+        cy.location("pathname").should("include", "/student-registration/")
     });
 
     it('should display an error for mismatched password confirmation', () => {

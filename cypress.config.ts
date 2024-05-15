@@ -9,13 +9,13 @@ export default defineConfig({
   viewportHeight: 900,
   viewportWidth: 1400,
   env: {
-    base_url: 'http://localhost:10003',
-    single_course_slug: 'the-complete-javascript-course-2019-build-real-projects',
-    student_username: 'student',
-    student_password: 'test123',
-    admin_username: 'admin',
-    admin_password: 'admin',
-    instructor_username: 'instructor',
-    instructor_password: 'test123',
+    base_url: 'http://localhost:8888/wordpress-tutor',
+    single_course_slug: 'intro-to-javascript-for-beginners',
+    student_username: 'tutor',//student
+    student_password: 'zgB#X9hN4kkqJLd67T',//test123
+    admin_username: 'tutor',
+    admin_password: 'zgB#X9hN4kkqJLd67T',
+    instructor_username: 'tutor',
+    instructor_password: 'zgB#X9hN4kkqJLd67T',
   },
 });
