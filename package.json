@@ -11,7 +11,7 @@
 		"build-dev": "webpack --mode=development && npm run gulp-build-dev",
 		"gulp-build": "npm run rm-lang && _GULP_ENV='build' gulp build",
 		"gulp-build-dev": "npm run rm-lang && gulp build",
-		"css-watch": "gulp watch",
+		"css-watch": "gulp",
 		"js-watch": "webpack --watch --mode=development",
 		"docz-build": "docz build",
 		"docz-init": "docz build && node doczcp.js",
