@@ -357,14 +357,15 @@ class Course_List {
 	public static function tutor_course_delete() {
 		tutor_utils()->checking_nonce();
 
+		$user_id   = get_current_user_id();
+		$course_id = Input::post( 'id', 0, Input::TYPE_INT );
+
 		// Check if user is privileged.
-		$roles = array( User::ADMIN, User::INSTRUCTOR );
-		if ( ! User::has_any_role( $roles ) ) {
+		if ( ! tutor_utils()->can_user_edit_course( $user_id, $course_id ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$id     = Input::post( 'id', 0, Input::TYPE_INT );
-		$delete = CourseModel::delete_course( $id );
+		$delete = CourseModel::delete_course( $course_id );
 
 		if ( $delete ) {
 			wp_send_json_success( __( 'Course has been deleted ', 'tutor' ) );
