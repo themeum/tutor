@@ -25,6 +25,7 @@ declare namespace Cypress {
       apiFieldOption: string,
       dataValueAttribute: string
     ): Chainable<JQuery<HTMLElement>>;
+    toggle(inputName:string,fieldOption:string): Chainable<JQuery<HTMLElement>>
   }
 }
 
@@ -198,3 +199,46 @@ Cypress.Commands.add(
     });
   }
 );
+
+Cypress.Commands.add("toggle",(inputName,idName)=>{
+        cy.intercept(
+        "POST",
+        `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`,
+        (req) => {
+          if (req.body.includes("tutor_option_save")) {
+            req.alias = "ajaxRequest";
+          }
+        }
+      );
+      // Click the toggle button to enable marketplace
+      cy.get(
+        `${idName} > .tutor-option-field-input > .tutor-form-toggle > .tutor-form-toggle-control`
+      ).click();
+      cy.contains("Save Changes").click({ force: true });
+
+       cy.getByInputName(`${inputName}`).should(
+        "have.attr",
+        "value",
+        "on"
+      );
+
+        cy.wait("@ajaxRequest").then((interception) => {
+        expect(interception.response.body.success).to.equal(true);
+
+        // Click the toggle button to disable marketplace
+        cy.get(
+          `${idName} > .tutor-option-field-input > .tutor-form-toggle > .tutor-form-toggle-control`
+        ).click();
+        cy.contains("Save Changes").click({ force: true });
+
+        cy.getByInputName(`${inputName}`).should(
+          "have.attr",
+          "value",
+          "off"
+        );
+
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.response.body.success).to.equal(true);
+        });
+      });
+})
