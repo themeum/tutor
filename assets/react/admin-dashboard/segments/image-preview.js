@@ -103,11 +103,11 @@ const getImageAsDataURL = (file, imgSrc) => {
 const insInput = document.querySelector('input[type=number]#revenue-instructor');
 const adminInput = document.querySelector('input[type=number]#revenue-admin');
 const revenueInputs = document.querySelectorAll('.revenue-percentage input[type=number]');
-const save_button = document.getElementById('save_tutor_option');
+const saveButton = document.getElementById('save_tutor_option');
 const { __, _x, _n, _nx } = wp.i18n;
 const disableSaveButton = (time) => {
 	setTimeout(() => {
-		if (save_button) save_button.disabled = true;
+		if (saveButton) saveButton.disabled = true;
 	}, time)
 }
 
