@@ -2,6 +2,48 @@ window.jQuery(document).ready($ => {
     const { __ } = window.wp.i18n;
 
     let quiz_options = _tutorobject.quiz_options
+    let interactions = new Map();
+
+    const tutorDraggables = document.querySelectorAll('.tutor-draggable > div');
+    const tutorDropzone = document.querySelectorAll('.tutor-dropzone');
+
+    if (tutorDraggables) {
+        tutorDraggables.forEach((quizBox) => {
+            quizBox.addEventListener('touchend', handleTouch)
+        })
+    }
+
+    if (tutorDropzone) {
+        tutorDropzone.forEach((quizAnswerBox) => {
+            quizAnswerBox.addEventListener('drop', handleDrop)
+        })
+    }
+
+    $('.tutor-sortable-list').on('sortchange', handleSort);
+
+    function handleSort(e, ui) {
+        let question_id = parseInt($(this).closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
+
+        console.log(question_id);
+        if (!interactions.get(question_id)) {
+            interactions.set(question_id, true);
+        }
+    }
+
+    function handleDrop(e) {
+        let question_id = parseInt($(this).closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
+        if (!interactions.get(question_id)) {
+            interactions.set(question_id, true);
+        }
+
+    }
+
+    function handleTouch(e) {
+        let question_id = parseInt($(this).closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
+        if (!interactions.get(question_id)) {
+            interactions.set(question_id, true);
+        }
+    }
 
     function get_reveal_wait_time() {
         return Number(_tutorobject.quiz_answer_display_time) || 2000;
@@ -44,7 +86,7 @@ window.jQuery(document).ready($ => {
             // Loop through every single checked radio/checkbox input field
             $checkedInputs.each(function () {
                 var $input = $(this);
-                var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
+                var isTrue = quiz_answers.indexOf($input.val()) > -1; // $input.attr('data-is-correct') == '1';
 
                 // And check if the answer is correct
                 if (!isTrue) {
@@ -59,7 +101,7 @@ window.jQuery(document).ready($ => {
 
                 // Reveal mode feature is currently available for only radio and checkbox type answers
                 if ($type === 'radio' || $type === 'checkbox') {
-                    var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
+                    var isTrue = quiz_answers.indexOf($input.val()) > -1; // $input.attr('data-is-correct') == '1';
                     var checked = $input.is(':checked');
 
                     if (isTrue) {
@@ -76,7 +118,7 @@ window.jQuery(document).ready($ => {
                     }
 
                     if (isTrue && !checked) {
-                        $input.attr('disabled','disabled');
+                        $input.attr('disabled', 'disabled');
                         validatedTrue = false;
                         goNext = true;
                     }
@@ -97,12 +139,18 @@ window.jQuery(document).ready($ => {
      * @since v.1.6.1
      */
 
-    function tutor_quiz_validation($question_wrap) {
+    function tutor_quiz_validation($question_wrap, $question_id) {
         var validated = true;
 
         var $required_answer_wrap = $question_wrap.find('.quiz-answer-required');
 
         if ($required_answer_wrap.length) {
+
+            let question_id = parseInt($question_wrap.attr('id').match(/\d+/)[0], 10);
+            let interaction_times = interactions.get(question_id);
+            let tutor_draggable = $question_wrap.find('.tutor-draggable');
+            let is_sortable = $question_wrap.find('.ui-sortable');
+
             /**
              * Radio field validation
              *
@@ -140,6 +188,17 @@ window.jQuery(document).ready($ => {
                     validated = false;
                 }
             }
+            //Validate draggable quiz questions
+            if (interaction_times === undefined && tutor_draggable.length) {
+                $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('The answer for this question is required', 'tutor')}</p>`);
+                validated = false;
+            }
+
+            //Validate sortable quiz questions
+            if (interaction_times === undefined && is_sortable.length) {
+                $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('The answer for this question is required', 'tutor')}</p>`);
+                validated = false;
+            }
         }
 
         return validated;
@@ -151,7 +210,7 @@ window.jQuery(document).ready($ => {
      * @since v.1.0.0
      */
     $('.tutor-quiz-next-btn-all').prop('disabled', false);
-    $('.quiz-attempt-single-question input').filter('[type="radio"], [type="checkbox"]').change(function(){
+    $('.quiz-attempt-single-question input').filter('[type="radio"], [type="checkbox"]').change(function () {
         $('.tutor-quiz-next-btn-all').prop('disabled', false);
     });
 
@@ -169,6 +228,9 @@ window.jQuery(document).ready($ => {
 
         var $that = $(this);
         var $question_wrap = $that.closest('.quiz-attempt-single-question');
+        var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
+        var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
+
         /**
          * Validating required answer
          * @type {jQuery}
@@ -197,9 +259,7 @@ window.jQuery(document).ready($ => {
             }
         }
 
-        var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
-        var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
-        console.log(`next question ${next_question_id}`);
+
         if (next_question_id) {
             var $nextQuestion = $(next_question_id);
             if ($nextQuestion && $nextQuestion.length) {
@@ -236,7 +296,7 @@ window.jQuery(document).ready($ => {
         }
     });
 
-    $(document).on('click', '.tutor-quiz-question-paginate-item', function(e) {
+    $(document).on('click', '.tutor-quiz-question-paginate-item', function (e) {
         e.preventDefault();
         var $that = $(this);
         var $question = $($that.attr('href'));
@@ -251,13 +311,13 @@ window.jQuery(document).ready($ => {
     /**
      * Limit Short Answer Question Type
      */
-    $(document).on('keyup', 'textarea.question_type_short_answer, textarea.question_type_open_ended', function(e) {
+    $(document).on('keyup', 'textarea.question_type_short_answer, textarea.question_type_open_ended', function (e) {
         var $that = $(this);
         var value = $that.val();
         var limit = $that.hasClass('question_type_short_answer')
             ? _tutorobject.quiz_options.short_answer_characters_limit
             : _tutorobject.quiz_options.open_ended_answer_characters_limit;
-            
+
         var remaining = limit - value.length;
 
         if (remaining < 1) {
@@ -275,16 +335,16 @@ window.jQuery(document).ready($ => {
         e.preventDefault();
 
         let $questions_wrap = $('.quiz-attempt-single-question');
-        let quizSubmitBtn   = document.querySelector('.tutor-quiz-submit-btn');
-        let submitted_form  = $(e.target)
+        let quizSubmitBtn = document.querySelector('.tutor-quiz-submit-btn');
+        let submitted_form = $(e.target)
 
-        let quiz_validated      = true;
-        let feedback_validated  = true;
+        let quiz_validated = true;
+        let feedback_validated = true;
 
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
-                quiz_validated      = tutor_quiz_validation($(question));
-                feedback_validated  = feedback_response($(question));
+                quiz_validated = tutor_quiz_validation($(question));
+                feedback_validated = feedback_response($(question));
             });
         }
 
@@ -303,7 +363,7 @@ window.jQuery(document).ready($ => {
         }
     });
 
-    $(".tutor-quiz-submit-btn").click(function(event) {
+    $(".tutor-quiz-submit-btn").click(function (event) {
         event.preventDefault();
 
         if (is_reveal_mode()) {
@@ -316,9 +376,9 @@ window.jQuery(document).ready($ => {
 
                 });
             }
-            
+
             $(this).attr('disabled', 'disabled')
-            
+
             setTimeout(() => {
                 $(this).addClass('is-loading');
                 $("#tutor-answering-quiz").submit();
@@ -335,7 +395,7 @@ window.jQuery(document).ready($ => {
     var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     // @todo: check the button class functionality
 
-    $(document).on('click', 'a',  function(event) {
+    $(document).on('click', 'a', function (event) {
         const href = $(this).attr('href');
         // if user click on ask question then return, no warning.
         if (event.target.classList.contains('sidebar-ask-new-qna-btn') || event.target.classList.contains('tutor-quiz-question-paginate-item')) {
@@ -355,23 +415,23 @@ window.jQuery(document).ready($ => {
                         title: __('Yes, leave quiz', 'tutor'),
                         id: 'leave',
                         class: 'tutor-btn tutor-btn-outline-primary',
-                        callback: function() {
+                        callback: function () {
                             var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
                             $.ajax({
                                 url: window._tutorobject.ajaxurl,
                                 type: 'POST',
                                 data: formData,
-                                beforeSend: function() {
+                                beforeSend: function () {
                                     document.querySelector('#tutor-popup-leave').innerHTML = __('Leaving...', 'tutor');
                                 },
-                                success: function(response) {
+                                success: function (response) {
                                     if (response.success) {
                                         location.href = href;
                                     } else {
                                         alert(__('Something went wrong', 'tutor'));
                                     }
                                 },
-                                error: function() {
+                                error: function () {
                                     alert(__('Something went wrong', 'tutor'));
                                     popup.find('[data-tutor-modal-close]').click();
                                 },
@@ -382,7 +442,7 @@ window.jQuery(document).ready($ => {
                         title: __('Stay here', 'tutor'),
                         id: 'reset',
                         class: 'tutor-btn tutor-btn-primary tutor-ml-20',
-                        callback: function() {
+                        callback: function () {
                             popup.find('[data-tutor-modal-close]').click();
                         },
                     },
@@ -394,7 +454,7 @@ window.jQuery(document).ready($ => {
     });
 
     /* Disable start quiz button  */
-    $('body').on('submit', 'form#tutor-start-quiz', function() {
+    $('body').on('submit', 'form#tutor-start-quiz', function () {
         $(this)
             .find('button')
             .prop('disabled', true);
