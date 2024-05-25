@@ -72,4 +72,5 @@ describe("Tutor Admin Courses", () => {
       cy.performBulkAction(option);
     });
   });
+  
 });

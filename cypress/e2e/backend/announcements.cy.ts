@@ -64,7 +64,6 @@ describe("Tutor Admin Announcements", () => {
       })
   })
 
-
   it("should be able to search any announcement", () => {
     const searchInputSelector = "#tutor-backend-filter-search";
     const searchQuery = "Important Announcement";
@@ -75,7 +74,6 @@ describe("Tutor Admin Announcements", () => {
     cy.search(searchInputSelector, searchQuery, courseLinkSelector,submitButtonSelector,submitWithButton);
 
   });
-
 
   it("should perform bulk action on all annoucements", () => {
     cy.get("#tutor-bulk-checkbox-all").click();
@@ -92,6 +90,5 @@ describe("Tutor Admin Announcements", () => {
 
     cy.contains("No Data Available in this Section");
   });
-
 
 });

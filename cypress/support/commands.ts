@@ -1,3 +1,5 @@
+// import 'cypress-iframe';
+
 declare namespace Cypress {
   interface Chainable {
     getByInputName(dataTestAttribute: string): Chainable<JQuery<HTMLElement>>;
@@ -25,7 +27,8 @@ declare namespace Cypress {
       apiFieldOption: string,
       dataValueAttribute: string
     ): Chainable<JQuery<HTMLElement>>;
-    toggle(inputName:string,fieldOption:string): Chainable<JQuery<HTMLElement>>
+    toggle(inputName: string, fieldId: string): Chainable<JQuery<HTMLElement>>;
+    isEnrolled(): Chainable<JQuery<HTMLElement>>;
   }
 }
 
@@ -133,14 +136,11 @@ Cypress.Commands.add(
       .eq(0)
       .each(($link) => {
         const courseName = $link.text().trim();
-
         if (courseName.includes(searchQuery)) {
           count++;
-
           expect(courseName.toLowerCase()).to.include(
             searchQuery.toLowerCase()
           );
-
           cy.get(courseLinkSelector)
             .eq(0)
             .its("length")
@@ -164,12 +164,10 @@ Cypress.Commands.add(
         }
       }
     );
-
     // Click to open the dropdown
     cy.get(
       `${commonSelector} > .tutor-option-field-input > .tutor-js-form-select`
     ).click();
-
     // Get the list of options
     cy.get(
       `${commonSelector} > .tutor-option-field-input > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > .tutor-form-select-option`
@@ -189,10 +187,7 @@ Cypress.Commands.add(
 
             const requestBody = interception.request.body;
             const params = new URLSearchParams(requestBody);
-
             const tutorOptionId = params.get(`${apiFieldOption}`);
-
-            // Check if the selected option matches the value in the intercepted request
             expect(tutorOptionId).to.equal(dataValue);
           });
         });
@@ -200,45 +195,45 @@ Cypress.Commands.add(
   }
 );
 
-Cypress.Commands.add("toggle",(inputName,idName)=>{
-        cy.intercept(
-        "POST",
-        `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`,
-        (req) => {
-          if (req.body.includes("tutor_option_save")) {
-            req.alias = "ajaxRequest";
-          }
-        }
-      );
-      // Click the toggle button to enable marketplace
-      cy.get(
-        `${idName} > .tutor-option-field-input > .tutor-form-toggle > .tutor-form-toggle-control`
-      ).click();
+Cypress.Commands.add("toggle", (inputName, fieldId) => {
+  cy.intercept(
+    "POST",
+    `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`,
+    (req) => {
+      if (req.body.includes("tutor_option_save")) {
+        req.alias = "ajaxRequest";
+      }
+    }
+  );
+  cy.get(
+    `${fieldId} > .tutor-option-field-input > .tutor-form-toggle > .tutor-form-toggle-control`
+  ).click();
+
+  cy.getByInputName(`${inputName}`)
+    .invoke("attr", "value")
+    .then((dataValue) => {
       cy.contains("Save Changes").click({ force: true });
 
-       cy.getByInputName(`${inputName}`).should(
-        "have.attr",
-        "value",
-        "on"
-      );
-
-        cy.wait("@ajaxRequest").then((interception) => {
+      cy.wait("@ajaxRequest").then((interception) => {
         expect(interception.response.body.success).to.equal(true);
 
-        // Click the toggle button to disable marketplace
-        cy.get(
-          `${idName} > .tutor-option-field-input > .tutor-form-toggle > .tutor-form-toggle-control`
-        ).click();
-        cy.contains("Save Changes").click({ force: true });
+        const requestBody = interception.request.body;
+        const params = new URLSearchParams(requestBody);
+        const tutorOptionId = params.get(`${inputName}`);
 
-        cy.getByInputName(`${inputName}`).should(
-          "have.attr",
-          "value",
-          "off"
-        );
-
-        cy.wait("@ajaxRequest").then((interception) => {
-          expect(interception.response.body.success).to.equal(true);
-        });
+        console.log("if", tutorOptionId);
+        console.log("inp", dataValue);
+        expect(tutorOptionId).to.equal(dataValue);
       });
-})
+    });
+});
+
+Cypress.Commands.add('isEnrolled', () => {
+  cy.get('body').then(($body) => {
+    if ($body.find("button[name='add-to-cart']").length > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  });
+});

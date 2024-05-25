@@ -7,9 +7,8 @@ describe('Tutor Student Course Journey', () => {
     cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest")
 
     // Click on enroll course button
-    // cy.get(".tutor-enroll-course-button").click()
-    cy.get('.tutor-btn.tutor-btn-primary.tutor-btn-block').click();
-
+    cy.get('.tutor-enrol-course-form > .tutor-btn').click()
+    // cy.get('.tutor-btn.tutor-btn-primary.tutor-btn-block').click();
 
     // Login as a student
     cy.getByInputName("log").type(Cypress.env("student_username"))
@@ -47,7 +46,6 @@ describe('Tutor Student Course Journey', () => {
 
     cy.url().should("include", Cypress.env("single_course_slug"))
 
-    
     cy.get(".tutor-course-topic-item").each(($topic, index, $list) => {
       
       const isLastItem = index === $list.length - 1;
@@ -158,7 +156,6 @@ describe('Tutor Student Course Journey', () => {
             }
           })
         }
-
 
         if ($url.includes("/zoom-lessons")) {
           cy.get("body").then(($body) => {

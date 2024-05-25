@@ -40,7 +40,6 @@ describe("Tutor Dashboard Settings", () => {
         cy.loginAsStudent()
     })
 
-
     it ("should select a withdraw method", () => {
         cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
         
@@ -60,7 +59,6 @@ describe("Tutor Dashboard Settings", () => {
         });
     })
     
-// fails api
     it ("should update social profiles", () => {
 
         cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
