@@ -170,12 +170,10 @@ $incorrect = 0;
 if ( is_array( $answers ) && count( $answers ) > 0 ) {
 	foreach ( $answers as $answer ) {
 		if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-			$correct++;
+			++$correct;
+		} elseif ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
 		} else {
-			if ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
-			} else {
-				$incorrect++;
-			}
+			++$incorrect;
 		}
 	}
 }
@@ -296,7 +294,7 @@ endif;
 								$has_pending = count(
 									array_filter(
 										$ans_array,
-										function( $ans ) {
+										function ( $ans ) {
 											return null === $ans->is_correct;
 										}
 									)
@@ -356,7 +354,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 				<?php
 					$answer_i = 0;
 				foreach ( $answers as $answer ) {
-					$answer_i++;
+					++$answer_i;
 					$question_type = tutor_utils()->get_question_types( $answer->question_type );
 
 					$answer_status = 'wrong';
@@ -505,8 +503,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
 														foreach ( $provided_answer_order as $provided_answer_order ) {
 														}
-
-														if ( $provided_answer_order->answer_title ) {
+														if ( ! is_array( $provided_answer_order ) ) {
 															$original_saved_answer->answer_view_format = 'text_image';
 															$original_saved_answer->answer_title       = $provided_answer_order->answer_title;
 															$answers[]                                 = $original_saved_answer;
@@ -733,7 +730,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 								<?php endforeach; ?>
 							</tr>
 							
-							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status )?>
+							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status ); ?>
 
 							<?php
 				}
