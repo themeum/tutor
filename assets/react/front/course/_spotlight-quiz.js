@@ -107,6 +107,7 @@ window.jQuery(document).ready($ => {
      *
      * Validate whether draggable required question has all answers
      * 
+     * @since 2.8.0
      * @param {Object} required_answer_wrap 
      * @returns {boolean}
      */
@@ -334,13 +335,13 @@ window.jQuery(document).ready($ => {
         let quizSubmitBtn   = document.querySelector('.tutor-quiz-submit-btn');
         let submitted_form  = $(e.target)
 
-        let quiz_validated     = true;
-        let feedback_validated = true;
+        let quiz_validated    = true;
+        let feedback_validated= true;
 
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
-                quiz_validated     = tutor_quiz_validation($(question), quiz_validated);
-                feedback_validated = feedback_response($(question));
+                quiz_validated    = tutor_quiz_validation($(question), quiz_validated);
+                feedback_validated= feedback_response($(question));
             });
         }
         //If auto submit option is enabled after time expire submit current progress
@@ -394,7 +395,7 @@ window.jQuery(document).ready($ => {
     var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     // @todo: check the button class functionality
 
-    $(document).on('click', 'a', function(event) {
+    $(document).on('click', 'a',function(event) {
         const href = $(this).attr('href');
         // if user click on ask question then return, no warning.
         if (event.target.classList.contains('sidebar-ask-new-qna-btn') || event.target.classList.contains('tutor-quiz-question-paginate-item')) {
