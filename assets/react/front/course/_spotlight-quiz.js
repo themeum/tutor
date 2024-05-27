@@ -24,7 +24,6 @@ window.jQuery(document).ready($ => {
     function handleSort(e, ui) {
         let question_id = parseInt($(this).closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
 
-        console.log(question_id);
         if (!interactions.get(question_id)) {
             interactions.set(question_id, true);
         }
@@ -134,13 +133,36 @@ window.jQuery(document).ready($ => {
     }
 
     /**
+     *
+     * Validate whether draggable required question has all answers
+     * 
+     * @param {Object} required_answer_wrap 
+     * @returns {boolean}
+     */
+    function draggableValidation(required_answer_wrap) {
+        let validation = true;
+        let element = required_answer_wrap[0];
+        let dropzones = $(element).find('.tutor-dropzone');
+        if (dropzones.length > 0) {
+            Object.values(dropzones).forEach((dropzone) => {
+                if (dropzone instanceof Element && dropzone.classList.contains('tutor-dropzone')) {
+                    if ($(dropzone).has('input').length === 0) {
+                        validation = false;
+                    }
+                }
+            })
+        }
+        return validation;
+    }
+
+    /**
      * Quiz Validation Helper
      *
      * @since v.1.6.1
      */
 
-    function tutor_quiz_validation($question_wrap, $question_id) {
-        var validated = true;
+    function tutor_quiz_validation($question_wrap, validated) {
+        // var validated = true;
 
         var $required_answer_wrap = $question_wrap.find('.quiz-answer-required');
 
@@ -189,9 +211,13 @@ window.jQuery(document).ready($ => {
                 }
             }
             //Validate draggable quiz questions
-            if (interaction_times === undefined && tutor_draggable.length) {
-                $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('The answer for this question is required', 'tutor')}</p>`);
-                validated = false;
+            if (tutor_draggable.length) {
+                let isAnswered = draggableValidation($required_answer_wrap);
+                if (!isAnswered) {
+                    $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('The answer for this question is required', 'tutor')}</p>`);
+                    validated = false;
+                }
+
             }
 
             //Validate sortable quiz questions
@@ -237,8 +263,8 @@ window.jQuery(document).ready($ => {
          *
          * @since v.1.6.1
          */
-
-        var validated = tutor_quiz_validation($question_wrap);
+        var validated = true;
+        validated = tutor_quiz_validation($question_wrap, validated);
         if (!validated) {
             return;
         }
@@ -343,9 +369,14 @@ window.jQuery(document).ready($ => {
 
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
-                quiz_validated = tutor_quiz_validation($(question));
+                quiz_validated = tutor_quiz_validation($(question), quiz_validated);
                 feedback_validated = feedback_response($(question));
             });
+        }
+        //If auto submit option is enabled after time expire submit current progress
+        if (_tutorobject.quiz_options.quiz_when_time_expires === 'auto_submit' && $('#tutor-quiz-time-update').hasClass('tutor-quiz-time-expired')) {
+            quiz_validated = true;
+            feedback_validated = true;
         }
 
         if (quiz_validated && feedback_validated) {
