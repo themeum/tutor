@@ -299,9 +299,9 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 
-		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">'.
+		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">' .
 		__( 'Fully Booked', 'tutor' )
-		.'</div></div>';
+		. '</div></div>';
 	}
 
 	/**
@@ -446,7 +446,7 @@ class Course extends Tutor_Base {
 			if ( is_array( $order ) && count( $order ) ) {
 				$i = 0;
 				foreach ( $order as $topic ) {
-					$i++;
+					++$i;
 					$wpdb->update(
 						$wpdb->posts,
 						array( 'menu_order' => $i ),
@@ -529,37 +529,29 @@ class Course extends Tutor_Base {
 			if ( ! empty( $_POST['course_benefits'] ) ) {
 				$course_benefits = Input::post( 'course_benefits', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_benefits', $course_benefits );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_benefits' );
-				}
 			}
 
 			if ( ! empty( $_POST['course_requirements'] ) ) {
 				$requirements = Input::post( 'course_requirements', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_requirements', $requirements );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_requirements' );
-				}
 			}
 
 			if ( ! empty( $_POST['course_target_audience'] ) ) {
 				$target_audience = Input::post( 'course_target_audience', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_target_audience', $target_audience );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_target_audience' );
-				}
 			}
 
 			if ( ! empty( $_POST['course_material_includes'] ) ) {
 				$material_includes = Input::post( 'course_material_includes', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_material_includes', $material_includes );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_material_includes' );
-				}
 			}
 			//phpcs:enable WordPress.Security.NonceVerification.Missing
 		}
@@ -583,10 +575,8 @@ class Course extends Tutor_Base {
 			$video_source = tutor_utils()->array_get( 'source', $video );
 			if ( -1 !== $video_source ) {
 				update_post_meta( $post_ID, '_video', $video );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_video' );
-				}
 			}
 		}
 
@@ -1309,7 +1299,7 @@ class Course extends Tutor_Base {
 
 		return array_filter(
 			$items,
-			function( $item ) use ( $is_enrolled ) {
+			function ( $item ) use ( $is_enrolled ) {
 				if ( isset( $item['require_enrolment'] ) && $item['require_enrolment'] ) {
 					return $is_enrolled;
 				}
@@ -1332,6 +1322,27 @@ class Course extends Tutor_Base {
 		add_action( 'woocommerce_product_query', array( $this, 'filter_woocommerce_product_query' ) );
 		add_filter( 'edd_downloads_query', array( $this, 'filter_edd_downloads_query' ), 10, 2 );
 		add_action( 'pre_get_posts', array( $this, 'filter_archive_meta_query' ), 1 );
+	}
+
+
+
+	public function handle_products_post( $posts, $query ) {
+		$filtered_post = array();
+		if ( 'product_query' !== $query->get( 'wc_query' ) ) {
+			return $posts;
+		}
+
+		foreach ( $posts as $post ) {
+
+			$is_course = tutor_utils()->product_belongs_with_course( $post->ID );
+			if ( ! isset( $is_course ) ) {
+				array_push( $filtered_post, $post );
+			}
+		}
+
+		$query->found_posts = count( $filtered_post );
+
+		return $filtered_post;
 	}
 
 	/**
@@ -1357,6 +1368,7 @@ class Course extends Tutor_Base {
 	 * @return \WP_Query
 	 */
 	public function filter_woocommerce_product_query( $wp_query ) {
+		add_action( 'the_posts', array( $this, 'handle_products_post' ), 10, 2 );
 		$wp_query->set( 'meta_query', array( $this->tutor_product_meta_query() ) );
 		return $wp_query;
 	}
@@ -1466,10 +1478,10 @@ class Course extends Tutor_Base {
 				$given_mark = get_comment_meta( $submitted_assignment->comment_ID, 'assignment_mark', true );
 
 				if ( $given_mark < $pass_mark ) {
-					$required_assignment_pass++;
+					++$required_assignment_pass;
 				}
 			} else {
-				$required_assignment_pass++;
+				++$required_assignment_pass;
 			}
 		}
 
@@ -1485,11 +1497,11 @@ class Course extends Tutor_Base {
 					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
 
 					if ( $earned_percentage < $passing_grade ) {
-						$required_quiz_pass++;
+						++$required_quiz_pass;
 						$is_quiz_pass = false;
 					}
 				} else {
-					$required_quiz_pass++;
+					++$required_quiz_pass;
 					$is_quiz_pass = false;
 				}
 			}
@@ -1718,5 +1730,4 @@ class Course extends Tutor_Base {
 
 		return $product_obj->save();
 	}
-
 }
