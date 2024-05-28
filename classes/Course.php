@@ -1325,7 +1325,15 @@ class Course extends Tutor_Base {
 	}
 
 
-
+	/**
+	 * Filters courses if they are woocommerce product
+	 *
+	 * @since 2.8.0
+	 *
+	 * @param array  $posts the list of post to filter
+	 *
+	 * @param object $query the query object.
+	 */
 	public function handle_products_post( $posts, $query ) {
 		$filtered_post = array();
 		if ( 'product_query' !== $query->get( 'wc_query' ) ) {
