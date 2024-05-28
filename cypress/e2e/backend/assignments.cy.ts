@@ -8,6 +8,7 @@ describe("Tutor Admin Assignments", () => {
     })
 
     it("should evaluate an assignment", () => {
+
         cy.get("body").then(($body) => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
@@ -21,7 +22,10 @@ describe("Tutor Admin Assignments", () => {
 
                     cy.url().should("include", "view_assignment")
                     cy.url().then((url) => {
-                        cy.intercept("POST", url).as("ajaxRequest")
+                        cy.intercept(
+                            "POST",
+                            `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`
+                          ).as("ajaxRequest");
                         
                         cy.get("input[type=number]").clear().type("5")
                         cy.get("textarea").clear().type("The assignment displays a strong grasp of the subject, excellent organization, and effective communication, reflecting high-level critical thinking.")
@@ -37,4 +41,14 @@ describe("Tutor Admin Assignments", () => {
             }
         })
     })
+
+    it("should be able to search any announcement", () => {
+        const searchInputSelector = "#tutor-backend-filter-search";
+        const searchQuery = "assignment";
+        const courseLinkSelector = "td>a";
+        const submitButtonSelector=""
+        const submitWithButton=false;
+    
+        cy.search(searchInputSelector, searchQuery, courseLinkSelector,submitButtonSelector,submitWithButton);
+      });
 })

@@ -1,4 +1,3 @@
-// import 'cypress-iframe';
 
 declare namespace Cypress {
   interface Chainable {
@@ -29,6 +28,17 @@ declare namespace Cypress {
     ): Chainable<JQuery<HTMLElement>>;
     toggle(inputName: string, fieldId: string): Chainable<JQuery<HTMLElement>>;
     isEnrolled(): Chainable<JQuery<HTMLElement>>;
+    completePayment():Chainable<JQuery<HTMLElement>>;
+    handleCourseStart(): Chainable<JQuery<HTMLElement>>;
+    completeLesson(): Chainable<JQuery<HTMLElement>>;
+    handleNextButton(): Chainable<JQuery<HTMLElement>>;
+    handleAssignment(): Chainable<JQuery<HTMLElement>>;
+    handleQuiz(): Chainable<JQuery<HTMLElement>>;
+    handleMeetingLesson(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
+    handleZoomLesson(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
+    completeCourse(): Chainable<JQuery<HTMLElement>>;
+    submitCourseReview(): Chainable<JQuery<HTMLElement>>;
+    viewCertificate(): Chainable<JQuery<HTMLElement>>;
   }
 }
 
@@ -221,8 +231,6 @@ Cypress.Commands.add("toggle", (inputName, fieldId) => {
         const params = new URLSearchParams(requestBody);
         const tutorOptionId = params.get(`${inputName}`);
 
-        console.log("if", tutorOptionId);
-        console.log("inp", dataValue);
         expect(tutorOptionId).to.equal(dataValue);
       });
     });
@@ -230,10 +238,190 @@ Cypress.Commands.add("toggle", (inputName, fieldId) => {
 
 Cypress.Commands.add('isEnrolled', () => {
   cy.get('body').then(($body) => {
-    if ($body.find("button[name='add-to-cart']").length > 0) {
+    if ($body.find("button[name='add-to-cart']").length > 0 ) {
       return false;
-    } else {
+    }
+    if($body.find("a.tutor-woocommerce-view-cart").length > 0){
+      return false;
+    }
+    else {
       return true;
     }
   });
 });
+
+Cypress.Commands.add('completePayment', () => {
+  // Card number
+  cy.frameLoaded("#wc-stripe-card-number-element > .__PrivateStripeElement > iframe");
+  cy.iframe("#wc-stripe-card-number-element > .__PrivateStripeElement > iframe").within(() => {
+    cy.get('input[name="cardnumber"]').type("4242424242424242");
+  });
+
+  // Expiry date
+  cy.frameLoaded("#wc-stripe-card-expiry-element > .__PrivateStripeElement > iframe");
+  cy.iframe("#wc-stripe-card-expiry-element > .__PrivateStripeElement > iframe").within(() => {
+    cy.get('input[name="exp-date"]').type("12/25");
+  });
+
+  // CVC
+  cy.frameLoaded("#wc-stripe-card-code-element > .__PrivateStripeElement > iframe");
+  cy.iframe("#wc-stripe-card-code-element > .__PrivateStripeElement > iframe").within(() => {
+    cy.get('input[name="cvc"]').type("123");
+  });
+});
+
+Cypress.Commands.add('handleCourseStart', () => {
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("Retake This Course")) {
+      cy.get("button").contains("Retake This Course").click();
+      cy.get("button").contains("Reset Data").click();
+      cy.wait("@ajaxRequest").then((interception) => {
+        expect(interception.response.body.success).to.equal(true);
+      });
+    } else if ($body.text().includes("Continue Learning")) {
+      cy.get("a").contains("Continue Learning").click();
+    } else if ($body.text().includes("Start Learning")) {
+      cy.get("a").contains("Start Learning").click();
+    }
+  });
+});
+
+Cypress.Commands.add('completeLesson', () => {
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("Mark as Complete")) {
+      cy.get("button").contains("Mark as Complete").click();
+      cy.wait(1000);
+      cy.get("body").should("not.contain", "Mark as Complete");
+    }
+  });
+});
+
+Cypress.Commands.add('handleNextButton', () => {
+  cy.get("a").contains("Next").parent().then(($element) => {
+    if ($element.attr("disabled")) {
+      cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click();
+    } else {
+      cy.wrap($element).click();
+    }
+  });
+});
+
+Cypress.Commands.add('handleAssignment', () => {
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("You have missed the submission deadline. Please contact the instructor for more information.")) {
+      cy.get("a").contains("Skip To Next").click();
+    }
+    if ($body.text().includes("Start Assignment Submit")) {
+      cy.get("#tutor_assignment_start_btn").click();
+      cy.wait("@ajaxRequest").then((interception) => {
+        expect(interception.response.statusCode).to.equal(200);
+      });
+      cy.url().should("include", "assignments");
+      cy.setTinyMceContent(".tutor-assignment-text-area", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+      cy.get("#tutor_assignment_submit_btn").click();
+      cy.get("body").should("contain", "Your Assignment");
+    }
+    if ($body.text().includes("Submit Assignment")) {
+      cy.setTinyMceContent(".tutor-assignment-text-area", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+      cy.get("#tutor_assignment_submit_btn").click();
+      cy.get("body").should("contain", "Your Assignment");
+    }
+    if ($body.text().includes("Continue Lesson")) {
+      cy.get("a").contains("Continue Lesson").click();
+    }
+  });
+});
+
+Cypress.Commands.add('handleQuiz', () => {
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("Start Quiz")) {
+      cy.get("button[name=start_quiz_btn]").click();
+    }
+    if ($body.text().includes("Start Quiz") || $body.text().includes("Submit & Next") || $body.text().includes("Submit Quiz")) {
+      cy.get(".quiz-attempt-single-question").each(($question, $index) => {
+        if ($question.find("textarea").length) {
+          cy.wrap($question).find("textarea").type("Sample answer for text area question.");
+        }
+        if ($question.find("input[type=text]").length) {
+          cy.wrap($question).find("input[type=text]").each(($input) => {
+            cy.wrap($input).type("Sample text input answer.");
+          });
+        }
+        if ($question.find("#tutor-quiz-single-multiple-choice").length) {
+          cy.wrap($question).find(".tutor-quiz-answer-single").eq(0).find("input").click();
+        }
+        cy.get("button.tutor-quiz-next-btn-all").eq($index).click();
+      });
+    }
+    cy.get("a").contains("Next").parent().then(($element) => {
+      if ($element.attr("disabled")) {
+        cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click();
+      } else {
+        cy.wrap($element).click();
+      }
+    });
+  });
+});
+
+Cypress.Commands.add('handleMeetingLesson', (isLastItem) => {
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("Mark as Complete")) {
+      cy.get("button").contains("Mark as Complete").click();
+    } else {
+      if (isLastItem) {
+        cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click();
+      } else {
+        cy.get(".tutor-course-topic-item").children("a").click({ force: true });
+      }
+    }
+  });
+});
+
+Cypress.Commands.add('handleZoomLesson', (isLastItem) => {
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("Mark as Complete")) {
+      cy.get("button").contains("Mark as Complete").click();
+    } else {
+      if (isLastItem) {
+        cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click();
+      } else {
+        cy.get(".tutor-course-topic-item").children("a").click({ force: true });
+      }
+    }
+  });
+});
+
+Cypress.Commands.add('completeCourse', () => {
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("Complete Course")) {
+      cy.get("button").contains("Complete Course").click();
+    }
+  });
+});
+
+Cypress.Commands.add('submitCourseReview', () => {
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("How would you rate this course?")) {
+      cy.get(".tutor-modal-content .tutor-icon-star-line").eq(4).click();
+      cy.get(".tutor-modal-content textarea[name=review]").type(
+        "Just completed a course on TutorLMS, and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze. The interactive quizzes and discussions keep you engaged, and the user-friendly interface enhances the overall experience. The flexibility to learn at your own pace is a game-changer for busy professionals."
+      );
+      cy.get(".tutor-modal-content button.tutor_submit_review_btn").click();
+      cy.wait("@ajaxRequest").then((interception) => {
+        expect(interception.response.body.success).to.equal(true);
+      });
+      cy.wait(5000);
+    }
+  });
+});
+
+Cypress.Commands.add('viewCertificate', () => {
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("View Certificate")) {
+      cy.get("a").contains("View Certificate").click();
+      cy.url().should("include", "tutor-certificate");
+      cy.wait(5000);
+    }
+  });
+});
+
