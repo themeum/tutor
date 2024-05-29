@@ -16,10 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 use TUTOR\Input;
 use TUTOR\Instructors_List;
 
+$allowed_subpage = array();
+
 if ( Input::has( 'sub_page' ) ) {
 	$sub_page = Input::get( 'sub_page' );
-	include_once tutor()->path . "views/pages/{$sub_page}.php";
-	return;
+	if ( in_array( $sub_page, $allowed, true ) ) {
+		include_once tutor()->path . "views/pages/{$sub_page}.php";
+		return;
+	}
 }
 
 $instructors = new Instructors_List();
