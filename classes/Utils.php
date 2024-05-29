@@ -1944,6 +1944,7 @@ class Utils {
 
 		$course_query = '';
 		if ( '' !== $course_id ) {
+			$course_id    = (int) $course_id;
 			$course_query = "AND posts.post_parent = {$course_id}";
 		}
 
