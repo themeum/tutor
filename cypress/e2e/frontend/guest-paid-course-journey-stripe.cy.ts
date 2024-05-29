@@ -1,9 +1,9 @@
 describe("Tutor Student Paid Course Journey", () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.env("base_url")}/${Cypress.env("cod_course_slug")}/`);
+    cy.visit(`${Cypress.env("base_url")}/${Cypress.env("paid_course_slug")}/`);
   });
 
-  it("should be able to enroll in a paid course for cash on delivery, view cart, and manage items", () => {
+  it("should be able to enroll in a paid course, view cart, and manage items as a guest", () => {
     cy.intercept(
       "POST",
       `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`
@@ -14,26 +14,6 @@ describe("Tutor Student Paid Course Journey", () => {
         cy.get("button[name='add-to-cart']")
           .contains("Add to cart")
           .click();
-        // Login as a student
-        cy.getByInputName("log").type(Cypress.env("student_username"));
-        cy.getByInputName("pwd").type(Cypress.env("student_password"));
-        cy.get("#tutor-login-form button")
-          .contains("Sign In")
-          .click();
-        cy.url().should("include", Cypress.env("cod_course_slug"));
-
-        cy.get("body").then(($body) => {
-          if ($body.find("button[name='add-to-cart']").length > 0) {
-            cy.get("button[name='add-to-cart']")
-              .contains("Add to cart")
-              .click();
-          }
-          if ($body.find(".tutor-woocommerce-view-cart").length > 0) {
-            cy.get(".tutor-woocommerce-view-cart")
-              .contains("View Cart")
-              .click();
-          }
-        });
 
         cy.url().then((url) => {
           if (url.includes("/cart")) {
@@ -41,8 +21,7 @@ describe("Tutor Student Paid Course Journey", () => {
               .contains("Proceed to Checkout")
               .click();
             cy.url().should("include", "/checkout");
-            // fill up the checkout form
-            // contact info
+
             cy.get("#billing_first_name")
               .clear()
               .type("Guest");
@@ -86,6 +65,7 @@ describe("Tutor Student Paid Course Journey", () => {
             cy.get("#billing_phone")
               .clear()
               .type("+8801555123456");
+
             const randomEmail = `guest${Math.random()
               .toString()
               .slice(2)}@gmail.com`;
@@ -94,54 +74,60 @@ describe("Tutor Student Paid Course Journey", () => {
               .clear()
               .type(randomEmail);
 
-            cy.contains("Cash on delivery").click();
+            cy.get("#payment_method_stripe").click();
 
-            cy.get("body").then(($body) => {
-              if ($body.find(".tutor-icon-times").length > 0) {
-                cy.get(".tutor-icon-times").click();
-              }
+            // card number
+            cy.frameLoaded(
+              "#stripe-card-element > .__PrivateStripeElement > iframe"
+            );
+
+            cy.iframe(
+              "#stripe-card-element > .__PrivateStripeElement > iframe"
+            ).within(() => {
+              cy.get('input[name="cardnumber"]').type("4242424242424242");
             });
 
-            cy.contains("Place order").click();
-
-            cy.url().should("include", "/order-received");
-
-            //   redirect to admin dashboard
-            cy.visit(
-              `${Cypress.env("base_url")}/wp-admin/admin.php?page=wc-orders`
+            // card expiry date
+            cy.frameLoaded(
+              "#stripe-exp-element > .__PrivateStripeElement > iframe"
             );
 
-            cy.get("input[name='id[]']")
+            cy.iframe(
+              "#stripe-exp-element > .__PrivateStripeElement > iframe"
+            ).within(() => {
+              cy.get('input[name="exp-date"]').type("12/25");
+            });
+
+            // cvv
+            cy.frameLoaded(
+              "#stripe-cvc-element > .__PrivateStripeElement > iframe"
+            );
+
+            cy.iframe(
+              "#stripe-cvc-element > .__PrivateStripeElement > iframe"
+            ).within(() => {
+              cy.get('input[name="cvc"]').type("123");
+            });
+
+            cy.get("#place_order").click();
+
+            cy.wait("@ajaxRequest", { timeout: 20000 }).then((interception) => {
+              expect(interception.response.body.success).to.equal(true);
+            });
+
+            cy.url().should("include", "/enrolled-courses");
+
+            cy.get(".tutor-course-name")
               .eq(0)
-              .invoke("attr", "value")
-              .then((value) => {
-                const selector = `#cb-select-${value}`;
-
-                cy.get(selector)
-                  .should("be.visible")
-                  .check();
-              });
-
-            cy.get("#bulk-action-selector-top")
-              .select("Change status to completed")
-              .should("have.value", "mark_completed");
-
-            cy.get("#doaction")
-              .contains("Apply")
               .click();
-
-            // redirect to course
-            cy.visit(
-              `${Cypress.env("base_url")}/courses/${Cypress.env(
-                "cod_course_slug"
-              )}/}`
-            );
           }
         });
       }
     });
 
     cy.handleCourseStart();
+
+    cy.url().should("include", Cypress.env("paid_course_slug"));
 
     cy.isEnrolled().then((isEnrolled) => {
       if (isEnrolled) {

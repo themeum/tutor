@@ -79,4 +79,31 @@ describe("Tutor Admin Question and Answers", () => {
             }
         })
     })
+
+    it("should be able to search any q&a", () => {
+        const searchInputSelector = "#tutor-backend-filter-search";
+        const searchQuery = "test";
+        const courseLinkSelector = ".tutor-qna-content.tutor-fs-6.tutor-fw-bold.tutor-color-black>p";
+        const submitButtonSelector=""
+        const submitWithButton=false;
+    
+        cy.search(searchInputSelector, searchQuery, courseLinkSelector,submitButtonSelector,submitWithButton);
+    
+      });
+    
+      it("should perform bulk action on all q&a", () => {
+        cy.get("#tutor-bulk-checkbox-all").click();
+        cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
+        cy.get(
+          ".tutor-mr-12 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis"
+        )
+          .contains("Delete Permanently")
+          .click();
+        cy.get("#tutor-admin-bulk-action-btn").click();
+        cy.get("#tutor-confirm-bulk-action")
+          .contains("Yes, I'am Sure")
+          .click();
+    
+        cy.contains("No Data Available in this Section");
+      });
 })

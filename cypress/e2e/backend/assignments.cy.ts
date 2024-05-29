@@ -42,7 +42,7 @@ describe("Tutor Admin Assignments", () => {
         })
     })
 
-    it("should be able to search any announcement", () => {
+    it("should be able to search any assignement", () => {
         const searchInputSelector = "#tutor-backend-filter-search";
         const searchQuery = "assignment";
         const courseLinkSelector = "td>a";

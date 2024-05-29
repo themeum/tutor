@@ -13,7 +13,7 @@ export default defineConfig({
     base_url: 'http://localhost:8888/wordpress-tutor',
     single_course_slug: 'intro-to-javascript-for-beginners-2',
     paid_course_slug:'intro-to-paid-course-2',
-    cod_course_slug:'intro-to-cod-course-2-3',
+    cod_course_slug:'intro-to-cod-course-2-3-2',
     student_username: 'tutor',
     student_password: 'zgB#X9hN4kkqJLd67T',
     admin_username: 'tutor',
