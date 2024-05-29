@@ -1326,34 +1326,6 @@ class Course extends Tutor_Base {
 
 
 	/**
-	 * Filters courses if they are woocommerce product
-	 *
-	 * @since 2.8.0
-	 *
-	 * @param array  $posts the list of post to filter
-	 *
-	 * @param object $query the query object.
-	 */
-	public function handle_products_post( $posts, $query ) {
-		$filtered_post = array();
-		if ( 'product_query' !== $query->get( 'wc_query' ) ) {
-			return $posts;
-		}
-
-		foreach ( $posts as $post ) {
-
-			$is_course = tutor_utils()->product_belongs_with_course( $post->ID );
-			if ( ! isset( $is_course ) ) {
-				array_push( $filtered_post, $post );
-			}
-		}
-
-		$query->found_posts = count( $filtered_post );
-
-		return $filtered_post;
-	}
-
-	/**
 	 * Tutor product meta query
 	 *
 	 * @since 1.4.9
@@ -1376,9 +1348,30 @@ class Course extends Tutor_Base {
 	 * @return \WP_Query
 	 */
 	public function filter_woocommerce_product_query( $wp_query ) {
-		add_action( 'the_posts', array( $this, 'handle_products_post' ), 10, 2 );
-		$wp_query->set( 'meta_query', array( $this->tutor_product_meta_query() ) );
+		$product_ids = $this->get_connected_wc_product_ids();
+		$wp_query->set( 'post__not_in', $product_ids );
 		return $wp_query;
+	}
+
+	public function get_connected_wc_product_ids() {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT DISTINCT pm.meta_value product_id
+				FROM {$wpdb->posts} p
+				INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID
+				AND pm.meta_key = '_tutor_course_product_id'
+				WHERE post_type IN( 'courses','course-bundle' )"
+			)
+		);
+
+		$ids = array();
+		if ( is_array( $results ) && count( $results ) ) {
+			$ids = array_column( $results, 'product_id' );
+		}
+
+		return $ids;
 	}
 
 	/**
