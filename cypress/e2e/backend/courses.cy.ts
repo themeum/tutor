@@ -7,13 +7,16 @@ describe("Tutor Admin Courses", () => {
     cy.url().should("include", backendUrls.COURSES);
   });
 
+  it("should filter by category",()=>{
+    cy.filterByCategory()
+  })
+
   it("should show warning when no course is selected", () => {
     cy.get(".tutor-form-select-label").then(() => {
       cy.get("#tutor-admin-bulk-action-btn")
         .contains("Apply")
         .click();
     });
-
     cy.contains("Nothing was selected for bulk action.");
   });
 
@@ -21,10 +24,15 @@ describe("Tutor Admin Courses", () => {
     const searchInputSelector = "#tutor-backend-filter-search";
     const searchQuery = "js";
     const courseLinkSelector = ".tutor-table-link";
-    const submitButtonSelector=""
-    const submitWithButton=false;
-
-    cy.search(searchInputSelector, searchQuery, courseLinkSelector,submitButtonSelector,submitWithButton);
+    const submitButtonSelector = "";
+    const submitWithButton = false;
+    cy.search(
+      searchInputSelector,
+      searchQuery,
+      courseLinkSelector,
+      submitButtonSelector,
+      submitWithButton
+    );
   });
 
   it("should be able to duplicate a course successfully", () => {
@@ -65,9 +73,15 @@ describe("Tutor Admin Courses", () => {
       });
   });
 
+  it("should perform bulk actions on selected course", () => {
+    const options = ["publish", "pending", "draft", "trash"];
+    options.forEach((option) => {
+      cy.performBulkActionOnSelectedElement(option);
+    });
+  });
+
   it("should be able to perform bulk actions on all courses", () => {
     const options = ["publish", "pending", "draft", "trash"];
-
     options.forEach((option) => {
       cy.performBulkAction(option);
     });

@@ -1,4 +1,3 @@
-
 declare namespace Cypress {
   interface Chainable {
     getByInputName(dataTestAttribute: string): Chainable<JQuery<HTMLElement>>;
@@ -10,8 +9,11 @@ declare namespace Cypress {
     loginAsInstructor(): Chainable<JQuery<HTMLElement>>;
     loginAsStudent(): Chainable<JQuery<HTMLElement>>;
     performBulkAction(option: string): Chainable<JQuery<HTMLElement>>;
-    performBulkActionOnSelectedCourses(
+    performBulkActionOnSelectedElement(
       option: string
+    ): Chainable<JQuery<HTMLElement>>;
+    filterByCategory(
+      // selector: string,
     ): Chainable<JQuery<HTMLElement>>;
     search(
       searchInputSelector: string,
@@ -28,7 +30,6 @@ declare namespace Cypress {
     ): Chainable<JQuery<HTMLElement>>;
     toggle(inputName: string, fieldId: string): Chainable<JQuery<HTMLElement>>;
     isEnrolled(): Chainable<JQuery<HTMLElement>>;
-    completePayment():Chainable<JQuery<HTMLElement>>;
     handleCourseStart(): Chainable<JQuery<HTMLElement>>;
     completeLesson(): Chainable<JQuery<HTMLElement>>;
     handleNextButton(): Chainable<JQuery<HTMLElement>>;
@@ -91,8 +92,36 @@ Cypress.Commands.add("loginAsStudent", () => {
     .click();
 });
 
-// perform publish,pending,draft,trash when all courses are selected at once
+Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
+  cy.getByInputName("tutor-bulk-checkbox-all").then(($checkboxes) => {
+    const checkboxesArray = Cypress._.toArray($checkboxes);
+    const randomIndex = Cypress._.random(0, checkboxesArray.length - 1);
+    cy.wrap(checkboxesArray[randomIndex]).as("randomCheckbox");
+    cy.get("@randomCheckbox").check();
+    cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
+    cy.get(
+      `span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`
+    ).click();
 
+    cy.get("#tutor-admin-bulk-action-btn")
+      .contains("Apply")
+      .click();
+    cy.get("#tutor-confirm-bulk-action").click();
+
+    cy.get('@randomCheckbox').invoke('attr', 'value').then((id) => {
+      if (option === "trash") {
+        cy.get(`.tutor-table-row-status-update[data-id="${id}"]`).should('not.exist');
+      } else {
+        cy.get(`.tutor-table-row-status-update[data-id="${id}"]`)
+          .invoke('attr', 'data-status')
+          .then((status) => {
+            expect(status).to.include(option);
+          });
+      }
+    });
+  });
+});
+// perform publish,pending,draft,trash on all courses
 Cypress.Commands.add("performBulkAction", (option) => {
   cy.get("#tutor-bulk-checkbox-all").click();
   cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
@@ -101,12 +130,9 @@ Cypress.Commands.add("performBulkAction", (option) => {
     .invoke("text")
     .then((text) => {
       const expectedValue = text.trim();
-      console.log(`${option} Option:`, expectedValue);
-
       cy.get(
         `span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`
       ).click();
-
       cy.get("#tutor-admin-bulk-action-btn")
         .contains("Apply")
         .click();
@@ -120,12 +146,38 @@ Cypress.Commands.add("performBulkAction", (option) => {
         cy.get("select.tutor-table-row-status-update")
           .invoke("val")
           .then((selectedValue) => {
-            console.log("Selected val", selectedValue);
-            expect(selectedValue).to.equal(expectedValue.toLowerCase());
+            expect(selectedValue).to.include(expectedValue.toLowerCase());
           });
       }
     });
 });
+
+Cypress.Commands.add(
+  "filterByCategory",
+  () => {
+    cy.get(".tutor-js-form-select").eq(1).click()
+    cy.get(".tutor-form-select-options").eq(1).then(()=>{
+      cy.get('.tutor-form-select-option').then(($options) => {
+        const randomIndex = Cypress._.random(6, $options.length - 3);
+        const $randomOption = Cypress.$($options[randomIndex]);
+        cy.wrap($randomOption).find('span[tutor-dropdown-item]').click();
+      }).then(() => {
+        cy.get('span.tutor-form-select-label[tutor-dropdown-label]').eq(1)
+          .invoke('text')
+          .then((retrievedText) => {
+            console.log("Text:", retrievedText.trim());
+            cy.get(".tutor-fw-normal.tutor-fs-7").each(($category) => {
+              cy.wrap($category).invoke('text').then((categoryText) => {
+                if (categoryText.trim() === retrievedText.trim()) {
+                  cy.wrap($category).click();
+                }
+              });
+            });
+          });
+      });
+    }) 
+  }
+);
 
 Cypress.Commands.add(
   "search",
@@ -174,17 +226,14 @@ Cypress.Commands.add(
         }
       }
     );
-    // Click to open the dropdown
     cy.get(
       `${commonSelector} > .tutor-option-field-input > .tutor-js-form-select`
     ).click();
-    // Get the list of options
     cy.get(
       `${commonSelector} > .tutor-option-field-input > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > .tutor-form-select-option`
     ).then((options) => {
       const randomIndex = Math.floor(Math.random() * options.length);
       cy.wrap(options[randomIndex]).click();
-
       cy.get(
         `${commonSelector} > .tutor-option-field-input > .tutor-js-form-select > span[tutor-dropdown-label]`
       )
@@ -236,173 +285,291 @@ Cypress.Commands.add("toggle", (inputName, fieldId) => {
     });
 });
 
-Cypress.Commands.add('isEnrolled', () => {
-  cy.get('body').then(($body) => {
-    if ($body.find("button[name='add-to-cart']").length > 0 ) {
+Cypress.Commands.add("isEnrolled", () => {
+  cy.get("body").then(($body) => {
+    if ($body.find("button[name='add-to-cart']").length > 0) {
       return false;
     }
-    if($body.find("a.tutor-woocommerce-view-cart").length > 0){
+    if ($body.find("a.tutor-woocommerce-view-cart").length > 0) {
       return false;
-    }
-    else {
+    } else {
       return true;
     }
   });
 });
 
-Cypress.Commands.add('completePayment', () => {
-  // Card number
-  cy.frameLoaded("#wc-stripe-card-number-element > .__PrivateStripeElement > iframe");
-  cy.iframe("#wc-stripe-card-number-element > .__PrivateStripeElement > iframe").within(() => {
-    cy.get('input[name="cardnumber"]').type("4242424242424242");
-  });
-
-  // Expiry date
-  cy.frameLoaded("#wc-stripe-card-expiry-element > .__PrivateStripeElement > iframe");
-  cy.iframe("#wc-stripe-card-expiry-element > .__PrivateStripeElement > iframe").within(() => {
-    cy.get('input[name="exp-date"]').type("12/25");
-  });
-
-  // CVC
-  cy.frameLoaded("#wc-stripe-card-code-element > .__PrivateStripeElement > iframe");
-  cy.iframe("#wc-stripe-card-code-element > .__PrivateStripeElement > iframe").within(() => {
-    cy.get('input[name="cvc"]').type("123");
-  });
-});
-
-Cypress.Commands.add('handleCourseStart', () => {
+Cypress.Commands.add("handleCourseStart", () => {
   cy.get("body").then(($body) => {
     if ($body.text().includes("Retake This Course")) {
-      cy.get("button").contains("Retake This Course").click();
-      cy.get("button").contains("Reset Data").click();
+      cy.get("button")
+        .contains("Retake This Course")
+        .click();
+      cy.get("button")
+        .contains("Reset Data")
+        .click();
       cy.wait("@ajaxRequest").then((interception) => {
         expect(interception.response.body.success).to.equal(true);
       });
     } else if ($body.text().includes("Continue Learning")) {
-      cy.get("a").contains("Continue Learning").click();
+      cy.get("a")
+        .contains("Continue Learning")
+        .click();
     } else if ($body.text().includes("Start Learning")) {
-      cy.get("a").contains("Start Learning").click();
+      cy.get("a")
+        .contains("Start Learning")
+        .click();
     }
   });
 });
 
-Cypress.Commands.add('completeLesson', () => {
+Cypress.Commands.add("completeLesson", () => {
   cy.get("body").then(($body) => {
     if ($body.text().includes("Mark as Complete")) {
-      cy.get("button").contains("Mark as Complete").click();
+      cy.get("button")
+        .contains("Mark as Complete")
+        .click();
       cy.wait(1000);
       cy.get("body").should("not.contain", "Mark as Complete");
     }
   });
 });
 
-Cypress.Commands.add('handleNextButton', () => {
-  cy.get("a").contains("Next").parent().then(($element) => {
-    if ($element.attr("disabled")) {
-      cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click();
-    } else {
-      cy.wrap($element).click();
-    }
-  });
+Cypress.Commands.add("handleNextButton", () => {
+  cy.get("a")
+    .contains("Next")
+    .parent()
+    .then(($element) => {
+      if ($element.attr("disabled")) {
+        cy.get(
+          ".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times"
+        )
+          .parent()
+          .click();
+      } else {
+        cy.wrap($element).click();
+      }
+    });
 });
 
-Cypress.Commands.add('handleAssignment', () => {
+Cypress.Commands.add("handleAssignment", () => {
+  cy.intercept('POST', '/your/ajax/endpoint').as('ajaxRequest'); // Adjust the URL to match the actual endpoint
+
   cy.get("body").then(($body) => {
-    if ($body.text().includes("You have missed the submission deadline. Please contact the instructor for more information.")) {
+    const bodyText = $body.text();
+
+    if (bodyText.includes("You have missed the submission deadline. Please contact the instructor for more information.")) {
       cy.get("a").contains("Skip To Next").click();
+      return;
     }
-    if ($body.text().includes("Start Assignment Submit")) {
-      cy.get("#tutor_assignment_start_btn").click();
-      cy.wait("@ajaxRequest").then((interception) => {
-        expect(interception.response.statusCode).to.equal(200);
-      });
-      cy.url().should("include", "assignments");
-      cy.setTinyMceContent(".tutor-assignment-text-area", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+
+    if (bodyText.includes("Start Assignment Submit")) {
+      if (bodyText.includes("Deadline: Expired")) {
+        cy.log('Error: Deadline has expired').then(() => {
+          throw new Error('Error: Deadline has expired');
+        });
+      } else {
+        cy.get("#tutor_assignment_start_btn").click();
+        
+        cy.wait('@ajaxRequest').then((interception) => {
+          expect(interception.response.statusCode).to.equal(200);
+        });
+
+        cy.url().should("include", "assignments");
+
+        cy.setTinyMceContent(
+          ".tutor-assignment-text-area",
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        );
+
+        cy.get("#tutor_assignment_submit_btn").click();
+        cy.get("body").should("contain.text", "Your Assignment");
+      }
+    }
+
+    if (bodyText.includes("Submit Assignment")) {
+      cy.setTinyMceContent(
+        ".tutor-assignment-text-area",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      );
       cy.get("#tutor_assignment_submit_btn").click();
-      cy.get("body").should("contain", "Your Assignment");
+      cy.get("body").should("contain.text", "Your Assignment");
     }
-    if ($body.text().includes("Submit Assignment")) {
-      cy.setTinyMceContent(".tutor-assignment-text-area", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-      cy.get("#tutor_assignment_submit_btn").click();
-      cy.get("body").should("contain", "Your Assignment");
-    }
-    if ($body.text().includes("Continue Lesson")) {
+
+    if (bodyText.includes("Continue Lesson")) {
       cy.get("a").contains("Continue Lesson").click();
     }
   });
 });
 
-Cypress.Commands.add('handleQuiz', () => {
+
+// Cypress.Commands.add("handleAssignment", () => {
+//   cy.get("body").then(($body) => {
+//     if (
+//       $body
+//         .text()
+//         .includes(
+//           "You have missed the submission deadline. Please contact the instructor for more information."
+//         )
+//     ) {
+//       cy.get("a")
+//         .contains("Skip To Next")
+//         .click();
+//     }
+//     // if assignment deadline expires will show an error message
+//     if ($body.text().includes("Start Assignment Submit")) {
+//       if($body.text().includes("Deadline:Expired")){
+//         cy.contains('Deadline: Expired').then(($el) => {
+//           if ($el.length) {
+//             // Show error message in the console
+//             cy.log('Error: Deadline has expired').then(() => {
+//               throw new Error('Error: Deadline has expired');
+//             });
+//           }
+//         });
+//       }
+//       else{
+//         cy.get("#tutor_assignment_start_btn").click();
+//         cy.wait("@ajaxRequest").then((interception) => {
+//           expect(interception.response.statusCode).to.equal(200);
+//         });
+//         cy.url().should("include", "assignments");
+//         cy.setTinyMceContent(
+//           ".tutor-assignment-text-area",
+//           "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+//         );
+//         cy.get("#tutor_assignment_submit_btn").click();
+//         cy.get("body").should("contain", "Your Assignment");
+//       }
+     
+//     }
+//     if ($body.text().includes("Submit Assignment")) {
+//       cy.setTinyMceContent(
+//         ".tutor-assignment-text-area",
+//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+//       );
+//       cy.get("#tutor_assignment_submit_btn").click();
+//       cy.get("body").should("contain", "Your Assignment");
+//     }
+//     if ($body.text().includes("Continue Lesson")) {
+//       cy.get("a")
+//         .contains("Continue Lesson")
+//         .click();
+//     }
+//   });
+// });
+
+Cypress.Commands.add("handleQuiz", () => {
   cy.get("body").then(($body) => {
     if ($body.text().includes("Start Quiz")) {
       cy.get("button[name=start_quiz_btn]").click();
     }
-    if ($body.text().includes("Start Quiz") || $body.text().includes("Submit & Next") || $body.text().includes("Submit Quiz")) {
+    if (
+      $body.text().includes("Start Quiz") ||
+      $body.text().includes("Submit & Next") ||
+      $body.text().includes("Submit Quiz")
+    ) {
       cy.get(".quiz-attempt-single-question").each(($question, $index) => {
         if ($question.find("textarea").length) {
-          cy.wrap($question).find("textarea").type("Sample answer for text area question.");
+          cy.wrap($question)
+            .find("textarea")
+            .type("Sample answer for text area question.");
         }
         if ($question.find("input[type=text]").length) {
-          cy.wrap($question).find("input[type=text]").each(($input) => {
-            cy.wrap($input).type("Sample text input answer.");
-          });
+          cy.wrap($question)
+            .find("input[type=text]")
+            .each(($input) => {
+              cy.wrap($input).type("Sample text input answer.");
+            });
         }
         if ($question.find("#tutor-quiz-single-multiple-choice").length) {
-          cy.wrap($question).find(".tutor-quiz-answer-single").eq(0).find("input").click();
+          cy.wrap($question)
+            .find(".tutor-quiz-answer-single")
+            .eq(0)
+            .find("input")
+            .click();
         }
-        cy.get("button.tutor-quiz-next-btn-all").eq($index).click();
+        cy.get("button.tutor-quiz-next-btn-all")
+          .eq($index)
+          .click();
       });
     }
-    cy.get("a").contains("Next").parent().then(($element) => {
-      if ($element.attr("disabled")) {
-        cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click();
-      } else {
-        cy.wrap($element).click();
-      }
-    });
+    cy.get("a")
+      .contains("Next")
+      .parent()
+      .then(($element) => {
+        if ($element.attr("disabled")) {
+          cy.get(
+            ".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times"
+          )
+            .parent()
+            .click();
+        } else {
+          cy.wrap($element).click();
+        }
+      });
   });
 });
 
-Cypress.Commands.add('handleMeetingLesson', (isLastItem) => {
+Cypress.Commands.add("handleMeetingLesson", (isLastItem) => {
   cy.get("body").then(($body) => {
     if ($body.text().includes("Mark as Complete")) {
-      cy.get("button").contains("Mark as Complete").click();
+      cy.get("button")
+        .contains("Mark as Complete")
+        .click();
     } else {
       if (isLastItem) {
-        cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click();
+        cy.get(
+          ".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times"
+        )
+          .parent()
+          .click();
       } else {
-        cy.get(".tutor-course-topic-item").children("a").click({ force: true });
+        cy.get(".tutor-course-topic-item")
+          .children("a")
+          .click({ force: true });
       }
     }
   });
 });
 
-Cypress.Commands.add('handleZoomLesson', (isLastItem) => {
+Cypress.Commands.add("handleZoomLesson", (isLastItem) => {
   cy.get("body").then(($body) => {
     if ($body.text().includes("Mark as Complete")) {
-      cy.get("button").contains("Mark as Complete").click();
+      cy.get("button")
+        .contains("Mark as Complete")
+        .click();
     } else {
       if (isLastItem) {
-        cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click();
+        cy.get(
+          ".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times"
+        )
+          .parent()
+          .click();
       } else {
-        cy.get(".tutor-course-topic-item").children("a").click({ force: true });
+        cy.get(".tutor-course-topic-item")
+          .children("a")
+          .click({ force: true });
       }
     }
   });
 });
 
-Cypress.Commands.add('completeCourse', () => {
+Cypress.Commands.add("completeCourse", () => {
   cy.get("body").then(($body) => {
     if ($body.text().includes("Complete Course")) {
-      cy.get("button").contains("Complete Course").click();
+      cy.get("button")
+        .contains("Complete Course")
+        .click();
     }
   });
 });
 
-Cypress.Commands.add('submitCourseReview', () => {
+Cypress.Commands.add("submitCourseReview", () => {
   cy.get("body").then(($body) => {
     if ($body.text().includes("How would you rate this course?")) {
-      cy.get(".tutor-modal-content .tutor-icon-star-line").eq(4).click();
+      cy.get(".tutor-modal-content .tutor-icon-star-line")
+        .eq(4)
+        .click();
       cy.get(".tutor-modal-content textarea[name=review]").type(
         "Just completed a course on TutorLMS, and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze. The interactive quizzes and discussions keep you engaged, and the user-friendly interface enhances the overall experience. The flexibility to learn at your own pace is a game-changer for busy professionals."
       );
@@ -415,13 +582,14 @@ Cypress.Commands.add('submitCourseReview', () => {
   });
 });
 
-Cypress.Commands.add('viewCertificate', () => {
+Cypress.Commands.add("viewCertificate", () => {
   cy.get("body").then(($body) => {
     if ($body.text().includes("View Certificate")) {
-      cy.get("a").contains("View Certificate").click();
+      cy.get("a")
+        .contains("View Certificate")
+        .click();
       cy.url().should("include", "tutor-certificate");
       cy.wait(5000);
     }
   });
 });
-

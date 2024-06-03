@@ -14,7 +14,7 @@ describe("Tutor Dashboard Quiz Attempts", () => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
             } else {
-                cy.get(".tutor-table-quiz-attempts a").contains("Review").eq(0).click()
+                cy.get(".tutor-table-quiz-attempts a").eq(0).click()
                 cy.window().scrollTo('bottom', { duration: 500, easing: 'linear' })
                 cy.setTinyMceContent(".tutor-instructor-feedback-wrap", "Nice work! You got it right. If not, don't worry—just a small tweak needed. Keep it up!")
                 cy.get(".quiz-attempt-answers-wrap button.tutor-instructor-feedback").click()

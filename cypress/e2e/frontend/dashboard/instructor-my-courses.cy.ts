@@ -30,11 +30,11 @@ describe("Tutor Dashboard My Courses", () => {
 
         cy.get(".tutor-nav").then(()=>{
             cy.get(".tutor-nav-item").eq(1).click().then(()=>{
-                cy.get(".tutor-btn.tutor-btn-ghost").eq(0).click()
+                cy.get(".tutor-nav-link").eq(0).click()
             })
         })
 
-        cy.get('.tutor-dashboard-builder-header-right > .tutor-iconic-btn').click()
+        cy.get('.tutor-dashboard-menu-item.tutor-dashboard-menu-index').contains("Dashboard").click()
         cy.url().should("include", frontendUrls.dashboard.DASHBOARD)
         cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.MY_COURSES}`)
     })

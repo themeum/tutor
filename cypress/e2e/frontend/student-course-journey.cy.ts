@@ -1,6 +1,6 @@
 describe('Tutor Student Course Journey', () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.env("base_url")}/${Cypress.env("single_course_slug")}/`)
+    cy.visit(`${Cypress.env("base_url")}/courses/${Cypress.env("single_course_slug")}/`)
   })
 
   it('should be able to enroll in a course and complete assignments', () => {

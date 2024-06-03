@@ -16,7 +16,7 @@ describe("Tutor Dashboard Student My Quiz Attempts", () => {
                     if ($quiz.text().includes("Details")) {
                         cy.wrap($quiz).find("a").contains("Details").click()
                         cy.url().should("include", "view_quiz_attempt_id")
-                        cy.get("a").contains("Back").click()
+                        cy.get('.tutor-quiz-attempt-details-wrapper > .tutor-btn').contains("Back").click()
                     }
                 })
             }

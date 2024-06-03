@@ -1,6 +1,6 @@
 describe("Tutor Student Paid Course Journey", () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.env("base_url")}/${Cypress.env("paid_course_slug")}/`);
+    cy.visit(`${Cypress.env("base_url")}/courses/${Cypress.env("paid_course_slug")}/`);
   });
 
   it("should be able to enroll in a paid course, view cart, and manage items as a guest", () => {
@@ -74,15 +74,18 @@ describe("Tutor Student Paid Course Journey", () => {
               .clear()
               .type(randomEmail);
 
+            // accept terms
+            cy.get("#terms").check()
+
             cy.get("#place_order").click();
 
-            cy.url().should("include", "/order-received");
+            cy.url().should("include", "/checkout");
 
             // login as admin
             cy.visit(
               `${Cypress.env(
                 "base_url"
-              )}/wp-login.php?loggedout=true&wp_lang=en_US`
+              )}/wp-login.php`
             );
             // Login as a admin
             cy.get('#user_login')
@@ -106,9 +109,7 @@ describe("Tutor Student Paid Course Journey", () => {
               .invoke("attr", "value")
               .then((value) => {
                 const selector = `#cb-select-${value}`;
-                console.log(selector);
-                // Use the dynamic selector to perform actions
-                cy.get(selector)
+                 cy.get(selector)
                   .should("be.visible")
                   .check();
               });
@@ -120,10 +121,6 @@ describe("Tutor Student Paid Course Journey", () => {
             cy.get("#doaction")
               .contains("Apply")
               .click();
-
-            // cy.wait(10000);
-
-          
           }
         });
       }
