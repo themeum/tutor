@@ -33,7 +33,7 @@ declare namespace Cypress {
     handleCourseStart(): Chainable<JQuery<HTMLElement>>;
     completeLesson(): Chainable<JQuery<HTMLElement>>;
     handleNextButton(): Chainable<JQuery<HTMLElement>>;
-    handleAssignment(): Chainable<JQuery<HTMLElement>>;
+    handleAssignment(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
     handleQuiz(): Chainable<JQuery<HTMLElement>>;
     handleMeetingLesson(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
     handleZoomLesson(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
@@ -351,39 +351,28 @@ Cypress.Commands.add("handleNextButton", () => {
     });
 });
 
-Cypress.Commands.add("handleAssignment", () => {
-  cy.intercept('POST', '/your/ajax/endpoint').as('ajaxRequest'); // Adjust the URL to match the actual endpoint
+Cypress.Commands.add("handleAssignment", (isLastItem) => {
 
   cy.get("body").then(($body) => {
     const bodyText = $body.text();
 
     if (bodyText.includes("You have missed the submission deadline. Please contact the instructor for more information.")) {
-      cy.get("a").contains("Skip To Next").click();
+      cy.get('.tutor-btn-ghost').contains("Skip To Next").click();
       return;
     }
 
     if (bodyText.includes("Start Assignment Submit")) {
-      if (bodyText.includes("Deadline: Expired")) {
-        cy.log('Error: Deadline has expired').then(() => {
-          throw new Error('Error: Deadline has expired');
-        });
-      } else {
-        cy.get("#tutor_assignment_start_btn").click();
-        
-        cy.wait('@ajaxRequest').then((interception) => {
-          expect(interception.response.statusCode).to.equal(200);
-        });
-
-        cy.url().should("include", "assignments");
-
-        cy.setTinyMceContent(
-          ".tutor-assignment-text-area",
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        );
-
-        cy.get("#tutor_assignment_submit_btn").click();
-        cy.get("body").should("contain.text", "Your Assignment");
-      }
+      cy.get("#tutor_assignment_start_btn").click(); 
+      cy.wait('@ajaxRequest').then((interception) => {
+        expect(interception.response.statusCode).to.equal(200);
+      });
+      cy.url().should("include", "assignments");
+      cy.setTinyMceContent(
+        ".tutor-assignment-text-area",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      );
+      cy.get("#tutor_assignment_submit_btn").click();
+      cy.get("body").should("contain.text", "Your Assignment");
     }
 
     if (bodyText.includes("Submit Assignment")) {
@@ -394,69 +383,16 @@ Cypress.Commands.add("handleAssignment", () => {
       cy.get("#tutor_assignment_submit_btn").click();
       cy.get("body").should("contain.text", "Your Assignment");
     }
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("Continue Lesson")) {
+        cy.get("a").contains("Continue Lesson").click()
+      } else if (isLastItem) {
+        cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click()
+      }
+    })
 
-    if (bodyText.includes("Continue Lesson")) {
-      cy.get("a").contains("Continue Lesson").click();
-    }
   });
 });
-
-
-// Cypress.Commands.add("handleAssignment", () => {
-//   cy.get("body").then(($body) => {
-//     if (
-//       $body
-//         .text()
-//         .includes(
-//           "You have missed the submission deadline. Please contact the instructor for more information."
-//         )
-//     ) {
-//       cy.get("a")
-//         .contains("Skip To Next")
-//         .click();
-//     }
-//     // if assignment deadline expires will show an error message
-//     if ($body.text().includes("Start Assignment Submit")) {
-//       if($body.text().includes("Deadline:Expired")){
-//         cy.contains('Deadline: Expired').then(($el) => {
-//           if ($el.length) {
-//             // Show error message in the console
-//             cy.log('Error: Deadline has expired').then(() => {
-//               throw new Error('Error: Deadline has expired');
-//             });
-//           }
-//         });
-//       }
-//       else{
-//         cy.get("#tutor_assignment_start_btn").click();
-//         cy.wait("@ajaxRequest").then((interception) => {
-//           expect(interception.response.statusCode).to.equal(200);
-//         });
-//         cy.url().should("include", "assignments");
-//         cy.setTinyMceContent(
-//           ".tutor-assignment-text-area",
-//           "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-//         );
-//         cy.get("#tutor_assignment_submit_btn").click();
-//         cy.get("body").should("contain", "Your Assignment");
-//       }
-     
-//     }
-//     if ($body.text().includes("Submit Assignment")) {
-//       cy.setTinyMceContent(
-//         ".tutor-assignment-text-area",
-//         "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-//       );
-//       cy.get("#tutor_assignment_submit_btn").click();
-//       cy.get("body").should("contain", "Your Assignment");
-//     }
-//     if ($body.text().includes("Continue Lesson")) {
-//       cy.get("a")
-//         .contains("Continue Lesson")
-//         .click();
-//     }
-//   });
-// });
 
 Cypress.Commands.add("handleQuiz", () => {
   cy.get("body").then(($body) => {

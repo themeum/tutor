@@ -46,10 +46,8 @@ describe('Tutor Student Course Journey', () => {
 
     cy.url().should("include", Cypress.env("single_course_slug"))
 
-    cy.get(".tutor-course-topic-item").each(($topic, index, $list) => {
-      
+    cy.get(".tutor-course-topic-item").each(($topic, index, $list) => {  
       const isLastItem = index === $list.length - 1;
-
       cy.url().then(($url) => {
         if ($url.includes("/lesson")) {
           cy.get("body").then(($body) => {
@@ -101,7 +99,8 @@ describe('Tutor Student Course Journey', () => {
           cy.get("body").then(($body) => {
             if ($body.text().includes("Continue Lesson")) {
               cy.get("a").contains("Continue Lesson").click()
-            } else if (isLastItem) {
+            }
+             else if (isLastItem) {
               cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click()
             }
           })

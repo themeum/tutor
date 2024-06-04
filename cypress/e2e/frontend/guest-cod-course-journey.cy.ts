@@ -147,7 +147,7 @@ describe("Tutor Student Paid Course Journey", () => {
             }
 
             if ($url.includes("/assignments")) {
-              cy.handleAssignment();
+              cy.handleAssignment(isLastItem);
             }
 
             if ($url.includes("/quizzes")) {

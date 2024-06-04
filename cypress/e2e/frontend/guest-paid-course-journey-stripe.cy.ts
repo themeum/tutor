@@ -109,9 +109,7 @@ describe("Tutor Student Paid Course Journey", () => {
               cy.get('input[name="cvc"]').type("123");
             });
 
-            // accept terms
             cy.get("#terms").check()
-
             cy.get("#place_order").click();
 
             cy.wait("@ajaxRequest", { timeout: 20000 }).then((interception) => {
@@ -144,7 +142,7 @@ describe("Tutor Student Paid Course Journey", () => {
             }
 
             if ($url.includes("/assignments")) {
-              cy.handleAssignment();
+              cy.handleAssignment(isLastItem);
             }
 
             if ($url.includes("/quizzes")) {

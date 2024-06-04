@@ -43,7 +43,7 @@ describe("Tutor Student Paid Course Journey", () => {
 
             cy.get("#billing_first_name")
               .clear()
-              .type("Guest");
+              .type("Student");
             cy.get("#billing_last_name")
               .clear()
               .type("Test");
@@ -85,7 +85,7 @@ describe("Tutor Student Paid Course Journey", () => {
               .clear()
               .type("+8801555123456");
 
-            const randomEmail = `guest${Math.random()
+            const randomEmail = `student${Math.random()
               .toString()
               .slice(2)}@gmail.com`;
 
@@ -138,12 +138,8 @@ describe("Tutor Student Paid Course Journey", () => {
             ).within(() => {
               cy.get('input[name="cvc"]').type("123");
             });
-            // jwt error
-            cy.get("body").then(($body) => {
-              if ($body.find(".tutor-icon-times").length > 0) {
-                cy.get(".tutor-icon-times").click();
-              }
-            });
+
+            cy.get("#terms").check()
 
             cy.get("#place_order").click();
 
@@ -177,7 +173,7 @@ describe("Tutor Student Paid Course Journey", () => {
             }
 
             if ($url.includes("/assignments")) {
-              cy.handleAssignment();
+              cy.handleAssignment(isLastItem);
             }
 
             if ($url.includes("/quizzes")) {
