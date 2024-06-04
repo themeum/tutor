@@ -107,7 +107,7 @@ window.jQuery(document).ready($ => {
      *
      * Validate whether draggable required question has all answers
      * 
-     * @since 2.8.0
+     * @since 2.7.2
      * @param {Object} required_answer_wrap 
      * @returns {boolean}
      */

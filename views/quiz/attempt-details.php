@@ -170,10 +170,10 @@ $incorrect = 0;
 if ( is_array( $answers ) && count( $answers ) > 0 ) {
 	foreach ( $answers as $answer ) {
 		if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-			++$correct;
+			$correct++;
 		} elseif ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
 		} else {
-			++$incorrect;
+			$incorrect++;
 		}
 	}
 }
@@ -354,7 +354,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 				<?php
 					$answer_i = 0;
 				foreach ( $answers as $answer ) {
-					++$answer_i;
+					$answer_i++;
 					$question_type = tutor_utils()->get_question_types( $answer->question_type );
 
 					$answer_status = 'wrong';

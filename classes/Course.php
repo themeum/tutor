@@ -446,7 +446,7 @@ class Course extends Tutor_Base {
 			if ( is_array( $order ) && count( $order ) ) {
 				$i = 0;
 				foreach ( $order as $topic ) {
-					++$i;
+					$i++;
 					$wpdb->update(
 						$wpdb->posts,
 						array( 'menu_order' => $i ),
@@ -1353,6 +1353,13 @@ class Course extends Tutor_Base {
 		return $wp_query;
 	}
 
+	/**
+	 * Get connected woocommerce product ids for course and course bundle
+	 *
+	 * @since 2.7.2
+	 *
+	 * @return array
+	 */
 	public function get_connected_wc_product_ids() {
 		global $wpdb;
 
@@ -1477,10 +1484,10 @@ class Course extends Tutor_Base {
 				$given_mark = get_comment_meta( $submitted_assignment->comment_ID, 'assignment_mark', true );
 
 				if ( $given_mark < $pass_mark ) {
-					++$required_assignment_pass;
+					$required_assignment_pass++;
 				}
 			} else {
-				++$required_assignment_pass;
+				$required_assignment_pass++;
 			}
 		}
 
@@ -1496,11 +1503,11 @@ class Course extends Tutor_Base {
 					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
 
 					if ( $earned_percentage < $passing_grade ) {
-						++$required_quiz_pass;
+						$required_quiz_pass++;
 						$is_quiz_pass = false;
 					}
 				} else {
-					++$required_quiz_pass;
+					$required_quiz_pass++;
 					$is_quiz_pass = false;
 				}
 			}
