@@ -1,6 +1,8 @@
 describe("Tutor Student Paid Course Journey", () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.env("base_url")}/courses/${Cypress.env("paid_course_slug")}/`);
+    cy.visit(
+      `${Cypress.env("base_url")}/courses/${Cypress.env("paid_course_slug")}/`
+    );
   });
 
   it("should be able to enroll in a paid course, view cart, and manage items as a guest", () => {
@@ -75,23 +77,19 @@ describe("Tutor Student Paid Course Journey", () => {
               .type(randomEmail);
 
             // accept terms
-            cy.get("#terms").check()
+            cy.get("#terms").check();
 
             cy.get("#place_order").click();
 
             cy.url().should("include", "/checkout");
 
             // login as admin
-            cy.visit(
-              `${Cypress.env(
-                "base_url"
-              )}/wp-login.php`
-            );
+            cy.visit(`${Cypress.env("base_url")}/wp-login.php`);
             // Login as a admin
-            cy.get('#user_login')
+            cy.get("#user_login")
               .clear()
               .type(Cypress.env("admin_username"), { delay: 100 });
-            cy.get('#user_pass')
+            cy.get("#user_pass")
               .clear()
               .type(Cypress.env("admin_password"), { delay: 100 });
 
@@ -109,7 +107,7 @@ describe("Tutor Student Paid Course Journey", () => {
               .invoke("attr", "value")
               .then((value) => {
                 const selector = `#cb-select-${value}`;
-                 cy.get(selector)
+                cy.get(selector)
                   .should("be.visible")
                   .check();
               });
@@ -126,9 +124,7 @@ describe("Tutor Student Paid Course Journey", () => {
       }
     });
 
-    cy.visit(
-      `${Cypress.env("base_url")}/dashboard/enrolled-courses/`
-    );
+    cy.visit(`${Cypress.env("base_url")}/dashboard/enrolled-courses/`);
     cy.get(".tutor-course-name")
       .eq(0)
       .click();

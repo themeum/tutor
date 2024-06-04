@@ -8,9 +8,30 @@ describe("Tutor Dashboard Assignments", () => {
     cy.loginAsInstructor();
     cy.url().should("include", frontendUrls.dashboard.ASSIGNMENTS);
   });
-
-  it("should evaluate all the assignments", () => {
-    
+  
+  it("should filter announcements", () => {
+    cy.get(".tutor-col-lg-6 > .tutor-js-form-select").click();
+    cy.get(
+      ".tutor-col-lg-6 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options span[tutor-dropdown-item]"
+    ).then(($options) => {
+      const randomIndex = Cypress._.random(1, $options.length - 1);
+      const $randomOption = $options.eq(randomIndex);
+      cy.wrap($randomOption).click({ force: true });
+      const selectedOptionText = $randomOption.text().trim();
+      cy.get("body").then(($body) => {
+        if ($body.text().includes("No Data Found from your Search/Filter")) {
+          cy.log("No data available");
+        } else {
+          cy.get(".tutor-fs-7>a").each(
+            ($announcement) => {
+              cy.wrap($announcement).should("contain.text", selectedOptionText);
+            }
+          );
+        }
+      });
+    });
+  });
+  it("should evaluate all the assignments", () => { 
     cy.get("body").then(($body) => {
       if ($body.text().includes("No Data Available in this Section")) {
         cy.log("No data found");
@@ -62,9 +83,7 @@ describe("Tutor Dashboard Assignments", () => {
 
                       cy.wait("@ajaxRequest").then((interception) => {
                         expect(interception.response.statusCode).to.equal(200)
-                        // expect(interception.response.body.success).to.equal(true);
                       });
-
                       cy.get('.submitted-assignment-title > .tutor-btn')
                       .contains("Back")
                       .click();

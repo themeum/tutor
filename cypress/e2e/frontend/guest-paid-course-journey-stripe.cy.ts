@@ -1,6 +1,8 @@
 describe("Tutor Student Paid Course Journey", () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.env("base_url")}/courses/${Cypress.env("paid_course_slug")}/`);
+    cy.visit(
+      `${Cypress.env("base_url")}/courses/${Cypress.env("paid_course_slug")}/`
+    );
   });
 
   it("should be able to enroll in a paid course, view cart, and manage items as a guest", () => {
@@ -109,7 +111,7 @@ describe("Tutor Student Paid Course Journey", () => {
               cy.get('input[name="cvc"]').type("123");
             });
 
-            cy.get("#terms").check()
+            cy.get("#terms").check();
             cy.get("#place_order").click();
 
             cy.wait("@ajaxRequest", { timeout: 20000 }).then((interception) => {

@@ -1,6 +1,8 @@
 describe("Tutor Student Paid Course Journey", () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.env("base_url")}/courses/${Cypress.env("cod_course_slug")}/`);
+    cy.visit(
+      `${Cypress.env("base_url")}/courses/${Cypress.env("cod_course_slug")}/`
+    );
   });
 
   it("should be able to enroll in a paid course for cash on delivery, view cart, and manage items", () => {
@@ -102,8 +104,8 @@ describe("Tutor Student Paid Course Journey", () => {
               }
             });
             // accept terms
-            cy.get("#terms").check()
-            cy.get('#place_order').click();
+            cy.get("#terms").check();
+            cy.get("#place_order").click();
 
             cy.url().should("include", "/order-received");
 

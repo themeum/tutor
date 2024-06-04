@@ -1,40 +1,82 @@
-import { frontendUrls } from "../../../config/page-urls"
+import { frontendUrls } from "../../../config/page-urls";
 
 describe("Tutor Dashboard Announcements", () => {
-    beforeEach(() => {
-        cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.ANNOUNCEMENTS}`)
-        cy.loginAsInstructor()
-        cy.url().should("include", frontendUrls.dashboard.DASHBOARD)
-    })
+  beforeEach(() => {
+    cy.visit(
+      `${Cypress.env("base_url")}/${frontendUrls.dashboard.ANNOUNCEMENTS}`
+    );
+    cy.loginAsInstructor();
+    cy.url().should("include", frontendUrls.dashboard.DASHBOARD);
+  });
 
-    it ("should create a new announcement", () => {
-        cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
-
-        cy.get("button[data-tutor-modal-target=tutor_announcement_new]").click()
-        cy.get("#tutor_announcement_new input[name=tutor_announcement_title]").type("Important Announcement - Upcoming Student Assembly")
-        cy.get("#tutor_announcement_new textarea[name=tutor_announcement_summary]").type("I trust this message finds you well. As we prepare for the commencement of a dynamic new semester, we have pivotal information to share in our upcoming Student Assembly.")
-        cy.get("#tutor_announcement_new button").contains("Publish").click()
-
-        cy.wait("@ajaxRequest").then((interception) => {
-            expect(interception.response.body.success).to.equal(true);
-        });
-    })
-
-    it ("should view and delete an announcement", () => {
-        cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
-        
-        cy.get("body").then(($body) => {
-            if ($body.text().includes("No Data Available in this Section")) {
-                cy.log("No data found")
-            } else {
-                cy.get("button.tutor-announcement-details").eq(0).click()
-                cy.get(".tutor-modal.tutor-is-active button.tutor-modal-btn-delete").click()
-                cy.get(".tutor-modal.tutor-is-active button").contains("Yes, Delete This").click()
-
-                cy.wait("@ajaxRequest").then((interception) => {
-                    expect(interception.response.body.success).to.equal(true);
-                });
+  it("should filter announcements", () => {
+    cy.get(".tutor-col-12 > .tutor-js-form-select").click();
+    cy.get(
+      ".tutor-col-12 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options span[tutor-dropdown-item]"
+    ).then(($options) => {
+      const randomIndex = Cypress._.random(1, $options.length - 1);
+      const $randomOption = $options.eq(randomIndex);
+      cy.wrap($randomOption).click({ force: true });
+      const selectedOptionText = $randomOption.text().trim();
+      cy.get("body").then(($body) => {
+        if ($body.text().includes("No Data Found from your Search/Filter")) {
+          cy.log("No data available");
+        } else {
+          cy.get(".tutor-fs-7.tutor-fw-medium.tutor-color-muted").each(
+            ($announcement) => {
+              cy.wrap($announcement).should("contain.text", selectedOptionText);
             }
-        })
-    })
-})
+          );
+        }
+      });
+    });
+  });
+
+  it("should create a new announcement", () => {
+    cy.intercept(
+      "POST",
+      `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`
+    ).as("ajaxRequest");
+    cy.get("button[data-tutor-modal-target=tutor_announcement_new]").click();
+    cy.get("#tutor_announcement_new input[name=tutor_announcement_title]").type(
+      "Important Announcement - Upcoming Student Assembly"
+    );
+    cy.get(
+      "#tutor_announcement_new textarea[name=tutor_announcement_summary]"
+    ).type(
+      "I trust this message finds you well. As we prepare for the commencement of a dynamic new semester, we have pivotal information to share in our upcoming Student Assembly."
+    );
+    cy.get("#tutor_announcement_new button")
+      .contains("Publish")
+      .click();
+
+    cy.wait("@ajaxRequest").then((interception) => {
+      expect(interception.response.body.success).to.equal(true);
+    });
+  });
+
+  it("should view and delete an announcement", () => {
+    cy.intercept(
+      "POST",
+      `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`
+    ).as("ajaxRequest");
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("No Data Available in this Section")) {
+        cy.log("No data found");
+      } else {
+        cy.get("button.tutor-announcement-details")
+          .eq(0)
+          .click();
+        cy.get(
+          ".tutor-modal.tutor-is-active button.tutor-modal-btn-delete"
+        ).click();
+        cy.get(".tutor-modal.tutor-is-active button")
+          .contains("Yes, Delete This")
+          .click();
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.response.body.success).to.equal(true);
+        });
+      }
+    });
+  });
+});
