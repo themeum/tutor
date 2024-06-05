@@ -529,29 +529,37 @@ class Course extends Tutor_Base {
 			if ( ! empty( $_POST['course_benefits'] ) ) {
 				$course_benefits = Input::post( 'course_benefits', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_benefits', $course_benefits );
-			} elseif ( ! tutor_is_rest() ) {
+			} else {
+				if ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_benefits' );
+				}
 			}
 
 			if ( ! empty( $_POST['course_requirements'] ) ) {
 				$requirements = Input::post( 'course_requirements', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_requirements', $requirements );
-			} elseif ( ! tutor_is_rest() ) {
+			} else {
+				if ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_requirements' );
+				}
 			}
 
 			if ( ! empty( $_POST['course_target_audience'] ) ) {
 				$target_audience = Input::post( 'course_target_audience', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_target_audience', $target_audience );
-			} elseif ( ! tutor_is_rest() ) {
+			} else {
+				if ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_target_audience' );
+				}
 			}
 
 			if ( ! empty( $_POST['course_material_includes'] ) ) {
 				$material_includes = Input::post( 'course_material_includes', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_material_includes', $material_includes );
-			} elseif ( ! tutor_is_rest() ) {
+			} else {
+				if ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_material_includes' );
+				}
 			}
 			//phpcs:enable WordPress.Security.NonceVerification.Missing
 		}
@@ -575,8 +583,10 @@ class Course extends Tutor_Base {
 			$video_source = tutor_utils()->array_get( 'source', $video );
 			if ( -1 !== $video_source ) {
 				update_post_meta( $post_ID, '_video', $video );
-			} elseif ( ! tutor_is_rest() ) {
+			} else {
+				if ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_video' );
+				}
 			}
 		}
 
@@ -1364,11 +1374,14 @@ class Course extends Tutor_Base {
 		global $wpdb;
 
 		$results = $wpdb->get_results(
-			"SELECT DISTINCT pm.meta_value product_id
+			$wpdb->prepare(
+				"SELECT DISTINCT pm.meta_value product_id
 				FROM {$wpdb->posts} p
 				INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID
-				AND pm.meta_key = '_tutor_course_product_id'
-				WHERE post_type IN( 'courses','course-bundle' )"
+				AND pm.meta_key = %s
+				WHERE post_type IN( 'courses','course-bundle' )",
+				'_tutor_course_product_id'
+			)
 		);
 
 		$ids = array();
