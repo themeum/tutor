@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.7.1
+Stable tag: 2.7.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -262,7 +262,7 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 13. Color Preset: Preset Colors tab to configure color settings throughout your entire site
 14. Gradebook: Ease of access to edit your entire Grading point system for your LMS
 15. Certificate Configuration: A guided certificate setup page to create the best certificates
-16. Certficiate Builder: Fully customizable certificates using drag & drop Certificate Builder
+16. Certificate Builder: Fully customizable certificates using drag & drop Certificate Builder
 17. Student Progress: In-depth analytics & metrics detailing student progress
 18. Quiz Types: A plethora of unique and engaging quiz question types
 19. Quiz Builder: A powerful Quiz Builder revived with a new look and feel
@@ -281,6 +281,21 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 
 == Changelog ==
+
+= 2.7.2 - June 6, 2024
+
+Fix: An invalid revenue sharing percentage could be set in the tutor settings
+Fix: 'Commission & Fees' tab renamed to 'Commission' to reduce confusion
+Fix: Error on Course List page with Restrict Content Pro
+Fix: Warning on quiz attempt details page
+Fix: Bundle course products were showing on the shop page despite 'Hide Course Products on Shop Page' being enabled (Pro)
+Fix: Answer Required option not working for Image Matching, Matching, and Ordering quiz types
+Fix: Course progress resetting when WC Subscriptions expired (Pro)
+Fix: Assignment submission time was not showing WP timezone on the frontend dashboard (Pro)
+Fix: HTML text appearing in enrolment box with Paid Membership Pro (Pro)
+Fix: Course content access not working for instructors and admins when a course has prerequisites (Pro)
+Fix: Error on first-time installation
+Fix: Enhanced plugin security
 
 = 2.7.1 - May 14, 2024
 
