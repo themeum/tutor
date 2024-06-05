@@ -583,8 +583,10 @@ class Course extends Tutor_Base {
 			$video_source = tutor_utils()->array_get( 'source', $video );
 			if ( -1 !== $video_source ) {
 				update_post_meta( $post_ID, '_video', $video );
-			} elseif ( ! tutor_is_rest() ) {
+			} else {
+				if ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_video' );
+				}
 			}
 		}
 
