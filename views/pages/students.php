@@ -22,7 +22,7 @@ $students = new Students_List();
  * Short able params
  */
 $user_id   = Input::get( 'user_id', '' );
-$course_id = Input::get( 'course-id', 0, Input::TYPE_INT );
+$course_id = Input::get( 'course-id', '' );
 $order     = Input::get( 'order', 'DESC' );
 $date      = Input::has( 'date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'date' ) ) : '';
 $search    = Input::get( 'search', '' );

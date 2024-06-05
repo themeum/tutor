@@ -32,7 +32,7 @@ $instructors = new Instructors_List();
  * Short able params
  */
 $user_id     = Input::get( 'user_id', '' );
-$course_id   = Input::get( 'course-id', '' );
+$course_id   = Input::get( 'course-id', '');
 $data_order  = Input::get( 'order', 'DESC' );
 $date        = Input::get( 'date', '' );
 $search_term = Input::get( 'search', '' );

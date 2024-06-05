@@ -22,7 +22,7 @@ $limit         = tutor_utils()->get_option( 'pagination_per_page' );
 $page_filter   = Input::get( 'paged', 1, Input::TYPE_INT );
 $order_filter  = Input::get( 'order', 'DESC' );
 $search_filter = Input::get( 'search', '' );
-$course_id     = Input::get( 'course-id', '' );
+$course_id     = Input::get( 'course-id', 0, Input::TYPE_INT );
 $date_filter   = Input::get( 'date', '' );
 
 $year  = date( 'Y', strtotime( $date_filter ) );
@@ -33,13 +33,17 @@ $args = array(
 	'post_type'      => 'tutor_announcements',
 	'post_status'    => 'publish',
 	's'              => $search_filter,
-	'post_parent'    => $course_id,
 	'posts_per_page' => sanitize_text_field( $limit ),
 	'paged'          => sanitize_text_field( $page_filter ),
 	'orderBy'        => 'ID',
 	'order'          => sanitize_text_field( $order_filter ),
 
 );
+
+if ( $course_id ) {
+	$args['post_parent'] = $course_id;
+}
+
 if ( ! empty( $date_filter ) ) {
 	$args['date_query'] = array(
 		array(
@@ -49,9 +53,11 @@ if ( ! empty( $date_filter ) ) {
 		),
 	);
 }
+
 if ( ! current_user_can( 'administrator' ) ) {
 	$args['author'] = get_current_user_id();
 }
+
 $the_query = new WP_Query( $args );
 
 /**
