@@ -1374,11 +1374,14 @@ class Course extends Tutor_Base {
 		global $wpdb;
 
 		$results = $wpdb->get_results(
-			"SELECT DISTINCT pm.meta_value product_id
+			$wpdb->prepare(
+				"SELECT DISTINCT pm.meta_value product_id
 				FROM {$wpdb->posts} p
 				INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID
-				AND pm.meta_key = '_tutor_course_product_id'
-				WHERE post_type IN( 'courses','course-bundle' )"
+				AND pm.meta_key = %s
+				WHERE post_type IN( 'courses','course-bundle' )",
+				'_tutor_course_product_id'
+			)
 		);
 
 		$ids = array();
