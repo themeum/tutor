@@ -354,8 +354,8 @@ class Instructors_List {
 
 		$search_clause = $wild . $wpdb->esc_like( $search ) . $wild;
 		$course_clause = '';
-		if( '' !== $course_id ){
-			$course_id = (int) $course_id;
+		if ( '' !== $course_id ) {
+			$course_id     = (int) $course_id;
 			$course_clause = "AND umeta.meta_value = {$course_id}";
 		} 
 		
