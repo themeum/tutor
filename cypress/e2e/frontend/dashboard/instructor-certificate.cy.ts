@@ -18,6 +18,15 @@ describe("Tutor Dashboard Certificate", () => {
         cy.get(".tutor-certificate-builder-header-toolbar a").eq(2).click()
     })
 
+    it ("should edit a certificate", () => {
+        cy.get('.tutor-ml-16').eq(0).click()
+        cy.get('.tutor-certificate-name > input').type("My Edited Template")
+        cy.wait(5000)
+        cy.get("button").contains("Publish").click()
+        cy.wait(5000)
+        cy.get(".tutor-certificate-builder-header-toolbar a").eq(2).click()
+    })
+
     it ("should delete a certificate", () => {
         cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
 
@@ -29,7 +38,6 @@ describe("Tutor Dashboard Certificate", () => {
             cy.wait("@ajaxRequest").then((interception) => {
                 expect(interception.response.body.success).to.equal(true);
             });
-            
             cy.get(`#tutor-cb-row-id-${certificateId}`).should("not.exist");
         })
     })

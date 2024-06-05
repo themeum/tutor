@@ -193,7 +193,11 @@ Cypress.Commands.add(
       cy.get(searchInputSelector).clear();
       cy.get(submitButtonSelector).click();
     }
-    let count = 0;
+    cy.get("body").then(($body) => {
+    if ($body.text().includes("No Data Found from your Search/Filter")) {
+      cy.log("No data available");
+    } else{
+      let count = 0;
     cy.get(courseLinkSelector)
       .eq(0)
       .each(($link) => {
@@ -211,7 +215,9 @@ Cypress.Commands.add(
             });
         }
       });
-  }
+    }
+  })
+    }
 );
 
 Cypress.Commands.add(
@@ -352,7 +358,6 @@ Cypress.Commands.add("handleNextButton", () => {
 });
 
 Cypress.Commands.add("handleAssignment", (isLastItem) => {
-
   cy.get("body").then(($body) => {
     const bodyText = $body.text();
 
