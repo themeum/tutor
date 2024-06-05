@@ -299,9 +299,9 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 
-		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">'.
+		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">' .
 		__( 'Fully Booked', 'tutor' )
-		.'</div></div>';
+		. '</div></div>';
 	}
 
 	/**
@@ -1309,7 +1309,7 @@ class Course extends Tutor_Base {
 
 		return array_filter(
 			$items,
-			function( $item ) use ( $is_enrolled ) {
+			function ( $item ) use ( $is_enrolled ) {
 				if ( isset( $item['require_enrolment'] ) && $item['require_enrolment'] ) {
 					return $is_enrolled;
 				}
@@ -1334,6 +1334,7 @@ class Course extends Tutor_Base {
 		add_action( 'pre_get_posts', array( $this, 'filter_archive_meta_query' ), 1 );
 	}
 
+
 	/**
 	 * Tutor product meta query
 	 *
@@ -1357,8 +1358,38 @@ class Course extends Tutor_Base {
 	 * @return \WP_Query
 	 */
 	public function filter_woocommerce_product_query( $wp_query ) {
-		$wp_query->set( 'meta_query', array( $this->tutor_product_meta_query() ) );
+		$product_ids = $this->get_connected_wc_product_ids();
+		$wp_query->set( 'post__not_in', $product_ids );
 		return $wp_query;
+	}
+
+	/**
+	 * Get connected woocommerce product ids for course and course bundle
+	 *
+	 * @since 2.7.2
+	 *
+	 * @return array
+	 */
+	public function get_connected_wc_product_ids() {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT DISTINCT pm.meta_value product_id
+				FROM {$wpdb->posts} p
+				INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID
+				AND pm.meta_key = %s
+				WHERE post_type IN( 'courses','course-bundle' )",
+				'_tutor_course_product_id'
+			)
+		);
+
+		$ids = array();
+		if ( is_array( $results ) && count( $results ) ) {
+			$ids = array_column( $results, 'product_id' );
+		}
+
+		return $ids;
 	}
 
 	/**
@@ -1718,5 +1749,4 @@ class Course extends Tutor_Base {
 
 		return $product_obj->save();
 	}
-
 }
