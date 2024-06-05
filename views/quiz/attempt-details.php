@@ -501,13 +501,14 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													foreach ( $original_saved_answers as $key => $original_saved_answer ) {
 														$provided_answer_order_id = isset( $ordering_ids[ $key ] ) ? $ordering_ids[ $key ] : 0;
 														$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
-														foreach ( $provided_answer_order as $provided_answer_order ) {
+														foreach ( $provided_answer_order as $p_answer ) {
+															if ( $p_answer->answer_title ) {
+																$original_saved_answer->answer_view_format = 'text_image';
+																$original_saved_answer->answer_title       = $p_answer->answer_title;
+																$answers[]                                 = $original_saved_answer;
+															}
 														}
-														if ( ! is_array( $provided_answer_order ) ) {
-															$original_saved_answer->answer_view_format = 'text_image';
-															$original_saved_answer->answer_title       = $provided_answer_order->answer_title;
-															$answers[]                                 = $original_saved_answer;
-														}
+														
 													}
 
 													tutor_render_answer_list( $answers );
