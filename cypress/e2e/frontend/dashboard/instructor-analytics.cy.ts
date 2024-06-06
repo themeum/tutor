@@ -93,7 +93,6 @@ describe("Tutor Admin Dashboard Journey", () => {
       submitWithButton
     );
   });
-
   // export
   it("should be able to dowonload csv", () => {
     cy.get(".tutor-nav-link")

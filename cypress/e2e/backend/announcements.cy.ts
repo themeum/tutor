@@ -13,7 +13,6 @@ describe("Tutor Admin Announcements", () => {
               req.alias = "ajaxRequest"
           }
       })
-
       cy.get("button[data-tutor-modal-target=tutor_announcement_new]").click()
       cy.get("#tutor_announcement_new input[name=tutor_announcement_title]").type("Important Announcement - Upcoming Student Assembly")
       cy.get("#tutor_announcement_new textarea[name=tutor_announcement_summary]").type("I trust this message finds you well. As we prepare for the commencement of a dynamic new semester, we have pivotal information to share in our upcoming Student Assembly.")

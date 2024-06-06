@@ -12,9 +12,7 @@ declare namespace Cypress {
     performBulkActionOnSelectedElement(
       option: string
     ): Chainable<JQuery<HTMLElement>>;
-    filterByCategory(
-      // selector: string,
-    ): Chainable<JQuery<HTMLElement>>;
+    filterByCategory(): Chainable<JQuery<HTMLElement>>;
     search(
       searchInputSelector: string,
       searchQuery: string,
