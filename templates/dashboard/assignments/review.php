@@ -69,7 +69,7 @@ if ( ! $submitted_assignment ) {
 				<span class="tutor-color-secondary"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?>:</span>
 			</div>
 			<div class="tutor-col-lg tutor-mt-8 tutor-mt-lg-0">
-				<span class="tutor-fw-medium tutor-color-black"><?php echo esc_attr( date( 'j M, Y, h:i a', strtotime( $submitted_assignment->comment_date ) ) ); ?></span>
+				<span class="tutor-fw-medium tutor-color-black"><?php echo esc_attr(  tutor_utils()->convert_date_into_wp_timezone( $submitted_assignment->comment_date_gmt, 'j M, Y, h:i a' ) ); ?></span>
 			</div>
 		</div>
 	</div>
