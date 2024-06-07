@@ -6,8 +6,16 @@ describe("Tutor Admin Courses", () => {
     cy.loginAsAdmin();
     cy.url().should("include", backendUrls.COURSES);
   });
+
   it("should filter by category", () => {
     cy.filterByCategory();
+  });
+  it("should check if the elements are sorted", () => {
+    const formSelector = "#tutor-backend-filter-order";
+    const itemSelector =
+      ".tutor-d-flex.tutor-align-center.tutor-gap-2 > div > a.tutor-table-link";
+    cy.checkSorting("ASC", formSelector, itemSelector);
+    cy.checkSorting("DESC", formSelector, itemSelector);
   });
   it("should show warning when no course is selected", () => {
     cy.get(".tutor-form-select-label").then(() => {
@@ -90,4 +98,5 @@ describe("Tutor Admin Courses", () => {
       cy.performBulkAction(option);
     });
   });
+
 });

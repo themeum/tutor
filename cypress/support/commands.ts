@@ -13,6 +13,7 @@ declare namespace Cypress {
       option: string
     ): Chainable<JQuery<HTMLElement>>;
     filterByCategory(): Chainable<JQuery<HTMLElement>>;
+    checkSorting(order:string, formSelector:string, itemSelector:string): Chainable<JQuery<HTMLElement>>;
     search(
       searchInputSelector: string,
       searchQuery: string,
@@ -148,6 +149,18 @@ Cypress.Commands.add("performBulkAction", (option) => {
           });
       }
     });
+});
+
+Cypress.Commands.add('checkSorting', (order, formSelector, itemSelector) => {
+  function checkSorting() {
+    cy.get(formSelector).select(order);
+    cy.get(itemSelector).then(($items) => {
+      const itemTexts = $items.map((index, item) => item.innerText.trim()).get().filter(text => text);
+      const sortedItems = order === 'ASC' ? itemTexts.sort() : itemTexts.sort().reverse();
+      expect(itemTexts).to.deep.equal(sortedItems);
+    });
+  }
+  checkSorting();
 });
 
 Cypress.Commands.add(

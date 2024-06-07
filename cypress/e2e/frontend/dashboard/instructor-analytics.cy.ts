@@ -5,6 +5,7 @@ describe("Tutor Admin Dashboard Journey", () => {
     cy.visit(`${Cypress.env("base_url")}${frontendUrls.dashboard.ANALYTICS}`);
     cy.loginAsInstructor();
   });
+  
   it("should visit all analytics pages", () => {
     cy.get("body").then(($body) => {
       cy.get(".tutor-nav>.tutor-nav-item")
