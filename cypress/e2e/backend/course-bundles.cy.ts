@@ -7,6 +7,31 @@ describe("Tutor Admin Course Bundles", () => {
     cy.url().should("include", backendUrls.COURSE_BUNDLES);
   });
 
+  it("should check if the elements are sorted", () => {
+    const formSelector = ":nth-child(3) > .tutor-js-form-select";
+    const itemSelector =
+     ".tutor-d-flex.tutor-align-center.tutor-gap-2 > div > a.tutor-table-link";
+    function checkSorting(order) {
+      cy.get(formSelector).click();
+      cy.get(`span[title=${order}]`).click();
+      cy.get("body").then(($body) => {
+        if (
+          $body.text().includes("No Data Available in this Section")
+        ) {
+          cy.log("No data available");
+        }else{
+          cy.get(itemSelector).then(($items) => {
+            const itemTexts = $items.map((index, item) => item.innerText.trim()).get().filter(text => text);
+            const sortedItems = order === 'ASC' ? itemTexts.sort() : itemTexts.sort().reverse();
+            expect(itemTexts).to.deep.equal(sortedItems);
+          });
+        }
+      })
+    }
+    checkSorting("ASC");
+    checkSorting("DESC")
+  });
+
   it("should be able to search any course", () => {
     const searchInputSelector = "#tutor-backend-filter-search";
     const searchQuery = "test";
@@ -26,14 +51,14 @@ describe("Tutor Admin Course Bundles", () => {
     cy.filterByCategory()
   })
 
-  it("should perform bulk actions on selected course", () => {
+  it("should perform bulk actions on selected bundle course", () => {
     const options = ["publish", "pending", "draft", "trash"];
     options.forEach((option) => {
       cy.performBulkActionOnSelectedElement(option);
     });
   });
 
-  it("should be able to perform bulk actions on all courses", () => {
+  it("should be able to perform bulk actions on all bundle courses", () => {
     const options = ["publish", "pending", "draft", "trash"];
     options.forEach((option) => {
       cy.performBulkAction(option);

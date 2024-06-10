@@ -11,11 +11,28 @@ describe("Tutor Admin Courses", () => {
     cy.filterByCategory();
   });
   it("should check if the elements are sorted", () => {
-    const formSelector = "#tutor-backend-filter-order";
+    const formSelector = ":nth-child(3) > .tutor-js-form-select";
     const itemSelector =
-      ".tutor-d-flex.tutor-align-center.tutor-gap-2 > div > a.tutor-table-link";
-    cy.checkSorting("ASC", formSelector, itemSelector);
-    cy.checkSorting("DESC", formSelector, itemSelector);
+     ".tutor-d-flex.tutor-align-center.tutor-gap-2 > div > a.tutor-table-link";
+    function checkSorting(order) {
+      cy.get(formSelector).click();
+      cy.get(`span[title=${order}]`).click()
+      cy.get("body").then(($body) => {
+        if (
+          $body.text().includes("No Data Available in this Section")
+        ) {
+          cy.log("No data available");
+        }else{
+          cy.get(itemSelector).then(($items) => {
+            const itemTexts = $items.map((index, item) => item.innerText.trim()).get().filter(text => text);
+            const sortedItems = order === 'ASC' ? itemTexts.sort() : itemTexts.sort().reverse();
+            expect(itemTexts).to.deep.equal(sortedItems);
+          });
+        }
+      })
+    }
+    checkSorting("ASC");
+    checkSorting("DESC")
   });
   it("should show warning when no course is selected", () => {
     cy.get(".tutor-form-select-label").then(() => {

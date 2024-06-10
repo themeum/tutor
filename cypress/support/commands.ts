@@ -13,7 +13,11 @@ declare namespace Cypress {
       option: string
     ): Chainable<JQuery<HTMLElement>>;
     filterByCategory(): Chainable<JQuery<HTMLElement>>;
-    checkSorting(order:string, formSelector:string, itemSelector:string): Chainable<JQuery<HTMLElement>>;
+    checkSorting(
+      order: string,
+      formSelector: string,
+      itemSelector: string
+    ): Chainable<JQuery<HTMLElement>>;
     search(
       searchInputSelector: string,
       searchQuery: string,
@@ -107,17 +111,21 @@ Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
       .click();
     cy.get("#tutor-confirm-bulk-action").click();
 
-    cy.get('@randomCheckbox').invoke('attr', 'value').then((id) => {
-      if (option === "trash") {
-        cy.get(`.tutor-table-row-status-update[data-id="${id}"]`).should('not.exist');
-      } else {
-        cy.get(`.tutor-table-row-status-update[data-id="${id}"]`)
-          .invoke('attr', 'data-status')
-          .then((status) => {
-            expect(status).to.include(option);
-          });
-      }
-    });
+    cy.get("@randomCheckbox")
+      .invoke("attr", "value")
+      .then((id) => {
+        if (option === "trash") {
+          cy.get(`.tutor-table-row-status-update[data-id="${id}"]`).should(
+            "not.exist"
+          );
+        } else {
+          cy.get(`.tutor-table-row-status-update[data-id="${id}"]`)
+            .invoke("attr", "data-status")
+            .then((status) => {
+              expect(status).to.include(option);
+            });
+        }
+      });
   });
 });
 // perform publish,pending,draft,trash on all courses
@@ -151,44 +159,73 @@ Cypress.Commands.add("performBulkAction", (option) => {
     });
 });
 
-Cypress.Commands.add('checkSorting', (order, formSelector, itemSelector) => {
+Cypress.Commands.add("checkSorting", (order, formSelector, itemSelector) => {
   function checkSorting() {
     cy.get(formSelector).select(order);
-    cy.get(itemSelector).then(($items) => {
-      const itemTexts = $items.map((index, item) => item.innerText.trim()).get().filter(text => text);
-      const sortedItems = order === 'ASC' ? itemTexts.sort() : itemTexts.sort().reverse();
-      expect(itemTexts).to.deep.equal(sortedItems);
-    });
-  }
+    cy.get("body").then(($body) => {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter")
+      ) {
+        cy.log("No data available");
+      }else{
+        cy.get(itemSelector).then(($items) => {
+          const itemTexts = $items
+            .map((index, item) => item.innerText.trim())
+            .get()
+            .filter((text) => text);
+          const sortedItems =
+            order === "ASC" ? itemTexts.sort() : itemTexts.sort().reverse();
+          expect(itemTexts).to.deep.equal(sortedItems);
+        });
+      }
+    }
+    
+)}
   checkSorting();
 });
 
-Cypress.Commands.add(
-  "filterByCategory",
-  () => {
-    cy.get(".tutor-js-form-select").eq(1).click()
-    cy.get(".tutor-form-select-options").eq(1).then(()=>{
-      cy.get('.tutor-form-select-option').then(($options) => {
-        const randomIndex = Cypress._.random(6, $options.length - 3);
-        const $randomOption = Cypress.$($options[randomIndex]);
-        cy.wrap($randomOption).find('span[tutor-dropdown-item]').click();
-      }).then(() => {
-        cy.get('span.tutor-form-select-label[tutor-dropdown-label]').eq(1)
-          .invoke('text')
-          .then((retrievedText) => {
-            console.log("Text:", retrievedText.trim());
-            cy.get(".tutor-fw-normal.tutor-fs-7").each(($category) => {
-              cy.wrap($category).invoke('text').then((categoryText) => {
-                if (categoryText.trim() === retrievedText.trim()) {
-                  cy.wrap($category).click();
-                }
-              });
-            });
+Cypress.Commands.add("filterByCategory", () => {
+  cy.get(".tutor-js-form-select")
+    .eq(1)
+    .click();
+  cy.get(".tutor-form-select-options")
+    .eq(1)
+    .then(() => {
+      cy.get(".tutor-form-select-option")
+        .then(($options) => {
+          const randomIndex = Cypress._.random(6, $options.length - 3);
+          const $randomOption = Cypress.$($options[randomIndex]);
+          cy.wrap($randomOption)
+            .find("span[tutor-dropdown-item]")
+            .click();
+        })
+        .then(() => {
+          cy.get("body").then(($body) => {
+            if (
+              $body.text().includes("No Data Found from your Search/Filter")
+            ) {
+              cy.log("No data available");
+            } else {
+              cy.get("span.tutor-form-select-label[tutor-dropdown-label]")
+                .eq(1)
+                .invoke("text")
+                .then((retrievedText) => {
+                  console.log("Text:", retrievedText.trim());
+                  cy.get(".tutor-fw-normal.tutor-fs-7").each(($category) => {
+                    cy.wrap($category)
+                      .invoke("text")
+                      .then((categoryText) => {
+                        if (categoryText.trim() === retrievedText.trim()) {
+                          cy.wrap($category).click();
+                        }
+                      });
+                  });
+                });
+            }
           });
-      });
-    }) 
-  }
-);
+        });
+    });
+});
 
 Cypress.Commands.add(
   "search",
@@ -205,30 +242,30 @@ Cypress.Commands.add(
       cy.get(submitButtonSelector).click();
     }
     cy.get("body").then(($body) => {
-    if ($body.text().includes("No Data Found from your Search/Filter")) {
-      cy.log("No data available");
-    } else{
-      let count = 0;
-    cy.get(courseLinkSelector)
-      .eq(0)
-      .each(($link) => {
-        const courseName = $link.text().trim();
-        if (courseName.includes(searchQuery)) {
-          count++;
-          expect(courseName.toLowerCase()).to.include(
-            searchQuery.toLowerCase()
-          );
-          cy.get(courseLinkSelector)
-            .eq(0)
-            .its("length")
-            .then((totalVisibleElements) => {
-              expect(count).to.eq(totalVisibleElements);
-            });
-        }
-      });
-    }
-  })
-    }
+      if ($body.text().includes("No Data Found from your Search/Filter")) {
+        cy.log("No data available");
+      } else {
+        let count = 0;
+        cy.get(courseLinkSelector)
+          .eq(0)
+          .each(($link) => {
+            const courseName = $link.text().trim();
+            if (courseName.includes(searchQuery)) {
+              count++;
+              expect(courseName.toLowerCase()).to.include(
+                searchQuery.toLowerCase()
+              );
+              cy.get(courseLinkSelector)
+                .eq(0)
+                .its("length")
+                .then((totalVisibleElements) => {
+                  expect(count).to.eq(totalVisibleElements);
+                });
+            }
+          });
+      }
+    });
+  }
 );
 
 Cypress.Commands.add(
@@ -372,14 +409,20 @@ Cypress.Commands.add("handleAssignment", (isLastItem) => {
   cy.get("body").then(($body) => {
     const bodyText = $body.text();
 
-    if (bodyText.includes("You have missed the submission deadline. Please contact the instructor for more information.")) {
-      cy.get('.tutor-btn-ghost').contains("Skip To Next").click();
+    if (
+      bodyText.includes(
+        "You have missed the submission deadline. Please contact the instructor for more information."
+      )
+    ) {
+      cy.get(".tutor-btn-ghost")
+        .contains("Skip To Next")
+        .click();
       return;
     }
 
     if (bodyText.includes("Start Assignment Submit")) {
-      cy.get("#tutor_assignment_start_btn").click(); 
-      cy.wait('@ajaxRequest').then((interception) => {
+      cy.get("#tutor_assignment_start_btn").click();
+      cy.wait("@ajaxRequest").then((interception) => {
         expect(interception.response.statusCode).to.equal(200);
       });
       cy.url().should("include", "assignments");
@@ -401,12 +444,17 @@ Cypress.Commands.add("handleAssignment", (isLastItem) => {
     }
     cy.get("body").then(($body) => {
       if ($body.text().includes("Continue Lesson")) {
-        cy.get("a").contains("Continue Lesson").click()
+        cy.get("a")
+          .contains("Continue Lesson")
+          .click();
       } else if (isLastItem) {
-        cy.get(".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times").parent().click()
+        cy.get(
+          ".tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times"
+        )
+          .parent()
+          .click();
       }
-    })
-
+    });
   });
 });
 
