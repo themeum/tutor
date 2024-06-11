@@ -468,7 +468,7 @@ class Admin {
 
 		if ( ! $has_pro ) {
 			$actions['tutor_pro_link'] =
-				'<a href="https://www.themeum.com/product/tutor-lms/#pricing?utm_source=tutor_plugin_action_link&utm_medium=wordpress_dashboard&utm_campaign=go_premium" target="_blank">
+				'<a href="https://tutorlms.com/pricing?utm_source=tutor_plugin_action_link&utm_medium=wordpress_dashboard&utm_campaign=go_premium" target="_blank">
 					<span style="color: #ff7742; font-weight: bold;">' .
 						__( 'Upgrade to Pro', 'wp-megamenu' ) .
 					'</span>
