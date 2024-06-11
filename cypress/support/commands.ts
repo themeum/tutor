@@ -210,7 +210,6 @@ Cypress.Commands.add("filterByCategory", () => {
                 .eq(1)
                 .invoke("text")
                 .then((retrievedText) => {
-                  console.log("Text:", retrievedText.trim());
                   cy.get(".tutor-fw-normal.tutor-fs-7").each(($category) => {
                     cy.wrap($category)
                       .invoke("text")

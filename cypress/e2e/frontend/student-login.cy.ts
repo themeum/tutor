@@ -93,7 +93,6 @@ describe("Tutor Student login", () => {
     //     // cy.contains('Password successfully reset');
     // });
     
-    
     it('should prevent Cross-Site Scripting (XSS) attacks', () => {
         cy.getByInputName("log").type('<script>alert("XSS attack");</script>');
         cy.getByInputName("pwd").type('test123');

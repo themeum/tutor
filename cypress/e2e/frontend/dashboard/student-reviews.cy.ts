@@ -16,8 +16,6 @@ describe("Tutor Dashboard Student Reviews", () => {
                 cy.log("No data found")
             } else {
 
-                
-
                 cy.get(".tutor-nav").then(()=>{
                     cy.get(".tutor-nav-item").eq(1).click().then(()=>{
                         cy.get(".tutor-btn.tutor-btn-ghost").eq(0).click()

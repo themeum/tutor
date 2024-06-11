@@ -20,5 +20,8 @@ export default defineConfig({
     admin_password: 'zgB#X9hN4kkqJLd67T',
     instructor_username: 'tutor',
     instructor_password: 'zgB#X9hN4kkqJLd67T',
+    instructor_zoom_account_id:'fcsXFECITP2sLoJxvK7VtQ',
+    instructor_zoom_client_id:'KY2IWr_dSVi_FaTF62YHeA',
+    instructor_zoom_client_secret:'O5TmiqEkJjY8lII98XfrJL8KnEn5Y6un',
   },
 });
