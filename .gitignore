@@ -41,3 +41,6 @@ vendor/
 .phpunit.result.cache
 yarn.lock
 .env
+
+cypress.config.test
+cypress/fixtures/google-meet-integration.json
