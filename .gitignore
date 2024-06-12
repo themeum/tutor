@@ -42,5 +42,5 @@ vendor/
 yarn.lock
 .env
 
-cypress.config.test
-cypress/fixtures/google-meet-integration.json
+# cypress.config.ts
+# cypress/fixtures/google-meet-integration.json
