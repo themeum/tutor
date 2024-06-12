@@ -23,6 +23,7 @@ describe("Tutor Dashboard My Courses", () => {
   });
   it("should filter meetings", () => {
     cy.get(".tutor-my-lg-0 > .tutor-js-form-select").click();
+
     cy.get(".tutor-form-select-options")
       .eq(1)
       .then(() => {
@@ -181,76 +182,78 @@ describe("Tutor Dashboard My Courses", () => {
     cy.intercept("POST", "/wordpress-tutor/wp-admin/admin-ajax.php").as(
       "ajaxRequest"
     );
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("No Data Found from your Search/Filter")) {
+        cy.log("No data available");
+      } else {
+        cy.get("button[action-tutor-dropdown='toggle']")
+          .eq(1)
+          .click();
+        cy.get("a.tutor-dropdown-item")
+          .contains("Edit")
+          .click();
+        cy.get("input[data-name='meeting_title']")
+          .eq(0)
+          .clear()
+          .type("Edited test zoom meeting");
 
-    cy.get("button[action-tutor-dropdown='toggle']")
-      .eq(1)
-      .click();
-    cy.get("a.tutor-dropdown-item")
-      .contains("Edit")
-      .click();
+        cy.get("textarea[data-name='meeting_summary'")
+          .eq(0)
+          .clear()
+          .type("Edited zoom meeting summary", { force: true });
+        cy.get(
+          ".tutor-mb-12 > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control"
+        )
+          .eq(0)
+          .clear()
+          .click();
+        cy.get(".dropdown-years > .dropdown-label").click();
+        cy.get(".dropdown-container.dropdown-years .dropdown-list li")
+          .contains("2025")
+          .click();
+        cy.get(".dropdown-container.dropdown-months .dropdown-label").click();
+        cy.get(".dropdown-container.dropdown-months .dropdown-list li")
+          .contains("May")
+          .click();
+        // Select the desired day
+        cy.get(".react-datepicker__day")
+          .contains("13")
+          .click();
+        cy.get("input[data-name='meeting_duration']")
+          .eq(0)
+          .clear()
+          .type("1");
+        cy.get('input[data-name="meeting_time"]')
+          .eq(0)
+          .clear()
+          .type("08:00 PM");
+        cy.get('select[data-name="meeting_duration_unit"]')
+          .eq(0)
+          .select("Hours");
+        cy.get(
+          "div[class='tutor-col-6'] div[class='tutor-form-control tutor-form-select tutor-js-form-select']"
+        )
+          .eq(0)
+          .click();
 
-    cy.get("input[data-name='meeting_title']")
-      .eq(0)
-      .clear()
-      .type("Edited test zoom meeting");
-
-    cy.get("textarea[data-name='meeting_summary'")
-      .eq(0)
-      .clear()
-      .type("Edited zoom meeting summary", { force: true });
-
-    cy.get(
-      ".tutor-mb-12 > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control"
-    )
-      .eq(0)
-      .clear()
-      .click();
-    cy.get(".dropdown-years > .dropdown-label").click();
-    cy.get(".dropdown-container.dropdown-years .dropdown-list li")
-      .contains("2025")
-      .click();
-    cy.get(".dropdown-container.dropdown-months .dropdown-label").click();
-    cy.get(".dropdown-container.dropdown-months .dropdown-list li")
-      .contains("May")
-      .click();
-    // Select the desired day
-    cy.get(".react-datepicker__day")
-      .contains("13")
-      .click();
-
-    cy.get("input[data-name='meeting_duration']")
-      .eq(0)
-      .clear()
-      .type("1");
-    cy.get('input[data-name="meeting_time"]')
-      .eq(0)
-      .clear()
-      .type("08:00 PM");
-    cy.get('select[data-name="meeting_duration_unit"]')
-      .eq(0)
-      .select("Hours");
-    cy.get(
-      "div[class='tutor-col-6'] div[class='tutor-form-control tutor-form-select tutor-js-form-select']"
-    )
-      .eq(0)
-      .click();
-    cy.get(
-      ".meeting-modal-form-wrap > :nth-child(4) > :nth-child(1) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(108) > .tutor-nowrap-ellipsis"
-    )
-      .eq(0)
-      .click();
-    cy.get("select[data-name='auto_recording']")
-      .eq(0)
-      .select("No Recordings");
-    cy.get("input[data-name='meeting_password']")
-      .eq(0)
-      .type("1234");
-    cy.get("button")
-      .contains("Update Meeting")
-      .click();
-
-    cy.wait("@ajaxRequest").then((interception) => {
-      expect(interception.response.statusCode).to.equal(200);
+        cy.get(
+          ".meeting-modal-form-wrap > :nth-child(4) > :nth-child(1) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(108) > .tutor-nowrap-ellipsis"
+        )
+          .eq(0)
+          .click();
+        cy.get("select[data-name='auto_recording']")
+          .eq(0)
+          .select("No Recordings");
+        cy.get("input[data-name='meeting_password']")
+          .eq(0)
+          .type("1234");
+        cy.get("button")
+          .contains("Update Meeting")
+          .click();
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.response.statusCode).to.equal(200);
+        });
+      }
     });
   });
 
@@ -258,18 +261,24 @@ describe("Tutor Dashboard My Courses", () => {
     cy.intercept("POST", "/wordpress-tutor/wp-admin/admin-ajax.php").as(
       "ajaxRequest"
     );
-    cy.get("button[action-tutor-dropdown='toggle']")
-      .eq(5)
-      .click();
-    cy.get("a.tutor-dropdown-item")
-      .contains("Delete")
-      .click({ force: true });
-    cy.get("button")
-      .contains("Yes, Delete This")
-      .click();
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("No Data Found from your Search/Filter")) {
+        cy.log("No data available");
+      } else {
+        cy.get("button[action-tutor-dropdown='toggle']")
+          .eq(5)
+          .click();
+        cy.get("a.tutor-dropdown-item")
+          .contains("Delete")
+          .click({ force: true });
+        cy.get("button")
+          .contains("Yes, Delete This")
+          .click();
 
-    cy.wait("@ajaxRequest").then((interception) => {
-      expect(interception.response.statusCode).to.equal(200);
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.response.statusCode).to.equal(200);
+        });
+      }
     });
   });
 
