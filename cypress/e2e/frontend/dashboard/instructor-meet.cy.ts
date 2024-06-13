@@ -136,6 +136,7 @@ describe("Tutor Dashboard My Courses", () => {
       force: true,
     });
 
+    
     cy.get(
       ".tutor-gmi-meeting-time > :nth-child(1) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control"
     ).click();

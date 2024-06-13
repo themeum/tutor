@@ -163,11 +163,9 @@ Cypress.Commands.add("checkSorting", (order, formSelector, itemSelector) => {
   function checkSorting() {
     cy.get(formSelector).select(order);
     cy.get("body").then(($body) => {
-      if (
-        $body.text().includes("No Data Found from your Search/Filter")
-      ) {
+      if ($body.text().includes("No Data Found from your Search/Filter")) {
         cy.log("No data available");
-      }else{
+      } else {
         cy.get(itemSelector).then(($items) => {
           const itemTexts = $items
             .map((index, item) => item.innerText.trim())
@@ -178,9 +176,8 @@ Cypress.Commands.add("checkSorting", (order, formSelector, itemSelector) => {
           expect(itemTexts).to.deep.equal(sortedItems);
         });
       }
-    }
-    
-)}
+    });
+  }
   checkSorting();
 });
 
