@@ -193,7 +193,13 @@ class Shortcode {
 						'operator' => 'IN',
 					),
 				);
-			}
+				if ( is_array( $category_ids ) && count( $category_ids )  ) {
+					
+					$_GET = array('tutor-course-filter-category' => $category_ids);
+
+				}
+
+ 			}
 
 			if ( ! empty( $category_names ) ) {
 				$a['tax_query'] = array(
