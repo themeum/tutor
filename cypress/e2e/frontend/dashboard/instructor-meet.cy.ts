@@ -306,7 +306,7 @@ describe("Tutor Dashboard My Courses", () => {
     });
   });
 
-  it("should delete a zoom meeting", () => {
+  it("should delete a google meeting", () => {
     cy.intercept("POST", "/wordpress-tutor/wp-admin/admin-ajax.php").as(
       "ajaxRequest"
     );

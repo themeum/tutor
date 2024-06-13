@@ -161,12 +161,12 @@ Cypress.Commands.add("performBulkAction", (option) => {
 
 Cypress.Commands.add("checkSorting", (order, formSelector, itemSelector) => {
   function checkSorting() {
-    cy.get(formSelector).select(order);
     cy.get("body").then(($body) => {
       if ($body.text().includes("No Data Found from your Search/Filter")) {
         cy.log("No data available");
       } else {
         cy.get(itemSelector).then(($items) => {
+          cy.get(formSelector).select(order);
           const itemTexts = $items
             .map((index, item) => item.innerText.trim())
             .get()
@@ -238,7 +238,7 @@ Cypress.Commands.add(
       cy.get(submitButtonSelector).click();
     }
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
+      if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No request found")) {
         cy.log("No data available");
       } else {
         let count = 0;

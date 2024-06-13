@@ -41,5 +41,6 @@ export const backendUrls = {
     COURSES:"wp-admin/admin.php?page=tutor",
     SETTINGS:"wp-admin/admin.php?page=tutor_settings",
     SETTINGS_COURSE:"wp-admin/admin.php?page=tutor_settings&tab_page=course",
-    ENROLLMENTS:"wp-admin/admin.php?page=enrollments"
+    ENROLLMENTS:"wp-admin/admin.php?page=enrollments",
+    WITHDRAW_REQUESTS:"wp-admin/admin.php?page=tutor_withdraw_requests"
 }

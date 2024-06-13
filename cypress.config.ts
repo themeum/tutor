@@ -11,7 +11,7 @@ export default defineConfig({
   viewportWidth: 1400,
   env: {
     base_url: 'http://localhost:8888/wordpress-tutor',
-    single_course_slug: 'intro-to-javascript-for-beginners-free',
+    single_course_slug: 'intro-to-javascript-for-beginners-free-2',
     paid_course_slug:'intro-to-paid-course-2-2',
     cod_course_slug:'intro-to-javascript-for-beginners-cod',
     student_username: 'tutor',

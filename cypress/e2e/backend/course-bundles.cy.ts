@@ -32,7 +32,7 @@ describe("Tutor Admin Course Bundles", () => {
     checkSorting("DESC")
   });
 
-  it("should be able to search any course", () => {
+  it("should be able to search any course bundle", () => {
     const searchInputSelector = "#tutor-backend-filter-search";
     const searchQuery = "test";
     const courseLinkSelector = ".tutor-table-link";
