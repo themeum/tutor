@@ -365,6 +365,10 @@ class Course_List {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
+		//check if h5p addon is enabled
+		if( tutor_utils()->get_option('_tutor_h5p_enabled')){
+			\TUTOR_H5P\H5P::delete_h5p_course_quiz_meta( $course_id);
+		}
 		$delete = CourseModel::delete_course( $course_id );
 
 		if ( $delete ) {

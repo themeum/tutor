@@ -1053,6 +1053,17 @@ class Quiz {
 				//phpcs:enable
 			}
 
+			//check if h5p addon is enabled
+			if( tutor_utils()->get_option('_tutor_h5p_enabled')){
+
+				foreach ($questions_ids as $question_id) {
+					//check if h5p question
+					if(get_post_meta($question_id, '_tutor_h5p_question_content_id')){
+						delete_post_meta( $question_id, '_tutor_h5p_question_content_id' );
+					}
+				}
+			}
+
 			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) );
 
 			wp_delete_post( $quiz_id, true );
