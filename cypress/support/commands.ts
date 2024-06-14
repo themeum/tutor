@@ -18,6 +18,16 @@ declare namespace Cypress {
       formSelector: string,
       itemSelector: string
     ): Chainable<JQuery<HTMLElement>>;
+    filterElements(
+      filterFormSelector: string,
+      dropdownSelector: string,
+      dropdownOptionSelector: string,
+      dropdownTextSelector: string,
+      elementTitleSelector: string
+    ): Chainable<JQuery<HTMLElement>>;
+    filterElementsByDate(
+      filterFormSelector:string, elementDateSelector:string
+    ): Chainable<JQuery<HTMLElement>>;
     search(
       searchInputSelector: string,
       searchQuery: string,
@@ -181,6 +191,83 @@ Cypress.Commands.add("checkSorting", (order, formSelector, itemSelector) => {
   checkSorting();
 });
 
+Cypress.Commands.add(
+  "filterElements",
+  (
+    filterFormSelector,
+    dropdownSelector,
+    dropdownOptionSelector,
+    dropdownTextSelector,
+    elementTitleSelector
+  ) => {
+    cy.get(filterFormSelector).click();
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("No Records Found")) {
+        cy.log("No data available");
+      } else {
+        cy.get(dropdownSelector)
+          .eq(1)
+          .then(() => {
+            cy.get(dropdownOptionSelector).then(($options) => {
+              const randomIndex = Cypress._.random(1, $options.length - 3);
+              const $randomOption = Cypress.$($options[randomIndex]);
+              const selectedOptionText = $randomOption.text().trim();
+              cy.wrap($randomOption)
+                .find(dropdownTextSelector)
+                .click();
+              
+              cy.get("body").then(($body) => {
+                if (
+                  $body.text().includes("No Data Found from your Search/Filter")
+                ) {
+                  cy.log("No data available");
+                } else {
+                  cy.wait(500);
+                  cy.get(elementTitleSelector).each(($element) => {
+                    const elementText = $element.text().trim();
+                    expect(elementText).to.contain(selectedOptionText);
+                  });
+                }
+              });
+            });
+          });
+      }
+    });
+  }
+);
+
+Cypress.Commands.add(
+  "filterElementsByDate",
+  (
+    filterFormSelector,
+    elementDateSelector
+  ) => {
+    cy.get(filterFormSelector).click();
+      cy.get(".dropdown-years").click();
+      cy.get(".dropdown-years>.dropdown-list")
+        .contains("2025")
+        .click();
+      cy.get(".dropdown-months > .dropdown-label").click();
+      cy.get(".dropdown-months > .dropdown-list")
+        .contains("June")
+        .click();
+      cy.get(".react-datepicker__day--011")
+        .contains("11")
+        .click();
+      cy.get("body").then(($body) => {
+        if ($body.text().includes("No Data Found from your Search/Filter")) {
+          cy.log("No data available");
+        } else {
+          cy.wait(2000);
+          cy.get(elementDateSelector).each(($el) => {
+            const dateText = $el.text().trim();
+            expect(dateText).to.contain("June 11, 2025");
+          });
+        }
+      });
+  }
+);
+
 Cypress.Commands.add("filterByCategory", () => {
   cy.get(".tutor-js-form-select")
     .eq(1)
@@ -238,7 +325,10 @@ Cypress.Commands.add(
       cy.get(submitButtonSelector).click();
     }
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No request found")) {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found")
+      ) {
         cy.log("No data available");
       } else {
         let count = 0;
