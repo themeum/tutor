@@ -22,31 +22,8 @@ describe("Tutor Student login", () => {
         cy.getByInputName("log").type('john');
         cy.getByInputName("pwd").type('invalidPassword');
         cy.get("#tutor-login-form button").contains("Sign In").click()
-        cy.get('.tutor-alert').should('contain', 'is not registered on this site');
+        cy.get('.tutor-alert').should('contain', 'is incorrect.');
     });
-
-    // commented 
-
-    // it('should display an error for empty username', () => {
-    //     // cy.getByInputName("log").clear();
-    //     cy.getByInputName("pwd").type('validPassword');
-    //     cy.get("#tutor-login-form button").contains("Sign In").click()
-    //     cy.get('.tutor-alert').should('contain', 'The username field is empty');
-    // });
-    
-    // it('should display an error for empty password', () => {
-    //     cy.getByInputName("log").type('validUsername');
-    //     cy.get("#tutor-login-form button").contains("Sign In").click()
-    //     cy.get('.tutor-alert').should('contain', 'Password is required');
-    // });
-    
-    // it('should display errors for empty username and password', () => {
-    //     cy.get("#tutor-login-form button").contains("Sign In").click()
-    //     cy.get('.tutor-alert').should('contain', 'Username is required');
-    //     cy.get('.tutor-alert').should('contain', 'Password is required');
-    // });
-
-    // commented
     
     it('should trim leading/trailing spaces in username', () => {
         cy.getByInputName("log").type('   john   ');

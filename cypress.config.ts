@@ -1,4 +1,7 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress';
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -10,18 +13,18 @@ export default defineConfig({
   viewportHeight: 900,
   viewportWidth: 1400,
   env: {
-    base_url: 'http://localhost:8888/wordpress-tutor',
-    single_course_slug: 'intro-to-javascript-for-beginners-free-2',
-    paid_course_slug:'intro-to-paid-course-2-2',
-    cod_course_slug:'intro-to-javascript-for-beginners-cod',
-    student_username: 'tutor',
-    student_password: 'zgB#X9hN4kkqJLd67T',
-    admin_username: 'tutor',
-    admin_password: 'zgB#X9hN4kkqJLd67T',
-    instructor_username: 'tutor',
-    instructor_password: 'zgB#X9hN4kkqJLd67T',
-    instructor_zoom_account_id:'fcsXFECITP2sLoJxvK7VtQ',
-    instructor_zoom_client_id:'KY2IWr_dSVi_FaTF62YHeA',
-    instructor_zoom_client_secret:'O5TmiqEkJjY8lII98XfrJL8KnEn5Y6un',
+    base_url: process.env.CYPRESS_base_url,
+    single_course_slug: process.env.CYPRESS_single_course_slug,
+    paid_course_slug: process.env.CYPRESS_paid_course_slug,
+    cod_course_slug: process.env.CYPRESS_cod_course_slug,
+    student_username: process.env.CYPRESS_student_username,
+    student_password: process.env.CYPRESS_student_password,
+    admin_username: process.env.CYPRESS_admin_username,
+    admin_password: process.env.CYPRESS_admin_password,
+    instructor_username: process.env.CYPRESS_instructor_username,
+    instructor_password: process.env.CYPRESS_instructor_password,
+    instructor_zoom_account_id: process.env.CYPRESS_instructor_zoom_account_id,
+    instructor_zoom_client_id: process.env.CYPRESS_instructor_zoom_client_id,
+    instructor_zoom_client_secret: process.env.CYPRESS_instructor_zoom_client_secret,
   },
 });
