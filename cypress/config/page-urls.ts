@@ -32,9 +32,15 @@ export const backendUrls = {
     COURSE_BUNDLES: 'wp-admin/admin.php?page=course-bundle',
     CATEGORIES: 'wp-admin/edit-tags.php?taxonomy=course-category&post_type=courses',
     TAGS: 'wp-admin/edit-tags.php?taxonomy=course-tag&post_type=courses',
+    STUDENTS:'wp-admin/admin.php?page=tutor-students',
     INSTRUCTORS: 'wp-admin/admin.php?page=tutor-instructors',
     ANNOUNCEMENTS: 'wp-admin/admin.php?page=tutor_announcements',
     QUESTION_AND_ANSWER: 'wp-admin/admin.php?page=question_answer',
     QUIZ_ATTEMPTS: 'wp-admin/admin.php?page=tutor_quiz_attempts',
     ASSIGNMENTS: 'wp-admin/admin.php?page=tutor-assignments',
+    COURSES:"wp-admin/admin.php?page=tutor",
+    SETTINGS:"wp-admin/admin.php?page=tutor_settings",
+    SETTINGS_COURSE:"wp-admin/admin.php?page=tutor_settings&tab_page=course",
+    ENROLLMENTS:"wp-admin/admin.php?page=enrollments",
+    WITHDRAW_REQUESTS:"wp-admin/admin.php?page=tutor_withdraw_requests"
 }

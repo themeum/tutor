@@ -14,7 +14,13 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+import 'cypress-iframe';
 import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+    console.log(err)
+    return false
+})

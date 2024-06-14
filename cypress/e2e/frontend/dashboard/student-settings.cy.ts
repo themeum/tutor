@@ -1,8 +1,9 @@
 import { frontendUrls } from "../../../config/page-urls"
 
 describe("Tutor Dashboard Settings", () => {
+    
     beforeEach(() => {
-        cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.SETTINGS}`)
+        cy.visit(`${Cypress.env("base_url")}${frontendUrls.dashboard.SETTINGS}`)
         cy.loginAsStudent()
         cy.url().should("include", frontendUrls.dashboard.SETTINGS)
     })
@@ -39,7 +40,27 @@ describe("Tutor Dashboard Settings", () => {
         cy.loginAsStudent()
     })
 
+    it ("should select a withdraw method", () => {
+        cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
+        
+        cy.get("a.tutor-nav-link").contains("Withdraw").click()
+        
+        cy.getByInputName("tutor_selected_withdraw_method").click()
+        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][account_name]").clear().type("John Doe")
+        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][account_number]").clear().type("46728376439")
+        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][bank_name]").clear().type("National Bank")
+        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][iban]").clear().type("46728376439")
+        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][swift]").clear().type("46728376439")
+
+        cy.get("button").contains("Save Withdrawal Account").click()
+
+        cy.wait('@ajaxRequest').then((interception) => {
+            expect(interception.response.body.success).to.equal(true);
+        });
+    })
+    
     it ("should update social profiles", () => {
+
         cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
 
         cy.get("a.tutor-nav-link").contains("Social Profile").click()
@@ -49,10 +70,13 @@ describe("Tutor Dashboard Settings", () => {
         cy.getByInputName("_tutor_profile_linkedin").clear().type("https://linkedin.com/username")
         cy.getByInputName("_tutor_profile_website").clear().type("https://example.com/")
         cy.getByInputName("_tutor_profile_github").clear().type("https://github.com/username")
+
         cy.get("button").contains("Update Profile").click()
         
+        // testcase fails because api call does not happen
         cy.wait('@ajaxRequest').then((interception) => {
             expect(interception.response.body.success).to.equal(true);
         });
+
     })
 })
