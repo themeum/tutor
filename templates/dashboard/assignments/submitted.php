@@ -106,7 +106,7 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 						?>
 						<tr>
 							<td>
-								<?php echo wp_kses_post( date( 'j M, Y,<\b\r>h:i a', strtotime( $assignment->comment_date ) ) ); ?>
+								<?php echo wp_kses_post( tutor_utils()->convert_date_into_wp_timezone( $assignment->comment_date_gmt , 'j M, Y,<\b\r>h:i a' ) ); ?>
 							</td>
 
 							<td>

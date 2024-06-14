@@ -1944,6 +1944,7 @@ class Utils {
 
 		$course_query = '';
 		if ( '' !== $course_id ) {
+			$course_id    = (int) $course_id;
 			$course_query = "AND posts.post_parent = {$course_id}";
 		}
 
@@ -2004,6 +2005,7 @@ class Utils {
 
 		$course_query = '';
 		if ( '' !== $course_id ) {
+			$course_id    = (int) $course_id;
 			$course_query = "AND posts.post_parent = {$course_id}";
 		}
 
@@ -5347,6 +5349,19 @@ class Utils {
 	}
 
 	/**
+	 * Generate cache busting URL
+	 *
+	 * @since 2.8.0
+	 *
+	 * @param string $url url.
+	 *
+	 * @return string
+	 */
+	public function get_nocache_url( $url ) {
+		return add_query_arg( 'nocache', time(), $url );
+	}
+
+	/**
 	 * Student registration form
 	 *
 	 * @since 1.0.0
@@ -5371,7 +5386,7 @@ class Utils {
 	 * @return bool|false|string
 	 */
 	public function instructor_register_url() {
-		 $instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
+		$instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
 
 		if ( $instructor_register_page ) {
 			return apply_filters( 'tutor_instructor_register_url', get_the_permalink( $instructor_register_page ) );
@@ -9712,10 +9727,11 @@ class Utils {
 	 */
 	public function update_enrollments( string $status, array $enrollment_ids ): bool {
 		global $wpdb;
-		$enrollment_ids_in = implode( ',', $enrollment_ids );
+		$enrollment_ids_in = QueryHelper::prepare_in_clause( $enrollment_ids );
 		$status            = 'complete' === $status ? 'completed' : $status;
 		$post_table        = $wpdb->posts;
-		$update            = $wpdb->query(
+		
+		$wpdb->query(
 			$wpdb->prepare(
 				" UPDATE {$post_table}
 				SET post_status = %s
@@ -9724,18 +9740,6 @@ class Utils {
 				$status
 			)
 		);
-
-		// Clear course progress if cancelled.
-		if ( $status == 'cancelled' || $status == 'cancel' ) {
-			foreach ( $enrollment_ids as $id ) {
-				$course_id  = get_post_field( 'post_parent', $id );
-				$student_id = get_post_field( 'post_author', $id );
-
-				if ( $course_id && $student_id ) {
-					$this->delete_course_progress( $course_id, $student_id );
-				}
-			}
-		}
 
 		// Run action hook.
 		foreach ( $enrollment_ids as $id ) {
