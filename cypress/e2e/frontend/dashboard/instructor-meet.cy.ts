@@ -24,7 +24,6 @@ describe("Tutor Dashboard My Courses", () => {
   });
   it("should filter meetings", () => {
     cy.get(":nth-child(2) > .tutor-js-form-select").click();
-
     cy.get("body").then(($body) => {
       if ($body.text().includes("No Records Found")) {
         cy.log("No data available");
@@ -113,7 +112,6 @@ describe("Tutor Dashboard My Courses", () => {
       }
     });
   });
-
   it("should create new course and google meeting", () => {
     cy.intercept(
       "POST",
@@ -196,13 +194,13 @@ describe("Tutor Dashboard My Courses", () => {
       .click();
   });
   it("should start meeting", () => {
-    // google login
-    // cy.visit("https://workspace.google.com/intl/en/products/calendar/")
-
     cy.get("a.tutor-btn.tutor-btn-primary")
       .contains("Start Meeting")
       .invoke("removeAttr", "target")
       .click()
+      .then(()=>{
+        cy.googleLogin()
+      })
       .then((url) => {
         console.log(url);
       });
@@ -373,4 +371,5 @@ describe("Tutor Dashboard My Courses", () => {
       }
     );
   });
+
 });

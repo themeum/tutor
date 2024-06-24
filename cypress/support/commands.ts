@@ -13,6 +13,7 @@ declare namespace Cypress {
       option: string
     ): Chainable<JQuery<HTMLElement>>;
     filterByCategory(): Chainable<JQuery<HTMLElement>>;
+    googleLogin(): Chainable<JQuery<HTMLElement>>;
     checkSorting(
       order: string,
       formSelector: string,
@@ -26,7 +27,8 @@ declare namespace Cypress {
       elementTitleSelector: string
     ): Chainable<JQuery<HTMLElement>>;
     filterElementsByDate(
-      filterFormSelector:string, elementDateSelector:string
+      filterFormSelector: string,
+      elementDateSelector: string
     ): Chainable<JQuery<HTMLElement>>;
     search(
       searchInputSelector: string,
@@ -104,6 +106,71 @@ Cypress.Commands.add("loginAsStudent", () => {
     .contains("Sign In")
     .click();
 });
+
+// Cypress.Commands.add("googleLogin", () => {
+//   const {
+//     CYPRESS_google_client_id,
+//     CYPRESS_google_client_secret,
+//     CYPRESS_google_refresh_token,
+//   } = Cypress.env();
+
+//   cy.request({
+//     method: "POST",
+//     url: "https://oauth2.googleapis.com/token",
+//     body: {
+//       client_id: CYPRESS_google_client_id,
+//       client_secret: CYPRESS_google_client_secret,
+//       refresh_token: CYPRESS_google_refresh_token,
+//       grant_type: "refresh_token",
+//     },
+//   }).then((response) => {
+//     const accessToken = response.body.access_token;
+//     cy.visit(`http://localhost:8888/wordpress-tutor/wp-admin/admin.php?page=tutor-google-classroom?access_token=${accessToken}`);
+//   });
+// });
+
+// cypress/support/commands.js
+Cypress.Commands.add('googleLogin', () => {
+  cy.log('Logging in to Google')
+  cy.request({
+    method: 'POST',
+    url: 'https://www.googleapis.com/oauth2/v4/token',
+    body: {
+      grant_type: 'refresh_token',
+      client_id: Cypress.env('googleClientId'),
+      client_secret: Cypress.env('googleClientSecret'),
+      refresh_token: Cypress.env('googleRefreshToken'),
+    },
+  }).then(({ body }) => {
+    const { access_token, id_token } = body
+
+    cy.request({
+      method: 'GET',
+      url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+      headers: { Authorization: `Bearer ${access_token}` },
+    }).then(({ body }) => {
+      cy.log(body)
+      const userItem = {
+        token: id_token,
+        user: {
+          googleId: body.sub,
+          email: body.email,
+          givenName: body.given_name,
+          familyName: body.family_name,
+          imageUrl: body.picture,
+        },
+      }
+
+      window.localStorage.setItem('googleCypress', JSON.stringify(userItem))
+      // cy.visit('/')
+      // cy.visit(`http://localhost:8888/wordpress-tutor/wp-admin/admin.php?page=tutor-google-classroom`);
+    })
+  })
+})
+
+
+
+
 
 Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
   cy.getByInputName("tutor-bulk-checkbox-all").then(($checkboxes) => {
@@ -215,7 +282,7 @@ Cypress.Commands.add(
               cy.wrap($randomOption)
                 .find(dropdownTextSelector)
                 .click();
-              
+
               cy.get("body").then(($body) => {
                 if (
                   $body.text().includes("No Data Found from your Search/Filter")
@@ -238,33 +305,30 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   "filterElementsByDate",
-  (
-    filterFormSelector,
-    elementDateSelector
-  ) => {
+  (filterFormSelector, elementDateSelector) => {
     cy.get(filterFormSelector).click();
-      cy.get(".dropdown-years").click();
-      cy.get(".dropdown-years>.dropdown-list")
-        .contains("2025")
-        .click();
-      cy.get(".dropdown-months > .dropdown-label").click();
-      cy.get(".dropdown-months > .dropdown-list")
-        .contains("June")
-        .click();
-      cy.get(".react-datepicker__day--011")
-        .contains("11")
-        .click();
-      cy.get("body").then(($body) => {
-        if ($body.text().includes("No Data Found from your Search/Filter")) {
-          cy.log("No data available");
-        } else {
-          cy.wait(2000);
-          cy.get(elementDateSelector).each(($el) => {
-            const dateText = $el.text().trim();
-            expect(dateText).to.contain("June 11, 2025");
-          });
-        }
-      });
+    cy.get(".dropdown-years").click();
+    cy.get(".dropdown-years>.dropdown-list")
+      .contains("2025")
+      .click();
+    cy.get(".dropdown-months > .dropdown-label").click();
+    cy.get(".dropdown-months > .dropdown-list")
+      .contains("June")
+      .click();
+    cy.get(".react-datepicker__day--011")
+      .contains("11")
+      .click();
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("No Data Found from your Search/Filter")) {
+        cy.log("No data available");
+      } else {
+        cy.wait(2000);
+        cy.get(elementDateSelector).each(($el) => {
+          const dateText = $el.text().trim();
+          expect(dateText).to.contain("June 11, 2025");
+        });
+      }
+    });
   }
 );
 
@@ -327,7 +391,8 @@ Cypress.Commands.add(
     cy.get("body").then(($body) => {
       if (
         $body.text().includes("No Data Found from your Search/Filter") ||
-        $body.text().includes("No request found")
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section")
       ) {
         cy.log("No data available");
       } else {

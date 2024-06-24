@@ -158,7 +158,6 @@ describe("Tutor Admin Announcements", () => {
         cy.get("#tutor-confirm-bulk-action")
           .contains("Yes, I'am Sure")
           .click();
-
         cy.contains("No Data Available in this Section");
       }
     });
