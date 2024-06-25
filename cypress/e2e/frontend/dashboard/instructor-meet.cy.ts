@@ -11,7 +11,8 @@ describe("Tutor Dashboard My Courses", () => {
   it("should be able to search any meeting", () => {
     const searchInputSelector = "#tutor-backend-filter-search";
     const searchQuery = "Google meet test";
-    const courseLinkSelector = ".tutor-google-meet-meeting-item>td>div";
+    const courseLinkSelector =
+      ".tutor-google-meet-meeting-item>td:nth-child(2)>div:first-child";
     const submitButtonSelector = "";
     const submitWithButton = false;
     cy.search(
@@ -33,7 +34,9 @@ describe("Tutor Dashboard My Courses", () => {
           .then(() => {
             cy.get(".tutor-form-select-option")
               .then(($options) => {
-                cy.get('[data-key="14144"]').click();
+                cy.get(".tutor-form-select-options>div:nth-child(2)")
+                  .eq(0)
+                  .click();
               })
               .then(() => {
                 cy.get("span.tutor-form-select-label[tutor-dropdown-label]")
@@ -134,7 +137,6 @@ describe("Tutor Dashboard My Courses", () => {
       force: true,
     });
 
-    
     cy.get(
       ".tutor-gmi-meeting-time > :nth-child(1) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control"
     ).click();
@@ -147,7 +149,6 @@ describe("Tutor Dashboard My Courses", () => {
     cy.get(".dropdown-container.dropdown-months .dropdown-list li")
       .contains("June")
       .click();
-    // Select the desired day
     cy.get(".react-datepicker__day")
       .contains("11")
       .click();
@@ -165,7 +166,6 @@ describe("Tutor Dashboard My Courses", () => {
     cy.get(".dropdown-container.dropdown-months .dropdown-list li")
       .contains("June")
       .click();
-    // Select the desired day
     cy.get(".react-datepicker__day")
       .contains("11")
       .click();
@@ -197,13 +197,7 @@ describe("Tutor Dashboard My Courses", () => {
     cy.get("a.tutor-btn.tutor-btn-primary")
       .contains("Start Meeting")
       .invoke("removeAttr", "target")
-      .click()
-      .then(()=>{
-        cy.googleLogin()
-      })
-      .then((url) => {
-        console.log(url);
-      });
+      .click();
 
     cy.url().should("include", "/calendar");
   });
@@ -271,7 +265,6 @@ describe("Tutor Dashboard My Courses", () => {
         cy.get(".dropdown-container.dropdown-months .dropdown-list li")
           .contains("June")
           .click();
-        // Select the desired day
         cy.get(".react-datepicker__day")
           .contains("11")
           .click();
@@ -357,7 +350,7 @@ describe("Tutor Dashboard My Courses", () => {
       .check()
       .should("be.checked");
   });
-  // help
+  // // help
   it("Should make corresponding elements visible when accordion is clicked", () => {
     cy.get(":nth-child(5) > .tutor-nav-link")
       .contains("Help")
@@ -371,5 +364,4 @@ describe("Tutor Dashboard My Courses", () => {
       }
     );
   });
-
 });
