@@ -43,5 +43,8 @@ export const backendUrls = {
     SETTINGS_COURSE:"wp-admin/admin.php?page=tutor_settings&tab_page=course",
     ENROLLMENTS:"wp-admin/admin.php?page=enrollments",
     WITHDRAW_REQUESTS:"wp-admin/admin.php?page=tutor_withdraw_requests",
-    GOOGLE_CLASSROOM:"wp-admin/admin.php?page=tutor-google-classroom"
+    GOOGLE_CLASSROOM:"wp-admin/admin.php?page=tutor-google-classroom",
+    GOOGLE_MEET:"wp-admin/admin.php?page=google-meet",
+    ZOOM:"wp-admin/admin.php?page=tutor_zoom",
+    REPORTS:"wp-admin/admin.php?page=tutor_report",
 }
