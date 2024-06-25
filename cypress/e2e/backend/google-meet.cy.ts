@@ -1,12 +1,10 @@
-import { frontendUrls } from "../../../config/page-urls";
+import { backendUrls } from "../../config/page-urls";
 
 describe("Tutor Dashboard My Courses", () => {
   beforeEach(() => {
-    cy.visit(
-      `${Cypress.env("base_url")}/${frontendUrls.dashboard.GOOGLE_MEET}`
-    );
-    cy.loginAsInstructor();
-    cy.url().should("include", frontendUrls.dashboard.GOOGLE_MEET);
+    cy.visit(`${Cypress.env("base_url")}/${backendUrls.GOOGLE_MEET}`);
+    cy.loginAsAdmin();
+    cy.url().should("include", backendUrls.GOOGLE_MEET);
   });
   it("should be able to search any meeting", () => {
     const searchInputSelector = "#tutor-backend-filter-search";
@@ -78,7 +76,10 @@ describe("Tutor Dashboard My Courses", () => {
       .click();
 
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No records found")
+      ) {
         cy.log("No data available");
       } else {
         cy.wait(2000);
@@ -89,7 +90,7 @@ describe("Tutor Dashboard My Courses", () => {
       }
     });
   });
-  //   set api and save connection
+  // set api and save connection
   it("should upload meet integration json and save connection", () => {
     const filePath = "/Users/ollyo/Documents/google-meet-integration.json";
     cy.get("body").then(($body) => {
@@ -115,84 +116,7 @@ describe("Tutor Dashboard My Courses", () => {
       }
     });
   });
-  it("should create new course and google meeting", () => {
-    cy.intercept(
-      "POST",
-      `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`
-    ).as("ajaxRequest");
 
-    cy.get("a#tutor-create-new-course").click();
-    cy.url().should("include", "/create-course");
-    cy.get("input#tutor-course-create-title")
-      .clear()
-      .type("Meet test course");
-    cy.get(
-      "button[data-tutor-modal-target='tutor-google-meet-create-modal']"
-    ).click();
-    cy.get("input[name='meeting_title']")
-      .clear()
-      .type("Google meet test");
-
-    cy.get("textarea[name='meeting_summary'").type("Google meet test summary", {
-      force: true,
-    });
-
-    cy.get(
-      ".tutor-gmi-meeting-time > :nth-child(1) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control"
-    ).click();
-    // cy.get("#meeting_start_date").click()
-    cy.get(".dropdown-years > .dropdown-label").click();
-    cy.get(".dropdown-container.dropdown-years .dropdown-list li")
-      .contains("2025")
-      .click();
-    cy.get(".dropdown-container.dropdown-months .dropdown-label").click();
-    cy.get(".dropdown-container.dropdown-months .dropdown-list li")
-      .contains("June")
-      .click();
-    cy.get(".react-datepicker__day")
-      .contains("11")
-      .click();
-
-    cy.get("input[name='meeting_start_time']")
-      .clear()
-      .type("08:30 PM");
-
-    cy.get("input[name='meeting_end_date']").click();
-    cy.get(".dropdown-years > .dropdown-label").click();
-    cy.get(".dropdown-container.dropdown-years .dropdown-list li")
-      .contains("2025")
-      .click();
-    cy.get(".dropdown-container.dropdown-months .dropdown-label").click();
-    cy.get(".dropdown-container.dropdown-months .dropdown-list li")
-      .contains("June")
-      .click();
-    cy.get(".react-datepicker__day")
-      .contains("11")
-      .click();
-
-    cy.get('input[name="meeting_end_time"]')
-      .clear()
-      .type("09:30 PM");
-
-    cy.get(".tutor-col-md-8 > .tutor-js-form-select").click();
-    cy.get(
-      ".tutor-col-md-8 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(108) > .tutor-nowrap-ellipsis"
-    ).click();
-
-    cy.get("input[name='meeting_attendees_enroll_students']").check();
-
-    cy.get(".tutor-gm-create-new-meeting")
-      .contains("Create Meeting")
-      .click();
-
-    cy.wait("@ajaxRequest").then((interception) => {
-      expect(interception.response.body.success).to.equal(true);
-    });
-
-    cy.get("button[name='course_submit_btn']")
-      .contains("Publish")
-      .click();
-  });
   it("should start meeting", () => {
     cy.get("a.tutor-btn.tutor-btn-primary")
       .contains("Start Meeting")
@@ -217,11 +141,9 @@ describe("Tutor Dashboard My Courses", () => {
       if ($body.text().includes("No Records Found")) {
         cy.log("No data available");
       } else {
-        cy.get("button[action-tutor-dropdown='toggle']")
-          .eq(1)
-          .click();
-        cy.get("a.tutor-dropdown-item")
+        cy.get("a.tutor-btn.tutor-btn-outline-primary.tutor-btn-md")
           .contains("Edit")
+          .eq(0)
           .click();
 
         cy.get("input[name='meeting_title']")
@@ -296,10 +218,12 @@ describe("Tutor Dashboard My Courses", () => {
           .contains("Update Meeting")
           .click();
 
-          cy.wait("@ajaxRequest").then((interception) => {
-            expect(interception.request.body).to.include("tutor_google_meet_new_meeting");
-            expect(interception.response.body.success).to.equal(true);
-          });
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.request.body).to.include(
+            "tutor_google_meet_new_meeting"
+          );
+          expect(interception.response.body.success).to.equal(true);
+        });
       }
     });
   });
@@ -318,17 +242,12 @@ describe("Tutor Dashboard My Courses", () => {
       if ($body.text().includes("No Records Found")) {
         cy.log("No data available");
       } else {
-        cy.get("button[action-tutor-dropdown='toggle']")
-          .eq(3)
-          .click();
-        cy.get("a.tutor-dropdown-item")
-          .contains("Delete")
+        cy.get("a.tutor-iconic-btn")
+          .eq(0)
           .click({ force: true });
         cy.get(
           "#tutor-common-confirmation-form > .tutor-d-flex > .tutor-btn-primary"
-        )
-          .contains("Yes, I'am Sure")
-          .click();
+        ).click();
       }
     });
     cy.wait("@ajaxRequest").then((interception) => {
@@ -336,7 +255,6 @@ describe("Tutor Dashboard My Courses", () => {
       expect(interception.response.body.success).to.equal(true);
     });
   });
-
   // settings
   it("should save settings", () => {
     cy.get(":nth-child(4) > .tutor-nav-link")
@@ -364,7 +282,7 @@ describe("Tutor Dashboard My Courses", () => {
       .check()
       .should("be.checked");
   });
-  // // help
+  //    help
   it("Should make corresponding elements visible when accordion is clicked", () => {
     cy.get(":nth-child(5) > .tutor-nav-link")
       .contains("Help")

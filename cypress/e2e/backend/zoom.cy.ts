@@ -207,7 +207,7 @@ describe("Tutor Dashboard My Courses", () => {
         cy.log("No data available");
       } else {
         cy.get("a.tutor-iconic-btn")
-          .eq(1)
+          .eq(0)
           .click({ force: true });
 
         cy.get("button")
