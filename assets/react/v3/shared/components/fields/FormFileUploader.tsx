@@ -70,7 +70,9 @@ const FormFileUploader = ({
     );
 
     const newFiles = selected.reduce((acc: UploadedFile[], file: UploadedFile) => {
-      if (existingFileIds.has(file.id)) return acc;
+      if (existingFileIds.has(file.id)) {
+        return acc;
+      }
 
       const newFile = {
         id: file.id,
@@ -81,7 +83,9 @@ const FormFileUploader = ({
         subtype: file.subtype,
       };
 
-      if (!selectMultiple) return [newFile];
+      if (!selectMultiple) {
+        return [newFile];
+      }
 
       acc.push(newFile);
       return acc;
@@ -134,16 +138,23 @@ const FormFileUploader = ({
                     <div key={file.id} css={styles.attachmentCardWrapper}>
                       <div css={styles.attachmentCard}>
                         <SVGIcon name="preview" height={40} width={40} />
+
                         <div css={styles.attachmentCardBody}>
                           <div css={styles.attachmentCardTitle}>
-                            <p css={styleUtils.text.ellipsis(1)}>{file.title}</p>
-                            <p css={styles.fileExtension}>{`.${file.subtype}`}</p>
+                            <div css={styleUtils.text.ellipsis(1)}>
+                              {file.title.concat('jduyttrhgdfgjdsjfgjdykhfkghfhc')}
+                            </div>
+
+                            <div css={styles.fileExtension}>{`.${file.subtype}`}</div>
                           </div>
-                          <p css={styles.attachmentCardSubtitle}>
+
+                          <div css={styles.attachmentCardSubtitle}>
                             <span>{`${__('Size', 'tutor')}: ${formatBytes(file.filesizeInBytes)}`}</span>
+
                             <SVGIcon name="dot" height={2} width={2} />
+
                             <span>{format(new Date(file.date), DateFormats.monthDayYearHoursMinutes)}</span>
-                          </p>
+                          </div>
                         </div>
                       </div>
 
@@ -159,6 +170,7 @@ const FormFileUploader = ({
                     </div>
                   )}
                 </For>
+
                 <Button
                   buttonCss={styles.uploadButton}
                   icon={<SVGIcon name="attach" height={24} width={24} />}
