@@ -463,7 +463,6 @@ window.tutor_esc_html = function (unsafeText) {
 
 
 window.tutor_esc_attr = function(str) {
-	console.log('called from tutor_esc_attr');
     return str.replace(/&/g, '&amp;')
               .replace(/"/g, '&quot;')
               .replace(/'/g, '&#039;')
