@@ -156,14 +156,28 @@ class Shortcode {
 			$atts
 		);
 
+		$supported_filters         = tutor_utils()->get_option( 'supported_course_filters', array() );
+		$course_filter_category    = array();
+		$course_filter_exclude_ids = array();
+		$course_filter_post_ids    = array();
+
 		if ( ! empty( $a['id'] ) ) {
 			$ids           = (array) explode( ',', $a['id'] );
 			$a['post__in'] = $ids;
+
+			if ( is_array( $ids ) && count( $ids ) > 0 && ! wp_doing_ajax() ) {
+				$_GET['tutor-course-filter-post-ids'] = $ids;
+				$course_filter_post_ids               = $ids;
+			}
 		}
 
 		if ( ! empty( $a['exclude_ids'] ) ) {
 			$exclude_ids       = (array) explode( ',', $a['exclude_ids'] );
 			$a['post__not_in'] = $exclude_ids;
+			if ( is_array( $exclude_ids ) && count( $exclude_ids ) > 0 && ! wp_doing_ajax() ) {
+				$_GET['tutor-course-filter-exclude-ids'] = $exclude_ids;
+				$course_filter_exclude_ids               = $exclude_ids;
+			}
 		}
 		if ( ! empty( $a['category'] ) ) {
 			$category = (array) explode( ',', $a['category'] );
@@ -193,6 +207,12 @@ class Shortcode {
 						'operator' => 'IN',
 					),
 				);
+
+				if ( is_array( $category_ids ) && count( $category_ids ) && ! wp_doing_ajax() ) {
+					$_GET['tutor-course-filter-category'] = $category_ids;
+					$course_filter_category               = $category_ids;
+					unset( $supported_filters['category'] );
+				}
 			}
 
 			if ( ! empty( $category_names ) ) {
@@ -229,14 +249,17 @@ class Shortcode {
 			tutor_load_template(
 				'archive-course-init',
 				array(
-					'course_filter'     => isset( $atts['course_filter'] ) && 'on' === $atts['course_filter'],
-					'supported_filters' => tutor_utils()->get_option( 'supported_course_filters', array() ),
-					'loop_content_only' => false,
-					'column_per_row'    => isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
-					'course_per_page'   => $a['posts_per_page'],
-					'show_pagination'   => isset( $atts['show_pagination'] ) && 'on' === $atts['show_pagination'],
-					'the_query'         => $the_query,
-					'current_page'      => isset( $get['current_page'] ) ? (int) $get['current_page'] : 1,
+					'course_filter'             => isset( $atts['course_filter'] ) && 'on' === $atts['course_filter'],
+					'supported_filters'         => $supported_filters,
+					'loop_content_only'         => false,
+					'column_per_row'            => isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
+					'course_per_page'           => $a['posts_per_page'],
+					'show_pagination'           => isset( $atts['show_pagination'] ) && 'on' === $atts['show_pagination'],
+					'the_query'                 => $the_query,
+					'current_page'              => isset( $get['current_page'] ) ? (int) $get['current_page'] : 1,
+					'course_filter_category'    => ! empty( $course_filter_category ) ? json_encode( $course_filter_category ) : null,
+					'course_filter_exclude_ids' => ! empty( $course_filter_exclude_ids ) ? json_encode( $course_filter_exclude_ids ) : null,
+					'course_filter_post_ids'    => ! empty( $course_filter_post_ids ) ? json_encode( $course_filter_post_ids ) : null,
 				)
 			);
 		} else {
