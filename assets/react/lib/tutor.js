@@ -454,11 +454,6 @@ window.tutor_esc_html = function (unsafeText) {
 		return str.replace(/['"]/g, function(match) {
             return match === '"' ? '&quot;' : '&#39;';
         })
-		.replace(/</g,'&lt;')
-		.replace(/>/g,'&gt;')
-		.replace(/&/g,'&amp;')
-		.replace(/\//g,'&#x2F;')
-		.replace(/`/g,'&#x60;')
 	}
 	/**
 	 * When set an HTML string to an element's innerText
