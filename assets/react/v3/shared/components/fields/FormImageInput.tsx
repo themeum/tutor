@@ -74,7 +74,7 @@ const FormImageInput = ({
                   <div css={styles.previewWrapper}>
                     <img src={url} alt={fieldValue?.title} css={styles.imagePreview} />
                     <div css={styles.hoverPreview} data-hover-buttons-wrapper>
-                      <Button variant="outlined" onClick={uploadHandler}>
+                      <Button variant="secondary" onClick={uploadHandler}>
                         {__('Replace Image', 'tutor')}
                       </Button>
                       <Button variant="text" onClick={clearHandler}>
