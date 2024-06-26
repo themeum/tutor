@@ -7,7 +7,6 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
 import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
 
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -16,6 +15,8 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
+import type { UploadedFile } from '@Components/fields/FormFileUploader';
+import FormFileUploader from '@Components/fields/FormFileUploader';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -26,7 +27,7 @@ type TimeLimitUnit = 'weeks' | 'days' | 'hours';
 interface AddLessonForm {
   assignment_title: string;
   summary: string;
-  attachments: File[] | null;
+  attachments: UploadedFile[] | null;
   time_limit: number;
   time_limit_unit: TimeLimitUnit;
   total_points: number;
@@ -122,12 +123,18 @@ const AddAssignmentModal = ({ closeModal, icon, title, subtitle }: AddLessonModa
         </div>
 
         <div css={styles.rightPanel}>
-          <div css={styles.uploadAttachment}>
-            <span css={styles.uploadLabel}>{__('Attachments', 'tutor')}</span>
-            <Button icon={<SVGIcon name="attach" height={24} width={24} />} variant="secondary">
-              {__('Upload Attachment', 'tutor')}
-            </Button>
-          </div>
+          <Controller
+            name="attachments"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormFileUploader
+                {...controllerProps}
+                label={__('Attachments', 'tutor')}
+                buttonText={__('Upload Attachment', 'tutor')}
+                selectMultiple
+              />
+            )}
+          />
 
           <div css={styles.timeLimit}>
             <Controller

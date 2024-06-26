@@ -1,16 +1,19 @@
-import type { FormControllerProps } from '@Utils/form';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import FormFieldWrapper from './FormFieldWrapper';
+import { format } from 'date-fns';
+
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
-import { css } from '@emotion/react';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
+
+import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
+
 import For from '@Controls/For';
+import Show from '@Controls/Show';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { DateFormats } from '@Config/constants';
 import { typography } from '@Config/typography';
 import { formatBytes } from '@Utils/util';
-import { format } from 'date-fns';
-import { DateFormats } from '@Config/constants';
+import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 
 export type UploadedFile = {
@@ -27,7 +30,8 @@ type FormFileUploaderProps = {
   onChange?: () => void;
   helpText?: string;
   buttonText?: string;
-} & FormControllerProps<UploadedFile[] | null>;
+  selectMultiple?: boolean;
+} & FormControllerProps<UploadedFile[] | UploadedFile | null>;
 
 const FormFileUploader = ({
   field,
@@ -35,8 +39,11 @@ const FormFileUploader = ({
   label,
   helpText,
   buttonText = __('Upload Media', 'tutor'),
+  selectMultiple = false,
 }: FormFileUploaderProps) => {
-  const wpMedia = window.wp.media();
+  const wpMedia = window.wp.media({
+    multiple: selectMultiple ? 'add' : false,
+  });
 
   const fieldValue = field.value;
 
@@ -44,17 +51,64 @@ const FormFileUploader = ({
     wpMedia.open();
   };
 
-  wpMedia.on('select', () => {
-    const attachment = wpMedia.state().get('selection').first().toJSON();
-    console.log(attachment);
-    const { id, url, title, filesizeInBytes, date, subtype } = attachment;
-
-    field.onChange(
-      fieldValue
-        ? [...fieldValue, { id, url, title, filesizeInBytes, date, subtype }]
-        : [{ id, url, title, filesizeInBytes, date, subtype }]
-    );
+  wpMedia.on('open', () => {
+    const selection = wpMedia.state().get('selection');
+    const ids = Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : [];
+    if (ids.length > 0) {
+      for (const id of ids) {
+        const attachment = window.wp.media.attachment(id);
+        selection.add(attachment ? [attachment] : []);
+      }
+    }
   });
+
+  wpMedia.on('select', () => {
+    const selected = wpMedia.state().get('selection').toJSON();
+
+    const existingFileIds = new Set(
+      Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : []
+    );
+
+    const newFiles = selected.reduce((acc: UploadedFile[], file: UploadedFile) => {
+      if (existingFileIds.has(file.id)) return acc;
+
+      const newFile = {
+        id: file.id,
+        title: file.title,
+        url: file.url,
+        date: file.date,
+        filesizeInBytes: file.filesizeInBytes,
+        subtype: file.subtype,
+      };
+
+      if (!selectMultiple) return [newFile];
+
+      acc.push(newFile);
+      return acc;
+    }, []);
+
+    if (selectMultiple) {
+      const updatedValue = Array.isArray(fieldValue)
+        ? [...fieldValue, ...newFiles]
+        : fieldValue
+          ? [fieldValue, ...newFiles]
+          : newFiles;
+      field.onChange(updatedValue);
+    } else {
+      field.onChange(newFiles[0] || null);
+    }
+  });
+
+  const handleRemove = (fileId: number) => {
+    if (selectMultiple) {
+      const newFiles = (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []).filter(
+        (file: UploadedFile) => file.id !== fileId
+      );
+      field.onChange(newFiles.length > 0 ? newFiles : null);
+    } else {
+      field.onChange(null);
+    }
+  };
 
   return (
     <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
@@ -74,22 +128,34 @@ const FormFileUploader = ({
             }
           >
             {(files) => (
-              <div css={styles.wrapper({ hasFiles: files.length > 0 })}>
-                <For each={files}>
+              <div css={styles.wrapper({ hasFiles: !!fieldValue })}>
+                <For each={Array.isArray(files) ? files : [files]}>
                   {(file) => (
-                    <div key={file.id} css={styles.attachmentCard}>
-                      <SVGIcon name="preview" height={40} width={40} />
-                      <div css={styles.attachmentCardBody}>
-                        <p css={styles.attachmentCardTitle}>
-                          <span css={styleUtils.text.ellipsis(1)}>{file.title}jkgsjahfasjhfashgdfahdfas</span>{' '}
-                          {file.subtype}
-                        </p>
-                        <p css={styles.attachmentCardSubtitle}>
-                          <span>{`${__('Size', 'tutor')}: ${formatBytes(file.filesizeInBytes)}`}</span> .
-                          {/* <SVGIcon name="dot" height={4} width={4} /> */}
-                          <span>{format(new Date(file.date), DateFormats.monthDayYearHoursMinutes)}</span>
-                        </p>
+                    <div key={file.id} css={styles.attachmentCardWrapper}>
+                      <div css={styles.attachmentCard}>
+                        <SVGIcon name="preview" height={40} width={40} />
+                        <div css={styles.attachmentCardBody}>
+                          <div css={styles.attachmentCardTitle}>
+                            <p css={styleUtils.text.ellipsis(1)}>{file.title}</p>
+                            <p css={styles.fileExtension}>{`.${file.subtype}`}</p>
+                          </div>
+                          <p css={styles.attachmentCardSubtitle}>
+                            <span>{`${__('Size', 'tutor')}: ${formatBytes(file.filesizeInBytes)}`}</span>
+                            <SVGIcon name="dot" height={2} width={2} />
+                            <span>{format(new Date(file.date), DateFormats.monthDayYearHoursMinutes)}</span>
+                          </p>
+                        </div>
                       </div>
+
+                      <button
+                        type="button"
+                        css={styleUtils.resetButton}
+                        onClick={() => {
+                          handleRemove(file.id);
+                        }}
+                      >
+                        <SVGIcon name="cross" height={24} width={24} />
+                      </button>
                     </div>
                   )}
                 </For>
@@ -121,6 +187,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[8]};
+
     ${
       hasFiles &&
       css`
@@ -130,20 +197,53 @@ const styles = {
       `
     }
   `,
+  attachmentCardWrapper: css`
+    ${styleUtils.display.flex()};
+    justify-content: space-between;
+    align-items: center;
+    gap: ${spacing[20]};
+    padding: ${spacing[4]} ${spacing[12]} ${spacing[4]} 0;
+    border-radius: ${borderRadius[6]};
+
+    button {
+      opacity: 0;
+    }
+
+    &:hover {
+      background: ${colorTokens.background.white};
+
+      button {
+        opacity: 1;
+      }
+    }
+  `,
   attachmentCard: css`
-    display: flex;
+    ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[8]};
   `,
   attachmentCardBody: css`
-    display: flex;
-    flex-direction: column;
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
   `,
   attachmentCardTitle: css`
+    ${styleUtils.display.flex()};
     ${typography.caption('medium')}
+    word-break: break-all;
+  `,
+  fileExtension: css`
+    flex-shrink: 0;
   `,
   attachmentCardSubtitle: css`
     ${typography.tiny('regular')}
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[8]};
+    color: ${colorTokens.text.hints};
+
+    svg {
+      color: ${colorTokens.icon.default};
+    }
   `,
   uploadButton: css`
     width: 100%;

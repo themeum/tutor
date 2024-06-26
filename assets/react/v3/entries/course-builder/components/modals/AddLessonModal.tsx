@@ -181,6 +181,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
                 {...controllerProps}
                 label={__('Exercise Files', 'tutor')}
                 buttonText={__('Upload Attachment', 'tutor')}
+                selectMultiple
               />
             )}
           />
