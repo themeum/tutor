@@ -216,7 +216,7 @@ Cypress.Commands.add(
               cy.wrap($randomOption)
                 .find(dropdownTextSelector)
                 .click();
-
+              console.log(`drop `,selectedOptionText)
               cy.get("body").then(($body) => {
                 if (
                   $body.text().includes("No Data Found from your Search/Filter")
@@ -226,6 +226,7 @@ Cypress.Commands.add(
                   cy.wait(500);
                   cy.get(elementTitleSelector).each(($element) => {
                     const elementText = $element.text().trim();
+                    console.log('el ',elementText)
                     expect(elementText).to.contain(selectedOptionText);
                   });
                 }
