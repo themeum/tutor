@@ -1,5 +1,4 @@
 import '../../../v2-library/_src/js/main';
-
 window.tutor_get_nonce_data = function(send_key_value) {
 	var nonce_data = window._tutorobject || {};
 	var nonce_key = nonce_data.nonce_key || '';
@@ -450,21 +449,25 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 window.tutor_esc_html = function (unsafeText) {
 	let safeHTML = ''
 	let div = document.createElement('div');
-	const sanitize_js = (str) => {
-		return str.replace(/['"]/g, function(match) {
-            return match === '"' ? '&quot;' : '&#39;';
-        })
-	}
 	/**
 	 * When set an HTML string to an element's innerText
 	 * the browser automatically escapes any HTML tags and
 	 * treats the content as plain text.
 	 */
-	div.innerText = sanitize_js(unsafeText);
+	div.innerText = unsafeText;
 	safeHTML = div.innerHTML;
 	div.remove()
 
 	return safeHTML;
+}
+
+
+window.tutor_esc_attr = function(str) {
+    return str.replace(/&/g, '&amp;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
 }
 
 // enable custom selector when modal opens
