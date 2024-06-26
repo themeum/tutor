@@ -450,12 +450,17 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 window.tutor_esc_html = function (unsafeText) {
 	let safeHTML = ''
 	let div = document.createElement('div');
+	const sanitize_js = (str) => {
+		return str.replace(/['"]/g, function(match) {
+            return match === '"' ? '&quot;' : '&#39;';
+        })
+	}
 	/**
 	 * When set an HTML string to an element's innerText
 	 * the browser automatically escapes any HTML tags and
 	 * treats the content as plain text.
 	 */
-	div.innerText = unsafeText;
+	div.innerText = sanitize_js(unsafeText);
 	safeHTML = div.innerHTML;
 	div.remove()
 
