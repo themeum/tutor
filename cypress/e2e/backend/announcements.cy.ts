@@ -127,7 +127,7 @@ describe("Tutor Admin Announcements", () => {
       } else {
         cy.get(".tutor-fs-7.tutor-fw-medium.tutor-color-muted").each(
           ($announcement) => {
-            console.log($announcement)
+            console.log($announcement);
             cy.wrap($announcement).should("contain.text", selectedOptionText);
           }
         );

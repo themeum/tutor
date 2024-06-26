@@ -47,4 +47,5 @@ export const backendUrls = {
     GOOGLE_MEET:"wp-admin/admin.php?page=google-meet",
     ZOOM:"wp-admin/admin.php?page=tutor_zoom",
     REPORTS:"wp-admin/admin.php?page=tutor_report",
+    GRADEBOOK:"wp-admin/admin.php?page=tutor_gradebook"
 }
