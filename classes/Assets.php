@@ -25,9 +25,18 @@ class Assets {
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 3.0.0 register hook param added
+	 *
+	 * @param bool $register_hooks param added to enable or disable registering hooks.
+	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
+		if ( ! $register_hooks ) {
+			return;
+		}
+
 		 /**
 		 * Common scripts loading
 		 */
@@ -88,7 +97,7 @@ class Assets {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	private function get_default_localized_data() {
+	public function get_default_localized_data() {
 		$home_url = get_home_url();
 		$parsed   = parse_url( $home_url );
 

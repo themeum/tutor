@@ -110,7 +110,7 @@ function i18n_makepot(callback, target_dir) {
 		}
 
 		// Make sure only js extension file to process
-		if (stat.isFile() && path.extname(file_name) == '.js' && 
+		if (stat.isFile() && (path.extname(file_name) == '.js' || path.extname(file_name) == '.tsx') && 
 			( 	full_path.indexOf('assets/react') > -1 
 				|| full_path.indexOf('v2-library/_src/js') > -1
 				|| full_path.indexOf('v2-library/src/components') > -1 

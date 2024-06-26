@@ -1057,6 +1057,25 @@ class Utils {
 	}
 
 	/**
+	 * Check tutor nonce is verified.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $request_method request method.
+	 *
+	 * @return bool.
+	 */
+	public function is_nonce_verified( $request_method = null ) {
+		! $request_method ? $request_method = sanitize_text_field( $_SERVER['REQUEST_METHOD'] ) : 0; //phpcs:ignore
+
+		$data        = strtolower( $request_method ) === 'post' ? $_POST : $_GET; //phpcs:ignore
+		$nonce_value = sanitize_text_field( $this->array_get( tutor()->nonce, $data, null ) );
+		$is_matched  = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
+
+		return $is_matched;
+	}
+
+	/**
 	 * Check actions nonce.
 	 *
 	 * @since 1.0.0
@@ -1066,14 +1085,8 @@ class Utils {
 	 * @return void.
 	 */
 	public function checking_nonce( $request_method = null ) {
-		! $request_method ? $request_method = sanitize_text_field( $_SERVER['REQUEST_METHOD'] ) : 0; //phpcs:ignore
-
-		$data        = strtolower( $request_method ) === 'post' ? $_POST : $_GET; //phpcs:ignore
-		$nonce_value = sanitize_text_field( $this->array_get( tutor()->nonce, $data, null ) );
-		$matched     = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
-
-		if ( ! $matched ) {
-			wp_send_json_error( array( 'message' => __( 'Nonce not matched. Action failed!', 'tutor' ) ) );
+		if ( ! $this->is_nonce_verified( $request_method ) ) {
+			wp_send_json_error( array( 'message' => $this->error_message( 'nonce' ) ) );
 			exit;
 		}
 	}
@@ -2711,11 +2724,9 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course id.
-	 *
 	 * @return array|null|object
 	 */
-	public function get_wc_products_db( $course_id ) {
+	public function get_wc_products_db() {
 		global $wpdb;
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
@@ -3827,6 +3838,7 @@ class Utils {
 	 * Get tutor user.
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 tutor_profile_photo_url property added.
 	 *
 	 * @param int $user_id user id.
 	 *
@@ -3867,6 +3879,10 @@ class Utils {
 				$user_id
 			)
 		);
+
+		if ( $user ) {
+			$user->tutor_profile_photo_url = wp_get_attachment_image_url( $user->tutor_profile_photo );
+		}
 
 		TutorCache::set( $cache_key, $user );
 
@@ -6612,7 +6628,7 @@ class Utils {
 	 * @since 2.5.0
 	 *
 	 * @param boolean $url_decode URL decode for unicode support.
-	 * 
+	 *
 	 * @return void|string
 	 */
 	public function referer_field( $url_decode = true ) {
@@ -6620,8 +6636,8 @@ class Utils {
 		if ( $url_decode ) {
 			$url = urldecode( $url );
 		}
-		
-		echo '<input type="hidden" name="_wp_http_referer" value="'. esc_url( $url ) .'">';
+
+		echo '<input type="hidden" name="_wp_http_referer" value="' . esc_url( $url ) . '">';
 	}
 
 	/**
@@ -6636,9 +6652,9 @@ class Utils {
 	public function course_edit_link( $course_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
 
-		$url = admin_url( "post.php?post={$course_id}&action=edit" );
+		$url = admin_url( "post.php?post={$course_id}&action=tutor" );
 		if ( tutor()->has_pro ) {
-			$url = $this->tutor_dashboard_url( 'create-course/?course_ID=' . $course_id );
+			$url = $this->tutor_dashboard_url( 'create-course?course_id=' . $course_id );
 		}
 
 		return $url;
@@ -8466,10 +8482,11 @@ class Utils {
 		$addons       = apply_filters( 'tutor_pro_addons_lists_for_display', array() );
 		$plugins_data = $addons;
 
+		$addons_config = get_option( 'tutor_addons_config' );
+		$has_pro       = tutor()->has_pro;
+
 		if ( is_array( $addons ) && count( $addons ) ) {
 			foreach ( $addons as $base_name => $addon ) {
-
-				$addonConfig = $this->get_addon_config( $base_name );
 
 				$addons_path = trailingslashit( tutor()->path . "assets/addons/{$base_name}" );
 				$addons_url  = trailingslashit( tutor()->url . "assets/addons/{$base_name}" );
@@ -8484,6 +8501,10 @@ class Utils {
 				}
 
 				$plugins_data[ $base_name ]['url'] = $thumbnailURL;
+
+				// Add add-on enable status.
+				$addon_url                                = "tutor-pro/addons/{$base_name}/{$base_name}.php";
+				$plugins_data[ $base_name ]['is_enabled'] = $has_pro ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
 			}
 		}
 
@@ -9662,8 +9683,8 @@ class Utils {
 				if ( $result->content_id ) {
 					$course_meta[ $result->course_id ][ $result->content_type ][] = $result->content_id;
 				}
-			} catch (\Throwable $th) {
-				tutor_log( 'Affected course ID : ' . $result->course_id . ' Error : '. $th->getMessage() );
+			} catch ( \Throwable $th ) {
+				tutor_log( 'Affected course ID : ' . $result->course_id . ' Error : ' . $th->getMessage() );
 			}
 		}
 
@@ -9921,6 +9942,7 @@ class Utils {
 			'tutor_default_error_messages',
 			array(
 				'401' => __( 'You are not authorzied to perform this action', 'tutor' ),
+				'nonce' => __( 'Nonce not matched. Action failed!', 'tutor' ),
 			)
 		);
 
