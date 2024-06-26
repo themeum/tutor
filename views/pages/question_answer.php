@@ -15,42 +15,43 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( Input::has( 'question_id' ) ) {
+$question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
+if ( $question_id > 0 ) {
 	tutor_load_template_from_custom_path(
 		tutor()->path . '/views/qna/qna-single.php',
 		array(
-			'question_id' => Input::get( 'question_id' ),
+			'question_id' => $question_id,
 			'context'     => 'backend-dashboard-qna-single',
 		)
 	);
 	return;
 }
 
-	$qna_object     = new \TUTOR\Question_Answers_List( false );
-	$qna            = $qna_object->get_items( $_GET );
-	$qna_list       = $qna['items'];
-	$qna_pagination = $qna['pagination'];
+$qna_object     = new \TUTOR\Question_Answers_List( false );
+$qna            = $qna_object->get_items( $_GET );
+$qna_list       = $qna['items'];
+$qna_pagination = $qna['pagination'];
 
-	$filters = array(
-		'bulk_action'   => true,
-		'bulk_actions'  => $qna_object->get_bulk_actions(),
-		'ajax_action'   => 'tutor_qna_bulk_action',
-		'filters'       => true,
-		'course_filter' => true,
-	);
+$filters = array(
+	'bulk_action'   => true,
+	'bulk_actions'  => $qna_object->get_bulk_actions(),
+	'ajax_action'   => 'tutor_qna_bulk_action',
+	'filters'       => true,
+	'course_filter' => true,
+);
 
-	/**
-	 * Determine active tab
-	 */
+/**
+ * Determine active tab
+ */
 
-	$active_tab = Input::get( 'tab', 'all' );
+$active_tab = Input::get( 'tab', 'all' );
 
-	$navbar_data = array(
-		'page_title' => __( 'Question & Answer', 'tutor' ),
-		'tabs'       => \Tutor\Q_and_A::tabs_key_value(),
-		'active'     => $active_tab,
-	);
-	?>
+$navbar_data = array(
+	'page_title' => __( 'Question & Answer', 'tutor' ),
+	'tabs'       => \Tutor\Q_And_A::tabs_key_value(),
+	'active'     => $active_tab,
+);
+?>
 
 <div class="tutor-admin-wrap">
 	<?php

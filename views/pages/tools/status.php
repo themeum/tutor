@@ -233,7 +233,7 @@
 				<td>
 					<?php
 					if ( 'UTC' !== $environment['default_timezone'] ) {
-						/* Translators: %s: default timezone.. */
+						/* translators: %s: default timezone */
 						echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( 'Default timezone is %s - it should be UTC', 'tutor' ), esc_html( $environment['default_timezone'] ) ) . '</mark>';
 					} else {
 						echo '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>';

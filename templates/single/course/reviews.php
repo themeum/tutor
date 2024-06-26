@@ -106,7 +106,12 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 									</div>
 
 									<div class="tutor-col-4 tutor-col-lg-3">
-										<span class="tutor-fs-6 tutor-color-secondary tutor-individual-star-rating"><?php printf( esc_html( _n( '%s Rating', '%s Ratings', 0 == $value ? 1 : $value, 'tutor' ) ), number_format_i18n( $value ) ); ?></span>
+										<span class="tutor-fs-6 tutor-color-secondary tutor-individual-star-rating">
+											<?php
+												/* translators: %s: rating count */
+												printf( esc_html( _n( '%s Rating', '%s Ratings', 0 == $value ? 1 : $value, 'tutor' ) ), number_format_i18n( $value ) ); 
+											?>
+										</span>
 									</div>
 								</div>
 							<?php endforeach; ?>
