@@ -1,5 +1,4 @@
 import '../../../v2-library/_src/js/main';
-console.log("asdas");
 window.tutor_get_nonce_data = function(send_key_value) {
 	var nonce_data = window._tutorobject || {};
 	var nonce_key = nonce_data.nonce_key || '';
