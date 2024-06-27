@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormInput from '@Components/fields/FormInput';
@@ -20,6 +19,7 @@ import For from '@Controls/For';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
+import FormFileUploader from '@Components/fields/FormFileUploader';
 
 type PartialCourseDetails = Pick<CourseDetailsResponse, 'ID' | 'post_title' | 'thumbnail'>;
 // @TODO: will come from app config api later.
@@ -184,19 +184,18 @@ const Additional = () => {
           </div>
 
           <div css={styles.uploadAttachment}>
-            <span css={styles.uploadLabel}>{__('Attachments', 'tutor')}</span>
-            <Button
-              icon={<SVGIcon name="attach" height={24} width={24} />}
-              variant="secondary"
-              buttonContentCss={css`
-                justify-content: center;
-              `}
-              onClick={() => {
-                alert('@TODO: Will be implemented in future');
-              }}
-            >
-              {__('Upload Attachment', 'tutor')}
-            </Button>
+            <Controller
+              name="attachments"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormFileUploader
+                  {...controllerProps}
+                  label={__('Attachments', 'tutor')}
+                  buttonText={__('Upload Attachment', 'tutor')}
+                  selectMultiple
+                />
+              )}
+            />
           </div>
 
           <LiveClass />
@@ -272,12 +271,7 @@ const styles = {
     overflow-y: auto;
   `,
   uploadAttachment: css`
-    ${styleUtils.display.flex('column')}
-    gap: ${spacing[8]};
-  `,
-  uploadLabel: css`
-    ${typography.body()}
-    color: ${colorTokens.text.title};
+    padding-top: ${spacing[8]};
   `,
   liveClass: css`
     ${styleUtils.display.flex('column')}
