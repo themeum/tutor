@@ -23,7 +23,11 @@ export type Media = {
   date?: string;
   filesizeInBytes?: number;
   subtype?: string;
-  duration?: number;
+  duration?: {
+    hour: number;
+    minute: number;
+    second: number;
+  };
   sizes?: {
     thumbnail: MediaSize;
     medium: MediaSize;

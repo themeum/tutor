@@ -13,6 +13,7 @@ import { styleUtils } from '@Utils/style-utils';
 import { formatBytes, formatSeconds } from '@Utils/util';
 import { format } from 'date-fns';
 import { DateFormats } from '@Config/constants';
+import { useState } from 'react';
 
 type FormVideoInputProps = {
   label?: string;
@@ -35,6 +36,7 @@ const FormVideoInput = ({
   supportedFormats,
   fromUrl = false,
 }: FormVideoInputProps) => {
+  const [videoDuration, setVideoDuration] = useState(0);
   const wpMedia = window.wp.media({
     library: { type: supportedFormats ? supportedFormats.map((type) => `video/${type}`).join(',') : 'video' },
   });
@@ -47,7 +49,6 @@ const FormVideoInput = ({
 
   wpMedia.on('select', () => {
     const attachment = wpMedia.state().get('selection').first().toJSON();
-    console.log(attachment);
     const { id, url, title, subtype, date, filesizeInBytes } = attachment;
 
     const video = document.createElement('video');
@@ -80,11 +81,17 @@ const FormVideoInput = ({
       const thumbnail = canvas.toDataURL('image/png');
 
       // Handle the video details, including duration and thumbnail
+      setVideoDuration(video.duration);
+
       const videoDetails = {
         id,
         url,
         title,
-        duration: video.duration,
+        duration: {
+          hour: Math.floor(video.duration / 3600),
+          minute: Math.floor((video.duration % 3600) / 60),
+          second: Math.floor(video.duration % 60),
+        },
         subtype,
         date,
         filesizeInBytes,
@@ -130,9 +137,6 @@ const FormVideoInput = ({
     // Listen for loadedmetadata event
     video.addEventListener('loadedmetadata', onLoadedMetadata);
     video.addEventListener('seeked', onSeeked);
-
-    // Append the video element to the body to load it
-    document.body.appendChild(video);
   });
 
   const clearHandler = () => {
@@ -168,7 +172,6 @@ const FormVideoInput = ({
               }
             >
               {(media) => {
-                console.log(media);
                 return (
                   <div css={styles.previewWrapper}>
                     <div css={styles.videoInfoWrapper}>
@@ -201,7 +204,7 @@ const FormVideoInput = ({
                     <div css={styles.imagePreview}>
                       <img src={media.sizes?.thumbnail.url} alt={fieldValue?.title} css={styles.thumbImage} />
 
-                      <div css={styles.duration}>{formatSeconds(media.duration || 0)}</div>
+                      <div css={styles.duration}>{formatSeconds(videoDuration)}</div>
 
                       <div css={styles.hoverPreview} data-hover-buttons-wrapper>
                         <Button variant="secondary" onClick={uploadHandler}>

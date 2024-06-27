@@ -14,6 +14,7 @@ import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormVideoInput from '@Components/fields/FormVideoInput';
+import { useEffect } from 'react';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -24,9 +25,6 @@ interface AddLessonForm {
   description: string;
   featured_image: Media | null;
   exercise_files: Media[];
-  duration_hour: number;
-  duration_min: number;
-  duration_sec: number;
   available_after_days: number;
   lesson_preview: boolean;
   video: Media | null;
@@ -39,6 +37,17 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
     console.log(data);
     closeModal({ action: 'CONFIRM' });
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const videoDuration = form.watch('video')?.duration;
+
+    if (videoDuration) {
+      form.setValue('video.duration.hour', videoDuration.hour);
+      form.setValue('video.duration.minute', videoDuration.minute);
+      form.setValue('video.duration.second', videoDuration.second);
+    }
+  }, [form.watch('video')]);
 
   return (
     <ModalWrapper
@@ -117,7 +126,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
             <span css={styles.additoinLabel}>{__('Video playback time', 'tutor')}</span>
             <div css={styles.duration}>
               <Controller
-                name="duration_hour"
+                name="video.duration.hour"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInputWithContent
@@ -131,7 +140,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
                 )}
               />
               <Controller
-                name="duration_min"
+                name="video.duration.minute"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInputWithContent
@@ -145,7 +154,7 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
                 )}
               />
               <Controller
-                name="duration_sec"
+                name="video.duration.second"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInputWithContent
