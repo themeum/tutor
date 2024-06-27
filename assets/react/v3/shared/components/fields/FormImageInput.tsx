@@ -13,7 +13,7 @@ type MediaSize = {
   url: string;
   width: number;
   height: number;
-  orientation: string;
+  orientation?: string;
 };
 
 export type Media = {
@@ -23,6 +23,7 @@ export type Media = {
   date?: string;
   filesizeInBytes?: number;
   subtype?: string;
+  duration?: number;
   sizes?: {
     thumbnail: MediaSize;
     medium: MediaSize;

@@ -256,20 +256,36 @@ export const parseNumberOnly = (value: string) => {
 };
 
 export const throttle = <T extends (args: MouseEvent) => void>(func: T, limit: number) => {
-	let inThrottle = false;
+  let inThrottle = false;
 
-	return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-		if (!inThrottle) {
-			func.apply(this, args);
-			inThrottle = true;
+  return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+    if (!inThrottle) {
+      func.apply(this, args);
+      inThrottle = true;
 
-			setTimeout(() => {
-				inThrottle = false;
-			}, limit);
-		}
-	};
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
+    }
+  };
 };
 
 export const jsonParse = <T>(data: string): T => {
-	return JSON.parse(data) as T;
+  return JSON.parse(data) as T;
+};
+
+export const formatSeconds = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600)
+    .toString()
+    .padStart(2, '0');
+  const minutes = Math.floor((seconds % 3600) / 60)
+    .toString()
+    .padStart(2, '0');
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  if (hours === '00') {
+    return `${minutes}:${remainingSeconds} mins`;
+  }
+
+  return `${hours}:${minutes}:${remainingSeconds} hrs`;
 };

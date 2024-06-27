@@ -13,6 +13,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import FormFileUploader from '@Components/fields/FormFileUploader';
+import FormVideoInput from '@Components/fields/FormVideoInput';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -28,6 +29,7 @@ interface AddLessonForm {
   duration_sec: number;
   available_after_days: number;
   lesson_preview: boolean;
+  video: Media | null;
 }
 
 const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalProps) => {
@@ -98,19 +100,19 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
               />
             )}
           />
-          {/* // @TODO: Need to add FormVideo component when its implemented*/}
-          {/* <Controller
-              name='thumbnail'
-              control={form.control}
-              render={(controllerProps) => (
-                <FormImageInput
-                  {...controllerProps}
-                  label={__('Featured Image', 'tutor')}
-                  buttonText={__('Upload Course Thumbnail', 'tutor')}
-                  infoText={__('Size: 700x430 pixels', 'tutor')}
-                />
-              )}
-            /> */}
+          <Controller
+            name="video"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormVideoInput
+                {...controllerProps}
+                label={__('Video', 'tutor')}
+                buttonText={__('Upload Video', 'tutor')}
+                infoText={__('Supported file formats .mp4', 'tutor')}
+                supportedFormats={['mp4']}
+              />
+            )}
+          />
           <div css={styles.durationWrapper}>
             <span css={styles.additoinLabel}>{__('Video playback time', 'tutor')}</span>
             <div css={styles.duration}>
