@@ -15,8 +15,8 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import type { UploadedFile } from '@Components/fields/FormFileUploader';
 import FormFileUploader from '@Components/fields/FormFileUploader';
+import type { Media } from '@Components/fields/FormImageInput';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -27,7 +27,7 @@ type TimeLimitUnit = 'weeks' | 'days' | 'hours';
 interface AddLessonForm {
   assignment_title: string;
   summary: string;
-  attachments: UploadedFile[] | null;
+  attachments: Media[] | null;
   time_limit: number;
   time_limit_unit: TimeLimitUnit;
   total_points: number;

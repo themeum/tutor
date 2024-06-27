@@ -6,6 +6,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
+import type { Media } from '@Components/fields/FormImageInput';
 
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -16,22 +17,13 @@ import { formatBytes } from '@Utils/util';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 
-export type UploadedFile = {
-  id: number;
-  title: string;
-  url: string;
-  date: string;
-  filesizeInBytes: number;
-  subtype: string;
-};
-
 type FormFileUploaderProps = {
   label?: string;
-  onChange?: () => void;
+  onChange?: (media: Media[] | Media | null) => void;
   helpText?: string;
   buttonText?: string;
   selectMultiple?: boolean;
-} & FormControllerProps<UploadedFile[] | UploadedFile | null>;
+} & FormControllerProps<Media[] | Media | null>;
 
 const FormFileUploader = ({
   field,
@@ -40,6 +32,7 @@ const FormFileUploader = ({
   helpText,
   buttonText = __('Upload Media', 'tutor'),
   selectMultiple = false,
+  onChange,
 }: FormFileUploaderProps) => {
   const wpMedia = window.wp.media({
     multiple: selectMultiple ? 'add' : false,
@@ -69,7 +62,7 @@ const FormFileUploader = ({
       Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : []
     );
 
-    const newFiles = selected.reduce((acc: UploadedFile[], file: UploadedFile) => {
+    const newFiles = selected.reduce((acc: Media[], file: Media) => {
       if (existingFileIds.has(file.id)) {
         return acc;
       }
@@ -98,19 +91,35 @@ const FormFileUploader = ({
           ? [fieldValue, ...newFiles]
           : newFiles;
       field.onChange(updatedValue);
+
+      if (onChange) {
+        onChange(updatedValue);
+      }
     } else {
       field.onChange(newFiles[0] || null);
+
+      if (onChange) {
+        onChange(newFiles[0] || null);
+      }
     }
   });
 
-  const handleRemove = (fileId: number) => {
+  const clearHandler = (fileId: number) => {
     if (selectMultiple) {
       const newFiles = (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []).filter(
-        (file: UploadedFile) => file.id !== fileId
+        (file: Media) => file.id !== fileId
       );
       field.onChange(newFiles.length > 0 ? newFiles : null);
+
+      if (onChange) {
+        onChange(newFiles.length > 0 ? newFiles : null);
+      }
     } else {
       field.onChange(null);
+
+      if (onChange) {
+        onChange(null);
+      }
     }
   };
 
@@ -141,19 +150,19 @@ const FormFileUploader = ({
 
                         <div css={styles.attachmentCardBody}>
                           <div css={styles.attachmentCardTitle}>
-                            <div css={styleUtils.text.ellipsis(1)}>
-                              {file.title.concat('jduyttrhgdfgjdsjfgjdykhfkghfhc')}
-                            </div>
+                            <div css={styleUtils.text.ellipsis(1)}>{file.title}</div>
 
                             <div css={styles.fileExtension}>{`.${file.subtype}`}</div>
                           </div>
 
                           <div css={styles.attachmentCardSubtitle}>
-                            <span>{`${__('Size', 'tutor')}: ${formatBytes(file.filesizeInBytes)}`}</span>
+                            <span>{`${__('Size', 'tutor')}: ${formatBytes(file?.filesizeInBytes || 0)}`}</span>
 
                             <SVGIcon name="dot" height={2} width={2} />
 
-                            <span>{format(new Date(file.date), DateFormats.monthDayYearHoursMinutes)}</span>
+                            {file.date && (
+                              <span>{format(new Date(file.date), DateFormats.monthDayYearHoursMinutes)}</span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -162,7 +171,7 @@ const FormFileUploader = ({
                         type="button"
                         css={styleUtils.resetButton}
                         onClick={() => {
-                          handleRemove(file.id);
+                          clearHandler(file.id);
                         }}
                       >
                         <SVGIcon name="cross" height={24} width={24} />

@@ -12,7 +12,7 @@ import ModalWrapper from '@Components/modals/ModalWrapper';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import FormFileUploader, { type UploadedFile } from '@Components/fields/FormFileUploader';
+import FormFileUploader from '@Components/fields/FormFileUploader';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -22,7 +22,7 @@ interface AddLessonForm {
   lesson_name: string;
   description: string;
   featured_image: Media | null;
-  exercise_files: UploadedFile[];
+  exercise_files: Media[];
   duration_hour: number;
   duration_min: number;
   duration_sec: number;
