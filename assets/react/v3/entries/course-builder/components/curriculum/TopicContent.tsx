@@ -6,6 +6,7 @@ import Show from '@Controls/Show';
 import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
 import AddLessonModal from '@CourseBuilderComponents/modals/AddLessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -17,6 +18,7 @@ import { __ } from '@wordpress/i18n';
 type ContentType = 'lesson' | 'quiz' | 'assignment' | 'zoom' | 'meet';
 interface TopicContentProps {
   type: ContentType;
+  topic: CourseTopicWithCollapse;
   content: { id: ID; title: string; questionCount?: number };
   isDragging?: boolean;
   onDelete?: () => void;
@@ -74,7 +76,7 @@ const modalIcon: {
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
-const TopicContent = ({ type, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
+const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
   const icon = icons[type];
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: content.id,
@@ -93,7 +95,7 @@ const TopicContent = ({ type, content, isDragging = false, onCopy, onDelete }: T
         component: modalComponent[isContentType],
         props: {
           title: modalTitle[isContentType],
-          subtitle: `${__('Topic')}: ${content.title}`,
+          subtitle: `${__('Topic')}: ${topic.post_title}`,
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
         },
       });
