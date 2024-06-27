@@ -1,13 +1,18 @@
 import SVGIcon from '@Atoms/SVGIcon';
+import { useModal } from '@Components/modals/Modal';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
+import AddLessonModal from '@CourseBuilderComponents/modals/AddLessonModal';
+import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import { type AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 type ContentType = 'lesson' | 'quiz' | 'assignment' | 'zoom' | 'meet';
 interface TopicContentProps {
@@ -41,6 +46,31 @@ const icons = {
   },
 } as const;
 
+const modalComponent: {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  [key in Exclude<ContentType, 'zoom' | 'meet'>]: React.FunctionComponent<any>;
+} = {
+  lesson: AddLessonModal,
+  quiz: QuizModal,
+  assignment: AddAssignmentModal,
+} as const;
+
+const modalTitle: {
+  [key in Exclude<ContentType, 'zoom' | 'meet'>]: string;
+} = {
+  lesson: __('Lesson', 'tutor'),
+  quiz: __('Quiz', 'tutor'),
+  assignment: __('Assignment', 'tutor'),
+} as const;
+
+const modalIcon: {
+  [key in Exclude<ContentType, 'zoom' | 'meet'>]: IconCollection;
+} = {
+  lesson: 'lesson',
+  quiz: 'quiz',
+  assignment: 'assignment',
+} as const;
+
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
@@ -53,6 +83,21 @@ const TopicContent = ({ type, content, isDragging = false, onCopy, onDelete }: T
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+  const { showModal } = useModal();
+
+  const handleShowModal = () => {
+    const isContentType = type as keyof typeof modalComponent;
+    if (modalComponent[isContentType]) {
+      showModal({
+        component: modalComponent[isContentType],
+        props: {
+          title: modalTitle[isContentType],
+          subtitle: `${__('Topic')}: ${content.title}`,
+          icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
+        },
+      });
+    }
   };
 
   return (
@@ -80,13 +125,7 @@ const TopicContent = ({ type, content, isDragging = false, onCopy, onDelete }: T
       </div>
 
       <div css={styles.actions} data-actions>
-        <button
-          type="button"
-          css={styles.actionButton}
-          onClick={() => {
-            alert('@TODO: will be implemented later');
-          }}
-        >
+        <button type="button" css={styles.actionButton} onClick={handleShowModal}>
           <SVGIcon name="edit" width={24} height={24} />
         </button>
         <button type="button" css={styles.actionButton} onClick={onCopy}>

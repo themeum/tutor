@@ -92,7 +92,7 @@ const FormImageInput = ({
               fallback={
                 <div css={styles.emptyMedia}>
                   <SVGIcon name="addImage" width={32} height={32} />
-                  <Button variant="text" onClick={uploadHandler}>
+                  <Button variant="text" buttonContentCss={styles.uploadButton} onClick={uploadHandler}>
                     {buttonText}
                   </Button>
                   <p css={styles.infoTexts}>{infoText}</p>
@@ -144,6 +144,10 @@ const styles = {
     &:hover svg {
       color: ${colorTokens.brand.blue};
     }
+  `,
+  uploadButton: css`
+    ${typography.small('medium')};
+    color: ${colorTokens.text.brand};
   `,
   infoTexts: css`
     ${typography.small()};
