@@ -73,7 +73,6 @@ describe("Tutor Dashboard Settings", () => {
 
         cy.get("button").contains("Update Profile").click()
         
-        // testcase fails because api call does not happen
         cy.wait('@ajaxRequest').then((interception) => {
             expect(interception.response.body.success).to.equal(true);
         });

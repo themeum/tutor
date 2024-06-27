@@ -134,6 +134,36 @@ describe("Tutor Admin Announcements", () => {
       }
     });
   });
+
+  it("should filter enrollments", () => {
+    cy.get(":nth-child(2) > .tutor-js-form-select").click();
+    cy.get(
+      ":nth-child(2) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options"
+    ).then(($option) => {
+      const selectedOptionText = $option.text().trim();
+      // console.log("se ", selectedOptionText);
+      cy.wrap($option).click({ force: true });
+      cy.get("body").then(($body) => {
+        if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No Data Available in this Section") ) {
+          cy.log("No data available");
+        } else {
+          cy.get(".tutor-fs-7.tutor-fw-medium.tutor-color-muted").each(
+            ($announcement) => {
+              cy.wrap($announcement)
+                .invoke("text")
+                .then((announcementText) => {
+                  console.log('asd ',announcementText)
+                  console.log('sele ',selectedOptionText)
+                  expect(selectedOptionText).to.include(
+                    announcementText.replace(/Course:\s*/g, '').trim()
+                  );
+                });
+            }
+          );
+        }
+      });
+    });
+  });
   it("Should filter announcements by a specific date", () => {
     const filterFormSelector =
       ".react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control";

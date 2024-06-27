@@ -24,11 +24,22 @@ describe("Tutor Students", () => {
   });
 
   it("should perform bulk action on all annoucements", () => {
+    cy.intercept(
+      "POST",
+      `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`,
+      (req) => {
+        if (req.body.includes("tutor_student_bulk_action")) {
+          req.alias = "ajaxRequest";
+        }
+      }
+    ).as("ajaxRequest");
     cy.get("body").then(($body) => {
       if ($body.text().includes("No Data Available in this Section")) {
         cy.log("No data found");
       } else {
-        cy.get("#tutor-bulk-checkbox-all").click();
+        cy.get(".tutor-form-check-input.tutor-bulk-checkbox")
+          .eq(0)
+          .click();
         cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
         cy.get(
           ".tutor-mr-12 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis"
@@ -40,7 +51,12 @@ describe("Tutor Students", () => {
           .contains("Yes, I'am Sure")
           .click();
 
-        cy.contains("No Data Available in this Section");
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.request.body).to.include(
+            "tutor_student_bulk_action"
+          );
+          expect(interception.response.body.success).to.equal(true);
+        });
       }
     });
   });
