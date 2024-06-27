@@ -46,6 +46,7 @@ export const courseDefaultData: CourseFormData = {
   course_material_includes: '',
   course_duration_hours: 0,
   course_duration_minutes: 0,
+  attachments: null,
 };
 
 export interface CourseFormData {
@@ -78,6 +79,7 @@ export interface CourseFormData {
   course_material_includes: string;
   course_duration_hours: number;
   course_duration_minutes: number;
+  attachments: Media[] | null;
 }
 
 export interface CoursePayload {
