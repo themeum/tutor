@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
+import { useToast } from '@Atoms/Toast';
 
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 import type { Media } from '@Components/fields/FormImageInput';
@@ -23,6 +24,8 @@ type FormFileUploaderProps = {
   helpText?: string;
   buttonText?: string;
   selectMultiple?: boolean;
+  maxFiles?: number;
+  maxFileSize?: number; // in bytes
 } & FormControllerProps<Media[] | Media | null>;
 
 const FormFileUploader = ({
@@ -33,7 +36,11 @@ const FormFileUploader = ({
   buttonText = __('Upload Media', 'tutor'),
   selectMultiple = false,
   onChange,
+  maxFileSize,
+  maxFiles,
 }: FormFileUploaderProps) => {
+  const { showToast } = useToast();
+
   const wpMedia = window.wp.media({
     multiple: selectMultiple ? 'add' : false,
   });
@@ -63,6 +70,14 @@ const FormFileUploader = ({
     );
 
     const newFiles = selected.reduce((acc: Media[], file: Media) => {
+      if (maxFileSize && file.filesizeInBytes && file.filesizeInBytes > maxFileSize) {
+        showToast({
+          message: `${file.title} ${__(' size exceeds the limit', 'tutor')}`,
+          type: 'danger',
+        });
+        return acc;
+      }
+
       if (existingFileIds.has(file.id)) {
         return acc;
       }
@@ -83,6 +98,16 @@ const FormFileUploader = ({
       acc.push(newFile);
       return acc;
     }, []);
+
+    const totalFiles = fieldValue ? (Array.isArray(fieldValue) ? fieldValue.length : 1) : 0 + newFiles.length;
+
+    if (maxFiles && totalFiles > maxFiles) {
+      showToast({
+        message: __(`You can not upload more than ${maxFiles} files in total`, 'tutor'),
+        type: 'danger',
+      });
+      return;
+    }
 
     if (selectMultiple) {
       const updatedValue = Array.isArray(fieldValue)
