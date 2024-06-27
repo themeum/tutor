@@ -14,7 +14,7 @@ describe("Tutor Dashboard Student Question and Answers", () => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
             } else {
-                cy.get(".frontend-dashboard-qna-table-student tbody tr").eq(0).find("a").contains("Reply").click()
+                cy.get("tbody tr").eq(0).find("a").contains("Reply").click()
                 cy.setTinyMceContent(".tutor-qna-reply-editor", "Hello there!")
                 cy.get("button").contains("Reply").click()
 
@@ -22,7 +22,7 @@ describe("Tutor Dashboard Student Question and Answers", () => {
                     expect(interception.response.body.success).to.equal(true);
                 });
 
-                cy.get("a").contains("Back").click()
+                cy.get("a").contains("Back").click({force:true})
             }
         })
     })
@@ -34,7 +34,7 @@ describe("Tutor Dashboard Student Question and Answers", () => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
             } else {
-                cy.get(".frontend-dashboard-qna-table-student tbody tr").eq(0).find(".tutor-icon-kebab-menu").parent().click()
+                cy.get("tbody tr").eq(0).find(".tutor-icon-kebab-menu").parent().click()
                 cy.get(".tutor-dropdown-parent.is-open .tutor-dropdown-item").eq(0).click()
                 
                 cy.wait('@ajaxRequest').then((interception) => {
@@ -51,8 +51,8 @@ describe("Tutor Dashboard Student Question and Answers", () => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
             } else {
-                cy.get(".frontend-dashboard-qna-table-student tbody tr").eq(0).find(".tutor-icon-kebab-menu").parent().click()
-                cy.get(".tutor-dropdown-parent.is-open .tutor-dropdown-item").eq(1).click()
+                cy.get("tbody tr").eq(0).find(".tutor-icon-kebab-menu").parent().click()
+                cy.get(':nth-child(3) > .tutor-dropdown-item').click()
                 cy.get(".tutor-modal.tutor-is-active").find("button").contains("Yes, Delete This").click()
                 
                 cy.wait('@ajaxRequest').then((interception) => {

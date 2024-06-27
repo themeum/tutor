@@ -22,7 +22,7 @@ describe("Tutor Dashboard My Courses", () => {
     );
   });
 
-  //   set api and save connection
+  //  set api and save connection
   it("should upload google classroom integration json and save connection", () => {
     const filePath = "/Users/ollyo/Documents/google-classroom.json";
     cy.get("body").then(($body) => {

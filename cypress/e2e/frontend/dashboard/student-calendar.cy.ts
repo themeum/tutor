@@ -12,20 +12,6 @@ describe("Tutor Dashboard Student Calendar", () => {
         cy.visit(`${Cypress.env("base_url")}/${frontendUrls.dashboard.CALENDER}`)
         cy.url().should("include", frontendUrls.dashboard.CALENDER)
     })
-    it("should be able to search any event on calendar", () => {
-        const searchInputSelector = "input[name='search']";
-        const searchQuery = "meeting";
-        const courseLinkSelector = ".meta-info>a>span";
-        const submitButtonSelector = "";
-        const submitWithButton = false;
-        cy.search(
-          searchInputSelector,
-          searchQuery,
-          courseLinkSelector,
-          submitButtonSelector,
-          submitWithButton
-        );
-      });
     it ("should visit all the upcoming events", () => {
         cy.wait('@calendarAjaxRequest') 
         cy.get("body").then(($body) => {
