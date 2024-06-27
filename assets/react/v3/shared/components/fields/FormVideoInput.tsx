@@ -205,7 +205,7 @@ const FormVideoInput = ({
 
                       <div css={styles.hoverPreview} data-hover-buttons-wrapper>
                         <Button variant="secondary" onClick={uploadHandler}>
-                          {__('Replace Image', 'tutor')}
+                          {__('Replace Video', 'tutor')}
                         </Button>
                       </div>
                     </div>
