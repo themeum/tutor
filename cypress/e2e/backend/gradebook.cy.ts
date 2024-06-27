@@ -134,6 +134,26 @@ describe("Tutor Dashboard My Courses", () => {
       expect(interception.response.body.success).to.equal(true);
     });
   })
+  it("should import grade settings",()=>{
+    cy.intercept(
+      "POST",
+      `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`,
+      (req) => {
+        if (req.body.includes("import_gradebook_sample_data")) {
+          req.alias = "ajaxRequest";
+        }
+      }
+    );
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("No grading system has been defined to manage student grades")) {
+        cy.get("button").contains("Import Sample Grade Data").click();
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.request.body).to.include("import_gradebook_sample_data");
+          expect(interception.response.body.success).to.equal(true);
+        });
+      } 
+    });
+  })
   it("should edit a grade",()=>{
     cy.intercept(
       "POST",

@@ -254,7 +254,7 @@ Cypress.Commands.add(
       .contains("11")
       .click();
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
+      if ($body.text().includes("No Data Found from your Search/Filter")|| $body.text().includes("No request found")) {
         cy.log("No data available");
       } else {
         cy.wait(2000);
