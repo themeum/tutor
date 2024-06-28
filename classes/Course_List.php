@@ -324,7 +324,8 @@ class Course_List {
 
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
-			if ( 'trash' === $status && tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
+			$can_delete_course = tutor_utils()->get_option( 'instructor_can_delete_course' ) && tutor_utils()->can_user_edit_course( get_current_user_id(), $course->ID );
+			if ( 'trash' === $status && $can_delete_course ) {
 				$args       = array(
 					'ID'          => $id,
 					'post_status' => $status,
