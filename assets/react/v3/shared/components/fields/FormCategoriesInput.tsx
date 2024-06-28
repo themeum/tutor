@@ -166,13 +166,12 @@ interface BranchProps {
   isLastChild: boolean;
 }
 
-// all children nested under this category
-const calculateTotalChildren = (option: CategoryWithChildren): number => {
-  return option.children.reduce((acc, child) => acc + calculateTotalChildren(child), option.children.length);
+const getTotalNestedChildrenCount = (option: CategoryWithChildren): number => {
+  return option.children.reduce((total, child) => total + getTotalNestedChildrenCount(child), option.children.length);
 };
 
 export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) => {
-  const totalChildren = calculateTotalChildren(option);
+  const totalChildren = getTotalNestedChildrenCount(option);
   const hasChildren = totalChildren > 0;
 
   const leftBarHeight = getCategoryLeftBarHeight(isLastChild, totalChildren);
