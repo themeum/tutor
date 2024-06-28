@@ -6,7 +6,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
     post_title: data.post_title,
     post_name: data.post_name,
     post_content: data.post_content,
-    post_status: data.post_password.length ? 'public' : data.post_status,
+    post_status: data.post_password.length ? 'publish' : (data.post_status as 'publish' | 'private'),
     post_password: data.post_password,
     post_author: data.post_author?.id ?? null,
     ...(data.video && {
@@ -19,10 +19,21 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
     enable_qna: data.enable_qna ? 'yes' : 'no',
     is_public_course: data.is_public_course ? 'yes' : 'no',
     course_level: data.course_level,
-    _tutor_course_settings: {
+    course_settings: {
       maximum_students: Number(data.maximum_students),
+      enrollment_expiry: Number(data.enrollment_expiry),
       // enable_content_drip: data.enable_content_drip,
       // content_drip_type: data.content_drip_type,
+    },
+    additional_content: {
+      course_benefits: data.course_benefits,
+      course_target_audience: data.course_target_audience,
+      course_duration: {
+        hours: data.course_duration_hours,
+        minutes: data.course_duration_minutes,
+      },
+      course_material_includes: data.course_material_includes,
+      course_requirements: data.course_requirements,
     },
   };
 };
@@ -33,7 +44,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     post_title: courseDetails.post_title,
     post_name: courseDetails.post_name,
     post_content: courseDetails.post_content,
-    post_status: courseDetails.post_status,
+    post_status: courseDetails.post_status as 'publish' | 'private' | 'password_protected',
     post_password: courseDetails.post_password,
     post_author: {
       id: Number(courseDetails.post_author.ID),
@@ -65,12 +76,12 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_level: courseDetails.course_level,
     maximum_students: courseDetails.course_settings.maximum_students,
     enrollment_expiration: '',
-    course_benefits: '',
-    course_duration_hours: 0,
-    course_duration_minutes: 0,
-    course_material_includes: '',
-    course_requirements: '',
-    course_target_audience: '',
+    course_benefits: courseDetails.course_benefits,
+    course_duration_hours: courseDetails.course_duration.hours,
+    course_duration_minutes: courseDetails.course_duration.minutes,
+    course_material_includes: courseDetails.course_material_includes,
+    course_requirements: courseDetails.course_requirements,
+    course_target_audience: courseDetails.course_target_audience,
   };
 };
 

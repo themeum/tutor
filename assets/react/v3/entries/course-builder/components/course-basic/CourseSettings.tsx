@@ -8,7 +8,6 @@ import type { CourseFormData } from '@CourseBuilderServices/course';
 import Tabs from '@Molecules/Tabs';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import React from 'react';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import ContentDropSettings from './ContentDropSettings';
@@ -92,7 +91,7 @@ const CourseSettings = () => {
 
             {/* @TODO: Add condition based on tutor pro and tutor settings */}
             <Controller
-              name="enrollment_expiration"
+              name="enrollment_expiry"
               control={form.control}
               render={(controllerProps) => (
                 <FormInput
