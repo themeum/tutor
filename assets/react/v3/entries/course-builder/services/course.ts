@@ -6,7 +6,7 @@ import type { User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosResponse } from 'axios';
 
 const currentUser = tutorConfig.current_user.data;
@@ -267,11 +267,15 @@ const updateCourse = (payload: CoursePayload) => {
 
 export const useUpdateCourseMutation = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateCourse,
     onSuccess: (response) => {
       showToast({ type: 'success', message: response.message });
+      queryClient.invalidateQueries({
+        queryKey: ['CourseDetails', response.data],
+      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
