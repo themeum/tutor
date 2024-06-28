@@ -357,10 +357,17 @@ class Instructors_List {
 		if ( '' !== $course_id ) {
 			$course_id     = (int) $course_id;
 			$course_clause = "AND umeta.meta_value = {$course_id}";
-		} 
-		
+		}
+
+		$order_clause = "ORDER BY user.ID {$order}";
+		if ( '' !== $order ) {
+			$is_valid_sql = sanitize_sql_orderby( $order );
+			if ( ! $is_valid_sql ) {
+				$order_clause = '';
+			}
+		}
+
 		$date_clause   = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
-		$order_clause  = '' !== $order ? "ORDER BY user.ID {$order}" : '';
 		$in_clause     = QueryHelper::prepare_in_clause( $status );
 
 		$query  = "SELECT
