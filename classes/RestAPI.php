@@ -166,51 +166,10 @@ class RestAPI {
 			)
 		);
 
-		// Courses by terms cat and tag.
-		register_rest_route(
-			$this->namespace,
-			'/course-by-terms',
-			array(
-				'methods'             => 'POST',
-				'callback'            => array(
-					$this->course_obj,
-					'course_by_terms',
-				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
-			)
-		);
-
-		// Courses by terms cat and tag.
-		register_rest_route(
-			$this->namespace,
-			'/course-sorting-by-price',
-			array(
-				'methods'             => 'GET',
-				'callback'            => array(
-					$this->course_obj,
-					'course_sort_by_price',
-				),
-				'args'                => array(
-					'order' => array(
-						'required'          => true,
-						'type'              => 'string',
-						'validate_callback' => function ( $order ) {
-							return $this->validate_order( $order );
-						},
-					),
-					'page'  => array(
-						'required' => false,
-						'type'     => 'number',
-					),
-				),
-				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
-			)
-		);
-
 		// Course details.
 		register_rest_route(
 			$this->namespace,
-			'/course-detail/(?P<id>\d+)',
+			'/courses/(?P<id>\d+)',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array(
@@ -231,7 +190,7 @@ class RestAPI {
 		// Course topic.
 		register_rest_route(
 			$this->namespace,
-			'/course-topic/(?P<id>\d+)',
+			'/topics',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array(
@@ -239,7 +198,7 @@ class RestAPI {
 					'course_topic',
 				),
 				'args'                => array(
-					'id' => array(
+					'course_id' => array(
 						'validate_callback' => function ( $param ) {
 							return is_numeric( $param );
 						},
@@ -252,7 +211,7 @@ class RestAPI {
 		// Lesson by topic.
 		register_rest_route(
 			$this->namespace,
-			'/lesson/(?P<id>\d+)',
+			'/lessons',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array(
@@ -260,7 +219,7 @@ class RestAPI {
 					'topic_lesson',
 				),
 				'args'                => array(
-					'id' => array(
+					'topic_id' => array(
 						'validate_callback' => function ( $param ) {
 							return is_numeric( $param );
 						},
@@ -278,7 +237,7 @@ class RestAPI {
 				'methods'             => 'GET',
 				'callback'            => array(
 					$this->announcement_obj,
-					'course_annoucement',
+					'course_announcement',
 				),
 				'args'                => array(
 					'id' => array(
@@ -294,12 +253,33 @@ class RestAPI {
 		// Quiz by topic id.
 		register_rest_route(
 			$this->namespace,
-			'/quiz/(?P<id>\d+)',
+			'/quizzes',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array(
 					$this->quiz_obj,
 					'quiz_with_settings',
+				),
+				'args'                => array(
+					'topic_id' => array(
+						'validate_callback' => function ( $param ) {
+							return is_numeric( $param );
+						},
+					),
+				),
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+			)
+		);
+
+		// Quiz by quiz id.
+		register_rest_route(
+			$this->namespace,
+			'/quizzes/(?P<id>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array(
+					$this->quiz_obj,
+					'get_quiz',
 				),
 				'args'                => array(
 					'id' => array(
@@ -384,6 +364,27 @@ class RestAPI {
 				'callback'            => array(
 					$this->rating_obj,
 					'course_rating',
+				),
+				'args'                => array(
+					'id' => array(
+						'validate_callback' => function ( $param ) {
+							return is_numeric( $param );
+						},
+					),
+				),
+				'permission_callback' => array( RestAuth::class, 'process_api_request' ),
+			)
+		);
+
+		// Get course content by id.
+		register_rest_route(
+			$this->namespace,
+			'/course-contents/(?P<id>\d+)',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array(
+					$this->course_obj,
+					'course_contents',
 				),
 				'args'                => array(
 					'id' => array(

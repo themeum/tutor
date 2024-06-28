@@ -109,7 +109,6 @@ class Course extends Tutor_Base {
 		add_action( "manage_{$this->course_post_type}_posts_custom_column", array( $this, 'custom_lesson_column' ), 10, 2 );
 
 		add_action( 'wp_ajax_tutor_delete_topic', array( $this, 'tutor_delete_topic' ) );
-		add_action( 'admin_action_tutor_delete_announcement', array( $this, 'tutor_delete_announcement' ) );
 
 		/**
 		 * Frontend Action
@@ -1001,7 +1000,9 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 
-		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">Fully Booked</div></div>';
+		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">'.
+		__( 'Fully Booked', 'tutor' )
+		.'</div></div>';
 	}
 
 	/**
@@ -1472,21 +1473,6 @@ class Course extends Tutor_Base {
 		wp_delete_post( $topic_id );
 
 		wp_send_json_success();
-	}
-
-	/**
-	 * Delete announcement
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function tutor_delete_announcement() {
-		tutor_utils()->checking_nonce( 'get' );
-
-		$announcement_id = Input::get( 'topic_id', 0, Input::TYPE_INT );
-
-		wp_delete_post( $announcement_id );
-		wp_safe_redirect( wp_get_referer() );
 	}
 
 	/**
@@ -2216,15 +2202,17 @@ class Course extends Tutor_Base {
 			$assignment_str = _n( 'assignment', 'assignments', $required_assignment_pass, 'tutor' );
 
 			if ( ! $is_quiz_pass && 0 == $required_assignment_pass ) {
-				/* translators: %s: number of quiz pass required */
+				/* translators: %1$s: number of quiz/assignment pass required; %2$s: quiz/assignment string */
 				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str );
 			}
+
 			if ( $is_quiz_pass && $required_assignment_pass > 0 ) {
-				/* translators: %s: number of assignment pass required */
+				//phpcs:ignore
 				$_msg = sprintf( __( 'You have to pass %1$s %2$s to complete this course.', 'tutor' ), $required_assignment_pass, $assignment_str );
 			}
+
 			if ( ! $is_quiz_pass && $required_assignment_pass > 0 ) {
-				/* translators: %s: number of quiz pass required */
+				/* translators: %1$s: number of quiz pass required; %2$s: quiz string; %3$s: number of assignment pass required; %4$s: assignment string */
 				$_msg = sprintf( __( 'You have to pass %1$s %2$s and %3$s %4$s to complete this course.', 'tutor' ), $required_quiz_pass, $quiz_str, $required_assignment_pass, $assignment_str );
 			}
 

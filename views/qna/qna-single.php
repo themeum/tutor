@@ -14,7 +14,7 @@ use TUTOR\Input;
 extract( $data ); // $question_id
 
 // QNA data.
-	$question = tutor_utils()->get_qa_question( $question_id );
+$question = tutor_utils()->get_qa_question( (int) $question_id );
 if ( ! $question ) {
 	tutor_utils()->tutor_empty_state();
 	return;

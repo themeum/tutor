@@ -87,8 +87,7 @@ const MeetingCard = ({
 
         <div css={styles.buttonWrapper}>
           <Button
-            variant="primary"
-            isOutlined
+            variant="secondary"
             size="small"
             type="button"
             onClick={() => {

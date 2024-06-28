@@ -19,7 +19,7 @@ export const courseDefaultData: CourseFormData = {
   post_status: 'publish',
   post_password: '',
   post_author: {
-    id: Number(currentUser.ID),
+    id: Number(currentUser.id),
     name: currentUser.display_name,
     email: currentUser.user_email,
     avatar_url: '',
@@ -46,6 +46,7 @@ export const courseDefaultData: CourseFormData = {
   course_material_includes: '',
   course_duration_hours: 0,
   course_duration_minutes: 0,
+  attachments: null,
 };
 
 export interface CourseFormData {
@@ -78,6 +79,7 @@ export interface CourseFormData {
   course_material_includes: string;
   course_duration_hours: number;
   course_duration_minutes: number;
+  attachments: Media[] | null;
 }
 
 export interface CoursePayload {

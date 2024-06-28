@@ -37,7 +37,6 @@ class Admin {
 		add_action( 'admin_init', array( $this, 'filter_posts_for_instructors' ) );
 		add_action( 'load-post.php', array( $this, 'check_if_current_users_post' ) );
 
-		add_action( 'admin_action_uninstall_tutor_and_erase', array( $this, 'erase_tutor_data' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( TUTOR_FILE ), array( $this, 'plugin_action_links' ) );
 
 		// Plugin Row Meta.
@@ -455,92 +454,6 @@ class Admin {
 		}
 
 		return $override_files;
-	}
-
-	/**
-	 * Erase tutor data
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function erase_tutor_data() {
-		global $wpdb;
-
-		$is_erase_data = tutor_utils()->get_option( 'delete_on_uninstall' );
-		// Deleting Data.
-
-		$plugin_file = tutor()->basename;
-		if ( $is_erase_data && current_user_can( 'deactivate_plugin', $plugin_file ) ) {
-			/**
-			 * Deleting Post Type, Meta Data, taxonomy
-			 */
-			$course_post_type = tutor()->course_post_type;
-			$lesson_post_type = tutor()->lesson_post_type;
-
-			$post_types = array(
-				$course_post_type,
-				$lesson_post_type,
-				'tutor_quiz',
-				'tutor_enrolled',
-				'topics',
-				'tutor_enrolled',
-				'tutor_announcements',
-			);
-
-			$post_type_strings = "'" . implode( "','", $post_types ) . "'";
-			$tutor_posts       = $wpdb->get_col( "SELECT ID from {$wpdb->posts} WHERE post_type in({$post_type_strings}) ;" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-			if ( is_array( $tutor_posts ) && count( $tutor_posts ) ) {
-				foreach ( $tutor_posts as $post_id ) {
-					// Delete categories.
-					$terms = wp_get_object_terms( $post_id, 'course-category' );
-					foreach ( $terms as $term ) {
-						wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-category' );
-					}
-
-					// Delete tags if available.
-					$terms = wp_get_object_terms( $post_id, 'course-tag' );
-					foreach ( $terms as $term ) {
-						wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-tag' );
-					}
-
-					// Delete All Meta.
-					$wpdb->delete( $wpdb->postmeta, array( 'post_id' => $post_id ) );
-					$wpdb->delete( $wpdb->posts, array( 'ID' => $post_id ) );
-				}
-			}
-
-			/**
-			 * Deleting Comments (reviews, questions, quiz_answers, etc)
-			 */
-			$tutor_comments       = $wpdb->get_col( "SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;" );
-			$comments_ids_strings = "'" . implode( "','", $tutor_comments ) . "'";
-			if ( is_array( $tutor_comments ) && count( $tutor_comments ) ) {
-				$wpdb->query( "DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) " ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			}
-			$wpdb->delete( $wpdb->comments, array( 'comment_agent' => 'comment_agent' ) );
-
-			/**
-			 * Delete Options
-			 */
-
-			delete_option( 'tutor_option' );
-			$wpdb->delete( $wpdb->usermeta, array( 'meta_key' => '_is_tutor_student' ) );
-			$wpdb->delete( $wpdb->usermeta, array( 'meta_key' => '_tutor_instructor_approved' ) );
-			$wpdb->delete( $wpdb->usermeta, array( 'meta_key' => '_tutor_instructor_status' ) );
-			$wpdb->delete( $wpdb->usermeta, array( 'meta_key' => '_is_tutor_instructor' ) );
-			$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE  '%_tutor_completed_lesson_id_%' " );
-
-			// Deleting Table.
-			$prefix = $wpdb->prefix;
-			//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$wpdb->query( "DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws " );
-
-			deactivate_plugins( $plugin_file );
-		}
-
-		wp_redirect( 'plugins.php' );
-		die();
 	}
 
 	/**
