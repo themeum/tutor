@@ -11,6 +11,8 @@ import type { AxiosResponse } from 'axios';
 
 const currentUser = tutorConfig.current_user.data;
 
+type CourseLevel = 'all_levels' | 'beginner' | 'intermediate' | 'expert';
+
 export const courseDefaultData: CourseFormData = {
   post_date: '',
   post_name: '',
@@ -39,7 +41,7 @@ export const courseDefaultData: CourseFormData = {
   is_public_course: false,
   course_level: 'beginner',
   maximum_students: null,
-  enrollment_expiration: '',
+  enrollment_expiry: '',
   course_benefits: '',
   course_requirements: '',
   course_target_audience: '',
@@ -54,7 +56,7 @@ export interface CourseFormData {
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: string;
+  post_status: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;
   thumbnail: Media | null;
@@ -70,9 +72,9 @@ export interface CourseFormData {
   course_instructors: User[];
   enable_qna: boolean;
   is_public_course: boolean;
-  course_level: string;
+  course_level: CourseLevel;
   maximum_students: number | null;
-  enrollment_expiration: string;
+  enrollment_expiry: string;
   course_benefits: string;
   course_requirements: string;
   course_target_audience: string;
@@ -88,7 +90,7 @@ export interface CoursePayload {
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: string;
+  post_status: 'publish' | 'private';
   post_password: string;
   post_author: number | null;
   thumbnail_id: number | null;
@@ -104,11 +106,23 @@ export interface CoursePayload {
   course_instructors?: number[];
   enable_qna: string;
   is_public_course: string;
-  course_level: string;
-  _tutor_course_settings: {
-    maximum_students: number;
-    enable_content_drip?: number;
+  course_level: CourseLevel;
+  course_settings: {
+    maximum_students?: number;
+    enable_content_drip?: boolean;
     content_drip_type?: string;
+    enrollment_expiry?: number;
+    enable_tutor_bp?: boolean;
+  };
+  additional_content?: {
+    course_benefits?: string;
+    course_target_audience?: string;
+    course_duration?: {
+      hours: number;
+      minutes: number;
+    };
+    course_material_includes?: string;
+    course_requirements?: string;
   };
 }
 
@@ -186,7 +200,7 @@ export interface CourseDetailsResponse {
   thumbnail: string;
   enable_qna: string;
   is_public_course: string;
-  course_level: string;
+  course_level: CourseLevel;
   video: {
     source: string;
     source_video_id: string;
@@ -203,7 +217,7 @@ export interface CourseDetailsResponse {
     seconds: number;
   };
   course_benefits: string;
-  course_requirements: string[];
+  course_requirements: string;
   course_target_audience: string;
   course_material_includes: string;
   course_price_type: string;
