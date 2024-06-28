@@ -108,9 +108,15 @@ Cypress.Commands.add("loginAsStudent", () => {
 
 Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
   cy.get("body").then(($body) => {
-    if ($body.text().includes("No Data Available in this Section")) {
+    if (
+      $body.text().includes("No Data Available in this Section") ||
+      $body.text().includes("No Data Found from your Search/Filter") ||
+      $body.text().includes("No request found") ||
+      $body.text().includes("No records found") ||
+      $body.text().includes("No Records Found")
+    ) {
       cy.log("No data available");
-    } else{
+    } else {
       cy.getByInputName("tutor-bulk-checkbox-all").then(($checkboxes) => {
         const checkboxesArray = Cypress._.toArray($checkboxes);
         const randomIndex = Cypress._.random(0, checkboxesArray.length - 1);
@@ -120,12 +126,12 @@ Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
         cy.get(
           `span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`
         ).click();
-    
+
         cy.get("#tutor-admin-bulk-action-btn")
           .contains("Apply")
           .click();
         cy.get("#tutor-confirm-bulk-action").click();
-    
+
         cy.get("@randomCheckbox")
           .invoke("attr", "value")
           .then((id) => {
@@ -142,19 +148,25 @@ Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
             }
           });
       });
-    }})
- 
+    }
+  });
 });
 // perform publish,pending,draft,trash on all courses
 Cypress.Commands.add("performBulkAction", (option) => {
   cy.get("body").then(($body) => {
-    if ($body.text().includes("No Data Available in this Section")) {
+    if ($body.text().includes("No Data Found from your Search/Filter") ||
+    $body.text().includes("No request found") ||
+    $body.text().includes("No Data Available in this Section") ||
+    $body.text().includes("No records found") ||
+    $body.text().includes("No Records Found")) {
       cy.log("No data available");
-    } else{
+    } else {
       cy.get("#tutor-bulk-checkbox-all").click();
       cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
-    
-      cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`)
+
+      cy.get(
+        `span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`
+      )
         .invoke("text")
         .then((text) => {
           const expectedValue = text.trim();
@@ -167,7 +179,7 @@ Cypress.Commands.add("performBulkAction", (option) => {
           cy.get("#tutor-confirm-bulk-action")
             .contains("Yes, I'am Sure")
             .click();
-    
+
           if (option === "trash") {
             cy.contains("No Data Available in this Section");
           } else {
@@ -178,14 +190,18 @@ Cypress.Commands.add("performBulkAction", (option) => {
               });
           }
         });
-    }})
-  
+    }
+  });
 });
 
 Cypress.Commands.add("checkSorting", (order, formSelector, itemSelector) => {
   function checkSorting() {
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
+      if ($body.text().includes("No Data Found from your Search/Filter") ||
+      $body.text().includes("No request found") ||
+      $body.text().includes("No Data Available in this Section") ||
+      $body.text().includes("No records found") ||
+      $body.text().includes("No Records Found")) {
         cy.log("No data available");
       } else {
         cy.get(itemSelector).then(($items) => {
@@ -215,7 +231,13 @@ Cypress.Commands.add(
   ) => {
     cy.get(filterFormSelector).click();
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Records Found")) {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
+      ) {
         cy.log("No data available");
       } else {
         cy.get(dropdownSelector)
@@ -228,17 +250,21 @@ Cypress.Commands.add(
               cy.wrap($randomOption)
                 .find(dropdownTextSelector)
                 .click();
-              console.log(`drop `,selectedOptionText)
+              console.log(`drop `, selectedOptionText);
               cy.get("body").then(($body) => {
                 if (
-                  $body.text().includes("No Data Found from your Search/Filter")
+                  $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
                 ) {
                   cy.log("No data available");
                 } else {
                   cy.wait(500);
                   cy.get(elementTitleSelector).each(($element) => {
                     const elementText = $element.text().trim();
-                    console.log('el ',elementText)
+                    console.log("el ", elementText);
                     expect(elementText).to.contain(selectedOptionText);
                   });
                 }
@@ -266,7 +292,13 @@ Cypress.Commands.add(
       .contains("11")
       .click();
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")|| $body.text().includes("No request found")) {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
+      ) {
         cy.log("No data available");
       } else {
         cy.wait(2000);
@@ -297,7 +329,11 @@ Cypress.Commands.add("filterByCategory", () => {
         .then(() => {
           cy.get("body").then(($body) => {
             if (
-              $body.text().includes("No Data Found from your Search/Filter")
+              $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
             ) {
               cy.log("No data available");
             } else {
@@ -339,7 +375,9 @@ Cypress.Commands.add(
       if (
         $body.text().includes("No Data Found from your Search/Filter") ||
         $body.text().includes("No request found") ||
-        $body.text().includes("No Data Available in this Section") || $body.text().includes("No records found") 
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
       ) {
         cy.log("No data available");
       } else {

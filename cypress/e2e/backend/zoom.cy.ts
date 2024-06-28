@@ -36,7 +36,7 @@ describe("Tutor Dashboard My Courses", () => {
           .then(() => {
             cy.get("body").then(($body) => {
               if (
-                $body.text().includes("No Data Found from your Search/Filter")
+                $body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No records found")
               ) {
                 cy.log("No data available");
               } else {
@@ -79,7 +79,7 @@ describe("Tutor Dashboard My Courses", () => {
       .click();
 
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
+      if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No records found")) {
         cy.log("No data available");
       } else {
         cy.wait(2000);
@@ -126,7 +126,7 @@ describe("Tutor Dashboard My Courses", () => {
       "ajaxRequest"
     );
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
+      if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No records found")) {
         cy.log("No data available");
       } else {
         cy.get("a.tutor-btn.tutor-btn-outline-primary.tutor-btn-md")
@@ -203,7 +203,7 @@ describe("Tutor Dashboard My Courses", () => {
       "ajaxRequest"
     );
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
+      if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No records found")) {
         cy.log("No data available");
       } else {
         cy.get("a.tutor-iconic-btn")

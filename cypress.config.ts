@@ -26,8 +26,5 @@ export default defineConfig({
     instructor_zoom_account_id: process.env.CYPRESS_instructor_zoom_account_id,
     instructor_zoom_client_id: process.env.CYPRESS_instructor_zoom_client_id,
     instructor_zoom_client_secret: process.env.CYPRESS_instructor_zoom_client_secret,
-    googleRefreshToken: process.env.CYPRESS_google_refresh_token,
-    googleClientId: process.env.CYPRESS_google_client_id,
-    googleClientSecret: process.env.CYPRESS_google_client_secret,
   },
 });

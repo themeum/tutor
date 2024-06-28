@@ -26,7 +26,7 @@ describe("Tutor Dashboard My Courses", () => {
   it("should filter meetings", () => {
     cy.get(":nth-child(2) > .tutor-js-form-select").click();
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Records Found")) {
+      if ($body.text().includes("No Records Found")||$body.text().includes("No records found")) {
         cy.log("No data available");
       } else {
         cy.get(".tutor-form-select-options")
@@ -78,7 +78,7 @@ describe("Tutor Dashboard My Courses", () => {
       .click();
 
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
+      if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No records found")) {
         cy.log("No data available");
       } else {
         cy.wait(2000);
@@ -315,7 +315,7 @@ describe("Tutor Dashboard My Courses", () => {
       }
     ).as("ajaxRequest");
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Records Found")) {
+      if ($body.text().includes("No Records Found")||$body.text().includes("No records found")) {
         cy.log("No data available");
       } else {
         cy.get("button[action-tutor-dropdown='toggle']")

@@ -12,7 +12,7 @@ describe("Tutor Dashboard My Bundles", () => {
 
         cy.get("a.tutor-add-new-course-bundle").click()
 
-        cy.getByInputName("title").type("My new bundle course")
+        cy.getByInputName("title").clear().type("My new bundle course")
         cy.getByInputName("post_name").type("my-new-bundle-course")
         cy.setTinyMceContent("#wp-course_description-editor-container", "Our Digital Marketing Mastery bundle covers vital areas like social media strategies, SEO, email marketing, content creation, and paid advertising on platforms like Google and Facebook.")
         cy.get("textarea[name=course_benefits]").type("Participants gain hands-on experience with Google Analytics for data analysis and conversion rate optimization techniques.")

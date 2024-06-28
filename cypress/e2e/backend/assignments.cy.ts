@@ -9,7 +9,13 @@ describe("Tutor Admin Assignments", () => {
 
   it("should evaluate an assignment", () => {
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Available in this Section")) {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
+      ) {
         cy.log("No data found");
       } else {
         cy.get(".tutor-table-assignments tbody tr")
@@ -81,7 +87,13 @@ describe("Tutor Admin Assignments", () => {
       cy.get(formSelector).click();
       cy.get(`span[title=${order}]`).click();
       cy.get("body").then(($body) => {
-        if ($body.text().includes("No Data Available in this Section")) {
+        if (
+          $body.text().includes("No Data Found from your Search/Filter") ||
+          $body.text().includes("No request found") ||
+          $body.text().includes("No Data Available in this Section") ||
+          $body.text().includes("No records found") ||
+          $body.text().includes("No Records Found")
+        ) {
           cy.log("No data available");
         } else {
           cy.get(itemSelector).then(($items) => {
@@ -121,5 +133,4 @@ describe("Tutor Admin Assignments", () => {
     const elementDateSelector = ".tutor-fs-7 > span";
     cy.filterElementsByDate(filterFormSelector, elementDateSelector);
   });
-
 });

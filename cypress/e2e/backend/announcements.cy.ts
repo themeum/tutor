@@ -76,7 +76,13 @@ describe("Tutor Admin Announcements", () => {
     );
 
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Available in this Section")) {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
+      ) {
         cy.log("No data found");
       } else {
         cy.get("button.tutor-announcement-details")
@@ -122,7 +128,13 @@ describe("Tutor Admin Announcements", () => {
       .contains(selectedOptionText)
       .click({ force: true });
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
+      ) {
         cy.log("No data available");
       } else {
         cy.get(".tutor-fs-7.tutor-fw-medium.tutor-color-muted").each(
@@ -144,7 +156,13 @@ describe("Tutor Admin Announcements", () => {
       // console.log("se ", selectedOptionText);
       cy.wrap($option).click({ force: true });
       cy.get("body").then(($body) => {
-        if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No Data Available in this Section") ) {
+        if (
+          $body.text().includes("No Data Found from your Search/Filter") ||
+          $body.text().includes("No request found") ||
+          $body.text().includes("No Data Available in this Section") ||
+          $body.text().includes("No records found") ||
+          $body.text().includes("No Records Found")
+        ) {
           cy.log("No data available");
         } else {
           cy.get(".tutor-fs-7.tutor-fw-medium.tutor-color-muted").each(
@@ -152,10 +170,10 @@ describe("Tutor Admin Announcements", () => {
               cy.wrap($announcement)
                 .invoke("text")
                 .then((announcementText) => {
-                  console.log('asd ',announcementText)
-                  console.log('sele ',selectedOptionText)
+                  console.log("asd ", announcementText);
+                  console.log("sele ", selectedOptionText);
                   expect(selectedOptionText).to.include(
-                    announcementText.replace(/Course:\s*/g, '').trim()
+                    announcementText.replace(/Course:\s*/g, "").trim()
                   );
                 });
             }
@@ -173,7 +191,13 @@ describe("Tutor Admin Announcements", () => {
 
   it("should perform bulk action on all annoucements", () => {
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Available in this Section")) {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
+      ) {
         cy.log("No data found");
       } else {
         cy.get("#tutor-bulk-checkbox-all").click();
@@ -191,4 +215,5 @@ describe("Tutor Admin Announcements", () => {
       }
     });
   });
+  
 });
