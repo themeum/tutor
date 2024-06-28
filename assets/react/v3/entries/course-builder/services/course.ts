@@ -19,7 +19,7 @@ export const courseDefaultData: CourseFormData = {
   post_status: 'publish',
   post_password: '',
   post_author: {
-    id: Number(currentUser.ID),
+    id: Number(currentUser.id),
     name: currentUser.display_name,
     email: currentUser.user_email,
     avatar_url: '',

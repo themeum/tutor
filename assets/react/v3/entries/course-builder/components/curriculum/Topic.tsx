@@ -19,7 +19,7 @@ import ThreeDots from '@Molecules/ThreeDots';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
-import { nanoid, noop } from '@Utils/util';
+import { moveTo, nanoid, noop } from '@Utils/util';
 import {
   DndContext,
   DragOverlay,
@@ -39,7 +39,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
-import { animated } from '@react-spring/web';
+import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -73,10 +73,18 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const deleteRef = useRef<HTMLButtonElement>(null);
 
-  const collapseAnimation = useCollapseExpandAnimation({
-    ref: topicRef,
-    isOpen: !topic.isCollapsed,
-  });
+  const [collapseAnimation, collapseAnimate] = useSpring(
+    {
+      height: !topic.isCollapsed ? topicRef.current?.scrollHeight : 0,
+      opacity: !topic.isCollapsed ? 1 : 0,
+      overflow: 'hidden',
+      config: {
+        duration: 300,
+        easing: (t) => t * (2 - t),
+      },
+    },
+    [content.length]
+  );
   const collapseAnimationDescription = useCollapseExpandAnimation({
     ref: descriptionRef,
     isOpen: !topic.isCollapsed,
@@ -147,6 +155,16 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
       return [...previousContent, newContent];
     });
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isDefined(topicRef.current)) {
+      collapseAnimate.start({
+        height: !topic.isCollapsed ? topicRef.current.scrollHeight : 0,
+        opacity: !topic.isCollapsed ? 1 : 0,
+      });
+    }
+  }, [topic.isCollapsed, content.length]);
 
   return (
     <div
@@ -227,11 +245,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               triggerRef={deleteRef}
               closePopover={() => setIsDeletePopoverOpen(false)}
               maxWidth="258px"
-              title={`${__('Delete topic', 'tutor')} ${topic.post_title}`}
-              message={__(
-                'Are you sure you want to delete this content from your course? This cannot be undone.',
-                'tutor'
-              )}
+              title={`Delete topic "${topic.post_title}"`}
+              message="Are you sure you want to delete this content from your course? This cannot be undone."
               animationType={AnimationType.slideUp}
               arrow="auto"
               hideArrow
@@ -323,9 +338,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               }
 
               if (active.id !== over.id) {
-                const activeIndex = topic.content.findIndex((item) => item.ID === active.id);
-                const overIndex = topic.content.findIndex((item) => item.ID === over.id);
-                onSort?.(activeIndex, overIndex);
+                const activeIndex = content.findIndex((item) => item.ID === active.id);
+                const overIndex = content.findIndex((item) => item.ID === over.id);
+                // Will be modified later
+                // onSort?.(activeIndex, overIndex);
+                setContent(moveTo(content, activeIndex, overIndex));
               }
             }}
           >

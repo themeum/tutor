@@ -109,6 +109,24 @@ class Assets {
 
 		$current_page = tutor_utils()->get_current_page_slug();
 
+		/**
+		 * Only required current user data.
+		 *
+		 * @since 2.6.2
+		 */
+		$current_user = array();
+		$userdata     = get_userdata( get_current_user_id() );
+
+		if ( $userdata ) {
+			$current_user = array(
+				'roles' => $userdata->roles,
+				'data'  => array(
+					'id'           => $userdata->ID,
+					'display_name' => $userdata->display_name,
+				),
+			);
+		}
+
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => get_home_url(),
@@ -126,7 +144,7 @@ class Assets {
 			'is_admin'                     => is_admin(),
 			'is_admin_bar_showing'         => is_admin_bar_showing(),
 			'addons_data'                  => tutor_utils()->prepare_free_addons_data(),
-			'current_user'                 => wp_get_current_user(),
+			'current_user'                 => $current_user,
 			'content_change_event'         => 'tutor_content_changed_event',
 			'is_tutor_course_edit'         => isset( $_GET['action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) ? true : false,
 			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
@@ -174,9 +192,10 @@ class Assets {
 		/**
 		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
 		 * condition updated @since v.1.7.4
+		 *
+		 * @since 2.7.0 is_user_logged_in() check added to remove duplicate H1 tag on each single post.
 		 */
-
-		if ( is_single() ) {
+		if ( is_single() && is_user_logged_in() ) {
 			if ( function_exists( 'et_pb_is_pagebuilder_used' ) ) {
 				$is_page_builder_used = et_pb_is_pagebuilder_used( get_the_ID() );
 				if ( ! $is_page_builder_used ) {

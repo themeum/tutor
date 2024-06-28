@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { format } from 'date-fns';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -10,7 +11,6 @@ import Show from '@Controls/Show';
 
 import { DateFormats } from '@Config/constants';
 import { styleUtils } from '@Utils/style-utils';
-import { __ } from '@wordpress/i18n';
 
 interface MeetingCardProps {
   meetingTitle: string;

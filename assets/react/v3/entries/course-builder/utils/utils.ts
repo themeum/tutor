@@ -66,6 +66,12 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_level: courseDetails.course_level,
     maximum_students: courseDetails.course_settings.maximum_students,
     enrollment_expiration: '',
+    course_benefits: '',
+    course_duration_hours: 0,
+    course_duration_minutes: 0,
+    course_material_includes: '',
+    course_requirements: '',
+    course_target_audience: '',
   };
 };
 

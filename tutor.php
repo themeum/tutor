@@ -4,11 +4,11 @@
  * Plugin URI: https://www.themeum.com/product/tutor-lms/
  * Description: Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create small to large scale online education site very conveniently. Power features like report, certificate, course preview, private file sharing make Tutor a robust plugin for any educational institutes.
  * Author: Themeum
- * Version: 2.6.0
+ * Version: 2.7.1
  * Author URI: https://themeum.com
  * Requires PHP: 7.4
  * Requires at least: 5.3
- * Tested up to: 6.4
+ * Tested up to: 6.5
  * License: GPLv2 or later
  * Text Domain: tutor
  *
@@ -19,12 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once 'vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 /**
  * Defined the tutor main file
  */
-define( 'TUTOR_VERSION', '2.6.0' );
+define( 'TUTOR_VERSION', '2.7.1' );
 define( 'TUTOR_FILE', __FILE__ );
 
 /**
@@ -143,9 +143,14 @@ if ( ! function_exists( 'tutils' ) ) {
  * Do some task during activation
  *
  * @since 1.5.2
+ *
+ * @since 2.6.2
+ *
+ * Uninstall hook registered
  */
 register_activation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_activate' ) );
 register_deactivation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_deactivation' ) );
+register_uninstall_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_uninstall' ) );
 
 if ( ! function_exists( 'tutor_lms' ) ) {
 	/**

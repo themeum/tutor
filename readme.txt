@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 2.6.0
+Stable tag: 2.7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -315,6 +315,49 @@ These key integrations with Tutor LMS extend its capabilities for a more powerfu
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.7.1 - May 14, 2024
+
+New: Added Quiz Details API
+Update: Updated several API endpoints and fortified the API infrastructure
+Update: Enriched user experience through multiple enhancements
+Fix: Fixed WooCommerce conflicts with Tutor LMS API
+Fix: Resolved critical security vulnerabilities
+Fix: Fixed “Class Not Found” errors in some scenarios
+Fix: Resolved various translation-related issues
+
+= 2.7.0 - April 24, 2024
+
+New: Introduced API for accessing course content
+New: Added API for student dashboard functionality (Pro)
+New: Implemented API for student calendar event list (Pro)
+New: Added API for accessing the student's enrolled courses (Pro)
+New: Introduced API for retrieving quiz attempt lists (Pro)
+New: Added API for accessing enrolled student lists on a course (Pro)
+New: Implemented API for accepting instructor registration applications (Pro)
+New: Added API for viewing student order history (Pro)
+New: Introduced APIs for profile management (Pro)
+New: Implemented APIs for Q&A management (Pro)
+Update: Compatibility with WordPress 6.5
+Update: Implemented various enhancements to improve the overall user experience
+Fix: Fixed the duplicate H1 tags issue on every single page
+Fix: Resolved various translation-related issues
+Fix: Enhanced security by solving a few vulnerabilities
+
+= 2.6.2 - March 11, 2024
+
+New: APIs for enabling students to submit assignments (Pro)
+New: APIs allowing students to add courses to their wishlists (Pro)
+New: APIs enabling students to review and rate courses (Pro)
+Update: Some enhancements to improve the overall experience
+Fix: Strengthened security to prevent data loss
+
+= 2.6.1 - February 19, 2024
+
+New: Added API functionality for submitting and retrieving list of quizzes (Pro)
+Update: Improved security to ensure safe submission of questions and answers
+Update: Improved response data, extendability, and performance across all APIs within the Tutor LMS Free plugin
+Fix: Fixed issue causing "Resource not found" error related to ChatGPT (Pro)
 
 = 2.6.0 - January 11, 2024
 

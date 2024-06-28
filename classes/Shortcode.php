@@ -105,7 +105,9 @@ class Shortcode {
 			 * @since 2.1.3
 			 */
 			$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
-			echo sprintf( __( 'Please %1$sSign-In%2$s to view this page', 'tutor' ), '<a data-login_url="' . esc_url( $login_url ) . '" href="#" class="tutor-open-login-modal">', '</a>' );//phpcs:ignore
+			$signin_link = '<a data-login_url="' . esc_url( $login_url ) . '" href="#" class="tutor-open-login-modal">' . __( 'Sign-In', 'tutor' ) . '</a>';
+			/* translators: %s is anchor link for signin */
+			echo sprintf( __( 'Please %s to view this page', 'tutor' ), $signin_link ); //phpcs:ignore
 		}
 		return apply_filters( 'tutor_dashboard/index', ob_get_clean() );
 	}
