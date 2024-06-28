@@ -960,8 +960,7 @@ class Course extends Tutor_Base {
 				if ( $trash_course ) {
 					wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
 				}
-			}
-			else {
+			} else {
 				wp_send_json_error( tutor_utils()->error_message() );
 			}
 		}
