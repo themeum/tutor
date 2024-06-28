@@ -137,6 +137,11 @@ $future_list = array(
 	'publish' => array( __( 'Publish', 'tutor' ), 'select-success' ),
 	'future'  => array( __( 'Schedule', 'tutor' ), 'select-default' ),
 );
+
+$show_course_delete = false;
+if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
+	$show_course_delete = true;
+}
 ?>
 
 <div class="tutor-admin-wrap">
@@ -353,10 +358,12 @@ $future_list = array(
 														<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 													</a>
 													<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
+													<?php if ( $show_course_delete ) : ?>
 													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
 														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
 														<span><?php esc_html_e( 'Delete Permanently', 'tutor' ); ?></span>
 													</a>
+													<?php endif; ?>
 													<?php do_action( 'tutor_admin_after_course_list_action', $post->ID ); ?>
 												</div>
 											</div>
