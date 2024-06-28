@@ -657,6 +657,14 @@ class Options_V2 {
 								'desc'        => __( 'Enable instructors to publish the course directly. If disabled, admins will be able to review course content before publishing.', 'tutor' ),
 							),
 							array(
+								'key'         => 'instructor_can_delete_course',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Allow Instructors To Delete Courses', 'tutor'),
+								'label_title' => '',
+								'default'     => 'off',
+								'desc'        => __( 'Enable instructors to only trash courses. If disabled, instructors will not be allowed to trash courses.', 'tutor'),
+							),
+							array(
 								'key'         => 'enable_become_instructor_btn',
 								'type'        => 'toggle_switch',
 								'label'       => __( 'Become an Instructor Button', 'tutor' ),

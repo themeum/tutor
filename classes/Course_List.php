@@ -318,14 +318,30 @@ class Course_List {
 	public static function tutor_change_course_status() {
 		tutor_utils()->checking_nonce();
 
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
 		$status = Input::post( 'status' );
 		$id     = Input::post( 'id' );
 		$course = get_post( $id );
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			
+			if( 'trash' === $status && tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
+				
+				$args = array(
+			        'ID'          => $id,
+		            'post_status' => $status,
+		        );
+				
+				$trash_post = wp_update_post( $args );
+
+				if ( $trash_post ) {
+					wp_send_json_success( __( 'Course trashed successfully', 'tutor' ) );
+				}
+			}
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
+		
 
 		if ( CourseModel::POST_TYPE !== $course->post_type ) {
 			wp_send_json_error( tutor_utils()->error_message() );

@@ -944,6 +944,31 @@ class Course extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Only main instructor can delete this course', 'tutor' ) ) );
 		}
 
+		//Check if user is only an instructor
+		if ( ! current_user_can( 'administrator' ) ) {
+			
+			//Check if instructor can trash course
+			$can_trash_post = tutor_utils()->get_option('instructor_can_delete_course');
+
+			if ( $can_trash_post ) {
+				
+				$trash_course = wp_update_post( 
+					array( 
+						'ID'          => $course_id,
+						'post_status' => 'trash'
+					)
+				);
+
+				if ( $trash_course ) {
+					wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
+				}
+				
+			}
+			else {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+		}
+
 		CourseModel::delete_course( $course_id );
 		wp_send_json_success();
 	}
