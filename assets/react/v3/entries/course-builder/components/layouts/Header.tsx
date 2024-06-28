@@ -36,7 +36,10 @@ const Header = () => {
     if (courseId) {
       updateCourseMutation.mutate({ course_id: Number(courseId), ...payload });
     } else {
-      const response = await createCourseMutation.mutateAsync(payload);
+      const response = await createCourseMutation.mutateAsync({
+        ...payload,
+        post_status: payload.post_password ? 'password_protected' : 'publish',
+      });
 
       if (response.data) {
         // @TODO: Redirect to edit page url

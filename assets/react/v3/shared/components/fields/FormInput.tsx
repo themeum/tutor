@@ -38,7 +38,7 @@ const styles = {
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string;
-  type?: 'number' | 'text';
+  type?: 'number' | 'text' | 'password';
   maxLimit?: number;
   disabled?: boolean;
   readOnly?: boolean;
@@ -122,7 +122,7 @@ const FormInput = ({
                 {...field}
                 {...inputProps}
                 {...additionalAttributes}
-                type="text"
+                type={type === 'password' ? 'password' : 'text'}
                 value={inputValue}
                 onChange={(event) => {
                   const { value } = event.target;

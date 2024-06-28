@@ -11,8 +11,6 @@ import FormFieldWrapper from './FormFieldWrapper';
 import type { Media } from '@Components/fields/FormImageInput';
 import { styleUtils } from '@Utils/style-utils';
 import { formatBytes, formatSeconds } from '@Utils/util';
-import { format } from 'date-fns';
-import { DateFormats } from '@Config/constants';
 import { useState } from 'react';
 
 type FormVideoInputProps = {
@@ -176,7 +174,7 @@ const FormVideoInput = ({
                   <div css={styles.previewWrapper}>
                     <div css={styles.videoInfoWrapper}>
                       <div css={styles.videoInfoCard}>
-                        <SVGIcon name="preview" height={40} width={40} />
+                        <SVGIcon name="video" height={40} width={40} />
 
                         <div css={styles.videoInfo}>
                           <div css={styles.videoInfoTitle}>
@@ -187,12 +185,6 @@ const FormVideoInput = ({
 
                           <div css={styles.videoInfoSubtitle}>
                             <span>{`${__('Size', 'tutor')}: ${formatBytes(media?.filesizeInBytes || 0)}`}</span>
-
-                            <SVGIcon name="dot" height={2} width={2} />
-
-                            {media.date && (
-                              <span>{format(new Date(media.date), DateFormats.monthDayYearHoursMinutes)}</span>
-                            )}
                           </div>
                         </div>
                       </div>
@@ -261,6 +253,10 @@ const styles = {
     ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[8]};
+
+    svg {
+      color: ${colorTokens.icon.hover};
+    }
   `,
   videoInfo: css`
     ${styleUtils.display.flex('column')};

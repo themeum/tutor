@@ -275,7 +275,11 @@ const getCourseDetails = (courseId: number) => {
 export const useCourseDetailsQuery = (courseId: number) => {
   return useQuery({
     queryKey: ['CourseDetails', courseId],
-    queryFn: () => getCourseDetails(courseId).then((res) => res.data),
+    queryFn: () =>
+      getCourseDetails(courseId).then((res) => {
+        res.data.post_status = res.data.post_password ? 'password_protected' : res.data.post_status;
+        return res.data;
+      }),
     enabled: !!courseId,
   });
 };
