@@ -144,7 +144,9 @@ const CourseBasic = () => {
           <Controller
             name="post_password"
             control={form.control}
-            render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
+            render={(controllerProps) => (
+              <FormInput {...controllerProps} label={__('Password', 'tutor')} type="password" />
+            )}
           />
         )}
 

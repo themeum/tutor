@@ -275,7 +275,10 @@ const getCourseDetails = (courseId: number) => {
 export const useCourseDetailsQuery = (courseId: number) => {
   return useQuery({
     queryKey: ['CourseDetails', courseId],
-    queryFn: () => getCourseDetails(courseId).then((res) => res.data),
+    queryFn: () =>
+      getCourseDetails(courseId).then((res) => {
+        return res.data;
+      }),
     enabled: !!courseId,
   });
 };

@@ -6,7 +6,6 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 const ContentDropSettings = () => {
