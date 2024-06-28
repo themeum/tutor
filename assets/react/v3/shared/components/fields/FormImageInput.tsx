@@ -9,15 +9,31 @@ import { __ } from '@wordpress/i18n';
 import { rgba } from 'polished';
 import FormFieldWrapper from './FormFieldWrapper';
 
-export type Media = {
-  id: number | null;
+type MediaSize = {
   url: string;
-  title?: string;
+  width: number;
+  height: number;
+  orientation: string;
+};
+
+export type Media = {
+  id: number;
+  url: string;
+  title: string;
+  date?: string;
+  filesizeInBytes?: number;
+  subtype?: string;
+  sizes?: {
+    thumbnail: MediaSize;
+    medium: MediaSize;
+    large: MediaSize;
+    full: MediaSize;
+  };
 };
 
 type FormImageInputProps = {
   label?: string;
-  onChange?: () => void;
+  onChange?: (media: Media | null) => void;
   helpText?: string;
   buttonText?: string;
   infoText?: string;
@@ -30,6 +46,7 @@ const FormImageInput = ({
   helpText,
   buttonText = __('Upload Media', 'tutor'),
   infoText,
+  onChange,
 }: FormImageInputProps) => {
   const wpMedia = window.wp.media({
     library: { type: 'image' },
@@ -46,10 +63,18 @@ const FormImageInput = ({
     const { id, url, title } = attachment;
 
     field.onChange({ id, url, title });
+
+    if (onChange) {
+      onChange({ id, url, title });
+    }
   });
 
   const clearHandler = () => {
-    field.onChange({ id: null, url: '', title: '' });
+    field.onChange(null);
+
+    if (onChange) {
+      onChange(null);
+    }
   };
 
   return (
@@ -74,7 +99,7 @@ const FormImageInput = ({
                   <div css={styles.previewWrapper}>
                     <img src={url} alt={fieldValue?.title} css={styles.imagePreview} />
                     <div css={styles.hoverPreview} data-hover-buttons-wrapper>
-                      <Button variant="outlined" onClick={uploadHandler}>
+                      <Button variant="secondary" onClick={uploadHandler}>
                         {__('Replace Image', 'tutor')}
                       </Button>
                       <Button variant="text" onClick={clearHandler}>

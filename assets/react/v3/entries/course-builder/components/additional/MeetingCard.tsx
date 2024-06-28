@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { format } from 'date-fns';
-import React from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -88,7 +87,7 @@ const MeetingCard = ({
 
         <div css={styles.buttonWrapper}>
           <Button
-            variant="outlined"
+            variant="secondary"
             size="small"
             type="button"
             onClick={() => {
