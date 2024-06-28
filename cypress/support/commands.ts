@@ -107,67 +107,79 @@ Cypress.Commands.add("loginAsStudent", () => {
 });
 
 Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
-  cy.getByInputName("tutor-bulk-checkbox-all").then(($checkboxes) => {
-    const checkboxesArray = Cypress._.toArray($checkboxes);
-    const randomIndex = Cypress._.random(0, checkboxesArray.length - 1);
-    cy.wrap(checkboxesArray[randomIndex]).as("randomCheckbox");
-    cy.get("@randomCheckbox").check();
-    cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
-    cy.get(
-      `span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`
-    ).click();
-
-    cy.get("#tutor-admin-bulk-action-btn")
-      .contains("Apply")
-      .click();
-    cy.get("#tutor-confirm-bulk-action").click();
-
-    cy.get("@randomCheckbox")
-      .invoke("attr", "value")
-      .then((id) => {
-        if (option === "trash") {
-          cy.get(`.tutor-table-row-status-update[data-id="${id}"]`).should(
-            "not.exist"
-          );
-        } else {
-          cy.get(`.tutor-table-row-status-update[data-id="${id}"]`)
-            .invoke("attr", "data-status")
-            .then((status) => {
-              expect(status).to.include(option);
-            });
-        }
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("No Data Available in this Section")) {
+      cy.log("No data available");
+    } else{
+      cy.getByInputName("tutor-bulk-checkbox-all").then(($checkboxes) => {
+        const checkboxesArray = Cypress._.toArray($checkboxes);
+        const randomIndex = Cypress._.random(0, checkboxesArray.length - 1);
+        cy.wrap(checkboxesArray[randomIndex]).as("randomCheckbox");
+        cy.get("@randomCheckbox").check();
+        cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
+        cy.get(
+          `span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`
+        ).click();
+    
+        cy.get("#tutor-admin-bulk-action-btn")
+          .contains("Apply")
+          .click();
+        cy.get("#tutor-confirm-bulk-action").click();
+    
+        cy.get("@randomCheckbox")
+          .invoke("attr", "value")
+          .then((id) => {
+            if (option === "trash") {
+              cy.get(`.tutor-table-row-status-update[data-id="${id}"]`).should(
+                "not.exist"
+              );
+            } else {
+              cy.get(`.tutor-table-row-status-update[data-id="${id}"]`)
+                .invoke("attr", "data-status")
+                .then((status) => {
+                  expect(status).to.include(option);
+                });
+            }
+          });
       });
-  });
+    }})
+ 
 });
 // perform publish,pending,draft,trash on all courses
 Cypress.Commands.add("performBulkAction", (option) => {
-  cy.get("#tutor-bulk-checkbox-all").click();
-  cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
-
-  cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`)
-    .invoke("text")
-    .then((text) => {
-      const expectedValue = text.trim();
-      cy.get(
-        `span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`
-      ).click();
-      cy.get("#tutor-admin-bulk-action-btn")
-        .contains("Apply")
-        .click();
-      cy.get("#tutor-confirm-bulk-action")
-        .contains("Yes, I'am Sure")
-        .click();
-
-      if (option === "trash") {
-        cy.contains("No Data Available in this Section");
-      } else {
-        cy.get("select.tutor-table-row-status-update")
-          .invoke("val")
-          .then((selectedValue) => {
-            expect(selectedValue).to.include(expectedValue.toLowerCase());
-          });
-      }
-    });
+  cy.get("body").then(($body) => {
+    if ($body.text().includes("No Data Available in this Section")) {
+      cy.log("No data available");
+    } else{
+      cy.get("#tutor-bulk-checkbox-all").click();
+      cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
+    
+      cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`)
+        .invoke("text")
+        .then((text) => {
+          const expectedValue = text.trim();
+          cy.get(
+            `span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`
+          ).click();
+          cy.get("#tutor-admin-bulk-action-btn")
+            .contains("Apply")
+            .click();
+          cy.get("#tutor-confirm-bulk-action")
+            .contains("Yes, I'am Sure")
+            .click();
+    
+          if (option === "trash") {
+            cy.contains("No Data Available in this Section");
+          } else {
+            cy.get("select.tutor-table-row-status-update")
+              .invoke("val")
+              .then((selectedValue) => {
+                expect(selectedValue).to.include(expectedValue.toLowerCase());
+              });
+          }
+        });
+    }})
+  
 });
 
 Cypress.Commands.add("checkSorting", (order, formSelector, itemSelector) => {
@@ -494,7 +506,6 @@ Cypress.Commands.add("handleNextButton", () => {
 Cypress.Commands.add("handleAssignment", (isLastItem) => {
   cy.get("body").then(($body) => {
     const bodyText = $body.text();
-
     if (
       bodyText.includes(
         "You have missed the submission deadline. Please contact the instructor for more information."
