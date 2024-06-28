@@ -277,7 +277,7 @@ export default CourseBasic;
 const styles = {
   wrapper: css`
     display: grid;
-    grid-template-columns: 1fr 370px;
+    grid-template-columns: 1fr 338px;
     gap: ${spacing[32]};
   `,
   mainForm: css`
@@ -299,7 +299,7 @@ const styles = {
     gap: ${spacing[8]};
   `,
   sidebar: css`
-    border-left: 1px solid ${colorTokens.stroke.default};
+    border-left: 1px solid ${colorTokens.stroke.divider};
     min-height: calc(100vh - ${headerHeight}px);
     padding-left: ${spacing[32]};
     padding-block: ${spacing[24]};

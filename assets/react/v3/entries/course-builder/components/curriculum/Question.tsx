@@ -1,16 +1,15 @@
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import type { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import ThreeDots from '@Molecules/ThreeDots';
-import { IconCollection, isDefined } from '@Utils/types';
 import { css } from '@emotion/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { __ } from '@wordpress/i18n';
 import { styleUtils } from '@Utils/style-utils';
+import type { IconCollection } from '@Utils/types';
 
 interface QuestionProps {
   question: QuizQuestion;
@@ -34,7 +33,14 @@ const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
   ordering: 'quizOrdering',
 };
 
-export const Question = ({ question, index, activeQuestionId, setActiveQuestionId, selectedQuestionId, setSelectedQuestionId }: QuestionProps) => {
+export const Question = ({
+  question,
+  index,
+  activeQuestionId,
+  setActiveQuestionId,
+  selectedQuestionId,
+  setSelectedQuestionId,
+}: QuestionProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.ID,
     animateLayoutChanges,
@@ -47,11 +53,17 @@ export const Question = ({ question, index, activeQuestionId, setActiveQuestionI
   };
 
   return (
-    <div {...attributes} key={question.ID} css={styles.questionItem({ isActive: activeQuestionId === question.ID, isDragging })} ref={setNodeRef} style={style} onClick={() => setActiveQuestionId(question.ID)}>
+    <div
+      {...attributes}
+      key={question.ID}
+      css={styles.questionItem({ isActive: activeQuestionId === question.ID, isDragging })}
+      ref={setNodeRef}
+      style={style}
+      onClick={() => setActiveQuestionId(question.ID)}
+    >
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
         <SVGIcon name={questionTypeIconMap[question.type]} width={24} height={24} data-question-icon />
-        <button {...listeners} type='button' css={styleUtils.resetButton
-        }>
+        <button {...listeners} type="button" css={styleUtils.resetButton}>
           <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
         </button>
         <span data-serial>{index + 1}</span>
@@ -76,7 +88,10 @@ export const Question = ({ question, index, activeQuestionId, setActiveQuestionI
 };
 
 const styles = {
-  questionItem: ({ isActive = false, isDragging = false }: {
+  questionItem: ({
+    isActive = false,
+    isDragging = false,
+  }: {
     isActive: boolean;
     isDragging: boolean;
   }) => css`
@@ -97,8 +112,9 @@ const styles = {
       }
     }
 
-    ${isActive &&
-    css`
+    ${
+      isActive &&
+      css`
       border-color: ${colorTokens.stroke.brand};
       background-color: ${colorTokens.background.active};
       [data-icon-serial] {
@@ -106,7 +122,8 @@ const styles = {
         border-bottom-right-radius: 3px;
         border-color: transparent;
       }
-    `}
+    `
+    }
     :hover {
       background-color: ${colorTokens.background.white};
 
@@ -129,13 +146,17 @@ const styles = {
       }
     }
 
-    ${isDragging &&
-    css`
+    ${
+      isDragging &&
+      css`
       box-shadow: ${shadow.drag};
       background-color: ${colorTokens.background.white};
-    `}
+    `
+    }
   `,
-  iconAndSerial: ({isDragging = false}: {
+  iconAndSerial: ({
+    isDragging = false,
+  }: {
     isDragging: boolean;
   }) => css`
     display: flex;
@@ -165,6 +186,7 @@ const styles = {
   `,
   questionTitle: css`
     ${typography.small()};
+    color: ${colorTokens.text.subdued};
     max-width: 170px;
     width: 100%;
   `,

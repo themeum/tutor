@@ -103,7 +103,7 @@ const Notebook = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (isCollapsed) {
+    if (isCollapsed || !isFloating) {
       return;
     }
 
@@ -221,14 +221,10 @@ const Notebook = () => {
 
       const wrapper = wrapperRef.current;
 
-      wrapper.style.left = left === 'auto' ? `${window.innerWidth - notebook.MIN_NOTEBOOK_WIDTH}px` : left;
-      wrapper.style.top = top === 'auto' ? `${window.innerHeight - notebook.MIN_NOTEBOOK_HEIGHT}px` : top;
-      if (isDefined(height)) {
-        wrapper.style.height = height;
-      }
-      if (isDefined(width)) {
-        wrapper.style.width = width;
-      }
+      wrapper.style.left = left === 'auto' ? `${window.innerWidth / 2 - notebook.MIN_NOTEBOOK_WIDTH}px` : left;
+      wrapper.style.top = top === 'auto' ? `${window.innerHeight / 2 - notebook.MIN_NOTEBOOK_HEIGHT}px` : top;
+      wrapper.style.height = isDefined(height) ? height : `${2 * notebook.MIN_NOTEBOOK_HEIGHT}px`;
+      wrapper.style.width = isDefined(width) ? width : `${2 * notebook.MIN_NOTEBOOK_WIDTH}px`;
     }
   }, [isCollapsed, isFloating]);
 
@@ -241,8 +237,12 @@ const Notebook = () => {
   }, []);
 
   return (
-    <animated.div ref={wrapperRef} css={styles.wrapper({ isCollapsed, isFloating })} style={{ ...expandAnimation }}>
-      <div css={styles.header({ isCollapsed })} onMouseDown={handleMouseDown}>
+    <animated.div
+      ref={wrapperRef}
+      css={styles.wrapper({ isCollapsed, isFloating })}
+      style={!isFloating ? { ...expandAnimation } : {}}
+    >
+      <div css={styles.header({ isCollapsed, isFloating })} onMouseDown={handleMouseDown}>
         <span css={styleUtils.text.ellipsis(1)}>{__('Notebook', 'tutor')}</span>
 
         <div css={styles.actions}>
@@ -271,7 +271,7 @@ const Notebook = () => {
               setIsFloating((previous) => !previous);
             }}
           >
-            <SVGIcon name="arrowsIn" height={24} width={24} />
+            <SVGIcon name={isFloating ? 'arrowsIn' : 'arrowsOut'} height={24} width={24} />
           </Button>
           <Show when={isFloating}>
             <Button
@@ -337,7 +337,7 @@ const styles = {
 		border-radius: ${borderRadius.card} 0 ${borderRadius.card} 0;
 		transition: box-shadow background 0.3s ease-in-out;
 		box-shadow: ${shadow.notebook};
-		z-index: ${zIndex.highest};
+		z-index: ${zIndex.notebook};
 		
 		${
       !isCollapsed &&
@@ -357,8 +357,10 @@ const styles = {
 	`,
   header: ({
     isCollapsed,
+    isFloating,
   }: {
     isCollapsed: boolean;
+    isFloating: boolean;
   }) => css`
 		display: flex;
 		justify-content: space-between;
@@ -367,12 +369,18 @@ const styles = {
 		${typography.body('medium')};
 		color: ${colorTokens.text.title};
 
+    ${
+      isFloating &&
+      css`
+        cursor: grab;
+      `
+    }
+
 		${
       !isCollapsed &&
       css`
 				border-bottom: 1px solid ${colorTokens.stroke.divider};
 				padding: ${spacing[8]} ${spacing[12]};
-				cursor: grab;
 			`
     }
 	`,
@@ -409,8 +417,8 @@ const styles = {
 	`,
   textFieldExpand: css`
 		position: absolute;
-		bottom: 10px;
-		right: 10px;
+		bottom: ${spacing[4]};
+		right: ${spacing[4]};
 		user-select: none;
 		color: ${colorTokens.icon.hints};
 		cursor: nwse-resize;
