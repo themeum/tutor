@@ -35,7 +35,7 @@ const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
 
 const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
   const { activeQuestionId, setActiveQuestionId } = useQuizModalContext();
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string>('');
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.ID,
@@ -55,7 +55,9 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       css={styles.questionItem({ isActive: activeQuestionId === question.ID, isDragging })}
       ref={setNodeRef}
       style={style}
+      tabIndex={-1}
       onClick={() => setActiveQuestionId(question.ID)}
+      onKeyDown={() => setActiveQuestionId(question.ID)}
     >
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
         <SVGIcon name={questionTypeIconMap[question.type]} width={24} height={24} data-question-icon />
@@ -68,7 +70,7 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       <ThreeDots
         isOpen={selectedQuestionId === question.ID}
         onClick={() => setSelectedQuestionId(question.ID)}
-        closePopover={() => setSelectedQuestionId(null)}
+        closePopover={() => setSelectedQuestionId('')}
         dotsOrientation="vertical"
         maxWidth="220px"
         isInverse

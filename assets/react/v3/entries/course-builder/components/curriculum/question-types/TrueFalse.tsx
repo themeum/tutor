@@ -63,11 +63,12 @@ const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
 
     const updatedOptions = [...optionsFields];
     updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
-    updatedOptions.forEach((_, index) => {
+
+    for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = Object.assign({}, updatedOptions[index], { isCorrect: false });
+        updatedOptions[index] = { ...option, isCorrect: false };
       }
-    });
+    }
 
     form.setValue(`questions.${activeQuestionIndex}.options`, updatedOptions);
   }, [currentOptions]);

@@ -1,16 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-
-import SVGIcon from '@Atoms/SVGIcon';
-
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-import For from '@Controls/For';
-import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
-
-import { colorTokens, spacing } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
+import { createPortal } from 'react-dom';
 import { useEffect, useMemo, useState } from 'react';
 import {
   KeyboardSensor,
@@ -24,8 +15,18 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
-import { createPortal } from 'react-dom';
+
+import SVGIcon from '@Atoms/SVGIcon';
+
+import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
+import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
+
+import { colorTokens, spacing } from '@Config/styles';
+import { styleUtils } from '@Utils/style-utils';
+import { nanoid } from '@Utils/util';
+import For from '@Controls/For';
 import Show from '@Controls/Show';
+
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 const ImageAnswering = () => {
@@ -40,7 +41,7 @@ const ImageAnswering = () => {
     move: moveOption,
   } = useFieldArray({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.options`,
+    name: `questions.${activeQuestionIndex}.options` as 'questions.0.options',
   });
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -53,7 +54,7 @@ const ImageAnswering = () => {
 
   const currentOptions = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.options`,
+    name: `questions.${activeQuestionIndex}.options` as 'questions.0.options',
     defaultValue: [],
   });
 

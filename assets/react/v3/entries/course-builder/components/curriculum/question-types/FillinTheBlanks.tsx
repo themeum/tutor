@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
+import { Controller, useFormContext } from 'react-hook-form';
+
 import { styleUtils } from '@Utils/style-utils';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-import { Controller, useFormContext } from 'react-hook-form';
 import FormFillinTheBlanks from '@Components/fields/quiz/FormFillinTheBlanks';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
@@ -13,7 +14,7 @@ const FillinTheBlanks = () => {
     <div css={styles.optionWrapper}>
       <Controller
         control={form.control}
-        name={`questions.${activeQuestionIndex}.options.0`}
+        name={`questions.${activeQuestionIndex}.options.0` as 'questions.0.options.0'}
         render={({ field, fieldState }) => <FormFillinTheBlanks field={field} fieldState={fieldState} />}
       />
     </div>

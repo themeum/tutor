@@ -108,11 +108,13 @@ const MultipleChoiceAndOrdering = () => {
 
     const updatedOptions = [...currentOptions];
     updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
-    updatedOptions.forEach((_, index) => {
+
+    for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = Object.assign({}, updatedOptions[index], { isCorrect: false });
+        updatedOptions[index] = { ...option, isCorrect: false };
       }
-    });
+    }
+
     isInitialRenderRef.current = false;
     form.setValue(`questions.${activeQuestionIndex}.options`, updatedOptions);
   }, [currentOptions]);

@@ -69,18 +69,18 @@ const QuestionList = () => {
     const questionId = nanoid();
     addQuestion({
       ID: questionId,
-      title: 'Write anything here..',
+      title: __('Write anything here..', 'tutor'),
       description: '',
       type: 'true-false',
       answerRequired: false,
       options: [
         {
           ID: nanoid(),
-          title: 'True',
+          title: __('True', 'tutor'),
         },
         {
           ID: nanoid(),
-          title: 'False',
+          title: __('False', 'tutor'),
         },
       ],
       questionMark: 1,

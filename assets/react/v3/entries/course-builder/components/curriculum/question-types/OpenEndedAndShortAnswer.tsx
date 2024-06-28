@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
 import Alert from '@Atoms/Alert';
+import { spacing } from '@Config/styles';
 
 const OpenEndedAndShortAnswer = () => {
   return (
@@ -15,6 +16,6 @@ export default OpenEndedAndShortAnswer;
 
 const styles = {
   optionWrapper: css`
-    padding-left: 42px; // This is not is our design system.
+    padding-left: ${spacing[40]};
   `,
 };

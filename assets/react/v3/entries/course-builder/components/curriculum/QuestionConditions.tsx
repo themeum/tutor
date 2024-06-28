@@ -79,7 +79,7 @@ const QuestionConditions = () => {
           control={form.control}
           name={`questions.${activeQuestionIndex}.type` as 'questions.0.type'}
           render={(controllerProps) => (
-            <FormSelectInput {...controllerProps} label="Question Type" options={questionTypeOptions} />
+            <FormSelectInput {...controllerProps} label={__('Question Type', 'tutor')} options={questionTypeOptions} />
           )}
         />
       </div>

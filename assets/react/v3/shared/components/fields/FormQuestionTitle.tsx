@@ -150,13 +150,7 @@ const FormQuestionTitle = ({
         <Show
           when={isEdit}
           fallback={
-            <Button
-              buttonCss={css`${styles.actionButton}`}
-              type="button"
-              variant="text"
-              size="small"
-              onClick={() => setIsEdit(true)}
-            >
+            <Button buttonCss={styles.actionButton} variant="text" size="small" onClick={() => setIsEdit(true)}>
               <SVGIcon name="edit" height={24} width={24} />
             </Button>
           }

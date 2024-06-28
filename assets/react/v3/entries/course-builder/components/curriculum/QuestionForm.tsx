@@ -20,11 +20,15 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import EmptyState from '@Molecules/EmptyState';
 
+import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
+import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
+
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.type`);
+  const questions = form.watch('questions');
 
   const questionTypeForm = {
     'true-false': <TrueFalse key={activeQuestionId} activeQuestionIndex={activeQuestionIndex} />,
@@ -37,12 +41,12 @@ const QuestionForm = () => {
     ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
   } as const;
 
-  if (!activeQuestionId) {
+  if (!activeQuestionId && questions.length === 0) {
     return (
       <div css={styles.emptyState}>
         <EmptyState
-          emptyStateImage="https://placehold.co/200x200"
-          emptyStateImage2x="https://placehold.co/400x200"
+          emptyStateImage={emptyStateImage}
+          emptyStateImage2x={emptyStateImage2x}
           title={__('Write the quiz name to start creating questions', 'tutor')}
           description={__('You can add questions to the quiz once you have written the quiz name.', 'tutor')}
           imageAltText={__('No Question Image', 'tutor')}
@@ -59,7 +63,7 @@ const QuestionForm = () => {
         <div css={styles.questionTitleAndDesc}>
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.title`}
+            name={`questions.${activeQuestionIndex}.title` as 'questions.0.title'}
             render={(controllerProps) => (
               <FormQuestionTitle {...controllerProps} placeholder={__('Write your question here..', 'tutor')} />
             )}
@@ -115,7 +119,7 @@ const styles = {
   questionWithIndex: css`
     ${styleUtils.display.flex('row')};
     align-items: flex-start;
-    padding-left: 42px; // This is outside of the design
+    padding-left: ${spacing[40]};
     gap: ${spacing[4]};
   `,
   questionIndex: css`
@@ -129,9 +133,9 @@ const styles = {
     width: 100%;
   `,
   questionAnswer: css`
-    padding-left: 42px; // This is outside of the design
+    padding-left: ${spacing[40]};
   `,
   emptyState: css`
-    padding-left: 42px; // This is outside of the design
+    padding-left: ${spacing[40]}; 
   `,
 };
