@@ -324,14 +324,11 @@ class Course_List {
 
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
-			
-			if( 'trash' === $status && tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
-				
-				$args = array(
-			        'ID'          => $id,
-		            'post_status' => $status,
-		        );
-				
+			if ( 'trash' === $status && tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
+				$args       = array(
+					'ID'          => $id,
+					'post_status' => $status,
+				);
 				$trash_post = wp_update_post( $args );
 
 				if ( $trash_post ) {
@@ -340,8 +337,6 @@ class Course_List {
 			}
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
-
-		
 
 		if ( CourseModel::POST_TYPE !== $course->post_type ) {
 			wp_send_json_error( tutor_utils()->error_message() );
