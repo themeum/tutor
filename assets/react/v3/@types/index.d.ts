@@ -33,7 +33,7 @@ declare global {
       }[];
       current_user: {
         data: {
-          ID: string;
+          id: string;
           user_login: string;
           user_pass: string;
           user_nicename: string;
