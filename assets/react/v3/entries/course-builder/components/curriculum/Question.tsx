@@ -193,6 +193,7 @@ const styles = {
   `,
   questionTitle: css`
     ${typography.small()};
+    color: ${colorTokens.text.subdued};
     max-width: 170px;
     width: 100%;
   `,

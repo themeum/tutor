@@ -1,15 +1,35 @@
 import { __ } from '@wordpress/i18n';
 
-import type { Media } from '@Atoms/ImageInput';
 import ImageInput from '@Atoms/ImageInput';
 
 import type { FormControllerProps } from '@Utils/form';
+import FormFieldWrapper from './FormFieldWrapper';
 
-import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
+type MediaSize = {
+  url: string;
+  width: number;
+  height: number;
+  orientation: string;
+};
+
+export type Media = {
+  id: number;
+  url: string;
+  title: string;
+  date?: string;
+  filesizeInBytes?: number;
+  subtype?: string;
+  sizes?: {
+    thumbnail: MediaSize;
+    medium: MediaSize;
+    large: MediaSize;
+    full: MediaSize;
+  };
+};
 
 type FormImageInputProps = {
   label?: string;
-  onChange?: () => void;
+  onChange?: (media: Media | null) => void;
   helpText?: string;
   buttonText?: string;
   infoText?: string;
@@ -22,6 +42,7 @@ const FormImageInput = ({
   helpText,
   buttonText = __('Upload Media', 'tutor'),
   infoText,
+  onChange,
 }: FormImageInputProps) => {
   const wpMedia = window.wp.media({
     library: { type: 'image' },
@@ -38,10 +59,18 @@ const FormImageInput = ({
     const { id, url, title } = attachment;
 
     field.onChange({ id, url, title });
+
+    if (onChange) {
+      onChange({ id, url, title });
+    }
   });
 
   const clearHandler = () => {
-    field.onChange({ id: null, url: '', title: '' });
+    field.onChange(null);
+
+    if (onChange) {
+      onChange(null);
+    }
   };
 
   return (

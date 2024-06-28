@@ -57,61 +57,73 @@ class ValidationHelper {
 					switch ( $nested_rule ) {
 						case 'required':
 							if ( ! self::has_key( $key, $data ) || self::is_empty( $data[ $key ] ) ) {
-								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' is required', 'tutor' );
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' is required', 'tutor' );
 							}
 							break;
 						case 'numeric':
 							if ( ! self::is_numeric( $data[ $key ] ) ) {
-								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' is not numeric', 'tutor' );
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' is not numeric', 'tutor' );
 							}
 							break;
 						case 'min_length':
 							if ( strlen( $data[ $key ] ) < $nested_rules[1] ) {
-								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' minimum length is ', 'tutor' ) . $nested_rules[1];
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' minimum length is ', 'tutor' ) . $nested_rules[1];
 							}
 							break;
 						case 'mimes':
 							$extensions = explode( ',', $nested_rules[1] );
 							if ( ! self::in_array( $data[ $key ], $extensions ) ) {
-								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' extension is not valid', 'tutor' );
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' extension is not valid', 'tutor' );
 							}
 							break;
 						case 'match_string':
 							$strings = explode( ',', $nested_rules[1] );
 							if ( ! self::in_array( $data[ $key ], $strings ) ) {
-								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' string is not valid', 'tutor' );
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' string is not valid', 'tutor' );
 							}
 							break;
 						case 'boolean':
 							if ( ! self::is_boolean( $data[ $key ] ) ) {
-								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' is not boolean', 'tutor' );
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' is not boolean', 'tutor' );
 							}
 							break;
 						case 'is_array':
 							if ( ! self::is_array( $data[ $key ] ) ) {
-								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' is not an array', 'tutor' );
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' is not an array', 'tutor' );
 							}
 							break;
 						case 'date_format':
 							$format = $nested_rules[1];
 							if ( ! self::is_valid_date( $data[ $key ], $format ) ) {
-								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' invalid date format', 'tutor' );
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' invalid date format', 'tutor' );
 							}
 							break;
+
+						case 'has_record':
+							list( $table, $column ) = explode( ',', $nested_rules[1], 2 );
+
+							$value      = $data[ $key ];
+							$has_record = self::has_record( $table, $column, $value );
+							if ( ! $has_record ) {
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' record not found', 'tutor' );
+							}
+							break;
+
 						case 'user_exists':
 							$user_id   = (int) $data[ $key ];
 							$is_exists = self::is_user_exists( $user_id );
 							if ( ! $is_exists ) {
-								$validation_pass           = false;
-								$validation_errors[ $key ] = $key . __( ' user does not exist', 'tutor' );
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' user does not exist', 'tutor' );
 							}
 							break;
 						default:
@@ -121,10 +133,12 @@ class ValidationHelper {
 				}
 			}
 		}
+
 		$response = array(
 			'success' => $validation_pass,
 			'errors'  => $validation_errors,
 		);
+
 		return (object) $response;
 	}
 
@@ -250,5 +264,27 @@ class ValidationHelper {
 	public static function is_user_exists( int $user_id ): bool {
 		$user = get_user_by( 'id', $user_id );
 		return $user ? true : false;
+	}
+
+	/**
+	 * Check a table has record.
+	 *
+	 * @since 2.7.0
+	 *
+	 * @param string $table table name with prefix or without.
+	 * @param string $column table column name.
+	 * @param mixed  $value table column value.
+	 *
+	 * @return boolean
+	 */
+	public static function has_record( $table, $column, $value ) {
+		global $wpdb;
+		$table_prefix = $wpdb->prefix;
+		if ( strpos( $table, $table_prefix ) !== 0 ) {
+			$table = $table_prefix . $table;
+		}
+
+		$record = QueryHelper::get_row( $table, array( $column => $value ), $column );
+		return $record ? true : false;
 	}
 }

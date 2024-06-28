@@ -8,12 +8,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-
-export type Media = {
-  id: number | null;
-  url: string;
-  title?: string;
-};
+import type { Media } from '@Components/fields/FormImageInput';
 
 interface ImageInputProps {
   buttonText?: string;

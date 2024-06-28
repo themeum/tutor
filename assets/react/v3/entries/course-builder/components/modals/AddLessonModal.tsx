@@ -1,19 +1,22 @@
 import { css } from '@emotion/react';
 import { Controller } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
+
 import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormImageInput from '@Components/fields/FormImageInput';
+
+import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
+import FormFileUploader from '@Components/fields/FormFileUploader';
+
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import type { Media } from '@Atoms/ImageInput';
 
 interface AddLessonModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -23,6 +26,7 @@ interface AddLessonForm {
   lesson_name: string;
   description: string;
   featured_image: Media | null;
+  exercise_files: Media[];
   duration_hour: number;
   duration_min: number;
   duration_sec: number;
@@ -173,12 +177,18 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
             )}
           />
 
-          <div css={styles.uploadAttachment}>
-            <span css={styles.additoinLabel}>{__('Exercise Files', 'tutor')}</span>
-            <Button icon={<SVGIcon name="attach" height={24} width={24} />} variant="secondary">
-              Upload Attachment
-            </Button>
-          </div>
+          <Controller
+            name="exercise_files"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormFileUploader
+                {...controllerProps}
+                label={__('Exercise Files', 'tutor')}
+                buttonText={__('Upload Attachment', 'tutor')}
+                selectMultiple
+              />
+            )}
+          />
 
           <div css={styles.lessonPreview}>
             <Controller
@@ -240,12 +250,6 @@ const styles = {
   durationContent: css`
     ${typography.small()};
     color: ${colorTokens.text.hints};
-  `,
-
-  uploadAttachment: css`
-    display: flex;
-    flex-direction: column;
-    gap: ${spacing[8]};
   `,
   additoinLabel: css`
     ${typography.body()}

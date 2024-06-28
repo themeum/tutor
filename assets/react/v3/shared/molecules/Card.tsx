@@ -143,7 +143,6 @@ const styles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: ${spacing[6]};
   `,
   cardBody: css`
 		padding: ${spacing[16]} ${spacing[24]} ${spacing[32]} ${spacing[24]};

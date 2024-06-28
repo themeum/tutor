@@ -20,10 +20,11 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 import Tracker from './Tracker';
+import config from '@Config/config';
 
 const Header = () => {
   const params = new URLSearchParams(window.location.href);
-  const courseId = params.get('course-id')?.split('#')[0];
+  const courseId = params.get('course_id')?.split('#')[0];
 
   const form = useFormContext<CourseFormData>();
 
@@ -39,8 +40,7 @@ const Header = () => {
       const response = await createCourseMutation.mutateAsync(payload);
 
       if (response.data) {
-        // @TODO: Redirect to edit page url
-        console.log(response);
+        window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
       }
     }
   };
@@ -62,9 +62,26 @@ const Header = () => {
             buttonCss={styles.previewButton}
             icon={<SVGIcon name="linkExternal" width={24} height={24} />}
             iconPosition="right"
+            onClick={() => {
+              const legacyUrl = courseId
+                ? `${config.TUTOR_API_BASE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
+                : `${config.TUTOR_API_BASE_URL}/wp-admin/post-new.php?post_type=courses`;
+
+              window.open(legacyUrl, '_blank');
+            }}
+          >
+            {__('Back To Legacy', 'tutor')}
+          </Button>
+
+          <Button
+            variant="text"
+            buttonCss={styles.previewButton}
+            icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+            iconPosition="right"
           >
             {__('Preview', 'tutor')}
           </Button>
+
           <DropdownButton
             text="Publish"
             variant="primary"
