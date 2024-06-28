@@ -135,7 +135,7 @@ describe("Tutor Admin Announcements", () => {
     });
   });
 
-  it("should filter enrollments", () => {
+  it("should filter announcements", () => {
     cy.get(":nth-child(2) > .tutor-js-form-select").click();
     cy.get(
       ":nth-child(2) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options"
@@ -167,7 +167,7 @@ describe("Tutor Admin Announcements", () => {
   it("Should filter announcements by a specific date", () => {
     const filterFormSelector =
       ".react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control";
-    const elementDateSelector = ".tutor-fs-7 > span";
+    const elementDateSelector = "tbody>tr>td:nth-child(2)";
     cy.filterElementsByDate(filterFormSelector, elementDateSelector);
   });
 

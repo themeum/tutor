@@ -244,10 +244,10 @@ Cypress.Commands.add(
     cy.get(filterFormSelector).click();
     cy.get(".dropdown-years").click();
     cy.get(".dropdown-years>.dropdown-list")
-      .contains("2025")
+      .contains("2024")
       .click();
     cy.get(".dropdown-months > .dropdown-label").click();
-    cy.get(".dropdown-months > .dropdown-list")
+    cy.get(".dropdown-months > .dropdown-list>li")
       .contains("June")
       .click();
     cy.get(".react-datepicker__day--011")
@@ -260,7 +260,7 @@ Cypress.Commands.add(
         cy.wait(2000);
         cy.get(elementDateSelector).each(($el) => {
           const dateText = $el.text().trim();
-          expect(dateText).to.contain("June 11, 2025");
+          expect(dateText).to.contain("June 11, 2024");
         });
       }
     });

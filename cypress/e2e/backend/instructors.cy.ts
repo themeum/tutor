@@ -90,7 +90,7 @@ describe("Tutor Admin Instructors", () => {
   });
 
   it("should be able to perform bulk actions on all instructors", () => {
-    const options = ["approved", "pending", "blocked"];
+    const options = ["pending","blocked","approved"];
     options.forEach((option)=>{
       cy.performBulkAction(option)
     })

@@ -208,7 +208,6 @@ describe("Tutor Admin ENROLLMENTS", () => {
   });
   it("Should filter enrollments by a specific date", () => {
     cy.get("input[placeholder='MMMM d, yyyy']").click();
-
     cy.get(".dropdown-years").click();
     cy.get(".dropdown-years>.dropdown-list")
       .contains("2025")
@@ -233,4 +232,12 @@ describe("Tutor Admin ENROLLMENTS", () => {
       }
     });
   });
+
+  it("Should filter announcements by a specific date", () => {
+    const filterFormSelector =
+      ".react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control";
+    const elementDateSelector = ".tutor-fs-7";
+    cy.filterElementsByDate(filterFormSelector, elementDateSelector);
+  });
+
 });
