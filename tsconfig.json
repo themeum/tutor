@@ -36,7 +36,8 @@
       "@CourseBuilderPages/*": ["assets/react/v3/entries/course-builder/pages/*"],
       "@CourseBuilderUtils/*": ["assets/react/v3/entries/course-builder/utils/*"],
       "@CourseBuilderPublic/*": ["assets/react/v3/entries/course-builder/public/*"],
-      "@CourseBuilderContexts/*": ["assets/react/v3/entries/course-builder/contexts/*"]
+      "@CourseBuilderContexts/*": ["assets/react/v3/entries/course-builder/contexts/*"],
+      "@OrderComponents/*": ["assets/react/v3/entries/order-details/components/*"]
     }
   },
   "include": ["./assets/react/v3"],

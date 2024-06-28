@@ -290,6 +290,9 @@ export const colorTokens = {
       fail: '#fdd9d7',
     },
   },
+  border: {
+    neutral: '#C8C8C8',
+  },
   action: {
     primary: {
       default: '#3e64de',

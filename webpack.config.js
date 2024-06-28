@@ -104,6 +104,7 @@ module.exports = (env, options) => {
         'tutor.min': './assets/react/v2/common.js',
         'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
         'tutor-course-builder-v3.min': './assets/react/v3/entries/course-builder/index.tsx',
+        'tutor-order-details.min': './assets/react/v3/entries/order-details/index.tsx',
       },
     },
     {
@@ -156,6 +157,7 @@ module.exports = (env, options) => {
             '@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
             '@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
             '@CourseBuilderPublic': path.resolve(__dirname, './assets/react/v3/entries/course-builder/public/'),
+            '@OrderComponents': path.resolve(__dirname, './assets/react/v3/entries/order-details/components/'),
           },
         },
       })

@@ -479,6 +479,10 @@ const collection = {
     icon: '<circle cx="1" cy="1.5" r="1" fill="currentColor"/>',
     viewBox: '0 0 2 2',
   },
+  arrowLeft: {
+    icon: '<path d="M10.312 7.687a.616.616 0 0 1 .88 0 .621.621 0 0 1 0 .871l-3.737 3.74H20.05c.343.001.616.275.616.618a.62.62 0 0 1-.616.624H7.456l3.737 3.733v.001a.63.63 0 0 1 0 .879.616.616 0 0 1-.88 0v-.001L5.52 13.357a.608.608 0 0 1 0-.874l4.791-4.796Z" fill="currentColor"/>',
+    viewBox: '0 0 26 26',
+  },
 } as const;
 
 export default collection;
