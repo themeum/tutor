@@ -38,7 +38,6 @@ const Header = () => {
     } else {
       const response = await createCourseMutation.mutateAsync({
         ...payload,
-        post_status: payload.post_password ? 'password_protected' : 'publish',
       });
 
       if (response.data) {

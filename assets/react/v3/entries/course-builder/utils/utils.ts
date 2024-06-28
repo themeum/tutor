@@ -6,7 +6,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
     post_title: data.post_title,
     post_name: data.post_name,
     post_content: data.post_content,
-    post_status: data.post_password.length ? 'public' : data.post_status,
+    post_status: data.post_password.length ? 'publish' : data.post_status,
     post_password: data.post_password,
     post_author: data.post_author?.id ?? null,
     ...(data.video && {
@@ -28,12 +28,13 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
 };
 
 export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
+  console.log(courseDetails.thumbnail);
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
     post_name: courseDetails.post_name,
     post_content: courseDetails.post_content,
-    post_status: courseDetails.post_status,
+    post_status: courseDetails.post_password.length ? 'password_protected' : courseDetails.post_status,
     post_password: courseDetails.post_password,
     post_author: {
       id: Number(courseDetails.post_author.ID),
@@ -42,7 +43,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       avatar_url: courseDetails.post_author.tutor_profile_photo_url,
     },
     thumbnail: {
-      id: null,
+      id: courseDetails.thumbnail_id,
       url: courseDetails.thumbnail,
     },
     video: {
