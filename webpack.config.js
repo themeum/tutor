@@ -105,6 +105,7 @@ module.exports = (env, options) => {
         'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
         'tutor-course-builder-v3.min': './assets/react/v3/entries/course-builder/index.tsx',
       },
+      clean: true
     },
     {
       dest_path: './v2-library/bundle',
@@ -122,7 +123,7 @@ module.exports = (env, options) => {
 
   var configEditors = [];
   for (let i = 0; i < react_blueprints.length; i++) {
-    let { src_files, dest_path } = react_blueprints[i];
+    let { src_files, dest_path, clean } = react_blueprints[i];
 
     configEditors.push(
       Object.assign({}, config, {
@@ -131,6 +132,7 @@ module.exports = (env, options) => {
         output: {
           path: path.resolve(dest_path),
           filename: `[name].js`,
+          clean: clean
         },
         resolve: {
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
