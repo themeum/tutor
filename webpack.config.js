@@ -1,8 +1,6 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const webpack = require('webpack');
-// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = (env, options) => {
   const mode = options.mode || 'development';
@@ -43,34 +41,11 @@ module.exports = (env, options) => {
   };
 
   if ('production' === mode) {
-    var minimizer = !env.build
-      ? new TerserPlugin({
-          terserOptions: {},
-          minify: file => {
-            const uglifyJsOptions = {
-              sourceMap: true,
-            };
-            return require('uglify-js').minify(file, uglifyJsOptions);
-          },
-        })
-      : new TerserPlugin({
-          terserOptions: {},
-          minify: file => {
-            const uglifyJsOptions = {
-              sourceMap: false,
-            };
-            return require('uglify-js').minify(file, uglifyJsOptions);
-          },
-        });
-
     config.devtool = false;
     config.optimization = {
-      // minimize: true,
-      // minimizer: [minimizer, new CssMinimizerPlugin()],
+      minimize: true,
       minimizer: [
-        // we specify a custom UglifyJsPlugin here to get source maps in production
         new TerserPlugin({
-          // cache: true,
           parallel: true,
           terserOptions: {
             compress: false,
@@ -78,17 +53,6 @@ module.exports = (env, options) => {
             mangle: true,
           },
         }),
-        // new UglifyJsPlugin({
-        //   cache: true,
-        //   parallel: true,
-        //   uglifyOptions: {
-        //     compress: false,
-        //     ecma: 6,
-        //     mangle: true,
-        //   },
-        // sourceMap: true,
-        // }),
-        new CssMinimizerPlugin(),
       ],
     };
   }
@@ -105,25 +69,12 @@ module.exports = (env, options) => {
         'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
         'tutor-course-builder-v3.min': './assets/react/v3/entries/course-builder/index.tsx',
       },
-      clean: true
-    },
-    {
-      dest_path: './v2-library/bundle',
-      src_files: {
-        'main.min': './v2-library/_src/js/main.js',
-      },
-    },
-    {
-      dest_path: './.docz/static/v2-library/bundle',
-      src_files: {
-        'main.min': './v2-library/_src/js/main.js',
-      },
     },
   ];
 
   var configEditors = [];
   for (let i = 0; i < react_blueprints.length; i++) {
-    let { src_files, dest_path, clean } = react_blueprints[i];
+    let { src_files, dest_path } = react_blueprints[i];
 
     configEditors.push(
       Object.assign({}, config, {
@@ -132,7 +83,7 @@ module.exports = (env, options) => {
         output: {
           path: path.resolve(dest_path),
           filename: `[name].js`,
-          clean: clean
+          clean: true
         },
         resolve: {
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
