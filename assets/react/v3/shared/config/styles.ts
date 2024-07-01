@@ -214,6 +214,7 @@ export const colorTokens = {
       completed: '#097336',
       onHold: '#ac0640',
       cancelled: '#6f7073',
+      primary: '#3e64de',
     },
   },
   surface: {

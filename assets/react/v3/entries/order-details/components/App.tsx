@@ -1,14 +1,14 @@
-import ToastProvider from "@Atoms/Toast";
-import { ModalProvider } from "@Components/modals/Modal";
-import RTLProvider from "@CourseBuilderComponents/layouts/RTLProvider";
-import { Global } from "@emotion/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createGlobalCss } from "@Utils/style-utils";
-import { useState } from "react";
-import Layout from "./layout/Layout";
+import ToastProvider from '@Atoms/Toast';
+import { ModalProvider } from '@Components/modals/Modal';
+import RTLProvider from '@CourseBuilderComponents/layouts/RTLProvider';
+import { Global } from '@emotion/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createGlobalCss } from '@Utils/style-utils';
+import { useState } from 'react';
+import Main from './layout/Main';
 
 function App() {
-	const [queryClient] = useState(
+  const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
@@ -24,16 +24,18 @@ function App() {
         },
       })
   );
-	return <RTLProvider>
+  return (
+    <RTLProvider>
       <QueryClientProvider client={queryClient}>
         <ToastProvider position="bottom-center">
           <ModalProvider>
             <Global styles={createGlobalCss()} />
-						<Layout />
+            <Main />
           </ModalProvider>
         </ToastProvider>
       </QueryClientProvider>
     </RTLProvider>
+  );
 }
 
 export default App;

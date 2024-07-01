@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const webpack = require('webpack');
@@ -43,10 +43,10 @@ module.exports = (env, options) => {
   };
 
   if ('production' === mode) {
-    var minimizer = !env.build
+    const minimizer = !env.build
       ? new TerserPlugin({
           terserOptions: {},
-          minify: file => {
+          minify: (file) => {
             const uglifyJsOptions = {
               sourceMap: true,
             };
@@ -55,7 +55,7 @@ module.exports = (env, options) => {
         })
       : new TerserPlugin({
           terserOptions: {},
-          minify: file => {
+          minify: (file) => {
             const uglifyJsOptions = {
               sourceMap: false,
             };
@@ -93,7 +93,7 @@ module.exports = (env, options) => {
     };
   }
 
-  var react_blueprints = [
+  const react_blueprints = [
     {
       dest_path: './assets/js',
       src_files: {
@@ -121,9 +121,9 @@ module.exports = (env, options) => {
     },
   ];
 
-  var configEditors = [];
+  const configEditors = [];
   for (let i = 0; i < react_blueprints.length; i++) {
-    let { src_files, dest_path } = react_blueprints[i];
+    const { src_files, dest_path } = react_blueprints[i];
 
     configEditors.push(
       Object.assign({}, config, {
@@ -131,7 +131,7 @@ module.exports = (env, options) => {
         entry: src_files,
         output: {
           path: path.resolve(dest_path),
-          filename: `[name].js`,
+          filename: '[name].js',
         },
         resolve: {
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -158,6 +158,9 @@ module.exports = (env, options) => {
             '@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
             '@CourseBuilderPublic': path.resolve(__dirname, './assets/react/v3/entries/course-builder/public/'),
             '@OrderComponents': path.resolve(__dirname, './assets/react/v3/entries/order-details/components/'),
+            '@OrderPublic': path.resolve(__dirname, './assets/react/v3/entries/order-details/public/'),
+            '@OrderServices': path.resolve(__dirname, './assets/react/v3/entries/order-details/services/'),
+            '@OrderAtoms': path.resolve(__dirname, './assets/react/v3/entries/order-details/atoms/'),
           },
         },
       })
