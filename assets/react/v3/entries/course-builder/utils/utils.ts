@@ -15,7 +15,11 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
       source: '',
     }),
     'pricing[type]': data.course_price_type,
-    // 'pricing[product_id]': data.course_price,
+    'pricing[product_id]': data.course_product_id,
+
+    course_price: data.course_price ?? 0,
+    course_sale_price: data.course_sale_price ?? 0,
+
     course_categories: data.course_categories,
     course_tags: data.course_tags.map((item) => item.id),
     thumbnail_id: data.thumbnail?.id ?? null,
@@ -37,6 +41,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
 };
 
 export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
+  console.log(courseDetails.course_pricing);
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
@@ -58,9 +63,9 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_type: '',
       source: '',
     },
-    course_price_type: courseDetails.course_price_type,
-    course_price: courseDetails.course_price,
-    course_sale_price: courseDetails.course_sale_price,
+    course_price_type: courseDetails.course_pricing.type,
+    course_price: courseDetails.course_pricing.price,
+    course_sale_price: courseDetails.course_pricing.sale_price,
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
     course_tags: courseDetails.course_tags.map((item) => {
       return {
@@ -82,6 +87,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
     contentDripType: courseDetails.course_settings.content_drip_type ?? '',
+    course_product_id: String(courseDetails.course_pricing.product_id),
   };
 };
 

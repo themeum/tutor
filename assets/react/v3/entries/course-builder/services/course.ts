@@ -226,8 +226,6 @@ export interface CourseDetailsResponse {
   course_requirements: string;
   course_target_audience: string;
   course_material_includes: string;
-  course_price_type: string;
-  course_price: string;
   course_sale_price: string;
   course_settings: {
     maximum_students: number;
@@ -241,6 +239,13 @@ export interface CourseDetailsResponse {
     enrollment_expiry: number;
   };
   step_completion_status: Record<CourseBuilderSteps, boolean>;
+  course_pricing: {
+    price: string;
+    product_id: string;
+    product_name: string;
+    sale_price: string;
+    type: string;
+  };
 }
 
 interface CourseResponse {

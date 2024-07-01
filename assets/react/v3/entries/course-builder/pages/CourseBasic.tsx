@@ -68,6 +68,7 @@ const CourseBasic = () => {
     },
   ];
 
+  // Custom user API needed
   const instructorListQuery = useUserListQuery({
     context: 'edit',
     roles: ['administrator', 'tutor_instructor'],
@@ -97,15 +98,11 @@ const CourseBasic = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (courseProductId) {
-      productDetailsQuery.refetch();
-    }
-
     if (productDetailsQuery.isSuccess && productDetailsQuery.data) {
       form.setValue('course_price', productDetailsQuery.data.regular_price);
       form.setValue('course_sale_price', productDetailsQuery.data.sale_price);
     }
-  }, [courseProductId, productDetailsQuery.data]);
+  }, [productDetailsQuery.data]);
 
   return (
     <div css={styles.wrapper}>
@@ -236,7 +233,7 @@ const CourseBasic = () => {
         {coursePriceType === 'paid' && (
           <div css={styles.coursePriceWrapper}>
             <Controller
-              name="course_product_id"
+              name="course_price"
               control={form.control}
               render={(controllerProps) => (
                 <FormInputWithContent
@@ -244,6 +241,7 @@ const CourseBasic = () => {
                   label={__('Regular Price', 'tutor')}
                   content="$"
                   placeholder={__('0', 'tutor')}
+                  type="number"
                 />
               )}
             />
@@ -256,6 +254,7 @@ const CourseBasic = () => {
                   label={__('Discount Price', 'tutor')}
                   content="$"
                   placeholder={__('0', 'tutor')}
+                  type="number"
                 />
               )}
             />
