@@ -65,6 +65,7 @@ declare global {
       course_post_type: string;
       settings: {
         monetize_by: 'wc' | 'tutor' | 'edd';
+        enable_course_marketplace: string;
       };
     };
     wpApiSettings: {

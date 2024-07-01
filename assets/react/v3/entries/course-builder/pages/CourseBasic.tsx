@@ -28,6 +28,11 @@ const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
 
   const [instructorSearchText, setInstructorSearchText] = useState('');
+  const isMultiInstructorEnabled =
+    tutorConfig.tutor_pro_url &&
+    tutorConfig.addons_data.find((addon) => addon.name === 'Tutor Multi Instructors')?.is_enabled &&
+    tutorConfig.settings.enable_course_marketplace === 'on' &&
+    tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
 
   const visibilityStatus = useWatch({
     control: form.control,
@@ -224,6 +229,9 @@ const CourseBasic = () => {
                 label={__('Select product', 'tutor')}
                 placeholder={__('Select a product', 'tutor')}
                 options={productOptions}
+                helpText={__(
+                  'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.'
+                )}
                 isSearchable
               />
             )}
@@ -294,21 +302,23 @@ const CourseBasic = () => {
         )}
 
         {/* @TODO: Need to add condition based on tutor pro, marketplace, multi instructor addon, and admin role */}
-        <Controller
-          name="course_instructors"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormSelectUser
-              {...controllerProps}
-              label={__('Instructors', 'tutor')}
-              options={instructorOptions}
-              placeholder={__('Search to add instructors', 'tutor')}
-              isSearchable
-              handleSearchOnChange={setInstructorSearchText}
-              isMultiSelect
-            />
-          )}
-        />
+        {isMultiInstructorEnabled && (
+          <Controller
+            name="course_instructors"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectUser
+                {...controllerProps}
+                label={__('Instructors', 'tutor')}
+                options={instructorOptions}
+                placeholder={__('Search to add instructor', 'tutor')}
+                isSearchable
+                handleSearchOnChange={setInstructorSearchText}
+                isMultiSelect
+              />
+            )}
+          />
+        )}
       </div>
     </div>
   );

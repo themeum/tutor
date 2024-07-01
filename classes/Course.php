@@ -384,7 +384,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Validate video source
+	 * Validate price
 	 *
 	 * @since 3.0.0
 	 *
@@ -405,6 +405,40 @@ class Course extends Tutor_Base {
 					$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
 					if ( $is_linked_with_course ) {
 						$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+					}
+				} else {
+					$errors['pricing'] = __( 'Invalid product', 'tutor' );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Validate price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $params array of params.
+	 * @param array $errors array of errors.
+	 * @param int   $course_id course id.
+	 *
+	 * @return void
+	 */
+	public function validate_price_for_update( $params, &$errors, $course_id ) {
+		if ( isset( $params['pricing'] ) ) {
+			$type = $params['pricing']['type'] ?? '';
+			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID ), true ) ) {
+				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
+			} elseif ( self::PRICE_TYPE_PAID === $type ) {
+				$course_product_id = tutor_utils()->get_course_product_id( $course_id );
+				$product_id        = isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : '';
+				$product           = wc_get_product( $product_id );
+				if ( is_a( $product, 'WC_Product' ) ) {
+					if ( $course_product_id != $product_id ) {
+						$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+						if ( $is_linked_with_course ) {
+							$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+						}
 					}
 				} else {
 					$errors['pricing'] = __( 'Invalid product', 'tutor' );
@@ -708,11 +742,13 @@ class Course extends Tutor_Base {
 			$errors = $validation->errors;
 		}
 
+		$course_id = (int) $params['course_id'];
+
 		// Validate video source if user set video.
 		$this->validate_video_source( $params, $errors );
 
 		// Validate WC product.
-		$this->validate_price( $params, $errors );
+		$this->validate_price_for_update( $params, $errors, $course_id );
 
 		// Set course categories and tags.
 		$this->prepare_course_cats_tags( $params, $errors );
@@ -723,7 +759,7 @@ class Course extends Tutor_Base {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
 
-		$params['ID'] = $params['course_id'];
+		$params['ID'] = $course_id;
 		$update_id    = wp_update_post( $params, false );
 		if ( is_wp_error( $update_id ) ) {
 			$this->json_response( $update_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );

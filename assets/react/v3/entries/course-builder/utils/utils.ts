@@ -37,11 +37,11 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'additional_content[course_duration][minutes]': data.course_duration_minutes ?? 0,
     'additional_content[course_material_includes]': data.course_material_includes ?? '',
     'additional_content[course_requirements]': data.course_requirements ?? '',
+    course_instructor_ids: data.course_instructors.map((item) => item.id),
   };
 };
 
 export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
-  console.log(courseDetails.course_pricing);
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
