@@ -19,7 +19,7 @@ describe("Tutor Student login", () => {
     });
 
     it('should display an error for invalid password', () => {
-        cy.getByInputName("log").type('john');
+        cy.getByInputName("log").type('student1');
         cy.getByInputName("pwd").type('invalidPassword');
         cy.get("#tutor-login-form button").contains("Sign In").click()
         cy.get('.tutor-alert').should('contain', 'is incorrect.');
@@ -51,13 +51,14 @@ describe("Tutor Student login", () => {
     //     cy.contains('Forgot?').click();
     
     //     // Fill out the email or username field with a valid email address or username
-    //     cy.getByInputName("log").type('john');
+    //     // cy.getByInputName("log").type('john');
+    //     cy.get('#user_login').type("student1")
     
     //     // Submit the form to request a password reset
-    //     cy.contains('Reset Password').click();
+    //     cy.contains('Reset password').click();
     
     //     // Check if a success message or confirmation is displayed
-    //     cy.get('.success-message').should('be.visible');
+    //     cy.get('.tutor-alert-text').should('be.visible');
     
     //     // (Optional) Verify if the password reset email is sent to the provided email address
     //     // cy.task('checkEmail').should('contain', 'Password reset instructions');

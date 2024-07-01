@@ -85,22 +85,22 @@ Cypress.Commands.add("setTinyMceContent", (selector, content) => {
 
 Cypress.Commands.add("loginAsAdmin", () => {
   cy.wait(500);
-  cy.getByInputName("log").type(Cypress.env("admin_username"));
-  cy.getByInputName("pwd").type(Cypress.env("admin_password"));
+  cy.getByInputName("log").clear().type(Cypress.env("admin_username"));
+  cy.getByInputName("pwd").clear().type(Cypress.env("admin_password"));
   cy.get("form#loginform").submit();
 });
 
 Cypress.Commands.add("loginAsInstructor", () => {
-  cy.getByInputName("log").type(Cypress.env("instructor_username"));
-  cy.getByInputName("pwd").type(Cypress.env("instructor_password"));
+  cy.getByInputName("log").clear().type(Cypress.env("instructor_username"));
+  cy.getByInputName("pwd").clear().type(Cypress.env("instructor_password"));
   cy.get("#tutor-login-form button")
     .contains("Sign In")
     .click();
 });
 
 Cypress.Commands.add("loginAsStudent", () => {
-  cy.getByInputName("log").type(Cypress.env("student_username"));
-  cy.getByInputName("pwd").type(Cypress.env("student_password"));
+  cy.getByInputName("log").clear().type(Cypress.env("student_username"));
+  cy.getByInputName("pwd").clear().type(Cypress.env("student_password"));
   cy.get("#tutor-login-form button")
     .contains("Sign In")
     .click();
@@ -154,11 +154,13 @@ Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
 // perform publish,pending,draft,trash on all courses
 Cypress.Commands.add("performBulkAction", (option) => {
   cy.get("body").then(($body) => {
-    if ($body.text().includes("No Data Found from your Search/Filter") ||
-    $body.text().includes("No request found") ||
-    $body.text().includes("No Data Available in this Section") ||
-    $body.text().includes("No records found") ||
-    $body.text().includes("No Records Found")) {
+    if (
+      $body.text().includes("No Data Found from your Search/Filter") ||
+      $body.text().includes("No request found") ||
+      $body.text().includes("No Data Available in this Section") ||
+      $body.text().includes("No records found") ||
+      $body.text().includes("No Records Found")
+    ) {
       cy.log("No data available");
     } else {
       cy.get("#tutor-bulk-checkbox-all").click();
@@ -197,11 +199,13 @@ Cypress.Commands.add("performBulkAction", (option) => {
 Cypress.Commands.add("checkSorting", (order, formSelector, itemSelector) => {
   function checkSorting() {
     cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter") ||
-      $body.text().includes("No request found") ||
-      $body.text().includes("No Data Available in this Section") ||
-      $body.text().includes("No records found") ||
-      $body.text().includes("No Records Found")) {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
+      ) {
         cy.log("No data available");
       } else {
         cy.get(itemSelector).then(($items) => {
@@ -253,11 +257,13 @@ Cypress.Commands.add(
               console.log(`drop `, selectedOptionText);
               cy.get("body").then(($body) => {
                 if (
-                  $body.text().includes("No Data Found from your Search/Filter") ||
-        $body.text().includes("No request found") ||
-        $body.text().includes("No Data Available in this Section") ||
-        $body.text().includes("No records found") ||
-        $body.text().includes("No Records Found")
+                  $body
+                    .text()
+                    .includes("No Data Found from your Search/Filter") ||
+                  $body.text().includes("No request found") ||
+                  $body.text().includes("No Data Available in this Section") ||
+                  $body.text().includes("No records found") ||
+                  $body.text().includes("No Records Found")
                 ) {
                   cy.log("No data available");
                 } else {
@@ -330,10 +336,10 @@ Cypress.Commands.add("filterByCategory", () => {
           cy.get("body").then(($body) => {
             if (
               $body.text().includes("No Data Found from your Search/Filter") ||
-        $body.text().includes("No request found") ||
-        $body.text().includes("No Data Available in this Section") ||
-        $body.text().includes("No records found") ||
-        $body.text().includes("No Records Found")
+              $body.text().includes("No request found") ||
+              $body.text().includes("No Data Available in this Section") ||
+              $body.text().includes("No records found") ||
+              $body.text().includes("No Records Found")
             ) {
               cy.log("No data available");
             } else {
@@ -660,7 +666,7 @@ Cypress.Commands.add("handleMeetingLesson", (isLastItem) => {
           .click();
       } else {
         cy.get(".tutor-course-topic-item")
-          .children("a")
+          .children("a").first()
           .click({ force: true });
       }
     }
@@ -708,7 +714,7 @@ Cypress.Commands.add("submitCourseReview", () => {
       cy.get(".tutor-modal-content textarea[name=review]").type(
         "Just completed a course on TutorLMS, and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze. The interactive quizzes and discussions keep you engaged, and the user-friendly interface enhances the overall experience. The flexibility to learn at your own pace is a game-changer for busy professionals."
       );
-      cy.get(".tutor-modal-content button.tutor_submit_review_btn").click();
+      cy.get('.tutor-d-flex > .tutor_submit_review_btn').click();
       cy.wait("@ajaxRequest").then((interception) => {
         expect(interception.response.body.success).to.equal(true);
       });

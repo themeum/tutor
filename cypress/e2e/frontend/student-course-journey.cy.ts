@@ -301,5 +301,6 @@ describe("Tutor Student Course Journey", () => {
         cy.wait(5000);
       }
     });
+    
   });
 });

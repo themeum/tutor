@@ -45,7 +45,7 @@ describe("Tutor Dashboard Settings", () => {
         
         cy.get("a.tutor-nav-link").contains("Withdraw").click()
         
-        cy.getByInputName("tutor_selected_withdraw_method").click()
+        cy.getByInputName("tutor_selected_withdraw_method").eq(0).click()
         cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][account_name]").clear().type("John Doe")
         cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][account_number]").clear().type("46728376439")
         cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][bank_name]").clear().type("National Bank")

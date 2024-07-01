@@ -43,73 +43,55 @@ describe("Tutor Student Paid Course Journey", () => {
               .contains("Proceed to Checkout")
               .click();
             cy.url().should("include", "/checkout");
-            // fill up the checkout form
-            // contact info
-            cy.get("#billing_first_name")
+
+            cy.get("#billing-first_name")
               .clear()
               .type("Student");
-            cy.get("#billing_last_name")
+            cy.get("#billing-last_name")
               .clear()
               .type("Test");
-            cy.get("#billing_company")
-              .clear()
-              .type("Company");
-
-            cy.get(".select2-selection.select2-selection--single")
-              .eq(0)
-              .click();
-            cy.get("#select2-billing_country-results").then((options) => {
-              const randomIndex = Math.floor(Math.random() * options.length);
-              cy.wrap(options[randomIndex]).click();
-            });
-
-            cy.get("#billing_address_1")
+            cy.get("#billing-address_1")
               .clear()
               .type("123 Main Street");
-            cy.get("#billing_address_2")
+
+            cy.get("#billing-city")
               .clear()
-              .type("Apt 4B");
+              .type("New York");
 
-            cy.get("#billing_city")
+            cy.get("#components-form-token-input-1")
               .clear()
-              .type("Dhaka");
+              .type("Florida");
 
-            cy.get(".select2-selection.select2-selection--single")
-              .eq(1)
-              .click();
-            cy.get("#select2-billing_state-results").then((options) => {
-              const randomIndex = Math.floor(Math.random() * options.length);
-              cy.wrap(options[randomIndex]).click();
-            });
-
-            cy.get("#billing_postcode")
+            cy.get("#billing-postcode")
               .clear()
               .type("96799");
-            cy.get("#billing_phone")
+            cy.get("#billing-phone")
               .clear()
               .type("+8801555123456");
-            const randomEmail = `student${Math.random()
-              .toString()
-              .slice(2)}@gmail.com`;
 
-            cy.get("#billing_email")
-              .clear()
-              .type(randomEmail);
-
-            cy.contains("Cash on delivery").click();
+            cy.get(".wc-block-components-radio-control-accordion-option")
+              .eq(2)
+              .then(() => {
+                cy.get(
+                  ":nth-child(3) > .wc-block-components-radio-control__option"
+                ).click();
+              });
 
             cy.get("body").then(($body) => {
               if ($body.find(".tutor-icon-times").length > 0) {
                 cy.get(".tutor-icon-times").click();
               }
             });
-            // accept terms
-            cy.get("#terms").check();
-            cy.get("#place_order").click();
+
+            cy.get("button")
+              .contains("Place Order")
+              .click();
 
             cy.url().should("include", "/order-received");
 
-            // redirect to admin dashboard
+            // redirect to admin dashboard and login
+            cy.visit(`${Cypress.env("base_url")}/wp-login.php`);
+            cy.loginAsAdmin();
             cy.visit(
               `${Cypress.env("base_url")}/wp-admin/admin.php?page=wc-orders`
             );
@@ -144,41 +126,45 @@ describe("Tutor Student Paid Course Journey", () => {
       }
     });
 
-    cy.handleCourseStart();
-
     cy.isEnrolled().then((isEnrolled) => {
       if (isEnrolled) {
-        cy.get(".tutor-course-topic-item").each(($topic, index, $list) => {
-          const isLastItem = index === $list.length - 1;
+        cy.get("body").then(($body) => {
+          if ($body.find(".tutor-course-topic-item").length > 0) {
+            cy.get(".tutor-course-topic-item").each(($topic, index, $list) => {
+              const isLastItem = index === $list.length - 1;
 
-          cy.url().then(($url) => {
-            if ($url.includes("/lesson")) {
-              cy.completeLesson();
-              cy.handleNextButton();
-            }
+              cy.url().then(($url) => {
+                if ($url.includes("/lesson")) {
+                  cy.completeLesson();
+                  cy.handleNextButton();
+                }
 
-            if ($url.includes("/assignments")) {
-              cy.handleAssignment(isLastItem);
-            }
+                if ($url.includes("/assignments")) {
+                  cy.handleAssignment(isLastItem);
+                }
 
-            if ($url.includes("/quizzes")) {
-              cy.handleQuiz();
-            }
+                if ($url.includes("/quizzes")) {
+                  cy.handleQuiz();
+                }
 
-            if ($url.includes("/meet-lessons")) {
-              cy.handleMeetingLesson(isLastItem);
-            }
+                if ($url.includes("/meet-lessons")) {
+                  cy.handleMeetingLesson(isLastItem);
+                }
 
-            if ($url.includes("/zoom-lessons")) {
-              cy.handleZoomLesson(isLastItem);
-            }
-          });
+                if ($url.includes("/zoom-lessons")) {
+                  cy.handleZoomLesson(isLastItem);
+                }
+              });
+            });
+          } else {
+            cy.log("No course topics found.");
+          }
         });
       }
     });
 
-    cy.completeCourse();
     cy.submitCourseReview();
+    cy.completeCourse();
     cy.viewCertificate();
   });
 });

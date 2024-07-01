@@ -4,9 +4,9 @@ describe("Tutor Student registration", () => {
     });
 
     it("should register a new user with valid information", () => {
-        cy.getByInputName("first_name").type("Ron")
+        cy.getByInputName("first_name").type("student1")
         cy.getByInputName("last_name").type("Due")
-        cy.getByInputName("user_login").type("john_due3")
+        cy.getByInputName("user_login").type("student1")
         cy.getByInputName("email").type("jane_due12@gmail.com")
         cy.getByInputName("password").type("test123")
         cy.getByInputName("password_confirmation").type("test123")
