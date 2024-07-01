@@ -261,6 +261,11 @@ class Course extends Tutor_Base {
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
 
+		/**
+		 * Ajax API list
+		 *
+		 * @since 3.0.0
+		 */
 		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
 		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
@@ -458,7 +463,7 @@ class Course extends Tutor_Base {
 		$_POST['course_requirements']      = $course_requirements;
 		$_POST['course_target_audience']   = $course_target_audience;
 		$_POST['course_material_includes'] = $course_materials;
-		$_POST['_tutor_enable_qna']        = $param['enable_qna'] ?? 'yes';
+		$_POST['_tutor_enable_qa']         = $param['enable_qna'] ?? 'yes';
 		$_POST['_tutor_is_public_course']  = $param['is_public_course'] ?? 'no';
 
 		// Set course price.
@@ -545,6 +550,10 @@ class Course extends Tutor_Base {
 				throw new \Exception( $th->getMessage() );
 			}
 		}
+
+		update_post_meta( $post_id, '_tutor_enable_qa', $params['enable_qna'] ?? 'yes' );
+		update_post_meta( $post_id, '_tutor_is_public_course', $params['is_public_course'] ?? 'no' );
+		update_post_meta( $post_id, '_tutor_course_level', $params['course_level'] );
 	}
 
 	/**
@@ -715,7 +724,7 @@ class Course extends Tutor_Base {
 		}
 
 		$params['ID'] = $params['course_id'];
-		$update_id    = wp_update_post( $params, false, false );
+		$update_id    = wp_update_post( $params, false );
 		if ( is_wp_error( $update_id ) ) {
 			$this->json_response( $update_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
 		}
@@ -774,12 +783,12 @@ class Course extends Tutor_Base {
 			'course_material_includes' => get_post_meta( $course_id, '_tutor_course_material_includes', true ),
 			'course_price_type'        => get_post_meta( $course_id, '_tutor_course_price_type', true ),
 			'course_settings'          => get_post_meta( $course_id, '_tutor_course_settings', true ),
-			'step_completion_status'   => [
-				'basic' => true,
-				'curriculum' => false,
-				'additional' => false,
+			'step_completion_status'   => array(
+				'basic'       => true,
+				'curriculum'  => false,
+				'additional'  => false,
 				'certificate' => false,
-			],
+			),
 		);
 
 		$data = apply_filters( 'tutor_course_data', array_merge( $course, $data ) );
@@ -1000,9 +1009,9 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 
-		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">'.
+		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">' .
 		__( 'Fully Booked', 'tutor' )
-		.'</div></div>';
+		. '</div></div>';
 	}
 
 	/**
