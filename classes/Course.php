@@ -262,7 +262,7 @@ class Course extends Tutor_Base {
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
 
 		/**
-		 * Ajax API list
+		 * Ajax list
 		 *
 		 * @since 3.0.0
 		 */
@@ -765,6 +765,37 @@ class Course extends Tutor_Base {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
 
+		$price_type  = get_post_meta( $course_id, '_tutor_course_price_type', true );
+		$monetize_by = tutils()->get_option( 'monetize_by' );
+
+		$product_name = '';
+		$price        = 0;
+		$sale_price   = 0;
+		$product_id   = 0;
+
+		if ( 'wc' === $monetize_by ) {
+			$product_id = tutor_utils()->get_course_product_id( $course_id );
+			$product    = wc_get_product( $product_id );
+			if ( $product ) {
+				$product_name = $product->get_name();
+				$price        = $product->get_regular_price();
+				$sale_price   = $product->get_sale_price();
+			}
+		}
+
+		if ( 'tutor' === $monetize_by ) {
+			$price      = get_post_meta( $course_id, 'course_price', true );
+			$sale_price = get_post_meta( $course_id, 'course_sale_price', true );
+		}
+
+		$course_pricing = array(
+			'type'         => $price_type,
+			'product_id'   => $product_id,
+			'product_name' => $product_name,
+			'price'        => $price,
+			'sale_price'   => $sale_price,
+		);
+
 		$course = get_post( $course_id, ARRAY_A );
 		$data   = array(
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
@@ -781,7 +812,8 @@ class Course extends Tutor_Base {
 			'course_requirements'      => get_post_meta( $course_id, '_tutor_course_requirements', true ),
 			'course_target_audience'   => get_post_meta( $course_id, '_tutor_course_target_audience', true ),
 			'course_material_includes' => get_post_meta( $course_id, '_tutor_course_material_includes', true ),
-			'course_price_type'        => get_post_meta( $course_id, '_tutor_course_price_type', true ),
+			'monetize_by'              => $monetize_by,
+			'course_pricing'           => $course_pricing,
 			'course_settings'          => get_post_meta( $course_id, '_tutor_course_settings', true ),
 			'step_completion_status'   => array(
 				'basic'       => true,
