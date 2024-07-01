@@ -1,6 +1,7 @@
-import type { CourseDetailsResponse, CourseFormData, CoursePayload } from '@CourseBuilderServices/course';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 
-export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const convertCourseDataToPayload = (data: CourseFormData): any => {
   return {
     post_date: data.post_date,
     post_title: data.post_title,
@@ -13,28 +14,30 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
       source_type: '',
       source: '',
     }),
+    'pricing[type]': data.course_price_type,
+    'pricing[product_id]': data.course_product_id,
+
+    course_price: data.course_price ?? 0,
+    course_sale_price: data.course_sale_price ?? 0,
+
     course_categories: data.course_categories,
     course_tags: data.course_tags.map((item) => item.id),
     thumbnail_id: data.thumbnail?.id ?? null,
     enable_qna: data.enable_qna ? 'yes' : 'no',
     is_public_course: data.is_public_course ? 'yes' : 'no',
     course_level: data.course_level,
-    course_settings: {
-      maximum_students: Number(data.maximum_students),
-      enrollment_expiry: Number(data.enrollment_expiry),
-      // enable_content_drip: data.enable_content_drip,
-      // content_drip_type: data.content_drip_type,
-    },
-    additional_content: {
-      course_benefits: data.course_benefits,
-      course_target_audience: data.course_target_audience,
-      course_duration: {
-        hours: data.course_duration_hours,
-        minutes: data.course_duration_minutes,
-      },
-      course_material_includes: data.course_material_includes,
-      course_requirements: data.course_requirements,
-    },
+    'course_settings[maximum_students]': data.maximum_students,
+    'course_settings[enrollment_expiry]': data.enrollment_expiry ?? '',
+    'course_settings[enable_content_drip]': data.isContentDripEnabled ? 1 : 0,
+    'course_settings[content_drip_type]': data.contentDripType,
+
+    'additional_content[course_benefits]': data.course_benefits ?? '',
+    'additional_content[course_target_audience]': data.course_target_audience ?? '',
+    'additional_content[course_duration][hours]': data.course_duration_hours ?? 0,
+    'additional_content[course_duration][minutes]': data.course_duration_minutes ?? 0,
+    'additional_content[course_material_includes]': data.course_material_includes ?? '',
+    'additional_content[course_requirements]': data.course_requirements ?? '',
+    course_instructor_ids: data.course_instructors.map((item) => item.id),
   };
 };
 
@@ -60,9 +63,9 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_type: '',
       source: '',
     },
-    course_price_type: courseDetails.course_price_type,
-    course_price: courseDetails.course_price,
-    course_sale_price: courseDetails.course_sale_price,
+    course_price_type: courseDetails.course_pricing.type,
+    course_price: courseDetails.course_pricing.price,
+    course_sale_price: courseDetails.course_pricing.sale_price,
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
     course_tags: courseDetails.course_tags.map((item) => {
       return {
@@ -75,13 +78,16 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     is_public_course: courseDetails.is_public_course === 'yes' ? true : false,
     course_level: courseDetails.course_level,
     maximum_students: courseDetails.course_settings.maximum_students,
-    enrollment_expiration: '',
+    enrollment_expiry: courseDetails.course_settings.enrollment_expiry,
     course_benefits: courseDetails.course_benefits,
     course_duration_hours: courseDetails.course_duration.hours,
     course_duration_minutes: courseDetails.course_duration.minutes,
     course_material_includes: courseDetails.course_material_includes,
     course_requirements: courseDetails.course_requirements,
     course_target_audience: courseDetails.course_target_audience,
+    isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
+    contentDripType: courseDetails.course_settings.content_drip_type ?? '',
+    course_product_id: String(courseDetails.course_pricing.product_id),
   };
 };
 
