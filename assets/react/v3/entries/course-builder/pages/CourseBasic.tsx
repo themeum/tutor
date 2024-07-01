@@ -16,12 +16,12 @@ import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import type { CourseFormData } from '@CourseBuilderServices/course';
+import { useGetProductsQuery, useProductDetailsQuery, type CourseFormData } from '@CourseBuilderServices/course';
 import { useUserListQuery } from '@Services/users';
 import { maxValueRule, requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const CourseBasic = () => {
@@ -36,6 +36,10 @@ const CourseBasic = () => {
   const coursePriceType = useWatch({
     control: form.control,
     name: 'course_price_type',
+  });
+  const courseProductId = useWatch({
+    control: form.control,
+    name: 'course_product_id',
   });
 
   const visibilityStatusOptions = [
@@ -79,6 +83,29 @@ const CourseBasic = () => {
         avatar_url: item.avatar_urls[48],
       };
     }) ?? [];
+
+  const productsQuery = useGetProductsQuery();
+  const productDetailsQuery = useProductDetailsQuery(courseProductId);
+
+  const productOptions =
+    productsQuery.data?.map((item) => {
+      return {
+        label: item.post_title,
+        value: item.ID,
+      };
+    }) ?? [];
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (courseProductId) {
+      productDetailsQuery.refetch();
+    }
+
+    if (productDetailsQuery.isSuccess && productDetailsQuery.data) {
+      form.setValue('course_price', productDetailsQuery.data.regular_price);
+      form.setValue('course_sale_price', productDetailsQuery.data.sale_price);
+    }
+  }, [courseProductId, productDetailsQuery.data]);
 
   return (
     <div css={styles.wrapper}>
@@ -190,10 +217,26 @@ const CourseBasic = () => {
           )}
         />
 
+        {coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc' && (
+          <Controller
+            name="course_product_id"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Select product', 'tutor')}
+                placeholder={__('Select a product', 'tutor')}
+                options={productOptions}
+                isSearchable
+              />
+            )}
+          />
+        )}
+
         {coursePriceType === 'paid' && (
           <div css={styles.coursePriceWrapper}>
             <Controller
-              name="course_price"
+              name="course_product_id"
               control={form.control}
               render={(controllerProps) => (
                 <FormInputWithContent

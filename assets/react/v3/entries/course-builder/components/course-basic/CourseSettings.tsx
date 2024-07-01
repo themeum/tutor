@@ -16,6 +16,8 @@ const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
   const [activeTab, setActiveTab] = useState('general');
 
+  const isContentDripActive = form.watch('contentDripType');
+
   // @TODO: Need to add buddyboss options based on plugin installation
   const tabList = [
     {
@@ -27,7 +29,7 @@ const CourseSettings = () => {
       label: 'Content Drip',
       value: 'content_drip',
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
-      activeBadge: true,
+      activeBadge: isContentDripActive ? true : false,
     },
   ];
 
