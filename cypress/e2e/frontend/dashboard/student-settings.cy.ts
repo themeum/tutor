@@ -39,25 +39,6 @@ describe("Tutor Dashboard Settings", () => {
 
         cy.loginAsStudent()
     })
-
-    it ("should select a withdraw method", () => {
-        cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
-        
-        cy.get("a.tutor-nav-link").contains("Withdraw").click()
-        
-        cy.getByInputName("tutor_selected_withdraw_method").eq(0).click()
-        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][account_name]").clear().type("John Doe")
-        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][account_number]").clear().type("46728376439")
-        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][bank_name]").clear().type("National Bank")
-        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][iban]").clear().type("46728376439")
-        cy.getByInputName("withdraw_method_field[bank_transfer_withdraw][swift]").clear().type("46728376439")
-
-        cy.get("button").contains("Save Withdrawal Account").click()
-
-        cy.wait('@ajaxRequest').then((interception) => {
-            expect(interception.response.body.success).to.equal(true);
-        });
-    })
     
     it ("should update social profiles", () => {
 

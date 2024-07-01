@@ -1,6 +1,8 @@
 describe("Tutor Student Paid Course Journey", () => {
   beforeEach(() => {
-    cy.visit(`${Cypress.env("base_url")}/courses/${Cypress.env("paid_course_slug")}/`);
+    cy.visit(
+      `${Cypress.env("base_url")}/courses/${Cypress.env("paid_course_slug")}/`
+    );
   });
 
   it("should be able to enroll in a paid course, view cart, and manage items", () => {
@@ -31,6 +33,7 @@ describe("Tutor Student Paid Course Journey", () => {
             cy.get(".tutor-woocommerce-view-cart")
               .contains("View Cart")
               .click();
+
           }
         });
 
@@ -41,107 +44,88 @@ describe("Tutor Student Paid Course Journey", () => {
               .click();
             cy.url().should("include", "/checkout");
 
-            cy.get("#billing_first_name")
+            cy.get("#billing-first_name")
               .clear()
               .type("Student");
-            cy.get("#billing_last_name")
+            cy.get("#billing-last_name")
               .clear()
               .type("Test");
-            cy.get("#billing_company")
-              .clear()
-              .type("Company");
-
-            cy.get(".select2-selection.select2-selection--single")
-              .eq(0)
-              .click();
-            cy.get("#select2-billing_country-results").then((options) => {
-              const randomIndex = Math.floor(Math.random() * options.length);
-              cy.wrap(options[randomIndex]).click();
-            });
-
-            cy.get("#billing_address_1")
+            cy.get("#billing-address_1")
               .clear()
               .type("123 Main Street");
-            cy.get("#billing_address_2")
+
+            cy.get("#billing-city")
               .clear()
-              .type("Apt 4B");
+              .type("New York");
 
-            cy.get("#billing_city")
+            cy.get("#components-form-token-input-1")
               .clear()
-              .type("Dhaka");
+              .type("Florida");
 
-            cy.get(".select2-selection.select2-selection--single")
-              .eq(1)
-              .click();
-            cy.get("#select2-billing_state-results").then((options) => {
-              const randomIndex = Math.floor(Math.random() * options.length);
-              cy.wrap(options[randomIndex]).click();
-            });
-
-            cy.get("#billing_postcode")
+            cy.get("#billing-postcode")
               .clear()
               .type("96799");
-            cy.get("#billing_phone")
+            cy.get("#billing-phone")
               .clear()
               .type("+8801555123456");
 
-            const randomEmail = `student${Math.random()
-              .toString()
-              .slice(2)}@gmail.com`;
+              cy.get(
+                ":nth-child(4) > .wc-block-components-radio-control__option"
+              ).click();
 
-            cy.get("#billing_email")
-              .clear()
-              .type(randomEmail);
-
-            cy.get("#payment_method_stripe").click();
-
-            // if previous cards are added
-
-            cy.get("ul.woocommerce-SavedPaymentMethods").then(($ul) => {
-              // Check if there are more than one li items
-              if ($ul.children("li").length > 1) {
-                // Click the "Use a new payment method" option
-                cy.get("#wc-stripe-payment-token-new")
-                  .check()
-                  .should("be.checked");
+            cy.get("body").then(($body) => {
+              if ($body.find(".tutor-icon-times").length > 0) {
+                cy.get(".tutor-icon-times").click();
               }
             });
 
+            // if previous cards are added
+
+            // cy.get("ul.woocommerce-SavedPaymentMethods").then(($ul) => {
+            //   // Check if there are more than one li items
+            //   if ($ul.children("li").length > 0) {
+            //     // Click the "Use a new payment method" option
+            //     cy.get("#wc-stripe-payment-token-new")
+            //       .check()
+            //       .should("be.checked");
+            //   }
+            // });
+            
             // card number
             cy.frameLoaded(
-              "#stripe-card-element > .__PrivateStripeElement > iframe"
+              "#wc-stripe-card-number-element > .__PrivateStripeElement > iframe"
             );
 
             cy.iframe(
-              "#stripe-card-element > .__PrivateStripeElement > iframe"
+              "#wc-stripe-card-number-element > .__PrivateStripeElement > iframe"
             ).within(() => {
               cy.get('input[name="cardnumber"]').type("4242424242424242");
             });
-            // card expiry date
+
             cy.frameLoaded(
-              "#stripe-exp-element > .__PrivateStripeElement > iframe"
+              "#wc-stripe-card-expiry-element > .__PrivateStripeElement > iframe"
             );
 
             cy.iframe(
-              "#stripe-exp-element > .__PrivateStripeElement > iframe"
+              "#wc-stripe-card-expiry-element > .__PrivateStripeElement > iframe"
             ).within(() => {
               cy.get('input[name="exp-date"]').type("12/25");
             });
 
             // cvv
             cy.frameLoaded(
-              "#stripe-cvc-element > .__PrivateStripeElement > iframe"
+              "#wc-stripe-card-code-element > .__PrivateStripeElement > iframe"
             );
 
             cy.iframe(
-              "#stripe-cvc-element > .__PrivateStripeElement > iframe"
+              "#wc-stripe-card-code-element > .__PrivateStripeElement > iframe"
             ).within(() => {
               cy.get('input[name="cvc"]').type("123");
             });
 
-            cy.get("#terms").check()
-
-            cy.get("#place_order").click();
+            cy.get("button")
+              .contains("Place Order")
+              .click();
 
             cy.wait("@ajaxRequest", { timeout: 15000 }).then((interception) => {
               expect(interception.response.body.success).to.equal(true);

@@ -15,12 +15,7 @@ describe("Tutor Dashboard Student Reviews", () => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
             } else {
-
-                cy.get(".tutor-nav").then(()=>{
-                    cy.get(".tutor-nav-item").eq(1).click().then(()=>{
-                        cy.get(".tutor-btn.tutor-btn-ghost").eq(0).click()
-                    })
-                })
+                cy.get("span").contains("Edit").click()
 
                 cy.get(".tutor-modal.tutor-is-active").find(".tutor-ratings-stars i").eq(randomNumber).click()
                 cy.get(".tutor-modal.tutor-is-active").find("textarea[name=review]").clear().type("Just completed the course, and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze.")
@@ -32,7 +27,6 @@ describe("Tutor Dashboard Student Reviews", () => {
             }
         })
     })
-    
 
     it("should delete a review", () => {
         cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
@@ -41,13 +35,8 @@ describe("Tutor Dashboard Student Reviews", () => {
             if ($body.text().includes("No Data Available in this Section")) {
                 cy.log("No data found")
             } else {
-                // cy.get(".tutor-dashboard-single-review").eq(0).find("span").contains("Delete").click()
 
-                cy.get(".tutor-nav").then(()=>{
-                    cy.get(".tutor-nav-item").eq(1).click().then(()=>{
-                        cy.get(".tutor-btn.tutor-btn-ghost").eq(1).click()
-                    })
-                })
+                cy.get(".tutor-given-review-actions").eq(1).click()
                 cy.get(".tutor-modal.tutor-is-active").find("button").contains("Yes, Delete This").click()
 
                 cy.wait('@ajaxRequest').then((interception) => {

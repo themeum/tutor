@@ -17,6 +17,101 @@ describe("Tutor Student Paid Course Journey", () => {
           .contains("Add to cart")
           .click();
 
+          // cy.url().then((url) => {
+          //   if (url.includes("/cart")) {
+          //     cy.get(".wc-block-cart__submit-button")
+          //       .contains("Proceed to Checkout")
+          //       .click();
+          //     cy.url().should("include", "/checkout");
+
+          //     const randomEmail = `guest${Math.random()
+          //             .toString()
+          //             .slice(2)}@gmail.com`;
+
+          //     cy.get("#email").clear().type(randomEmail)
+  
+          //     cy.get("#billing-first_name")
+          //       .clear()
+          //       .type("Guest1");
+          //     cy.get("#billing-last_name")
+          //       .clear()
+          //       .type("Test");
+          //     cy.get("#billing-address_1")
+          //       .clear()
+          //       .type("123 Main Street");
+  
+          //     cy.get("#billing-city")
+          //       .clear()
+          //       .type("New York");
+  
+          //     cy.get("#components-form-token-input-1")
+          //       .clear()
+          //       .type("Florida");
+  
+          //     cy.get("#billing-postcode")
+          //       .clear()
+          //       .type("96799");
+          //     cy.get("#billing-phone")
+          //       .clear()
+          //       .type("+8801555123456");
+  
+          //     cy.get(".wc-block-components-radio-control-accordion-option")
+          //       .eq(2)
+          //       .then(() => {
+          //         cy.get(
+          //           ":nth-child(3) > .wc-block-components-radio-control__option"
+          //         ).click();
+          //       });
+  
+          //     cy.get("body").then(($body) => {
+          //       if ($body.find(".tutor-icon-times").length > 0) {
+          //         cy.get(".tutor-icon-times").click();
+          //       }
+          //     });
+  
+          //     // cy.get('button')
+          //     //   .contains("Place Order")
+          //     //   .click({force:true});
+
+          //     cy.get('.wc-block-components-button').click({force:true})
+  
+          //     cy.url().should("include", "/order-received");
+  
+          //     // redirect to admin dashboard and login
+          //     cy.visit(`${Cypress.env("base_url")}/wp-login.php`);
+          //     cy.loginAsAdmin();
+          //     cy.visit(
+          //       `${Cypress.env("base_url")}/wp-admin/admin.php?page=wc-orders`
+          //     );
+  
+          //     cy.get("input[name='id[]']")
+          //       .eq(0)
+          //       .invoke("attr", "value")
+          //       .then((value) => {
+          //         const selector = `#cb-select-${value}`;
+  
+          //         cy.get(selector)
+          //           .should("be.visible")
+          //           .check();
+          //       });
+  
+          //     cy.get("#bulk-action-selector-top")
+          //       .select("Change status to completed")
+          //       .should("have.value", "mark_completed");
+  
+          //     cy.get("#doaction")
+          //       .contains("Apply")
+          //       .click();
+  
+          //     // redirect to course
+          //     cy.visit(
+          //       `${Cypress.env("base_url")}/courses/${Cypress.env(
+          //         "cod_course_slug"
+          //       )}/}`
+          //     );
+          //   }
+          // });
+
         cy.url().then((url) => {
           if (url.includes("/cart")) {
             cy.get(".wc-block-cart__submit-button")
@@ -24,79 +119,53 @@ describe("Tutor Student Paid Course Journey", () => {
               .click();
             cy.url().should("include", "/checkout");
 
-            cy.get("#billing_first_name")
-              .clear()
-              .type("Guest");
-            cy.get("#billing_last_name")
-              .clear()
-              .type("Test");
-            cy.get("#billing_company")
-              .clear()
-              .type("Company");
+                const randomEmail = `guest${Math.random()
+                      .toString()
+                      .slice(2)}@gmail.com`;
 
-            cy.get(".select2-selection.select2-selection--single")
-              .eq(0)
-              .click();
-            cy.get("#select2-billing_country-results").then((options) => {
-              const randomIndex = Math.floor(Math.random() * options.length);
-              cy.wrap(options[randomIndex]).click();
-            });
-
-            cy.get("#billing_address_1")
-              .clear()
-              .type("123 Main Street");
-            cy.get("#billing_address_2")
-              .clear()
-              .type("Apt 4B");
-
-            cy.get("#billing_city")
-              .clear()
-              .type("Dhaka");
-
-            cy.get(".select2-selection.select2-selection--single")
-              .eq(1)
-              .click();
-            cy.get("#select2-billing_state-results").then((options) => {
-              const randomIndex = Math.floor(Math.random() * options.length);
-              cy.wrap(options[randomIndex]).click();
-            });
-
-            cy.get("#billing_postcode")
-              .clear()
-              .type("96799");
-            cy.get("#billing_phone")
+              cy.get("#email").clear().type(randomEmail)
+  
+              cy.get("#billing-first_name")
+                .clear()
+                .type("Guest1");
+              cy.get("#billing-last_name")
+                .clear()
+                .type("Test");
+              cy.get("#billing-address_1")
+                .clear()
+                .type("123 Main Street");
+  
+              cy.get("#billing-city")
+                .clear()
+                .type("New York");
+  
+              cy.get("#components-form-token-input-1")
+                .clear()
+                .type("Florida");
+  
+              cy.get("#billing-postcode")
+                .clear()
+                .type("96799");
+              
+            cy.get("#billing-phone")
               .clear()
               .type("+8801555123456");
 
-            const randomEmail = `guest${Math.random()
-              .toString()
-              .slice(2)}@gmail.com`;
+              cy.get(':nth-child(3) > .wc-block-components-radio-control__option').click()
 
-            cy.get("#billing_email")
-              .clear()
-              .type(randomEmail);
+        //     // accept terms
+        //     cy.get("#terms").check();
 
-            // accept terms
-            cy.get("#terms").check();
-
-            cy.get("#place_order").click();
+            cy.get("button").contains("Place Order").click();
 
             cy.url().should("include", "/checkout");
 
             // login as admin
             cy.visit(`${Cypress.env("base_url")}/wp-login.php`);
             // Login as a admin
-            cy.get("#user_login")
-              .clear()
-              .type(Cypress.env("admin_username"), { delay: 100 });
-            cy.get("#user_pass")
-              .clear()
-              .type(Cypress.env("admin_password"), { delay: 100 });
+            cy.loginAsAdmin()
 
-            cy.get("#wp-submit")
-              .contains("Log In")
-              .click();
-
+            
             // redirect to admin dashboard
             cy.visit(
               `${Cypress.env("base_url")}/wp-admin/admin.php?page=wc-orders`
@@ -124,7 +193,7 @@ describe("Tutor Student Paid Course Journey", () => {
       }
     });
 
-    cy.visit(`${Cypress.env("base_url")}/dashboard/enrolled-courses/`);
+    cy.visit(`${Cypress.env("base_url")}/dashboard-2-2/enrolled-courses/`);
     cy.get(".tutor-course-name")
       .eq(0)
       .click();

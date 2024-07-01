@@ -52,7 +52,7 @@ describe("Tutor Dashboard Student Question and Answers", () => {
                 cy.log("No data found")
             } else {
                 cy.get("tbody tr").eq(0).find(".tutor-icon-kebab-menu").parent().click()
-                cy.get(':nth-child(3) > .tutor-dropdown-item').click()
+                cy.get("a").contains("Delete").click()
                 cy.get(".tutor-modal.tutor-is-active").find("button").contains("Yes, Delete This").click()
                 
                 cy.wait('@ajaxRequest').then((interception) => {

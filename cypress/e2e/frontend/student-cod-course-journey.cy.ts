@@ -5,7 +5,7 @@ describe("Tutor Student Paid Course Journey", () => {
     );
   });
 
-  it("should be able to enroll in a paid course for cash on delivery, view cart, and manage items", () => {
+  it("should be able to enroll in a paid course for cash on delivery and journey", () => {
     cy.intercept(
       "POST",
       `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`
