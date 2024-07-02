@@ -1,13 +1,13 @@
-import { useRef, type ReactNode, useState } from 'react';
 import { css } from '@emotion/react';
 import { animated } from '@react-spring/web';
+import { useRef, useState, type ReactNode } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
 import { borderRadius, colorPalate, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
 import Show from '@Controls/Show';
+import { styleUtils } from '@Utils/style-utils';
 
 import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 
@@ -19,6 +19,8 @@ interface CardProps {
   actionTray?: ReactNode;
   collapsed?: boolean;
   noSeparator?: boolean;
+  hideArrow?: boolean;
+  isAlternative?: boolean;
 }
 
 const Card = ({
@@ -29,6 +31,8 @@ const Card = ({
   actionTray,
   collapsed = false,
   noSeparator = false,
+  hideArrow = false,
+  isAlternative = false,
 }: CardProps) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(collapsed);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -40,7 +44,7 @@ const Card = ({
 
   return (
     <div css={styles.wrapper(hasBorder)}>
-      <div css={styles.headerWrapper(isCollapsed || noSeparator)}>
+      <div css={styles.headerWrapper(isCollapsed || noSeparator, isAlternative)}>
         <div css={styles.headerAndAction}>
           <div css={styles.header}>
             <h5 css={styles.title}>{title}</h5>
@@ -51,13 +55,15 @@ const Card = ({
 
           <div css={styles.actions}>
             <Show when={actionTray}>{actionTray}</Show>
-            <button
-              css={styles.collapseButton({ isCollapsed })}
-              type="button"
-              onClick={() => setIsCollapsed(!isCollapsed)}
-            >
-              <SVGIcon name="chevronDown" width={24} height={24} style={styles.arrowUpDown} />
-            </button>
+            <Show when={!hideArrow}>
+              <button
+                type="button"
+                css={styles.collapseButton({ isCollapsed })}
+                onClick={() => setIsCollapsed(!isCollapsed)}
+              >
+                <SVGIcon name="chevronDown" width={24} height={24} style={styles.arrowUpDown} />
+              </button>
+            </Show>
           </div>
         </div>
       </div>
@@ -87,7 +93,7 @@ const styles = {
     	`
     }
   `,
-  headerWrapper: (collapsed: boolean) => css`
+  headerWrapper: (collapsed: boolean, isAlternative: boolean) => css`
 		padding: ${spacing[8]};
 		display: flex;
 		flex-direction: column;
@@ -100,6 +106,10 @@ const styles = {
 				border-bottom: 1px solid ${colorTokens.stroke.divider};;
 			`
     }
+
+    ${isAlternative && css`
+      padding: ${spacing[12]} ${spacing[16]} ${spacing[12]} ${spacing[24]};
+    `}
 	`,
   headerAndAction: css`
 		display: flex;

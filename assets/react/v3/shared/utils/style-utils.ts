@@ -4,11 +4,14 @@ import { css } from '@emotion/react';
 export const createGlobalCss = () => css`
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
+  #wpcontent {
+    padding-left: 0;
+  }
+
   *,
   ::after,
   ::before {
     box-sizing: border-box;
-    font-family: ${fontFamily.sfProDisplay};
   }
 
   html {
@@ -211,12 +214,10 @@ export const styleUtils = {
     align-items: center;
     flex-direction: row;
 
-    ${
-      direction === 'column' &&
-      css`
+    ${direction === 'column' &&
+    css`
       flex-direction: column;
-    `
-    }
+    `}
   `,
   ulReset: css`
     list-style: none;
