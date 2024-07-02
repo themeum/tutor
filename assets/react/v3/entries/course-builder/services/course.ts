@@ -2,7 +2,7 @@ import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
-import type { User } from '@Services/users';
+import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
@@ -246,6 +246,7 @@ export interface CourseDetailsResponse {
     sale_price: string;
     type: string;
   };
+  course_instructors: InstructorListResponse[];
 }
 
 interface CourseResponse {
@@ -356,18 +357,19 @@ const getProductDetails = (productId: string, courseId: string) => {
   });
 };
 
-export const useProductDetailsQuery = (productId: string, courseId: string) => {
+export const useProductDetailsQuery = (productId: string, courseId: string, coursePriceType: string) => {
   const { showToast } = useToast();
+
   return useQuery({
     queryKey: ['WcProductDetails', productId],
     queryFn: () =>
       getProductDetails(productId, courseId).then((res) => {
         if (typeof res.data === 'string') {
           showToast({ type: 'danger', message: res.data });
-          return;
+          return null;
         }
         return res.data;
       }),
-    enabled: !!productId,
+    enabled: !!productId && coursePriceType === 'paid',
   });
 };
