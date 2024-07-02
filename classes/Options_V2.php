@@ -221,7 +221,7 @@ class Options_V2 {
 	public function tutor_delete_single_settings() {
 
 		tutor_utils()->checking_nonce();
-		
+
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
@@ -668,7 +668,7 @@ class Options_V2 {
 								'type'        => 'toggle_switch',
 								'label'       => __( 'Allow Instructors to Trash Courses', 'tutor' ),
 								'label_title' => '',
-								'default'     => 'off',
+								'default'     => 'on',
 								'desc'        => __( 'Enable to allow instructors to trash courses. Disable to prevent them from trashing courses.', 'tutor' ),
 							),
 							array(
