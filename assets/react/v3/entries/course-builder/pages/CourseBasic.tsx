@@ -26,6 +26,8 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
+  const params = new URLSearchParams(window.location.href);
+  const courseId = params.get('course_id')?.split('#')[0];
 
   const [instructorSearchText, setInstructorSearchText] = useState('');
   const isMultiInstructorEnabled =
@@ -45,6 +47,16 @@ const CourseBasic = () => {
   const courseProductId = useWatch({
     control: form.control,
     name: 'course_product_id',
+  });
+
+  const price = useWatch({
+    control: form.control,
+    name: 'course_price',
+  });
+
+  const salePrice = useWatch({
+    control: form.control,
+    name: 'course_sale_price',
   });
 
   const visibilityStatusOptions = [
@@ -91,7 +103,7 @@ const CourseBasic = () => {
     }) ?? [];
 
   const productsQuery = useGetProductsQuery();
-  const productDetailsQuery = useProductDetailsQuery(courseProductId);
+  const productDetailsQuery = useProductDetailsQuery(courseProductId, courseId ?? '');
 
   const productOptions =
     productsQuery.data?.map((item) => {
@@ -104,6 +116,7 @@ const CourseBasic = () => {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (productDetailsQuery.isSuccess && productDetailsQuery.data) {
+      console.log('productDetailsQuery.data', productDetailsQuery.data);
       form.setValue('course_price', productDetailsQuery.data.regular_price);
       form.setValue('course_sale_price', productDetailsQuery.data.sale_price);
     }

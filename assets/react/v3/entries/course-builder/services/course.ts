@@ -348,17 +348,26 @@ export const useGetProductsQuery = () => {
   });
 };
 
-const getProductDetails = (productId: string) => {
+const getProductDetails = (productId: string, courseId: string) => {
   return authApiInstance.post<WcProductDetailsPayload, AxiosResponse<WcProductDetailsResponse>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_get_wc_product',
     product_id: productId,
+    course_id: courseId,
   });
 };
 
-export const useProductDetailsQuery = (productId: string) => {
+export const useProductDetailsQuery = (productId: string, courseId: string) => {
+  const { showToast } = useToast();
   return useQuery({
     queryKey: ['WcProductDetails', productId],
-    queryFn: () => getProductDetails(productId).then((res) => res.data),
+    queryFn: () =>
+      getProductDetails(productId, courseId).then((res) => {
+        if (typeof res.data === 'string') {
+          showToast({ type: 'danger', message: res.data });
+          return;
+        }
+        return res.data;
+      }),
     enabled: !!productId,
   });
 };
