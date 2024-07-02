@@ -666,8 +666,14 @@ class Course extends Tutor_Base {
 	public function ajax_create_course() {
 		$this->check_access();
 
-		//phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$params = Input::sanitize_array( $_POST, array( 'post_content' => 'wp_kses_post' ), );
+		$params = Input::sanitize_array(
+			//phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$_POST,
+			array(
+				'post_content'             => 'wp_kses_post',
+				'course_material_includes' => 'sanitize_textarea_field',
+			)
+		);
 
 		$params['post_type'] = tutor()->course_post_type;
 
@@ -690,6 +696,7 @@ class Course extends Tutor_Base {
 
 		// Set course categories and tags.
 		$this->prepare_course_cats_tags( $params, $errors );
+		$this->setup_course_price( $params );
 
 		if ( ! empty( $errors ) ) {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
@@ -724,6 +731,23 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Setup course price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $params params.
+	 *
+	 * @return void
+	 */
+	public function setup_course_price( $params ) {
+		if ( isset( $params['pricing'] )
+			&& isset( $params['pricing']['product_id'] )
+			&& is_numeric( $params['pricing']['product_id'] ) ) {
+			$_POST['_tutor_course_product_id'] = $params['pricing']['product_id'];
+		}
+	}
+
+	/**
 	 * Update course by ajax request.
 	 *
 	 * @since 3.0.0
@@ -733,8 +757,14 @@ class Course extends Tutor_Base {
 	public function ajax_update_course() {
 		$this->check_access();
 
-		//phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$params = Input::sanitize_array( $_POST, array( 'post_content' => 'wp_kses_post' ), );
+		$params = Input::sanitize_array(
+			//phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$_POST,
+			array(
+				'post_content'             => 'wp_kses_post',
+				'course_material_includes' => 'sanitize_textarea_field',
+			)
+		);
 
 		$errors     = array();
 		$validation = $this->validate_inputs( $params );
@@ -754,6 +784,7 @@ class Course extends Tutor_Base {
 		$this->prepare_course_cats_tags( $params, $errors );
 
 		$this->prepare_course_settings( $params );
+		$this->setup_course_price( $params );
 
 		if ( ! empty( $errors ) ) {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
@@ -859,7 +890,7 @@ class Course extends Tutor_Base {
 			),
 		);
 
-		$data = apply_filters( 'tutor_course_data', array_merge( $course, $data ) );
+		$data = apply_filters( 'tutor_course_details_response', array_merge( $course, $data ) );
 
 		$this->json_response(
 			__( 'Data retrieved successfully!' ),
