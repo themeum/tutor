@@ -197,6 +197,45 @@ class Course extends Tutor_Base {
 		add_action( 'trashed_post', __CLASS__ . '::redirect_to_course_list_page' );
 
 		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
+		/**
+		 * Remove wp trash button if instructor settings is disabled
+		 *
+		 * @since 2.7.3
+		 */
+		add_action( 'wp_enqueue_editor', array( $this, 'disable_course_trash_instructor' ) );
+	}
+
+	/**
+	 * Remove move to trash button on WordPress editor for instructor.
+	 *
+	 * @since 2.7.3
+	 *
+	 * @return void
+	 */
+	public function disable_course_trash_instructor() {
+		if ( wp_doing_ajax() ) {
+			return;
+		}
+
+		$post_id         = Input::get( 'post' );
+		$current_screen  = get_current_screen();
+		$action          = Input::get( 'action' );
+		$is_correct_post = 'post' === $current_screen->base && ( 'courses' === $current_screen->post_type || 'course-bundle' === $current_screen->post_type );
+		$is_editing_post = isset( $post_id ) && 'edit' === $action & $is_correct_post;
+
+		if ( $is_editing_post && ( tutor_utils()->can_user_edit_course( get_current_user_id(), $post_id ) || tutor_utils()->can_user_manage( 'course', $post_id ) ) ) {
+
+			if ( ! current_user_can( 'administrator' ) ) {
+				// Check if instructor can trash course.
+				$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+
+				if ( ! $can_trash_post ) {
+					?>	
+					<style>#delete-action { display: none; }</style>
+					<?php
+				}
+			}
+		}
 	}
 
 	/**
@@ -944,7 +983,7 @@ class Course extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Only main instructor can delete this course', 'tutor' ) ) );
 		}
 
-		// sCheck if user is only an instructor.
+		// Check if user is only an instructor.
 		if ( ! current_user_can( 'administrator' ) ) {
 			// Check if instructor can trash course.
 			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );

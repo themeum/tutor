@@ -359,11 +359,11 @@ class Instructors_List {
 			$course_clause = "AND umeta.meta_value = {$course_id}";
 		}
 
-		$order_clause = "ORDER BY user.ID {$order}";
+		$order_clause = '';
 		if ( '' !== $order ) {
 			$is_valid_sql = sanitize_sql_orderby( $order );
-			if ( ! $is_valid_sql ) {
-				$order_clause = '';
+			if ( $is_valid_sql ) {
+				$order_clause = "ORDER BY user.ID {$order}";
 			}
 		}
 

@@ -133,6 +133,10 @@ $available_status = array(
 	'private' => array( __( 'Private', 'tutor' ), 'select-default' ),
 );
 
+if ( ! tutor_utils()->get_option( 'instructor_can_delete_course' ) && ! current_user_can( 'administrator' ) ) {
+	unset( $available_status['trash'] );
+}
+
 $future_list = array(
 	'publish' => array( __( 'Publish', 'tutor' ), 'select-success' ),
 	'future'  => array( __( 'Schedule', 'tutor' ), 'select-default' ),

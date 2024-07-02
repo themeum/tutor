@@ -125,10 +125,9 @@ class WithdrawModel {
 		// Order query @since 2.0.0.
 		$order_query = '';
 		if ( isset( $order ) && '' !== $order ) {
-			$order_query  = "ORDER BY  	created_at {$order}";
 			$is_valid_sql = sanitize_sql_orderby( $order );
 			if ( ! $is_valid_sql ) {
-				$order_query = '';
+				$order_query = "ORDER BY  	created_at {$order}";
 			}
 		} else {
 			$order_query = 'ORDER BY  	created_at DESC';

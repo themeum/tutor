@@ -171,6 +171,9 @@ class Course_List {
 				'url'   => $url . '&data=trash',
 			),
 		);
+		if ( ! tutor_utils()->get_option( 'instructor_can_delete_course' ) && ! current_user_can( 'administrator' ) ) {
+			unset( $tabs[7] );
+		}
 		return apply_filters( 'tutor_course_tabs', $tabs );
 	}
 

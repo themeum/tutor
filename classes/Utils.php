@@ -1953,11 +1953,11 @@ class Utils {
 			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
 
-		$order_query     = "ORDER BY posts.post_date {$order}";
+		$order_query     = '';
 		if ( '' !== $order ) {
 			$is_valid_sql = sanitize_sql_orderby( $order );
-			if ( ! $is_valid_sql ) {
-				$order_query = '';
+			if ( $is_valid_sql ) {
+				$order_query = "ORDER BY posts.post_date {$order}";
 			}
 		}
 		$search_term_raw = $search_term;
