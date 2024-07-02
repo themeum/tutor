@@ -871,6 +871,7 @@ class Course extends Tutor_Base {
 
 		$course = get_post( $course_id, ARRAY_A );
 		$data   = array(
+			'preview_link'             => get_preview_post_link( $course_id ),
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
 			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),
 			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),
