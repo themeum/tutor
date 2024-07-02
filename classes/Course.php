@@ -202,7 +202,7 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 2.7.3
 		 */
-		add_action( 'wp_enqueue_editor', array( $this, 'disable_course_trash_instructor' ) );
+		add_action( 'admin_init', array( $this, 'disable_course_trash_instructor' ) );
 	}
 
 	/**
@@ -217,23 +217,16 @@ class Course extends Tutor_Base {
 			return;
 		}
 
-		$post_id         = Input::get( 'post' );
-		$current_screen  = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		$action          = Input::get( 'action' );
-		$is_correct_post = isset( $current_screen ) && 'post' === $current_screen->base && ( 'courses' === $current_screen->post_type || 'course-bundle' === $current_screen->post_type );
-		$is_editing_post = isset( $post_id ) && 'edit' === $action & $is_correct_post;
+		if ( current_user_can( 'edit_tutor_course' ) && ! current_user_can( 'administrator' ) ) {
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+			$role           = get_role( tutor()->instructor_role );
 
-		if ( $is_editing_post && ( tutor_utils()->can_user_edit_course( get_current_user_id(), $post_id ) || tutor_utils()->can_user_manage( 'course', $post_id ) ) ) {
-
-			if ( ! current_user_can( 'administrator' ) ) {
-				// Check if instructor can trash course.
-				$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
-
-				if ( ! $can_trash_post ) {
-					?>	
-					<style>#delete-action { display: none; }</style>
-					<?php
-				}
+			if ( ! $can_trash_post ) {
+				$role->remove_cap( 'delete_tutor_courses' );
+				$role->remove_cap( 'delete_tutor_course' );
+			} else {
+				$role->add_cap( 'delete_tutor_courses' );
+				$role->add_cap( 'delete_tutor_course' );
 			}
 		}
 	}
