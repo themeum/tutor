@@ -867,6 +867,7 @@ final class Tutor {
 			coupon_code VARCHAR(255),
 			discount_type ENUM('percentage', 'flat'),
 			discount_amount DECIMAL(13, 2),
+			discount_reason TEXT,
 			tax DECIMAL(13, 2) COMMENT 'Tax percentage',
 			tax_amount DECIMAL(13, 2),
 			fees DECIMAL(13, 2),
@@ -909,6 +910,8 @@ final class Tutor {
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			coupon_code VARCHAR(50) NOT NULL,
+			coupon_title VARCHAR(255) NOT NULL,
+			coupon_description TEXT,
 			discount_type ENUM('percentage', 'flat') NOT NULL,
 			discount_amount DECIMAL(13, 2) NOT NULL,
 			total_usage_limit INT(10) UNSIGNED,
