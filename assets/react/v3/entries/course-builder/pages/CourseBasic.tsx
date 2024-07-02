@@ -49,16 +49,6 @@ const CourseBasic = () => {
     name: 'course_product_id',
   });
 
-  const price = useWatch({
-    control: form.control,
-    name: 'course_price',
-  });
-
-  const salePrice = useWatch({
-    control: form.control,
-    name: 'course_sale_price',
-  });
-
   const visibilityStatusOptions = [
     {
       label: __('Public', 'tutor'),
@@ -116,7 +106,6 @@ const CourseBasic = () => {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (productDetailsQuery.isSuccess && productDetailsQuery.data) {
-      console.log('productDetailsQuery.data', productDetailsQuery.data);
       form.setValue('course_price', productDetailsQuery.data.regular_price);
       form.setValue('course_sale_price', productDetailsQuery.data.sale_price);
     }
