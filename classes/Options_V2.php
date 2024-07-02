@@ -659,10 +659,10 @@ class Options_V2 {
 							array(
 								'key'         => 'instructor_can_delete_course',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Allow Instructors To Delete Courses', 'tutor' ),
+								'label'       => __( 'Allow Instructors to Trash Courses', 'tutor' ),
 								'label_title' => '',
 								'default'     => 'off',
-								'desc'        => __( 'Enable instructors to only trash courses. If disabled, instructors will not be allowed to trash courses.', 'tutor' ),
+								'desc'        => __( 'Enable to allow instructors to trash courses. Disable to prevent them from trashing courses.', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_become_instructor_btn',
