@@ -26,6 +26,8 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
+  const params = new URLSearchParams(window.location.href);
+  const courseId = params.get('course_id')?.split('#')[0];
 
   const [instructorSearchText, setInstructorSearchText] = useState('');
   const isMultiInstructorEnabled =
@@ -91,7 +93,7 @@ const CourseBasic = () => {
     }) ?? [];
 
   const productsQuery = useGetProductsQuery();
-  const productDetailsQuery = useProductDetailsQuery(courseProductId);
+  const productDetailsQuery = useProductDetailsQuery(courseProductId, courseId ?? '');
 
   const productOptions =
     productsQuery.data?.map((item) => {

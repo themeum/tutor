@@ -20,8 +20,8 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import EmptyState from '@Molecules/EmptyState';
 
-import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
-import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
+import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
