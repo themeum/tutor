@@ -1,9 +1,9 @@
 import { Box, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
+import { TutorBadge } from '@Atoms/TutorBadge';
 import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
-import { Badge } from '@OrderAtoms/Badge';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
 
@@ -13,7 +13,7 @@ function Payment() {
       <BoxTitle>
         <div css={styles.paymentTitle}>
           <span>{__('Payment', 'tutor')}</span>
-          <Badge variant="warning">Pending</Badge>
+          <TutorBadge variant="warning">Pending</TutorBadge>
         </div>
       </BoxTitle>
       <div css={styles.content}>

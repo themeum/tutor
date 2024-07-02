@@ -1,10 +1,10 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import { TutorBadge } from '@Atoms/TutorBadge';
 import Container from '@Components/Container';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
-import { Badge } from '@OrderAtoms/Badge';
 import { styleUtils } from '@Utils/style-utils';
 
 export const TOPBAR_HEIGHT = 96;
@@ -21,11 +21,11 @@ function Topbar() {
             <div>
               <div css={styles.headerContent}>
                 <h4 css={typography.heading5('medium')}>Order #45</h4>
-                <Badge variant="warning">Pending</Badge>
-                <Badge variant="success">Paid</Badge>
-                <Badge variant="secondary">Partially Refunded</Badge>
-                <Badge variant="critical">Fully Refunded</Badge>
-                <Badge variant="secondary">Cancelled</Badge>
+                <TutorBadge variant="warning">Pending</TutorBadge>
+                <TutorBadge variant="success">Paid</TutorBadge>
+                <TutorBadge variant="secondary">Partially Refunded</TutorBadge>
+                <TutorBadge variant="critical">Fully Refunded</TutorBadge>
+                <TutorBadge variant="secondary">Cancelled</TutorBadge>
               </div>
               <p css={styles.updateMessage}>Updated by Jhon Doe Today at 12:24 pm</p>
             </div>

@@ -3,7 +3,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { css } from '@emotion/react';
-import coursePlaceholder from '@OrderPublic/images/course-placeholder.png';
+import coursePlaceholder from '@Images/orders/course-placeholder.png';
 import type { OrderSummaryItem } from '@OrderServices/order';
 import { isDefined } from '@Utils/types';
 import React from 'react';

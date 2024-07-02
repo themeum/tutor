@@ -54,7 +54,6 @@
 			"@OrderComponents/*": [
 				"assets/react/v3/entries/order-details/components/*"
 			],
-			"@OrderPublic/*": ["assets/react/v3/entries/order-details/public/*"],
 			"@OrderServices/*": ["assets/react/v3/entries/order-details/services/*"],
 			"@OrderAtoms/*": ["assets/react/v3/entries/order-details/atoms/*"]
 		}

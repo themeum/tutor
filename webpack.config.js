@@ -158,7 +158,6 @@ module.exports = (env, options) => {
             '@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
             '@CourseBuilderPublic': path.resolve(__dirname, './assets/react/v3/entries/course-builder/public/'),
             '@OrderComponents': path.resolve(__dirname, './assets/react/v3/entries/order-details/components/'),
-            '@OrderPublic': path.resolve(__dirname, './assets/react/v3/entries/order-details/public/'),
             '@OrderServices': path.resolve(__dirname, './assets/react/v3/entries/order-details/services/'),
             '@OrderAtoms': path.resolve(__dirname, './assets/react/v3/entries/order-details/atoms/'),
           },
