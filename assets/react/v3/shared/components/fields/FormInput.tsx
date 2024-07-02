@@ -1,6 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
@@ -19,6 +19,13 @@ const styles = {
       ${isClearable && `padding-right: ${spacing[36]};`};
       ${typography.body()}
       width: 100%;
+      border: 1px solid ${colorTokens.stroke.default};
+      border-radius: ${borderRadius[6]};
+
+      :focus {
+        border-color: transparent;
+        box-shadow: ${shadow.focus};
+      }
     }
   `,
   clearButton: css`
@@ -115,6 +122,7 @@ const FormInput = ({
       inputStyle={style}
     >
       {(inputProps) => {
+        console.log(inputProps);
         return (
           <>
             <div css={styles.container(isClearable)}>

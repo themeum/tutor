@@ -13,6 +13,7 @@ export const isRTL = document.dir === 'rtl';
 export const modal = {
   HEADER_HEIGHT: 56,
   MARGIN_TOP: 88,
+  BASIC_MODAL_HEADER_HEIGHT: 50
 };
 
 export const notebook = {
