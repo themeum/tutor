@@ -1,46 +1,42 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
-import ThreeDots from '@Molecules/ThreeDots';
-import { css } from '@emotion/react';
-import { animateLayoutChanges } from '@Utils/dndkit';
+import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { __ } from '@wordpress/i18n';
-import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
+
+import SVGIcon from '@Atoms/SVGIcon';
+import ThreeDots from '@Molecules/ThreeDots';
+
+import type { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
 import type { IconCollection } from '@Utils/types';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import { styleUtils } from '@Utils/style-utils';
 
 interface QuestionProps {
   question: QuizQuestion;
   index: number;
-  activeQuestionId: number | null;
-  setActiveQuestionId: (id: number | null) => void;
-  selectedQuestionId: number | null;
-  setSelectedQuestionId: (id: number | null) => void;
+  onRemoveQuestion: () => void;
 }
 
 const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
   'true-false': 'quizTrueFalse',
-  'single-choice': 'quizSingleChoice',
   'multiple-choice': 'quizMultiChoice',
   'open-ended': 'quizEssay',
   'fill-in-the-blanks': 'quizFillInTheBlanks',
   'short-answer': 'quizShortAnswer',
-  matching: 'quizMatching',
-  'image-matching': 'quizImageMatching',
+  matching: 'quizImageMatching',
   'image-answering': 'quizImageAnswer',
   ordering: 'quizOrdering',
 };
 
-export const Question = ({
-  question,
-  index,
-  activeQuestionId,
-  setActiveQuestionId,
-  selectedQuestionId,
-  setSelectedQuestionId,
-}: QuestionProps) => {
+const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
+  const { activeQuestionId, setActiveQuestionId } = useQuizModalContext();
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string>('');
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.ID,
     animateLayoutChanges,
@@ -59,7 +55,9 @@ export const Question = ({
       css={styles.questionItem({ isActive: activeQuestionId === question.ID, isDragging })}
       ref={setNodeRef}
       style={style}
+      tabIndex={-1}
       onClick={() => setActiveQuestionId(question.ID)}
+      onKeyDown={() => setActiveQuestionId(question.ID)}
     >
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
         <SVGIcon name={questionTypeIconMap[question.type]} width={24} height={24} data-question-icon />
@@ -72,7 +70,7 @@ export const Question = ({
       <ThreeDots
         isOpen={selectedQuestionId === question.ID}
         onClick={() => setSelectedQuestionId(question.ID)}
-        closePopover={() => setSelectedQuestionId(null)}
+        closePopover={() => setSelectedQuestionId('')}
         dotsOrientation="vertical"
         maxWidth="220px"
         isInverse
@@ -81,11 +79,20 @@ export const Question = ({
         data-three-dots
       >
         <ThreeDots.Option text={__('Duplicate', 'tutor')} icon={<SVGIcon name="duplicate" width={24} height={24} />} />
-        <ThreeDots.Option text={__('Delete', 'tutor')} icon={<SVGIcon name="delete" width={24} height={24} />} />
+        <ThreeDots.Option
+          text={__('Delete', 'tutor')}
+          icon={<SVGIcon name="delete" width={24} height={24} />}
+          onClick={(event) => {
+            event.stopPropagation();
+            onRemoveQuestion();
+          }}
+        />
       </ThreeDots>
     </div>
   );
 };
+
+export default Question;
 
 const styles = {
   questionItem: ({

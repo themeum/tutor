@@ -166,9 +166,7 @@ const styles = {
     border-bottom-left-radius: ${borderRadius.card};
 
     svg {
-      fill: ${colorTokens.icon.brand};
-      stroke: ${colorTokens.bg.white};
-      /* stroke-width: 5px; */
+      color: ${colorTokens.icon.brand};
     }
   `,
 };

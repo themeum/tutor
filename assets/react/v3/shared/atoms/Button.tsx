@@ -1,5 +1,5 @@
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import { type SerializedStyles, css, keyframes } from '@emotion/react';
@@ -467,8 +467,9 @@ const styles = {
     ${
       (disabled || loading) &&
       css`
-      pointer-events: none;
-    `
+        pointer-events: none;
+        cursor: not-allowed;
+      `
     }
   `,
   buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
