@@ -1,8 +1,7 @@
-import { type SerializedStyles, css } from '@emotion/react';
+import { css } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -75,24 +74,20 @@ const FormQuestionDescription = ({
   }, [isEdit, textareaRef.current]);
 
   return (
-    <div css={styles.container({ isEdit })}>
-      <Show
-        when={isEdit}
-        fallback={
-          <div
-            css={styles.placeholder}
-            role="button"
-            onClick={() => setIsEdit(true)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                setIsEdit(true);
-              }
-            }}
-          >
-            {field.value || placeholder}
-          </div>
+    <div
+      css={styles.container({ isEdit })}
+      onClick={() => {
+        if (!isEdit) {
+          setIsEdit(true);
         }
-      >
+      }}
+      onKeyDown={(event) => {
+        if ((event.key === 'Enter' || event.key === ' ') && !isEdit) {
+          setIsEdit(true);
+        }
+      }}
+    >
+      <Show when={isEdit} fallback={<div css={styles.placeholder}>{field.value || placeholder}</div>}>
         <FormFieldWrapper
           label={label}
           field={field}
@@ -181,8 +176,10 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[16]};
-    height: 64px;
+    min-height: 64px;
+    height: 100%;
     width: 100%;
+    inset: 0;
     padding-inline: ${spacing[8]} ${spacing[16]};
     border-radius: ${borderRadius[6]};
     transition: background 0.15s ease-in-out;
@@ -196,7 +193,6 @@ const styles = {
     &:hover {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
-      cursor: text;
 
 			[data-action-buttons] {
 				opacity: 1;
@@ -205,15 +201,23 @@ const styles = {
       ${
         isEdit &&
         css`
-        background-color: transparent;
-      `
+          background-color: transparent;
+        `
       }
       
     };
+
+    ${
+      isEdit &&
+      css`
+        padding-inline: 0;
+      `
+    }
   `,
   inputContainer: (enableResize: boolean) => css`
     position: relative;
     display: flex;
+    cursor: text;
 
     & textarea {
       ${typography.heading6()}
@@ -246,6 +250,7 @@ const styles = {
     ${typography.heading6()}
     color: ${colorTokens.text.hints};
     height: 100%;
+    inset: 0;
   `,
   actionButtonWrapper: ({
     isEdit,

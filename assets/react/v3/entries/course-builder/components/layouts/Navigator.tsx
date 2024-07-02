@@ -78,7 +78,17 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   };
   return (
     <div css={[styles.wrapper, styleModifier]}>
-      <Button variant="tertiary" icon={<SVGIcon name="chevronLeft" />} onClick={handlePreviousClick} />
+      <Button
+        variant="tertiary"
+        iconPosition="right"
+        size="small"
+        onClick={handleNextClick}
+        buttonCss={css`
+          padding: ${spacing[6]};
+        `}
+      >
+        <SVGIcon name="chevronLeft" height={18} width={18} />
+      </Button>
       <Button
         variant="tertiary"
         icon={<SVGIcon name="chevronRight" />}

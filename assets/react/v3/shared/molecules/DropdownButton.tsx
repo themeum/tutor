@@ -64,7 +64,7 @@ const DropdownButton = ({
   text,
   children,
   variant = 'primary',
-  size = 'medium',
+  size = 'regular',
   icon,
   iconPosition = 'left',
   loading = false,
@@ -223,7 +223,9 @@ const styles = {
     padding: ${spacing[8]} ${spacing[16]};
     border-radius: ${borderRadius[6]} 0 0 ${borderRadius[6]};
     z-index: ${zIndex.level};
-    transition: all 150ms ease-in-out;
+    transition-property: box-shadow, background, opacity;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
     position: relative;
 
     &:focus,
@@ -250,188 +252,190 @@ const styles = {
     ${
       variant === 'primary' &&
       css`
-      background-color: ${colorTokens.action.primary.default};
-      color: ${colorTokens.text.white};
+        background-color: ${colorTokens.action.primary.default};
+        color: ${colorTokens.text.white};
 
-      &:hover {
-        background-color: ${colorTokens.action.primary.hover};
-      }
+        &:hover {
+          background-color: ${colorTokens.action.primary.hover};
+        }
 
-      &:active {
-        background-color: ${colorTokens.action.primary.active};
-      }
+        &:active {
+          background-color: ${colorTokens.action.primary.active};
+        }
 
-      &:focus {
-        box-shadow: ${shadow.focus};
-      }
+        &:focus {
+          box-shadow: ${shadow.focus};
+        }
 
-      ${
-        (disabled || loading) &&
-        css`
-        background-color: ${colorTokens.action.primary.disable};
-        color: ${colorTokens.text.disable};
+        ${
+          (disabled || loading) &&
+          css`
+          background-color: ${colorTokens.action.primary.disable};
+          color: ${colorTokens.text.disable};
+        `
+        }
       `
-      }
-    `
     }
 
     ${
       variant === 'secondary' &&
       css`
-      background-color: ${colorTokens.action.secondary.default};
-      color: ${colorTokens.text.brand};
+        background-color: ${colorTokens.action.secondary.default};
+        color: ${colorTokens.text.brand};
 
-      &:hover {
-        background-color: ${colorTokens.action.secondary.hover};
-      }
+        &:hover {
+          background-color: ${colorTokens.action.secondary.hover};
+        }
 
-      &:active {
-        background-color: ${colorTokens.action.secondary.active};
-      }
+        &:active {
+          background-color: ${colorTokens.action.secondary.active};
+        }
 
-      &:focus {
-        box-shadow: ${shadow.focus};
-      }
+        &:focus {
+          box-shadow: ${shadow.focus};
+        }
 
-      ${
-        (disabled || loading) &&
-        css`
-        background-color: ${colorTokens.action.primary.disable};
-        color: ${colorTokens.text.disable};
+        ${
+          (disabled || loading) &&
+          css`
+          background-color: ${colorTokens.action.primary.disable};
+          color: ${colorTokens.text.disable};
+        `
+        }
       `
-      }
-    `
     }
 
     ${
-      variant === 'outlined' &&
+      variant === 'secondary' &&
       css`
-      background-color: ${colorTokens.action.outline.default};
-      color: ${colorTokens.text.brand};
-      box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
+        background-color: ${colorTokens.action.outline.default};
+        color: ${colorTokens.text.brand};
+        box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
 
-      &:hover {
-        background-color: ${colorTokens.action.outline.hover};
-      }
+        &:hover {
+          background-color: ${colorTokens.action.outline.hover};
+        }
 
-      &:active {
-        background-color: ${colorTokens.action.outline.active};
-      }
+        &:active {
+          background-color: ${colorTokens.action.outline.active};
+        }
 
-      &:focus {
-        box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand}, ${shadow.focus};
-      }
+        &:focus {
+          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand}, ${shadow.focus};
+        }
 
-      ${
-        (disabled || loading) &&
-        css`
-        color: ${colorTokens.text.disable};
-        box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+        ${
+          (disabled || loading) &&
+          css`
+          color: ${colorTokens.text.disable};
+          box-shadow: 0 0 0 1px ${colorTokens.action.outline.disable};
+        `
+        }
       `
-      }
-    `
     }
 
     ${
       variant === 'tertiary' &&
       css`
-      background-color: ${colorTokens.background.white};
-      color: ${colorTokens.text.subdued};
-      box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
+        background-color: ${colorTokens.background.white};
+        color: ${colorTokens.text.subdued};
+        box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
 
-      &:hover {
-        background-color: ${colorTokens.background.hover};
-        box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
-      }
+        &:hover {
+          background-color: ${colorTokens.background.hover};
+          box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+          z-index: ${zIndex.positive};
+        }
 
-      &:active {
-        background-color: ${colorTokens.background.active};
-        box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
-      }
+        &:active {
+          background-color: ${colorTokens.background.active};
+          box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+        }
 
-      &:focus {
-        box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default}, ${shadow.focus};
-      }
+        &:focus {
+          box-shadow: 0 0 0 1px ${colorTokens.stroke.default}, ${shadow.focus};
+          z-index: calc(${zIndex.positive} + 1);
+        }
 
-      ${
-        (disabled || loading) &&
-        css`
-        color: ${colorTokens.text.disable};
-        box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+        ${
+          (disabled || loading) &&
+          css`
+          color: ${colorTokens.text.disable};
+          box-shadow: 0 0 0 1px ${colorTokens.action.outline.disable};
+        `
+        }
       `
-      }
-    `
     }
 
     ${
       variant === 'danger' &&
       css`
-      background-color: ${colorTokens.background.status.errorFail};
-      color: ${colorTokens.text.error};
-
-      &:hover {
         background-color: ${colorTokens.background.status.errorFail};
-      }
+        color: ${colorTokens.text.error};
 
-      &:active {
-        background-color: ${colorTokens.background.status.errorFail};
-      }
+        &:hover {
+          background-color: ${colorTokens.background.status.errorFail};
+        }
 
-      &:focus {
-        box-shadow: ${shadow.focus};
-      }
+        &:active {
+          background-color: ${colorTokens.background.status.errorFail};
+        }
 
-      ${
-        (disabled || loading) &&
-        css`
-        background-color: ${colorTokens.action.primary.disable};
-        color: ${colorTokens.text.disable};
+        &:focus {
+          box-shadow: ${shadow.focus};
+        }
+
+        ${
+          (disabled || loading) &&
+          css`
+          background-color: ${colorTokens.action.primary.disable};
+          color: ${colorTokens.text.disable};
+        `
+        }
       `
-      }
-    `
     }
 
     ${
       variant === 'text' &&
       css`
-      background-color: transparent;
-      color: ${colorTokens.text.subdued};
-      padding: ${spacing[4]} ${spacing[8]};
-
-      svg {
-        color: ${colorTokens.icon.default};
-      }
-
-      &:hover {
-        text-decoration: underline;
-        color: ${colorTokens.text.primary};
+        background-color: transparent;
+        color: ${colorTokens.text.subdued};
+        padding: ${spacing[4]} ${spacing[8]};
 
         svg {
-          color: ${colorTokens.icon.brand};
+          color: ${colorTokens.icon.default};
         }
-      }
 
-      &:active {
-        color: ${colorTokens.text.title};
-      }
+        &:hover {
+          text-decoration: underline;
+          color: ${colorTokens.text.primary};
 
-      &:focus {
-        color: ${colorTokens.text.title};
-        box-shadow: ${shadow.focus};
-        svg {
-          color: ${colorTokens.icon.brand};
+          svg {
+            color: ${colorTokens.icon.brand};
+          }
         }
-      }
 
-      ${
-        (disabled || loading) &&
-        css`
-        color: ${colorTokens.text.disable};
-
-        svg {
-          color: ${colorTokens.icon.disable};
+        &:active {
+          color: ${colorTokens.text.title};
         }
-      `
+
+        &:focus {
+          color: ${colorTokens.text.title};
+          box-shadow: ${shadow.focus};
+          svg {
+            color: ${colorTokens.icon.brand};
+          }
+        }
+
+        ${
+          (disabled || loading) &&
+          css`
+          color: ${colorTokens.text.disable};
+
+          svg {
+            color: ${colorTokens.icon.disable};
+          }
+        `
       }
     `
     }
@@ -439,8 +443,8 @@ const styles = {
     ${
       (disabled || loading) &&
       css`
-      pointer-events: none;
-    `
+        pointer-events: none;
+      `
     }
   `,
   buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
@@ -451,8 +455,8 @@ const styles = {
       loading &&
       !disabled &&
       css`
-      color: transparent;
-    `
+        color: transparent;
+      `
     }
   `,
   buttonIcon: ({ iconPosition }: { iconPosition: ButtonIconPosition }) => css`
@@ -462,9 +466,9 @@ const styles = {
     ${
       iconPosition === 'right' &&
       css`
-      margin-right: 0;
-      margin-left: ${spacing[6]};
-    `
+        margin-right: 0;
+        margin-left: ${spacing[6]};
+      `
     }
   `,
   spinner: css`
@@ -481,37 +485,32 @@ const styles = {
   dropdownButton: ({ variant, disabled }: { variant: ButtonVariant; disabled: boolean }) => css`
     ${styleUtils.flexCenter()}
     padding: ${spacing[8]};
-    border-left: 1px solid ${colorTokens.stroke.brand};
+    border-left: 1px solid transparent;
     border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
 
     ${
-      variant === 'outlined' ||
-      variant === 'tertiary' ||
-      (variant === 'text' &&
-        css`
-        border-left: none;
-      `)
+      variant === 'primary' &&
+      css`
+        border-color: ${colorTokens.stroke.brand};
+
+        :focus {
+          border-color: transparent;
+        }
+      `
     }
 
     ${
       variant === 'danger' &&
       css`
-      border-color: ${colorTokens.stroke.danger};
-    `
-    }
-
-    ${
-      variant === 'secondary' &&
-      css`
-      border-color: ${colorTokens.stroke.default};
-    `
+        border-color: ${colorTokens.stroke.danger};
+      `
     }
 
     ${
       disabled &&
       css`
-      border-color: ${colorTokens.stroke.disable};
-    `
+        border-color: ${colorTokens.stroke.disable};
+      `
     }
   `,
   dropdownWrapper: css`
@@ -533,8 +532,8 @@ const styles = {
     ${
       isDanger &&
       css`
-      color: ${colorTokens.text.error};
-    `
+        color: ${colorTokens.text.error};
+      `
     }
 
     :hover {
@@ -550,9 +549,9 @@ const styles = {
     ${
       disabled &&
       css`
-      pointer-events: none;
-      color: ${colorTokens.text.disable};
-    `
+        pointer-events: none;
+        color: ${colorTokens.text.disable};
+      `
     }
   `,
   dropdownOptionContent: css`
