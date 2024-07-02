@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -6,67 +5,123 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { typography } from '@Config/typography';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
+import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { useEffect } from 'react';
 
-const TrueFalse = () => {
-  const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
+interface TrueFalseProps {
+  activeQuestionIndex: number;
+}
+
+const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
+  const form = useFormContext<QuizForm>();
+
+  const { fields: optionsFields } = useFieldArray({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.options`,
+  });
+
+  const currentOptions = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.options`,
+    defaultValue: [],
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (optionsFields.length === 2) {
+      return;
+    }
+
+    form.setValue(`questions.${activeQuestionIndex}.options`, [
+      {
+        ID: 'true',
+        title: __('True', 'tutor'),
+        isCorrect: false,
+      },
+      {
+        ID: 'false',
+        title: __('False', 'tutor'),
+        isCorrect: false,
+      },
+    ]);
+  }, []);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const changedOptions = currentOptions.filter((option) => {
+      const index = optionsFields.findIndex((item) => item.ID === option.ID);
+      const previousOption = optionsFields[index];
+      return option.isCorrect !== previousOption.isCorrect;
+    });
+
+    if (changedOptions.length === 0) {
+      return;
+    }
+
+    const changedOptionIndex = optionsFields.findIndex((item) => item.ID === changedOptions[0].ID);
+
+    const updatedOptions = [...optionsFields];
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
+
+    for (const [index, option] of updatedOptions.entries()) {
+      if (index !== changedOptionIndex) {
+        updatedOptions[index] = { ...option, isCorrect: false };
+      }
+    }
+
+    form.setValue(`questions.${activeQuestionIndex}.options`, updatedOptions);
+  }, [currentOptions]);
 
   return (
     <div css={styles.optionWrapper}>
-      <div css={styles.option({ isSelected: selectedAnswer === true })}>
-        <div
-          onClick={() => {
-            setSelectedAnswer(true);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              setSelectedAnswer(true);
-            }
-          }}
-        >
-          <SVGIcon data-check-icon name={selectedAnswer === true ? 'checkFilled' : 'check'} height={32} width={32} />
-        </div>
-        <div
-          css={styles.optionLabel({ isSelected: selectedAnswer === true })}
-          onClick={() => {
-            setSelectedAnswer(true);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              setSelectedAnswer(true);
-            }
-          }}
-        >
-          {__('True', 'tutor')}
-        </div>
-      </div>
-
-      <div css={styles.option({ isSelected: selectedAnswer === false })}>
-        <div
-          onClick={() => {
-            setSelectedAnswer(false);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              setSelectedAnswer(false);
-            }
-          }}
-        >
-          <SVGIcon data-check-icon name={selectedAnswer === false ? 'checkFilled' : 'check'} height={32} width={32} />
-        </div>
-        <div
-          css={styles.optionLabel({ isSelected: selectedAnswer === false })}
-          onClick={() => {
-            setSelectedAnswer(false);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              setSelectedAnswer(false);
-            }
-          }}
-        >
-          {__('False', 'tutor')}
-        </div>
-      </div>
+      {optionsFields.map((option, index) => (
+        <Controller
+          key={option.id}
+          control={form.control}
+          name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
+          render={({ field }) => (
+            <div css={styles.option({ isSelected: !!field.value.isCorrect })}>
+              <button
+                type="button"
+                css={styleUtils.resetButton}
+                onClick={() => {
+                  field.onChange({
+                    ...field.value,
+                    isCorrect: !field.value.isCorrect,
+                  });
+                }}
+              >
+                <SVGIcon
+                  data-check-icon
+                  name={field.value.isCorrect ? 'checkFilled' : 'check'}
+                  height={32}
+                  width={32}
+                />
+              </button>
+              <div
+                css={styles.optionLabel({ isSelected: !!field.value.isCorrect })}
+                onClick={() => {
+                  field.onChange({
+                    ...field.value,
+                    isCorrect: !field.value.isCorrect,
+                  });
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    field.onChange({
+                      ...field.value,
+                      isCorrect: !field.value.isCorrect,
+                    });
+                  }
+                }}
+              >
+                {index === 0 ? __('True', 'tutor') : __('False', 'tutor')}
+              </div>
+            </div>
+          )}
+        />
+      ))}
     </div>
   );
 };
@@ -95,6 +150,7 @@ const styles = {
       opacity: 0;
       transition: opacity 0.15s ease-in-out;
       fill: none;
+      flex-shrink: 0;
     }
 
     &:hover {
@@ -122,7 +178,6 @@ const styles = {
     width: 100%;
     border-radius: ${borderRadius.card};
     padding: ${spacing[12]} ${spacing[16]};
-    transition: box-shadow 0.15s ease-in-out;
     background-color: ${colorTokens.background.white};
     cursor: pointer;
 
