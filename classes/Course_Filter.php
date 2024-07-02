@@ -136,7 +136,7 @@ class Course_Filter {
 
 		$exclude_ids_array = array_map(
 			function ( $exclude_id ) {
-				return is_numeric( $exclude_id );
+				return (int) $exclude_id;
 			},
 			$exclude_ids_array
 		);
