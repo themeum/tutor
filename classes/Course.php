@@ -218,9 +218,9 @@ class Course extends Tutor_Base {
 		}
 
 		$post_id         = Input::get( 'post' );
-		$current_screen  = get_current_screen();
+		$current_screen  = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$action          = Input::get( 'action' );
-		$is_correct_post = 'post' === $current_screen->base && ( 'courses' === $current_screen->post_type || 'course-bundle' === $current_screen->post_type );
+		$is_correct_post = isset( $current_screen ) && 'post' === $current_screen->base && ( 'courses' === $current_screen->post_type || 'course-bundle' === $current_screen->post_type );
 		$is_editing_post = isset( $post_id ) && 'edit' === $action & $is_correct_post;
 
 		if ( $is_editing_post && ( tutor_utils()->can_user_edit_course( get_current_user_id(), $post_id ) || tutor_utils()->can_user_manage( 'course', $post_id ) ) ) {
