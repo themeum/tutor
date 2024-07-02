@@ -692,6 +692,10 @@ class Course extends Tutor_Base {
 			$tmp->post_title     = $course->post_title;
 			$tmp->featured_image = get_the_post_thumbnail_url( $course->ID );
 
+			if ( ! $tmp->featured_image ) {
+				$tmp->featured_image = CourseModel::get_course_preview_image_placeholder();
+			}
+
 			$items[] = $tmp;
 		}
 
