@@ -497,8 +497,14 @@ class Course extends Tutor_Base {
 		$_POST['course_requirements']      = $course_requirements;
 		$_POST['course_target_audience']   = $course_target_audience;
 		$_POST['course_material_includes'] = $course_materials;
-		$_POST['_tutor_enable_qa']         = $param['enable_qna'] ?? 'yes';
-		$_POST['_tutor_is_public_course']  = $param['is_public_course'] ?? 'no';
+
+		if ( isset( $params['enable_qna'] ) && 'yes' === $params['enable_qna'] ) {
+			$_POST['_tutor_enable_qa'] = 'yes';
+		}
+
+		if ( isset( $params['_tutor_is_public_course'] ) && 'yes' === $params['_tutor_is_public_course'] ) {
+			$_POST['_tutor_is_public_course'] = 'yes';
+		}
 
 		// Set course price.
 		if ( -1 !== $pricing['product_id'] ) {
