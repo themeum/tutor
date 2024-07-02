@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use stdClass;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
@@ -266,6 +267,7 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 3.0.0
 		 */
+		add_action( 'wp_ajax_tutor_course_list', array( $this, 'ajax_course_list' ) );
 		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
 		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
@@ -663,6 +665,47 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Get course list
+	 *
+	 * @return void
+	 */
+	public function ajax_course_list() {
+		$this->check_access();
+
+		$args = array(
+			'post_type'      => tutor()->course_post_type,
+			'posts_per_page' => -1,
+		);
+
+		$exclude = Input::post( 'exclude', array(), Input::TYPE_ARRAY );
+		if ( count( $exclude ) ) {
+			$exclude         = array_filter( $exclude, 'intval' );
+			$args['exclude'] = $exclude;
+		}
+
+		$courses = get_posts( $args );
+
+		$items = array();
+		foreach ( $courses as $course ) {
+			$tmp                 = new stdClass();
+			$tmp->id             = $course->ID;
+			$tmp->post_title     = $course->post_title;
+			$tmp->featured_image = get_the_post_thumbnail_url( $course->ID );
+
+			if ( ! $tmp->featured_image ) {
+				$tmp->featured_image = CourseModel::get_course_preview_image_placeholder();
+			}
+
+			$items[] = $tmp;
+		}
+
+		$this->json_response(
+			__( 'Course list fetched successfully', 'tutor' ),
+			$items
+		);
+	}
+
+	/**
 	 * Create course by ajax request.
 	 *
 	 * @since 3.0.0
@@ -871,6 +914,7 @@ class Course extends Tutor_Base {
 
 		$course = get_post( $course_id, ARRAY_A );
 		$data   = array(
+			'preview_link'             => get_preview_post_link( $course_id ),
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
 			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),
 			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),

@@ -743,4 +743,15 @@ class CourseModel {
 
 		return $permalink;
 	}
+
+	/**
+	 * Get course preview image placeholder
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public static function get_course_preview_image_placeholder() {
+		return tutor()->url . 'assets/images/placeholder.svg';
+	}
 }
