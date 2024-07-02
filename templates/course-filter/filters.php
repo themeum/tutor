@@ -17,9 +17,11 @@ $filter_prices = array(
 );
 
 $course_levels     = tutor_utils()->course_levels();
-$supported_filters = tutor_utils()->get_option( 'supported_course_filters', array() );
 $supported_filters = array_keys( $supported_filters );
 $reset_link        = remove_query_arg( $supported_filters, get_pagenum_link() );
+
+! isset( $supported_filters ) ? $supported_filters = tutor_utils()->get_option( 'supported_course_filters', array() ) : 0;
+
 ?>
 
 <form class="tutor-course-filter-form tutor-form">

@@ -37,14 +37,19 @@ document.addEventListener("DOMContentLoaded", function () {
       const response = await post.json();
       if (response) {
 
-        target.dataset.status = newStatus;
-        let putStatus = target.getElementsByTagName('OPTION')[target.selectedIndex].dataset.status_class;
-        let message = response.data ? response.data.status : "Course status updated ";
-        // add new status class
-        target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}`);
+        if(response.success){
+          target.dataset.status = newStatus;
+          let putStatus = target.getElementsByTagName('OPTION')[target.selectedIndex].dataset.status_class;
+          let message = response.data ? response.data.status : "Course status updated ";
+          // add new status class
+          target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}`);
 
-        tutor_toast(__("Updated", "tutor"), __(message, "tutor"), "success");
-        courseTabsCoursesCount(prevStatus, newStatus);
+          tutor_toast(__("Updated", "tutor"), __(message, "tutor"), "success");
+          courseTabsCoursesCount(prevStatus, newStatus);
+        }
+        else{
+         tutor_toast(__("Failed", "tutor"), __(response.data, 'tutor'), "error");
+        }
 
       } else {
         tutor_toast(__("Failed", "tutor"), __('Course status update failed', 'tutor'), "error");

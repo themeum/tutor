@@ -171,6 +171,9 @@ class Course_List {
 				'url'   => $url . '&data=trash',
 			),
 		);
+		if ( ! tutor_utils()->get_option( 'instructor_can_delete_course' ) && ! current_user_can( 'administrator' ) ) {
+			unset( $tabs[7] );
+		}
 		return apply_filters( 'tutor_course_tabs', $tabs );
 	}
 
@@ -318,14 +321,25 @@ class Course_List {
 	public static function tutor_change_course_status() {
 		tutor_utils()->checking_nonce();
 
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
 		$status = Input::post( 'status' );
 		$id     = Input::post( 'id' );
 		$course = get_post( $id );
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			$can_delete_course = tutor_utils()->get_option( 'instructor_can_delete_course' ) && tutor_utils()->can_user_edit_course( get_current_user_id(), $course->ID );
+			if ( 'trash' === $status && $can_delete_course ) {
+				$args       = array(
+					'ID'          => $id,
+					'post_status' => $status,
+				);
+				$trash_post = wp_update_post( $args );
+
+				if ( $trash_post ) {
+					wp_send_json_success( __( 'Course trashed successfully', 'tutor' ) );
+				}
+			}
+		}
 
 		if ( CourseModel::POST_TYPE !== $course->post_type ) {
 			wp_send_json_error( tutor_utils()->error_message() );

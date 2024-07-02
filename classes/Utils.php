@@ -1953,7 +1953,13 @@ class Utils {
 			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
 
-		$order_query     = "ORDER BY posts.post_date {$order}";
+		$order_query     = '';
+		if ( '' !== $order ) {
+			$is_valid_sql = sanitize_sql_orderby( $order );
+			if ( $is_valid_sql ) {
+				$order_query = "ORDER BY posts.post_date {$order}";
+			}
+		}
 		$search_term_raw = $search_term;
 		$search_term     = '%' . $wpdb->esc_like( $search_term ) . '%';
 
@@ -3398,7 +3404,7 @@ class Utils {
 			$order_by = 'user.ID';
 		}
 
-		$order = sanitize_text_field( $order );
+		$order = sanitize_sql_orderby( $order );
 
 		if ( '' !== $date_filter ) {
 			$date_filter = \tutor_get_formated_date( 'Y-m-d', $date_filter );
