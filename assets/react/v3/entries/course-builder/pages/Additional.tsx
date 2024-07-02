@@ -20,6 +20,7 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import FormFileUploader from '@Components/fields/FormFileUploader';
+import Certificate from '../components/additional/Certificate';
 
 type PartialCourseDetails = Pick<CourseDetailsResponse, 'ID' | 'post_title' | 'thumbnail'>;
 // @TODO: will come from app config api later.
@@ -56,6 +57,13 @@ const courses: PartialCourseDetails[] = [
   },
 ];
 
+type CertificateTabValue = 'templates' | 'my_certificates';
+
+const certificateTabs: { label: string; value: CertificateTabValue }[] = [
+  { label: __('Templates', 'tutor'), value: 'templates' },
+  { label: __('My Certificates', 'tutor'), value: 'my_certificates' },
+];
+
 const Additional = () => {
   const form = useFormContext<CourseFormData>();
   const searchForm = useFormWithGlobalError();
@@ -64,7 +72,7 @@ const Additional = () => {
     <div css={styles.wrapper}>
       <div css={styles.leftSide}>
         <CanvasHead title={__('Additionals', 'tutor')} />
-        <div css={styles.informationForm}>
+        <div css={styles.formSection}>
           <div css={styles.titleAndSub}>
             <div css={styles.title}>{__('Information', 'tutor')}</div>
             <div css={styles.subtitle}>
@@ -157,6 +165,15 @@ const Additional = () => {
             />
           </div>
         </div>
+
+        <div css={styles.formSection}>
+          <div css={styles.titleAndSub}>
+            <div css={styles.title}>{__('Certificate', 'tutor')}</div>
+            <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
+
+            <Certificate />
+          </div>
+        </div>
         <Navigator styleModifier={styles.navigator} />
       </div>
 
@@ -217,7 +234,7 @@ const styles = {
 		${styleUtils.display.flex('column')}
 		gap: ${spacing[24]};
   `,
-  informationForm: css`
+  formSection: css`
 		${styleUtils.display.flex('column')}
 		gap: ${spacing[20]};
 		border: 1px solid ${colorTokens.stroke.default};
@@ -279,5 +296,26 @@ const styles = {
   `,
   navigator: css`
     margin-block: ${spacing[40]};
+  `,
+  tabs: css`
+    position: relative;
+  `,
+  certificateWrapper: css`
+    ${styleUtils.display.flex()}
+    gap: ${spacing[16]};
+  `,
+  orientation: css`
+    ${styleUtils.display.flex()}
+    gap: ${spacing[8]};
+    position: absolute;
+    right: 0;
+    top: 0;
+  `,
+  activeOrientation: ({
+    isActive,
+  }: {
+    isActive: boolean;
+  }) => css`
+    color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
   `,
 };
