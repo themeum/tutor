@@ -106,7 +106,19 @@ const Certificate = () => {
         </div>
       </Show>
       <Show when={activeCetificateTab === 'my_certificates'}>
-        <div css={styles.certificateWrapper}>My Certificates</div>
+        <div css={styles.certificateWrapper}>
+          <For each={mockCertificateData}>
+            {(certificate) => (
+              <CertificateCard
+                key={certificate.id}
+                isSelected={selectedCertificate === certificate.id}
+                setSelectedCertificate={setSelectedCertificate}
+                data={certificate}
+                orientation={activeOrientation}
+              />
+            )}
+          </For>
+        </div>
       </Show>
     </>
   );
