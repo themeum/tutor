@@ -26,3 +26,9 @@ export interface PaymentInformation {
   information: string | string[];
   price: string;
 }
+
+export interface Discount {
+  type: 'fixed' | 'percentage';
+	value: number;
+	reason: string;
+}

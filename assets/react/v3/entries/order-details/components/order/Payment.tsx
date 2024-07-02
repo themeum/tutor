@@ -1,13 +1,16 @@
 import { Box, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
+import { useModal } from '@Components/modals/Modal';
 import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { Badge } from '@OrderAtoms/Badge';
+import DiscountModal from '@OrderComponents/modals/DiscountModal';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
 
 function Payment() {
+  const { showModal } = useModal();
   return (
     <Box bordered>
       <BoxTitle>
@@ -27,7 +30,20 @@ function Payment() {
             <button
               type="button"
               css={styles.discountButton}
-              onClick={() => alert('@TODO: Will be implemented later.')}
+              onClick={() =>
+                showModal({
+                  component: DiscountModal,
+                  props: {
+                    title: 'Add discount',
+                    discount: {
+                      type: 'percentage',
+                      value: 0,
+                      reason: '',
+                    },
+                    total_price: 100,
+                  },
+                })
+              }
             >
               Add discount
             </button>
