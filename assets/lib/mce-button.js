@@ -21,26 +21,12 @@ jQuery(document).ready(function($){
                         editor.insertContent('[tutor_student_registration_form]');
                     }
                 },
-                /*{
-                    text: 'Student Dashboard',
-                    onclick: function() {
-                        editor.insertContent('[tutor_dashboard]');
-                    }
-                },*/{
+                {
                     text: editor.getLang('tutor_button.instructor_registration_form'),
                     onclick: function() {
                         editor.insertContent('[tutor_instructor_registration_form]');
                     }
                 },
-               /* {
-                    text: 'Courses',
-                    onclick: function() {
-                        editor.insertContent('[tutor_course]');
-                    }
-                },*/
-
-
-
                 {
                     text: editor.getLang('tutor_button.courses'),
                     onclick: function() {
@@ -103,10 +89,7 @@ jQuery(document).ready(function($){
                         });
                     }
                 }
-
-
             ]
         });
     });
-
 });
