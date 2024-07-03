@@ -89,8 +89,8 @@ const CourseBasic = () => {
 
   const instructorOptions = instructorListQuery.data ?? [];
 
-  const productsQuery = useGetProductsQuery();
-  const productDetailsQuery = useProductDetailsQuery(courseProductId, String(courseId) ?? '', coursePriceType);
+  const productsQuery = useGetProductsQuery(courseId ? String(courseId) : '');
+  const productDetailsQuery = useProductDetailsQuery(courseProductId, String(courseId), coursePriceType);
 
   const productOptions =
     productsQuery.data?.map((item) => {

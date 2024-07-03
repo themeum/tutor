@@ -270,6 +270,7 @@ interface WcProduct {
 
 interface GetProductsPayload {
   action: string;
+  exclude_linked_products: boolean;
 }
 
 interface WcProductDetailsPayload {
@@ -355,16 +356,18 @@ export const useCourseDetailsQuery = (courseId: number) => {
   });
 };
 
-const getWcProducts = () => {
+const getWcProducts = (courseId?: string) => {
   return authApiInstance.post<GetProductsPayload, AxiosResponse<WcProduct[]>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_get_wc_products',
+    exclude_linked_products: true,
+    ...(courseId && { course_id: courseId }),
   });
 };
 
-export const useGetProductsQuery = () => {
+export const useGetProductsQuery = (courseId?: string) => {
   return useQuery({
     queryKey: ['WcProducts'],
-    queryFn: () => getWcProducts().then((res) => res.data),
+    queryFn: () => getWcProducts(courseId).then((res) => res.data),
   });
 };
 
