@@ -386,7 +386,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Validate price
+	 * Validate price for course create
 	 *
 	 * @since 3.0.0
 	 *
@@ -398,18 +398,25 @@ class Course extends Tutor_Base {
 	public function validate_price( $params, &$errors ) {
 		if ( isset( $params['pricing'] ) ) {
 			$type = $params['pricing']['type'] ?? '';
+
 			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID ), true ) ) {
 				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
-			} elseif ( self::PRICE_TYPE_PAID === $type ) {
-				$product_id = isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : '';
-				$product    = wc_get_product( $product_id );
-				if ( is_a( $product, 'WC_Product' ) ) {
-					$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
-					if ( $is_linked_with_course ) {
-						$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+			}
+
+			if ( self::PRICE_TYPE_PAID === $type ) {
+				$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+				if ( 'wc' === $monetize_by ) {
+					$product_id = (int) isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : 0;
+					// $product_id = 0 then new WC product will be created.
+					if ( $product_id ) {
+						$product = wc_get_product( $product_id );
+						if ( is_a( $product, 'WC_Product' ) ) {
+							$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+							if ( $is_linked_with_course ) {
+								$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+							}
+						}
 					}
-				} else {
-					$errors['pricing'] = __( 'Invalid product', 'tutor' );
 				}
 			}
 		}
@@ -429,21 +436,28 @@ class Course extends Tutor_Base {
 	public function validate_price_for_update( $params, &$errors, $course_id ) {
 		if ( isset( $params['pricing'] ) ) {
 			$type = $params['pricing']['type'] ?? '';
+
 			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID ), true ) ) {
 				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
-			} elseif ( self::PRICE_TYPE_PAID === $type ) {
-				$course_product_id = tutor_utils()->get_course_product_id( $course_id );
-				$product_id        = isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : '';
-				$product           = wc_get_product( $product_id );
-				if ( is_a( $product, 'WC_Product' ) ) {
-					if ( $course_product_id != $product_id ) {
-						$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
-						if ( $is_linked_with_course ) {
-							$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+			}
+
+			if ( self::PRICE_TYPE_PAID === $type ) {
+				$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+				if ( 'wc' === $monetize_by ) {
+					$course_product_id = tutor_utils()->get_course_product_id( $course_id );
+					$product_id        = (int) isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : 0;
+					$product           = wc_get_product( $product_id );
+
+					if ( is_a( $product, 'WC_Product' ) ) {
+						if ( $course_product_id != $product_id ) {
+							$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+							if ( $is_linked_with_course ) {
+								$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+							}
 						}
+					} else {
+						$errors['pricing'] = __( 'Invalid product', 'tutor' );
 					}
-				} else {
-					$errors['pricing'] = __( 'Invalid product', 'tutor' );
 				}
 			}
 		}
@@ -667,6 +681,8 @@ class Course extends Tutor_Base {
 	/**
 	 * Get course list
 	 *
+	 * @since 3.0.0
+	 *
 	 * @return void
 	 */
 	public function ajax_course_list() {
@@ -679,7 +695,12 @@ class Course extends Tutor_Base {
 
 		$exclude = Input::post( 'exclude', array(), Input::TYPE_ARRAY );
 		if ( count( $exclude ) ) {
-			$exclude         = array_filter( $exclude, 'intval' );
+			$exclude         = array_filter(
+				$exclude,
+				function( $id ) {
+					return is_numeric( $id );
+				}
+			);
 			$args['exclude'] = $exclude;
 		}
 
@@ -1062,14 +1083,32 @@ class Course extends Tutor_Base {
 	/**
 	 * Get list of WC products.
 	 *
-	 * @since 3.0.0
+	 * @since 2.5.0
+	 * @since 3.0.0 exclude_linked_products, course_id are added.
 	 *
 	 * @return void
 	 */
 	public function get_wc_products() {
+		$exclude                 = array();
+		$exclude_linked_products = Input::has( 'exclude_linked_products' );
+		$course_id               = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		if ( $exclude_linked_products ) {
+			$exclude = tutor_utils()->get_linked_product_ids();
+		}
+
+		if ( $course_id ) {
+			$linked_product_id = tutor_utils()->get_course_product_id( $course_id );
+			if ( $linked_product_id && isset( $exclude[ $linked_product_id ] ) ) {
+				unset( $exclude[ $linked_product_id ] );
+			}
+		}
+
+		$exclude = array_unique( $exclude );
+
 		$this->json_response(
 			__( 'Products retrieved successfully!', 'tutor' ),
-			tutor_utils()->get_wc_products_db(),
+			tutor_utils()->get_wc_products_db( $exclude ),
 			HttpHelper::STATUS_OK
 		);
 	}
