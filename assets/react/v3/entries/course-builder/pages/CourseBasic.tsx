@@ -34,7 +34,7 @@ const CourseBasic = () => {
   const [instructorSearchText, setInstructorSearchText] = useState('');
 
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
-  const isTutorProEnabled = tutorConfig.tutor_pro_url;
+  const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
   const isAdministrator = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
 
   const isInstructorVisible =
