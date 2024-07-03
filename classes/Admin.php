@@ -105,6 +105,10 @@ class Admin {
 
 		add_submenu_page( 'tutor', __( 'Create Course', 'tutor' ), __( '<span class="tutor-create-course">Create Course</span>', 'tutor' ), 'manage_tutor_instructor', 'create-course', '__return_true' );
 
+
+		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), __( 'Orders', 'tutor' ), 'manage_tutor_instructor', 'orders', array( $this, 'tutor_order_list' ) );
+		add_submenu_page( 'tutor', __( 'Order Details', 'tutor' ), __( '<span class="tutor-create-course">Order Details</span>', 'tutor' ), 'manage_tutor_instructor', 'order-details', array( $this, 'tutor_order_details' ) );
+
 		// Extendable action hook @since 2.2.0.
 		do_action( 'tutor_after_courses_menu' );
 
