@@ -74,17 +74,19 @@ const Header = () => {
             {__('Back To Legacy', 'tutor')}
           </Button>
 
-          <Button
-            variant="text"
-            buttonCss={styles.previewButton}
-            icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-            iconPosition="right"
-            onClick={() => {
-              window.open(previewLink, '_blank');
-            }}
-          >
-            {__('Preview', 'tutor')}
-          </Button>
+          {previewLink && (
+            <Button
+              variant="text"
+              buttonCss={styles.previewButton}
+              icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+              iconPosition="right"
+              onClick={() => {
+                window.open(previewLink, '_blank');
+              }}
+            >
+              {__('Preview', 'tutor')}
+            </Button>
+          )}
 
           <DropdownButton
             text="Publish"
