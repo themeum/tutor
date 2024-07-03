@@ -32,6 +32,7 @@ import {
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 
 const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean };
@@ -42,6 +43,13 @@ const Curriculum = () => {
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
 
   const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
+  const navigate = useNavigate();
+
+  if (!courseId) {
+    navigate('/', {
+      replace: true,
+    });
+  }
 
   useEffect(() => {
     if (!courseCurriculumQuery.data) {
@@ -89,7 +97,7 @@ const Curriculum = () => {
     });
   };
 
-  return (
+  return courseId ? (
     <div css={styles.container}>
       <div css={styles.wrapper}>
         <CanvasHead
@@ -266,7 +274,7 @@ const Curriculum = () => {
         `}
       />
     </div>
-  );
+  ) : null;
 };
 
 export default Curriculum;

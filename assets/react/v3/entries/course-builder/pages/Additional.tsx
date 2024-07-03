@@ -19,11 +19,19 @@ import Certificate from '../components/additional/Certificate';
 import { tutorConfig } from '@Config/config';
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import { useNavigate } from 'react-router-dom';
 
 const Additional = () => {
   const form = useFormContext<CourseFormData>();
+  const navigate = useNavigate();
 
   const courseId = getCourseId();
+
+  if (!courseId) {
+    navigate('/', {
+      replace: true,
+    });
+  }
 
   const isPrerequisiteAddonEnabled = tutorConfig.addons_data.find(
     (addon) => addon.name === 'Tutor Prerequisites'
@@ -36,7 +44,7 @@ const Additional = () => {
     !!isPrerequisiteAddonEnabled
   );
 
-  return (
+  return courseId ? (
     <div css={styles.wrapper}>
       <div css={styles.leftSide}>
         <CanvasHead title={__('Additionals', 'tutor')} />
@@ -178,7 +186,7 @@ const Additional = () => {
         <LiveClass />
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default Additional;
