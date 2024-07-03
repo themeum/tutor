@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
 import { Controller } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
+
 import Button from '@Atoms/Button';
+
 import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
@@ -9,8 +11,10 @@ import FormSwitch from '@Components/fields/FormSwitch';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
+
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormVideoInput from '@Components/fields/FormVideoInput';

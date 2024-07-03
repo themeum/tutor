@@ -2,14 +2,16 @@ import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
-import type { User } from '@Services/users';
+import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosResponse } from 'axios';
 
 const currentUser = tutorConfig.current_user.data;
+
+type CourseLevel = 'all_levels' | 'beginner' | 'intermediate' | 'expert';
 
 export const courseDefaultData: CourseFormData = {
   post_date: '',
@@ -39,7 +41,7 @@ export const courseDefaultData: CourseFormData = {
   is_public_course: false,
   course_level: 'beginner',
   maximum_students: null,
-  enrollment_expiration: '',
+  enrollment_expiry: 0,
   course_benefits: '',
   course_requirements: '',
   course_target_audience: '',
@@ -47,6 +49,9 @@ export const courseDefaultData: CourseFormData = {
   course_duration_hours: 0,
   course_duration_minutes: 0,
   attachments: null,
+  isContentDripEnabled: false,
+  contentDripType: '',
+  course_product_id: '',
 };
 
 export interface CourseFormData {
@@ -54,7 +59,7 @@ export interface CourseFormData {
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: string;
+  post_status: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;
   thumbnail: Media | null;
@@ -70,9 +75,9 @@ export interface CourseFormData {
   course_instructors: User[];
   enable_qna: boolean;
   is_public_course: boolean;
-  course_level: string;
+  course_level: CourseLevel;
   maximum_students: number | null;
-  enrollment_expiration: string;
+  enrollment_expiry: number;
   course_benefits: string;
   course_requirements: string;
   course_target_audience: string;
@@ -80,6 +85,9 @@ export interface CourseFormData {
   course_duration_hours: number;
   course_duration_minutes: number;
   attachments: Media[] | null;
+  isContentDripEnabled: boolean;
+  contentDripType: 'unlock_by_date' | 'specific_days' | 'unlock_sequentially' | 'after_finishing_prerequisites' | '';
+  course_product_id: string;
 }
 
 export interface CoursePayload {
@@ -88,7 +96,7 @@ export interface CoursePayload {
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: string;
+  post_status: 'publish' | 'private';
   post_password: string;
   post_author: number | null;
   thumbnail_id: number | null;
@@ -104,11 +112,23 @@ export interface CoursePayload {
   course_instructors?: number[];
   enable_qna: string;
   is_public_course: string;
-  course_level: string;
-  _tutor_course_settings: {
-    maximum_students: number;
-    enable_content_drip?: number;
+  course_level: CourseLevel;
+  course_settings: {
+    maximum_students?: number;
+    enable_content_drip?: boolean;
     content_drip_type?: string;
+    enrollment_expiry?: number;
+    enable_tutor_bp?: boolean;
+  };
+  additional_content?: {
+    course_benefits?: string;
+    course_target_audience?: string;
+    course_duration?: {
+      hours: number;
+      minutes: number;
+    };
+    course_material_includes?: string;
+    course_requirements?: string;
   };
 }
 
@@ -186,7 +206,7 @@ export interface CourseDetailsResponse {
   thumbnail: string;
   enable_qna: string;
   is_public_course: string;
-  course_level: string;
+  course_level: CourseLevel;
   video: {
     source: string;
     source_video_id: string;
@@ -203,24 +223,56 @@ export interface CourseDetailsResponse {
     seconds: number;
   };
   course_benefits: string;
-  course_requirements: string[];
+  course_requirements: string;
   course_target_audience: string;
   course_material_includes: string;
-  course_price_type: string;
-  course_price: string;
   course_sale_price: string;
   course_settings: {
     maximum_students: number;
-    content_drip_type: string;
+    content_drip_type:
+      | 'unlock_by_date'
+      | 'specific_days'
+      | 'unlock_sequentially'
+      | 'after_finishing_prerequisites'
+      | '';
     enable_content_drip: number;
+    enrollment_expiry: number;
   };
   step_completion_status: Record<CourseBuilderSteps, boolean>;
+  course_pricing: {
+    price: string;
+    product_id: string;
+    product_name: string;
+    sale_price: string;
+    type: string;
+  };
+  course_instructors: InstructorListResponse[];
 }
 
 interface CourseResponse {
   data: number;
   message: string;
   status_code: number;
+}
+
+interface WcProduct {
+  ID: string;
+  post_title: string;
+}
+
+interface GetProductsPayload {
+  action: string;
+}
+
+interface WcProductDetailsPayload {
+  action: string;
+  product_id: string;
+}
+
+interface WcProductDetailsResponse {
+  name: string;
+  regular_price: string;
+  sale_price: string;
 }
 
 const createCourse = (payload: CoursePayload) => {
@@ -253,11 +305,15 @@ const updateCourse = (payload: CoursePayload) => {
 
 export const useUpdateCourseMutation = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateCourse,
     onSuccess: (response) => {
       showToast({ type: 'success', message: response.message });
+      queryClient.invalidateQueries({
+        queryKey: ['CourseDetails', response.data],
+      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
@@ -280,5 +336,43 @@ export const useCourseDetailsQuery = (courseId: number) => {
         return res.data;
       }),
     enabled: !!courseId,
+  });
+};
+
+const getWcProducts = () => {
+  return authApiInstance.post<GetProductsPayload, AxiosResponse<WcProduct[]>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_get_wc_products',
+  });
+};
+
+export const useGetProductsQuery = () => {
+  return useQuery({
+    queryKey: ['WcProducts'],
+    queryFn: () => getWcProducts().then((res) => res.data),
+  });
+};
+
+const getProductDetails = (productId: string, courseId: string) => {
+  return authApiInstance.post<WcProductDetailsPayload, AxiosResponse<WcProductDetailsResponse>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_get_wc_product',
+    product_id: productId,
+    course_id: courseId,
+  });
+};
+
+export const useProductDetailsQuery = (productId: string, courseId: string, coursePriceType: string) => {
+  const { showToast } = useToast();
+
+  return useQuery({
+    queryKey: ['WcProductDetails', productId],
+    queryFn: () =>
+      getProductDetails(productId, courseId).then((res) => {
+        if (typeof res.data === 'string') {
+          showToast({ type: 'danger', message: res.data });
+          return null;
+        }
+        return res.data;
+      }),
+    enabled: !!productId && coursePriceType === 'paid',
   });
 };

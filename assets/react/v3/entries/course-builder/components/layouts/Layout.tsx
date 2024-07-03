@@ -8,7 +8,6 @@ import { css } from '@emotion/react';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
-import Notebook from '@CourseBuilderComponents/layouts/Notebook';
 
 const Layout = () => {
   const params = new URLSearchParams(window.location.search);
@@ -40,7 +39,7 @@ const Layout = () => {
             {/* Placeholder div for allocating the 1fr space */}
             <div />
           </div>
-          <Notebook />
+          {/* <Notebook /> */}
         </div>
       </CourseNavigatorProvider>
     </FormProvider>

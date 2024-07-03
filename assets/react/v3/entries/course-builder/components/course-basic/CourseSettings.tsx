@@ -8,7 +8,6 @@ import type { CourseFormData } from '@CourseBuilderServices/course';
 import Tabs from '@Molecules/Tabs';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import React from 'react';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import ContentDropSettings from './ContentDropSettings';
@@ -16,6 +15,8 @@ import ContentDropSettings from './ContentDropSettings';
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
   const [activeTab, setActiveTab] = useState('general');
+
+  const isContentDripActive = form.watch('contentDripType');
 
   // @TODO: Need to add buddyboss options based on plugin installation
   const tabList = [
@@ -28,7 +29,7 @@ const CourseSettings = () => {
       label: 'Content Drip',
       value: 'content_drip',
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
-      activeBadge: true,
+      activeBadge: isContentDripActive ? true : false,
     },
   ];
 
@@ -92,7 +93,7 @@ const CourseSettings = () => {
 
             {/* @TODO: Add condition based on tutor pro and tutor settings */}
             <Controller
-              name="enrollment_expiration"
+              name="enrollment_expiry"
               control={form.control}
               render={(controllerProps) => (
                 <FormInput
