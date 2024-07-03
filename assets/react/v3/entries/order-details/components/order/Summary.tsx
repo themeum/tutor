@@ -2,20 +2,18 @@ import { Box, BoxTitle } from '@Atoms/Box';
 import { spacing } from '@Config/styles';
 import For from '@Controls/For';
 import { css } from '@emotion/react';
-import type { OrderSummaryItem } from '@OrderServices/order';
+import { useOrderContext } from '@OrderContexts/order-context';
 import { __ } from '@wordpress/i18n';
 import { OrderItem } from './OrderItem';
 
-interface SummaryProps {
-  items: OrderSummaryItem[];
-}
+function Summary() {
+  const { order } = useOrderContext();
 
-function Summary({ items }: SummaryProps) {
   return (
     <Box css={styles.outerBox} bordered>
       <BoxTitle>{__('Order Summary', 'tutor')}</BoxTitle>
       <Box css={styles.innerBox} bordered>
-        <For each={items}>{(item) => <OrderItem key={item.id} item={item} />}</For>
+        <For each={order.courses}>{(course) => <OrderItem key={course.id} item={course} />}</For>
       </Box>
     </Box>
   );

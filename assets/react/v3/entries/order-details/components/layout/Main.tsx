@@ -6,62 +6,28 @@ import Notes from '@OrderComponents/order/Notes';
 import Payment from '@OrderComponents/order/Payment';
 import Student from '@OrderComponents/order/Student';
 import Summary from '@OrderComponents/order/Summary';
-import type { OrderSummaryItem } from '@OrderServices/order';
+import { OrderProvider } from '@OrderContexts/order-context';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
-
-const items: OrderSummaryItem[] = [
-  {
-    id: 1,
-    title: 'Tutor LMS For Beginners Part II: Progress Your Webflow Skills',
-    image: '',
-    type: 'course',
-    regular_price: '$140.00',
-    discounted_price: '$120.00',
-  },
-  {
-    id: 2,
-    title: 'Frontend Courses',
-    type: 'bundle',
-    regular_price: '$140.00',
-    discounted_price: '$120.00',
-    total_courses: 4,
-    discount: {
-      name: 'Special Discount',
-      value: '$20.00',
-    },
-  },
-  {
-    id: 3,
-    title: 'Backend Guru',
-    image: '',
-    type: 'bundle',
-    regular_price: '$150.00',
-    discounted_price: '$140.00',
-    total_courses: 4,
-    discount: {
-      name: 'Promotional discount',
-      value: '$10.00',
-    },
-  },
-];
 
 function Main() {
   return (
     <div css={styles.wrapper}>
-      <Topbar />
-      <Container>
-        <div css={styles.content}>
-          <div css={styles.left}>
-            <Summary items={items} />
-            <Payment />
-            <Activities />
+      <OrderProvider orderId={1}>
+        <Topbar />
+        <Container>
+          <div css={styles.content}>
+            <div css={styles.left}>
+              <Summary />
+              <Payment />
+              <Activities />
+            </div>
+            <div css={styles.right}>
+              <Student />
+              <Notes />
+            </div>
           </div>
-          <div css={styles.right}>
-            <Student />
-            <Notes />
-          </div>
-        </div>
-      </Container>
+        </Container>
+      </OrderProvider>
     </div>
   );
 }

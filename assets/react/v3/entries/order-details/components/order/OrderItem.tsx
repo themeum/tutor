@@ -5,7 +5,7 @@ import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import coursePlaceholder from '@Images/orders/course-placeholder.png';
 import type { OrderSummaryItem } from '@OrderServices/order';
-import { isDefined } from '@Utils/types';
+import { createPriceFormatter } from '@Utils/currency';
 import React from 'react';
 
 interface OrderItemProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -13,6 +13,7 @@ interface OrderItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ className, item }, ref) => {
+  const formatPrice = createPriceFormatter({ locale: 'en-US', currency: 'USD' });
   return (
     <div className={className} ref={ref} css={styles.wrapper}>
       <div css={styles.left}>
@@ -25,7 +26,7 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
               <div css={styles.discount}>
                 <SVGIcon name="tagOutline" width={16} height={16} />
                 <p>{discount.name}</p>
-                <p>(-{discount.value})</p>
+                <p>(-{formatPrice(discount.value)})</p>
               </div>
             )}
           </Show>
@@ -36,9 +37,13 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
         </div>
       </div>
       <div css={styles.right}>
-        <Show when={isDefined(item.discounted_price)} fallback={<span>{item.regular_price}</span>}>
-          <del>{item.regular_price}</del>
-          <span>{item.discounted_price}</span>
+        <Show when={item.discounted_price} fallback={<span>{formatPrice(item.regular_price)}</span>}>
+          {(discountedPrice) => (
+            <>
+              <del>{formatPrice(item.regular_price)}</del>
+              <span>{formatPrice(discountedPrice)}</span>
+            </>
+          )}
         </Show>
       </div>
     </div>

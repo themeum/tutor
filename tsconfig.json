@@ -55,7 +55,8 @@
 				"assets/react/v3/entries/order-details/components/*"
 			],
 			"@OrderServices/*": ["assets/react/v3/entries/order-details/services/*"],
-			"@OrderAtoms/*": ["assets/react/v3/entries/order-details/atoms/*"]
+			"@OrderAtoms/*": ["assets/react/v3/entries/order-details/atoms/*"],
+			"@OrderContexts/*": ["assets/react/v3/entries/order-details/contexts/*"]
 		}
 	},
 	"include": ["./assets/react/v3"],

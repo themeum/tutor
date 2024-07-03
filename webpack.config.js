@@ -160,6 +160,7 @@ module.exports = (env, options) => {
             '@OrderComponents': path.resolve(__dirname, './assets/react/v3/entries/order-details/components/'),
             '@OrderServices': path.resolve(__dirname, './assets/react/v3/entries/order-details/services/'),
             '@OrderAtoms': path.resolve(__dirname, './assets/react/v3/entries/order-details/atoms/'),
+            '@OrderContexts': path.resolve(__dirname, './assets/react/v3/entries/order-details/contexts/'),
           },
         },
       })

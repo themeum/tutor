@@ -37,7 +37,7 @@ const badgeVariants = {
   },
 };
 
-type Variant = 'default' | 'secondary' | 'critical' | 'warning' | 'success' | 'outline';
+export type Variant = 'default' | 'secondary' | 'critical' | 'warning' | 'success' | 'outline';
 
 interface TutorBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: Variant;

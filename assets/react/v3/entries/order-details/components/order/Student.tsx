@@ -2,31 +2,49 @@ import { Avatar } from '@Atoms/Avatar';
 import { Box, BoxTitle } from '@Atoms/Box';
 import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { css } from '@emotion/react';
+import { useOrderContext } from '@OrderContexts/order-context';
+import { isDefined } from '@Utils/types';
 import { __ } from '@wordpress/i18n';
 
 function Student() {
+  const { order } = useOrderContext();
+  const { student } = order;
   return (
     <Box bordered>
       <BoxTitle separator>{__('Student', 'tutor')}</BoxTitle>
       <div css={styles.content}>
-        <Avatar image={'https://placehold.co/100'} name="Hedy Lamarr" />
+        <Avatar image={student.image} name={student.name} />
         <div css={styles.innerContent}>
           <div css={styles.row}>
+            {/* @TODO: need confirmation */}
             <span>Active order number: #19384</span>
             <span>Enrolled courses number: #29389</span>
           </div>
           <div css={styles.row}>
-            <h4>Contact information</h4>
-            <span>nikolatesla@abc.com</span>
-            <span>039483994883</span>
+            <h4>{__('Contact information', 'tutor')}</h4>
+            <span>{student.email}</span>
+            <span>{student.phone}</span>
           </div>
           <div css={styles.row}>
-            <h4>Billing Address</h4>
-            <span>Santiago Nuetro</span>
-            <span>Caro, Caroa 2</span>
-            <span>Tusca, California 2345, United States</span>
-            <span>3948579398</span>
+            <h4>{__('Billing Address', 'tutor')}</h4>
+            <Show when={order.student?.billing_address?.address}>
+              <span>{student.billing_address.address}</span>
+            </Show>
+            <Show when={order.student?.billing_address?.city}>
+              <span>{student.billing_address.city}</span>
+            </Show>
+
+            <span>
+              {[student.billing_address.state, student.billing_address.zip_code, student.billing_address.country]
+                .filter(isDefined)
+                .join(', ')}
+            </span>
+
+            <Show when={order.student?.billing_address?.phone}>
+              <span>{student.billing_address.phone}</span>
+            </Show>
           </div>
         </div>
       </div>
