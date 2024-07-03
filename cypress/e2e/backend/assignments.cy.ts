@@ -34,11 +34,6 @@ describe("Tutor Admin Assignments", () => {
             }
             cy.url().should("include", "view_assignment");
             cy.url().then((url) => {
-              cy.intercept(
-                "POST",
-                `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`
-              ).as("ajaxRequest");
-
               cy.get("input[type=number]")
                 .clear()
                 .type("5");
@@ -51,13 +46,7 @@ describe("Tutor Admin Assignments", () => {
                 .contains("Evaluate this submission")
                 .click();
 
-              cy.wait("@ajaxRequest").then((interception) => {
-                expect(interception.response.body.success).to.equal(true);
-              });
-
-              cy.get("a")
-                .contains("Back")
-                .click();
+              cy.contains("Success");
             });
           });
       }

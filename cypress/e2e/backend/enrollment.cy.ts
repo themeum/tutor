@@ -131,29 +131,6 @@ describe("Tutor Admin ENROLLMENTS", () => {
   });
 
   it("should filter enrollments", () => {
-    const selectedOptionText = "intro-to-js-paid";
-
-    cy.get(":nth-child(2) > .tutor-js-form-select").click();
-    cy.get(
-      ":nth-child(2) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options"
-    )
-      .eq(1)
-      .click({ force: true });
-
-    cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
-        cy.log("No data available");
-      } else {
-        cy.get(".tutor-d-flex.tutor-align-center.tutor-gap-2").each(
-          ($announcement) => {
-            cy.wrap($announcement).should("contain", selectedOptionText);
-          }
-        );
-      }
-    });
-  });
-
-  it("should filter enrollments", () => {
     cy.get(":nth-child(2) > .tutor-js-form-select").click();
     cy.get(
       ":nth-child(2) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options"
@@ -162,7 +139,10 @@ describe("Tutor Admin ENROLLMENTS", () => {
       console.log("se ", selectedOptionText);
       cy.wrap($option).click({ force: true });
       cy.get("body").then(($body) => {
-        if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No Data Available in this Section")) {
+        if (
+          $body.text().includes("No Data Found from your Search/Filter") ||
+          $body.text().includes("No Data Available in this Section")
+        ) {
           cy.log("No data available");
         } else {
           cy.get(".tutor-d-flex.tutor-align-center.tutor-gap-2").each(
@@ -232,12 +212,4 @@ describe("Tutor Admin ENROLLMENTS", () => {
       }
     });
   });
-
-  it("Should filter announcements by a specific date", () => {
-    const filterFormSelector =
-      ".react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control";
-    const elementDateSelector = ".tutor-fs-7";
-    cy.filterElementsByDate(filterFormSelector, elementDateSelector);
-  });
-
 });

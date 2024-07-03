@@ -7,21 +7,6 @@ describe("Tutor Dashboard My Courses", () => {
     cy.url().should("include", backendUrls.GOOGLE_CLASSROOM);
   });
 
-  it("should be able to search any class", () => {
-    const searchInputSelector = "#tutor-gc-search-class";
-    const searchQuery = "test";
-    const courseLinkSelector = "td.tutor-gc-title>a";
-    const submitButtonSelector = "";
-    const submitWithButton = false;
-    cy.search(
-      searchInputSelector,
-      searchQuery,
-      courseLinkSelector,
-      submitButtonSelector,
-      submitWithButton
-    );
-  });
-
   //  set api and save connection
   it("should upload google classroom integration json and save connection", () => {
     const filePath = "/Users/ollyo/Documents/google-classroom.json";
@@ -152,6 +137,22 @@ describe("Tutor Dashboard My Courses", () => {
           });
       });
   });
+
+  it("should be able to search any class", () => {
+    const searchInputSelector = "#tutor-gc-search-class";
+    const searchQuery = "test";
+    const courseLinkSelector = "td.tutor-gc-title>a";
+    const submitButtonSelector = "";
+    const submitWithButton = false;
+    cy.search(
+      searchInputSelector,
+      searchQuery,
+      courseLinkSelector,
+      submitButtonSelector,
+      submitWithButton
+    );
+  });
+
 
   //   it("should trash, delete, restore a class", () => {
   //     // cy.intercept(

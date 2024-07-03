@@ -120,11 +120,13 @@ Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
       cy.getByInputName("tutor-bulk-checkbox-all").then(($checkboxes) => {
         const checkboxesArray = Cypress._.toArray($checkboxes);
         const randomIndex = Cypress._.random(0, checkboxesArray.length - 1);
+        console.log(randomIndex)
         cy.wrap(checkboxesArray[randomIndex]).as("randomCheckbox");
         cy.get("@randomCheckbox").check();
+        cy.get(':nth-child(1) > :nth-child(1) > .td-checkbox > .tutor-form-check-input').check()
         cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
         cy.get(
-          `span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`
+          `span[tutor-dropdown-item][data-key=${option}]`
         ).click();
 
         cy.get("#tutor-admin-bulk-action-btn")
@@ -143,6 +145,8 @@ Cypress.Commands.add("performBulkActionOnSelectedElement", (option) => {
               cy.get(`.tutor-table-row-status-update[data-id="${id}"]`)
                 .invoke("attr", "data-status")
                 .then((status) => {
+                  console.log(status)
+                  console.log("option ",option)
                   expect(status).to.include(option);
                 });
             }

@@ -9,7 +9,7 @@ describe("Tutor Dashboard Assignments", () => {
     cy.url().should("include", frontendUrls.dashboard.ASSIGNMENTS);
   });
   
-  it("should filter announcements", () => {
+  it("should filter assignments", () => {
     cy.get(".tutor-col-lg-6 > .tutor-js-form-select").click();
     cy.get(
       ".tutor-col-lg-6 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options span[tutor-dropdown-item]"

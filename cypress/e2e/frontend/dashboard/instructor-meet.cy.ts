@@ -8,87 +8,6 @@ describe("Tutor Dashboard My Courses", () => {
     cy.loginAsInstructor();
     cy.url().should("include", frontendUrls.dashboard.GOOGLE_MEET);
   });
-  it("should be able to search any meeting", () => {
-    const searchInputSelector = "#tutor-backend-filter-search";
-    const searchQuery = "Google meet test";
-    const courseLinkSelector =
-      ".tutor-google-meet-meeting-item>td:nth-child(2)>div:first-child";
-    const submitButtonSelector = "";
-    const submitWithButton = false;
-    cy.search(
-      searchInputSelector,
-      searchQuery,
-      courseLinkSelector,
-      submitButtonSelector,
-      submitWithButton
-    );
-  });
-  it("should filter meetings", () => {
-    cy.get(":nth-child(2) > .tutor-js-form-select").click();
-    cy.get("body").then(($body) => {
-      if ($body.text().includes("No Records Found")||$body.text().includes("No records found")) {
-        cy.log("No data available");
-      } else {
-        cy.get(".tutor-form-select-options")
-          .eq(1)
-          .then(() => {
-            cy.get(".tutor-form-select-option")
-              .then(($options) => {
-                cy.get(".tutor-form-select-options>div:nth-child(2)")
-                  .eq(0)
-                  .click();
-              })
-              .then(() => {
-                cy.get("span.tutor-form-select-label[tutor-dropdown-label]")
-                  .eq(0)
-                  .invoke("text")
-                  .then((retrievedText) => {
-                    cy.get(
-                      ".tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis"
-                    ).each(($category) => {
-                      cy.wrap($category)
-                        .invoke("text")
-                        .then((categoryText) => {
-                          if (categoryText.trim() === retrievedText.trim()) {
-                            cy.wrap($category).click({ force: true });
-                          }
-                        });
-                    });
-                  });
-              });
-          });
-      }
-    });
-  });
-  it("Should filter courses by a specific date", () => {
-    cy.get(
-      ".tutor-wp-dashboard-filter-items > :nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control"
-    ).click();
-
-    cy.get(".dropdown-years").click();
-    cy.get(".dropdown-years>.dropdown-list")
-      .contains("2025")
-      .click();
-    cy.get(".dropdown-months > .dropdown-label").click();
-    cy.get(".dropdown-months > .dropdown-list")
-      .contains("June")
-      .click();
-    cy.get(".react-datepicker__day--011")
-      .contains("11")
-      .click();
-
-    cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No records found")) {
-        cy.log("No data available");
-      } else {
-        cy.wait(2000);
-        cy.get(".tutor-fs-7 > span").each(($el) => {
-          const dateText = $el.text().trim();
-          expect(dateText).to.contain("June 11, 2025");
-        });
-      }
-    });
-  });
   //   set api and save connection
   it("should upload meet integration json and save connection", () => {
     const filePath = "/Users/ollyo/Documents/google-meet-integration.json";
@@ -377,5 +296,86 @@ describe("Tutor Dashboard My Courses", () => {
           .should("be.visible");
       }
     );
+  });
+  it("should be able to search any meeting", () => {
+    const searchInputSelector = "#tutor-backend-filter-search";
+    const searchQuery = "Google meet test";
+    const courseLinkSelector =
+      ".tutor-google-meet-meeting-item>td:nth-child(2)>div:first-child";
+    const submitButtonSelector = "";
+    const submitWithButton = false;
+    cy.search(
+      searchInputSelector,
+      searchQuery,
+      courseLinkSelector,
+      submitButtonSelector,
+      submitWithButton
+    );
+  });
+  it("should filter meetings", () => {
+    cy.get(":nth-child(2) > .tutor-js-form-select").click();
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("No Records Found")||$body.text().includes("No records found")) {
+        cy.log("No data available");
+      } else {
+        cy.get(".tutor-form-select-options")
+          .eq(1)
+          .then(() => {
+            cy.get(".tutor-form-select-option")
+              .then(($options) => {
+                cy.get(".tutor-form-select-options>div:nth-child(2)")
+                  .eq(0)
+                  .click();
+              })
+              .then(() => {
+                cy.get("span.tutor-form-select-label[tutor-dropdown-label]")
+                  .eq(0)
+                  .invoke("text")
+                  .then((retrievedText) => {
+                    cy.get(
+                      ".tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis"
+                    ).each(($category) => {
+                      cy.wrap($category)
+                        .invoke("text")
+                        .then((categoryText) => {
+                          if (categoryText.trim() === retrievedText.trim()) {
+                            cy.wrap($category).click({ force: true });
+                          }
+                        });
+                    });
+                  });
+              });
+          });
+      }
+    });
+  });
+  it("Should filter courses by a specific date", () => {
+    cy.get(
+      ".tutor-wp-dashboard-filter-items > :nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control"
+    ).click();
+
+    cy.get(".dropdown-years").click();
+    cy.get(".dropdown-years>.dropdown-list")
+      .contains("2025")
+      .click();
+    cy.get(".dropdown-months > .dropdown-label").click();
+    cy.get(".dropdown-months > .dropdown-list")
+      .contains("June")
+      .click();
+    cy.get(".react-datepicker__day--011")
+      .contains("11")
+      .click();
+
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("No Data Found from your Search/Filter")||$body.text().includes("No records found")) {
+        cy.log("No data available");
+      } else {
+        cy.wait(2000);
+        cy.get(".tutor-fs-7 > span").each(($el) => {
+          const dateText = $el.text().trim();
+          expect(dateText).to.contain("June 11, 2025");
+        });
+      }
+    });
   });
 });

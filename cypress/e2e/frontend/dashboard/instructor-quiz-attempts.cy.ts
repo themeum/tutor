@@ -10,11 +10,35 @@ describe("Tutor Dashboard Quiz Attempts", () => {
   });
 
   it("should check if the elements are sorted", () => {
-    const formSelector = ":nth-child(2) > .tutor-form-select";
-    const itemSelector =
-      ".tutor-mt-4";
-    cy.checkSorting("ASC", formSelector, itemSelector);
-    cy.checkSorting("DESC", formSelector, itemSelector);
+    const formSelector = ":nth-child(2) > .tutor-js-form-select";
+    const itemSelector = ".tutor-mt-4";
+    function checkSorting(order) {
+      cy.get(formSelector).click();
+      cy.get(`span[title=${order}]`).click();
+      cy.get("body").then(($body) => {
+        if (
+          $body.text().includes("No Data Found from your Search/Filter") ||
+          $body.text().includes("No request found") ||
+          $body.text().includes("No Data Available in this Section") ||
+          $body.text().includes("No records found") ||
+          $body.text().includes("No Records Found")
+        ) {
+          cy.log("No data available");
+        } else {
+          cy.get(itemSelector).then(($items) => {
+            const itemTexts = $items
+              .map((index, item) => item.innerText.trim())
+              .get()
+              .filter((text) => text);
+            const sortedItems =
+              order === "ASC" ? itemTexts.sort() : itemTexts.sort().reverse();
+            expect(itemTexts).to.deep.equal(sortedItems);
+          });
+        }
+      });
+    }
+    checkSorting("ASC");
+    checkSorting("DESC");
   });
 
   it("should review a quiz", () => {

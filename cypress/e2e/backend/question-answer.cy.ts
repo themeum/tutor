@@ -22,7 +22,7 @@ describe("Tutor Admin Question and Answers", () => {
                   expect(interception.response.body.success).to.equal(true);
               });
 
-              cy.get("a").contains("Back").click()
+              cy.get("a").contains("Back").click({force:true})
           }
       })
   })

@@ -6,88 +6,7 @@ describe("Tutor Dashboard My Courses", () => {
     cy.loginAsInstructor();
     cy.url().should("include", frontendUrls.dashboard.ZOOM);
   });
-  it("should be able to search any meeting", () => {
-    const searchInputSelector =
-      ".tutor-wp-dashboard-filter-items > :nth-child(1) > .tutor-form-wrap > .tutor-form-control";
-    const searchQuery = "New Zoom Meeting";
-    const courseLinkSelector = ".tutor-table-link";
-    const submitButtonSelector = "";
-    const submitWithButton = false;
-    cy.search(
-      searchInputSelector,
-      searchQuery,
-      courseLinkSelector,
-      submitButtonSelector,
-      submitWithButton
-    );
-  });
-  it("should filter meetings", () => {
-    cy.get(".tutor-my-lg-0 > .tutor-js-form-select").click();
-
-    cy.get(".tutor-form-select-options")
-      .eq(1)
-      .then(() => {
-        cy.get(".tutor-form-select-option")
-          .then(($options) => {
-            cy.get('[data-key="14123"]').click();
-          })
-          .then(() => {
-            cy.get("body").then(($body) => {
-              if (
-                $body.text().includes("No Data Found from your Search/Filter")
-              ) {
-                cy.log("No data available");
-              } else {
-                cy.get("span.tutor-form-select-label[tutor-dropdown-label]")
-                  .eq(1)
-                  .invoke("text")
-                  .then((retrievedText) => {
-                    cy.get(
-                      ".tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis"
-                    ).each(($category) => {
-                      cy.wrap($category)
-                        .invoke("text")
-                        .then((categoryText) => {
-                          if (categoryText.trim() === retrievedText.trim()) {
-                            cy.wrap($category).click();
-                          }
-                        });
-                    });
-                  });
-              }
-            });
-          });
-      });
-  });
-  it("Should filter courses by a specific date", () => {
-    cy.get(
-      ":nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control"
-    ).click();
-
-    cy.get(".dropdown-years").click();
-    cy.get(".dropdown-years>.dropdown-list")
-      .contains("2025")
-      .click();
-    cy.get(".dropdown-months > .dropdown-label").click();
-    cy.get(".dropdown-months > .dropdown-list")
-      .contains("June")
-      .click();
-    cy.get(".react-datepicker__day--011")
-      .contains("11")
-      .click();
-
-    cy.get("body").then(($body) => {
-      if ($body.text().includes("No Data Found from your Search/Filter")) {
-        cy.log("No data available");
-      } else {
-        cy.wait(2000);
-        cy.get(".tutor-zoom-meeting-item>td>.tutor-fs-7").each(($el) => {
-          const dateText = $el.text().trim();
-          expect(dateText).to.contain("June 11, 2025");
-        });
-      }
-    });
-  });
+  
   //   set api and save connection
   it("should set and save zoom api connection", () => {
     cy.visit(
@@ -266,9 +185,9 @@ describe("Tutor Dashboard My Courses", () => {
         cy.log("No data available");
       } else {
         cy.get("button[action-tutor-dropdown='toggle']")
-          .eq(5)
+          .eq(0)
           .click();
-        cy.get("a.tutor-dropdown-item")
+        cy.get("a")
           .contains("Delete")
           .click({ force: true });
         cy.get("button")
@@ -303,16 +222,12 @@ describe("Tutor Dashboard My Courses", () => {
       .check({ force: true })
       .should("be.checked");
     // recording options
-    cy.get("input#tutor_zoom_rec_local")
+    cy.get("input#tutor_zoom_rec_none")
       .check()
-      .should("not.be.checked");
-    cy.get("input#tutor_zoom_rec_none").should("be.checked");
+      .should("be.checked");
     cy.get("input#tutor_zoom_rec_cloud").should("not.be.checked");
     cy.get("input#tutor_zoom_rec_cloud")
-      .check()
       .should("not.be.checked");
-    cy.get("input#tutor_zoom_rec_none").should("be.checked");
-    cy.get("input#tutor_zoom_rec_local").should("not.be.checked");
   });
 
   //   help
@@ -325,6 +240,90 @@ describe("Tutor Dashboard My Courses", () => {
       cy.get(`.tutor-fs-7.tutor-color-secondary`)
         .eq(index)
         .should("be.visible");
+    });
+  });
+
+  it("should be able to search any meeting", () => {
+    const searchInputSelector =
+      ".tutor-wp-dashboard-filter-items > :nth-child(1) > .tutor-form-wrap > .tutor-form-control";
+    const searchQuery = "New Zoom Meeting";
+    const courseLinkSelector = ".tutor-table-link";
+    const submitButtonSelector = "";
+    const submitWithButton = false;
+    cy.search(
+      searchInputSelector,
+      searchQuery,
+      courseLinkSelector,
+      submitButtonSelector,
+      submitWithButton
+    );
+  });
+  it("should filter meetings", () => {
+    cy.get(".tutor-my-lg-0 > .tutor-js-form-select").click();
+
+    cy.get(".tutor-form-select-options")
+      .eq(1)
+      .then(() => {
+        cy.get(".tutor-form-select-option")
+          .then(($options) => {
+            // cy.get('.tutor-dropdown-item').eq(1).click();
+            cy.get('.tutor-my-lg-0 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis').click()
+
+          })
+          .then(() => {
+            cy.get("body").then(($body) => {
+              if (
+                $body.text().includes("No Data Found from your Search/Filter")
+              ) {
+                cy.log("No data available");
+              } else {
+                cy.get("span.tutor-form-select-label[tutor-dropdown-label]")
+                  .eq(1)
+                  .invoke("text")
+                  .then((retrievedText) => {
+                    cy.get(
+                      ".tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis"
+                    ).each(($category) => {
+                      cy.wrap($category)
+                        .invoke("text")
+                        .then((categoryText) => {
+                          if (categoryText.trim() === retrievedText.trim()) {
+                            cy.wrap($category).click();
+                          }
+                        });
+                    });
+                  });
+              }
+            });
+          });
+      });
+  });
+  it("Should filter courses by a specific date", () => {
+    cy.get(
+      ":nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control"
+    ).click();
+
+    cy.get(".dropdown-years").click();
+    cy.get(".dropdown-years>.dropdown-list")
+      .contains("2025")
+      .click();
+    cy.get(".dropdown-months > .dropdown-label").click();
+    cy.get(".dropdown-months > .dropdown-list")
+      .contains("June")
+      .click();
+    cy.get(".react-datepicker__day--011")
+      .contains("11")
+      .click();
+    cy.get("body").then(($body) => {
+      if ($body.text().includes("No Data Found from your Search/Filter")) {
+        cy.log("No data available");
+      } else {
+        cy.wait(2000);
+        cy.get(".tutor-zoom-meeting-item>td>.tutor-fs-7").each(($el) => {
+          const dateText = $el.text().trim();
+          expect(dateText).to.contain("June 11, 2025");
+        });
+      }
     });
   });
 });

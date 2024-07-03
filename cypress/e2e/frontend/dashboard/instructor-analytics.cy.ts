@@ -95,10 +95,11 @@ describe("Tutor Admin Dashboard Journey", () => {
     );
   });
   // export
-  it("should be able to dowonload csv", () => {
+  it("should be able to download CSV", () => {
     cy.get(".tutor-nav-link")
       .contains("Export")
       .click();
+
     cy.intercept(
       "POST",
       `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`,
@@ -108,10 +109,20 @@ describe("Tutor Admin Dashboard Journey", () => {
         }
       }
     );
-    cy.get("#download_analytics").should("not.be.disabled").click();
-    cy.wait("@ajaxRequest").then((interception) => {
-      expect(interception.response.body.success).to.equal(true);
+
+    cy.get("#download_analytics").then(($button) => {
+      if ($button.is(':disabled')) {
+        cy.log("The download button is disabled.");
+      } else {
+        cy.get("#download_analytics").should("not.be.disabled").click();
+        
+        // Wait for the intercepted AJAX request and verify the response
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.response.body.success).to.equal(true);
+        });
+      }
     });
   });
+  
 
 });

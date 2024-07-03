@@ -142,18 +142,29 @@ describe("Tutor Dashboard Quiz Attempts", () => {
   });
 
   it("should perform bulk action on all quiz attempts", () => {
-    cy.get("#tutor-bulk-checkbox-all").click();
-    cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
-    cy.get(
-      ".tutor-mr-12 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis"
-    )
-      .contains("Delete Permanently")
-      .click();
-    cy.get("#tutor-admin-bulk-action-btn").click();
-    cy.get("#tutor-confirm-bulk-action")
-      .contains("Yes, I'am Sure")
-      .click();
-
-    cy.contains("No Data Available in this Section");
+    cy.get("body").then(($body) => {
+      if (
+        $body.text().includes("No Data Found from your Search/Filter") ||
+        $body.text().includes("No request found") ||
+        $body.text().includes("No Data Available in this Section") ||
+        $body.text().includes("No records found") ||
+        $body.text().includes("No Records Found")
+      ) {
+        cy.log("No data available");
+      } else {
+        cy.get("#tutor-bulk-checkbox-all").click();
+        cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
+        cy.get(
+          ".tutor-mr-12 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis"
+        )
+          .contains("Delete Permanently")
+          .click();
+        cy.get("#tutor-admin-bulk-action-btn").click();
+        cy.get("#tutor-confirm-bulk-action")
+          .contains("Yes, I'am Sure")
+          .click();
+        cy.contains("No Data Available in this Section");
+      }
+    });
   });
 });

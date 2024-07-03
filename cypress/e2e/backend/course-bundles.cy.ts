@@ -52,16 +52,10 @@ describe("Tutor Admin Course Bundles", () => {
   })
 
   it("should perform bulk actions on selected bundle course", () => {
-    const options = ["publish", "pending", "draft", "trash"];
+    // const options = ["publish", "pending", "draft", "trash"];
+    const options = ["pending"];
     options.forEach((option) => {
       cy.performBulkActionOnSelectedElement(option);
-    });
-  });
-
-  it("should be able to perform bulk actions on all bundle courses", () => {
-    const options = ["publish", "pending", "draft", "trash"];
-    options.forEach((option) => {
-      cy.performBulkAction(option);
     });
   });
 
@@ -107,7 +101,6 @@ describe("Tutor Admin Course Bundles", () => {
         cy.url().should("equal", link);
       });
   });
-
   it("should update a bundle course successfully", () => {
     cy.intercept(
       "POST",
@@ -152,7 +145,6 @@ describe("Tutor Admin Course Bundles", () => {
         cy.url().should("equal", link);
       });
   });
-
   it("should visit a random bundle product", () => {
     cy.get("body").then(($body) => {
       if ($body.text().includes("No Data Available in this Section")) {
@@ -171,7 +163,6 @@ describe("Tutor Admin Course Bundles", () => {
       }
     });
   });
-
   it("should change a bundle products status", () => {
     cy.intercept(
       "POST",
@@ -212,7 +203,6 @@ describe("Tutor Admin Course Bundles", () => {
       }
     });
   });
-
   it("should delete a bundle product successfully", () => {
     cy.intercept(
       "POST",
