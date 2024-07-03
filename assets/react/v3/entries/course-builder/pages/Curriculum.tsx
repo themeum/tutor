@@ -95,7 +95,7 @@ const Curriculum = () => {
         <CanvasHead
           title={__('Curriculum', 'tutor')}
           rightButton={
-            <Button variant="text" onClick={() => setAllCollapsed((previous) => !previous)}>
+            <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
               {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
             </Button>
           }
@@ -273,7 +273,7 @@ export default Curriculum;
 
 const styles = {
   container: css`
-    margin-top: ${spacing[32]};
+    margin-top: ${spacing[24]};
   `,
   wrapper: css`
     max-width: ${containerMaxWidth}px;

@@ -38,6 +38,9 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'additional_content[course_material_includes]': data.course_material_includes ?? '',
     'additional_content[course_requirements]': data.course_requirements ?? '',
     course_instructor_ids: data.course_instructors.map((item) => item.id),
+    preview_link: data.preview_link,
+    _tutor_prerequisites_main_edit: true,
+    _tutor_course_prerequisites_ids: data.course_prerequisites_ids,
   };
 };
 
@@ -95,6 +98,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
         avatar_url: item.avatar_url,
       };
     }),
+    preview_link: courseDetails.preview_link,
+    course_prerequisites_ids: courseDetails._tutor_course_prerequisites_ids,
   };
 };
 

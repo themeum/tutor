@@ -17,6 +17,7 @@ import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptio
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { useGetProductsQuery, useProductDetailsQuery, type CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
 import { maxValueRule, requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
@@ -26,8 +27,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
-  const params = new URLSearchParams(window.location.href);
-  const courseId = params.get('course_id')?.split('#')[0];
+  const courseId = getCourseId();
 
   const author = form.watch('post_author');
 
@@ -87,12 +87,12 @@ const CourseBasic = () => {
     },
   ];
 
-  const instructorListQuery = useInstructorListQuery(courseId ?? '');
+  const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
   const instructorOptions = instructorListQuery.data ?? [];
 
   const productsQuery = useGetProductsQuery();
-  const productDetailsQuery = useProductDetailsQuery(courseProductId, courseId ?? '', coursePriceType);
+  const productDetailsQuery = useProductDetailsQuery(courseProductId, String(courseId) ?? '', coursePriceType);
 
   const productOptions =
     productsQuery.data?.map((item) => {

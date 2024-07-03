@@ -52,6 +52,8 @@ export const courseDefaultData: CourseFormData = {
   isContentDripEnabled: false,
   contentDripType: '',
   course_product_id: '',
+  preview_link: '',
+  course_prerequisites_ids: [],
 };
 
 export interface CourseFormData {
@@ -88,6 +90,8 @@ export interface CourseFormData {
   isContentDripEnabled: boolean;
   contentDripType: 'unlock_by_date' | 'specific_days' | 'unlock_sequentially' | 'after_finishing_prerequisites' | '';
   course_product_id: string;
+  preview_link: string;
+  course_prerequisites_ids: string[];
 }
 
 export interface CoursePayload {
@@ -130,6 +134,8 @@ export interface CoursePayload {
     course_material_includes?: string;
     course_requirements?: string;
   };
+  preview_link: string;
+  _tutor_course_prerequisites_ids: string[];
 }
 
 interface CourseDetailsPayload {
@@ -247,6 +253,8 @@ export interface CourseDetailsResponse {
     type: string;
   };
   course_instructors: InstructorListResponse[];
+  preview_link: string;
+  _tutor_course_prerequisites_ids: string[];
 }
 
 interface CourseResponse {
@@ -273,6 +281,17 @@ interface WcProductDetailsResponse {
   name: string;
   regular_price: string;
   sale_price: string;
+}
+
+interface GetPrerequisiteCoursesPayload {
+  action: string;
+  exclude: string[];
+}
+
+export interface PrerequisiteCourses {
+  id: number;
+  post_title: string;
+  featured_image: string;
 }
 
 const createCourse = (payload: CoursePayload) => {
@@ -371,5 +390,23 @@ export const useProductDetailsQuery = (productId: string, courseId: string, cour
         return res.data;
       }),
     enabled: !!productId && coursePriceType === 'paid',
+  });
+};
+
+const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
+  return authApiInstance.post<GetPrerequisiteCoursesPayload, AxiosResponse<PrerequisiteCourses[]>>(
+    endpoints.ADMIN_AJAX,
+    {
+      action: 'tutor_course_list',
+      exclude: excludedCourseIds,
+    }
+  );
+};
+
+export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrerequisiteAddonEnabled: boolean) => {
+  return useQuery({
+    queryKey: ['PrerequisiteCourses', excludedCourseIds],
+    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then((res) => res.data),
+    enabled: isPrerequisiteAddonEnabled,
   });
 };
