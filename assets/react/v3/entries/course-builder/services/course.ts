@@ -307,6 +307,7 @@ export interface Certificate {
   preview_src: string;
   background_src: string;
   key: string;
+  is_default?: boolean;
 }
 
 const createCourse = (payload: CoursePayload) => {

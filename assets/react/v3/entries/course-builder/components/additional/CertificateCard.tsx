@@ -1,12 +1,19 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { Certificate } from '@CourseBuilderServices/course';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+
+import { useModal } from '@Components/modals/Modal';
+import CertificatePreviewModal from '@CourseBuilderComponents/modals/CertificatePreviewModal';
+import { useCourseDetailsQuery, type Certificate } from '@CourseBuilderServices/course';
+
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+
+import Show from '@Controls/Show';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { styleUtils } from '@Utils/style-utils';
 
 interface CertificateCardProps {
   isSelected: boolean;
@@ -16,6 +23,14 @@ interface CertificateCardProps {
 }
 
 const CertificateCard = ({ isSelected = true, setSelectedCertificate, data, orientation }: CertificateCardProps) => {
+  const courseId = getCourseId();
+  const { showModal } = useModal();
+  const courseDetailsQuery = useCourseDetailsQuery(courseId);
+  const certificatesData =
+    courseDetailsQuery.data?.course_certificates_templates.filter(
+      (certificate) => certificate.orientation === orientation
+    ) ?? [];
+
   return (
     <div
       css={styles.wrapper({
@@ -45,7 +60,17 @@ const CertificateCard = ({ isSelected = true, setSelectedCertificate, data, orie
               isOutlined
               size="small"
               onClick={() => {
-                window.open(data.preview_src, '_blank');
+                showModal({
+                  component: CertificatePreviewModal,
+                  props: {
+                    certificates: certificatesData,
+                    currentCertificate: data,
+                    selectedCertificate: data.key,
+                    onSelectCertificate: (certificate: Certificate): void => {
+                      setSelectedCertificate(certificate.key);
+                    },
+                  },
+                });
               }}
             >
               {__('Preview', 'tutor')}
@@ -137,7 +162,7 @@ const styles = {
   certificateImage: css`
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: ${borderRadius.card};
   `,
   footerWrapper: css`

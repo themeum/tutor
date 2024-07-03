@@ -1,28 +1,33 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
-import Tabs from '@Molecules/Tabs';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
-import CertificateCard from './CertificateCard';
-import For from '@Controls/For';
+import { useFormContext } from 'react-hook-form';
+
+import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@Atoms/Button';
+
+import Tabs from '@Molecules/Tabs';
+import EmptyState from '@Molecules/EmptyState';
+
+import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
 import { type CourseFormData, useCourseDetailsQuery } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useFormContext } from 'react-hook-form';
+
+import Show from '@Controls/Show';
+import For from '@Controls/For';
+import { colorTokens, spacing } from '@Config/styles';
 import config, { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
-import EmptyState from '@Molecules/EmptyState';
-import Button from '@Atoms/Button';
+import { styleUtils } from '@Utils/style-utils';
+
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 
-type CertificateTabValue = 'templates' | 'my_certificates';
+type CertificateTabValue = 'templates' | 'custom_certificates';
 
 const certificateTabs: { label: string; value: CertificateTabValue }[] = [
   { label: __('Templates', 'tutor'), value: 'templates' },
-  { label: __('My Certificates', 'tutor'), value: 'my_certificates' },
+  { label: __('Custom Certificates', 'tutor'), value: 'custom_certificates' },
 ];
 
 const Certificate = () => {
@@ -42,18 +47,38 @@ const Certificate = () => {
   );
   const [selectedCertificate, setSelectedCertificate] = useState(currentCertificateKey);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!currentCertificateKey) {
+      return;
+    }
+    const newCertificate = certificatesData.find((certificate) => certificate.key === currentCertificateKey);
+    if (newCertificate) {
+      if (activeOrientation !== newCertificate.orientation) {
+        setActiveOrientation(newCertificate.orientation);
+      }
+      setSelectedCertificate(currentCertificateKey);
+    }
+  }, [currentCertificateKey, certificatesData]);
+
   const filteredCertificatesData = certificatesData.filter(
-    (certificate) => certificate.orientation === activeOrientation
+    (certificate) =>
+      certificate.orientation === activeOrientation &&
+      (activeCertificateTab === 'templates' ? certificate?.is_default : !certificate?.is_default)
   );
 
   const handleTabChange = (tab: CertificateTabValue) => {
     setActiveCertificateTab(tab);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    form.setValue('tutor_course_certificate_template', selectedCertificate);
-  }, [selectedCertificate]);
+  const handleOrientationChange = (orientation: 'landscape' | 'portrait') => {
+    setActiveOrientation(orientation);
+  };
+
+  const handleCertificateSelection = (certificateKey: string) => {
+    form.setValue('tutor_course_certificate_template', certificateKey);
+    setSelectedCertificate(certificateKey);
+  };
 
   return (
     <Show
@@ -93,7 +118,7 @@ const Certificate = () => {
                   isActive: activeOrientation === 'landscape',
                 }),
               ]}
-              onClick={() => setActiveOrientation('landscape')}
+              onClick={() => handleOrientationChange('landscape')}
             >
               <SVGIcon name="landscape" width={32} height={32} />
             </button>
@@ -105,18 +130,22 @@ const Certificate = () => {
                   isActive: activeOrientation === 'portrait',
                 }),
               ]}
-              onClick={() => setActiveOrientation('portrait')}
+              onClick={() => handleOrientationChange('portrait')}
             >
               <SVGIcon name="portrait" width={32} height={32} />
             </button>
           </div>
         </div>
 
-        <Show when={activeCertificateTab === 'templates'}>
-          <div css={styles.certificateWrapper}>
+        <div
+          css={styles.certificateWrapper({
+            hasCertificates: filteredCertificatesData.length > 0,
+          })}
+        >
+          <Show when={activeCertificateTab === 'templates'}>
             <CertificateCard
               isSelected={selectedCertificate === ''}
-              setSelectedCertificate={setSelectedCertificate}
+              setSelectedCertificate={handleCertificateSelection}
               data={{
                 key: '',
                 name: __('None', 'tutor'),
@@ -127,34 +156,35 @@ const Certificate = () => {
               }}
               orientation={activeOrientation}
             />
+          </Show>
+          <Show
+            when={filteredCertificatesData.length > 0}
+            fallback={
+              <Show when={activeCertificateTab === 'custom_certificates'}>
+                <EmptyState
+                  size="small"
+                  title={__('No templates found', 'tutor')}
+                  description={__('No custom certificates found. Create a new one.', 'tutor')}
+                  emptyStateImage={emptyStateImage}
+                  emptyStateImage2x={emptyStateImage2x}
+                  imageAltText={__('Illustration of a certificate', 'tutor')}
+                />
+              </Show>
+            }
+          >
             <For each={filteredCertificatesData}>
               {(certificate) => (
                 <CertificateCard
                   key={certificate.key}
                   isSelected={selectedCertificate === certificate.key}
-                  setSelectedCertificate={setSelectedCertificate}
+                  setSelectedCertificate={handleCertificateSelection}
                   data={certificate}
                   orientation={activeOrientation}
                 />
               )}
             </For>
-          </div>
-        </Show>
-        <Show when={activeCertificateTab === 'my_certificates'}>
-          <div css={styles.certificateWrapper}>
-            <For each={filteredCertificatesData}>
-              {(certificate) => (
-                <CertificateCard
-                  key={certificate.key}
-                  isSelected={selectedCertificate === certificate.key}
-                  setSelectedCertificate={setSelectedCertificate}
-                  data={certificate}
-                  orientation={activeOrientation}
-                />
-              )}
-            </For>
-          </div>
-        </Show>
+          </Show>
+        </div>
       </Show>
     </Show>
   );
@@ -166,11 +196,23 @@ const styles = {
   tabs: css`
     position: relative;
   `,
-  certificateWrapper: css`
+  certificateWrapper: ({
+    hasCertificates,
+  }: {
+    hasCertificates: boolean;
+  }) => css`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: ${spacing[16]};
     padding-top: ${spacing[12]};
+
+    ${
+      !hasCertificates &&
+      css`
+        grid-template-columns: 1fr;
+        place-items: center;
+      `
+    }
   `,
   orientation: css`
     ${styleUtils.display.flex()}
