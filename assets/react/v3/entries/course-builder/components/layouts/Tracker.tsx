@@ -20,7 +20,7 @@ const Tracker = () => {
             css={styles.element({
               isActive: step.isActive,
               isCompleted: step.isCompleted,
-              isDsabled: step.isDisabled,
+              isDisabled: step.isDisabled,
             })}
             onClick={() => {
               navigate(step.path);
@@ -46,7 +46,7 @@ const styles = {
     display: flex;
     align-items: center;
   `,
-  element: ({ isActive = false, isCompleted = false, isDsabled = false }) => css`
+  element: ({ isActive = false, isCompleted = false, isDisabled = false }) => css`
     ${styleUtils.resetButton};
     ${styleUtils.display.flex()};
     ${typography.small()};
@@ -62,7 +62,7 @@ const styles = {
     }
 
     ${
-      isDsabled &&
+      isDisabled &&
       css`
         color: ${colorTokens.text.hints};
         cursor: not-allowed;

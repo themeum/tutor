@@ -1,3 +1,4 @@
+import { tutorConfig } from '@Config/config';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -40,7 +41,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     course_instructor_ids: data.course_instructors.map((item) => item.id),
     preview_link: data.preview_link,
     _tutor_prerequisites_main_edit: true,
-    _tutor_course_prerequisites_ids: data.course_prerequisites_ids,
+    _tutor_course_prerequisites_ids: data.course_prerequisites?.map((item) => item.id) ?? [],
   };
 };
 
@@ -99,7 +100,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       };
     }),
     preview_link: courseDetails.preview_link,
-    course_prerequisites_ids: courseDetails._tutor_course_prerequisites_ids,
+    course_prerequisites: courseDetails.course_prerequisites,
   };
 };
 
@@ -107,4 +108,8 @@ export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
   const courseId = params.get('course_id');
   return Number(courseId);
+};
+
+export const isAddonEnabled = (addon: string) => {
+  return tutorConfig.addons_data.find((item) => item.name === addon)?.is_enabled;
 };

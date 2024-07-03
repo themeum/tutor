@@ -38,18 +38,25 @@ const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean };
 
 const Curriculum = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!courseId) {
+      navigate('/', {
+        replace: true,
+      });
+    }
+  }, [navigate]);
+
+  if (!courseId) {
+    return null;
+  }
+
   const [allCollapsed, setAllCollapsed] = useState(true);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
 
   const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
-  const navigate = useNavigate();
-
-  if (!courseId) {
-    navigate('/', {
-      replace: true,
-    });
-  }
 
   useEffect(() => {
     if (!courseCurriculumQuery.data) {
@@ -97,7 +104,7 @@ const Curriculum = () => {
     });
   };
 
-  return courseId ? (
+  return (
     <div css={styles.container}>
       <div css={styles.wrapper}>
         <CanvasHead
@@ -274,7 +281,7 @@ const Curriculum = () => {
         `}
       />
     </div>
-  ) : null;
+  );
 };
 
 export default Curriculum;

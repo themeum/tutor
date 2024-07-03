@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -16,35 +17,41 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { styleUtils } from '@Utils/style-utils';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import Certificate from '../components/additional/Certificate';
-import { tutorConfig } from '@Config/config';
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useNavigate } from 'react-router-dom';
+import { Addons } from '@Config/constants';
 
 const Additional = () => {
-  const form = useFormContext<CourseFormData>();
+  const courseId = getCourseId();
   const navigate = useNavigate();
 
-  const courseId = getCourseId();
+  useEffect(() => {
+    if (!courseId) {
+      navigate('/', {
+        replace: true,
+      });
+    }
+  }, [navigate, courseId]);
 
   if (!courseId) {
-    navigate('/', {
-      replace: true,
-    });
+    return null;
   }
 
-  const isPrerequisiteAddonEnabled = tutorConfig.addons_data.find(
-    (addon) => addon.name === 'Tutor Prerequisites'
-  )?.is_enabled;
+  const form = useFormContext<CourseFormData>();
+  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
 
-  const prerequisiteCourses = useCourseDetailsQuery(courseId).data?._tutor_course_prerequisites_ids || [];
+  const courseDetailsQuery = useCourseDetailsQuery(courseId);
+  const prerequisiteCourses = (courseDetailsQuery.data?.course_prerequisites || []).map((prerequisite) =>
+    String(prerequisite.id)
+  );
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
     !!isPrerequisiteAddonEnabled
   );
 
-  return courseId ? (
+  return (
     <div css={styles.wrapper}>
       <div css={styles.leftSide}>
         <CanvasHead title={__('Additionals', 'tutor')} />
@@ -156,7 +163,7 @@ const Additional = () => {
       <div css={styles.sidebar}>
         {isPrerequisiteAddonEnabled && (
           <Controller
-            name="course_prerequisites_ids"
+            name="course_prerequisites"
             control={form.control}
             render={(controllerProps) => (
               <FormCoursePrerequisites
@@ -186,7 +193,7 @@ const Additional = () => {
         <LiveClass />
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default Additional;

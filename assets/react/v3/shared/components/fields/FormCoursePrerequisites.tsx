@@ -19,7 +19,7 @@ type FormCoursePrerequisitesProps = {
   label?: string;
   placeholder?: string;
   options: PrerequisiteCourses[];
-  onChange?: (selectedOption: string[]) => void;
+  onChange?: (selectedOption: PrerequisiteCourses[]) => void;
   handleSearchOnChange?: (searchText: string) => void;
   disabled?: boolean;
   readOnly?: boolean;
@@ -28,7 +28,7 @@ type FormCoursePrerequisitesProps = {
   isHidden?: boolean;
   responsive?: boolean;
   helpText?: string;
-} & FormControllerProps<string[] | null>;
+} & FormControllerProps<PrerequisiteCourses[] | null>;
 
 const FormCoursePrerequisites = ({
   field,
@@ -45,7 +45,7 @@ const FormCoursePrerequisites = ({
   helpText,
 }: FormCoursePrerequisitesProps) => {
   const inputValue = field.value ?? [];
-  const selectedCourses = options.filter((option) => inputValue.includes(String(option.id)));
+  const selectedIds = inputValue.map((course) => String(course.id));
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -72,7 +72,7 @@ const FormCoursePrerequisites = ({
 
   const handleDeleteSelection = (id: number) => {
     if (Array.isArray(inputValue)) {
-      const updatedValue = inputValue.filter((item) => item !== String(id));
+      const updatedValue = inputValue.filter((item) => item.id !== id);
 
       field.onChange(updatedValue);
       onChange(updatedValue);
@@ -121,7 +121,7 @@ const FormCoursePrerequisites = ({
                   isScrolling,
                 })}
               >
-                {selectedCourses.map((course) => (
+                {inputValue.map((course) => (
                   <div key={course.id} css={styles.courseCard}>
                     <div css={styles.imageWrapper}>
                       <img src={course.featured_image} alt={course.post_title} css={styles.image} />
@@ -164,15 +164,15 @@ const FormCoursePrerequisites = ({
                 <ul css={[styles.options]}>
                   {searchedOptions.length > 0 ? (
                     searchedOptions
-                      .filter((item) => !inputValue.includes(String(item.id)))
+                      .filter((course) => !selectedIds.includes(String(course.id)))
                       .map((course) => (
                         <li key={course.id}>
                           <button
                             type="button"
                             css={styles.courseCard}
                             onClick={() => {
-                              field.onChange([...inputValue, String(course.id)]);
-                              onChange([...inputValue, String(course.id)]);
+                              field.onChange([...inputValue, course]);
+                              onChange([...inputValue, course]);
                               setIsOpen(false);
                               setSearchText('');
                             }}

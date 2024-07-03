@@ -10,14 +10,14 @@ import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { tutorConfig } from '@Config/config';
-import { TutorRoles } from '@Config/constants';
+import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { useGetProductsQuery, useProductDetailsQuery, type CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
 import { maxValueRule, requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
@@ -33,13 +33,11 @@ const CourseBasic = () => {
 
   const [instructorSearchText, setInstructorSearchText] = useState('');
 
-  const isMultiInstructorEnabled = tutorConfig.addons_data.find(
-    (addon) => addon.name === 'Tutor Multi Instructors'
-  )?.is_enabled;
+  const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = tutorConfig.tutor_pro_url;
   const isAdministrator = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
 
-  const isIstructorVisible =
+  const isInstructorVisible =
     isTutorProEnabled &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
@@ -142,7 +140,7 @@ const CourseBasic = () => {
                 <FormEditableAlias
                   {...controllerProps}
                   label={__('Course URL', 'tutor')}
-                  baseURL={`${tutorConfig.home_url}/courses`}
+                  baseURL={`${tutorConfig.home_url}/${tutorConfig.settings.course_permalink_base}`}
                 />
               )}
             />
@@ -308,7 +306,7 @@ const CourseBasic = () => {
           />
         )}
 
-        {isIstructorVisible && (
+        {isInstructorVisible && (
           <Controller
             name="course_instructors"
             control={form.control}

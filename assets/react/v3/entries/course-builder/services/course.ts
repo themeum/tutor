@@ -53,7 +53,7 @@ export const courseDefaultData: CourseFormData = {
   contentDripType: '',
   course_product_id: '',
   preview_link: '',
-  course_prerequisites_ids: [],
+  course_prerequisites: [],
 };
 
 export interface CourseFormData {
@@ -91,7 +91,7 @@ export interface CourseFormData {
   contentDripType: 'unlock_by_date' | 'specific_days' | 'unlock_sequentially' | 'after_finishing_prerequisites' | '';
   course_product_id: string;
   preview_link: string;
-  course_prerequisites_ids: string[];
+  course_prerequisites: PrerequisiteCourses[];
 }
 
 export interface CoursePayload {
@@ -254,7 +254,7 @@ export interface CourseDetailsResponse {
   };
   course_instructors: InstructorListResponse[];
   preview_link: string;
-  _tutor_course_prerequisites_ids: string[];
+  course_prerequisites: PrerequisiteCourses[];
 }
 
 interface CourseResponse {
