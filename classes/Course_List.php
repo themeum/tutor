@@ -339,7 +339,6 @@ class Course_List {
 					wp_send_json_success( __( 'Course trashed successfully', 'tutor' ) );
 				}
 			}
-			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		if ( CourseModel::POST_TYPE !== $course->post_type ) {
