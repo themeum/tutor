@@ -5,6 +5,7 @@ import routes from '@CourseBuilderConfig/routes';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
 import { useCurrentPath } from '@Hooks/useCurrentPath';
 import { type SerializedStyles, css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useNavigate } from 'react-router-dom';
 
 interface NavigatorProps {
@@ -15,12 +16,13 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   const { steps, setSteps } = useCourseNavigator();
   const navigate = useNavigate();
   const currentPath = useCurrentPath(routes);
+  const currentIndex = steps.findIndex((item) => item.path === currentPath);
+  const previousIndex = Math.max(0, currentIndex - 1);
+  const nextIndex = Math.min(steps.length - 1, currentIndex + 1);
+  const previousStep = steps[previousIndex];
+  const nextStep = steps[nextIndex];
 
   const handlePreviousClick = () => {
-    const currentIndex = steps.findIndex((item) => item.path === currentPath);
-    const previousIndex = Math.max(0, currentIndex - 1);
-    const previousStep = steps[previousIndex];
-
     setSteps((previous) => {
       return previous.map((item, index) => {
         if (index === currentIndex) {
@@ -47,10 +49,6 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   };
 
   const handleNextClick = () => {
-    const currentIndex = steps.findIndex((item) => item.path === currentPath);
-    const nextIndex = Math.min(steps.length - 1, currentIndex + 1);
-    const nextStep = steps[nextIndex];
-
     setSteps((previous) => {
       return previous.map((item, index) => {
         if (index === currentIndex) {
@@ -82,7 +80,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         variant="tertiary"
         iconPosition="right"
         size="small"
-        onClick={handleNextClick}
+        onClick={handlePreviousClick}
         buttonCss={css`
           padding: ${spacing[6]};
         `}
@@ -95,8 +93,9 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         iconPosition="right"
         size="small"
         onClick={handleNextClick}
+        disabled={nextStep.isDisabled}
       >
-        Next
+        {__('Next', 'tutor')}
       </Button>
     </div>
   );

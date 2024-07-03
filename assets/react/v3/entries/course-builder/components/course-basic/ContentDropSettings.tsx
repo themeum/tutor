@@ -2,9 +2,11 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import { tutorConfig } from '@Config/config';
+import { Addons } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { CourseFormData } from '@CourseBuilderServices/course';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -49,7 +51,7 @@ const ContentDropSettings = () => {
     );
   }
 
-  if (!tutorConfig.addons_data.find((addon) => addon.name === 'Content Drip')?.is_enabled) {
+  if (!isAddonEnabled(Addons.CONTENT_DRIP)) {
     return (
       <div css={styles.dripNoProWrapper}>
         <SVGIcon name="contentDrip" width={72} height={72} style={styles.dripIcon} />

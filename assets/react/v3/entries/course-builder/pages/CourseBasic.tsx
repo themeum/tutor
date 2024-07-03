@@ -10,13 +10,14 @@ import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { tutorConfig } from '@Config/config';
-import { TutorRoles } from '@Config/constants';
+import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { useGetProductsQuery, useProductDetailsQuery, type CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
 import { maxValueRule, requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
@@ -26,20 +27,17 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
-  const params = new URLSearchParams(window.location.href);
-  const courseId = params.get('course_id')?.split('#')[0];
+  const courseId = getCourseId();
 
   const author = form.watch('post_author');
 
   const [instructorSearchText, setInstructorSearchText] = useState('');
 
-  const isMultiInstructorEnabled = tutorConfig.addons_data.find(
-    (addon) => addon.name === 'Tutor Multi Instructors'
-  )?.is_enabled;
-  const isTutorProEnabled = tutorConfig.tutor_pro_url;
+  const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
+  const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
   const isAdministrator = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
 
-  const isIstructorVisible =
+  const isInstructorVisible =
     isTutorProEnabled &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
@@ -87,12 +85,12 @@ const CourseBasic = () => {
     },
   ];
 
-  const instructorListQuery = useInstructorListQuery(courseId ?? '');
+  const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
   const instructorOptions = instructorListQuery.data ?? [];
 
-  const productsQuery = useGetProductsQuery();
-  const productDetailsQuery = useProductDetailsQuery(courseProductId, courseId ?? '', coursePriceType);
+  const productsQuery = useGetProductsQuery(courseId ? String(courseId) : '');
+  const productDetailsQuery = useProductDetailsQuery(courseProductId, String(courseId), coursePriceType);
 
   const productOptions =
     productsQuery.data?.map((item) => {
@@ -142,7 +140,7 @@ const CourseBasic = () => {
                 <FormEditableAlias
                   {...controllerProps}
                   label={__('Course URL', 'tutor')}
-                  baseURL={`${tutorConfig.home_url}/courses`}
+                  baseURL={`${tutorConfig.home_url}/${tutorConfig.settings.course_permalink_base}`}
                 />
               )}
             />
@@ -177,7 +175,9 @@ const CourseBasic = () => {
           <Controller
             name="post_password"
             control={form.control}
-            render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
+            render={(controllerProps) => (
+              <FormInput {...controllerProps} label={__('Password', 'tutor')} type="password" isPassword />
+            )}
           />
         )}
 
@@ -306,7 +306,7 @@ const CourseBasic = () => {
           />
         )}
 
-        {isIstructorVisible && (
+        {isInstructorVisible && (
           <Controller
             name="course_instructors"
             control={form.control}
