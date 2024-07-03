@@ -136,6 +136,7 @@ const FormInput = ({
                   }
                 }}
                 onKeyDown={(event) => {
+                  event.stopPropagation();
                   onKeyDown?.(event.key);
                 }}
                 autoComplete="off"

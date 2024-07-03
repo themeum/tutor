@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use stdClass;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
@@ -266,6 +267,7 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 3.0.0
 		 */
+		add_action( 'wp_ajax_tutor_course_list', array( $this, 'ajax_course_list' ) );
 		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
 		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
@@ -384,7 +386,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Validate price
+	 * Validate price for course create
 	 *
 	 * @since 3.0.0
 	 *
@@ -396,18 +398,25 @@ class Course extends Tutor_Base {
 	public function validate_price( $params, &$errors ) {
 		if ( isset( $params['pricing'] ) ) {
 			$type = $params['pricing']['type'] ?? '';
+
 			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID ), true ) ) {
 				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
-			} elseif ( self::PRICE_TYPE_PAID === $type ) {
-				$product_id = isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : '';
-				$product    = wc_get_product( $product_id );
-				if ( is_a( $product, 'WC_Product' ) ) {
-					$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
-					if ( $is_linked_with_course ) {
-						$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+			}
+
+			if ( self::PRICE_TYPE_PAID === $type ) {
+				$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+				if ( 'wc' === $monetize_by ) {
+					$product_id = (int) isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : 0;
+					// $product_id = 0 then new WC product will be created.
+					if ( $product_id ) {
+						$product = wc_get_product( $product_id );
+						if ( is_a( $product, 'WC_Product' ) ) {
+							$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+							if ( $is_linked_with_course ) {
+								$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+							}
+						}
 					}
-				} else {
-					$errors['pricing'] = __( 'Invalid product', 'tutor' );
 				}
 			}
 		}
@@ -427,21 +436,28 @@ class Course extends Tutor_Base {
 	public function validate_price_for_update( $params, &$errors, $course_id ) {
 		if ( isset( $params['pricing'] ) ) {
 			$type = $params['pricing']['type'] ?? '';
+
 			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID ), true ) ) {
 				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
-			} elseif ( self::PRICE_TYPE_PAID === $type ) {
-				$course_product_id = tutor_utils()->get_course_product_id( $course_id );
-				$product_id        = isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : '';
-				$product           = wc_get_product( $product_id );
-				if ( is_a( $product, 'WC_Product' ) ) {
-					if ( $course_product_id != $product_id ) {
-						$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
-						if ( $is_linked_with_course ) {
-							$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+			}
+
+			if ( self::PRICE_TYPE_PAID === $type ) {
+				$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+				if ( 'wc' === $monetize_by ) {
+					$course_product_id = tutor_utils()->get_course_product_id( $course_id );
+					$product_id        = (int) isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : 0;
+					$product           = wc_get_product( $product_id );
+
+					if ( is_a( $product, 'WC_Product' ) ) {
+						if ( $course_product_id != $product_id ) {
+							$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+							if ( $is_linked_with_course ) {
+								$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+							}
 						}
+					} else {
+						$errors['pricing'] = __( 'Invalid product', 'tutor' );
 					}
-				} else {
-					$errors['pricing'] = __( 'Invalid product', 'tutor' );
 				}
 			}
 		}
@@ -497,8 +513,14 @@ class Course extends Tutor_Base {
 		$_POST['course_requirements']      = $course_requirements;
 		$_POST['course_target_audience']   = $course_target_audience;
 		$_POST['course_material_includes'] = $course_materials;
-		$_POST['_tutor_enable_qa']         = $param['enable_qna'] ?? 'yes';
-		$_POST['_tutor_is_public_course']  = $param['is_public_course'] ?? 'no';
+
+		if ( isset( $params['enable_qna'] ) && 'yes' === $params['enable_qna'] ) {
+			$_POST['_tutor_enable_qa'] = 'yes';
+		}
+
+		if ( isset( $params['_tutor_is_public_course'] ) && 'yes' === $params['_tutor_is_public_course'] ) {
+			$_POST['_tutor_is_public_course'] = 'yes';
+		}
 
 		// Set course price.
 		if ( -1 !== $pricing['product_id'] ) {
@@ -657,6 +679,54 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Get course list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_course_list() {
+		$this->check_access();
+
+		$args = array(
+			'post_type'      => tutor()->course_post_type,
+			'posts_per_page' => -1,
+		);
+
+		$exclude = Input::post( 'exclude', array(), Input::TYPE_ARRAY );
+		if ( count( $exclude ) ) {
+			$exclude         = array_filter(
+				$exclude,
+				function( $id ) {
+					return is_numeric( $id );
+				}
+			);
+			$args['exclude'] = $exclude;
+		}
+
+		$courses = get_posts( $args );
+
+		$items = array();
+		foreach ( $courses as $course ) {
+			$tmp                 = new stdClass();
+			$tmp->id             = $course->ID;
+			$tmp->post_title     = $course->post_title;
+			$tmp->featured_image = get_the_post_thumbnail_url( $course->ID );
+
+			if ( ! $tmp->featured_image ) {
+				$tmp->featured_image = CourseModel::get_course_preview_image_placeholder();
+			}
+
+			$items[] = $tmp;
+		}
+
+		$this->json_response(
+			__( 'Course list fetched successfully', 'tutor' ),
+			$items
+		);
+	}
+
+	/**
 	 * Create course by ajax request.
 	 *
 	 * @since 3.0.0
@@ -666,8 +736,14 @@ class Course extends Tutor_Base {
 	public function ajax_create_course() {
 		$this->check_access();
 
-		//phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$params = Input::sanitize_array( $_POST, array( 'post_content' => 'wp_kses_post' ), );
+		$params = Input::sanitize_array(
+			//phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$_POST,
+			array(
+				'post_content'             => 'wp_kses_post',
+				'course_material_includes' => 'sanitize_textarea_field',
+			)
+		);
 
 		$params['post_type'] = tutor()->course_post_type;
 
@@ -690,6 +766,7 @@ class Course extends Tutor_Base {
 
 		// Set course categories and tags.
 		$this->prepare_course_cats_tags( $params, $errors );
+		$this->setup_course_price( $params );
 
 		if ( ! empty( $errors ) ) {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
@@ -724,6 +801,23 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Setup course price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $params params.
+	 *
+	 * @return void
+	 */
+	public function setup_course_price( $params ) {
+		if ( isset( $params['pricing'] )
+			&& isset( $params['pricing']['product_id'] )
+			&& is_numeric( $params['pricing']['product_id'] ) ) {
+			$_POST['_tutor_course_product_id'] = $params['pricing']['product_id'];
+		}
+	}
+
+	/**
 	 * Update course by ajax request.
 	 *
 	 * @since 3.0.0
@@ -733,8 +827,14 @@ class Course extends Tutor_Base {
 	public function ajax_update_course() {
 		$this->check_access();
 
-		//phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$params = Input::sanitize_array( $_POST, array( 'post_content' => 'wp_kses_post' ), );
+		$params = Input::sanitize_array(
+			//phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$_POST,
+			array(
+				'post_content'             => 'wp_kses_post',
+				'course_material_includes' => 'sanitize_textarea_field',
+			)
+		);
 
 		$errors     = array();
 		$validation = $this->validate_inputs( $params );
@@ -754,6 +854,7 @@ class Course extends Tutor_Base {
 		$this->prepare_course_cats_tags( $params, $errors );
 
 		$this->prepare_course_settings( $params );
+		$this->setup_course_price( $params );
 
 		if ( ! empty( $errors ) ) {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
@@ -834,6 +935,7 @@ class Course extends Tutor_Base {
 
 		$course = get_post( $course_id, ARRAY_A );
 		$data   = array(
+			'preview_link'             => get_preview_post_link( $course_id ),
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
 			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),
 			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),
@@ -859,7 +961,7 @@ class Course extends Tutor_Base {
 			),
 		);
 
-		$data = apply_filters( 'tutor_course_data', array_merge( $course, $data ) );
+		$data = apply_filters( 'tutor_course_details_response', array_merge( $course, $data ) );
 
 		$this->json_response(
 			__( 'Data retrieved successfully!' ),
@@ -981,14 +1083,32 @@ class Course extends Tutor_Base {
 	/**
 	 * Get list of WC products.
 	 *
-	 * @since 3.0.0
+	 * @since 2.5.0
+	 * @since 3.0.0 exclude_linked_products, course_id are added.
 	 *
 	 * @return void
 	 */
 	public function get_wc_products() {
+		$exclude                 = array();
+		$exclude_linked_products = Input::has( 'exclude_linked_products' );
+		$course_id               = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		if ( $exclude_linked_products ) {
+			$exclude = tutor_utils()->get_linked_product_ids();
+		}
+
+		if ( $course_id ) {
+			$linked_product_id = tutor_utils()->get_course_product_id( $course_id );
+			if ( $linked_product_id && isset( $exclude[ $linked_product_id ] ) ) {
+				unset( $exclude[ $linked_product_id ] );
+			}
+		}
+
+		$exclude = array_unique( $exclude );
+
 		$this->json_response(
 			__( 'Products retrieved successfully!', 'tutor' ),
-			tutor_utils()->get_wc_products_db(),
+			tutor_utils()->get_wc_products_db( $exclude ),
 			HttpHelper::STATUS_OK
 		);
 	}

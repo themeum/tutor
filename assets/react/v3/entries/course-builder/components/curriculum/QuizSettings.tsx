@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import FormInput from '@Components/fields/FormInput';
 import { css } from '@emotion/react';
 
+import SVGIcon from '@Atoms/SVGIcon';
 import Card from '@Molecules/Card';
 
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
@@ -11,15 +12,11 @@ import FormSwitch from '@Components/fields/FormSwitch';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
 import { spacing } from '@Config/styles';
-import type { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
-import SVGIcon from '@Atoms/SVGIcon';
 
-interface QuizSettingsProps {
-  form: FormWithGlobalErrorType<QuizForm>;
-}
+const QuizSettings = () => {
+  const form = useFormContext<QuizForm>();
 
-const QuizSettings = ({ form }: QuizSettingsProps) => {
   return (
     <div css={styles.settings}>
       <Card title={__('Basic Settings', 'tutor')}>

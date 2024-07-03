@@ -98,6 +98,11 @@ class Admin {
 
 		// Added @since v2.0.0.
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
+
+		// Ecommerce menu @since 3.0.0.
+		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), __( 'Orders', 'tutor' ), 'manage_options', 'tutor-orders', array( $this, 'orders_view' ) );
+		add_submenu_page( 'tutor', __( 'Coupons', 'tutor' ), __( 'Coupons', 'tutor' ), 'manage_options', 'tutor-coupons', array( $this, 'coupons_view' ) );
+
 		add_submenu_page( 'tutor', __( 'Create Course', 'tutor' ), __( '<span class="tutor-create-course">Create Course</span>', 'tutor' ), 'manage_tutor_instructor', 'create-course', '__return_true' );
 
 
@@ -560,23 +565,25 @@ class Admin {
 	}
 
 	/**
-	 * Tutor order list
+	 * Orders view page
 	 *
 	 * @since 3.0.0
+	 *
 	 * @return void
 	 */
-	public function tutor_order_list() {
-		include tutor()->path . 'views/pages/order-list.php';
+	public function orders_view() {
+		include tutor()->path . 'views/pages/ecommerce/order-list.php';
 	}
 
 	/**
-	 * Tutor order details page
+	 * Coupons view page
 	 *
 	 * @since 3.0.0
+	 *
 	 * @return void
 	 */
-	public function tutor_order_details() {
-		include tutor()->path . 'views/pages/order-details.php';
+	public function coupons_view() {
+		include tutor()->path . 'views/pages/ecommerce/coupon-list.php';
 	}
 
 	/**

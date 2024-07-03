@@ -7,7 +7,8 @@
             "Tutor\\Cache\\":"cache/",
             "Tutor\\Models\\":"models/",
             "Tutor\\Helpers\\":"helpers/",
-            "Tutor\\Traits\\":"traits/"
+            "Tutor\\Traits\\":"traits/",
+            "Tutor\\Ecommerce\\":"ecommerce/"
         }
     },
     "autoload-dev": {

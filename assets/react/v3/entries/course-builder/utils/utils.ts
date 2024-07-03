@@ -73,7 +73,6 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
         name: item.name,
       };
     }),
-    course_instructors: [],
     enable_qna: courseDetails.enable_qna === 'yes' ? true : false,
     is_public_course: courseDetails.is_public_course === 'yes' ? true : false,
     course_level: courseDetails.course_level,
@@ -88,6 +87,14 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
     contentDripType: courseDetails.course_settings.content_drip_type ?? '',
     course_product_id: String(courseDetails.course_pricing.product_id),
+    course_instructors: courseDetails.course_instructors.map((item) => {
+      return {
+        id: item.id,
+        name: item.display_name,
+        email: item.user_email,
+        avatar_url: item.avatar_url,
+      };
+    }),
   };
 };
 

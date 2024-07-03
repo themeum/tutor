@@ -2,7 +2,7 @@ import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
-import type { User } from '@Services/users';
+import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
@@ -246,6 +246,7 @@ export interface CourseDetailsResponse {
     sale_price: string;
     type: string;
   };
+  course_instructors: InstructorListResponse[];
 }
 
 interface CourseResponse {
@@ -348,17 +349,27 @@ export const useGetProductsQuery = () => {
   });
 };
 
-const getProductDetails = (productId: string) => {
+const getProductDetails = (productId: string, courseId: string) => {
   return authApiInstance.post<WcProductDetailsPayload, AxiosResponse<WcProductDetailsResponse>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_get_wc_product',
     product_id: productId,
+    course_id: courseId,
   });
 };
 
-export const useProductDetailsQuery = (productId: string) => {
+export const useProductDetailsQuery = (productId: string, courseId: string, coursePriceType: string) => {
+  const { showToast } = useToast();
+
   return useQuery({
     queryKey: ['WcProductDetails', productId],
-    queryFn: () => getProductDetails(productId).then((res) => res.data),
-    enabled: !!productId,
+    queryFn: () =>
+      getProductDetails(productId, courseId).then((res) => {
+        if (typeof res.data === 'string') {
+          showToast({ type: 'danger', message: res.data });
+          return null;
+        }
+        return res.data;
+      }),
+    enabled: !!productId && coursePriceType === 'paid',
   });
 };
