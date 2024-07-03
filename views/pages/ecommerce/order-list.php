@@ -247,7 +247,9 @@ $total_items = $get_orders['total_count'];
 										<?php echo wp_kses_post( tutor_utils()->tutor_price( $order->total_price ) ); ?>
 									</td>
 									<td>
-										Action
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-orders&id=' . $order->id ) ); ?>">
+											<?php esc_html_e( 'Edit', 'tutor' );?>
+										</a>
 									</td>
 								</tr>
 							<?php endforeach; ?>
