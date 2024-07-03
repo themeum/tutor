@@ -380,7 +380,7 @@ export const useProductDetailsQuery = (productId: string, courseId: string, cour
   const { showToast } = useToast();
 
   return useQuery({
-    queryKey: ['WcProductDetails', productId],
+    queryKey: ['WcProductDetails', productId, courseId],
     queryFn: () =>
       getProductDetails(productId, courseId).then((res) => {
         if (typeof res.data === 'string') {
