@@ -2,19 +2,21 @@
 /**
  * Manage Order
  *
- * @package Tutor\Order
+ * @package Tutor\Ecommerce
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 3.0.0
  */
 
 namespace Tutor\Ecommerce;
 
 use TUTOR\Backend_Page_Trait;
+use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * OrderController class
  *
- * @since 2.0.0
+ * @since 3.0.0
  */
 class OrderController {
 	/**
@@ -30,8 +32,12 @@ class OrderController {
 	 *
 	 * @var $page_title
 	 */
-
 	use Backend_Page_Trait;
+
+	/**
+	 * Trait for sending JSON response
+	 */
+	use JsonResponse;
 
 	/**
 	 * Page Title
@@ -51,35 +57,76 @@ class OrderController {
 	 * Constructor
 	 *
 	 * @return void
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
 		$this->page_title = __( 'Orders', 'tutor' );
+
+		if ( ! $register_hooks ) {
+			return;
+		}		
+
+		/**
+		 * Handle ajax request for getting order related data by order id
+		 *
+		 * @since 3.0.0
+		 */
+		add_action( 'wp_ajax_nopriv_tutor_order_details', array( $this, 'get_order_by_id' ) );
+
 		/**
 		 * Handle bulk action
 		 *
-		 * @since v2.0.0
+		 * @since 3.0.0
 		 */
 		add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
 		/**
 		 * Handle ajax request for updating order status
 		 *
-		 * @since v2.0.0
+		 * @since 3.0.0
 		 */
 		add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
 		/**
 		 * Handle ajax request for delete order
 		 *
-		 * @since v2.0.0
+		 * @since 3.0.0
 		 */
 		add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
+	}
+
+	/**
+	 * Get Order data by order id
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function get_order_by_id() {
+
+		$order_id = Input::post( 'tutor_order_id' );
+
+		if ( empty( $order_id) ) {
+			$this->json_response(
+				__( 'Order Id is required', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$order_model = new OrderModel();
+
+		$order_data = $order_model->get_order_by_id( $order_id );
+
+		$this->json_response(
+			__( 'Order retrieved successfully', 'tutor' ),
+			$order_data
+		);
 	}
 
 	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @return array
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public function prepare_bulk_actions(): array {
 		$actions = array(
@@ -110,7 +157,7 @@ class OrderController {
 	 *
 	 * @return array
 	 *
-	 * @since v2.0.0
+	 * @since 3.0.0
 	 */
 	public function tabs_key_value( $category_slug, $order_id, $date, $search ): array {
 		$url = get_pagenum_link();
@@ -188,14 +235,14 @@ class OrderController {
 	 *
 	 * @return int
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	protected static function count_order( string $status, $order_id = '', $date = '', $search_term = '' ): int {
-		$user_id       = get_current_user_id();
-		$status        = sanitize_text_field( $status );
-		$order_id      = sanitize_text_field( $order_id );
-		$date          = sanitize_text_field( $date );
-		$search_term   = sanitize_text_field( $search_term );
+		$user_id     = get_current_user_id();
+		$status      = sanitize_text_field( $status );
+		$order_id    = sanitize_text_field( $order_id );
+		$date        = sanitize_text_field( $date );
+		$search_term = sanitize_text_field( $search_term );
 
 		$args = array(
 			'post_type' => tutor()->order_post_type,
@@ -241,14 +288,13 @@ class OrderController {
 		$the_query = new \WP_Query( $args );
 
 		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : $the_query;
-
 	}
 
 	/**
 	 * Handle bulk action for enrollment cancel | delete
 	 *
 	 * @return void
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public function order_list_bulk_action() {
 
@@ -303,7 +349,7 @@ class OrderController {
 	 * Handle ajax request for updating order status
 	 *
 	 * @return void
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public static function tutor_change_order_status() {
 		tutor_utils()->checking_nonce();
@@ -340,14 +386,14 @@ class OrderController {
 	/**
 	 * Handle ajax request for deleting order
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 *
 	 * @return void JSON response
 	 */
 	public static function tutor_order_delete() {
 		tutor_utils()->checking_nonce();
 
-		$user_id   = get_current_user_id();
+		$user_id  = get_current_user_id();
 		$order_id = Input::post( 'id', 0, Input::TYPE_INT );
 
 		// Check if user is privileged.
@@ -371,7 +417,7 @@ class OrderController {
 	 *
 	 * @param string $bulk_ids ids that need to update.
 	 * @return bool
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public static function bulk_delete_order( $bulk_ids ): bool {
 		$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
@@ -391,7 +437,7 @@ class OrderController {
 	 *
 	 * @return bool
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public static function update_order_status( string $status, $bulk_ids ): bool {
 		global $wpdb;

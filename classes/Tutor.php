@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\Init;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -542,6 +544,9 @@ final class Tutor {
 		$this->instructor_list = new Instructors_List();
 		$this->course_embed    = new Course_Embed();
 		$this->rest_auth       = new RestAuth();
+
+		//@since 3.0.0 tutor ecommerce init
+		new Init();
 
 		/**
 		 * Run Method
