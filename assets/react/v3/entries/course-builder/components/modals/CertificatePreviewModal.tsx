@@ -9,6 +9,7 @@ import Tooltip from '@Atoms/Tooltip';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import type { Certificate } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
+import Show from '@Controls/Show';
 
 export interface CertificatePreviewModalProps {
   certificates: Certificate[];
@@ -69,11 +70,21 @@ const CertificatePreviewModal = ({
                   <SVGIcon name="cross" width={40} height={40} />
                 </button>
               </Tooltip>
-              <Tooltip content={__('Edit in Certificate Builder', 'tutor')}>
-                <button type="button" css={[styles.actionButton, styles.editButton]}>
-                  <SVGIcon name="edit" width={40} height={40} />
-                </button>
-              </Tooltip>
+              <Show when={currentCertificate.url}>
+                {(editUrl) => (
+                  <Tooltip content={__('Edit in Certificate Builder', 'tutor')}>
+                    <button
+                      type="button"
+                      css={[styles.actionButton, styles.editButton]}
+                      onClick={() => {
+                        window.open(editUrl, '_blank');
+                      }}
+                    >
+                      <SVGIcon name="edit" width={40} height={40} />
+                    </button>
+                  </Tooltip>
+                )}
+              </Show>
             </div>
           </div>
         </div>
