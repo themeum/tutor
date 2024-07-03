@@ -572,6 +572,18 @@ class Admin {
 	 * @return void
 	 */
 	public function orders_view() {
+		$order_id = Input::get( 'id', null, Input::TYPE_INT );
+
+		if ( ! is_null( $order_id ) ) {
+			?>
+				<div class="tutor-admin-wrap">
+					<div class="tutor-order-details-root">
+					</div>
+				</div>
+			<?php
+			return;
+		}
+
 		include tutor()->path . 'views/pages/ecommerce/order-list.php';
 	}
 
@@ -583,6 +595,17 @@ class Admin {
 	 * @return void
 	 */
 	public function coupons_view() {
+		$coupon_id = Input::get( 'id', null, Input::TYPE_INT );
+
+		if ( ! is_null( $coupon_id ) ) {
+			?>
+				<div class="tutor-admin-wrap">
+					<div class="tutor-coupon-root">
+					</div>
+				</div>
+			<?php
+			return;
+		}
 		include tutor()->path . 'views/pages/ecommerce/coupon-list.php';
 	}
 

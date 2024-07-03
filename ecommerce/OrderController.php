@@ -191,11 +191,11 @@ class OrderController {
 	 * @since 2.0.0
 	 */
 	protected static function count_order( string $status, $order_id = '', $date = '', $search_term = '' ): int {
-		$user_id       = get_current_user_id();
-		$status        = sanitize_text_field( $status );
-		$order_id      = sanitize_text_field( $order_id );
-		$date          = sanitize_text_field( $date );
-		$search_term   = sanitize_text_field( $search_term );
+		$user_id     = get_current_user_id();
+		$status      = sanitize_text_field( $status );
+		$order_id    = sanitize_text_field( $order_id );
+		$date        = sanitize_text_field( $date );
+		$search_term = sanitize_text_field( $search_term );
 
 		$args = array(
 			'post_type' => tutor()->order_post_type,
@@ -347,7 +347,7 @@ class OrderController {
 	public static function tutor_order_delete() {
 		tutor_utils()->checking_nonce();
 
-		$user_id   = get_current_user_id();
+		$user_id  = get_current_user_id();
 		$order_id = Input::post( 'id', 0, Input::TYPE_INT );
 
 		// Check if user is privileged.
@@ -410,5 +410,47 @@ class OrderController {
 		);
 
 		return true;
+	}
+
+	/**
+	 * Get orders list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array  $where where clause conditions.
+	 * @param int    $limit limit default 10.
+	 * @param int    $offset default 0.
+	 * @param string $order_by column default 'o.id'.
+	 * @param string $order list order default 'desc'.
+	 *
+	 * @return array
+	 */
+	public static function get_orders( array $where = array(), int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
+
+		global $wpdb;
+
+		$primary_table  = "{$wpdb->prefix}tutor_orders o";
+		$joining_tables = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->users} u",
+				'on'    => 'o.user_id = u.ID',
+			),
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->usermeta} um1",
+				'on'    => 'u.ID = um1.user_id AND um1.meta_key = "tutor_customer_billing_name"',
+			),
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->usermeta} um2",
+				'on'    => 'u.ID = um2.user_id AND um2.meta_key = "tutor_customer_billing_name"',
+			),
+		);
+
+		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
+
+		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $order_by, $limit, $offset, $order );
+
 	}
 }
