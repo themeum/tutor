@@ -54,6 +54,7 @@ export const courseDefaultData: CourseFormData = {
   course_product_id: '',
   preview_link: '',
   course_prerequisites: [],
+  tutor_course_certificate_template: '',
 };
 
 export interface CourseFormData {
@@ -92,6 +93,7 @@ export interface CourseFormData {
   course_product_id: string;
   preview_link: string;
   course_prerequisites: PrerequisiteCourses[];
+  tutor_course_certificate_template: string;
 }
 
 export interface CoursePayload {
@@ -136,6 +138,7 @@ export interface CoursePayload {
   };
   preview_link: string;
   _tutor_course_prerequisites_ids: string[];
+  tutor_course_certificate_template: string;
 }
 
 interface CourseDetailsPayload {
@@ -255,6 +258,8 @@ export interface CourseDetailsResponse {
   course_instructors: InstructorListResponse[];
   preview_link: string;
   course_prerequisites: PrerequisiteCourses[];
+  course_certificate_template: string;
+  course_certificates_templates: Certificate[];
 }
 
 interface CourseResponse {
@@ -293,6 +298,15 @@ export interface PrerequisiteCourses {
   id: number;
   post_title: string;
   featured_image: string;
+}
+
+export interface Certificate {
+  name: string;
+  orientation: 'landscape' | 'portrait';
+  url: string;
+  preview_src: string;
+  background_src: string;
+  key: string;
 }
 
 const createCourse = (payload: CoursePayload) => {
