@@ -863,28 +863,31 @@ final class Tutor {
 
 		$orders_table = "CREATE TABLE {$wpdb->prefix}tutor_orders (
 			id BIGINT(20) UNSIGNED AUTO_INCREMENT,
-			payment_id BIGINT(20) UNSIGNED COMMENT 'Unique payment id from payment gateway',
+			transaction_id BIGINT(20) UNSIGNED COMMENT 'Transaction id from payment gateway',
 			user_id BIGINT(20) UNSIGNED NOT NULL,
-			status ENUM('pending', 'completed', 'cancelled', 'refunded', 'partially-refunded') NOT NULL,
-			sub_total_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
+			order_status VARCHAR(50) NOT NULL,
+			payment_status VARCHAR(50) NOT NULL,
+			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
 			total_price DECIMAL(13, 2) NOT NULL,
-			order_price DECIMAL(13, 2) NOT NULL,
+			order_price DECIMAL(13, 2) NOT NULL, -- final price
 			coupon_code VARCHAR(255),
 			discount_type ENUM('percentage', 'flat'),
 			discount_amount DECIMAL(13, 2),
-			tax DECIMAL(13, 2) COMMENT 'Tax percentage',
+			discount_reason TEXT,
+			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
 			tax_amount DECIMAL(13, 2),
-			fees DECIMAL(13, 2),
-			earnings DECIMAL(13, 2),
+			fees DECIMAL(13, 2), -- payment gateway fees
+			earnings DECIMAL(13, 2), -- net earning
 			payment_method VARCHAR(255),
 			payment_payloads LONGTEXT,
 			note TEXT,
-			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at_gmt DATETIME NOT NULL,
+			updated_at_gmt DATETIME,
 			PRIMARY KEY (id),
 			KEY user_id (user_id),
-			KEY payment_id (payment_id),
-			KEY status (status)
+			KEY payment_status (payment_status),
+			KEY order_status (order_status),
+			KEY transaction_id (transaction_id)
 		) $charset_collate;";
 
 		$order_meta_table = "CREATE TABLE {$wpdb->prefix}tutor_ordermeta (
@@ -914,19 +917,21 @@ final class Tutor {
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			coupon_code VARCHAR(50) NOT NULL,
+			coupon_title VARCHAR(255) NOT NULL,
+			coupon_description TEXT,
 			discount_type ENUM('percentage', 'flat') NOT NULL,
 			discount_amount DECIMAL(13, 2) NOT NULL,
 			total_usage_limit INT(10) UNSIGNED,
 			per_user_usage_limit INT(10) UNSIGNED,
 			coupon_type VARCHAR(100) NOT NULL, -- product specific or category or all
-			utc_start_date DATETIME NOT NULL,
-			utc_expire_date DATETIME DEFAULT NULL,
-			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			start_date_gmt DATETIME NOT NULL,
+			expire_date_gmt DATETIME DEFAULT NULL,
+			created_at_gmt DATETIME NOT NULL,
+			updated_at_gmt DATETIME,
 			PRIMARY KEY (id),
 			UNIQUE KEY coupon_code (coupon_code),
-			KEY start_date (utc_start_date),
-			KEY expire_date (utc_expire_date)
+			KEY start_date_gmt (start_date_gmt),
+			KEY expire_date_gmt (expire_date_gmt)
 		) $charset_collate;";
 
 		$coupon_applications_table = "CREATE TABLE {$wpdb->prefix}tutor_coupon_applications (
@@ -952,8 +957,8 @@ final class Tutor {
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			user_id BIGINT(20) UNSIGNED DEFAULT NULL,
 			coupon_code VARCHAR(50) DEFAULT NULL,
-			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			created_at_gmt DATETIME NOT NULL,
+			updated_at_gmt DATETIME,
 			PRIMARY KEY (id),
 			KEY user_id (user_id),
 			KEY coupon_code (coupon_code),

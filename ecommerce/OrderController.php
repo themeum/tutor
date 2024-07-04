@@ -457,4 +457,46 @@ class OrderController {
 
 		return true;
 	}
+
+	/**
+	 * Get orders list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array  $where where clause conditions.
+	 * @param int    $limit limit default 10.
+	 * @param int    $offset default 0.
+	 * @param string $order_by column default 'o.id'.
+	 * @param string $order list order default 'desc'.
+	 *
+	 * @return array
+	 */
+	public static function get_orders( array $where = array(), int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
+
+		global $wpdb;
+
+		$primary_table  = "{$wpdb->prefix}tutor_orders o";
+		$joining_tables = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->users} u",
+				'on'    => 'o.user_id = u.ID',
+			),
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->usermeta} um1",
+				'on'    => 'u.ID = um1.user_id AND um1.meta_key = "tutor_customer_billing_name"',
+			),
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->usermeta} um2",
+				'on'    => 'u.ID = um2.user_id AND um2.meta_key = "tutor_customer_billing_name"',
+			),
+		);
+
+		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
+
+		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $order_by, $limit, $offset, $order );
+
+	}
 }

@@ -100,9 +100,25 @@ function tutor_get_translate_text() {
 			'badge' => 'warning',
 			'text'  => __( 'On Hold', 'tutor' ),
 		),
-		'publish'    => array(
+		'partially-refunded' => array(
+			'badge' => 'warning',
+			'text'  => __( 'Partially Refunded', 'tutor' ),
+		),
+		'refunded' => array(
+			'badge' => 'danger',
+			'text'  => __( 'Refunded', 'tutor' ),
+		),
+		'unpaid' => array(
+			'badge' => 'default',
+			'text'  => __( 'Unpaid', 'tutor' ),
+		),
+		'paid' => array(
 			'badge' => 'success',
-			'text'  => __( 'Publish', 'tutor' ),
+			'text'  => __( 'Paid', 'tutor' ),
+		),
+		'partially-paid'    => array(
+			'badge' => 'success',
+			'text'  => __( 'Partially Paid', 'tutor' ),
 		),
 		'trash'      => array(
 			'badge' => 'danger',
