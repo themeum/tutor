@@ -1,7 +1,6 @@
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
-import { isDefined } from '@Utils/types';
 
 interface AvatarProps {
   image?: string;
@@ -9,7 +8,7 @@ interface AvatarProps {
 }
 
 export function Avatar({ image, name }: AvatarProps) {
-  if (!isDefined(image)) {
+  if (!image) {
     return <AvatarFallback name={name} />;
   }
 
@@ -58,7 +57,7 @@ const styles = {
   placeholder: css`
 		width: 32px;
 		height: 32px;
-		background-color: ${colorTokens.text.status.processing};
+		background-color: ${colorTokens.action.primary.wp};
 		display: flex;
 		justify-content: center;
 		align-items: center;

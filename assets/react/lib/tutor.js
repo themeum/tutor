@@ -1,4 +1,4 @@
-import '../../../v2-library/_src/js/main';
+import '../../../v2-library/src/js/main';
 
 window.tutor_get_nonce_data = function(send_key_value) {
 	var nonce_data = window._tutorobject || {};

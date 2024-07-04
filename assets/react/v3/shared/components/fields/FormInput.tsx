@@ -1,51 +1,24 @@
+import { type SerializedStyles, css } from '@emotion/react';
+import { useState } from 'react';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+
+import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
+
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import type { FormControllerProps } from '@Utils/form';
-import { type SerializedStyles, css } from '@emotion/react';
 
 import Show from '@Controls/Show';
+
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { parseNumberOnly } from '@Utils/util';
-import FormFieldWrapper from './FormFieldWrapper';
-
-const styles = {
-  container: (isClearable: boolean) => css`
-    position: relative;
-    display: flex;
-
-    & input {
-      ${isClearable && `padding-right: ${spacing[36]};`};
-      ${typography.body()}
-      width: 100%;
-      border: 1px solid ${colorTokens.stroke.default};
-      border-radius: ${borderRadius[6]};
-
-      :focus {
-        border-color: transparent;
-        box-shadow: ${shadow.focus};
-      }
-    }
-  `,
-  clearButton: css`
-    position: absolute;
-    right: ${spacing[2]};
-    top: ${spacing[2]};
-    width: 36px;
-    height: 36px;
-    border-radius: ${borderRadius[2]};
-    background: transparent;
-
-    button {
-      padding: ${spacing[10]};
-    }
-  `,
-};
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string;
-  type?: 'number' | 'text';
+  type?: 'number' | 'text' | 'password';
   maxLimit?: number;
   disabled?: boolean;
   readOnly?: boolean;
@@ -60,6 +33,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   removeBorder?: boolean;
   dataAttribute?: string;
   isInlineLabel?: boolean;
+  isPassword?: boolean;
   style?: SerializedStyles;
 }
 
@@ -82,8 +56,11 @@ const FormInput = ({
   removeBorder,
   dataAttribute,
   isInlineLabel = false,
+  isPassword = false,
   style,
 }: FormInputProps) => {
+  const [fieldType, setFieldType] = useState<typeof type>(type);
+
   let inputValue = field.value ?? '';
   let characterCount:
     | {
@@ -92,7 +69,7 @@ const FormInput = ({
       }
     | undefined = undefined;
 
-  if (type === 'number') {
+  if (fieldType === 'number') {
     inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
   }
 
@@ -122,7 +99,6 @@ const FormInput = ({
       inputStyle={style}
     >
       {(inputProps) => {
-        console.log(inputProps);
         return (
           <>
             <div css={styles.container(isClearable)}>
@@ -130,12 +106,12 @@ const FormInput = ({
                 {...field}
                 {...inputProps}
                 {...additionalAttributes}
-                type="text"
+                type={fieldType === 'number' ? 'text' : fieldType}
                 value={inputValue}
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  const fieldValue: string | number = type === 'number' ? parseNumberOnly(value) : value;
+                  const fieldValue: string | number = fieldType === 'number' ? parseNumberOnly(value) : value;
 
                   field.onChange(fieldValue);
 
@@ -144,6 +120,7 @@ const FormInput = ({
                   }
                 }}
                 onKeyDown={(event) => {
+                  event.stopPropagation();
                   onKeyDown?.(event.key);
                 }}
                 autoComplete="off"
@@ -155,7 +132,18 @@ const FormInput = ({
                   </Button>
                 </div>
               )}
-              <Show when={isClearable && !!field.value}>
+              <Show when={isPassword}>
+                <div css={styles.eyeButtonWrapper}>
+                  <button
+                    type="button"
+                    css={styles.eyeButton({ type: fieldType })}
+                    onClick={() => setFieldType((prev) => (prev === 'password' ? 'text' : 'password'))}
+                  >
+                    <SVGIcon name="eye" height={24} width={24} />
+                  </button>
+                </div>
+              </Show>
+              <Show when={isClearable && !!field.value && fieldType !== 'password'}>
                 <div css={styles.clearButton}>
                   <Button variant="text" onClick={() => field.onChange(null)}>
                     <SVGIcon name="timesAlt" />
@@ -171,3 +159,55 @@ const FormInput = ({
 };
 
 export default FormInput;
+
+const styles = {
+  container: (isClearable: boolean) => css`
+    position: relative;
+    display: flex;
+
+    & input {
+      ${isClearable && `padding-right: ${spacing[36]};`};
+      ${typography.body()}
+      width: 100%;
+    }
+  `,
+  clearButton: css`
+    position: absolute;
+    right: ${spacing[2]};
+    top: ${spacing[2]};
+    width: 36px;
+    height: 36px;
+    border-radius: ${borderRadius[2]};
+    background: transparent;
+
+    button {
+      padding: ${spacing[10]};
+    }
+  `,
+  eyeButtonWrapper: css`
+    position: absolute;
+    right: ${spacing[4]};
+    top: -${spacing[2]};
+    width: 36px;
+    height: 36px;
+    border-radius: ${borderRadius[2]};
+    background: transparent;
+  `,
+
+  eyeButton: ({
+    type,
+  }: {
+    type: 'password' | 'text' | 'number';
+  }) => css`
+    ${styleUtils.resetButton}
+    padding: ${spacing[10]};
+    color: ${colorTokens.icon.default};
+
+    ${
+      type !== 'password' &&
+      css`
+        color: ${colorTokens.icon.brand};
+      `
+    }
+  `,
+};

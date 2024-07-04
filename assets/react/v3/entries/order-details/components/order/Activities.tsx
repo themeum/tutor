@@ -1,15 +1,21 @@
 import { Box, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { useOrderContext } from '@OrderContexts/order-context';
 import { requiredRule } from '@Utils/validation';
 import { __ } from '@wordpress/i18n';
+import { format } from 'date-fns';
 import { Controller } from 'react-hook-form';
 
 function Activities() {
+  const { order } = useOrderContext();
   const form = useFormWithGlobalError<{ comment: string }>({
     defaultValues: {
       comment: '',
@@ -38,30 +44,30 @@ function Activities() {
                   <FormTextareaInput
                     {...props}
                     label={__('Add a comment (Only you and other staff can see comments)', 'tutor')}
-                    rows={5}
+                    rows={3}
                   />
                 )}
               />
               <Button type="submit" variant="primary" size="small" isOutlined>
-                Post
+                {__('Post', 'tutor')}
               </Button>
             </form>
           </div>
-          <div css={styles.activityItem}>
-            <span css={styles.dot} />
-            <div css={styles.innerContent}>
-              <span>Nov 16, 2024 10:17 AM</span>
-              <span>You sent an order invoice to</span>
-              <span>example@gmail.com</span>
-            </div>
-          </div>
-          <div css={styles.activityItem}>
-            <span css={styles.dot} />
-            <div css={styles.innerContent}>
-              <span>Nov 16, 2024 10:17 AM</span>
-              <span>Nikola Tesla placed an order</span>
-            </div>
-          </div>
+          <Show when={order.activities}>
+            {(activities) => (
+              <For each={activities}>
+                {(activity) => (
+                  <div css={styles.activityItem} key={activity.id}>
+                    <span css={styles.dot} />
+                    <div css={styles.innerContent}>
+                      <span>{format(new Date(activity.date), DateFormats.activityDate)}</span>
+                      <span>{activity.message}</span>
+                    </div>
+                  </div>
+                )}
+              </For>
+            )}
+          </Show>
         </div>
       </div>
     </Box>

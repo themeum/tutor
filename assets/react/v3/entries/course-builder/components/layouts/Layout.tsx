@@ -2,17 +2,15 @@ import { colorTokens, containerMaxWidth, headerHeight } from '@Config/styles';
 import Header from '@CourseBuilderComponents/layouts/Header';
 import { CourseNavigatorProvider } from '@CourseBuilderContexts/CourseNavigatorContext';
 import { type CourseFormData, courseDefaultData, useCourseDetailsQuery } from '@CourseBuilderServices/course';
-import { convertCourseDataToFormData } from '@CourseBuilderUtils/utils';
+import { convertCourseDataToFormData, getCourseId } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
-import Notebook from '@CourseBuilderComponents/layouts/Notebook';
 
 const Layout = () => {
-  const params = new URLSearchParams(window.location.search);
-  const courseId = params.get('course_id');
+  const courseId = getCourseId();
 
   const form = useFormWithGlobalError<CourseFormData>({
     defaultValues: courseDefaultData,
@@ -40,7 +38,7 @@ const Layout = () => {
             {/* Placeholder div for allocating the 1fr space */}
             <div />
           </div>
-          <Notebook />
+          {/* <Notebook /> */}
         </div>
       </CourseNavigatorProvider>
     </FormProvider>

@@ -1,15 +1,21 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import { TutorBadge } from '@Atoms/TutorBadge';
 import Container from '@Components/Container';
+import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { css } from '@emotion/react';
-import { Badge } from '@OrderAtoms/Badge';
+import { useOrderContext } from '@OrderContexts/order-context';
 import { styleUtils } from '@Utils/style-utils';
+import { __ } from '@wordpress/i18n';
+import { format } from 'date-fns';
 
 export const TOPBAR_HEIGHT = 96;
 
 function Topbar() {
+  const { order } = useOrderContext();
   return (
     <div css={styles.wrapper}>
       <Container>
@@ -20,14 +26,31 @@ function Topbar() {
             </button>
             <div>
               <div css={styles.headerContent}>
-                <h4 css={typography.heading5('medium')}>Order #45</h4>
-                <Badge variant="warning">Pending</Badge>
-                <Badge variant="success">Paid</Badge>
-                <Badge variant="secondary">Partially Refunded</Badge>
-                <Badge variant="critical">Fully Refunded</Badge>
-                <Badge variant="secondary">Cancelled</Badge>
+                <h4 css={typography.heading5('medium')}>
+                  {__('Order', 'tutor')} #{order.id}
+                </h4>
+                <TutorBadge variant="warning">Pending</TutorBadge>
+                <TutorBadge variant="success">Paid</TutorBadge>
+                <TutorBadge variant="secondary">Partially Refunded</TutorBadge>
+                <TutorBadge variant="critical">Fully Refunded</TutorBadge>
+                <TutorBadge variant="secondary">Cancelled</TutorBadge>
               </div>
-              <p css={styles.updateMessage}>Updated by Jhon Doe Today at 12:24 pm</p>
+              <Show
+                when={order.updated_at}
+                fallback={
+                  <p css={styles.updateMessage}>
+                    {__('Created by ')} {order.user} {__(' at ', 'tutor')}
+                    {format(new Date(order.created_at), DateFormats.activityDate)}
+                  </p>
+                }
+              >
+                {(date) => (
+                  <p css={styles.updateMessage}>
+                    {__('Update by ')} {order.user} {__(' at ', 'tutor')}
+                    {format(new Date(date), DateFormats.activityDate)}
+                  </p>
+                )}
+              </Show>
             </div>
           </div>
           <Button variant="tertiary" onClick={() => alert('@TODO: will be implemented later.')}>

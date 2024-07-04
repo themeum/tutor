@@ -42,8 +42,8 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
     defaultValues: discount,
   });
   const type = form.watch('type');
-  const value = form.watch('value');
-  const content = type === 'fixed' ? '$' : '%';
+  const value = form.watch('amount');
+  const content = type === 'flat' ? '$' : '%';
   const priceAfterDiscount = useMemo(() => {
     return type === 'percentage' ? total_price - calculatePercentage(total_price, value) : total_price - value;
   }, [type, value, total_price]);
@@ -75,7 +75,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
             />
             <Controller
               control={form.control}
-              name="value"
+              name="amount"
               rules={{ ...requiredRule() }}
               render={(props) => (
                 <FormInputWithContent
