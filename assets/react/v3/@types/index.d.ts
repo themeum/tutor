@@ -66,6 +66,7 @@ declare global {
       settings: {
         monetize_by: 'wc' | 'tutor' | 'edd';
         enable_course_marketplace: string;
+        course_permalink_base: string;
         supported_video_sources: string[] | string;
       };
     };

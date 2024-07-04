@@ -24,6 +24,7 @@ export interface CourseVideo {
   source: string;
   source_video_id: string;
   poster: string;
+  poster_url: string;
   source_external_url: string;
   source_shortcode: string;
   source_youtube: string;
@@ -79,6 +80,7 @@ const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<Course
     source: 'html5',
     source_video_id: '',
     poster: '',
+    poster_url: '',
     source_external_url: '',
     source_shortcode: '',
     source_youtube: '',
@@ -98,8 +100,9 @@ const FormVideoInput = ({
   onChange,
   supportedFormats,
 }: FormVideoInputProps) => {
-  const [posterUrl, setPosterUrl] = useState<string | null>(null);
   const form = useFormWithGlobalError<URLFormData>();
+
+  console.log(field.value);
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -159,11 +162,10 @@ const FormVideoInput = ({
     const attachment = posterUploader.state().get('selection').first().toJSON();
     const { id, url } = attachment;
 
-    setPosterUrl(url);
-
     field.onChange(
       updateFieldValue(fieldValue, {
         poster: id,
+        poster_url: url,
       })
     );
 
@@ -171,6 +173,7 @@ const FormVideoInput = ({
       onChange(
         updateFieldValue(fieldValue, {
           poster: id,
+          poster_url: url,
         })
       );
     }
@@ -188,6 +191,7 @@ const FormVideoInput = ({
     field.onChange(
       updateFieldValue(fieldValue, {
         poster: '',
+        poster_url: '',
       })
     );
 
@@ -195,6 +199,7 @@ const FormVideoInput = ({
       onChange(
         updateFieldValue(fieldValue, {
           poster: '',
+          poster_url: '',
         })
       );
     }
@@ -372,7 +377,7 @@ const FormVideoInput = ({
                               fieldValue
                                 ? {
                                     id: Number(fieldValue.poster),
-                                    url: posterUrl || fieldValue.poster,
+                                    url: fieldValue.poster_url,
                                     title: '',
                                   }
                                 : null
@@ -387,14 +392,6 @@ const FormVideoInput = ({
                             replaceButtonText={__('Replace Poster', 'tutor')}
                           />
                         </Show>
-
-                        {/* <div css={styles.duration}>{formatSeconds(videoDuration)}</div> */}
-
-                        {/* <div css={styles.hoverPreview} data-hover-buttons-wrapper>
-                        <Button variant="secondary" onClick={videoUploadHandler}>
-                          {__('Replace Video', 'tutor')}
-                        </Button>
-                      </div> */}
                       </div>
                     </div>
                   );

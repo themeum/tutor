@@ -5,6 +5,7 @@ import {
   type CourseDetailsResponse,
   useCourseDetailsQuery,
 } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useCurrentPath } from '@Hooks/useCurrentPath';
 import { isDefined } from '@Utils/types';
 import { noop } from '@Utils/util';
@@ -83,8 +84,7 @@ interface CourseNavigatorProviderProps {
 export const CourseNavigatorProvider = ({ children }: CourseNavigatorProviderProps) => {
   const [steps, setSteps] = useState<Step[]>(defaultSteps);
   const currentPath = useCurrentPath(routes);
-  const params = new URLSearchParams(window.location.search);
-  const courseId = params.get('course_id');
+  const courseId = getCourseId();
   const courseDetailsQuery = useCourseDetailsQuery(Number(courseId));
 
   const courseContent = useMemo(() => {

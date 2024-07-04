@@ -1,9 +1,9 @@
-import { borderRadius, colorPalate, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
 
-export type BadgeVariant = 'neutral' | 'neutralDefault' | 'informational' | 'success' | 'warning' | 'attention';
+export type BadgeVariant = 'neutral' | 'neutralDefault' | 'informational' | 'success' | 'warning' | 'attention' | 'success_fade';
 
 interface BadgeProps {
   children: ReactNode;
@@ -35,6 +35,9 @@ const colorMapping = {
   attention: {
     background: colorPalate.surface.critical.subDuedDepressed,
   },
+  success_fade: {
+    background: colorTokens.background.status.success
+  }
 } as const;
 
 const styles = {

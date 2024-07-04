@@ -1,3 +1,5 @@
+import { tutorConfig } from '@Config/config';
+import { Addons } from '@Config/constants';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -37,7 +39,27 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'additional_content[course_duration][minutes]': data.course_duration_minutes ?? 0,
     'additional_content[course_material_includes]': data.course_material_includes ?? '',
     'additional_content[course_requirements]': data.course_requirements ?? '',
-    course_instructor_ids: data.course_instructors.map((item) => item.id),
+    preview_link: data.preview_link,
+
+    ...(isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS) && {
+      course_instructor_ids: data.course_instructors.map((item) => item.id),
+    }),
+
+    ...(isAddonEnabled(Addons.TUTOR_PREREQUISITES) && {
+      _tutor_prerequisites_main_edit: true,
+      _tutor_course_prerequisites_ids: data.course_prerequisites?.map((item) => item.id) ?? [],
+    }),
+    tutor_course_certificate_template: data.tutor_course_certificate_template,
+    video: {
+      source: data.video.source,
+      source_video_id: data.video.source_video_id,
+      poster: data.video.poster,
+      source_external_url: data.video.source_external_url,
+      source_shortcode: data.video.source_shortcode,
+      source_youtube: data.video.source_youtube,
+      source_vimeo: data.video.source_vimeo,
+      source_embedded: data.video.source_embedded,
+    },
   };
 };
 
@@ -66,6 +88,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source: courseDetails.video.source ?? '',
       source_video_id: courseDetails.video.source_video_id ?? '',
       poster: courseDetails.video.poster ?? '',
+      poster_url: courseDetails.video.poster_url ?? '',
       source_external_url: courseDetails.video.source_external_url ?? '',
       source_shortcode: courseDetails.video.source_shortcode ?? '',
       source_youtube: courseDetails.video.source_youtube ?? '',
@@ -95,15 +118,20 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
     contentDripType: courseDetails.course_settings.content_drip_type ?? '',
-    course_product_id: String(courseDetails.course_pricing.product_id),
-    course_instructors: courseDetails.course_instructors.map((item) => {
-      return {
-        id: item.id,
-        name: item.display_name,
-        email: item.user_email,
-        avatar_url: item.avatar_url,
-      };
-    }),
+    course_product_id:
+      String(courseDetails.course_pricing.product_id) !== '0' ? String(courseDetails.course_pricing.product_id) : '',
+    course_instructors:
+      courseDetails.course_instructors?.map((item) => {
+        return {
+          id: item.id,
+          name: item.display_name,
+          email: item.user_email,
+          avatar_url: item.avatar_url,
+        };
+      }) ?? [],
+    preview_link: courseDetails.preview_link ?? '',
+    course_prerequisites: courseDetails.course_prerequisites ?? [],
+    tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     attachments: null,
   };
 };
@@ -112,4 +140,8 @@ export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
   const courseId = params.get('course_id');
   return Number(courseId);
+};
+
+export const isAddonEnabled = (addon: string) => {
+  return !!tutorConfig.addons_data.find((item) => item.name === addon)?.is_enabled;
 };

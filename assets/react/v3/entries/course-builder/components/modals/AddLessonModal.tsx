@@ -62,10 +62,10 @@ const AddLessonModal = ({ closeModal, icon, title, subtitle }: AddLessonModalPro
       actions={
         <>
           <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
-            Cancel
+            {__('Cancel', 'tutor')}
           </Button>
           <Button variant="primary" size="small" onClick={form.handleSubmit(onSubmit)}>
-            Save
+            {__('Save', 'tutor')}
           </Button>
         </>
       }

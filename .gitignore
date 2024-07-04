@@ -2,7 +2,6 @@ node_modules/
 assets/css/*
 !assets/css/.gitkeep
 assets/js/*
-!assets/js/lib/
 languages/*
 !languages/.gitkeep
 test/
@@ -37,7 +36,7 @@ v2-library/bundle/main.min.js.map
 v2-library/bundle/main.rtl.min.css
 v2-library/bundle/main.rtl.min.css.map
 vendor/
-!v2-library/_src/scss/structure/vendor
+!v2-library/src/scss/structure/vendor
 .phpunit.result.cache
 yarn.lock
 .env
