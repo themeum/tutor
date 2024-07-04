@@ -5,10 +5,6 @@ import DatePicker, { CalendarContainer } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CustomInput } from '../CustomInput';
 
-
-// import './TutorDatepicker.scss';
-// import '../../../bundle/main.min.css';
-
 const TutorDateTimePicker = () => {
 	const [startDate, setStartDate] = useState(new Date());
 	const [dropdownMonth, setDropdownMonth] = useState(false);

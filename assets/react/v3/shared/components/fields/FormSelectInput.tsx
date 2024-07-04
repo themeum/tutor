@@ -7,7 +7,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { type IconCollection, type Option, isDefined } from '@Utils/types';
 import { css } from '@emotion/react';
-import { type ReactNode, useEffect, useMemo, useState, useRef } from 'react';
+import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
 import Show from '@Controls/Show';
 import { noop } from '@Utils/util';
@@ -35,6 +35,7 @@ type FormSelectInputProps<T> = {
   removeOptionsMinWidth?: boolean;
   leftIcon?: ReactNode;
   dataAttribute?: string;
+  isSecondary?: boolean;
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
@@ -57,6 +58,7 @@ const FormSelectInput = <T,>({
   leftIcon,
   removeBorder,
   dataAttribute,
+  isSecondary = false,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = () => options.find((item) => item.value === field.value);
 
@@ -111,6 +113,7 @@ const FormSelectInput = <T,>({
       isInlineLabel={isInlineLabel}
       helpText={helpText}
       removeBorder={removeBorder}
+      isSecondary={isSecondary}
     >
       {(inputProps) => {
         const { css: inputCss, ...restInputProps } = inputProps;
@@ -300,6 +303,7 @@ const styles = {
     cursor: pointer;
     padding-right: ${spacing[32]};
     ${styleUtils.textEllipsis};
+    background-color: transparent;
 
     ${
       hasLeftIcon &&

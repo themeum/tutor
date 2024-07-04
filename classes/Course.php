@@ -298,19 +298,14 @@ class Course extends Tutor_Base {
 	 */
 	public function validate_video_source( $params, &$errors ) {
 		if ( isset( $params['video'] ) ) {
-			$video_source_type = isset( $params['video']['source_type'] ) ? $params['video']['source_type'] : '';
-			$video_source      = isset( $params['video']['source'] ) ? $params['video']['source'] : '';
-
-			if ( '' === $video_source_type ) {
-				$errors['video_source_type'] = __( 'Video source type is required', 'tutor' );
-			} else {
-				if ( ! $this->is_valid_video_source_type( $video_source_type ) ) {
-					$errors['video_source_type'] = __( 'Invalid video source type', 'tutor' );
-				}
-			}
+			$video_source = isset( $params['video']['source'] ) ? $params['video']['source'] : '';
 
 			if ( '' === $video_source ) {
 				$errors['video_source'] = __( 'Video source is required', 'tutor' );
+			} else {
+				if ( ! $this->is_valid_video_source_type( $video_source ) ) {
+					$errors['video_source'] = __( 'Invalid video source', 'tutor' );
+				}
 			}
 		}
 	}
@@ -486,13 +481,6 @@ class Course extends Tutor_Base {
 
 		$course_requirements = isset( $additional_content['course_requirements'] ) ? $additional_content['course_requirements'] : '';
 
-		if ( isset( $params['video'] ) ) {
-			$this->video_params['source'] = $params['video']['source_type'];
-
-			$this->video_params[ 'source_' . $params['video']['source_type'] ] = $params['video']['source'];
-			$_POST['video'] = $this->video_params;
-		}
-
 		$pricing = isset( $params['pricing'] ) ? array(
 			'type'       => $params['pricing']['type'] ?? self::PRICE_TYPE_FREE,
 			'product_id' => (int) $params['pricing']['product_id'] ?? -1,
@@ -585,13 +573,6 @@ class Course extends Tutor_Base {
 			if ( ! empty( $course_duration ) ) {
 				update_post_meta( $post_id, '_course_duration', $course_duration );
 			}
-		}
-
-		if ( isset( $params['video'] ) ) {
-			$this->video_params['source'] = $params['video']['source_type'];
-
-			$this->video_params[ 'source_' . $params['video']['source_type'] ] = $params['video']['source'];
-			update_post_meta( $post_id, '_video', $this->video_params );
 		}
 
 		if ( isset( $params['pricing'] ) && ! empty( $params['pricing'] ) ) {
@@ -933,6 +914,15 @@ class Course extends Tutor_Base {
 			'sale_price'   => $sale_price,
 		);
 
+		$video_intro = get_post_meta( $course_id, '_video', true );
+		if ( $video_intro ) {
+			$source = $video_intro['source'] ?? '';
+			if ( 'html5' === $source ) {
+				$poster_url                = wp_get_attachment_url( $video_intro['poster'] ?? 0 );
+				$video_intro['poster_url'] = $poster_url;
+			}
+		}
+
 		$course = get_post( $course_id, ARRAY_A );
 		$data   = array(
 			'preview_link'             => get_preview_post_link( $course_id ),
@@ -944,7 +934,7 @@ class Course extends Tutor_Base {
 			'enable_qna'               => get_post_meta( $course_id, '_tutor_enable_qa', true ),
 			'is_public_course'         => get_post_meta( $course_id, '_tutor_is_public_course', true ),
 			'course_level'             => get_post_meta( $course_id, '_tutor_course_level', true ),
-			'video'                    => get_post_meta( $course_id, '_video', true ),
+			'video'                    => $video_intro,
 			'course_duration'          => get_post_meta( $course_id, '_course_duration', true ),
 			'course_benefits'          => get_post_meta( $course_id, '_tutor_course_benefits', true ),
 			'course_requirements'      => get_post_meta( $course_id, '_tutor_course_requirements', true ),

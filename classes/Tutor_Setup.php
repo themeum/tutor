@@ -903,9 +903,9 @@ class Tutor_Setup {
 		$page = Input::get( 'page', '' );
 		if ( 'tutor-setup' === $page ) {
 			wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
-			wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.css', array(), TUTOR_VERSION );
-			wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/packages/slick/slick-theme.css', array(), TUTOR_VERSION );
-			wp_register_script( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/lib/slick/slick.css', array(), TUTOR_VERSION );
+			wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/lib/slick/slick-theme.css', array(), TUTOR_VERSION );
+			wp_register_script( 'tutor-slick', tutor()->url . 'assets/lib/slick/slick.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 			wp_register_script( 'tutor-setup-v2', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 			wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.min.js', array( 'jquery', 'tutor-slick', 'wp-i18n' ), TUTOR_VERSION, true );
 			wp_localize_script( 'tutor-setup', '_tutorobject', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
