@@ -2,8 +2,6 @@ import { borderRadius, colorPalate, containerMaxWidth, fontFamily, spacing } fro
 import { css } from '@emotion/react';
 
 export const createGlobalCss = () => css`
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
   #wpcontent {
     padding-left: 0;
   }
@@ -100,26 +98,6 @@ export const createGlobalCss = () => css`
     font-size: 100%;
     line-height: 1.15;
     margin: 0;
-  }
-
-  .tutor-order-details-wrapper {
-    input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week] {
-      font-family: inherit;
-      font-size: 100%;
-      line-height: 1.15;
-      margin: 0;
-      padding: 0 12px;
-      min-height: initial;
-      box-shadow: none;
-      background-color: initial;
-      color: currentColor;
-    }
-  
-    input[type=checkbox]:focus, input[type=color]:focus, input[type=date]:focus, input[type=datetime-local]:focus, input[type=datetime]:focus, input[type=email]:focus, input[type=month]:focus, input[type=number]:focus, input[type=password]:focus, input[type=radio]:focus, input[type=search]:focus, input[type=tel]:focus, input[type=text]:focus, input[type=time]:focus, input[type=url]:focus, input[type=week]:focus, select:focus, textarea:focus {
-      border-color: initial;
-      box-shadow: none;
-      outline: none;
-    }
   }
 
 

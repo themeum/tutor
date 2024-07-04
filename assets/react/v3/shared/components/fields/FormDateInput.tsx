@@ -144,7 +144,7 @@ const styles = {
     }
   `,
   input: css`
-    padding-left: ${spacing[40]};
+    padding-left: ${spacing[40]} !important;
   `,
   icon: css`
     position: absolute;

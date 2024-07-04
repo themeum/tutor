@@ -1,7 +1,7 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
@@ -136,7 +136,7 @@ const styles = {
     }
   `,
   input: css`
-    padding-left: ${spacing[40]};
+    padding-left: ${spacing[40]} !important;
   `,
   icon: css`
     position: absolute;

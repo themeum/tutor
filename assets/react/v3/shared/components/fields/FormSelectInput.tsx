@@ -94,12 +94,14 @@ const FormSelectInput = <T,>({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
       setInputValue(getInitialValue()?.label);
     }
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
   return (
@@ -286,7 +288,7 @@ const styles = {
   }) => css`
     position: absolute;
     left: ${spacing[8]};
-    top: ${spacing[4]};
+    top: ${spacing[6]};
     color: ${colorTokens.icon.default};
 
 		${
@@ -308,7 +310,7 @@ const styles = {
     ${
       hasLeftIcon &&
       css`
-      padding-left: ${spacing[48]};
+      padding-left: ${spacing[48]} !important;
     `
     }
 

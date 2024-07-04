@@ -48,6 +48,7 @@ function Activities() {
                   />
                 )}
               />
+              
               <Button type="submit" variant="primary" size="small" isOutlined>
                 {__('Post', 'tutor')}
               </Button>

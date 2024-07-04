@@ -107,8 +107,8 @@ const styles = {
     display: flex;
 
     textarea {
-      ${typography.body()}
-      height: auto;
+      ${typography.body()};
+      height: auto !important;
       padding: ${spacing[8]} ${spacing[12]};
       resize: none;
 

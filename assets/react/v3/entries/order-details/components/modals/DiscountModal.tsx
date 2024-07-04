@@ -70,6 +70,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
                   options={discountTypeOptions}
                   placeholder={__('Select discount type', 'tutor')}
                   isSearchable
+                  
                 />
               )}
             />
@@ -83,6 +84,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
                   label={__('Discount Value', 'tutor')}
                   content={content}
                   type="number"
+                  selectOnFocus
                 />
               )}
             />

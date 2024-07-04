@@ -6,7 +6,7 @@ import type { ProductDiscount } from './types';
 
 type Rule = UseControllerProps['rules'];
 
-export const requiredRule = (): Rule => ({
+export const requiredRule = (): object => ({
   required: { value: true, message: __('This field is required', 'tutor') },
 });
 
@@ -17,7 +17,7 @@ export const maxValueRule = ({ maxValue, message }: { maxValue: number; message?
   },
 });
 
-export const discountRule = (): Rule => ({
+export const discountRule = (): object => ({
   validate: (value?: ProductDiscount) => {
     if (value?.amount === undefined) {
       return __('The field is required', 'tutor');
@@ -26,7 +26,7 @@ export const discountRule = (): Rule => ({
   },
 });
 
-export const invalidDateRule = (): Rule => ({
+export const invalidDateRule = (): object => ({
   validate: (value?: string) => {
     if (!isValid(new Date(value || ''))) {
       return 'Invalid date entered!';
@@ -36,7 +36,7 @@ export const invalidDateRule = (): Rule => ({
   },
 });
 
-export const maxLimitRule = (maxLimit: number): Rule => ({
+export const maxLimitRule = (maxLimit: number): object => ({
   validate: (value?: string) => {
     if (value && maxLimit < value.length) {
       return __(`Maximum ${maxLimit} character supported`, 'tutor');
@@ -45,7 +45,7 @@ export const maxLimitRule = (maxLimit: number): Rule => ({
   },
 });
 
-export const invalidTimeRule = (): Rule => ({
+export const invalidTimeRule = (): object => ({
   validate: (value?: string) => {
     if (!value) {
       return undefined;

@@ -1,8 +1,8 @@
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
-import { type SerializedStyles, css } from '@emotion/react';
-import type { ReactNode } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+import { useRef, type ReactNode } from 'react';
 
 import { styleUtils } from '@Utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
@@ -24,6 +24,7 @@ interface FormInputWithContentProps extends FormControllerProps<string | number 
   isHidden?: boolean;
   wrapperCss?: SerializedStyles;
   removeBorder?: boolean;
+  selectOnFocus?: boolean;
 }
 
 const FormInputWithContent = ({
@@ -45,7 +46,9 @@ const FormInputWithContent = ({
   isHidden,
   wrapperCss,
   removeBorder = false,
+  selectOnFocus = false
 }: FormInputWithContentProps) => {
+  const ref = useRef<HTMLInputElement>(null);
   return (
     <FormFieldWrapper
       label={label}
@@ -85,6 +88,13 @@ const FormInputWithContent = ({
               onKeyDown={(event) => onKeyDown?.(event.key)}
               css={[inputCss, styles.input(contentPosition, showVerticalBar, size)]}
               autoComplete="off"
+              ref={ref}
+              onFocus={() => {
+                if (!selectOnFocus || !ref.current) {
+                  return;
+                }
+                ref.current.select();
+              }}
             />
 
             {contentPosition === 'right' && <div css={styles.inputRightContent(showVerticalBar, size)}>{content}</div>}
@@ -124,9 +134,10 @@ const styles = {
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
     ${typography.body()};
     border: none !important;
-    box-shadow: none;
+    box-shadow: none !important;
     background-color: transparent;
     padding-${contentPosition}: 0;
+
     ${
       showVerticalBar &&
       css`
@@ -157,6 +168,7 @@ const styles = {
     ${typography.small()}
     ${styleUtils.flexCenter()}
     height: 40px;
+    min-width: 48px;
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
 
@@ -178,6 +190,7 @@ const styles = {
     ${typography.small()}
     ${styleUtils.flexCenter()}
     height: 40px;
+    min-width: 48px;
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
 

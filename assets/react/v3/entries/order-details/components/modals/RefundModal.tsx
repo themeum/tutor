@@ -59,7 +59,7 @@ function RefundModal({ title, closeModal, actions, available_amount }: RefundMod
                 },
               }}
               render={(props) => (
-                <FormInputWithContent {...props} label={__('Refund amount', 'tutor')} content={'$'} type="number" />
+                <FormInputWithContent {...props} label={__('Refund amount', 'tutor')} content={'$'} type="number" selectOnFocus />
               )}
             />
 
