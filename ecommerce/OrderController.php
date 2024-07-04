@@ -64,7 +64,7 @@ class OrderController {
 
 		if ( ! $register_hooks ) {
 			return;
-		}		
+		}
 
 		/**
 		 * Handle ajax request for getting order related data by order id
@@ -104,7 +104,7 @@ class OrderController {
 
 		$order_id = Input::post( 'tutor_order_id' );
 
-		if ( empty( $order_id) ) {
+		if ( empty( $order_id ) ) {
 			$this->json_response(
 				__( 'Order Id is required', 'tutor' ),
 				null,
@@ -497,6 +497,5 @@ class OrderController {
 		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
 
 		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $order_by, $limit, $offset, $order );
-
 	}
 }

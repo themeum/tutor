@@ -19,8 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 2.0.0
  */
 class Init {
-	public function __construct()
-	{
+	/**
+	 * Construct function to initialize ecommerce classes
+	 *
+	 * @since 3.0.0
+	 */
+	public function __construct() {
 		new OrderController();
 	}
 }
