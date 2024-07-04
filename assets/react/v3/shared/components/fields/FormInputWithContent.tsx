@@ -123,7 +123,7 @@ const styles = {
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
     ${typography.body()};
-    border: none;
+    border: none !important;
     box-shadow: none;
     background-color: transparent;
     padding-${contentPosition}: 0;

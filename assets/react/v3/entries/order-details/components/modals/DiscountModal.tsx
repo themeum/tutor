@@ -25,7 +25,7 @@ type FormField = Discount;
 const discountTypeOptions = [
   {
     label: __('Amount', 'tutor'),
-    value: 'fixed',
+    value: 'flat',
   },
   {
     label: __('Percentage', 'tutor'),

@@ -111,8 +111,6 @@ export const createGlobalCss = () => css`
     padding: 0 12px;
     min-height: initial;
     box-shadow: none;
-    border-radius: 0;
-    border: none;
     background-color: initial;
     color: currentColor;
   }
@@ -237,10 +235,12 @@ export const styleUtils = {
     align-items: center;
     flex-direction: row;
 
-    ${direction === 'column' &&
-    css`
+    ${
+      direction === 'column' &&
+      css`
       flex-direction: column;
-    `}
+    `
+    }
   `,
   ulReset: css`
     list-style: none;
