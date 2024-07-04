@@ -181,7 +181,7 @@ const Additional = () => {
         )}
         <div css={styles.uploadAttachment}>
           <Controller
-            name="attachments"
+            name="course_attachments"
             control={form.control}
             render={(controllerProps) => (
               <FormFileUploader

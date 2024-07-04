@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format } from 'date-fns';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
@@ -12,11 +11,19 @@ import type { Media } from '@Components/fields/FormImageInput';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { DateFormats } from '@Config/constants';
-import { typography } from '@Config/typography';
 import { formatBytes } from '@Utils/util';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
+import { typography } from '@Config/typography';
+
+export type WpMediaDetails = {
+  id: number;
+  url: string;
+  title: string;
+  date?: string;
+  filesizeInBytes?: number;
+  subtype?: string;
+};
 
 type FormFileUploaderProps = {
   label?: string;
@@ -69,34 +76,34 @@ const FormFileUploader = ({
       Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : []
     );
 
-    const newFiles = selected.reduce((acc: Media[], file: Media) => {
+    const newFiles = selected.reduce((allFiles: Media[], file: WpMediaDetails) => {
       if (maxFileSize && file.filesizeInBytes && file.filesizeInBytes > maxFileSize) {
         showToast({
           message: `${file.title} ${__(' size exceeds the limit', 'tutor')}`,
           type: 'danger',
         });
-        return acc;
+        return allFiles;
       }
 
       if (existingFileIds.has(file.id)) {
-        return acc;
+        return allFiles;
       }
 
-      const newFile = {
+      const newFile: Media = {
         id: file.id,
         title: file.title,
         url: file.url,
-        date: file.date,
-        filesizeInBytes: file.filesizeInBytes,
-        subtype: file.subtype,
+        name: file.title,
+        size_bytes: file.filesizeInBytes,
+        ext: file.subtype,
       };
 
       if (!selectMultiple) {
         return [newFile];
       }
 
-      acc.push(newFile);
-      return acc;
+      allFiles.push(newFile);
+      return allFiles;
     }, []);
 
     const totalFiles = fieldValue ? (Array.isArray(fieldValue) ? fieldValue.length : 1) : 0 + newFiles.length;
@@ -166,28 +173,22 @@ const FormFileUploader = ({
             }
           >
             {(files) => (
-              <div css={styles.wrapper({ hasFiles: !!fieldValue })}>
+              <div css={styles.wrapper({ hasFiles: Array.isArray(files) ? files.length > 0 : files !== null })}>
                 <For each={Array.isArray(files) ? files : [files]}>
                   {(file) => (
                     <div key={file.id} css={styles.attachmentCardWrapper}>
                       <div css={styles.attachmentCard}>
-                        <SVGIcon name="preview" height={40} width={40} />
+                        <SVGIcon style={styles.fileIcon} name="preview" height={40} width={40} />
 
                         <div css={styles.attachmentCardBody}>
                           <div css={styles.attachmentCardTitle}>
                             <div css={styleUtils.text.ellipsis(1)}>{file.title}</div>
 
-                            <div css={styles.fileExtension}>{`.${file.subtype}`}</div>
+                            <div css={styles.fileExtension}>{`.${file.ext}`}</div>
                           </div>
 
                           <div css={styles.attachmentCardSubtitle}>
-                            <span>{`${__('Size', 'tutor')}: ${formatBytes(file?.filesizeInBytes || 0)}`}</span>
-
-                            <SVGIcon name="dot" height={2} width={2} />
-
-                            {file.date && (
-                              <span>{format(new Date(file.date), DateFormats.monthDayYearHoursMinutes)}</span>
-                            )}
+                            <span>{`${__('Size', 'tutor')}: ${formatBytes(file?.size_bytes || 0)}`}</span>
                           </div>
                         </div>
                       </div>
@@ -293,5 +294,8 @@ const styles = {
   `,
   uploadButton: css`
     width: 100%;
+  `,
+  fileIcon: css`
+    flex-shrink: 0;
   `,
 };

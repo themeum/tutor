@@ -51,6 +51,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     }),
     tutor_course_certificate_template: data.tutor_course_certificate_template,
     _tutor_course_additional_data_edit: true,
+    _tutor_attachments_main_edit: true,
     'video[source]': data.video.source,
     'video[source_video_id]': data.video.source_video_id,
     'video[poster]': data.video.poster,
@@ -59,6 +60,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'video[source_youtube]': data.video.source_youtube,
     'video[source_vimeo]': data.video.source_vimeo,
     'video[source_embedded]': data.video.source_embedded,
+    tutor_attachments: data.course_attachments?.map((item) => item.id) ?? [],
   };
 };
 
@@ -131,7 +133,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     preview_link: courseDetails.preview_link ?? '',
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
-    attachments: null,
+    course_attachments: courseDetails.course_attachments ?? [],
   };
 };
 
