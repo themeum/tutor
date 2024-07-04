@@ -179,11 +179,50 @@ const FormVideoInput = ({
     }
   });
 
-  const clearHandler = () => {
-    field.onChange(null);
+  const videoClearHandler = () => {
+    const currentVideoSource = fieldValue?.source;
+
+    const updatedValue: CourseVideo = fieldValue
+      ? { ...fieldValue }
+      : {
+          source: 'html5',
+          source_video_id: '',
+          poster: '',
+          poster_url: '',
+          source_external_url: '',
+          source_shortcode: '',
+          source_youtube: '',
+          source_vimeo: '',
+          source_embedded: '',
+        };
+
+    switch (currentVideoSource) {
+      case 'html5':
+        updatedValue.source_video_id = '';
+        break;
+      case 'external_url':
+        updatedValue.source_external_url = '';
+        break;
+      case 'shortcode':
+        updatedValue.source_shortcode = '';
+        break;
+      case 'youtube':
+        updatedValue.source_youtube = '';
+        break;
+      case 'vimeo':
+        updatedValue.source_vimeo = '';
+        break;
+      case 'embedded':
+        updatedValue.source_embedded = '';
+        break;
+      default:
+        break;
+    }
+
+    field.onChange(updatedValue);
 
     if (onChange) {
-      onChange(null);
+      onChange(updatedValue);
     }
   };
 
@@ -344,14 +383,10 @@ const FormVideoInput = ({
 
                               <div css={styles.fileExtension}>{`.${__('mp4', 'tutor')}`}</div>
                             </div>
-
-                            {/* <div css={styles.videoInfoSubtitle}>
-                            <span>{`${__('Size', 'tutor')}: ${formatBytes(media?.filesizeInBytes || 0)}`}</span>
-                          </div> */}
                           </div>
                         </div>
 
-                        <button type="button" css={styles.removeButton} onClick={clearHandler}>
+                        <button type="button" css={styles.removeButton} onClick={videoClearHandler}>
                           <SVGIcon name="cross" height={24} width={24} />
                         </button>
                       </div>

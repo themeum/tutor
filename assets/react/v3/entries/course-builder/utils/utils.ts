@@ -50,16 +50,14 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
       _tutor_course_prerequisites_ids: data.course_prerequisites?.map((item) => item.id) ?? [],
     }),
     tutor_course_certificate_template: data.tutor_course_certificate_template,
-    video: {
-      source: data.video.source,
-      source_video_id: data.video.source_video_id,
-      poster: data.video.poster,
-      source_external_url: data.video.source_external_url,
-      source_shortcode: data.video.source_shortcode,
-      source_youtube: data.video.source_youtube,
-      source_vimeo: data.video.source_vimeo,
-      source_embedded: data.video.source_embedded,
-    },
+    'video[source]': data.video.source,
+    'video[source_video_id]': data.video.source_video_id,
+    'video[poster]': data.video.poster,
+    'video[source_external_url]': data.video.source_external_url,
+    'video[source_shortcode]': data.video.source_shortcode,
+    'video[source_youtube]': data.video.source_youtube,
+    'video[source_vimeo]': data.video.source_vimeo,
+    'video[source_embedded]': data.video.source_embedded,
   };
 };
 
