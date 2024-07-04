@@ -8,7 +8,7 @@ import { __ } from '@wordpress/i18n';
 import { rgba } from 'polished';
 import FormFieldWrapper from './FormFieldWrapper';
 import { styleUtils } from '@Utils/style-utils';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ImageInput from '@Atoms/ImageInput';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import { AnimationType } from '@Hooks/useAnimation';
@@ -102,7 +102,32 @@ const FormVideoInput = ({
 }: FormVideoInputProps) => {
   const form = useFormWithGlobalError<URLFormData>();
 
-  console.log(field.value);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (field.value) {
+      form.setValue('videoSource', field.value.source);
+
+      switch (field.value.source) {
+        case 'external_url':
+          form.setValue('videoUrl', field.value.source_external_url);
+          break;
+        case 'shortcode':
+          form.setValue('videoUrl', field.value.source_shortcode);
+          break;
+        case 'youtube':
+          form.setValue('videoUrl', field.value.source_youtube);
+          break;
+        case 'vimeo':
+          form.setValue('videoUrl', field.value.source_vimeo);
+          break;
+        case 'embedded':
+          form.setValue('videoUrl', field.value.source_embedded);
+          break;
+        default:
+          break;
+      }
+    }
+  }, [field.value]);
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);

@@ -283,7 +283,7 @@ class Course extends Tutor_Base {
 	 * @return boolean
 	 */
 	private function is_valid_video_source_type( string $source_type ): bool {
-		return in_array( $source_type, $this->supported_video_sources, true );
+		return in_array( $source_type, tutor_utils()->get_option( 'supported_video_sources', array() ), true );
 	}
 
 	/**

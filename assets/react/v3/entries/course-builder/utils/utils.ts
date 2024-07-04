@@ -50,6 +50,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
       _tutor_course_prerequisites_ids: data.course_prerequisites?.map((item) => item.id) ?? [],
     }),
     tutor_course_certificate_template: data.tutor_course_certificate_template,
+    _tutor_course_additional_data_edit: true,
     'video[source]': data.video.source,
     'video[source_video_id]': data.video.source_video_id,
     'video[poster]': data.video.poster,
