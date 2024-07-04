@@ -43,11 +43,11 @@ export function isObject<T>(value: T): value is T {
 }
 
 export interface Option<T> {
-	label: string;
-	value: T;
-	icon?: ReactNode | string;
-	disabled?: boolean;
-	description?: string;
+  label: string;
+  value: T;
+  icon?: ReactNode | string;
+  disabled?: boolean;
+  description?: string;
 }
 export type CouponStatus = 'active' | 'inactive';
 export type ProductStatus = 'draft' | 'published' | 'trashed';
@@ -101,3 +101,7 @@ export interface MoreOptionsProps<T> {
   item: T;
   updateSelectedItems?: () => void;
 }
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};

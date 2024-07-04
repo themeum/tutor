@@ -1,44 +1,64 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "downlevelIteration": true,
-    "lib": ["dom", "dom.iterable", "esnext", "es5", "es6"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "noEmit": true,
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "@emotion/react",
-    "baseUrl": ".",
-    // "types": ["@emotion/react/types/css-prop", "node"],
-    "typeRoots": ["./node_modules/@types/", "./assets/react/@types"],
-    "paths": {
-      "@Atoms/*": ["assets/react/v3/shared/atoms/*"],
-      "@Molecules/*": ["assets/react/v3/shared/molecules/*"],
-      "@Components/*": ["assets/react/v3/shared/components/*"],
-      "@Config/*": ["assets/react/v3/shared/config/*"],
-      "@Hooks/*": ["assets/react/v3/shared/hooks/*"],
-      "@Services/*": ["assets/react/v3/shared/services/*"],
-      "@Utils/*": ["assets/react/v3/shared/utils/*"],
-      "@Images/*": ["assets/images/*"],
-      "@Controls/*": ["assets/react/v3/shared/controls/*"],
-      "@CourseBuilderComponents/*": ["assets/react/v3/entries/course-builder/components/*"],
-      "@CourseBuilderServices/*": ["assets/react/v3/entries/course-builder/services/*"],
-      "@CourseBuilderConfig/*": ["assets/react/v3/entries/course-builder/config/*"],
-      "@CourseBuilderPages/*": ["assets/react/v3/entries/course-builder/pages/*"],
-      "@CourseBuilderUtils/*": ["assets/react/v3/entries/course-builder/utils/*"],
-      "@CourseBuilderPublic/*": ["assets/react/v3/entries/course-builder/public/*"],
-      "@CourseBuilderContexts/*": ["assets/react/v3/entries/course-builder/contexts/*"]
-    }
-  },
-  "include": ["./assets/react/v3"],
-  "exclude": ["node_modules"]
+	"compilerOptions": {
+		"target": "es5",
+		"downlevelIteration": true,
+		"lib": ["dom", "dom.iterable", "esnext", "es5", "es6"],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowSyntheticDefaultImports": true,
+		"noEmit": true,
+		"sourceMap": true,
+		"esModuleInterop": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"jsx": "react-jsx",
+		"jsxImportSource": "@emotion/react",
+		"baseUrl": ".",
+		// "types": ["@emotion/react/types/css-prop", "node"],
+		"typeRoots": ["./node_modules/@types/", "./assets/react/@types"],
+		"paths": {
+			"@Atoms/*": ["assets/react/v3/shared/atoms/*"],
+			"@Molecules/*": ["assets/react/v3/shared/molecules/*"],
+			"@Components/*": ["assets/react/v3/shared/components/*"],
+			"@Config/*": ["assets/react/v3/shared/config/*"],
+			"@Hooks/*": ["assets/react/v3/shared/hooks/*"],
+			"@Services/*": ["assets/react/v3/shared/services/*"],
+			"@Utils/*": ["assets/react/v3/shared/utils/*"],
+			"@Images/*": ["assets/images/*"],
+			"@Controls/*": ["assets/react/v3/shared/controls/*"],
+			"@CourseBuilderComponents/*": [
+				"assets/react/v3/entries/course-builder/components/*"
+			],
+			"@CourseBuilderServices/*": [
+				"assets/react/v3/entries/course-builder/services/*"
+			],
+			"@CourseBuilderConfig/*": [
+				"assets/react/v3/entries/course-builder/config/*"
+			],
+			"@CourseBuilderPages/*": [
+				"assets/react/v3/entries/course-builder/pages/*"
+			],
+			"@CourseBuilderUtils/*": [
+				"assets/react/v3/entries/course-builder/utils/*"
+			],
+			"@CourseBuilderPublic/*": [
+				"assets/react/v3/entries/course-builder/public/*"
+			],
+			"@CourseBuilderContexts/*": [
+				"assets/react/v3/entries/course-builder/contexts/*"
+			],
+			"@OrderComponents/*": [
+				"assets/react/v3/entries/order-details/components/*"
+			],
+			"@OrderServices/*": ["assets/react/v3/entries/order-details/services/*"],
+			"@OrderAtoms/*": ["assets/react/v3/entries/order-details/atoms/*"],
+			"@OrderContexts/*": ["assets/react/v3/entries/order-details/contexts/*"]
+		}
+	},
+	"include": ["./assets/react/v3"],
+	"exclude": ["node_modules"]
 }

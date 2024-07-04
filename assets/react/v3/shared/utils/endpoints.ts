@@ -3,6 +3,7 @@ const endpoints = {
   TAGS: 'course-tag',
   CATEGORIES: 'course-category',
   USERS: 'users',
+  ORDER_DETAILS: 'tutor-order-details'
 };
 
 export default endpoints;
