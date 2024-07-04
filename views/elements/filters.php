@@ -14,6 +14,8 @@
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
+$current_page = Input::get( 'page', '' );
+
 if ( isset( $data ) ) : ?>
 	<div class="tutor-px-20">
 		<div class="tutor-wp-dashboard-filter tutor-d-flex tutor-align-end tutor-justify-<?php echo esc_attr( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ? 'between' : 'end' ); ?>">
@@ -129,6 +131,22 @@ if ( isset( $data ) ) : ?>
 						</div>
 					<?php endif; ?>
 
+					<?php if ( 'tutor-orders' === $current_page ) : ?>
+						<div class="tutor-wp-dashboard-filter-item">
+							<label class="tutor-form-label">
+								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
+							</label>
+							<select class="tutor-form-select" id="tutor-backend-filter-order" data-search="no">
+								<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
+									<?php esc_html_e( 'DESC', 'tutor' ); ?>
+								</option>
+								<option value="ASC" <?php selected( $order, 'ASC', 'selected' ); ?>>
+									<?php esc_html_e( 'ASC', 'tutor' ); ?>
+								</option>
+							</select>
+						</div>
+					<?php endif; ?>
+					
 					<?php if ( ! isset( $data['sort_by'] ) || true == $data['sort_by'] ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
@@ -144,6 +162,7 @@ if ( isset( $data ) ) : ?>
 							</select>
 						</div>
 					<?php endif; ?>
+
 					<div class="tutor-wp-dashboard-filter-item">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Date', 'tutor' ); ?>

@@ -196,6 +196,30 @@ class QueryHelper {
 	}
 
 	/**
+	 * Build like clause string with or
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array  $where assoc array with field and value.
+	 * @param string $relation default is OR.
+	 *
+	 * @return string
+	 */
+	public static function build_like_clause( array $where, $relation = 'OR' ) {
+		global $wpdb;
+
+		$like_conditions = array();
+
+		foreach ( $where as $column_name => $term ) {
+			$like_conditions[] = $wpdb->prepare( "$column_name LIKE %s", '%' . $wpdb->esc_like( $term ) . '%' );
+		}
+
+		$where_clause = implode( ' OR ', $like_conditions );
+
+		return $where_clause;
+	}
+
+	/**
 	 * Sanitize assoc array
 	 *
 	 * @param array $array an assoc array
@@ -545,6 +569,48 @@ class QueryHelper {
 		);
 
 		return $response;
+	}
+
+	/**
+	 * Get count var
+	 *
+	 * Argument should be SQL escaped.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $table table name with prefix.
+	 * @param array  $where array of where condition.
+	 * @param array  $search array of search conditions for LIKE operator.
+	 * @param string $count_column column name to count, default id.
+	 *
+	 * @return int
+	 */
+	public static function get_count( $table, $where = [], $search = [], $count_column = 'id' ): int {
+		global $wpdb;
+
+		$where_clause = !empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
+		$search_clause = !empty( $search ) ? self::build_like_clause( $search, 'AND' ) : '';
+
+		if ( !empty( $search_clause ) ) {
+			if ( !empty( $where_clause ) ) {
+				$where_clause .= ' AND ' . $search_clause;
+			} else {
+				$where_clause = 'WHERE ' . $search_clause;
+			}
+		}
+
+		$count = $wpdb->get_var(
+			"SELECT COUNT($count_column)
+			FROM $table
+			{$where_clause}"
+		);
+
+		// If error occurred then throw new exception.
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
+		}
+
+		return (int) $count;
 	}
 
 }

@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Tutor\Helpers\QueryHelper;
+use TUTOR\Input;
 
 /**
  * OrderModel Class
@@ -73,6 +74,39 @@ class OrderModel {
 		return $this->table_name;
 	}
 
+
+	/**
+	 * Get all order statuses
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_order_status() {
+		return array(
+			self::ORDER_PENDING            => __( 'Pending', 'tutor' ),
+			self::ORDER_COMPLETED          => __( 'Completed', 'tutor' ),
+			self::ORDER_CANCELLED          => __( 'Cancelled', 'tutor' ),
+			self::ORDER_REFUNDED           => __( 'Refunded', 'tutor' ),
+			self::ORDER_PARTIALLY_REFUNDED => __( 'Partially Refunded', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Get all payment statuses
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_payment_status() {
+		return array(
+			self::PAYMENT_STATUS_PENDING => __( 'Pending', 'tutor' ),
+			self::PAYMENT_STATUS_PAID    => __( 'Paid', 'tutor' ),
+			self::PAYMENT_STATUS_FAILED  => __( 'Failed', 'tutor' ),
+		);
+	}
+
 	/**
 	 * Get orders list
 	 *
@@ -113,23 +147,22 @@ class OrderModel {
 		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
 
 		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $search, $order_by, $limit, $offset, $order );
-
 	}
 
 	/**
-	 * Delete an order by ID
+	 * Get order count
 	 *
-	 * @since 2.0.9
+	 * @since 3.0.0
 	 *
-	 * @param int $order_id  order id that need to delete.
-	 * @return bool
+	 * @param array $where Where conditions.
+	 * @param array $search Search conditions.
+	 *
+	 * @return int
 	 */
-	public static function delete_course( $order_id ) {
-		// if ( get_post_type( $post_id ) !== tutor()->course_post_type ) {
-		// return false;
-		// }
+	public function get_order_count( $where = array(), $search = array() ) {
+		$where  = Input::sanitize_array( $where );
+		$search = Input::sanitize_array( $search );
 
-		// wp_delete_post( $post_id, true );
-		return true;
+		return QueryHelper::get_count( $this->table_name, $where, $search );
 	}
 }
