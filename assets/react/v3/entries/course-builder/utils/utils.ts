@@ -50,10 +50,14 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
       _tutor_course_prerequisites_ids: data.course_prerequisites?.map((item) => item.id) ?? [],
     }),
     tutor_course_certificate_template: data.tutor_course_certificate_template,
+    tutor_attachments: data.course_attachments?.map((item) => item.id) ?? [],
   };
 };
 
 export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
+  console.log({
+    attachment: courseDetails,
+  });
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
@@ -112,6 +116,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     preview_link: courseDetails.preview_link ?? '',
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
+    course_attachments: courseDetails.course_attachments ?? [],
   };
 };
 

@@ -48,7 +48,7 @@ export const courseDefaultData: CourseFormData = {
   course_material_includes: '',
   course_duration_hours: 0,
   course_duration_minutes: 0,
-  attachments: null,
+  course_attachments: null,
   isContentDripEnabled: false,
   contentDripType: '',
   course_product_id: '',
@@ -87,7 +87,7 @@ export interface CourseFormData {
   course_material_includes: string;
   course_duration_hours: number;
   course_duration_minutes: number;
-  attachments: Media[] | null;
+  course_attachments: Media[] | null;
   isContentDripEnabled: boolean;
   contentDripType: 'unlock_by_date' | 'specific_days' | 'unlock_sequentially' | 'after_finishing_prerequisites' | '';
   course_product_id: string;
@@ -139,6 +139,7 @@ export interface CoursePayload {
   preview_link: string;
   _tutor_course_prerequisites_ids: string[];
   tutor_course_certificate_template: string;
+  tutor_attachments: Media[];
 }
 
 interface CourseDetailsPayload {
@@ -260,6 +261,7 @@ export interface CourseDetailsResponse {
   course_prerequisites: PrerequisiteCourses[];
   course_certificate_template: string;
   course_certificates_templates: Certificate[];
+  course_attachments: Media[];
 }
 
 interface CourseResponse {
