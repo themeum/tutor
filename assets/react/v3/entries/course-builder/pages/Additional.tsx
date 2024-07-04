@@ -21,6 +21,7 @@ import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites'
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useNavigate } from 'react-router-dom';
 import { Addons } from '@Config/constants';
+import Show from '@Controls/Show';
 
 const Additional = () => {
   const courseId = getCourseId();
@@ -149,14 +150,16 @@ const Additional = () => {
           </div>
         </div>
 
-        <div css={styles.formSection}>
-          <div css={styles.titleAndSub}>
-            <div css={styles.title}>{__('Certificate', 'tutor')}</div>
-            <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
+        <Show when={isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
+          <div css={styles.formSection}>
+            <div css={styles.titleAndSub}>
+              <div css={styles.title}>{__('Certificate', 'tutor')}</div>
+              <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
 
-            <Certificate />
+              <Certificate />
+            </div>
           </div>
-        </div>
+        </Show>
         <Navigator styleModifier={styles.navigator} />
       </div>
 
