@@ -453,7 +453,7 @@ class QueryHelper {
 	/**
 	 * Get data by joining multiple tables with specified join relations.
 	 *
-	 * Argument should be sql escaped
+	 * Argument should be SQL escaped.
 	 *
 	 * @since 3.0.0
 	 *
@@ -461,6 +461,7 @@ class QueryHelper {
 	 * @param array  $joining_tables An array of join relations. Each relation should be an array with keys 'type', 'table', 'on'.
 	 * @param array  $select_columns An array of columns to select.
 	 * @param array  $where  An associative array for the WHERE clause. For example: [col_name => value].
+	 * @param array  $search An associative array for the search clause. For example: [col_name => value].
 	 * @param string $order_by  Order by column name.
 	 * @param int    $limit Maximum number of rows to return.
 	 * @param int    $offset Offset for pagination.
@@ -471,24 +472,44 @@ class QueryHelper {
 	 *
 	 * @return mixed  Based on output param, default OBJECT.
 	 */
-	public static function get_joined_data(string $primary_table, array $joining_tables, array $select_columns, array $where = [], string $order_by = '', $limit = 10, $offset = 0, string $order = 'DESC', string $output = 'OBJECT') {
+	public static function get_joined_data(
+		string $primary_table,
+		array $joining_tables,
+		array $select_columns,
+		array $where = [],
+		array $search = [],
+		string $order_by = '',
+		$limit = 10,
+		$offset = 0,
+		string $order = 'DESC',
+		string $output = 'OBJECT'
+	) {
 		global $wpdb;
 
 		$obj = new self();
-		
+
 		$select_clause = implode(', ', $select_columns);
-		
+
 		$from_clause = $primary_table;
-		
+
 		$join_clauses = '';
 		foreach ($joining_tables as $relation) {
 			$join_clauses .= " {$relation['type']} JOIN {$relation['table']} ON {$relation['on']}";
 		}
-		
+
 		$where_clause = !empty($where) ? 'WHERE ' . $obj->build_where_clause($where) : '';
-		
+
+		if (!empty($search)) {
+			$search_clauses = [];
+			foreach ($search as $column => $value) {
+				$search_clauses[] = $wpdb->prepare("{$column} LIKE %s", '%' . $wpdb->esc_like($value) . '%');
+			}
+			$search_clause = implode(' OR ', $search_clauses);
+			$where_clause .= !empty($where_clause) ? ' AND (' . $search_clause . ')' : 'WHERE ' . $search_clause;
+		}
+
 		$order_by_clause = !empty($order_by) ? "ORDER BY {$order_by} {$order}" : '';
-		
+
 		// Query to get total count.
 		$count_query = "
 			SELECT COUNT(*) as total_count
@@ -496,25 +517,25 @@ class QueryHelper {
 			{$join_clauses}
 			{$where_clause}
 		";
-		
+
 		$total_count = $wpdb->get_var($count_query);
-		
+
 		$query = $wpdb->prepare(
 			"SELECT {$select_clause}
-			 FROM {$from_clause}
-			 {$join_clauses}
-			 {$where_clause}
-			 {$order_by_clause}
-			 LIMIT %d OFFSET %d",
+			FROM {$from_clause}
+			{$join_clauses}
+			{$where_clause}
+			{$order_by_clause}
+			LIMIT %d OFFSET %d",
 			$limit,
 			$offset
 		);
-		
+
 		$results = $wpdb->get_results($query, $output);
-		
+
 		// Throw exception if error occurred.
-		if ( $wpdb->last_error ) {
-			throw new \Exception( $wpdb->last_error );
+		if ($wpdb->last_error) {
+			throw new \Exception($wpdb->last_error);
 		}
 
 		// Prepare response array.
@@ -522,7 +543,8 @@ class QueryHelper {
 			'total_count' => (int) $total_count,
 			'results'     => $results,
 		);
-		
+
 		return $response;
 	}
+
 }

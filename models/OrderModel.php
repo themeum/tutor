@@ -79,6 +79,7 @@ class OrderModel {
 	 * @since 3.0.0
 	 *
 	 * @param array  $where where clause conditions.
+	 * @param array  $search search clause conditions.
 	 * @param int    $limit limit default 10.
 	 * @param int    $offset default 0.
 	 * @param string $order_by column default 'o.id'.
@@ -86,7 +87,7 @@ class OrderModel {
 	 *
 	 * @return array
 	 */
-	public function get_orders( array $where = array(), int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
+	public function get_orders( array $where = array(), $search = array(), int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
 
 		global $wpdb;
 
@@ -111,7 +112,7 @@ class OrderModel {
 
 		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
 
-		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $order_by, $limit, $offset, $order );
+		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $search, $order_by, $limit, $offset, $order );
 
 	}
 

@@ -443,6 +443,10 @@ class OrderController {
 		$list_order    = '' === $list_order ? Input::get( 'order', 'DESC' ) : $list_order;
 		$list_order_by = '' === $list_order_by ? 'id' : $list_order_by;
 
-		return $this->model->get_orders( $where, $limit, $offset, $list_order_by, $list_order );
+		$search_term = Input::get( 'search', '' );
+
+		$search_conditions = array();
+
+		return $this->model->get_orders( $where, $search_conditions, $limit, $offset, $list_order_by, $list_order );
 	}
 }
