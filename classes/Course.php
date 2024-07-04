@@ -213,10 +213,6 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function disable_course_trash_instructor() {
-		if ( wp_doing_ajax() ) {
-			return;
-		}
-
 		if ( current_user_can( 'edit_tutor_course' ) && ! current_user_can( 'administrator' ) ) {
 			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
 			$role           = get_role( tutor()->instructor_role );
