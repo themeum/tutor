@@ -124,69 +124,36 @@ class OrderController {
 	public function tabs_key_value(): array {
 		$url = get_pagenum_link();
 
-		$order_id = '';
-		$date     = '';
-		$search   = '';
+		$date           = Input::get( 'date', '' );
+		$payment_status = Input::get( 'payment-status', '' );
+		$search         = Input::get( 'search', '' );
 
-		$all       = 0;
-		$mine      = 0;
-		$published = 0;
-		$draft     = 0;
-		$pending   = 0;
-		$trash     = 0;
-		$private   = 0;
-		$future    = 0;
+		$where  = array();
+		$search = array();
 
-		$tabs = array(
-			array(
-				'key'   => 'all',
-				'title' => __( 'All', 'tutor' ),
-				'value' => $all,
-				'url'   => $url . '&data=all',
-			),
-			array(
-				'key'   => 'mine',
-				'title' => __( 'Mine', 'tutor' ),
-				'value' => $mine,
-				'url'   => $url . '&data=mine',
-			),
-			array(
-				'key'   => 'published',
-				'title' => __( 'Published', 'tutor' ),
-				'value' => $published,
-				'url'   => $url . '&data=published',
-			),
-			array(
-				'key'   => 'draft',
-				'title' => __( 'Draft', 'tutor' ),
-				'value' => $draft,
-				'url'   => $url . '&data=draft',
-			),
-			array(
-				'key'   => 'pending',
-				'title' => __( 'Pending', 'tutor' ),
-				'value' => $pending,
-				'url'   => $url . '&data=pending',
-			),
-			array(
-				'key'   => 'future',
-				'title' => __( 'Scheduled', 'tutor' ),
-				'value' => $future,
-				'url'   => $url . '&data=future',
-			),
-			array(
-				'key'   => 'private',
-				'title' => __( 'Private', 'tutor' ),
-				'value' => $private,
-				'url'   => $url . '&data=private',
-			),
-			array(
-				'key'   => 'trash',
-				'title' => __( 'Trash', 'tutor' ),
-				'value' => $trash,
-				'url'   => $url . '&data=trash',
-			),
-		);
+		if ( '' !== $date ) {
+			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
+		}
+
+		if ( '' !== $payment_status ) {
+			$where['payment_status'] = $payment_status;
+		}
+
+		$order_status = $this->model->get_order_status();
+
+		$tabs = array();
+
+		foreach ( $order_status as $key => $value ) {
+			$where['order_status'] = $key;
+
+			$tabs[] = array(
+				'key'   => $key,
+				'title' => $value,
+				'value' => $this->model->get_order_count( $where, $search ),
+				'url'   => $url . '&data=' . $key,
+			);
+		};
+
 		return apply_filters( 'tutor_order_tabs', $tabs );
 	}
 

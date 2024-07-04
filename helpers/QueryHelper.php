@@ -180,12 +180,12 @@ class QueryHelper {
 	/**
 	 * Build where clause string
 	 *
-	 * @param   array $where assoc array with field and value
+	 * @param   array $where assoc array with field and value.
 	 * @return  string
 	 *
 	 * @since 2.0.9
 	 */
-	private function build_where_clause( array $where ) {
+	private static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
 			$value = is_numeric( $value ) ? ( $value + 0 ) : "'" . $value . "'";
@@ -222,12 +222,12 @@ class QueryHelper {
 	/**
 	 * Sanitize assoc array
 	 *
-	 * @param array $array an assoc array
+	 * @param array $array an assoc array.
 	 * @return array
 	 *
 	 * @since 2.0.9
 	 */
-	private function sanitize_assoc_array( array $array ) {
+	private static function sanitize_assoc_array( array $array ) {
 		return array_map(
 			function( $value ) {
 				return sanitize_text_field( $value );
@@ -250,8 +250,7 @@ class QueryHelper {
 			return false;
 		}
 
-		$obj   = new self();
-		$where = $obj->build_where_clause( $obj->sanitize_assoc_array( $where ) );
+		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );
@@ -283,8 +282,7 @@ class QueryHelper {
 			return false;
 		}
 
-		$obj   = new self();
-		$where = $obj->build_where_clause( $obj->sanitize_assoc_array( $where ) );
+		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );
@@ -316,8 +314,8 @@ class QueryHelper {
 	 */
 	public static function get_row( string $table, array $where, string $order_by, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
-		$obj          = new self();
-		$where_clause = $obj->build_where_clause( $where );
+
+		$where_clause = self::build_where_clause( $where );
 		$query        = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
@@ -350,8 +348,8 @@ class QueryHelper {
 	 */
 	public static function get_all( string $table, array $where, string $order_by, $limit = 1000, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
-		$obj          = new self();
-		$where_clause = $obj->build_where_clause( $where );
+		
+		$where_clause = self::build_where_clause( $where );
 		$limit        = sanitize_text_field( $limit );
 		$query        = $wpdb->prepare(
 			"SELECT *
@@ -510,8 +508,6 @@ class QueryHelper {
 	) {
 		global $wpdb;
 
-		$obj = new self();
-
 		$select_clause = implode(', ', $select_columns);
 
 		$from_clause = $primary_table;
@@ -521,7 +517,7 @@ class QueryHelper {
 			$join_clauses .= " {$relation['type']} JOIN {$relation['table']} ON {$relation['on']}";
 		}
 
-		$where_clause = !empty($where) ? 'WHERE ' . $obj->build_where_clause($where) : '';
+		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
 
 		if (!empty($search)) {
 			$search_clauses = [];
