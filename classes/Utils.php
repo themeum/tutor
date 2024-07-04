@@ -8521,8 +8521,8 @@ class Utils {
 		if ( is_array( $addons ) && count( $addons ) ) {
 			foreach ( $addons as $base_name => $addon ) {
 
-				$addons_path = trailingslashit( tutor()->path . "assets/addons/{$base_name}" );
-				$addons_url  = trailingslashit( tutor()->url . "assets/addons/{$base_name}" );
+				$addons_path = trailingslashit( tutor()->path . "assets/images/addons/{$base_name}" );
+				$addons_url  = trailingslashit( tutor()->url . "assets/images/addons/{$base_name}" );
 
 				$thumbnailURL = tutor()->url . 'assets/images/tutor-plugin.png';
 				if ( file_exists( $addons_path . 'thumbnail.png' ) ) {
