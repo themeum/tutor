@@ -55,11 +55,10 @@ $navbar_data    = array(
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'     => $courses->bulk_action,
-	'bulk_actions'    => $courses->prepare_bulk_actions(),
-	'ajax_action'     => 'tutor_course_list_bulk_action',
-	'filters'         => true,
-	'category_filter' => true,
+	'bulk_action'  => $courses->bulk_action,
+	'bulk_actions' => $courses->prepare_bulk_actions(),
+	'ajax_action'  => 'tutor_order_list_bulk_action',
+	'filters'      => true,
 );
 
 
@@ -247,32 +246,9 @@ $total_items = $get_orders['total_count'];
 										<?php echo wp_kses_post( tutor_utils()->tutor_price( $order->total_price ) ); ?>
 									</td>
 									<td>
-										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
-											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-orders&id=' . $order->id ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-												<?php esc_html_e( 'Edit', 'tutor' ); ?>
-											</a>
-											<div class="tutor-dropdown-parent">
-											<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-												<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
-											</button>
-											<div id="table-dashboard-course-list-5778" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-												<a class="tutor-dropdown-item"
-													href="http://localhost:10004/wp-admin/admin.php?page=create-course&amp;course_id=5778">
-													<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
-													<span>Edit</span>
-												</a>
-												<a class="tutor-dropdown-item" href="?tutor_action=duplicate_course&amp;is_wp_admin=yes&amp;course_id=5778">
-													<i class="tutor-icon-copy tutor-mr-8" area-hidden="true"></i>
-													<span>Duplicate</span>
-												</a>
-												<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete"
-													data-tutor-modal-target="tutor-common-confirmation-modal" data-id="5778">
-													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
-													<span>Delete Permanently</span>
-												</a>
-											</div>
-										</div>
-										</div>
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-orders&id=' . $order->id ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+											<?php esc_html_e( 'Edit', 'tutor' ); ?>
+										</a>
 									</td>
 								</tr>
 							<?php endforeach; ?>
