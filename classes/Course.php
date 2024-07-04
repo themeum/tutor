@@ -933,6 +933,15 @@ class Course extends Tutor_Base {
 			'sale_price'   => $sale_price,
 		);
 
+		$video_intro = get_post_meta( $course_id, '_video', true );
+		if ( $video_intro ) {
+			$source = $video_intro['source'] ?? '';
+			if ( 'html5' === $source ) {
+				$poster_url                = wp_get_attachment_url( $video_intro['poster'] ?? 0 );
+				$video_intro['poster_url'] = $poster_url;
+			}
+		}
+
 		$course = get_post( $course_id, ARRAY_A );
 		$data   = array(
 			'preview_link'             => get_preview_post_link( $course_id ),
@@ -944,7 +953,7 @@ class Course extends Tutor_Base {
 			'enable_qna'               => get_post_meta( $course_id, '_tutor_enable_qa', true ),
 			'is_public_course'         => get_post_meta( $course_id, '_tutor_is_public_course', true ),
 			'course_level'             => get_post_meta( $course_id, '_tutor_course_level', true ),
-			'video'                    => get_post_meta( $course_id, '_video', true ),
+			'video'                    => $video_intro,
 			'course_duration'          => get_post_meta( $course_id, '_course_duration', true ),
 			'course_benefits'          => get_post_meta( $course_id, '_tutor_course_benefits', true ),
 			'course_requirements'      => get_post_meta( $course_id, '_tutor_course_requirements', true ),
