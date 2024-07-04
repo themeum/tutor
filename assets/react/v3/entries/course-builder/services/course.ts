@@ -1,5 +1,6 @@
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
+import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
@@ -28,8 +29,14 @@ export const courseDefaultData: CourseFormData = {
   },
   thumbnail: null,
   video: {
-    source_type: '',
-    source: '',
+    source: 'external_url',
+    source_video_id: '',
+    poster: '',
+    source_external_url: '',
+    source_shortcode: '',
+    source_youtube: '',
+    source_vimeo: '',
+    source_embedded: '',
   },
   course_price_type: 'free',
   course_price: '',
@@ -63,10 +70,7 @@ export interface CourseFormData {
   post_password: string;
   post_author: User | null;
   thumbnail: Media | null;
-  video: {
-    source_type: string;
-    source: string;
-  };
+  video: CourseVideo;
   course_price_type: string;
   course_price: string;
   course_sale_price: string;
@@ -100,10 +104,7 @@ export interface CoursePayload {
   post_password: string;
   post_author: number | null;
   thumbnail_id: number | null;
-  video?: {
-    source_type: string;
-    source: string;
-  };
+  video?: CourseVideo;
   course_price_type?: string;
   course_price?: string;
   course_sale_price?: string;
@@ -207,16 +208,7 @@ export interface CourseDetailsResponse {
   enable_qna: string;
   is_public_course: string;
   course_level: CourseLevel;
-  video: {
-    source: string;
-    source_video_id: string;
-    poster: string;
-    source_external_url: string;
-    source_shortcode: string;
-    source_youtube: string;
-    source_vimeo: string;
-    source_embedded: string;
-  };
+  video: CourseVideo;
   course_duration: {
     hours: number;
     minutes: number;

@@ -42,7 +42,6 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
 };
 
 export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
-  console.log(courseDetails.thumbnail);
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
@@ -64,8 +63,14 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       url: courseDetails.thumbnail,
     },
     video: {
-      source_type: '',
-      source: '',
+      source: courseDetails.video.source ?? '',
+      source_video_id: courseDetails.video.source_video_id ?? '',
+      poster: courseDetails.video.poster ?? '',
+      source_external_url: courseDetails.video.source_external_url ?? '',
+      source_shortcode: courseDetails.video.source_shortcode ?? '',
+      source_youtube: courseDetails.video.source_youtube ?? '',
+      source_vimeo: courseDetails.video.source_vimeo ?? '',
+      source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_price_type: courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
