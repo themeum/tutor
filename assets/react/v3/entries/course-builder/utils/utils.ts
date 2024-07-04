@@ -65,9 +65,6 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
 };
 
 export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
-  console.log({
-    attachment: courseDetails,
-  });
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,

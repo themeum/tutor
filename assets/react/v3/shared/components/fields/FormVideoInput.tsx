@@ -148,16 +148,26 @@ const FormVideoInput = ({
   });
 
   const fieldValue = field.value;
-  const isVideoAvailable =
-    fieldValue &&
-    (fieldValue.source_video_id ||
-      fieldValue.source_external_url ||
-      fieldValue.source_shortcode ||
-      fieldValue.source_vimeo ||
-      fieldValue.source_youtube ||
-      fieldValue.source_embedded);
+  const isVideoAvailable = () => {
+    switch (fieldValue?.source) {
+      case 'html5':
+        return fieldValue.source_video_id !== '';
+      case 'external_url':
+        return fieldValue.source_external_url !== '';
+      case 'shortcode':
+        return fieldValue.source_shortcode !== '';
+      case 'youtube':
+        return fieldValue.source_youtube !== '';
+      case 'vimeo':
+        return fieldValue.source_vimeo !== '';
+      case 'embedded':
+        return fieldValue.source_embedded !== '';
+      default:
+        return false;
+    }
+  };
 
-  const showPosterInput = !!fieldValue?.source_video_id;
+  const showPosterInput = fieldValue?.source === 'html5';
 
   const videoUploadHandler = () => {
     videoUploader.open();
@@ -338,7 +348,7 @@ const FormVideoInput = ({
           return (
             <div>
               <Show
-                when={isVideoAvailable}
+                when={isVideoAvailable()}
                 fallback={
                   <div
                     ref={triggerRef}
