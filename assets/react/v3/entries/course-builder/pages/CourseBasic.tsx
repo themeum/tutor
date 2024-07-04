@@ -9,6 +9,7 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import FormVideoInput from '@Components/fields/FormVideoInput';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
@@ -196,20 +197,19 @@ const CourseBasic = () => {
           )}
         />
 
-        {/* <Controller
+        <Controller
           name="video"
           control={form.control}
           render={(controllerProps) => (
-            <FormImageInput
+            <FormVideoInput
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
               infoText={__('Supported file formats .mp4 ', 'tutor')}
             />
           )}
-        /> */}
+        />
 
-        {/* @TODO: Add course price options based on monetization setting */}
         <Controller
           name="course_price_type"
           control={form.control}

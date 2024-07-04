@@ -38,7 +38,9 @@ const Header = () => {
     if (courseId) {
       updateCourseMutation.mutate({ course_id: Number(courseId), ...payload });
     } else {
-      const response = await createCourseMutation.mutateAsync(payload);
+      const response = await createCourseMutation.mutateAsync({
+        ...payload,
+      });
 
       if (response.data) {
         window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
