@@ -327,7 +327,18 @@ class Course_List {
 
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
-			$can_delete_course = tutor_utils()->get_option( 'instructor_can_delete_course' ) && tutor_utils()->can_user_edit_course( get_current_user_id(), $course->ID );
+
+			if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course->ID ) ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+
+			$can_delete_course  = tutor_utils()->get_option( 'instructor_can_delete_course' );
+			$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
+
+			if ( 'publish' === $status && ! $can_publish_course ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+
 			if ( 'trash' === $status && $can_delete_course ) {
 				$args       = array(
 					'ID'          => $id,
