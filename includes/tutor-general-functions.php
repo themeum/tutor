@@ -790,20 +790,23 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 	}
 }
 
-/**
- * Convert date to desire format
- *
- * NOTE: mysql query use formated date from here
- * that's why date_i18n need to be ignore
- *
- * @param $format string
- *
- * @param $date string
- *
- * @return string ( date )
-*/
 if ( ! function_exists( 'tutor_get_formated_date' ) ) {
-	function tutor_get_formated_date( string $require_format, string $user_date ) {
+	/**
+	 * Convert date to desire format
+	 *
+	 * NOTE: mysql query use formated date from here
+	 * that's why date_i18n need to be ignore
+	 *
+	 * @param string $require_format string If empty Y-m-d is used.
+	 * @param string $user_date string Date.
+	 *
+	 * @return string ( date )
+	 */
+	function tutor_get_formated_date( string $require_format = '', string $user_date ) {
+		if ( '' === $require_format ) {
+			$require_format = 'Y-m-d';
+		}
+
 		$date = date_create( str_replace( '/', '-', $user_date ) );
 		if ( is_a( $date, 'DateTime' ) ) {
 			$formatted_date = date_format( $date, $require_format );
@@ -1222,14 +1225,14 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 				$is_completed_course = tutor_utils()->is_completed_course( $course_id, $user_id );
 				$course_progress     = (int) tutor_utils()->get_course_completed_percent( $course_id, $user_id );
 
-				if ( $course_progress > 0 || $course_progress < 100) {
+				if ( $course_progress > 0 || $course_progress < 100 ) {
 					$conditional_buttons->show_continue_learning_btn = true;
 				}
 
 				if ( $course_progress === 0 ) {
 					$conditional_buttons->show_start_learning_btn = true;
 				}
-				
+
 				if ( $can_complete_course ) {
 					$conditional_buttons->show_complete_course_btn = true;
 				}

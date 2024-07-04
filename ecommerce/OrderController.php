@@ -400,20 +400,17 @@ class OrderController {
 	 * @param integer $limit List limit.
 	 * @param integer $offset List offset.
 	 * @param array   $where Where clause conditions.
+	 * @param array   $search Search conditions.
 	 * @param string  $list_order List order.
 	 * @param string  $list_order_by List order by.
 	 *
 	 * @return array
 	 */
-	public function get_orders( $limit = 10, $offset = 0, $where = array(), $list_order = '', $list_order_by = '' ) {
+	public function get_orders( $limit = 10, $offset = 0, $where = array(), $search = array(), $list_order = '', $list_order_by = '' ) {
 
 		$list_order    = '' === $list_order ? Input::get( 'order', 'DESC' ) : $list_order;
 		$list_order_by = '' === $list_order_by ? 'id' : $list_order_by;
 
-		$search_term = Input::get( 'search', '' );
-
-		$search_conditions = array();
-
-		return $this->model->get_orders( $where, $search_conditions, $limit, $offset, $list_order_by, $list_order );
+		return $this->model->get_orders( $where, $search, $limit, $offset, $list_order_by, $list_order );
 	}
 }
