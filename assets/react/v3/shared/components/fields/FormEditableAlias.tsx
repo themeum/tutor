@@ -63,7 +63,8 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                     />
 
                     <Button
-                      variant="outlined"
+                      variant="secondary"
+                      isOutlined
                       size="small"
                       buttonCss={styles.saveBtn}
                       onClick={() => {
@@ -74,6 +75,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                       {__('Save', 'tutor')}
                     </Button>
                     <Button
+                      buttonContentCss={styles.cancleButton}
                       variant="text"
                       size="small"
                       onClick={() => {
@@ -160,6 +162,9 @@ const styles = {
   `,
   saveBtn: css`
     margin-right: ${spacing[8]};
+  `,
+  cancleButton: css`
+    color: ${colorTokens.text.brand};
   `,
 };
 

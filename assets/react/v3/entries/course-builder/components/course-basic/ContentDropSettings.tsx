@@ -2,36 +2,38 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import { tutorConfig } from '@Config/config';
+import { Addons } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 const ContentDropSettings = () => {
-  const form = useFormContext();
+  const form = useFormContext<CourseFormData>();
 
   const contentDropOptions = [
     {
       label: __('Schedule course contents by date', 'tutor'),
-      value: 1,
+      value: 'unlock_by_date',
     },
     {
       label: __('Content available after X days from enrollment', 'tutor'),
-      value: 2,
+      value: 'specific_days',
     },
     {
       label: __('Course content available sequentially', 'tutor'),
-      value: 3,
+      value: 'unlock_sequentially',
     },
     {
       label: __('Course content unlocked after finishing prerequisites', 'tutor'),
-      value: 4,
+      value: 'after_finishing_prerequisites',
     },
     {
       label: __('None', 'tutor'),
-      value: 0,
+      value: '',
     },
   ];
 
@@ -49,7 +51,7 @@ const ContentDropSettings = () => {
     );
   }
 
-  if (!tutorConfig.addons_data.find((addon) => addon.name === 'Content Drip')?.is_enabled) {
+  if (!isAddonEnabled(Addons.CONTENT_DRIP)) {
     return (
       <div css={styles.dripNoProWrapper}>
         <SVGIcon name="contentDrip" width={72} height={72} style={styles.dripIcon} />
@@ -66,7 +68,7 @@ const ContentDropSettings = () => {
       </p>
 
       <Controller
-        name="content_drop"
+        name="contentDripType"
         control={form.control}
         render={(controllerProps) => (
           <FormRadioGroup {...controllerProps} options={contentDropOptions} wrapperCss={styles.radioWrapper} />

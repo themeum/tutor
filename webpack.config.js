@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 
@@ -57,7 +57,7 @@ module.exports = (env, options) => {
     };
   }
 
-  var react_blueprints = [
+  const react_blueprints = [
     {
       dest_path: './assets/js',
       src_files: {
@@ -68,13 +68,14 @@ module.exports = (env, options) => {
         'tutor.min': './assets/react/v2/common.js',
         'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
         'tutor-course-builder-v3.min': './assets/react/v3/entries/course-builder/index.tsx',
+        'tutor-order-details.min': './assets/react/v3/entries/order-details/index.tsx',
       },
     },
   ];
 
-  var configEditors = [];
+  const configEditors = [];
   for (let i = 0; i < react_blueprints.length; i++) {
-    let { src_files, dest_path } = react_blueprints[i];
+    const { src_files, dest_path } = react_blueprints[i];
 
     configEditors.push(
       Object.assign({}, config, {
@@ -82,7 +83,7 @@ module.exports = (env, options) => {
         entry: src_files,
         output: {
           path: path.resolve(dest_path),
-          filename: `[name].js`,
+          filename: '[name].js',
           clean: true
         },
         resolve: {
@@ -109,6 +110,10 @@ module.exports = (env, options) => {
             '@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
             '@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
             '@CourseBuilderPublic': path.resolve(__dirname, './assets/react/v3/entries/course-builder/public/'),
+            '@OrderComponents': path.resolve(__dirname, './assets/react/v3/entries/order-details/components/'),
+            '@OrderServices': path.resolve(__dirname, './assets/react/v3/entries/order-details/services/'),
+            '@OrderAtoms': path.resolve(__dirname, './assets/react/v3/entries/order-details/atoms/'),
+            '@OrderContexts': path.resolve(__dirname, './assets/react/v3/entries/order-details/contexts/'),
           },
         },
       })

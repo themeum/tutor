@@ -63,6 +63,11 @@ declare global {
       is_ssl: string;
       course_list_page_url: string;
       course_post_type: string;
+      settings: {
+        monetize_by: 'wc' | 'tutor' | 'edd';
+        enable_course_marketplace: string;
+        course_permalink_base: string;
+      };
     };
     wpApiSettings: {
       nonce: string;

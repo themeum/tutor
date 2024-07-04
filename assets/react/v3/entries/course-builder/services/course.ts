@@ -2,7 +2,7 @@ import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
-import type { User } from '@Services/users';
+import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
@@ -41,7 +41,7 @@ export const courseDefaultData: CourseFormData = {
   is_public_course: false,
   course_level: 'beginner',
   maximum_students: null,
-  enrollment_expiry: '',
+  enrollment_expiry: 0,
   course_benefits: '',
   course_requirements: '',
   course_target_audience: '',
@@ -49,6 +49,12 @@ export const courseDefaultData: CourseFormData = {
   course_duration_hours: 0,
   course_duration_minutes: 0,
   attachments: null,
+  isContentDripEnabled: false,
+  contentDripType: '',
+  course_product_id: '',
+  preview_link: '',
+  course_prerequisites: [],
+  tutor_course_certificate_template: '',
 };
 
 export interface CourseFormData {
@@ -74,7 +80,7 @@ export interface CourseFormData {
   is_public_course: boolean;
   course_level: CourseLevel;
   maximum_students: number | null;
-  enrollment_expiry: string;
+  enrollment_expiry: number;
   course_benefits: string;
   course_requirements: string;
   course_target_audience: string;
@@ -82,6 +88,12 @@ export interface CourseFormData {
   course_duration_hours: number;
   course_duration_minutes: number;
   attachments: Media[] | null;
+  isContentDripEnabled: boolean;
+  contentDripType: 'unlock_by_date' | 'specific_days' | 'unlock_sequentially' | 'after_finishing_prerequisites' | '';
+  course_product_id: string;
+  preview_link: string;
+  course_prerequisites: PrerequisiteCourses[];
+  tutor_course_certificate_template: string;
 }
 
 export interface CoursePayload {
@@ -124,6 +136,9 @@ export interface CoursePayload {
     course_material_includes?: string;
     course_requirements?: string;
   };
+  preview_link: string;
+  _tutor_course_prerequisites_ids: string[];
+  tutor_course_certificate_template: string;
 }
 
 interface CourseDetailsPayload {
@@ -220,21 +235,79 @@ export interface CourseDetailsResponse {
   course_requirements: string;
   course_target_audience: string;
   course_material_includes: string;
-  course_price_type: string;
-  course_price: string;
   course_sale_price: string;
   course_settings: {
     maximum_students: number;
-    content_drip_type: string;
+    content_drip_type:
+      | 'unlock_by_date'
+      | 'specific_days'
+      | 'unlock_sequentially'
+      | 'after_finishing_prerequisites'
+      | '';
     enable_content_drip: number;
+    enrollment_expiry: number;
   };
   step_completion_status: Record<CourseBuilderSteps, boolean>;
+  course_pricing: {
+    price: string;
+    product_id: string;
+    product_name: string;
+    sale_price: string;
+    type: string;
+  };
+  course_instructors: InstructorListResponse[];
+  preview_link: string;
+  course_prerequisites: PrerequisiteCourses[];
+  course_certificate_template: string;
+  course_certificates_templates: Certificate[];
 }
 
 interface CourseResponse {
   data: number;
   message: string;
   status_code: number;
+}
+
+interface WcProduct {
+  ID: string;
+  post_title: string;
+}
+
+interface GetProductsPayload {
+  action: string;
+  exclude_linked_products: boolean;
+}
+
+interface WcProductDetailsPayload {
+  action: string;
+  product_id: string;
+}
+
+interface WcProductDetailsResponse {
+  name: string;
+  regular_price: string;
+  sale_price: string;
+}
+
+interface GetPrerequisiteCoursesPayload {
+  action: string;
+  exclude: string[];
+}
+
+export interface PrerequisiteCourses {
+  id: number;
+  post_title: string;
+  featured_image: string;
+}
+
+export interface Certificate {
+  name: string;
+  orientation: 'landscape' | 'portrait';
+  url: string;
+  preview_src: string;
+  background_src: string;
+  key: string;
+  is_default?: boolean;
 }
 
 const createCourse = (payload: CoursePayload) => {
@@ -295,5 +368,63 @@ export const useCourseDetailsQuery = (courseId: number) => {
     queryKey: ['CourseDetails', courseId],
     queryFn: () => getCourseDetails(courseId).then((res) => res.data),
     enabled: !!courseId,
+  });
+};
+
+const getWcProducts = (courseId?: string) => {
+  return authApiInstance.post<GetProductsPayload, AxiosResponse<WcProduct[]>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_get_wc_products',
+    exclude_linked_products: true,
+    ...(courseId && { course_id: courseId }),
+  });
+};
+
+export const useGetProductsQuery = (courseId?: string) => {
+  return useQuery({
+    queryKey: ['WcProducts'],
+    queryFn: () => getWcProducts(courseId).then((res) => res.data),
+  });
+};
+
+const getProductDetails = (productId: string, courseId: string) => {
+  return authApiInstance.post<WcProductDetailsPayload, AxiosResponse<WcProductDetailsResponse>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_get_wc_product',
+    product_id: productId,
+    course_id: courseId,
+  });
+};
+
+export const useProductDetailsQuery = (productId: string, courseId: string, coursePriceType: string) => {
+  const { showToast } = useToast();
+
+  return useQuery({
+    queryKey: ['WcProductDetails', productId, courseId],
+    queryFn: () =>
+      getProductDetails(productId, courseId).then((res) => {
+        if (typeof res.data === 'string') {
+          showToast({ type: 'danger', message: res.data });
+          return null;
+        }
+        return res.data;
+      }),
+    enabled: !!productId && coursePriceType === 'paid',
+  });
+};
+
+const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
+  return authApiInstance.post<GetPrerequisiteCoursesPayload, AxiosResponse<PrerequisiteCourses[]>>(
+    endpoints.ADMIN_AJAX,
+    {
+      action: 'tutor_course_list',
+      exclude: excludedCourseIds,
+    }
+  );
+};
+
+export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrerequisiteAddonEnabled: boolean) => {
+  return useQuery({
+    queryKey: ['PrerequisiteCourses', excludedCourseIds],
+    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then((res) => res.data),
+    enabled: isPrerequisiteAddonEnabled,
   });
 };

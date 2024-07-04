@@ -200,7 +200,8 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[16]};
-    height: 48px;
+    min-height: 48px;
+    height: 100%;
     width: 100%;
     border-radius: ${borderRadius[6]};
     transition: background 0.15s ease-in-out;
@@ -270,7 +271,7 @@ const styles = {
   `,
   placeholder: css`
     padding: ${spacing[12]} ${spacing[24]};
-    ${typography.heading6()}
+    ${typography.caption()}
     color: ${colorTokens.text.hints};
     display: flex;
     align-items: center;

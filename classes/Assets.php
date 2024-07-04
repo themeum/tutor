@@ -160,6 +160,8 @@ class Assets {
 	 * Enqueue scripts for admin
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 Order details & coupon scripts added.
+	 *
 	 * @return void
 	 */
 	public function admin_scripts() {
@@ -178,6 +180,18 @@ class Assets {
 
 		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
+		
+		// Tutor order detail & coupon scripts.
+		$page = Input::get( 'page', '' );
+		$id   = Input::get( 'id', 0, Input::TYPE_INT );
+
+		if ( 'tutor-orders' === $page && $id > 0 ) {
+			wp_enqueue_script( 'tutor-order-details', tutor()->url . 'assets/js/tutor-order-details.min.js', array(), TUTOR_VERSION, true );
+		}
+
+		if ( 'tutor-coupons' === $page && $id > 0 ) {
+			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array(), TUTOR_VERSION, true );
+		}
 	}
 
 	/**

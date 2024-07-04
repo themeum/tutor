@@ -14,8 +14,8 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from 'react';
 
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import emptyStateImage2x from '@CourseBuilderPublic/images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@CourseBuilderPublic/images/empty-state-illustration.webp';
+import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
 import EmptyState from '@Molecules/EmptyState';
 import { droppableMeasuringStrategy } from '@Utils/dndkit';
 import { moveTo, nanoid } from '@Utils/util';
@@ -32,11 +32,26 @@ import {
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 
 const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean };
 
 const Curriculum = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!courseId) {
+      navigate('/', {
+        replace: true,
+      });
+    }
+  }, [navigate]);
+
+  if (!courseId) {
+    return null;
+  }
+
   const [allCollapsed, setAllCollapsed] = useState(true);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
@@ -95,7 +110,7 @@ const Curriculum = () => {
         <CanvasHead
           title={__('Curriculum', 'tutor')}
           rightButton={
-            <Button variant="text" onClick={() => setAllCollapsed((previous) => !previous)}>
+            <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
               {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
             </Button>
           }
@@ -273,7 +288,7 @@ export default Curriculum;
 
 const styles = {
   container: css`
-    margin-top: ${spacing[32]};
+    margin-top: ${spacing[24]};
   `,
   wrapper: css`
     max-width: ${containerMaxWidth}px;

@@ -10,24 +10,41 @@ import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { tutorConfig } from '@Config/config';
-import { TutorRoles } from '@Config/constants';
+import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { useUserListQuery } from '@Services/users';
+import { useGetProductsQuery, useProductDetailsQuery, type CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { useInstructorListQuery } from '@Services/users';
 import { maxValueRule, requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
+  const courseId = getCourseId();
+
+  const author = form.watch('post_author');
 
   const [instructorSearchText, setInstructorSearchText] = useState('');
+
+  const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
+  const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
+  const isAdministrator = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+
+  const isInstructorVisible =
+    isTutorProEnabled &&
+    isMultiInstructorEnabled &&
+    tutorConfig.settings.enable_course_marketplace === 'on' &&
+    isAdministrator &&
+    String(tutorConfig.current_user.data.id) === String(author?.id || '');
+
+  const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
 
   const visibilityStatus = useWatch({
     control: form.control,
@@ -36,6 +53,10 @@ const CourseBasic = () => {
   const coursePriceType = useWatch({
     control: form.control,
     name: 'course_price_type',
+  });
+  const courseProductId = useWatch({
+    control: form.control,
+    name: 'course_product_id',
   });
 
   const visibilityStatusOptions = [
@@ -64,21 +85,31 @@ const CourseBasic = () => {
     },
   ];
 
-  const instructorListQuery = useUserListQuery({
-    context: 'edit',
-    roles: ['administrator', 'tutor_instructor'],
-    search: instructorSearchText,
-  });
+  const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
-  const instructorOptions =
-    instructorListQuery.data?.map((item) => {
+  const instructorOptions = instructorListQuery.data ?? [];
+
+  const productsQuery = useGetProductsQuery(courseId ? String(courseId) : '');
+  const productDetailsQuery = useProductDetailsQuery(courseProductId, String(courseId), coursePriceType);
+
+  const productOptions =
+    productsQuery.data?.map((item) => {
       return {
-        id: item.id,
-        name: item.name,
-        email: item.email,
-        avatar_url: item.avatar_urls[48],
+        label: item.post_title,
+        value: item.ID,
       };
     }) ?? [];
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (productDetailsQuery.isSuccess && productDetailsQuery.data) {
+      form.setValue('course_price', productDetailsQuery.data.regular_price || '0');
+      form.setValue('course_sale_price', productDetailsQuery.data.sale_price || '0');
+    } else {
+      form.setValue('course_price', '0');
+      form.setValue('course_sale_price', '0');
+    }
+  }, [productDetailsQuery.data]);
 
   return (
     <div css={styles.wrapper}>
@@ -109,7 +140,7 @@ const CourseBasic = () => {
                 <FormEditableAlias
                   {...controllerProps}
                   label={__('Course URL', 'tutor')}
-                  baseURL={`${tutorConfig.home_url}/courses`}
+                  baseURL={`${tutorConfig.home_url}/${tutorConfig.settings.course_permalink_base}`}
                 />
               )}
             />
@@ -144,7 +175,9 @@ const CourseBasic = () => {
           <Controller
             name="post_password"
             control={form.control}
-            render={(controllerProps) => <FormInput {...controllerProps} label={__('Password', 'tutor')} />}
+            render={(controllerProps) => (
+              <FormInput {...controllerProps} label={__('Password', 'tutor')} type="password" isPassword />
+            )}
           />
         )}
 
@@ -190,6 +223,25 @@ const CourseBasic = () => {
           )}
         />
 
+        {coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc' && (
+          <Controller
+            name="course_product_id"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Select product', 'tutor')}
+                placeholder={__('Select a product', 'tutor')}
+                options={productOptions}
+                helpText={__(
+                  'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.'
+                )}
+                isSearchable
+              />
+            )}
+          />
+        )}
+
         {coursePriceType === 'paid' && (
           <div css={styles.coursePriceWrapper}>
             <Controller
@@ -201,6 +253,7 @@ const CourseBasic = () => {
                   label={__('Regular Price', 'tutor')}
                   content="$"
                   placeholder={__('0', 'tutor')}
+                  type="number"
                 />
               )}
             />
@@ -213,6 +266,7 @@ const CourseBasic = () => {
                   label={__('Discount Price', 'tutor')}
                   content="$"
                   placeholder={__('0', 'tutor')}
+                  type="number"
                 />
               )}
             />
@@ -246,27 +300,29 @@ const CourseBasic = () => {
                 placeholder={__('Search to add author', 'tutor')}
                 isSearchable
                 handleSearchOnChange={setInstructorSearchText}
+                disabled={!isAuthorEditable}
               />
             )}
           />
         )}
 
-        {/* @TODO: Need to add condition based on tutor pro, marketplace, multi instructor addon, and admin role */}
-        <Controller
-          name="course_instructors"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormSelectUser
-              {...controllerProps}
-              label={__('Instructors', 'tutor')}
-              options={instructorOptions}
-              placeholder={__('Search to add instructors', 'tutor')}
-              isSearchable
-              handleSearchOnChange={setInstructorSearchText}
-              isMultiSelect
-            />
-          )}
-        />
+        {isInstructorVisible && (
+          <Controller
+            name="course_instructors"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectUser
+                {...controllerProps}
+                label={__('Instructors', 'tutor')}
+                options={instructorOptions}
+                placeholder={__('Search to add instructor', 'tutor')}
+                isSearchable
+                handleSearchOnChange={setInstructorSearchText}
+                isMultiSelect
+              />
+            )}
+          />
+        )}
       </div>
     </div>
   );
