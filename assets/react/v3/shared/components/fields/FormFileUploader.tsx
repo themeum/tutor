@@ -178,7 +178,7 @@ const FormFileUploader = ({
                   {(file) => (
                     <div key={file.id} css={styles.attachmentCardWrapper}>
                       <div css={styles.attachmentCard}>
-                        <SVGIcon name="preview" height={40} width={40} />
+                        <SVGIcon style={styles.fileIcon} name="preview" height={40} width={40} />
 
                         <div css={styles.attachmentCardBody}>
                           <div css={styles.attachmentCardTitle}>
@@ -294,5 +294,8 @@ const styles = {
   `,
   uploadButton: css`
     width: 100%;
+  `,
+  fileIcon: css`
+    flex-shrink: 0;
   `,
 };
