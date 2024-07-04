@@ -25,6 +25,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 2.0.0
  */
 class OrderController {
+
+	/**
+	 * Order model
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var Object
+	 */
+	private $model;
+
 	/**
 	 * Trait for utilities
 	 *
@@ -53,26 +63,30 @@ class OrderController {
 	 * @return void
 	 * @since 2.0.0
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
 		$this->page_title = __( 'Orders', 'tutor' );
-		/**
-		 * Handle bulk action
-		 *
-		 * @since v2.0.0
-		 */
-		add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
-		/**
-		 * Handle ajax request for updating order status
-		 *
-		 * @since v2.0.0
-		 */
-		add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
-		/**
-		 * Handle ajax request for delete order
-		 *
-		 * @since v2.0.0
-		 */
-		add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
+		$this->model      = new OrderModel();
+
+		if ( $register_hooks ) {
+			/**
+			 * Handle bulk action
+			 *
+			 * @since v2.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
+			/**
+			 * Handle ajax request for updating order status
+			 *
+			 * @since v2.0.0
+			 */
+			add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
+			/**
+			 * Handle ajax request for delete order
+			 *
+			 * @since v2.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
+		}
 	}
 
 	/**
@@ -103,26 +117,25 @@ class OrderController {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
-	 * @param string  $category_slug category slug.
-	 * @param integer $order_id order ID.
-	 * @param string  $date selected date | optional.
-	 * @param string  $search search by user name or email | optional.
-	 *
 	 * @return array
 	 *
 	 * @since v2.0.0
 	 */
-	public function tabs_key_value( $category_slug, $order_id, $date, $search ): array {
+	public function tabs_key_value(): array {
 		$url = get_pagenum_link();
 
-		$all       = self::count_order( 'all', $order_id, $date, $search );
-		$mine      = self::count_order( 'mine', $order_id, $date, $search );
-		$published = self::count_order( 'publish', $order_id, $date, $search );
-		$draft     = self::count_order( 'draft', $order_id, $date, $search );
-		$pending   = self::count_order( 'pending', $order_id, $date, $search );
-		$trash     = self::count_order( 'trash', $order_id, $date, $search );
-		$private   = self::count_order( 'private', $order_id, $date, $search );
-		$future    = self::count_order( 'future', $order_id, $date, $search );
+		$order_id = '';
+		$date     = '';
+		$search   = '';
+
+		$all       = 0;
+		$mine      = 0;
+		$published = 0;
+		$draft     = 0;
+		$pending   = 0;
+		$trash     = 0;
+		$private   = 0;
+		$future    = 0;
 
 		$tabs = array(
 			array(
@@ -413,44 +426,23 @@ class OrderController {
 	}
 
 	/**
-	 * Get orders list
+	 * Get orders
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array  $where where clause conditions.
-	 * @param int    $limit limit default 10.
-	 * @param int    $offset default 0.
-	 * @param string $order_by column default 'o.id'.
-	 * @param string $order list order default 'desc'.
+	 * @param integer $limit List limit.
+	 * @param integer $offset List offset.
+	 * @param array   $where Where clause conditions.
+	 * @param string  $list_order List order.
+	 * @param string  $list_order_by List order by.
 	 *
 	 * @return array
 	 */
-	public static function get_orders( array $where = array(), int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
+	public function get_orders( $limit = 10, $offset = 0, $where = array(), $list_order = '', $list_order_by = '' ) {
 
-		global $wpdb;
+		$list_order    = '' === $list_order ? Input::get( 'order', 'DESC' ) : $list_order;
+		$list_order_by = '' === $list_order_by ? 'id' : $list_order_by;
 
-		$primary_table  = "{$wpdb->prefix}tutor_orders o";
-		$joining_tables = array(
-			array(
-				'type'  => 'INNER',
-				'table' => "{$wpdb->users} u",
-				'on'    => 'o.user_id = u.ID',
-			),
-			array(
-				'type'  => 'LEFT',
-				'table' => "{$wpdb->usermeta} um1",
-				'on'    => 'u.ID = um1.user_id AND um1.meta_key = "tutor_customer_billing_name"',
-			),
-			array(
-				'type'  => 'LEFT',
-				'table' => "{$wpdb->usermeta} um2",
-				'on'    => 'u.ID = um2.user_id AND um2.meta_key = "tutor_customer_billing_name"',
-			),
-		);
-
-		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
-
-		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $order_by, $limit, $offset, $order );
-
+		return $this->model->get_orders( $where, $limit, $offset, $list_order_by, $list_order );
 	}
 }
