@@ -283,7 +283,7 @@ class Course extends Tutor_Base {
 	 * @return boolean
 	 */
 	private function is_valid_video_source_type( string $source_type ): bool {
-		return in_array( $source_type, $this->supported_video_sources, true );
+		return in_array( $source_type, tutor_utils()->get_option( 'supported_video_sources', array() ), true );
 	}
 
 	/**
@@ -298,19 +298,14 @@ class Course extends Tutor_Base {
 	 */
 	public function validate_video_source( $params, &$errors ) {
 		if ( isset( $params['video'] ) ) {
-			$video_source_type = isset( $params['video']['source_type'] ) ? $params['video']['source_type'] : '';
-			$video_source      = isset( $params['video']['source'] ) ? $params['video']['source'] : '';
-
-			if ( '' === $video_source_type ) {
-				$errors['video_source_type'] = __( 'Video source type is required', 'tutor' );
-			} else {
-				if ( ! $this->is_valid_video_source_type( $video_source_type ) ) {
-					$errors['video_source_type'] = __( 'Invalid video source type', 'tutor' );
-				}
-			}
+			$video_source = isset( $params['video']['source'] ) ? $params['video']['source'] : '';
 
 			if ( '' === $video_source ) {
 				$errors['video_source'] = __( 'Video source is required', 'tutor' );
+			} else {
+				if ( ! $this->is_valid_video_source_type( $video_source ) ) {
+					$errors['video_source'] = __( 'Invalid video source', 'tutor' );
+				}
 			}
 		}
 	}
@@ -486,13 +481,6 @@ class Course extends Tutor_Base {
 
 		$course_requirements = isset( $additional_content['course_requirements'] ) ? $additional_content['course_requirements'] : '';
 
-		if ( isset( $params['video'] ) ) {
-			$this->video_params['source'] = $params['video']['source_type'];
-
-			$this->video_params[ 'source_' . $params['video']['source_type'] ] = $params['video']['source'];
-			$_POST['video'] = $this->video_params;
-		}
-
 		$pricing = isset( $params['pricing'] ) ? array(
 			'type'       => $params['pricing']['type'] ?? self::PRICE_TYPE_FREE,
 			'product_id' => (int) $params['pricing']['product_id'] ?? -1,
@@ -585,13 +573,6 @@ class Course extends Tutor_Base {
 			if ( ! empty( $course_duration ) ) {
 				update_post_meta( $post_id, '_course_duration', $course_duration );
 			}
-		}
-
-		if ( isset( $params['video'] ) ) {
-			$this->video_params['source'] = $params['video']['source_type'];
-
-			$this->video_params[ 'source_' . $params['video']['source_type'] ] = $params['video']['source'];
-			update_post_meta( $post_id, '_video', $this->video_params );
 		}
 
 		if ( isset( $params['pricing'] ) && ! empty( $params['pricing'] ) ) {

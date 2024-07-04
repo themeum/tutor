@@ -357,6 +357,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                       <TopicContent
                         key={content.ID}
                         type={content.type}
+                        topic={topic}
                         content={{
                           id: content.ID,
                           title: content.post_title,
@@ -375,6 +376,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 <Show when={activeSortItem}>
                   {(item) => (
                     <TopicContent
+                      topic={topic}
                       content={{
                         id: item.ID,
                         title: item.post_title,

@@ -1,11 +1,13 @@
 import { Box, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
 import { TutorBadge, type Variant } from '@Atoms/TutorBadge';
+import { useModal } from '@Components/modals/Modal';
 import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { css } from '@emotion/react';
+import DiscountModal from '@OrderComponents/modals/DiscountModal';
 import { useOrderContext } from '@OrderContexts/order-context';
 import type { PaymentStatus } from '@OrderServices/order';
 import { createPriceFormatter } from '@Utils/currency';
@@ -46,6 +48,7 @@ function PaymentActionButton({ status, onClick }: { status: PaymentStatus; onCli
 }
 
 function Payment() {
+  const { showModal } = useModal();
   const { order } = useOrderContext();
   const formatPrice = createPriceFormatter({ locale: 'en-US', currency: 'USD' });
   return (
@@ -74,7 +77,21 @@ function Payment() {
                   <button
                     type="button"
                     css={styles.discountButton}
-                    onClick={() => alert('@TODO: Will be implemented later.')}
+                    onClick={() =>
+                      showModal({
+                        component: DiscountModal,
+                        props: {
+                          title: 'Add discount',
+                          discount: {
+                            amount: 0,
+                            discounted_value: 0,
+                            reason: '',
+                            type: 'percentage',
+                          },
+                          total_price: 100,
+                        },
+                      })
+                    }
                   >
                     {__('Add discount', 'tutor')}
                   </button>

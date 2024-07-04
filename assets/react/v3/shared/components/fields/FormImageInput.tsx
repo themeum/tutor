@@ -9,7 +9,7 @@ type MediaSize = {
   url: string;
   width: number;
   height: number;
-  orientation: string;
+  orientation?: string;
 };
 
 export type Media = {

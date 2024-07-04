@@ -89,6 +89,8 @@ export const createGlobalCss = () => css`
     border-style: none;
   }
 
+
+
   button,
   input,
   optgroup,
@@ -98,6 +100,27 @@ export const createGlobalCss = () => css`
     font-size: 100%;
     line-height: 1.15;
     margin: 0;
+  }
+
+
+  input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week] {
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+    padding: 0 12px;
+    min-height: initial;
+    box-shadow: none;
+    border-radius: 0;
+    border: none;
+    background-color: initial;
+    color: currentColor;
+  }
+
+  input[type=checkbox]:focus, input[type=color]:focus, input[type=date]:focus, input[type=datetime-local]:focus, input[type=datetime]:focus, input[type=email]:focus, input[type=month]:focus, input[type=number]:focus, input[type=password]:focus, input[type=radio]:focus, input[type=search]:focus, input[type=tel]:focus, input[type=text]:focus, input[type=time]:focus, input[type=url]:focus, input[type=week]:focus, select:focus, textarea:focus {
+    border-color: initial;
+    box-shadow: none;
+    outline: none;
   }
 
   button,
