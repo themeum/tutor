@@ -43,6 +43,16 @@ document.addEventListener('DOMContentLoaded', function () {
 			{ once: true },
 		);
 	}
+	const filterPaymentStatus = document.getElementById('tutor-backend-filter-payment-status');
+	if (filterPaymentStatus) {
+		filterPaymentStatus.addEventListener(
+			'change',
+			(e) => {
+				window.location = urlPrams('payment-status', e.target.value);
+			},
+			{ once: true },
+		);
+	}
 
 	const filterSearch = document.getElementById('tutor-admin-search-filter-form');
 	const search_field = document.getElementById('tutor-backend-filter-search');
