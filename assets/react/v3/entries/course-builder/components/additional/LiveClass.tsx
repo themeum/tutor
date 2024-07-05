@@ -16,30 +16,22 @@ import { AnimationType } from '@Hooks/useAnimation';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
 import MeetingCard from './MeetingCard';
-import MeetingForm, { type MeetingType } from './MeetingForm';
-
-export interface Meeting {
-  id: number;
-  type: MeetingType;
-  meeting_title: string;
-  meeting_date: string;
-  meeting_start_time: string;
-  meeting_link: string;
-  meeting_token?: string;
-  meeting_password?: string;
-}
+import MeetingForm from './MeetingForm';
+import { type MeetingType, useCourseDetailsQuery } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 // @TODO: will come from app config api later.
 const isPro = true;
 const hasLiveAddons = true;
 
+const courseId = getCourseId();
+
 const LiveClass = () => {
   const [showMeetingForm, setShowMeetingForm] = useState<MeetingType | null>(null);
-  // @TODO: will come from app config api later.
-  const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const courseDetailsQuery = useCourseDetailsQuery(courseId);
 
-  const zoomMeetings = meetings.filter((meeting) => meeting.type === 'zoom');
-  const googleMeetMeetings = meetings.filter((meeting) => meeting.type === 'google_meet');
+  const zoomMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
+  // const googleMeetMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
 
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
   const googleMeetButtonRef = useRef<HTMLButtonElement>(null);
@@ -113,18 +105,19 @@ const LiveClass = () => {
             <For each={zoomMeetings}>
               {(meeting) => (
                 <div
-                  key={meeting.id}
+                  key={meeting.ID}
                   css={styles.meeting({
                     hasMeeting: zoomMeetings.length > 0,
                   })}
                 >
                   <MeetingCard
-                    meetingTitle={meeting.meeting_title}
-                    meetingDate={meeting.meeting_date}
-                    meetingStartTime={meeting.meeting_start_time}
-                    meetingLink={meeting.meeting_link}
-                    meetingToken={meeting.meeting_token}
-                    meetingPassword={meeting.meeting_password}
+                    type="zoom"
+                    ID={meeting.ID}
+                    meetingTitle={meeting.post_title}
+                    meetingStartTime={meeting.meeting_data.start_time}
+                    meetingLink={meeting.meeting_data.start_url}
+                    meetingToken={meeting.meeting_data.id}
+                    meetingPassword={meeting.meeting_data.password}
                   />
                 </div>
               )}
@@ -151,7 +144,7 @@ const LiveClass = () => {
             </div>
           </div>
 
-          <div
+          {/* <div
             css={styles.meetingsWrapper({
               hasMeeting: googleMeetMeetings.length > 0,
             })}
@@ -159,18 +152,22 @@ const LiveClass = () => {
             <For each={googleMeetMeetings}>
               {(meeting) => (
                 <div
-                  key={meeting.id}
+                  key={meeting.ID}
                   css={styles.meeting({
                     hasMeeting: googleMeetMeetings.length > 0,
                   })}
                 >
                   <MeetingCard
-                    meetingTitle={meeting.meeting_title}
-                    meetingDate={meeting.meeting_date}
-                    meetingStartTime={meeting.meeting_start_time}
-                    meetingLink={meeting.meeting_link}
-                    meetingToken={meeting.meeting_token}
-                    meetingPassword={meeting.meeting_password}
+                    type="google_meet"
+                    meetingTitle={meeting.post_title}
+                    meetingStartTime={meeting.meeting_data.start_time}
+                    meetingLink={meeting.meeting_data.start_url}
+                    meetingToken={meeting.meeting_data.id}
+                    meetingPassword={meeting.meeting_data.password}
+                    onEditClick={() => {
+                      setShowMeetingForm('google_meet');
+                      setCurrentMeetingId(meeting.ID);
+                    }}
                   />
                 </div>
               )}
@@ -195,7 +192,7 @@ const LiveClass = () => {
                 {__('Create a Google Meet', 'tutor')}
               </Button>
             </div>
-          </div>
+          </div> */}
 
           <Button
             variant="secondary"
@@ -221,8 +218,10 @@ const LiveClass = () => {
       >
         <MeetingForm
           type={showMeetingForm as MeetingType}
-          setShowMeetingForm={setShowMeetingForm}
-          setMeetings={setMeetings}
+          onCancel={() => {
+            setShowMeetingForm(null);
+          }}
+          currentMeetingId=""
         />
       </Popover>
       <Popover
@@ -233,8 +232,10 @@ const LiveClass = () => {
       >
         <MeetingForm
           type={showMeetingForm as MeetingType}
-          setShowMeetingForm={setShowMeetingForm}
-          setMeetings={setMeetings}
+          onCancel={() => {
+            setShowMeetingForm(null);
+          }}
+          currentMeetingId=""
         />
       </Popover>
       <Popover
@@ -245,8 +246,10 @@ const LiveClass = () => {
       >
         <MeetingForm
           type={showMeetingForm as MeetingType}
-          setShowMeetingForm={setShowMeetingForm}
-          setMeetings={setMeetings}
+          onCancel={() => {
+            setShowMeetingForm(null);
+          }}
+          currentMeetingId=""
         />
       </Popover>
     </div>

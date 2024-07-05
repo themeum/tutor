@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import type React from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -20,77 +19,113 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { styleUtils } from '@Utils/style-utils';
-import type { Meeting } from './LiveClass';
-
-export type MeetingType = 'zoom' | 'google_meet' | 'jitsi';
-
-interface MeetingFormField {
-  meeting_name: string;
-  meeting_summary: string;
-  meeting_date: string;
-  meeting_time_from: string;
-  meeting_time_to: string;
-  meeting_enrolledAsAttendee: boolean;
-  meeting_autoRecording: string;
-  meeting_password: string;
-  meeting_host: string;
-}
+import {
+  type MeetingFormData,
+  type MeetingType,
+  useCourseDetailsQuery,
+  useSaveZoomMeetingMutation,
+} from '@CourseBuilderServices/course';
+import { convertMeetingFormDataToPayload, getCourseId } from '@CourseBuilderUtils/utils';
+import { useEffect } from 'react';
+import { format } from 'date-fns';
+import { DateFormats } from '@Config/constants';
 
 interface MeetingFormProps {
   type: MeetingType;
-  setShowMeetingForm: React.Dispatch<React.SetStateAction<MeetingType | null>>;
-  setMeetings: React.Dispatch<React.SetStateAction<Meeting[]>>;
+  onCancel: () => void;
+  currentMeetingId: string;
 }
 
-const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps) => {
+const courseId = getCourseId();
+
+const MeetingForm = ({ type, currentMeetingId, onCancel }: MeetingFormProps) => {
   const { ref, isScrolling } = useIsScrolling({ defaultValue: true });
-  const meetingForm = useFormWithGlobalError<MeetingFormField>({
+  const courseDetailsQuery = useCourseDetailsQuery(courseId);
+  const zoomMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
+
+  const meetingForm = useFormWithGlobalError<MeetingFormData>({
     defaultValues: {
       meeting_name: '',
       meeting_summary: '',
       meeting_date: '',
-      meeting_time_from: '',
-      meeting_time_to: '',
+      meeting_time: '',
+      meeting_duration: '',
+      meeting_duration_unit: 'min',
       meeting_enrolledAsAttendee: false,
-      meeting_autoRecording: 'disabled',
+      meeting_timezone: '',
+      auto_recording: 'none',
       meeting_password: '',
       meeting_host: '',
     },
   });
 
-  const onCancel = () => {
-    setShowMeetingForm(null);
-  };
+  const saveZoomMeeting = useSaveZoomMeetingMutation(String(courseId));
+
+  const timeZones = courseDetailsQuery.data?.zoom_timezones ?? {};
+  const timeZonesOptions = Object.keys(timeZones).map((key) => ({
+    label: timeZones[key],
+    value: key,
+  }));
 
   // @TODO: will come from app config api later.
-  const onSubmit = (data: MeetingFormField) => {
-    setShowMeetingForm(null);
-    meetingForm.reset();
+  const onSubmit = async (data: MeetingFormData) => {
+    const payload = convertMeetingFormDataToPayload(data, type, 'metabox');
 
-    if (!data.meeting_date || !data.meeting_time_from || !data.meeting_time_to) {
+    if (!courseId) {
       return;
     }
 
-    const dataToSubmit: Omit<Meeting, 'id'> = {
-      type: type,
-      meeting_title: data.meeting_name,
-      meeting_date: data.meeting_date,
-      meeting_start_time: data.meeting_time_from,
-      meeting_link: type === 'zoom' ? 'https://zoom.us/abc-xyz' : 'https://meet.google.com/abc-xyz',
-      ...(type === 'zoom' && {
-        meeting_token: 'abc-xyz',
-        meeting_password: data.meeting_password,
-      }),
-    };
+    if (type === 'zoom') {
+      const zoomUsers = courseDetailsQuery.data?.zoom_users ?? {};
+      const response = await saveZoomMeeting.mutateAsync({
+        ...payload,
+        course_id: courseId,
+        meeting_host: Object.keys(zoomUsers)[0],
+        ...(currentMeetingId && { meeting_id: currentMeetingId }),
+      });
 
-    setMeetings((prev) => [
-      ...prev,
-      {
-        id: prev.length + 1,
-        ...dataToSubmit,
-      },
-    ]);
+      if (response.data) {
+        onCancel();
+        meetingForm.reset();
+      }
+    }
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!courseDetailsQuery.data) {
+      return;
+    }
+
+    if (type === 'zoom') {
+      const zoomUsers = courseDetailsQuery.data?.zoom_users ?? {};
+      meetingForm.setValue('meeting_host', Object.values(zoomUsers)[0]);
+
+      if (!currentMeetingId) {
+        return;
+      }
+
+      const currentMeeting = zoomMeetings.find((meeting) => meeting.ID === currentMeetingId);
+
+      if (currentMeeting) {
+        meetingForm.setValue('meeting_name', currentMeeting.post_title);
+        meetingForm.setValue('meeting_summary', currentMeeting.post_content);
+        meetingForm.setValue(
+          'meeting_date',
+          format(new Date(currentMeeting.meeting_data.start_time), DateFormats.yearMonthDay)
+        );
+        meetingForm.setValue(
+          'meeting_time',
+          format(new Date(currentMeeting.meeting_data.start_time), DateFormats.hoursMinutes)
+        );
+        meetingForm.setValue('meeting_duration', String(currentMeeting.meeting_data.duration));
+        meetingForm.setValue('meeting_duration_unit', currentMeeting.meeting_data.duration_unit);
+        meetingForm.setValue('meeting_timezone', currentMeeting.meeting_data.timezone);
+        meetingForm.setValue('auto_recording', currentMeeting.meeting_data.settings.auto_recording);
+        meetingForm.setValue('meeting_password', currentMeeting.meeting_data.password);
+      }
+    }
+  }, [courseDetailsQuery.data]);
 
   return (
     <div css={styles.container}>
@@ -98,6 +133,9 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
         <Controller
           name="meeting_name"
           control={meetingForm.control}
+          rules={{
+            required: 'Meeting name is required',
+          }}
           render={(controllerProps) => (
             <FormInput
               {...controllerProps}
@@ -110,6 +148,9 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
         <Controller
           name="meeting_summary"
           control={meetingForm.control}
+          rules={{
+            required: 'Meeting summary is required',
+          }}
           render={(controllerProps) => (
             <FormTextareaInput
               {...controllerProps}
@@ -125,34 +166,53 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
           <Controller
             name="meeting_date"
             control={meetingForm.control}
+            rules={{
+              required: 'Meeting date is required',
+            }}
             render={(controllerProps) => (
               <FormDateInput
                 {...controllerProps}
                 label={__('Meeting Date', 'tutor')}
                 placeholder={__('Enter meeting date', 'tutor')}
+                disabledBefore={new Date().toISOString()}
               />
             )}
           />
 
+          <Controller
+            name="meeting_time"
+            control={meetingForm.control}
+            rules={{
+              required: 'Meeting time is required',
+            }}
+            render={(controllerProps) => <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />}
+          />
           <div css={styles.meetingTimeWrapper}>
             <Controller
-              name="meeting_time_from"
+              name="meeting_duration"
               control={meetingForm.control}
+              rules={{
+                required: 'Meeting duration is required',
+              }}
               render={(controllerProps) => (
-                <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />
+                <FormInput {...controllerProps} placeholder={__('Duration', 'tutor')} type="number" />
               )}
             />
-            <div
-              css={{
-                width: '10px',
-                height: '2px',
-                backgroundColor: colorTokens.stroke.default,
-              }}
-            />
             <Controller
-              name="meeting_time_to"
+              name="meeting_duration_unit"
               control={meetingForm.control}
-              render={(controllerProps) => <FormTimeInput {...controllerProps} placeholder={__('End time', 'tutor')} />}
+              rules={{
+                required: 'Meeting duration unit is required',
+              }}
+              render={(controllerProps) => (
+                <FormSelectInput
+                  {...controllerProps}
+                  options={[
+                    { label: 'Minutes', value: 'min' },
+                    { label: 'Hours', value: 'hr' },
+                  ]}
+                />
+              )}
             />
           </div>
         </div>
@@ -169,15 +229,34 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
 
         <Show when={type === 'zoom'}>
           <Controller
-            name="meeting_autoRecording"
+            name="meeting_timezone"
             control={meetingForm.control}
+            rules={{
+              required: 'Time zone is required',
+            }}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Time Zone', 'tutor')}
+                placeholder="Select time zone"
+                options={timeZonesOptions}
+                isSearchable
+              />
+            )}
+          />
+          <Controller
+            name="auto_recording"
+            control={meetingForm.control}
+            rules={{
+              required: 'Auto recording is required',
+            }}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
                 label={__('Auto recording', 'tutor')}
                 placeholder="Select auto recording option"
                 options={[
-                  { label: 'Disabled', value: 'disabled' },
+                  { label: 'No Recordings', value: 'none' },
                   { label: 'Local', value: 'local' },
                   { label: 'Cloud', value: 'cloud' },
                 ]}
@@ -188,11 +267,16 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
           <Controller
             name="meeting_password"
             control={meetingForm.control}
+            rules={{
+              required: 'Meeting password is required',
+            }}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
                 label={__('Meeting Password', 'tutor')}
                 placeholder={__('Enter meeting password', 'tutor')}
+                type="password"
+                isPassword
               />
             )}
           />
@@ -200,11 +284,15 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
           <Controller
             name="meeting_host"
             control={meetingForm.control}
+            rules={{
+              required: 'Meeting host is required',
+            }}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
                 label={__('Meeting Host', 'tutor')}
                 placeholder={__('Enter meeting host', 'tutor')}
+                disabled
               />
             )}
           />
@@ -215,8 +303,13 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
         <Button variant="text" size="small" onClick={onCancel}>
           {__('Cancel', 'tutor')}
         </Button>
-        <Button variant="primary" size="small" onClick={meetingForm.handleSubmit(onSubmit)}>
-          {__('Create meeting', 'tutor')}
+        <Button
+          loading={saveZoomMeeting.isPending}
+          variant="primary"
+          size="small"
+          onClick={meetingForm.handleSubmit(onSubmit)}
+        >
+          {currentMeetingId ? __('Update Meeting', 'tutor') : __('Create Meeting', 'tutor')}
         </Button>
       </div>
     </div>
@@ -224,6 +317,7 @@ const MeetingForm = ({ type, setShowMeetingForm, setMeetings }: MeetingFormProps
 };
 
 export default MeetingForm;
+
 const styles = {
   container: css`
     ${styleUtils.display.flex('column')}
