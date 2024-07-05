@@ -45,6 +45,17 @@ class OrderModel {
 	const PAYMENT_STATUS_FAILED  = 'failed';
 
 	/**
+	 * Order Meta keys for history & refunds
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const META_KEY_HISTORY = 'history';
+	const META_KEY_REFUND  = 'refund';
+
+
+	/**
 	 * Order table name
 	 *
 	 * @since 3.0.0
@@ -337,7 +348,7 @@ class OrderModel {
 			"{$wpdb->prefix}tutor_ordermeta",
 			array(
 				'order_id' => $order_id,
-				'meta_key' => 'history',
+				'meta_key' => self::META_KEY_HISTORY,
 			),
 			'id'
 		);
@@ -397,7 +408,7 @@ class OrderModel {
 			"{$wpdb->prefix}tutor_ordermeta",
 			array(
 				'order_id' => $order_id,
-				'meta_key' => 'refund',
+				'meta_key' => self::META_KEY_REFUND,
 			),
 			'id'
 		);

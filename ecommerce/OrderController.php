@@ -137,9 +137,7 @@ class OrderController {
 			);
 		}
 
-		$order_model = new OrderModel();
-
-		$order_data = $order_model->get_order_by_id( $order_id );
+		$order_data = $this->model->get_order_by_id( $order_id );
 
 		if ( ! $order_data ) {
 			$this->json_response(
