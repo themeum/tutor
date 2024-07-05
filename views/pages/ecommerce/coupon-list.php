@@ -81,25 +81,22 @@ $filters = array(
 								</div>
 							</th>
 							<th class="tutor-table-rows-sorting">
-								<?php esc_html_e( 'Order ID', 'tutor' ); ?>
-								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
+								<?php esc_html_e( 'Title', 'tutor' ); ?>
 							</th>
 							<th>
-								<?php esc_html_e( 'Name', 'tutor' ); ?>
-							</th>
-							<th class="tutor-table-rows-sorting">
-								<?php esc_html_e( 'Date', 'tutor' ); ?>
-								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
+								<?php esc_html_e( 'Discount', 'tutor' ); ?>
 							</th>
 							<th>
-								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
+								<?php esc_html_e( 'Type', 'tutor' ); ?>
 							</th>
 							<th>
-								<?php esc_html_e( 'Order Status', 'tutor' ); ?>
+								<?php esc_html_e( 'Code', 'tutor' ); ?>
 							</th>
-							<th class="tutor-table-rows-sorting">
-								<?php esc_html_e( 'Total', 'tutor' ); ?>
-								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
+							<th>
+								<?php esc_html_e( 'Status', 'tutor' ); ?>
+							</th>
+							<th>
+								<?php esc_html_e( 'Uses', 'tutor' ); ?>
 							</th>
 							<th  width="10%">
 							<?php esc_html_e( 'Action', 'tutor' ); ?>
@@ -111,7 +108,6 @@ $filters = array(
 						<?php if ( is_array( $coupons ) && count( $coupons ) ) : ?>
 							<?php
 							foreach ( $coupons as $key => $coupon ) :
-								$user_data = get_userdata( $coupon->user_id );
 								?>
 								<tr>
 									<td>
@@ -122,46 +118,58 @@ $filters = array(
 
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( '#' . $coupon->id ); ?>
+											<?php echo esc_html( $coupon->coupon_title ); ?>
 										</div>
 									</td>
 									
 									<td>
-										<div class="tutor-d-flex tutor-align-center">
-											<?php
-											echo wp_kses(
-												tutor_utils()->get_tutor_avatar( $user_data, 'sm' ),
-												tutor_utils()->allowed_avatar_tags()
-											)
-											?>
-											<div class="tutor-ml-12">
-												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $user_data, true ) ); ?>">
-													<?php echo esc_html( $user_data ? $user_data->display_name : '' ); ?>
-												</a>
-											</div>
+										<div class="tutor-fs-7">
+											<?php echo esc_html( $coupon->discount_amount ); ?>
+										</div>
+									</td>
+									<td>
+										<div class="tutor-fs-7">
+											<?php echo esc_html( $coupon->discount_type ); ?>
 										</div>
 									</td>
 
 									<td>
-										<span class="tutor-fw-normal tutor-fs-7">
-											<?php echo esc_attr( tutor_i18n_get_formated_date( $coupon->created_at_gmt ) ); ?>
-										</span>
+										<div class="tutor-fs-7">
+											<?php echo esc_html( $coupon->coupon_code ); ?>
+										</div>
 									</td>
 
 									<td>
-									<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon->payment_status, true ) ); ?>
+										<?php
+										$coupon_status = (int) $coupon->coupon_status;
+										echo wp_kses_post( tutor_utils()->translate_dynamic_text( 1 === $coupon_status ? 'active' : 'inactive', true ) );
+										?>
 									</td>
 
 									<td>
-										<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon->order_status, true ) ); ?>
+										12
 									</td>
 									<td>
-										<?php echo wp_kses_post( tutor_utils()->tutor_price( $coupon->total_price ) ); ?>
-									</td>
-									<td>
-										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-coupons&id=' . $coupon->id ) ); ?>">
-											<?php esc_html_e( 'Edit', 'tutor' );?>
-										</a>
+										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
+											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-coupons&id=' . $coupon->id ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+												<?php esc_html_e( 'Edit', 'tutor' ); ?>
+											</a>
+											<div class="tutor-dropdown-parent">
+												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+													<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+												</button>
+												<div id="table-dashboard-coupon-list-<?php echo esc_attr( $coupon->id ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-coupon-delete"
+														data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $coupon->id ); ?>">
+														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+														<span>
+															<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
+														</span>
+													</a>
+												</div>
+											</div>
+										</div>
+										
 									</td>
 								</tr>
 							<?php endforeach; ?>
