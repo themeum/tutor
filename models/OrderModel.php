@@ -522,12 +522,23 @@ class OrderModel {
 	 * @return int
 	 */
 	public function get_order_count( $where = array(), string $search_term = '' ) {
+		global $wpdb;
+
 		$search_clause = array();
 		if ( '' !== $search_term ) {
-			foreach ( $this->get_order_searchable_fields() as $column ) {
+			foreach ( $this->get_searchable_fields() as $column ) {
 				$search_clause[ $column ] = $search_term;
 			}
 		}
-		return QueryHelper::get_count( $this->table_name, $where, $search_clause );
+
+		$join_table    = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->users} u",
+				'on'    => 'o.user_id = u.ID',
+			),
+		);
+		$primary_table = "{$this->table_name} o";
+		return QueryHelper::get_joined_count( $primary_table, $join_table, $where, $search_clause );
 	}
 }

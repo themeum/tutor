@@ -24,7 +24,7 @@ $date           = Input::get( 'date', '' );
 $search_term    = Input::get( 'search', '' );
 $payment_status = Input::get( 'payment-status', '' );
 
-$where_clause  = array();
+$where_clause = array();
 
 if ( $date ) {
 	$where_clause['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
@@ -32,6 +32,9 @@ if ( $date ) {
 
 if ( $payment_status ) {
 	$where_clause['o.payment_status'] = $payment_status;
+}
+if ( 'all' !== $active_tab ) {
+	$where_clause['o.order_status'] = $active_tab;
 }
 
 $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );

@@ -608,4 +608,58 @@ class QueryHelper {
 		return (int) $count;
 	}
 
+	/**
+	 * Get count by joining multiple tables with specified join relations.
+	 *
+	 * Argument should be SQL escaped.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $primary_table The primary table name with prefix.
+	 * @param array  $joining_tables An array of join relations. Each relation should be an array with keys 'type', 'table', 'on'.
+	 * @param array  $where array of where conditions.
+	 * @param array  $search array of search conditions for LIKE operator.
+	 * @param string $count_column column name to count, default id.
+	 *
+	 * @return int
+	 */
+	public static function get_joined_count(string $primary_table, array $joining_tables, array $where = [], array $search = [], string $count_column = '*'): int {
+		global $wpdb;
+		
+		$from_clause = $primary_table;
+		
+		$join_clauses = '';
+		foreach ($joining_tables as $relation) {
+			$join_clauses .= " {$relation['type']} JOIN {$relation['table']} ON {$relation['on']}";
+		}
+		
+		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
+		$search_clause = !empty($search) ? self::build_like_clause($search, 'AND') : '';
+
+		if (!empty($search_clause)) {
+			if (!empty($where_clause)) {
+				$where_clause .= ' AND (' . $search_clause . ')';
+			} else {
+				$where_clause = 'WHERE ' . $search_clause;
+			}
+		}
+
+		$count_query = "
+			SELECT COUNT($count_column) as total_count
+			FROM {$from_clause}
+			{$join_clauses}
+			{$where_clause}
+		";
+
+		$total_count = $wpdb->get_var($count_query);
+
+		// If error occurred then throw new exception.
+		if ($wpdb->last_error) {
+			throw new \Exception($wpdb->last_error);
+		}
+
+		return (int) $total_count;
+	}
+
+
 }

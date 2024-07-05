@@ -477,38 +477,8 @@ class OrderController {
 	 */
 	public function get_orders( $limit = 10, $offset = 0, $where = array(), $search_term = '', $list_order = '', $list_order_by = '' ) {
 
-		global $wpdb;
-
 		$list_order    = '' === $list_order ? Input::get( 'order', 'DESC' ) : $list_order;
 		$list_order_by = '' === $list_order_by ? 'id' : $list_order_by;
-
-		$primary_table  = "{$wpdb->prefix}tutor_orders o";
-		$joining_tables = array(
-			array(
-				'type'  => 'INNER',
-				'table' => "{$wpdb->users} u",
-				'on'    => 'o.user_id = u.ID',
-			),
-			array(
-				'type'  => 'LEFT',
-				'table' => "{$wpdb->usermeta} um1",
-				'on'    => 'u.ID = um1.user_id AND um1.meta_key = "tutor_customer_billing_name"',
-			),
-			array(
-				'type'  => 'LEFT',
-				'table' => "{$wpdb->usermeta} um2",
-				'on'    => 'u.ID = um2.user_id AND um2.meta_key = "tutor_customer_billing_name"',
-			),
-		);
-
-		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
-
-		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $order_by, $limit, $offset, $order );
-
-		$current_tab = Input::get( 'data', 'all' );
-		if ( 'all' !== $current_tab ) {
-			$where['o.order_status'] = $current_tab;
-		}
 
 		return $this->model->get_orders( $where, $search_term, $limit, $offset, $list_order_by, $list_order );
 	}
