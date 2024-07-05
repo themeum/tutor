@@ -600,7 +600,7 @@ class Admin {
 		if ( ! is_null( $coupon_id ) ) {
 			?>
 				<div class="tutor-admin-wrap">
-					<div class="tutor-coupon-root">
+					<div id="tutor-coupon-root">
 					</div>
 				</div>
 			<?php

@@ -190,7 +190,7 @@ class Assets {
 		}
 
 		if ( 'tutor-coupons' === $page && $id > 0 ) {
-			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array(), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 		}
 	}
 
