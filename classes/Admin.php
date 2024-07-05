@@ -577,7 +577,7 @@ class Admin {
 		if ( ! is_null( $order_id ) ) {
 			?>
 				<div class="tutor-admin-wrap">
-					<div class="tutor-order-details-root">
+					<div id="tutor-order-details-root">
 					</div>
 				</div>
 			<?php

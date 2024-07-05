@@ -1,5 +1,6 @@
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
+import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
@@ -28,8 +29,15 @@ export const courseDefaultData: CourseFormData = {
   },
   thumbnail: null,
   video: {
-    source_type: '',
-    source: '',
+    source: 'external_url',
+    source_video_id: '',
+    poster: '',
+    poster_url: '',
+    source_external_url: '',
+    source_shortcode: '',
+    source_youtube: '',
+    source_vimeo: '',
+    source_embedded: '',
   },
   course_price_type: 'free',
   course_price: '',
@@ -48,7 +56,7 @@ export const courseDefaultData: CourseFormData = {
   course_material_includes: '',
   course_duration_hours: 0,
   course_duration_minutes: 0,
-  attachments: null,
+  course_attachments: null,
   isContentDripEnabled: false,
   contentDripType: '',
   course_product_id: '',
@@ -66,10 +74,7 @@ export interface CourseFormData {
   post_password: string;
   post_author: User | null;
   thumbnail: Media | null;
-  video: {
-    source_type: string;
-    source: string;
-  };
+  video: CourseVideo;
   course_price_type: string;
   course_price: string;
   course_sale_price: string;
@@ -87,7 +92,7 @@ export interface CourseFormData {
   course_material_includes: string;
   course_duration_hours: number;
   course_duration_minutes: number;
-  attachments: Media[] | null;
+  course_attachments: Media[] | null;
   isContentDripEnabled: boolean;
   contentDripType: 'unlock_by_date' | 'specific_days' | 'unlock_sequentially' | 'after_finishing_prerequisites' | '';
   course_product_id: string;
@@ -106,10 +111,7 @@ export interface CoursePayload {
   post_password: string;
   post_author: number | null;
   thumbnail_id: number | null;
-  video?: {
-    source_type: string;
-    source: string;
-  };
+  video?: CourseVideo;
   course_price_type?: string;
   course_price?: string;
   course_sale_price?: string;
@@ -139,6 +141,7 @@ export interface CoursePayload {
   preview_link: string;
   _tutor_course_prerequisites_ids: string[];
   tutor_course_certificate_template: string;
+  tutor_attachments: Media[];
 }
 
 interface CourseDetailsPayload {
@@ -216,16 +219,7 @@ export interface CourseDetailsResponse {
   enable_qna: string;
   is_public_course: string;
   course_level: CourseLevel;
-  video: {
-    source: string;
-    source_video_id: string;
-    poster: string;
-    source_external_url: string;
-    source_shortcode: string;
-    source_youtube: string;
-    source_vimeo: string;
-    source_embedded: string;
-  };
+  video: CourseVideo;
   course_duration: {
     hours: number;
     minutes: number;
@@ -260,6 +254,7 @@ export interface CourseDetailsResponse {
   course_prerequisites: PrerequisiteCourses[];
   course_certificate_template: string;
   course_certificates_templates: Certificate[];
+  course_attachments: Media[];
 }
 
 interface CourseResponse {
@@ -366,7 +361,10 @@ const getCourseDetails = (courseId: number) => {
 export const useCourseDetailsQuery = (courseId: number) => {
   return useQuery({
     queryKey: ['CourseDetails', courseId],
-    queryFn: () => getCourseDetails(courseId).then((res) => res.data),
+    queryFn: () =>
+      getCourseDetails(courseId).then((res) => {
+        return res.data;
+      }),
     enabled: !!courseId,
   });
 };

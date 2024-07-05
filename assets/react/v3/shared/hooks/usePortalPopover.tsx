@@ -5,7 +5,6 @@ import { css } from '@emotion/react';
 import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { isDefined } from '@Utils/types';
 import { noop } from '@Utils/util';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
 import { usePrevious } from './usePrevious';

@@ -36,8 +36,6 @@ interface ConfirmationPopoverProps<TRef> {
   };
 }
 
-const text = 'hello';
-
 const ConfirmationPopover = <TRef extends HTMLElement>({
   arrow,
   triggerRef,
