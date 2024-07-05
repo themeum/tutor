@@ -108,12 +108,55 @@ class OrderModel {
 	}
 
 	/**
+	 * Get searchable fields
+	 *
+	 * This method is intendant to use with get order list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	private function get_searchable_fields() {
+		return array(
+			'o.id',
+			'o.transaction_id',
+			'o.coupon_code',
+			'o.payment_method',
+			'o.order_status',
+			'o.payment_status',
+			'u.display_name',
+			'u.user_login',
+			'u.user_email',
+		);
+	}
+
+	/**
+	 * Get searchable fields
+	 *
+	 * This method is intendant to use with get order list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	private function get_order_searchable_fields() {
+		return array(
+			'id',
+			'coupon_code',
+			'transaction_id',
+			'payment_method',
+			'order_status',
+			'payment_status',
+		);
+	}
+
+	/**
 	 * Get orders list
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param array  $where where clause conditions.
-	 * @param array  $search search clause conditions.
+	 * @param string $search_term search clause conditions.
 	 * @param int    $limit limit default 10.
 	 * @param int    $offset default 0.
 	 * @param string $order_by column default 'o.id'.
@@ -121,7 +164,7 @@ class OrderModel {
 	 *
 	 * @return array
 	 */
-	public function get_orders( array $where = array(), $search = array(), int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
+	public function get_orders( array $where = array(), $search_term = '', int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
 
 		global $wpdb;
 
@@ -146,7 +189,14 @@ class OrderModel {
 
 		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
 
-		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $search, $order_by, $limit, $offset, $order );
+		$search_clause = array();
+		if ( '' !== $search_term ) {
+			foreach ( $this->get_searchable_fields() as $column ) {
+				$search_clause[ $column ] = $search_term;
+			}
+		}
+
+		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $search_clause, $order_by, $limit, $offset, $order );
 	}
 
 	/**
@@ -154,15 +204,17 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $where Where conditions.
-	 * @param array $search Search conditions.
+	 * @param array  $where Where conditions, sql esc data.
+	 * @param string $search_term Search terms, sql esc data.
 	 *
 	 * @return int
 	 */
-	public function get_order_count( $where = array(), $search = array() ) {
-		$where  = Input::sanitize_array( $where );
-		$search = Input::sanitize_array( $search );
+	public function get_order_count( $where = array(), string $search_term = '' ) {
+		$search_clause = array();
+		foreach ( $this->get_order_searchable_fields() as $column ) {
+			$search_clause[ $column ] = $search_term;
+		}
 
-		return QueryHelper::get_count( $this->table_name, $where, $search );
+		return QueryHelper::get_count( $this->table_name, $where, $search_clause );
 	}
 }

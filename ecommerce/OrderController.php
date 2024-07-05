@@ -128,8 +128,7 @@ class OrderController {
 		$payment_status = Input::get( 'payment-status', '' );
 		$search         = Input::get( 'search', '' );
 
-		$where  = array();
-		$search = array();
+		$where = array();
 
 		if ( '' !== $date ) {
 			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
@@ -142,6 +141,13 @@ class OrderController {
 		$order_status = $this->model->get_order_status();
 
 		$tabs = array();
+
+		$tabs [] = array(
+			'key'   => 'all',
+			'title' => __( 'All', 'tutor' ),
+			'value' => $this->model->get_order_count( $where, $search ),
+			'url'   => $url . '&data=all',
+		);
 
 		foreach ( $order_status as $key => $value ) {
 			$where['order_status'] = $key;
@@ -400,17 +406,22 @@ class OrderController {
 	 * @param integer $limit List limit.
 	 * @param integer $offset List offset.
 	 * @param array   $where Where clause conditions.
-	 * @param array   $search Search conditions.
+	 * @param array   $search_term Search term.
 	 * @param string  $list_order List order.
 	 * @param string  $list_order_by List order by.
 	 *
 	 * @return array
 	 */
-	public function get_orders( $limit = 10, $offset = 0, $where = array(), $search = array(), $list_order = '', $list_order_by = '' ) {
+	public function get_orders( $limit = 10, $offset = 0, $where = array(), $search_term = '', $list_order = '', $list_order_by = '' ) {
 
 		$list_order    = '' === $list_order ? Input::get( 'order', 'DESC' ) : $list_order;
 		$list_order_by = '' === $list_order_by ? 'id' : $list_order_by;
 
-		return $this->model->get_orders( $where, $search, $limit, $offset, $list_order_by, $list_order );
+		$current_tab = Input::get( 'data', 'all' );
+		if ( 'all' !== $current_tab ) {
+			$where['o.order_status'] = $current_tab;
+		}
+
+		return $this->model->get_orders( $where, $search_term, $limit, $offset, $list_order_by, $list_order );
 	}
 }

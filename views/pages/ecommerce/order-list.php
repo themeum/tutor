@@ -25,7 +25,6 @@ $search_term    = Input::get( 'search', '' );
 $payment_status = Input::get( 'payment-status', '' );
 
 $where_clause  = array();
-$search_clause = array();
 
 if ( $date ) {
 	$where_clause['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
@@ -41,7 +40,7 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 
 $order_controller = new OrderController();
 
-$get_orders  = $order_controller->get_orders( $limit, $offset, $where_clause );
+$get_orders  = $order_controller->get_orders( $limit, $offset, $where_clause, $search_term );
 $orders      = $get_orders['results'];
 $total_items = $get_orders['total_count'];
 

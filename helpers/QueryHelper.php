@@ -482,8 +482,8 @@ class QueryHelper {
 	 * @param string $primary_table The primary table name with prefix.
 	 * @param array  $joining_tables An array of join relations. Each relation should be an array with keys 'type', 'table', 'on'.
 	 * @param array  $select_columns An array of columns to select.
-	 * @param array  $where  An associative array for the WHERE clause. For example: [col_name => value].
-	 * @param array  $search An associative array for the search clause. For example: [col_name => value].
+	 * @param array  $where  An associative array for the WHERE clause. For example: [col_name => value]. Without sql esc.
+	 * @param array  $search An associative array for the search clause. For example: [col_name => value]. Without sql esc.
 	 * @param string $order_by  Order by column name.
 	 * @param int    $limit Maximum number of rows to return.
 	 * @param int    $offset Offset for pagination.
