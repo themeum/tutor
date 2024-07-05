@@ -20,30 +20,13 @@ use TUTOR\Input;
  */
 $active_tab = Input::get( 'data', 'all' );
 
-$date           = Input::get( 'date', '' );
-$search_term    = Input::get( 'search', '' );
-$payment_status = Input::get( 'payment-status', '' );
-
-$where_clause = array();
-
-if ( $date ) {
-	$where_clause['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
-}
-
-if ( $payment_status ) {
-	$where_clause['o.payment_status'] = $payment_status;
-}
-if ( 'all' !== $active_tab ) {
-	$where_clause['o.order_status'] = $active_tab;
-}
-
 $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
 $limit        = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
 $order_controller = new OrderController();
 
-$get_orders  = $order_controller->get_orders( $limit, $offset, $where_clause, $search_term );
+$get_orders  = $order_controller->get_orders( $limit, $offset );
 $orders      = $get_orders['results'];
 $total_items = $get_orders['total_count'];
 

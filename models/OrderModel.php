@@ -43,6 +43,7 @@ class OrderModel {
 	const PAYMENT_STATUS_PENDING = 'pending';
 	const PAYMENT_STATUS_PAID    = 'paid';
 	const PAYMENT_STATUS_FAILED  = 'failed';
+	const PAYMENT_STATUS_UNPAID  = 'unpaid';
 
 	/**
 	 * Order Meta keys for history & refunds
@@ -115,6 +116,7 @@ class OrderModel {
 			self::PAYMENT_STATUS_PENDING => __( 'Pending', 'tutor' ),
 			self::PAYMENT_STATUS_PAID    => __( 'Paid', 'tutor' ),
 			self::PAYMENT_STATUS_FAILED  => __( 'Failed', 'tutor' ),
+			self::PAYMENT_STATUS_UNPAID  => __( 'Unpaid', 'tutor' ),
 		);
 	}
 
@@ -138,26 +140,6 @@ class OrderModel {
 			'u.display_name',
 			'u.user_login',
 			'u.user_email',
-		);
-	}
-
-	/**
-	 * Get searchable fields
-	 *
-	 * This method is intendant to use with get order list
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array
-	 */
-	private function get_order_searchable_fields() {
-		return array(
-			'id',
-			'coupon_code',
-			'transaction_id',
-			'payment_method',
-			'order_status',
-			'payment_status',
 		);
 	}
 

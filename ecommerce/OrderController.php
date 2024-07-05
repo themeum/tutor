@@ -468,18 +468,34 @@ class OrderController {
 	 *
 	 * @param integer $limit List limit.
 	 * @param integer $offset List offset.
-	 * @param array   $where Where clause conditions.
-	 * @param array   $search_term Search term.
-	 * @param string  $list_order List order.
-	 * @param string  $list_order_by List order by.
 	 *
 	 * @return array
 	 */
-	public function get_orders( $limit = 10, $offset = 0, $where = array(), $search_term = '', $list_order = '', $list_order_by = '' ) {
+	public function get_orders( $limit = 10, $offset = 0 ) {
 
-		$list_order    = '' === $list_order ? Input::get( 'order', 'DESC' ) : $list_order;
-		$list_order_by = '' === $list_order_by ? 'id' : $list_order_by;
+		$active_tab = Input::get( 'data', 'all' );
 
-		return $this->model->get_orders( $where, $search_term, $limit, $offset, $list_order_by, $list_order );
+		$date           = Input::get( 'date', '' );
+		$search_term    = Input::get( 'search', '' );
+		$payment_status = Input::get( 'payment-status', '' );
+
+		$where_clause = array();
+
+		if ( $date ) {
+			$where_clause['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
+		}
+
+		if ( $payment_status ) {
+			$where_clause['o.payment_status'] = $payment_status;
+		}
+
+		if ( 'all' !== $active_tab ) {
+			$where_clause['o.order_status'] = $active_tab;
+		}
+
+		$list_order    = Input::get( 'order', 'DESC' );
+		$list_order_by = 'id';
+
+		return $this->model->get_orders( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );
 	}
 }
