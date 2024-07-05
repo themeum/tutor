@@ -82,11 +82,18 @@ class OrderController {
 
 		if ( $register_hooks ) {
 			/**
-			 * Handle ajax request for getting order related data by order id
+			 * Handle AJAX request for getting order related data by order ID.
 			 *
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_details', array( $this, 'get_order_by_id' ) );
+
+			/**
+			 * Handle AJAX request for marking an order as paid by order ID.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_paid', array( $this, 'order_mark_as_paid' ) );
 
 			/**
 			 * Handle bulk action
@@ -130,7 +137,7 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
-		$order_id = Input::post( 'tutor_order_id' );
+		$order_id = Input::post( 'order_id' );
 
 		if ( empty( $order_id ) ) {
 			$this->json_response(
@@ -154,6 +161,48 @@ class OrderController {
 			__( 'Order retrieved successfully', 'tutor' ),
 			$order_data
 		);
+	}
+
+	/**
+	 * Mark an order as paid.
+	 *
+	 * This function verifies a nonce for security, constructs a payload object with
+	 * the order ID, note, and payment status, and updates the payment status of the order
+	 * to 'paid'. It sends a JSON response indicating the success or failure of the operation.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function order_mark_as_paid() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$payload                 = new \stdClass();
+		$payload->order_id       = Input::post( 'order_id' );
+		$payload->note           = Input::post( 'note' );
+		$payload->payment_status = $this->model::PAYMENT_STATUS_PAID;
+
+		if ( empty( $payload->order_id ) ) {
+			$this->json_response(
+				__( 'Order Id is required', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$response = $this->model->payment_status_update( $payload );
+
+		if ( ! $response ) {
+			$this->json_response(
+				__( 'Failed to update Order payment status', 'tutor' ),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
 
 	/**
