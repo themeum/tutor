@@ -108,7 +108,7 @@ const styles = {
 
     textarea {
       ${typography.body()};
-      height: auto !important;
+      height: auto;
       padding: ${spacing[8]} ${spacing[12]};
       resize: none;
 

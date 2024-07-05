@@ -85,6 +85,7 @@ const FormDateInput = ({
                   field.onChange(value);
                 }}
                 autoComplete="off"
+                data-input
               />
               <SVGIcon name="calendarLine" width={30} height={32} style={styles.icon} />
 
@@ -144,7 +145,9 @@ const styles = {
     }
   `,
   input: css`
-    padding-left: ${spacing[40]} !important;
+    &[data-input] {
+      padding-left: ${spacing[40]};
+    }
   `,
   icon: css`
     position: absolute;

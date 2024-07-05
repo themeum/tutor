@@ -95,6 +95,7 @@ const FormInputWithContent = ({
                 }
                 ref.current.select();
               }}
+              data-input
             />
 
             {contentPosition === 'right' && <div css={styles.inputRightContent(showVerticalBar, size)}>{content}</div>}
@@ -132,36 +133,39 @@ const styles = {
     }
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
-    ${typography.body()};
-    border: none !important;
-    box-shadow: none !important;
-    background-color: transparent;
-    padding-${contentPosition}: 0;
-
-    ${
-      showVerticalBar &&
-      css`
-        padding-${contentPosition}: ${spacing[10]};
-      `
-    };
-
-    ${
-      size === 'large' &&
-      css`
-      font-size: ${fontSize[24]};
-      font-weight: ${fontWeight.medium};
-      height: 34px;
+    // Increasing the css specificity
+    &[data-input] {
+      ${typography.body()};
+      border: none;
+      box-shadow: none;
+      background-color: transparent;
+      padding-${contentPosition}: 0;
+  
       ${
         showVerticalBar &&
         css`
-          padding-${contentPosition}: ${spacing[12]};
+          padding-${contentPosition}: ${spacing[10]};
         `
       };
-    `
-    }
-
-    &:focus {
-      box-shadow: none;
+  
+      ${
+        size === 'large' &&
+        css`
+        font-size: ${fontSize[24]};
+        font-weight: ${fontWeight.medium};
+        height: 34px;
+        ${
+          showVerticalBar &&
+          css`
+            padding-${contentPosition}: ${spacing[12]};
+          `
+        };
+      `
+      }
+  
+      &:focus {
+        box-shadow: none;
+      }
     }
   `,
   inputLeftContent: (showVerticalBar: boolean, size: string) => css`

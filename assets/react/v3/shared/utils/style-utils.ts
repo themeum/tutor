@@ -152,6 +152,7 @@ export const createGlobalCss = () => css`
 
   textarea {
     overflow: auto;
+    height: auto;
   }
 
   [type='checkbox'],

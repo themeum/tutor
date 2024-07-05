@@ -159,6 +159,7 @@ const FormSelectInput = <T,>({
                     setInputValue(event.target.value);
                     setSearchText(event.target.value);
                   }}
+                  data-select
                 />
 
                 <Show when={hasDescription}>
@@ -288,7 +289,7 @@ const styles = {
   }) => css`
     position: absolute;
     left: ${spacing[8]};
-    top: ${spacing[6]};
+    top: ${spacing[4]};
     color: ${colorTokens.icon.default};
 
 		${
@@ -300,23 +301,25 @@ const styles = {
 		
   `,
   input: (hasLeftIcon: boolean) => css`
-    ${typography.body()};
-    width: 100%;
-    cursor: pointer;
-    padding-right: ${spacing[32]};
-    ${styleUtils.textEllipsis};
-    background-color: transparent;
+    &[data-select] {
+      ${typography.body()};
+      width: 100%;
+      cursor: pointer;
+      padding-right: ${spacing[32]};
+      ${styleUtils.textEllipsis};
+      background-color: transparent;
 
-    ${
-      hasLeftIcon &&
-      css`
-      padding-left: ${spacing[48]} !important;
-    `
-    }
+      ${
+        hasLeftIcon &&
+        css`
+          padding-left: ${spacing[48]};
+        `
+      }
 
-    :focus {
-      outline: none;
-      box-shadow: ${shadow.focus};
+      :focus {
+        outline: none;
+        box-shadow: ${shadow.focus};
+      }
     }
   `,
   decription: ({
