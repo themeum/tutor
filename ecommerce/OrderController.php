@@ -54,10 +54,17 @@ class OrderController {
 	public $bulk_action = true;
 
 	/**
-	 * Constructor
+	 * Constructor.
+	 *
+	 * Initializes the Orders class, sets the page title, and optionally registers
+	 * hooks for handling AJAX requests related to order data, bulk actions, order status updates,
+	 * and order deletions.
+	 *
+	 * @param bool $register_hooks Whether to register hooks for handling requests. Default is true.
+	 *
+	 * @since 3.0.0
 	 *
 	 * @return void
-	 * @since 3.0.0
 	 */
 	public function __construct( $register_hooks = true ) {
 		$this->page_title = __( 'Orders', 'tutor' );
@@ -94,7 +101,15 @@ class OrderController {
 	}
 
 	/**
-	 * Get Order data by order id
+	 * Retrieve order data by order ID and respond with JSON.
+	 *
+	 * This function retrieves the order ID from the POST request, validates it,
+	 * fetches the corresponding order data using the OrderModel class, and returns
+	 * a JSON response with the order data or an error message.
+	 *
+	 * If the order ID is not provided, it responds with a "Bad Request" status.
+	 * If the order is not found, it responds with a "Not Found" status.
+	 * Otherwise, it responds with the order data and a success message.
 	 *
 	 * @since 3.0.0
 	 *
@@ -115,6 +130,14 @@ class OrderController {
 		$order_model = new OrderModel();
 
 		$order_data = $order_model->get_order_by_id( $order_id );
+
+		if ( ! $order_data ) {
+			$this->json_response(
+				__( 'Order not found', 'tutor' ),
+				null,
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
 
 		$this->json_response(
 			__( 'Order retrieved successfully', 'tutor' ),

@@ -50,12 +50,16 @@ class OrderModel {
 	 *
 	 * @param int $order_id The ID of the order to retrieve.
 	 *
-	 * @return object The order data with the student's information included.
+	 * @return object|false The order data with the student's information included, or false if no order is found.
 	 */
 	public function get_order_by_id( $order_id ) {
 		global $wpdb;
 
 		$order_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_orders WHERE id = %d", $order_id ) );
+
+		if ( ! $order_data ) {
+			return false;
+		}
 
 		$user_info = get_userdata( $order_data->user_id );
 
