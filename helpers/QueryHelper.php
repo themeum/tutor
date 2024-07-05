@@ -348,7 +348,7 @@ class QueryHelper {
 	 */
 	public static function get_all( string $table, array $where, string $order_by, $limit = 1000, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
-		
+
 		$where_clause = self::build_where_clause( $where );
 		$limit        = sanitize_text_field( $limit );
 		$query        = $wpdb->prepare(
@@ -520,11 +520,10 @@ class QueryHelper {
 		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
 
 		if (!empty($search)) {
-			$search_clauses = [];
-			foreach ($search as $column => $value) {
-				$search_clauses[] = $wpdb->prepare("{$column} LIKE %s", '%' . $wpdb->esc_like($value) . '%');
-			}
-			$search_clause = implode(' OR ', $search_clauses);
+			$search_clause = self::build_like_clause( $search );
+			// foreach ($search as $column => $value) {
+			// 	$search_clauses[] = $wpdb->prepare("{$column} LIKE %s", '%' . $wpdb->esc_like($value) . '%');
+			// }
 			$where_clause .= !empty($where_clause) ? ' AND (' . $search_clause . ')' : 'WHERE ' . $search_clause;
 		}
 
@@ -589,7 +588,7 @@ class QueryHelper {
 
 		if ( !empty( $search_clause ) ) {
 			if ( !empty( $where_clause ) ) {
-				$where_clause .= ' AND ' . $search_clause;
+				$where_clause .= ' AND (' . $search_clause . ')';
 			} else {
 				$where_clause = 'WHERE ' . $search_clause;
 			}

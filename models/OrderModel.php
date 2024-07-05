@@ -211,10 +211,11 @@ class OrderModel {
 	 */
 	public function get_order_count( $where = array(), string $search_term = '' ) {
 		$search_clause = array();
-		foreach ( $this->get_order_searchable_fields() as $column ) {
-			$search_clause[ $column ] = $search_term;
+		if ( '' !== $search_term ) {
+			foreach ( $this->get_order_searchable_fields() as $column ) {
+				$search_clause[ $column ] = $search_term;
+			}
 		}
-
 		return QueryHelper::get_count( $this->table_name, $where, $search_clause );
 	}
 }
