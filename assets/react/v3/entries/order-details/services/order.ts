@@ -87,7 +87,7 @@ export interface Order {
   note?: string;
   courses: OrderSummaryItem[];
   subtotal_price: number;
-  discount: Discount;
+  discount?: Discount;
   tax?: Tax;
   total_price: number;
   refunds: Refund[];
@@ -100,7 +100,7 @@ export interface Order {
 
 const mockOrderData: Order = {
   id: 49583,
-  payment_status: 'partially-refunded',
+  payment_status: 'pending',
   order_status: 'active',
   student: {
     id: 1,
