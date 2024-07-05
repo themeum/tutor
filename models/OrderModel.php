@@ -315,14 +315,22 @@ class OrderModel {
 	}
 
 	/**
-	 * Delete an order by ID
+	 * Delete an order by order ID.
+	 *
+	 * This static function deletes an order from the 'tutor_orders' table based on the given
+	 * order ID. It uses the QueryHelper class to perform the database delete operation.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int $order_id  order id that need to delete.
-	 * @return bool
+	 * @global wpdb $wpdb WordPress database abstraction object.
+	 *
+	 * @param int $order_id The ID of the order to delete.
+	 *
+	 * @return bool|int False on failure, or the number of rows affected if successful.
 	 */
-	public static function delete_course( $order_id ) {
-		return true;
+	public static function delete_order( $order_id ) {
+		global $wpdb;
+
+		return QueryHelper::delete( "{$wpdb->prefix}tutor_orders", array( 'id' => $order_id ) );
 	}
 }
