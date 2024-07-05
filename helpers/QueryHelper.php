@@ -180,12 +180,12 @@ class QueryHelper {
 	/**
 	 * Build where clause string
 	 *
-	 * @param   array $where assoc array with field and value
+	 * @param   array $where assoc array with field and value.
 	 * @return  string
 	 *
 	 * @since 2.0.9
 	 */
-	private function build_where_clause( array $where ) {
+	private static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
 			$value = is_numeric( $value ) ? ( $value + 0 ) : "'" . $value . "'";
@@ -196,14 +196,38 @@ class QueryHelper {
 	}
 
 	/**
+	 * Build like clause string with or
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array  $where assoc array with field and value.
+	 * @param string $relation default is OR.
+	 *
+	 * @return string
+	 */
+	public static function build_like_clause( array $where, $relation = 'OR' ) {
+		global $wpdb;
+
+		$like_conditions = array();
+
+		foreach ( $where as $column_name => $term ) {
+			$like_conditions[] = $wpdb->prepare( "$column_name LIKE %s", '%' . $wpdb->esc_like( $term ) . '%' );
+		}
+
+		$where_clause = implode( ' OR ', $like_conditions );
+
+		return $where_clause;
+	}
+
+	/**
 	 * Sanitize assoc array
 	 *
-	 * @param array $array an assoc array
+	 * @param array $array an assoc array.
 	 * @return array
 	 *
 	 * @since 2.0.9
 	 */
-	private function sanitize_assoc_array( array $array ) {
+	private static function sanitize_assoc_array( array $array ) {
 		return array_map(
 			function( $value ) {
 				return sanitize_text_field( $value );
@@ -226,8 +250,7 @@ class QueryHelper {
 			return false;
 		}
 
-		$obj   = new self();
-		$where = $obj->build_where_clause( $obj->sanitize_assoc_array( $where ) );
+		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );
@@ -259,8 +282,7 @@ class QueryHelper {
 			return false;
 		}
 
-		$obj   = new self();
-		$where = $obj->build_where_clause( $obj->sanitize_assoc_array( $where ) );
+		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );
@@ -292,8 +314,8 @@ class QueryHelper {
 	 */
 	public static function get_row( string $table, array $where, string $order_by, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
-		$obj          = new self();
-		$where_clause = $obj->build_where_clause( $where );
+
+		$where_clause = self::build_where_clause( $where );
 		$query        = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
@@ -326,8 +348,8 @@ class QueryHelper {
 	 */
 	public static function get_all( string $table, array $where, string $order_by, $limit = 1000, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
-		$obj          = new self();
-		$where_clause = $obj->build_where_clause( $where );
+
+		$where_clause = self::build_where_clause( $where );
 		$limit        = sanitize_text_field( $limit );
 		$query        = $wpdb->prepare(
 			"SELECT *
@@ -453,14 +475,15 @@ class QueryHelper {
 	/**
 	 * Get data by joining multiple tables with specified join relations.
 	 *
-	 * Argument should be sql escaped
+	 * Argument should be SQL escaped.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param string $primary_table The primary table name with prefix.
 	 * @param array  $joining_tables An array of join relations. Each relation should be an array with keys 'type', 'table', 'on'.
 	 * @param array  $select_columns An array of columns to select.
-	 * @param array  $where  An associative array for the WHERE clause. For example: [col_name => value].
+	 * @param array  $where  An associative array for the WHERE clause. For example: [col_name => value]. Without sql esc.
+	 * @param array  $search An associative array for the search clause. For example: [col_name => value]. Without sql esc.
 	 * @param string $order_by  Order by column name.
 	 * @param int    $limit Maximum number of rows to return.
 	 * @param int    $offset Offset for pagination.
@@ -471,24 +494,41 @@ class QueryHelper {
 	 *
 	 * @return mixed  Based on output param, default OBJECT.
 	 */
-	public static function get_joined_data(string $primary_table, array $joining_tables, array $select_columns, array $where = [], string $order_by = '', $limit = 10, $offset = 0, string $order = 'DESC', string $output = 'OBJECT') {
+	public static function get_joined_data(
+		string $primary_table,
+		array $joining_tables,
+		array $select_columns,
+		array $where = [],
+		array $search = [],
+		string $order_by = '',
+		$limit = 10,
+		$offset = 0,
+		string $order = 'DESC',
+		string $output = 'OBJECT'
+	) {
 		global $wpdb;
 
-		$obj = new self();
-		
 		$select_clause = implode(', ', $select_columns);
-		
+
 		$from_clause = $primary_table;
-		
+
 		$join_clauses = '';
 		foreach ($joining_tables as $relation) {
 			$join_clauses .= " {$relation['type']} JOIN {$relation['table']} ON {$relation['on']}";
 		}
-		
-		$where_clause = !empty($where) ? 'WHERE ' . $obj->build_where_clause($where) : '';
-		
+
+		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
+
+		if (!empty($search)) {
+			$search_clause = self::build_like_clause( $search );
+			// foreach ($search as $column => $value) {
+			// 	$search_clauses[] = $wpdb->prepare("{$column} LIKE %s", '%' . $wpdb->esc_like($value) . '%');
+			// }
+			$where_clause .= !empty($where_clause) ? ' AND (' . $search_clause . ')' : 'WHERE ' . $search_clause;
+		}
+
 		$order_by_clause = !empty($order_by) ? "ORDER BY {$order_by} {$order}" : '';
-		
+
 		// Query to get total count.
 		$count_query = "
 			SELECT COUNT(*) as total_count
@@ -496,25 +536,25 @@ class QueryHelper {
 			{$join_clauses}
 			{$where_clause}
 		";
-		
+
 		$total_count = $wpdb->get_var($count_query);
-		
+
 		$query = $wpdb->prepare(
 			"SELECT {$select_clause}
-			 FROM {$from_clause}
-			 {$join_clauses}
-			 {$where_clause}
-			 {$order_by_clause}
-			 LIMIT %d OFFSET %d",
+			FROM {$from_clause}
+			{$join_clauses}
+			{$where_clause}
+			{$order_by_clause}
+			LIMIT %d OFFSET %d",
 			$limit,
 			$offset
 		);
-		
+
 		$results = $wpdb->get_results($query, $output);
-		
+
 		// Throw exception if error occurred.
-		if ( $wpdb->last_error ) {
-			throw new \Exception( $wpdb->last_error );
+		if ($wpdb->last_error) {
+			throw new \Exception($wpdb->last_error);
 		}
 
 		// Prepare response array.
@@ -522,7 +562,50 @@ class QueryHelper {
 			'total_count' => (int) $total_count,
 			'results'     => $results,
 		);
-		
+
 		return $response;
 	}
+
+	/**
+	 * Get count var
+	 *
+	 * Argument should be SQL escaped.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $table table name with prefix.
+	 * @param array  $where array of where condition.
+	 * @param array  $search array of search conditions for LIKE operator.
+	 * @param string $count_column column name to count, default id.
+	 *
+	 * @return int
+	 */
+	public static function get_count( $table, $where = [], $search = [], $count_column = 'id' ): int {
+		global $wpdb;
+
+		$where_clause = !empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
+		$search_clause = !empty( $search ) ? self::build_like_clause( $search, 'AND' ) : '';
+
+		if ( !empty( $search_clause ) ) {
+			if ( !empty( $where_clause ) ) {
+				$where_clause .= ' AND (' . $search_clause . ')';
+			} else {
+				$where_clause = 'WHERE ' . $search_clause;
+			}
+		}
+
+		$count = $wpdb->get_var(
+			"SELECT COUNT($count_column)
+			FROM $table
+			{$where_clause}"
+		);
+
+		// If error occurred then throw new exception.
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
+		}
+
+		return (int) $count;
+	}
+
 }

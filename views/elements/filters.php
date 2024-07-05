@@ -13,6 +13,9 @@
 
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Models\OrderModel;
+
+$current_page = Input::get( 'page', '' );
 
 if ( isset( $data ) ) : ?>
 	<div class="tutor-px-20">
@@ -129,6 +132,27 @@ if ( isset( $data ) ) : ?>
 						</div>
 					<?php endif; ?>
 
+					<?php if ( 'tutor-orders' === $current_page ) : ?>
+						<div class="tutor-wp-dashboard-filter-item">
+							<label class="tutor-form-label">
+								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
+							</label>
+							<select class="tutor-form-select" id="tutor-backend-filter-payment-status" data-search="no">
+								<option value="">
+									<?php esc_html_e( 'Select', 'tutor' ); ?>
+								</option>
+							<?php
+								$payment_status = OrderModel::get_payment_status();
+							foreach ( $payment_status as $key => $value ) :
+								?>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $value, $key ); ?>>
+								<?php echo esc_html( $value ); ?>
+								</option>
+							<?php endforeach; ?>
+							</select>							
+						</div>
+					<?php endif; ?>
+
 					<?php if ( ! isset( $data['sort_by'] ) || true == $data['sort_by'] ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
@@ -144,6 +168,7 @@ if ( isset( $data ) ) : ?>
 							</select>
 						</div>
 					<?php endif; ?>
+
 					<div class="tutor-wp-dashboard-filter-item">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Date', 'tutor' ); ?>

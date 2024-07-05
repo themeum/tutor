@@ -27,6 +27,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.0.0
  */
 class OrderController {
+
+	/**
+	 * Order model
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var Object
+	 */
+	private $model;
+
 	/**
 	 * Trait for utilities
 	 *
@@ -68,37 +78,37 @@ class OrderController {
 	 */
 	public function __construct( $register_hooks = true ) {
 		$this->page_title = __( 'Orders', 'tutor' );
+		$this->model      = new OrderModel();
 
-		if ( ! $register_hooks ) {
-			return;
+		if ( $register_hooks ) {
+			/**
+			 * Handle ajax request for getting order related data by order id
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_nopriv_tutor_order_details', array( $this, 'get_order_by_id' ) );
+
+			/**
+			 * Handle bulk action
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
+			/**
+			 * Handle ajax request for updating order status
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
+			/**
+			 * Handle ajax request for delete order
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
 		}
-
-		/**
-		 * Handle ajax request for getting order related data by order id
-		 *
-		 * @since 3.0.0
-		 */
-		add_action( 'wp_ajax_nopriv_tutor_order_details', array( $this, 'get_order_by_id' ) );
-
-		/**
-		 * Handle bulk action
-		 *
-		 * @since 3.0.0
-		 */
-		add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
-		/**
-		 * Handle ajax request for updating order status
-		 *
-		 * @since 3.0.0
-		 */
-		add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
-		/**
-		 * Handle ajax request for delete order
-		 *
-		 * @since 3.0.0
-		 */
-		add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
 	}
+
 
 	/**
 	 * Retrieve order data by order ID and respond with JSON.
@@ -173,77 +183,49 @@ class OrderController {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
-	 * @param string  $category_slug category slug.
-	 * @param integer $order_id order ID.
-	 * @param string  $date selected date | optional.
-	 * @param string  $search search by user name or email | optional.
-	 *
 	 * @return array
 	 *
 	 * @since 3.0.0
 	 */
-	public function tabs_key_value( $category_slug, $order_id, $date, $search ): array {
+	public function tabs_key_value(): array {
 		$url = get_pagenum_link();
 
-		$all       = self::count_order( 'all', $order_id, $date, $search );
-		$mine      = self::count_order( 'mine', $order_id, $date, $search );
-		$published = self::count_order( 'publish', $order_id, $date, $search );
-		$draft     = self::count_order( 'draft', $order_id, $date, $search );
-		$pending   = self::count_order( 'pending', $order_id, $date, $search );
-		$trash     = self::count_order( 'trash', $order_id, $date, $search );
-		$private   = self::count_order( 'private', $order_id, $date, $search );
-		$future    = self::count_order( 'future', $order_id, $date, $search );
+		$date           = Input::get( 'date', '' );
+		$payment_status = Input::get( 'payment-status', '' );
+		$search         = Input::get( 'search', '' );
 
-		$tabs = array(
-			array(
-				'key'   => 'all',
-				'title' => __( 'All', 'tutor' ),
-				'value' => $all,
-				'url'   => $url . '&data=all',
-			),
-			array(
-				'key'   => 'mine',
-				'title' => __( 'Mine', 'tutor' ),
-				'value' => $mine,
-				'url'   => $url . '&data=mine',
-			),
-			array(
-				'key'   => 'published',
-				'title' => __( 'Published', 'tutor' ),
-				'value' => $published,
-				'url'   => $url . '&data=published',
-			),
-			array(
-				'key'   => 'draft',
-				'title' => __( 'Draft', 'tutor' ),
-				'value' => $draft,
-				'url'   => $url . '&data=draft',
-			),
-			array(
-				'key'   => 'pending',
-				'title' => __( 'Pending', 'tutor' ),
-				'value' => $pending,
-				'url'   => $url . '&data=pending',
-			),
-			array(
-				'key'   => 'future',
-				'title' => __( 'Scheduled', 'tutor' ),
-				'value' => $future,
-				'url'   => $url . '&data=future',
-			),
-			array(
-				'key'   => 'private',
-				'title' => __( 'Private', 'tutor' ),
-				'value' => $private,
-				'url'   => $url . '&data=private',
-			),
-			array(
-				'key'   => 'trash',
-				'title' => __( 'Trash', 'tutor' ),
-				'value' => $trash,
-				'url'   => $url . '&data=trash',
-			),
+		$where = array();
+
+		if ( '' !== $date ) {
+			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
+		}
+
+		if ( '' !== $payment_status ) {
+			$where['payment_status'] = $payment_status;
+		}
+
+		$order_status = $this->model->get_order_status();
+
+		$tabs = array();
+
+		$tabs [] = array(
+			'key'   => 'all',
+			'title' => __( 'All', 'tutor' ),
+			'value' => $this->model->get_order_count( $where, $search ),
+			'url'   => $url . '&data=all',
 		);
+
+		foreach ( $order_status as $key => $value ) {
+			$where['order_status'] = $key;
+
+			$tabs[] = array(
+				'key'   => $key,
+				'title' => $value,
+				'value' => $this->model->get_order_count( $where, $search ),
+				'url'   => $url . '&data=' . $key,
+			);
+		}
+
 		return apply_filters( 'tutor_order_tabs', $tabs );
 	}
 
@@ -482,21 +464,25 @@ class OrderController {
 	}
 
 	/**
-	 * Get orders list
+	 * Get orders
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array  $where where clause conditions.
-	 * @param int    $limit limit default 10.
-	 * @param int    $offset default 0.
-	 * @param string $order_by column default 'o.id'.
-	 * @param string $order list order default 'desc'.
+	 * @param integer $limit List limit.
+	 * @param integer $offset List offset.
+	 * @param array   $where Where clause conditions.
+	 * @param array   $search_term Search term.
+	 * @param string  $list_order List order.
+	 * @param string  $list_order_by List order by.
 	 *
 	 * @return array
 	 */
-	public static function get_orders( array $where = array(), int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
+	public function get_orders( $limit = 10, $offset = 0, $where = array(), $search_term = '', $list_order = '', $list_order_by = '' ) {
 
 		global $wpdb;
+
+		$list_order    = '' === $list_order ? Input::get( 'order', 'DESC' ) : $list_order;
+		$list_order_by = '' === $list_order_by ? 'id' : $list_order_by;
 
 		$primary_table  = "{$wpdb->prefix}tutor_orders o";
 		$joining_tables = array(
@@ -520,5 +506,12 @@ class OrderController {
 		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
 
 		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $order_by, $limit, $offset, $order );
+
+		$current_tab = Input::get( 'data', 'all' );
+		if ( 'all' !== $current_tab ) {
+			$where['o.order_status'] = $current_tab;
+		}
+
+		return $this->model->get_orders( $where, $search_term, $limit, $offset, $list_order_by, $list_order );
 	}
 }

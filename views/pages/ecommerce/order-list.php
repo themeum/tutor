@@ -1,6 +1,6 @@
 <?php
 /**
- * Course List Template.
+ * Order List Template.
  *
  * @package Tutor\Views
  * @author Themeum <support@themeum.com>
@@ -12,41 +12,44 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Tutor\Ecommerce\OrderController as OrderController;
+use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
-
-$courses = \TUTOR\Tutor::instance()->course_list;
-
-/**
- * Short able params
- */
-$course_id     = Input::get( 'course-id', '' );
-$order_filter  = Input::get( 'order', 'DESC' );
-$date          = Input::get( 'date', '' );
-$search_filter = Input::get( 'search', '' );
-$category_slug = Input::get( 'category', '' );
 
 /**
  * Determine active tab
  */
 $active_tab = Input::get( 'data', 'all' );
 
-/**
- * Pagination data
- */
+$date           = Input::get( 'date', '' );
+$search_term    = Input::get( 'search', '' );
+$payment_status = Input::get( 'payment-status', '' );
+
+$where_clause  = array();
+
+if ( $date ) {
+	$where_clause['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
+}
+
+if ( $payment_status ) {
+	$where_clause['o.payment_status'] = $payment_status;
+}
+
 $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
-$limit        = tutor_utils()->get_option( 'pagination_per_page' );
+$limit        = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
-/**
- * Navbar data to make nav menu
- */
+$order_controller = new OrderController();
+
+$get_orders  = $order_controller->get_orders( $limit, $offset, $where_clause, $search_term );
+$orders      = $get_orders['results'];
+$total_items = $get_orders['total_count'];
+
 $add_course_url = esc_url( admin_url( 'admin.php?page=create-course' ) );
 $navbar_data    = array(
-	'page_title'   => $courses->page_title,
-	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
+	'page_title'   => $order_controller->page_title,
+	'tabs'         => $order_controller->tabs_key_value(),
 	'active'       => $active_tab,
-	'add_button'   => true,
+	'add_button'   => false,
 	'button_title' => __( 'Add New', 'tutor' ),
 	'button_url'   => $add_course_url,
 );
@@ -55,76 +58,11 @@ $navbar_data    = array(
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'     => $courses->bulk_action,
-	'bulk_actions'    => $courses->prepare_bulk_actions(),
-	'ajax_action'     => 'tutor_course_list_bulk_action',
-	'filters'         => true,
-	'category_filter' => true,
+	'bulk_action'  => $order_controller->bulk_action,
+	'bulk_actions' => $order_controller->prepare_bulk_actions(),
+	'ajax_action'  => 'tutor_order_list_bulk_action',
+	'filters'      => true,
 );
-
-
-$args = array(
-	'post_type'      => tutor()->course_post_type,
-	'orderby'        => 'ID',
-	'order'          => $order_filter,
-	'paged'          => $paged_filter,
-	'offset'         => $offset,
-	'posts_per_page' => tutor_utils()->get_option( 'pagination_per_page' ),
-);
-
-if ( 'all' === $active_tab || 'mine' === $active_tab ) {
-	$args['post_status'] = array( 'publish', 'pending', 'draft', 'private', 'future' );
-} else {
-	//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-	$status              = 'published' === $active_tab ? 'publish' : $active_tab;
-	$args['post_status'] = array( $status );
-}
-
-if ( 'mine' === $active_tab ) {
-	$args['author'] = get_current_user_id();
-}
-$date_filter = sanitize_text_field( tutor_utils()->array_get( 'date', $_GET, '' ) );
-
-//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-$year  = gmdate( 'Y', strtotime( $date_filter ) );
-$month = gmdate( 'm', strtotime( $date_filter ) );
-$day   = gmdate( 'd', strtotime( $date_filter ) );
-// Add date query.
-if ( '' !== $date_filter ) {
-	$args['date_query'] = array(
-		array(
-			'year'  => $year,
-			'month' => $month,
-			'day'   => $day,
-		),
-	);
-}
-
-if ( '' !== $course_id ) {
-	$args['p'] = $course_id;
-}
-// Add author param.
-if ( 'mine' === $active_tab || ! current_user_can( 'administrator' ) ) {
-	$args['author'] = get_current_user_id();
-}
-// Search filter.
-if ( '' !== $search_filter ) {
-	$args['s'] = $search_filter;
-}
-// Category filter.
-if ( '' !== $category_slug ) {
-	$args['tax_query'] = array(
-		array(
-			'taxonomy' => 'course-category',
-			'field'    => 'slug',
-			'terms'    => $category_slug,
-		),
-	);
-}
-
-add_filter( 'posts_search', '_tutor_search_by_title_only', 500, 2 );
-
-remove_filter( 'posts_search', '_tutor_search_by_title_only', 500 );
 
 $available_status = array(
 	'publish' => array( __( 'Publish', 'tutor' ), 'select-success' ),
@@ -134,16 +72,6 @@ $available_status = array(
 	'private' => array( __( 'Private', 'tutor' ), 'select-default' ),
 );
 
-$future_list = array(
-	'publish' => array( __( 'Publish', 'tutor' ), 'select-success' ),
-	'future'  => array( __( 'Schedule', 'tutor' ), 'select-default' ),
-);
-
-$where = array();
-
-$get_orders  = OrderController::get_orders( $where, $limit, $offset );
-$orders      = $get_orders['results'];
-$total_items = $get_orders['total_count'];
 ?>
 
 <div class="tutor-admin-wrap">
@@ -247,8 +175,8 @@ $total_items = $get_orders['total_count'];
 										<?php echo wp_kses_post( tutor_utils()->tutor_price( $order->total_price ) ); ?>
 									</td>
 									<td>
-										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-orders&id=' . $order->id ) ); ?>">
-											<?php esc_html_e( 'Edit', 'tutor' );?>
+										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-orders&id=' . $order->id ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+											<?php esc_html_e( 'Edit', 'tutor' ); ?>
 										</a>
 									</td>
 								</tr>
