@@ -661,5 +661,75 @@ class QueryHelper {
 		return (int) $total_count;
 	}
 
+	/**
+	 * Get all rows from any table with where and search clauses.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $table  Table name with prefix.
+	 * @param array  $where  Assoc array for exact match. For example: [col_name => value]. Without sql esc.
+	 * @param array  $search  Assoc array for LIKE match. For example: [col_name => search_term]. Without sql esc.
+	 * @param string $order_by  Order by column name.
+	 * @param int    $limit  Maximum number of rows to return, default is 10.
+	 * @param int    $offset  Offset for pagination, default is 0.
+	 * @param string $order  DESC or ASC, default is DESC.
+	 * @param string $output  Expected output type, default is OBJECT.
+	 *
+	 * @throws \Exception Throw exception if error occurred during query execution.
+	 *
+	 * @return mixed  Based on output param, default OBJECT.
+	 */
+	public static function get_all_with_search(string $table, array $where, array $search, string $order_by, $limit = 10, $offset = 0, string $order = 'DESC', string $output = 'OBJECT'): array {
+		global $wpdb;
+	
+		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
+		$search_clause = !empty($search) ? self::build_like_clause($search, 'AND') : '';
+	
+		if (!empty($search_clause)) {
+			if (!empty($where_clause)) {
+				$where_clause .= ' AND (' . $search_clause . ')';
+			} else {
+				$where_clause = 'WHERE ' . $search_clause;
+			}
+		}
+	
+		// Query to get total count
+		$count_query = "
+			SELECT COUNT(*)
+			FROM {$table}
+			{$where_clause}
+		";
+		$total_count = $wpdb->get_var($count_query);
+	
+		// If error occurred then throw new exception.
+		if ($wpdb->last_error) {
+			throw new \Exception($wpdb->last_error);
+		}
+	
+		$query = $wpdb->prepare(
+			"SELECT *
+			 FROM {$table}
+			 {$where_clause}
+			 ORDER BY {$order_by} {$order}
+			 LIMIT %d OFFSET %d",
+			$limit,
+			$offset
+		);
+	
+		$results = $wpdb->get_results($query, $output);
+	
+		// If error occurred then throw new exception.
+		if ($wpdb->last_error) {
+			throw new \Exception($wpdb->last_error);
+		}
+	
+		// Prepare response array.
+		$response = array(
+			'results' => $results,
+			'total_count' => (int) $total_count,
+		);
+	
+		return $response;
+	}
 
 }

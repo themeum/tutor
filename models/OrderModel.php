@@ -27,11 +27,10 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const ORDER_PENDING            = 'pending';
-	const ORDER_COMPLETED          = 'completed';
-	const ORDER_CANCELLED          = 'cancelled';
-	const ORDER_REFUNDED           = 'refunded';
-	const ORDER_PARTIALLY_REFUNDED = 'partially-refunded';
+	const ORDER_INCOMPLETE = 'incomplete';
+	const ORDER_COMPLETED  = 'completed';
+	const ORDER_CANCELLED  = 'cancelled';
+	const ORDER_TRASH      = 'trash';
 
 	/**
 	 * Payment status
@@ -40,10 +39,11 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const PAYMENT_STATUS_PENDING = 'pending';
-	const PAYMENT_STATUS_PAID    = 'paid';
-	const PAYMENT_STATUS_FAILED  = 'failed';
-	const PAYMENT_STATUS_UNPAID  = 'unpaid';
+	const PAYMENT_PAID               = 'paid';
+	const PAYMENT_FAILED             = 'failed';
+	const PAYMENT_UNPAID             = 'unpaid';
+	const PAYMENT_REFUNDED           = 'refunded';
+	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
 
 	/**
 	 * Order Meta keys for history & refunds
@@ -96,11 +96,10 @@ class OrderModel {
 	 */
 	public static function get_order_status() {
 		return array(
-			self::ORDER_PENDING            => __( 'Pending', 'tutor' ),
-			self::ORDER_COMPLETED          => __( 'Completed', 'tutor' ),
-			self::ORDER_CANCELLED          => __( 'Cancelled', 'tutor' ),
-			self::ORDER_REFUNDED           => __( 'Refunded', 'tutor' ),
-			self::ORDER_PARTIALLY_REFUNDED => __( 'Partially Refunded', 'tutor' ),
+			self::ORDER_INCOMPLETE => __( 'Incomplete', 'tutor' ),
+			self::ORDER_COMPLETED  => __( 'Completed', 'tutor' ),
+			self::ORDER_CANCELLED  => __( 'Cancelled', 'tutor' ),
+			self::ORDER_TRASH      => __( 'Trash', 'tutor' ),
 		);
 	}
 
@@ -113,10 +112,11 @@ class OrderModel {
 	 */
 	public static function get_payment_status() {
 		return array(
-			self::PAYMENT_STATUS_PENDING => __( 'Pending', 'tutor' ),
-			self::PAYMENT_STATUS_PAID    => __( 'Paid', 'tutor' ),
-			self::PAYMENT_STATUS_FAILED  => __( 'Failed', 'tutor' ),
-			self::PAYMENT_STATUS_UNPAID  => __( 'Unpaid', 'tutor' ),
+			self::PAYMENT_PAID               => __( 'Paid', 'tutor' ),
+			self::PAYMENT_UNPAID             => __( 'Unpaid', 'tutor' ),
+			self::PAYMENT_FAILED             => __( 'Failed', 'tutor' ),
+			self::PAYMENT_REFUNDED           => __( 'Refunded', 'tutor' ),
+			self::PAYMENT_PARTIALLY_REFUNDED => __( 'Partially Refunded', 'tutor' ),
 		);
 	}
 
