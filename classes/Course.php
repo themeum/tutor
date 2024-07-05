@@ -900,7 +900,7 @@ class Course extends Tutor_Base {
 
 				if ( $topic_contents->have_posts() ) {
 					foreach ( $topic_contents->get_posts() as $post ) {
-						if ( 'tutor_quiz' === $post->post_type ) {
+						if ( tutor()->quiz_post_type === $post->post_type ) {
 							$questions            = tutor_utils()->get_questions_by_quiz( $post->ID );
 							$post->total_question = is_array( $questions ) ? count( $questions ) : 0;
 						}
