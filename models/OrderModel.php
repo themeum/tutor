@@ -465,23 +465,13 @@ class OrderModel {
 		$primary_table  = "{$this->table_name} o";
 		$joining_tables = array(
 			array(
-				'type'  => 'INNER',
+				'type'  => 'LEFT',
 				'table' => "{$wpdb->users} u",
 				'on'    => 'o.user_id = u.ID',
 			),
-			array(
-				'type'  => 'LEFT',
-				'table' => "{$wpdb->usermeta} um1",
-				'on'    => 'u.ID = um1.user_id AND um1.meta_key = "tutor_customer_billing_name"',
-			),
-			array(
-				'type'  => 'LEFT',
-				'table' => "{$wpdb->usermeta} um2",
-				'on'    => 'u.ID = um2.user_id AND um2.meta_key = "tutor_customer_billing_name"',
-			),
 		);
 
-		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
+		$select_columns = array( 'o.*', 'u.user_login' );
 
 		$search_clause = array();
 		if ( '' !== $search_term ) {
@@ -490,7 +480,18 @@ class OrderModel {
 			}
 		}
 
-		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $search_clause, $order_by, $limit, $offset, $order );
+		$response = array(
+			'results'     => array(),
+			'total_count' => 0,
+		);
+
+		try {
+			return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $search_clause, $order_by, $limit, $offset, $order );
+		} catch ( \Throwable $th ) {
+			// Log with error, line & file name.
+			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
+			return $response;
+		}
 	}
 
 	/**
