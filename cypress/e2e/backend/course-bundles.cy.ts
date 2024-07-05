@@ -52,8 +52,7 @@ describe("Tutor Admin Course Bundles", () => {
   })
 
   it("should perform bulk actions on selected bundle course", () => {
-    // const options = ["publish", "pending", "draft", "trash"];
-    const options = ["pending"];
+    const options = ["publish", "pending", "draft", "trash"];
     options.forEach((option) => {
       cy.performBulkActionOnSelectedElement(option);
     });

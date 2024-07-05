@@ -8,7 +8,7 @@ describe("Tutor Dashboard Student Wishlist", () => {
     })
     it('should add a course to wishlist', () => {
         cy.intercept("POST", `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`).as("ajaxRequest");
-        cy.visit(`${Cypress.env("base_url")}/courses/wishlist-test`) // slug of unerolled course
+        cy.visit(`${Cypress.env("base_url")}/courses/wishlist-test`) // replace wishlist-test with the slug of any unerolled course
         cy.get('.tutor-icon-bookmark-line').click()
         cy.wait('@ajaxRequest').then((interception) => {
             expect(interception.response.body.success).to.equal(true);

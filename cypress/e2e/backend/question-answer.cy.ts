@@ -89,12 +89,22 @@ describe("Tutor Admin Question and Answers", () => {
       cy.search(searchInputSelector, searchQuery, courseLinkSelector,submitButtonSelector,submitWithButton);
     });
 
-  it("should perform bulk action on all q&a", () => {
+  it("should perform bulk action on a q&a", () => {
+    cy.intercept(
+        "POST",
+        `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`,
+        (req) => {
+          if (req.body.includes("delete")) {
+            req.alias = "ajaxRequest";
+          }
+        }
+      );
     cy.get("body").then(($body) => {
       if ($body.text().includes("No Data Available in this Section")) {
         cy.log("No data found");
       } else {
-        cy.get("#tutor-bulk-checkbox-all").click();
+        
+        cy.getByInputName("tutor-bulk-checkbox-all").eq(0).check();
         cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
         cy.get(
           ".tutor-mr-12 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis"
@@ -105,7 +115,10 @@ describe("Tutor Admin Question and Answers", () => {
         cy.get("#tutor-confirm-bulk-action")
           .contains("Yes, I'am Sure")
           .click();
-        cy.contains("No Data Available in this Section");
+        // cy.contains("No Data Available in this Section");
+        cy.wait("@ajaxRequest").then((interception) => {
+            expect(interception.response.body.success).to.equal(true);
+          });
       }
     });
   });

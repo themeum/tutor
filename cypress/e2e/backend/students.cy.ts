@@ -23,7 +23,7 @@ describe("Tutor Students", () => {
     );
   });
 
-  it("should perform bulk action on all annoucements", () => {
+  it("should perform bulk action on all students", () => {
     cy.intercept(
       "POST",
       `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`,
