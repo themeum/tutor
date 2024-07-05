@@ -15,33 +15,29 @@ import Show from '@Controls/Show';
 import { AnimationType } from '@Hooks/useAnimation';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import MeetingForm from './MeetingForm';
-import { type MeetingType, useCourseDetailsQuery } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import type { MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import { tutorConfig } from '@Config/config';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
-// @TODO: will come from app config api later.
+interface LiveClassProps {
+  zoomMeetings: ZoomMeeting[];
+  zoomUsers: {
+    [key: string]: string;
+  };
+  zoomTimezones: {
+    [key: string]: string;
+  };
+}
+
 const isPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled('Tutor Zoom Integration');
 
-const courseId = getCourseId();
-
-const LiveClass = () => {
+const LiveClass = ({ zoomMeetings, zoomUsers, zoomTimezones }: LiveClassProps) => {
   const [showMeetingForm, setShowMeetingForm] = useState<MeetingType | null>(null);
-  const courseDetailsQuery = useCourseDetailsQuery(courseId);
-
-  const zoomMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
-  // const googleMeetMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
-
-  const zoomUsers = courseDetailsQuery.data?.zoom_users ?? {};
-  const zoomTimezones = courseDetailsQuery.data?.zoom_timezones ?? {};
 
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
-  const googleMeetButtonRef = useRef<HTMLButtonElement>(null);
-  const jitsiButtonRef = useRef<HTMLButtonElement>(null);
-
   return (
     <div css={styles.liveClass}>
       <span css={styles.label}>
@@ -140,20 +136,6 @@ const LiveClass = () => {
               </Button>
             </div>
           </div>
-
-          <Button
-            variant="secondary"
-            icon={<SVGIcon name="jitsiColorize" width={24} height={24} />}
-            buttonContentCss={css`
-              justify-content: center;
-            `}
-            onClick={() => {
-              alert('@TODO: Will be implemented in future');
-            }}
-            ref={jitsiButtonRef}
-          >
-            {__('Create a Jitsi meeting', 'tutor')}
-          </Button>
         </Show>
       </Show>
 
@@ -172,7 +154,8 @@ const LiveClass = () => {
           timezones={zoomTimezones}
         />
       </Popover>
-      <Popover
+      {/* @TODO: Will be implemented later */}
+      {/* <Popover
         triggerRef={googleMeetButtonRef}
         isOpen={showMeetingForm === 'google_meet'}
         closePopover={() => setShowMeetingForm(null)}
@@ -185,21 +168,7 @@ const LiveClass = () => {
           }}
           currentMeetingId=""
         />
-      </Popover>
-      <Popover
-        triggerRef={jitsiButtonRef}
-        isOpen={showMeetingForm === 'jitsi'}
-        closePopover={() => setShowMeetingForm(null)}
-        animationType={AnimationType.slideUp}
-      >
-        <MeetingForm
-          type={showMeetingForm as MeetingType}
-          onCancel={() => {
-            setShowMeetingForm(null);
-          }}
-          currentMeetingId=""
-        />
-      </Popover>
+      </Popover> */}
     </div>
   );
 };
