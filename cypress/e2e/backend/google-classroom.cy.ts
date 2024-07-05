@@ -24,7 +24,7 @@ describe("Tutor Dashboard My Courses", () => {
         cy.get("button")
           .contains("Load Credentials")
           .click();
-        //   another option change credentials
+        // another option change credentials
       }
 
       if ($body.text().includes("Please complete the authorization process")) {

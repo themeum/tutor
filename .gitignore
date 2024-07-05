@@ -41,3 +41,7 @@ vendor/
 .phpunit.result.cache
 yarn.lock
 .env
+# Ignore Cypress screenshots
+cypress/screenshots/
+# Ignore specific PNG files
+**/beforeEach*.png
