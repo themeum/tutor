@@ -38,7 +38,6 @@ const FormDateInput = ({
 }: FormDateInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(field.value ?? '');
-  console.log(inputValue, field.value);
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,

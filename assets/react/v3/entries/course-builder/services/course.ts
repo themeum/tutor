@@ -287,6 +287,18 @@ export interface CourseDetailsResponse {
 
 export type MeetingType = 'zoom' | 'google_meet' | 'jitsi';
 
+export interface ZoomMeetingFormData {
+  meeting_name: string;
+  meeting_summary: string;
+  meeting_date: string;
+  meeting_time: string;
+  meeting_duration: string;
+  meeting_duration_unit: 'min' | 'hr';
+  meeting_timezone: string;
+  auto_recording: 'none' | 'local' | 'cloud';
+  meeting_password: string;
+  meeting_host: string;
+}
 export interface MeetingFormData {
   meeting_name: string;
   meeting_summary: string;
@@ -356,8 +368,10 @@ export interface ZoomMeetingPayload {
   click_form: 'course_builder' | 'metabox';
   meeting_title: string;
   meeting_summary: string;
+  meeting_date: string;
   meeting_time: string;
   meeting_duration: number;
+  meeting_duration_unit: 'min' | 'hr';
   meeting_timezone: string;
   auto_recording: 'none' | 'local' | 'cloud';
   meeting_password: string;

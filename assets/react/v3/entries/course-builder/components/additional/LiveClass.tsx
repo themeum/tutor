@@ -15,14 +15,16 @@ import Show from '@Controls/Show';
 import { AnimationType } from '@Hooks/useAnimation';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import MeetingCard from './MeetingCard';
 import MeetingForm from './MeetingForm';
 import { type MeetingType, useCourseDetailsQuery } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import ZoomMeetingCard from './meeting/ZoomMeetingCard';
+import { tutorConfig } from '@Config/config';
+import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
 // @TODO: will come from app config api later.
-const isPro = true;
-const hasLiveAddons = true;
+const isPro = !!tutorConfig.tutor_pro_url;
+const isZoomAddonEnabled = isAddonEnabled('Tutor Zoom Integration');
 
 const courseId = getCourseId();
 
@@ -32,6 +34,9 @@ const LiveClass = () => {
 
   const zoomMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
   // const googleMeetMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
+
+  const zoomUsers = courseDetailsQuery.data?.zoom_users ?? {};
+  const zoomTimezones = courseDetailsQuery.data?.zoom_timezones ?? {};
 
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
   const googleMeetButtonRef = useRef<HTMLButtonElement>(null);
@@ -71,7 +76,7 @@ const LiveClass = () => {
         }
       >
         <Show
-          when={hasLiveAddons}
+          when={isPro && isZoomAddonEnabled}
           fallback={
             <EmptyState
               size="small"
@@ -110,15 +115,7 @@ const LiveClass = () => {
                     hasMeeting: zoomMeetings.length > 0,
                   })}
                 >
-                  <MeetingCard
-                    type="zoom"
-                    ID={meeting.ID}
-                    meetingTitle={meeting.post_title}
-                    meetingStartTime={meeting.meeting_data.start_time}
-                    meetingLink={meeting.meeting_data.start_url}
-                    meetingToken={meeting.meeting_data.id}
-                    meetingPassword={meeting.meeting_data.password}
-                  />
+                  <ZoomMeetingCard data={meeting} meetingHost={zoomUsers} timezones={zoomTimezones} />
                 </div>
               )}
             </For>
@@ -144,56 +141,6 @@ const LiveClass = () => {
             </div>
           </div>
 
-          {/* <div
-            css={styles.meetingsWrapper({
-              hasMeeting: googleMeetMeetings.length > 0,
-            })}
-          >
-            <For each={googleMeetMeetings}>
-              {(meeting) => (
-                <div
-                  key={meeting.ID}
-                  css={styles.meeting({
-                    hasMeeting: googleMeetMeetings.length > 0,
-                  })}
-                >
-                  <MeetingCard
-                    type="google_meet"
-                    meetingTitle={meeting.post_title}
-                    meetingStartTime={meeting.meeting_data.start_time}
-                    meetingLink={meeting.meeting_data.start_url}
-                    meetingToken={meeting.meeting_data.id}
-                    meetingPassword={meeting.meeting_data.password}
-                    onEditClick={() => {
-                      setShowMeetingForm('google_meet');
-                      setCurrentMeetingId(meeting.ID);
-                    }}
-                  />
-                </div>
-              )}
-            </For>
-            <div
-              css={styles.meetingsFooter({
-                hasMeeting: googleMeetMeetings.length > 0,
-              })}
-            >
-              <Button
-                variant="secondary"
-                icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
-                buttonContentCss={css`
-                  justify-content: center;
-                `}
-                buttonCss={css`
-                  width: 100%;
-                `}
-                onClick={() => setShowMeetingForm('google_meet')}
-                ref={googleMeetButtonRef}
-              >
-                {__('Create a Google Meet', 'tutor')}
-              </Button>
-            </div>
-          </div> */}
-
           <Button
             variant="secondary"
             icon={<SVGIcon name="jitsiColorize" width={24} height={24} />}
@@ -216,12 +163,13 @@ const LiveClass = () => {
         closePopover={() => setShowMeetingForm(null)}
         animationType={AnimationType.slideUp}
       >
-        <MeetingForm
-          type={showMeetingForm as MeetingType}
+        <ZoomMeetingForm
+          data={null}
+          meetingHost={zoomUsers}
           onCancel={() => {
             setShowMeetingForm(null);
           }}
-          currentMeetingId=""
+          timezones={zoomTimezones}
         />
       </Popover>
       <Popover
