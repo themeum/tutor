@@ -86,7 +86,7 @@ class OrderController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_nopriv_tutor_order_details', array( $this, 'get_order_by_id' ) );
+			add_action( 'wp_ajax_tutor_order_details', array( $this, 'get_order_by_id' ) );
 
 			/**
 			 * Handle bulk action
@@ -126,6 +126,9 @@ class OrderController {
 	 * @return void
 	 */
 	public function get_order_by_id() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		$order_id = Input::post( 'tutor_order_id' );
 
