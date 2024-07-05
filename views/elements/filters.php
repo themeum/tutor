@@ -142,10 +142,11 @@ if ( isset( $data ) ) : ?>
 									<?php esc_html_e( 'Select', 'tutor' ); ?>
 								</option>
 							<?php
-								$payment_status = OrderModel::get_payment_status();
+								$payment_status        = OrderModel::get_payment_status();
+								$filter_payment_status = Input::get( 'payment-status', '' );
 							foreach ( $payment_status as $key => $value ) :
 								?>
-								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $value, $key ); ?>>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $filter_payment_status, $key ); ?>>
 								<?php echo esc_html( $value ); ?>
 								</option>
 							<?php endforeach; ?>
