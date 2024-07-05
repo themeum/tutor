@@ -1,74 +1,66 @@
+import { useEffect } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
-
-import SVGIcon from '@Atoms/SVGIcon';
 
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
-import CourseCard from '@CourseBuilderComponents/additional/CourseCard';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import { useCourseDetailsQuery, usePrerequisiteCoursesQuery, type CourseFormData } from '@CourseBuilderServices/course';
 
 import { borderRadius, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import For from '@Controls/For';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import FormFileUploader from '@Components/fields/FormFileUploader';
-
-type PartialCourseDetails = Pick<CourseDetailsResponse, 'ID' | 'post_title' | 'thumbnail'>;
-// @TODO: will come from app config api later.
-const courses: PartialCourseDetails[] = [
-  {
-    ID: 1,
-    post_title: 'Digital Fantasy Portra...with Photoshop',
-    thumbnail: 'https://via.placeholder.com/76x76',
-  },
-  {
-    ID: 2,
-    post_title: 'Portrait Sketchbooking: Explore the Human Face',
-    thumbnail: 'https://via.placeholder.com/76x76',
-  },
-  {
-    ID: 3,
-    post_title: 'Portrait Sketchbooking: Explore the Human Face',
-    thumbnail: 'https://via.placeholder.com/76x76',
-  },
-  {
-    ID: 4,
-    post_title: 'Portrait Sketchbooking: Explore the Human Face',
-    thumbnail: 'https://via.placeholder.com/76x76',
-  },
-  {
-    ID: 5,
-    post_title: 'Digital Fantasy Portra...with Photoshop',
-    thumbnail: 'https://via.placeholder.com/76x76',
-  },
-  {
-    ID: 6,
-    post_title: 'Digital Fantasy Portra...with Photoshop',
-    thumbnail: 'https://via.placeholder.com/76x76',
-  },
-];
+import Certificate from '../components/additional/Certificate';
+import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { useNavigate } from 'react-router-dom';
+import { Addons } from '@Config/constants';
+import Show from '@Controls/Show';
 
 const Additional = () => {
+  const courseId = getCourseId();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!courseId) {
+      navigate('/', {
+        replace: true,
+      });
+    }
+  }, [navigate, courseId]);
+
+  if (!courseId) {
+    return null;
+  }
+
   const form = useFormContext<CourseFormData>();
-  const searchForm = useFormWithGlobalError();
+  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
+
+  const courseDetailsQuery = useCourseDetailsQuery(courseId);
+  const prerequisiteCourses = (courseDetailsQuery.data?.course_prerequisites || []).map((prerequisite) =>
+    String(prerequisite.id)
+  );
+
+  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
+    String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
+    !!isPrerequisiteAddonEnabled
+  );
 
   return (
     <div css={styles.wrapper}>
       <div css={styles.leftSide}>
         <CanvasHead title={__('Additionals', 'tutor')} />
-        <div css={styles.informationForm}>
+        <div css={styles.formSection}>
           <div css={styles.titleAndSub}>
             <div css={styles.title}>{__('Information', 'tutor')}</div>
             <div css={styles.subtitle}>
-              {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
+              {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}:
             </div>
           </div>
           <div css={styles.fieldsWrapper}>
@@ -157,49 +149,51 @@ const Additional = () => {
             />
           </div>
         </div>
+
+        <Show when={isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
+          <div css={styles.formSection}>
+            <div css={styles.titleAndSub}>
+              <div css={styles.title}>{__('Certificate', 'tutor')}</div>
+              <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
+
+              <Certificate />
+            </div>
+          </div>
+        </Show>
         <Navigator styleModifier={styles.navigator} />
       </div>
 
       <div css={styles.sidebar}>
-        <div css={styles.coursePrerequisite}>
+        {isPrerequisiteAddonEnabled && (
           <Controller
-            name="course_price_type"
-            control={searchForm.control}
+            name="course_prerequisites"
+            control={form.control}
             render={(controllerProps) => (
-              <FormInputWithContent
+              <FormCoursePrerequisites
                 {...controllerProps}
                 label={__('Course prerequisites', 'tutor')}
                 placeholder={__('Search to add course prerequisites', 'tutor')}
-                content={<SVGIcon name="search" width={24} height={24} />}
-                showVerticalBar={false}
+                options={prerequisiteCoursesQuery.data || []}
+                isSearchable
               />
             )}
           />
-          <div css={styles.courses}>
-            <For each={courses}>
-              {(course) => (
-                <CourseCard key={course.ID} id={course.ID} title={course.post_title} image={course.thumbnail} />
-              )}
-            </For>
-          </div>
-
-          <div css={styles.uploadAttachment}>
-            <Controller
-              name="attachments"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormFileUploader
-                  {...controllerProps}
-                  label={__('Attachments', 'tutor')}
-                  buttonText={__('Upload Attachment', 'tutor')}
-                  selectMultiple
-                />
-              )}
-            />
-          </div>
-
-          <LiveClass />
+        )}
+        <div css={styles.uploadAttachment}>
+          <Controller
+            name="course_attachments"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormFileUploader
+                {...controllerProps}
+                label={__('Attachments', 'tutor')}
+                buttonText={__('Upload Attachment', 'tutor')}
+                selectMultiple
+              />
+            )}
+          />
         </div>
+        <LiveClass />
       </div>
     </div>
   );
@@ -217,7 +211,7 @@ const styles = {
 		${styleUtils.display.flex('column')}
 		gap: ${spacing[24]};
   `,
-  informationForm: css`
+  formSection: css`
 		${styleUtils.display.flex('column')}
 		gap: ${spacing[20]};
 		border: 1px solid ${colorTokens.stroke.default};
@@ -279,5 +273,26 @@ const styles = {
   `,
   navigator: css`
     margin-block: ${spacing[40]};
+  `,
+  tabs: css`
+    position: relative;
+  `,
+  certificateWrapper: css`
+    ${styleUtils.display.flex()}
+    gap: ${spacing[16]};
+  `,
+  orientation: css`
+    ${styleUtils.display.flex()}
+    gap: ${spacing[8]};
+    position: absolute;
+    right: 0;
+    top: 0;
+  `,
+  activeOrientation: ({
+    isActive,
+  }: {
+    isActive: boolean;
+  }) => css`
+    color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
   `,
 };

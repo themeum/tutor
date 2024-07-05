@@ -13,23 +13,24 @@ import {
 import { typography } from '@Config/typography';
 import Logo from '@CourseBuilderPublic/images/logo.svg';
 import { type CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
-import { convertCourseDataToPayload } from '@CourseBuilderUtils/utils';
+import { convertCourseDataToPayload, getCourseId } from '@CourseBuilderUtils/utils';
 import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import Tracker from './Tracker';
 import config from '@Config/config';
 
 const Header = () => {
-  const params = new URLSearchParams(window.location.href);
-  const courseId = params.get('course_id')?.split('#')[0];
+  const courseId = getCourseId();
 
   const form = useFormContext<CourseFormData>();
 
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
+
+  const previewLink = useWatch({ name: 'preview_link' });
 
   const handleSubmit = async (data: CourseFormData) => {
     const payload = convertCourseDataToPayload(data);
@@ -37,7 +38,9 @@ const Header = () => {
     if (courseId) {
       updateCourseMutation.mutate({ course_id: Number(courseId), ...payload });
     } else {
-      const response = await createCourseMutation.mutateAsync(payload);
+      const response = await createCourseMutation.mutateAsync({
+        ...payload,
+      });
 
       if (response.data) {
         window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
@@ -73,14 +76,19 @@ const Header = () => {
             {__('Back To Legacy', 'tutor')}
           </Button>
 
-          <Button
-            variant="text"
-            buttonCss={styles.previewButton}
-            icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-            iconPosition="right"
-          >
-            {__('Preview', 'tutor')}
-          </Button>
+          {previewLink && (
+            <Button
+              variant="text"
+              buttonCss={styles.previewButton}
+              icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+              iconPosition="right"
+              onClick={() => {
+                window.open(previewLink, '_blank');
+              }}
+            >
+              {__('Preview', 'tutor')}
+            </Button>
+          )}
 
           <DropdownButton
             text="Publish"

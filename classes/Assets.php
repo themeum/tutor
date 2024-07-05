@@ -165,7 +165,7 @@ class Assets {
 	 * @return void
 	 */
 	public function admin_scripts() {
-		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION );
+		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
 		/**
 		 * Scripts
@@ -178,7 +178,7 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-slider' );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
-		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
 		
 		// Tutor order detail & coupon scripts.
@@ -238,12 +238,12 @@ class Assets {
 
 		// Plyr.
 		if ( is_single_course( true ) ) {
-			wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), TUTOR_VERSION );
-			wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
+			wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		}
 
 		// Social Share.
-		wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/lib/SocialShare/SocialShare.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
 		/**
 		 * Chart Data
@@ -251,11 +251,11 @@ class Assets {
 		if ( ! empty( $wp_query->query_vars['tutor_dashboard_page'] ) ) {
 			wp_enqueue_script( 'jquery-ui-slider' );
 
-			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION );
-			wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
+			wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
 			if ( 'earning' === $wp_query->query_vars['tutor_dashboard_page'] ) {
-				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/js/lib/Chart.bundle.min.js', array(), TUTOR_VERSION );
+				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/lib/Chart.bundle.min.js', array(), TUTOR_VERSION );
 				wp_enqueue_script( 'jquery-ui-datepicker' );
 			}
 		}
@@ -387,15 +387,15 @@ class Assets {
 		 */
 		$should_enqueue = apply_filters( 'tutor_should_enqueue_countdown_scripts', false );
 		if ( $should_enqueue ) {
-			wp_enqueue_script( 'tutor-moment', tutor()->url . 'assets/js/lib/countdown/moment.min.js', array(), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-moment', tutor()->url . 'assets/lib/countdown/moment.min.js', array(), TUTOR_VERSION, true );
 
-			wp_enqueue_script( 'tutor-moment-timezone', tutor()->url . 'assets/js/lib/countdown/moment-timezone-with-data.min.js', array(), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-moment-timezone', tutor()->url . 'assets/lib/countdown/moment-timezone-with-data.min.js', array(), TUTOR_VERSION, true );
 
-			wp_enqueue_script( 'tutor-jquery-countdown', tutor()->url . 'assets/js/lib/countdown/jquery.countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-jquery-countdown', tutor()->url . 'assets/lib/countdown/jquery.countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
-			wp_enqueue_script( 'tutor-countdown', tutor()->url . 'assets/js/lib/countdown/tutor-countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-countdown', tutor()->url . 'assets/lib/countdown/tutor-countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
-			wp_enqueue_style( 'tutor-countdown', tutor()->url . 'assets/js/lib/countdown/tutor-countdown.min.css', '', TUTOR_VERSION );
+			wp_enqueue_style( 'tutor-countdown', tutor()->url . 'assets/lib/countdown/tutor-countdown.min.css', '', TUTOR_VERSION );
 		}
 	}
 
@@ -540,7 +540,7 @@ class Assets {
 	 * @return array
 	 */
 	public function tutor_add_tinymce_js( $plugin_array ) {
-		$plugin_array['tutor_button'] = tutor()->url . 'assets/js/lib/mce-button.js';
+		$plugin_array['tutor_button'] = tutor()->url . 'assets/lib/mce-button.js';
 		return $plugin_array;
 	}
 

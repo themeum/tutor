@@ -2723,19 +2723,31 @@ class Utils {
 	 * Get wc product in efficient query
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 $exclude param added.
+	 *
+	 * @param array $exclude exclude ids.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_wc_products_db() {
+	public function get_wc_products_db( $exclude = array() ) {
 		global $wpdb;
+
+		$exclude = array_filter( $exclude, 'is_numeric' );
+
+		$where_clause = 'post_status = %s';
+		if ( count( $exclude ) ) {
+			$ids           = QueryHelper::prepare_in_clause( $exclude );
+			$where_clause .= " AND ID NOT IN ({$ids})";
+		}
+
+		$where_clause .= ' AND post_type = %s';
+
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID,
 					post_title
 			FROM 	{$wpdb->posts}
-			WHERE 	post_status = %s
-					AND post_type = %s;
-			",
+			WHERE 	{$where_clause}", //phpcs:ignore
 				'publish',
 				'product'
 			)
@@ -2783,6 +2795,27 @@ class Utils {
 		$product_id = (int) get_post_meta( $course_id, '_tutor_course_product_id', true );
 
 		return $product_id;
+	}
+
+	/**
+	 * Get all WC product ids which are linked with course.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function get_linked_product_ids() {
+		global $wpdb;
+		$ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT meta_value 
+				FROM 	{$wpdb->postmeta} 
+				WHERE	meta_key = %s",
+				'_tutor_course_product_id'
+			)
+		);
+
+		return array_filter( $ids, 'is_numeric' );
 	}
 
 	/**
@@ -4734,9 +4767,9 @@ class Utils {
 	public function can_delete_qa( $user_id, $question_id ) {
 		global $wpdb;
 
-		$is_admin = $this->has_user_role( 'administrator', $user_id);
+		$is_admin = $this->has_user_role( 'administrator', $user_id );
 
-		if ($is_admin) {
+		if ( $is_admin ) {
 			return true;
 		}
 
@@ -4750,7 +4783,7 @@ class Utils {
 			)
 		);
 
-		if ( $result && (int) $result->user_id === $user_id) {
+		if ( $result && (int) $result->user_id === $user_id ) {
 			return true;
 		}
 
@@ -8488,8 +8521,8 @@ class Utils {
 		if ( is_array( $addons ) && count( $addons ) ) {
 			foreach ( $addons as $base_name => $addon ) {
 
-				$addons_path = trailingslashit( tutor()->path . "assets/addons/{$base_name}" );
-				$addons_url  = trailingslashit( tutor()->url . "assets/addons/{$base_name}" );
+				$addons_path = trailingslashit( tutor()->path . "assets/images/addons/{$base_name}" );
+				$addons_url  = trailingslashit( tutor()->url . "assets/images/addons/{$base_name}" );
 
 				$thumbnailURL = tutor()->url . 'assets/images/tutor-plugin.png';
 				if ( file_exists( $addons_path . 'thumbnail.png' ) ) {
@@ -9941,7 +9974,7 @@ class Utils {
 		$error_messages = apply_filters(
 			'tutor_default_error_messages',
 			array(
-				'401' => __( 'You are not authorzied to perform this action', 'tutor' ),
+				'401'   => __( 'You are not authorzied to perform this action', 'tutor' ),
 				'nonce' => __( 'Nonce not matched. Action failed!', 'tutor' ),
 			)
 		);

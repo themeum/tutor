@@ -1,8 +1,9 @@
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
+import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
-import type { User } from '@Services/users';
+import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
@@ -28,8 +29,15 @@ export const courseDefaultData: CourseFormData = {
   },
   thumbnail: null,
   video: {
-    source_type: '',
-    source: '',
+    source: 'external_url',
+    source_video_id: '',
+    poster: '',
+    poster_url: '',
+    source_external_url: '',
+    source_shortcode: '',
+    source_youtube: '',
+    source_vimeo: '',
+    source_embedded: '',
   },
   course_price_type: 'free',
   course_price: '',
@@ -48,10 +56,13 @@ export const courseDefaultData: CourseFormData = {
   course_material_includes: '',
   course_duration_hours: 0,
   course_duration_minutes: 0,
-  attachments: null,
+  course_attachments: null,
   isContentDripEnabled: false,
   contentDripType: '',
   course_product_id: '',
+  preview_link: '',
+  course_prerequisites: [],
+  tutor_course_certificate_template: '',
 };
 
 export interface CourseFormData {
@@ -63,10 +74,7 @@ export interface CourseFormData {
   post_password: string;
   post_author: User | null;
   thumbnail: Media | null;
-  video: {
-    source_type: string;
-    source: string;
-  };
+  video: CourseVideo;
   course_price_type: string;
   course_price: string;
   course_sale_price: string;
@@ -84,10 +92,13 @@ export interface CourseFormData {
   course_material_includes: string;
   course_duration_hours: number;
   course_duration_minutes: number;
-  attachments: Media[] | null;
+  course_attachments: Media[] | null;
   isContentDripEnabled: boolean;
   contentDripType: 'unlock_by_date' | 'specific_days' | 'unlock_sequentially' | 'after_finishing_prerequisites' | '';
   course_product_id: string;
+  preview_link: string;
+  course_prerequisites: PrerequisiteCourses[];
+  tutor_course_certificate_template: string;
 }
 
 export interface CoursePayload {
@@ -100,10 +111,7 @@ export interface CoursePayload {
   post_password: string;
   post_author: number | null;
   thumbnail_id: number | null;
-  video?: {
-    source_type: string;
-    source: string;
-  };
+  video?: CourseVideo;
   course_price_type?: string;
   course_price?: string;
   course_sale_price?: string;
@@ -130,6 +138,10 @@ export interface CoursePayload {
     course_material_includes?: string;
     course_requirements?: string;
   };
+  preview_link: string;
+  _tutor_course_prerequisites_ids: string[];
+  tutor_course_certificate_template: string;
+  tutor_attachments: Media[];
 }
 
 interface CourseDetailsPayload {
@@ -207,16 +219,7 @@ export interface CourseDetailsResponse {
   enable_qna: string;
   is_public_course: string;
   course_level: CourseLevel;
-  video: {
-    source: string;
-    source_video_id: string;
-    poster: string;
-    source_external_url: string;
-    source_shortcode: string;
-    source_youtube: string;
-    source_vimeo: string;
-    source_embedded: string;
-  };
+  video: CourseVideo;
   course_duration: {
     hours: number;
     minutes: number;
@@ -246,6 +249,12 @@ export interface CourseDetailsResponse {
     sale_price: string;
     type: string;
   };
+  course_instructors: InstructorListResponse[];
+  preview_link: string;
+  course_prerequisites: PrerequisiteCourses[];
+  course_certificate_template: string;
+  course_certificates_templates: Certificate[];
+  course_attachments: Media[];
 }
 
 interface CourseResponse {
@@ -261,6 +270,7 @@ interface WcProduct {
 
 interface GetProductsPayload {
   action: string;
+  exclude_linked_products: boolean;
 }
 
 interface WcProductDetailsPayload {
@@ -272,6 +282,27 @@ interface WcProductDetailsResponse {
   name: string;
   regular_price: string;
   sale_price: string;
+}
+
+interface GetPrerequisiteCoursesPayload {
+  action: string;
+  exclude: string[];
+}
+
+export interface PrerequisiteCourses {
+  id: number;
+  post_title: string;
+  featured_image: string;
+}
+
+export interface Certificate {
+  name: string;
+  orientation: 'landscape' | 'portrait';
+  url: string;
+  preview_src: string;
+  background_src: string;
+  key: string;
+  is_default?: boolean;
 }
 
 const createCourse = (payload: CoursePayload) => {
@@ -330,21 +361,26 @@ const getCourseDetails = (courseId: number) => {
 export const useCourseDetailsQuery = (courseId: number) => {
   return useQuery({
     queryKey: ['CourseDetails', courseId],
-    queryFn: () => getCourseDetails(courseId).then((res) => res.data),
+    queryFn: () =>
+      getCourseDetails(courseId).then((res) => {
+        return res.data;
+      }),
     enabled: !!courseId,
   });
 };
 
-const getWcProducts = () => {
+const getWcProducts = (courseId?: string) => {
   return authApiInstance.post<GetProductsPayload, AxiosResponse<WcProduct[]>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_get_wc_products',
+    exclude_linked_products: true,
+    ...(courseId && { course_id: courseId }),
   });
 };
 
-export const useGetProductsQuery = () => {
+export const useGetProductsQuery = (courseId?: string) => {
   return useQuery({
     queryKey: ['WcProducts'],
-    queryFn: () => getWcProducts().then((res) => res.data),
+    queryFn: () => getWcProducts(courseId).then((res) => res.data),
   });
 };
 
@@ -356,18 +392,37 @@ const getProductDetails = (productId: string, courseId: string) => {
   });
 };
 
-export const useProductDetailsQuery = (productId: string, courseId: string) => {
+export const useProductDetailsQuery = (productId: string, courseId: string, coursePriceType: string) => {
   const { showToast } = useToast();
+
   return useQuery({
-    queryKey: ['WcProductDetails', productId],
+    queryKey: ['WcProductDetails', productId, courseId],
     queryFn: () =>
       getProductDetails(productId, courseId).then((res) => {
         if (typeof res.data === 'string') {
           showToast({ type: 'danger', message: res.data });
-          return;
+          return null;
         }
         return res.data;
       }),
-    enabled: !!productId,
+    enabled: !!productId && coursePriceType === 'paid',
+  });
+};
+
+const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
+  return authApiInstance.post<GetPrerequisiteCoursesPayload, AxiosResponse<PrerequisiteCourses[]>>(
+    endpoints.ADMIN_AJAX,
+    {
+      action: 'tutor_course_list',
+      exclude: excludedCourseIds,
+    }
+  );
+};
+
+export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrerequisiteAddonEnabled: boolean) => {
+  return useQuery({
+    queryKey: ['PrerequisiteCourses', excludedCourseIds],
+    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then((res) => res.data),
+    enabled: isPrerequisiteAddonEnabled,
   });
 };

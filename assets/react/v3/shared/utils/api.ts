@@ -1,7 +1,7 @@
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
-import * as querystring from 'querystring';
 import config, { tutorConfig } from '@Config/config';
 import axios from 'axios';
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import * as querystring from 'querystring';
 
 import { convertToFormData, serializeParams } from './form';
 
@@ -16,6 +16,7 @@ export const publicApiInstance = axios.create({
 export const authApiInstance = axios.create({
   baseURL: config.TUTOR_API_BASE_URL,
 });
+
 
 authApiInstance.interceptors.request.use(
   (config) => {
@@ -90,3 +91,31 @@ wpAuthApiInstance.interceptors.request.use(
 wpAuthApiInstance.interceptors.response.use((response) => {
   return Promise.resolve<{ data: unknown }>(response).then((res) => res);
 });
+
+
+export const wpAjaxInstance = axios.create({
+  baseURL: config.WP_AJAX_BASE_URL,
+});
+
+wpAjaxInstance.interceptors.request.use((config) => {
+  config.headers ||= {};
+  config.headers['X-WP-Nonce'] = window.wpApiSettings.nonce;
+
+  // We will use REST methods while using but wp ajax only sent via post method.
+  config.method = 'POST';
+
+  if (config.params) {
+    config.params = serializeParams(config.params);
+  }
+
+  config.data ||= {};
+  config.data = {...config.data, ...config.params, action: config.url};
+  config.data = convertToFormData(config.data, config.method);
+  
+  config.params = {};
+  config.url = undefined;
+  
+  return config;
+}, (error) => Promise.reject(error));
+
+wpAjaxInstance.interceptors.response.use((response) => Promise.resolve(response).then(res => res));

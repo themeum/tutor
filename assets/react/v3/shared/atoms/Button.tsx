@@ -5,7 +5,7 @@ import { styleUtils } from '@Utils/style-utils';
 import { type SerializedStyles, css, keyframes } from '@emotion/react';
 import React, { type ReactNode } from 'react';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'text';
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'text' | 'WP';
 export type ButtonSize = 'large' | 'regular' | 'small';
 export type ButtonIconPosition = 'left' | 'right';
 
@@ -162,6 +162,92 @@ const styles = {
         background-color: transparent;
         box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
         color: ${colorTokens.text.brand};
+
+        svg {
+          color: ${colorTokens.icon.brand};
+        }
+
+        &:hover {
+          color: ${colorTokens.text.white};
+
+          svg {
+            color: ${colorTokens.icon.white};
+          }
+        }
+
+        &:focus {
+          color: ${colorTokens.text.white};
+
+          svg {
+            color: ${colorTokens.icon.white};
+          }
+        }
+
+        &:active {
+          color: ${colorTokens.text.white};
+
+          svg {
+            color: ${colorTokens.icon.white};
+          }
+        }
+      `
+      }
+
+      ${
+        (disabled || loading) &&
+        css`
+        background-color: ${colorTokens.action.primary.disable};
+        color: ${colorTokens.text.disable};
+        svg {
+          color: ${colorTokens.icon.disable.default};
+        }
+
+        ${
+          isOutlined &&
+          css`
+          background-color: transparent;
+          box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
+          svg {
+            color: ${colorTokens.icon.disable.default};
+          }
+        `
+        }
+      `
+      }
+    `
+    }
+
+    ${
+      variant === 'WP' &&
+      css`
+      background-color: ${colorTokens.action.primary.wp};
+      color: ${colorTokens.text.white};
+
+      svg {
+        color: ${colorTokens.icon.white};
+      }
+
+      &:hover {
+        background-color: ${colorTokens.action.primary.wp_hover};
+      }
+
+      &:focus {
+        background-color: ${colorTokens.action.primary.wp_hover};
+        box-shadow: ${shadow.focus};
+      }
+
+      &:active {
+        background-color: ${colorTokens.action.primary.wp};
+        box-shadow: none;
+      }
+
+      ${
+        isOutlined &&
+        css`
+        background-color: transparent;
+        box-shadow: inset 0 0 0 1px ${colorTokens.action.primary.wp};
+        color: ${colorTokens.text.wp};
 
         svg {
           color: ${colorTokens.icon.brand};

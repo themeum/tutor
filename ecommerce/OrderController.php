@@ -2,19 +2,21 @@
 /**
  * Manage Order
  *
- * @package Tutor\Order
+ * @package Tutor\Ecommerce
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 3.0.0
  */
 
 namespace Tutor\Ecommerce;
 
 use TUTOR\Backend_Page_Trait;
+use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * OrderController class
  *
- * @since 2.0.0
+ * @since 3.0.0
  */
 class OrderController {
 
@@ -40,8 +42,12 @@ class OrderController {
 	 *
 	 * @var $page_title
 	 */
-
 	use Backend_Page_Trait;
+
+	/**
+	 * Trait for sending JSON response
+	 */
+	use JsonResponse;
 
 	/**
 	 * Page Title
@@ -58,10 +64,17 @@ class OrderController {
 	public $bulk_action = true;
 
 	/**
-	 * Constructor
+	 * Constructor.
+	 *
+	 * Initializes the Orders class, sets the page title, and optionally registers
+	 * hooks for handling AJAX requests related to order data, bulk actions, order status updates,
+	 * and order deletions.
+	 *
+	 * @param bool $register_hooks Whether to register hooks for handling requests. Default is true.
+	 *
+	 * @since 3.0.0
 	 *
 	 * @return void
-	 * @since 2.0.0
 	 */
 	public function __construct( $register_hooks = true ) {
 		$this->page_title = __( 'Orders', 'tutor' );
@@ -69,31 +82,82 @@ class OrderController {
 
 		if ( $register_hooks ) {
 			/**
+			 * Handle ajax request for getting order related data by order id
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_nopriv_tutor_order_details', array( $this, 'get_order_by_id' ) );
+
+			/**
 			 * Handle bulk action
 			 *
-			 * @since v2.0.0
+			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
 			/**
 			 * Handle ajax request for updating order status
 			 *
-			 * @since v2.0.0
+			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
 			/**
 			 * Handle ajax request for delete order
 			 *
-			 * @since v2.0.0
+			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
 		}
+	}
+
+
+	/**
+	 * Retrieve order data by order ID and respond with JSON.
+	 *
+	 * This function retrieves the order ID from the POST request, validates it,
+	 * fetches the corresponding order data using the OrderModel class, and returns
+	 * a JSON response with the order data or an error message.
+	 *
+	 * If the order ID is not provided, it responds with a "Bad Request" status.
+	 * If the order is not found, it responds with a "Not Found" status.
+	 * Otherwise, it responds with the order data and a success message.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function get_order_by_id() {
+
+		$order_id = Input::post( 'tutor_order_id' );
+
+		if ( empty( $order_id ) ) {
+			$this->json_response(
+				__( 'Order Id is required', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$order_data = $this->model->get_order_by_id( $order_id );
+
+		if ( ! $order_data ) {
+			$this->json_response(
+				__( 'Order not found', 'tutor' ),
+				null,
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
+		$this->json_response(
+			__( 'Order retrieved successfully', 'tutor' ),
+			$order_data
+		);
 	}
 
 	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @return array
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public function prepare_bulk_actions(): array {
 		$actions = array(
@@ -119,7 +183,7 @@ class OrderController {
 	 *
 	 * @return array
 	 *
-	 * @since v2.0.0
+	 * @since 3.0.0
 	 */
 	public function tabs_key_value(): array {
 		$url = get_pagenum_link();
@@ -158,7 +222,7 @@ class OrderController {
 				'value' => $this->model->get_order_count( $where, $search ),
 				'url'   => $url . '&data=' . $key,
 			);
-		};
+		}
 
 		return apply_filters( 'tutor_order_tabs', $tabs );
 	}
@@ -174,7 +238,7 @@ class OrderController {
 	 *
 	 * @return int
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	protected static function count_order( string $status, $order_id = '', $date = '', $search_term = '' ): int {
 		$user_id     = get_current_user_id();
@@ -227,14 +291,13 @@ class OrderController {
 		$the_query = new \WP_Query( $args );
 
 		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : $the_query;
-
 	}
 
 	/**
 	 * Handle bulk action for enrollment cancel | delete
 	 *
 	 * @return void
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public function order_list_bulk_action() {
 
@@ -289,7 +352,7 @@ class OrderController {
 	 * Handle ajax request for updating order status
 	 *
 	 * @return void
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public static function tutor_change_order_status() {
 		tutor_utils()->checking_nonce();
@@ -326,7 +389,7 @@ class OrderController {
 	/**
 	 * Handle ajax request for deleting order
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 *
 	 * @return void JSON response
 	 */
@@ -357,7 +420,7 @@ class OrderController {
 	 *
 	 * @param string $bulk_ids ids that need to update.
 	 * @return bool
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public static function bulk_delete_order( $bulk_ids ): bool {
 		$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
@@ -377,7 +440,7 @@ class OrderController {
 	 *
 	 * @return bool
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public static function update_order_status( string $status, $bulk_ids ): bool {
 		global $wpdb;
@@ -414,8 +477,33 @@ class OrderController {
 	 */
 	public function get_orders( $limit = 10, $offset = 0, $where = array(), $search_term = '', $list_order = '', $list_order_by = '' ) {
 
+		global $wpdb;
+
 		$list_order    = '' === $list_order ? Input::get( 'order', 'DESC' ) : $list_order;
 		$list_order_by = '' === $list_order_by ? 'id' : $list_order_by;
+
+		$primary_table  = "{$wpdb->prefix}tutor_orders o";
+		$joining_tables = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->users} u",
+				'on'    => 'o.user_id = u.ID',
+			),
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->usermeta} um1",
+				'on'    => 'u.ID = um1.user_id AND um1.meta_key = "tutor_customer_billing_name"',
+			),
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->usermeta} um2",
+				'on'    => 'u.ID = um2.user_id AND um2.meta_key = "tutor_customer_billing_name"',
+			),
+		);
+
+		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
+
+		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $order_by, $limit, $offset, $order );
 
 		$current_tab = Input::get( 'data', 'all' );
 		if ( 'all' !== $current_tab ) {
