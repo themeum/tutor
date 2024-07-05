@@ -1,6 +1,12 @@
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import { Addons, DateFormats } from '@Config/constants';
+import type {
+  CourseDetailsResponse,
+  CourseFormData,
+  MeetingFormData,
+  MeetingType,
+} from '@CourseBuilderServices/course';
+import { format } from 'date-fns';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
@@ -50,6 +56,17 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
       _tutor_course_prerequisites_ids: data.course_prerequisites?.map((item) => item.id) ?? [],
     }),
     tutor_course_certificate_template: data.tutor_course_certificate_template,
+    _tutor_course_additional_data_edit: true,
+    _tutor_attachments_main_edit: true,
+    'video[source]': data.video.source,
+    'video[source_video_id]': data.video.source_video_id,
+    'video[poster]': data.video.poster,
+    'video[source_external_url]': data.video.source_external_url,
+    'video[source_shortcode]': data.video.source_shortcode,
+    'video[source_youtube]': data.video.source_youtube,
+    'video[source_vimeo]': data.video.source_vimeo,
+    'video[source_embedded]': data.video.source_embedded,
+    tutor_attachments: data.course_attachments?.map((item) => item.id) ?? [],
   };
 };
 
@@ -59,7 +76,9 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     post_title: courseDetails.post_title,
     post_name: courseDetails.post_name,
     post_content: courseDetails.post_content,
-    post_status: courseDetails.post_status as 'publish' | 'private' | 'password_protected',
+    post_status: courseDetails.post_password.length
+      ? 'password_protected'
+      : (courseDetails.post_status as 'publish' | 'private'),
     post_password: courseDetails.post_password,
     post_author: {
       id: Number(courseDetails.post_author.ID),
@@ -68,12 +87,20 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       avatar_url: courseDetails.post_author.tutor_profile_photo_url,
     },
     thumbnail: {
-      id: null,
+      id: 0,
+      title: '',
       url: courseDetails.thumbnail,
     },
     video: {
-      source_type: '',
-      source: '',
+      source: courseDetails.video.source ?? '',
+      source_video_id: courseDetails.video.source_video_id ?? '',
+      poster: courseDetails.video.poster ?? '',
+      poster_url: courseDetails.video.poster_url ?? '',
+      source_external_url: courseDetails.video.source_external_url ?? '',
+      source_shortcode: courseDetails.video.source_shortcode ?? '',
+      source_youtube: courseDetails.video.source_youtube ?? '',
+      source_vimeo: courseDetails.video.source_vimeo ?? '',
+      source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_price_type: courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
@@ -112,7 +139,30 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     preview_link: courseDetails.preview_link ?? '',
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
+    course_attachments: courseDetails.course_attachments ?? [],
   };
+};
+
+export const convertMeetingFormDataToPayload = (
+  data: MeetingFormData,
+  type: MeetingType,
+  click_form: 'course_builder' | 'metabox'
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+): any => {
+  if (type === 'zoom') {
+    return {
+      click_form: click_form,
+      meeting_title: data.meeting_name,
+      meeting_summary: data.meeting_summary,
+      meeting_date: format(new Date(data.meeting_date), DateFormats.monthDayYear),
+      meeting_time: data.meeting_time,
+      meeting_duration: data.meeting_duration,
+      meeting_duration_unit: data.meeting_duration_unit,
+      meeting_timezone: data.meeting_timezone,
+      auto_recording: data.auto_recording,
+      meeting_password: data.meeting_password,
+    };
+  }
 };
 
 export const getCourseId = () => {
@@ -121,6 +171,8 @@ export const getCourseId = () => {
   return Number(courseId);
 };
 
-export const isAddonEnabled = (addon: string) => {
+type Addon = `${Addons}`;
+
+export const isAddonEnabled = (addon: Addon) => {
   return !!tutorConfig.addons_data.find((item) => item.name === addon)?.is_enabled;
 };

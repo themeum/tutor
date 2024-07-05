@@ -18,6 +18,8 @@ interface ImageInputProps {
   clearHandler: () => void;
   emptyImageCss?: SerializedStyles;
   previewImageCss?: SerializedStyles;
+  overlayCss?: SerializedStyles;
+  replaceButtonText?: string;
 }
 
 const ImageInput = ({
@@ -28,6 +30,8 @@ const ImageInput = ({
   clearHandler,
   emptyImageCss,
   previewImageCss,
+  overlayCss,
+  replaceButtonText,
 }: ImageInputProps) => {
   return (
     <Show
@@ -60,7 +64,7 @@ const ImageInput = ({
         return (
           <div css={[styles.previewWrapper, previewImageCss]}>
             <img src={url} alt={value?.title} css={styles.imagePreview} />
-            <div css={styles.hoverPreview} data-hover-buttons-wrapper>
+            <div css={[styles.hoverPreview, overlayCss]} data-hover-buttons-wrapper>
               <Button
                 variant="secondary"
                 onClick={(event) => {
@@ -68,7 +72,7 @@ const ImageInput = ({
                   uploadHandler();
                 }}
               >
-                {__('Replace Image', 'tutor')}
+                {replaceButtonText || __('Replace Image', 'tutor')}
               </Button>
               <Button
                 variant="text"

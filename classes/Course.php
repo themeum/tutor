@@ -283,7 +283,7 @@ class Course extends Tutor_Base {
 	 * @return boolean
 	 */
 	private function is_valid_video_source_type( string $source_type ): bool {
-		return in_array( $source_type, $this->supported_video_sources, true );
+		return in_array( $source_type, tutor_utils()->get_option( 'supported_video_sources', array() ), true );
 	}
 
 	/**
@@ -953,11 +953,7 @@ class Course extends Tutor_Base {
 
 		$data = apply_filters( 'tutor_course_details_response', array_merge( $course, $data ) );
 
-		$this->json_response(
-			__( 'Data retrieved successfully!' ),
-			$data,
-			HttpHelper::STATUS_OK
-		);
+		$this->json_response( __( 'Data retrieved successfully!' ), $data );
 	}
 
 	/**
@@ -1005,6 +1001,8 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function enqueue_course_builder_assets() {
+		wp_enqueue_script( 'wp-tinymce' );
+		wp_enqueue_editor();
 		wp_enqueue_media();
 		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/tutor-course-builder-v3.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 
@@ -1034,6 +1032,10 @@ class Course extends Tutor_Base {
 		);
 
 		$data = array_merge( $default_data, $new_data );
+
+		ob_start();
+		wp_editor( '', 'post_content' );
+		$data['wp_editor'] = ob_get_clean();
 
 		wp_localize_script( 'tutor-course-builder-v3', '_tutorobject', $data );
 	}
