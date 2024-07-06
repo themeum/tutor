@@ -49,7 +49,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Me
       meeting_time: currentMeeting?.meeting_data.start_time
         ? format(new Date(currentMeeting?.meeting_data.start_time), DateFormats.hoursMinutes)
         : '',
-      meeting_duration: String(currentMeeting?.meeting_data.duration) ?? '',
+      meeting_duration: currentMeeting?.meeting_data.duration ? String(currentMeeting?.meeting_data.duration) : '',
       meeting_duration_unit: currentMeeting?.meeting_data.duration_unit ?? 'min',
       meeting_timezone: currentMeeting?.meeting_data.timezone ?? '',
       auto_recording: currentMeeting?.meeting_data.settings.auto_recording ?? 'none',
@@ -301,7 +301,7 @@ const styles = {
   meetingTimeWrapper: css`
     ${styleUtils.display.flex()}
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: ${spacing[6]};
   `,
   buttonWrapper: ({ isScrolling = false }) => css`

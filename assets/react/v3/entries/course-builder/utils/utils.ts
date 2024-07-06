@@ -76,9 +76,16 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     post_title: courseDetails.post_title,
     post_name: courseDetails.post_name,
     post_content: courseDetails.post_content,
-    post_status: courseDetails.post_password.length
-      ? 'password_protected'
-      : (courseDetails.post_status as 'publish' | 'private'),
+    post_status: courseDetails.post_status,
+    visibility: (() => {
+      if (courseDetails.post_password.length) {
+        return 'password_protected';
+      }
+      if (courseDetails.post_status === 'private') {
+        return 'private';
+      }
+      return 'publish';
+    })(),
     post_password: courseDetails.post_password,
     post_author: {
       id: Number(courseDetails.post_author.ID),

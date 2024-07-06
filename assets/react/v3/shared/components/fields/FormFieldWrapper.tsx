@@ -199,6 +199,9 @@ const styles = {
     transform: translateY(-50%);
     display: flex;
   `,
+  alertIcon: css`
+    flex-shrink: 0;
+  `,
 };
 
 const FormFieldWrapper = <T,>({
@@ -289,7 +292,7 @@ const FormFieldWrapper = <T,>({
       </div>
       {fieldState.error?.message && (
         <p css={styles.errorLabel(!!fieldState.error)}>
-          <SVGIcon name="alert" width={20} height={20} /> {fieldState.error.message}
+          <SVGIcon style={styles.alertIcon} name="alert" width={20} height={20} /> {fieldState.error.message}
         </p>
       )}
     </div>

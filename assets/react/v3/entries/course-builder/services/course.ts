@@ -20,7 +20,8 @@ export interface CourseFormData {
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: 'publish' | 'private' | 'password_protected';
+  post_status: 'publish' | 'private' | 'draft' | 'future';
+  visibility: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;
   thumbnail: Media | null;
@@ -57,6 +58,7 @@ export const courseDefaultData: CourseFormData = {
   post_title: '',
   post_content: '',
   post_status: 'publish',
+  visibility: 'publish',
   post_password: '',
   post_author: {
     id: Number(currentUser.id),
@@ -108,7 +110,7 @@ export interface CoursePayload {
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: 'publish' | 'private';
+  post_status: 'publish' | 'private' | 'draft' | 'future';
   post_password: string;
   post_author: number | null;
   thumbnail_id: number | null;
@@ -188,7 +190,7 @@ export interface CourseDetailsResponse {
   post_content: string;
   post_title: string;
   post_excerpt: string;
-  post_status: string;
+  post_status: 'publish' | 'private' | 'draft' | 'future';
   comment_status: string;
   ping_status: string;
   post_password: string;

@@ -49,7 +49,7 @@ const CourseBasic = () => {
 
   const visibilityStatus = useWatch({
     control: form.control,
-    name: 'post_status',
+    name: 'visibility',
   });
   const coursePriceType = useWatch({
     control: form.control,
@@ -159,7 +159,7 @@ const CourseBasic = () => {
       </div>
       <div css={styles.sidebar}>
         <Controller
-          name="post_status"
+          name="visibility"
           control={form.control}
           render={(controllerProps) => (
             <FormSelectInput
@@ -251,7 +251,7 @@ const CourseBasic = () => {
                 <FormInputWithContent
                   {...controllerProps}
                   label={__('Regular Price', 'tutor')}
-                  content="$"
+                  content={<SVGIcon name="currency" width={24} height={24} />}
                   placeholder={__('0', 'tutor')}
                   type="number"
                 />
@@ -264,7 +264,7 @@ const CourseBasic = () => {
                 <FormInputWithContent
                   {...controllerProps}
                   label={__('Discount Price', 'tutor')}
-                  content="$"
+                  content={<SVGIcon name="currency" width={24} height={24} />}
                   placeholder={__('0', 'tutor')}
                   type="number"
                 />
