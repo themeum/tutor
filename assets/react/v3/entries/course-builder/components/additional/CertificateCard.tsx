@@ -94,7 +94,7 @@ const CertificateCard = ({
           isSelected: selectedCertificate === data.key,
         })}
       >
-        <SVGIcon name="checkFilled" width={32} height={32} />
+        <SVGIcon name="checkFilledWhite" width={32} height={32} />
       </div>
     </div>
   );
