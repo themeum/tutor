@@ -6,6 +6,7 @@ const config = {
   VIDEO_SOURCES_SETTINGS_URL: `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_settings&tab_page=course`,
   WP_AJAX_BASE_URL: tutorConfig.ajaxurl,
   TUTOR_PRICING_PAGE: 'https://tutorlms.com/pricing/',
+  TUTOR_ADDONS_PAGE: `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor-addons`,
 };
 
 export default config;

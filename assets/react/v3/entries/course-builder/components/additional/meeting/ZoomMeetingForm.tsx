@@ -21,7 +21,7 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { format } from 'date-fns';
 import { DateFormats } from '@Config/constants';
 
-interface MeetingFormProps {
+interface ZoomMeetingFormProps {
   onCancel: () => void;
   data: ZoomMeeting | null;
   timezones: {
@@ -35,7 +35,7 @@ interface MeetingFormProps {
 
 const courseId = getCourseId();
 
-const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: MeetingFormProps) => {
+const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: ZoomMeetingFormProps) => {
   const { ref, isScrolling } = useIsScrolling({ defaultValue: true });
   const currentMeeting = data;
 
@@ -56,6 +56,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Me
       meeting_password: currentMeeting?.meeting_data.password ?? '',
       meeting_host: Object.values(meetingHost)[0],
     },
+    shouldFocusError: true,
   });
 
   const saveZoomMeeting = useSaveZoomMeetingMutation(String(courseId));

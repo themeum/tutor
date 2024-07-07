@@ -170,6 +170,21 @@ export interface ZoomMeeting {
   };
 }
 
+export interface GoogleMeetMeeting {
+  ID: string;
+  post_content: string;
+  post_title: string;
+  meeting_data: {
+    id: string;
+    summary: string;
+    start_datetime: string;
+    end_datetime: string;
+    attendees: 'Yes' | 'No';
+    timezone: string;
+    meet_link: string;
+  };
+}
+
 export interface CourseDetailsResponse {
   ID: number;
   post_author: {
@@ -283,9 +298,13 @@ export interface CourseDetailsResponse {
     [key: string]: string;
   };
   zoom_meetings: ZoomMeeting[];
+  google_meet_timezones: {
+    [key: string]: string;
+  };
+  google_meet_meetings: GoogleMeetMeeting[];
 }
 
-export type MeetingType = 'zoom' | 'google_meet' | 'jitsi';
+export type MeetingType = 'zoom' | 'google_meet';
 
 export interface ZoomMeetingFormData {
   meeting_name: string;
@@ -299,18 +318,16 @@ export interface ZoomMeetingFormData {
   meeting_password: string;
   meeting_host: string;
 }
-export interface MeetingFormData {
+
+export interface GoogleMeetMeetingFormData {
   meeting_name: string;
   meeting_summary: string;
-  meeting_date: string;
-  meeting_time: string;
-  meeting_duration: string;
-  meeting_duration_unit: string;
+  meeting_start_date: string;
+  meeting_start_time: string;
+  meeting_end_date: string;
+  meeting_end_time: string;
   meeting_enrolledAsAttendee: boolean;
   meeting_timezone: string;
-  auto_recording: 'none' | 'local' | 'cloud';
-  meeting_password: string;
-  meeting_host: string;
 }
 
 interface CourseResponse {
@@ -365,7 +382,7 @@ export interface ZoomMeetingPayload {
   meeting_id?: number; // only update
   topic_id?: number; // only when it will add as a lesson
   course_id: number;
-  click_form: 'course_builder' | 'metabox';
+  click_form: 'course_builder' | 'metabox'; // 'course_builder' for course lesson, 'metabox' for additional
   meeting_title: string;
   meeting_summary: string;
   meeting_date: string;
@@ -376,6 +393,26 @@ export interface ZoomMeetingPayload {
   auto_recording: 'none' | 'local' | 'cloud';
   meeting_password: string;
   meeting_host: string;
+}
+
+export interface GoogleMeetMeetingPayload {
+  'post-id'?: number; //only update
+  'event-id'?: string; //only update
+  attendees: 'Yes' | 'No';
+  course_id: number; // for course builder set topic id
+  meeting_title: string;
+  meeting_summary: string;
+  meeting_start_date: string; // yyyy-mm-dd
+  meeting_start_time: string; // hh:mm
+  meeting_end_date: string;
+  meeting_end_time: string;
+  meeting_timezone: string;
+  meeting_attendees_enroll_students: 'Yes' | 'No';
+}
+
+interface GoogleMeetMeetingDeletePayload {
+  'post-id': string;
+  'event-id': string;
 }
 
 const createCourse = (payload: CoursePayload) => {
@@ -539,6 +576,59 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: deleteZoomMeeting,
+    onSuccess: () => {
+      showToast({ type: 'success', message: __('Meeting deleted successfully', 'tutor') });
+
+      queryClient.invalidateQueries({
+        queryKey: ['CourseDetails', Number(courseId)],
+      });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
+  });
+};
+
+const saveGoogleMeetMeeting = (payload: GoogleMeetMeetingPayload) => {
+  return authApiInstance.post<GoogleMeetMeetingPayload, AxiosResponse<unknown>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_google_meet_new_meeting',
+    ...payload,
+  });
+};
+
+export const useSaveGoogleMeetMeetingMutation = (courseId: string) => {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: saveGoogleMeetMeeting,
+    onSuccess: () => {
+      showToast({ type: 'success', message: __('Meeting saved successfully', 'tutor') });
+
+      queryClient.invalidateQueries({
+        queryKey: ['CourseDetails', Number(courseId)],
+      });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
+  });
+};
+
+const deleteGoogleMeetMeeting = (postId: string, eventId: string) => {
+  return authApiInstance.post<GoogleMeetMeetingPayload, AxiosResponse<unknown>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_google_meet_delete',
+    'post-id': postId,
+    'event-id': eventId,
+  });
+};
+
+export const useDeleteGoogleMeetMeetingMutation = (courseId: string, payload: GoogleMeetMeetingDeletePayload) => {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteGoogleMeetMeeting(payload['post-id'], payload['event-id']),
     onSuccess: () => {
       showToast({ type: 'success', message: __('Meeting deleted successfully', 'tutor') });
 
