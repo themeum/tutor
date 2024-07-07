@@ -1,6 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { wpAjaxInstance } from '@Utils/api';
+import { useToast } from '@Atoms/Toast';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
+import { ErrorResponse } from '@Utils/form';
 
 export type CouponType = 'code' | 'automatic';
 
@@ -51,6 +53,31 @@ export interface Coupon {
 	created_at: string;
 	updated_at?: string;
 }
+
+export const couponInitialValue: Coupon = {
+	id: 0,
+	type: 'code',
+	name: '',
+	code: '',
+	user_name: 'User',
+	discount_type: 'amount',
+	discount_value: 0,
+	applies_to: 'all_courses_and_bundles',
+	courses: [],
+	categories: [],
+	bundles: [],
+	usage_limit_status: false,
+	usage_limit_value: 0,
+	is_limit_to_one_use_per_customer: false,
+	purchase_requirements: 'no_minimum',
+	purchase_requirements_value: 0,
+	start_date: '',
+	start_time: '',
+	is_end_enabled: false,
+	end_date: '',
+	end_time: '',
+	created_at: '02/16/2024 10:00:00',
+};
 
 const mockCouponData: Coupon = {
 	id: 11211,
@@ -188,5 +215,57 @@ export const useCouponDetailsQuery = (couponId: number) => {
 		enabled: !!couponId,
 		queryKey: ['CouponDetails', couponId],
 		queryFn: () => getCouponDetails(couponId),
+	});
+};
+
+interface CouponResponse {
+	id: number;
+	message: string;
+	status_code: number;
+}
+
+const createCoupon = (payload: Coupon) => {
+	return authApiInstance.post<Coupon, CouponResponse>(endpoints.ADMIN_AJAX, {
+		action: 'tutor_create_coupon',
+		...payload,
+	});
+};
+
+export const useCreateCouponMutation = () => {
+	const { showToast } = useToast();
+
+	return useMutation({
+		mutationFn: createCoupon,
+		onSuccess: (response) => {
+			showToast({ type: 'success', message: response.message });
+		},
+		onError: (error: ErrorResponse) => {
+			showToast({ type: 'danger', message: error.response.data.message });
+		},
+	});
+};
+
+const updateCoupon = (payload: Coupon) => {
+	return authApiInstance.post<Coupon, CouponResponse>(endpoints.ADMIN_AJAX, {
+		action: 'tutor_update_coupon',
+		...payload,
+	});
+};
+
+export const useUpdateCouponMutation = () => {
+	const { showToast } = useToast();
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: updateCoupon,
+		onSuccess: (response) => {
+			showToast({ type: 'success', message: response.message });
+			queryClient.invalidateQueries({
+				queryKey: ['CouponDetails', response.id],
+			});
+		},
+		onError: (error: ErrorResponse) => {
+			showToast({ type: 'danger', message: error.response.data.message });
+		},
 	});
 };

@@ -1,33 +1,30 @@
 import Container from '@Components/Container';
 import { colorTokens, spacing } from '@Config/styles';
-import Activities from '@CouponComponents/coupon/Activities';
-import Notes from '@CouponComponents/coupon/Notes';
-import Payment from '@CouponComponents/coupon/Payment';
-import Student from '@CouponComponents/coupon/Student';
-import Summary from '@CouponComponents/coupon/Summary';
-import { CouponProvider } from '@CouponContexts/coupon-context';
+import { Coupon, couponInitialValue } from '@CouponServices/coupon';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
+import { FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 
 function Main() {
+	const form = useFormWithGlobalError<Coupon>({ defaultValues: couponInitialValue });
+
+	// @TODO: populate form data when in edit view
+
 	return (
 		<div css={styles.wrapper}>
-			<CouponProvider couponId={1}>
+			<FormProvider {...form}>
 				<Topbar />
 				<Container>
 					<div css={styles.content}>
 						<div css={styles.left}>
-							<Summary />
-							<Payment />
-							<Activities />
+							{/* <Summary />
+							<Activities /> */}
 						</div>
-						<div css={styles.right}>
-							<Student />
-							<Notes />
-						</div>
+						<div css={styles.right}>{/* <Notes /> */}</div>
 					</div>
 				</Container>
-			</CouponProvider>
+			</FormProvider>
 		</div>
 	);
 }

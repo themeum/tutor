@@ -6,16 +6,26 @@ import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { useCouponContext } from '@CouponContexts/coupon-context';
+import { Coupon, useCreateCouponMutation, useUpdateCouponMutation } from '@CouponServices/coupon';
+import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
+import { useFormContext } from 'react-hook-form';
 
 export const TOPBAR_HEIGHT = 96;
 
 function Topbar() {
-	const { coupon } = useCouponContext();
+	const form = useFormContext<Coupon>();
+	const coupon = form.getValues();
+	const createCouponMutation = useCreateCouponMutation();
+	const updateCouponMutation = useUpdateCouponMutation();
+
+	async function handleSubmit(data: Coupon) {
+		console.log(data);
+	}
+
 	return (
 		<div css={styles.wrapper}>
 			<Container>
@@ -26,36 +36,46 @@ function Topbar() {
 						</button>
 						<div>
 							<div css={styles.headerContent}>
-								<h4 css={typography.heading5('medium')}>
-									{__('Coupon', 'tutor')} #{coupon.id}
-								</h4>
-								<TutorBadge variant="warning">Pending</TutorBadge>
-								<TutorBadge variant="success">Paid</TutorBadge>
-								<TutorBadge variant="secondary">Partially Refunded</TutorBadge>
-								<TutorBadge variant="critical">Fully Refunded</TutorBadge>
-								<TutorBadge variant="secondary">Cancelled</TutorBadge>
+								<h4 css={typography.heading5('medium')}>{__('Create coupon', 'tutor')}</h4>
+								<TutorBadge variant="success">Active</TutorBadge>
 							</div>
 							<Show
 								when={coupon.updated_at}
 								fallback={
 									<p css={styles.updateMessage}>
-										{__('Created by ')} {coupon.user} {__(' at ', 'tutor')}
+										{__('Updated by ')} {coupon.user_name} {__(' at ', 'tutor')}
 										{format(new Date(coupon.created_at), DateFormats.activityDate)}
 									</p>
 								}
 							>
-								{(date) => (
+								{(updatedDate) => (
 									<p css={styles.updateMessage}>
-										{__('Update by ')} {coupon.user} {__(' at ', 'tutor')}
-										{format(new Date(date), DateFormats.activityDate)}
+										{__('Update by ')} {coupon.user_name} {__(' at ', 'tutor')}
+										{format(new Date(updatedDate), DateFormats.activityDate)}
 									</p>
 								)}
 							</Show>
 						</div>
 					</div>
-					<Button variant="tertiary" onClick={() => alert('@TODO: will be implemented later.')}>
-						Cancel Coupon
-					</Button>
+					<div css={styles.right}>
+						<Button variant="tertiary" onClick={() => alert('@TODO: will be implemented later.')}>
+							Cancel
+						</Button>
+						<DropdownButton
+							text="Publish"
+							variant="primary"
+							loading={createCouponMutation.isPending || updateCouponMutation.isPending}
+							onClick={form.handleSubmit(handleSubmit)}
+							dropdownMaxWidth="144px"
+						>
+							<DropdownButton.Item text="Save as Draft" onClick={() => alert('@TODO: will be implemented later.')} />
+							<DropdownButton.Item
+								text="Move to trash"
+								onClick={() => alert('@TODO: will be implemented later.')}
+								isDanger
+							/>
+						</DropdownButton>
+					</div>
 				</div>
 			</Container>
 		</div>
@@ -83,6 +103,10 @@ const styles = {
 	left: css`
 		display: flex;
 		gap: ${spacing[16]};
+	`,
+	right: css`
+		display: flex;
+		gap: ${spacing[12]};
 	`,
 	updateMessage: css`
 		${typography.body()};

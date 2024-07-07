@@ -3,7 +3,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { CouponSummaryItem } from '@CouponServices/coupon';
-import coursePlaceholder from '@Images/coupons/course-placeholder.png';
+import coursePlaceholder from '@Images/common/course-placeholder.png';
 import { createPriceFormatter } from '@Utils/currency';
 import { css } from '@emotion/react';
 import React from 'react';
