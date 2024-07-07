@@ -303,7 +303,7 @@ const styles = {
         css`
           [data-check-icon] {
             opacity: 1;
-            fill: ${colorTokens.bg.success};
+            color: ${colorTokens.bg.success};
           }
         `
       }
