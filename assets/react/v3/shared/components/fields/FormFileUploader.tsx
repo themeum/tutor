@@ -383,5 +383,6 @@ const styles = {
   `,
   fileIcon: css`
     flex-shrink: 0;
+    color: ${colorTokens.icon.default};
   `,
 };
