@@ -170,7 +170,7 @@ export interface ZoomMeeting {
   };
 }
 
-export interface GoogleMeetMeeting {
+export interface GoogleMeet {
   ID: string;
   post_content: string;
   post_title: string;
@@ -301,7 +301,7 @@ export interface CourseDetailsResponse {
   google_meet_timezones: {
     [key: string]: string;
   };
-  google_meet_meetings: GoogleMeetMeeting[];
+  google_meet_meetings: GoogleMeet[];
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
@@ -422,6 +422,20 @@ const createCourse = (payload: CoursePayload) => {
   });
 };
 
+interface TutorMutationResponse {
+  data: number;
+  message: string;
+  status_code: number;
+}
+
+interface TutorDeleteResponse {
+  data: {
+    message: string;
+    post_id: number;
+  };
+  success: boolean;
+}
+
 export const useCreateCourseMutation = () => {
   const { showToast } = useToast();
 
@@ -538,7 +552,7 @@ export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrere
 };
 
 const saveZoomMeeting = (payload: ZoomMeetingPayload) => {
-  return authApiInstance.post<ZoomMeetingPayload, AxiosResponse<unknown>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ZoomMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_zoom_save_meeting',
     ...payload,
   });
@@ -550,8 +564,8 @@ export const useSaveZoomMeetingMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: saveZoomMeeting,
-    onSuccess: () => {
-      showToast({ type: 'success', message: __('Meeting saved successfully', 'tutor') });
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
@@ -564,7 +578,7 @@ export const useSaveZoomMeetingMutation = (courseId: string) => {
 };
 
 const deleteZoomMeeting = (meetingId: string) => {
-  return authApiInstance.post<number, AxiosResponse<unknown>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<number, TutorDeleteResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_zoom_delete_meeting',
     meeting_id: meetingId,
   });
@@ -576,8 +590,8 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: deleteZoomMeeting,
-    onSuccess: () => {
-      showToast({ type: 'success', message: __('Meeting deleted successfully', 'tutor') });
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: __(response.data.message, 'tutor') });
 
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
@@ -590,7 +604,7 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
 };
 
 const saveGoogleMeetMeeting = (payload: GoogleMeetMeetingPayload) => {
-  return authApiInstance.post<GoogleMeetMeetingPayload, AxiosResponse<unknown>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_google_meet_new_meeting',
     ...payload,
   });
@@ -602,8 +616,8 @@ export const useSaveGoogleMeetMeetingMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: saveGoogleMeetMeeting,
-    onSuccess: () => {
-      showToast({ type: 'success', message: __('Meeting saved successfully', 'tutor') });
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
@@ -616,7 +630,7 @@ export const useSaveGoogleMeetMeetingMutation = (courseId: string) => {
 };
 
 const deleteGoogleMeetMeeting = (postId: string, eventId: string) => {
-  return authApiInstance.post<GoogleMeetMeetingPayload, AxiosResponse<unknown>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_google_meet_delete',
     'post-id': postId,
     'event-id': eventId,
@@ -629,8 +643,8 @@ export const useDeleteGoogleMeetMeetingMutation = (courseId: string, payload: Go
 
   return useMutation({
     mutationFn: () => deleteGoogleMeetMeeting(payload['post-id'], payload['event-id']),
-    onSuccess: () => {
-      showToast({ type: 'success', message: __('Meeting deleted successfully', 'tutor') });
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],

@@ -15,13 +15,13 @@ import Show from '@Controls/Show';
 import { AnimationType } from '@Hooks/useAnimation';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import type { GoogleMeetMeeting, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
+import type { GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import config, { tutorConfig } from '@Config/config';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
-import GoogleMeetMeetingForm from './meeting/GoogleMeetMeetingForm';
-import GoogleMeetMeetingCard from './meeting/GoogleMeetMeetingCard';
+import GoogleMeetMeetingForm from './meeting/GoogleMeetForm';
+import GoogleMeetMeetingCard from './meeting/GoogleMeetCard';
 
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
@@ -34,7 +34,7 @@ interface LiveClassProps {
   zoomTimezones: {
     [key: string]: string;
   };
-  googleMeetMeetings: GoogleMeetMeeting[];
+  googleMeetMeetings: GoogleMeet[];
   googleMeetTimezones: {
     [key: string]: string;
   };

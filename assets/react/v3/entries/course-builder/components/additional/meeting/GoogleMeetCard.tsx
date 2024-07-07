@@ -10,15 +10,15 @@ import { typography } from '@Config/typography';
 
 import { DateFormats } from '@Config/constants';
 import { styleUtils } from '@Utils/style-utils';
-import { useDeleteGoogleMeetMeetingMutation, type GoogleMeetMeeting } from '@CourseBuilderServices/course';
+import { useDeleteGoogleMeetMeetingMutation, type GoogleMeet } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useRef, useState } from 'react';
 import Popover from '@Molecules/Popover';
-import GoogleMeetMeetingForm from './GoogleMeetMeetingForm';
+import GoogleMeetMeetingForm from './GoogleMeetForm';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 
 interface GoogleMeetMeetingCardProps {
-  data: GoogleMeetMeeting;
+  data: GoogleMeet;
   timezones: {
     [key: string]: string;
   };

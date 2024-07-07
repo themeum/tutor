@@ -18,7 +18,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import {
   useSaveGoogleMeetMeetingMutation,
-  type GoogleMeetMeeting,
+  type GoogleMeet,
   type GoogleMeetMeetingFormData,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
@@ -31,7 +31,7 @@ export type MeetingType = 'zoom' | 'google_meet' | 'jitsi';
 
 interface GoogleMeetMeetingFormProps {
   onCancel: () => void;
-  data: GoogleMeetMeeting | null;
+  data: GoogleMeet | null;
   timezones: {
     [key: string]: string;
   };
@@ -81,7 +81,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
       ...(currentMeeting && { 'post-id': currentMeeting.ID, 'event-id': currentMeeting.meeting_data.id }),
       ...(topicId && { 'topic-id': topicId }),
       // @ts-ignore
-      'course-id': courseId,
+      course_id: String(courseId),
       meeting_title: data.meeting_name,
       meeting_summary: data.meeting_summary,
       meeting_start_date: data.meeting_start_date,
@@ -93,7 +93,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
       attendees: data.meeting_enrolledAsAttendee ? 'Yes' : 'No',
     });
 
-    if (response.data) {
+    if (response.status_code === 200) {
       onCancel();
       meetingForm.reset();
     }
@@ -138,7 +138,11 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
               control={meetingForm.control}
               rules={{ required: __('Meeting start date is required', 'tutor') }}
               render={(controllerProps) => (
-                <FormDateInput {...controllerProps} placeholder={__('Start date', 'tutor')} />
+                <FormDateInput
+                  {...controllerProps}
+                  placeholder={__('Start date', 'tutor')}
+                  disabledBefore={new Date().toISOString()}
+                />
               )}
             />
 
@@ -160,14 +164,52 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
             <Controller
               name="meeting_end_date"
               control={meetingForm.control}
-              rules={{ required: __('Meeting end date is required', 'tutor') }}
-              render={(controllerProps) => <FormDateInput {...controllerProps} placeholder={__('End date', 'tutor')} />}
+              rules={{
+                required: __('Meeting end date is required', 'tutor'),
+                validate: {
+                  checkEndDate: (value) => {
+                    const startDate = meetingForm.watch('meeting_start_date');
+                    const endDate = value;
+                    if (startDate && endDate) {
+                      return new Date(startDate) > new Date(endDate)
+                        ? __('End date should be greater than start date', 'tutor')
+                        : undefined;
+                    }
+                    return undefined;
+                  },
+                },
+                deps: ['meeting_start_date'],
+              }}
+              render={(controllerProps) => (
+                <FormDateInput
+                  {...controllerProps}
+                  placeholder={__('End date', 'tutor')}
+                  disabledBefore={meetingForm.watch('meeting_start_date') || new Date().toISOString()}
+                />
+              )}
             />
 
             <Controller
               name="meeting_end_time"
               control={meetingForm.control}
-              rules={{ required: __('Meeting end time is required', 'tutor') }}
+              rules={{
+                required: __('Meeting end time is required', 'tutor'),
+                validate: {
+                  checkEndTime: (value) => {
+                    const startDate = meetingForm.watch('meeting_start_date');
+                    const startTime = meetingForm.watch('meeting_start_time');
+                    const endDate = meetingForm.watch('meeting_end_date');
+                    const endTime = value;
+                    if (startDate && endDate && startTime && endTime) {
+                      return new Date(`${startDate} ${startTime}`) > new Date(`${endDate} ${endTime}`)
+                        ? __('End time should be greater than start time', 'tutor')
+                        : undefined;
+                    }
+                    return undefined;
+                  },
+                },
+                deps: ['meeting_start_time', 'meeting_start_date', 'meeting_end_date'],
+              }}
               render={(controllerProps) => <FormTimeInput {...controllerProps} placeholder={__('End time', 'tutor')} />}
             />
           </div>
@@ -185,7 +227,6 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
         <Controller
           name="meeting_enrolledAsAttendee"
           control={meetingForm.control}
-          rules={{ required: __('Meeting enrolled as attendee is required', 'tutor') }}
           render={(controllerProps) => (
             <FormCheckbox {...controllerProps} label={__('Add enrolled students as attendees', 'tutor')} />
           )}
