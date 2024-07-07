@@ -26,9 +26,10 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+const courseId = getCourseId();
+
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
-  const courseId = getCourseId();
 
   const author = form.watch('post_author');
 

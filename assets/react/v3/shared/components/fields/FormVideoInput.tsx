@@ -54,7 +54,7 @@ const videoSourceOptions = videoSources.reduce((options, source) => {
   let option: Option<string> | undefined;
   switch (source) {
     case 'external_url':
-      option = { label: __('External URL', 'tutor'), value: 'external' };
+      option = { label: __('External URL', 'tutor'), value: 'external_url' };
       break;
     case 'shortcode':
       option = { label: __('Shortcode', 'tutor'), value: 'shortcode' };
@@ -87,6 +87,7 @@ const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<Course
     source_vimeo: '',
     source_embedded: '',
   };
+
   return fieldValue ? { ...fieldValue, ...update } : { ...defaultValue, ...update };
 };
 
@@ -100,38 +101,37 @@ const FormVideoInput = ({
   onChange,
   supportedFormats,
 }: FormVideoInputProps) => {
-  const form = useFormWithGlobalError<URLFormData>();
+  const fieldValue = field.value;
+  const form = useFormWithGlobalError<URLFormData>({
+    defaultValues: {
+      videoSource: fieldValue?.source || 'html5',
+      videoUrl: fieldValue?.[`source_${fieldValue?.source}` as keyof CourseVideo] || '',
+    },
+  });
+
+  const videoSource = form.watch('videoSource');
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (field.value) {
-      form.setValue('videoSource', field.value.source);
-
-      switch (field.value.source) {
-        case 'external_url':
-          form.setValue('videoUrl', field.value.source_external_url);
-          break;
-        case 'shortcode':
-          form.setValue('videoUrl', field.value.source_shortcode);
-          break;
-        case 'youtube':
-          form.setValue('videoUrl', field.value.source_youtube);
-          break;
-        case 'vimeo':
-          form.setValue('videoUrl', field.value.source_vimeo);
-          break;
-        case 'embedded':
-          form.setValue('videoUrl', field.value.source_embedded);
-          break;
-        default:
-          break;
-      }
+    if (!fieldValue) {
+      return;
     }
-  }, [field.value]);
+    form.setValue('videoSource', fieldValue.source);
+    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
+  }, [fieldValue]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!fieldValue?.[`source_${videoSource}` as keyof CourseVideo]) {
+      form.setValue('videoUrl', '');
+      return;
+    }
+    form.setValue('videoUrl', fieldValue?.[`source_${videoSource}` as keyof CourseVideo]);
+  }, [videoSource]);
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const { popoverRef, triggerWidth, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { popoverRef, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     triggerRef,
     positionModifier: {
@@ -139,205 +139,65 @@ const FormVideoInput = ({
       left: 0,
     },
   });
-  const videoUploader = window.wp.media({
-    library: { type: supportedFormats ? supportedFormats.map((type) => `video/${type}`).join(',') : 'video' },
-  });
 
-  const posterUploader = window.wp.media({
-    library: { type: 'image' },
-  });
+  const handleUpload = (type: 'video' | 'poster') => {
+    const videoUploader = window.wp.media({
+      library: { type: supportedFormats ? supportedFormats.map((type) => `video/${type}`).join(',') : 'video' },
+    });
 
-  const fieldValue = field.value;
+    const posterUploader = window.wp.media({
+      library: { type: 'image' },
+    });
+
+    const uploader = type === 'video' ? videoUploader : posterUploader;
+    uploader.open();
+    uploader.on('select', () => {
+      const attachment = uploader.state().get('selection').first().toJSON();
+      const updateData =
+        type === 'video'
+          ? { source: 'html5', source_video_id: attachment.id }
+          : { poster: attachment.id, poster_url: attachment.url };
+      field.onChange(updateFieldValue(fieldValue, updateData));
+      if (onChange) {
+        onChange(updateFieldValue(fieldValue, updateData));
+      }
+    });
+  };
+
+  const handleClear = (type: 'video' | 'poster') => {
+    const updateData = type === 'video' ? { source: '' } : { poster: '', poster_url: '' };
+    field.onChange(updateFieldValue(fieldValue, updateData));
+    if (onChange) {
+      onChange(updateFieldValue(fieldValue, updateData));
+    }
+  };
+
   const isVideoAvailable = () => {
-    switch (fieldValue?.source) {
-      case 'html5':
-        return fieldValue.source_video_id !== '';
-      case 'external_url':
-        return fieldValue.source_external_url !== '';
-      case 'shortcode':
-        return fieldValue.source_shortcode !== '';
-      case 'youtube':
-        return fieldValue.source_youtube !== '';
-      case 'vimeo':
-        return fieldValue.source_vimeo !== '';
-      case 'embedded':
-        return fieldValue.source_embedded !== '';
-      default:
-        return false;
+    if (!fieldValue?.source) {
+      return false;
     }
-  };
-
-  const showPosterInput = fieldValue?.source === 'html5';
-
-  const videoUploadHandler = () => {
-    videoUploader.open();
-  };
-
-  const posterUploadHandler = () => {
-    posterUploader.open();
-  };
-
-  videoUploader.on('select', () => {
-    const attachment = videoUploader.state().get('selection').first().toJSON();
-    const { id } = attachment;
-
-    field.onChange(updateFieldValue(fieldValue, { source: 'html5', source_video_id: id }));
-
-    if (onChange) {
-      onChange(
-        updateFieldValue(fieldValue, {
-          source: 'html5',
-          source_video_id: id,
-        })
-      );
-    }
-  });
-
-  posterUploader.on('select', () => {
-    const attachment = posterUploader.state().get('selection').first().toJSON();
-    const { id, url } = attachment;
-
-    field.onChange(
-      updateFieldValue(fieldValue, {
-        poster: id,
-        poster_url: url,
-      })
-    );
-
-    if (onChange) {
-      onChange(
-        updateFieldValue(fieldValue, {
-          poster: id,
-          poster_url: url,
-        })
-      );
-    }
-  });
-
-  const videoClearHandler = () => {
-    const currentVideoSource = fieldValue?.source;
-
-    const updatedValue: CourseVideo = fieldValue
-      ? { ...fieldValue }
-      : {
-          source: 'html5',
-          source_video_id: '',
-          poster: '',
-          poster_url: '',
-          source_external_url: '',
-          source_shortcode: '',
-          source_youtube: '',
-          source_vimeo: '',
-          source_embedded: '',
-        };
-
-    switch (currentVideoSource) {
-      case 'html5':
-        updatedValue.source_video_id = '';
-        break;
-      case 'external_url':
-        updatedValue.source_external_url = '';
-        break;
-      case 'shortcode':
-        updatedValue.source_shortcode = '';
-        break;
-      case 'youtube':
-        updatedValue.source_youtube = '';
-        break;
-      case 'vimeo':
-        updatedValue.source_vimeo = '';
-        break;
-      case 'embedded':
-        updatedValue.source_embedded = '';
-        break;
-      default:
-        break;
-    }
-
-    field.onChange(updatedValue);
-
-    if (onChange) {
-      onChange(updatedValue);
-    }
-  };
-
-  const posterClearHandler = () => {
-    field.onChange(
-      updateFieldValue(fieldValue, {
-        poster: '',
-        poster_url: '',
-      })
-    );
-
-    if (onChange) {
-      onChange(
-        updateFieldValue(fieldValue, {
-          poster: '',
-          poster_url: '',
-        })
-      );
-    }
+    const sourceType = fieldValue?.source;
+    const videoIdKey = `source_${sourceType}` as keyof CourseVideo;
+    return fieldValue && fieldValue[videoIdKey] !== '';
   };
 
   const handleDataFromUrl = (data: URLFormData) => {
-    let source = '';
-    let embedded = '';
-    let externalUrl = '';
-    let shortcode = '';
-    let vimeo = '';
-    let youtube = '';
+    const sourceMap: { [key: string]: string } = {
+      external: 'external_url',
+      shortcode: 'shortcode',
+      youtube: 'youtube',
+      vimeo: 'vimeo',
+      embedded: 'embedded',
+    };
 
-    switch (data.videoSource) {
-      case 'external':
-        source = 'external_url';
-        externalUrl = data.videoUrl;
-        break;
-      case 'shortcode':
-        source = 'shortcode';
-        shortcode = data.videoUrl;
-        break;
-      case 'youtube':
-        source = 'youtube';
-        youtube = data.videoUrl;
-        break;
-      case 'vimeo':
-        source = 'vimeo';
-        vimeo = data.videoUrl;
-        break;
-      case 'embedded':
-        source = 'embedded';
-        embedded = data.videoUrl;
-        break;
-      default:
-        source = 'external_url';
-        externalUrl = data.videoUrl;
-        break;
-    }
+    const source = sourceMap[data.videoSource] || 'external_url';
+    const updatedValue = {
+      source,
+      [`source_${source}`]: data.videoUrl,
+    };
 
-    field.onChange(
-      updateFieldValue(fieldValue, {
-        source,
-        source_embedded: embedded,
-        source_external_url: externalUrl,
-        source_shortcode: shortcode,
-        source_vimeo: vimeo,
-        source_youtube: youtube,
-      })
-    );
-
-    if (onChange) {
-      onChange(
-        updateFieldValue(fieldValue, {
-          source,
-          source_embedded: embedded,
-          source_external_url: externalUrl,
-          source_shortcode: shortcode,
-          source_vimeo: vimeo,
-          source_youtube: youtube,
-        })
-      );
-    }
-
+    field.onChange(updateFieldValue(fieldValue, updatedValue));
+    onChange?.(updateFieldValue(fieldValue, updatedValue));
     setIsOpen(false);
   };
 
@@ -383,7 +243,9 @@ const FormVideoInput = ({
                         <Button
                           variant="secondary"
                           icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
-                          onClick={videoUploadHandler}
+                          onClick={() => {
+                            handleUpload('video');
+                          }}
                         >
                           {buttonText}
                         </Button>
@@ -393,7 +255,7 @@ const FormVideoInput = ({
                           type="button"
                           css={styles.urlButton}
                           onClick={() => {
-                            setIsOpen((prev) => !prev);
+                            setIsOpen((previousState) => !previousState);
                           }}
                         >
                           {__('Add from URL', 'tutor')}
@@ -421,13 +283,19 @@ const FormVideoInput = ({
                           </div>
                         </div>
 
-                        <button type="button" css={styles.removeButton} onClick={videoClearHandler}>
+                        <button
+                          type="button"
+                          css={styles.removeButton}
+                          onClick={() => {
+                            handleClear('video');
+                          }}
+                        >
                           <SVGIcon name="cross" height={24} width={24} />
                         </button>
                       </div>
                       <div css={styles.imagePreview}>
                         <Show
-                          when={showPosterInput}
+                          when={fieldValue?.source === 'html5'}
                           fallback={
                             <div css={styles.urlData}>
                               <p>
@@ -452,8 +320,8 @@ const FormVideoInput = ({
                                   }
                                 : null
                             }
-                            uploadHandler={posterUploadHandler}
-                            clearHandler={posterClearHandler}
+                            uploadHandler={() => handleUpload('poster')}
+                            clearHandler={() => handleClear('poster')}
                             buttonText={__('Upload Poster', 'tutor')}
                             infoText={__('Upload a poster for the video', 'tutor')}
                             emptyImageCss={styles.thumbImage}
@@ -479,7 +347,7 @@ const FormVideoInput = ({
             {
               left: position.left,
               top: position.top,
-              maxWidth: triggerWidth,
+              maxWidth: '306px',
             },
           ]}
         >
