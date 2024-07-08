@@ -270,6 +270,7 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_course_list', array( $this, 'ajax_course_list' ) );
 		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
 		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
+		add_action( 'wp_ajax_tutor_course_contents', array( $this, 'ajax_course_contents' ) );
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
 	}
 
@@ -613,16 +614,20 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @param int $course_id course id.
+	 *
 	 * @return void
 	 */
-	private function check_access() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+	private function check_access( $course_id = null ) {
+		$has_access = false;
+
+		if ( $course_id ) {
+			$has_access = tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
+		} else {
+			$has_access = User::is_admin() || User::is_instructor();
 		}
 
-		$has_access_role = User::is_admin() || User::is_instructor();
-
-		if ( ! $has_access_role ) {
+		if ( ! $has_access ) {
 			$this->json_response(
 				tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ),
 				null,
@@ -715,6 +720,10 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_create_course() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
 		$this->check_access();
 
 		$params = Input::sanitize_array(
@@ -806,7 +815,9 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_update_course() {
-		$this->check_access();
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		$params = Input::sanitize_array(
 			//phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -817,13 +828,14 @@ class Course extends Tutor_Base {
 			)
 		);
 
+		$course_id = (int) $params['course_id'];
+		$this->check_access( $course_id );
+
 		$errors     = array();
 		$validation = $this->validate_inputs( $params );
 		if ( ! $validation->success ) {
 			$errors = $validation->errors;
 		}
-
-		$course_id = (int) $params['course_id'];
 
 		// Validate video source if user set video.
 		$this->validate_video_source( $params, $errors );
@@ -863,6 +875,78 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Get all course contents by course id.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return array
+	 */
+	public function get_course_contents( $course_id ) {
+		$data   = array();
+		$topics = tutor_utils()->get_topics( $course_id );
+
+		if ( $topics->have_posts() ) {
+			foreach ( $topics->get_posts() as $post ) {
+				$current_topic = array(
+					'id'       => $post->ID,
+					'title'    => $post->post_title,
+					'summary'  => $post->post_content,
+					'contents' => array(),
+				);
+
+				$topic_contents = tutor_utils()->get_course_contents_by_topic( $post->ID, -1 );
+
+				if ( $topic_contents->have_posts() ) {
+					foreach ( $topic_contents->get_posts() as $post ) {
+						if ( tutor()->quiz_post_type === $post->post_type ) {
+							$questions            = tutor_utils()->get_questions_by_quiz( $post->ID );
+							$post->total_question = is_array( $questions ) ? count( $questions ) : 0;
+						}
+
+						array_push( $current_topic['contents'], $post );
+					}
+				}
+
+				array_push( $data, $current_topic );
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Get course contents
+	 *
+	 * @since 3.0.0
+	 */
+	public function ajax_course_contents() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		$this->check_access( $course_id );
+
+		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
+			$errors['course_id'] = __( 'Invalid course id', 'tutor' );
+		}
+
+		if ( ! empty( $errors ) ) {
+			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
+		}
+
+		$contents = $this->get_course_contents( $course_id );
+
+		$this->json_response(
+			__( 'Course contents fetched successfully', 'tutor' ),
+			$contents
+		);
+	}
+
+	/**
 	 * Get course details by ID
 	 *
 	 * @since 3.0.0
@@ -870,10 +954,14 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_course_details() {
-		$this->check_access();
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		$errors    = array();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+
+		$this->check_access( $course_id );
 
 		if ( tutor()->course_post_type !== get_post_type( $course_id ) ) {
 			$errors['course_id'] = __( 'Invalid course id', 'tutor' );
@@ -1036,6 +1124,16 @@ class Course extends Tutor_Base {
 		ob_start();
 		wp_editor( '', 'post_content' );
 		$data['wp_editor'] = ob_get_clean();
+
+		/**
+		 * Course builder dashboard URL based on role and settings.
+		 */
+		$dashboard_url = get_admin_url();
+		if ( User::is_instructor() ) {
+			$dashboard_url = tutor_utils()->tutor_dashboard_url();
+		}
+
+		$data['dashboard_url'] = $dashboard_url;
 
 		wp_localize_script( 'tutor-course-builder-v3', '_tutorobject', $data );
 	}
@@ -1520,21 +1618,33 @@ class Course extends Tutor_Base {
 	 * Save course topic
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 response and input name updated.
+	 *
 	 * @return void
 	 */
 	public function tutor_save_topic() {
-		tutor_utils()->checking_nonce();
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
-		// Check required fields.
-		if ( empty( Input::post( 'topic_title' ) ) ) {
-			wp_send_json_error( array( 'message' => __( 'Topic title is required!', 'tutor' ) ) );
+		$is_update   = false;
+		$errors      = array();
+		$topic_title = Input::post( 'title' );
+
+		if ( empty( $topic_title ) ) {
+			$errors['topic_title'] = __( 'Topic title is required!', 'tutor' );
+			$this->json_response(
+				__( 'Invalid inputs' ),
+				$errors,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
 		}
 
 		// Gather parameters.
-		$course_id           = Input::post( 'topic_course_id', 0, Input::TYPE_INT );
-		$topic_id            = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		$topic_title         = Input::post( 'topic_title' );
-		$topic_summery       = Input::post( 'topic_summery', '', Input::TYPE_KSES_POST );
+		$course_id     = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$topic_id      = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$topic_summery = Input::post( 'summery', '', Input::TYPE_KSES_POST );
+
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id( $course_id, $topic_id );
 
 		// Validate if user can manage the topic.
@@ -1543,7 +1653,7 @@ class Course extends Tutor_Base {
 		}
 
 		// Create payload to create/update the topic.
-		$post_arr                   = array(
+		$post_arr = array(
 			'post_type'    => 'topics',
 			'post_title'   => $topic_title,
 			'post_content' => $topic_summery,
@@ -1552,18 +1662,26 @@ class Course extends Tutor_Base {
 			'post_parent'  => $course_id,
 			'menu_order'   => $next_topic_order_id,
 		);
-		$topic_id ? $post_arr['ID'] = $topic_id : 0;
-		$current_topic_id           = wp_insert_post( $post_arr );
 
-		ob_start();
-		include tutor()->path . 'views/metabox/course-contents.php';
+		if ( $topic_id ) {
+			$is_update      = true;
+			$post_arr['ID'] = $topic_id;
+		}
 
-		wp_send_json_success(
-			array(
-				'topic_title'     => $topic_title,
-				'course_contents' => ob_get_clean(),
-			)
-		);
+		$current_topic_id = wp_insert_post( $post_arr );
+
+		if ( $is_update ) {
+			$this->json_response(
+				__( 'Topic updated successfully!', 'tutor' ),
+				$current_topic_id
+			);
+		} else {
+			$this->json_response(
+				__( 'Topic created successfully!', 'tutor' ),
+				$current_topic_id,
+				HttpHelper::STATUS_CREATED
+			);
+		}
 	}
 
 	/**

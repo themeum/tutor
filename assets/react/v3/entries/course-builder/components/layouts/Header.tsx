@@ -21,31 +21,102 @@ import { __ } from '@wordpress/i18n';
 import { useFormContext, useWatch } from 'react-hook-form';
 import Tracker from './Tracker';
 import config from '@Config/config';
+import Show from '@Controls/Show';
+import { isBefore } from 'date-fns';
+
+const courseId = getCourseId();
 
 const Header = () => {
-  const courseId = getCourseId();
-
   const form = useFormContext<CourseFormData>();
 
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
 
   const previewLink = useWatch({ name: 'preview_link' });
+  const postStatus = useWatch({ name: 'post_status' });
+  const postDate = useWatch({ name: 'post_date' });
 
-  const handleSubmit = async (data: CourseFormData) => {
+  const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future') => {
     const payload = convertCourseDataToPayload(data);
 
     if (courseId) {
-      updateCourseMutation.mutate({ course_id: Number(courseId), ...payload });
-    } else {
-      const response = await createCourseMutation.mutateAsync({
-        ...payload,
-      });
-
-      if (response.data) {
-        window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
-      }
+      updateCourseMutation.mutate({ course_id: Number(courseId), ...payload, post_status: postStatus });
+      return;
     }
+    const response = await createCourseMutation.mutateAsync({
+      ...payload,
+    });
+
+    if (response.data) {
+      window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
+    }
+  };
+
+  const dropdownButton = () => {
+    let text: string;
+    let action: 'publish' | 'draft' | 'future';
+
+    if (!courseId) {
+      text = __('Save as Draft', 'tutor');
+      action = 'draft';
+    } else if (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate))) {
+      text = __('Publish', 'tutor');
+      action = 'publish';
+    } else if (postStatus === 'draft' && isBefore(new Date(), new Date(postDate))) {
+      text = __('Schedule', 'tutor');
+      action = 'future';
+    } else {
+      text = __('Update', 'tutor');
+      action = 'publish';
+    }
+
+    return { text, action };
+  };
+
+  const dropdownItems = () => {
+    const previewItem = {
+      text: (
+        <div
+          css={[
+            styleUtils.display.flex(),
+            {
+              alignItems: 'center',
+            },
+          ]}
+        >
+          {__('Preview', 'tutor')}
+          <SVGIcon name="linkExternal" width={24} height={24} />
+        </div>
+      ),
+      onClick:
+        !courseId || (postStatus === 'draft' && courseId)
+          ? () => window.open(previewLink, '_blank')
+          : () => alert('@TODO: will be implemented later.'),
+      isDanger: false,
+    };
+
+    const moveToTrashItem = {
+      text: <>{__('Move to trash', 'tutor')}</>,
+      onClick: () => alert('@TODO: will be implemented later.'),
+      isDanger: true,
+    };
+
+    const switchToDraftItem = {
+      text: <>{__('Switch to draft', 'tutor')}</>,
+      onClick: form.handleSubmit((data) => handleSubmit(data, 'draft')),
+      isDanger: false,
+    };
+
+    const items = [previewItem];
+
+    if (courseId && postStatus !== 'draft') {
+      items.pop();
+      items.push(switchToDraftItem);
+    }
+
+    items.push(moveToTrashItem);
+
+    return items;
   };
 
   return (
@@ -61,8 +132,8 @@ const Header = () => {
         </div>
         <div css={styles.headerRight}>
           <Button
-            variant="text"
-            buttonCss={styles.previewButton}
+            variant="secondary"
+            size="small"
             icon={<SVGIcon name="linkExternal" width={24} height={24} />}
             iconPosition="right"
             onClick={() => {
@@ -76,33 +147,49 @@ const Header = () => {
             {__('Back To Legacy', 'tutor')}
           </Button>
 
-          {previewLink && (
+          <Show
+            when={postStatus === 'draft'}
+            fallback={
+              <Show when={previewLink}>
+                <Button
+                  variant="text"
+                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                  iconPosition="right"
+                  onClick={() => {
+                    window.open(previewLink, '_blank');
+                  }}
+                >
+                  {__('Preview', 'tutor')}
+                </Button>
+              </Show>
+            }
+          >
             <Button
-              variant="text"
-              buttonCss={styles.previewButton}
-              icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-              iconPosition="right"
-              onClick={() => {
-                window.open(previewLink, '_blank');
-              }}
+              size="small"
+              variant="secondary"
+              icon={<SVGIcon name="upload" width={24} height={24} />}
+              loading={updateCourseMutation.isPending}
+              iconPosition="left"
+              onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
             >
-              {__('Preview', 'tutor')}
+              {__('Save draft', 'tutor')}
             </Button>
-          )}
+          </Show>
 
           <DropdownButton
-            text="Publish"
+            text={dropdownButton().text}
             variant="primary"
-            loading={createCourseMutation.isPending || updateCourseMutation.isPending}
-            onClick={form.handleSubmit(handleSubmit)}
+            loading={
+              createCourseMutation.isPending ||
+              ((postStatus === 'publish' || postStatus === 'future') && updateCourseMutation.isPending)
+            }
+            onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
             dropdownMaxWidth="144px"
+            disabledDropdown={!form.formState.isDirty && !courseId}
           >
-            <DropdownButton.Item text="Save as Draft" onClick={() => alert('@TODO: will be implemented later.')} />
-            <DropdownButton.Item
-              text="Move to trash"
-              onClick={() => alert('@TODO: will be implemented later.')}
-              isDanger
-            />
+            {dropdownItems().map((item, index) => (
+              <DropdownButton.Item key={index} text={item.text} onClick={item.onClick} isDanger={item.isDanger} />
+            ))}
           </DropdownButton>
         </div>
       </div>

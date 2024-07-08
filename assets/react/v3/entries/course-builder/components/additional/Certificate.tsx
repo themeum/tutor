@@ -154,8 +154,8 @@ const Certificate = () => {
         >
           <Show when={activeCertificateTab === 'templates'}>
             <CertificateCard
-              isSelected={selectedCertificate === ''}
-              setSelectedCertificate={handleCertificateSelection}
+              selectedCertificate={selectedCertificate}
+              onSelectCertificate={handleCertificateSelection}
               data={{
                 key: '',
                 name: __('None', 'tutor'),
@@ -186,8 +186,8 @@ const Certificate = () => {
               {(certificate) => (
                 <CertificateCard
                   key={certificate.key}
-                  isSelected={selectedCertificate === certificate.key}
-                  setSelectedCertificate={handleCertificateSelection}
+                  selectedCertificate={selectedCertificate}
+                  onSelectCertificate={handleCertificateSelection}
                   data={certificate}
                   orientation={activeOrientation}
                 />

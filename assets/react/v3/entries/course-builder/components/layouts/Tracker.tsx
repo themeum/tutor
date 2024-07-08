@@ -1,15 +1,42 @@
+import config from '@Config/config';
 import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
+import { type Step, useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
+import { type CourseFormData, useCreateCourseMutation } from '@CourseBuilderServices/course';
+import { convertCourseDataToPayload, getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
+import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+
+const courseId = getCourseId();
 
 const Tracker = () => {
   const { steps } = useCourseNavigator();
   const navigate = useNavigate();
+  const createCourseMutation = useCreateCourseMutation();
+  const form = useFormContext<CourseFormData>();
+
+  const postTitle = form.watch('post_title');
+
+  const handleClick = async (step: Step) => {
+    if (!courseId) {
+      const payload = convertCourseDataToPayload(form.getValues());
+      const response = await createCourseMutation.mutateAsync({
+        ...payload,
+        post_status: 'draft',
+      });
+
+      if (response.data) {
+        window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}#/${step.id}`;
+      }
+    } else {
+      navigate(step.path);
+    }
+  };
+
   return (
     <div css={styles.wrapper}>
       <For each={steps}>
@@ -20,12 +47,10 @@ const Tracker = () => {
             css={styles.element({
               isActive: step.isActive,
               isCompleted: step.isCompleted,
-              isDisabled: step.isDisabled,
+              isDisabled: step.id !== 'basic' && !postTitle,
             })}
-            onClick={() => {
-              navigate(step.path);
-            }}
-            disabled={step.isDisabled}
+            onClick={() => handleClick(step)}
+            disabled={step.id !== 'basic' && !postTitle}
           >
             <span data-element-id>{step.indicator}</span>
             <span>{step.label}</span>
