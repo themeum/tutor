@@ -24,8 +24,8 @@ interface Category {
 
 export interface Coupon {
 	id: number;
-	type: CouponType;
-	name: string;
+	coupon_type: CouponType;
+	coupon_name: string;
 	code: string;
 	user_name: string;
 	discount_type: 'percent' | 'amount';
@@ -56,8 +56,8 @@ export interface Coupon {
 
 export const couponInitialValue: Coupon = {
 	id: 0,
-	type: 'code',
-	name: '',
+	coupon_type: 'code',
+	coupon_name: '',
 	code: '',
 	user_name: 'User',
 	discount_type: 'amount',
@@ -81,8 +81,8 @@ export const couponInitialValue: Coupon = {
 
 const mockCouponData: Coupon = {
 	id: 11211,
-	type: 'code',
-	name: 'Winter sale',
+	coupon_type: 'code',
+	coupon_name: 'Winter sale',
 	code: 'WINTER24',
 	user_name: 'John Doe',
 	discount_type: 'amount',

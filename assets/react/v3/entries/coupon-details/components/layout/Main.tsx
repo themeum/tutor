@@ -1,5 +1,6 @@
 import Container from '@Components/Container';
 import { colorTokens, spacing } from '@Config/styles';
+import CouponInfo from '@CouponComponents/coupon/CouponInfo';
 import { Coupon, couponInitialValue } from '@CouponServices/coupon';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
@@ -18,10 +19,9 @@ function Main() {
 				<Container>
 					<div css={styles.content}>
 						<div css={styles.left}>
-							{/* <Summary />
-							<Activities /> */}
+							<CouponInfo />
 						</div>
-						<div css={styles.right}>{/* <Notes /> */}</div>
+						<div css={styles.right}></div>
 					</div>
 				</Container>
 			</FormProvider>
