@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import AddLessonModal from '@CourseBuilderComponents/modals/AddLessonModal';
+import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useModal } from '@Components/modals/Modal';
@@ -54,7 +54,7 @@ const modalComponent: {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: React.FunctionComponent<any>;
 } = {
-  lesson: AddLessonModal,
+  lesson: LessonModal,
   tutor_quiz: QuizModal,
   tutor_assignments: AddAssignmentModal,
 } as const;

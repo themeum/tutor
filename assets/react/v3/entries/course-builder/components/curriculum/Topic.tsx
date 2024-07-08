@@ -41,7 +41,7 @@ import { useModal } from '@Components/modals/Modal';
 
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import AddLessonModal from '@CourseBuilderComponents/modals/AddLessonModal';
+import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
 import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
 
@@ -79,6 +79,13 @@ const hasLiveAddons = true;
 const courseId = getCourseId();
 
 const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false }: TopicProps) => {
+  const form = useFormWithGlobalError<TopicForm>({
+    defaultValues: {
+      title: topic.title,
+      summary: topic.summary,
+    },
+  });
+
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(!topic.isSaved);
   const [isOpen, setIsOpen] = useState(false);
@@ -110,13 +117,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     ref: descriptionRef,
     isOpen: !topic.isCollapsed,
     heightCalculator: 'client',
-  });
-
-  const form = useFormWithGlobalError<TopicForm>({
-    defaultValues: {
-      title: topic.title,
-      summary: topic.summary,
-    },
   });
 
   const { showModal } = useModal();
@@ -225,7 +225,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               when={isEdit}
               fallback={
                 <div css={styles.title({ isEdit })} title={topic.title} onDoubleClick={() => setIsEdit(true)}>
-                  {topic.title}
+                  {form.watch('title')}
                 </div>
               }
             >
@@ -321,7 +321,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           fallback={
             <animated.div style={{ ...collapseAnimationDescription }}>
               <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
-                {topic.summary}
+                {form.watch('summary')}
               </div>
             </animated.div>
           }
@@ -330,6 +330,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             <Controller
               control={form.control}
               name="summary"
+              rules={{ required: __('Summary is required', 'tutor') }}
               render={(controllerProps) => (
                 <FormTextareaInput
                   {...controllerProps}
@@ -437,8 +438,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 disabled={!topic.isSaved}
                 onClick={() => {
                   showModal({
-                    component: AddLessonModal,
+                    component: LessonModal,
                     props: {
+                      id: topic.id,
                       title: __('Lesson', 'tutor'),
                       icon: <SVGIcon name="lesson" width={24} height={24} />,
                       subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,

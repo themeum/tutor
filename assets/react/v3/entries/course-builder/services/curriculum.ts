@@ -91,14 +91,32 @@ interface TopicPayload {
   summary: string;
 }
 
-const getCourseTopic = (courseId: number) => {
+interface LessonPayload {
+  topic_id: ID;
+  lesson_id: ID; //only for update
+  title: string;
+  description: string;
+  thumbnail_id: number;
+
+  'video[source]': string;
+  'video[source_video_id]': ID;
+
+  'video[runtime][hours]': number;
+  'video[runtime][minutes]': number;
+  'video[runtime][seconds]': number;
+
+  _is_preview: 0 | 1; //only when course preview addon enabled
+  tutor_attachments: ID[];
+}
+
+const getCourseTopic = (courseId: ID) => {
   return authApiInstance.post<string, AxiosResponse<CourseTopic[]>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_course_contents',
     course_id: courseId,
   });
 };
 
-export const useCourseTopicQuery = (courseId: number) => {
+export const useCourseTopicQuery = (courseId: ID) => {
   return useQuery({
     queryKey: ['Topic', courseId],
     queryFn: () => getCourseTopic(courseId).then((res) => res.data),
@@ -164,6 +182,77 @@ export const useDeleteTopicMutation = () => {
         });
         showToast({
           message: __('Topic deleted successfully', 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const saveLesson = (payload: LessonPayload) => {
+  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_save_lesson',
+    ...payload,
+  });
+};
+
+export const useSaveLessonMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: saveLesson,
+    onSuccess: (response) => {
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __('Lesson saved successfully', 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const deleteLesson = (lessonId: ID) => {
+  return authApiInstance.post<
+    string,
+    {
+      success: true;
+    }
+  >(endpoints.ADMIN_AJAX, {
+    action: 'tutor_delete_lesson',
+    lesson_id: lessonId,
+  });
+};
+
+export const useDeleteLessonMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteLesson,
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __('Lesson deleted successfully', 'tutor'),
           type: 'success',
         });
       }
