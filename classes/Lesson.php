@@ -42,7 +42,7 @@ class Lesson extends Tutor_Base {
 
 		add_action( 'wp_ajax_tutor_load_edit_lesson_modal', array( $this, 'tutor_load_edit_lesson_modal' ) );
 		add_action( 'wp_ajax_tutor_save_lesson', array( $this, 'ajax_save_lesson' ) );
-		add_action( 'wp_ajax_tutor_delete_lesson_by_id', array( $this, 'tutor_delete_lesson_by_id' ) );
+		add_action( 'wp_ajax_tutor_delete_lesson', array( $this, 'ajax_delete_lesson' ) );
 
 		add_filter( 'get_sample_permalink', array( $this, 'change_lesson_permalink' ), 10, 2 );
 
@@ -372,20 +372,28 @@ class Lesson extends Tutor_Base {
 	 * Delete Lesson from course builder by ID
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 refactor and update response.
 	 *
 	 * @return void
 	 */
-	public function tutor_delete_lesson_by_id() {
-		tutor_utils()->checking_nonce();
+	public function ajax_delete_lesson() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
 		if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
 		}
 
 		wp_delete_post( $lesson_id, true );
-		wp_send_json_success();
+
+		$this->json_response( __( 'Lesson deleted successfully', 'tutor' ) );
 	}
 
 
