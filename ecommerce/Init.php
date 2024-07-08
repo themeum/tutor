@@ -26,6 +26,7 @@ class Init {
 	 */
 	public function __construct() {
 		new OrderController();
+		new OrderActivitiesController();
 		new CouponController();
 	}
 }
