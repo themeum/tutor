@@ -29,7 +29,7 @@ class QueryHelper {
 		global $wpdb;
 		// Sanitize text field.
 		$data = array_map(
-			function( $value ) {
+			function ( $value ) {
 				return sanitize_text_field( $value );
 			},
 			$data
@@ -57,14 +57,14 @@ class QueryHelper {
 		global $wpdb;
 		// Sanitize text field.
 		$data = array_map(
-			function( $value ) {
+			function ( $value ) {
 				return sanitize_text_field( $value );
 			},
 			$data
 		);
 
 		$where = array_map(
-			function( $value ) {
+			function ( $value ) {
 				return sanitize_text_field( $value );
 			},
 			$where
@@ -229,7 +229,7 @@ class QueryHelper {
 	 */
 	private static function sanitize_assoc_array( array $array ) {
 		return array_map(
-			function( $value ) {
+			function ( $value ) {
 				return sanitize_text_field( $value );
 			},
 			$array
@@ -539,16 +539,27 @@ class QueryHelper {
 
 		$total_count = $wpdb->get_var($count_query);
 
-		$query = $wpdb->prepare(
-			"SELECT {$select_clause}
-			FROM {$from_clause}
-			{$join_clauses}
-			{$where_clause}
-			{$order_by_clause}
-			LIMIT %d OFFSET %d",
-			$limit,
-			$offset
-		);
+		if (empty($limit) && empty($offset)) {
+			$query = $wpdb->prepare(
+				"SELECT {$select_clause}
+				FROM {$from_clause}
+				{$join_clauses}
+				{$where_clause}
+				{$order_by_clause}"
+			);
+		} else {
+			$query = $wpdb->prepare(
+				"SELECT {$select_clause}
+				FROM {$from_clause}
+				{$join_clauses}
+				{$where_clause}
+				{$order_by_clause}
+				LIMIT %d OFFSET %d",
+				$limit,
+				$offset
+			);
+		}
+
 
 		$results = $wpdb->get_results($query, $output);
 

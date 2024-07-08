@@ -179,12 +179,7 @@ class OrderModel {
 		$student->email           = $user_info->data->user_email;
 		$student->phone           = get_user_meta( $order_data->user_id, 'phone_number', true );
 		$student->billing_address = $this->get_tutor_customer_data( $order_data->user_id );
-		$student->image           = '';
-		$profile_photo            = get_user_meta( $order_data->user_id, '_tutor_profile_photo', true );
-
-		if ( $profile_photo ) {
-			$student->image = wp_get_attachment_image_url( $profile_photo );
-		}
+		$student->image           = get_avatar_url( $order_data->user_id );
 
 		$order_data->student         = $student;
 		$order_data->courses         = $this->get_order_items_by_id( $order_id );
@@ -192,7 +187,7 @@ class OrderModel {
 		$order_data->total_price     = (float) $order_data->total_price;
 		$order_data->order_price     = (float) $order_data->order_price;
 		$order_data->discount_amount = (float) $order_data->discount_amount;
-		$order_data->tax             = (float) $order_data->tax;
+		$order_data->tax_rate        = (float) $order_data->tax_rate;
 		$order_data->tax_amount      = (float) $order_data->tax_amount;
 
 		$order_data->created_by = get_userdata( $order_data->created_by )->display_name;
@@ -229,31 +224,35 @@ class OrderModel {
 	public function get_order_items_by_id( $order_id ) {
 		global $wpdb;
 
-		$courses = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 
-				oi.course_id AS id,
-				oi.regular_price,
-				oi.sale_price,
-				p.post_title AS title,
-				p.post_type AS type
-			FROM {$wpdb->prefix}tutor_order_items AS oi
-			LEFT JOIN {$wpdb->prefix}posts AS p ON p.ID = oi.course_id
-			AND order_id = %d",
-				$order_id
-			)
+		$primary_table  = "{$wpdb->prefix}tutor_order_items AS oi";
+		$joining_tables = array(
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->prefix}posts AS p",
+				'on'    => 'p.ID = oi.course_id',
+			),
 		);
 
-		$bundle_model = new BundleModel();
-		foreach ( $courses as &$course ) {
-			if ( 'course-bundle' === $course->type ) {
-				$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
-			}
+		$where = array( 'order_id' => $order_id );
 
-			$course->id            = (int) $course->id;
-			$course->regular_price = (float) $course->regular_price;
-			$course->sale_price    = (float) $course->sale_price;
-			$course->image         = get_the_post_thumbnail_url( $course->id );
+		$select_columns = array( 'oi.course_id AS id', 'oi.regular_price', 'oi.sale_price', 'p.post_title AS title', 'p.post_type AS type' );
+
+		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
+		$courses      = $courses_data['results'];
+
+		$bundle_model = new BundleModel();
+
+		if ( ! empty( $courses_data['total_count'] ) ) {
+			foreach ( $courses as &$course ) {
+				if ( 'course-bundle' === $course->type ) {
+					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
+				}
+
+				$course->id            = (int) $course->id;
+				$course->regular_price = (float) $course->regular_price;
+				$course->sale_price    = (float) $course->sale_price;
+				$course->image         = get_the_post_thumbnail_url( $course->id );
+			}
 		}
 
 		unset( $course );
@@ -432,15 +431,11 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
 	 * @param int $order_id The ID of the order to delete.
 	 *
 	 * @return bool|int False on failure, or the number of rows affected if successful.
 	 */
 	public function delete_order( $order_id ) {
-		global $wpdb;
-
 		return QueryHelper::delete( $this->table_name, array( 'id' => $order_id ) );
 	}
 
