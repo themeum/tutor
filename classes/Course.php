@@ -1125,6 +1125,13 @@ class Course extends Tutor_Base {
 		wp_editor( '', 'post_content' );
 		$data['wp_editor'] = ob_get_clean();
 
+		$dashboard_url = get_admin_url();
+		if ( User::is_instructor() ) {
+			$dashboard_url = tutor_utils()->tutor_dashboard_url();
+		}
+
+		$data['dashboard_url'] = $dashboard_url;
+
 		wp_localize_script( 'tutor-course-builder-v3', '_tutorobject', $data );
 	}
 
