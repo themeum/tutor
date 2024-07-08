@@ -84,6 +84,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
       title: topic.title,
       summary: topic.summary,
     },
+    shouldFocusError: true,
   });
 
   const [isActive, setIsActive] = useState(false);

@@ -195,6 +195,28 @@ export const useDeleteTopicMutation = () => {
   });
 };
 
+const getLessonDetails = (lessonId: ID, topicId: ID) => {
+  return authApiInstance.post<string, AxiosResponse<Lesson>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_lesson_details',
+    lesson_id: lessonId,
+    topic_id: topicId,
+  });
+};
+
+export const useLessonDetailsQuery = (lessonId: ID, topicId: ID) => {
+  return useQuery({
+    queryKey: [
+      'Lesson',
+      {
+        lessonId,
+        topicId,
+      },
+    ],
+    queryFn: () => getLessonDetails(lessonId, topicId).then((res) => res.data),
+    enabled: !!lessonId,
+  });
+};
+
 const saveLesson = (payload: LessonPayload) => {
   return authApiInstance.post<string, AxiosResponse<TutorMutationResponse>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_save_lesson',
@@ -211,7 +233,7 @@ export const useSaveLessonMutation = () => {
     onSuccess: (response) => {
       if (response.data) {
         queryClient.invalidateQueries({
-          queryKey: ['Topic'],
+          queryKey: ['Topic', 'Lesson'],
         });
         showToast({
           message: __('Lesson saved successfully', 'tutor'),
