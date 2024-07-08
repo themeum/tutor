@@ -70,12 +70,19 @@ class QueryHelper {
 			$where
 		);
 
-		$update = $wpdb->update(
+		$wpdb->update(
 			$table,
 			$data,
 			$where
 		);
-		return $update ? true : false;
+
+		if ( $wpdb->last_error ) {
+			error_log( $wpdb->last_error );
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
