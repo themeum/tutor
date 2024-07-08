@@ -18,7 +18,7 @@ use Tutor\Helpers\QueryHelper;
 class CouponModel {
 
 	/**
-	 * Order status
+	 * Coupon status
 	 *
 	 * @since 3.0.0
 	 *
@@ -26,6 +26,7 @@ class CouponModel {
 	 */
 	const STATUS_ACTIVE   = 'active';
 	const STATUS_INACTIVE = 'inactive';
+	const STATUS_TRASH    = 'trash';
 
 	/**
 	 * Coupon table name
@@ -78,6 +79,7 @@ class CouponModel {
 		return array(
 			self::STATUS_ACTIVE   => __( 'Active', 'tutor' ),
 			self::STATUS_INACTIVE => __( 'Inactive', 'tutor' ),
+			self::STATUS_TRASH    => __( 'Trash', 'tutor' ),
 		);
 	}
 

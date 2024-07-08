@@ -53,7 +53,7 @@ $navbar_data = array(
 $filters = array(
 	'bulk_action'  => $coupon_controller->bulk_action,
 	'bulk_actions' => $coupon_controller->prepare_bulk_actions(),
-	'ajax_action'  => 'tutor_course_list_bulk_action',
+	'ajax_action'  => 'tutor_coupon_bulk_action',
 	'filters'      => true,
 );
 

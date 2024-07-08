@@ -102,20 +102,19 @@ class CouponController {
 	public function prepare_bulk_actions(): array {
 		$actions = array(
 			$this->bulk_action_default(),
-			$this->bulk_action_publish(),
-			$this->bulk_action_pending(),
-			$this->bulk_action_draft(),
+			$this->bulk_action_active(),
+			$this->bulk_action_inactive(),
 		);
 
 		$active_tab = Input::get( 'data', '' );
 
 		if ( 'trash' === $active_tab ) {
 			array_push( $actions, $this->bulk_action_delete() );
-		}
-		if ( 'trash' !== $active_tab ) {
+		} else {
 			array_push( $actions, $this->bulk_action_trash() );
 		}
-		return apply_filters( 'tutor_order_bulk_actions', $actions );
+
+		return apply_filters( 'tutor_coupon_bulk_actions', $actions );
 	}
 
 	/**
