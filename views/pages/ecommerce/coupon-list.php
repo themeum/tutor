@@ -147,7 +147,7 @@ $filters = array(
 									</td>
 
 									<td>
-										12
+										<?php echo esc_html( $coupon->usage_count ); ?>
 									</td>
 									<td>
 										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
