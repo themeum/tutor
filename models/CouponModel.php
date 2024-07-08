@@ -24,8 +24,8 @@ class CouponModel {
 	 *
 	 * @var string
 	 */
-	const STATUS_ACTIVE   = 1;
-	const STATUS_INACTIVE = 0;
+	const STATUS_ACTIVE   = 'active';
+	const STATUS_INACTIVE = 'inactive';
 
 	/**
 	 * Coupon table name

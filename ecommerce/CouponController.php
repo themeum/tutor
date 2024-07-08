@@ -200,7 +200,7 @@ class CouponController {
 
 		$date          = Input::get( 'date', '' );
 		$search_term   = Input::get( 'search', '' );
-		$coupon_status = Input::get( 'coupon-status', null, Input::TYPE_INT );
+		$coupon_status = Input::get( 'coupon-status' );
 
 		$where_clause = array();
 
@@ -212,8 +212,8 @@ class CouponController {
 			$where_clause['coupon_status'] = $coupon_status;
 		}
 
-		if ( 'all' !== $active_tab ) {
-			$where_clause['coupon_status'] = (int) $active_tab;
+		if ( 'all' !== $active_tab && in_array( $active_tab, array_keys( $this->model->get_coupon_status() ), true ) ) {
+			$where_clause['coupon_status'] = $active_tab;
 		}
 
 		$list_order    = Input::get( 'order', 'DESC' );

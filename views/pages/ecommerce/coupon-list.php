@@ -142,8 +142,7 @@ $filters = array(
 
 									<td>
 										<?php
-										$coupon_status = (int) $coupon->coupon_status;
-										echo wp_kses_post( tutor_utils()->translate_dynamic_text( 1 === $coupon_status ? 'active' : 'inactive', true ) );
+										echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon->coupon_status, true ) );
 										?>
 									</td>
 
