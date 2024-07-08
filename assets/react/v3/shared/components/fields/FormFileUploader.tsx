@@ -155,8 +155,6 @@ const FormFileUploader = ({
   wpMedia.on('select', () => {
     const selected = wpMedia.state().get('selection').toJSON();
 
-    console.log(selected[0]);
-
     const existingFileIds = new Set(
       Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : []
     );
