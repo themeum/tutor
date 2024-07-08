@@ -20,7 +20,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext, useWatch } from 'react-hook-form';
 import Tracker from './Tracker';
-import config from '@Config/config';
+import config, { tutorConfig } from '@Config/config';
 import Show from '@Controls/Show';
 import { isBefore } from 'date-fns';
 
@@ -121,9 +121,15 @@ const Header = () => {
 
   return (
     <div css={styles.wrapper}>
-      <div css={styles.logo}>
+      <button
+        type="button"
+        css={[styleUtils.resetButton, styles.logo]}
+        onClick={() => {
+          window.open(tutorConfig.dashboard_url, '_blank');
+        }}
+      >
         <Logo width={108} height={24} />
-      </div>
+      </button>
       <div css={styles.container}>
         <div css={styles.titleAndTacker}>
           <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>

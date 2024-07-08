@@ -16,6 +16,7 @@ declare global {
       base_path: string;
       tutor_url: string;
       tutor_pro_url: string;
+      dashboard_url: string;
       nonce_key: string;
       _tutor_nonce: string;
       loading_icon_url: string;
