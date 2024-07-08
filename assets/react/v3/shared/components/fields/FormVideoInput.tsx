@@ -1,6 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, fontWeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
@@ -276,9 +276,7 @@ const FormVideoInput = ({
 
                           <div css={styles.videoInfo}>
                             <div css={styles.videoInfoTitle}>
-                              <div css={styleUtils.text.ellipsis(1)}>{__('Video', 'tutor')}</div>
-
-                              <div css={styles.fileExtension}>{`.${__('mp4', 'tutor')}`}</div>
+                              <div css={styleUtils.text.ellipsis(1)}>{__('Video added', 'tutor')}</div>
                             </div>
                           </div>
                         </div>
@@ -299,14 +297,16 @@ const FormVideoInput = ({
                           fallback={
                             <div css={styles.urlData}>
                               <p>
-                                {`
-                                ${__('Source', 'tutor')}: 
-                                ${
+                                <span>{`${__('Source', 'tutor')}: `}</span>
+                                {`${
                                   videoSourceOptions.find((option) => option.value === form.watch('videoSource'))
                                     ?.label || ''
                                 }`}
                               </p>
-                              <p>{`${__('URL', 'tutor')}: ${form.watch('videoUrl')}`}</p>
+                              <p>
+                                <span>{`${__('URL', 'tutor')}: `}</span>
+                                {`${form.watch('videoUrl')}`}
+                              </p>
                             </div>
                           }
                         >
@@ -438,9 +438,15 @@ const styles = {
     background: ${colorTokens.bg.white};
   `,
   urlData: css`
+    ${typography.caption()};
     ${styleUtils.display.flex('column')};
     padding: ${spacing[8]} ${spacing[12]};
     gap: ${spacing[8]};
+
+    span {
+      font-weight: ${fontWeight.semiBold};
+      color: ${colorTokens.text.hints};
+    }
   `,
   previewWrapper: css`
     width: 100%;
@@ -539,7 +545,6 @@ const styles = {
   `,
   removeButton: css`
     ${styleUtils.resetButton};
-    align-self: flex-start;
     color: ${colorTokens.icon.default};
   `,
   popover: css`
