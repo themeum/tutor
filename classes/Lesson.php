@@ -14,7 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\LessonModel;
+use Tutor\Traits\JsonResponse;
 
 /**
  * Lesson class
@@ -22,6 +25,7 @@ use Tutor\Models\LessonModel;
  * @since 1.0.0
  */
 class Lesson extends Tutor_Base {
+	use JsonResponse;
 
 	/**
 	 * Register hooks
@@ -37,7 +41,7 @@ class Lesson extends Tutor_Base {
 		add_action( 'save_post_' . $this->lesson_post_type, array( $this, 'save_lesson_meta' ) );
 
 		add_action( 'wp_ajax_tutor_load_edit_lesson_modal', array( $this, 'tutor_load_edit_lesson_modal' ) );
-		add_action( 'wp_ajax_tutor_modal_create_or_update_lesson', array( $this, 'tutor_modal_create_or_update_lesson' ) );
+		add_action( 'wp_ajax_tutor_save_lesson', array( $this, 'ajax_save_lesson' ) );
 		add_action( 'wp_ajax_tutor_delete_lesson_by_id', array( $this, 'tutor_delete_lesson_by_id' ) );
 
 		add_filter( 'get_sample_permalink', array( $this, 'change_lesson_permalink' ), 10, 2 );
@@ -246,17 +250,18 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
-	 * Load lesson modal for create or update lesson
+	 * Create or update lesson.
 	 *
 	 * @since 1.0.0
 	 * @since 1.5.1 updated
+	 * @since 3.0.0 refactor and response updated.
 	 *
 	 * @return void
 	 */
-	public function tutor_modal_create_or_update_lesson() {
-		tutor_utils()->checking_nonce();
-
-		global $wpdb;
+	public function ajax_save_lesson() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		/**
 		 * Allow iframe inside lesson content to support
@@ -266,21 +271,50 @@ class Lesson extends Tutor_Base {
 		 */
 		add_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
 
-		$lesson_id        = Input::post( 'lesson_id', 0, Input::TYPE_INT );
-		$topic_id         = Input::post( 'current_topic_id', 0, Input::TYPE_INT );
-		$current_topic_id = $topic_id;
-		$course_id        = tutor_utils()->get_course_id_by( 'topic', $topic_id );
+		$is_update = false;
 
-		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
+		$topic_id  = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$course_id = tutor_utils()->get_course_id_by( 'topic', $topic_id );
+
+		if ( $lesson_id ) {
+			$is_update = true;
 		}
 
-		$title                = Input::post( 'lesson_title' );
-		$_lesson_thumbnail_id = Input::post( '_lesson_thumbnail_id', 0, Input::TYPE_INT );
-		$lesson_content       = Input::post( 'lesson_content', '', Input::TYPE_KSES_POST );
-		$is_html_active       = Input::post( 'is_html_active' ) === 'true' ? true : false;
-		$raw_html_content     = Input::post( 'tutor_lesson_modal_editor', '', Input::TYPE_KSES_POST );
-		$post_content         = $is_html_active ? $raw_html_content : $lesson_content;
+		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
+		}
+
+		$title        = Input::post( 'title' );
+		$description  = Input::post( 'description', '', Input::TYPE_KSES_POST );
+		$thumbnail_id = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
+
+		$is_html_active   = Input::post( 'is_html_active' ) === 'true' ? true : false;
+		$raw_html_content = Input::post( 'tutor_lesson_modal_editor', '', Input::TYPE_KSES_POST );
+		$post_content     = $is_html_active ? $raw_html_content : $description;
+
+		$rules = array(
+			'topic_id'     => 'required|numeric',
+			'description'  => 'required',
+			'lesson_id'    => 'if_input|numeric',
+			'thumbnail_id' => 'if_input|numeric',
+		);
+
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$params = Input::sanitize_array( $_POST, array( 'description' => 'wp_kses_post' ) );
+
+		$validation = ValidationHelper::validate( $rules, $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				__( 'Invalid inputs', 'tutor' ),
+				$validation->errors,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
 
 		$lesson_data = array(
 			'post_type'      => $this->lesson_post_type,
@@ -293,22 +327,26 @@ class Lesson extends Tutor_Base {
 			'post_parent'    => $topic_id,
 		);
 
-		if ( 0 === $lesson_id ) {
+		if ( ! $is_update ) {
 			$lesson_data['menu_order'] = tutor_utils()->get_next_course_content_order_id( $topic_id );
 			$lesson_id                 = wp_insert_post( $lesson_data );
 
 			if ( $lesson_id ) {
 				do_action( 'tutor/lesson/created', $lesson_id );
 			} else {
-				wp_send_json_error( array( 'message' => __( 'Couldn\'t create lesson.', 'tutor' ) ) );
+				$this->json_response(
+					tutor_utils()->error_message(),
+					null,
+					HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+				);
 			}
 		} else {
 			$lesson_data['ID'] = $lesson_id;
 
 			do_action( 'tutor/lesson_update/before', $lesson_id );
 			wp_update_post( $lesson_data );
-			if ( $_lesson_thumbnail_id ) {
-				update_post_meta( $lesson_id, '_thumbnail_id', $_lesson_thumbnail_id );
+			if ( $thumbnail_id ) {
+				update_post_meta( $lesson_id, '_thumbnail_id', $thumbnail_id );
 			} else {
 				delete_post_meta( $lesson_id, '_thumbnail_id' );
 			}
@@ -316,11 +354,18 @@ class Lesson extends Tutor_Base {
 			do_action( 'tutor/lesson_update/after', $lesson_id );
 		}
 
-		ob_start();
-		include tutor()->path . 'views/metabox/course-contents.php';
-		$course_contents = ob_get_clean();
-
-		wp_send_json_success( array( 'course_contents' => $course_contents ) );
+		if ( $is_update ) {
+			$this->json_response(
+				__( 'Lesson updated successfully', 'tutor' ),
+				$lesson_id
+			);
+		} else {
+			$this->json_response(
+				__( 'Lesson created successfully', 'tutor' ),
+				$lesson_id,
+				HttpHelper::STATUS_CREATED
+			);
+		}
 	}
 
 	/**
