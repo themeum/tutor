@@ -20,14 +20,19 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext, useWatch } from 'react-hook-form';
 import Tracker from './Tracker';
-import config from '@Config/config';
+import config, { tutorConfig } from '@Config/config';
 import Show from '@Controls/Show';
 import { isBefore } from 'date-fns';
+import { noop } from '@Utils/util';
+import { useState } from 'react';
 
 const courseId = getCourseId();
 
 const Header = () => {
   const form = useFormContext<CourseFormData>();
+  const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private'>(
+    form.watch('post_status')
+  );
 
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
@@ -38,6 +43,7 @@ const Header = () => {
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future') => {
     const payload = convertCourseDataToPayload(data);
+    setLocalPostStatus(postStatus);
 
     if (courseId) {
       updateCourseMutation.mutate({ course_id: Number(courseId), ...payload, post_status: postStatus });
@@ -56,10 +62,7 @@ const Header = () => {
     let text: string;
     let action: 'publish' | 'draft' | 'future';
 
-    if (!courseId) {
-      text = __('Save as Draft', 'tutor');
-      action = 'draft';
-    } else if (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate))) {
+    if (!courseId || (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))) {
       text = __('Publish', 'tutor');
       action = 'publish';
     } else if (postStatus === 'draft' && isBefore(new Date(), new Date(postDate))) {
@@ -88,10 +91,7 @@ const Header = () => {
           <SVGIcon name="linkExternal" width={24} height={24} />
         </div>
       ),
-      onClick:
-        !courseId || (postStatus === 'draft' && courseId)
-          ? () => window.open(previewLink, '_blank')
-          : () => alert('@TODO: will be implemented later.'),
+      onClick: !courseId || (postStatus === 'draft' && courseId) ? () => window.open(previewLink, '_blank') : noop,
       isDanger: false,
     };
 
@@ -121,9 +121,15 @@ const Header = () => {
 
   return (
     <div css={styles.wrapper}>
-      <div css={styles.logo}>
+      <button
+        type="button"
+        css={[styleUtils.resetButton, styles.logo]}
+        onClick={() => {
+          window.open(tutorConfig.dashboard_url, '_blank');
+        }}
+      >
         <Logo width={108} height={24} />
-      </div>
+      </button>
       <div css={styles.container}>
         <div css={styles.titleAndTacker}>
           <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
@@ -168,7 +174,7 @@ const Header = () => {
               size="small"
               variant="secondary"
               icon={<SVGIcon name="upload" width={24} height={24} />}
-              loading={updateCourseMutation.isPending}
+              loading={localPostStatus === 'draft' && updateCourseMutation.isPending}
               iconPosition="left"
               onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
             >
@@ -181,7 +187,7 @@ const Header = () => {
             variant="primary"
             loading={
               createCourseMutation.isPending ||
-              ((postStatus === 'publish' || postStatus === 'future') && updateCourseMutation.isPending)
+              ((localPostStatus === 'publish' || localPostStatus === 'future') && updateCourseMutation.isPending)
             }
             onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
             dropdownMaxWidth="144px"

@@ -1,25 +1,26 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
-import AddLessonModal from '@CourseBuilderComponents/modals/AddLessonModal';
-import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
-import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import type { ID } from '@CourseBuilderServices/curriculum';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
 import { type AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-type ContentType = 'lesson' | 'quiz' | 'assignment' | 'zoom' | 'meet';
+import SVGIcon from '@Atoms/SVGIcon';
+
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
+import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
+import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
+import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
+import { useModal } from '@Components/modals/Modal';
+import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
+
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import { styleUtils } from '@Utils/style-utils';
+import type { IconCollection } from '@Utils/types';
+
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
-  content: { id: ID; title: string; questionCount?: number };
+  content: { id: ID; title: string };
   isDragging?: boolean;
   onDelete?: () => void;
   onCopy?: () => void;
@@ -30,19 +31,19 @@ const icons = {
     name: 'lesson',
     color: colorTokens.icon.default,
   },
-  quiz: {
+  tutor_quiz: {
     name: 'quiz',
     color: colorTokens.design.warning,
   },
-  assignment: {
+  tutor_assignments: {
     name: 'assignment',
     color: colorTokens.icon.processing,
   },
-  zoom: {
+  tutor_zoom_meeting: {
     name: 'zoomColorize',
     color: '',
   },
-  meet: {
+  'tutor-google-meet': {
     name: 'googleMeetColorize',
     color: '',
   },
@@ -50,27 +51,27 @@ const icons = {
 
 const modalComponent: {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  [key in Exclude<ContentType, 'zoom' | 'meet'>]: React.FunctionComponent<any>;
+  [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: React.FunctionComponent<any>;
 } = {
-  lesson: AddLessonModal,
-  quiz: QuizModal,
-  assignment: AddAssignmentModal,
+  lesson: LessonModal,
+  tutor_quiz: QuizModal,
+  tutor_assignments: AddAssignmentModal,
 } as const;
 
 const modalTitle: {
-  [key in Exclude<ContentType, 'zoom' | 'meet'>]: string;
+  [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: string;
 } = {
   lesson: __('Lesson', 'tutor'),
-  quiz: __('Quiz', 'tutor'),
-  assignment: __('Assignment', 'tutor'),
+  tutor_quiz: __('Quiz', 'tutor'),
+  tutor_assignments: __('Assignment', 'tutor'),
 } as const;
 
 const modalIcon: {
-  [key in Exclude<ContentType, 'zoom' | 'meet'>]: IconCollection;
+  [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: IconCollection;
 } = {
   lesson: 'lesson',
-  quiz: 'quiz',
-  assignment: 'assignment',
+  tutor_quiz: 'quiz',
+  tutor_assignments: 'assignment',
 } as const;
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
@@ -95,7 +96,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         component: modalComponent[isContentType],
         props: {
           title: modalTitle[isContentType],
-          subtitle: `${__('Topic')}: ${topic.post_title}`,
+          subtitle: `${__('Topic')}: ${topic.title}`,
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
         },
       });
@@ -120,9 +121,6 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         </div>
         <p css={styles.title}>
           <span dangerouslySetInnerHTML={{ __html: content.title }} />
-          <Show when={type === 'quiz' && !!content.questionCount}>
-            <span data-question-count>({content.questionCount} Questions)</span>
-          </Show>
         </p>
       </div>
 

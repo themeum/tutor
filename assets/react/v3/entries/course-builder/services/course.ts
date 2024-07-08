@@ -1,15 +1,17 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
+import type { AxiosResponse } from 'axios';
+
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
+
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
-import type { AxiosResponse } from 'axios';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -424,7 +426,7 @@ const createCourse = (payload: CoursePayload) => {
   });
 };
 
-interface TutorMutationResponse {
+export interface TutorMutationResponse {
   data: number;
   message: string;
   status_code: number;
