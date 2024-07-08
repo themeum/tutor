@@ -977,23 +977,21 @@ class Course extends Tutor_Base {
 			// Check if instructor can trash course.
 			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
 
-			if ( $can_trash_post ) {
-				$trash_course = wp_update_post(
-					array(
-						'ID'          => $course_id,
-						'post_status' => 'trash',
-					)
-				);
-
-				if ( $trash_course ) {
-					wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
-				}
-			} else {
+			if ( ! $can_trash_post ) {
 				wp_send_json_error( tutor_utils()->error_message() );
 			}
 		}
 
-		CourseModel::delete_course( $course_id );
+		$trash_course = wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_status' => 'trash',
+			)
+		);
+
+		if ( $trash_course ) {
+			wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
+		}
 		wp_send_json_success();
 	}
 
