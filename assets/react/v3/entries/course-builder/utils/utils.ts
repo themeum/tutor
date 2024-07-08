@@ -1,12 +1,6 @@
 import { tutorConfig } from '@Config/config';
-import { Addons, DateFormats } from '@Config/constants';
-import type {
-  CourseDetailsResponse,
-  CourseFormData,
-  MeetingFormData,
-  MeetingType,
-} from '@CourseBuilderServices/course';
-import { format } from 'date-fns';
+import { Addons } from '@Config/constants';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
@@ -148,28 +142,6 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
   };
-};
-
-export const convertMeetingFormDataToPayload = (
-  data: MeetingFormData,
-  type: MeetingType,
-  click_form: 'course_builder' | 'metabox'
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-): any => {
-  if (type === 'zoom') {
-    return {
-      click_form: click_form,
-      meeting_title: data.meeting_name,
-      meeting_summary: data.meeting_summary,
-      meeting_date: format(new Date(data.meeting_date), DateFormats.monthDayYear),
-      meeting_time: data.meeting_time,
-      meeting_duration: data.meeting_duration,
-      meeting_duration_unit: data.meeting_duration_unit,
-      meeting_timezone: data.meeting_timezone,
-      auto_recording: data.auto_recording,
-      meeting_password: data.meeting_password,
-    };
-  }
 };
 
 export const getCourseId = () => {

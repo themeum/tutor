@@ -56,6 +56,9 @@ const Additional = () => {
   const zoomUsers = courseDetailsQuery.data?.zoom_users ?? {};
   const zoomTimezones = courseDetailsQuery.data?.zoom_timezones ?? {};
 
+  const googleMeetMeetings = courseDetailsQuery.data?.google_meet_meetings ?? [];
+  const googleMeetTimezones = courseDetailsQuery.data?.google_meet_timezones ?? {};
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.leftSide}>
@@ -197,7 +200,13 @@ const Additional = () => {
             )}
           />
         </div>
-        <LiveClass zoomMeetings={zoomMeetings} zoomTimezones={zoomTimezones} zoomUsers={zoomUsers} />
+        <LiveClass
+          zoomMeetings={zoomMeetings}
+          zoomTimezones={zoomTimezones}
+          zoomUsers={zoomUsers}
+          googleMeetMeetings={googleMeetMeetings}
+          googleMeetTimezones={googleMeetTimezones}
+        />
       </div>
     </div>
   );
