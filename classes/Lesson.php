@@ -47,12 +47,6 @@ class Lesson extends Tutor_Base {
 		add_filter( 'get_sample_permalink', array( $this, 'change_lesson_permalink' ), 10, 2 );
 
 		/**
-		 * Add Column
-		 */
-		add_filter( "manage_{$this->lesson_post_type}_posts_columns", array( $this, 'add_column' ), 10, 1 );
-		add_action( "manage_{$this->lesson_post_type}_posts_custom_column", array( $this, 'custom_lesson_column' ), 10, 2 );
-
-		/**
 		 * Frontend Action
 		 */
 		add_action( 'template_redirect', array( $this, 'mark_lesson_complete' ) );
@@ -427,46 +421,6 @@ class Lesson extends Tutor_Base {
 		}
 
 		return $uri;
-	}
-
-	/**
-	 * Add column to lesson HTML table
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $columns columns.
-	 * @return array
-	 */
-	public function add_column( $columns ) {
-		$date_col = $columns['date'];
-		unset( $columns['date'] );
-		$columns['course'] = __( 'Course', 'tutor' );
-		$columns['date']   = $date_col;
-
-		return $columns;
-	}
-
-	/**
-	 * Add custom lesson column.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string  $column column name.
-	 * @param integer $post_id post ID.
-	 *
-	 * @return mixed
-	 */
-	public function custom_lesson_column( $column, $post_id ) {
-		if ( 'course' === $column ) {
-
-			$course_id = tutor_utils()->get_course_id_by( 'lesson', $post_id );
-			if ( $course_id ) {
-				echo wp_kses(
-					'<a href="' . admin_url( 'post.php?post=' . $course_id . '&action=edit' ) . '">' . get_the_title( $course_id ) . '</a>',
-					array( 'a' => array( 'href' => true ) )
-				);
-			}
-		}
 	}
 
 	/**
