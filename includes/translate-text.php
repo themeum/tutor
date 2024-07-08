@@ -132,6 +132,14 @@ function tutor_get_translate_text() {
 			'badge' => 'warning',
 			'text'  => __( 'Private', 'tutor' ),
 		),
+		'active'    => array(
+			'badge' => 'success',
+			'text'  => __( 'Active', 'tutor' ),
+		),
+		'inactive'    => array(
+			'badge' => 'default',
+			'text'  => __( 'Inactive', 'tutor' ),
+		),
 		'true'       => array(
 			'text' => _x( 'True', 'true/false question options', 'tutor' ),
 		),
