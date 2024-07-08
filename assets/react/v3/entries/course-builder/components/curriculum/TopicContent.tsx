@@ -20,7 +20,6 @@ import type { IconCollection } from '@Utils/types';
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
-  // content: { id: ID; title: string; questionCount?: number };
   content: { id: ID; title: string };
   isDragging?: boolean;
   onDelete?: () => void;
@@ -122,9 +121,6 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         </div>
         <p css={styles.title}>
           <span dangerouslySetInnerHTML={{ __html: content.title }} />
-          {/* <Show when={type === 'tutor_quiz' && !!content.questionCount}>
-            <span data-question-count>({content.questionCount} Questions)</span>
-          </Show> */}
         </p>
       </div>
 
