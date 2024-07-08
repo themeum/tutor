@@ -1643,7 +1643,7 @@ class Course extends Tutor_Base {
 		// Gather parameters.
 		$course_id     = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$topic_id      = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		$topic_summery = Input::post( 'summery', '', Input::TYPE_KSES_POST );
+		$topic_summary = Input::post( 'summary', '', Input::TYPE_KSES_POST );
 
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id( $course_id, $topic_id );
 
@@ -1656,7 +1656,7 @@ class Course extends Tutor_Base {
 		$post_arr = array(
 			'post_type'    => 'topics',
 			'post_title'   => $topic_title,
-			'post_content' => $topic_summery,
+			'post_content' => $topic_summary,
 			'post_status'  => 'publish',
 			'post_author'  => get_current_user_id(),
 			'post_parent'  => $course_id,
