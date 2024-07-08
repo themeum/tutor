@@ -21,7 +21,7 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { format } from 'date-fns';
 import { DateFormats } from '@Config/constants';
 
-interface MeetingFormProps {
+interface ZoomMeetingFormProps {
   onCancel: () => void;
   data: ZoomMeeting | null;
   timezones: {
@@ -35,7 +35,7 @@ interface MeetingFormProps {
 
 const courseId = getCourseId();
 
-const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: MeetingFormProps) => {
+const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: ZoomMeetingFormProps) => {
   const { ref, isScrolling } = useIsScrolling({ defaultValue: true });
   const currentMeeting = data;
 
@@ -49,13 +49,14 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Me
       meeting_time: currentMeeting?.meeting_data.start_time
         ? format(new Date(currentMeeting?.meeting_data.start_time), DateFormats.hoursMinutes)
         : '',
-      meeting_duration: String(currentMeeting?.meeting_data.duration) ?? '',
+      meeting_duration: currentMeeting?.meeting_data.duration ? String(currentMeeting?.meeting_data.duration) : '',
       meeting_duration_unit: currentMeeting?.meeting_data.duration_unit ?? 'min',
       meeting_timezone: currentMeeting?.meeting_data.timezone ?? '',
       auto_recording: currentMeeting?.meeting_data.settings.auto_recording ?? 'none',
       meeting_password: currentMeeting?.meeting_data.password ?? '',
       meeting_host: Object.values(meetingHost)[0],
     },
+    shouldFocusError: true,
   });
 
   const saveZoomMeeting = useSaveZoomMeetingMutation(String(courseId));
@@ -301,7 +302,7 @@ const styles = {
   meetingTimeWrapper: css`
     ${styleUtils.display.flex()}
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: ${spacing[6]};
   `,
   buttonWrapper: ({ isScrolling = false }) => css`

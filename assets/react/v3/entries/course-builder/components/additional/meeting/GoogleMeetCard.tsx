@@ -7,23 +7,19 @@ import SVGIcon from '@Atoms/SVGIcon';
 
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 
 import { DateFormats } from '@Config/constants';
 import { styleUtils } from '@Utils/style-utils';
-import { useDeleteZoomMeetingMutation, type ZoomMeeting } from '@CourseBuilderServices/course';
+import { useDeleteGoogleMeetMeetingMutation, type GoogleMeet } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useRef, useState } from 'react';
 import Popover from '@Molecules/Popover';
+import GoogleMeetMeetingForm from './GoogleMeetForm';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
-import ZoomMeetingForm from './ZoomMeetingForm';
 
-interface ZoomMeetingCardProps {
-  data: ZoomMeeting;
+interface GoogleMeetMeetingCardProps {
+  data: GoogleMeet;
   timezones: {
-    [key: string]: string;
-  };
-  meetingHost: {
     [key: string]: string;
   };
   topicId?: string;
@@ -31,20 +27,23 @@ interface ZoomMeetingCardProps {
 
 const courseId = getCourseId();
 
-const ZoomMeetingCard = ({ data, meetingHost, timezones, topicId }: ZoomMeetingCardProps) => {
+const GoogleMeetMeetingCard = ({ data, timezones, topicId }: GoogleMeetMeetingCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const deleteZoomMeetingMutation = useDeleteZoomMeetingMutation(String(courseId));
+  const deleteGoogleMeetMeetingMutation = useDeleteGoogleMeetMeetingMutation(String(courseId), {
+    'post-id': data.ID,
+    'event-id': data.meeting_data.id,
+  });
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const { ID, meeting_data, post_title } = data;
+  const { meeting_data, post_title } = data;
 
   const handleZoomMeetingDelete = async () => {
-    await deleteZoomMeetingMutation.mutateAsync(ID);
+    await deleteGoogleMeetMeetingMutation.mutateAsync();
   };
 
-  const day = format(new Date(meeting_data.start_time), DateFormats.day);
-  const month = format(new Date(meeting_data.start_time), DateFormats.month);
-  const year = format(new Date(meeting_data.start_time), DateFormats.year);
-  const [time, meridiem = ''] = format(new Date(meeting_data.start_time), DateFormats.hoursMinutes).split(' ');
+  const day = format(new Date(meeting_data.start_datetime), DateFormats.day);
+  const month = format(new Date(meeting_data.start_datetime), DateFormats.month);
+  const year = format(new Date(meeting_data.start_datetime), DateFormats.year);
+  const [time, meridiem = ''] = format(new Date(meeting_data.start_datetime), DateFormats.hoursMinutes).split(' ');
 
   return (
     <>
@@ -82,29 +81,13 @@ const ZoomMeetingCard = ({ data, meetingHost, timezones, topicId }: ZoomMeetingC
             </div>
           </span>
 
-          <Show when={meeting_data.id}>
-            <div css={styles.inlineContent}>
-              {__('Meeting Token', 'tutor')}
-              <div css={styles.hyphen} />
-              <div>{meeting_data.id}</div>
-            </div>
-          </Show>
-
-          <Show when={meeting_data.password}>
-            <div css={styles.inlineContent}>
-              {__('Password', 'tutor')}
-              <div css={styles.hyphen} />
-              <div>{meeting_data.password}</div>
-            </div>
-          </Show>
-
           <div css={styles.buttonWrapper}>
             <Button
               variant="secondary"
               size="small"
               type="button"
               onClick={() => {
-                window.open(meeting_data.start_url, '_blank');
+                window.open(meeting_data.meet_link, '_blank');
               }}
             >
               {__('Start Meeting', 'tutor')}
@@ -116,14 +99,12 @@ const ZoomMeetingCard = ({ data, meetingHost, timezones, topicId }: ZoomMeetingC
                 type="button"
                 css={styles.actionButton}
                 data-visually-hidden
-                onClick={() => {
-                  setIsOpen(true);
-                }}
+                onClick={() => setIsOpen(true)}
               >
                 <SVGIcon name="edit" width={24} height={24} />
               </button>
               <button type="button" css={styles.actionButton} data-visually-hidden onClick={handleZoomMeetingDelete}>
-                {deleteZoomMeetingMutation.isPending ? (
+                {deleteGoogleMeetMeetingMutation.isPending ? (
                   <LoadingSpinner size={24} />
                 ) : (
                   <SVGIcon name="delete" width={24} height={24} />
@@ -134,9 +115,8 @@ const ZoomMeetingCard = ({ data, meetingHost, timezones, topicId }: ZoomMeetingC
         </div>
       </div>
       <Popover isOpen={isOpen} triggerRef={triggerRef} closePopover={() => setIsOpen(false)} maxWidth={'306px'}>
-        <ZoomMeetingForm
+        <GoogleMeetMeetingForm
           data={data}
-          meetingHost={meetingHost}
           timezones={timezones}
           topicId={topicId}
           onCancel={() => {
@@ -148,7 +128,7 @@ const ZoomMeetingCard = ({ data, meetingHost, timezones, topicId }: ZoomMeetingC
   );
 };
 
-export default ZoomMeetingCard;
+export default GoogleMeetMeetingCard;
 
 const styles = {
   card: css`
@@ -157,12 +137,10 @@ const styles = {
     gap: ${spacing[8]};
     border-radius: ${borderRadius[6]};
     transition: background 0.3s ease;
-
     [data-visually-hidden] {
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
     }
-
     &:hover {
       background-color: ${colorTokens.background.hover};
       [data-visually-hidden] {

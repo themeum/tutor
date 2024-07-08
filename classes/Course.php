@@ -1608,21 +1608,33 @@ class Course extends Tutor_Base {
 	 * Save course topic
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 response and input name updated.
+	 *
 	 * @return void
 	 */
 	public function tutor_save_topic() {
-		tutor_utils()->checking_nonce();
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
-		// Check required fields.
-		if ( empty( Input::post( 'topic_title' ) ) ) {
-			wp_send_json_error( array( 'message' => __( 'Topic title is required!', 'tutor' ) ) );
+		$is_update   = false;
+		$errors      = array();
+		$topic_title = Input::post( 'title' );
+
+		if ( empty( $topic_title ) ) {
+			$errors['topic_title'] = __( 'Topic title is required!', 'tutor' );
+			$this->json_response(
+				__( 'Invalid inputs' ),
+				$errors,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
 		}
 
 		// Gather parameters.
-		$course_id           = Input::post( 'topic_course_id', 0, Input::TYPE_INT );
-		$topic_id            = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		$topic_title         = Input::post( 'topic_title' );
-		$topic_summery       = Input::post( 'topic_summery', '', Input::TYPE_KSES_POST );
+		$course_id     = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$topic_id      = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$topic_summery = Input::post( 'summery', '', Input::TYPE_KSES_POST );
+
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id( $course_id, $topic_id );
 
 		// Validate if user can manage the topic.
@@ -1631,7 +1643,7 @@ class Course extends Tutor_Base {
 		}
 
 		// Create payload to create/update the topic.
-		$post_arr                   = array(
+		$post_arr = array(
 			'post_type'    => 'topics',
 			'post_title'   => $topic_title,
 			'post_content' => $topic_summery,
@@ -1640,18 +1652,26 @@ class Course extends Tutor_Base {
 			'post_parent'  => $course_id,
 			'menu_order'   => $next_topic_order_id,
 		);
-		$topic_id ? $post_arr['ID'] = $topic_id : 0;
-		$current_topic_id           = wp_insert_post( $post_arr );
 
-		ob_start();
-		include tutor()->path . 'views/metabox/course-contents.php';
+		if ( $topic_id ) {
+			$is_update      = true;
+			$post_arr['ID'] = $topic_id;
+		}
 
-		wp_send_json_success(
-			array(
-				'topic_title'     => $topic_title,
-				'course_contents' => ob_get_clean(),
-			)
-		);
+		$current_topic_id = wp_insert_post( $post_arr );
+
+		if ( $is_update ) {
+			$this->json_response(
+				__( 'Topic updated successfully!', 'tutor' ),
+				$current_topic_id
+			);
+		} else {
+			$this->json_response(
+				__( 'Topic created successfully!', 'tutor' ),
+				$current_topic_id,
+				HttpHelper::STATUS_CREATED
+			);
+		}
 	}
 
 	/**

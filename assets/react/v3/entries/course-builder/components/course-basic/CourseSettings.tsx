@@ -10,7 +10,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import ContentDropSettings from './ContentDropSettings';
+import ContentDripSettings from './ContentDripSettings';
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
@@ -138,7 +138,7 @@ const CourseSettings = () => {
           </div>
         )}
 
-        {activeTab === 'content_drip' && <ContentDropSettings />}
+        {activeTab === 'content_drip' && <ContentDripSettings />}
       </div>
     </div>
   );

@@ -103,18 +103,18 @@ const styles = {
     ${
       !removeBorder &&
       css`
-      border: 1px solid ${colorTokens.stroke.default};
-      border-radius: ${borderRadius[6]};
-      box-shadow: ${shadow.input};
-      background-color: ${colorTokens.background.white};
-    `
+        border: 1px solid ${colorTokens.stroke.default};
+        border-radius: ${borderRadius[6]};
+        box-shadow: ${shadow.input};
+        background-color: ${colorTokens.background.white};
+      `
     }
 
     ${
       hasFieldError &&
       css`
-      border-color: ${colorTokens.stroke.danger};
-    `
+        border-color: ${colorTokens.stroke.danger};
+      `
     };
 
     &:focus-within {
@@ -126,7 +126,7 @@ const styles = {
     border: none;
     box-shadow: none;
     background-color: transparent;
-    padding-${contentPosition}: 0;
+    ${contentPosition === 'left' ? 'padding-left' : 'padding-right'}: 0;
     ${
       showVerticalBar &&
       css`
@@ -137,16 +137,16 @@ const styles = {
     ${
       size === 'large' &&
       css`
-      font-size: ${fontSize[24]};
-      font-weight: ${fontWeight.medium};
-      height: 34px;
-      ${
-        showVerticalBar &&
-        css`
-          padding-${contentPosition}: ${spacing[12]};
-        `
-      };
-    `
+        font-size: ${fontSize[24]};
+        font-weight: ${fontWeight.medium};
+        height: 34px;
+        ${
+          showVerticalBar &&
+          css`
+            padding-${contentPosition}: ${spacing[12]};
+          `
+        };
+      `
     }
 
     &:focus {
@@ -163,15 +163,15 @@ const styles = {
     ${
       size === 'large' &&
       css`
-      ${typography.body()}
-    `
+        ${typography.body()}
+      `
     }
 
     ${
       showVerticalBar &&
       css`
-      border-right: 1px solid ${colorTokens.stroke.default};
-    `
+        border-right: 1px solid ${colorTokens.stroke.default};
+      `
     }
   `,
   inputRightContent: (showVerticalBar: boolean, size: string) => css`
@@ -184,15 +184,15 @@ const styles = {
     ${
       size === 'large' &&
       css`
-      ${typography.body()}
-    `
+        ${typography.body()}
+      `
     }
 
     ${
       showVerticalBar &&
       css`
-      border-left: 1px solid ${colorTokens.stroke.default};
-    `
+        border-left: 1px solid ${colorTokens.stroke.default};
+      `
     }
   `,
 };
