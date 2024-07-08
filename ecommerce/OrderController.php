@@ -33,7 +33,7 @@ class OrderController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @var Object
+	 * @var OrderModel
 	 */
 	private $model;
 
@@ -197,11 +197,11 @@ class OrderController {
 
 		$where = array();
 
-		if ( '' !== $date ) {
+		if ( ! empty( $date ) ) {
 			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
 		}
 
-		if ( '' !== $payment_status ) {
+		if ( ! empty( $payment_status ) ) {
 			$where['payment_status'] = $payment_status;
 		}
 

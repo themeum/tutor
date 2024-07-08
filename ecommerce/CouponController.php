@@ -145,21 +145,21 @@ class CouponController {
 	public function tabs_key_value(): array {
 		$url = get_pagenum_link();
 
-		$date           = Input::get( 'date', '' );
-		$payment_status = Input::get( 'payment-status', '' );
-		$search         = Input::get( 'search', '' );
+		$date          = Input::get( 'date', '' );
+		$coupon_status = Input::get( 'coupon-status', '' );
+		$search        = Input::get( 'search', '' );
 
 		$where = array();
 
-		if ( '' !== $date ) {
+		if ( ! empty( $date ) ) {
 			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
 		}
 
-		if ( '' !== $payment_status ) {
-			$where['payment_status'] = $payment_status;
+		if ( ! empty( $coupon_status ) ) {
+			$where['coupon_status'] = $coupon_status;
 		}
 
-		$order_status = $this->model->get_coupon_status();
+		$coupon_status = $this->model->get_coupon_status();
 
 		$tabs = array();
 
@@ -170,7 +170,7 @@ class CouponController {
 			'url'   => $url . '&data=all',
 		);
 
-		foreach ( $order_status as $key => $value ) {
+		foreach ( $coupon_status as $key => $value ) {
 			$where['coupon_status'] = $key;
 
 			$tabs[] = array(

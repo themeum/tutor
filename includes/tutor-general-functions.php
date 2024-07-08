@@ -803,9 +803,7 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	 * @return string ( date )
 	 */
 	function tutor_get_formated_date( string $require_format = '', string $user_date ) {
-		if ( '' === $require_format ) {
-			$require_format = 'Y-m-d';
-		}
+		$require_format = $require_format ?: 'Y-m-d';  
 
 		$date = date_create( str_replace( '/', '-', $user_date ) );
 		if ( is_a( $date, 'DateTime' ) ) {
