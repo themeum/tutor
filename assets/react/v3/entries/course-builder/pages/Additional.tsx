@@ -52,6 +52,10 @@ const Additional = () => {
     !!isPrerequisiteAddonEnabled
   );
 
+  const zoomMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
+  const zoomUsers = courseDetailsQuery.data?.zoom_users ?? {};
+  const zoomTimezones = courseDetailsQuery.data?.zoom_timezones ?? {};
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.leftSide}>
@@ -193,7 +197,7 @@ const Additional = () => {
             )}
           />
         </div>
-        <LiveClass />
+        <LiveClass zoomMeetings={zoomMeetings} zoomTimezones={zoomTimezones} zoomUsers={zoomUsers} />
       </div>
     </div>
   );

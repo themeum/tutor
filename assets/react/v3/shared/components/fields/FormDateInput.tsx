@@ -64,7 +64,7 @@ const FormDateInput = ({
                 css={[css, styles.input]}
                 type="text"
                 onFocus={() => setIsOpen(true)}
-                value={inputValue}
+                value={inputValue || field.value}
                 onChange={(event) => {
                   const { value } = event.target;
 
