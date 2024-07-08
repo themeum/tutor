@@ -596,9 +596,8 @@ class Admin {
 	 * @return void
 	 */
 	public function coupons_view() {
-		$coupon_id = Input::get( 'id', null, Input::TYPE_INT );
-
-		if ( ! is_null( $coupon_id ) ) {
+		$action = Input::get( 'action' );
+		if ( in_array( $action, array( 'add_new', 'edit' ) ) ) {
 			?>
 				<div class="tutor-admin-wrap">
 					<div class="tutor-coupon-root">
