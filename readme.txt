@@ -282,9 +282,12 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 2.7.3 - June 26, 2024
+= 2.7.3 - July 08, 2024
 
-Update: Enhanced plugin security
+New: Settings for instructors regarding course deletion.
+Update: Removed the "Delete Permanently" option from the "All" tab on the course page.
+Update: Security enhancement.
+Fix: Fixed the course shortcode parameter functionality.
 
 = 2.7.2 - June 6, 2024
 
