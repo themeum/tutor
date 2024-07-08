@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\Init;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -543,6 +545,9 @@ final class Tutor {
 		$this->course_embed    = new Course_Embed();
 		$this->rest_auth       = new RestAuth();
 
+		// @since 3.0.0 tutor ecommerce init
+		new Init();
+
 		/**
 		 * Run Method
 		 *
@@ -877,7 +882,9 @@ final class Tutor {
 			payment_payloads LONGTEXT,
 			note TEXT,
 			created_at_gmt DATETIME NOT NULL,
+			created_by BIGINT(20) UNSIGNED NOT NULL,
 			updated_at_gmt DATETIME,
+			updated_by BIGINT(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			KEY user_id (user_id),
 			KEY payment_status (payment_status),
@@ -911,6 +918,7 @@ final class Tutor {
 
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			coupon_status TINYINT NOT NULL DEFAULT 1,
 			coupon_code VARCHAR(50) NOT NULL,
 			coupon_title VARCHAR(255) NOT NULL,
 			coupon_description TEXT,
@@ -971,6 +979,22 @@ final class Tutor {
 			CONSTRAINT fk_tutor_cart_item_course_id FOREIGN KEY (course_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
 		) $charset_collate;";
 
+		$customer_table = "CREATE TABLE {$wpdb->prefix}tutor_customers (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			user_id BIGINT(20) UNSIGNED DEFAULT NULL,
+			billing_name VARCHAR(255) NOT NULL,
+			billing_email VARCHAR(255) NOT NULL,
+			billing_phone VARCHAR(20) NOT NULL,
+			billing_zip_code VARCHAR(20) NOT NULL,
+			billing_address TEXT NOT NULL,
+			billing_country VARCHAR(100) NOT NULL,
+			billing_state VARCHAR(100) NOT NULL,
+			billing_city VARCHAR(100) NOT NULL,
+			PRIMARY KEY (id),
+			KEY user_id (user_id),
+			KEY billing_email (billing_email)
+		) $charset_collate;";
+
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $quiz_attempts_sql );
 		dbDelta( $quiz_attempt_answers );
@@ -986,6 +1010,7 @@ final class Tutor {
 		dbDelta( $coupon_usage_table );
 		dbDelta( $cart_table );
 		dbDelta( $cart_items_table );
+		dbDelta( $customer_table );
 	}
 
 	/**
