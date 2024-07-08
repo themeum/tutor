@@ -15,20 +15,6 @@ use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
 if ( isset( $data ) ) : ?>
-	<?php 
-	$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_course' );
-	if ( ! $can_trash_post && ! current_user_can( 'administrator' ) ) {
-		if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) {
-			$data[ 'bulk_actions' ] =
-			array_filter(
-				$data['bulk_actions'],
-				function ( $val ) {
-					return 'trash' !== $val['value'];
-				}
-			);
-		}
-	}
-	?>
 	<div class="tutor-px-20">
 		<div class="tutor-wp-dashboard-filter tutor-d-flex tutor-align-end tutor-justify-<?php echo esc_attr( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ? 'between' : 'end' ); ?>">
 			<?php if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) : ?>
