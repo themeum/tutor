@@ -13,6 +13,7 @@ namespace Tutor\Ecommerce;
 use TUTOR\Backend_Page_Trait;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
@@ -183,10 +184,27 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
+		$inputs = array(
+			'order_id' => Input::post( 'order_id' ),
+			'note'     => Input::post( 'note' ),
+		);
+
+		$params = Input::sanitize_array( $inputs );
+
+		// Validate request.
+		$validation = $this->validate( $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
+				$validation->errors,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
 		$payload                 = new \stdClass();
-		$payload->order_id       = Input::post( 'order_id' );
-		$payload->note           = Input::post( 'note' );
-		$payload->payment_status = $this->model::PAYMENT_STATUS_PAID;
+		$payload->order_id       = $params['order_id'];
+		$payload->note           = $params['note'];
+		$payload->payment_status = $this->model::PAYMENT_PAID;
 
 		if ( empty( $payload->order_id ) ) {
 			$this->json_response(
@@ -553,5 +571,35 @@ class OrderController {
 		$list_order_by = 'id';
 
 		return $this->model->get_orders( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );
+	}
+
+	/**
+	 * Validate input data based on predefined rules.
+	 *
+	 * This protected method validates the provided data array against a set of
+	 * predefined validation rules. The rules specify that 'order_id' is required
+	 * and must be numeric. The method will skip validation rules for fields that
+	 * are not present in the data array.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data The data array to validate.
+	 *
+	 * @return object The validation result. It returns validation object.
+	 */
+	protected function validate( array $data ) {
+
+		$validation_rules = array(
+			'order_id' => 'required|numeric',
+		);
+
+		// Skip validation rules for not available fields in data.
+		foreach ( $validation_rules as $key => $value ) {
+			if ( ! array_key_exists( $key, $data ) ) {
+				unset( $validation_rules[ $key ] );
+			}
+		}
+
+		return ValidationHelper::validate( $validation_rules, $data );
 	}
 }
