@@ -16,13 +16,18 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 
 interface CertificateCardProps {
-  isSelected: boolean;
-  setSelectedCertificate: (id: string) => void;
+  selectedCertificate: string;
   orientation: 'landscape' | 'portrait';
   data: Certificate;
+  onSelectCertificate: (key: string) => void;
 }
 
-const CertificateCard = ({ isSelected = true, setSelectedCertificate, data, orientation }: CertificateCardProps) => {
+const CertificateCard = ({
+  selectedCertificate = '',
+  data,
+  orientation,
+  onSelectCertificate,
+}: CertificateCardProps) => {
   const courseId = getCourseId();
   const { showModal } = useModal();
   const courseDetailsQuery = useCourseDetailsQuery(courseId);
@@ -34,7 +39,7 @@ const CertificateCard = ({ isSelected = true, setSelectedCertificate, data, orie
   return (
     <div
       css={styles.wrapper({
-        isSelected,
+        isSelected: selectedCertificate === data.key,
         isLandScape: orientation === 'landscape',
       })}
     >
@@ -52,7 +57,7 @@ const CertificateCard = ({ isSelected = true, setSelectedCertificate, data, orie
           return <img css={styles.certificateImage} src={image} alt={data.name} />;
         }}
       </Show>
-      <Show when={data.preview_src || !isSelected}>
+      <Show when={data.preview_src || data.key !== selectedCertificate}>
         <div data-footer-actions css={styles.footerWrapper}>
           <Show when={data.preview_src}>
             <Button
@@ -65,9 +70,9 @@ const CertificateCard = ({ isSelected = true, setSelectedCertificate, data, orie
                   props: {
                     certificates: certificatesData,
                     currentCertificate: data,
-                    selectedCertificate: data.key,
+                    selectedCertificate: selectedCertificate,
                     onSelectCertificate: (certificate: Certificate): void => {
-                      setSelectedCertificate(certificate.key);
+                      onSelectCertificate(certificate.key);
                     },
                   },
                 });
@@ -76,8 +81,8 @@ const CertificateCard = ({ isSelected = true, setSelectedCertificate, data, orie
               {__('Preview', 'tutor')}
             </Button>
           </Show>
-          <Show when={!isSelected}>
-            <Button variant="primary" size="small" onClick={() => setSelectedCertificate(data.key)}>
+          <Show when={data.key !== selectedCertificate}>
+            <Button variant="primary" size="small" onClick={() => onSelectCertificate(data.key)}>
               {__('Select', 'tutor')}
             </Button>
           </Show>
@@ -86,10 +91,10 @@ const CertificateCard = ({ isSelected = true, setSelectedCertificate, data, orie
 
       <div
         css={styles.checkIcon({
-          isSelected,
+          isSelected: selectedCertificate === data.key,
         })}
       >
-        <SVGIcon name="checkFilled" width={32} height={32} />
+        <SVGIcon name="checkFilledWhite" width={32} height={32} />
       </div>
     </div>
   );

@@ -11,16 +11,17 @@ import type { Media } from '@Components/fields/FormImageInput';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { formatBytes } from '@Utils/util';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { typography } from '@Config/typography';
+import type { IconCollection } from '@Utils/types';
 
 export type WpMediaDetails = {
   id: number;
   url: string;
   title: string;
   date?: string;
+  filesizeHumanReadable?: string;
   filesizeInBytes?: number;
   subtype?: string;
 };
@@ -34,6 +35,88 @@ type FormFileUploaderProps = {
   maxFiles?: number;
   maxFileSize?: number; // in bytes
 } & FormControllerProps<Media[] | Media | null>;
+
+const fileIcon = (fileExtension: string): IconCollection => {
+  switch (fileExtension) {
+    case 'iso':
+      return 'iso';
+    case 'dwg':
+      return 'dwg';
+    case 'pdf':
+      return 'pdf';
+    case 'doc':
+    case 'docx':
+      return 'doc';
+    case 'csv':
+      return 'csv';
+    case 'xls':
+    case 'xlsx':
+      return 'xls';
+    case 'ppt':
+    case 'pptx':
+      return 'ppt';
+    case 'zip':
+      return 'zip';
+    case 'rar':
+    case '7z':
+    case 'tar':
+    case 'gz':
+      return 'archive';
+    case 'txt':
+      return 'txt';
+    case 'rtf':
+      return 'rtf';
+    case 'log':
+      return 'text';
+    case 'jpg':
+      return 'jpg';
+    case 'png':
+      return 'png';
+    case 'jpeg':
+    case 'gif':
+      return 'image';
+    case 'mp3':
+      return 'mp3';
+    case 'fla':
+      return 'fla';
+    case 'ogg':
+    case 'wav':
+    case 'wma':
+      return 'audio';
+    case 'mp4':
+      return 'mp4';
+    case 'avi':
+      return 'avi';
+    case 'ai':
+      return 'ai';
+    case 'mkv':
+    case 'mpeg':
+    case 'flv':
+    case 'mov':
+    case 'wmv':
+      return 'videoFile';
+    case 'svg':
+      return 'svg';
+    case 'css':
+      return 'css';
+    case 'js':
+      return 'javascript';
+    case 'xml':
+      return 'xml';
+    case 'html':
+      return 'html';
+    case 'exe':
+      return 'exe';
+    case 'psd':
+      return 'psd';
+    case 'json':
+      return 'jsonFile';
+    case 'dbf':
+      return 'dbf';
+    default:
+      return 'file';
+  }
+};
 
 const FormFileUploader = ({
   field,
@@ -94,6 +177,7 @@ const FormFileUploader = ({
         title: file.title,
         url: file.url,
         name: file.title,
+        size: file.filesizeHumanReadable,
         size_bytes: file.filesizeInBytes,
         ext: file.subtype,
       };
@@ -178,7 +262,7 @@ const FormFileUploader = ({
                   {(file) => (
                     <div key={file.id} css={styles.attachmentCardWrapper}>
                       <div css={styles.attachmentCard}>
-                        <SVGIcon style={styles.fileIcon} name="preview" height={40} width={40} />
+                        <SVGIcon style={styles.fileIcon} name={fileIcon(file.ext || 'file')} height={40} width={40} />
 
                         <div css={styles.attachmentCardBody}>
                           <div css={styles.attachmentCardTitle}>
@@ -188,7 +272,7 @@ const FormFileUploader = ({
                           </div>
 
                           <div css={styles.attachmentCardSubtitle}>
-                            <span>{`${__('Size', 'tutor')}: ${formatBytes(file?.size_bytes || 0)}`}</span>
+                            <span>{`${__('Size', 'tutor')}: ${file.size}`}</span>
                           </div>
                         </div>
                       </div>
@@ -297,5 +381,6 @@ const styles = {
   `,
   fileIcon: css`
     flex-shrink: 0;
+    color: ${colorTokens.icon.default};
   `,
 };

@@ -14,6 +14,12 @@ import FormFieldWrapper from './FormFieldWrapper';
 import type { PrerequisiteCourses } from '@CourseBuilderServices/course';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { __ } from '@wordpress/i18n';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+import EmptyState from '@Molecules/EmptyState';
+
+import emptyStateImage from '@Images/empty-state-illustration.webp';
+import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 
 type FormCoursePrerequisitesProps = {
   label?: string;
@@ -114,34 +120,48 @@ const FormCoursePrerequisites = ({
               </div>
             </div>
 
-            {inputValue.length > 0 && (
+            <Show
+              when={inputValue.length > 0}
+              fallback={
+                <EmptyState
+                  size="small"
+                  emptyStateImage={emptyStateImage}
+                  emptyStateImage2x={emptyStateImage2x}
+                  imageAltText={__('Illustration of a no course selected', 'tutor')}
+                  title={__('No course selected', 'tutor')}
+                  description={__('Select a course to add as a prerequisite', 'tutor')}
+                />
+              }
+            >
               <div
                 ref={scrollDivRef}
                 css={styles.courseList({
                   isScrolling,
                 })}
               >
-                {inputValue.map((course) => (
-                  <div key={course.id} css={styles.courseCard}>
-                    <div css={styles.imageWrapper}>
-                      <img src={course.featured_image} alt={course.post_title} css={styles.image} />
+                <For each={inputValue}>
+                  {(course) => (
+                    <div key={course.id} css={styles.courseCard}>
+                      <div css={styles.imageWrapper}>
+                        <img src={course.featured_image} alt={course.post_title} css={styles.image} />
+                      </div>
+                      <div css={styles.cardContent}>
+                        <span css={styles.cardTitle}>{course.post_title}</span>
+                        <p css={typography.tiny()}>{course.id}</p>
+                      </div>
+                      <button
+                        type="button"
+                        css={styles.removeButton}
+                        data-visually-hidden
+                        onClick={() => handleDeleteSelection(course.id)}
+                      >
+                        <SVGIcon name="times" width={14} height={14} />
+                      </button>
                     </div>
-                    <div css={styles.cardContent}>
-                      <span css={styles.cardTitle}>{course.post_title}</span>
-                      <p css={typography.tiny()}>{course.id}</p>
-                    </div>
-                    <button
-                      type="button"
-                      css={styles.removeButton}
-                      data-visually-hidden
-                      onClick={() => handleDeleteSelection(course.id)}
-                    >
-                      <SVGIcon name="times" width={14} height={14} />
-                    </button>
-                  </div>
-                ))}
+                  )}
+                </For>
               </div>
-            )}
+            </Show>
 
             <Portal
               isOpen={isOpen}
@@ -162,10 +182,16 @@ const FormCoursePrerequisites = ({
                 ref={popoverRef}
               >
                 <ul css={[styles.options]}>
-                  {searchedOptions.length > 0 ? (
-                    searchedOptions
-                      .filter((course) => !selectedIds.includes(String(course.id)))
-                      .map((course) => (
+                  <Show
+                    when={searchedOptions.length > 0}
+                    fallback={
+                      <li css={styles.emptyOption}>
+                        <p>{__('No courses found')}</p>
+                      </li>
+                    }
+                  >
+                    <For each={searchedOptions.filter((course) => !selectedIds.includes(String(course.id)))}>
+                      {(course) => (
                         <li key={course.id}>
                           <button
                             type="button"
@@ -186,12 +212,9 @@ const FormCoursePrerequisites = ({
                             </div>
                           </button>
                         </li>
-                      ))
-                  ) : (
-                    <li css={styles.emptyOption}>
-                      <p>{__('No courses found')}</p>
-                    </li>
-                  )}
+                      )}
+                    </For>
+                  </Show>
                 </ul>
               </div>
             </Portal>

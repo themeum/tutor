@@ -57,6 +57,7 @@ interface DropdownButtonProps {
   buttonCss?: SerializedStyles;
   buttonContentCss?: SerializedStyles;
   dropdownMaxWidth?: string;
+  disabledDropdown?: boolean;
 }
 
 const DropdownButton = ({
@@ -74,6 +75,7 @@ const DropdownButton = ({
   buttonCss,
   buttonContentCss,
   dropdownMaxWidth = '140px',
+  disabledDropdown = false,
 }: DropdownButtonProps) => {
   const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -133,16 +135,17 @@ const DropdownButton = ({
         <button
           ref={dropdownTriggerRef}
           type="button"
+          disabled={disabled || disabledDropdown}
           css={[
             styles.button({
               variant,
               size,
               loading: false,
-              disabled,
+              disabled: disabled || disabledDropdown,
             }),
             styles.dropdownButton({
               variant,
-              disabled,
+              disabled: disabled || disabledDropdown,
             }),
           ]}
           onClick={() => setIsOpen(!isOpen)}
@@ -436,7 +439,7 @@ const styles = {
             color: ${colorTokens.icon.disable};
           }
         `
-      }
+        }
     `
     }
 
