@@ -1,12 +1,6 @@
 import { tutorConfig } from '@Config/config';
-import { Addons, DateFormats } from '@Config/constants';
-import type {
-  CourseDetailsResponse,
-  CourseFormData,
-  MeetingFormData,
-  MeetingType,
-} from '@CourseBuilderServices/course';
-import { format } from 'date-fns';
+import { Addons } from '@Config/constants';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
@@ -76,9 +70,16 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     post_title: courseDetails.post_title,
     post_name: courseDetails.post_name,
     post_content: courseDetails.post_content,
-    post_status: courseDetails.post_password.length
-      ? 'password_protected'
-      : (courseDetails.post_status as 'publish' | 'private'),
+    post_status: courseDetails.post_status,
+    visibility: (() => {
+      if (courseDetails.post_password.length) {
+        return 'password_protected';
+      }
+      if (courseDetails.post_status === 'private') {
+        return 'private';
+      }
+      return 'publish';
+    })(),
     post_password: courseDetails.post_password,
     post_author: {
       id: Number(courseDetails.post_author.ID),
@@ -141,28 +142,6 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
   };
-};
-
-export const convertMeetingFormDataToPayload = (
-  data: MeetingFormData,
-  type: MeetingType,
-  click_form: 'course_builder' | 'metabox'
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-): any => {
-  if (type === 'zoom') {
-    return {
-      click_form: click_form,
-      meeting_title: data.meeting_name,
-      meeting_summary: data.meeting_summary,
-      meeting_date: format(new Date(data.meeting_date), DateFormats.monthDayYear),
-      meeting_time: data.meeting_time,
-      meeting_duration: data.meeting_duration,
-      meeting_duration_unit: data.meeting_duration_unit,
-      meeting_timezone: data.meeting_timezone,
-      auto_recording: data.auto_recording,
-      meeting_password: data.meeting_password,
-    };
-  }
 };
 
 export const getCourseId = () => {

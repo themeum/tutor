@@ -11,7 +11,6 @@
 namespace Tutor\Models;
 
 use Tutor\Helpers\QueryHelper;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * Coupon model class
@@ -25,8 +24,8 @@ class CouponModel {
 	 *
 	 * @var string
 	 */
-	const STATUS_ACTIVE    = 1;
-	const STATUS_INACTIVE  = 0;
+	const STATUS_ACTIVE   = 1;
+	const STATUS_INACTIVE = 0;
 
 	/**
 	 * Coupon table name
@@ -84,7 +83,7 @@ class CouponModel {
 	private function get_searchable_fields() {
 		return array(
 			'id',
-			'status',
+			'coupon_status',
 			'coupon_code',
 			'coupon_title',
 		);

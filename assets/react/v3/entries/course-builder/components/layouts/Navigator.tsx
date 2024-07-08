@@ -3,9 +3,11 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { spacing } from '@Config/styles';
 import routes from '@CourseBuilderConfig/routes';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import { useCurrentPath } from '@Hooks/useCurrentPath';
 import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 interface NavigatorProps {
@@ -16,11 +18,14 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   const { steps, setSteps } = useCourseNavigator();
   const navigate = useNavigate();
   const currentPath = useCurrentPath(routes);
+  const form = useFormContext<CourseFormData>();
+
   const currentIndex = steps.findIndex((item) => item.path === currentPath);
   const previousIndex = Math.max(0, currentIndex - 1);
   const nextIndex = Math.min(steps.length - 1, currentIndex + 1);
   const previousStep = steps[previousIndex];
   const nextStep = steps[nextIndex];
+  const postTitle = form.watch('post_title');
 
   const handlePreviousClick = () => {
     setSteps((previous) => {
@@ -84,6 +89,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         buttonCss={css`
           padding: ${spacing[6]};
         `}
+        disabled={previousIndex >= 0}
       >
         <SVGIcon name="chevronLeft" height={18} width={18} />
       </Button>
@@ -93,7 +99,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         iconPosition="right"
         size="small"
         onClick={handleNextClick}
-        disabled={nextStep.isDisabled}
+        disabled={!postTitle || nextIndex >= steps.length}
       >
         {__('Next', 'tutor')}
       </Button>

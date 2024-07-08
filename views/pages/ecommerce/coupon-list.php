@@ -35,25 +35,26 @@ $total_items = $get_coupons['total_count'];
 /**
  * Navbar data to make nav menu
  */
-$add_course_url = esc_url( admin_url( 'admin.php?page=create-course' ) );
-$navbar_data    = array(
+$page_slug       = $coupon_controller::PAGE_SLUG;
+$coupon_page_url = $coupon_controller::get_coupon_page_url();
+
+$navbar_data = array(
 	'page_title'   => $coupon_controller->page_title,
 	'tabs'         => $coupon_controller->tabs_key_value(),
 	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
-	'button_url'   => $add_course_url,
+	'button_url'   => $coupon_controller::get_coupon_page_url() . '&action=add_new',
 );
 
 /**
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'     => $coupon_controller->bulk_action,
-	'bulk_actions'    => $coupon_controller->prepare_bulk_actions(),
-	'ajax_action'     => 'tutor_course_list_bulk_action',
-	'filters'         => true,
-	'category_filter' => true,
+	'bulk_action'  => $coupon_controller->bulk_action,
+	'bulk_actions' => $coupon_controller->prepare_bulk_actions(),
+	'ajax_action'  => 'tutor_course_list_bulk_action',
+	'filters'      => true,
 );
 
 ?>
@@ -151,7 +152,7 @@ $filters = array(
 									</td>
 									<td>
 										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
-											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-coupons&id=' . $coupon->id ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+											<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . $coupon->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</a>
 											<div class="tutor-dropdown-parent">
