@@ -232,7 +232,16 @@ class Lesson extends Tutor_Base {
 		if ( $post ) {
 			$post['thumbnail']   = get_the_post_thumbnail_url( $lesson_id );
 			$post['attachments'] = tutor_utils()->get_attachments( $lesson_id );
-			$post['video']       = maybe_unserialize( get_post_meta( $lesson_id, '_video', true ) );
+
+			$video = maybe_unserialize( get_post_meta( $lesson_id, '_video', true ) );
+			if ( $video ) {
+				$source = $video['source'] ?? '';
+				if ( 'html5' === $source ) {
+					$poster_url          = wp_get_attachment_url( $video['poster'] ?? 0 );
+					$video['poster_url'] = $poster_url;
+				}
+			}
+			$post['video'] = $video;
 		} else {
 			$post = array();
 		}
