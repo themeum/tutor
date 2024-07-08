@@ -1125,6 +1125,9 @@ class Course extends Tutor_Base {
 		wp_editor( '', 'post_content' );
 		$data['wp_editor'] = ob_get_clean();
 
+		/**
+		 * Course builder dashboard URL based on role and settings.
+		 */
 		$dashboard_url = get_admin_url();
 		if ( User::is_instructor() ) {
 			$dashboard_url = tutor_utils()->tutor_dashboard_url();
