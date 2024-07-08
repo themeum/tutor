@@ -41,10 +41,7 @@ const ScheduleOptions = () => {
   const scheduleTime = scheduleForm.watch('schedule_time') ?? '';
 
   const handleCancel = () => {
-    scheduleForm.reset({
-      schedule_date: '',
-      schedule_time: '',
-    });
+    setShowForm(false);
   };
 
   const handleSave = (data: ScheduleForm) => {
