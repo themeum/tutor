@@ -535,7 +535,7 @@ class OrderModel {
 	 *
 	 * @return bool True on successful update, false on failure.
 	 */
-	public function payment_status_update( $data ) {
+	public function payment_status_update( object $data ) {
 		return QueryHelper::update(
 			$this->table_name,
 			array(
