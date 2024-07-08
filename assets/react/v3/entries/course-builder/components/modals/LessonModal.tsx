@@ -59,7 +59,6 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
   });
 
   const onSubmit = (data: AddLessonForm) => {
-    console.log(data);
     closeModal({ action: 'CONFIRM' });
   };
 
