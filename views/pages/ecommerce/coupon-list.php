@@ -24,7 +24,7 @@ $active_tab = Input::get( 'data', 'all' );
  * Pagination data
  */
 $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
-$limit        = tutor_utils()->get_option( 'pagination_per_page' );
+$limit        = 3; //tutor_utils()->get_option( 'pagination_per_page' );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
 $coupon_controller = new CouponController();
@@ -49,11 +49,10 @@ $navbar_data    = array(
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'     => $coupon_controller->bulk_action,
-	'bulk_actions'    => $coupon_controller->prepare_bulk_actions(),
-	'ajax_action'     => 'tutor_course_list_bulk_action',
-	'filters'         => true,
-	'category_filter' => true,
+	'bulk_action'  => $coupon_controller->bulk_action,
+	'bulk_actions' => $coupon_controller->prepare_bulk_actions(),
+	'ajax_action'  => 'tutor_course_list_bulk_action',
+	'filters'      => true,
 );
 
 ?>

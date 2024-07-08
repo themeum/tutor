@@ -12,6 +12,7 @@
  */
 
 use TUTOR\Input;
+use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
 
@@ -147,6 +148,27 @@ if ( isset( $data ) ) : ?>
 							foreach ( $payment_status as $key => $value ) :
 								?>
 								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $filter_payment_status, $key ); ?>>
+								<?php echo esc_html( $value ); ?>
+								</option>
+							<?php endforeach; ?>
+							</select>							
+						</div>
+					<?php endif; ?>
+					<?php if ( 'tutor-coupons' === $current_page ) : ?>
+						<div class="tutor-wp-dashboard-filter-item">
+							<label class="tutor-form-label">
+								<?php esc_html_e( 'Status', 'tutor' ); ?>
+							</label>
+							<select class="tutor-form-select" id="tutor-backend-filter-coupon-status" data-search="no">
+								<option value="">
+									<?php esc_html_e( 'Select', 'tutor' ); ?>
+								</option>
+							<?php
+								$coupon_status        = CouponModel::get_coupon_status();
+								$filter_coupon_status = Input::get( 'coupon-status', '' );
+							foreach ( $coupon_status as $key => $value ) :
+								?>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $filter_coupon_status, $key ); ?>>
 								<?php echo esc_html( $value ); ?>
 								</option>
 							<?php endforeach; ?>
