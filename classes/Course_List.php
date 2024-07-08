@@ -267,13 +267,22 @@ class Course_List {
 
 		tutor_utils()->checking_nonce();
 
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			if ( current_user_can( 'edit_tutor_course' ) ) {
+				$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
+
+				if ( 'publish' === $action && ! $can_publish_course ) {
+					wp_send_json_error( tutor_utils()->error_message() );
+				}
+			} else {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+		}
+
 		if ( '' === $action || '' === $bulk_ids ) {
 			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
 			exit;
