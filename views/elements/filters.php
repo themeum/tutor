@@ -18,7 +18,7 @@ if ( isset( $data ) ) : ?>
 	<?php 
 	$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_course' );
 	if ( ! $can_trash_post && ! current_user_can( 'administrator' ) ) {
-		if ( isset( $data['bulk_actions'] ) ) {
+		if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) {
 			$data[ 'bulk_actions' ] =
 			array_filter(
 				$data['bulk_actions'],
