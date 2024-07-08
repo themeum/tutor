@@ -179,6 +179,10 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+
 		$payload                 = new \stdClass();
 		$payload->order_id       = Input::post( 'order_id' );
 		$payload->note           = Input::post( 'note' );
