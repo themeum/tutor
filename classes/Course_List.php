@@ -95,14 +95,16 @@ class Course_List {
 			array_push( $actions, $this->bulk_action_trash() );
 		}
 
-		$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_course' );
-		if ( ! $can_trash_post && ! current_user_can( 'administrator' ) ) {
-			$actions = array_filter(
-				$actions,
-				function ( $val ) {
-					return 'trash' !== $val['value'];
-				}
-			);
+		if ( ! current_user_can( 'administrator' ) ) {
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_course' );
+			if ( ! $can_trash_post ) {
+				$actions = array_filter(
+					$actions,
+					function ( $val ) {
+						return 'trash' !== $val['value'];
+					}
+				);
+			}
 		}
 		return apply_filters( 'tutor_course_bulk_actions', $actions );
 	}
