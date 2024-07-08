@@ -146,6 +146,56 @@ class CouponModel {
 	}
 
 	/**
+	 * Update coupon
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $coupon_id Integer or array of ids sql escaped.
+	 * @param array     $data Data to update, escape data.
+	 *
+	 * @return bool
+	 */
+	public function update_coupon( $coupon_id, array $data ) {
+		$coupon_ids = is_array( $coupon_id ) ? $coupon_id : array( $coupon_id );
+		$coupon_ids = QueryHelper::prepare_in_clause( $coupon_ids );
+		try {
+			QueryHelper::update_where_in(
+				$this->table_name,
+				$data,
+				$coupon_ids
+			);
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
+			return false;
+		}
+	}
+
+	/**
+	 * Update coupon
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $coupon_id Integer or array of ids sql escaped.
+	 *
+	 * @return bool
+	 */
+	public function delete_coupon( $coupon_id ) {
+		$coupon_ids = is_array( $coupon_id ) ? $coupon_id : array( $coupon_id );
+		$coupon_ids = QueryHelper::prepare_in_clause( $coupon_ids );
+		try {
+			QueryHelper::bulk_delete_by_ids(
+				$this->table_name,
+				$coupon_ids
+			);
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
+			return false;
+		}
+	}
+
+	/**
 	 * Get Coupon count
 	 *
 	 * @since 3.0.0

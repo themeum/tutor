@@ -11,12 +11,8 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Backend_Page_Trait;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
-use Tutor\Models\CourseModel;
-use Tutor\Models\OrderModel;
 use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -90,6 +86,7 @@ class CouponController {
 
 		if ( $register_hooks ) {
 			// Register hooks here.
+			add_action( 'tutor_coupon_bulk_action', __CLASS__ . 'bulk_action_handler' );
 		}
 	}
 
@@ -219,5 +216,55 @@ class CouponController {
 		$list_order_by = 'id';
 
 		return $this->model->get_coupons( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );
+	}
+
+	/**
+	 * Handle bulk action AJAX request.
+	 *
+	 * @return void
+	 */
+	public function bulk_action_handler() {
+		tutor_utils()->checking_nonce();
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			tutor_utils()->error_message();
+		}
+
+		// Get and sanitize input data.
+		$request     = Input::sanitize_array( $_POST );
+		$bulk_action = $request['bulk-action'];
+
+		$bulk_ids = isset( $request['bulk-ids'] ) ? array_map( 'intval', explode( ',', $request['bulk-ids'] ) ) : array();
+
+		if ( empty( $bulk_ids ) ) {
+			wp_send_json_error( __( 'No items selected for the bulk action.', 'tutor' ) );
+		}
+
+		$allowed_bulk_actions = $this->model->get_coupon_status();
+		array_push( $allowed_bulk_actions, 'delete' );
+
+		if ( ! in_array( $bulk_action, $allowed_bulk_actions, true ) ) {
+			wp_send_json_error( __( 'Invalid bulk action.', 'tutor' ) );
+		}
+
+		do_action( 'tutor_before_coupon_bulk_action', $bulk_action, $bulk_ids );
+
+		$response = false;
+		if ( 'delete' === $bulk_action ) {
+			$response = $this->model->delete_coupon( $bulk_ids );
+		} else {
+			$data     = array(
+				'coupon_status' => $bulk_action,
+			);
+			$response = $this->model->update_coupon( $bulk_ids, $data );
+		}
+
+		do_action( 'tutor_after_coupon_bulk_action', $bulk_action, $bulk_ids );
+
+		if ( $response ) {
+			wp_send_json_success( __( 'Coupon updated successfully.', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'Failed to update coupon.', 'tutor' ) );
+		}
 	}
 }
