@@ -141,15 +141,12 @@ const FormVideoInput = ({
   });
 
   const handleUpload = (type: 'video' | 'poster') => {
-    const videoUploader = window.wp.media({
-      library: { type: supportedFormats ? supportedFormats.map((type) => `video/${type}`).join(',') : 'video' },
+    const uploader = window.wp.media({
+      library: {
+        type: type === 'video' ? (supportedFormats || []).map((format) => `video/${format}`).join(',') : 'image',
+      },
     });
 
-    const posterUploader = window.wp.media({
-      library: { type: 'image' },
-    });
-
-    const uploader = type === 'video' ? videoUploader : posterUploader;
     uploader.open();
     uploader.on('select', () => {
       const attachment = uploader.state().get('selection').first().toJSON();
@@ -157,10 +154,9 @@ const FormVideoInput = ({
         type === 'video'
           ? { source: 'html5', source_video_id: attachment.id }
           : { poster: attachment.id, poster_url: attachment.url };
+
       field.onChange(updateFieldValue(fieldValue, updateData));
-      if (onChange) {
-        onChange(updateFieldValue(fieldValue, updateData));
-      }
+      onChange?.(updateFieldValue(fieldValue, updateData));
     });
   };
 
