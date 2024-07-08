@@ -84,7 +84,7 @@ class CouponModel {
 	private function get_searchable_fields() {
 		return array(
 			'id',
-			'status',
+			'coupon_status',
 			'coupon_code',
 			'coupon_title',
 		);

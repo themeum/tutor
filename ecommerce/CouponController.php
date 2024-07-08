@@ -30,6 +30,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class CouponController {
 
 	/**
+	 * Page slug
+	 *
+	 * @var string
+	 */
+	const PAGE_SLUG = 'tutor_coupons';
+
+	/**
 	 * Coupon model
 	 *
 	 * @since 3.0.0
@@ -112,6 +119,23 @@ class CouponController {
 	}
 
 	/**
+	 * Get coupon page url
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param boolean $is_admin Whether to get admin or frontend url.
+	 *
+	 * @return string
+	 */
+	public static function get_coupon_page_url( bool $is_admin = true ) {
+		if ( $is_admin ) {
+			return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
+		} else {
+			return tutor_utils()->get_tutor_dashboard_url() . '/coupons';
+		}
+	}
+
+	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
 	 * @return array
@@ -174,25 +198,25 @@ class CouponController {
 
 		$active_tab = Input::get( 'data', 'all' );
 
-		$date           = Input::get( 'date', '' );
-		$search_term    = Input::get( 'search', '' );
-		$payment_status = Input::get( 'payment-status', '' );
+		$date          = Input::get( 'date', '' );
+		$search_term   = Input::get( 'search', '' );
+		$coupon_status = Input::get( 'coupon-status', null, Input::TYPE_INT );
 
 		$where_clause = array();
 
-		// if ( $date ) {
-		// 	$where_clause['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
-		// }
+		if ( $date ) {
+			$where_clause['created_at_gmt'] = tutor_get_formated_date( '', $date );
+		}
 
-		// if ( $payment_status ) {
-		// 	$where_clause['o.payment_status'] = $payment_status;
-		// }
+		if ( ! is_null( $coupon_status ) ) {
+			$where_clause['coupon_status'] = $coupon_status;
+		}
 
-		// if ( 'all' !== $active_tab ) {
-		// 	$where_clause['o.order_status'] = $active_tab;
-		// }
+		if ( 'all' !== $active_tab ) {
+			$where_clause['coupon_status'] = (int) $active_tab;
+		}
 
-		$list_order    = Input::get( 'coupon', 'DESC' );
+		$list_order    = Input::get( 'order', 'DESC' );
 		$list_order_by = 'id';
 
 		return $this->model->get_coupons( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );

@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\CouponController;
 use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -101,7 +102,7 @@ class Admin {
 
 		// Ecommerce menu @since 3.0.0.
 		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), __( 'Orders', 'tutor' ), 'manage_options', 'tutor-orders', array( $this, 'orders_view' ) );
-		add_submenu_page( 'tutor', __( 'Coupons', 'tutor' ), __( 'Coupons', 'tutor' ), 'manage_options', 'tutor-coupons', array( $this, 'coupons_view' ) );
+		add_submenu_page( 'tutor', __( 'Coupons', 'tutor' ), __( 'Coupons', 'tutor' ), 'manage_options', CouponController::PAGE_SLUG, array( $this, 'coupons_view' ) );
 
 		add_submenu_page( 'tutor', __( 'Create Course', 'tutor' ), __( '<span class="tutor-create-course">Create Course</span>', 'tutor' ), 'manage_tutor_instructor', 'create-course', '__return_true' );
 

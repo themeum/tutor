@@ -11,6 +11,7 @@
  * @since 2.0.0
  */
 
+use Tutor\Ecommerce\CouponController;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
@@ -154,7 +155,7 @@ if ( isset( $data ) ) : ?>
 							</select>							
 						</div>
 					<?php endif; ?>
-					<?php if ( 'tutor-coupons' === $current_page ) : ?>
+					<?php if ( CouponController::PAGE_SLUG === $current_page ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
