@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import type { IconCollection } from '@Utils/types';
+import { borderRadius, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import type { IconCollection } from '@Utils/types';
 
-import SVGIcon from './SVGIcon';
 import Show from '@Controls/Show';
+import SVGIcon from './SVGIcon';
 
 type AlertType = 'success' | 'warning' | 'danger' | 'info' | 'primary';
 
