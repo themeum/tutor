@@ -184,14 +184,10 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		do_action( 'tutor_before_order_mark_as_paid' );
-
-		$inputs = array(
+		$params = array(
 			'order_id' => Input::post( 'order_id' ),
 			'note'     => Input::post( 'note' ),
 		);
-
-		$params = Input::sanitize_array( $inputs );
 
 		// Validate request.
 		$validation = $this->validate( $params );
@@ -202,6 +198,8 @@ class OrderController {
 				HttpHelper::STATUS_BAD_REQUEST
 			);
 		}
+
+		do_action( 'tutor_before_order_mark_as_paid', $params );
 
 		$payload                 = new \stdClass();
 		$payload->order_id       = $params['order_id'];
@@ -218,7 +216,7 @@ class OrderController {
 
 		$response = $this->model->payment_status_update( $payload );
 
-		do_action( 'tutor_after_order_mark_as_paid' );
+		do_action( 'tutor_after_order_mark_as_paid', $params );
 
 		if ( ! $response ) {
 			$this->json_response(
