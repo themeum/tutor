@@ -1,8 +1,8 @@
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
-import { type SerializedStyles, css } from '@emotion/react';
-import type { ReactNode } from 'react';
+import { css, type SerializedStyles } from '@emotion/react';
+import { useRef, type ReactNode } from 'react';
 
 import { styleUtils } from '@Utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
@@ -24,6 +24,7 @@ interface FormInputWithContentProps extends FormControllerProps<string | number 
   isHidden?: boolean;
   wrapperCss?: SerializedStyles;
   removeBorder?: boolean;
+  selectOnFocus?: boolean;
 }
 
 const FormInputWithContent = ({
@@ -45,7 +46,9 @@ const FormInputWithContent = ({
   isHidden,
   wrapperCss,
   removeBorder = false,
+  selectOnFocus = false
 }: FormInputWithContentProps) => {
+  const ref = useRef<HTMLInputElement>(null);
   return (
     <FormFieldWrapper
       label={label}
@@ -85,6 +88,14 @@ const FormInputWithContent = ({
               onKeyDown={(event) => onKeyDown?.(event.key)}
               css={[inputCss, styles.input(contentPosition, showVerticalBar, size)]}
               autoComplete="off"
+              ref={ref}
+              onFocus={() => {
+                if (!selectOnFocus || !ref.current) {
+                  return;
+                }
+                ref.current.select();
+              }}
+              data-input
             />
 
             {contentPosition === 'right' && <div css={styles.inputRightContent(showVerticalBar, size)}>{content}</div>}
@@ -122,21 +133,24 @@ const styles = {
     }
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
-    ${typography.body()};
-    border: none;
-    box-shadow: none;
-    background-color: transparent;
-    ${contentPosition === 'left' ? 'padding-left' : 'padding-right'}: 0;
-    ${
-      showVerticalBar &&
-      css`
-        padding-${contentPosition}: ${spacing[10]};
-      `
-    };
-
-    ${
-      size === 'large' &&
-      css`
+    // Increasing the css specificity
+    &[data-input] {
+      ${typography.body()};
+      border: none;
+      box-shadow: none;
+      background-color: transparent;
+      padding-${contentPosition}: 0;
+  
+      ${
+        showVerticalBar &&
+        css`
+          padding-${contentPosition}: ${spacing[10]};
+        `
+      };
+  
+      ${
+        size === 'large' &&
+        css`
         font-size: ${fontSize[24]};
         font-weight: ${fontWeight.medium};
         height: 34px;
@@ -147,16 +161,18 @@ const styles = {
           `
         };
       `
-    }
-
-    &:focus {
-      box-shadow: none;
+      }
+  
+      &:focus {
+        box-shadow: none;
+      }
     }
   `,
   inputLeftContent: (showVerticalBar: boolean, size: string) => css`
     ${typography.small()}
     ${styleUtils.flexCenter()}
     height: 40px;
+    min-width: 48px;
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
 
@@ -178,6 +194,7 @@ const styles = {
     ${typography.small()}
     ${styleUtils.flexCenter()}
     height: 40px;
+    min-width: 48px;
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
 
