@@ -1,5 +1,5 @@
 import { css, type SerializedStyles } from '@emotion/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -35,6 +35,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
 	isInlineLabel?: boolean;
 	isPassword?: boolean;
 	style?: SerializedStyles;
+	selectOnFocus?: boolean;
 }
 
 const FormInput = ({
@@ -58,6 +59,7 @@ const FormInput = ({
 	isInlineLabel = false,
 	isPassword = false,
 	style,
+	selectOnFocus = false,
 }: FormInputProps) => {
 	const [fieldType, setFieldType] = useState<typeof type>(type);
 
@@ -99,6 +101,7 @@ const FormInput = ({
 			inputStyle={style}
 		>
 			{(inputProps) => {
+				const ref = useRef<HTMLInputElement>(null);
 				return (
 					<>
 						<div css={styles.container(isClearable)}>
@@ -124,6 +127,13 @@ const FormInput = ({
 									onKeyDown?.(event.key);
 								}}
 								autoComplete="off"
+								ref={ref}
+								onFocus={() => {
+									if (!selectOnFocus || !ref.current) {
+										return;
+									}
+									ref.current.select();
+								}}
 							/>
 							{isClearable && !!field.value && (
 								<div css={styles.clearButton}>

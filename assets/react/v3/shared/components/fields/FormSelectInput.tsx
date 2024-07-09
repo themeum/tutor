@@ -94,12 +94,14 @@ const FormSelectInput = <T,>({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
       setInputValue(getInitialValue()?.label);
     }
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
   return (
@@ -157,6 +159,7 @@ const FormSelectInput = <T,>({
                     setInputValue(event.target.value);
                     setSearchText(event.target.value);
                   }}
+                  data-select
                 />
 
                 <Show when={hasDescription}>
@@ -298,23 +301,25 @@ const styles = {
 		
   `,
   input: (hasLeftIcon: boolean) => css`
-    ${typography.body()};
-    width: 100%;
-    cursor: pointer;
-    padding-right: ${spacing[32]};
-    ${styleUtils.textEllipsis};
-    background-color: transparent;
+    &[data-select] {
+      ${typography.body()};
+      width: 100%;
+      cursor: pointer;
+      padding-right: ${spacing[32]};
+      ${styleUtils.textEllipsis};
+      background-color: transparent;
 
-    ${
-      hasLeftIcon &&
-      css`
-      padding-left: ${spacing[48]};
-    `
-    }
+      ${
+        hasLeftIcon &&
+        css`
+          padding-left: ${spacing[48]};
+        `
+      }
 
-    :focus {
-      outline: none;
-      box-shadow: ${shadow.focus};
+      :focus {
+        outline: none;
+        box-shadow: ${shadow.focus};
+      }
     }
   `,
   decription: ({
