@@ -79,10 +79,35 @@ describe("Tutor Admin Courses", () => {
     });
   });
   it("should be able to delete a course successfully", () => {
+    // admin should delete course
     cy.get("body").then(($body) => {
+      cy.intercept(
+        "POST",
+        `${Cypress.env("base_url")}/wp-admin/admin-ajax.php`,
+        (req) => {
+          if (req.body.includes("tutor_course_delete")) {
+            req.alias = "ajaxRequest";
+          }
+        }
+      ).as("ajaxRequest");
       if ($body.text().includes("No Data Available in this Section")) {
         cy.log("No data found");
       } else {
+        // first trash course
+        cy.get(
+          ":nth-child(1) > :nth-child(1) > .td-checkbox > .tutor-form-check-input"
+        ).check();
+        cy.get(".tutor-mr-12 > .tutor-js-form-select").click();
+        cy.get(":nth-child(5) > .tutor-nowrap-ellipsis").click();
+
+        cy.get("#tutor-admin-bulk-action-btn")
+          .contains("Apply")
+          .click();
+        cy.get("#tutor-confirm-bulk-action").click();
+        // go to trash tab
+        cy.get("a.tutor-nav-link")
+          .contains("Trash")
+          .click();
         cy.get(".tutor-iconic-btn[action-tutor-dropdown]")
           .eq(0)
           .click();
@@ -94,21 +119,19 @@ describe("Tutor Admin Courses", () => {
         )
           .contains("Yes, I'am Sure")
           .click();
-        cy.get(".tutor-table-link")
-          .eq(0)
-          .invoke("text")
-          .then((courseName) => {
-            cy.contains(courseName).should("not.exist");
-          });
+        cy.wait("@ajaxRequest").then((interception) => {
+          expect(interception.response.body.success).to.equal(true);
+        });
       }
     });
   });
-  it("should perform bulk actions on selected course", () => {
+  it("should perform bulk actions on one randomly selected course", () => {
     const options = ["publish", "pending", "draft", "trash"];
     options.forEach((option) => {
       cy.performBulkActionOnSelectedElement(option);
     });
   });
+  // should perform bulk action on all courses
   it("should be able to perform bulk actions on all courses", () => {
     const options = ["publish", "pending", "draft", "trash"];
     options.forEach((option) => {
