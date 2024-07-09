@@ -290,14 +290,14 @@ const Curriculum = () => {
                                 {} as CourseContentOrderPayload['tutor_topics_lessons_sorting']
                               );
 
-                            const response = updateCourseContentOrderMutation.mutateAsync({
+                            updateCourseContentOrderMutation.mutate({
                               tutor_topics_lessons_sorting: convertedObject,
 
                               'content_parent[parent_topic_id]': topic.id,
                               'content_parent[content_id]': topic.contents[activeIndex].ID,
                             });
 
-                            if (!response) {
+                            if (updateCourseContentOrderMutation.isError) {
                               setContent(previousContent);
                             }
                           }}
