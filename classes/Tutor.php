@@ -918,7 +918,7 @@ final class Tutor {
 
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			coupon_status TINYINT NOT NULL DEFAULT 1,
+			coupon_status VARCHAR(50) DEFAULT,
 			coupon_code VARCHAR(50) NOT NULL,
 			coupon_title VARCHAR(255) NOT NULL,
 			coupon_description TEXT,
