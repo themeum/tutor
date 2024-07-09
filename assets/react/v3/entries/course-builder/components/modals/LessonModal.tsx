@@ -99,7 +99,9 @@ const LessonModal = ({
     shouldFocusError: true,
   });
 
-  const prerequisiteCourses = [] as string[];
+  const prerequisiteCourses = lessonDetails?.content_drip_settings?.prerequisites
+    ? lessonDetails?.content_drip_settings?.prerequisites.map((item) => String(item.id))
+    : [];
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
@@ -313,6 +315,7 @@ const LessonModal = ({
                 render={(controllerProps) => (
                   <FormCoursePrerequisites
                     {...controllerProps}
+                    placeholder={__('Select Prerequisite', 'tutor')}
                     label={__('Prerequisites', 'tutor')}
                     options={prerequisiteCoursesQuery.data || []}
                   />
