@@ -67,13 +67,6 @@ class OrderController {
 	public $page_title;
 
 	/**
-	 * Bulk Action
-	 *
-	 * @var $bulk_action
-	 */
-	public $bulk_action = true;
-
-	/**
 	 * Constructor.
 	 *
 	 * Initializes the Orders class, sets the page title, and optionally registers
@@ -261,20 +254,32 @@ class OrderController {
 	 * @since 3.0.0
 	 */
 	public function prepare_bulk_actions(): array {
-		$actions = array(
-			$this->bulk_action_default(),
-			$this->bulk_action_publish(),
-			$this->bulk_action_pending(),
-			$this->bulk_action_draft(),
-		);
+		$actions = array();
 
 		$active_tab = Input::get( 'data', '' );
 
-		if ( 'trash' === $active_tab ) {
-			array_push( $actions, $this->bulk_action_delete() );
-		}
-		if ( 'trash' !== $active_tab ) {
-			array_push( $actions, $this->bulk_action_trash() );
+		if ( ! empty( $active_tab ) ) {
+
+			$actions[] = $this->bulk_action_default();
+
+			switch ( $active_tab ) {
+				case $this->model::ORDER_INCOMPLETE:
+					$actions[] = $this->bulk_action_mark_order_paid();
+					break;
+				case $this->model::ORDER_COMPLETED:
+					$actions[] = $this->bulk_action_mark_order_unpaid();
+					break;
+				case $this->model::ORDER_TRASH:
+					$actions[] = $this->bulk_action_delete();
+					break;
+				default:
+					// code...
+					break;
+			}
+
+			if ( $this->model::ORDER_TRASH !== $active_tab ) {
+				$actions[] = $this->bulk_action_mark_order_trash();
+			}
 		}
 		return apply_filters( 'tutor_order_bulk_actions', $actions );
 	}
