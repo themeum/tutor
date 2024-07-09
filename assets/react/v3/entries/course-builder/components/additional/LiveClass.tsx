@@ -20,7 +20,7 @@ import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import config, { tutorConfig } from '@Config/config';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
-import GoogleMeetMeetingForm from './meeting/GoogleMeetForm';
+import GoogleMeetForm from './meeting/GoogleMeetForm';
 import GoogleMeetMeetingCard from './meeting/GoogleMeetCard';
 
 import emptyStateImage from '@Images/empty-state-illustration.webp';
@@ -216,7 +216,7 @@ const LiveClass = ({
         closePopover={() => setShowMeetingForm(null)}
         animationType={AnimationType.slideUp}
       >
-        <GoogleMeetMeetingForm
+        <GoogleMeetForm
           data={null}
           onCancel={() => {
             setShowMeetingForm(null);
