@@ -30,6 +30,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class OrderController {
 
 	/**
+	 * Order page slug
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const PAGE_SLUG = 'tutor_orders';
+
+	/**
 	 * Order model
 	 *
 	 * @since 3.0.0
@@ -117,6 +126,22 @@ class OrderController {
 		}
 	}
 
+	/**
+	 * Get order page url
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param boolean $is_admin Whether to get admin or frontend url.
+	 *
+	 * @return string
+	 */
+	public static function get_order_page_url( bool $is_admin = true ) {
+		if ( $is_admin ) {
+			return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
+		} else {
+			return tutor_utils()->get_tutor_dashboard_url() . '/orders';
+		}
+	}
 
 	/**
 	 * Retrieve order data by order ID and respond with JSON.

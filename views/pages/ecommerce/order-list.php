@@ -161,7 +161,7 @@ $available_status = array(
 										<?php echo wp_kses_post( tutor_utils()->tutor_price( $order->total_price ) ); ?>
 									</td>
 									<td>
-										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-orders&id=' . $order->id ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+										<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . $order->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 											<?php esc_html_e( 'Edit', 'tutor' ); ?>
 										</a>
 									</td>

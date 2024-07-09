@@ -12,6 +12,7 @@
  */
 
 use Tutor\Ecommerce\CouponController;
+use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
@@ -134,7 +135,7 @@ if ( isset( $data ) ) : ?>
 						</div>
 					<?php endif; ?>
 
-					<?php if ( 'tutor-orders' === $current_page ) : ?>
+					<?php if ( OrderController::PAGE_SLUG === $current_page ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
