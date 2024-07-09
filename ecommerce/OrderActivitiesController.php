@@ -54,24 +54,13 @@ class OrderActivitiesController {
 	 * hooks for handling AJAX requests related to order data, bulk actions, order status updates,
 	 * and order deletions.
 	 *
-	 * @param bool $register_hooks Whether to register hooks for handling requests. Default is true.
-	 *
 	 * @since 3.0.0
 	 *
 	 * @return void
 	 */
-	public function __construct( $register_hooks = true ) {
+	public function __construct() {
 		$this->page_title = __( 'Order Activity', 'tutor' );
 		$this->model      = new OrderActivitiesModel();
-
-		if ( $register_hooks ) {
-			/**
-			 * Hook to add order metadata.
-			 *
-			 * @since 3.0.0
-			 */
-			add_action( 'wp_ajax_nopriv_tutor_add_order_meta', array( $this, 'store_order_activity' ) );
-		}
 	}
 
 	/**
@@ -91,15 +80,13 @@ class OrderActivitiesController {
 	 * @return void
 	 */
 	public static function store_order_activity( int $order_id, string $meta_key, string $meta_value ) {
-		do_action( 'tutor_before_adding_order_activity' );
-
-		$inputs = array(
+		$params = array(
 			'order_id'   => $order_id,
 			'meta_key'   => $meta_key,
 			'meta_value' => $meta_value,
 		);
 
-		$params = Input::sanitize_array( $inputs );
+		do_action( 'tutor_before_adding_order_activity', $params );
 
 		// Validate request.
 		$validation = self::validate( $params );
@@ -119,11 +106,11 @@ class OrderActivitiesController {
 		$model    = new OrderActivitiesModel();
 		$response = $model->add_order_meta( $payload );
 
-		do_action( 'tutor_after_adding_order_activity' );
+		do_action( 'tutor_after_adding_order_activity', $params );
 
 		if ( ! $response ) {
 			self::json_response(
-				__( 'Failed to add Order activity', 'tutor' ),
+				__( 'Failed to add order activity', 'tutor' ),
 				null,
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);

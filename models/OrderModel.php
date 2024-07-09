@@ -469,8 +469,6 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @todo Need to store order activity after activity controller & model is created.
-	 *
 	 * @param object $data An object containing the payment status, note, and order ID.
 	 *                     - 'payment_status' (string): The new payment status.
 	 *                     - 'note' (string): A note regarding the payment status update.
@@ -479,7 +477,7 @@ class OrderModel {
 	 * @return bool True on successful update, false on failure.
 	 */
 	public function payment_status_update( object $data ) {
-		return QueryHelper::update(
+		$response = QueryHelper::update(
 			$this->table_name,
 			array(
 				'payment_status' => $data->payment_status,
@@ -487,5 +485,47 @@ class OrderModel {
 			),
 			array( 'id' => $data->order_id )
 		);
+
+		if ( $response ) {
+			$this->update_order_activity_for_marked_as_paid( $data->order_id );
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Update order activity for marking an order as paid.
+	 *
+	 * This method updates the order activity to log that an order has been marked as paid.
+	 * It retrieves the current user's display name and includes it in the activity message
+	 * if the user exists. The activity message and the current date and time are encoded
+	 * as JSON and stored as order metadata.
+	 *
+	 * @param int $order_id The ID of the order being marked as paid.
+	 *
+	 * @return int The insert ID of the newly added order metadata entry. Returns 0 on failure.
+	 */
+	private function update_order_activity_for_marked_as_paid( $order_id ) {
+		$user_name    = '';
+		$current_user = wp_get_current_user();
+
+		if ( $current_user->exists() ) {
+			$user_name = $current_user->display_name;
+		}
+
+		$message = empty( $user_name ) ? __( 'Order marked as paid', 'tutor' ) : __( 'Order marked as paid by ' . $user_name, 'tutor' );
+
+		$order_activities_model = new OrderActivitiesModel();
+		$payload                = new \stdClass();
+		$payload->order_id      = $order_id;
+		$payload->meta_key      = $order_activities_model::META_KEY_HISTORY;
+		$payload->meta_value    = wp_json_encode(
+			array(
+				'date'    => current_time( 'mysql' ),
+				'message' => $message,
+			)
+		);
+
+		return $order_activities_model->add_order_meta( $payload );
 	}
 }

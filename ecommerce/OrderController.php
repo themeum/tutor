@@ -223,7 +223,7 @@ class OrderController {
 
 		if ( empty( $payload->order_id ) ) {
 			$this->json_response(
-				__( 'Order Id is required', 'tutor' ),
+				__( 'Order ID is required', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);
@@ -265,15 +265,13 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		do_action( 'tutor_before_order_refund' );
-
-		$inputs = array(
+		$params = array(
 			'order_id'   => Input::post( 'order_id' ),
 			'meta_key'   => OrderActivitiesModel::META_KEY_REFUND,
 			'meta_value' => Input::post( 'meta_value' ),
 		);
 
-		$params = Input::sanitize_array( $inputs );
+		do_action( 'tutor_before_order_refund', $params );
 
 		// Validate request.
 		$validation = $this->validate( $params );
@@ -293,7 +291,7 @@ class OrderController {
 		$activity_model = new OrderActivitiesModel();
 		$response       = $activity_model->add_order_meta( $payload );
 
-		do_action( 'tutor_after_order_refund' );
+		do_action( 'tutor_after_order_refund', $params );
 
 		if ( ! $response ) {
 			$this->json_response(
@@ -327,15 +325,13 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		do_action( 'tutor_before_order_comment' );
-
-		$inputs = array(
+		$params = array(
 			'order_id'   => Input::post( 'order_id' ),
 			'meta_key'   => OrderActivitiesModel::META_KEY_COMMENT,
 			'meta_value' => Input::post( 'meta_value' ),
 		);
 
-		$params = Input::sanitize_array( $inputs );
+		do_action( 'tutor_before_order_comment', $params );
 
 		// Validate request.
 		$validation = $this->validate( $params );
@@ -355,7 +351,7 @@ class OrderController {
 		$activity_model = new OrderActivitiesModel();
 		$response       = $activity_model->add_order_meta( $payload );
 
-		do_action( 'tutor_after_order_comment' );
+		do_action( 'tutor_after_order_comment', $params );
 
 		if ( ! $response ) {
 			$this->json_response(
