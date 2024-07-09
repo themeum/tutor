@@ -17,6 +17,7 @@ import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 interface TopicContentProps {
   type: ContentType;
@@ -74,6 +75,8 @@ const modalIcon: {
   tutor_quiz: 'quiz',
   tutor_assignments: 'assignment',
 } as const;
+
+const courseId = getCourseId();
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });

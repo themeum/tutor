@@ -627,6 +627,10 @@ export const useSaveGoogleMeetMeetingMutation = (courseId: string) => {
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic', Number(courseId)],
+      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
@@ -653,6 +657,10 @@ export const useDeleteGoogleMeetMeetingMutation = (courseId: string, payload: Go
 
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic', Number(courseId)],
       });
     },
     onError: (error: ErrorResponse) => {
