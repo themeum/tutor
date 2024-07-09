@@ -86,7 +86,7 @@ class CouponController {
 
 		if ( $register_hooks ) {
 			// Register hooks here.
-			add_action( 'tutor_coupon_bulk_action', __CLASS__ . 'bulk_action_handler' );
+			add_action( 'wp_ajax_tutor_coupon_bulk_action', array( $this, 'bulk_action_handler' ) );
 		}
 	}
 
@@ -221,7 +221,11 @@ class CouponController {
 	/**
 	 * Handle bulk action AJAX request.
 	 *
-	 * @return void
+	 * Bulk actions: active, inactive, trash, delete
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
 	 */
 	public function bulk_action_handler() {
 		tutor_utils()->checking_nonce();
@@ -240,7 +244,7 @@ class CouponController {
 			wp_send_json_error( __( 'No items selected for the bulk action.', 'tutor' ) );
 		}
 
-		$allowed_bulk_actions = $this->model->get_coupon_status();
+		$allowed_bulk_actions = array_keys( $this->model->get_coupon_status() );
 		array_push( $allowed_bulk_actions, 'delete' );
 
 		if ( ! in_array( $bulk_action, $allowed_bulk_actions, true ) ) {

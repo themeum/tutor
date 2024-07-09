@@ -103,7 +103,7 @@ class QueryHelper {
 	 * @since 3.0.0
 	 *
 	 * @param string $table  table name.
-	 * @param string $ids Comma separated ids using SQL escapes using prepare_in_clause .
+	 * @param array  $ids array of ids.
 	 *
 	 * @see prepare_in_clause
 	 *
@@ -111,10 +111,13 @@ class QueryHelper {
 	 *
 	 * @return true on success
 	 */
-	public static function bulk_delete_by_ids( string $table, string $ids ): bool {
+	public static function bulk_delete_by_ids( string $table, array $ids ): bool {
 		global $wpdb;
+
+		$ids = self::prepare_in_clause( $ids );
+
 		$wpdb->query(
-			"DELETE * FROM {$table} WHERE id IN ( $ids )"
+			"DELETE FROM {$table} WHERE id IN ( $ids )"
 		);
 
 		if ( $wpdb->last_error ) {

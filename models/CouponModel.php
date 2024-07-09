@@ -182,7 +182,7 @@ class CouponModel {
 	 */
 	public function delete_coupon( $coupon_id ) {
 		$coupon_ids = is_array( $coupon_id ) ? $coupon_id : array( $coupon_id );
-		$coupon_ids = QueryHelper::prepare_in_clause( $coupon_ids );
+
 		try {
 			QueryHelper::bulk_delete_by_ids(
 				$this->table_name,
