@@ -94,6 +94,10 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<TopicContentType[]>(topic.contents);
 
+  useEffect(() => {
+    setContent(topic.contents);
+  }, [topic]);
+
   const topicRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -122,6 +126,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 
   const { showModal } = useModal();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLDivElement)) {
@@ -130,6 +135,10 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     };
 
     document.addEventListener('click', handleOutsideClick);
+
+    if (isEdit) {
+      form.setFocus('title');
+    }
 
     return () => document.removeEventListener('click', handleOutsideClick);
   }, []);
@@ -441,7 +450,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                   showModal({
                     component: LessonModal,
                     props: {
-                      id: topic.id,
+                      topicId: topic.id,
                       title: __('Lesson', 'tutor'),
                       icon: <SVGIcon name="lesson" width={24} height={24} />,
                       subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,

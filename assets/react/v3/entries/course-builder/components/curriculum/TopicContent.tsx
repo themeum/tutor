@@ -10,12 +10,13 @@ import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useModal } from '@Components/modals/Modal';
-import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
+import { useDeleteLessonMutation, type ContentType, type ID } from '@CourseBuilderServices/curriculum';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 
 interface TopicContentProps {
   type: ContentType;
@@ -88,6 +89,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
     transition,
   };
   const { showModal } = useModal();
+  const deleteLessonMutation = useDeleteLessonMutation();
 
   const handleShowModal = () => {
     const isContentType = type as keyof typeof modalComponent;
@@ -95,11 +97,21 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
       showModal({
         component: modalComponent[isContentType],
         props: {
+          topicId: topic.id,
+          lessonId: content.id,
           title: modalTitle[isContentType],
           subtitle: `${__('Topic')}: ${topic.title}`,
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
         },
       });
+    }
+  };
+
+  const handleDelete = () => {
+    if (type === 'lesson') {
+      deleteLessonMutation.mutate(content.id);
+    } else {
+      alert('@TODO: will be implemented later');
     }
   };
 
@@ -131,14 +143,12 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         <button type="button" css={styles.actionButton} onClick={onCopy}>
           <SVGIcon name="copyPaste" width={24} height={24} />
         </button>
-        <button
-          type="button"
-          css={styles.actionButton}
-          onClick={() => {
-            alert('@TODO: will be implemented later');
-          }}
-        >
-          <SVGIcon name="delete" width={24} height={24} />
+        <button type="button" css={styles.actionButton} onClick={handleDelete}>
+          {deleteLessonMutation.isPending ? (
+            <LoadingSpinner size={24} />
+          ) : (
+            <SVGIcon name="delete" width={24} height={24} />
+          )}
         </button>
         <button
           type="button"

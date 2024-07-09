@@ -7,6 +7,8 @@ import endpoints from '@Utils/endpoints';
 import type { AxiosResponse } from 'axios';
 import type { ErrorResponse } from '@Utils/form';
 import type { TutorMutationResponse } from '@CourseBuilderServices/course';
+import type { CourseVideo } from '@Components/fields/FormVideoInput';
+import type { Media } from '@Components/fields/FormImageInput';
 
 export type ID = string | number;
 
@@ -18,25 +20,19 @@ export interface Content {
   post_name: string | null;
   post_type: ContentType;
 }
-export interface LessonVideo {
-  source: 'youtube' | 'vimeo';
-  source_video_id: string;
-  source_youtube: string;
-  source_vimeo: string;
-  runtime: {
-    hours: string;
-    minutes: string;
-    seconds: string;
-  };
-  poster: string;
-}
 
 export interface Lesson extends Content {
-  type: 'lesson';
-  course_id: ID;
-  attachments: unknown[];
-  thumbnail: boolean;
-  video: LessonVideo[];
+  attachments: Media[];
+  thumbnail: string;
+  available_on: string;
+  video: CourseVideo & {
+    runtime: {
+      hours: number;
+      minutes: number;
+      seconds: number;
+    };
+  };
+  is_preview: boolean;
 }
 export type QuestionType = 'single_choice';
 export interface QuestionSetting {
@@ -91,22 +87,41 @@ interface TopicPayload {
   summary: string;
 }
 
-interface LessonPayload {
+export interface LessonPayload {
   topic_id: ID;
-  lesson_id: ID; //only for update
+  lesson_id?: ID; //only for update
   title: string;
   description: string;
-  thumbnail_id: number;
+  thumbnail_id: ID;
 
   'video[source]': string;
   'video[source_video_id]': ID;
+  'video[poster]': string;
+  'video[source_external_url]': string;
+  'video[source_shortcode]': string;
+  'video[source_youtube]': string;
+  'video[source_vimeo]': string;
+  'video[source_embedded]': string;
 
   'video[runtime][hours]': number;
   'video[runtime][minutes]': number;
   'video[runtime][seconds]': number;
 
-  _is_preview: 0 | 1; //only when course preview addon enabled
+  _is_preview?: 0 | 1; //only when course preview addon enabled
   tutor_attachments: ID[];
+}
+
+interface CourseContentOrderPayload {
+  tutor_topics_lessons_sorting: {
+    [order: string]: {
+      topic_id: ID;
+      lesson_ids: {
+        [order: string]: ID;
+      };
+    };
+  };
+  'content_parent[parent_topic_id]'?: ID; //only for topic contents
+  'content_parent[content_id]'?: ID; // only for topic contents
 }
 
 const getCourseTopic = (courseId: ID) => {
@@ -123,6 +138,7 @@ export const useCourseTopicQuery = (courseId: ID) => {
     enabled: !!courseId,
   });
 };
+
 const saveTopic = (payload: TopicPayload) => {
   return authApiInstance.post<string, AxiosResponse<TutorMutationResponse>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_save_topic',
@@ -137,7 +153,6 @@ export const useSaveTopicMutation = () => {
   return useMutation({
     mutationFn: saveTopic,
     onSuccess: (response) => {
-      console.log(response.data);
       if (response.data) {
         queryClient.invalidateQueries({
           queryKey: ['Topic'],
@@ -158,12 +173,7 @@ export const useSaveTopicMutation = () => {
 };
 
 const deleteTopic = (topicId: ID) => {
-  return authApiInstance.post<
-    string,
-    {
-      success: true;
-    }
-  >(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_delete_topic',
     topic_id: topicId,
   });
@@ -176,12 +186,12 @@ export const useDeleteTopicMutation = () => {
   return useMutation({
     mutationFn: deleteTopic,
     onSuccess: (response) => {
-      if (response.success) {
+      if (response.status_code === 200) {
         queryClient.invalidateQueries({
           queryKey: ['Topic'],
         });
         showToast({
-          message: __('Topic deleted successfully', 'tutor'),
+          message: __(response.message, 'tutor'),
           type: 'success',
         });
       }
@@ -195,25 +205,19 @@ export const useDeleteTopicMutation = () => {
   });
 };
 
-const getLessonDetails = (lessonId: ID, topicId: ID) => {
+const getLessonDetails = (topicId: ID, lessonId: ID) => {
   return authApiInstance.post<string, AxiosResponse<Lesson>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_lesson_details',
-    lesson_id: lessonId,
     topic_id: topicId,
+    lesson_id: lessonId,
   });
 };
 
 export const useLessonDetailsQuery = (lessonId: ID, topicId: ID) => {
   return useQuery({
-    queryKey: [
-      'Lesson',
-      {
-        lessonId,
-        topicId,
-      },
-    ],
+    queryKey: ['Lesson', lessonId, topicId],
     queryFn: () => getLessonDetails(lessonId, topicId).then((res) => res.data),
-    enabled: !!lessonId,
+    enabled: !!lessonId && !!topicId,
   });
 };
 
@@ -224,17 +228,29 @@ const saveLesson = (payload: LessonPayload) => {
   });
 };
 
-export const useSaveLessonMutation = () => {
+export const useSaveLessonMutation = ({
+  courseId,
+  topicId,
+  lessonId,
+}: {
+  courseId: ID;
+  topicId: ID;
+  lessonId: ID;
+}) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
-    mutationFn: saveLesson,
+    mutationFn: (payload: LessonPayload) => saveLesson(payload),
     onSuccess: (response) => {
       if (response.data) {
         queryClient.invalidateQueries({
-          queryKey: ['Topic', 'Lesson'],
+          queryKey: ['Topic', courseId],
         });
+        queryClient.invalidateQueries({
+          queryKey: ['Lesson', topicId, lessonId],
+        });
+
         showToast({
           message: __('Lesson saved successfully', 'tutor'),
           type: 'success',
@@ -251,12 +267,7 @@ export const useSaveLessonMutation = () => {
 };
 
 const deleteLesson = (lessonId: ID) => {
-  return authApiInstance.post<
-    string,
-    {
-      success: true;
-    }
-  >(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_delete_lesson',
     lesson_id: lessonId,
   });
@@ -269,12 +280,45 @@ export const useDeleteLessonMutation = () => {
   return useMutation({
     mutationFn: deleteLesson,
     onSuccess: (response) => {
-      if (response.success) {
+      if (response.status_code === 200) {
         queryClient.invalidateQueries({
           queryKey: ['Topic'],
         });
         showToast({
-          message: __('Lesson deleted successfully', 'tutor'),
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const updateCourseContentOrder = (payload: CourseContentOrderPayload) => {
+  return authApiInstance.post<CourseContentOrderPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_update_course_content_order',
+    ...payload,
+  });
+};
+
+export const useUpdateCourseContentOrderMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: updateCourseContentOrder,
+    onSuccess: (response) => {
+      if (response.status_code === 200) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __(response.message, 'tutor'),
           type: 'success',
         });
       }

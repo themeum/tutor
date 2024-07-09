@@ -4,11 +4,12 @@ import type { FormControllerProps } from '@Utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import type { ReactNode } from 'react';
 
 export type labelPositionType = 'left' | 'right';
 
 interface FormSwitchProps extends FormControllerProps<boolean> {
-  label?: string;
+  label?: string | ReactNode;
   title?: string;
   subTitle?: string;
   disabled?: boolean;

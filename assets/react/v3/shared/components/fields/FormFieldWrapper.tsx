@@ -29,7 +29,7 @@ interface InputProps {
 }
 
 interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
-  label?: string;
+  label?: string | ReactNode;
   isInlineLabel?: boolean;
   children: (inputProps: InputProps) => ReactNode;
   placeholder?: string;

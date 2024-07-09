@@ -1,24 +1,6 @@
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import Topic from '@CourseBuilderComponents/curriculum/Topic';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import { type CourseTopic, useCourseTopicQuery } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from 'react';
-
-import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
-import EmptyState from '@Molecules/EmptyState';
-import { droppableMeasuringStrategy } from '@Utils/dndkit';
-import { moveTo, nanoid } from '@Utils/util';
 import {
   DndContext,
   DragOverlay,
@@ -33,6 +15,27 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+
+import Button from '@Atoms/Button';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import SVGIcon from '@Atoms/SVGIcon';
+import EmptyState from '@Molecules/EmptyState';
+
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import Topic from '@CourseBuilderComponents/curriculum/Topic';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+
+import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+import { type CourseTopic, useCourseTopicQuery } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { styleUtils } from '@Utils/style-utils';
+import { droppableMeasuringStrategy } from '@Utils/dndkit';
+import { moveTo, nanoid } from '@Utils/util';
+
+import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
 
 const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean; isSaved: boolean };
@@ -59,6 +62,10 @@ const Curriculum = () => {
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
 
   useEffect(() => {
+    setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
+  }, [allCollapsed]);
+
+  useEffect(() => {
     if (!courseCurriculumQuery.data) {
       return;
     }
@@ -70,10 +77,6 @@ const Curriculum = () => {
       }))
     );
   }, [courseCurriculumQuery.data]);
-
-  useEffect(() => {
-    setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
-  }, [allCollapsed]);
 
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
