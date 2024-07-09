@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { Controller } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
@@ -22,11 +21,20 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useLessonDetailsQuery, useSaveLessonMutation, type ID } from '@CourseBuilderServices/curriculum';
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import Show from '@Controls/Show';
+import {
+  type PrerequisiteCourses,
+  usePrerequisiteCoursesQuery,
+  type ContentDripType,
+} from '@CourseBuilderServices/course';
+import FormDateInput from '@Components/fields/FormDateInput';
+import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
+import { css } from '@emotion/react';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID | null;
   topicId: ID;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  contentDripType: ContentDripType;
 }
 
 export interface LessonForm {
@@ -34,7 +42,6 @@ export interface LessonForm {
   description: string;
   thumbnail: Media | null;
   tutor_attachments: Media[];
-  available_after_days: string;
   lesson_preview: boolean;
   video: CourseVideo | null;
   duration: {
@@ -42,11 +49,25 @@ export interface LessonForm {
     minute: number;
     second: number;
   };
+  content_drip_settings: {
+    unlock_date: string;
+    after_xdays_of_enroll: string;
+    prerequisites: PrerequisiteCourses[];
+  };
 }
 
 const courseId = getCourseId();
 
-const LessonModal = ({ lessonId = null, topicId, closeModal, icon, title, subtitle }: LessonModalProps) => {
+const LessonModal = ({
+  lessonId = null,
+  topicId,
+  closeModal,
+  icon,
+  title,
+  subtitle,
+  contentDripType,
+}: LessonModalProps) => {
+  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Course Preview');
   const getLessonDetailsQuery = useLessonDetailsQuery(topicId, lessonId || '');
   const saveLessonMutation = useSaveLessonMutation({
     courseId,
@@ -62,7 +83,6 @@ const LessonModal = ({ lessonId = null, topicId, closeModal, icon, title, subtit
       description: '',
       thumbnail: null,
       tutor_attachments: [],
-      available_after_days: '0',
       lesson_preview: false,
       video: null,
       duration: {
@@ -70,9 +90,23 @@ const LessonModal = ({ lessonId = null, topicId, closeModal, icon, title, subtit
         minute: 0,
         second: 0,
       },
+      content_drip_settings: {
+        unlock_date: '',
+        after_xdays_of_enroll: '',
+        prerequisites: [],
+      },
     },
     shouldFocusError: true,
   });
+
+  const prerequisiteCourses = lessonDetails?.content_drip_settings?.prerequisites
+    ? lessonDetails?.content_drip_settings?.prerequisites.map((item) => String(item.id))
+    : [];
+
+  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
+    String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
+    !!isPrerequisiteAddonEnabled
+  );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -86,7 +120,6 @@ const LessonModal = ({ lessonId = null, topicId, closeModal, icon, title, subtit
           url: lessonDetails.thumbnail || '',
         },
         tutor_attachments: lessonDetails.attachments || [],
-        available_after_days: lessonDetails.available_on || '0',
         lesson_preview: lessonDetails.is_preview || false,
         video: lessonDetails.video || null,
         duration: {
@@ -94,17 +127,22 @@ const LessonModal = ({ lessonId = null, topicId, closeModal, icon, title, subtit
           minute: lessonDetails.video.runtime?.minutes || 0,
           second: lessonDetails.video.runtime?.seconds || 0,
         },
+        content_drip_settings: {
+          unlock_date: lessonDetails.content_drip_settings?.unlock_date || '',
+          after_xdays_of_enroll: lessonDetails.content_drip_settings?.after_xdays_of_enroll || '',
+          prerequisites: lessonDetails.content_drip_settings?.prerequisites || [],
+        },
       });
     }
   }, [lessonDetails]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('title');
-  }, []);
+  }, [form]);
 
   const onSubmit = async (data: LessonForm) => {
-    const payload = convertLessonDataToPayload(data, lessonId || '', topicId);
+    console.log(data);
+    const payload = convertLessonDataToPayload(data, lessonId || '', topicId, contentDripType);
     const response = await saveLessonMutation.mutateAsync(payload);
 
     if (response.data) {
@@ -135,6 +173,9 @@ const LessonModal = ({ lessonId = null, topicId, closeModal, icon, title, subtit
             <Controller
               name="title"
               control={form.control}
+              rules={{
+                required: __('Lesson Name is required', 'tutor'),
+              }}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
@@ -148,6 +189,9 @@ const LessonModal = ({ lessonId = null, topicId, closeModal, icon, title, subtit
             <Controller
               name="description"
               control={form.control}
+              rules={{
+                required: __('Description is required', 'tutor'),
+              }}
               render={(controllerProps) => (
                 <FormTextareaInput
                   {...controllerProps}
@@ -233,19 +277,52 @@ const LessonModal = ({ lessonId = null, topicId, closeModal, icon, title, subtit
             </div>
           </div>
 
-          <Controller
-            name="available_after_days"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                type="number"
-                label={__('Available after days', 'tutor')}
-                helpText={__('Set the number of days after which the lesson will be available', 'tutor')}
-                placeholder="0"
+          <Show when={isAddonEnabled('Content Drip')}>
+            <Show when={contentDripType === 'specific_days'}>
+              <Controller
+                name="content_drip_settings.after_xdays_of_enroll"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    type="number"
+                    label={__('Available after days', 'tutor')}
+                    helpText={__('Set the number of days after which the lesson will be available', 'tutor')}
+                    placeholder="0"
+                  />
+                )}
               />
-            )}
-          />
+            </Show>
+
+            <Show when={contentDripType === 'unlock_by_date'}>
+              <Controller
+                name="content_drip_settings.unlock_date"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormDateInput
+                    {...controllerProps}
+                    label={__('Unlock Date', 'tutor')}
+                    helpText={__('Set the date when the lesson will be available', 'tutor')}
+                  />
+                )}
+              />
+            </Show>
+
+            <Show when={contentDripType === 'after_finishing_prerequisites'}>
+              <Controller
+                name="content_drip_settings.prerequisites"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCoursePrerequisites
+                    {...controllerProps}
+                    placeholder={__('Select Prerequisite', 'tutor')}
+                    label={__('Prerequisites', 'tutor')}
+                    options={prerequisiteCoursesQuery.data || []}
+                  />
+                )}
+              />
+            </Show>
+          </Show>
 
           <Controller
             name="tutor_attachments"

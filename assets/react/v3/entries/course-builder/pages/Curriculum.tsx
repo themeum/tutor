@@ -42,7 +42,7 @@ import { moveTo, nanoid } from '@Utils/util';
 
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
-import { useCourseDetailsQuery } from '@CourseBuilderServices/course';
+import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 
 const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean; isSaved: boolean };
@@ -68,31 +68,6 @@ const Curriculum = () => {
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
-  const courseDetailsQuery = useCourseDetailsQuery(courseId);
-
-  const googleMeetTimeZones = useMemo(() => {
-    if (!courseDetailsQuery.data) {
-      return {};
-    }
-
-    return courseDetailsQuery.data.google_meet_timezones;
-  }, [courseDetailsQuery.data]);
-
-  const zoomMeetingTimeZones = useMemo(() => {
-    if (!courseDetailsQuery.data) {
-      return {};
-    }
-
-    return courseDetailsQuery.data.zoom_timezones;
-  }, [courseDetailsQuery.data]);
-
-  const zoomMeetingUsers = useMemo(() => {
-    if (!courseDetailsQuery.data) {
-      return {};
-    }
-
-    return courseDetailsQuery.data.zoom_users;
-  }, [courseDetailsQuery.data]);
 
   useEffect(() => {
     setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
@@ -141,254 +116,246 @@ const Curriculum = () => {
   };
 
   return (
-    <div css={styles.container}>
-      <div css={styles.wrapper}>
-        <CanvasHead
-          title={__('Curriculum', 'tutor')}
-          rightButton={
-            <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
-              {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
-            </Button>
-          }
-        />
-
-        <div css={styles.content}>
-          <Show
-            when={
-              !courseCurriculumQuery.isLoading && courseCurriculumQuery.data && courseCurriculumQuery.data.length > 0
+    <CourseDetailsProvider>
+      <div css={styles.container}>
+        <div css={styles.wrapper}>
+          <CanvasHead
+            title={__('Curriculum', 'tutor')}
+            rightButton={
+              <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
+                {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
+              </Button>
             }
-            fallback={
-              <EmptyState
-                emptyStateImage={emptyStateImage}
-                emptyStateImage2x={emptyStateImage2x}
-                imageAltText={__('Empty State Illustration', 'tutor')}
-                title={__('Create the course journey from here!', 'tutor')}
-                description={__(
-                  'when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries',
-                  'tutor'
-                )}
-                actions={
-                  <Button
-                    variant="secondary"
-                    icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
-                    onClick={() => {
-                      // @TODO: will be updated later.
-                      setContent((previous) => {
-                        return [
-                          ...previous.map((item) => ({
-                            ...item,
-                            isCollapsed: true,
-                          })),
-                          {
-                            id: nanoid(),
-                            title: 'New Course Topic',
-                            summary: '',
-                            contents: [],
-                            isCollapsed: false,
-                            isSaved: false,
-                          },
-                        ];
-                      });
-                    }}
-                  >
-                    {__('Add Topic', 'tutor')}
-                  </Button>
-                }
-              />
-            }
-          >
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              measuring={droppableMeasuringStrategy}
-              modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-              onDragStart={(event) => {
-                setActiveSortId(event.active.id);
-                setAllCollapsed(true);
-              }}
-              onDragEnd={(event) => {
-                const { active, over } = event;
-                if (!over) {
-                  setActiveSortId(null);
-                  return;
-                }
+          />
 
-                if (active.id !== over.id) {
-                  const activeIndex = content.findIndex((item) => item.id === active.id);
-                  const overIndex = content.findIndex((item) => item.id === over.id);
-
-                  const contentAfterSort = moveTo(content, activeIndex, overIndex);
-
-                  setContent(contentAfterSort);
-
-                  const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] =
-                    contentAfterSort.reduce(
-                      (topics, topic, topicIndex) => {
-                        let contentIndex = 0;
-                        topics[topicIndex] = {
-                          topic_id: topic.id,
-                          lesson_ids: topic.contents.reduce(
-                            (contents, content) => {
-                              contents[contentIndex] = content.ID;
-                              contentIndex++;
-
-                              return contents;
+          <div css={styles.content}>
+            <Show
+              when={
+                !courseCurriculumQuery.isLoading && courseCurriculumQuery.data && courseCurriculumQuery.data.length > 0
+              }
+              fallback={
+                <EmptyState
+                  emptyStateImage={emptyStateImage}
+                  emptyStateImage2x={emptyStateImage2x}
+                  imageAltText={__('Empty State Illustration', 'tutor')}
+                  title={__('Create the course journey from here!', 'tutor')}
+                  description={__(
+                    'when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries',
+                    'tutor'
+                  )}
+                  actions={
+                    <Button
+                      variant="secondary"
+                      icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
+                      onClick={() => {
+                        // @TODO: will be updated later.
+                        setContent((previous) => {
+                          return [
+                            ...previous.map((item) => ({
+                              ...item,
+                              isCollapsed: true,
+                            })),
+                            {
+                              id: nanoid(),
+                              title: 'New Course Topic',
+                              summary: '',
+                              contents: [],
+                              isCollapsed: false,
+                              isSaved: false,
                             },
-                            {} as { [key: ID]: ID }
-                          ),
-                        };
-                        return topics;
-                      },
-                      {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } }
-                    );
-
-                  updateCourseContentOrderMutation.mutate({
-                    tutor_topics_lessons_sorting: convertedObject,
-                  });
-                }
-
-                setActiveSortId(null);
-              }}
+                          ];
+                        });
+                      }}
+                    >
+                      {__('Add Topic', 'tutor')}
+                    </Button>
+                  }
+                />
+              }
             >
-              <SortableContext
-                items={content.map((item) => ({ ...item, id: item.id }))}
-                strategy={verticalListSortingStrategy}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                measuring={droppableMeasuringStrategy}
+                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                onDragStart={(event) => {
+                  setActiveSortId(event.active.id);
+                  setAllCollapsed(true);
+                }}
+                onDragEnd={(event) => {
+                  const { active, over } = event;
+                  if (!over) {
+                    setActiveSortId(null);
+                    return;
+                  }
+
+                  if (active.id !== over.id) {
+                    const activeIndex = content.findIndex((item) => item.id === active.id);
+                    const overIndex = content.findIndex((item) => item.id === over.id);
+
+                    const contentAfterSort = moveTo(content, activeIndex, overIndex);
+
+                    setContent(contentAfterSort);
+
+                    const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] =
+                      contentAfterSort.reduce(
+                        (topics, topic, topicIndex) => {
+                          let contentIndex = 0;
+                          topics[topicIndex] = {
+                            topic_id: topic.id,
+                            lesson_ids: topic.contents.reduce(
+                              (contents, content) => {
+                                contents[contentIndex] = content.ID;
+                                contentIndex++;
+
+                                return contents;
+                              },
+                              {} as { [key: ID]: ID }
+                            ),
+                          };
+                          return topics;
+                        },
+                        {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } }
+                      );
+
+                    updateCourseContentOrderMutation.mutate({
+                      tutor_topics_lessons_sorting: convertedObject,
+                    });
+                  }
+
+                  setActiveSortId(null);
+                }}
               >
-                <div css={styles.topicWrapper}>
-                  <For each={content}>
-                    {(topic, index) => {
-                      return (
-                        <Topic
-                          key={topic.id}
-                          topic={topic}
-                          googleMeetTimeZones={googleMeetTimeZones}
-                          zoomMeetingTimeZones={zoomMeetingTimeZones}
-                          zoomMeetingUsers={zoomMeetingUsers}
-                          onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
-                          onCollapse={() =>
-                            setContent((previous) =>
-                              previous.map((item, idx) => {
-                                if (idx === index) {
-                                  return {
-                                    ...item,
-                                    isCollapsed: !item.isCollapsed,
-                                  };
-                                }
+                <SortableContext
+                  items={content.map((item) => ({ ...item, id: item.id }))}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div css={styles.topicWrapper}>
+                    <For each={content}>
+                      {(topic, index) => {
+                        return (
+                          <Topic
+                            key={topic.id}
+                            topic={topic}
+                            onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
+                            onCollapse={() =>
+                              setContent((previous) =>
+                                previous.map((item, idx) => {
+                                  if (idx === index) {
+                                    return {
+                                      ...item,
+                                      isCollapsed: !item.isCollapsed,
+                                    };
+                                  }
 
-                                return item;
-                              })
-                            )
-                          }
-                          onCopy={() => {
-                            createDuplicateTopic(topic);
-                          }}
-                          onSort={(activeIndex, overIndex) => {
-                            const previousContent = content;
-                            const contentAfterSort = () => {
-                              return content.map((item, idx) => {
-                                if (idx === index) {
-                                  return {
-                                    ...item,
-                                    contents: moveTo(item.contents, activeIndex, overIndex),
-                                  };
-                                }
-
-                                return item;
-                              });
-                            };
-                            setContent(contentAfterSort);
-
-                            const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] =
-                              contentAfterSort().reduce(
-                                (topics, topic, topicIndex) => {
-                                  let contentIndex = 0;
-                                  topics[topicIndex] = {
-                                    topic_id: topic.id,
-                                    lesson_ids: topic.contents.reduce(
-                                      (contents, content) => {
-                                        contents[contentIndex] = content.ID;
-                                        contentIndex++;
-
-                                        return contents;
-                                      },
-                                      {} as { [key: ID]: ID }
-                                    ),
-                                  };
-                                  return topics;
-                                },
-                                {} as CourseContentOrderPayload['tutor_topics_lessons_sorting']
-                              );
-
-                            updateCourseContentOrderMutation.mutate({
-                              tutor_topics_lessons_sorting: convertedObject,
-
-                              'content_parent[parent_topic_id]': topic.id,
-                              'content_parent[content_id]': topic.contents[activeIndex].ID,
-                            });
-
-                            if (updateCourseContentOrderMutation.isError) {
-                              setContent(previousContent);
+                                  return item;
+                                })
+                              )
                             }
-                          }}
-                        />
-                      );
-                    }}
-                  </For>
-                </div>
-              </SortableContext>
+                            onCopy={() => {
+                              createDuplicateTopic(topic);
+                            }}
+                            onSort={(activeIndex, overIndex) => {
+                              const previousContent = content;
+                              const contentAfterSort = () => {
+                                return content.map((item, idx) => {
+                                  if (idx === index) {
+                                    return {
+                                      ...item,
+                                      contents: moveTo(item.contents, activeIndex, overIndex),
+                                    };
+                                  }
 
-              {createPortal(
-                <DragOverlay>
-                  <Show when={activeSortItem}>
-                    {(item) => {
-                      return (
-                        <Topic
-                          googleMeetTimeZones={googleMeetTimeZones}
-                          zoomMeetingTimeZones={zoomMeetingTimeZones}
-                          zoomMeetingUsers={zoomMeetingUsers}
-                          topic={item}
-                        />
-                      );
-                    }}
-                  </Show>
-                </DragOverlay>,
-                document.body
-              )}
-            </DndContext>
+                                  return item;
+                                });
+                              };
+                              setContent(contentAfterSort);
+
+                              const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] =
+                                contentAfterSort().reduce(
+                                  (topics, topic, topicIndex) => {
+                                    let contentIndex = 0;
+                                    topics[topicIndex] = {
+                                      topic_id: topic.id,
+                                      lesson_ids: topic.contents.reduce(
+                                        (contents, content) => {
+                                          contents[contentIndex] = content.ID;
+                                          contentIndex++;
+
+                                          return contents;
+                                        },
+                                        {} as { [key: ID]: ID }
+                                      ),
+                                    };
+                                    return topics;
+                                  },
+                                  {} as CourseContentOrderPayload['tutor_topics_lessons_sorting']
+                                );
+
+                              updateCourseContentOrderMutation.mutate({
+                                tutor_topics_lessons_sorting: convertedObject,
+
+                                'content_parent[parent_topic_id]': topic.id,
+                                'content_parent[content_id]': topic.contents[activeIndex].ID,
+                              });
+
+                              if (updateCourseContentOrderMutation.isError) {
+                                setContent(previousContent);
+                              }
+                            }}
+                          />
+                        );
+                      }}
+                    </For>
+                  </div>
+                </SortableContext>
+
+                {createPortal(
+                  <DragOverlay>
+                    <Show when={activeSortItem}>
+                      {(item) => {
+                        return <Topic topic={item} />;
+                      }}
+                    </Show>
+                  </DragOverlay>,
+                  document.body
+                )}
+              </DndContext>
+            </Show>
+          </div>
+          <Show when={content.length > 0}>
+            <div css={styles.addButtonWrapper}>
+              <Button
+                variant="secondary"
+                icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
+                onClick={() => {
+                  setContent((previous) => {
+                    return [
+                      ...previous.map((item) => ({ ...item, isCollapsed: true })),
+                      {
+                        id: nanoid(),
+                        title: '',
+                        summary: '',
+                        contents: [],
+                        isCollapsed: false,
+                        isSaved: false,
+                      },
+                    ];
+                  });
+                }}
+              >
+                {__('Add Topic', 'tutor')}
+              </Button>
+            </div>
           </Show>
         </div>
-        <Show when={content.length > 0}>
-          <div css={styles.addButtonWrapper}>
-            <Button
-              variant="secondary"
-              icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
-              onClick={() => {
-                setContent((previous) => {
-                  return [
-                    ...previous.map((item) => ({ ...item, isCollapsed: true })),
-                    {
-                      id: nanoid(),
-                      title: 'New Course Topic',
-                      summary: 'Default Summary',
-                      contents: [],
-                      isCollapsed: false,
-                      isSaved: false,
-                    },
-                  ];
-                });
-              }}
-            >
-              {__('Add Topic', 'tutor')}
-            </Button>
-          </div>
-        </Show>
-      </div>
-      <Navigator
-        styleModifier={css`
+        <Navigator
+          styleModifier={css`
           margin-block: 40px;
         `}
-      />
-    </div>
+        />
+      </div>
+    </CourseDetailsProvider>
   );
 };
 

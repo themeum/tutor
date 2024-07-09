@@ -21,13 +21,11 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { format } from 'date-fns';
 import { DateFormats } from '@Config/constants';
 import type { ID } from '@CourseBuilderServices/curriculum';
+import { tutorConfig } from '@Config/config';
 
 interface ZoomMeetingFormProps {
   onCancel: () => void;
   data: ZoomMeeting | null;
-  timezones: {
-    [key: string]: string;
-  };
   meetingHost: {
     [key: string]: string;
   };
@@ -36,7 +34,7 @@ interface ZoomMeetingFormProps {
 
 const courseId = getCourseId();
 
-const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: ZoomMeetingFormProps) => {
+const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId }: ZoomMeetingFormProps) => {
   const { ref, isScrolling } = useIsScrolling({ defaultValue: true });
   const currentMeeting = data;
 
@@ -61,6 +59,8 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
   });
 
   const saveZoomMeeting = useSaveZoomMeetingMutation(String(courseId));
+
+  const timezones = tutorConfig.timezones;
   const timeZonesOptions = Object.keys(timezones).map((key) => ({
     label: timezones[key],
     value: key,

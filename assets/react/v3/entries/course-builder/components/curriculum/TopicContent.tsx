@@ -18,6 +18,8 @@ import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import { useFormContext } from 'react-hook-form';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 
 interface TopicContentProps {
   type: ContentType;
@@ -82,11 +84,14 @@ const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
 const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
+  const form = useFormContext<CourseFormData>();
+
   const icon = icons[type];
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: content.id,
     animateLayoutChanges,
   });
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -100,6 +105,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
       showModal({
         component: modalComponent[isContentType],
         props: {
+          contentDripType: form.watch('contentDripType'),
           topicId: topic.id,
           lessonId: content.id,
           title: modalTitle[isContentType],

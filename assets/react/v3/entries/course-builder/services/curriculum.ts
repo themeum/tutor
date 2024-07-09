@@ -6,7 +6,7 @@ import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { AxiosResponse } from 'axios';
 import type { ErrorResponse } from '@Utils/form';
-import type { TutorMutationResponse } from '@CourseBuilderServices/course';
+import type { PrerequisiteCourses, TutorMutationResponse } from '@CourseBuilderServices/course';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type { Media } from '@Components/fields/FormImageInput';
 
@@ -33,6 +33,11 @@ export interface Lesson extends Content {
     };
   };
   is_preview: boolean;
+  content_drip_settings: {
+    unlock_date: string;
+    after_xdays_of_enroll: string;
+    prerequisites: PrerequisiteCourses[];
+  };
 }
 export type QuestionType = 'single_choice';
 export interface QuestionSetting {
@@ -109,6 +114,9 @@ export interface LessonPayload {
 
   _is_preview?: 0 | 1; //only when course preview addon enabled
   tutor_attachments: ID[];
+  'content_drip_settings[unlock_date]'?: string;
+  'content_drip_settings[after_xdays_of_enroll]'?: string;
+  'content_drip_settings[prerequisites]'?: ID[];
 }
 
 export interface CourseContentOrderPayload {
