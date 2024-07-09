@@ -100,7 +100,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
           name="meeting_name"
           control={meetingForm.control}
           rules={{
-            required: 'Meeting name is required',
+            required: __('Name is required', 'tutor'),
           }}
           render={(controllerProps) => (
             <FormInput
@@ -115,7 +115,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
           name="meeting_summary"
           control={meetingForm.control}
           rules={{
-            required: 'Meeting summary is required',
+            required: __('Summary is required', 'tutor'),
           }}
           render={(controllerProps) => (
             <FormTextareaInput
@@ -133,7 +133,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
             name="meeting_date"
             control={meetingForm.control}
             rules={{
-              required: 'Meeting date is required',
+              required: __('Date is required', 'tutor'),
             }}
             render={(controllerProps) => (
               <FormDateInput
@@ -149,7 +149,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
             name="meeting_time"
             control={meetingForm.control}
             rules={{
-              required: 'Meeting time is required',
+              required: __('Time is required', 'tutor'),
             }}
             render={(controllerProps) => <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />}
           />
@@ -158,7 +158,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
               name="meeting_duration"
               control={meetingForm.control}
               rules={{
-                required: 'Meeting duration is required',
+                required: __('Duration is required', 'tutor'),
               }}
               render={(controllerProps) => (
                 <FormInput {...controllerProps} placeholder={__('Duration', 'tutor')} type="number" />
@@ -168,7 +168,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
               name="meeting_duration_unit"
               control={meetingForm.control}
               rules={{
-                required: 'Meeting duration unit is required',
+                required: __('Duration unit is required', 'tutor'),
               }}
               render={(controllerProps) => (
                 <FormSelectInput
@@ -187,13 +187,13 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
           name="meeting_timezone"
           control={meetingForm.control}
           rules={{
-            required: 'Time zone is required',
+            required: __('Time zone is required', 'tutor'),
           }}
           render={(controllerProps) => (
             <FormSelectInput
               {...controllerProps}
               label={__('Time Zone', 'tutor')}
-              placeholder="Select time zone"
+              placeholder={__('Select time zone', 'tutor')}
               options={timeZonesOptions}
               isSearchable
             />
@@ -203,7 +203,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
           name="auto_recording"
           control={meetingForm.control}
           rules={{
-            required: 'Auto recording is required',
+            required: __('Auto recording is required', 'tutor'),
           }}
           render={(controllerProps) => (
             <FormSelectInput
@@ -223,7 +223,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
           name="meeting_password"
           control={meetingForm.control}
           rules={{
-            required: 'Meeting password is required',
+            required: __('Password is required', 'tutor'),
           }}
           render={(controllerProps) => (
             <FormInput
@@ -240,7 +240,7 @@ const ZoomMeetingForm = ({ onCancel, data, timezones, meetingHost, topicId }: Zo
           name="meeting_host"
           control={meetingForm.control}
           rules={{
-            required: 'Meeting host is required',
+            required: __('Meeting host is required', 'tutor'),
           }}
           render={(controllerProps) => (
             <FormInput
