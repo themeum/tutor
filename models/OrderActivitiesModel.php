@@ -154,9 +154,11 @@ class OrderActivitiesModel {
 		return QueryHelper::insert(
 			$this->table_name,
 			array(
-				'order_id'   => $data->order_id,
-				'meta_key'   => $data->meta_key,
-				'meta_value' => $data->meta_value,
+				'order_id'       => $data->order_id,
+				'meta_key'       => $data->meta_key,
+				'meta_value'     => $data->meta_value,
+				'created_at_gmt' => current_time( 'mysql' ),
+				'created_by'     => get_current_user_id(),
 			)
 		);
 	}
@@ -179,8 +181,10 @@ class OrderActivitiesModel {
 		return QueryHelper::update(
 			$this->table_name,
 			array(
-				'meta_key'   => $data->meta_key,
-				'meta_value' => $data->meta_value,
+				'meta_key'       => $data->meta_key,
+				'meta_value'     => $data->meta_value,
+				'updated_at_gmt' => current_time( 'mysql' ),
+				'updated_by'     => get_current_user_id(),
 			),
 			array(
 				'id'       => $data->id,
