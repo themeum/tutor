@@ -21,7 +21,7 @@ import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -62,6 +62,8 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import Popover from '@Molecules/Popover';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
+import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -70,15 +72,6 @@ interface TopicProps {
   onSort?: (activeIndex: number, overIndex: number) => void;
   onCollapse?: () => void;
   isOverlay?: boolean;
-  googleMeetTimeZones: {
-    [key: string]: string;
-  };
-  zoomMeetingTimeZones: {
-    [key: string]: string;
-  };
-  zoomMeetingUsers: {
-    [key: string]: string;
-  };
 }
 
 interface TopicForm {
@@ -90,17 +83,8 @@ const hasLiveAddons = true;
 
 const courseId = getCourseId();
 
-const Topic = ({
-  topic,
-  onDelete,
-  onCopy,
-  onSort,
-  onCollapse,
-  isOverlay = false,
-  googleMeetTimeZones,
-  zoomMeetingTimeZones,
-  zoomMeetingUsers,
-}: TopicProps) => {
+const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false }: TopicProps) => {
+  const courseDetailsForm = useFormContext<CourseFormData>();
   const form = useFormWithGlobalError<TopicForm>({
     defaultValues: {
       title: topic.title,
@@ -150,6 +134,8 @@ const Topic = ({
   });
 
   const { showModal } = useModal();
+
+  const courseDetails = useCourseDetails();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -476,6 +462,7 @@ const Topic = ({
                     showModal({
                       component: LessonModal,
                       props: {
+                        contentDripType: courseDetailsForm.watch('contentDripType'),
                         topicId: topic.id,
                         title: __('Lesson', 'tutor'),
                         icon: <SVGIcon name="lesson" width={24} height={24} />,
@@ -591,7 +578,6 @@ const Topic = ({
       >
         <GoogleMeetForm
           topicId={topic.id}
-          timezones={googleMeetTimeZones}
           data={null}
           onCancel={() => {
             setMeetingType(null);
@@ -606,8 +592,7 @@ const Topic = ({
       >
         <ZoomMeetingForm
           topicId={topic.id}
-          timezones={zoomMeetingTimeZones}
-          meetingHost={zoomMeetingUsers}
+          meetingHost={courseDetails?.zoom_users || {}}
           data={null}
           onCancel={() => {
             setMeetingType(null);

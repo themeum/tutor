@@ -109,6 +109,9 @@ export interface LessonPayload {
 
   _is_preview?: 0 | 1; //only when course preview addon enabled
   tutor_attachments: ID[];
+  'content_drip_settings[unlock_date]'?: string;
+  'content_drip_settings[after_xdays_of_enroll]'?: string;
+  'content_drip_settings[prerequisites]'?: ID[];
 }
 
 export interface CourseContentOrderPayload {

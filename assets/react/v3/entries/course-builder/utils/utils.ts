@@ -1,7 +1,7 @@
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import type { ContentDripType, CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import type { ID, LessonPayload } from '@CourseBuilderServices/curriculum';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -146,13 +146,18 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
   };
 };
 
-export const convertLessonDataToPayload = (data: LessonForm, lessonId: ID, topicId: ID): LessonPayload => {
+export const convertLessonDataToPayload = (
+  data: LessonForm,
+  lessonId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType
+): LessonPayload => {
   return {
     ...(lessonId && { lesson_id: lessonId }),
     topic_id: topicId,
     title: data.title,
     description: data.description,
-    thumbnail_id: data.thumbnail?.id || '',
+    thumbnail_id: data.thumbnail?.id || 0,
     'video[source]': data.video?.source || '',
     'video[source_video_id]': data.video?.source_video_id || '',
     'video[poster]': data.video?.poster || '',
@@ -167,6 +172,15 @@ export const convertLessonDataToPayload = (data: LessonForm, lessonId: ID, topic
     'video[runtime][seconds]': data.duration.second || 0,
     ...(isAddonEnabled('Tutor Course Preview') && { _is_preview: data.lesson_preview ? 1 : 0 }),
     tutor_attachments: data.tutor_attachments.map((attachment) => attachment.id),
+    ...(contentDripType === 'unlock_by_date' && {
+      'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+    }),
+    ...(contentDripType === 'specific_days' && {
+      'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+    }),
+    ...(contentDripType === 'after_finishing_prerequisites' && {
+      'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
+    }),
   };
 };
 

@@ -27,19 +27,17 @@ import { DateFormats } from '@Config/constants';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import type { ID } from '@CourseBuilderServices/curriculum';
+import { tutorConfig } from '@Config/config';
 
 interface GoogleMeetFormProps {
   onCancel: () => void;
   data: GoogleMeet | null;
-  timezones: {
-    [key: string]: string;
-  };
   topicId?: ID;
 }
 
 const courseId = getCourseId();
 
-const GoogleMeetForm = ({ onCancel, data, timezones, topicId }: GoogleMeetFormProps) => {
+const GoogleMeetForm = ({ onCancel, data, topicId }: GoogleMeetFormProps) => {
   const { ref, isScrolling } = useIsScrolling({ defaultValue: true });
   const currentMeeting = data;
 
@@ -66,6 +64,8 @@ const GoogleMeetForm = ({ onCancel, data, timezones, topicId }: GoogleMeetFormPr
   });
 
   const saveGoogleMeetMeeting = useSaveGoogleMeetMeetingMutation(String(courseId));
+
+  const timezones = tutorConfig.timezones;
 
   const timeZonesOptions = Object.keys(timezones).map((key) => ({
     label: timezones[key],

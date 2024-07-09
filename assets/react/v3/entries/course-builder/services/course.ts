@@ -18,6 +18,13 @@ const currentUser = tutorConfig.current_user.data;
 
 type CourseLevel = 'all_levels' | 'beginner' | 'intermediate' | 'expert';
 
+export type ContentDripType =
+  | 'unlock_by_date'
+  | 'specific_days'
+  | 'unlock_sequentially'
+  | 'after_finishing_prerequisites'
+  | '';
+
 export interface CourseFormData {
   post_date: string;
   post_title: string;
@@ -48,7 +55,7 @@ export interface CourseFormData {
   course_duration_minutes: number;
   course_attachments: Media[] | null;
   isContentDripEnabled: boolean;
-  contentDripType: 'unlock_by_date' | 'specific_days' | 'unlock_sequentially' | 'after_finishing_prerequisites' | '';
+  contentDripType: ContentDripType;
   course_product_id: string;
   preview_link: string;
   course_prerequisites: PrerequisiteCourses[];
@@ -273,12 +280,7 @@ export interface CourseDetailsResponse {
   course_sale_price: string;
   course_settings: {
     maximum_students: number;
-    content_drip_type:
-      | 'unlock_by_date'
-      | 'specific_days'
-      | 'unlock_sequentially'
-      | 'after_finishing_prerequisites'
-      | '';
+    content_drip_type: ContentDripType;
     enable_content_drip: number;
     enrollment_expiry: number;
   };
