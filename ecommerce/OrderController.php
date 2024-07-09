@@ -30,6 +30,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class OrderController {
 
 	/**
+	 * Order page slug
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const PAGE_SLUG = 'tutor_orders';
+
+	/**
 	 * Order model
 	 *
 	 * @since 3.0.0
@@ -56,13 +65,6 @@ class OrderController {
 	 * @var $page_title
 	 */
 	public $page_title;
-
-	/**
-	 * Bulk Action
-	 *
-	 * @var $bulk_action
-	 */
-	public $bulk_action = true;
 
 	/**
 	 * Constructor.
@@ -117,6 +119,22 @@ class OrderController {
 		}
 	}
 
+	/**
+	 * Get order page url
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param boolean $is_admin Whether to get admin or frontend url.
+	 *
+	 * @return string
+	 */
+	public static function get_order_page_url( bool $is_admin = true ) {
+		if ( $is_admin ) {
+			return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
+		} else {
+			return tutor_utils()->get_tutor_dashboard_url() . '/orders';
+		}
+	}
 
 	/**
 	 * Retrieve order data by order ID and respond with JSON.
@@ -236,20 +254,32 @@ class OrderController {
 	 * @since 3.0.0
 	 */
 	public function prepare_bulk_actions(): array {
-		$actions = array(
-			$this->bulk_action_default(),
-			$this->bulk_action_publish(),
-			$this->bulk_action_pending(),
-			$this->bulk_action_draft(),
-		);
+		$actions = array();
 
 		$active_tab = Input::get( 'data', '' );
 
-		if ( 'trash' === $active_tab ) {
-			array_push( $actions, $this->bulk_action_delete() );
+		if ( ! empty( $active_tab ) ) {
+
+			$actions[] = $this->bulk_action_default();
+
+			switch ( $active_tab ) {
+				case $this->model::ORDER_INCOMPLETE:
+					$actions[] = $this->bulk_action_mark_order_paid();
+					break;
+				case $this->model::ORDER_COMPLETED:
+					$actions[] = $this->bulk_action_mark_order_unpaid();
+					break;
+				case $this->model::ORDER_TRASH:
+					$actions[] = $this->bulk_action_delete();
+					break;
+				default:
+					// code...
+					break;
+			}
 		}
-		if ( 'trash' !== $active_tab ) {
-			array_push( $actions, $this->bulk_action_trash() );
+
+		if ( $this->model::ORDER_TRASH !== $active_tab ) {
+			$actions[] = $this->bulk_action_mark_order_trash();
 		}
 		return apply_filters( 'tutor_order_bulk_actions', $actions );
 	}
