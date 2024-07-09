@@ -389,7 +389,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 const activeIndex = content.findIndex((item) => item.ID === active.id);
                 const overIndex = content.findIndex((item) => item.ID === over.id);
                 // Will be modified later
-                // onSort?.(activeIndex, overIndex);
+                onSort?.(activeIndex, overIndex);
                 setContent(moveTo(content, activeIndex, overIndex));
               }
             }}

@@ -111,10 +111,11 @@ export interface LessonPayload {
   tutor_attachments: ID[];
 }
 
-interface CourseContentOrderPayload {
+export interface CourseContentOrderPayload {
   tutor_topics_lessons_sorting: {
     [order: string]: {
       topic_id: ID;
+      // lesson_ids represents the order of all contents inside a topic
       lesson_ids: {
         [order: string]: ID;
       };
@@ -300,29 +301,22 @@ export const useDeleteLessonMutation = () => {
 };
 
 const updateCourseContentOrder = (payload: CourseContentOrderPayload) => {
-  return authApiInstance.post<CourseContentOrderPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<
+    CourseContentOrderPayload,
+    {
+      success: boolean;
+    }
+  >(endpoints.ADMIN_AJAX, {
     action: 'tutor_update_course_content_order',
     ...payload,
   });
 };
 
 export const useUpdateCourseContentOrderMutation = () => {
-  const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: updateCourseContentOrder,
-    onSuccess: (response) => {
-      if (response.status_code === 200) {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
-        });
-      }
-    },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,

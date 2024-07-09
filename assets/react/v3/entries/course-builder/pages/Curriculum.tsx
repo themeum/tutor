@@ -28,7 +28,13 @@ import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { type CourseTopic, useCourseTopicQuery } from '@CourseBuilderServices/curriculum';
+import {
+  type CourseContentOrderPayload,
+  type CourseTopic,
+  type ID,
+  useCourseTopicQuery,
+  useUpdateCourseContentOrderMutation,
+} from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 import { droppableMeasuringStrategy } from '@Utils/dndkit';
@@ -60,6 +66,7 @@ const Curriculum = () => {
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
+  const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
 
   useEffect(() => {
     setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
@@ -184,10 +191,36 @@ const Curriculum = () => {
                   const activeIndex = content.findIndex((item) => item.id === active.id);
                   const overIndex = content.findIndex((item) => item.id === over.id);
 
-                  setContent((previous) => {
-                    return moveTo(previous, activeIndex, overIndex);
+                  const contentAfterSort = moveTo(content, activeIndex, overIndex);
+
+                  setContent(contentAfterSort);
+
+                  const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] =
+                    contentAfterSort.reduce(
+                      (topics, topic, topicIndex) => {
+                        let contentIndex = 0;
+                        topics[topicIndex] = {
+                          topic_id: topic.id,
+                          lesson_ids: topic.contents.reduce(
+                            (contents, content) => {
+                              contents[contentIndex] = content.ID;
+                              contentIndex++;
+
+                              return contents;
+                            },
+                            {} as { [key: ID]: ID }
+                          ),
+                        };
+                        return topics;
+                      },
+                      {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } }
+                    );
+
+                  updateCourseContentOrderMutation.mutate({
+                    tutor_topics_lessons_sorting: convertedObject,
                   });
                 }
+
                 setActiveSortId(null);
               }}
             >
@@ -221,18 +254,52 @@ const Curriculum = () => {
                             createDuplicateTopic(topic);
                           }}
                           onSort={(activeIndex, overIndex) => {
-                            setContent((previous) => {
-                              return previous.map((item, idx) => {
+                            const previousContent = content;
+                            const contentAfterSort = () => {
+                              return content.map((item, idx) => {
                                 if (idx === index) {
                                   return {
                                     ...item,
-                                    content: moveTo(item.contents, activeIndex, overIndex),
+                                    contents: moveTo(item.contents, activeIndex, overIndex),
                                   };
                                 }
 
                                 return item;
                               });
+                            };
+                            setContent(contentAfterSort);
+
+                            const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] =
+                              contentAfterSort().reduce(
+                                (topics, topic, topicIndex) => {
+                                  let contentIndex = 0;
+                                  topics[topicIndex] = {
+                                    topic_id: topic.id,
+                                    lesson_ids: topic.contents.reduce(
+                                      (contents, content) => {
+                                        contents[contentIndex] = content.ID;
+                                        contentIndex++;
+
+                                        return contents;
+                                      },
+                                      {} as { [key: ID]: ID }
+                                    ),
+                                  };
+                                  return topics;
+                                },
+                                {} as CourseContentOrderPayload['tutor_topics_lessons_sorting']
+                              );
+
+                            const response = updateCourseContentOrderMutation.mutateAsync({
+                              tutor_topics_lessons_sorting: convertedObject,
+
+                              'content_parent[parent_topic_id]': topic.id,
+                              'content_parent[content_id]': topic.contents[activeIndex].ID,
                             });
+
+                            if (!response) {
+                              setContent(previousContent);
+                            }
                           }}
                         />
                       );
