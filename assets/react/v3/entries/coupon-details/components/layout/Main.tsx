@@ -1,5 +1,6 @@
 import Container from '@Components/Container';
 import { colorTokens, spacing } from '@Config/styles';
+import CouponDiscount from '@CouponComponents/coupon/CouponDiscount';
 import CouponInfo from '@CouponComponents/coupon/CouponInfo';
 import { Coupon, couponInitialValue } from '@CouponServices/coupon';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -20,6 +21,7 @@ function Main() {
 					<div css={styles.content}>
 						<div css={styles.left}>
 							<CouponInfo />
+							<CouponDiscount />
 						</div>
 						<div css={styles.right}></div>
 					</div>
