@@ -95,7 +95,6 @@ const styles = {
 		position: absolute;
 		right: ${spacing[0]};
 		top: ${spacing[0]};
-		margin-right: ${spacing[20]};
 
 		:hover,
 		:active,
