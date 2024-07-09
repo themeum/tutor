@@ -282,7 +282,7 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 2.7.3 - July 08, 2024
+= 2.7.3 - July 09, 2024
 
 New: Settings for instructors regarding course deletion.
 Update: Removed the "Delete Permanently" option from the "All" tab on the course page.
