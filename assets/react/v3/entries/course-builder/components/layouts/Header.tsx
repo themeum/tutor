@@ -107,6 +107,24 @@ const Header = () => {
       isDanger: false,
     };
 
+    const backToLegacyItem = {
+      text: (
+        <div
+          css={[
+            styleUtils.display.flex(),
+            {
+              alignItems: 'center',
+            },
+          ]}
+        >
+          {__('Legacy mode', 'tutor')}
+          <SVGIcon name="linkExternal" width={24} height={24} />
+        </div>
+      ),
+      onClick: () => window.open(tutorConfig.dashboard_url, '_blank'),
+      isDanger: false,
+    };
+
     const items = [previewItem];
 
     if (courseId && postStatus !== 'draft') {
@@ -114,7 +132,7 @@ const Header = () => {
       items.push(switchToDraftItem);
     }
 
-    items.push(moveToTrashItem);
+    items.push(moveToTrashItem, backToLegacyItem);
 
     return items;
   };
@@ -137,22 +155,6 @@ const Header = () => {
           <Tracker />
         </div>
         <div css={styles.headerRight}>
-          <Button
-            variant="secondary"
-            size="small"
-            icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-            iconPosition="right"
-            onClick={() => {
-              const legacyUrl = courseId
-                ? `${config.TUTOR_API_BASE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
-                : `${config.TUTOR_API_BASE_URL}/wp-admin/post-new.php?post_type=courses`;
-
-              window.open(legacyUrl, '_blank');
-            }}
-          >
-            {__('Back To Legacy', 'tutor')}
-          </Button>
-
           <Show
             when={postStatus === 'draft'}
             fallback={
@@ -190,7 +192,7 @@ const Header = () => {
               ((localPostStatus === 'publish' || localPostStatus === 'future') && updateCourseMutation.isPending)
             }
             onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
-            dropdownMaxWidth="144px"
+            dropdownMaxWidth="164px"
             disabledDropdown={!form.formState.isDirty && !courseId}
           >
             {dropdownItems().map((item, index) => (

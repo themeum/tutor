@@ -1,8 +1,9 @@
-import { css } from '@emotion/react';
 import { Controller } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 
 import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
 
 import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
@@ -11,26 +12,36 @@ import FormSwitch from '@Components/fields/FormSwitch';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
+import FormFileUploader from '@Components/fields/FormFileUploader';
+import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import FormFileUploader from '@Components/fields/FormFileUploader';
-import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
-import type { ID } from '@CourseBuilderServices/curriculum';
+import { useLessonDetailsQuery, useSaveLessonMutation, type ID } from '@CourseBuilderServices/curriculum';
+import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import Show from '@Controls/Show';
+import {
+  type PrerequisiteCourses,
+  usePrerequisiteCoursesQuery,
+  type ContentDripType,
+} from '@CourseBuilderServices/course';
+import FormDateInput from '@Components/fields/FormDateInput';
+import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
+import { css } from '@emotion/react';
 
-interface AddLessonModalProps extends ModalProps {
-  id: ID;
+interface LessonModalProps extends ModalProps {
+  lessonId?: ID | null;
+  topicId: ID;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  contentDripType: ContentDripType;
 }
 
-interface AddLessonForm {
+export interface LessonForm {
   title: string;
   description: string;
-  featured_image: Media | null;
+  thumbnail: Media | null;
   tutor_attachments: Media[];
-  available_after_days: number;
   lesson_preview: boolean;
   video: CourseVideo | null;
   duration: {
@@ -38,16 +49,40 @@ interface AddLessonForm {
     minute: number;
     second: number;
   };
+  content_drip_settings: {
+    unlock_date: string;
+    after_xdays_of_enroll: string;
+    prerequisites: PrerequisiteCourses[];
+  };
 }
 
-const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModalProps) => {
-  const form = useFormWithGlobalError<AddLessonForm>({
+const courseId = getCourseId();
+
+const LessonModal = ({
+  lessonId = null,
+  topicId,
+  closeModal,
+  icon,
+  title,
+  subtitle,
+  contentDripType,
+}: LessonModalProps) => {
+  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Course Preview');
+  const getLessonDetailsQuery = useLessonDetailsQuery(topicId, lessonId || '');
+  const saveLessonMutation = useSaveLessonMutation({
+    courseId,
+    topicId,
+    lessonId: lessonId || '',
+  });
+
+  const lessonDetails = getLessonDetailsQuery?.data;
+
+  const form = useFormWithGlobalError<LessonForm>({
     defaultValues: {
       title: '',
       description: '',
-      featured_image: null,
+      thumbnail: null,
       tutor_attachments: [],
-      available_after_days: 0,
       lesson_preview: false,
       video: null,
       duration: {
@@ -55,11 +90,64 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
         minute: 0,
         second: 0,
       },
+      content_drip_settings: {
+        unlock_date: '',
+        after_xdays_of_enroll: '',
+        prerequisites: [],
+      },
     },
+    shouldFocusError: true,
   });
 
-  const onSubmit = (data: AddLessonForm) => {
-    closeModal({ action: 'CONFIRM' });
+  const prerequisiteCourses = lessonDetails?.content_drip_settings?.prerequisites
+    ? lessonDetails?.content_drip_settings?.prerequisites.map((item) => String(item.id))
+    : [];
+
+  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
+    String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
+    !!isPrerequisiteAddonEnabled
+  );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (lessonDetails) {
+      form.reset({
+        title: lessonDetails.post_title || '',
+        description: lessonDetails.post_content || '',
+        thumbnail: {
+          id: 0,
+          title: '',
+          url: lessonDetails.thumbnail || '',
+        },
+        tutor_attachments: lessonDetails.attachments || [],
+        lesson_preview: lessonDetails.is_preview || false,
+        video: lessonDetails.video || null,
+        duration: {
+          hour: lessonDetails.video.runtime?.hours || 0,
+          minute: lessonDetails.video.runtime?.minutes || 0,
+          second: lessonDetails.video.runtime?.seconds || 0,
+        },
+        content_drip_settings: {
+          unlock_date: lessonDetails.content_drip_settings?.unlock_date || '',
+          after_xdays_of_enroll: lessonDetails.content_drip_settings?.after_xdays_of_enroll || '',
+          prerequisites: lessonDetails.content_drip_settings?.prerequisites || [],
+        },
+      });
+    }
+  }, [lessonDetails]);
+
+  useEffect(() => {
+    form.setFocus('title');
+  }, [form]);
+
+  const onSubmit = async (data: LessonForm) => {
+    console.log(data);
+    const payload = convertLessonDataToPayload(data, lessonId || '', topicId, contentDripType);
+    const response = await saveLessonMutation.mutateAsync(payload);
+
+    if (response.data) {
+      closeModal({ action: 'CONFIRM' });
+    }
   };
 
   return (
@@ -74,7 +162,7 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
             {__('Cancel', 'tutor')}
           </Button>
           <Button variant="primary" size="small" onClick={form.handleSubmit(onSubmit)}>
-            {__('Save', 'tutor')}
+            {lessonId ? __('Update', 'tutor') : __('Save', 'tutor')}
           </Button>
         </>
       }
@@ -85,6 +173,9 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
             <Controller
               name="title"
               control={form.control}
+              rules={{
+                required: __('Lesson Name is required', 'tutor'),
+              }}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
@@ -98,6 +189,9 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
             <Controller
               name="description"
               control={form.control}
+              rules={{
+                required: __('Description is required', 'tutor'),
+              }}
               render={(controllerProps) => (
                 <FormTextareaInput
                   {...controllerProps}
@@ -111,7 +205,7 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
 
         <div css={styles.rightPanel}>
           <Controller
-            name="featured_image"
+            name="thumbnail"
             control={form.control}
             render={(controllerProps) => (
               <FormImageInput
@@ -136,7 +230,7 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
             )}
           />
           <div css={styles.durationWrapper}>
-            <span css={styles.additoinLabel}>{__('Video playback time', 'tutor')}</span>
+            <span css={styles.additionLabel}>{__('Video playback time', 'tutor')}</span>
             <div css={styles.duration}>
               <Controller
                 name="duration.hour"
@@ -183,19 +277,52 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
             </div>
           </div>
 
-          <Controller
-            name="available_after_days"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                type="number"
-                label={__('Available after days', 'tutor')}
-                helpText={__('Set the number of days after which the lesson will be available', 'tutor')}
-                placeholder="0"
+          <Show when={isAddonEnabled('Content Drip')}>
+            <Show when={contentDripType === 'specific_days'}>
+              <Controller
+                name="content_drip_settings.after_xdays_of_enroll"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    type="number"
+                    label={__('Available after days', 'tutor')}
+                    helpText={__('Set the number of days after which the lesson will be available', 'tutor')}
+                    placeholder="0"
+                  />
+                )}
               />
-            )}
-          />
+            </Show>
+
+            <Show when={contentDripType === 'unlock_by_date'}>
+              <Controller
+                name="content_drip_settings.unlock_date"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormDateInput
+                    {...controllerProps}
+                    label={__('Unlock Date', 'tutor')}
+                    helpText={__('Set the date when the lesson will be available', 'tutor')}
+                  />
+                )}
+              />
+            </Show>
+
+            <Show when={contentDripType === 'after_finishing_prerequisites'}>
+              <Controller
+                name="content_drip_settings.prerequisites"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCoursePrerequisites
+                    {...controllerProps}
+                    placeholder={__('Select Prerequisite', 'tutor')}
+                    label={__('Prerequisites', 'tutor')}
+                    options={prerequisiteCoursesQuery.data || []}
+                  />
+                )}
+              />
+            </Show>
+          </Show>
 
           <Controller
             name="tutor_attachments"
@@ -217,11 +344,28 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
               render={(controllerProps) => (
                 <FormSwitch
                   {...controllerProps}
-                  label={__('Lesson preview', 'tutor')}
-                  helpText={__('Show preview', 'tutor')}
+                  label={
+                    <div css={styles.previewLabel}>
+                      {__('Lesson Preview', 'tutor')}
+                      {!isAddonEnabled('Tutor Course Preview') && <SVGIcon name="crown" width={24} height={24} />}
+                    </div>
+                  }
+                  helpText={
+                    isAddonEnabled('Tutor Course Preview')
+                      ? __('If checked, any users/guest can view this lesson without enroll course', 'tutor')
+                      : ''
+                  }
                 />
               )}
             />
+            <Show when={form.watch('lesson_preview')}>
+              <div css={styles.previewInfo}>
+                {__(
+                  'Course preview is on, from now on any users/guest can view this lesson without enrolling the course.',
+                  'tutor'
+                )}
+              </div>
+            </Show>
           </div>
         </div>
       </div>
@@ -229,7 +373,7 @@ const AddLessonModal = ({ id, closeModal, icon, title, subtitle }: AddLessonModa
   );
 };
 
-export default AddLessonModal;
+export default LessonModal;
 
 const styles = {
   wrapper: css`
@@ -271,7 +415,7 @@ const styles = {
     ${typography.small()};
     color: ${colorTokens.text.hints};
   `,
-  additoinLabel: css`
+  additionLabel: css`
     ${typography.body()}
     color: ${colorTokens.text.title};
   `,
@@ -279,5 +423,18 @@ const styles = {
     padding: ${spacing[12]};
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
+  `,
+  previewLabel: css`
+    display: flex;
+    align-items: center;
+  `,
+  previewInfo: css`
+    ${typography.small()};
+    text-align: center;
+    color: ${colorTokens.text.title};
+    padding: ${spacing[8]} ${spacing[24]};
+    background: ${colorTokens.background.status.success};
+    border-radius: ${borderRadius[4]};
+    margin-top: ${spacing[12]};
   `,
 };

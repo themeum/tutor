@@ -21,7 +21,7 @@ import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -59,6 +59,11 @@ import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { moveTo, nanoid, noop } from '@Utils/util';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import Popover from '@Molecules/Popover';
+import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
+import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
+import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -79,24 +84,33 @@ const hasLiveAddons = true;
 const courseId = getCourseId();
 
 const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false }: TopicProps) => {
+  const courseDetailsForm = useFormContext<CourseFormData>();
   const form = useFormWithGlobalError<TopicForm>({
     defaultValues: {
       title: topic.title,
       summary: topic.summary,
     },
+    shouldFocusError: true,
   });
 
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(!topic.isSaved);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
+  const [meetingType, setMeetingType] = useState<'googleMeet' | 'zoom' | null>(null);
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<TopicContentType[]>(topic.contents);
+
+  useEffect(() => {
+    setContent(topic.contents);
+  }, [topic]);
 
   const topicRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const deleteRef = useRef<HTMLButtonElement>(null);
+  const triggerGoogleMeetRef = useRef<HTMLButtonElement>(null);
+  const triggerZoomRef = useRef<HTMLButtonElement>(null);
 
   const saveTopicMutation = useSaveTopicMutation();
   const deleteTopicMutation = useDeleteTopicMutation();
@@ -121,6 +135,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 
   const { showModal } = useModal();
 
+  const courseDetails = useCourseDetails();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLDivElement)) {
@@ -129,6 +146,10 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     };
 
     document.addEventListener('click', handleOutsideClick);
+
+    if (isEdit) {
+      form.setFocus('title');
+    }
 
     return () => document.removeEventListener('click', handleOutsideClick);
   }, []);
@@ -201,342 +222,384 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
   }, [topic.isCollapsed, content.length]);
 
   return (
-    <div
-      {...attributes}
-      css={styles.wrapper({ isActive: isActive || isEdit, isOverlay })}
-      onClick={() => setIsActive(true)}
-      onKeyDown={noop}
-      tabIndex={-1}
-      ref={combinedRef}
-      style={style}
-    >
+    <>
       <div
-        css={styles.header({
-          isCollapsed: topic.isCollapsed,
-          isEdit,
-          isDeletePopoverOpen,
-        })}
+        {...attributes}
+        css={styles.wrapper({ isActive: isActive || isEdit, isOverlay })}
+        onClick={() => setIsActive(true)}
+        onKeyDown={noop}
+        tabIndex={-1}
+        ref={combinedRef}
+        style={style}
       >
-        <div css={styles.headerContent}>
-          <div {...listeners} css={styles.grabberInput({ isOverlay })}>
-            <SVGIcon name="dragVertical" width={24} height={24} />
+        <div
+          css={styles.header({
+            isCollapsed: topic.isCollapsed,
+            isEdit,
+            isDeletePopoverOpen,
+          })}
+        >
+          <div css={styles.headerContent}>
+            <div {...listeners} css={styles.grabberInput({ isOverlay })}>
+              <SVGIcon name="dragVertical" width={24} height={24} />
 
-            <Show
-              when={isEdit}
-              fallback={
-                <div css={styles.title({ isEdit })} title={topic.title} onDoubleClick={() => setIsEdit(true)}>
-                  {form.watch('title')}
+              <Show
+                when={isEdit}
+                fallback={
+                  <div css={styles.title({ isEdit })} title={topic.title} onDoubleClick={() => setIsEdit(true)}>
+                    {form.watch('title')}
+                  </div>
+                }
+              >
+                <div css={styles.title({ isEdit })}>
+                  <Controller
+                    control={form.control}
+                    name="title"
+                    rules={{ required: __('Title is required', 'tutor') }}
+                    render={(controllerProps) => (
+                      <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
+                    )}
+                  />
                 </div>
-              }
-            >
-              <div css={styles.title({ isEdit })}>
-                <Controller
-                  control={form.control}
-                  name="title"
-                  rules={{ required: __('Title is required', 'tutor') }}
-                  render={(controllerProps) => (
-                    <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
-                  )}
-                />
-              </div>
-            </Show>
-          </div>
-          <div css={styles.actions}>
-            <Show when={!isEdit}>
+              </Show>
+            </div>
+            <div css={styles.actions}>
+              <Show when={!isEdit}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  data-visually-hidden
+                  onClick={() => {
+                    setIsEdit(true);
+                    if (topic.isCollapsed) {
+                      onCollapse?.();
+                    }
+                  }}
+                >
+                  <SVGIcon name="edit" width={24} height={24} />
+                </button>
+              </Show>
               <button
                 type="button"
                 css={styles.actionButton}
                 data-visually-hidden
                 onClick={() => {
-                  setIsEdit(true);
-                  if (topic.isCollapsed) {
-                    onCollapse?.();
-                  }
+                  alert('@TODO: will be implemented later');
                 }}
               >
-                <SVGIcon name="edit" width={24} height={24} />
+                <SVGIcon name="copyPaste" width={24} height={24} />
               </button>
-            </Show>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={() => {
-                alert('@TODO: will be implemented later');
-              }}
-            >
-              <SVGIcon name="copyPaste" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              ref={deleteRef}
-              onClick={() => {
-                setIsDeletePopoverOpen(true);
-              }}
-            >
-              <SVGIcon name="delete" width={24} height={24} />
-            </button>
-            <ConfirmationPopover
-              isOpen={isDeletePopoverOpen}
-              triggerRef={deleteRef}
-              closePopover={() => setIsDeletePopoverOpen(false)}
-              maxWidth="258px"
-              title={`Delete topic "${topic.title}"`}
-              message="Are you sure you want to delete this content from your course? This cannot be undone."
-              animationType={AnimationType.slideUp}
-              arrow="auto"
-              hideArrow
-              confirmButton={{
-                text: __('Delete', 'tutor'),
-                variant: 'text',
-                isDelete: true,
-              }}
-              cancelButton={{
-                text: __('Cancel', 'tutor'),
-                variant: 'text',
-              }}
-              onConfirmation={async () => {
-                await deleteTopicMutation.mutateAsync(topic.id);
-                setIsDeletePopoverOpen(false);
-                onDelete?.();
-              }}
-            />
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                ref={deleteRef}
+                onClick={() => {
+                  setIsDeletePopoverOpen(true);
+                }}
+              >
+                <SVGIcon name="delete" width={24} height={24} />
+              </button>
+              <ConfirmationPopover
+                isOpen={isDeletePopoverOpen}
+                triggerRef={deleteRef}
+                closePopover={() => setIsDeletePopoverOpen(false)}
+                maxWidth="258px"
+                title={`Delete topic "${topic.title}"`}
+                message="Are you sure you want to delete this content from your course? This cannot be undone."
+                animationType={AnimationType.slideUp}
+                arrow="auto"
+                hideArrow
+                confirmButton={{
+                  text: __('Delete', 'tutor'),
+                  variant: 'text',
+                  isDelete: true,
+                }}
+                cancelButton={{
+                  text: __('Cancel', 'tutor'),
+                  variant: 'text',
+                }}
+                onConfirmation={async () => {
+                  await deleteTopicMutation.mutateAsync(topic.id);
+                  setIsDeletePopoverOpen(false);
+                  onDelete?.();
+                }}
+              />
 
-            <button
-              type="button"
-              css={styles.actionButton}
-              onClick={() => {
-                onCollapse?.();
-              }}
-            >
-              <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
-            </button>
+              <button
+                type="button"
+                css={styles.actionButton}
+                onClick={() => {
+                  onCollapse?.();
+                }}
+              >
+                <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
+              </button>
+            </div>
           </div>
-        </div>
 
-        <Show
-          when={isEdit}
-          fallback={
-            <animated.div style={{ ...collapseAnimationDescription }}>
-              <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
-                {form.watch('summary')}
-              </div>
-            </animated.div>
-          }
-        >
-          <div css={styles.description({ isEdit })}>
-            <Controller
-              control={form.control}
-              name="summary"
-              rules={{ required: __('Summary is required', 'tutor') }}
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  placeholder={__('Add a summary', 'tutor')}
-                  isSecondary
-                  rows={2}
-                  enableResize
-                />
-              )}
-            />
-          </div>
-        </Show>
-
-        <Show when={isEdit}>
-          <div css={styles.footer}>
-            <Button variant="text" size="small" onClick={() => setIsEdit(false)}>
-              {__('Cancel', 'tutor')}
-            </Button>
-            <Button
-              loading={saveTopicMutation.isPending}
-              variant="secondary"
-              size="small"
-              onClick={form.handleSubmit(handleSubmit)}
-            >
-              {__('Ok', 'tutor')}
-            </Button>
-          </div>
-        </Show>
-      </div>
-      <animated.div style={{ ...collapseAnimation }}>
-        <div css={styles.content} ref={topicRef}>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-            onDragStart={(event) => {
-              setActiveSortId(event.active.id);
-            }}
-            onDragEnd={(event) => {
-              const { active, over } = event;
-              if (!over) {
-                return;
-              }
-
-              if (active.id !== over.id) {
-                const activeIndex = content.findIndex((item) => item.ID === active.id);
-                const overIndex = content.findIndex((item) => item.ID === over.id);
-                // Will be modified later
-                // onSort?.(activeIndex, overIndex);
-                setContent(moveTo(content, activeIndex, overIndex));
-              }
-            }}
+          <Show
+            when={isEdit}
+            fallback={
+              <animated.div style={{ ...collapseAnimationDescription }}>
+                <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
+                  {form.watch('summary')}
+                </div>
+              </animated.div>
+            }
           >
-            <SortableContext
-              items={content.map((item) => ({ ...item, id: item.ID }))}
-              strategy={verticalListSortingStrategy}
+            <div css={styles.description({ isEdit })}>
+              <Controller
+                control={form.control}
+                name="summary"
+                rules={{ required: __('Summary is required', 'tutor') }}
+                render={(controllerProps) => (
+                  <FormTextareaInput
+                    {...controllerProps}
+                    placeholder={__('Add a summary', 'tutor')}
+                    isSecondary
+                    rows={2}
+                    enableResize
+                  />
+                )}
+              />
+            </div>
+          </Show>
+
+          <Show when={isEdit}>
+            <div css={styles.footer}>
+              <Button variant="text" size="small" onClick={() => setIsEdit(false)}>
+                {__('Cancel', 'tutor')}
+              </Button>
+              <Button
+                loading={saveTopicMutation.isPending}
+                variant="secondary"
+                size="small"
+                onClick={form.handleSubmit(handleSubmit)}
+              >
+                {__('Ok', 'tutor')}
+              </Button>
+            </div>
+          </Show>
+        </div>
+        <animated.div style={{ ...collapseAnimation }}>
+          <div css={styles.content} ref={topicRef}>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+              onDragStart={(event) => {
+                setActiveSortId(event.active.id);
+              }}
+              onDragEnd={(event) => {
+                const { active, over } = event;
+                if (!over) {
+                  return;
+                }
+
+                if (active.id !== over.id) {
+                  const activeIndex = content.findIndex((item) => item.ID === active.id);
+                  const overIndex = content.findIndex((item) => item.ID === over.id);
+                  // Will be modified later
+                  onSort?.(activeIndex, overIndex);
+                  setContent(moveTo(content, activeIndex, overIndex));
+                }
+              }}
             >
-              <div>
-                <For each={content}>
-                  {(content) => {
-                    return (
+              <SortableContext
+                items={content.map((item) => ({ ...item, id: item.ID }))}
+                strategy={verticalListSortingStrategy}
+              >
+                <div>
+                  <For each={content}>
+                    {(content) => {
+                      return (
+                        <TopicContent
+                          key={content.ID}
+                          type={content.post_type}
+                          topic={topic}
+                          content={{
+                            id: content.ID,
+                            title: content.post_title,
+                          }}
+                          onCopy={() => createDuplicateContent(content)}
+                        />
+                      );
+                    }}
+                  </For>
+                </div>
+              </SortableContext>
+
+              {createPortal(
+                <DragOverlay>
+                  <Show when={activeSortItem}>
+                    {(item) => (
                       <TopicContent
-                        key={content.ID}
-                        type={content.post_type}
                         topic={topic}
                         content={{
-                          id: content.ID,
-                          title: content.post_title,
+                          id: item.ID,
+                          title: item.post_title,
                         }}
-                        onCopy={() => createDuplicateContent(content)}
+                        type={item.post_type}
+                        isDragging
                       />
-                    );
-                  }}
-                </For>
-              </div>
-            </SortableContext>
+                    )}
+                  </Show>
+                </DragOverlay>,
+                document.body
+              )}
+            </DndContext>
 
-            {createPortal(
-              <DragOverlay>
-                <Show when={activeSortItem}>
-                  {(item) => (
-                    <TopicContent
-                      topic={topic}
-                      content={{
-                        id: item.ID,
-                        title: item.post_title,
-                      }}
-                      type={item.post_type}
-                      isDragging
-                    />
-                  )}
-                </Show>
-              </DragOverlay>,
-              document.body
-            )}
-          </DndContext>
-
-          <div css={styles.contentButtons}>
-            <div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
-              <Button
-                variant="tertiary"
-                isOutlined
-                size="small"
-                icon={<SVGIcon name="plus" width={24} height={24} />}
-                disabled={!topic.isSaved}
-                onClick={() => {
-                  showModal({
-                    component: LessonModal,
-                    props: {
-                      id: topic.id,
-                      title: __('Lesson', 'tutor'),
-                      icon: <SVGIcon name="lesson" width={24} height={24} />,
-                      subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
-                    },
-                  });
-                }}
-              >
-                {__('Lesson', 'tutor')}
-              </Button>
-              <Button
-                variant="tertiary"
-                isOutlined
-                size="small"
-                icon={<SVGIcon name="plus" width={24} height={24} />}
-                disabled={!topic.isSaved}
-                onClick={() => {
-                  showModal({
-                    component: QuizModal,
-                    props: {
-                      title: __('Quiz', 'tutor'),
-                      icon: <SVGIcon name="quiz" width={24} height={24} />,
-                      subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
-                    },
-                  });
-                }}
-              >
-                {__('Quiz', 'tutor')}
-              </Button>
-              <Button
-                variant="tertiary"
-                isOutlined
-                size="small"
-                icon={<SVGIcon name="plus" width={24} height={24} />}
-                disabled={!topic.isSaved}
-                onClick={() => {
-                  showModal({
-                    component: AddAssignmentModal,
-                    props: {
-                      title: __('Assignment', 'tutor'),
-                      icon: <SVGIcon name="assignment" width={24} height={24} />,
-                      subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
-                    },
-                  });
-                }}
-              >
-                {__('Assignment', 'tutor')}
-              </Button>
-            </div>
-            <div css={styles.footerButtons}>
-              <Show
-                when={hasLiveAddons}
-                fallback={
-                  <Button
-                    variant="tertiary"
-                    isOutlined
-                    size="small"
-                    icon={<SVGIcon name="download" width={24} height={24} />}
-                    disabled={!topic.isSaved}
-                    onClick={() => {
-                      alert('@TODO: will be implemented later');
-                    }}
-                  >
-                    {__('Import Quiz', 'tutor')}
-                  </Button>
-                }
-              >
-                <ThreeDots
-                  isOpen={isOpen}
-                  onClick={() => setIsOpen(true)}
-                  closePopover={() => setIsOpen(false)}
+            <div css={styles.contentButtons}>
+              <div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
+                <Button
+                  variant="tertiary"
+                  isOutlined
+                  size="small"
+                  icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled={!topic.isSaved}
-                  dotsOrientation="vertical"
-                  maxWidth="220px"
-                  isInverse
-                  arrowPosition="auto"
-                  hideArrow
+                  onClick={() => {
+                    showModal({
+                      component: LessonModal,
+                      props: {
+                        contentDripType: courseDetailsForm.watch('contentDripType'),
+                        topicId: topic.id,
+                        title: __('Lesson', 'tutor'),
+                        icon: <SVGIcon name="lesson" width={24} height={24} />,
+                        subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
+                      },
+                    });
+                  }}
                 >
-                  <ThreeDots.Option
-                    text={__('Meet live lesson', 'tutor')}
-                    icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
-                  />
-                  <ThreeDots.Option
-                    text={__('Zoom live lesson', 'tutor')}
-                    icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
-                  />
-                  <ThreeDots.Option
-                    text={__('Import Quiz', 'tutor')}
-                    icon={<SVGIcon name="download" width={24} height={24} />}
-                  />
-                </ThreeDots>
-              </Show>
+                  {__('Lesson', 'tutor')}
+                </Button>
+                <Button
+                  variant="tertiary"
+                  isOutlined
+                  size="small"
+                  icon={<SVGIcon name="plus" width={24} height={24} />}
+                  disabled={!topic.isSaved}
+                  onClick={() => {
+                    showModal({
+                      component: QuizModal,
+                      props: {
+                        title: __('Quiz', 'tutor'),
+                        icon: <SVGIcon name="quiz" width={24} height={24} />,
+                        subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
+                      },
+                    });
+                  }}
+                >
+                  {__('Quiz', 'tutor')}
+                </Button>
+                <Button
+                  variant="tertiary"
+                  isOutlined
+                  size="small"
+                  icon={<SVGIcon name="plus" width={24} height={24} />}
+                  disabled={!topic.isSaved}
+                  onClick={() => {
+                    showModal({
+                      component: AddAssignmentModal,
+                      props: {
+                        title: __('Assignment', 'tutor'),
+                        icon: <SVGIcon name="assignment" width={24} height={24} />,
+                        subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
+                      },
+                    });
+                  }}
+                >
+                  {__('Assignment', 'tutor')}
+                </Button>
+              </div>
+              <div css={styles.footerButtons}>
+                <Show
+                  when={hasLiveAddons}
+                  fallback={
+                    <Button
+                      variant="tertiary"
+                      isOutlined
+                      size="small"
+                      icon={<SVGIcon name="download" width={24} height={24} />}
+                      disabled={!topic.isSaved}
+                      onClick={() => {
+                        alert('@TODO: will be implemented later');
+                      }}
+                    >
+                      {__('Import Quiz', 'tutor')}
+                    </Button>
+                  }
+                >
+                  <ThreeDots
+                    isOpen={isThreeDotOpen}
+                    onClick={() => setIsThreeDotOpen(true)}
+                    closePopover={() => setIsThreeDotOpen(false)}
+                    disabled={!topic.isSaved}
+                    dotsOrientation="vertical"
+                    maxWidth="220px"
+                    isInverse
+                    arrowPosition="auto"
+                    hideArrow
+                  >
+                    <ThreeDots.Option
+                      text={
+                        <button ref={triggerGoogleMeetRef} type="button" css={styleUtils.resetButton}>
+                          {__('Meet live lesson', 'tutor')}
+                        </button>
+                      }
+                      icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
+                      onClick={() => setMeetingType('googleMeet')}
+                    />
+                    <ThreeDots.Option
+                      text={
+                        <button ref={triggerZoomRef} type="button" css={styleUtils.resetButton}>
+                          {__('Zoom live lesson', 'tutor')}
+                        </button>
+                      }
+                      icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
+                      onClick={() => setMeetingType('zoom')}
+                    />
+                    <ThreeDots.Option
+                      text={__('Import Quiz', 'tutor')}
+                      icon={<SVGIcon name="download" width={24} height={24} />}
+                    />
+                  </ThreeDots>
+                </Show>
+              </div>
             </div>
           </div>
-        </div>
-      </animated.div>
-    </div>
+        </animated.div>
+      </div>
+      <Popover
+        triggerRef={triggerGoogleMeetRef}
+        isOpen={meetingType === 'googleMeet'}
+        closePopover={() => setMeetingType(null)}
+        maxWidth="306px"
+      >
+        <GoogleMeetForm
+          topicId={topic.id}
+          data={null}
+          onCancel={() => {
+            setMeetingType(null);
+          }}
+        />
+      </Popover>
+      <Popover
+        triggerRef={triggerZoomRef}
+        isOpen={meetingType === 'zoom'}
+        closePopover={() => setMeetingType(null)}
+        maxWidth="306px"
+      >
+        <ZoomMeetingForm
+          topicId={topic.id}
+          meetingHost={courseDetails?.zoom_users || {}}
+          data={null}
+          onCancel={() => {
+            setMeetingType(null);
+          }}
+        />
+      </Popover>
+    </>
   );
 };
 

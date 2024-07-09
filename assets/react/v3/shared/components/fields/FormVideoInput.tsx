@@ -77,7 +77,7 @@ const videoSourceOptions = videoSources.reduce((options, source) => {
 
 const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<CourseVideo>) => {
   const defaultValue = {
-    source: 'html5',
+    source: '',
     source_video_id: '',
     poster: '',
     poster_url: '',
@@ -343,7 +343,7 @@ const FormVideoInput = ({
             {
               left: position.left,
               top: position.top,
-              maxWidth: '306px',
+              maxWidth: triggerRef.current?.offsetWidth,
             },
           ]}
         >

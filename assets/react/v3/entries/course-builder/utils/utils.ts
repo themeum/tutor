@@ -1,6 +1,8 @@
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
+import type { ContentDripType, CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import type { ID, LessonPayload } from '@CourseBuilderServices/curriculum';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
@@ -141,6 +143,47 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
+  };
+};
+
+export const convertLessonDataToPayload = (
+  data: LessonForm,
+  lessonId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType
+): LessonPayload => {
+  return {
+    ...(lessonId && { lesson_id: lessonId }),
+    topic_id: topicId,
+    title: data.title,
+    description: data.description,
+    thumbnail_id: data.thumbnail?.id || 0,
+    'video[source]': data.video?.source || '',
+    'video[source_video_id]': data.video?.source_video_id || '',
+    'video[poster]': data.video?.poster || '',
+    'video[source_external_url]': data.video?.source_external_url || '',
+    'video[source_shortcode]': data.video?.source_shortcode || '',
+    'video[source_youtube]': data.video?.source_youtube || '',
+    'video[source_vimeo]': data.video?.source_vimeo || '',
+    'video[source_embedded]': data.video?.source_embedded || '',
+
+    'video[runtime][hours]': data.duration.hour || 0,
+    'video[runtime][minutes]': data.duration.minute || 0,
+    'video[runtime][seconds]': data.duration.second || 0,
+    ...(isAddonEnabled('Tutor Course Preview') && { _is_preview: data.lesson_preview ? 1 : 0 }),
+    tutor_attachments: data.tutor_attachments.map((attachment) => attachment.id),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
+      }),
   };
 };
 

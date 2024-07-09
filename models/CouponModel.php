@@ -18,14 +18,15 @@ use Tutor\Helpers\QueryHelper;
 class CouponModel {
 
 	/**
-	 * Order status
+	 * Coupon status
 	 *
 	 * @since 3.0.0
 	 *
 	 * @var string
 	 */
-	const STATUS_ACTIVE   = 1;
-	const STATUS_INACTIVE = 0;
+	const STATUS_ACTIVE   = 'active';
+	const STATUS_INACTIVE = 'inactive';
+	const STATUS_TRASH    = 'trash';
 
 	/**
 	 * Coupon table name
@@ -37,13 +38,23 @@ class CouponModel {
 	private $table_name = 'tutor_coupons';
 
 	/**
+	 * Coupon usage table name
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	private $coupon_usage_table = 'tutor_coupon_usages';
+
+	/**
 	 * Resolve props & dependencies
 	 *
 	 * @since 3.0.0
 	 */
 	public function __construct() {
 		global $wpdb;
-		$this->table_name = $wpdb->prefix . $this->table_name;
+		$this->table_name         = $wpdb->prefix . $this->table_name;
+		$this->coupon_usage_table = $wpdb->prefix . $this->coupon_usage_table;
 	}
 
 	/**
@@ -68,6 +79,7 @@ class CouponModel {
 		return array(
 			self::STATUS_ACTIVE   => __( 'Active', 'tutor' ),
 			self::STATUS_INACTIVE => __( 'Inactive', 'tutor' ),
+			self::STATUS_TRASH    => __( 'Trash', 'tutor' ),
 		);
 	}
 
@@ -118,11 +130,68 @@ class CouponModel {
 		);
 
 		try {
-			return QueryHelper::get_all_with_search( $this->table_name, $where, $search_clause, $order_by, $limit, $offset, $order );
+			$response = QueryHelper::get_all_with_search( $this->table_name, $where, $search_clause, $order_by, $limit, $offset, $order );
+
+			// Add coupon usage count.
+			foreach ( $response['results'] as $result ) {
+				$result->usage_count = $this->get_coupon_usage_count( $result->coupon_code );
+			}
+
+			return $response;
 		} catch ( \Throwable $th ) {
 			// Log with error, line & file name.
 			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
 			return $response;
+		}
+	}
+
+	/**
+	 * Update coupon
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $coupon_id Integer or array of ids sql escaped.
+	 * @param array     $data Data to update, escape data.
+	 *
+	 * @return bool
+	 */
+	public function update_coupon( $coupon_id, array $data ) {
+		$coupon_ids = is_array( $coupon_id ) ? $coupon_id : array( $coupon_id );
+		$coupon_ids = QueryHelper::prepare_in_clause( $coupon_ids );
+		try {
+			QueryHelper::update_where_in(
+				$this->table_name,
+				$data,
+				$coupon_ids
+			);
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
+			return false;
+		}
+	}
+
+	/**
+	 * Update coupon
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $coupon_id Integer or array of ids sql escaped.
+	 *
+	 * @return bool
+	 */
+	public function delete_coupon( $coupon_id ) {
+		$coupon_ids = is_array( $coupon_id ) ? $coupon_id : array( $coupon_id );
+
+		try {
+			QueryHelper::bulk_delete_by_ids(
+				$this->table_name,
+				$coupon_ids
+			);
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
+			return false;
 		}
 	}
 
@@ -145,5 +214,23 @@ class CouponModel {
 		}
 
 		return QueryHelper::get_count( $this->table_name, $where, $search_clause, '*' );
+	}
+
+	/**
+	 * Get coupon usage count
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $coupon_code Coupon code.
+	 *
+	 * @return int
+	 */
+	public function get_coupon_usage_count( $coupon_code ) {
+		return QueryHelper::get_count(
+			$this->coupon_usage_table,
+			array( 'coupon_code' => $coupon_code ),
+			array(),
+			'*'
+		);
 	}
 }

@@ -13,6 +13,7 @@ namespace Tutor\Ecommerce;
 use TUTOR\Backend_Page_Trait;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
@@ -33,7 +34,7 @@ class OrderController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @var Object
+	 * @var OrderModel
 	 */
 	private $model;
 
@@ -82,11 +83,18 @@ class OrderController {
 
 		if ( $register_hooks ) {
 			/**
-			 * Handle ajax request for getting order related data by order id
+			 * Handle AJAX request for getting order related data by order ID.
 			 *
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_details', array( $this, 'get_order_by_id' ) );
+
+			/**
+			 * Handle AJAX request for marking an order as paid by order ID.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_paid', array( $this, 'order_mark_as_paid' ) );
 
 			/**
 			 * Handle bulk action
@@ -130,11 +138,11 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
-		$order_id = Input::post( 'tutor_order_id' );
+		$order_id = Input::post( 'order_id' );
 
 		if ( empty( $order_id ) ) {
 			$this->json_response(
-				__( 'Order Id is required', 'tutor' ),
+				__( 'Order ID is required', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);
@@ -154,6 +162,71 @@ class OrderController {
 			__( 'Order retrieved successfully', 'tutor' ),
 			$order_data
 		);
+	}
+
+	/**
+	 * Mark an order as paid.
+	 *
+	 * This function verifies a nonce for security, constructs a payload object with
+	 * the order ID, note, and payment status, and updates the payment status of the order
+	 * to 'paid'. It sends a JSON response indicating the success or failure of the operation.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function order_mark_as_paid() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+
+		$params = array(
+			'order_id' => Input::post( 'order_id' ),
+			'note'     => Input::post( 'note' ),
+		);
+
+		// Validate request.
+		$validation = $this->validate( $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
+				$validation->errors,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		do_action( 'tutor_before_order_mark_as_paid', $params );
+
+		$payload                 = new \stdClass();
+		$payload->order_id       = $params['order_id'];
+		$payload->note           = $params['note'];
+		$payload->payment_status = $this->model::PAYMENT_PAID;
+
+		if ( empty( $payload->order_id ) ) {
+			$this->json_response(
+				__( 'Order Id is required', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$response = $this->model->payment_status_update( $payload );
+
+		do_action( 'tutor_after_order_mark_as_paid', $params );
+
+		if ( ! $response ) {
+			$this->json_response(
+				__( 'Failed to update order payment status', 'tutor' ),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
 
 	/**
@@ -197,11 +270,11 @@ class OrderController {
 
 		$where = array();
 
-		if ( '' !== $date ) {
+		if ( ! empty( $date ) ) {
 			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
 		}
 
-		if ( '' !== $payment_status ) {
+		if ( ! empty( $payment_status ) ) {
 			$where['payment_status'] = $payment_status;
 		}
 
@@ -500,5 +573,35 @@ class OrderController {
 		$list_order_by = 'id';
 
 		return $this->model->get_orders( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );
+	}
+
+	/**
+	 * Validate input data based on predefined rules.
+	 *
+	 * This protected method validates the provided data array against a set of
+	 * predefined validation rules. The rules specify that 'order_id' is required
+	 * and must be numeric. The method will skip validation rules for fields that
+	 * are not present in the data array.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data The data array to validate.
+	 *
+	 * @return object The validation result. It returns validation object.
+	 */
+	protected function validate( array $data ) {
+
+		$validation_rules = array(
+			'order_id' => 'required|numeric',
+		);
+
+		// Skip validation rules for not available fields in data.
+		foreach ( $validation_rules as $key => $value ) {
+			if ( ! array_key_exists( $key, $data ) ) {
+				unset( $validation_rules[ $key ] );
+			}
+		}
+
+		return ValidationHelper::validate( $validation_rules, $data );
 	}
 }
