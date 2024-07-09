@@ -14,7 +14,7 @@ import { useDeleteGoogleMeetMeetingMutation, type GoogleMeet } from '@CourseBuil
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useRef, useState } from 'react';
 import Popover from '@Molecules/Popover';
-import GoogleMeetMeetingForm from './GoogleMeetForm';
+import GoogleMeetForm from './GoogleMeetForm';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 
 interface GoogleMeetMeetingCardProps {
@@ -115,7 +115,7 @@ const GoogleMeetMeetingCard = ({ data, timezones, topicId }: GoogleMeetMeetingCa
         </div>
       </div>
       <Popover isOpen={isOpen} triggerRef={triggerRef} closePopover={() => setIsOpen(false)} maxWidth={'306px'}>
-        <GoogleMeetMeetingForm
+        <GoogleMeetForm
           data={data}
           timezones={timezones}
           topicId={topicId}

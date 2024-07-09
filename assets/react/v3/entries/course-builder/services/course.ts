@@ -12,6 +12,7 @@ import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
+import type { ID } from './curriculum';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -400,10 +401,10 @@ export interface ZoomMeetingPayload {
 }
 
 export interface GoogleMeetMeetingPayload {
-  'post-id'?: number; //only update
-  'event-id'?: string; //only update
+  'post-id'?: ID; //only update
+  'event-id'?: ID; //only update
   attendees: 'Yes' | 'No';
-  course_id: number; // for course builder set topic id
+  course_id: ID; // for course builder set topic id
   meeting_title: string;
   meeting_summary: string;
   meeting_start_date: string; // yyyy-mm-dd
@@ -626,6 +627,10 @@ export const useSaveGoogleMeetMeetingMutation = (courseId: string) => {
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic', Number(courseId)],
+      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
@@ -652,6 +657,10 @@ export const useDeleteGoogleMeetMeetingMutation = (courseId: string, payload: Go
 
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic', Number(courseId)],
       });
     },
     onError: (error: ErrorResponse) => {

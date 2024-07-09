@@ -26,21 +26,20 @@ import { format } from 'date-fns';
 import { DateFormats } from '@Config/constants';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import type { ID } from '@CourseBuilderServices/curriculum';
 
-export type MeetingType = 'zoom' | 'google_meet' | 'jitsi';
-
-interface GoogleMeetMeetingFormProps {
+interface GoogleMeetFormProps {
   onCancel: () => void;
   data: GoogleMeet | null;
   timezones: {
     [key: string]: string;
   };
-  topicId?: string;
+  topicId?: ID;
 }
 
 const courseId = getCourseId();
 
-const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMeetMeetingFormProps) => {
+const GoogleMeetForm = ({ onCancel, data, timezones, topicId }: GoogleMeetFormProps) => {
   const { ref, isScrolling } = useIsScrolling({ defaultValue: true });
   const currentMeeting = data;
 
@@ -67,6 +66,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
   });
 
   const saveGoogleMeetMeeting = useSaveGoogleMeetMeetingMutation(String(courseId));
+
   const timeZonesOptions = Object.keys(timezones).map((key) => ({
     label: timezones[key],
     value: key,
@@ -79,8 +79,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
 
     const response = await saveGoogleMeetMeeting.mutateAsync({
       ...(currentMeeting && { 'post-id': Number(currentMeeting.ID), 'event-id': currentMeeting.meeting_data.id }),
-      ...(topicId && { 'topic-id': topicId }),
-      course_id: courseId,
+      course_id: topicId ? topicId : courseId,
       meeting_title: data.meeting_name,
       meeting_summary: data.meeting_summary,
       meeting_start_date: data.meeting_start_date,
@@ -254,7 +253,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
   );
 };
 
-export default GoogleMeetMeetingForm;
+export default GoogleMeetForm;
 const styles = {
   container: css`
     ${styleUtils.display.flex('column')}

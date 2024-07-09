@@ -1,24 +1,6 @@
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import Topic from '@CourseBuilderComponents/curriculum/Topic';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import { type CourseTopic, useCourseTopicQuery } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from 'react';
-
-import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
-import EmptyState from '@Molecules/EmptyState';
-import { droppableMeasuringStrategy } from '@Utils/dndkit';
-import { moveTo, nanoid } from '@Utils/util';
 import {
   DndContext,
   DragOverlay,
@@ -33,6 +15,34 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+
+import Button from '@Atoms/Button';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import SVGIcon from '@Atoms/SVGIcon';
+import EmptyState from '@Molecules/EmptyState';
+
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import Topic from '@CourseBuilderComponents/curriculum/Topic';
+import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+
+import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+import {
+  type CourseContentOrderPayload,
+  type CourseTopic,
+  type ID,
+  useCourseTopicQuery,
+  useUpdateCourseContentOrderMutation,
+} from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { styleUtils } from '@Utils/style-utils';
+import { droppableMeasuringStrategy } from '@Utils/dndkit';
+import { moveTo, nanoid } from '@Utils/util';
+
+import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
+import { useCourseDetailsQuery } from '@CourseBuilderServices/course';
 
 const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean; isSaved: boolean };
@@ -57,6 +67,36 @@ const Curriculum = () => {
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
+  const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
+  const courseDetailsQuery = useCourseDetailsQuery(courseId);
+
+  const googleMeetTimeZones = useMemo(() => {
+    if (!courseDetailsQuery.data) {
+      return {};
+    }
+
+    return courseDetailsQuery.data.google_meet_timezones;
+  }, [courseDetailsQuery.data]);
+
+  const zoomMeetingTimeZones = useMemo(() => {
+    if (!courseDetailsQuery.data) {
+      return {};
+    }
+
+    return courseDetailsQuery.data.zoom_timezones;
+  }, [courseDetailsQuery.data]);
+
+  const zoomMeetingUsers = useMemo(() => {
+    if (!courseDetailsQuery.data) {
+      return {};
+    }
+
+    return courseDetailsQuery.data.zoom_users;
+  }, [courseDetailsQuery.data]);
+
+  useEffect(() => {
+    setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
+  }, [allCollapsed]);
 
   useEffect(() => {
     if (!courseCurriculumQuery.data) {
@@ -70,10 +110,6 @@ const Curriculum = () => {
       }))
     );
   }, [courseCurriculumQuery.data]);
-
-  useEffect(() => {
-    setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
-  }, [allCollapsed]);
 
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
@@ -181,10 +217,36 @@ const Curriculum = () => {
                   const activeIndex = content.findIndex((item) => item.id === active.id);
                   const overIndex = content.findIndex((item) => item.id === over.id);
 
-                  setContent((previous) => {
-                    return moveTo(previous, activeIndex, overIndex);
+                  const contentAfterSort = moveTo(content, activeIndex, overIndex);
+
+                  setContent(contentAfterSort);
+
+                  const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] =
+                    contentAfterSort.reduce(
+                      (topics, topic, topicIndex) => {
+                        let contentIndex = 0;
+                        topics[topicIndex] = {
+                          topic_id: topic.id,
+                          lesson_ids: topic.contents.reduce(
+                            (contents, content) => {
+                              contents[contentIndex] = content.ID;
+                              contentIndex++;
+
+                              return contents;
+                            },
+                            {} as { [key: ID]: ID }
+                          ),
+                        };
+                        return topics;
+                      },
+                      {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } }
+                    );
+
+                  updateCourseContentOrderMutation.mutate({
+                    tutor_topics_lessons_sorting: convertedObject,
                   });
                 }
+
                 setActiveSortId(null);
               }}
             >
@@ -199,6 +261,9 @@ const Curriculum = () => {
                         <Topic
                           key={topic.id}
                           topic={topic}
+                          googleMeetTimeZones={googleMeetTimeZones}
+                          zoomMeetingTimeZones={zoomMeetingTimeZones}
+                          zoomMeetingUsers={zoomMeetingUsers}
                           onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
                           onCollapse={() =>
                             setContent((previous) =>
@@ -218,18 +283,52 @@ const Curriculum = () => {
                             createDuplicateTopic(topic);
                           }}
                           onSort={(activeIndex, overIndex) => {
-                            setContent((previous) => {
-                              return previous.map((item, idx) => {
+                            const previousContent = content;
+                            const contentAfterSort = () => {
+                              return content.map((item, idx) => {
                                 if (idx === index) {
                                   return {
                                     ...item,
-                                    content: moveTo(item.contents, activeIndex, overIndex),
+                                    contents: moveTo(item.contents, activeIndex, overIndex),
                                   };
                                 }
 
                                 return item;
                               });
+                            };
+                            setContent(contentAfterSort);
+
+                            const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] =
+                              contentAfterSort().reduce(
+                                (topics, topic, topicIndex) => {
+                                  let contentIndex = 0;
+                                  topics[topicIndex] = {
+                                    topic_id: topic.id,
+                                    lesson_ids: topic.contents.reduce(
+                                      (contents, content) => {
+                                        contents[contentIndex] = content.ID;
+                                        contentIndex++;
+
+                                        return contents;
+                                      },
+                                      {} as { [key: ID]: ID }
+                                    ),
+                                  };
+                                  return topics;
+                                },
+                                {} as CourseContentOrderPayload['tutor_topics_lessons_sorting']
+                              );
+
+                            updateCourseContentOrderMutation.mutate({
+                              tutor_topics_lessons_sorting: convertedObject,
+
+                              'content_parent[parent_topic_id]': topic.id,
+                              'content_parent[content_id]': topic.contents[activeIndex].ID,
                             });
+
+                            if (updateCourseContentOrderMutation.isError) {
+                              setContent(previousContent);
+                            }
                           }}
                         />
                       );
@@ -242,7 +341,14 @@ const Curriculum = () => {
                 <DragOverlay>
                   <Show when={activeSortItem}>
                     {(item) => {
-                      return <Topic topic={item} />;
+                      return (
+                        <Topic
+                          googleMeetTimeZones={googleMeetTimeZones}
+                          zoomMeetingTimeZones={zoomMeetingTimeZones}
+                          zoomMeetingUsers={zoomMeetingUsers}
+                          topic={item}
+                        />
+                      );
                     }}
                   </Show>
                 </DragOverlay>,
@@ -257,7 +363,6 @@ const Curriculum = () => {
               variant="secondary"
               icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
               onClick={() => {
-                // @TODO: will be updated later.
                 setContent((previous) => {
                   return [
                     ...previous.map((item) => ({ ...item, isCollapsed: true })),
