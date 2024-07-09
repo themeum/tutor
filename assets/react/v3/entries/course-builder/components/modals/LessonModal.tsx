@@ -126,9 +126,9 @@ const LessonModal = ({
           second: lessonDetails.video.runtime?.seconds || 0,
         },
         content_drip_settings: {
-          unlock_date: '',
-          after_xdays_of_enroll: '',
-          prerequisites: [],
+          unlock_date: lessonDetails.content_drip_settings?.unlock_date || '',
+          after_xdays_of_enroll: lessonDetails.content_drip_settings?.after_xdays_of_enroll || '',
+          prerequisites: lessonDetails.content_drip_settings?.prerequisites || [],
         },
       });
     }
