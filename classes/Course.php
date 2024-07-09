@@ -1134,6 +1134,7 @@ class Course extends Tutor_Base {
 		}
 
 		$data['dashboard_url'] = $dashboard_url;
+		$data['timezones']     = tutor_global_timezone_lists();
 
 		wp_localize_script( 'tutor-course-builder-v3', '_tutorobject', $data );
 	}
