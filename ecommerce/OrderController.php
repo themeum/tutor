@@ -142,7 +142,7 @@ class OrderController {
 
 		if ( empty( $order_id ) ) {
 			$this->json_response(
-				__( 'Order Id is required', 'tutor' ),
+				__( 'Order ID is required', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);
@@ -220,7 +220,7 @@ class OrderController {
 
 		if ( ! $response ) {
 			$this->json_response(
-				__( 'Failed to update Order payment status', 'tutor' ),
+				__( 'Failed to update order payment status', 'tutor' ),
 				null,
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
