@@ -23,7 +23,7 @@ function CouponInfo() {
 	}
 
 	return (
-		<Box bordered wrapperStyle={styles.discountWrapper}>
+		<Box bordered css={styles.discountWrapper}>
 			<div css={styles.couponWrapper}>
 				<BoxTitle>{__('Coupon Info', 'tutor')}</BoxTitle>
 				<BoxSubtitle>
