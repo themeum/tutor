@@ -53,7 +53,7 @@ $navbar_data = array(
 $filters = array(
 	'bulk_action'  => $coupon_controller->bulk_action,
 	'bulk_actions' => $coupon_controller->prepare_bulk_actions(),
-	'ajax_action'  => 'tutor_course_list_bulk_action',
+	'ajax_action'  => 'tutor_coupon_bulk_action',
 	'filters'      => true,
 );
 
@@ -142,13 +142,12 @@ $filters = array(
 
 									<td>
 										<?php
-										$coupon_status = (int) $coupon->coupon_status;
-										echo wp_kses_post( tutor_utils()->translate_dynamic_text( 1 === $coupon_status ? 'active' : 'inactive', true ) );
+										echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon->coupon_status, true ) );
 										?>
 									</td>
 
 									<td>
-										12
+										<?php echo esc_html( $coupon->usage_count ); ?>
 									</td>
 									<td>
 										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">

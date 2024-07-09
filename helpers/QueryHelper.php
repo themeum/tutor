@@ -70,12 +70,19 @@ class QueryHelper {
 			$where
 		);
 
-		$update = $wpdb->update(
+		$wpdb->update(
 			$table,
 			$data,
 			$where
 		);
-		return $update ? true : false;
+
+		if ( $wpdb->last_error ) {
+			error_log( $wpdb->last_error );
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -95,6 +102,36 @@ class QueryHelper {
 			$where
 		);
 		return $delete ? true : false;
+	}
+
+	/**
+	 * Delete rows from table
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $table  table name.
+	 * @param array  $ids array of ids.
+	 *
+	 * @see prepare_in_clause
+	 *
+	 * @throws \Exception Throw database error if occurred.
+	 *
+	 * @return true on success
+	 */
+	public static function bulk_delete_by_ids( string $table, array $ids ): bool {
+		global $wpdb;
+
+		$ids = self::prepare_in_clause( $ids );
+
+		$wpdb->query(
+			"DELETE FROM {$table} WHERE id IN ( $ids )"
+		);
+
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
+		}
+
+		return true;
 	}
 
 	/**
