@@ -6,7 +6,7 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import { type CourseTopic, useCourseCurriculumQuery } from '@CourseBuilderServices/curriculum';
+import { type CourseTopic, useCourseTopicQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -35,7 +35,7 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
 const courseId = getCourseId();
-export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean };
+export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean; isSaved: boolean };
 
 const Curriculum = () => {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ const Curriculum = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
 
-  const courseCurriculumQuery = useCourseCurriculumQuery(courseId);
+  const courseCurriculumQuery = useCourseTopicQuery(courseId);
 
   useEffect(() => {
     if (!courseCurriculumQuery.data) {
@@ -66,6 +66,7 @@ const Curriculum = () => {
       courseCurriculumQuery.data.map((item, index) => ({
         ...item,
         isCollapsed: index > 0,
+        isSaved: true,
       }))
     );
   }, [courseCurriculumQuery.data]);
@@ -78,8 +79,7 @@ const Curriculum = () => {
     if (!activeSortId) {
       return null;
     }
-
-    return content.find((item) => item.ID === activeSortId);
+    return content.find((item) => item.id === activeSortId);
   }, [activeSortId, content]);
 
   const sensors = useSensors(
@@ -99,7 +99,7 @@ const Curriculum = () => {
 
   const createDuplicateTopic = (data: CourseTopic) => {
     setContent((previousTopic) => {
-      const newTopic = { ...data, ID: nanoid(), isCollapsed: false };
+      const newTopic = { ...data, ID: nanoid(), isCollapsed: false, isSaved: false };
       return [...previousTopic, newTopic];
     });
   };
@@ -125,9 +125,12 @@ const Curriculum = () => {
               <EmptyState
                 emptyStateImage={emptyStateImage}
                 emptyStateImage2x={emptyStateImage2x}
-                imageAltText="Empty State Image"
-                title="Create the course journey from here!"
-                description="when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
+                imageAltText={__('Empty State Illustration', 'tutor')}
+                title={__('Create the course journey from here!', 'tutor')}
+                description={__(
+                  'when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries',
+                  'tutor'
+                )}
                 actions={
                   <Button
                     variant="secondary"
@@ -141,12 +144,12 @@ const Curriculum = () => {
                             isCollapsed: true,
                           })),
                           {
-                            ID: nanoid(),
-                            post_title: 'New Course Topic',
-                            post_content: '',
-                            post_name: '',
-                            content: [],
+                            id: nanoid(),
+                            title: 'New Course Topic',
+                            summary: '',
+                            contents: [],
                             isCollapsed: false,
+                            isSaved: false,
                           },
                         ];
                       });
@@ -175,8 +178,8 @@ const Curriculum = () => {
                 }
 
                 if (active.id !== over.id) {
-                  const activeIndex = content.findIndex((item) => item.ID === active.id);
-                  const overIndex = content.findIndex((item) => item.ID === over.id);
+                  const activeIndex = content.findIndex((item) => item.id === active.id);
+                  const overIndex = content.findIndex((item) => item.id === over.id);
 
                   setContent((previous) => {
                     return moveTo(previous, activeIndex, overIndex);
@@ -186,7 +189,7 @@ const Curriculum = () => {
               }}
             >
               <SortableContext
-                items={content.map((item) => ({ ...item, id: item.ID }))}
+                items={content.map((item) => ({ ...item, id: item.id }))}
                 strategy={verticalListSortingStrategy}
               >
                 <div css={styles.topicWrapper}>
@@ -194,7 +197,7 @@ const Curriculum = () => {
                     {(topic, index) => {
                       return (
                         <Topic
-                          key={topic.ID}
+                          key={topic.id}
                           topic={topic}
                           onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
                           onCollapse={() =>
@@ -220,7 +223,7 @@ const Curriculum = () => {
                                 if (idx === index) {
                                   return {
                                     ...item,
-                                    content: moveTo(item.content, activeIndex, overIndex),
+                                    content: moveTo(item.contents, activeIndex, overIndex),
                                   };
                                 }
 
@@ -259,12 +262,12 @@ const Curriculum = () => {
                   return [
                     ...previous.map((item) => ({ ...item, isCollapsed: true })),
                     {
-                      ID: nanoid(),
-                      post_title: 'New Course Topic',
-                      post_content: '',
-                      post_name: '',
-                      content: [],
+                      id: nanoid(),
+                      title: 'New Course Topic',
+                      summary: 'Default Summary',
+                      contents: [],
                       isCollapsed: false,
+                      isSaved: false,
                     },
                   ];
                 });
