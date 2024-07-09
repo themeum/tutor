@@ -87,6 +87,7 @@ class CouponController {
 		if ( $register_hooks ) {
 			// Register hooks here.
 			add_action( 'wp_ajax_tutor_coupon_bulk_action', array( $this, 'bulk_action_handler' ) );
+			add_action( 'wp_ajax_tutor_coupon_permanent_delete', array( $this, 'coupon_permanent_delete' ) );
 		}
 	}
 
@@ -269,6 +270,38 @@ class CouponController {
 			wp_send_json_success( __( 'Coupon updated successfully.', 'tutor' ) );
 		} else {
 			wp_send_json_error( __( 'Failed to update coupon.', 'tutor' ) );
+		}
+	}
+
+	/**
+	 * Handle coupon permanent delete
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function coupon_permanent_delete() {
+		tutor_utils()->checking_nonce();
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			tutor_utils()->error_message();
+		}
+
+		// Get and sanitize input data.
+		$id = Input::post( 'id', 0, Input::TYPE_INT );
+		if ( ! $id ) {
+			wp_send_json_error( __( 'Invalid coupon ID', 'tutor' ) );
+		}
+
+		do_action( 'tutor_before_coupon_permanent_delete', $id );
+
+		$response = $this->model->delete_coupon( $id );
+		if ( $response ) {
+			do_action( 'tutor_after_coupon_permanent_delete', $id );
+
+			wp_send_json_success( __( 'Coupon delete successfully.', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'Failed to delete coupon.', 'tutor' ) );
 		}
 	}
 }
