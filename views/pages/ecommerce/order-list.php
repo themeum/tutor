@@ -44,7 +44,7 @@ $navbar_data    = array(
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'  => 'all' === $active_tab ? false : true,
+	'bulk_action'  => true,
 	'bulk_actions' => $order_controller->prepare_bulk_actions(),
 	'ajax_action'  => 'tutor_order_list_bulk_action',
 	'filters'      => true,

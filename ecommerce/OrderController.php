@@ -276,10 +276,10 @@ class OrderController {
 					// code...
 					break;
 			}
+		}
 
-			if ( $this->model::ORDER_TRASH !== $active_tab ) {
-				$actions[] = $this->bulk_action_mark_order_trash();
-			}
+		if ( $this->model::ORDER_TRASH !== $active_tab ) {
+			$actions[] = $this->bulk_action_mark_order_trash();
 		}
 		return apply_filters( 'tutor_order_bulk_actions', $actions );
 	}
