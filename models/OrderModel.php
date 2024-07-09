@@ -519,4 +519,32 @@ class OrderModel {
 		$primary_table = "{$this->table_name} o";
 		return QueryHelper::get_joined_count( $primary_table, $join_table, $where, $search_clause );
 	}
+
+	/**
+	 * Update the payment status of an order.
+	 *
+	 * This function updates the payment status and note of an order in the database.
+	 * It uses the QueryHelper class to perform the update operation.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @todo Need to store order activity after activity controller & model is created.
+	 *
+	 * @param object $data An object containing the payment status, note, and order ID.
+	 *                     - 'payment_status' (string): The new payment status.
+	 *                     - 'note' (string): A note regarding the payment status update.
+	 *                     - 'order_id' (int): The ID of the order to update.
+	 *
+	 * @return bool True on successful update, false on failure.
+	 */
+	public function payment_status_update( object $data ) {
+		return QueryHelper::update(
+			$this->table_name,
+			array(
+				'payment_status' => $data->payment_status,
+				'note'           => $data->note,
+			),
+			array( 'id' => $data->order_id )
+		);
+	}
 }
