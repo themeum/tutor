@@ -246,7 +246,7 @@ class Lesson extends Tutor_Base {
 			$post = array();
 		}
 
-		$data = apply_filters( 'tutor_lesson_details_response', $post );
+		$data = apply_filters( 'tutor_lesson_details_response', $post, $lesson_id );
 
 		$this->json_response(
 			__( 'Lesson data fetched successfully', 'tutor' ),
@@ -303,10 +303,9 @@ class Lesson extends Tutor_Base {
 		$post_content     = $is_html_active ? $raw_html_content : $description;
 
 		$rules = array(
-			'topic_id'     => 'required|numeric',
-			'description'  => 'required',
-			'lesson_id'    => 'if_input|numeric',
-			'thumbnail_id' => 'if_input|numeric',
+			'topic_id'    => 'required|numeric',
+			'description' => 'required',
+			'lesson_id'   => 'if_input|numeric',
 		);
 
 		//phpcs:ignore WordPress.Security.NonceVerification.Missing
