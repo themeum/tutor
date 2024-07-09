@@ -1,11 +1,22 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
+
+import { useToast } from '@Atoms/Toast';
+import { authApiInstance } from '@Utils/api';
+import endpoints from '@Utils/endpoints';
+import type { AxiosResponse } from 'axios';
+import type { ErrorResponse } from '@Utils/form';
+import type { TutorMutationResponse } from '@CourseBuilderServices/course';
 
 export type ID = string | number;
+
+export type ContentType = 'tutor-google-meet' | 'tutor_zoom_meeting' | 'lesson' | 'tutor_quiz' | 'tutor_assignments';
 export interface Content {
   ID: ID;
   post_title: string;
   post_content: string;
   post_name: string | null;
+  post_type: ContentType;
 }
 export interface LessonVideo {
   source: 'youtube' | 'vimeo';
@@ -63,265 +74,194 @@ export interface ZoomLive extends Content {
   type: 'zoom';
 }
 export interface MeetLive extends Content {
-  type: 'meet';
+  type: '"tutor-google-meet"';
 }
-
-export type TopicContent = Lesson | Assignment | Quiz | ZoomLive | MeetLive;
 
 export interface CourseTopic {
-  ID: ID;
-  post_title: string;
-  post_content: string;
-  post_name: string;
-  content: TopicContent[];
+  id: ID;
+  title: string;
+  summary: string;
+  contents: Content[];
 }
 
-const mockQuiz: Quiz[] = [
-  {
-    type: 'quiz',
-    ID: 576,
-    post_title: 'How to create a excel file',
-    post_content: 'Lorem ipsum dolor',
-    post_name: 'how-to-create-a-excel-file',
-    questions: [],
-  },
-  {
-    type: 'quiz',
-    ID: 577,
-    post_title: 'My first quiz',
-    post_content: 'Lorem ipsum dolor',
-    post_name: 'my-first-quiz',
-    questions: [
-      {
-        question_id: '2',
-        question_title: 'What is this?',
-        question_description: '<p>Lorem ipsum dolor</p>',
-        question_type: 'single_choice',
-        question_mark: 1.0,
-        question_settings: {
-          question_type: 'single_choice',
-          answer_required: true,
-          randomize_question: true,
-          question_mark: 1.0,
-          show_question_mark: true,
-        },
-        question_answers: [
-          {
-            answer_id: '7',
-            answer_title: 'True',
-            is_correct: false,
-          },
-          {
-            answer_id: '8',
-            answer_title: 'False',
-            is_correct: false,
-          },
-          {
-            answer_id: '9',
-            answer_title: 'Option A',
-            is_correct: false,
-          },
-          {
-            answer_id: '10',
-            answer_title: 'Option B',
-            is_correct: false,
-          },
-          {
-            answer_id: '11',
-            answer_title: 'Option C',
-            is_correct: true,
-          },
-          {
-            answer_id: '12',
-            answer_title: 'Option D',
-            is_correct: false,
-          },
-        ],
-      },
-    ],
-  },
-];
-const mockLesson: Lesson[] = [
-  {
-    type: 'lesson',
-    ID: 151,
-    post_title: 'How to Make Your Spreadsheets Look Professional',
-    post_content: '',
-    post_name: null,
-    course_id: 148,
-    attachments: [],
-    thumbnail: false,
-    video: [
-      {
-        source: 'youtube',
-        source_video_id: '',
-        source_youtube: 'https://www.youtube.com/watch?v=yGDwk4z9EEg',
-        source_vimeo: '',
-        runtime: {
-          hours: '00',
-          minutes: '02',
-          seconds: '20',
-        },
-        poster: '',
-      },
-    ],
-  },
-  {
-    type: 'lesson',
-    ID: 150,
-    post_title: 'Excel Made Easy: A Beginner&#8217;s Guide to Excel Spreadsheets',
-    post_content: '',
-    post_name: null,
-    course_id: 148,
-    attachments: [],
-    thumbnail: false,
-    video: [
-      {
-        source: 'youtube',
-        source_video_id: '',
-        source_youtube: 'https://www.youtube.com/watch?v=yGDwk4z9EEg',
-        source_vimeo: '',
-        runtime: {
-          hours: '00',
-          minutes: '01',
-          seconds: '10',
-        },
-        poster: '',
-      },
-    ],
-  },
-  {
-    type: 'lesson',
-    ID: 149,
-    post_title: 'Microsoft Excel: The World&#8217;s #1 Office Software',
-    post_content: '',
-    post_name: null,
-    course_id: 148,
-    attachments: [],
-    thumbnail: false,
-    video: [
-      {
-        source: 'youtube',
-        source_video_id: '',
-        source_youtube: 'https://www.youtube.com/watch?v=yGDwk4z9EEg',
-        source_vimeo: '',
-        runtime: {
-          hours: '00',
-          minutes: '01',
-          seconds: '00',
-        },
-        poster: '',
-      },
-    ],
-  },
-];
-const mockAssignment: Assignment[] = [
-  {
-    type: 'assignment',
-    ID: 248,
-    post_title: 'Assignment 1',
-    post_content: '',
-    post_name: null,
-  },
-  {
-    type: 'assignment',
-    ID: 249,
-    post_title: 'Assignment 2',
-    post_content: '',
-    post_name: null,
-  },
-  {
-    type: 'assignment',
-    ID: 250,
-    post_title: 'Assignment 3',
-    post_content: '',
-    post_name: null,
-  },
-];
-const mockZoomLive: ZoomLive[] = [
-  {
-    type: 'zoom',
-    ID: 348,
-    post_title: 'Zoom live session 1',
-    post_content: '',
-    post_name: null,
-  },
-  {
-    type: 'zoom',
-    ID: 349,
-    post_title: 'Zoom Live session 2',
-    post_content: '',
-    post_name: null,
-  },
-];
-const mockMeetLive: MeetLive[] = [
-  {
-    type: 'meet',
-    ID: 448,
-    post_title: 'Meet live session 1',
-    post_content: '',
-    post_name: null,
-  },
-  {
-    type: 'meet',
-    ID: 449,
-    post_title: 'Meet live session 2',
-    post_content: '',
-    post_name: null,
-  },
-];
+interface TopicPayload {
+  topic_id?: ID;
+  course_id: ID;
+  title: string;
+  summary: string;
+}
 
-const mockCurriculum: CourseTopic[] = [
-  {
-    ID: 342,
-    post_title: 'Meal Planning Basics',
-    post_content:
-      'The versatility of the tools and its compatibility with other software means that AutoCAD is the most used software in architectural and industrial projects. In this Domestika Basics of 5 courses, learn how to draw any type of project from scratch, alongside Alicia Sanz, model maker and interior designer.',
-    post_name: 'meal-planning-basics',
-    content: [...mockLesson.slice(0, 2), mockQuiz[0], mockAssignment[0], mockZoomLive[0], mockMeetLive[0]],
-  },
-  {
-    ID: 346,
-    post_title: 'Setting Up Your Diet',
-    post_content:
-      'The versatility of the tools and its compatibility with other software means that AutoCAD is the most used software in architectural and industrial projects. In this Domestika Basics of 5 courses, learn how to draw any type of project from scratch, alongside Alicia Sanz, model maker and interior designer.',
-    post_name: 'setting-up-your-diet',
-    content: [...mockLesson.slice(2, 3), mockQuiz[1], mockAssignment[1]],
-  },
-  {
-    ID: 350,
-    post_title: 'Adjusting Your Diet For Weigh Loss & Muscle Gains',
-    post_content:
-      'The versatility of the tools and its compatibility with other software means that AutoCAD is the most used software in architectural and industrial projects. In this Domestika Basics of 5 courses, learn how to draw any type of project from scratch, alongside Alicia Sanz, model maker and interior designer.',
-    post_name: 'adjusting-your-diet-for-weigh-loss-muscle-gains',
-    content: [...mockLesson.slice(2, 3), mockQuiz[1], mockAssignment[2]],
-  },
-  {
-    ID: 354,
-    post_title: 'Common Dieting Trends Explained',
-    post_content: '',
-    post_name: 'common-dieting-trends-explained',
-    content: [],
-  },
-  {
-    ID: 358,
-    post_title: 'Dieting Tips & Strategies',
-    post_content: '',
-    post_name: 'dieting-tips-strategies',
-    content: [...mockLesson.slice(2, 3), mockQuiz[1]],
-  },
-];
-const getCourseCurriculum = (courseId: number) => {
-  console.log({ courseId });
-  return Promise.resolve({
-    data: mockCurriculum,
+interface LessonPayload {
+  topic_id: ID;
+  lesson_id: ID; //only for update
+  title: string;
+  description: string;
+  thumbnail_id: number;
+
+  'video[source]': string;
+  'video[source_video_id]': ID;
+
+  'video[runtime][hours]': number;
+  'video[runtime][minutes]': number;
+  'video[runtime][seconds]': number;
+
+  _is_preview: 0 | 1; //only when course preview addon enabled
+  tutor_attachments: ID[];
+}
+
+const getCourseTopic = (courseId: ID) => {
+  return authApiInstance.post<string, AxiosResponse<CourseTopic[]>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_course_contents',
+    course_id: courseId,
   });
 };
 
-export const useCourseCurriculumQuery = (courseId: number) => {
+export const useCourseTopicQuery = (courseId: ID) => {
   return useQuery({
-    queryKey: ['CourseCurriculum', courseId],
-    queryFn: () => getCourseCurriculum(courseId).then((res) => res.data),
+    queryKey: ['Topic', courseId],
+    queryFn: () => getCourseTopic(courseId).then((res) => res.data),
     enabled: !!courseId,
+  });
+};
+const saveTopic = (payload: TopicPayload) => {
+  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_save_topic',
+    ...payload,
+  });
+};
+
+export const useSaveTopicMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: saveTopic,
+    onSuccess: (response) => {
+      console.log(response.data);
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __('Topic saved successfully', 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const deleteTopic = (topicId: ID) => {
+  return authApiInstance.post<
+    string,
+    {
+      success: true;
+    }
+  >(endpoints.ADMIN_AJAX, {
+    action: 'tutor_delete_topic',
+    topic_id: topicId,
+  });
+};
+
+export const useDeleteTopicMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteTopic,
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __('Topic deleted successfully', 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const saveLesson = (payload: LessonPayload) => {
+  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_save_lesson',
+    ...payload,
+  });
+};
+
+export const useSaveLessonMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: saveLesson,
+    onSuccess: (response) => {
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __('Lesson saved successfully', 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const deleteLesson = (lessonId: ID) => {
+  return authApiInstance.post<
+    string,
+    {
+      success: true;
+    }
+  >(endpoints.ADMIN_AJAX, {
+    action: 'tutor_delete_lesson',
+    lesson_id: lessonId,
+  });
+};
+
+export const useDeleteLessonMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteLesson,
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __('Lesson deleted successfully', 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
   });
 };

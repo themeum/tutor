@@ -12,19 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Tutor\Ecommerce\OrderController as OrderController;
+use Tutor\Ecommerce\CouponController;
 use TUTOR\Input;
-
-$courses = \TUTOR\Tutor::instance()->course_list;
-
-/**
- * Short able params
- */
-$course_id     = Input::get( 'course-id', '' );
-$order_filter  = Input::get( 'order', 'DESC' );
-$date          = Input::get( 'date', '' );
-$search_filter = Input::get( 'search', '' );
-$category_slug = Input::get( 'category', '' );
 
 /**
  * Determine active tab
@@ -38,112 +27,36 @@ $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
 $limit        = tutor_utils()->get_option( 'pagination_per_page' );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
+$coupon_controller = new CouponController();
+
+$get_coupons = $coupon_controller->get_coupons( $limit, $offset );
+$coupons     = $get_coupons['results'];
+$total_items = $get_coupons['total_count'];
 /**
  * Navbar data to make nav menu
  */
-$add_course_url = esc_url( admin_url( 'admin.php?page=create-course' ) );
-$navbar_data    = array(
-	'page_title'   => $courses->page_title,
-	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
+$page_slug       = $coupon_controller::PAGE_SLUG;
+$coupon_page_url = $coupon_controller::get_coupon_page_url();
+
+$navbar_data = array(
+	'page_title'   => $coupon_controller->page_title,
+	'tabs'         => $coupon_controller->tabs_key_value(),
 	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
-	'button_url'   => $add_course_url,
+	'button_url'   => $coupon_controller::get_coupon_page_url() . '&action=add_new',
 );
 
 /**
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'     => $courses->bulk_action,
-	'bulk_actions'    => $courses->prepare_bulk_actions(),
-	'ajax_action'     => 'tutor_course_list_bulk_action',
-	'filters'         => true,
-	'category_filter' => true,
+	'bulk_action'  => $coupon_controller->bulk_action,
+	'bulk_actions' => $coupon_controller->prepare_bulk_actions(),
+	'ajax_action'  => 'tutor_course_list_bulk_action',
+	'filters'      => true,
 );
 
-
-$args = array(
-	'post_type'      => tutor()->course_post_type,
-	'orderby'        => 'ID',
-	'order'          => $order_filter,
-	'paged'          => $paged_filter,
-	'offset'         => $offset,
-	'posts_per_page' => tutor_utils()->get_option( 'pagination_per_page' ),
-);
-
-if ( 'all' === $active_tab || 'mine' === $active_tab ) {
-	$args['post_status'] = array( 'publish', 'pending', 'draft', 'private', 'future' );
-} else {
-	//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-	$status              = 'published' === $active_tab ? 'publish' : $active_tab;
-	$args['post_status'] = array( $status );
-}
-
-if ( 'mine' === $active_tab ) {
-	$args['author'] = get_current_user_id();
-}
-$date_filter = sanitize_text_field( tutor_utils()->array_get( 'date', $_GET, '' ) );
-
-//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-$year  = gmdate( 'Y', strtotime( $date_filter ) );
-$month = gmdate( 'm', strtotime( $date_filter ) );
-$day   = gmdate( 'd', strtotime( $date_filter ) );
-// Add date query.
-if ( '' !== $date_filter ) {
-	$args['date_query'] = array(
-		array(
-			'year'  => $year,
-			'month' => $month,
-			'day'   => $day,
-		),
-	);
-}
-
-if ( '' !== $course_id ) {
-	$args['p'] = $course_id;
-}
-// Add author param.
-if ( 'mine' === $active_tab || ! current_user_can( 'administrator' ) ) {
-	$args['author'] = get_current_user_id();
-}
-// Search filter.
-if ( '' !== $search_filter ) {
-	$args['s'] = $search_filter;
-}
-// Category filter.
-if ( '' !== $category_slug ) {
-	$args['tax_query'] = array(
-		array(
-			'taxonomy' => 'course-category',
-			'field'    => 'slug',
-			'terms'    => $category_slug,
-		),
-	);
-}
-
-add_filter( 'posts_search', '_tutor_search_by_title_only', 500, 2 );
-
-remove_filter( 'posts_search', '_tutor_search_by_title_only', 500 );
-
-$available_status = array(
-	'publish' => array( __( 'Publish', 'tutor' ), 'select-success' ),
-	'pending' => array( __( 'Pending', 'tutor' ), 'select-warning' ),
-	'trash'   => array( __( 'Trash', 'tutor' ), 'select-danger' ),
-	'draft'   => array( __( 'Draft', 'tutor' ), 'select-default' ),
-	'private' => array( __( 'Private', 'tutor' ), 'select-default' ),
-);
-
-$future_list = array(
-	'publish' => array( __( 'Publish', 'tutor' ), 'select-success' ),
-	'future'  => array( __( 'Schedule', 'tutor' ), 'select-default' ),
-);
-
-$where = array();
-
-$get_orders  = OrderController::get_orders( $where, $limit, $offset );
-$orders      = $get_orders['results'];
-$total_items = $get_orders['total_count'];
 ?>
 
 <div class="tutor-admin-wrap">
@@ -169,25 +82,22 @@ $total_items = $get_orders['total_count'];
 								</div>
 							</th>
 							<th class="tutor-table-rows-sorting">
-								<?php esc_html_e( 'Order ID', 'tutor' ); ?>
-								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
+								<?php esc_html_e( 'Title', 'tutor' ); ?>
 							</th>
 							<th>
-								<?php esc_html_e( 'Name', 'tutor' ); ?>
-							</th>
-							<th class="tutor-table-rows-sorting">
-								<?php esc_html_e( 'Date', 'tutor' ); ?>
-								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
+								<?php esc_html_e( 'Discount', 'tutor' ); ?>
 							</th>
 							<th>
-								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
+								<?php esc_html_e( 'Type', 'tutor' ); ?>
 							</th>
 							<th>
-								<?php esc_html_e( 'Order Status', 'tutor' ); ?>
+								<?php esc_html_e( 'Code', 'tutor' ); ?>
 							</th>
-							<th class="tutor-table-rows-sorting">
-								<?php esc_html_e( 'Total', 'tutor' ); ?>
-								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
+							<th>
+								<?php esc_html_e( 'Status', 'tutor' ); ?>
+							</th>
+							<th>
+								<?php esc_html_e( 'Uses', 'tutor' ); ?>
 							</th>
 							<th  width="10%">
 							<?php esc_html_e( 'Action', 'tutor' ); ?>
@@ -196,60 +106,71 @@ $total_items = $get_orders['total_count'];
 					</thead>
 
 					<tbody>
-						<?php if ( is_array( $orders ) && count( $orders ) ) : ?>
+						<?php if ( is_array( $coupons ) && count( $coupons ) ) : ?>
 							<?php
-							foreach ( $orders as $key => $order ) :
-								$user_data = get_userdata( $order->user_id );
+							foreach ( $coupons as $key => $coupon ) :
 								?>
 								<tr>
 									<td>
 										<div class="td-checkbox tutor-d-flex ">
-											<input type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $order->id ); ?>" />
+											<input type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $coupon->id ); ?>" />
 										</div>
 									</td>
 
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( '#' . $order->id ); ?>
+											<?php echo esc_html( $coupon->coupon_title ); ?>
 										</div>
 									</td>
 									
 									<td>
-										<div class="tutor-d-flex tutor-align-center">
-											<?php
-											echo wp_kses(
-												tutor_utils()->get_tutor_avatar( $user_data, 'sm' ),
-												tutor_utils()->allowed_avatar_tags()
-											)
-											?>
-											<div class="tutor-ml-12">
-												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $user_data, true ) ); ?>">
-													<?php echo esc_html( $user_data ? $user_data->display_name : '' ); ?>
-												</a>
-											</div>
+										<div class="tutor-fs-7">
+											<?php echo esc_html( $coupon->discount_amount ); ?>
+										</div>
+									</td>
+									<td>
+										<div class="tutor-fs-7">
+											<?php echo esc_html( $coupon->discount_type ); ?>
 										</div>
 									</td>
 
 									<td>
-										<span class="tutor-fw-normal tutor-fs-7">
-											<?php echo esc_attr( tutor_i18n_get_formated_date( $order->created_at_gmt ) ); ?>
-										</span>
+										<div class="tutor-fs-7">
+											<?php echo esc_html( $coupon->coupon_code ); ?>
+										</div>
 									</td>
 
 									<td>
-									<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->payment_status, true ) ); ?>
+										<?php
+										$coupon_status = (int) $coupon->coupon_status;
+										echo wp_kses_post( tutor_utils()->translate_dynamic_text( 1 === $coupon_status ? 'active' : 'inactive', true ) );
+										?>
 									</td>
 
 									<td>
-										<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) ); ?>
+										12
 									</td>
 									<td>
-										<?php echo wp_kses_post( tutor_utils()->tutor_price( $order->total_price ) ); ?>
-									</td>
-									<td>
-										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-coupons&id=' . $order->id ) ); ?>">
-											<?php esc_html_e( 'Edit', 'tutor' );?>
-										</a>
+										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
+											<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . $coupon->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+												<?php esc_html_e( 'Edit', 'tutor' ); ?>
+											</a>
+											<div class="tutor-dropdown-parent">
+												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+													<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+												</button>
+												<div id="table-dashboard-coupon-list-<?php echo esc_attr( $coupon->id ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-coupon-delete"
+														data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $coupon->id ); ?>">
+														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+														<span>
+															<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
+														</span>
+													</a>
+												</div>
+											</div>
+										</div>
+										
 									</td>
 								</tr>
 							<?php endforeach; ?>

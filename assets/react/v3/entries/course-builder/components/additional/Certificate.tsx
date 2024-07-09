@@ -41,7 +41,17 @@ const Certificate = () => {
   const currentCertificate = currentCertificateKey
     ? certificatesData.find((certificate) => certificate.key === currentCertificateKey)
     : null;
-  const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>('templates');
+  const currentCertificateTab = () => {
+    if (currentCertificate) {
+      if (currentCertificate.is_default) {
+        return 'templates';
+      }
+      return 'custom_certificates';
+    }
+    return 'templates';
+  };
+
+  const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>(currentCertificateTab());
   const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>(
     currentCertificate?.orientation ?? 'landscape'
   );
@@ -144,8 +154,8 @@ const Certificate = () => {
         >
           <Show when={activeCertificateTab === 'templates'}>
             <CertificateCard
-              isSelected={selectedCertificate === ''}
-              setSelectedCertificate={handleCertificateSelection}
+              selectedCertificate={selectedCertificate}
+              onSelectCertificate={handleCertificateSelection}
               data={{
                 key: '',
                 name: __('None', 'tutor'),
@@ -176,8 +186,8 @@ const Certificate = () => {
               {(certificate) => (
                 <CertificateCard
                   key={certificate.key}
-                  isSelected={selectedCertificate === certificate.key}
-                  setSelectedCertificate={handleCertificateSelection}
+                  selectedCertificate={selectedCertificate}
+                  onSelectCertificate={handleCertificateSelection}
                   data={certificate}
                   orientation={activeOrientation}
                 />

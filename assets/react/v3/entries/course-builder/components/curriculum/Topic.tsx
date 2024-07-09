@@ -1,25 +1,3 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { TopicContent as TopicContentType } from '@CourseBuilderServices/curriculum';
-
-import FormInput from '@Components/fields/FormInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { useModal } from '@Components/modals/Modal';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
-import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import { AnimationType } from '@Hooks/useAnimation';
-import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import ThreeDots from '@Molecules/ThreeDots';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { moveTo, nanoid, noop } from '@Utils/util';
 import {
   DndContext,
   DragOverlay,
@@ -44,9 +22,43 @@ import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller } from 'react-hook-form';
-import TopicContent from './TopicContent';
-import AddLessonModal from '@CourseBuilderComponents/modals/AddLessonModal';
+
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import ThreeDots from '@Molecules/ThreeDots';
+
+import {
+  useDeleteTopicMutation,
+  useSaveTopicMutation,
+  type Content as TopicContentType,
+} from '@CourseBuilderServices/curriculum';
+
+import FormInput from '@Components/fields/FormInput';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import { useModal } from '@Components/modals/Modal';
+
+import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
+import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
+import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
+
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+
+import { AnimationType } from '@Hooks/useAnimation';
+import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
+import { moveTo, nanoid, noop } from '@Utils/util';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -57,21 +69,37 @@ interface TopicProps {
   isOverlay?: boolean;
 }
 
+interface TopicForm {
+  title: string;
+  summary: string;
+}
+
 const hasLiveAddons = true;
 
+const courseId = getCourseId();
+
 const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false }: TopicProps) => {
+  const form = useFormWithGlobalError<TopicForm>({
+    defaultValues: {
+      title: topic.title,
+      summary: topic.summary,
+    },
+  });
+
   const [isActive, setIsActive] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(!topic.isSaved);
   const [isOpen, setIsOpen] = useState(false);
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
-  // @TODO: will be controlled by the API
-  const [content, setContent] = useState<TopicContentType[]>(topic.content);
+  const [content, setContent] = useState<TopicContentType[]>(topic.contents);
 
   const topicRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const deleteRef = useRef<HTMLButtonElement>(null);
+
+  const saveTopicMutation = useSaveTopicMutation();
+  const deleteTopicMutation = useDeleteTopicMutation();
 
   const [collapseAnimation, collapseAnimate] = useSpring(
     {
@@ -89,13 +117,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     ref: descriptionRef,
     isOpen: !topic.isCollapsed,
     heightCalculator: 'client',
-  });
-
-  const form = useFormWithGlobalError<{ title: string; summary: string }>({
-    defaultValues: {
-      title: topic.post_title,
-      summary: topic.post_content,
-    },
   });
 
   const { showModal } = useModal();
@@ -124,11 +145,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
   );
 
   const activeSortItem = useMemo(() => {
-    return topic.content.find((item) => item.ID === activeSortId);
-  }, [activeSortId, topic.content]);
+    return topic.contents.find((item) => item.ID === activeSortId);
+  }, [activeSortId, topic.contents]);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: topic.ID,
+    id: topic.id,
     animateLayoutChanges,
   });
 
@@ -154,6 +175,19 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
       const newContent = { ...data, ID: nanoid() };
       return [...previousContent, newContent];
     });
+  };
+
+  const handleSubmit = async (values: TopicForm) => {
+    const response = await saveTopicMutation.mutateAsync({
+      ...(topic.isSaved && { topic_id: topic.id }),
+      course_id: courseId,
+      title: values.title,
+      summary: values.summary,
+    });
+
+    if (response.data) {
+      setIsEdit(false);
+    }
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -190,8 +224,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             <Show
               when={isEdit}
               fallback={
-                <div css={styles.title({ isEdit })} title={topic.post_title} onDoubleClick={() => setIsEdit(true)}>
-                  {topic.post_title}
+                <div css={styles.title({ isEdit })} title={topic.title} onDoubleClick={() => setIsEdit(true)}>
+                  {form.watch('title')}
                 </div>
               }
             >
@@ -199,6 +233,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 <Controller
                   control={form.control}
                   name="title"
+                  rules={{ required: __('Title is required', 'tutor') }}
                   render={(controllerProps) => (
                     <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
                   )}
@@ -214,6 +249,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 data-visually-hidden
                 onClick={() => {
                   setIsEdit(true);
+                  if (topic.isCollapsed) {
+                    onCollapse?.();
+                  }
                 }}
               >
                 <SVGIcon name="edit" width={24} height={24} />
@@ -245,7 +283,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               triggerRef={deleteRef}
               closePopover={() => setIsDeletePopoverOpen(false)}
               maxWidth="258px"
-              title={`Delete topic "${topic.post_title}"`}
+              title={`Delete topic "${topic.title}"`}
               message="Are you sure you want to delete this content from your course? This cannot be undone."
               animationType={AnimationType.slideUp}
               arrow="auto"
@@ -259,7 +297,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 text: __('Cancel', 'tutor'),
                 variant: 'text',
               }}
-              onConfirmation={() => {
+              onConfirmation={async () => {
+                await deleteTopicMutation.mutateAsync(topic.id);
+                setIsDeletePopoverOpen(false);
                 onDelete?.();
               }}
             />
@@ -281,7 +321,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           fallback={
             <animated.div style={{ ...collapseAnimationDescription }}>
               <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
-                {topic.post_content}
+                {form.watch('summary')}
               </div>
             </animated.div>
           }
@@ -290,6 +330,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             <Controller
               control={form.control}
               name="summary"
+              rules={{ required: __('Summary is required', 'tutor') }}
               render={(controllerProps) => (
                 <FormTextareaInput
                   {...controllerProps}
@@ -309,13 +350,10 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               {__('Cancel', 'tutor')}
             </Button>
             <Button
+              loading={saveTopicMutation.isPending}
               variant="secondary"
               size="small"
-              onClick={form.handleSubmit(async (values) => {
-                //@TODO: will be implemented later
-                console.log({ values });
-                setIsEdit(false);
-              })}
+              onClick={form.handleSubmit(handleSubmit)}
             >
               {__('Ok', 'tutor')}
             </Button>
@@ -356,11 +394,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                     return (
                       <TopicContent
                         key={content.ID}
-                        type={content.type}
+                        type={content.post_type}
+                        topic={topic}
                         content={{
                           id: content.ID,
                           title: content.post_title,
-                          questionCount: content.type === 'quiz' ? content.questions.length : undefined,
                         }}
                         onCopy={() => createDuplicateContent(content)}
                       />
@@ -375,12 +413,12 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 <Show when={activeSortItem}>
                   {(item) => (
                     <TopicContent
+                      topic={topic}
                       content={{
                         id: item.ID,
                         title: item.post_title,
-                        questionCount: 0,
                       }}
-                      type={item.type}
+                      type={item.post_type}
                       isDragging
                     />
                   )}
@@ -397,13 +435,15 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 isOutlined
                 size="small"
                 icon={<SVGIcon name="plus" width={24} height={24} />}
+                disabled={!topic.isSaved}
                 onClick={() => {
                   showModal({
-                    component: AddLessonModal,
+                    component: LessonModal,
                     props: {
+                      id: topic.id,
                       title: __('Lesson', 'tutor'),
                       icon: <SVGIcon name="lesson" width={24} height={24} />,
-                      subtitle: `${__('Topic:', 'tutor')}  ${topic.post_title}`,
+                      subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
                     },
                   });
                 }}
@@ -415,13 +455,14 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 isOutlined
                 size="small"
                 icon={<SVGIcon name="plus" width={24} height={24} />}
+                disabled={!topic.isSaved}
                 onClick={() => {
                   showModal({
                     component: QuizModal,
                     props: {
                       title: __('Quiz', 'tutor'),
                       icon: <SVGIcon name="quiz" width={24} height={24} />,
-                      subtitle: `${__('Topic:', 'tutor')}  ${topic.post_title}`,
+                      subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
                     },
                   });
                 }}
@@ -433,13 +474,14 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 isOutlined
                 size="small"
                 icon={<SVGIcon name="plus" width={24} height={24} />}
+                disabled={!topic.isSaved}
                 onClick={() => {
                   showModal({
                     component: AddAssignmentModal,
                     props: {
                       title: __('Assignment', 'tutor'),
                       icon: <SVGIcon name="assignment" width={24} height={24} />,
-                      subtitle: `${__('Topic:', 'tutor')}  ${topic.post_title}`,
+                      subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
                     },
                   });
                 }}
@@ -456,6 +498,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                     isOutlined
                     size="small"
                     icon={<SVGIcon name="download" width={24} height={24} />}
+                    disabled={!topic.isSaved}
                     onClick={() => {
                       alert('@TODO: will be implemented later');
                     }}
@@ -468,6 +511,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                   isOpen={isOpen}
                   onClick={() => setIsOpen(true)}
                   closePopover={() => setIsOpen(false)}
+                  disabled={!topic.isSaved}
                   dotsOrientation="vertical"
                   maxWidth="220px"
                   isInverse

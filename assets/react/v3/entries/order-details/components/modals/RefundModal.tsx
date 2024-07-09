@@ -64,7 +64,7 @@ function RefundModal({ title, closeModal, actions, available_amount }: RefundMod
             />
 
             <p css={styles.availableMessage}>
-              Available <strong>{formatPrice(available_amount)}</strong> for refund
+              {__('Available', 'tutor')} <strong>{formatPrice(available_amount)}</strong> {__('Available for refund', 'tutor')}
             </p>
           </div>
 

@@ -9,22 +9,17 @@ type MediaSize = {
   url: string;
   width: number;
   height: number;
-  orientation: string;
+  orientation?: string;
 };
 
 export type Media = {
   id: number;
   url: string;
+  name?: string;
   title: string;
-  date?: string;
-  filesizeInBytes?: number;
-  subtype?: string;
-  sizes?: {
-    thumbnail: MediaSize;
-    medium: MediaSize;
-    large: MediaSize;
-    full: MediaSize;
-  };
+  size_bytes?: number;
+  size?: string;
+  ext?: string;
 };
 
 type FormImageInputProps = {

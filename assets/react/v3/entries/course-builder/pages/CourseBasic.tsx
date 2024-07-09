@@ -9,6 +9,7 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import FormVideoInput from '@Components/fields/FormVideoInput';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
@@ -25,9 +26,10 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+const courseId = getCourseId();
+
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
-  const courseId = getCourseId();
 
   const author = form.watch('post_author');
 
@@ -48,7 +50,7 @@ const CourseBasic = () => {
 
   const visibilityStatus = useWatch({
     control: form.control,
-    name: 'post_status',
+    name: 'visibility',
   });
   const coursePriceType = useWatch({
     control: form.control,
@@ -158,7 +160,7 @@ const CourseBasic = () => {
       </div>
       <div css={styles.sidebar}>
         <Controller
-          name="post_status"
+          name="visibility"
           control={form.control}
           render={(controllerProps) => (
             <FormSelectInput
@@ -196,20 +198,19 @@ const CourseBasic = () => {
           )}
         />
 
-        {/* <Controller
+        <Controller
           name="video"
           control={form.control}
           render={(controllerProps) => (
-            <FormImageInput
+            <FormVideoInput
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
               infoText={__('Supported file formats .mp4 ', 'tutor')}
             />
           )}
-        /> */}
+        />
 
-        {/* @TODO: Add course price options based on monetization setting */}
         <Controller
           name="course_price_type"
           control={form.control}
@@ -251,7 +252,7 @@ const CourseBasic = () => {
                 <FormInputWithContent
                   {...controllerProps}
                   label={__('Regular Price', 'tutor')}
-                  content="$"
+                  content={<SVGIcon name="currency" width={24} height={24} />}
                   placeholder={__('0', 'tutor')}
                   type="number"
                 />
@@ -264,7 +265,7 @@ const CourseBasic = () => {
                 <FormInputWithContent
                   {...controllerProps}
                   label={__('Discount Price', 'tutor')}
-                  content="$"
+                  content={<SVGIcon name="currency" width={24} height={24} />}
                   placeholder={__('0', 'tutor')}
                   type="number"
                 />

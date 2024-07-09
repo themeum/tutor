@@ -13,7 +13,7 @@ export const isRTL = document.dir === 'rtl';
 export const modal = {
   HEADER_HEIGHT: 56,
   MARGIN_TOP: 88,
-  BASIC_MODAL_HEADER_HEIGHT: 50
+  BASIC_MODAL_HEADER_HEIGHT: 50,
 };
 
 export const notebook = {
@@ -45,30 +45,30 @@ export enum DateFormats {
   activityDate = 'MMM dd, yyyy HH:mm aa',
 }
 
-export const Addons = {
-  COURSE_BUNDLE: 'Course Bundle',
-  SOCIAL_LOGIN: 'Social Login',
-  CONTENT_DRIP: 'Content Drip',
-  TUTOR_MULTI_INSTRUCTORS: 'Tutor Multi Instructors',
-  TUTOR_ASSIGNMENTS: 'Tutor Assignments',
-  TUTOR_COURSE_PREVIEW: 'Tutor Course Preview',
-  TUTOR_COURSE_ATTACHMENTS: 'Tutor Course Attachments',
-  TUTOR_GOOGLE_MEET_INTEGRATION: 'Tutor Google Meet Integration',
-  TUTOR_REPORT: 'Tutor Report',
-  EMAIL: 'Email',
-  CALENDAR: 'Calendar',
-  NOTIFICATIONS: 'Notifications',
-  GOOGLE_CLASSROOM_INTEGRATION: 'Google Classroom Integration',
-  TUTOR_ZOOM_INTEGRATION: 'Tutor Zoom Integration',
-  QUIZ_EXPORT_IMPORT: 'Quiz Export/Import',
-  ENROLLMENT: 'Enrollment',
-  TUTOR_CERTIFICATE: 'Tutor Certificate',
-  GRADEBOOK: 'Gradebook',
-  TUTOR_PREREQUISITES: 'Tutor Prerequisites',
-  BUDDYPRESS: 'BuddyPress',
-  WOOCOMMERCE_SUBSCRIPTIONS: 'WooCommerce Subscriptions',
-  PAID_MEMBERSHIPS_PRO: 'Paid Memberships Pro',
-  RESTRICT_CONTENT_PRO: 'Restrict Content Pro',
-  WEGLOT: 'Weglot',
-  WPML_MULTILINGUAL_CMS: 'WPML Multilingual CMS',
-};
+export enum Addons {
+  COURSE_BUNDLE = 'Course Bundle',
+  SOCIAL_LOGIN = 'Social Login',
+  CONTENT_DRIP = 'Content Drip',
+  TUTOR_MULTI_INSTRUCTORS = 'Tutor Multi Instructors',
+  TUTOR_ASSIGNMENTS = 'Tutor Assignments',
+  TUTOR_COURSE_PREVIEW = 'Tutor Course Preview',
+  TUTOR_COURSE_ATTACHMENTS = 'Tutor Course Attachments',
+  TUTOR_GOOGLE_MEET_INTEGRATION = 'Tutor Google Meet Integration',
+  TUTOR_REPORT = 'Tutor Report',
+  EMAIL = 'Email',
+  CALENDAR = 'Calendar',
+  NOTIFICATIONS = 'Notifications',
+  GOOGLE_CLASSROOM_INTEGRATION = 'Google Classroom Integration',
+  TUTOR_ZOOM_INTEGRATION = 'Tutor Zoom Integration',
+  QUIZ_EXPORT_IMPORT = 'Quiz Export/Import',
+  ENROLLMENT = 'Enrollment',
+  TUTOR_CERTIFICATE = 'Tutor Certificate',
+  GRADEBOOK = 'Gradebook',
+  TUTOR_PREREQUISITES = 'Tutor Prerequisites',
+  BUDDYPRESS = 'BuddyPress',
+  WOOCOMMERCE_SUBSCRIPTIONS = 'WooCommerce Subscriptions',
+  PAID_MEMBERSHIPS_PRO = 'Paid Memberships Pro',
+  RESTRICT_CONTENT_PRO = 'Restrict Content Pro',
+  WEGLOT = 'Weglot',
+  WPML_MULTILINGUAL_CMS = 'WPML Multilingual CMS',
+}

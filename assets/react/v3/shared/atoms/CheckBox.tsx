@@ -80,12 +80,6 @@ const styles = {
     height: 0;
     width: 0;
 
-    :focus-within {
-      & + span {
-        
-      }
-    }
-
     & + span {
       position: relative;
       cursor: pointer;
