@@ -19,7 +19,7 @@ use Tutor\Helpers\QueryHelper;
  */
 class OrderActivitiesModel {
 	/**
-	 * Order Meta keys for history & refunds
+	 * Order Meta keys for history, refund & comment
 	 *
 	 * @since 3.0.0
 	 *
@@ -27,6 +27,7 @@ class OrderActivitiesModel {
 	 */
 	const META_KEY_HISTORY = 'history';
 	const META_KEY_REFUND  = 'refund';
+	const META_KEY_COMMENT = 'comment';
 
 
 	/**
@@ -71,6 +72,7 @@ class OrderActivitiesModel {
 		return array(
 			self::META_KEY_HISTORY => __( 'History', 'tutor' ),
 			self::META_KEY_REFUND  => __( 'Refund', 'tutor' ),
+			self::META_KEY_COMMENT => __( 'Comment', 'tutor' ),
 		);
 	}
 

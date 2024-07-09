@@ -16,6 +16,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Models\OrderActivitiesModel;
 use Tutor\Models\OrderModel;
 use Tutor\Traits\JsonResponse;
 
@@ -95,6 +96,20 @@ class OrderController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_paid', array( $this, 'order_mark_as_paid' ) );
+
+			/**
+			 * Handle AJAX request for marking an order's refund action.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_refund', array( $this, 'make_refund' ) );
+
+			/**
+			 * Handle AJAX request for adding an order comment.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_comment', array( $this, 'add_comment' ) );
 
 			/**
 			 * Handle bulk action
@@ -229,6 +244,130 @@ class OrderController {
 		}
 
 		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
+	}
+
+	/**
+	 * Handle order refund process.
+	 *
+	 * This method processes the refund for an order. It verifies the nonce and user capabilities,
+	 * triggers necessary actions before and after the refund process, validates input data, and
+	 * interacts with the OrderActivitiesModel to record the refund metadata. If any validation
+	 * fails or the refund process encounters an error, it returns an appropriate JSON response.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function make_refund() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+
+		do_action( 'tutor_before_order_refund' );
+
+		$inputs = array(
+			'order_id'   => Input::post( 'order_id' ),
+			'meta_key'   => OrderActivitiesModel::META_KEY_REFUND,
+			'meta_value' => Input::post( 'meta_value' ),
+		);
+
+		$params = Input::sanitize_array( $inputs );
+
+		// Validate request.
+		$validation = $this->validate( $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
+				$validation->errors,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$payload             = new \stdClass();
+		$payload->order_id   = $params['order_id'];
+		$payload->meta_key   = $params['meta_key'];
+		$payload->meta_value = $params['meta_value'];
+
+		$activity_model = new OrderActivitiesModel();
+		$response       = $activity_model->add_order_meta( $payload );
+
+		do_action( 'tutor_after_order_refund' );
+
+		if ( ! $response ) {
+			$this->json_response(
+				__( 'Failed to make refund', 'tutor' ),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$this->json_response( __( 'Order refund successful', 'tutor' ) );
+	}
+
+	/**
+	 * Handle adding a comment to an order.
+	 *
+	 * This method processes the addition of a comment to an order. It verifies the nonce and user capabilities,
+	 * triggers necessary actions before and after the comment addition, validates input data, and
+	 * interacts with the OrderActivitiesModel to record the comment metadata. If any validation
+	 * fails or the comment addition process encounters an error, it returns an appropriate JSON response.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function add_comment() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+
+		do_action( 'tutor_before_order_comment' );
+
+		$inputs = array(
+			'order_id'   => Input::post( 'order_id' ),
+			'meta_key'   => OrderActivitiesModel::META_KEY_COMMENT,
+			'meta_value' => Input::post( 'meta_value' ),
+		);
+
+		$params = Input::sanitize_array( $inputs );
+
+		// Validate request.
+		$validation = $this->validate( $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
+				$validation->errors,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$payload             = new \stdClass();
+		$payload->order_id   = $params['order_id'];
+		$payload->meta_key   = $params['meta_key'];
+		$payload->meta_value = $params['meta_value'];
+
+		$activity_model = new OrderActivitiesModel();
+		$response       = $activity_model->add_order_meta( $payload );
+
+		do_action( 'tutor_after_order_comment' );
+
+		if ( ! $response ) {
+			$this->json_response(
+				__( 'Failed to make a comment', 'tutor' ),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$this->json_response( __( 'Order comment successful added', 'tutor' ) );
 	}
 
 	/**
@@ -594,7 +733,9 @@ class OrderController {
 	protected function validate( array $data ) {
 
 		$validation_rules = array(
-			'order_id' => 'required|numeric',
+			'order_id'   => 'required|numeric',
+			'meta_key'   => 'required',
+			'meta_value' => 'required',
 		);
 
 		// Skip validation rules for not available fields in data.
