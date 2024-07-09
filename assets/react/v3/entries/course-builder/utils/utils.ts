@@ -172,15 +172,18 @@ export const convertLessonDataToPayload = (
     'video[runtime][seconds]': data.duration.second || 0,
     ...(isAddonEnabled('Tutor Course Preview') && { _is_preview: data.lesson_preview ? 1 : 0 }),
     tutor_attachments: data.tutor_attachments.map((attachment) => attachment.id),
-    ...(contentDripType === 'unlock_by_date' && {
-      'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
-    }),
-    ...(contentDripType === 'specific_days' && {
-      'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
-    }),
-    ...(contentDripType === 'after_finishing_prerequisites' && {
-      'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
-    }),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
+      }),
   };
 };
 
