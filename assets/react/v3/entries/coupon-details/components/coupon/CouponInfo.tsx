@@ -30,34 +30,26 @@ function CouponInfo() {
 					{__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
 				</BoxSubtitle>
 			</div>
-			<div css={styles.commonSection}>
-				<Controller
-					name="coupon_type"
-					control={form.control}
-					render={(controllerProps) => (
-						<FormRadioGroup
-							{...controllerProps}
-							label={__('Deduction type', 'tutor')}
-							options={couponTypeOptions}
-							wrapperCss={styles.radioWrapper}
-						/>
-					)}
-				/>
-			</div>
-			<div css={styles.commonSection}>
-				<Controller
-					name="coupon_name"
-					control={form.control}
-					render={(controllerProps) => (
-						<FormInput
-							{...controllerProps}
-							label={__('Coupon name', 'tutor')}
-							placeholder={__('Placeholder', 'tutor')}
-						/>
-					)}
-				/>
-			</div>
-			<div css={[styles.commonSection, styles.lastItem]}>
+			<Controller
+				name="coupon_type"
+				control={form.control}
+				render={(controllerProps) => (
+					<FormRadioGroup
+						{...controllerProps}
+						label={__('Deduction type', 'tutor')}
+						options={couponTypeOptions}
+						wrapperCss={styles.radioWrapper}
+					/>
+				)}
+			/>
+			<Controller
+				name="coupon_name"
+				control={form.control}
+				render={(controllerProps) => (
+					<FormInput {...controllerProps} label={__('Coupon name', 'tutor')} placeholder={__('Placeholder', 'tutor')} />
+				)}
+			/>
+			<div css={styles.couponCodeWrapper}>
 				<Controller
 					name="code"
 					control={form.control}
@@ -90,12 +82,8 @@ const styles = {
 		flex-direction: column;
 		gap: ${spacing[4]};
 	`,
-	commonSection: css`
+	couponCodeWrapper: css`
 		position: relative;
-		padding-inline: ${spacing[20]};
-	`,
-	lastItem: css`
-		padding-bottom: ${spacing[20]};
 	`,
 	radioWrapper: css`
 		display: flex;

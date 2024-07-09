@@ -58,6 +58,8 @@ const styles = {
 	wrapper: (bordered: boolean) => css`
 		background-color: ${colorTokens.background.white};
 		border-radius: ${borderRadius[6]};
+		padding: ${spacing[16]} ${spacing[20]} ${spacing[20]};
+
 		${bordered &&
 		css`
 			border: 1px solid ${colorTokens.stroke.border};
@@ -65,8 +67,6 @@ const styles = {
 	`,
 	title: (separator: boolean) => css`
 		${typography.body('medium')};
-		padding: ${spacing[16]} ${spacing[20]};
-		padding-bottom: 0;
 		color: ${colorTokens.text.title};
 		display: flex;
 		gap: ${spacing[4]};
@@ -93,6 +93,5 @@ const styles = {
 	subtitle: css`
 		${typography.caption()};
 		color: ${colorTokens.text.hints};
-		padding-left: ${spacing[20]};
 	`,
 };

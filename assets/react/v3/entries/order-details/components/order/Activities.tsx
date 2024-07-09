@@ -9,87 +9,87 @@ import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useOrderContext } from '@OrderContexts/order-context';
+import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { Controller } from 'react-hook-form';
 
 function Activities() {
-  const { order } = useOrderContext();
-  const form = useFormWithGlobalError<{ comment: string }>({
-    defaultValues: {
-      comment: '',
-    },
-  });
-  return (
-    <Box>
-      <BoxTitle separator tooltip="Order activities">
-        {__('Order activities')}
-      </BoxTitle>
-      <div css={styles.content}>
-        <div css={styles.activities}>
-          <div css={styles.activityItem}>
-            <span css={styles.dot} />
-            <form
-              onSubmit={form.handleSubmit((values) => {
-                console.log(values);
-              })}
-              css={styles.form}
-            >
-              <Controller
-                control={form.control}
-                name="comment"
-                rules={{ ...requiredRule() }}
-                render={(props) => (
-                  <FormTextareaInput
-                    {...props}
-                    label={__('Add a comment (Only you and other staff can see comments)', 'tutor')}
-                    rows={3}
-                  />
-                )}
-              />
-              
-              <Button type="submit" variant="primary" size="small" isOutlined>
-                {__('Post', 'tutor')}
-              </Button>
-            </form>
-          </div>
-          <Show when={order.activities}>
-            {(activities) => (
-              <For each={activities}>
-                {(activity) => (
-                  <div css={styles.activityItem} key={activity.id}>
-                    <span css={styles.dot} />
-                    <div css={styles.innerContent}>
-                      <span>{format(new Date(activity.date), DateFormats.activityDate)}</span>
-                      <span>{activity.message}</span>
-                    </div>
-                  </div>
-                )}
-              </For>
-            )}
-          </Show>
-        </div>
-      </div>
-    </Box>
-  );
+	const { order } = useOrderContext();
+	const form = useFormWithGlobalError<{ comment: string }>({
+		defaultValues: {
+			comment: '',
+		},
+	});
+	return (
+		<Box css={styleUtils.boxReset}>
+			<BoxTitle separator tooltip="Order activities">
+				{__('Order activities')}
+			</BoxTitle>
+			<div css={styles.content}>
+				<div css={styles.activities}>
+					<div css={styles.activityItem}>
+						<span css={styles.dot} />
+						<form
+							onSubmit={form.handleSubmit((values) => {
+								console.log(values);
+							})}
+							css={styles.form}
+						>
+							<Controller
+								control={form.control}
+								name="comment"
+								rules={{ ...requiredRule() }}
+								render={(props) => (
+									<FormTextareaInput
+										{...props}
+										label={__('Add a comment (Only you and other staff can see comments)', 'tutor')}
+										rows={3}
+									/>
+								)}
+							/>
+
+							<Button type="submit" variant="primary" size="small" isOutlined>
+								{__('Post', 'tutor')}
+							</Button>
+						</form>
+					</div>
+					<Show when={order.activities}>
+						{(activities) => (
+							<For each={activities}>
+								{(activity) => (
+									<div css={styles.activityItem} key={activity.id}>
+										<span css={styles.dot} />
+										<div css={styles.innerContent}>
+											<span>{format(new Date(activity.date), DateFormats.activityDate)}</span>
+											<span>{activity.message}</span>
+										</div>
+									</div>
+								)}
+							</For>
+						)}
+					</Show>
+				</div>
+			</div>
+		</Box>
+	);
 }
 
 export default Activities;
 
 const styles = {
-  content: css`
+	content: css`
 		padding: ${spacing[16]} ${spacing[24]};
-		
 	`,
-  activities: css`
+	activities: css`
 		border-left: 1px solid ${colorTokens.stroke.divider};
 		padding-left: ${spacing[20]};
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[24]};
 	`,
-  form: css`
+	form: css`
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[20]};
@@ -98,7 +98,7 @@ const styles = {
 			align-self: end;
 		}
 	`,
-  dot: css`
+	dot: css`
 		position: absolute;
 		width: 16px;
 		height: 16px;
@@ -119,7 +119,7 @@ const styles = {
 			background-color: ${colorTokens.icon.hover};
 		}
 	`,
-  activityItem: css`
+	activityItem: css`
 		position: relative;
 		&:last-of-type::before {
 			content: '';
@@ -129,7 +129,7 @@ const styles = {
 			left: -28px;
 			background: ${colorTokens.background.white};
 		}
-		
+
 		&:first-of-type::before {
 			content: '';
 			position: absolute;
@@ -140,7 +140,7 @@ const styles = {
 			background: ${colorTokens.background.white};
 		}
 	`,
-  innerContent: css`
+	innerContent: css`
 		display: flex;
 		flex-direction: column;
 
