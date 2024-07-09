@@ -20,6 +20,7 @@ import { useSaveZoomMeetingMutation, type ZoomMeeting, type ZoomMeetingFormData 
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { format } from 'date-fns';
 import { DateFormats } from '@Config/constants';
+import type { ID } from '@CourseBuilderServices/curriculum';
 
 interface ZoomMeetingFormProps {
   onCancel: () => void;
@@ -30,7 +31,7 @@ interface ZoomMeetingFormProps {
   meetingHost: {
     [key: string]: string;
   };
-  topicId?: string;
+  topicId?: ID;
 }
 
 const courseId = getCourseId();

@@ -42,6 +42,7 @@ import { moveTo, nanoid } from '@Utils/util';
 
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
+import { useCourseDetailsQuery } from '@CourseBuilderServices/course';
 
 const courseId = getCourseId();
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean; isSaved: boolean };
@@ -67,6 +68,31 @@ const Curriculum = () => {
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
+  const courseDetailsQuery = useCourseDetailsQuery(courseId);
+
+  const googleMeetTimeZones = useMemo(() => {
+    if (!courseDetailsQuery.data) {
+      return {};
+    }
+
+    return courseDetailsQuery.data.google_meet_timezones;
+  }, [courseDetailsQuery.data]);
+
+  const zoomMeetingTimeZones = useMemo(() => {
+    if (!courseDetailsQuery.data) {
+      return {};
+    }
+
+    return courseDetailsQuery.data.zoom_timezones;
+  }, [courseDetailsQuery.data]);
+
+  const zoomMeetingUsers = useMemo(() => {
+    if (!courseDetailsQuery.data) {
+      return {};
+    }
+
+    return courseDetailsQuery.data.zoom_users;
+  }, [courseDetailsQuery.data]);
 
   useEffect(() => {
     setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
@@ -235,6 +261,9 @@ const Curriculum = () => {
                         <Topic
                           key={topic.id}
                           topic={topic}
+                          googleMeetTimeZones={googleMeetTimeZones}
+                          zoomMeetingTimeZones={zoomMeetingTimeZones}
+                          zoomMeetingUsers={zoomMeetingUsers}
                           onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
                           onCollapse={() =>
                             setContent((previous) =>
@@ -312,7 +341,14 @@ const Curriculum = () => {
                 <DragOverlay>
                   <Show when={activeSortItem}>
                     {(item) => {
-                      return <Topic topic={item} />;
+                      return (
+                        <Topic
+                          googleMeetTimeZones={googleMeetTimeZones}
+                          zoomMeetingTimeZones={zoomMeetingTimeZones}
+                          zoomMeetingUsers={zoomMeetingUsers}
+                          topic={item}
+                        />
+                      );
                     }}
                   </Show>
                 </DragOverlay>,
@@ -327,7 +363,6 @@ const Curriculum = () => {
               variant="secondary"
               icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
               onClick={() => {
-                // @TODO: will be updated later.
                 setContent((previous) => {
                   return [
                     ...previous.map((item) => ({ ...item, isCollapsed: true })),
