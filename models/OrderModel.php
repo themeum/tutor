@@ -469,6 +469,8 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @todo Need to store order activity after activity controller & model is created.
+	 *
 	 * @param object $data An object containing the payment status, note, and order ID.
 	 *                     - 'payment_status' (string): The new payment status.
 	 *                     - 'note' (string): A note regarding the payment status update.

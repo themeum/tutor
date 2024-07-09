@@ -35,7 +35,7 @@ class OrderController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @var Object
+	 * @var OrderModel
 	 */
 	private $model;
 
@@ -157,7 +157,7 @@ class OrderController {
 
 		if ( empty( $order_id ) ) {
 			$this->json_response(
-				__( 'Order Id is required', 'tutor' ),
+				__( 'Order ID is required', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);
@@ -199,14 +199,10 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		do_action( 'tutor_before_order_mark_as_paid' );
-
-		$inputs = array(
+		$params = array(
 			'order_id' => Input::post( 'order_id' ),
 			'note'     => Input::post( 'note' ),
 		);
-
-		$params = Input::sanitize_array( $inputs );
 
 		// Validate request.
 		$validation = $this->validate( $params );
@@ -217,6 +213,8 @@ class OrderController {
 				HttpHelper::STATUS_BAD_REQUEST
 			);
 		}
+
+		do_action( 'tutor_before_order_mark_as_paid', $params );
 
 		$payload                 = new \stdClass();
 		$payload->order_id       = $params['order_id'];
@@ -233,11 +231,11 @@ class OrderController {
 
 		$response = $this->model->payment_status_update( $payload );
 
-		do_action( 'tutor_after_order_mark_as_paid' );
+		do_action( 'tutor_after_order_mark_as_paid', $params );
 
 		if ( ! $response ) {
 			$this->json_response(
-				__( 'Failed to update Order payment status', 'tutor' ),
+				__( 'Failed to update order payment status', 'tutor' ),
 				null,
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
@@ -411,11 +409,11 @@ class OrderController {
 
 		$where = array();
 
-		if ( '' !== $date ) {
+		if ( ! empty( $date ) ) {
 			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
 		}
 
-		if ( '' !== $payment_status ) {
+		if ( ! empty( $payment_status ) ) {
 			$where['payment_status'] = $payment_status;
 		}
 

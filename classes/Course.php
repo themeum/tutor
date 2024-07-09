@@ -1643,7 +1643,7 @@ class Course extends Tutor_Base {
 		// Gather parameters.
 		$course_id     = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$topic_id      = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		$topic_summery = Input::post( 'summery', '', Input::TYPE_KSES_POST );
+		$topic_summary = Input::post( 'summary', '', Input::TYPE_KSES_POST );
 
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id( $course_id, $topic_id );
 
@@ -1656,7 +1656,7 @@ class Course extends Tutor_Base {
 		$post_arr = array(
 			'post_type'    => 'topics',
 			'post_title'   => $topic_title,
-			'post_content' => $topic_summery,
+			'post_content' => $topic_summary,
 			'post_status'  => 'publish',
 			'post_author'  => get_current_user_id(),
 			'post_parent'  => $course_id,
@@ -1750,18 +1750,25 @@ class Course extends Tutor_Base {
 	 * Delete a course topic
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 code refactor and response updated.
+	 *
 	 * @return void
 	 */
 	public function tutor_delete_topic() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
-		tutor_utils()->checking_nonce();
+		$topic_id = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		if ( ! $topic_id || ! is_numeric( $topic_id ) || ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
+		}
 
 		global $wpdb;
-		$topic_id = Input::post( 'topic_id', '' );
-
-		if ( ! $topic_id || ! is_numeric( $topic_id ) || ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
-			wp_send_json_error( array( 'message' => 'Access Forbidden' ) );
-		}
 
 		// Assign course ID to orphan content IDs since the topic will be deleted.
 		$course_id   = tutor_utils()->get_course_id_by( 'topic', $topic_id );
@@ -1769,7 +1776,7 @@ class Course extends Tutor_Base {
 		foreach ( $content_ids as $content_id ) {
 			update_post_meta( $content_id, '_tutor_course_id_for_lesson', $course_id );
 			// Actually all kind of contents.
-			// This keyword '_tutor_course_id_for_lesson' used just to support backward compatibillity.
+			// This keyword '_tutor_course_id_for_lesson' used just to support backward compatibility.
 		}
 
 		// Set contents under the topic orphan.
@@ -1779,7 +1786,9 @@ class Course extends Tutor_Base {
 		$wpdb->delete( $wpdb->postmeta, array( 'post_id' => $topic_id ) );
 		wp_delete_post( $topic_id );
 
-		wp_send_json_success();
+		$this->json_response(
+			__( 'Topic deleted successfully!', 'tutor' )
+		);
 	}
 
 	/**

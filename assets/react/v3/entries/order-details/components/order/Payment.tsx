@@ -8,6 +8,7 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import DiscountModal from '@OrderComponents/modals/DiscountModal';
+import RefundModal from '@OrderComponents/modals/RefundModal';
 import { useOrderContext } from '@OrderContexts/order-context';
 import type { PaymentStatus } from '@OrderServices/order';
 import { createPriceFormatter } from '@Utils/currency';
@@ -26,19 +27,22 @@ function PaymentBadge({ status }: { status: PaymentStatus }) {
   return <TutorBadge variant={badgeMap[status].type}>{badgeMap[status].label}</TutorBadge>;
 }
 
-function PaymentActionButton({ status, onClick }: { status: PaymentStatus; onClick: () => void }) {
+function PaymentActionButton({
+  status,
+  onClick,
+}: { status: PaymentStatus; onClick: (buttonType: 'refund' | 'mark-as-paid') => void }) {
   switch (status) {
     case 'paid':
     case 'partially-refunded':
     case 'failed':
       return (
-        <Button variant="tertiary" size="small" isOutlined onClick={onClick}>
+        <Button variant="tertiary" size="small" isOutlined onClick={() => onClick('refund')}>
           {__('Refund', 'tutor')}
         </Button>
       );
     case 'pending':
       return (
-        <Button variant="primary" size="small" isOutlined onClick={onClick}>
+        <Button variant="primary" size="small" isOutlined onClick={() => onClick('mark-as-paid')}>
           {__('Mark as paid', 'tutor')}
         </Button>
       );
@@ -81,7 +85,7 @@ function Payment() {
                       showModal({
                         component: DiscountModal,
                         props: {
-                          title: 'Add discount',
+                          title: __('Add discount', 'tutor'),
                           discount: {
                             amount: 0,
                             discounted_value: 0,
@@ -156,7 +160,20 @@ function Payment() {
         </Box>
 
         <div css={styles.markAsPaid}>
-          <PaymentActionButton status={order.payment_status} onClick={() => alert('@TODO: will be handled later.')} />
+          <PaymentActionButton
+            status={order.payment_status}
+            onClick={(buttonType) => {
+              if (buttonType === 'refund') {
+                return showModal({
+                  component: RefundModal,
+                  props: {
+                    title: __('Refund', 'tutor'),
+                    available_amount: order.net_total_price,
+                  },
+                });
+              }
+            }}
+          />
         </div>
       </div>
     </Box>

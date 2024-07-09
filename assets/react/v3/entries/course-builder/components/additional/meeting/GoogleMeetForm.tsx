@@ -78,10 +78,9 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
     }
 
     const response = await saveGoogleMeetMeeting.mutateAsync({
-      ...(currentMeeting && { 'post-id': currentMeeting.ID, 'event-id': currentMeeting.meeting_data.id }),
+      ...(currentMeeting && { 'post-id': Number(currentMeeting.ID), 'event-id': currentMeeting.meeting_data.id }),
       ...(topicId && { 'topic-id': topicId }),
-      // @ts-ignore
-      course_id: String(courseId),
+      course_id: courseId,
       meeting_title: data.meeting_name,
       meeting_summary: data.meeting_summary,
       meeting_start_date: data.meeting_start_date,
@@ -105,7 +104,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
         <Controller
           name="meeting_name"
           control={meetingForm.control}
-          rules={{ required: __('Meeting name is required', 'tutor') }}
+          rules={{ required: __('Name is required', 'tutor') }}
           render={(controllerProps) => (
             <FormInput
               {...controllerProps}
@@ -118,7 +117,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
         <Controller
           name="meeting_summary"
           control={meetingForm.control}
-          rules={{ required: __('Meeting summary is required', 'tutor') }}
+          rules={{ required: __('Summary is required', 'tutor') }}
           render={(controllerProps) => (
             <FormTextareaInput
               {...controllerProps}
@@ -136,7 +135,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
             <Controller
               name="meeting_start_date"
               control={meetingForm.control}
-              rules={{ required: __('Meeting start date is required', 'tutor') }}
+              rules={{ required: __('Start date is required', 'tutor') }}
               render={(controllerProps) => (
                 <FormDateInput
                   {...controllerProps}
@@ -149,7 +148,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
             <Controller
               name="meeting_start_time"
               control={meetingForm.control}
-              rules={{ required: __('Meeting start time is required', 'tutor') }}
+              rules={{ required: __('Start time is required', 'tutor') }}
               render={(controllerProps) => (
                 <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />
               )}
@@ -165,7 +164,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
               name="meeting_end_date"
               control={meetingForm.control}
               rules={{
-                required: __('Meeting end date is required', 'tutor'),
+                required: __('End date is required', 'tutor'),
                 validate: {
                   checkEndDate: (value) => {
                     const startDate = meetingForm.watch('meeting_start_date');
@@ -193,7 +192,7 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
               name="meeting_end_time"
               control={meetingForm.control}
               rules={{
-                required: __('Meeting end time is required', 'tutor'),
+                required: __('End time is required', 'tutor'),
                 validate: {
                   checkEndTime: (value) => {
                     const startDate = meetingForm.watch('meeting_start_date');
@@ -218,9 +217,14 @@ const GoogleMeetMeetingForm = ({ onCancel, data, timezones, topicId }: GoogleMee
         <Controller
           name="meeting_timezone"
           control={meetingForm.control}
-          rules={{ required: __('Meeting timezone is required', 'tutor') }}
+          rules={{ required: __('Timezone is required', 'tutor') }}
           render={(controllerProps) => (
-            <FormSelectInput {...controllerProps} label={__('Timezone', 'tutor')} options={timeZonesOptions} />
+            <FormSelectInput
+              {...controllerProps}
+              label={__('Timezone', 'tutor')}
+              placeholder={__('Timezone', 'tutor')}
+              options={timeZonesOptions}
+            />
           )}
         />
 
