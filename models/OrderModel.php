@@ -162,9 +162,11 @@ class OrderModel {
 	 * @return object|false The order data with the student's information included, or false if no order is found.
 	 */
 	public function get_order_by_id( $order_id ) {
-		global $wpdb;
-
-		$order_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table_name WHERE id = %d", $order_id ) );
+		$order_data = QueryHelper::get_row(
+			$this->table_name,
+			array( 'id' => $order_id ),
+			'id'
+		);
 
 		if ( ! $order_data ) {
 			return false;
@@ -184,7 +186,6 @@ class OrderModel {
 		$order_data->courses         = $this->get_order_items_by_id( $order_id );
 		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
-		$order_data->net_payment     = (float) $order_data->net_payment;
 		$order_data->discount_amount = (float) $order_data->discount_amount;
 		$order_data->tax_rate        = (float) $order_data->tax_rate;
 		$order_data->tax_amount      = (float) $order_data->tax_amount;
