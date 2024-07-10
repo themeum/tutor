@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
+import type { AxiosResponse } from 'axios';
 
 import { useToast } from '@Atoms/Toast';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
-import type { AxiosResponse } from 'axios';
 import type { ErrorResponse } from '@Utils/form';
-import type { PrerequisiteCourses, TutorMutationResponse } from '@CourseBuilderServices/course';
+import type { PrerequisiteCourses, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type { Media } from '@Components/fields/FormImageInput';
 
@@ -164,6 +164,11 @@ export interface CourseContentOrderPayload {
   };
   'content_parent[parent_topic_id]'?: ID; //only for topic contents
   'content_parent[content_id]'?: ID; // only for topic contents
+}
+
+export interface ZoomMeetingDetailsPayload {
+  meeting_id: ID;
+  topic_id: ID;
 }
 
 const getCourseTopic = (courseId: ID) => {
@@ -425,5 +430,21 @@ export const useSaveAssignmentMutation = ({
         type: 'danger',
       });
     },
+  });
+};
+
+const getZoomMeetingDetails = (meetingId: ID, topicId: ID) => {
+  return authApiInstance.post<string, AxiosResponse<ZoomMeeting>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_zoom_meeting_details',
+    meeting_id: meetingId,
+    topic_id: topicId,
+  });
+};
+
+export const useZoomMeetingDetailsQuery = (meetingId: ID, topicId: ID) => {
+  return useQuery({
+    queryKey: ['ZoomMeeting', meetingId],
+    queryFn: () => getZoomMeetingDetails(meetingId, topicId).then((res) => res.data),
+    enabled: !!meetingId && !!topicId,
   });
 };

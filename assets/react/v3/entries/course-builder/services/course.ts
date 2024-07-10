@@ -578,6 +578,14 @@ export const useSaveZoomMeetingMutation = (courseId: string) => {
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic', Number(courseId)],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['ZoomMeeting', response.data],
+      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });

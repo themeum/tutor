@@ -239,9 +239,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             isDeletePopoverOpen,
           })}
         >
-          <div css={styles.headerContent}>
-            <div {...listeners} css={styles.grabberInput({ isOverlay })}>
-              <SVGIcon name="dragVertical" width={24} height={24} />
+          <div css={styles.headerContent} onClick={() => onCollapse?.()} onKeyDown={() => onCollapse?.()}>
+            <div css={styles.grabberInput({ isOverlay })}>
+              <button {...listeners} css={styleUtils.resetButton} type="button">
+                <SVGIcon name="dragVertical" width={24} height={24} />
+              </button>
 
               <Show
                 when={isEdit}
@@ -708,7 +710,6 @@ const styles = {
       color: ${colorTokens.color.black[40]};
       flex-shrink: 0;
     }
-    cursor: ${isOverlay ? 'grabbing' : 'grab'};
   `,
   actions: css`
     ${styleUtils.display.flex()};
