@@ -26,6 +26,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class CartController {
 
+	/**
+	 * Page slug for cart page
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	public const PAGE_SLUG = 'cart';
+
+	/**
+	 * Page slug for cart page
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	public const PAGE_ID_OPTION_NAME = 'tutor_cart_page_id';
 
 	/**
 	 * Cart model
@@ -86,16 +103,21 @@ class CartController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param boolean $is_admin Whether to get admin or frontend url.
+	 * @return string
+	 */
+	public static function get_page_url() {
+		return get_post_permalink( self::get_page_id() );
+	}
+
+	/**
+	 * Get cart page ID
+	 *
+	 * @since 3.0.0
 	 *
 	 * @return string
 	 */
-	public static function get_cart_page_url( bool $is_admin = true ) {
-		if ( $is_admin ) {
-			return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
-		} else {
-			return tutor_utils()->get_tutor_dashboard_url() . '/cart';
-		}
+	public static function get_page_id() {
+		return (int) tutor_utils()->get_option( self::PAGE_ID_OPTION_NAME );
 	}
 
 	/**
@@ -142,5 +164,27 @@ class CartController {
 			__( 'Cart retrieved successfully', 'tutor' ),
 			$cart_data
 		);
+	}
+
+	/**
+	 * Create cart page
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public static function create_cart_page() {
+		$page_id = self::get_page_id();
+		if ( ! $page_id ) {
+			$args = array(
+				'post_title'   => self::PAGE_SLUG,
+				'post_content' => '',
+				'post_type'    => 'page',
+				'post_status'  => 'publish',
+			);
+
+			$page_id = wp_insert_post( $args );
+			tutor_utils()->update_option( self::PAGE_ID_OPTION_NAME, $page_id );
+		}
 	}
 }

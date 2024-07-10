@@ -10005,41 +10005,4 @@ class Utils {
 
 		return (object) json_decode( $response['body'], true );
 	}
-
-	/**
-	 * Create tutor cart page
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void
-	 */
-	public static function create_tutor_cart_page() {
-		$tutor_cart_args = array(
-			'post_title'   => __( 'Cart', 'tutor' ),
-			'post_content' => '',
-			'post_type'    => 'page',
-			'post_status'  => 'publish',
-		);
-		$tutor_cart_page_id = wp_insert_post( $tutor_cart_args );
-		tutor_utils()->update_option( 'tutor_cart_page_id', $tutor_cart_page_id );
-	}
-
-	/**
-	 * Create tutor checkout page
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void
-	 */
-	public static function create_tutor_checkout_page() {
-		$tutor_checkout_args = array(
-			'post_title'   => __( 'Checkout', 'tutor' ),
-			'post_content' => '',
-			'post_type'    => 'page',
-			'post_status'  => 'publish',
-		);
-		$tutor_checkout_page_id = wp_insert_post( $tutor_checkout_args );
-		tutor_utils()->update_option( 'tutor_checkout_page_id', $tutor_checkout_page_id );
-	}
-
 }
