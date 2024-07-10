@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Ecommerce\OrderActivitiesController;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -186,6 +187,7 @@ class OrderModel {
 		$order_data->courses         = $this->get_order_items_by_id( $order_id );
 		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
+		$order_data->net_payment     = (float) $order_data->net_payment;
 		$order_data->discount_amount = (float) $order_data->discount_amount;
 		$order_data->tax_rate        = (float) $order_data->tax_rate;
 		$order_data->tax_amount      = (float) $order_data->tax_amount;
@@ -193,7 +195,8 @@ class OrderModel {
 		$order_data->created_by = get_userdata( $order_data->created_by )->display_name;
 		$order_data->updated_by = get_userdata( $order_data->updated_by )->display_name;
 
-		$order_data->activities = $this->get_order_activities( $order_id );
+		$order_activities_model = new OrderActivitiesModel();
+		$order_data->activities = $order_activities_model->get_order_activities( $order_id );
 		$order_data->refunds    = $this->get_order_refunds( $order_id );
 
 		unset( $order_data->user_id );
@@ -303,66 +306,6 @@ class OrderModel {
 		);
 
 		return $return_data;
-	}
-
-	/**
-	 * Retrieve order activities by order ID.
-	 *
-	 * This function fetches all order activities from the 'tutor_ordermeta' table
-	 * based on the given order ID and the 'history' meta key. It uses a helper
-	 * function from the QueryHelper class to perform the database query.
-	 *
-	 * If no order activities are found, the function returns an empty array.
-	 * Otherwise, it decodes the JSON-encoded meta values and returns them as an array.
-	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
-	 * @param int $order_id The ID of the order to retrieve activities for.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array An array of order activities, each decoded from its JSON representation.
-	 */
-	public function get_order_activities( $order_id ) {
-		global $wpdb;
-
-		// Retrieve order activities for the given order ID from the 'tutor_ordermeta' table.
-		$order_activities = QueryHelper::get_all(
-			"{$wpdb->prefix}tutor_ordermeta",
-			array(
-				'order_id' => $order_id,
-				'meta_key' => self::META_KEY_HISTORY,
-			),
-			'id'
-		);
-
-		if ( empty( $order_activities ) ) {
-			return array();
-		}
-
-		$response = array();
-
-		foreach ( $order_activities as &$activity ) {
-			$values     = new \stdClass();
-			$values     = json_decode( $activity->meta_value );
-			$values->id = (int) $activity->id;
-			$response[] = $values;
-		}
-
-		unset( $activity );
-
-		// Custom comparison function for sorting by date.
-		usort(
-			$response,
-			function ( $a, $b ) {
-				$date_a = strtotime( $a->date );
-				$date_b = strtotime( $b->date );
-
-				return $date_b - $date_a;
-			}
-		);
-
-		return $response;
 	}
 
 	/**
@@ -557,8 +500,6 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @todo Need to store order activity after activity controller & model is created.
-	 *
 	 * @param object $data An object containing the payment status, note, and order ID.
 	 *                     - 'payment_status' (string): The new payment status.
 	 *                     - 'note' (string): A note regarding the payment status update.
@@ -567,7 +508,7 @@ class OrderModel {
 	 * @return bool True on successful update, false on failure.
 	 */
 	public function payment_status_update( object $data ) {
-		return QueryHelper::update(
+		$response = QueryHelper::update(
 			$this->table_name,
 			array(
 				'payment_status' => $data->payment_status,
@@ -575,5 +516,12 @@ class OrderModel {
 			),
 			array( 'id' => $data->order_id )
 		);
+
+		if ( $response ) {
+			$activity_controller = new OrderActivitiesController();
+			$activity_controller->store_order_activity_for_marked_as_paid( $data->order_id );
+		}
+
+		return $response;
 	}
 }
