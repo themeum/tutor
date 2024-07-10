@@ -41,17 +41,8 @@ const Certificate = () => {
   const currentCertificate = currentCertificateKey
     ? certificatesData.find((certificate) => certificate.key === currentCertificateKey)
     : null;
-  const currentCertificateTab = () => {
-    if (currentCertificate) {
-      if (currentCertificate.is_default) {
-        return 'templates';
-      }
-      return 'custom_certificates';
-    }
-    return 'templates';
-  };
 
-  const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>(currentCertificateTab());
+  const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>('templates');
   const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>(
     currentCertificate?.orientation ?? 'landscape'
   );
