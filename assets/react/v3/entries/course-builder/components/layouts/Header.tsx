@@ -121,7 +121,13 @@ const Header = () => {
           <SVGIcon name="linkExternal" width={24} height={24} />
         </div>
       ),
-      onClick: () => window.open(tutorConfig.dashboard_url, '_blank'),
+      onClick: () => {
+        const legacyUrl = courseId
+          ? `${config.TUTOR_API_BASE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
+          : `${config.TUTOR_API_BASE_URL}/wp-admin/post-new.php?post_type=courses`;
+
+        window.open(legacyUrl, '_blank');
+      },
       isDanger: false,
     };
 

@@ -70,7 +70,7 @@ const CertificatePreviewModal = ({
                   <SVGIcon name="cross" width={40} height={40} />
                 </button>
               </Tooltip>
-              <Show when={currentCertificate.url}>
+              <Show when={currentCertificate.edit_url}>
                 {(editUrl) => (
                   <Tooltip content={__('Edit in Certificate Builder', 'tutor')}>
                     <button

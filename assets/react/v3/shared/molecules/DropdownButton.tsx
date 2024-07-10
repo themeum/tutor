@@ -201,6 +201,11 @@ const styles = {
   wrapper: css`
     ${styleUtils.display.inlineFlex()};
     align-items: center;
+    border-radius: ${borderRadius[6]};
+
+    :focus-within {
+      box-shadow: ${shadow.focus};
+    }
   `,
   button: ({
     variant,
@@ -230,11 +235,6 @@ const styles = {
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
     position: relative;
-
-    &:focus,
-    &:active {
-      z-index: ${zIndex.positive};
-    }
 
     ${
       size === 'large' &&
@@ -266,10 +266,6 @@ const styles = {
           background-color: ${colorTokens.action.primary.active};
         }
 
-        &:focus {
-          box-shadow: ${shadow.focus};
-        }
-
         ${
           (disabled || loading) &&
           css`
@@ -292,10 +288,6 @@ const styles = {
 
         &:active {
           background-color: ${colorTokens.action.secondary.active};
-        }
-
-        &:focus {
-          box-shadow: ${shadow.focus};
         }
 
         ${
@@ -321,10 +313,6 @@ const styles = {
 
         &:active {
           background-color: ${colorTokens.action.outline.active};
-        }
-
-        &:focus {
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand}, ${shadow.focus};
         }
 
         ${
@@ -355,11 +343,6 @@ const styles = {
           box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
         }
 
-        &:focus {
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.default}, ${shadow.focus};
-          z-index: calc(${zIndex.positive} + 1);
-        }
-
         ${
           (disabled || loading) &&
           css`
@@ -382,10 +365,6 @@ const styles = {
 
         &:active {
           background-color: ${colorTokens.background.status.errorFail};
-        }
-
-        &:focus {
-          box-shadow: ${shadow.focus};
         }
 
         ${
@@ -424,7 +403,6 @@ const styles = {
 
         &:focus {
           color: ${colorTokens.text.title};
-          box-shadow: ${shadow.focus};
           svg {
             color: ${colorTokens.icon.brand};
           }
@@ -495,10 +473,6 @@ const styles = {
       variant === 'primary' &&
       css`
         border-color: ${colorTokens.stroke.brand};
-
-        :focus {
-          border-color: transparent;
-        }
       `
     }
 

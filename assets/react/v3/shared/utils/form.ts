@@ -13,6 +13,7 @@ export interface FormControllerProps<ValueType> {
     onBlur: (e?: FocusEvent) => void;
     value: ValueType;
     name: string;
+    ref: React.RefCallback<HTMLElement>;
   };
   fieldState: ControllerFieldState;
 }
