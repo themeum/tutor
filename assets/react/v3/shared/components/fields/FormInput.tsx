@@ -59,7 +59,7 @@ const FormInput = ({
   isInlineLabel = false,
   isPassword = false,
   style,
-  selectOnFocus = false
+  selectOnFocus = false,
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
 
@@ -127,7 +127,11 @@ const FormInput = ({
                   onKeyDown?.(event.key);
                 }}
                 autoComplete="off"
-                ref={ref}
+                ref={(element) => {
+                  field.ref(element);
+                  // @ts-ignore
+                  ref.current = element; // this is not ideal but it is the only way to set ref to the input element
+                }}
                 onFocus={() => {
                   if (!selectOnFocus || !ref.current) {
                     return;

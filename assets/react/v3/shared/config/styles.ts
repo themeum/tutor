@@ -196,7 +196,7 @@ export const colorTokens = {
     blue: '#0049f8',
     black: '#092844',
   },
-  
+
   text: {
     primary: '#212327',
     title: '#41454f',
@@ -217,7 +217,7 @@ export const colorTokens = {
       cancelled: '#6f7073',
       primary: '#3e64de',
     },
-    wp: '#2271b1'
+    wp: '#2271b1',
   },
   surface: {
     tutor: '#ffffff',
@@ -304,7 +304,7 @@ export const colorTokens = {
       active: '#3453b8',
       disable: '#e3e6eb',
       wp: '#2271b1',
-      wp_hover: '#135e96'
+      wp_hover: '#135e96',
     },
     secondary: {
       default: '#e9edfb',
@@ -518,6 +518,7 @@ export const letterSpacing = {
 
 export const shadow = {
   focus: '0px 0px 0px 0px rgba(255, 255, 255, 1), 0px 0px 0px 3px rgba(0, 73, 248, 0.9)',
+  danger: '0px 0px 0px 0px rgba(255, 255, 255, 1), 0px 0px 0px 3px #ff9f99',
   button: '0px 1px 0.25px rgba(17, 18, 19, 0.08), inset 0px -1px 0.25px rgba(17, 18, 19, 0.24)',
   combinedButton:
     '0px 1px 0px rgba(0, 0, 0, 0.05), inset 0px -1px 0px #bcbfc3, inset 1px 0px 0px #bbbfc3, inset 0px 1px 0px #bbbfc3',

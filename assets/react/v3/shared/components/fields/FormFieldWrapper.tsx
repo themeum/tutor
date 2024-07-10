@@ -123,6 +123,13 @@ const styles = {
       :focus {
         outline: none;
         box-shadow: ${shadow.focus};
+
+        ${
+          options.hasFieldError &&
+          css`
+          box-shadow: ${shadow.danger};
+        `
+        }
       }
 
       ::-webkit-outer-spin-button,
@@ -256,7 +263,7 @@ const FormFieldWrapper = <T,>({
         disabled: disabled,
         readOnly: readOnly,
         placeholder,
-        className: 'tutor-input-field'
+        className: 'tutor-input-field',
       })}
 
       {loading && (

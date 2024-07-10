@@ -108,6 +108,7 @@ const FormCoursePrerequisites = ({
                 <input
                   {...restInputProps}
                   onClick={() => setIsOpen((previousState) => !previousState)}
+                  className="tutor-input-field"
                   css={[inputCss, styles.input]}
                   autoComplete="off"
                   readOnly={readOnly || !isSearchable}
@@ -140,8 +141,8 @@ const FormCoursePrerequisites = ({
                 })}
               >
                 <For each={inputValue}>
-                  {(course) => (
-                    <div key={course.id} css={styles.courseCard}>
+                  {(course, index) => (
+                    <div key={index} css={styles.courseCard}>
                       <div css={styles.imageWrapper}>
                         <img src={course.featured_image} alt={course.post_title} css={styles.image} />
                       </div>
@@ -252,6 +253,11 @@ const styles = {
     padding-left: ${spacing[36]};
     ${styleUtils.textEllipsis};
     border: 1px solid ${colorTokens.stroke.default};
+
+    &.tutor-input-field {
+      padding-right: ${spacing[32]};
+      padding-left: ${spacing[36]};
+    }
 
     :focus {
       outline: none;

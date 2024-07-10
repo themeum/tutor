@@ -1,6 +1,7 @@
 import { Controller } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
+import { css } from '@emotion/react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -14,6 +15,8 @@ import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
+import FormDateInput from '@Components/fields/FormDateInput';
+import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -26,12 +29,9 @@ import {
   usePrerequisiteCoursesQuery,
   type ContentDripType,
 } from '@CourseBuilderServices/course';
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
-import { css } from '@emotion/react';
 
 interface LessonModalProps extends ModalProps {
-  lessonId?: ID | null;
+  lessonId?: ID;
   topicId: ID;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   contentDripType: ContentDripType;
@@ -59,7 +59,7 @@ export interface LessonForm {
 const courseId = getCourseId();
 
 const LessonModal = ({
-  lessonId = null,
+  lessonId = '',
   topicId,
   closeModal,
   icon,
@@ -67,15 +67,15 @@ const LessonModal = ({
   subtitle,
   contentDripType,
 }: LessonModalProps) => {
-  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Course Preview');
-  const getLessonDetailsQuery = useLessonDetailsQuery(topicId, lessonId || '');
+  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Prerequisites');
+  const getLessonDetailsQuery = useLessonDetailsQuery(topicId, lessonId);
   const saveLessonMutation = useSaveLessonMutation({
     courseId,
     topicId,
-    lessonId: lessonId || '',
+    lessonId,
   });
 
-  const lessonDetails = getLessonDetailsQuery?.data;
+  const { data: lessonDetails } = getLessonDetailsQuery;
 
   const form = useFormWithGlobalError<LessonForm>({
     defaultValues: {
@@ -99,13 +99,13 @@ const LessonModal = ({
     shouldFocusError: true,
   });
 
-  const prerequisiteCourses = lessonDetails?.content_drip_settings?.prerequisites
-    ? lessonDetails?.content_drip_settings?.prerequisites.map((item) => String(item.id))
+  const prerequisiteCourses = lessonDetails?.content_drip_settings?.course_prerequisites
+    ? lessonDetails?.content_drip_settings?.course_prerequisites.map((item) => String(item.id))
     : [];
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    !!isPrerequisiteAddonEnabled
+    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites'
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -130,19 +130,19 @@ const LessonModal = ({
         content_drip_settings: {
           unlock_date: lessonDetails.content_drip_settings?.unlock_date || '',
           after_xdays_of_enroll: lessonDetails.content_drip_settings?.after_xdays_of_enroll || '',
-          prerequisites: lessonDetails.content_drip_settings?.prerequisites || [],
+          prerequisites: lessonDetails.content_drip_settings?.course_prerequisites || [],
         },
       });
     }
   }, [lessonDetails]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('title');
-  }, [form]);
+  }, []);
 
   const onSubmit = async (data: LessonForm) => {
-    console.log(data);
-    const payload = convertLessonDataToPayload(data, lessonId || '', topicId, contentDripType);
+    const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
     const response = await saveLessonMutation.mutateAsync(payload);
 
     if (response.data) {
@@ -161,7 +161,12 @@ const LessonModal = ({
           <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
             {__('Cancel', 'tutor')}
           </Button>
-          <Button variant="primary" size="small" onClick={form.handleSubmit(onSubmit)}>
+          <Button
+            loading={saveLessonMutation.isPending}
+            variant="primary"
+            size="small"
+            onClick={form.handleSubmit(onSubmit)}
+          >
             {lessonId ? __('Update', 'tutor') : __('Save', 'tutor')}
           </Button>
         </>
@@ -226,6 +231,11 @@ const LessonModal = ({
                 buttonText={__('Upload Video', 'tutor')}
                 infoText={__('Supported file formats .mp4', 'tutor')}
                 supportedFormats={['mp4']}
+                onGetDuration={(duration) => {
+                  form.setValue('duration.hour', duration.hours);
+                  form.setValue('duration.minute', duration.minutes);
+                  form.setValue('duration.second', duration.seconds);
+                }}
               />
             )}
           />
@@ -287,7 +297,7 @@ const LessonModal = ({
                     {...controllerProps}
                     type="number"
                     label={__('Available after days', 'tutor')}
-                    helpText={__('Set the number of days after which the lesson will be available', 'tutor')}
+                    helpText={__('This lesson will be available after the given number of days.', 'tutor')}
                     placeholder="0"
                   />
                 )}
@@ -302,7 +312,10 @@ const LessonModal = ({
                   <FormDateInput
                     {...controllerProps}
                     label={__('Unlock Date', 'tutor')}
-                    helpText={__('Set the date when the lesson will be available', 'tutor')}
+                    helpText={__(
+                      'This lesson will be available from the given date. Leave empty to make it available immediately.',
+                      'tutor'
+                    )}
                   />
                 )}
               />
@@ -318,6 +331,7 @@ const LessonModal = ({
                     placeholder={__('Select Prerequisite', 'tutor')}
                     label={__('Prerequisites', 'tutor')}
                     options={prerequisiteCoursesQuery.data || []}
+                    helpText={__('Select items that should be complete before this item', 'tutor')}
                   />
                 )}
               />
