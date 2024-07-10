@@ -254,14 +254,17 @@ class OrderController {
 	 * @since 3.0.0
 	 */
 	public function prepare_bulk_actions(): array {
-		$actions = array();
+		$actions = array(
+			$this->bulk_action_default(),
+		);
 
 		$active_tab = Input::get( 'data', '' );
 
+		if ( $this->model::ORDER_TRASH !== $active_tab ) {
+			$actions[] = $this->bulk_action_mark_order_trash();
+		}		
+
 		if ( ! empty( $active_tab ) ) {
-
-			$actions[] = $this->bulk_action_default();
-
 			switch ( $active_tab ) {
 				case $this->model::ORDER_INCOMPLETE:
 					$actions[] = $this->bulk_action_mark_order_paid();
@@ -278,9 +281,6 @@ class OrderController {
 			}
 		}
 
-		if ( $this->model::ORDER_TRASH !== $active_tab ) {
-			$actions[] = $this->bulk_action_mark_order_trash();
-		}
 		return apply_filters( 'tutor_order_bulk_actions', $actions );
 	}
 
