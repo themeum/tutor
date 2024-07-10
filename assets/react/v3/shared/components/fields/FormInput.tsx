@@ -17,7 +17,7 @@ import { isDefined } from '@Utils/types';
 import { parseNumberOnly } from '@Utils/util';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
-	label?: string;
+	label?: string | React.ReactNode;
 	type?: 'number' | 'text' | 'password';
 	maxLimit?: number;
 	disabled?: boolean;
@@ -127,7 +127,11 @@ const FormInput = ({
 									onKeyDown?.(event.key);
 								}}
 								autoComplete="off"
-								ref={ref}
+								ref={(element) => {
+									field.ref(element);
+									// @ts-ignore
+									ref.current = element; // this is not ideal but it is the only way to set ref to the input element
+								}}
 								onFocus={() => {
 									if (!selectOnFocus || !ref.current) {
 										return;

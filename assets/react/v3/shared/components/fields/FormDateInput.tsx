@@ -14,7 +14,7 @@ import 'react-day-picker/dist/style.css';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormDateInputProps extends FormControllerProps<string> {
-  label?: string;
+  label?: string | React.ReactNode;
   disabled?: boolean;
   disabledBefore?: string;
   disabledAfter?: string;

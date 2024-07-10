@@ -44,6 +44,11 @@ type FormVideoInputProps = {
   buttonText?: string;
   infoText?: string;
   supportedFormats?: string[];
+  onGetDuration?: (duration: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+  }) => void;
 } & FormControllerProps<CourseVideo | null>;
 
 const videoSources = Array.isArray(tutorConfig.settings.supported_video_sources)
@@ -100,6 +105,7 @@ const FormVideoInput = ({
   infoText,
   onChange,
   supportedFormats,
+  onGetDuration,
 }: FormVideoInputProps) => {
   const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
@@ -154,6 +160,19 @@ const FormVideoInput = ({
         type === 'video'
           ? { source: 'html5', source_video_id: attachment.id }
           : { poster: attachment.id, poster_url: attachment.url };
+
+      if (type === 'video' && onGetDuration) {
+        const video = document.createElement('video');
+        video.src = attachment.url;
+        video.preload = 'metadata';
+        video.onloadedmetadata = () => {
+          const duration = Math.floor(video.duration);
+          const hours = Math.floor(duration / 3600);
+          const minutes = Math.floor((duration % 3600) / 60);
+          const seconds = duration % 60;
+          onGetDuration({ hours, minutes, seconds });
+        };
+      }
 
       field.onChange(updateFieldValue(fieldValue, updateData));
       onChange?.(updateFieldValue(fieldValue, updateData));
