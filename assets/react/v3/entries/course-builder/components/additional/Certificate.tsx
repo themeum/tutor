@@ -41,17 +41,8 @@ const Certificate = () => {
   const currentCertificate = currentCertificateKey
     ? certificatesData.find((certificate) => certificate.key === currentCertificateKey)
     : null;
-  const currentCertificateTab = () => {
-    if (currentCertificate) {
-      if (currentCertificate.is_default) {
-        return 'templates';
-      }
-      return 'custom_certificates';
-    }
-    return 'templates';
-  };
 
-  const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>(currentCertificateTab());
+  const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>('templates');
   const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>(
     currentCertificate?.orientation ?? 'landscape'
   );
@@ -62,11 +53,13 @@ const Certificate = () => {
     if (!currentCertificateKey) {
       return;
     }
+
     const newCertificate = certificatesData.find((certificate) => certificate.key === currentCertificateKey);
     if (newCertificate) {
       if (activeOrientation !== newCertificate.orientation) {
         setActiveOrientation(newCertificate.orientation);
       }
+      setActiveCertificateTab(newCertificate.is_default ? 'templates' : 'custom_certificates');
       setSelectedCertificate(currentCertificateKey);
     }
   }, [currentCertificateKey, certificatesData]);
