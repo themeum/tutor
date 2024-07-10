@@ -424,6 +424,32 @@ class OrderModel {
 	}
 
 	/**
+	 * Update an order
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $order_id Integer or array of ids sql escaped.
+	 * @param array     $data Data to update, escape data.
+	 *
+	 * @return bool
+	 */
+	public function update_order( $order_id, array $data ) {
+		$order_id = is_array( $order_id ) ? $order_id : array( $order_id );
+		$order_id = QueryHelper::prepare_in_clause( $order_id );
+		try {
+			QueryHelper::update_where_in(
+				$this->table_name,
+				$data,
+				$order_id
+			);
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
+			return false;
+		}
+	}
+
+	/**
 	 * Delete an order by order ID.
 	 *
 	 * This function deletes an order from the 'tutor_orders' table based on the given
@@ -431,12 +457,13 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int $order_id The ID of the order to delete.
+	 * @param int|array $order_id The ID of the order to delete.
 	 *
-	 * @return bool|int False on failure, or the number of rows affected if successful.
+	 * @return bool False on failure, or the number of rows affected if successful.
 	 */
 	public function delete_order( $order_id ) {
-		return QueryHelper::delete( $this->table_name, array( 'id' => $order_id ) );
+		$order_id = is_array( $order_id ) ? $order_id : array( intval( $order_id ) );
+		return QueryHelper::bulk_delete_by_ids( $this->table_name, $order_id ) ? true : false;
 	}
 
 	/**

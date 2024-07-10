@@ -116,6 +116,10 @@ function tutor_get_translate_text() {
 			'badge' => 'success',
 			'text'  => __( 'Paid', 'tutor' ),
 		),
+		'failed' => array(
+			'badge' => 'danger',
+			'text'  => __( 'Failed', 'tutor' ),
+		),
 		'partially-paid'    => array(
 			'badge' => 'success',
 			'text'  => __( 'Partially Paid', 'tutor' ),
