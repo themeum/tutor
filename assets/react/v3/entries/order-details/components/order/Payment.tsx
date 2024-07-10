@@ -1,6 +1,5 @@
 import { Box, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
-import { TutorBadge, type Variant } from '@Atoms/TutorBadge';
 import { useModal } from '@Components/modals/Modal';
 import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -15,18 +14,9 @@ import type { PaymentStatus } from '@OrderServices/order';
 import { createPriceFormatter } from '@Utils/currency';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
+import { PaymentBadge } from './PaymentBadge';
 
-const badgeMap: Record<PaymentStatus, { label: string; type: Variant }> = {
-  paid: { label: __('Paid', 'tutor'), type: 'success' },
-  failed: { label: __('Failed', 'tutor'), type: 'critical' },
-  'partially-refunded': { label: __('Partially refunded', 'tutor'), type: 'secondary' },
-  refunded: { label: __('Refunded', 'tutor'), type: 'critical' },
-  pending: { label: __('Pending', 'tutor'), type: 'warning' },
-};
 
-function PaymentBadge({ status }: { status: PaymentStatus }) {
-  return <TutorBadge variant={badgeMap[status].type}>{badgeMap[status].label}</TutorBadge>;
-}
 
 function PaymentActionButton({
   status,
@@ -41,7 +31,7 @@ function PaymentActionButton({
           {__('Refund', 'tutor')}
         </Button>
       );
-    case 'pending':
+    case 'unpaid':
       return (
         <Button variant="primary" size="small" isOutlined onClick={() => onClick('mark-as-paid')}>
           {__('Mark as paid', 'tutor')}
@@ -76,7 +66,7 @@ function Payment() {
 
           <div css={styles.item({ action: 'regular' })}>
             <Show
-              when={order.discount}
+              when={order.discount_amount}
               fallback={
                 <>
                   <button
@@ -93,7 +83,7 @@ function Payment() {
                             reason: '',
                             type: 'percentage',
                           },
-                          total_price: 100,
+                          total_price: order.net_payment,
                         },
                       })
                     }
@@ -105,36 +95,42 @@ function Payment() {
                 </>
               }
             >
-              {(discount) => (
-                <>
-                  <div>{__('Discount', 'tutor')}</div>
-                  <div>
-                    {discount.reason ?? '-'}
-                    <strong> ({`${discount.amount}${discount.type === 'percentage' ? '%' : ''}`})</strong>
-                  </div>
-                  <div>-{formatPrice(discount.discounted_value)}</div>
-                </>
-              )}
+              <div>{__('Discount', 'tutor')}</div>
+              <div>
+                {order.discount_reason ?? '-'}
+                <strong> ({`${order.discount_amount}${order.discount_type === 'percentage' ? '%' : ''}`})</strong>
+              </div>
+              <div>-{formatPrice(order.discount_amount)}</div>
             </Show>
           </div>
-          <Show when={order.tax}>
-            {(tax) => (
+          <Show when={order.tax_amount}>
+            {(taxAmount) => (
               <div css={styles.item({ action: 'regular' })}>
                 <div>{__('Estimated tax', 'tutor')}</div>
-                <div>{tax.rate}%</div>
-                <div>{formatPrice(tax.taxable_amount)}</div>
+                <div>{order.tax_rate}%</div>
+                <div>{formatPrice(taxAmount)}</div>
               </div>
             )}
           </Show>
+
+          <Show when={order.fees}>
+            {(fees) => (
+              <div css={styles.item({ action: 'regular' })}>
+                <div>{__('Fees', 'tutor')}</div>
+                <div>-</div>
+                <div>{formatPrice(fees)}</div>
+              </div>
+            )}
+          </Show>
+
           <div css={styles.item({ action: 'bold' })}>
             <div>{__('Total Paid', 'tutor')}</div>
             <div />
             <div>{formatPrice(order.total_price)}</div>
           </div>
 
-          <Show when={order.refunds.length > 0}>
+          <Show when={order.refunds?.length}>
             <div css={styles.separator} />
-
             <Show when={order.refunds}>
               {(refunds) => (
                 <For each={refunds}>
@@ -155,7 +151,7 @@ function Payment() {
             <div css={styles.item({ action: 'bold' })}>
               <div>{__('Net payment', 'tutor')}</div>
               <div />
-              <div>{formatPrice(order.net_total_price)}</div>
+              <div>{formatPrice(order.net_payment)}</div>
             </div>
           </Show>
         </Box>
@@ -169,7 +165,7 @@ function Payment() {
                   component: RefundModal,
                   props: {
                     title: __('Refund', 'tutor'),
-                    available_amount: order.net_total_price,
+                    available_amount: order.net_payment,
                   },
                 });
               }
@@ -179,7 +175,8 @@ function Payment() {
                   component: MarkAsPaidModal,
                   props: {
                     title: __('Mark as Paid', 'tutor'),
-                    total: order.net_total_price
+                    total: order.net_payment,
+                    order_id: order.id
                   }
                 })
               }

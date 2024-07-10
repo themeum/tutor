@@ -6,6 +6,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { useMarkAsPaidMutation } from '@OrderServices/order';
 import { createPriceFormatter } from '@Utils/currency';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
@@ -13,13 +14,15 @@ import { Controller } from 'react-hook-form';
 interface MarkAsPaidModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   total: number;
+  order_id: number;
 }
 
 interface FormField {
   note: string;
 }
 
-function MarkAsPaidModal({ title, closeModal, actions, total }: MarkAsPaidModalProps) {
+function MarkAsPaidModal({ title, closeModal, actions, total, order_id }: MarkAsPaidModalProps) {
+  const markAsPaidMutation = useMarkAsPaidMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
       note: ''
@@ -32,8 +35,8 @@ function MarkAsPaidModal({ title, closeModal, actions, total }: MarkAsPaidModalP
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          console.log(values);
-          alert('@TODO: will be implemented later.');
+          markAsPaidMutation.mutate({note: values.note, order_id});
+          closeModal();
         })}
       >
         <div css={styles.formContent}>
@@ -45,13 +48,12 @@ function MarkAsPaidModal({ title, closeModal, actions, total }: MarkAsPaidModalP
                 <FormTextareaInput {...props} label={__('Note', 'tutor')} rows={3} placeholder={__('Write some note against this action.', 'tutor')} />
               )}
             />
-          
         </div>
         <div css={styles.footer}>
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
             {__('Cancel', 'tutor')}
           </Button>
-          <Button type="submit" size="small" variant="WP">
+          <Button type="submit" size="small" variant="WP" loading={markAsPaidMutation.isPending}>
             {__('Mark as Paid', 'tutor')}
           </Button>
         </div>

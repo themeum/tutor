@@ -75,7 +75,6 @@ const styles = {
 		justify-content: center;
 		align-items: center;
 		border-radius: ${borderRadius.circle};
-		border: 1px solid ${colorTokens.stroke.border};
 		color: ${colorTokens.text.white};
 		text-transform: uppercase;
 	`,
