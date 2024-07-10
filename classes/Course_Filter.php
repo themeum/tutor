@@ -119,30 +119,29 @@ class Course_Filter {
 			),
 		);
 
-		$post_ids_array                                 = tutils()->array_get( 'tutor-course-filter-post-ids', $sanitized_post, array() );
-		! is_array( $post_ids_array ) ? $post_ids_array = array( $post_ids_array ) : 0;
+		$post_ids_array = tutils()->array_get( 'tutor-course-filter-post-ids', $sanitized_post, array() );
 
-		$post_ids_array = array_filter(
-			$post_ids_array,
+		$post_ids_array = array_map(
 			function ( $post_id ) {
-				return is_numeric( $post_id );
-			}
+				return (int) $post_id;
+			},
+			$post_ids_array
 		);
 
-		if ( count( $post_ids_array ) > 0 ) {
+		if ( count( $post_ids_array ) ) {
 			$args['post__in'] = $post_ids_array;
 		}
-		$exclude_ids_array                                    = tutils()->array_get( 'tutor-course-filter-exclude-ids', $sanitized_post, array() );
-		! is_array( $exclude_ids_array ) ? $exclude_ids_array = array( $exclude_ids_array ) : 0;
 
-		$exclude_ids_array = array_filter(
-			$exclude_ids_array,
+		$exclude_ids_array = tutils()->array_get( 'tutor-course-filter-exclude-ids', $sanitized_post, array() );
+
+		$exclude_ids_array = array_map(
 			function ( $exclude_id ) {
-				return is_numeric( $exclude_id );
-			}
+				return (int) $exclude_id;
+			},
+			$exclude_ids_array
 		);
 
-		if ( count( $exclude_ids_array ) > 0 ) {
+		if ( count( $exclude_ids_array ) ) {
 			$args['post__not_in'] = $exclude_ids_array;
 		}
 		// Prepare taxonomy.

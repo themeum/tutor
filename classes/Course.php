@@ -197,6 +197,34 @@ class Course extends Tutor_Base {
 		add_action( 'trashed_post', __CLASS__ . '::redirect_to_course_list_page' );
 
 		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
+		/**
+		 * Remove wp trash button if instructor settings is disabled
+		 *
+		 * @since 2.7.3
+		 */
+		add_action( 'admin_init', array( $this, 'disable_course_trash_instructor' ) );
+	}
+
+	/**
+	 * Remove move to trash button on WordPress editor for instructor.
+	 *
+	 * @since 2.7.3
+	 *
+	 * @return void
+	 */
+	public function disable_course_trash_instructor() {
+		if ( current_user_can( 'edit_tutor_course' ) && ! current_user_can( 'administrator' ) ) {
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+			$role           = get_role( tutor()->instructor_role );
+
+			if ( ! $can_trash_post ) {
+				$role->remove_cap( 'delete_tutor_courses' );
+				$role->remove_cap( 'delete_tutor_course' );
+			} else {
+				$role->add_cap( 'delete_tutor_courses' );
+				$role->add_cap( 'delete_tutor_course' );
+			}
+		}
 	}
 
 	/**
@@ -944,7 +972,26 @@ class Course extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Only main instructor can delete this course', 'tutor' ) ) );
 		}
 
-		CourseModel::delete_course( $course_id );
+		// Check if user is only an instructor.
+		if ( ! current_user_can( 'administrator' ) ) {
+			// Check if instructor can trash course.
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+
+			if ( ! $can_trash_post ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+		}
+
+		$trash_course = wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_status' => 'trash',
+			)
+		);
+
+		if ( $trash_course ) {
+			wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
+		}
 		wp_send_json_success();
 	}
 

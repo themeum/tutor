@@ -963,6 +963,12 @@ class Quiz {
 			);
 		}
 
+		if ( 0 !== $topic_id ) {
+			if ( ! tutor_utils()->can_user_manage( 'quiz', $ex_quiz_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+			}
+		}
+
 		// Prepare quiz data to save in database.
 		$post_arr = array(
 			'ID'           => $ex_quiz_id,

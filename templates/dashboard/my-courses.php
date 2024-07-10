@@ -40,6 +40,10 @@ $paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
 
 $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page );
+$show_course_delete = true;
+if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
+	$show_course_delete = false;
+}
 ?>
 
 <div class="tutor-dashboard-my-courses">
@@ -263,10 +267,12 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 											
 											<!-- Delete Action -->
 											<?php if ( $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT ) ) ) : ?>
-											<a href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-dropdown-item tutor-admin-course-delete">
-												<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
-												<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
-											</a>
+												<?php if ( $show_course_delete ) : ?>
+												<a href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-dropdown-item tutor-admin-course-delete">
+													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+													<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
+												</a>
+												<?php endif; ?>
 											<?php endif; ?>
 											<!-- # Delete Action -->
 

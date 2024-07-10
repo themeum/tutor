@@ -165,7 +165,7 @@ class Shortcode {
 			$ids           = (array) explode( ',', $a['id'] );
 			$a['post__in'] = $ids;
 
-			if ( is_array( $ids ) && count( $ids ) > 0 && ! wp_doing_ajax() ) {
+			if ( is_array( $ids ) && count( $ids ) && ! wp_doing_ajax() ) {
 				$_GET['tutor-course-filter-post-ids'] = $ids;
 				$course_filter_post_ids               = $ids;
 			}
@@ -174,7 +174,7 @@ class Shortcode {
 		if ( ! empty( $a['exclude_ids'] ) ) {
 			$exclude_ids       = (array) explode( ',', $a['exclude_ids'] );
 			$a['post__not_in'] = $exclude_ids;
-			if ( is_array( $exclude_ids ) && count( $exclude_ids ) > 0 && ! wp_doing_ajax() ) {
+			if ( is_array( $exclude_ids ) && count( $exclude_ids ) && ! wp_doing_ajax() ) {
 				$_GET['tutor-course-filter-exclude-ids'] = $exclude_ids;
 				$course_filter_exclude_ids               = $exclude_ids;
 			}

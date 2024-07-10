@@ -175,6 +175,8 @@ class Options_V2 {
 	 */
 	public function tutor_export_single_settings() {
 
+		tutor_utils()->checking_nonce();
+
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
@@ -193,6 +195,8 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_apply_settings() {
+
+		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
@@ -215,6 +219,9 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_delete_single_settings() {
+
+		tutor_utils()->checking_nonce();
+
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
@@ -655,6 +662,14 @@ class Options_V2 {
 								'label_title' => '',
 								'default'     => 'off',
 								'desc'        => __( 'Enable instructors to publish the course directly. If disabled, admins will be able to review course content before publishing.', 'tutor' ),
+							),
+							array(
+								'key'         => 'instructor_can_delete_course',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Allow Instructors to Trash Courses', 'tutor' ),
+								'label_title' => '',
+								'default'     => 'on',
+								'desc'        => __( 'Enable to allow instructors to trash courses. Disable to prevent them from trashing courses.', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_become_instructor_btn',
