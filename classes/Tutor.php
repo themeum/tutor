@@ -873,6 +873,7 @@ final class Tutor {
 			payment_status VARCHAR(50) NOT NULL,
 			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
 			total_price DECIMAL(13, 2) NOT NULL, -- final price
+			net_payment DECIMAL(13, 2) NOT NULL, -- calculated price if any refund is done else same as total_price
 			coupon_code VARCHAR(255),
 			discount_type ENUM('percentage', 'flat'),
 			discount_amount DECIMAL(13, 2),
@@ -900,6 +901,10 @@ final class Tutor {
 			order_id BIGINT(20) UNSIGNED NOT NULL,
 			meta_key VARCHAR(255) NOT NULL,
 			meta_value LONGTEXT NOT NULL,
+			created_at_gmt DATETIME NOT NULL,
+			created_by BIGINT(20) UNSIGNED NOT NULL,
+			updated_at_gmt DATETIME,
+			updated_by BIGINT(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
 			KEY meta_key (meta_key),
