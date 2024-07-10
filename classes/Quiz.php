@@ -86,7 +86,8 @@ class Quiz {
 		 */
 
 		add_action( 'wp_ajax_tutor_quiz_save', array( $this, 'ajax_quiz_save' ) );
-		add_action( 'wp_ajax_tutor_delete_quiz_by_id', array( $this, 'tutor_delete_quiz_by_id' ) );
+		add_action( 'wp_ajax_tutor_quiz_delete', array( $this, 'ajax_quiz_delete' ) );
+
 		add_action( 'wp_ajax_tutor_load_quiz_builder_modal', array( $this, 'tutor_load_quiz_builder_modal' ), 10, 0 );
 		add_action( 'wp_ajax_tutor_quiz_builder_get_question_form', array( $this, 'tutor_quiz_builder_get_question_form' ) );
 		add_action( 'wp_ajax_tutor_quiz_modal_update_question', array( $this, 'tutor_quiz_modal_update_question' ) );
@@ -1014,51 +1015,64 @@ class Quiz {
 	 * Delete quiz by id
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 refactor and response change.
 	 *
 	 * @return void
 	 */
-	public function tutor_delete_quiz_by_id() {
-		tutor_utils()->checking_nonce();
+	public function ajax_quiz_delete() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		global $wpdb;
 
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-		$post    = get_post( $quiz_id );
-
-		if ( ! tutils()->can_user_manage( 'quiz', $quiz_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
 		}
 
-		if ( 'tutor_quiz' === $post->post_type ) {
-			do_action( 'tutor_delete_quiz_before', $quiz_id );
-
-			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $quiz_id ) );
-			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $quiz_id ) );
-
-			$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $quiz_id ) );
-
-			if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
-				$in_question_ids = QueryHelper::prepare_in_clause( $questions_ids );
-				//phpcs:disable
-				$wpdb->query(
-					"DELETE 
-						FROM {$wpdb->prefix}tutor_quiz_question_answers
-						WHERE belongs_question_id IN({$in_question_ids})
-					"
-				);
-				//phpcs:enable
-			}
-
-			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) );
-
-			wp_delete_post( $quiz_id, true );
-
-			do_action( 'tutor_delete_quiz_after', $quiz_id );
-
-			wp_send_json_success();
+		$post = get_post( $quiz_id );
+		if ( 'tutor_quiz' !== $post->post_type ) {
+			$this->json_response(
+				__( 'Invalid quiz', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
-		wp_send_json_error();
+		do_action( 'tutor_delete_quiz_before', $quiz_id );
+
+		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $quiz_id ) );
+		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $quiz_id ) );
+
+		$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $quiz_id ) );
+
+		if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
+			$in_question_ids = QueryHelper::prepare_in_clause( $questions_ids );
+			//phpcs:disable
+			$wpdb->query(
+				"DELETE 
+					FROM {$wpdb->prefix}tutor_quiz_question_answers
+					WHERE belongs_question_id IN({$in_question_ids})
+				"
+			);
+			//phpcs:enable
+		}
+
+		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) );
+
+		wp_delete_post( $quiz_id, true );
+
+		do_action( 'tutor_delete_quiz_after', $quiz_id );
+
+		$this->json_response(
+			__( 'Quiz deleted successfully', 'tutor' ),
+			$quiz_id
+		);
 	}
 
 	/**
