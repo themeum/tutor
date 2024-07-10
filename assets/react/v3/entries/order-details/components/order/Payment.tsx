@@ -175,7 +175,7 @@ function Payment() {
                   component: MarkAsPaidModal,
                   props: {
                     title: __('Mark as Paid', 'tutor'),
-                    total: order.net_total_price
+                    total: order.net_payment
                   }
                 })
               }

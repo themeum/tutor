@@ -346,7 +346,7 @@ class OrderController {
 		$params = array(
 			'order_id'   => Input::post( 'order_id' ),
 			'meta_key'   => OrderActivitiesModel::META_KEY_COMMENT,
-			'meta_value' => Input::post( 'meta_value' ),
+			'meta_value' => Input::post( 'comment' ),
 		);
 
 		do_action( 'tutor_before_order_comment', $params );
@@ -364,7 +364,7 @@ class OrderController {
 		$payload             = new \stdClass();
 		$payload->order_id   = $params['order_id'];
 		$payload->meta_key   = $params['meta_key'];
-		$payload->meta_value = $params['meta_value'];
+		$payload->meta_value = wp_json_encode( (object) array( 'message' => $params['meta_value'] ) );
 
 		$activity_model = new OrderActivitiesModel();
 		$response       = $activity_model->add_order_meta( $payload );

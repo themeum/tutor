@@ -98,15 +98,20 @@ class OrderActivitiesModel {
 		global $wpdb;
 
 		// Retrieve order activities for the given order ID from the 'tutor_ordermeta' table.
-		$order_activities = QueryHelper::get_all(
-			$this->table_name,
-			array(
-				'order_id' => $order_id,
-				'meta_key' => self::META_KEY_HISTORY,
-			),
-			'updated_at_gmt'
+		$keys = array( self::META_KEY_COMMENT, self::META_KEY_HISTORY, self::META_KEY_REFUND );
+		$placeholders = implode( ', ', array_fill( 0, count( $keys ), '%s' ) );
+
+		$query = $wpdb->prepare(
+			"SELECT *
+				FROM {$this->table_name}
+				WHERE meta_key IN ({$placeholders})
+				ORDER BY created_at_gmt DESC
+			",
+			...$keys
 		);
 
+		$order_activities = $wpdb->get_results($query);
+		
 		if ( empty( $order_activities ) ) {
 			return array();
 		}
@@ -117,21 +122,11 @@ class OrderActivitiesModel {
 			$values     = new \stdClass();
 			$values     = json_decode( $activity->meta_value );
 			$values->id = (int) $activity->id;
+			$values->date = $activity->created_at_gmt;
 			$response[] = $values;
 		}
 
 		unset( $activity );
-
-		// Custom comparison function for sorting by date.
-		usort(
-			$response,
-			function ( $a, $b ) {
-				$date_a = strtotime( $a->date );
-				$date_b = strtotime( $b->date );
-
-				return $date_b - $date_a;
-			}
-		);
 
 		return $response;
 	}
