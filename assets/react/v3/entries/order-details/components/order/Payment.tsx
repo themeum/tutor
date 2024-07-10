@@ -7,6 +7,7 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import DiscountModal from '@OrderComponents/modals/DiscountModal';
+import MarkAsPaidModal from '@OrderComponents/modals/MarkAsPaidModal';
 import RefundModal from '@OrderComponents/modals/RefundModal';
 import { useOrderContext } from '@OrderContexts/order-context';
 import type { PaymentStatus } from '@OrderServices/order';
@@ -167,6 +168,16 @@ function Payment() {
                     available_amount: order.net_payment,
                   },
                 });
+              }
+
+              if (buttonType === 'mark-as-paid') {
+                return showModal({
+                  component: MarkAsPaidModal,
+                  props: {
+                    title: __('Mark as Paid', 'tutor'),
+                    total: order.net_total_price
+                  }
+                })
               }
             }}
           />

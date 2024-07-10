@@ -7,6 +7,19 @@ interface AvatarProps {
   name: string;
 }
 
+const generateAcronym = (name: string) => {
+	const parts = name.split(/\s+/);
+	if (parts.length === 1) {
+		return parts[0].charAt(0);
+	}
+
+	if (parts.length > 1) {
+		return parts.slice(0, 2).map(part => part.charAt(0)).join('');
+	}
+	
+	return '';
+}
+
 export function Avatar({ image, name }: AvatarProps) {
   if (!image) {
     return <AvatarFallback name={name} />;
@@ -25,7 +38,7 @@ export function Avatar({ image, name }: AvatarProps) {
 export function AvatarFallback({ name }: { name: string }) {
   return (
     <div css={styles.wrapper}>
-      <div css={styles.placeholder}>{name.charAt(0)}</div>
+      <div css={styles.placeholder}>{generateAcronym(name)}</div>
       <span css={styles.name}>{name}</span>
     </div>
   );
@@ -63,6 +76,7 @@ const styles = {
 		align-items: center;
 		border-radius: ${borderRadius.circle};
 		color: ${colorTokens.text.white};
+		text-transform: uppercase;
 	`,
   name: css`
 		${typography.body()};
