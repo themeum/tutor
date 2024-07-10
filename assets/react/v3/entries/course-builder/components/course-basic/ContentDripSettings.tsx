@@ -11,7 +11,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-const ContentDropSettings = () => {
+const ContentDripSettings = () => {
   const form = useFormContext<CourseFormData>();
 
   const contentDropOptions = [
@@ -67,6 +67,7 @@ const ContentDropSettings = () => {
         {__('You can schedule your course content using the above content drip options', 'tutor')}
       </p>
 
+      {/* @TODO: should be save on change */}
       <Controller
         name="contentDripType"
         control={form.control}
@@ -78,7 +79,7 @@ const ContentDropSettings = () => {
   );
 };
 
-export default ContentDropSettings;
+export default ContentDripSettings;
 
 const styles = {
   dripWrapper: css`

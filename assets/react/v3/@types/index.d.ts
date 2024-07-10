@@ -16,6 +16,7 @@ declare global {
       base_path: string;
       tutor_url: string;
       tutor_pro_url: string;
+      dashboard_url: string;
       nonce_key: string;
       _tutor_nonce: string;
       loading_icon_url: string;
@@ -25,6 +26,9 @@ declare global {
       wp_date_format: string;
       is_admin: string;
       is_admin_bar_showing: string;
+      timezones: {
+        [key: string]: string;
+      };
       addons_data: {
         name: string;
         description: string;

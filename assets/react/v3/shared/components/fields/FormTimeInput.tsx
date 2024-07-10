@@ -1,7 +1,7 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
@@ -81,6 +81,7 @@ const FormTimeInput = ({
                   field.onChange(value);
                 }}
                 autoComplete="off"
+                data-input
               />
               <SVGIcon name="clock" width={32} height={32} style={styles.icon} />
 
@@ -136,7 +137,9 @@ const styles = {
     }
   `,
   input: css`
-    padding-left: ${spacing[40]};
+    &[data-input] {
+      padding-left: ${spacing[40]};
+    }
   `,
   icon: css`
     position: absolute;

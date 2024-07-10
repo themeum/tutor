@@ -154,12 +154,12 @@ const mockOrderData: Order = {
     },
   ],
   subtotal_price: 380,
-  discount: {
-    type: 'percentage',
-    amount: 10,
-    reason: 'Special discount',
-    discounted_value: 38,
-  },
+  // discount: {
+  //   type: 'percentage',
+  //   amount: 10,
+  //   reason: 'Special discount',
+  //   discounted_value: 38,
+  // },
   total_price: 342,
   refunds: [
     {

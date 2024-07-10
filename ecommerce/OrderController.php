@@ -2,19 +2,22 @@
 /**
  * Manage Order
  *
- * @package Tutor\Order
+ * @package Tutor\Ecommerce
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 3.0.0
  */
 
 namespace Tutor\Ecommerce;
 
 use TUTOR\Backend_Page_Trait;
+use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,16 +25,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * OrderController class
  *
- * @since 2.0.0
+ * @since 3.0.0
  */
 class OrderController {
+
+	/**
+	 * Order model
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var OrderModel
+	 */
+	private $model;
+
 	/**
 	 * Trait for utilities
 	 *
 	 * @var $page_title
 	 */
-
 	use Backend_Page_Trait;
+
+	/**
+	 * Trait for sending JSON response
+	 */
+	use JsonResponse;
 
 	/**
 	 * Page Title
@@ -48,38 +65,175 @@ class OrderController {
 	public $bulk_action = true;
 
 	/**
-	 * Constructor
+	 * Constructor.
+	 *
+	 * Initializes the Orders class, sets the page title, and optionally registers
+	 * hooks for handling AJAX requests related to order data, bulk actions, order status updates,
+	 * and order deletions.
+	 *
+	 * @param bool $register_hooks Whether to register hooks for handling requests. Default is true.
+	 *
+	 * @since 3.0.0
 	 *
 	 * @return void
-	 * @since 2.0.0
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
 		$this->page_title = __( 'Orders', 'tutor' );
-		/**
-		 * Handle bulk action
-		 *
-		 * @since v2.0.0
-		 */
-		add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
-		/**
-		 * Handle ajax request for updating order status
-		 *
-		 * @since v2.0.0
-		 */
-		add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
-		/**
-		 * Handle ajax request for delete order
-		 *
-		 * @since v2.0.0
-		 */
-		add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
+		$this->model      = new OrderModel();
+
+		if ( $register_hooks ) {
+			/**
+			 * Handle AJAX request for getting order related data by order ID.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_details', array( $this, 'get_order_by_id' ) );
+
+			/**
+			 * Handle AJAX request for marking an order as paid by order ID.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_paid', array( $this, 'order_mark_as_paid' ) );
+
+			/**
+			 * Handle bulk action
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
+			/**
+			 * Handle ajax request for updating order status
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
+			/**
+			 * Handle ajax request for delete order
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
+		}
+	}
+
+
+	/**
+	 * Retrieve order data by order ID and respond with JSON.
+	 *
+	 * This function retrieves the order ID from the POST request, validates it,
+	 * fetches the corresponding order data using the OrderModel class, and returns
+	 * a JSON response with the order data or an error message.
+	 *
+	 * If the order ID is not provided, it responds with a "Bad Request" status.
+	 * If the order is not found, it responds with a "Not Found" status.
+	 * Otherwise, it responds with the order data and a success message.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function get_order_by_id() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$order_id = Input::post( 'order_id' );
+
+		if ( empty( $order_id ) ) {
+			$this->json_response(
+				__( 'Order ID is required', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$order_data = $this->model->get_order_by_id( $order_id );
+
+		if ( ! $order_data ) {
+			$this->json_response(
+				__( 'Order not found', 'tutor' ),
+				null,
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
+		$this->json_response(
+			__( 'Order retrieved successfully', 'tutor' ),
+			$order_data
+		);
+	}
+
+	/**
+	 * Mark an order as paid.
+	 *
+	 * This function verifies a nonce for security, constructs a payload object with
+	 * the order ID, note, and payment status, and updates the payment status of the order
+	 * to 'paid'. It sends a JSON response indicating the success or failure of the operation.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function order_mark_as_paid() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+
+		$params = array(
+			'order_id' => Input::post( 'order_id' ),
+			'note'     => Input::post( 'note' ),
+		);
+
+		// Validate request.
+		$validation = $this->validate( $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
+				$validation->errors,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		do_action( 'tutor_before_order_mark_as_paid', $params );
+
+		$payload                 = new \stdClass();
+		$payload->order_id       = $params['order_id'];
+		$payload->note           = $params['note'];
+		$payload->payment_status = $this->model::PAYMENT_PAID;
+
+		if ( empty( $payload->order_id ) ) {
+			$this->json_response(
+				__( 'Order Id is required', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$response = $this->model->payment_status_update( $payload );
+
+		do_action( 'tutor_after_order_mark_as_paid', $params );
+
+		if ( ! $response ) {
+			$this->json_response(
+				__( 'Failed to update order payment status', 'tutor' ),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
 
 	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @return array
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public function prepare_bulk_actions(): array {
 		$actions = array(
@@ -103,77 +257,49 @@ class OrderController {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
-	 * @param string  $category_slug category slug.
-	 * @param integer $order_id order ID.
-	 * @param string  $date selected date | optional.
-	 * @param string  $search search by user name or email | optional.
-	 *
 	 * @return array
 	 *
-	 * @since v2.0.0
+	 * @since 3.0.0
 	 */
-	public function tabs_key_value( $category_slug, $order_id, $date, $search ): array {
+	public function tabs_key_value(): array {
 		$url = get_pagenum_link();
 
-		$all       = self::count_order( 'all', $order_id, $date, $search );
-		$mine      = self::count_order( 'mine', $order_id, $date, $search );
-		$published = self::count_order( 'publish', $order_id, $date, $search );
-		$draft     = self::count_order( 'draft', $order_id, $date, $search );
-		$pending   = self::count_order( 'pending', $order_id, $date, $search );
-		$trash     = self::count_order( 'trash', $order_id, $date, $search );
-		$private   = self::count_order( 'private', $order_id, $date, $search );
-		$future    = self::count_order( 'future', $order_id, $date, $search );
+		$date           = Input::get( 'date', '' );
+		$payment_status = Input::get( 'payment-status', '' );
+		$search         = Input::get( 'search', '' );
 
-		$tabs = array(
-			array(
-				'key'   => 'all',
-				'title' => __( 'All', 'tutor' ),
-				'value' => $all,
-				'url'   => $url . '&data=all',
-			),
-			array(
-				'key'   => 'mine',
-				'title' => __( 'Mine', 'tutor' ),
-				'value' => $mine,
-				'url'   => $url . '&data=mine',
-			),
-			array(
-				'key'   => 'published',
-				'title' => __( 'Published', 'tutor' ),
-				'value' => $published,
-				'url'   => $url . '&data=published',
-			),
-			array(
-				'key'   => 'draft',
-				'title' => __( 'Draft', 'tutor' ),
-				'value' => $draft,
-				'url'   => $url . '&data=draft',
-			),
-			array(
-				'key'   => 'pending',
-				'title' => __( 'Pending', 'tutor' ),
-				'value' => $pending,
-				'url'   => $url . '&data=pending',
-			),
-			array(
-				'key'   => 'future',
-				'title' => __( 'Scheduled', 'tutor' ),
-				'value' => $future,
-				'url'   => $url . '&data=future',
-			),
-			array(
-				'key'   => 'private',
-				'title' => __( 'Private', 'tutor' ),
-				'value' => $private,
-				'url'   => $url . '&data=private',
-			),
-			array(
-				'key'   => 'trash',
-				'title' => __( 'Trash', 'tutor' ),
-				'value' => $trash,
-				'url'   => $url . '&data=trash',
-			),
+		$where = array();
+
+		if ( ! empty( $date ) ) {
+			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
+		}
+
+		if ( ! empty( $payment_status ) ) {
+			$where['payment_status'] = $payment_status;
+		}
+
+		$order_status = $this->model->get_order_status();
+
+		$tabs = array();
+
+		$tabs [] = array(
+			'key'   => 'all',
+			'title' => __( 'All', 'tutor' ),
+			'value' => $this->model->get_order_count( $where, $search ),
+			'url'   => $url . '&data=all',
 		);
+
+		foreach ( $order_status as $key => $value ) {
+			$where['order_status'] = $key;
+
+			$tabs[] = array(
+				'key'   => $key,
+				'title' => $value,
+				'value' => $this->model->get_order_count( $where, $search ),
+				'url'   => $url . '&data=' . $key,
+			);
+		}
+
 		return apply_filters( 'tutor_order_tabs', $tabs );
 	}
 
@@ -188,7 +314,7 @@ class OrderController {
 	 *
 	 * @return int
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	protected static function count_order( string $status, $order_id = '', $date = '', $search_term = '' ): int {
 		$user_id     = get_current_user_id();
@@ -241,14 +367,13 @@ class OrderController {
 		$the_query = new \WP_Query( $args );
 
 		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : $the_query;
-
 	}
 
 	/**
 	 * Handle bulk action for enrollment cancel | delete
 	 *
 	 * @return void
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public function order_list_bulk_action() {
 
@@ -303,7 +428,7 @@ class OrderController {
 	 * Handle ajax request for updating order status
 	 *
 	 * @return void
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public static function tutor_change_order_status() {
 		tutor_utils()->checking_nonce();
@@ -340,7 +465,7 @@ class OrderController {
 	/**
 	 * Handle ajax request for deleting order
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 *
 	 * @return void JSON response
 	 */
@@ -371,7 +496,7 @@ class OrderController {
 	 *
 	 * @param string $bulk_ids ids that need to update.
 	 * @return bool
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public static function bulk_delete_order( $bulk_ids ): bool {
 		$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
@@ -391,7 +516,7 @@ class OrderController {
 	 *
 	 * @return bool
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public static function update_order_status( string $status, $bulk_ids ): bool {
 		global $wpdb;
@@ -413,44 +538,70 @@ class OrderController {
 	}
 
 	/**
-	 * Get orders list
+	 * Get orders
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array  $where where clause conditions.
-	 * @param int    $limit limit default 10.
-	 * @param int    $offset default 0.
-	 * @param string $order_by column default 'o.id'.
-	 * @param string $order list order default 'desc'.
+	 * @param integer $limit List limit.
+	 * @param integer $offset List offset.
 	 *
 	 * @return array
 	 */
-	public static function get_orders( array $where = array(), int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
+	public function get_orders( $limit = 10, $offset = 0 ) {
 
-		global $wpdb;
+		$active_tab = Input::get( 'data', 'all' );
 
-		$primary_table  = "{$wpdb->prefix}tutor_orders o";
-		$joining_tables = array(
-			array(
-				'type'  => 'INNER',
-				'table' => "{$wpdb->users} u",
-				'on'    => 'o.user_id = u.ID',
-			),
-			array(
-				'type'  => 'LEFT',
-				'table' => "{$wpdb->usermeta} um1",
-				'on'    => 'u.ID = um1.user_id AND um1.meta_key = "tutor_customer_billing_name"',
-			),
-			array(
-				'type'  => 'LEFT',
-				'table' => "{$wpdb->usermeta} um2",
-				'on'    => 'u.ID = um2.user_id AND um2.meta_key = "tutor_customer_billing_name"',
-			),
+		$date           = Input::get( 'date', '' );
+		$search_term    = Input::get( 'search', '' );
+		$payment_status = Input::get( 'payment-status', '' );
+
+		$where_clause = array();
+
+		if ( $date ) {
+			$where_clause['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
+		}
+
+		if ( $payment_status ) {
+			$where_clause['o.payment_status'] = $payment_status;
+		}
+
+		if ( 'all' !== $active_tab ) {
+			$where_clause['o.order_status'] = $active_tab;
+		}
+
+		$list_order    = Input::get( 'order', 'DESC' );
+		$list_order_by = 'id';
+
+		return $this->model->get_orders( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );
+	}
+
+	/**
+	 * Validate input data based on predefined rules.
+	 *
+	 * This protected method validates the provided data array against a set of
+	 * predefined validation rules. The rules specify that 'order_id' is required
+	 * and must be numeric. The method will skip validation rules for fields that
+	 * are not present in the data array.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data The data array to validate.
+	 *
+	 * @return object The validation result. It returns validation object.
+	 */
+	protected function validate( array $data ) {
+
+		$validation_rules = array(
+			'order_id' => 'required|numeric',
 		);
 
-		$select_columns = array( 'o.*', 'u.user_login', 'um1.meta_value as billing_name', 'um2.meta_value as billing_email' );
+		// Skip validation rules for not available fields in data.
+		foreach ( $validation_rules as $key => $value ) {
+			if ( ! array_key_exists( $key, $data ) ) {
+				unset( $validation_rules[ $key ] );
+			}
+		}
 
-		return QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, $order_by, $limit, $offset, $order );
-
+		return ValidationHelper::validate( $validation_rules, $data );
 	}
 }

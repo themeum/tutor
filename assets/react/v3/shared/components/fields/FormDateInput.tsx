@@ -37,7 +37,7 @@ const FormDateInput = ({
   isClearable = true,
 }: FormDateInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(field.value ?? '');
+  const fieldValue = field.value ?? '';
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -64,11 +64,9 @@ const FormDateInput = ({
                 css={[css, styles.input]}
                 type="text"
                 onFocus={() => setIsOpen(true)}
-                value={inputValue}
+                value={fieldValue}
                 onChange={(event) => {
                   const { value } = event.target;
-
-                  setInputValue(value);
 
                   const currentDate = parseISO(value);
                   const disabledBeforeDate = disabledBefore && parseISO(disabledBefore);
@@ -85,6 +83,7 @@ const FormDateInput = ({
                   field.onChange(value);
                 }}
                 autoComplete="off"
+                data-input
               />
               <SVGIcon name="calendarLine" width={30} height={32} style={styles.icon} />
 
@@ -93,7 +92,6 @@ const FormDateInput = ({
                   variant="text"
                   buttonCss={styles.clearButton}
                   onClick={() => {
-                    setInputValue('');
                     field.onChange('');
                   }}
                 >
@@ -115,7 +113,6 @@ const FormDateInput = ({
                     if (value) {
                       const formattedDate = format(value, DateFormats.yearMonthDay);
 
-                      setInputValue(formattedDate);
                       field.onChange(formattedDate);
                       setIsOpen(false);
                     }
@@ -144,7 +141,9 @@ const styles = {
     }
   `,
   input: css`
-    padding-left: ${spacing[40]};
+    &[data-input] {
+      padding-left: ${spacing[40]};
+    }
   `,
   icon: css`
     position: absolute;

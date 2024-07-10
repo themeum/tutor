@@ -194,4 +194,31 @@ trait Backend_Page_Trait {
 			'option' => __( 'Reject', 'tutor' ),
 		);
 	}
+
+	/**
+	 * Bulk action active
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function bulk_action_active(): array {
+		return array(
+			'value'  => 'active',
+			'option' => __( 'Active', 'tutor' ),
+		);
+	}
+	/**
+	 * Bulk action inactive
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function bulk_action_inactive(): array {
+		return array(
+			'value'  => 'inactive',
+			'option' => __( 'Inactive', 'tutor' ),
+		);
+	}
 }

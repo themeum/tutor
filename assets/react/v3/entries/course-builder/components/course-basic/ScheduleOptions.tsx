@@ -1,48 +1,47 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormDateInput from '@Components/fields/FormDateInput';
-import FormSwitch from '@Components/fields/FormSwitch';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import type { CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format } from 'date-fns';
+import { format, isBefore, parseISO } from 'date-fns';
 import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 interface ScheduleForm {
   schedule_date: string;
   schedule_time: string;
-  schedule_options: boolean;
 }
+
+const courseId = getCourseId();
 
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
-  const scheduleForm = useFormWithGlobalError<ScheduleForm>();
+  const postDate = useWatch({ name: 'post_date' }) || new Date().toISOString();
+  const scheduleForm = useFormWithGlobalError<ScheduleForm>({
+    defaultValues: {
+      schedule_date: format(courseId ? parseISO(postDate) : new Date(), DateFormats.yearMonthDay),
+      schedule_time: format(courseId ? parseISO(postDate) : new Date(), DateFormats.hoursMinutes),
+    },
+  });
 
-  const [showForm, setShowForm] = useState(true);
+  const [showForm, setShowForm] = useState(courseId ? false : true);
 
-  const scheduleOptions = useWatch({ control: scheduleForm.control, name: 'schedule_options' });
-
-  const scheduleDate = scheduleForm.getValues('schedule_date')
-    ? format(new Date(scheduleForm.getValues('schedule_date')), DateFormats.monthDayYear)
+  const scheduleDate = scheduleForm.watch('schedule_date')
+    ? format(new Date(scheduleForm.watch('schedule_date')), DateFormats.monthDayYear)
     : '';
-  const scheduleTime = scheduleForm.getValues('schedule_time') ?? '';
-
-  const handleDelete = () => {
-    scheduleForm.setValue('schedule_options', false);
-    setShowForm(true);
-    scheduleForm.reset();
-  };
+  const scheduleTime = scheduleForm.watch('schedule_time') ?? '';
 
   const handleCancel = () => {
-    scheduleForm.setValue('schedule_options', false);
-    scheduleForm.reset();
+    setShowForm(false);
   };
 
   const handleSave = (data: ScheduleForm) => {
@@ -59,18 +58,28 @@ const ScheduleOptions = () => {
 
   return (
     <div css={styles.scheduleOptions}>
-      <Controller
-        name="schedule_options"
-        control={scheduleForm.control}
-        render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
-      />
-
-      {scheduleOptions && showForm && (
-        <>
+      <div css={styles.scheduleInfoWrapper}>
+        <div css={styles.scheduledFor}>
+          <div css={styles.scheduleLabel}>
+            {isBefore(parseISO(postDate), new Date()) ? __('Published on', 'tutor') : __('Scheduled for', 'tutor')}
+          </div>
+          <div css={styles.scheduleInfoButtons}>
+            <button type="button" onClick={() => setShowForm(true)}>
+              <SVGIcon name="edit" width={24} height={24} />
+            </button>
+          </div>
+        </div>
+        <Show
+          when={showForm}
+          fallback={<div css={styles.scheduleInfo}>{__(`${scheduleDate} at ${scheduleTime}`, 'tutor')}</div>}
+        >
           <div css={styles.dateAndTimeWrapper}>
             <Controller
               name="schedule_date"
               control={scheduleForm.control}
+              rules={{
+                required: __('Schedule date is required', 'tutor'),
+              }}
               render={(controllerProps) => (
                 <FormDateInput {...controllerProps} isClearable={false} placeholder="yyyy-mm-dd" />
               )}
@@ -79,6 +88,9 @@ const ScheduleOptions = () => {
             <Controller
               name="schedule_time"
               control={scheduleForm.control}
+              rules={{
+                required: __('Schedule time is required', 'tutor'),
+              }}
               render={(controllerProps) => (
                 <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
               )}
@@ -93,25 +105,8 @@ const ScheduleOptions = () => {
               {__('Ok', 'tutor')}
             </Button>
           </div>
-        </>
-      )}
-
-      {scheduleOptions && !showForm && (
-        <div css={styles.scheduleInfoWrapper}>
-          <div css={styles.scheduledFor}>
-            <div css={styles.scheduleLabel}>{__('Scheduled for', 'tutor')}</div>
-            <div css={styles.scheduleInfoButtons}>
-              <button type="button" onClick={handleDelete}>
-                <SVGIcon name="delete" width={24} height={24} />
-              </button>
-              <button type="button" onClick={() => setShowForm(true)}>
-                <SVGIcon name="edit" width={24} height={24} />
-              </button>
-            </div>
-          </div>
-          <div css={styles.scheduleInfo}>{__(`${scheduleDate} at ${scheduleTime}`, 'tutor')}</div>
-        </div>
-      )}
+        </Show>
+      </div>
     </div>
   );
 };
@@ -133,7 +128,6 @@ const styles = {
     grid-template-columns: 1fr 124px;
     gap: 1px;
     background-image: linear-gradient(to right, transparent, ${colorTokens.stroke.default}, transparent);
-    margin-top: ${spacing[12]};
     border-radius: ${borderRadius[6]};
 
     &:focus-within {
@@ -175,7 +169,6 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[8]};
-    margin-top: ${spacing[12]};
   `,
   scheduledFor: css`
     display: flex;

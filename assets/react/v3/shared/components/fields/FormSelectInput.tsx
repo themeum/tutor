@@ -72,7 +72,7 @@ const FormSelectInput = <T,>({
 
   const selections = useMemo(() => {
     if (isSearchable) {
-      return options.filter(({ label }) => label.toLowerCase().startsWith(searchText.toLowerCase()));
+      return options.filter(({ label }) => label.toLowerCase().includes(searchText.toLowerCase()));
     }
 
     return options;
@@ -157,6 +157,7 @@ const FormSelectInput = <T,>({
                     setInputValue(event.target.value);
                     setSearchText(event.target.value);
                   }}
+                  data-select
                 />
 
                 <Show when={hasDescription}>
@@ -298,23 +299,25 @@ const styles = {
 		
   `,
   input: (hasLeftIcon: boolean) => css`
-    ${typography.body()};
-    width: 100%;
-    cursor: pointer;
-    padding-right: ${spacing[32]};
-    ${styleUtils.textEllipsis};
-    background-color: transparent;
+    &[data-select] {
+      ${typography.body()};
+      width: 100%;
+      cursor: pointer;
+      padding-right: ${spacing[32]};
+      ${styleUtils.textEllipsis};
+      background-color: transparent;
 
-    ${
-      hasLeftIcon &&
-      css`
-      padding-left: ${spacing[48]};
-    `
-    }
+      ${
+        hasLeftIcon &&
+        css`
+          padding-left: ${spacing[48]};
+        `
+      }
 
-    :focus {
-      outline: none;
-      box-shadow: ${shadow.focus};
+      :focus {
+        outline: none;
+        box-shadow: ${shadow.focus};
+      }
     }
   `,
   decription: ({

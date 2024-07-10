@@ -26,10 +26,11 @@ interface InputProps {
   disabled: boolean;
   readOnly: boolean;
   placeholder?: string;
+  className?: string;
 }
 
 interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
-  label?: string;
+  label?: string | ReactNode;
   isInlineLabel?: boolean;
   children: (inputProps: InputProps) => ReactNode;
   placeholder?: string;
@@ -84,74 +85,80 @@ const styles = {
     }
   `,
   input: (options: InputOptions) => css`
-    width: 100%;
-    height: 40px;
-    border-radius: ${borderRadius[6]};
-    border: 1px solid ${colorTokens.stroke.default};
-    padding: ${spacing[8]} ${spacing[16]};
-    color: ${colorTokens.text.title};
-    appearance: textfield;
+    &.tutor-input-field {
+      width: 100%;
+      border-radius: ${borderRadius[6]};
+      border: 1px solid ${colorTokens.stroke.default};
+      padding: ${spacing[8]} ${spacing[16]};
+      color: ${colorTokens.text.title};
+      appearance: textfield;
 
-    ${
-      options.hasHelpText &&
-      css`
-      padding: 0 ${spacing[32]} 0 ${spacing[12]};
-    `
-    }
+      &:not(textarea) {
+        height: 40px;
+      }
 
-    ${
-      options.removeBorder &&
-      css`
-      border-radius: 0;
-      border: none;
-      box-shadow: none;
-    `
-    }
+      ${
+        options.hasHelpText &&
+        css`
+        padding: 0 ${spacing[32]} 0 ${spacing[12]};
+      `
+      }
 
-    ${
-      options.isSecondary &&
-      css`
-      border-color: transparent;
-    `
-    }
-
-    :focus {
-      outline: none;
-      box-shadow: ${shadow.focus};
-    }
-
-    ::-webkit-outer-spin-button,
-    ::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    ::placeholder {
-      ${typography.caption('regular')};
-      color: ${colorTokens.text.hints};
+      ${
+        options.removeBorder &&
+        css`
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+      `
+      }
 
       ${
         options.isSecondary &&
         css`
+        border-color: transparent;
+      `
+      }
+
+      :focus {
+        outline: none;
+        box-shadow: ${shadow.focus};
+      }
+
+      ::-webkit-outer-spin-button,
+      ::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      ::placeholder {
+        ${typography.caption('regular')};
         color: ${colorTokens.text.hints};
+
+        ${
+          options.isSecondary &&
+          css`
+          color: ${colorTokens.text.hints};
+        `
+        }
+      }
+
+      ${
+        options.hasFieldError &&
+        css`
+        border: 1px solid ${colorTokens.stroke.danger};
+      `
+      }
+
+      ${
+        options.readOnly &&
+        css`
+        border: 1px solid ${colorTokens.background.disable};
+        background-color: ${colorTokens.background.disable};
       `
       }
     }
-
-    ${
-      options.hasFieldError &&
-      css`
-      border: 1px solid ${colorTokens.stroke.danger};
-    `
-    }
-
-    ${
-      options.readOnly &&
-      css`
-      border: 1px solid ${colorTokens.background.disable};
-      background-color: ${colorTokens.background.disable};
-    `
-    }
+    
   `,
   errorLabel: (hasError: boolean) => css`
     ${typography.small()};
@@ -198,6 +205,9 @@ const styles = {
     right: ${spacing[12]};
     transform: translateY(-50%);
     display: flex;
+  `,
+  alertIcon: css`
+    flex-shrink: 0;
   `,
 };
 
@@ -246,6 +256,7 @@ const FormFieldWrapper = <T,>({
         disabled: disabled,
         readOnly: readOnly,
         placeholder,
+        className: 'tutor-input-field'
       })}
 
       {loading && (
@@ -289,7 +300,7 @@ const FormFieldWrapper = <T,>({
       </div>
       {fieldState.error?.message && (
         <p css={styles.errorLabel(!!fieldState.error)}>
-          <SVGIcon name="alert" width={20} height={20} /> {fieldState.error.message}
+          <SVGIcon style={styles.alertIcon} name="alert" width={20} height={20} /> {fieldState.error.message}
         </p>
       )}
     </div>

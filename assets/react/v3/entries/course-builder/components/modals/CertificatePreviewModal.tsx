@@ -31,9 +31,9 @@ const CertificatePreviewModal = ({
 
   const currentCertificateIndex = certificates.findIndex((certificate) => certificate.key === currentCertificate.key);
 
-  const previousIndex = Math.max(0, currentCertificateIndex - 1);
+  const previousIndex = Math.max(-1, currentCertificateIndex - 1);
 
-  const nextIndex = Math.min(certificates.length - 1, currentCertificateIndex + 1);
+  const nextIndex = Math.min(certificates.length, currentCertificateIndex + 1);
 
   const handleSelectCertificate = (certificate: Certificate) => {
     if (certificate.key === selectedCertificate) {
@@ -44,9 +44,9 @@ const CertificatePreviewModal = ({
   };
 
   const handleNavigate = (direction: 'previous' | 'next') => {
-    if (direction === 'previous' && previousIndex >= 0) {
+    if (direction === 'previous' && currentCertificateIndex > 0) {
       setCurrentCertificate(certificates[previousIndex]);
-    } else if (direction === 'next' && nextIndex < certificates.length) {
+    } else if (direction === 'next' && currentCertificateIndex < certificates.length - 1) {
       setCurrentCertificate(certificates[nextIndex]);
     }
   };
@@ -96,7 +96,7 @@ const CertificatePreviewModal = ({
             type="button"
             css={[styles.actionButton, styles.navigatorButton]}
             onClick={() => handleNavigate('previous')}
-            disabled={previousIndex === 0}
+            disabled={previousIndex < 0}
           >
             <SVGIcon name="chevronLeft" width={40} height={40} />
           </button>
@@ -113,7 +113,7 @@ const CertificatePreviewModal = ({
             type="button"
             css={[styles.actionButton, styles.navigatorButton]}
             onClick={() => handleNavigate('next')}
-            disabled={nextIndex === certificates.length - 1}
+            disabled={nextIndex > certificates.length - 1}
           >
             <SVGIcon name="chevronRight" width={40} height={40} />
           </button>

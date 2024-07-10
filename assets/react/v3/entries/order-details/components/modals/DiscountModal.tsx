@@ -25,7 +25,7 @@ type FormField = Discount;
 const discountTypeOptions = [
   {
     label: __('Amount', 'tutor'),
-    value: 'fixed',
+    value: 'flat',
   },
   {
     label: __('Percentage', 'tutor'),
@@ -83,6 +83,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
                   label={__('Discount Value', 'tutor')}
                   content={content}
                   type="number"
+                  selectOnFocus
                 />
               )}
             />

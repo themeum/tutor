@@ -1,18 +1,66 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
+import type { AxiosResponse } from 'axios';
+
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
+
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AxiosResponse } from 'axios';
+import type { ID } from './curriculum';
 
 const currentUser = tutorConfig.current_user.data;
 
 type CourseLevel = 'all_levels' | 'beginner' | 'intermediate' | 'expert';
+
+export type ContentDripType =
+  | 'unlock_by_date'
+  | 'specific_days'
+  | 'unlock_sequentially'
+  | 'after_finishing_prerequisites'
+  | '';
+
+export interface CourseFormData {
+  post_date: string;
+  post_title: string;
+  post_name: string;
+  post_content: string;
+  post_status: 'publish' | 'private' | 'draft' | 'future';
+  visibility: 'publish' | 'private' | 'password_protected';
+  post_password: string;
+  post_author: User | null;
+  thumbnail: Media | null;
+  video: CourseVideo;
+  course_price_type: string;
+  course_price: string;
+  course_sale_price: string;
+  course_categories: number[];
+  course_tags: Tag[];
+  course_instructors: User[];
+  enable_qna: boolean;
+  is_public_course: boolean;
+  course_level: CourseLevel;
+  maximum_students: number | null;
+  enrollment_expiry: number;
+  course_benefits: string;
+  course_requirements: string;
+  course_target_audience: string;
+  course_material_includes: string;
+  course_duration_hours: number;
+  course_duration_minutes: number;
+  course_attachments: Media[] | null;
+  isContentDripEnabled: boolean;
+  contentDripType: ContentDripType;
+  course_product_id: string;
+  preview_link: string;
+  course_prerequisites: PrerequisiteCourses[];
+  tutor_course_certificate_template: string;
+}
 
 export const courseDefaultData: CourseFormData = {
   post_date: '',
@@ -20,6 +68,7 @@ export const courseDefaultData: CourseFormData = {
   post_title: '',
   post_content: '',
   post_status: 'publish',
+  visibility: 'publish',
   post_password: '',
   post_author: {
     id: Number(currentUser.id),
@@ -56,7 +105,7 @@ export const courseDefaultData: CourseFormData = {
   course_material_includes: '',
   course_duration_hours: 0,
   course_duration_minutes: 0,
-  attachments: null,
+  course_attachments: null,
   isContentDripEnabled: false,
   contentDripType: '',
   course_product_id: '',
@@ -65,49 +114,13 @@ export const courseDefaultData: CourseFormData = {
   tutor_course_certificate_template: '',
 };
 
-export interface CourseFormData {
-  post_date: string;
-  post_title: string;
-  post_name: string;
-  post_content: string;
-  post_status: 'publish' | 'private' | 'password_protected';
-  post_password: string;
-  post_author: User | null;
-  thumbnail: Media | null;
-  video: CourseVideo;
-  course_price_type: string;
-  course_price: string;
-  course_sale_price: string;
-  course_categories: number[];
-  course_tags: Tag[];
-  course_instructors: User[];
-  enable_qna: boolean;
-  is_public_course: boolean;
-  course_level: CourseLevel;
-  maximum_students: number | null;
-  enrollment_expiry: number;
-  course_benefits: string;
-  course_requirements: string;
-  course_target_audience: string;
-  course_material_includes: string;
-  course_duration_hours: number;
-  course_duration_minutes: number;
-  attachments: Media[] | null;
-  isContentDripEnabled: boolean;
-  contentDripType: 'unlock_by_date' | 'specific_days' | 'unlock_sequentially' | 'after_finishing_prerequisites' | '';
-  course_product_id: string;
-  preview_link: string;
-  course_prerequisites: PrerequisiteCourses[];
-  tutor_course_certificate_template: string;
-}
-
 export interface CoursePayload {
   course_id?: number;
   post_date: string;
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: 'publish' | 'private';
+  post_status: 'publish' | 'private' | 'draft' | 'future';
   post_password: string;
   post_author: number | null;
   thumbnail_id: number | null;
@@ -141,6 +154,7 @@ export interface CoursePayload {
   preview_link: string;
   _tutor_course_prerequisites_ids: string[];
   tutor_course_certificate_template: string;
+  tutor_attachments: Media[];
 }
 
 interface CourseDetailsPayload {
@@ -148,6 +162,41 @@ interface CourseDetailsPayload {
   course_id: number;
 }
 export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional';
+
+export interface ZoomMeeting {
+  ID: string;
+  post_content: string;
+  post_title: string;
+  meeting_data: {
+    id: number;
+    topic: string;
+    start_time: string;
+    duration: number;
+    timezone: string;
+    password: string;
+    start_url: string;
+    duration_unit: 'min' | 'hr';
+    settings: {
+      auto_recording: 'none' | 'local' | 'cloud';
+    };
+  };
+}
+
+export interface GoogleMeet {
+  ID: string;
+  post_content: string;
+  post_title: string;
+  meeting_data: {
+    id: string;
+    summary: string;
+    start_datetime: string;
+    end_datetime: string;
+    attendees: 'Yes' | 'No';
+    timezone: string;
+    meet_link: string;
+  };
+}
+
 export interface CourseDetailsResponse {
   ID: number;
   post_author: {
@@ -166,7 +215,7 @@ export interface CourseDetailsResponse {
   post_content: string;
   post_title: string;
   post_excerpt: string;
-  post_status: string;
+  post_status: 'publish' | 'private' | 'draft' | 'future';
   comment_status: string;
   ping_status: string;
   post_password: string;
@@ -231,12 +280,7 @@ export interface CourseDetailsResponse {
   course_sale_price: string;
   course_settings: {
     maximum_students: number;
-    content_drip_type:
-      | 'unlock_by_date'
-      | 'specific_days'
-      | 'unlock_sequentially'
-      | 'after_finishing_prerequisites'
-      | '';
+    content_drip_type: ContentDripType;
     enable_content_drip: number;
     enrollment_expiry: number;
   };
@@ -253,6 +297,44 @@ export interface CourseDetailsResponse {
   course_prerequisites: PrerequisiteCourses[];
   course_certificate_template: string;
   course_certificates_templates: Certificate[];
+  course_attachments: Media[];
+  zoom_users: {
+    [key: string]: string;
+  };
+  zoom_timezones: {
+    [key: string]: string;
+  };
+  zoom_meetings: ZoomMeeting[];
+  google_meet_timezones: {
+    [key: string]: string;
+  };
+  google_meet_meetings: GoogleMeet[];
+}
+
+export type MeetingType = 'zoom' | 'google_meet';
+
+export interface ZoomMeetingFormData {
+  meeting_name: string;
+  meeting_summary: string;
+  meeting_date: string;
+  meeting_time: string;
+  meeting_duration: string;
+  meeting_duration_unit: 'min' | 'hr';
+  meeting_timezone: string;
+  auto_recording: 'none' | 'local' | 'cloud';
+  meeting_password: string;
+  meeting_host: string;
+}
+
+export interface GoogleMeetMeetingFormData {
+  meeting_name: string;
+  meeting_summary: string;
+  meeting_start_date: string;
+  meeting_start_time: string;
+  meeting_end_date: string;
+  meeting_end_time: string;
+  meeting_enrolledAsAttendee: boolean;
+  meeting_timezone: string;
 }
 
 interface CourseResponse {
@@ -303,12 +385,63 @@ export interface Certificate {
   is_default?: boolean;
 }
 
+export interface ZoomMeetingPayload {
+  meeting_id?: number; // only update
+  topic_id?: number; // only when it will add as a lesson
+  course_id: number;
+  click_form: 'course_builder' | 'metabox'; // 'course_builder' for course lesson, 'metabox' for additional
+  meeting_title: string;
+  meeting_summary: string;
+  meeting_date: string;
+  meeting_time: string;
+  meeting_duration: number;
+  meeting_duration_unit: 'min' | 'hr';
+  meeting_timezone: string;
+  auto_recording: 'none' | 'local' | 'cloud';
+  meeting_password: string;
+  meeting_host: string;
+}
+
+export interface GoogleMeetMeetingPayload {
+  'post-id'?: ID; //only update
+  'event-id'?: ID; //only update
+  attendees: 'Yes' | 'No';
+  course_id: ID; // for course builder set topic id
+  meeting_title: string;
+  meeting_summary: string;
+  meeting_start_date: string; // yyyy-mm-dd
+  meeting_start_time: string; // hh:mm
+  meeting_end_date: string;
+  meeting_end_time: string;
+  meeting_timezone: string;
+  meeting_attendees_enroll_students: 'Yes' | 'No';
+}
+
+interface GoogleMeetMeetingDeletePayload {
+  'post-id': string;
+  'event-id': string;
+}
+
 const createCourse = (payload: CoursePayload) => {
   return authApiInstance.post<CoursePayload, CourseResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_create_course',
     ...payload,
   });
 };
+
+export interface TutorMutationResponse {
+  data: number;
+  message: string;
+  status_code: number;
+}
+
+interface TutorDeleteResponse {
+  data: {
+    message: string;
+    post_id: number;
+  };
+  success: boolean;
+}
 
 export const useCreateCourseMutation = () => {
   const { showToast } = useToast();
@@ -422,5 +555,118 @@ export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrere
     queryKey: ['PrerequisiteCourses', excludedCourseIds],
     queryFn: () => getPrerequisiteCourses(excludedCourseIds).then((res) => res.data),
     enabled: isPrerequisiteAddonEnabled,
+  });
+};
+
+const saveZoomMeeting = (payload: ZoomMeetingPayload) => {
+  return authApiInstance.post<ZoomMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_zoom_save_meeting',
+    ...payload,
+  });
+};
+
+export const useSaveZoomMeetingMutation = (courseId: string) => {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: saveZoomMeeting,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: __(response.message, 'tutor') });
+
+      queryClient.invalidateQueries({
+        queryKey: ['CourseDetails', Number(courseId)],
+      });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
+  });
+};
+
+const deleteZoomMeeting = (meetingId: string) => {
+  return authApiInstance.post<number, TutorDeleteResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_zoom_delete_meeting',
+    meeting_id: meetingId,
+  });
+};
+
+export const useDeleteZoomMeetingMutation = (courseId: string) => {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteZoomMeeting,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: __(response.data.message, 'tutor') });
+
+      queryClient.invalidateQueries({
+        queryKey: ['CourseDetails', Number(courseId)],
+      });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
+  });
+};
+
+const saveGoogleMeetMeeting = (payload: GoogleMeetMeetingPayload) => {
+  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_google_meet_new_meeting',
+    ...payload,
+  });
+};
+
+export const useSaveGoogleMeetMeetingMutation = (courseId: string) => {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: saveGoogleMeetMeeting,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: __(response.message, 'tutor') });
+
+      queryClient.invalidateQueries({
+        queryKey: ['CourseDetails', Number(courseId)],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic', Number(courseId)],
+      });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
+  });
+};
+
+const deleteGoogleMeetMeeting = (postId: string, eventId: string) => {
+  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_google_meet_delete',
+    'post-id': postId,
+    'event-id': eventId,
+  });
+};
+
+export const useDeleteGoogleMeetMeetingMutation = (courseId: string, payload: GoogleMeetMeetingDeletePayload) => {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteGoogleMeetMeeting(payload['post-id'], payload['event-id']),
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: __(response.message, 'tutor') });
+
+      queryClient.invalidateQueries({
+        queryKey: ['CourseDetails', Number(courseId)],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic', Number(courseId)],
+      });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
   });
 };
