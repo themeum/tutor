@@ -136,3 +136,22 @@ export const useAdminCommentMutation = () => {
     }
   });
 }
+
+const markAsPaid = (params: {order_id: number; note: string}) => {
+  return wpAjaxInstance.post(endpoints.ORDER_MARK_AS_PAID, params);
+}
+
+export const useMarkAsPaidMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: markAsPaid,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['OrderDetails']});
+      showToast({type: 'success', message: __('Order marked as paid')})
+    },
+    onError: (error) => {
+      showToast({type: 'danger', message: error.message});
+    }
+  })
+}
