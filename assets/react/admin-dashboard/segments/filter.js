@@ -205,8 +205,25 @@ document.addEventListener('DOMContentLoaded', function () {
 			const id = e.currentTarget.dataset.id;
 
 			if (commonConfirmForm) {
-				console.log(commonConfirmForm);
 				commonConfirmForm.elements.action.value = 'tutor_course_delete';
+				commonConfirmForm.elements.id.value = id;
+			}
+		};
+	}
+
+	/**
+	 * Handle permanent delete action
+	 *
+	 * @since 3.0.0
+	 */
+	const permanentDeleteElem = document.querySelectorAll('.tutor-delete-permanently');
+	for (let deleteElem of permanentDeleteElem) {
+		deleteElem.onclick = (e) => {
+			const id = e.currentTarget.dataset.id;
+			const action = e.currentTarget.dataset.action;
+
+			if (commonConfirmForm) {
+				commonConfirmForm.elements.action.value = action
 				commonConfirmForm.elements.id.value = id;
 			}
 		};
