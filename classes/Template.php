@@ -293,6 +293,18 @@ class Template extends Tutor_Base {
 			return $shortcode->student_registration_form();
 		}
 
+		$tutor_cart_page_id = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
+		if ( get_the_ID() === $tutor_cart_page_id ) {
+			$shortcode = new Shortcode();
+			return $shortcode->tutor_cart_page();
+		}
+
+		$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
+		if ( get_the_ID() === $tutor_checkout_page_id ) {
+			$shortcode = new Shortcode();
+			return $shortcode->tutor_checkout_page();
+		}
+
 		return $content;
 	}
 
