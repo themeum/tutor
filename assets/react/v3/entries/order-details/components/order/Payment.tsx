@@ -20,7 +20,7 @@ const badgeMap: Record<PaymentStatus, { label: string; type: Variant }> = {
   failed: { label: __('Failed', 'tutor'), type: 'critical' },
   'partially-refunded': { label: __('Partially refunded', 'tutor'), type: 'secondary' },
   refunded: { label: __('Refunded', 'tutor'), type: 'critical' },
-  pending: { label: __('Pending', 'tutor'), type: 'warning' },
+  unpaid: { label: __('Unpaid', 'tutor'), type: 'warning' },
 };
 
 function PaymentBadge({ status }: { status: PaymentStatus }) {
@@ -40,7 +40,7 @@ function PaymentActionButton({
           {__('Refund', 'tutor')}
         </Button>
       );
-    case 'pending':
+    case 'unpaid':
       return (
         <Button variant="primary" size="small" isOutlined onClick={() => onClick('mark-as-paid')}>
           {__('Mark as paid', 'tutor')}
@@ -75,7 +75,7 @@ function Payment() {
 
           <div css={styles.item({ action: 'regular' })}>
             <Show
-              when={order.discount}
+              when={order.discount_amount}
               fallback={
                 <>
                   <button
@@ -92,7 +92,7 @@ function Payment() {
                             reason: '',
                             type: 'percentage',
                           },
-                          total_price: 100,
+                          total_price: order.net_payment,
                         },
                       })
                     }
@@ -104,27 +104,32 @@ function Payment() {
                 </>
               }
             >
-              {(discount) => (
-                <>
-                  <div>{__('Discount', 'tutor')}</div>
-                  <div>
-                    {discount.reason ?? '-'}
-                    <strong> ({`${discount.amount}${discount.type === 'percentage' ? '%' : ''}`})</strong>
-                  </div>
-                  <div>-{formatPrice(discount.discounted_value)}</div>
-                </>
-              )}
+              <div>{__('Discount', 'tutor')}</div>
+              <div>
+                {order.discount_reason ?? '-'}
+                <strong> ({`${order.discount_amount}${order.discount_type === 'percentage' ? '%' : ''}`})</strong>
+              </div>
+              <div>-{formatPrice(order.discount_amount)}</div>
             </Show>
           </div>
-          <Show when={order.tax}>
-            {(tax) => (
+          <Show when={order.tax_amount}>
+            <div css={styles.item({ action: 'regular' })}>
+              <div>{__('Estimated tax', 'tutor')}</div>
+              <div>{order.tax_rate}%</div>
+              <div>{formatPrice(order.tax_amount)}</div>
+            </div>
+          </Show>
+
+          <Show when={order.fees}>
+            {(fees) => (
               <div css={styles.item({ action: 'regular' })}>
-                <div>{__('Estimated tax', 'tutor')}</div>
-                <div>{tax.rate}%</div>
-                <div>{formatPrice(tax.taxable_amount)}</div>
+                <div>{__('Fees', 'tutor')}</div>
+                <div>-</div>
+                <div>{formatPrice(fees)}</div>
               </div>
             )}
           </Show>
+
           <div css={styles.item({ action: 'bold' })}>
             <div>{__('Total Paid', 'tutor')}</div>
             <div />
@@ -133,7 +138,6 @@ function Payment() {
 
           <Show when={order.refunds.length > 0}>
             <div css={styles.separator} />
-
             <Show when={order.refunds}>
               {(refunds) => (
                 <For each={refunds}>
@@ -154,7 +158,7 @@ function Payment() {
             <div css={styles.item({ action: 'bold' })}>
               <div>{__('Net payment', 'tutor')}</div>
               <div />
-              <div>{formatPrice(order.net_total_price)}</div>
+              <div>{formatPrice(order.net_payment)}</div>
             </div>
           </Show>
         </Box>

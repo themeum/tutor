@@ -16,6 +16,7 @@ export const TOPBAR_HEIGHT = 96;
 
 function Topbar() {
   const { order } = useOrderContext();
+  
   return (
     <div css={styles.wrapper}>
       <Container>
@@ -36,17 +37,17 @@ function Topbar() {
                 <TutorBadge variant="secondary">Cancelled</TutorBadge>
               </div>
               <Show
-                when={order.updated_at}
+                when={order.updated_at_gmt}
                 fallback={
                   <p css={styles.updateMessage}>
-                    {__('Created by ')} {order.user} {__(' at ', 'tutor')}
-                    {format(new Date(order.created_at), DateFormats.activityDate)}
+                    {__('Created by ')} {order.created_by} {__(' at ', 'tutor')}
+                    {format(new Date(order.created_at_gmt), DateFormats.activityDate)}
                   </p>
                 }
               >
                 {(date) => (
                   <p css={styles.updateMessage}>
-                    {__('Update by ')} {order.user} {__(' at ', 'tutor')}
+                    {__('Update by ')} {order.updated_by} {__(' at ', 'tutor')}
                     {format(new Date(date), DateFormats.activityDate)}
                   </p>
                 )}
