@@ -1,7 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useToast } from '@Atoms/Toast';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { Prettify } from '@Utils/types';
+import { __ } from '@wordpress/i18n';
 
 interface OrderSummary {
   id: number;
@@ -115,3 +117,22 @@ export const useOrderDetailsQuery = (orderId: number) => {
     queryFn: () => getOrderDetails(orderId),
   });
 };
+
+const markAsPaid = (params: {order_id: number; note: string}) => {
+  return wpAjaxInstance.post(endpoints.ORDER_MARK_AS_PAID, params);
+}
+
+export const useMarkAsPaidMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: markAsPaid,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['OrderDetails']});
+      showToast({type: 'success', message: __('Order marked as paid')})
+    },
+    onError: (error) => {
+      showToast({type: 'danger', message: error.message});
+    }
+  })
+}
