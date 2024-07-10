@@ -2,11 +2,13 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { TutorBadge } from '@Atoms/TutorBadge';
 import Container from '@Components/Container';
+import { useModal } from '@Components/modals/Modal';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { css } from '@emotion/react';
+import CancelOrderModal from '@OrderComponents/modals/CancelOrderModal';
 import { useOrderContext } from '@OrderContexts/order-context';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
@@ -16,6 +18,7 @@ export const TOPBAR_HEIGHT = 96;
 
 function Topbar() {
   const { order } = useOrderContext();
+  const {showModal} = useModal();
   return (
     <div css={styles.wrapper}>
       <Container>
@@ -53,8 +56,16 @@ function Topbar() {
               </Show>
             </div>
           </div>
-          <Button variant="tertiary" onClick={() => alert('@TODO: will be implemented later.')}>
-            Cancel Order
+          <Button variant="tertiary" onClick={() => {
+            showModal({
+              component: CancelOrderModal,
+              props: {
+                total: 30,
+                title: __('Cancel order #', 'tutor') + order.id
+              }
+            })
+          }}>
+            {__('Cancel Order', 'tutor')}
           </Button>
         </div>
       </Container>
