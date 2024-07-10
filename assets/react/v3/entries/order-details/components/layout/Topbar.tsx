@@ -1,12 +1,13 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { TutorBadge } from '@Atoms/TutorBadge';
 import Container from '@Components/Container';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { css } from '@emotion/react';
+import { OrderBadge } from '@OrderComponents/order/OrderBadge';
+import { PaymentBadge } from '@OrderComponents/order/PaymentBadge';
 import { useOrderContext } from '@OrderContexts/order-context';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
@@ -30,11 +31,12 @@ function Topbar() {
                 <h4 css={typography.heading5('medium')}>
                   {__('Order', 'tutor')} #{order.id}
                 </h4>
-                <TutorBadge variant="warning">Pending</TutorBadge>
-                <TutorBadge variant="success">Paid</TutorBadge>
-                <TutorBadge variant="secondary">Partially Refunded</TutorBadge>
-                <TutorBadge variant="critical">Fully Refunded</TutorBadge>
-                <TutorBadge variant="secondary">Cancelled</TutorBadge>
+                <Show when={order.payment_status}>
+                  <PaymentBadge status={order.payment_status} />
+                </Show>
+                <Show when={order.order_status}>
+                  <OrderBadge status={order.order_status} />
+                </Show>
               </div>
               <Show
                 when={order.updated_at_gmt}
