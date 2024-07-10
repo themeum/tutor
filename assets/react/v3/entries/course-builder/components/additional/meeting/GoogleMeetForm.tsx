@@ -123,7 +123,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
         meeting_enrolledAsAttendee: currentMeeting.meeting_data.attendees === 'Yes' ? true : false,
       });
     }
-  }, [googleMeetDetailsQuery.data]);
+  }, [currentMeeting]);
 
   return (
     <div css={styles.container}>
