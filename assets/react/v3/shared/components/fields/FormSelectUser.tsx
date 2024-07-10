@@ -136,6 +136,7 @@ const FormSelectUser = ({
                   <input
                     {...restInputProps}
                     onClick={() => setIsOpen((previousState) => !previousState)}
+                    className="tutor-input-field"
                     css={[inputCss, styles.input]}
                     autoComplete="off"
                     readOnly={readOnly || !isSearchable}
@@ -207,6 +208,7 @@ const FormSelectUser = ({
                           {...restInputProps}
                           // biome-ignore lint/a11y/noAutofocus: <explanation>
                           autoFocus
+                          className="tutor-input-field"
                           css={[inputCss, styles.input]}
                           autoComplete="off"
                           readOnly={readOnly || !isSearchable}
@@ -290,6 +292,11 @@ const styles = {
     :focus {
       outline: none;
       box-shadow: none;
+    }
+
+    &.tutor-input-field {
+      padding-right: ${spacing[32]};
+      padding-left: ${spacing[36]};
     }
   `,
   instructorList: css`
