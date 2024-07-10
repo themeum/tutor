@@ -11,7 +11,6 @@
 namespace Tutor\Models;
 
 use Tutor\Helpers\QueryHelper;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * OrderModel Class
@@ -163,9 +162,11 @@ class OrderModel {
 	 * @return object|false The order data with the student's information included, or false if no order is found.
 	 */
 	public function get_order_by_id( $order_id ) {
-		global $wpdb;
-
-		$order_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table_name WHERE id = %d", $order_id ) );
+		$order_data = QueryHelper::get_row(
+			$this->table_name,
+			array( 'id' => $order_id ),
+			'id'
+		);
 
 		if ( ! $order_data ) {
 			return false;
@@ -174,7 +175,7 @@ class OrderModel {
 		$user_info = get_userdata( $order_data->user_id );
 
 		$student                  = new \stdClass();
-		$student->id              = $user_info->ID;
+		$student->id              = (int) $user_info->ID;
 		$student->name            = $user_info->data->display_name;
 		$student->email           = $user_info->data->user_email;
 		$student->phone           = get_user_meta( $order_data->user_id, 'phone_number', true );
@@ -183,9 +184,8 @@ class OrderModel {
 
 		$order_data->student         = $student;
 		$order_data->courses         = $this->get_order_items_by_id( $order_id );
-		$order_data->sub_total_price = (float) $order_data->sub_total_price;
+		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
-		$order_data->order_price     = (float) $order_data->order_price;
 		$order_data->discount_amount = (float) $order_data->discount_amount;
 		$order_data->tax_rate        = (float) $order_data->tax_rate;
 		$order_data->tax_amount      = (float) $order_data->tax_amount;
@@ -241,11 +241,13 @@ class OrderModel {
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
 
-		$bundle_model = new BundleModel();
+		if ( tutor()->has_pro ) {
+			$bundle_model = new \TutorPro\CourseBundle\Models\BundleModel();
+		}
 
 		if ( ! empty( $courses_data['total_count'] ) ) {
 			foreach ( $courses as &$course ) {
-				if ( 'course-bundle' === $course->type ) {
+				if ( tutor()->has_pro && 'course-bundle' === $course->type ) {
 					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
 				}
 
@@ -365,6 +367,32 @@ class OrderModel {
 	}
 
 	/**
+	 * Update an order
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $order_id Integer or array of ids sql escaped.
+	 * @param array     $data Data to update, escape data.
+	 *
+	 * @return bool
+	 */
+	public function update_order( $order_id, array $data ) {
+		$order_id = is_array( $order_id ) ? $order_id : array( $order_id );
+		$order_id = QueryHelper::prepare_in_clause( $order_id );
+		try {
+			QueryHelper::update_where_in(
+				$this->table_name,
+				$data,
+				$order_id
+			);
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
+			return false;
+		}
+	}
+
+	/**
 	 * Delete an order by order ID.
 	 *
 	 * This function deletes an order from the 'tutor_orders' table based on the given
@@ -372,12 +400,13 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int $order_id The ID of the order to delete.
+	 * @param int|array $order_id The ID of the order to delete.
 	 *
-	 * @return bool|int False on failure, or the number of rows affected if successful.
+	 * @return bool False on failure, or the number of rows affected if successful.
 	 */
 	public function delete_order( $order_id ) {
-		return QueryHelper::delete( $this->table_name, array( 'id' => $order_id ) );
+		$order_id = is_array( $order_id ) ? $order_id : array( intval( $order_id ) );
+		return QueryHelper::bulk_delete_by_ids( $this->table_name, $order_id ) ? true : false;
 	}
 
 	/**

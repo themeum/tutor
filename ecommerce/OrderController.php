@@ -31,6 +31,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class OrderController {
 
 	/**
+	 * Order page slug
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const PAGE_SLUG = 'tutor_orders';
+
+	/**
 	 * Order model
 	 *
 	 * @since 3.0.0
@@ -57,13 +66,6 @@ class OrderController {
 	 * @var $page_title
 	 */
 	public $page_title;
-
-	/**
-	 * Bulk Action
-	 *
-	 * @var $bulk_action
-	 */
-	public $bulk_action = true;
 
 	/**
 	 * Constructor.
@@ -116,7 +118,7 @@ class OrderController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
+			add_action( 'wp_ajax_tutor_order_bulk_action', array( $this, 'bulk_action_handler' ) );
 			/**
 			 * Handle ajax request for updating order status
 			 *
@@ -132,6 +134,22 @@ class OrderController {
 		}
 	}
 
+	/**
+	 * Get order page url
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param boolean $is_admin Whether to get admin or frontend url.
+	 *
+	 * @return string
+	 */
+	public static function get_order_page_url( bool $is_admin = true ) {
+		if ( $is_admin ) {
+			return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
+		} else {
+			return tutor_utils()->get_tutor_dashboard_url() . '/orders';
+		}
+	}
 
 	/**
 	 * Retrieve order data by order ID and respond with JSON.
@@ -373,19 +391,31 @@ class OrderController {
 	public function prepare_bulk_actions(): array {
 		$actions = array(
 			$this->bulk_action_default(),
-			$this->bulk_action_publish(),
-			$this->bulk_action_pending(),
-			$this->bulk_action_draft(),
 		);
 
 		$active_tab = Input::get( 'data', '' );
 
-		if ( 'trash' === $active_tab ) {
-			array_push( $actions, $this->bulk_action_delete() );
+		if ( $this->model::ORDER_TRASH !== $active_tab ) {
+			$actions[] = $this->bulk_action_mark_order_trash();
 		}
-		if ( 'trash' !== $active_tab ) {
-			array_push( $actions, $this->bulk_action_trash() );
+
+		if ( ! empty( $active_tab ) ) {
+			switch ( $active_tab ) {
+				case $this->model::ORDER_INCOMPLETE:
+					$actions[] = $this->bulk_action_mark_order_paid();
+					break;
+				case $this->model::ORDER_COMPLETED:
+					$actions[] = $this->bulk_action_mark_order_unpaid();
+					break;
+				case $this->model::ORDER_TRASH:
+					$actions[] = $this->bulk_action_delete();
+					break;
+				default:
+					// code...
+					break;
+			}
 		}
+
 		return apply_filters( 'tutor_order_bulk_actions', $actions );
 	}
 
@@ -505,12 +535,13 @@ class OrderController {
 	}
 
 	/**
-	 * Handle bulk action for enrollment cancel | delete
+	 * Handle order bulk action
 	 *
-	 * @return void
 	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
 	 */
-	public function order_list_bulk_action() {
+	public function bulk_action_handler() {
 
 		tutor_utils()->checking_nonce();
 
@@ -519,44 +550,66 @@ class OrderController {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$action   = Input::post( 'bulk-action', '' );
-		$bulk_ids = Input::post( 'bulk-ids', '' );
-		if ( '' === $action || '' === $bulk_ids ) {
-			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
-			exit;
-		}
+		$request     = Input::sanitize_array( $_POST );
+		$bulk_action = $request['bulk-action'];
 
-		if ( 'delete' === $action ) {
-			// Do action before delete.
-			do_action( 'before_tutor_order_bulk_action_delete', $bulk_ids );
+		$bulk_ids = isset( $request['bulk-ids'] ) ? array_map( 'intval', explode( ',', $request['bulk-ids'] ) ) : array();
 
-			$delete_orders = self::bulk_delete_order( $bulk_ids );
-
-			do_action( 'after_tutor_order_bulk_action_delete', $bulk_ids );
-			$delete_orders ? wp_send_json_success() : wp_send_json_error( array( 'message' => __( 'Could not delete selected orders', 'tutor' ) ) );
-			exit;
-		}
-
-		/**
-		 * Do action before order update
-		 *
-		 * @param string $action (publish | pending | draft | trash).
-		 * @param array $bulk_ids, order id.
-		 */
-		do_action( 'before_tutor_order_bulk_action_update', $action, $bulk_ids );
-
-		$update_status = self::update_order_status( $action, $bulk_ids );
-
-		do_action( 'after_tutor_order_bulk_action_update', $action, $bulk_ids );
-
-		$update_status ? wp_send_json_success() : wp_send_json_error(
-			array(
-				'message' => 'Could not update order status',
-				'tutor',
-			)
+		$allowed_bulk_actions = array(
+			$this->model::PAYMENT_PAID,
+			$this->model::PAYMENT_UNPAID,
+			$this->model::ORDER_TRASH,
+			'delete',
 		);
 
-		exit;
+		if ( ! in_array( $bulk_action, $allowed_bulk_actions, true ) ) {
+			wp_send_json_error( __( 'Please select appropriate action', 'tutor' ) );
+		}
+
+		if ( empty( $bulk_ids ) ) {
+			wp_send_json_error( __( 'No items selected for the bulk action.', 'tutor' ) );
+		}
+
+		do_action( 'tutor_before_order_bulk_action', $bulk_action, $bulk_ids );
+
+		$response = false;
+		if ( 'delete' === $bulk_action ) {
+			$response = $this->model->delete_order( $bulk_ids );
+		} else {
+			$data = null;
+
+			switch ( $bulk_action ) {
+				case $this->model::PAYMENT_PAID:
+					$data = array(
+						'order_status' => $this->model::ORDER_COMPLETED,
+					);
+					break;
+				case $this->model::PAYMENT_UNPAID:
+					$data = array(
+						'order_status' => $this->model::ORDER_INCOMPLETE,
+					);
+					break;
+				case $this->model::ORDER_TRASH:
+					$data = array(
+						'order_status' => $this->model::ORDER_TRASH,
+					);
+					break;
+				default:
+					// code...
+					break;
+			}
+
+			if ( ! empty( $data ) ) {
+				$response = $this->model->update_order( $bulk_ids, $data );
+			}
+		}
+
+		if ( $response ) {
+			do_action( 'tutor_after_order_bulk_action', $bulk_action, $bulk_ids );
+			wp_send_json_success( __( 'Order updated successfully.', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'Failed to update order.', 'tutor' ) );
+		}
 	}
 
 	/**
@@ -633,14 +686,17 @@ class OrderController {
 	 * @return bool
 	 * @since 3.0.0
 	 */
-	public static function bulk_delete_order( $bulk_ids ): bool {
+	public function bulk_delete_order( $bulk_ids ): bool {
 		$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
 
-		foreach ( $bulk_ids as $post_id ) {
-			CourseModel::delete_course( $post_id );
+		$response = false;
+		try {
+			$response = QueryHelper::bulk_delete_by_ids( $this->model->get_table_name(), $bulk_ids );
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' Line: ' . $th->getLine() . ' File: ' . $th->getFile() );
 		}
 
-		return true;
+		return $response;
 	}
 
 	/**

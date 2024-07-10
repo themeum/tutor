@@ -10,7 +10,7 @@
 
 namespace TUTOR;
 
-use Tutor\Ecommerce\Init;
+use Tutor\Ecommerce\Ecommerce;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -545,8 +545,12 @@ final class Tutor {
 		$this->course_embed    = new Course_Embed();
 		$this->rest_auth       = new RestAuth();
 
-		// @since 3.0.0 tutor ecommerce init
-		new Init();
+		/**
+		 * Tutor native e-commerce
+		 *
+		 * @since 3.0.0
+		 */
+		new Ecommerce();
 
 		/**
 		 * Run Method
@@ -868,8 +872,7 @@ final class Tutor {
 			order_status VARCHAR(50) NOT NULL,
 			payment_status VARCHAR(50) NOT NULL,
 			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
-			total_price DECIMAL(13, 2) NOT NULL,
-			order_price DECIMAL(13, 2) NOT NULL, -- final price
+			total_price DECIMAL(13, 2) NOT NULL, -- final price
 			coupon_code VARCHAR(255),
 			discount_type ENUM('percentage', 'flat'),
 			discount_amount DECIMAL(13, 2),
