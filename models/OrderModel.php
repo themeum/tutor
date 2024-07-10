@@ -11,7 +11,6 @@
 namespace Tutor\Models;
 
 use Tutor\Helpers\QueryHelper;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * OrderModel Class
@@ -174,7 +173,7 @@ class OrderModel {
 		$user_info = get_userdata( $order_data->user_id );
 
 		$student                  = new \stdClass();
-		$student->id              = $user_info->ID;
+		$student->id              = (int) $user_info->ID;
 		$student->name            = $user_info->data->display_name;
 		$student->email           = $user_info->data->user_email;
 		$student->phone           = get_user_meta( $order_data->user_id, 'phone_number', true );
@@ -183,9 +182,9 @@ class OrderModel {
 
 		$order_data->student         = $student;
 		$order_data->courses         = $this->get_order_items_by_id( $order_id );
-		$order_data->sub_total_price = (float) $order_data->sub_total_price;
+		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
-		$order_data->order_price     = (float) $order_data->order_price;
+		$order_data->net_payment     = (float) $order_data->net_payment;
 		$order_data->discount_amount = (float) $order_data->discount_amount;
 		$order_data->tax_rate        = (float) $order_data->tax_rate;
 		$order_data->tax_amount      = (float) $order_data->tax_amount;
@@ -240,11 +239,13 @@ class OrderModel {
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
 
-		$bundle_model = new BundleModel();
+		if ( tutor()->has_pro ) {
+			$bundle_model = new \TutorPro\CourseBundle\Models\BundleModel();
+		}
 
 		if ( ! empty( $courses_data['total_count'] ) ) {
 			foreach ( $courses as &$course ) {
-				if ( 'course-bundle' === $course->type ) {
+				if ( tutor()->has_pro && 'course-bundle' === $course->type ) {
 					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
 				}
 
