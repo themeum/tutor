@@ -19,8 +19,8 @@ function Student() {
         <div css={styles.innerContent}>
           <div css={styles.row}>
             {/* @TODO: need confirmation */}
-            <span>Active order number: #19384</span>
-            <span>Enrolled courses number: #29389</span>
+            <span>{__('Active order number:')} #{order.id}</span>
+            <span>{__('Enrolled course numbers: ')}{order.courses.map(course => `#${course.id}`).join(', ')}</span>
           </div>
           <div css={styles.row}>
             <h4>{__('Contact information', 'tutor')}</h4>
