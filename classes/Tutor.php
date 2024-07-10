@@ -873,6 +873,7 @@ final class Tutor {
 			payment_status VARCHAR(50) NOT NULL,
 			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
 			total_price DECIMAL(13, 2) NOT NULL, -- final price
+			net_payment DECIMAL(13, 2) NOT NULL, -- calculated price if any refund is done else same as total_price
 			coupon_code VARCHAR(255),
 			discount_type ENUM('percentage', 'flat'),
 			discount_amount DECIMAL(13, 2),

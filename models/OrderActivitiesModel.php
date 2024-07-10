@@ -104,7 +104,7 @@ class OrderActivitiesModel {
 				'order_id' => $order_id,
 				'meta_key' => self::META_KEY_HISTORY,
 			),
-			'id'
+			'updated_at_gmt'
 		);
 
 		if ( empty( $order_activities ) ) {
@@ -151,14 +151,19 @@ class OrderActivitiesModel {
 	 * @return int The ID of the inserted row on success, or 0 on failure.
 	 */
 	public function add_order_meta( object $data ) {
+		$current_time    = current_time( 'mysql', true );
+		$current_user_id = get_current_user_id();
+
 		return QueryHelper::insert(
 			$this->table_name,
 			array(
 				'order_id'       => $data->order_id,
 				'meta_key'       => $data->meta_key,
 				'meta_value'     => $data->meta_value,
-				'created_at_gmt' => current_time( 'mysql' ),
-				'created_by'     => get_current_user_id(),
+				'created_at_gmt' => $current_time,
+				'created_by'     => $current_user_id,
+				'updated_at_gmt' => $current_time,
+				'updated_by'     => $current_user_id,
 			)
 		);
 	}
@@ -183,7 +188,7 @@ class OrderActivitiesModel {
 			array(
 				'meta_key'       => $data->meta_key,
 				'meta_value'     => $data->meta_value,
-				'updated_at_gmt' => current_time( 'mysql' ),
+				'updated_at_gmt' => current_time( 'mysql', true ),
 				'updated_by'     => get_current_user_id(),
 			),
 			array(

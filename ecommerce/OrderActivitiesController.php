@@ -58,8 +58,7 @@ class OrderActivitiesController {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Order Activity', 'tutor' );
-		$this->model      = new OrderActivitiesModel();
+		$this->model = new OrderActivitiesModel();
 	}
 
 	/**
@@ -116,6 +115,42 @@ class OrderActivitiesController {
 		}
 
 		self::json_response( __( 'Order activity successfully added', 'tutor' ) );
+	}
+
+	/**
+	 * Store order activity for marking an order as paid.
+	 *
+	 * This method stores the order activity to log that an order has been marked as paid.
+	 * It retrieves the current user's display name and includes it in the activity message
+	 * if the user exists. The activity message and the current date and time are encoded
+	 * as JSON and stored as order metadata.
+	 *
+	 * @param int $order_id The ID of the order being marked as paid.
+	 *
+	 * @return int The insert ID of the newly added order metadata entry. Returns 0 on failure.
+	 */
+	public function store_order_activity_for_marked_as_paid( $order_id ) {
+		$user_name    = '';
+		$current_user = wp_get_current_user();
+
+		if ( $current_user->exists() ) {
+			$user_name = $current_user->display_name;
+		}
+
+		$message = empty( $user_name ) ? __( 'Order marked as paid', 'tutor' ) : __( 'Order marked as paid by ' . $user_name, 'tutor' );
+
+		$order_activities_model = new OrderActivitiesModel();
+		$payload                = new \stdClass();
+		$payload->order_id      = $order_id;
+		$payload->meta_key      = $order_activities_model::META_KEY_HISTORY;
+		$payload->meta_value    = wp_json_encode(
+			array(
+				'date'    => current_time( 'mysql' ),
+				'message' => $message,
+			)
+		);
+
+		return $order_activities_model->add_order_meta( $payload );
 	}
 
 	/**
