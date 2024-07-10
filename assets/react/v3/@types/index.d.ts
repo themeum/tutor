@@ -26,6 +26,9 @@ declare global {
       wp_date_format: string;
       is_admin: string;
       is_admin_bar_showing: string;
+      timezones: {
+        [key: string]: string;
+      };
       addons_data: {
         name: string;
         description: string;
