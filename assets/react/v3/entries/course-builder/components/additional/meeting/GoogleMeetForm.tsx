@@ -26,20 +26,24 @@ import { format } from 'date-fns';
 import { DateFormats } from '@Config/constants';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import type { ID } from '@CourseBuilderServices/curriculum';
+import { useGoogleMeetDetailsQuery, type ID } from '@CourseBuilderServices/curriculum';
 import { tutorConfig } from '@Config/config';
+import { useEffect } from 'react';
 
 interface GoogleMeetFormProps {
   onCancel: () => void;
   data: GoogleMeet | null;
   topicId?: ID;
+  meetingId?: ID;
 }
 
 const courseId = getCourseId();
 
-const GoogleMeetForm = ({ onCancel, data, topicId }: GoogleMeetFormProps) => {
+const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormProps) => {
   const { ref, isScrolling } = useIsScrolling({ defaultValue: true });
-  const currentMeeting = data;
+  const googleMeetDetailsQuery = useGoogleMeetDetailsQuery(meetingId ? meetingId : '', topicId ? topicId : '');
+
+  const currentMeeting = data ?? googleMeetDetailsQuery.data;
 
   const meetingForm = useFormWithGlobalError<GoogleMeetMeetingFormData>({
     defaultValues: {
@@ -96,6 +100,30 @@ const GoogleMeetForm = ({ onCancel, data, topicId }: GoogleMeetFormProps) => {
       meetingForm.reset();
     }
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (currentMeeting) {
+      meetingForm.reset({
+        meeting_name: currentMeeting.post_title,
+        meeting_summary: currentMeeting.post_content,
+        meeting_start_date: currentMeeting.meeting_data.start_datetime
+          ? format(new Date(currentMeeting.meeting_data.start_datetime), DateFormats.yearMonthDay)
+          : '',
+        meeting_start_time: currentMeeting.meeting_data.start_datetime
+          ? format(new Date(currentMeeting.meeting_data.start_datetime), DateFormats.hoursMinutes)
+          : '',
+        meeting_end_date: currentMeeting.meeting_data.end_datetime
+          ? format(new Date(currentMeeting.meeting_data.end_datetime), DateFormats.yearMonthDay)
+          : '',
+        meeting_end_time: currentMeeting.meeting_data.end_datetime
+          ? format(new Date(currentMeeting.meeting_data.end_datetime), DateFormats.hoursMinutes)
+          : '',
+        meeting_timezone: currentMeeting.meeting_data.timezone,
+        meeting_enrolledAsAttendee: currentMeeting.meeting_data.attendees === 'Yes' ? true : false,
+      });
+    }
+  }, [googleMeetDetailsQuery.data]);
 
   return (
     <div css={styles.container}>

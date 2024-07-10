@@ -6,7 +6,12 @@ import { useToast } from '@Atoms/Toast';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import type { PrerequisiteCourses, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
+import type {
+  GoogleMeet,
+  PrerequisiteCourses,
+  TutorMutationResponse,
+  ZoomMeeting,
+} from '@CourseBuilderServices/course';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type { Media } from '@Components/fields/FormImageInput';
 
@@ -445,6 +450,22 @@ export const useZoomMeetingDetailsQuery = (meetingId: ID, topicId: ID) => {
   return useQuery({
     queryKey: ['ZoomMeeting', meetingId],
     queryFn: () => getZoomMeetingDetails(meetingId, topicId).then((res) => res.data),
+    enabled: !!meetingId && !!topicId,
+  });
+};
+
+const getGoogleMeetDetails = (meetingId: ID, topicId: ID) => {
+  return authApiInstance.post<string, AxiosResponse<GoogleMeet>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_google_meet_meeting_details',
+    meeting_id: meetingId,
+    topic_id: topicId,
+  });
+};
+
+export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
+  return useQuery({
+    queryKey: ['GoogleMeet', meetingId],
+    queryFn: () => getGoogleMeetDetails(meetingId, topicId).then((res) => res.data),
     enabled: !!meetingId && !!topicId,
   });
 };
