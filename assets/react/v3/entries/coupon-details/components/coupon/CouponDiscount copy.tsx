@@ -67,8 +67,11 @@ function CouponDiscount() {
 					isOutlined={true}
 					buttonCss={styles.addCoursesButton}
 					icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
+					onClick={() => {
+						// @TODO: will be updated later.
+					}}
 				>
-					{__('Add Courses', 'tutor')}
+					{__('Add Items', 'tutor')}
 				</Button>
 			)}
 		</Box>
