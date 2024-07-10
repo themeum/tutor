@@ -518,7 +518,6 @@ export const letterSpacing = {
 
 export const shadow = {
   focus: '0px 0px 0px 0px rgba(255, 255, 255, 1), 0px 0px 0px 3px rgba(0, 73, 248, 0.9)',
-  danger: '0px 0px 0px 0px rgba(255, 255, 255, 1), 0px 0px 0px 3px #ff9f99',
   button: '0px 1px 0.25px rgba(17, 18, 19, 0.08), inset 0px -1px 0.25px rgba(17, 18, 19, 0.24)',
   combinedButton:
     '0px 1px 0px rgba(0, 0, 0, 0.05), inset 0px -1px 0px #bcbfc3, inset 1px 0px 0px #bbbfc3, inset 0px 1px 0px #bbbfc3',

@@ -62,11 +62,13 @@ const Certificate = () => {
     if (!currentCertificateKey) {
       return;
     }
+
     const newCertificate = certificatesData.find((certificate) => certificate.key === currentCertificateKey);
     if (newCertificate) {
       if (activeOrientation !== newCertificate.orientation) {
         setActiveOrientation(newCertificate.orientation);
       }
+      setActiveCertificateTab(newCertificate.is_default ? 'templates' : 'custom_certificates');
       setSelectedCertificate(currentCertificateKey);
     }
   }, [currentCertificateKey, certificatesData]);

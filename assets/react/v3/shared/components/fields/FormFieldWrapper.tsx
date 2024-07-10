@@ -123,13 +123,6 @@ const styles = {
       :focus {
         outline: none;
         box-shadow: ${shadow.focus};
-
-        ${
-          options.hasFieldError &&
-          css`
-          box-shadow: ${shadow.danger};
-        `
-        }
       }
 
       ::-webkit-outer-spin-button,
