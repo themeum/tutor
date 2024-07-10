@@ -22,7 +22,7 @@ import emptyStateImage from '@Images/empty-state-illustration.webp';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 
 type FormCoursePrerequisitesProps = {
-  label?: string;
+  label?: string | React.ReactNode;
   placeholder?: string;
   options: PrerequisiteCourses[];
   onChange?: (selectedOption: PrerequisiteCourses[]) => void;

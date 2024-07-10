@@ -296,7 +296,12 @@ const LessonModal = ({
                   <FormInput
                     {...controllerProps}
                     type="number"
-                    label={__('Available after days', 'tutor')}
+                    label={
+                      <div css={styles.contentDripLabel}>
+                        <SVGIcon name="contentDrip" height={24} width={24} />
+                        {__('Available after days', 'tutor')}
+                      </div>
+                    }
                     helpText={__('This lesson will be available after the given number of days.', 'tutor')}
                     placeholder="0"
                   />
@@ -311,7 +316,12 @@ const LessonModal = ({
                 render={(controllerProps) => (
                   <FormDateInput
                     {...controllerProps}
-                    label={__('Unlock Date', 'tutor')}
+                    label={
+                      <div css={styles.contentDripLabel}>
+                        <SVGIcon name="contentDrip" height={24} width={24} />
+                        {__('Unlock Date', 'tutor')}
+                      </div>
+                    }
                     helpText={__(
                       'This lesson will be available from the given date. Leave empty to make it available immediately.',
                       'tutor'
@@ -328,8 +338,13 @@ const LessonModal = ({
                 render={(controllerProps) => (
                   <FormCoursePrerequisites
                     {...controllerProps}
+                    label={
+                      <div css={styles.contentDripLabel}>
+                        <SVGIcon name="contentDrip" height={24} width={24} />
+                        {__('Prerequisites', 'tutor')}
+                      </div>
+                    }
                     placeholder={__('Select Prerequisite', 'tutor')}
-                    label={__('Prerequisites', 'tutor')}
                     options={prerequisiteCoursesQuery.data || []}
                     helpText={__('Select items that should be complete before this item', 'tutor')}
                   />
@@ -441,6 +456,15 @@ const styles = {
   previewLabel: css`
     display: flex;
     align-items: center;
+  `,
+  contentDripLabel: css`
+    display: flex;
+    align-items: center;
+
+    svg {
+      margin-right: ${spacing[4]};
+      color: ${colorTokens.icon.success};
+    }
   `,
   previewInfo: css`
     ${typography.small()};

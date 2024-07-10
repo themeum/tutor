@@ -17,7 +17,7 @@ import { isDefined } from '@Utils/types';
 import { parseNumberOnly } from '@Utils/util';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
-  label?: string;
+  label?: string | React.ReactNode;
   type?: 'number' | 'text' | 'password';
   maxLimit?: number;
   disabled?: boolean;
