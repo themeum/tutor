@@ -81,6 +81,7 @@ class Upgrader {
 		if ( $version ) {
 			$upgrades[] = 'upgrade_to_1_3_1';
 			$upgrades[] = 'upgrade_to_2_6_0';
+			$upgrades[] = 'upgrade_to_3_0_0';
 		}
 
 		return $upgrades;
@@ -119,6 +120,25 @@ class Upgrader {
 
 			do_action( 'before_tutor_version_upgrade_to_2_6_0', $this->installed_version );
 			update_option( 'tutor_version', TUTOR_VERSION );
+		}
+	}
+
+	/**
+	 * Migration logic when user upgrade to 3.0.0.
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_3_0_0() {
+		// Create cart and checkout pages if not exists.
+		$tutor_cart_page_id     = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
+		$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
+
+		if ( ! $tutor_cart_page_id ) {
+			tutor_utils()->create_tutor_cart_page();
+		}
+
+		if ( ! $tutor_checkout_page_id ) {
+			tutor_utils()->create_tutor_checkout_page();
 		}
 	}
 

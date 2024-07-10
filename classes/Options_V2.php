@@ -579,6 +579,36 @@ class Options_V2 {
 						'slug'       => 'general-page',
 						'fields'     => array(
 							array(
+								'key'     => 'tutor_cart_page_id',
+								'type'    => 'select',
+								'label'   => __( 'Cart Page', 'tutor' ),
+								'default' => '0',
+								'options' => $pages,
+								'desc'    => __( 'This page will be used as the cart page', 'tutor' ),
+							),
+						),
+					),
+					array(
+						'label'      => false,
+						'block_type' => 'uniform',
+						'slug'       => 'general-page',
+						'fields'     => array(
+							array(
+								'key'     => 'tutor_checkout_page_id',
+								'type'    => 'select',
+								'label'   => __( 'Checkout Page', 'tutor' ),
+								'default' => '0',
+								'options' => $pages,
+								'desc'    => __( 'This page will be used as the checkout page', 'tutor' ),
+							),
+						),
+					),
+					array(
+						'label'      => false,
+						'block_type' => 'uniform',
+						'slug'       => 'general-page',
+						'fields'     => array(
+							array(
 								'key'     => 'tutor_toc_page_id',
 								'type'    => 'select',
 								'label'   => __( 'Terms and Conditions Page', 'tutor' ),
