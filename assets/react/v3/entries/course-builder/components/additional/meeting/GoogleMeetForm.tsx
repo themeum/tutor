@@ -17,7 +17,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
 import { styleUtils } from '@Utils/style-utils';
 import {
-  useSaveGoogleMeetMeetingMutation,
+  useSaveGoogleMeetMutation,
   type GoogleMeet,
   type GoogleMeetMeetingFormData,
 } from '@CourseBuilderServices/course';
@@ -63,7 +63,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId }: GoogleMeetFormProps) => {
     shouldFocusError: true,
   });
 
-  const saveGoogleMeetMeeting = useSaveGoogleMeetMeetingMutation(String(courseId));
+  const saveGoogleMeetMeeting = useSaveGoogleMeetMutation(String(courseId));
 
   const timezones = tutorConfig.timezones;
 

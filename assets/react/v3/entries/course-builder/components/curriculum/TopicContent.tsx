@@ -10,7 +10,7 @@ import Popover from '@Molecules/Popover';
 
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
+import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useModal } from '@Components/modals/Modal';
 import {
@@ -21,16 +21,14 @@ import {
 } from '@CourseBuilderServices/curriculum';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
-import type { CourseFormData } from '@CourseBuilderServices/course';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import Show from '@Controls/Show';
-
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
@@ -69,7 +67,7 @@ const modalComponent: {
 } = {
   lesson: LessonModal,
   tutor_quiz: QuizModal,
-  tutor_assignments: AddAssignmentModal,
+  tutor_assignments: AssignmentModal,
 } as const;
 
 const modalTitle: {
@@ -87,8 +85,6 @@ const modalIcon: {
   tutor_quiz: 'quiz',
   tutor_assignments: 'assignment',
 } as const;
-
-const courseId = getCourseId();
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
@@ -123,6 +119,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
           contentDripType: form.watch('contentDripType'),
           topicId: topic.id,
           lessonId: content.id,
+          assignmentId: content.id,
           title: modalTitle[isContentType],
           subtitle: `${__('Topic')}: ${topic.title}`,
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
@@ -135,7 +132,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   };
 
   const handleDelete = () => {
-    if (type === 'lesson') {
+    if (type === 'lesson' || type === 'tutor_assignments') {
       deleteLessonMutation.mutate(content.id);
     } else {
       alert('@TODO: will be implemented later');

@@ -42,7 +42,7 @@ import { useModal } from '@Components/modals/Modal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
+import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
 
 import For from '@Controls/For';
@@ -239,9 +239,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             isDeletePopoverOpen,
           })}
         >
-          <div css={styles.headerContent}>
-            <div {...listeners} css={styles.grabberInput({ isOverlay })}>
-              <SVGIcon name="dragVertical" width={24} height={24} />
+          <div css={styles.headerContent} onClick={() => onCollapse?.()} onKeyDown={() => onCollapse?.()}>
+            <div css={styles.grabberInput({ isOverlay })}>
+              <button {...listeners} css={styleUtils.resetButton} type="button">
+                <SVGIcon name="dragVertical" width={24} height={24} />
+              </button>
 
               <Show
                 when={isEdit}
@@ -268,6 +270,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 <button
                   type="button"
                   css={styles.actionButton}
+                  disabled={!topic.isSaved}
                   data-visually-hidden
                   onClick={() => {
                     setIsEdit(true);
@@ -282,6 +285,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               <button
                 type="button"
                 css={styles.actionButton}
+                disabled={!topic.isSaved}
                 data-visually-hidden
                 onClick={() => {
                   alert('@TODO: will be implemented later');
@@ -292,6 +296,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               <button
                 type="button"
                 css={styles.actionButton}
+                disabled={!topic.isSaved}
                 data-visually-hidden
                 ref={deleteRef}
                 onClick={() => {
@@ -329,6 +334,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               <button
                 type="button"
                 css={styles.actionButton}
+                disabled={!topic.isSaved}
                 onClick={() => {
                   onCollapse?.();
                 }}
@@ -368,7 +374,17 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 
           <Show when={isEdit}>
             <div css={styles.footer}>
-              <Button variant="text" size="small" onClick={() => setIsEdit(false)}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  if (!form.formState.isValid && !topic.isSaved) {
+                    onDelete?.();
+                  }
+                  form.reset();
+                  setIsEdit(false);
+                }}
+              >
                 {__('Cancel', 'tutor')}
               </Button>
               <Button
@@ -400,7 +416,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 if (active.id !== over.id) {
                   const activeIndex = content.findIndex((item) => item.ID === active.id);
                   const overIndex = content.findIndex((item) => item.ID === over.id);
-                  // Will be modified later
                   onSort?.(activeIndex, overIndex);
                   setContent(moveTo(content, activeIndex, overIndex));
                 }
@@ -500,8 +515,10 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                   disabled={!topic.isSaved}
                   onClick={() => {
                     showModal({
-                      component: AddAssignmentModal,
+                      component: AssignmentModal,
                       props: {
+                        topicId: topic.id,
+                        contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Assignment', 'tutor'),
                         icon: <SVGIcon name="assignment" width={24} height={24} />,
                         subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
@@ -693,7 +710,6 @@ const styles = {
       color: ${colorTokens.color.black[40]};
       flex-shrink: 0;
     }
-    cursor: ${isOverlay ? 'grabbing' : 'grab'};
   `,
   actions: css`
     ${styleUtils.display.flex()};
@@ -706,6 +722,10 @@ const styles = {
     color: ${colorTokens.icon.default};
     display: flex;
     cursor: pointer;
+
+    :disabled {
+      cursor: not-allowed;
+    }
   `,
   content: css`
     padding: ${spacing[16]};

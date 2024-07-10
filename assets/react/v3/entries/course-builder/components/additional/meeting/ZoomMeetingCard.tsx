@@ -137,7 +137,6 @@ const ZoomMeetingCard = ({ data, meetingHost, timezones, topicId }: ZoomMeetingC
         <ZoomMeetingForm
           data={data}
           meetingHost={meetingHost}
-          timezones={timezones}
           topicId={topicId}
           onCancel={() => {
             setIsOpen(false);

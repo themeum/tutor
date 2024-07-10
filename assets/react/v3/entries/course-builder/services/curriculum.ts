@@ -36,7 +36,7 @@ export interface Lesson extends Content {
   content_drip_settings: {
     unlock_date: string;
     after_xdays_of_enroll: string;
-    prerequisites: PrerequisiteCourses[];
+    course_prerequisites: PrerequisiteCourses[];
   };
 }
 export type QuestionType = 'single_choice';
@@ -68,7 +68,22 @@ export interface Quiz extends Content {
 }
 
 export interface Assignment extends Content {
-  type: 'assignment';
+  attachments: Media[];
+  assignment_option: {
+    time_duration: {
+      time: string;
+      value: string;
+    };
+    total_mark: number;
+    pass_mark: number;
+    upload_files_limit: number;
+    upload_file_size_limit: number;
+  };
+  content_drip_settings: {
+    unlock_date: string;
+    after_xdays_of_enroll: string;
+    course_prerequisites: PrerequisiteCourses[];
+  };
 }
 
 export interface ZoomLive extends Content {
@@ -114,6 +129,24 @@ export interface LessonPayload {
 
   _is_preview?: 0 | 1; //only when course preview addon enabled
   tutor_attachments: ID[];
+  'content_drip_settings[unlock_date]'?: string;
+  'content_drip_settings[after_xdays_of_enroll]'?: string;
+  'content_drip_settings[prerequisites]'?: ID[];
+}
+
+export interface AssignmentPayload {
+  topic_id: ID;
+  assignment_id?: ID; //only for update
+  title: string;
+  summary: string;
+  attachments: ID[];
+  'assignment_option[time_duration][time]': string;
+  'assignment_option[time_duration][value]': string;
+  'assignment_option[total_mark]': number;
+  'assignment_option[pass_mark]': number;
+  'assignment_option[upload_files_limit]': number;
+  'assignment_option[upload_file_size_limit]': number;
+
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: string;
   'content_drip_settings[prerequisites]'?: ID[];
@@ -339,6 +372,67 @@ export const useUpdateCourseContentOrderMutation = () => {
   });
 };
 
+const getAssignmentDetails = (topicId: ID, assignmentId: ID) => {
+  return authApiInstance.post<string, AxiosResponse<Assignment>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_assignment_details',
+    topic_id: topicId,
+    assignment_id: assignmentId,
+  });
+};
+
+export const useAssignmentDetailsQuery = (assignmentId: ID, topicId: ID) => {
+  return useQuery({
+    queryKey: ['Assignment', assignmentId, topicId],
+    queryFn: () => getAssignmentDetails(assignmentId, topicId).then((res) => res.data),
+    enabled: !!assignmentId && !!topicId,
+  });
+};
+
+const saveAssignment = (payload: AssignmentPayload) => {
+  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_assignment_save',
+    ...payload,
+  });
+};
+
+export const useSaveAssignmentMutation = ({
+  courseId,
+  topicId,
+  assignmentId,
+}: {
+  courseId: ID;
+  topicId: ID;
+  assignmentId: ID;
+}) => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: (payload: AssignmentPayload) => saveAssignment(payload),
+    onSuccess: (response) => {
+      if (response.status_code === 200) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic', Number(courseId)],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['Assignment', topicId, assignmentId],
+        });
+
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
 const getZoomMeetingDetails = (meetingId: ID, topicId: ID) => {
   return authApiInstance.post<string, AxiosResponse<ZoomMeeting>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_zoom_meeting_details',
@@ -349,7 +443,7 @@ const getZoomMeetingDetails = (meetingId: ID, topicId: ID) => {
 
 export const useZoomMeetingDetailsQuery = (meetingId: ID, topicId: ID) => {
   return useQuery({
-    queryKey: ['ZoomMeeting', meetingId, topicId],
+    queryKey: ['ZoomMeeting', meetingId],
     queryFn: () => getZoomMeetingDetails(meetingId, topicId).then((res) => res.data),
     enabled: !!meetingId && !!topicId,
   });
