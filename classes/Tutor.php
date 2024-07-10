@@ -926,7 +926,7 @@ final class Tutor {
 
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			coupon_status VARCHAR(50) DEFAULT,
+			coupon_status VARCHAR(50) DEFAULT 'code',
 			coupon_code VARCHAR(50) NOT NULL,
 			coupon_title VARCHAR(255) NOT NULL,
 			coupon_description TEXT,
@@ -938,7 +938,9 @@ final class Tutor {
 			start_date_gmt DATETIME NOT NULL,
 			expire_date_gmt DATETIME DEFAULT NULL,
 			created_at_gmt DATETIME NOT NULL,
+			created_by BIGINT(20) UNSIGNED NOT NULL,
 			updated_at_gmt DATETIME,
+			updated_by BIGINT(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			UNIQUE KEY coupon_code (coupon_code),
 			KEY start_date_gmt (start_date_gmt),

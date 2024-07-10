@@ -233,4 +233,30 @@ class CouponModel {
 			'*'
 		);
 	}
+
+	/**
+	 * Retrieve a coupon by its ID.
+	 *
+	 * This function fetches the coupon data from the database based on the provided coupon ID.
+	 * If the coupon is found, it returns the coupon data; otherwise, it returns false.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $coupon_id The ID of the coupon to retrieve.
+	 *
+	 * @return object|false The coupon data as an object if found, or false if not found.
+	 */
+	public function get_coupon_by_id( $coupon_id ) {
+		$coupon_data = QueryHelper::get_row(
+			$this->table_name,
+			array( 'id' => $coupon_id ),
+			'id'
+		);
+
+		if ( ! $coupon_data ) {
+			return false;
+		}
+
+		return $coupon_data;
+	}
 }
