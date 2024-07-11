@@ -245,18 +245,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     }
   }, [topic.isCollapsed, content.length]);
 
-  useEffect(() => {
-    if (isThreeDotOpen) {
-      const closePopover = () => {
-        setIsThreeDotOpen(false);
-      };
-
-      document.addEventListener('click', closePopover);
-
-      return () => document.removeEventListener('click', closePopover);
-    }
-  }, [isThreeDotOpen]);
-
   return (
     <>
       <div
@@ -585,7 +573,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                       icon={<SVGIcon name="download" width={24} height={24} />}
                       disabled={!topic.isSaved}
                       onClick={() => {
-                        alert('@TODO: will be implemented later');
+                        fileInputRef?.current?.click();
                       }}
                     >
                       {__('Import Quiz', 'tutor')}
@@ -594,11 +582,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 >
                   <ThreeDots
                     isOpen={isThreeDotOpen}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setIsThreeDotOpen(true);
-                    }}
-                    closePopover={noop} // 'noop' is passed as a function to prevent the popover from closing on its own
+                    onClick={() => setIsThreeDotOpen(true)}
+                    closePopover={() => setIsThreeDotOpen(false)}
                     disabled={!topic.isSaved}
                     dotsOrientation="vertical"
                     maxWidth="220px"
@@ -625,21 +610,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                       onClick={() => setMeetingType('zoom')}
                     />
                     <ThreeDots.Option
-                      text={
-                        <>
-                          {__('Import Quiz', 'tutor')}
-                          <input
-                            css={styleUtils.display.none}
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleChange}
-                            multiple={false}
-                            accept=".csv"
-                          />
-                        </>
-                      }
-                      onClick={(event) => {
-                        event.stopPropagation();
+                      text={__('Import Quiz', 'tutor')}
+                      onClick={() => {
                         fileInputRef?.current?.click();
                       }}
                       icon={<SVGIcon name="download" width={24} height={24} />}
@@ -651,6 +623,16 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           </div>
         </animated.div>
       </div>
+
+      {/* This input is added for file input trigger point and it will be accessed by both 'ThreeDot' and 'Import Quiz' button */}
+      <input
+        css={styleUtils.display.none}
+        type="file"
+        ref={fileInputRef}
+        onChange={handleChange}
+        multiple={false}
+        accept=".csv"
+      />
 
       <Popover
         triggerRef={triggerGoogleMeetRef}
