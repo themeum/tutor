@@ -38,7 +38,7 @@ function Activities() {
             >
               <Controller
                 control={form.control}
-                name="comment"
+              name="comment"
                 rules={{ ...requiredRule() }}
                 render={(props) => (
                   <FormTextareaInput
@@ -48,7 +48,6 @@ function Activities() {
                   />
                 )}
               />
-              
               <Button type="submit" variant="primary" size="small" isOutlined>
                 {__('Post', 'tutor')}
               </Button>

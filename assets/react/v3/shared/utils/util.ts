@@ -37,15 +37,6 @@ export const getValueInArray = <T>(value: T | T[] | undefined): T[] => {
   return Array.isArray(value) ? value : value ? [value] : [];
 };
 
-interface JoomlaStructure {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getOptions: (param: string) => string;
-  pagebuilderBase: string;
-  Text: {
-    _: (text: string) => string;
-  };
-}
-
 export const getIcon = (name: IconCollection) => {
   return collection[name];
 };
