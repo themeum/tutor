@@ -882,6 +882,7 @@ final class Tutor {
 			tax_amount DECIMAL(13, 2),
 			fees DECIMAL(13, 2), -- payment gateway fees
 			earnings DECIMAL(13, 2), -- net earning
+			refund_amount DECIMAL(13, 2), -- Refund amount
 			payment_method VARCHAR(255),
 			payment_payloads LONGTEXT,
 			note TEXT,
