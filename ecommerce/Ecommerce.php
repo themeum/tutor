@@ -39,6 +39,7 @@ class Ecommerce {
 		new OrderController();
 		new OrderActivitiesController();
 		new CouponController();
+		new HooksHandler();
 	}
 
 	/**

@@ -405,6 +405,7 @@ class OrderController {
 					$actions[] = $this->bulk_action_mark_order_paid();
 					break;
 				case $this->model::ORDER_TRASH:
+					$actions[] = $this->bulk_action_mark_order_paid();
 					$actions[] = $this->bulk_action_delete();
 					break;
 				default:
