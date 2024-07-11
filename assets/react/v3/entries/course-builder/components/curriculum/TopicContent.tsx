@@ -13,7 +13,12 @@ import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useModal } from '@Components/modals/Modal';
-import { useDeleteLessonMutation, type ContentType, type ID } from '@CourseBuilderServices/curriculum';
+import {
+  useDeleteLessonMutation,
+  useExportQuizMutation,
+  type ContentType,
+  type ID,
+} from '@CourseBuilderServices/curriculum';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 
@@ -106,6 +111,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   const deleteLessonMutation = useDeleteLessonMutation();
   const deleteGoogleMeetMutation = useDeleteLessonMutation();
   const deleteZoomMeetingMutation = useDeleteLessonMutation();
+  const exportQuizMutation = useExportQuizMutation();
 
   const handleShowModalOrPopover = () => {
     const isContentType = type as keyof typeof modalComponent;
@@ -174,6 +180,17 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         </div>
 
         <div css={styles.actions} data-actions>
+          <Show when={type === 'tutor_quiz'}>
+            <button
+              type="button"
+              css={styles.actionButton}
+              onClick={() => {
+                exportQuizMutation.mutate(content.id);
+              }}
+            >
+              <SVGIcon name="upload" width={24} height={24} />
+            </button>
+          </Show>
           <button ref={editButtonRef} type="button" css={styles.actionButton} onClick={handleShowModalOrPopover}>
             <SVGIcon name="edit" width={24} height={24} />
           </button>
