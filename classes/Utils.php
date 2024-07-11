@@ -7279,6 +7279,8 @@ class Utils {
 				'tutor_dashboard_page_id'  => __( 'Dashboard Page', 'tutor' ),
 				'instructor_register_page' => __( 'Instructor Registration Page', 'tutor' ),
 				'student_register_page'    => __( 'Student Registration Page', 'tutor' ),
+				'tutor_cart_page_id'       => __( 'Cart', 'tutor' ),
+				'tutor_checkout_page_id'   => __( 'Checkout', 'tutor' ),
 			)
 		);
 
@@ -10003,5 +10005,4 @@ class Utils {
 
 		return (object) json_decode( $response['body'], true );
 	}
-
 }
