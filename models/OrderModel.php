@@ -329,12 +329,17 @@ class OrderModel {
 	public function get_order_refunds( $order_id ) {
 		global $wpdb;
 
+		$meta_keys = array(
+			OrderActivitiesModel::META_KEY_REFUND,
+			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND
+		);
+
 		// Retrieve order refunds for the given order ID from the 'tutor_ordermeta' table.
 		$order_refunds = QueryHelper::get_all(
 			"{$wpdb->prefix}tutor_ordermeta",
 			array(
 				'order_id' => $order_id,
-				'meta_key' => self::META_KEY_REFUND,
+				array( 'meta_key', 'IN', $meta_keys ),
 			),
 			'id'
 		);

@@ -27,6 +27,7 @@ class OrderActivitiesModel {
 	 */
 	const META_KEY_HISTORY = 'history';
 	const META_KEY_REFUND  = 'refund';
+	const META_KEY_PARTIALLY_REFUND  = 'partially-refund';
 	const META_KEY_COMMENT = 'comment';
 
 
@@ -98,19 +99,22 @@ class OrderActivitiesModel {
 		global $wpdb;
 
 		// Retrieve order activities for the given order ID from the 'tutor_ordermeta' table.
-		$keys = array( self::META_KEY_COMMENT, self::META_KEY_HISTORY, self::META_KEY_REFUND );
-		$placeholders = implode( ', ', array_fill( 0, count( $keys ), '%s' ) );
-
-		$query = $wpdb->prepare(
-			"SELECT *
-				FROM {$this->table_name}
-				WHERE meta_key IN ({$placeholders})
-				ORDER BY created_at_gmt DESC
-			",
-			...$keys
+		$meta_keys = array(
+			self::META_KEY_COMMENT,
+			self::META_KEY_HISTORY,
+			self::META_KEY_REFUND,
+			self::META_KEY_PARTIALLY_REFUND
 		);
 
-		$order_activities = $wpdb->get_results($query);
+		// $order_activities = QueryHelper::get_all_by_array( $this->table_name, 'meta_key', $values, 'id' );
+		$order_activities = QueryHelper::get_all(
+			$this->table_name,
+			array(
+				'order_id' => $order_id,
+				array( 'meta_key', 'IN', $meta_keys )
+			),
+			'id'
+		);
 		
 		if ( empty( $order_activities ) ) {
 			return array();
@@ -123,6 +127,7 @@ class OrderActivitiesModel {
 			$values     = json_decode( $activity->meta_value );
 			$values->id = (int) $activity->id;
 			$values->date = $activity->created_at_gmt;
+			$values->type = $activity->meta_key;
 			$response[] = $values;
 		}
 
