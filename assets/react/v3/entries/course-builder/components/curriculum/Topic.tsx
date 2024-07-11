@@ -239,9 +239,18 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             isDeletePopoverOpen,
           })}
         >
-          <div css={styles.headerContent} onClick={() => onCollapse?.()} onKeyDown={() => onCollapse?.()}>
-            <div css={styles.grabberInput({ isOverlay })}>
-              <button {...listeners} css={styleUtils.resetButton} type="button">
+          <div css={styles.headerContent}>
+            <div
+              css={styles.grabberInput({ isOverlay })}
+              onClick={() => onCollapse?.()}
+              onKeyDown={(event) => {
+                event.stopPropagation();
+                if (event.key === 'Enter' || event.key === ' ') {
+                  onCollapse?.();
+                }
+              }}
+            >
+              <button {...listeners} css={styles.grabButton({ isDragging: isDragging })} type="button">
                 <SVGIcon name="dragVertical" width={24} height={24} />
               </button>
 
@@ -778,5 +787,13 @@ const styles = {
   footerButtons: css`
     display: flex;
     align-items: center;
+  `,
+  grabButton: ({
+    isDragging = false,
+  }: {
+    isDragging: boolean;
+  }) => css`
+    ${styleUtils.resetButton};
+    cursor: ${isDragging ? 'grabbing' : 'grab'};
   `,
 };
