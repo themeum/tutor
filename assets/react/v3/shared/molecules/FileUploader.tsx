@@ -27,7 +27,7 @@ interface UseFileUploaderProps {
   onUpload: (files: File[]) => void;
   onError: (errorMessage: string[]) => void;
 }
-const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUploaderProps) => {
+export const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +42,7 @@ const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUploaderPr
 
     for (const file of [...files]) {
       if (!acceptedTypes.includes(getFileExtensionFromName(file.name))) {
-        errorMessages.push('Invalid image type');
+        errorMessages.push('Invalid file type');
       } else if (file.size > MAX_FILE_SIZE) {
         errorMessages.push('Maximum upload size exceeded');
       } else {
