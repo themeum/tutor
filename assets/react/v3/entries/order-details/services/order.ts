@@ -118,6 +118,25 @@ export const useOrderDetailsQuery = (orderId: number) => {
   });
 };
 
+const postAdminComment = (params: {order_id: number; comment: string;}) => {
+  return wpAjaxInstance.post(endpoints.ADMIN_COMMENT, params);
+}
+
+export const useAdminCommentMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: postAdminComment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['OrderDetails']});
+      showToast({type: 'success', message: __('Comment added successfully.')});
+    },
+    onError: (error) => {
+      showToast({type: 'danger', message: error.message});
+    }
+  });
+}
+
 const markAsPaid = (params: {order_id: number; note: string}) => {
   return wpAjaxInstance.post(endpoints.ORDER_MARK_AS_PAID, params);
 }
