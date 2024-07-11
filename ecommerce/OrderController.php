@@ -16,6 +16,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Models\OrderActivitiesModel;
 use Tutor\Models\OrderModel;
 use Tutor\Traits\JsonResponse;
 
@@ -28,6 +29,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.0.0
  */
 class OrderController {
+
+	/**
+	 * Order page slug
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const PAGE_SLUG = 'tutor_orders';
 
 	/**
 	 * Order model
@@ -56,13 +66,6 @@ class OrderController {
 	 * @var $page_title
 	 */
 	public $page_title;
-
-	/**
-	 * Bulk Action
-	 *
-	 * @var $bulk_action
-	 */
-	public $bulk_action = true;
 
 	/**
 	 * Constructor.
@@ -97,11 +100,25 @@ class OrderController {
 			add_action( 'wp_ajax_tutor_order_paid', array( $this, 'order_mark_as_paid' ) );
 
 			/**
+			 * Handle AJAX request for marking an order's refund action.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_refund', array( $this, 'make_refund' ) );
+
+			/**
+			 * Handle AJAX request for adding an order comment.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_comment', array( $this, 'add_comment' ) );
+
+			/**
 			 * Handle bulk action
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_order_list_bulk_action', array( $this, 'order_list_bulk_action' ) );
+			add_action( 'wp_ajax_tutor_order_bulk_action', array( $this, 'bulk_action_handler' ) );
 			/**
 			 * Handle ajax request for updating order status
 			 *
@@ -117,6 +134,22 @@ class OrderController {
 		}
 	}
 
+	/**
+	 * Get order page url
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param boolean $is_admin Whether to get admin or frontend url.
+	 *
+	 * @return string
+	 */
+	public static function get_order_page_url( bool $is_admin = true ) {
+		if ( $is_admin ) {
+			return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
+		} else {
+			return tutor_utils()->get_tutor_dashboard_url() . '/orders';
+		}
+	}
 
 	/**
 	 * Retrieve order data by order ID and respond with JSON.
@@ -208,7 +241,7 @@ class OrderController {
 
 		if ( empty( $payload->order_id ) ) {
 			$this->json_response(
-				__( 'Order Id is required', 'tutor' ),
+				__( 'Order ID is required', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);
@@ -230,6 +263,126 @@ class OrderController {
 	}
 
 	/**
+	 * Handle order refund process.
+	 *
+	 * This method processes the refund for an order. It verifies the nonce and user capabilities,
+	 * triggers necessary actions before and after the refund process, validates input data, and
+	 * interacts with the OrderActivitiesModel to record the refund metadata. If any validation
+	 * fails or the refund process encounters an error, it returns an appropriate JSON response.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function make_refund() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+
+		$params = array(
+			'order_id'   => Input::post( 'order_id' ),
+			'meta_key'   => OrderActivitiesModel::META_KEY_REFUND,
+			'meta_value' => Input::post( 'meta_value' ),
+		);
+
+		do_action( 'tutor_before_order_refund', $params );
+
+		// Validate request.
+		$validation = $this->validate( $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
+				$validation->errors,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$payload             = new \stdClass();
+		$payload->order_id   = $params['order_id'];
+		$payload->meta_key   = $params['meta_key'];
+		$payload->meta_value = $params['meta_value'];
+
+		$activity_model = new OrderActivitiesModel();
+		$response       = $activity_model->add_order_meta( $payload );
+
+		do_action( 'tutor_after_order_refund', $params );
+
+		if ( ! $response ) {
+			$this->json_response(
+				__( 'Failed to make refund', 'tutor' ),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$this->json_response( __( 'Order refund successful', 'tutor' ) );
+	}
+
+	/**
+	 * Handle adding a comment to an order.
+	 *
+	 * This method processes the addition of a comment to an order. It verifies the nonce and user capabilities,
+	 * triggers necessary actions before and after the comment addition, validates input data, and
+	 * interacts with the OrderActivitiesModel to record the comment metadata. If any validation
+	 * fails or the comment addition process encounters an error, it returns an appropriate JSON response.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function add_comment() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+
+		$params = array(
+			'order_id'   => Input::post( 'order_id' ),
+			'meta_key'   => OrderActivitiesModel::META_KEY_COMMENT,
+			'meta_value' => Input::post( 'comment' ),
+		);
+
+		do_action( 'tutor_before_order_comment', $params );
+
+		// Validate request.
+		$validation = $this->validate( $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
+				$validation->errors,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$payload             = new \stdClass();
+		$payload->order_id   = $params['order_id'];
+		$payload->meta_key   = $params['meta_key'];
+		$payload->meta_value = wp_json_encode( (object) array( 'message' => $params['meta_value'] ) );
+
+		$activity_model = new OrderActivitiesModel();
+		$response       = $activity_model->add_order_meta( $payload );
+
+		do_action( 'tutor_after_order_comment', $params );
+
+		if ( ! $response ) {
+			$this->json_response(
+				__( 'Failed to make a comment', 'tutor' ),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$this->json_response( __( 'Order comment successful added', 'tutor' ) );
+	}
+
+	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @return array
@@ -238,19 +391,31 @@ class OrderController {
 	public function prepare_bulk_actions(): array {
 		$actions = array(
 			$this->bulk_action_default(),
-			$this->bulk_action_publish(),
-			$this->bulk_action_pending(),
-			$this->bulk_action_draft(),
 		);
 
 		$active_tab = Input::get( 'data', '' );
 
-		if ( 'trash' === $active_tab ) {
-			array_push( $actions, $this->bulk_action_delete() );
+		if ( $this->model::ORDER_TRASH !== $active_tab ) {
+			$actions[] = $this->bulk_action_mark_order_trash();
 		}
-		if ( 'trash' !== $active_tab ) {
-			array_push( $actions, $this->bulk_action_trash() );
+
+		if ( ! empty( $active_tab ) ) {
+			switch ( $active_tab ) {
+				case $this->model::ORDER_INCOMPLETE:
+					$actions[] = $this->bulk_action_mark_order_paid();
+					break;
+				case $this->model::ORDER_COMPLETED:
+					$actions[] = $this->bulk_action_mark_order_unpaid();
+					break;
+				case $this->model::ORDER_TRASH:
+					$actions[] = $this->bulk_action_delete();
+					break;
+				default:
+					// code...
+					break;
+			}
 		}
+
 		return apply_filters( 'tutor_order_bulk_actions', $actions );
 	}
 
@@ -370,12 +535,13 @@ class OrderController {
 	}
 
 	/**
-	 * Handle bulk action for enrollment cancel | delete
+	 * Handle order bulk action
 	 *
-	 * @return void
 	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
 	 */
-	public function order_list_bulk_action() {
+	public function bulk_action_handler() {
 
 		tutor_utils()->checking_nonce();
 
@@ -384,44 +550,66 @@ class OrderController {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$action   = Input::post( 'bulk-action', '' );
-		$bulk_ids = Input::post( 'bulk-ids', '' );
-		if ( '' === $action || '' === $bulk_ids ) {
-			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
-			exit;
-		}
+		$request     = Input::sanitize_array( $_POST );
+		$bulk_action = $request['bulk-action'];
 
-		if ( 'delete' === $action ) {
-			// Do action before delete.
-			do_action( 'before_tutor_order_bulk_action_delete', $bulk_ids );
+		$bulk_ids = isset( $request['bulk-ids'] ) ? array_map( 'intval', explode( ',', $request['bulk-ids'] ) ) : array();
 
-			$delete_orders = self::bulk_delete_order( $bulk_ids );
-
-			do_action( 'after_tutor_order_bulk_action_delete', $bulk_ids );
-			$delete_orders ? wp_send_json_success() : wp_send_json_error( array( 'message' => __( 'Could not delete selected orders', 'tutor' ) ) );
-			exit;
-		}
-
-		/**
-		 * Do action before order update
-		 *
-		 * @param string $action (publish | pending | draft | trash).
-		 * @param array $bulk_ids, order id.
-		 */
-		do_action( 'before_tutor_order_bulk_action_update', $action, $bulk_ids );
-
-		$update_status = self::update_order_status( $action, $bulk_ids );
-
-		do_action( 'after_tutor_order_bulk_action_update', $action, $bulk_ids );
-
-		$update_status ? wp_send_json_success() : wp_send_json_error(
-			array(
-				'message' => 'Could not update order status',
-				'tutor',
-			)
+		$allowed_bulk_actions = array(
+			$this->model::PAYMENT_PAID,
+			$this->model::PAYMENT_UNPAID,
+			$this->model::ORDER_TRASH,
+			'delete',
 		);
 
-		exit;
+		if ( ! in_array( $bulk_action, $allowed_bulk_actions, true ) ) {
+			wp_send_json_error( __( 'Please select appropriate action', 'tutor' ) );
+		}
+
+		if ( empty( $bulk_ids ) ) {
+			wp_send_json_error( __( 'No items selected for the bulk action.', 'tutor' ) );
+		}
+
+		do_action( 'tutor_before_order_bulk_action', $bulk_action, $bulk_ids );
+
+		$response = false;
+		if ( 'delete' === $bulk_action ) {
+			$response = $this->model->delete_order( $bulk_ids );
+		} else {
+			$data = null;
+
+			switch ( $bulk_action ) {
+				case $this->model::PAYMENT_PAID:
+					$data = array(
+						'order_status' => $this->model::ORDER_COMPLETED,
+					);
+					break;
+				case $this->model::PAYMENT_UNPAID:
+					$data = array(
+						'order_status' => $this->model::ORDER_INCOMPLETE,
+					);
+					break;
+				case $this->model::ORDER_TRASH:
+					$data = array(
+						'order_status' => $this->model::ORDER_TRASH,
+					);
+					break;
+				default:
+					// code...
+					break;
+			}
+
+			if ( ! empty( $data ) ) {
+				$response = $this->model->update_order( $bulk_ids, $data );
+			}
+		}
+
+		if ( $response ) {
+			do_action( 'tutor_after_order_bulk_action', $bulk_action, $bulk_ids );
+			wp_send_json_success( __( 'Order updated successfully.', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'Failed to update order.', 'tutor' ) );
+		}
 	}
 
 	/**
@@ -498,14 +686,17 @@ class OrderController {
 	 * @return bool
 	 * @since 3.0.0
 	 */
-	public static function bulk_delete_order( $bulk_ids ): bool {
+	public function bulk_delete_order( $bulk_ids ): bool {
 		$bulk_ids = explode( ',', sanitize_text_field( $bulk_ids ) );
 
-		foreach ( $bulk_ids as $post_id ) {
-			CourseModel::delete_course( $post_id );
+		$response = false;
+		try {
+			$response = QueryHelper::bulk_delete_by_ids( $this->model->get_table_name(), $bulk_ids );
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' Line: ' . $th->getLine() . ' File: ' . $th->getFile() );
 		}
 
-		return true;
+		return $response;
 	}
 
 	/**
@@ -592,7 +783,9 @@ class OrderController {
 	protected function validate( array $data ) {
 
 		$validation_rules = array(
-			'order_id' => 'required|numeric',
+			'order_id'   => 'required|numeric',
+			'meta_key'   => 'required',
+			'meta_value' => 'required',
 		);
 
 		// Skip validation rules for not available fields in data.

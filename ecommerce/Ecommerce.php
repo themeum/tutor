@@ -37,6 +37,7 @@ class Ecommerce {
 		add_filter( 'tutor_monetization_options', array( $this, 'add_monetization_option' ) );
 
 		new OrderController();
+		new OrderActivitiesController();
 		new CouponController();
 	}
 

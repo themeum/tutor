@@ -9,6 +9,7 @@ import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useOrderContext } from '@OrderContexts/order-context';
+import { useAdminCommentMutation } from '@OrderServices/order';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
 import { __ } from '@wordpress/i18n';
@@ -17,6 +18,7 @@ import { Controller } from 'react-hook-form';
 
 function Activities() {
 	const { order } = useOrderContext();
+	const adminCommentMutation = useAdminCommentMutation();
 	const form = useFormWithGlobalError<{ comment: string }>({
 		defaultValues: {
 			comment: '',
@@ -33,7 +35,8 @@ function Activities() {
 						<span css={styles.dot} />
 						<form
 							onSubmit={form.handleSubmit((values) => {
-								console.log(values);
+								adminCommentMutation.mutate({ order_id: order.id, comment: values.comment });
+								form.reset();
 							})}
 							css={styles.form}
 						>
@@ -45,12 +48,12 @@ function Activities() {
 									<FormTextareaInput
 										{...props}
 										label={__('Add a comment (Only you and other staff can see comments)', 'tutor')}
+										placeholder={__('Write a comment for this order...', 'tutor')}
 										rows={3}
 									/>
 								)}
 							/>
-
-							<Button type="submit" variant="primary" size="small" isOutlined>
+							<Button type="submit" variant="primary" size="small" isOutlined loading={adminCommentMutation.isPending}>
 								{__('Post', 'tutor')}
 							</Button>
 						</form>

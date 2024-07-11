@@ -122,6 +122,9 @@ const FormInput = ({
 										onChange(fieldValue);
 									}
 								}}
+								onClick={(event) => {
+									event.stopPropagation();
+								}}
 								onKeyDown={(event) => {
 									event.stopPropagation();
 									onKeyDown?.(event.key);

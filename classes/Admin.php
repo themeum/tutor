@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\CouponController;
+use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -101,7 +102,7 @@ class Admin {
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
 
 		// Ecommerce menu @since 3.0.0.
-		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), __( 'Orders', 'tutor' ), 'manage_options', 'tutor-orders', array( $this, 'orders_view' ) );
+		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), __( 'Orders', 'tutor' ), 'manage_options', OrderController::PAGE_SLUG, array( $this, 'orders_view' ) );
 		add_submenu_page( 'tutor', __( 'Coupons', 'tutor' ), __( 'Coupons', 'tutor' ), 'manage_options', CouponController::PAGE_SLUG, array( $this, 'coupons_view' ) );
 
 		add_submenu_page( 'tutor', __( 'Create Course', 'tutor' ), __( '<span class="tutor-create-course">Create Course</span>', 'tutor' ), 'manage_tutor_instructor', 'create-course', '__return_true' );
@@ -569,9 +570,10 @@ class Admin {
 	 * @return void
 	 */
 	public function orders_view() {
-		$order_id = Input::get( 'id', null, Input::TYPE_INT );
+		$current_page = Input::get( 'page' );
+		$action       = Input::get( 'action' );
 
-		if ( ! is_null( $order_id ) ) {
+		if ( OrderController::PAGE_SLUG === $current_page && 'edit' === $action ) {
 			?>
 				<div class="tutor-admin-wrap tutor-order-details-wrapper">
 					<div id="tutor-order-details-root">

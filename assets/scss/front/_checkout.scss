@@ -1,0 +1,188 @@
+.tutor-checkout-page {
+    input[type=text], input[type=email], select {
+        line-height: 36px;
+        padding: 0px 10px;
+        text-indent: 0;
+    }
+
+    .tutor-checkout-billing {
+        background-color: #F9FAFC;
+        padding: 80px 0px;
+        height: 100%;
+
+        form {
+            max-width: 445px;
+            margin-left: auto;
+            margin-right: 125px;
+        }
+    }
+
+    .tutor-checkout-details {
+        border: 1px solid var(--tutor-border-color);
+        border-radius: 6px;
+        max-width: 480px;
+        margin-top: 120px;
+        margin-bottom: 80px;
+        margin-left: 64px;
+    }
+    .tutor-checkout-courses {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    .tutor-checkout-course-item {
+        color: var(--tutor-body-color);
+    }
+    .tutor-checkout-course-content {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 56px;
+    }
+    .tutor-checkout-course-bundle-badge {
+        display: inline-block;
+        font-size: 11px;
+        line-height: 16px;
+        background-color: #7A078D;
+        color: #ffffff;
+        border-radius: 13px;
+        padding: 0px 6px;
+    }
+    .tutor-checkout-course-title {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 26px;
+        margin-bottom: 8px;
+        
+        a {
+            color: var(--tutor-body-color);
+            text-decoration: none;
+            
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+    .tutor-checkout-coupon-badge {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        width: fit-content;
+        background-color: #F1F1F1;
+        color: #41454F;
+        font-size: 11px;
+        line-height: 16px;
+        border-radius: 4px;
+        padding: 3px 6px;
+
+        &.tutor-has-delete-button {
+            font-size: 13px;
+            line-height: 18px;
+            padding: 10px 8px;
+        }
+
+        button {
+            display: flex;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            padding: 0;
+            cursor: pointer;
+        }
+    }
+    .tutor-checkout-discount-price {
+        font-size: 13px;
+        color: #767C8E;
+        text-decoration: line-through;
+    }
+    .tutor-checkout-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .tutor-checkout-summary-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--tutor-body-color);
+    }
+    .tutor-checkout-separator {
+        line-height: 18px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: var(--tutor-body-color);
+        text-align: center;
+        position: relative;
+
+        span {
+            position: relative;
+            z-index: 1;
+            background-color: #F9FAFC;
+            padding: 0 4px;
+        }
+
+        &::before {
+            content: "";
+            height: 1px;
+            width: 100%;
+            background-color: var(--tutor-border-color);
+            position: absolute;
+            top: 8px;
+            left: 0;
+        }
+    }
+
+    .tutor-checkout-payment-options {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        button {
+            font-size: 15px;
+            line-height: 24px;
+            font-weight: 500;
+            background-color: #ffffff;
+            border: 1px solid var(--tutor-border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+            padding: 8px 16px;
+            min-width: 128px;
+
+            &:hover {
+                background-color: #F5F6FA;
+            }
+
+            &:active {
+                background-color: #F0F1F5;
+            }
+        }
+    }
+    .tutor-checkout-coupon-form {
+        background-color: #ffffff;
+        border: 1px solid var(--tutor-border-color);
+        border-radius: 6px;
+        padding: 4px;
+        display: flex;
+
+        input {
+            width: 100%;
+            border: none;
+            background-color: transparent;
+            outline: none;
+            box-shadow: none;
+        }
+
+        button {
+            border: none;
+            font-weight: 500;
+            padding: 4px 16px;
+            font-size: 13px;
+            line-height: 24px;
+        }
+    }
+}
