@@ -133,7 +133,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   };
 
   const handleDelete = () => {
-    if (type === 'lesson' || type === 'tutor_assignments') {
+    if (type === 'lesson' || type === 'tutor_assignments' || type === 'tutor_quiz') {
       deleteLessonMutation.mutate(content.id);
     }
 

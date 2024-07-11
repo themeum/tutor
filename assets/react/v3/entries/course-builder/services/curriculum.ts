@@ -176,6 +176,11 @@ export interface ZoomMeetingDetailsPayload {
   topic_id: ID;
 }
 
+interface ImportQuizPayload {
+  topic_id: ID;
+  csv_file: File;
+}
+
 const getCourseTopic = (courseId: ID) => {
   return authApiInstance.post<string, AxiosResponse<CourseTopic[]>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_course_contents',
@@ -467,5 +472,38 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
     queryKey: ['GoogleMeet', meetingId],
     queryFn: () => getGoogleMeetDetails(meetingId, topicId).then((res) => res.data),
     enabled: !!meetingId && !!topicId,
+  });
+};
+
+const importQuiz = (payload: ImportQuizPayload) => {
+  return authApiInstance.post<string, AxiosResponse<unknown>>(endpoints.ADMIN_AJAX, {
+    action: 'quiz_import_data',
+    ...payload,
+  });
+};
+
+export const useImportQuizMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: importQuiz,
+    onSuccess: (response) => {
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __('Quiz imported successfully', 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
   });
 };
