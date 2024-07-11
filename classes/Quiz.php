@@ -87,6 +87,7 @@ class Quiz {
 
 		add_action( 'wp_ajax_tutor_quiz_save', array( $this, 'ajax_quiz_save' ) );
 		add_action( 'wp_ajax_tutor_quiz_delete', array( $this, 'ajax_quiz_delete' ) );
+		add_action( 'wp_ajax_tutor_quiz_details', array( $this, 'ajax_quiz_details' ) );
 
 		add_action( 'wp_ajax_tutor_load_quiz_builder_modal', array( $this, 'tutor_load_quiz_builder_modal' ), 10, 0 );
 		add_action( 'wp_ajax_tutor_quiz_builder_get_question_form', array( $this, 'tutor_quiz_builder_get_question_form' ) );
@@ -1009,6 +1010,43 @@ class Quiz {
 				HttpHelper::STATUS_CREATED
 			);
 		}
+	}
+
+	/**
+	 * Get a quiz details by id
+	 *
+	 * @return void
+	 */
+	public function ajax_quiz_details() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
+		}
+
+		$quiz              = get_post( $quiz_id );
+		$quiz->quiz_option = get_post_meta( $quiz_id, 'tutor_quiz_option', true );
+		$quiz->questions   = tutor_utils()->get_questions_by_quiz( $quiz_id );
+
+		foreach ( $quiz->questions as $question ) {
+			if ( isset( $question->question_settings ) ) {
+				$question->question_settings = maybe_unserialize( $question->question_settings );
+			}
+		}
+
+		$data = apply_filters( 'tutor_quiz_details_response', $quiz, $quiz_id );
+
+		$this->json_response(
+			__( 'Quiz data fetched successfully', 'tutor' ),
+			$data
+		);
 	}
 
 	/**
