@@ -74,7 +74,7 @@ export const couponInitialValue: Coupon = {
 	start_date: '',
 	start_time: '',
 	is_end_enabled: false,
-	end_date: '',
+	end_date: '02/16/2024',
 	end_time: '',
 	created_at: '02/16/2024 10:00:00',
 };

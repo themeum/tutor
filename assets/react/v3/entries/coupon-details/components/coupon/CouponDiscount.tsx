@@ -1,8 +1,9 @@
 import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import FormInput from '@Components/fields/FormInput';
+import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import { tutorConfig } from '@Config/config';
 import { spacing } from '@Config/styles';
 import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
@@ -24,7 +25,10 @@ const appliesToOptions = [
 
 function CouponDiscount() {
 	const form = useFormContext<Coupon>();
+	const { tutor_currency } = tutorConfig;
+
 	const appliesTo = form.watch('applies_to');
+	const discountType = form.watch('discount_type');
 
 	return (
 		<Box bordered css={styles.discountWrapper}>
@@ -43,13 +47,15 @@ function CouponDiscount() {
 					)}
 				/>
 				<Controller
-					name="coupon_name"
+					name="discount_value"
 					control={form.control}
 					render={(controllerProps) => (
-						<FormInput
+						<FormInputWithContent
 							{...controllerProps}
-							label={__('Coupon name', 'tutor')}
-							placeholder={__('Placeholder', 'tutor')}
+							type="number"
+							label={__('Discount Value', 'tutor')}
+							placeholder="0"
+							content={discountType === 'amount' ? tutor_currency?.symbol ?? '$' : '%'}
 						/>
 					)}
 				/>

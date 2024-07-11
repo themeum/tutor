@@ -1,8 +1,10 @@
 import Container from '@Components/Container';
 import { colorTokens, spacing } from '@Config/styles';
 
-import CouponDiscount from '@CouponComponents/coupon/CouponDiscount copy';
+import CouponDiscount from '@CouponComponents/coupon/CouponDiscount';
 import CouponInfo from '@CouponComponents/coupon/CouponInfo';
+import CouponPreview from '@CouponComponents/coupon/CouponPreview';
+import CouponValidity from '@CouponComponents/coupon/CouponValidity';
 import PurchaseRequirements from '@CouponComponents/coupon/PurchaseRequirements';
 import { Coupon, couponInitialValue } from '@CouponServices/coupon';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -25,8 +27,11 @@ function Main() {
 							<CouponInfo />
 							<CouponDiscount />
 							<PurchaseRequirements />
+							<CouponValidity />
 						</div>
-						<div css={styles.right}></div>
+						<div css={styles.right}>
+							<CouponPreview />
+						</div>
 					</div>
 				</Container>
 			</FormProvider>
@@ -45,7 +50,7 @@ const styles = {
 		min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
 		width: 100%;
 		display: flex;
-		gap: ${spacing[24]};
+		gap: ${spacing[36]};
 		margin-top: ${spacing[32]};
 	`,
 	left: css`

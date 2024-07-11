@@ -43,7 +43,9 @@ function PurchaseRequirements() {
 			<Controller
 				name="purchase_requirements"
 				control={form.control}
-				render={(controllerProps) => <FormRadioGroup {...controllerProps} options={requirementOptions} />}
+				render={(controllerProps) => (
+					<FormRadioGroup {...controllerProps} options={requirementOptions} wrapperCss={styles.radioGroupWrapper} />
+				)}
 			/>
 			<div css={styles.requirementInput}>
 				{purchaseRequirements === 'minimum_purchase' && (
@@ -90,5 +92,10 @@ const styles = {
 	`,
 	requirementInput: css`
 		width: fit-content;
+	`,
+	radioGroupWrapper: css`
+		display: flex;
+		flex-direction: column;
+		gap: ${spacing[8]};
 	`,
 };
