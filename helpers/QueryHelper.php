@@ -222,15 +222,15 @@ class QueryHelper {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $where 	The where clause array. e.g. array( 'id', 'IN', array(1, 2, 3) ) or array( 'id', '=', 1 )
+	 * @param array $where  The where clause array. e.g. array( 'id', 'IN', array(1, 2, 3) ) or array( 'id', '=', 1 ).
 	 *
 	 * @return string
 	 */
 	private static function make_clause( array $where ) {
 		list ( $field, $operator, $value ) = $where;
 
-		if ( 'IN' === strtoupper($operator) ) {
-			$value = "(" . self::prepare_in_clause( $value ) . ")";
+		if ( 'IN' === strtoupper( $operator ) ) {
+			$value = '(' . self::prepare_in_clause( $value ) . ')';
 		}
 
 		return "{$field} {$operator} {$value}";
@@ -254,7 +254,7 @@ class QueryHelper {
 				$value = array( $field, '=', $value );
 			}
 
-			$arr[] = self::make_clause($value);
+			$arr[] = self::make_clause( $value );
 		}
 
 		return implode( ' AND ', $arr );
