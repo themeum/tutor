@@ -1,12 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
+import type { AxiosResponse } from 'axios';
 
 import { useToast } from '@Atoms/Toast';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
-import type { AxiosResponse } from 'axios';
 import type { ErrorResponse } from '@Utils/form';
-import type { PrerequisiteCourses, TutorMutationResponse } from '@CourseBuilderServices/course';
+import type {
+  GoogleMeet,
+  PrerequisiteCourses,
+  TutorMutationResponse,
+  ZoomMeeting,
+} from '@CourseBuilderServices/course';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type { Media } from '@Components/fields/FormImageInput';
 
@@ -36,7 +41,7 @@ export interface Lesson extends Content {
   content_drip_settings: {
     unlock_date: string;
     after_xdays_of_enroll: string;
-    prerequisites: PrerequisiteCourses[];
+    course_prerequisites: PrerequisiteCourses[];
   };
 }
 export type QuestionType = 'single_choice';
@@ -68,7 +73,22 @@ export interface Quiz extends Content {
 }
 
 export interface Assignment extends Content {
-  type: 'assignment';
+  attachments: Media[];
+  assignment_option: {
+    time_duration: {
+      time: string;
+      value: string;
+    };
+    total_mark: number;
+    pass_mark: number;
+    upload_files_limit: number;
+    upload_file_size_limit: number;
+  };
+  content_drip_settings: {
+    unlock_date: string;
+    after_xdays_of_enroll: string;
+    course_prerequisites: PrerequisiteCourses[];
+  };
 }
 
 export interface ZoomLive extends Content {
@@ -119,6 +139,24 @@ export interface LessonPayload {
   'content_drip_settings[prerequisites]'?: ID[];
 }
 
+export interface AssignmentPayload {
+  topic_id: ID;
+  assignment_id?: ID; //only for update
+  title: string;
+  summary: string;
+  attachments: ID[];
+  'assignment_option[time_duration][time]': string;
+  'assignment_option[time_duration][value]': string;
+  'assignment_option[total_mark]': number;
+  'assignment_option[pass_mark]': number;
+  'assignment_option[upload_files_limit]': number;
+  'assignment_option[upload_file_size_limit]': number;
+
+  'content_drip_settings[unlock_date]'?: string;
+  'content_drip_settings[after_xdays_of_enroll]'?: string;
+  'content_drip_settings[prerequisites]'?: ID[];
+}
+
 export interface CourseContentOrderPayload {
   tutor_topics_lessons_sorting: {
     [order: string]: {
@@ -131,6 +169,16 @@ export interface CourseContentOrderPayload {
   };
   'content_parent[parent_topic_id]'?: ID; //only for topic contents
   'content_parent[content_id]'?: ID; // only for topic contents
+}
+
+export interface ZoomMeetingDetailsPayload {
+  meeting_id: ID;
+  topic_id: ID;
+}
+
+interface ImportQuizPayload {
+  topic_id: ID;
+  csv_file: File;
 }
 
 const getCourseTopic = (courseId: ID) => {
@@ -325,6 +373,199 @@ export const useUpdateCourseContentOrderMutation = () => {
 
   return useMutation({
     mutationFn: updateCourseContentOrder,
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const getAssignmentDetails = (topicId: ID, assignmentId: ID) => {
+  return authApiInstance.post<string, AxiosResponse<Assignment>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_assignment_details',
+    topic_id: topicId,
+    assignment_id: assignmentId,
+  });
+};
+
+export const useAssignmentDetailsQuery = (assignmentId: ID, topicId: ID) => {
+  return useQuery({
+    queryKey: ['Assignment', assignmentId, topicId],
+    queryFn: () => getAssignmentDetails(assignmentId, topicId).then((res) => res.data),
+    enabled: !!assignmentId && !!topicId,
+  });
+};
+
+const saveAssignment = (payload: AssignmentPayload) => {
+  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_assignment_save',
+    ...payload,
+  });
+};
+
+export const useSaveAssignmentMutation = ({
+  courseId,
+  topicId,
+  assignmentId,
+}: {
+  courseId: ID;
+  topicId: ID;
+  assignmentId: ID;
+}) => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: (payload: AssignmentPayload) => saveAssignment(payload),
+    onSuccess: (response) => {
+      if (response.status_code === 200) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic', Number(courseId)],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['Assignment', topicId, assignmentId],
+        });
+
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const getZoomMeetingDetails = (meetingId: ID, topicId: ID) => {
+  return authApiInstance.post<string, AxiosResponse<ZoomMeeting>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_zoom_meeting_details',
+    meeting_id: meetingId,
+    topic_id: topicId,
+  });
+};
+
+export const useZoomMeetingDetailsQuery = (meetingId: ID, topicId: ID) => {
+  return useQuery({
+    queryKey: ['ZoomMeeting', meetingId],
+    queryFn: () => getZoomMeetingDetails(meetingId, topicId).then((res) => res.data),
+    enabled: !!meetingId && !!topicId,
+  });
+};
+
+const getGoogleMeetDetails = (meetingId: ID, topicId: ID) => {
+  return authApiInstance.post<string, AxiosResponse<GoogleMeet>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_google_meet_meeting_details',
+    meeting_id: meetingId,
+    topic_id: topicId,
+  });
+};
+
+export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
+  return useQuery({
+    queryKey: ['GoogleMeet', meetingId],
+    queryFn: () => getGoogleMeetDetails(meetingId, topicId).then((res) => res.data),
+    enabled: !!meetingId && !!topicId,
+  });
+};
+
+const importQuiz = (payload: ImportQuizPayload) => {
+  return authApiInstance.post<
+    string,
+    {
+      data: {
+        message: string;
+      };
+      success: boolean;
+    }
+  >(endpoints.ADMIN_AJAX, {
+    action: 'quiz_import_data',
+    ...payload,
+  });
+};
+
+export const useImportQuizMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: importQuiz,
+    onSuccess: (response) => {
+      console.log(response);
+      if (response.success) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __('Quiz imported successfully', 'tutor'),
+          type: 'success',
+        });
+      } else {
+        showToast({
+          message: response.data.message,
+          type: 'danger',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const exportQuiz = (quizId: ID) => {
+  return authApiInstance.post<
+    string,
+    {
+      data: {
+        title: string;
+        output_quiz_data: unknown[][];
+      };
+      success: boolean;
+    }
+  >(endpoints.ADMIN_AJAX, {
+    action: 'quiz_export_data',
+    quiz_id: quizId,
+  });
+};
+
+export const useExportQuizMutation = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: exportQuiz,
+    onSuccess: (response) => {
+      let csvContent = '';
+      for (const rowArray of response.data.output_quiz_data) {
+        const row = rowArray.join(',');
+        csvContent += `${row}\r\n`;
+      }
+      const blob = new Blob([csvContent], {
+        type: 'text/csv',
+      });
+      const csvUrl = window.webkitURL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', csvUrl);
+      link.setAttribute('download', `tutor-quiz-${response.data.title}.csv`);
+      document.body.appendChild(link);
+      link.click();
+
+      if (response.success) {
+        showToast({
+          message: __('Quiz exported successfully', 'tutor'),
+          type: 'success',
+        });
+      }
+    },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,

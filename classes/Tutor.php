@@ -882,6 +882,7 @@ final class Tutor {
 			tax_amount DECIMAL(13, 2),
 			fees DECIMAL(13, 2), -- payment gateway fees
 			earnings DECIMAL(13, 2), -- net earning
+			refund_amount DECIMAL(13, 2), -- Refund amount
 			payment_method VARCHAR(255),
 			payment_payloads LONGTEXT,
 			note TEXT,
@@ -926,7 +927,7 @@ final class Tutor {
 
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			coupon_status VARCHAR(50) DEFAULT 'active',
+			coupon_status VARCHAR(50),
 			coupon_type VARCHAR(100) DEFAULT 'code', -- coupon type 'code' or 'automatic'
 			coupon_code VARCHAR(50) NOT NULL,
 			coupon_title VARCHAR(255) NOT NULL,

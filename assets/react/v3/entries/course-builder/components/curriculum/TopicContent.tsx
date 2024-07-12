@@ -2,25 +2,34 @@ import { type AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } f
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
+import Popover from '@Molecules/Popover';
 
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
+import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useModal } from '@Components/modals/Modal';
-import { useDeleteLessonMutation, type ContentType, type ID } from '@CourseBuilderServices/curriculum';
+import {
+  useDeleteLessonMutation,
+  useExportQuizMutation,
+  type ContentType,
+  type ID,
+} from '@CourseBuilderServices/curriculum';
+import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
+import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useFormContext } from 'react-hook-form';
 import type { CourseFormData } from '@CourseBuilderServices/course';
-
+import Show from '@Controls/Show';
+import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
@@ -59,7 +68,7 @@ const modalComponent: {
 } = {
   lesson: LessonModal,
   tutor_quiz: QuizModal,
-  tutor_assignments: AddAssignmentModal,
+  tutor_assignments: AssignmentModal,
 } as const;
 
 const modalTitle: {
@@ -78,13 +87,15 @@ const modalIcon: {
   tutor_assignments: 'assignment',
 } as const;
 
-const courseId = getCourseId();
-
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
 const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
+  const courseDetails = useCourseDetails();
   const form = useFormContext<CourseFormData>();
+  const [meetingType, setMeetingType] = useState<'tutor_zoom_meeting' | 'tutor-google-meet' | null>(null);
+
+  const editButtonRef = useRef<HTMLButtonElement>(null);
 
   const icon = icons[type];
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
@@ -98,8 +109,11 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   };
   const { showModal } = useModal();
   const deleteLessonMutation = useDeleteLessonMutation();
+  const deleteGoogleMeetMutation = useDeleteLessonMutation();
+  const deleteZoomMeetingMutation = useDeleteLessonMutation();
+  const exportQuizMutation = useExportQuizMutation();
 
-  const handleShowModal = () => {
+  const handleShowModalOrPopover = () => {
     const isContentType = type as keyof typeof modalComponent;
     if (modalComponent[isContentType]) {
       showModal({
@@ -108,75 +122,132 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
           contentDripType: form.watch('contentDripType'),
           topicId: topic.id,
           lessonId: content.id,
+          assignmentId: content.id,
           title: modalTitle[isContentType],
           subtitle: `${__('Topic')}: ${topic.title}`,
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
         },
       });
     }
+    if (type === 'tutor_zoom_meeting') {
+      setMeetingType('tutor_zoom_meeting');
+    }
+
+    if (type === 'tutor-google-meet') {
+      setMeetingType('tutor-google-meet');
+    }
   };
 
   const handleDelete = () => {
-    if (type === 'lesson') {
+    if (type === 'lesson' || type === 'tutor_assignments' || type === 'tutor_quiz') {
       deleteLessonMutation.mutate(content.id);
-    } else {
-      alert('@TODO: will be implemented later');
+    }
+
+    if (type === 'tutor-google-meet') {
+      deleteGoogleMeetMutation.mutate(content.id);
+    }
+
+    if (type === 'tutor_zoom_meeting') {
+      deleteZoomMeetingMutation.mutate(content.id);
     }
   };
 
   return (
-    <div css={styles.wrapper({ isDragging })} ref={setNodeRef} style={style} {...attributes}>
-      <div css={styles.iconAndTitle({ isDragging })} {...listeners}>
-        <div data-content-icon>
-          <SVGIcon
-            name={icon.name as IconCollection}
-            width={24}
-            height={24}
-            style={css`
+    <>
+      <div
+        {...attributes}
+        css={styles.wrapper({ isDragging, isMeetingSelected: meetingType === type })}
+        ref={setNodeRef}
+        style={style}
+      >
+        <div css={styles.iconAndTitle({ isDragging })} {...listeners}>
+          <div data-content-icon>
+            <SVGIcon
+              name={icon.name as IconCollection}
+              width={24}
+              height={24}
+              style={css`
               color: ${icon.color};
             `}
-          />
+            />
+          </div>
+          <div data-bar-icon>
+            <SVGIcon name="bars" width={24} height={24} />
+          </div>
+          <p css={styles.title}>
+            <span dangerouslySetInnerHTML={{ __html: content.title }} />
+          </p>
         </div>
-        <div data-bar-icon>
-          <SVGIcon name="bars" width={24} height={24} />
-        </div>
-        <p css={styles.title}>
-          <span dangerouslySetInnerHTML={{ __html: content.title }} />
-        </p>
-      </div>
 
-      <div css={styles.actions} data-actions>
-        <button type="button" css={styles.actionButton} onClick={handleShowModal}>
-          <SVGIcon name="edit" width={24} height={24} />
-        </button>
-        <button type="button" css={styles.actionButton} onClick={onCopy}>
-          <SVGIcon name="copyPaste" width={24} height={24} />
-        </button>
-        <button type="button" css={styles.actionButton} onClick={handleDelete}>
-          {deleteLessonMutation.isPending ? (
-            <LoadingSpinner size={24} />
-          ) : (
-            <SVGIcon name="delete" width={24} height={24} />
-          )}
-        </button>
-        <button
-          type="button"
-          css={styles.actionButton}
-          onClick={() => {
-            alert('@TODO: will be implemented later');
-          }}
-        >
-          <SVGIcon name="threeDotsVertical" width={24} height={24} />
-        </button>
+        <div css={styles.actions} data-actions>
+          <Show when={type === 'tutor_quiz'}>
+            <button
+              type="button"
+              css={styles.actionButton}
+              onClick={() => {
+                exportQuizMutation.mutate(content.id);
+              }}
+            >
+              <SVGIcon name="upload" width={24} height={24} />
+            </button>
+          </Show>
+          <button ref={editButtonRef} type="button" css={styles.actionButton} onClick={handleShowModalOrPopover}>
+            <SVGIcon name="edit" width={24} height={24} />
+          </button>
+          <button type="button" css={styles.actionButton} onClick={onCopy}>
+            <SVGIcon name="copyPaste" width={24} height={24} />
+          </button>
+          <button type="button" css={styles.actionButton} onClick={handleDelete}>
+            {deleteLessonMutation.isPending ? (
+              <LoadingSpinner size={24} />
+            ) : (
+              <SVGIcon name="delete" width={24} height={24} />
+            )}
+          </button>
+          <button
+            type="button"
+            css={styles.actionButton}
+            onClick={() => {
+              alert('@TODO: will be implemented later');
+            }}
+          >
+            <SVGIcon name="threeDotsVertical" width={24} height={24} />
+          </button>
+        </div>
       </div>
-    </div>
+      <Popover
+        triggerRef={editButtonRef}
+        isOpen={meetingType !== null}
+        closePopover={() => setMeetingType(null)}
+        maxWidth="306px"
+      >
+        <Show when={meetingType === 'tutor_zoom_meeting'}>
+          <ZoomMeetingForm
+            data={null}
+            topicId={topic.id}
+            meetingHost={courseDetails?.zoom_users || {}}
+            onCancel={() => setMeetingType(null)}
+            meetingId={content.id}
+          />
+        </Show>
+        <Show when={meetingType === 'tutor-google-meet'}>
+          <GoogleMeetForm data={null} topicId={topic.id} onCancel={() => setMeetingType(null)} meetingId={content.id} />
+        </Show>
+      </Popover>
+    </>
   );
 };
 
 export default TopicContent;
 
 const styles = {
-  wrapper: ({ isDragging = false }) => css`
+  wrapper: ({
+    isDragging = false,
+    isMeetingSelected = false,
+  }: {
+    isDragging: boolean;
+    isMeetingSelected: boolean;
+  }) => css`
     width: 100%;
     padding: ${spacing[10]} ${spacing[8]};
     cursor: pointer;
@@ -204,8 +275,25 @@ const styles = {
       }
 
       [data-actions] {
-        display: flex;
+        opacity: 1;
       }
+    }
+
+    ${
+      isMeetingSelected &&
+      css`
+        border-color: ${colorTokens.stroke.border};
+        background-color: ${colorTokens.background.white};
+        [data-content-icon] {
+          display: flex;
+        }
+        [data-bar-icon] {
+          display: none;
+        }
+        [data-actions] {
+          opacity: 1;
+        }
+      `
     }
 
     ${
@@ -216,7 +304,7 @@ const styles = {
       background-color: ${colorTokens.background.white};
 
       [data-actions] {
-        display: flex;
+        opacity: 1;
       }
     `
     }
@@ -254,7 +342,8 @@ const styles = {
     }
   `,
   actions: css`
-    display: none;
+    display: flex;
+    opacity: 0;
     align-items: center;
     gap: ${spacing[8]};
     justify-content: end;

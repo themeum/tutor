@@ -39,7 +39,7 @@ const FormTextareaInput = ({
   onChange,
   onKeyDown,
   isHidden,
-  enableResize = false,
+  enableResize = true,
   isSecondary = false,
 }: FormTextareaInputProps) => {
   const inputValue = field.value ?? '';

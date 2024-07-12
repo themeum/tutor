@@ -1,8 +1,9 @@
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
+import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import type { ContentDripType, CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import type { ID, LessonPayload } from '@CourseBuilderServices/curriculum';
+import type { AssignmentPayload, ID, LessonPayload } from '@CourseBuilderServices/curriculum';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
@@ -172,6 +173,40 @@ export const convertLessonDataToPayload = (
     'video[runtime][seconds]': data.duration.second || 0,
     ...(isAddonEnabled('Tutor Course Preview') && { _is_preview: data.lesson_preview ? 1 : 0 }),
     tutor_attachments: data.tutor_attachments.map((attachment) => attachment.id),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
+      }),
+  };
+};
+
+export const convertAssignmentDataToPayload = (
+  data: AssignmentForm,
+  assignmentId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType
+): AssignmentPayload => {
+  return {
+    ...(assignmentId && { assignment_id: assignmentId }),
+    topic_id: topicId,
+    title: data.title,
+    summary: data.summary,
+    attachments: data.attachments.map((attachment) => attachment.id),
+    'assignment_option[time_duration][time]': data.time_duration.time,
+    'assignment_option[time_duration][value]': data.time_duration.value,
+    'assignment_option[total_mark]': data.total_mark,
+    'assignment_option[pass_mark]': data.pass_mark,
+    'assignment_option[upload_files_limit]': data.upload_files_limit,
+    'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
+
     ...(isAddonEnabled('Content Drip') &&
       contentDripType === 'unlock_by_date' && {
         'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',

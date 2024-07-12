@@ -256,7 +256,7 @@ const FormFieldWrapper = <T,>({
         disabled: disabled,
         readOnly: readOnly,
         placeholder,
-        className: 'tutor-input-field'
+        className: 'tutor-input-field',
       })}
 
       {loading && (

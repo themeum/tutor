@@ -1,4 +1,3 @@
-import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -6,6 +5,7 @@ import { css } from '@emotion/react';
 import coursePlaceholder from '@Images/orders/course-placeholder.png';
 import type { OrderSummaryItem } from '@OrderServices/order';
 import { createPriceFormatter } from '@Utils/currency';
+import { __ } from '@wordpress/i18n';
 import React from 'react';
 
 interface OrderItemProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -21,23 +21,13 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
         <div>
           <p css={styles.title}>{item.title}</p>
 
-          <Show when={item.discount}>
-            {(discount) => (
-              <div css={styles.discount}>
-                <SVGIcon name="tagOutline" width={16} height={16} />
-                <p>{discount.name}</p>
-                <p>(-{formatPrice(discount.value)})</p>
-              </div>
-            )}
-          </Show>
-
-          {/* {item.type === 'bundle' && (
-					<div css={styles.bundleCount}>{item.total_courses} {__('Courses', 'tutor')}</div>
-				)} */}
+          {item.type === 'bundle' && (
+            <div css={styles.bundleCount}>{item.total_courses} {__('Courses', 'tutor')}</div>
+          )}
         </div>
       </div>
       <div css={styles.right}>
-        <Show when={item.discounted_price} fallback={<span>{formatPrice(item.regular_price)}</span>}>
+        <Show when={item.sale_price} fallback={<span>{formatPrice(item.regular_price)}</span>}>
           {(discountedPrice) => (
             <>
               <del>{formatPrice(item.regular_price)}</del>

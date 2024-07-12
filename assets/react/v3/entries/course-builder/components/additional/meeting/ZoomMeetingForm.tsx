@@ -20,8 +20,9 @@ import { useSaveZoomMeetingMutation, type ZoomMeeting, type ZoomMeetingFormData 
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { format } from 'date-fns';
 import { DateFormats } from '@Config/constants';
-import type { ID } from '@CourseBuilderServices/curriculum';
+import { useZoomMeetingDetailsQuery, type ID } from '@CourseBuilderServices/curriculum';
 import { tutorConfig } from '@Config/config';
+import { useEffect } from 'react';
 
 interface ZoomMeetingFormProps {
   onCancel: () => void;
@@ -30,13 +31,16 @@ interface ZoomMeetingFormProps {
     [key: string]: string;
   };
   topicId?: ID;
+  meetingId?: ID;
 }
 
 const courseId = getCourseId();
 
-const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId }: ZoomMeetingFormProps) => {
+const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: ZoomMeetingFormProps) => {
   const { ref, isScrolling } = useIsScrolling({ defaultValue: true });
-  const currentMeeting = data;
+  const zoomMeetingDetailsQuery = useZoomMeetingDetailsQuery(meetingId ? meetingId : '', topicId ? topicId : '');
+
+  const currentMeeting = data ?? zoomMeetingDetailsQuery.data;
 
   const meetingForm = useFormWithGlobalError<ZoomMeetingFormData>({
     defaultValues: {
@@ -93,6 +97,24 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId }: ZoomMeetingFo
       meetingForm.reset();
     }
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (currentMeeting) {
+      meetingForm.reset({
+        meeting_name: currentMeeting.post_title,
+        meeting_summary: currentMeeting.post_content,
+        meeting_date: format(new Date(currentMeeting.meeting_data.start_time), DateFormats.yearMonthDay),
+        meeting_time: format(new Date(currentMeeting.meeting_data.start_time), DateFormats.hoursMinutes),
+        meeting_duration: String(currentMeeting.meeting_data.duration),
+        meeting_duration_unit: currentMeeting.meeting_data.duration_unit,
+        meeting_timezone: currentMeeting.meeting_data.timezone,
+        auto_recording: currentMeeting.meeting_data.settings.auto_recording,
+        meeting_password: currentMeeting.meeting_data.password,
+        meeting_host: Object.keys(meetingHost)[0],
+      });
+    }
+  }, [currentMeeting]);
 
   return (
     <div css={styles.container}>
