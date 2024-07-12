@@ -248,7 +248,7 @@ class QueryHelper {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
 			if ( is_array( $value ) ) {
-				$value = array( $field, 'IN', $value);
+				$value = array( $field, 'IN', $value );
 			} else {
 				$value = is_numeric( $value ) ? $value : "'" . $value . "'";
 				$value = array( $field, '=', $value );
