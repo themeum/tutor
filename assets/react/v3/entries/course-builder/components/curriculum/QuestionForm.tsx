@@ -27,8 +27,8 @@ const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.type`);
-  const questions = form.watch('questions');
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_settings.question_type`);
+  const questions = form.watch('questions') || [];
 
   const questionTypeForm = {
     'true-false': <TrueFalse key={activeQuestionId} activeQuestionIndex={activeQuestionIndex} />,
@@ -63,7 +63,7 @@ const QuestionForm = () => {
         <div css={styles.questionTitleAndDesc}>
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.title` as 'questions.0.title'}
+            name={`questions.${activeQuestionIndex}.question_title` as 'questions.0.question_title'}
             render={(controllerProps) => (
               <FormQuestionTitle {...controllerProps} placeholder={__('Write your question here..', 'tutor')} />
             )}
@@ -71,7 +71,7 @@ const QuestionForm = () => {
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.description` as 'questions.0.description'}
+            name={`questions.${activeQuestionIndex}.question_description` as 'questions.0.question_description'}
             render={(controllerProps) => (
               <FormQuestionDescription
                 {...controllerProps}
@@ -89,7 +89,7 @@ const QuestionForm = () => {
       <div css={styles.questionAnswer}>
         <Controller
           control={form.control}
-          name={`questions.${activeQuestionIndex}.answerExplanation` as 'questions.0.answerExplanation'}
+          name={`questions.${activeQuestionIndex}.answer_explanation` as 'questions.0.answer_explanation'}
           render={(controllerProps) => (
             <FormAnswerExplanation {...controllerProps} placeholder={__('Write answer explanation...', 'tutor')} />
           )}

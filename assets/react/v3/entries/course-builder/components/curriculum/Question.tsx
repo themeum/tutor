@@ -38,7 +38,7 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
   const [selectedQuestionId, setSelectedQuestionId] = useState<string>('');
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: question.ID,
+    id: question.question_id,
     animateLayoutChanges,
   });
 
@@ -51,25 +51,25 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
   return (
     <div
       {...attributes}
-      key={question.ID}
-      css={styles.questionItem({ isActive: activeQuestionId === question.ID, isDragging })}
+      key={question.question_id}
+      css={styles.questionItem({ isActive: activeQuestionId === question.question_id, isDragging })}
       ref={setNodeRef}
       style={style}
       tabIndex={-1}
-      onClick={() => setActiveQuestionId(question.ID)}
-      onKeyDown={() => setActiveQuestionId(question.ID)}
+      onClick={() => setActiveQuestionId(question.question_id)}
+      onKeyDown={() => setActiveQuestionId(question.question_id)}
     >
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
-        <SVGIcon name={questionTypeIconMap[question.type]} width={24} height={24} data-question-icon />
+        <SVGIcon name={questionTypeIconMap[question.question_type]} width={24} height={24} data-question-icon />
         <button {...listeners} type="button" css={styleUtils.resetButton}>
           <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
         </button>
         <span data-serial>{index + 1}</span>
       </div>
-      <span css={styles.questionTitle}>{question.title}</span>
+      <span css={styles.questionTitle}>{question.question_title}</span>
       <ThreeDots
-        isOpen={selectedQuestionId === question.ID}
-        onClick={() => setSelectedQuestionId(question.ID)}
+        isOpen={selectedQuestionId === question.question_id}
+        onClick={() => setSelectedQuestionId(question.question_id)}
         closePopover={() => setSelectedQuestionId('')}
         dotsOrientation="vertical"
         maxWidth="220px"

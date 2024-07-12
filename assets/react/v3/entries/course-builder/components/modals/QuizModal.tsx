@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -19,7 +19,7 @@ import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionConditions';
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
-import { type QuizQuestion, useGetQuizQuestionsQuery } from '@CourseBuilderServices/quiz';
+import { type QuizQuestion, useGetQuizDetailsQuery, useSaveQuizMutation } from '@CourseBuilderServices/quiz';
 import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 
 import { modal } from '@Config/constants';
@@ -30,12 +30,21 @@ import { styleUtils } from '@Utils/style-utils';
 
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import type { ID } from '@CourseBuilderServices/curriculum';
+import type { ContentDripType } from '@CourseBuilderServices/course';
+import { isDefined } from '@Utils/types';
 
 interface QuizModalProps extends ModalProps {
+  quizId?: ID;
+  topicId: ID;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  contentDripType: ContentDripType;
 }
 
 export type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
+export type QuizFeedbackMode = 'default' | 'reveal' | 'retry';
+export type QuizLayoutView = '' | 'single_question' | 'question_pagination' | 'question_below_each_other';
+export type QuizQuestionsOrder = 'rand' | 'sorting' | 'asc' | 'desc';
 
 export interface QuizForm {
   quiz_title: string;
@@ -46,30 +55,37 @@ export interface QuizForm {
       time_type: QuizTimeLimit;
     };
     hide_quiz_time_display: boolean;
-    feedback_mode: 'default' | 'reveal' | 'retry';
+    feedback_mode: QuizFeedbackMode;
     attempts_allowed: number;
     passing_grade: number;
     max_questions_for_answer: number;
     available_after_days: number;
     quiz_auto_start: boolean;
-    question_layout_view: '' | 'single_question' | 'question_pagination' | 'question_below_each_other';
-    questions_order: 'rand' | 'sorting' | 'asc' | 'desc';
+    question_layout_view: QuizLayoutView;
+    questions_order: QuizQuestionsOrder;
     hide_question_number_overview: boolean;
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
+    content_drip_settings: {
+      unlock_date: string;
+      after_xdays_of_enroll: number;
+      prerequisites: [];
+    };
   };
   questions: QuizQuestion[];
 }
 
 type QuizTabs = 'questions' | 'settings';
 
-const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
+const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, contentDripType }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('questions');
+  const [localQuizId, setLocalQuizId] = useState<ID>(quizId || '');
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
-  const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
+  const saveQuizMutation = useSaveQuizMutation();
+  const getQuizDetailsQuery = useGetQuizDetailsQuery(localQuizId);
 
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {
@@ -83,52 +99,89 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
         attempts_allowed: 0,
         passing_grade: 0,
         max_questions_for_answer: 0,
-        available_after_days: 0,
         quiz_auto_start: false,
         question_layout_view: '',
         questions_order: 'rand',
         hide_question_number_overview: false,
         short_answer_characters_limit: 0,
         open_ended_answer_characters_limit: 0,
+        content_drip_settings: {
+          unlock_date: '',
+          after_xdays_of_enroll: 0,
+          prerequisites: [],
+        },
       },
       questions: [],
     },
-    values: {
-      quiz_title: 'New Quiz',
-      quiz_description: 'Quiz description',
-      quiz_option: {
-        time_limit: {
-          time_value: 0,
-          time_type: 'minutes',
-        },
-        hide_quiz_time_display: false,
-        feedback_mode: 'default',
-        attempts_allowed: 0,
-        passing_grade: 0,
-        max_questions_for_answer: 0,
-        available_after_days: 0,
-        quiz_auto_start: false,
-        question_layout_view: '',
-        questions_order: 'rand',
-        hide_question_number_overview: false,
-        short_answer_characters_limit: 0,
-        open_ended_answer_characters_limit: 0,
-      },
-      questions: getQuizQuestionsQuery.data || [],
-    },
   });
 
-  // @TODO: isEdit will be calculated based on the quiz data form API
-  const [isEdit, setIsEdit] = useState(true);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!getQuizDetailsQuery.data) {
+      return;
+    }
 
-  const onQuizFormSubmit = (data: QuizForm) => {
-    // @TODO: will be implemented later
-    setIsEdit(false);
+    form.reset({
+      quiz_title: getQuizDetailsQuery.data.post_title || '',
+      quiz_description: getQuizDetailsQuery.data.post_content || '',
+      quiz_option: {
+        time_limit: {
+          time_value: getQuizDetailsQuery.data.quiz_option.time_limit.time_value || 0,
+          time_type: getQuizDetailsQuery.data.quiz_option.time_limit.time_type || 'minutes',
+        },
+        feedback_mode: getQuizDetailsQuery.data.quiz_option.feedback_mode || 'default',
+        attempts_allowed: getQuizDetailsQuery.data.quiz_option.attempts_allowed || 0,
+        passing_grade: getQuizDetailsQuery.data.quiz_option.passing_grade || 0,
+        max_questions_for_answer: getQuizDetailsQuery.data.quiz_option.max_questions_for_answer || 0,
+        question_layout_view: getQuizDetailsQuery.data.quiz_option.question_layout_view || '',
+        questions_order: getQuizDetailsQuery.data.quiz_option.questions_order || 'rand',
+        short_answer_characters_limit: getQuizDetailsQuery.data.quiz_option.short_answer_characters_limit || 0,
+        open_ended_answer_characters_limit:
+          getQuizDetailsQuery.data.quiz_option.open_ended_answer_characters_limit || 0,
+      },
+    });
+  }, [getQuizDetailsQuery.data]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (localQuizId) {
+      getQuizDetailsQuery.refetch();
+    }
+  }, [localQuizId]);
+
+  const [isEdit, setIsEdit] = useState(!isDefined(quizId));
+
+  const onQuizFormSubmit = async (data: QuizForm) => {
+    const response = await saveQuizMutation.mutateAsync({
+      topic_id: topicId,
+      quiz_title: data.quiz_title,
+      quiz_description: data.quiz_description,
+      'quiz_option[time_limit][time_type]': data.quiz_option.time_limit.time_type,
+      'quiz_option[time_limit][time_value]': data.quiz_option.time_limit.time_value,
+      'quiz_option[hide_quiz_time_display]': data.quiz_option.hide_quiz_time_display ? 1 : 0,
+      'quiz_option[feedback_mode]': data.quiz_option.feedback_mode,
+      'quiz_option[attempts_allowed]': data.quiz_option.attempts_allowed,
+      'quiz_option[passing_grade]': data.quiz_option.passing_grade,
+      'quiz_option[max_questions_for_answer]': data.quiz_option.max_questions_for_answer,
+      // 'quiz_option[available_after_days]': data.quiz_option.available_after_days,
+      // 'quiz_option[quiz_auto_start]': data.quiz_option.quiz_auto_start,
+      'quiz_option[question_layout_view]': data.quiz_option.question_layout_view,
+      'quiz_option[questions_order]': data.quiz_option.questions_order,
+      // 'quiz_option[hide_question_number_overview]': data.quiz_option.hide_question_number_overview,
+      'quiz_option[short_answer_characters_limit]': data.quiz_option.short_answer_characters_limit,
+      'quiz_option[open_ended_answer_characters_limit]': data.quiz_option.open_ended_answer_characters_limit,
+      // questions: data.questions,
+    });
+
+    if (response.data) {
+      setIsEdit(false);
+      setLocalQuizId(response.data);
+    }
   };
 
   const { isDirty } = form.formState;
 
-  if (getQuizQuestionsQuery.isLoading) {
+  if (getQuizDetailsQuery.isLoading) {
     return <LoadingSection />;
   }
 
@@ -243,13 +296,13 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                     </Show>
                   </div>
 
-                  <QuestionList />
+                  <QuestionList quizId={localQuizId} />
                 </Show>
               </div>
             </Show>
             <div css={styles.content({ activeTab })}>
               <Show when={activeTab === 'settings'} fallback={<QuestionForm />}>
-                <QuizSettings />
+                <QuizSettings contentDripType={contentDripType} />
               </Show>
             </div>
             <Show when={activeTab === 'questions'} fallback={<div />}>

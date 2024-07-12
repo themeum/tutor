@@ -1,5 +1,19 @@
-import type { Media } from '@Atoms/ImageInput';
-import { useQuery } from '@tanstack/react-query';
+import type { Media } from '@Components/fields/FormImageInput';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { ID } from './curriculum';
+import type {
+  QuizFeedbackMode,
+  QuizLayoutView,
+  QuizQuestionsOrder,
+  QuizTimeLimit,
+} from '@CourseBuilderComponents/modals/QuizModal';
+import { authApiInstance } from '@Utils/api';
+import type { TutorMutationResponse } from './course';
+import endpoints from '@Utils/endpoints';
+import type { ErrorResponse } from '@Utils/form';
+import { useToast } from '@Atoms/Toast';
+import { __ } from '@wordpress/i18n';
+import type { AxiosResponse } from 'axios';
 
 export type QuizQuestionType =
   | 'true-false'
@@ -22,53 +36,103 @@ export interface QuizQuestionOption {
 
 // Define a base interface for common properties
 interface BaseQuizQuestion {
-  ID: string;
-  title: string;
-  description: string;
-  answerRequired: boolean;
+  question_id: ID;
+  question_title: string;
+  question_description: string;
   randomizeQuestion: boolean;
-  questionMark: number;
-  showQuestionMark: boolean;
-  answerExplanation: string;
+  question_mark: number;
+  answer_explanation: string;
+  question_order: number;
+  question_settings: {
+    question_type: QuizQuestionType;
+    answer_required: boolean;
+    randomize_options: boolean;
+    question_mark: number;
+    show_question_mark: boolean;
+  };
 }
 
 interface TrueFalseQuizQuestion extends BaseQuizQuestion {
-  type: 'true-false';
+  question_type: 'true-false';
   options: QuizQuestionOption[];
 }
 
 export interface MultipleChoiceQuizQuestion extends BaseQuizQuestion {
-  type: 'multiple-choice';
+  question_type: 'multiple-choice';
   multipleCorrectAnswer: boolean;
   options: QuizQuestionOption[];
 }
 
 interface MatchingQuizQuestion extends BaseQuizQuestion {
-  type: 'matching';
+  question_type: 'matching';
   imageMatching: boolean;
   options: QuizQuestionOption[];
 }
 
 interface ImageAnsweringQuizQuestion extends BaseQuizQuestion {
-  type: 'image-answering';
+  question_type: 'image-answering';
   options: QuizQuestionOption[];
 }
 
 interface FillInTheBlanksQuizQuestion extends BaseQuizQuestion {
-  type: 'fill-in-the-blanks';
+  question_type: 'fill-in-the-blanks';
   options: QuizQuestionOption[];
 }
 
 export interface OrderingQuizQuestion extends BaseQuizQuestion {
-  type: 'ordering';
+  question_type: 'ordering';
   options: QuizQuestionOption[];
 }
 
 interface OtherQuizQuestion extends BaseQuizQuestion {
-  type: Exclude<
+  question_type: Exclude<
     QuizQuestionType,
     'true-false' | 'multiple-choice' | 'matching' | 'image-answering' | 'fill-in-the-blanks' | 'ordering'
   >;
+}
+
+interface ImportQuizPayload {
+  topic_id: ID;
+  csv_file: File;
+}
+
+interface QuizPayload {
+  quiz_id?: ID; // only for update
+  topic_id: ID;
+  quiz_title: string;
+  quiz_description: string;
+
+  'quiz_option[time_limit][time_value]': number;
+  'quiz_option[time_limit][time_type]': QuizTimeLimit;
+  'quiz_option[feedback_mode]': QuizFeedbackMode;
+  'quiz_option[attempts_allowed]': number;
+  'quiz_option[passing_grade]': number;
+  'quiz_option[max_questions_for_answer]': number;
+  'quiz_option[question_layout_view]': QuizLayoutView;
+  'quiz_option[questions_order]': QuizQuestionsOrder;
+  'quiz_option[short_answer_characters_limit]': number;
+  'quiz_option[open_ended_answer_characters_limit]': number;
+  'quiz_option[hide_quiz_time_display]'?: 1 | 0;
+  'quiz_option[pass_is_required]'?: 1 | 0; // when => content_drip enabled + drip settings sequential + retry mode
+}
+
+interface QuizDetailsResponse {
+  post_title: string;
+  post_content: string;
+  quiz_option: {
+    time_limit: {
+      time_value: number;
+      time_type: QuizTimeLimit;
+    };
+    feedback_mode: QuizFeedbackMode;
+    attempts_allowed: number;
+    passing_grade: number;
+    max_questions_for_answer: number;
+    question_layout_view: QuizLayoutView;
+    questions_order: QuizQuestionsOrder;
+    short_answer_characters_limit: number;
+    open_ended_answer_characters_limit: number;
+  };
 }
 
 export type QuizQuestion =
@@ -80,135 +144,282 @@ export type QuizQuestion =
   | OrderingQuizQuestion
   | OtherQuizQuestion;
 
-const mockQuizQuestions: QuizQuestion[] = [
-  {
-    ID: '3',
-    type: 'multiple-choice',
-    title: 'Literally I am multiple choice don’t you see?',
-    description: 'This is a multiple choice question',
-    options: [
-      { ID: '1', title: 'Option 1', isCorrect: true },
-      { ID: '2', title: 'Option 2', isCorrect: false },
-      { ID: '3', title: 'Option 3', isCorrect: false },
-      { ID: '4', title: 'Option 4', isCorrect: false },
-    ],
-    answerRequired: false,
-    questionMark: 1,
-    randomizeQuestion: false,
-    showQuestionMark: false,
-    multipleCorrectAnswer: false,
-    answerExplanation: 'This is the answer explanation',
-  },
-  {
-    ID: '1',
-    type: 'true-false',
-    title: 'Trust me I am True / False',
-    description: 'This is a true false question',
-    options: [
-      { ID: '1', title: 'True', isCorrect: true },
-      { ID: '2', title: 'False', isCorrect: false },
-    ],
-    answerRequired: false,
-    questionMark: 1,
-    randomizeQuestion: false,
-    showQuestionMark: true,
-    answerExplanation: '',
-  },
-  {
-    ID: '4',
-    type: 'open-ended',
-    title: 'Write an essay dude, I am open endeeed!',
-    description: 'This is an open ended question',
-    answerRequired: false,
-    questionMark: 1,
-    randomizeQuestion: false,
-    showQuestionMark: true,
-    answerExplanation: 'This is the answer explanation',
-  },
-  {
-    ID: '5',
-    type: 'fill-in-the-blanks',
-    title: 'Nature never keep spaces empty, fill in the Blanks!',
-    description: 'This is a fill in the blanks question',
-    answerRequired: false,
-    questionMark: 1,
-    randomizeQuestion: false,
-    showQuestionMark: true,
-    options: [{ ID: '1', title: 'Fill the {dash} in time', fillinTheBlanksCorrectAnswer: ['gap'] }],
-    answerExplanation: 'This is the answer explanation',
-  },
-  {
-    ID: '6',
-    type: 'short-answer',
-    title: 'Keep it short!',
-    description: 'This is a short answer question',
-    answerRequired: false,
-    questionMark: 1,
-    randomizeQuestion: false,
-    showQuestionMark: true,
-    answerExplanation: 'This is the answer explanation',
-  },
-  {
-    ID: '7',
-    type: 'matching',
-    title: 'Matching matching matching',
-    description: 'This is a matching question',
-    answerRequired: false,
-    questionMark: 1,
-    randomizeQuestion: false,
-    showQuestionMark: true,
-    imageMatching: false,
-    options: [
-      { ID: '1', title: 'Option 1', matchedTitle: 'Matched Option 1', isCorrect: true },
-      { ID: '2', title: 'Option 2', matchedTitle: 'Matched Option 2', isCorrect: false },
-      { ID: '3', title: 'Option 3', matchedTitle: 'Matched Option 3', isCorrect: false },
-      { ID: '4', title: 'Option 4', matchedTitle: 'Matched Option 4', isCorrect: false },
-    ],
-    answerExplanation: 'This is the answer explanation',
-  },
-  {
-    ID: '9',
-    type: 'image-answering',
-    title: 'Image answering is not that bad',
-    description: 'This is an image answering question',
-    answerRequired: false,
-    questionMark: 1,
-    randomizeQuestion: false,
-    showQuestionMark: true,
-    options: [
-      { ID: '1', title: 'Option 1', isCorrect: true },
-      { ID: '2', title: 'Option 2', isCorrect: false },
-      { ID: '3', title: 'Option 3', isCorrect: false },
-      { ID: '4', title: 'Option 4', isCorrect: false },
-    ],
-    answerExplanation: 'This is the answer explanation',
-  },
-  {
-    ID: '10',
-    type: 'ordering',
-    title: 'Order is not chaos!',
-    description: 'This is an ordering question',
-    options: [
-      { ID: '1', title: 'Option 5', isCorrect: true },
-      { ID: '2', title: 'Option 6', isCorrect: false },
-      { ID: '3', title: 'Option 7', isCorrect: false },
-      { ID: '4', title: 'Option 8', isCorrect: false },
-    ],
-    answerRequired: false,
-    questionMark: 1,
-    randomizeQuestion: false,
-    showQuestionMark: true,
-    answerExplanation: 'This is the answer explanation',
-  },
-];
+// const mockQuizQuestions: QuizQuestion[] = [
+//   {
+//     question_id: '3',
+//     question_type: 'multiple-choice',
+//     question_title: 'Literally I am multiple choice don’t you see?',
+//     question_description: 'This is a multiple choice question',
+//     options: [
+//       { ID: '1', title: 'Option 1', isCorrect: true },
+//       { ID: '2', title: 'Option 2', isCorrect: false },
+//       { ID: '3', title: 'Option 3', isCorrect: false },
+//       { ID: '4', title: 'Option 4', isCorrect: false },
+//     ],
+//     answerRequired: false,
+//     question_mark: 1,
+//     randomizeQuestion: false,
+//     showQuestionMark: false,
+//     multipleCorrectAnswer: false,
+//     answer_explanation: 'This is the answer explanation',
+//   },
+//   {
+//     question_id: '1',
+//     question_type: 'true-false',
+//     question_title: 'Trust me I am True / False',
+//     question_description: 'This is a true false question',
+//     options: [
+//       { ID: '1', title: 'True', isCorrect: true },
+//       { ID: '2', title: 'False', isCorrect: false },
+//     ],
+//     answerRequired: false,
+//     question_mark: 1,
+//     randomizeQuestion: false,
+//     showQuestionMark: true,
+//     answer_explanation: '',
+//   },
+//   {
+//     question_id: '4',
+//     question_type: 'open-ended',
+//     question_title: 'Write an essay dude, I am open endeeed!',
+//     question_description: 'This is an open ended question',
+//     answerRequired: false,
+//     question_mark: 1,
+//     randomizeQuestion: false,
+//     showQuestionMark: true,
+//     answer_explanation: 'This is the answer explanation',
+//   },
+//   {
+//     question_id: '5',
+//     question_type: 'fill-in-the-blanks',
+//     question_title: 'Nature never keep spaces empty, fill in the Blanks!',
+//     question_description: 'This is a fill in the blanks question',
+//     answerRequired: false,
+//     question_mark: 1,
+//     randomizeQuestion: false,
+//     showQuestionMark: true,
+//     options: [{ ID: '1', title: 'Fill the {dash} in time', fillinTheBlanksCorrectAnswer: ['gap'] }],
+//     answer_explanation: 'This is the answer explanation',
+//   },
+//   {
+//     question_id: '6',
+//     question_type: 'short-answer',
+//     question_title: 'Keep it short!',
+//     question_description: 'This is a short answer question',
+//     answerRequired: false,
+//     question_mark: 1,
+//     randomizeQuestion: false,
+//     showQuestionMark: true,
+//     answer_explanation: 'This is the answer explanation',
+//   },
+//   {
+//     question_id: '7',
+//     question_type: 'matching',
+//     question_title: 'Matching matching matching',
+//     question_description: 'This is a matching question',
+//     answerRequired: false,
+//     question_mark: 1,
+//     randomizeQuestion: false,
+//     showQuestionMark: true,
+//     imageMatching: false,
+//     options: [
+//       { ID: '1', title: 'Option 1', matchedTitle: 'Matched Option 1', isCorrect: true },
+//       { ID: '2', title: 'Option 2', matchedTitle: 'Matched Option 2', isCorrect: false },
+//       { ID: '3', title: 'Option 3', matchedTitle: 'Matched Option 3', isCorrect: false },
+//       { ID: '4', title: 'Option 4', matchedTitle: 'Matched Option 4', isCorrect: false },
+//     ],
+//     answer_explanation: 'This is the answer explanation',
+//   },
+//   {
+//     question_id: '9',
+//     question_type: 'image-answering',
+//     question_title: 'Image answering is not that bad',
+//     question_description: 'This is an image answering question',
+//     answerRequired: false,
+//     question_mark: 1,
+//     randomizeQuestion: false,
+//     showQuestionMark: true,
+//     options: [
+//       { ID: '1', title: 'Option 1', isCorrect: true },
+//       { ID: '2', title: 'Option 2', isCorrect: false },
+//       { ID: '3', title: 'Option 3', isCorrect: false },
+//       { ID: '4', title: 'Option 4', isCorrect: false },
+//     ],
+//     answer_explanation: 'This is the answer explanation',
+//   },
+//   {
+//     question_id: '10',
+//     question_type: 'ordering',
+//     question_title: 'Order is not chaos!',
+//     question_description: 'This is an ordering question',
+//     options: [
+//       { ID: '1', title: 'Option 5', isCorrect: true },
+//       { ID: '2', title: 'Option 6', isCorrect: false },
+//       { ID: '3', title: 'Option 7', isCorrect: false },
+//       { ID: '4', title: 'Option 8', isCorrect: false },
+//     ],
+//     answerRequired: false,
+//     question_mark: 1,
+//     randomizeQuestion: false,
+//     showQuestionMark: true,
+//     answer_explanation: 'This is the answer explanation',
+//   },
+// ];
 
-const getQuizQuestions = () => {
-  return Promise.resolve({ data: mockQuizQuestions });
+// const getQuizQuestions = () => {
+//   return Promise.resolve({ data: mockQuizQuestions });
+// };
+
+// export const useGetQuizQuestionsQuery = () => {
+//   return useQuery({
+//     queryKey: ['GetQuizQuestions'],
+//     queryFn: () => getQuizQuestions().then((response) => response.data),
+//   });
+// };
+
+const importQuiz = (payload: ImportQuizPayload) => {
+  return authApiInstance.post<
+    string,
+    {
+      data: {
+        message: string;
+      };
+      success: boolean;
+    }
+  >(endpoints.ADMIN_AJAX, {
+    action: 'quiz_import_data',
+    ...payload,
+  });
 };
 
-export const useGetQuizQuestionsQuery = () => {
+export const useImportQuizMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: importQuiz,
+    onSuccess: (response) => {
+      console.log(response);
+      if (response.success) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __('Quiz imported successfully', 'tutor'),
+          type: 'success',
+        });
+      } else {
+        showToast({
+          message: response.data.message,
+          type: 'danger',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const exportQuiz = (quizId: ID) => {
+  return authApiInstance.post<
+    string,
+    {
+      data: {
+        title: string;
+        output_quiz_data: unknown[][];
+      };
+      success: boolean;
+    }
+  >(endpoints.ADMIN_AJAX, {
+    action: 'quiz_export_data',
+    quiz_id: quizId,
+  });
+};
+
+export const useExportQuizMutation = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: exportQuiz,
+    onSuccess: (response) => {
+      let csvContent = '';
+      for (const rowArray of response.data.output_quiz_data) {
+        const row = rowArray.join(',');
+        csvContent += `${row}\r\n`;
+      }
+      const blob = new Blob([csvContent], {
+        type: 'text/csv',
+      });
+      const csvUrl = window.webkitURL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', csvUrl);
+      link.setAttribute('download', `tutor-quiz-${response.data.title}.csv`);
+      document.body.appendChild(link);
+      link.click();
+
+      if (!response.success) {
+        showToast({
+          message: __('Something went wrong.', 'tutor'),
+          type: 'danger',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const saveQuiz = (payload: QuizPayload) => {
+  return authApiInstance.post<QuizPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_save',
+    ...payload,
+  });
+};
+
+export const useSaveQuizMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: saveQuiz,
+    onSuccess: (response) => {
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const getQuizDetails = (quizId: ID) => {
+  return authApiInstance.post<ID, AxiosResponse<QuizDetailsResponse>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_details',
+    quiz_id: quizId,
+  });
+};
+
+export const useGetQuizDetailsQuery = (quizId: ID) => {
   return useQuery({
-    queryKey: ['GetQuizQuestions'],
-    queryFn: () => getQuizQuestions().then((response) => response.data),
+    queryKey: ['GetQuizDetails', quizId],
+    queryFn: () => getQuizDetails(quizId).then((response) => response.data),
   });
 };
