@@ -1041,4 +1041,35 @@ class QuizModel {
 
 		return $result;
 	}
+
+	/**
+	 * Get all answer's of a quiz question.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $question_id question id.
+	 * @param string $question_type question type.
+	 *
+	 * @return array
+	 */
+	public static function get_question_answers( $question_id, $question_type = null ) {
+		global $wpdb;
+
+		$query = "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d";
+
+		if ( $question_type ) {
+			$query .= " AND belongs_question_type = '{$question_type}'";
+		}
+
+		//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+		$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id ) );
+
+		foreach ( $answers as $answer ) {
+			if ( $answer->image_id ) {
+				$answer->image_url = wp_get_attachment_url( $answer->image_id );
+			}
+		}
+
+		return $answers;
+	}
 }
