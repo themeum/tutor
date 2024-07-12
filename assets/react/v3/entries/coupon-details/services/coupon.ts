@@ -22,6 +22,14 @@ interface Category {
 	number_of_courses: number;
 }
 
+export type CouponAppliesTo =
+	| 'all_courses_and_bundles'
+	| 'all_courses'
+	| 'all_bundles'
+	| 'specific_courses'
+	| 'specific_bundles'
+	| 'specific_category';
+
 export interface Coupon {
 	id: number;
 	coupon_type: CouponType;
@@ -30,13 +38,7 @@ export interface Coupon {
 	user_name: string;
 	discount_type: 'percent' | 'amount';
 	discount_value: number;
-	applies_to:
-		| 'all_courses_and_bundles'
-		| 'all_courses'
-		| 'all_bundles'
-		| 'specific_courses'
-		| 'specific_bundles'
-		| 'specific_category';
+	applies_to: CouponAppliesTo;
 	courses?: Course[];
 	categories?: Category[];
 	bundles?: Course[];
