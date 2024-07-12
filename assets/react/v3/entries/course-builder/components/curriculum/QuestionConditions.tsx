@@ -33,7 +33,7 @@ export const questionTypeOptions: Option<QuizQuestionType>[] = [
   },
   {
     label: __('Fill in the Blanks', 'tutor'),
-    value: 'fill_in_the_blanks',
+    value: 'fill_in_the_blank',
     icon: 'quizFillInTheBlanks',
   },
   {
@@ -62,7 +62,7 @@ const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_settings.question_type`);
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
 
   if (!activeQuestionId) {
     return (
@@ -77,9 +77,7 @@ const QuestionConditions = () => {
       <div css={styles.questionTypeWrapper}>
         <Controller
           control={form.control}
-          name={
-            `questions.${activeQuestionIndex}.question_settings.question_type` as 'questions.0.question_settings.question_type'
-          }
+          name={`questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type'}
           render={(controllerProps) => (
             <FormSelectInput {...controllerProps} label={__('Question Type', 'tutor')} options={questionTypeOptions} />
           )}

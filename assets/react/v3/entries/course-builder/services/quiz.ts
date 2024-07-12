@@ -18,7 +18,7 @@ export type QuizQuestionType =
   | 'true_false'
   | 'multiple_choice'
   | 'open_ended'
-  | 'fill_in_the_blanks'
+  | 'fill_in_the_blank'
   | 'short_answer'
   | 'matching'
   | 'image_answering'
@@ -46,6 +46,7 @@ interface BaseQuizQuestion {
   question_mark: number;
   answer_explanation: string;
   question_order: number;
+  question_type: QuizQuestionType;
   question_settings: {
     question_type: QuizQuestionType;
     answer_required: boolean;
@@ -56,12 +57,12 @@ interface BaseQuizQuestion {
 }
 
 interface TrueFalseQuizQuestion extends BaseQuizQuestion {
-  question_type: 'true-false';
+  question_type: 'true_false';
   question_answers: QuizQuestionOption[];
 }
 
 export interface MultipleChoiceQuizQuestion extends BaseQuizQuestion {
-  question_type: 'multiple-choice';
+  question_type: 'multiple_choice';
   multipleCorrectAnswer: boolean;
   question_answers: QuizQuestionOption[];
 }
@@ -73,12 +74,12 @@ interface MatchingQuizQuestion extends BaseQuizQuestion {
 }
 
 interface ImageAnsweringQuizQuestion extends BaseQuizQuestion {
-  question_type: 'image-answering';
+  question_type: 'image_answering';
   question_answers: QuizQuestionOption[];
 }
 
 interface FillInTheBlanksQuizQuestion extends BaseQuizQuestion {
-  question_type: 'fill-in-the-blanks';
+  question_type: 'fill_in_the_blank';
   question_answers: QuizQuestionOption[];
 }
 

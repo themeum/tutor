@@ -27,7 +27,7 @@ const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
   true_false: 'quizTrueFalse',
   multiple_choice: 'quizMultiChoice',
   open_ended: 'quizEssay',
-  fill_in_the_blanks: 'quizFillInTheBlanks',
+  fill_in_the_blank: 'quizFillInTheBlanks',
   short_answer: 'quizShortAnswer',
   matching: 'quizImageMatching',
   image_answering: 'quizImageAnswer',
@@ -61,12 +61,7 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       onKeyDown={() => setActiveQuestionId(question.question_id)}
     >
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
-        <SVGIcon
-          name={questionTypeIconMap[question.question_settings.question_type]}
-          width={24}
-          height={24}
-          data-question-icon
-        />
+        <SVGIcon name={questionTypeIconMap[question.question_type]} width={24} height={24} data-question-icon />
         <button {...listeners} type="button" css={styleUtils.resetButton}>
           <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
         </button>

@@ -27,14 +27,14 @@ const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_settings.question_type`);
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
   const questions = form.watch('questions') || [];
 
   const questionTypeForm = {
     true_false: <TrueFalse key={activeQuestionId} />,
     multiple_choice: <MultipleChoiceAndOrdering key={activeQuestionId} />,
     open_ended: <OpenEndedAndShortAnswer key={activeQuestionId} />,
-    fill_in_the_blanks: <FillinTheBlanks key={activeQuestionId} />,
+    fill_in_the_blank: <FillinTheBlanks key={activeQuestionId} />,
     short_answer: <OpenEndedAndShortAnswer key={activeQuestionId} />,
     matching: <Matching key={activeQuestionId} />,
     image_answering: <ImageAnswering key={activeQuestionId} />,

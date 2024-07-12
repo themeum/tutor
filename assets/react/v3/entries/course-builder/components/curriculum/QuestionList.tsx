@@ -73,7 +73,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
       question_id: questionId,
       question_title: __('Write anything here..', 'tutor'),
       question_description: '',
-      question_type: 'true-false',
+      question_type: 'true_false',
       question_answers: [
         {
           answer_id: nanoid(),
