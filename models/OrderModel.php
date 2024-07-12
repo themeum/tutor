@@ -339,7 +339,7 @@ class OrderModel {
 			"{$wpdb->prefix}tutor_ordermeta",
 			array(
 				'order_id' => $order_id,
-				array( 'meta_key', 'IN', $meta_keys ),
+				'meta_key' => $meta_keys,
 			),
 			'id'
 		);

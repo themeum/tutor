@@ -227,12 +227,12 @@ class QueryHelper {
 	 * @return string
 	 */
 	private static function make_clause( array $where ) {
-		list ( $column, $operator, $value ) = $where;
+		list ( $field, $operator, $value ) = $where;
 
 		if ( strtoupper($operator) === 'IN' ) {
 			$value = array_map(
 				function ( $item ) {
-					return "'" . $item . "'";
+					return is_numeric( $item ) ? $item : "'" . $item . "'";
 				},
 				$value
 			);
@@ -240,7 +240,7 @@ class QueryHelper {
 			$value = "(" . implode( ',', $value ) . ")";
 		}
 
-		return "{$column} {$operator} {$value}";
+		return "{$field} {$operator} {$value}";
 	}
 
 	/**
@@ -254,8 +254,10 @@ class QueryHelper {
 	private static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
-			if ( !is_array( $value ) ) {
-				$value = is_numeric( $value ) ? ( $value + 0 ) : "'" . $value . "'";
+			if ( is_array( $value ) ) {
+				$value = array( $field, 'IN', $value);
+			} else {
+				$value = is_numeric( $value ) ? $value : "'" . $value . "'";
 				$value = array( $field, '=', $value );
 			}
 
