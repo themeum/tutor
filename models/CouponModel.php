@@ -339,15 +339,15 @@ class CouponModel {
 			return false;
 		}
 
-		$coupon_data->id                               = (int) $coupon_data->id;
-		$coupon_data->usage_limit_status               = ! empty( $coupon_data->total_usage_limit ) ? true : false;
-		$coupon_data->total_usage_limit                = (int) $coupon_data->total_usage_limit;
-		$coupon_data->is_limit_to_one_use_per_customer = ! empty( $coupon_data->is_limit_to_one_use_per_customer ) ? true : false;
-		$coupon_data->discount_amount                  = (float) $coupon_data->discount_amount;
-		$coupon_data->created_by                       = get_userdata( $coupon_data->created_by )->display_name;
-		$coupon_data->updated_by                       = get_userdata( $coupon_data->updated_by )->display_name;
-		$coupon_data->courses                          = array();
-		$coupon_data->categories                       = array();
+		$coupon_data->id                  = (int) $coupon_data->id;
+		$coupon_data->usage_limit_status  = ! empty( $coupon_data->total_usage_limit ) ? true : false;
+		$coupon_data->total_usage_limit   = (int) $coupon_data->total_usage_limit;
+		$coupon_data->is_one_use_per_user = ! empty( $coupon_data->is_one_use_per_user ) ? true : false;
+		$coupon_data->discount_amount     = (float) $coupon_data->discount_amount;
+		$coupon_data->created_by          = get_userdata( $coupon_data->created_by )->display_name;
+		$coupon_data->updated_by          = get_userdata( $coupon_data->updated_by )->display_name;
+		$coupon_data->courses             = array();
+		$coupon_data->categories          = array();
 
 		if ( 'specific_courses' === $coupon_data->applies_to || 'specific_bundles' === $coupon_data->applies_to ) {
 			$coupon_data->courses = $this->get_coupon_courses_by_code( $coupon_data->coupon_code );
