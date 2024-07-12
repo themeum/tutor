@@ -90,12 +90,12 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_quiz_details', array( $this, 'ajax_quiz_details' ) );
 
 		add_action( 'wp_ajax_tutor_quiz_question_create', array( $this, 'ajax_quiz_question_create' ) );
+		add_action( 'wp_ajax_tutor_quiz_question_delete', array( $this, 'ajax_quiz_question_delete' ) );
 		add_action( 'wp_ajax_tutor_quiz_question_sorting', array( $this, 'ajax_quiz_question_sorting' ) );
 
 		add_action( 'wp_ajax_tutor_load_quiz_builder_modal', array( $this, 'tutor_load_quiz_builder_modal' ), 10, 0 );
 		add_action( 'wp_ajax_tutor_quiz_builder_get_question_form', array( $this, 'tutor_quiz_builder_get_question_form' ) );
 		add_action( 'wp_ajax_tutor_quiz_modal_update_question', array( $this, 'tutor_quiz_modal_update_question' ) );
-		add_action( 'wp_ajax_tutor_quiz_builder_question_delete', array( $this, 'tutor_quiz_builder_question_delete' ) );
 		add_action( 'wp_ajax_tutor_quiz_question_answer_editor', array( $this, 'tutor_quiz_question_answer_editor' ) );
 		add_action( 'wp_ajax_tutor_save_quiz_answer_options', array( $this, 'tutor_save_quiz_answer_options' ), 10, 0 );
 		add_action( 'wp_ajax_tutor_update_quiz_answer_options', array( $this, 'tutor_update_quiz_answer_options' ) );
@@ -1251,28 +1251,39 @@ class Quiz {
 	}
 
 	/**
-	 * Delete quiz questions
+	 * Delete quiz question
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 refactor and response updated.
 	 *
 	 * @return void
 	 */
-	public function tutor_quiz_builder_question_delete() {
-		tutor_utils()->checking_nonce();
+	public function ajax_quiz_question_delete() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		global $wpdb;
 
 		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
 
 		if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
 		}
 
 		if ( $question_id ) {
-			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'question_id' => esc_sql( $question_id ) ) );
+			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'question_id' => $question_id ) );
 		}
 
-		wp_send_json_success();
+		$this->json_response(
+			__( 'Question successfully deleted', 'tutor' ),
+			$question_id
+		);
+
 	}
 
 	/**
