@@ -902,7 +902,7 @@ class Utils {
 					 */
 					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
-						$completed_count++;
+						++$completed_count;
 					}
 				} elseif ( 'tutor-google-meet' === $content->post_type ) {
 					/**
@@ -912,7 +912,7 @@ class Utils {
 					 */
 					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
-						$completed_count++;
+						++$completed_count;
 					}
 				}
 			}
@@ -1119,11 +1119,12 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course ID.
+	 * @param int  $course_id course ID.
+	 * @param bool $apply_filter false if you don't want to apply the filter on return.
 	 *
 	 * @return null|string
 	 */
-	public function get_course_price( $course_id = 0 ) {
+	public function get_course_price( $course_id = 0, $apply_filter = true ) {
 		$price      = null;
 		$course_id  = $this->get_post_id( $course_id );
 		$product_id = $this->get_course_product_id( $course_id );
@@ -1139,8 +1140,10 @@ class Utils {
 				$price    = \edd_price( $download->ID, false );
 			}
 		}
-		return apply_filters( 'get_tutor_course_price', $price, $course_id );
 
+		$response = $apply_filter ? apply_filters( 'get_tutor_course_price', $price, $course_id ) : $price;
+
+		return $response;
 	}
 
 	/**
@@ -3357,7 +3360,7 @@ class Utils {
 			// Exclude instructor if already in main instructor.
 			$instructors = array_filter(
 				$instructors,
-				function( $instructor ) use ( $main_instructor ) {
+				function ( $instructor ) use ( $main_instructor ) {
 					if ( $instructor->ID !== $main_instructor[0]->ID ) {
 						return true;
 					}
@@ -3689,12 +3692,10 @@ class Utils {
 		for ( $i = 1; $i <= 5; $i++ ) {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<i class="tutor-icon-star-bold" data-rating-value="' . $i . '"></i>';
-			} else {
-				if ( ( $current_rating - $i ) >= -0.5 ) {
+			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<i class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></i>';
-				} else {
-					$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
-				}
+			} else {
+				$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
 			}
 		}
 
@@ -3768,12 +3769,10 @@ class Utils {
 		for ( $i = 1; $i <= 5; $i++ ) {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<span class="tutor-icon-star-bold" data-rating-value="' . $i . '"></span>';
-			} else {
-				if ( ( $current_rating - $i ) >= -0.5 ) {
+			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<span class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></span>';
-				} else {
-					$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
-				}
+			} else {
+				$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
 			}
 		}
 
@@ -5420,7 +5419,7 @@ class Utils {
 	 * @return bool|false|string
 	 */
 	public function instructor_register_url() {
-		 $instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
+		$instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
 
 		if ( $instructor_register_page ) {
 			return apply_filters( 'tutor_instructor_register_url', get_the_permalink( $instructor_register_page ) );
@@ -6836,7 +6835,7 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_script_debug() {
-		 return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+		return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
 	}
 
 	/**
@@ -7044,7 +7043,6 @@ class Utils {
 	 *
 	 * @return object
 	 */
-
 	public function get_rating_by_id( $rating_id = 0 ) {
 		global $wpdb;
 
@@ -7345,7 +7343,7 @@ class Utils {
 						$next_id = $ids[ $next_i ];
 					}
 				}
-				$i++;
+				++$i;
 			}
 		}
 
@@ -8108,7 +8106,7 @@ class Utils {
 	 * @return object
 	 */
 	function get_package_object() {
-		 $params = func_get_args();
+		$params = func_get_args();
 
 		$is_pro     = $params[0];
 		$class      = $params[1];
@@ -9045,26 +9043,26 @@ class Utils {
 					case $lesson_post_type:
 						$is_lesson_completed = $this->is_completed_lesson( $content->ID, $user_id );
 						if ( $is_lesson_completed ) {
-							$completed++;
+							++$completed;
 						}
 						break;
 					case $quiz_post_type:
 						$has_attempt = $this->has_attempted_quiz( $user_id, $content->ID );
 						if ( $has_attempt ) {
-							$completed++;
+							++$completed;
 						}
 						break;
 					case $assignment_post_type:
 						$is_assignment_completed = $this->is_assignment_submitted( $content->ID, $user_id );
 						if ( $is_assignment_completed ) {
-							$completed++;
+							++$completed;
 						}
 						break;
 					case $zoom_lesson_post_type:
 						if ( \class_exists( '\TUTOR_ZOOM\Zoom' ) ) {
 							$is_zoom_lesson_completed = \TUTOR_ZOOM\Zoom::is_zoom_lesson_done( '', $content->ID, $user_id );
 							if ( $is_zoom_lesson_completed ) {
-								$completed++;
+								++$completed;
 							}
 						}
 						break;
@@ -9073,7 +9071,7 @@ class Utils {
 							if ( \TutorPro\GoogleMeet\Validator\Validator::is_addon_enabled() ) {
 								$is_completed = \TutorPro\GoogleMeet\Frontend\Frontend::is_lesson_completed( false, $content->ID, $user_id );
 								if ( $is_completed ) {
-									$completed++;
+									++$completed;
 								}
 							}
 						}
@@ -9417,7 +9415,6 @@ class Utils {
 	 *
 	 * @return string
 	 */
-
 	public function clean_html_content( $content = '', $allowed = array() ) {
 
 		$default = array(
@@ -9653,7 +9650,7 @@ class Utils {
 		);
 
 		foreach ( $results as $result ) {
-			$course_meta[ $result->course_id ][ $post_type ]++;
+			++$course_meta[ $result->course_id ][ $post_type ];
 		}
 
 		return $course_meta;
@@ -9672,7 +9669,7 @@ class Utils {
 		// Prepare course IDs to get quiz count based on.
 		$course_ids = is_array( $course_id ) ? $course_id : array( $course_id );
 		$course_ids = array_map(
-			function( $id ) {
+			function ( $id ) {
 				return (int) $id;
 			},
 			$course_ids
@@ -9879,7 +9876,7 @@ class Utils {
 	 *
 	 * @return array allowed tags
 	 */
-	public function allowed_avatar_tags( array $tags = array() ):array {
+	public function allowed_avatar_tags( array $tags = array() ): array {
 		$defaults = array(
 			'a'    => array(
 				'href'   => true,
@@ -9915,7 +9912,7 @@ class Utils {
 	 *
 	 * @return array allowed tags
 	 */
-	public function allowed_icon_tags( array $tags = array() ):array {
+	public function allowed_icon_tags( array $tags = array() ): array {
 		$defaults = array(
 			'span' => array(
 				'class' => true,
