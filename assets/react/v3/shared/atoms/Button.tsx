@@ -320,14 +320,12 @@ const styles = {
 
       &:focus {
         background-color: ${colorTokens.action.secondary.hover};
-        // box-shadow: ${shadow.focus};
-        ${styleUtils.inputFocus};
+        box-shadow: ${shadow.focus};
       }
 
       &:active {
         background-color: ${colorTokens.action.secondary.active};
         box-shadow: none;
-        ${styleUtils.inputFocus};
       }
 
       ${

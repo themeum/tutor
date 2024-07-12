@@ -341,6 +341,7 @@ export const styleUtils = {
   },
   inputFocus: css`
     box-shadow: none;
+    border-color: ${colorTokens.stroke.default};
     outline: 2px solid ${colorTokens.stroke.brand};
     outline-offset: 1px;
   `,

@@ -149,7 +149,7 @@ const FormSelectInput = <T,>({
                   {...restInputProps}
                   {...additionalAttributes}
                   ref={inputRef}
-                  css={[inputCss, styles.input(!!leftIcon || !!selectedItem?.icon)]}
+                  css={[inputCss, styles.input(!!leftIcon || !!selectedItem?.icon, !!fieldState.error)]}
                   autoComplete="off"
                   readOnly={readOnly || !isSearchable}
                   placeholder={placeholder}
@@ -163,7 +163,7 @@ const FormSelectInput = <T,>({
                 />
 
                 <Show when={hasDescription}>
-                  <span css={styles.decription({ hasLeftIcon: !!leftIcon })} title={getInitialValue()?.description}>
+                  <span css={styles.description({ hasLeftIcon: !!leftIcon })} title={getInitialValue()?.description}>
                     {getInitialValue()?.description}
                   </span>
                 </Show>
@@ -300,14 +300,13 @@ const styles = {
     }
 		
   `,
-  input: (hasLeftIcon: boolean) => css`
+  input: (hasLeftIcon: boolean, hasFieldError = false) => css`
     &[data-select] {
       ${typography.body()};
       width: 100%;
       cursor: pointer;
       padding-right: ${spacing[32]};
       ${styleUtils.textEllipsis};
-      background-color: transparent;
 
       ${
         hasLeftIcon &&
@@ -318,10 +317,14 @@ const styles = {
 
       :focus {
         ${styleUtils.inputFocus};
+
+        ${hasFieldError && css`
+          border-color: ${colorTokens.stroke.danger};
+        `}
       }
     }
   `,
-  decription: ({
+  description: ({
     hasLeftIcon,
   }: {
     hasLeftIcon: boolean;
