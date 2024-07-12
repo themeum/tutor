@@ -163,7 +163,7 @@ const styles = {
   errorLabel: (hasError: boolean) => css`
     ${typography.small()};
     display: flex;
-    align-items: center;
+    align-items: start;
     margin-top: ${spacing[4]};
     ${
       hasError &&
