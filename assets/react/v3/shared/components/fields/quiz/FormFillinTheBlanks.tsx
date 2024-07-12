@@ -12,16 +12,20 @@ import For from '@Controls/For';
 import type { FormControllerProps } from '@Utils/form';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { isDefined } from '@Utils/types';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 interface FormFillinTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
 const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
+  const { activeQuestionId } = useQuizModalContext();
   const inputValue = field.value ?? {
-    ID: '',
-    title: '',
-    fillinTheBlanksCorrectAnswer: [],
+    answer_id: '',
+    answer_title: '',
+    belongs_question_id: activeQuestionId,
+    belongs_question_type: 'fill_in_the_blank',
   };
   const inputRef = useRef<HTMLInputElement>(null);
+  const fillinTheBlanksCorrectAnswer = inputValue.answer_two_gap_match?.split('|');
 
   const [isEditing, setIsEditing] = useState(false);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
@@ -79,24 +83,19 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
             when={isEditing}
             fallback={
               <div css={styles.placeholderWrapper}>
-                <div css={styles.optionPlaceholder({ isTitle: !!inputValue.title })}>
-                  {inputValue.title ? inputValue.title.replace(/{dash}/g, '_____') : __('Question title...', 'tutor')}
+                <div css={styles.optionPlaceholder({ isTitle: !!inputValue.answer_title })}>
+                  {inputValue.answer_title
+                    ? inputValue.answer_title.replace(/{dash}/g, '_____')
+                    : __('Question title...', 'tutor')}
                 </div>
-                <div
-                  css={styles.optionPlaceholder({ isCorrectAnswer: inputValue.fillinTheBlanksCorrectAnswer?.length })}
-                >
-                  {inputValue.fillinTheBlanksCorrectAnswer && inputValue.fillinTheBlanksCorrectAnswer.length > 0 ? (
-                    <For each={inputValue.fillinTheBlanksCorrectAnswer}>
+                <div css={styles.optionPlaceholder({ isCorrectAnswer: fillinTheBlanksCorrectAnswer?.length })}>
+                  {fillinTheBlanksCorrectAnswer && fillinTheBlanksCorrectAnswer.length > 0 ? (
+                    <For each={fillinTheBlanksCorrectAnswer}>
                       {(answer, index) => (
                         <Fragment key={index}>
                           {answer}
                           <Show
-                            when={
-                              index <
-                              (inputValue.fillinTheBlanksCorrectAnswer
-                                ? inputValue.fillinTheBlanksCorrectAnswer.length - 1
-                                : 0)
-                            }
+                            when={index < (fillinTheBlanksCorrectAnswer ? fillinTheBlanksCorrectAnswer.length - 1 : 0)}
                           >
                             <span>|</span>
                           </Show>
@@ -118,14 +117,14 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
                   type="text"
                   css={styles.optionInput}
                   placeholder={__('Question title...', 'tutor')}
-                  value={inputValue.title}
+                  value={inputValue.answer_title}
                   onClick={(event) => {
                     event.stopPropagation();
                   }}
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
-                      title: event.target.value,
+                      answer_title: event.target.value,
                     });
                   }}
                   onKeyDown={(event) => {
@@ -152,14 +151,14 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
                   type="text"
                   css={styles.optionInput}
                   placeholder={__('Correct Answer(s)...')}
-                  value={inputValue.fillinTheBlanksCorrectAnswer?.join('|')}
+                  value={fillinTheBlanksCorrectAnswer?.join('|')}
                   onClick={(event) => {
                     event.stopPropagation();
                   }}
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
-                      fillinTheBlanksCorrectAnswer: event.target.value.split('|'),
+                      answer_two_gap_match: event.target.value,
                     });
                   }}
                   onKeyDown={(event) => {

@@ -14,7 +14,7 @@ const FillinTheBlanks = () => {
     <div css={styles.optionWrapper}>
       <Controller
         control={form.control}
-        name={`questions.${activeQuestionIndex}.options.0` as 'questions.0.options.0'}
+        name={`questions.${activeQuestionIndex}.question_answers.0` as 'questions.0.question_answers.0'}
         render={({ field, fieldState }) => <FormFillinTheBlanks field={field} fieldState={fieldState} />}
       />
     </div>

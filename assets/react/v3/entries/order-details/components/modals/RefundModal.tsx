@@ -74,7 +74,6 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id }:
           <Controller
             control={form.control}
             name="is_remove_enrolment"
-            rules={{ ...requiredRule() }}
             render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrolment', 'tutor')} />}
           />
 
