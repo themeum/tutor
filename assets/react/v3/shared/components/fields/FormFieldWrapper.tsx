@@ -1,9 +1,10 @@
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { nanoid } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
@@ -121,8 +122,7 @@ const styles = {
       }
 
       :focus {
-        outline: none;
-        box-shadow: ${shadow.focus};
+        ${styleUtils.inputFocus};
       }
 
       ::-webkit-outer-spin-button,

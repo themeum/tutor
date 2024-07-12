@@ -270,14 +270,16 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     position: relative;
+    padding: ${spacing[8]};
   `,
   inputWrapperListItem: css`
     padding: 0px;
   `,
   leftIcon: css`
     position: absolute;
-    left: ${spacing[8]};
-    top: ${spacing[8]};
+    left: ${spacing[12]};
+    top: 50%;
+    transform: translateY(-50%);
     color: ${colorTokens.icon.default};
     display: flex;
   `,
@@ -331,6 +333,7 @@ const styles = {
         display: block;
       }
     }
+    
   `,
   instructorInfo: css`
     display: flex;

@@ -129,7 +129,7 @@ const styles = {
     };
 
     &:focus-within {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus};
     }
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
@@ -165,6 +165,7 @@ const styles = {
   
       &:focus {
         box-shadow: none;
+        outline: none;
       }
     }
   `,
