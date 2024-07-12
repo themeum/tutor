@@ -81,13 +81,18 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 								$active_class = ' is-active';
 							}
 							$get_page = Input::get( 'page', '' );
+
+							// @since 3.0.0 js_event elem added with settings.
+							$js_attr   = isset( $section['js_event'] ) ? $section['js_event']['type'] : '';
+							$js_script = ! empty( $js_attr ) ? $section['js_event']['script'] : '';
+							$inline_js = $js_attr && $js_script ? "{$js_attr}={$js_script}" : '';
 							?>
-						<li class="tutor-nav-item">
-							<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
-								<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
-								<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
-							</a>
-						</li>
+							<li class="tutor-nav-item" <?php echo esc_attr( $inline_js ); ?>>
+								<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" data-show-content="<?php echo esc_attr( isset( $section['show_content'] ) ? $section['show_content'] : 'true' ); ?>">
+									<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
+									<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
+								</a>
+							</li>
 							<?php
 						}
 						?>

@@ -55,4 +55,16 @@ class OptionKeys {
 
 		return apply_filters( 'tutor_ecommerce_billing_field_options', $options );
 	}
+
+	/**
+	 * Get tax configuration page url
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_tax_config_page_url() {
+		$url = admin_url( 'admin.php?page=tutor_settings&tab=tax_configuration' );
+		return apply_filters( 'tutor_tax_config_page_url', $url );
+	}
 }
