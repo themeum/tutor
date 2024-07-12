@@ -22,6 +22,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Ecommerce {
 
 	/**
+	 * Native ecommerce engin
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const MONETIZE_BY = 'tutor';
+
+	/**
 	 * Construct function to initialize e-commerce classes
 	 *
 	 * @since 3.0.0
@@ -52,7 +61,7 @@ class Ecommerce {
 	 * @return array
 	 */
 	public function add_monetization_option( $arr ) {
-		$arr['tutor'] = __( 'Tutor', 'tutor' );
+		$arr[ self::MONETIZE_BY ] = __( 'Tutor', 'tutor' );
 
 		return $arr;
 	}
