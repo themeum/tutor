@@ -1036,6 +1036,7 @@ class Quiz {
 		$quiz->questions   = tutor_utils()->get_questions_by_quiz( $quiz_id );
 
 		foreach ( $quiz->questions as $question ) {
+			$question->question_answers = QuizModel::get_question_answers( $question->question_id, $question->question_type );
 			if ( isset( $question->question_settings ) ) {
 				$question->question_settings = maybe_unserialize( $question->question_settings );
 			}
