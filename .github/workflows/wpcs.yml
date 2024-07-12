@@ -37,7 +37,7 @@ jobs:
           if: ${{ env.TOTAL_PHP_FILES > 0 }}
           uses: 10up/wpcs-action@stable
           with:
-            repo_branch: 'dev' # Branch of Standard repository
+            repo_branch: 'v3' # Branch of Standard repository
             paths: "${{ steps.changed-files.outputs.files }}" # Paths to check, space separated like ./views ./classes ./models
             excludes: '' # Paths to excludes, space separated
             standard: './phpcs.xml.dist' # Coding standard
