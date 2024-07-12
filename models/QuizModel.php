@@ -1058,11 +1058,13 @@ class QuizModel {
 		$query = "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d";
 
 		if ( $question_type ) {
-			$query .= " AND belongs_question_type = '{$question_type}'";
+			$query .= ' AND belongs_question_type = %s';
+			//phpcs:ignore
+			$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id, $question_type ) );
+		} else {
+			//phpcs:ignore
+			$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id ) );
 		}
-
-		//phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-		$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id ) );
 
 		foreach ( $answers as $answer ) {
 			if ( $answer->image_id ) {
