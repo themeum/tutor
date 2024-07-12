@@ -7,7 +7,7 @@ import { css } from '@emotion/react';
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
 
-import type { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import { useDeleteQuizQuestionMutation, type QuizQuestion, type QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
@@ -38,6 +38,8 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
   const { activeQuestionId, setActiveQuestionId } = useQuizModalContext();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
 
+  const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation();
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
     animateLayoutChanges,
@@ -53,7 +55,7 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
     <div
       {...attributes}
       key={question.question_id}
-      css={styles.questionItem({ isActive: activeQuestionId === question.question_id, isDragging })}
+      css={styles.questionItem({ isActive: Number(activeQuestionId) === Number(question.question_id), isDragging })}
       ref={setNodeRef}
       style={style}
       tabIndex={-1}
@@ -85,6 +87,7 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
           icon={<SVGIcon name="delete" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
+            deleteQuizQuestionMutation.mutate(question.question_id);
             onRemoveQuestion();
           }}
         />

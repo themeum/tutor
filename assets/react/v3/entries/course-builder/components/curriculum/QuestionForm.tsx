@@ -26,6 +26,7 @@ import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
+  console.log(activeQuestionIndex);
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
   const questions = form.watch('questions') || [];

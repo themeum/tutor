@@ -27,9 +27,9 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
+import { moveTo } from '@Utils/util';
 import type { ID } from '@CourseBuilderServices/curriculum';
-import { useCreateQuizQuestionMutation, useGetQuizDetailsQuery } from '@CourseBuilderServices/quiz';
+import { useCreateQuizQuestionMutation, useQuizQuestionSortingMutation } from '@CourseBuilderServices/quiz';
 
 interface QuestionListProps {
   quizId?: ID;
@@ -41,10 +41,9 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   const form = useFormContext<QuizForm>();
   const { setActiveQuestionId } = useQuizModalContext();
   const createQuizQuestion = useCreateQuizQuestionMutation();
-  const getQuizDetailsQuery = useGetQuizDetailsQuery(quizId || '');
+  const quizQuestionSortingMutation = useQuizQuestionSortingMutation();
 
   const {
-    append: addQuestion,
     remove: removeQuestion,
     move: moveQuestion,
     fields: questionFields,
@@ -71,51 +70,9 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   }, [activeSortId, questionFields]);
 
   const handleAddQuestion = async () => {
-    const questionId = nanoid();
-    addQuestion({
-      question_id: questionId,
-      question_title: __('Write anything here..', 'tutor'),
-      question_description: '',
-      question_type: 'true_false',
-      question_answers: [
-        {
-          answer_id: nanoid(),
-          answer_title: __('True', 'tutor'),
-          belongs_question_id: questionId,
-          is_correct: true,
-          belongs_question_type: 'true_false',
-          answer_order: 1,
-          answer_two_gap_match: 'true',
-          answer_view_format: 'text',
-        },
-        {
-          answer_id: nanoid(),
-          answer_title: __('False', 'tutor'),
-          belongs_question_id: questionId,
-          is_correct: false,
-          belongs_question_type: 'true_false',
-          answer_order: 1,
-          answer_two_gap_match: 'false',
-          answer_view_format: 'text',
-        },
-      ],
-      question_mark: 1,
-      randomizeQuestion: false,
-      answer_explanation: '',
-      question_order: questionFields.length + 1,
-      question_settings: {
-        answer_required: true,
-        question_mark: 1,
-        question_type: 'true_false',
-        randomize_options: false,
-        show_question_mark: true,
-      },
-    });
-
     if (quizId) {
-      await createQuizQuestion.mutateAsync(quizId);
-      setActiveQuestionId(questionId);
-      getQuizDetailsQuery.refetch();
+      const response = await createQuizQuestion.mutateAsync(quizId);
+      setActiveQuestionId(response.data);
     }
   };
 
@@ -151,6 +108,11 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
                 const activeIndex = questionFields.findIndex((item) => item.question_id === active.id);
                 const overIndex = questionFields.findIndex((item) => item.question_id === over.id);
 
+                const updatedQuestionOrder = moveTo(form.watch('questions'), activeIndex, overIndex);
+                quizQuestionSortingMutation.mutate({
+                  quiz_id: quizId,
+                  sorted_question_ids: updatedQuestionOrder.map((question) => question.question_id),
+                });
                 moveQuestion(activeIndex, overIndex);
               }
 

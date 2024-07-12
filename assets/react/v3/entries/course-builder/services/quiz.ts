@@ -293,11 +293,12 @@ export const useGetQuizDetailsQuery = (quizId: ID) => {
   return useQuery({
     queryKey: ['GetQuizDetails', quizId],
     queryFn: () => getQuizDetails(quizId).then((response) => response.data),
+    enabled: !!quizId,
   });
 };
 
 const createQuizQuestion = (quizId: ID) => {
-  return authApiInstance.post<QuizQuestion, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_create',
     quiz_id: quizId,
   });
@@ -309,6 +310,72 @@ export const useCreateQuizQuestionMutation = () => {
 
   return useMutation({
     mutationFn: createQuizQuestion,
+    onSuccess: (response) => {
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['GetQuizDetails'],
+        });
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const quizQuestionSorting = (payload: { quiz_id: ID; sorted_question_ids: ID[] }) => {
+  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_question_sorting',
+    ...payload,
+  });
+};
+
+export const useQuizQuestionSortingMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: quizQuestionSorting,
+    onSuccess: (response) => {
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['GetQuizDetails', response.data],
+        });
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const deleteQuizQuestion = (questionId: ID) => {
+  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_question_delete',
+    question_id: questionId,
+  });
+};
+
+export const useDeleteQuizQuestionMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteQuizQuestion,
     onSuccess: (response) => {
       if (response.data) {
         queryClient.invalidateQueries({

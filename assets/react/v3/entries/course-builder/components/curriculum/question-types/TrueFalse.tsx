@@ -54,7 +54,7 @@ const TrueFalse = () => {
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
       const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = optionsFields[index];
+      const previousOption = optionsFields[index] || {};
       return option.is_correct !== previousOption.is_correct;
     });
 
@@ -65,7 +65,7 @@ const TrueFalse = () => {
     const changedOptionIndex = optionsFields.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
     const updatedOptions = [...optionsFields];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: true });
 
     for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
@@ -91,13 +91,13 @@ const TrueFalse = () => {
                 onClick={() => {
                   field.onChange({
                     ...field.value,
-                    isCorrect: Number(field.value.is_correct),
+                    is_correct: Number(field.value.is_correct),
                   });
                 }}
               >
                 <SVGIcon
                   data-check-icon
-                  name={field.value.is_correct ? 'checkFilled' : 'check'}
+                  name={Number(field.value.is_correct) ? 'checkFilled' : 'check'}
                   height={32}
                   width={32}
                 />
@@ -107,14 +107,14 @@ const TrueFalse = () => {
                 onClick={() => {
                   field.onChange({
                     ...field.value,
-                    isCorrect: !field.value.is_correct,
+                    is_correct: Number(field.value.is_correct),
                   });
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
                     field.onChange({
                       ...field.value,
-                      isCorrect: !field.value.is_correct,
+                      is_correct: Number(field.value.is_correct),
                     });
                   }
                 }}

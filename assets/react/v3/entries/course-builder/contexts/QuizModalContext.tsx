@@ -32,7 +32,9 @@ export const QuizModalContextProvider = ({
   const form = useFormContext<QuizForm>();
   const questions = form.watch('questions') || [];
 
-  const activeQuestionIndex = questions.findIndex((question) => question.question_id === activeQuestionId);
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState(
+    questions.findIndex((question) => question.question_id === activeQuestionId)
+  );
 
   useEffect(() => {
     if (questions.length > 0 && !activeQuestionId) {
@@ -41,10 +43,16 @@ export const QuizModalContextProvider = ({
   }, [questions, activeQuestionId]);
 
   useEffect(() => {
-    if (activeQuestionIndex === -1 && activeQuestionId) {
-      setActiveQuestionId('');
+    if (questions.length > 0 && activeQuestionId) {
+      setActiveQuestionIndex(questions.findIndex((question) => question.question_id === activeQuestionId));
     }
-  }, [activeQuestionIndex, activeQuestionId]);
+  }, [questions, activeQuestionId]);
+
+  // useEffect(() => {
+  //   if (activeQuestionIndex === -1 && activeQuestionId) {
+  //     setActiveQuestionId('');
+  //   }
+  // }, [activeQuestionIndex, activeQuestionId]);
 
   return (
     <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId }}>
