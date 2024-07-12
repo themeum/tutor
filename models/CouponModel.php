@@ -458,7 +458,23 @@ class CouponModel {
 			$category_data = get_term_by( 'id', $category->reference_id, 'course-category' );
 
 			if ( $category_data ) {
-				$response[] = $category_data;
+				// Fetch the thumbnail_id from the wp_termmeta table.
+				$thumbnail_id = get_term_meta( $category_data->term_id, 'thumbnail_id', true );
+
+				// If the thumbnail ID is retrieved, get the image URL.
+				if ( $thumbnail_id ) {
+					$image = wp_get_attachment_url( $thumbnail_id );
+				} else {
+					$image = ''; // Or set a default image URL if needed.
+				}
+
+				$final_data                    = new \stdClass();
+				$final_data->id                = $category_data->term_id;
+				$final_data->title             = $category_data->name;
+				$final_data->number_of_courses = $category_data->count;
+				$final_data->image             = $image;
+
+				$response[] = $final_data;
 			}
 		}
 

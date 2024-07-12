@@ -94,7 +94,7 @@ class CouponController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_nopriv_tutor_coupon_details', array( $this, 'get_coupon_by_id' ) );
+			add_action( 'wp_ajax_tutor_coupon_details', array( $this, 'get_coupon_by_id' ) );
 		}
 	}
 
@@ -324,9 +324,9 @@ class CouponController {
 	 * @return void Sends a JSON response with the coupon data or an error message.
 	 */
 	public function get_coupon_by_id() {
-		// if ( ! tutor_utils()->is_nonce_verified() ) {
-		// $this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		// }
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		$coupon_id = Input::post( 'coupon_id' );
 
