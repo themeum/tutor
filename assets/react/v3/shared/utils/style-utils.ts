@@ -6,6 +6,10 @@ export const createGlobalCss = () => css`
     padding-left: 0;
   }
 
+  #wpbody {
+    background-color: ${colorTokens.background.default};
+  }
+
   *,
   ::after,
   ::before {
