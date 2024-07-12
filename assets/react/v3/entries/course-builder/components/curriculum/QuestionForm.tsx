@@ -31,13 +31,13 @@ const QuestionForm = () => {
   const questions = form.watch('questions') || [];
 
   const questionTypeForm = {
-    'true-false': <TrueFalse key={activeQuestionId} activeQuestionIndex={activeQuestionIndex} />,
-    'multiple-choice': <MultipleChoiceAndOrdering key={activeQuestionId} />,
-    'open-ended': <OpenEndedAndShortAnswer key={activeQuestionId} />,
-    'fill-in-the-blanks': <FillinTheBlanks key={activeQuestionId} />,
-    'short-answer': <OpenEndedAndShortAnswer key={activeQuestionId} />,
+    true_false: <TrueFalse key={activeQuestionId} />,
+    multiple_choice: <MultipleChoiceAndOrdering key={activeQuestionId} />,
+    open_ended: <OpenEndedAndShortAnswer key={activeQuestionId} />,
+    fill_in_the_blanks: <FillinTheBlanks key={activeQuestionId} />,
+    short_answer: <OpenEndedAndShortAnswer key={activeQuestionId} />,
     matching: <Matching key={activeQuestionId} />,
-    'image-answering': <ImageAnswering key={activeQuestionId} />,
+    image_answering: <ImageAnswering key={activeQuestionId} />,
     ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
   } as const;
 

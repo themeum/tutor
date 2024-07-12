@@ -18,27 +18,27 @@ import type { QuizQuestionType } from '@CourseBuilderServices/quiz';
 export const questionTypeOptions: Option<QuizQuestionType>[] = [
   {
     label: __('True/ False', 'tutor'),
-    value: 'true-false',
+    value: 'true_false',
     icon: 'quizTrueFalse',
   },
   {
     label: __('Multiple Choice', 'tutor'),
-    value: 'multiple-choice',
+    value: 'multiple_choice',
     icon: 'quizMultiChoice',
   },
   {
     label: __('Open Ended/ Essay', 'tutor'),
-    value: 'open-ended',
+    value: 'open_ended',
     icon: 'quizEssay',
   },
   {
     label: __('Fill in the Blanks', 'tutor'),
-    value: 'fill-in-the-blanks',
+    value: 'fill_in_the_blanks',
     icon: 'quizFillInTheBlanks',
   },
   {
     label: __('Short Answer', 'tutor'),
-    value: 'short-answer',
+    value: 'short_answer',
     icon: 'quizShortAnswer',
   },
   {
@@ -48,7 +48,7 @@ export const questionTypeOptions: Option<QuizQuestionType>[] = [
   },
   {
     label: __('Image Answering', 'tutor'),
-    value: 'image-answering',
+    value: 'image_answering',
     icon: 'quizImageAnswer',
   },
   {
@@ -90,7 +90,7 @@ const QuestionConditions = () => {
         <p>{__('Conditions', 'tutor')}</p>
 
         <div css={styles.conditionControls}>
-          <Show when={activeQuestionType === 'multiple-choice'}>
+          <Show when={activeQuestionType === 'multiple_choice'}>
             <Controller
               control={form.control}
               name={`questions.${activeQuestionIndex}.multipleCorrectAnswer` as 'questions.0.multipleCorrectAnswer'}

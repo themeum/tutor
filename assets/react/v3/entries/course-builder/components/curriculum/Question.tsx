@@ -15,6 +15,7 @@ import { typography } from '@Config/typography';
 import type { IconCollection } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
+import type { ID } from '@CourseBuilderServices/curriculum';
 
 interface QuestionProps {
   question: QuizQuestion;
@@ -23,19 +24,19 @@ interface QuestionProps {
 }
 
 const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
-  'true-false': 'quizTrueFalse',
-  'multiple-choice': 'quizMultiChoice',
-  'open-ended': 'quizEssay',
-  'fill-in-the-blanks': 'quizFillInTheBlanks',
-  'short-answer': 'quizShortAnswer',
+  true_false: 'quizTrueFalse',
+  multiple_choice: 'quizMultiChoice',
+  open_ended: 'quizEssay',
+  fill_in_the_blanks: 'quizFillInTheBlanks',
+  short_answer: 'quizShortAnswer',
   matching: 'quizImageMatching',
-  'image-answering': 'quizImageAnswer',
+  image_answering: 'quizImageAnswer',
   ordering: 'quizOrdering',
 };
 
 const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
   const { activeQuestionId, setActiveQuestionId } = useQuizModalContext();
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string>('');
+  const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
@@ -60,7 +61,12 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       onKeyDown={() => setActiveQuestionId(question.question_id)}
     >
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
-        <SVGIcon name={questionTypeIconMap[question.question_type]} width={24} height={24} data-question-icon />
+        <SVGIcon
+          name={questionTypeIconMap[question.question_settings.question_type]}
+          width={24}
+          height={24}
+          data-question-icon
+        />
         <button {...listeners} type="button" css={styleUtils.resetButton}>
           <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
         </button>

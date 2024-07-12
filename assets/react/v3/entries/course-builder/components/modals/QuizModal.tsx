@@ -139,6 +139,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
         open_ended_answer_characters_limit:
           getQuizDetailsQuery.data.quiz_option.open_ended_answer_characters_limit || 0,
       },
+      questions: getQuizDetailsQuery.data.questions || [],
     });
   }, [getQuizDetailsQuery.data]);
 

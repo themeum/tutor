@@ -1,4 +1,3 @@
-import type { Media } from '@Components/fields/FormImageInput';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { ID } from './curriculum';
 import type {
@@ -16,22 +15,26 @@ import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
 export type QuizQuestionType =
-  | 'true-false'
-  | 'multiple-choice'
-  | 'open-ended'
-  | 'fill-in-the-blanks'
-  | 'short-answer'
+  | 'true_false'
+  | 'multiple_choice'
+  | 'open_ended'
+  | 'fill_in_the_blanks'
+  | 'short_answer'
   | 'matching'
-  | 'image-answering'
+  | 'image_answering'
   | 'ordering';
 
 export interface QuizQuestionOption {
-  ID: string;
-  title: string;
-  image?: Media;
-  matchedTitle?: string;
-  fillinTheBlanksCorrectAnswer?: string[];
-  isCorrect?: boolean;
+  answer_id: ID;
+  belongs_question_id: ID;
+  belongs_question_type: QuizQuestionType;
+  answer_title: string;
+  is_correct?: boolean;
+  image_id?: ID;
+  image_url?: string;
+  answer_two_gap_match?: string;
+  answer_view_format?: string;
+  answer_order?: number;
 }
 
 // Define a base interface for common properties
@@ -54,40 +57,40 @@ interface BaseQuizQuestion {
 
 interface TrueFalseQuizQuestion extends BaseQuizQuestion {
   question_type: 'true-false';
-  options: QuizQuestionOption[];
+  question_answers: QuizQuestionOption[];
 }
 
 export interface MultipleChoiceQuizQuestion extends BaseQuizQuestion {
   question_type: 'multiple-choice';
   multipleCorrectAnswer: boolean;
-  options: QuizQuestionOption[];
+  question_answers: QuizQuestionOption[];
 }
 
 interface MatchingQuizQuestion extends BaseQuizQuestion {
   question_type: 'matching';
   imageMatching: boolean;
-  options: QuizQuestionOption[];
+  question_answers: QuizQuestionOption[];
 }
 
 interface ImageAnsweringQuizQuestion extends BaseQuizQuestion {
   question_type: 'image-answering';
-  options: QuizQuestionOption[];
+  question_answers: QuizQuestionOption[];
 }
 
 interface FillInTheBlanksQuizQuestion extends BaseQuizQuestion {
   question_type: 'fill-in-the-blanks';
-  options: QuizQuestionOption[];
+  question_answers: QuizQuestionOption[];
 }
 
 export interface OrderingQuizQuestion extends BaseQuizQuestion {
   question_type: 'ordering';
-  options: QuizQuestionOption[];
+  question_answers: QuizQuestionOption[];
 }
 
 interface OtherQuizQuestion extends BaseQuizQuestion {
   question_type: Exclude<
     QuizQuestionType,
-    'true-false' | 'multiple-choice' | 'matching' | 'image-answering' | 'fill-in-the-blanks' | 'ordering'
+    'true_false' | 'multiple_choice' | 'matching' | 'image_answering' | 'fill_in_the_blanks' | 'ordering'
   >;
 }
 
@@ -133,6 +136,7 @@ interface QuizDetailsResponse {
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
   };
+  questions: QuizQuestion[];
 }
 
 export type QuizQuestion =
