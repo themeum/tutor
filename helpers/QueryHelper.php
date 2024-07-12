@@ -229,15 +229,8 @@ class QueryHelper {
 	private static function make_clause( array $where ) {
 		list ( $field, $operator, $value ) = $where;
 
-		if ( strtoupper($operator) === 'IN' ) {
-			$value = array_map(
-				function ( $item ) {
-					return is_numeric( $item ) ? $item : "'" . $item . "'";
-				},
-				$value
-			);
-
-			$value = "(" . implode( ',', $value ) . ")";
+		if ( 'IN' === strtoupper($operator) ) {
+			$value = "(" . self::prepare_in_clause( $value ) . ")";
 		}
 
 		return "{$field} {$operator} {$value}";
