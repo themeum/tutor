@@ -25,7 +25,7 @@ function Activities() {
   });
   return (
     <Box>
-      <BoxTitle separator tooltip="Order activities">
+      <BoxTitle separator tooltip={__('You can see all the activities against this order chronologically.', 'tutor')}>
         {__('Order activities')}
       </BoxTitle>
       <div css={styles.content}>

@@ -27,7 +27,7 @@ function App() {
   return (
     <RTLProvider>
       <QueryClientProvider client={queryClient}>
-        <ToastProvider position="bottom-center">
+        <ToastProvider position="bottom-right">
           <ModalProvider>
             <Global styles={createGlobalCss()} />
             <Main />
