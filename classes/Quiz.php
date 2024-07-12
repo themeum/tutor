@@ -14,15 +14,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
+use Tutor\Traits\JsonResponse;
+
 /**
  * Manage quiz operations.
  *
  * @since 1.0.0
  */
 class Quiz {
+	use JsonResponse;
 
 	/**
 	 * Allowed attrs
@@ -81,8 +85,13 @@ class Quiz {
 		 * New Design Quiz
 		 */
 
-		add_action( 'wp_ajax_tutor_quiz_save', array( $this, 'tutor_quiz_save' ) );
-		add_action( 'wp_ajax_tutor_delete_quiz_by_id', array( $this, 'tutor_delete_quiz_by_id' ) );
+		add_action( 'wp_ajax_tutor_quiz_save', array( $this, 'ajax_quiz_save' ) );
+		add_action( 'wp_ajax_tutor_quiz_delete', array( $this, 'ajax_quiz_delete' ) );
+		add_action( 'wp_ajax_tutor_quiz_details', array( $this, 'ajax_quiz_details' ) );
+
+		add_action( 'wp_ajax_tutor_quiz_question_create', array( $this, 'ajax_quiz_question_create' ) );
+		add_action( 'wp_ajax_tutor_quiz_question_sorting', array( $this, 'ajax_quiz_question_sorting' ) );
+
 		add_action( 'wp_ajax_tutor_load_quiz_builder_modal', array( $this, 'tutor_load_quiz_builder_modal' ), 10, 0 );
 		add_action( 'wp_ajax_tutor_quiz_builder_get_question_form', array( $this, 'tutor_quiz_builder_get_question_form' ) );
 		add_action( 'wp_ajax_tutor_quiz_modal_update_question', array( $this, 'tutor_quiz_modal_update_question' ) );
@@ -92,7 +101,6 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_update_quiz_answer_options', array( $this, 'tutor_update_quiz_answer_options' ) );
 		add_action( 'wp_ajax_tutor_quiz_builder_change_type', array( $this, 'tutor_quiz_builder_change_type' ) );
 		add_action( 'wp_ajax_tutor_quiz_builder_delete_answer', array( $this, 'tutor_quiz_builder_delete_answer' ) );
-		add_action( 'wp_ajax_tutor_quiz_question_sorting', array( $this, 'tutor_quiz_question_sorting' ) );
 		add_action( 'wp_ajax_tutor_quiz_answer_sorting', array( $this, 'tutor_quiz_answer_sorting' ) );
 		add_action( 'wp_ajax_tutor_mark_answer_as_correct', array( $this, 'tutor_mark_answer_as_correct' ) );
 
@@ -338,6 +346,7 @@ class Quiz {
 	 * @param integer $course_id course id.
 	 * @param integer $quiz_id quiz id.
 	 * @param integer $user_id user id.
+	 * @param string  $attempt_status attempt status.
 	 *
 	 * @return int inserted id|0
 	 */
@@ -937,35 +946,37 @@ class Quiz {
 	}
 
 	/**
-	 * Save single quiz into database and send html response
+	 * Quiz create and update.
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 refactor and response change.
 	 *
 	 * @return void
 	 */
-	public function tutor_quiz_save() {
-		tutor_utils()->checking_nonce();
-		// Prepare args.
+	public function ajax_quiz_save() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$is_update        = false;
 		$topic_id         = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		$ex_quiz_id       = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		$quiz_id          = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		$quiz_title       = Input::post( 'quiz_title' );
 		$quiz_description = isset( $_POST['quiz_description'] ) ? wp_kses( wp_unslash( $_POST['quiz_description'] ), $this->allowed_html ) : ''; //phpcs:ignore
 
-		$next_order_id = tutor_utils()->get_next_course_content_order_id( $topic_id, $ex_quiz_id );
+		$next_order_id = tutor_utils()->get_next_course_content_order_id( $topic_id, $quiz_id );
 
 		// Check edit privilege.
 		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Access Denied', 'tutor' ),
-					'data'    => array(),
-				)
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
 			);
 		}
 
 		// Prepare quiz data to save in database.
 		$post_arr = array(
-			'ID'           => $ex_quiz_id,
 			'post_type'    => 'tutor_quiz',
 			'post_title'   => $quiz_title,
 			'post_content' => $quiz_description,
@@ -975,42 +986,69 @@ class Quiz {
 			'menu_order'   => $next_order_id,
 		);
 
+		if ( $quiz_id ) {
+			$is_update      = true;
+			$post_arr['ID'] = $quiz_id;
+		}
+
 		// Insert quiz and run hook.
 		$quiz_id = wp_insert_post( $post_arr );
-		do_action( ( $ex_quiz_id ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
+		do_action( ( $is_update ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
 
 		// Sanitize by helper method & save quiz settings.
 		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] ); //phpcs:ignore
 		update_post_meta( $quiz_id, 'tutor_quiz_option', $quiz_option );
 		do_action( 'tutor_quiz_settings_updated', $quiz_id );
 
-		// Generate quiz modal to show in modal.
-		$output = $this->tutor_load_quiz_builder_modal(
-			array(
-				'topic_id' => $topic_id,
-				'quiz_id'  => $quiz_id,
-			),
-			true
-		);
+		if ( $is_update ) {
+			$this->json_response(
+				__( 'Quiz updated successfully', 'tutor' ),
+				$quiz_id
+			);
+		} else {
+			$this->json_response(
+				__( 'Quiz created successfully', 'tutor' ),
+				$quiz_id,
+				HttpHelper::STATUS_CREATED
+			);
+		}
+	}
 
-		// Generate quiz list to show under topic as sub list.
-		ob_start();
-		tutor_load_template_from_custom_path(
-			tutor()->path . '/views/fragments/quiz-list-single.php',
-			array(
-				'quiz_id'    => $quiz_id,
-				'topic_id'   => $topic_id,
-				'quiz_title' => $quiz_title,
-			),
-			false
-		);
-		$output_quiz_row = ob_get_clean();
+	/**
+	 * Get a quiz details by id
+	 *
+	 * @return void
+	 */
+	public function ajax_quiz_details() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
-		wp_send_json_success(
-			array(
-				'output'          => $output,
-				'output_quiz_row' => $output_quiz_row,
-			)
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
+		}
+
+		$quiz              = get_post( $quiz_id );
+		$quiz->quiz_option = get_post_meta( $quiz_id, 'tutor_quiz_option', true );
+		$quiz->questions   = tutor_utils()->get_questions_by_quiz( $quiz_id );
+
+		foreach ( $quiz->questions as $question ) {
+			$question->question_answers = QuizModel::get_question_answers( $question->question_id, $question->question_type );
+			if ( isset( $question->question_settings ) ) {
+				$question->question_settings = maybe_unserialize( $question->question_settings );
+			}
+		}
+
+		$data = apply_filters( 'tutor_quiz_details_response', $quiz, $quiz_id );
+
+		$this->json_response(
+			__( 'Quiz data fetched successfully', 'tutor' ),
+			$data
 		);
 	}
 
@@ -1018,51 +1056,64 @@ class Quiz {
 	 * Delete quiz by id
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 refactor and response change.
 	 *
 	 * @return void
 	 */
-	public function tutor_delete_quiz_by_id() {
-		tutor_utils()->checking_nonce();
+	public function ajax_quiz_delete() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		global $wpdb;
 
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-		$post    = get_post( $quiz_id );
-
-		if ( ! tutils()->can_user_manage( 'quiz', $quiz_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
 		}
 
-		if ( 'tutor_quiz' === $post->post_type ) {
-			do_action( 'tutor_delete_quiz_before', $quiz_id );
-
-			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $quiz_id ) );
-			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $quiz_id ) );
-
-			$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $quiz_id ) );
-
-			if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
-				$in_question_ids = QueryHelper::prepare_in_clause( $questions_ids );
-				//phpcs:disable
-				$wpdb->query(
-					"DELETE 
-						FROM {$wpdb->prefix}tutor_quiz_question_answers
-						WHERE belongs_question_id IN({$in_question_ids})
-					"
-				);
-				//phpcs:enable
-			}
-
-			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) );
-
-			wp_delete_post( $quiz_id, true );
-
-			do_action( 'tutor_delete_quiz_after', $quiz_id );
-
-			wp_send_json_success();
+		$post = get_post( $quiz_id );
+		if ( 'tutor_quiz' !== $post->post_type ) {
+			$this->json_response(
+				__( 'Invalid quiz', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
-		wp_send_json_error();
+		do_action( 'tutor_delete_quiz_before', $quiz_id );
+
+		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $quiz_id ) );
+		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $quiz_id ) );
+
+		$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $quiz_id ) );
+
+		if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
+			$in_question_ids = QueryHelper::prepare_in_clause( $questions_ids );
+			//phpcs:disable
+			$wpdb->query(
+				"DELETE 
+					FROM {$wpdb->prefix}tutor_quiz_question_answers
+					WHERE belongs_question_id IN({$in_question_ids})
+				"
+			);
+			//phpcs:enable
+		}
+
+		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) );
+
+		wp_delete_post( $quiz_id, true );
+
+		do_action( 'tutor_delete_quiz_after', $quiz_id );
+
+		$this->json_response(
+			__( 'Quiz deleted successfully', 'tutor' ),
+			$quiz_id
+		);
 	}
 
 	/**
@@ -1096,83 +1147,6 @@ class Quiz {
 		if ( $return ) {
 			return $output;
 		}
-
-		wp_send_json_success( array( 'output' => $output ) );
-	}
-
-	/**
-	 * Load quiz question form for quiz
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function tutor_quiz_builder_get_question_form() {
-		tutor_utils()->checking_nonce();
-
-		global $wpdb;
-		$quiz_id     = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-		$topic_id    = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
-
-		// Check if the user can manage the quiz.
-		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-		}
-
-		// If question ID not provided, then create new before rendering the form.
-		if ( ! $question_id ) {
-			$next_question_id    = QuizModel::quiz_next_question_id();
-			$next_question_order = QuizModel::quiz_next_question_order_id( $quiz_id );
-			$question_title      = __( 'Question', 'tutor' ) . ' ' . $next_question_id;
-
-			$new_question_data = array(
-				'quiz_id'              => $quiz_id,
-				'question_title'       => $question_title,
-				'question_description' => '',
-				'question_type'        => 'true_false',
-				'question_mark'        => 1,
-				'question_settings'    => maybe_serialize( array() ),
-				'question_order'       => esc_sql( $next_question_order ),
-			);
-
-			$new_question_data = apply_filters( 'tutor_quiz_question_data', $new_question_data );
-
-			$wpdb->insert( $wpdb->prefix . 'tutor_quiz_questions', $new_question_data );
-			$question_id = $wpdb->insert_id;
-
-			// Add default true/false options for this question since it is by default true/false type.
-			$question_array = array(
-				$question_id => array(
-					'Question'             => $question_title,
-					'question_type'        => 'true_false',
-					'question_mark'        => '1.00',
-					'question_description' => '',
-				),
-			);
-
-			$answer_array = array(
-				$question_id => array(
-					'true_false' => true,
-				),
-			);
-
-			$this->tutor_save_quiz_answer_options( $question_array, $answer_array, false );
-		}
-
-		// Now get all data by this question id.
-		$question = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions
-			WHERE question_id = %d ",
-				$question_id
-			)
-		);
-
-		// Render the question form finally.
-		ob_start();
-		require tutor()->path . 'views/modal/question_form.php';
-		$output = ob_get_clean();
 
 		wp_send_json_success( array( 'output' => $output ) );
 	}
@@ -1602,28 +1576,104 @@ class Quiz {
 	}
 
 	/**
-	 * Save quiz questions sorting
+	 * Create quiz question
 	 *
-	 * @since 1.0.0
+	 * @since 3.0.0
 	 *
 	 * @return void
 	 */
-	public function tutor_quiz_question_sorting() {
-		tutor_utils()->checking_nonce();
+	public function ajax_quiz_question_create() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_FORBIDDEN );
+		}
+
+		global $wpdb;
+		$next_question_sl    = QueryHelper::get_count( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) ) + 1;
+		$next_question_order = QuizModel::quiz_next_question_order_id( $quiz_id );
+		$question_title      = __( 'Question', 'tutor' ) . ' ' . $next_question_sl;
+
+		$new_question_data = array(
+			'quiz_id'              => $quiz_id,
+			'question_title'       => $question_title,
+			'question_description' => '',
+			'question_type'        => 'true_false',
+			'question_mark'        => 1,
+			'question_settings'    => maybe_serialize( array() ),
+			'question_order'       => esc_sql( $next_question_order ),
+		);
+
+		$new_question_data = apply_filters( 'tutor_quiz_question_data', $new_question_data );
+
+		$wpdb->insert( $wpdb->prefix . 'tutor_quiz_questions', $new_question_data );
+		$question_id = $wpdb->insert_id;
+
+		// Add default true/false options for this question since it is by default true/false type.
+		$question_array = array(
+			$question_id => array(
+				'Question'             => $question_title,
+				'question_type'        => 'true_false',
+				'question_mark'        => '1.00',
+				'question_description' => '',
+			),
+		);
+
+		$answer_array = array(
+			$question_id => array(
+				'true_false' => true,
+			),
+		);
+
+		$this->tutor_save_quiz_answer_options( $question_array, $answer_array, false );
+
+		$this->json_response(
+			__( 'Question created successfully', 'tutor' ),
+			$question_id,
+			HttpHelper::STATUS_CREATED
+		);
+	}
+
+	/**
+	 * Save quiz questions sorting
+	 *
+	 * @since 1.0.0
+	 * @since 3.0.0 refactor and update response.
+	 *
+	 * @return void
+	 */
+	public function ajax_quiz_question_sorting() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$quiz_id      = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		$question_ids = Input::post( 'sorted_question_ids', array(), Input::TYPE_ARRAY );
+
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_FORBIDDEN );
+		}
 
 		global $wpdb;
 
-		// Data sanitizing by helper method.
-		$question_ids = tutor_utils()->avalue_dot( 'sorted_question_ids', tutor_sanitize_data( $_POST ) ); //phpcs:ignore
-		if ( is_array( $question_ids ) && count( $question_ids ) ) {
-			$i = 0;
-			foreach ( $question_ids as $key => $question_id ) {
-				if ( tutor_utils()->can_user_manage( 'question', $question_id ) ) {
-					$i++;
-					$wpdb->update( $wpdb->prefix . 'tutor_quiz_questions', array( 'question_order' => $i ), array( 'question_id' => $question_id ) );
-				}
-			}
+		$i = 0;
+		foreach ( $question_ids as $question_id ) {
+			$i++;
+			$wpdb->update(
+				$wpdb->prefix . 'tutor_quiz_questions',
+				array( 'question_order' => $i ),
+				array(
+					'quiz_id'     => $quiz_id,
+					'question_id' => $question_id,
+				)
+			);
 		}
+
+		$this->json_response( __( 'Question order successfully updated', 'tutor' ) );
 	}
 
 	/**
