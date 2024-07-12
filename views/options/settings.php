@@ -9,8 +9,10 @@
  * @since 2.0.0
  */
 
+use Tutor\Ecommerce\Ecommerce;
 use TUTOR\Input;
 
+$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 ?>
 <div class="tutor-admin-wrap">
 	<div class="tutor-admin-header is-sticky">
@@ -42,7 +44,12 @@ use TUTOR\Input;
 			<div class="tutor-col-auto tutor-col-lg-2">
 				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v tutor-is-sticky" tutor-option-tabs>
 					<?php
+					$ecommerce_settings = array();
 					foreach ( $option_fields as $key => $section ) {
+						if ( 'ecommerce' === explode( '_', $key )[0] ) {
+							$ecommerce_settings[ $key ] = $section;
+							continue;
+						}
 						$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
 						if ( $active_tab == $key ) {
 							$active_class = ' is-active';
@@ -60,6 +67,31 @@ use TUTOR\Input;
 						<?php
 					}
 					?>
+					<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
+					<li>
+						<?php esc_html_e( 'Tutor Commerce', 'tutor' ); ?>
+					</li>
+				
+						<?php
+						foreach ( $ecommerce_settings as $key => $section ) {
+							$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
+							if ( $active_tab == $key ) {
+								$active_class = ' is-active';
+							} elseif ( 'general' === $key && ! in_array( $active_tab, array_keys( $option_fields ) ) ) {
+								$active_class = ' is-active';
+							}
+							$get_page = Input::get( 'page', '' );
+							?>
+						<li class="tutor-nav-item">
+							<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
+								<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
+								<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
+							</a>
+						</li>
+							<?php
+						}
+						?>
+					<?php endif; ?>
 				</ul>
 			</div>
 
