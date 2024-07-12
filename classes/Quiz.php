@@ -1631,18 +1631,9 @@ class Quiz {
 
 		$this->tutor_save_quiz_answer_options( $question_array, $answer_array, false );
 
-		// Now get all data by this question id.
-		$question = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions
-			WHERE question_id = %d ",
-				$question_id
-			)
-		);
-
 		$this->json_response(
 			__( 'Question created successfully', 'tutor' ),
-			$question,
+			$question_id,
 			HttpHelper::STATUS_CREATED
 		);
 	}
