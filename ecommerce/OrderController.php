@@ -283,10 +283,10 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		$order_id = Input::post( 'order_id' );
-		$amount = (float) Input::post( 'amount' );
-		$reason = Input::post( 'reason' );
-		$remove_student_from_enrolment = Input::post( 'is_remove_enrolment' );
+		$order_id 											= Input::post( 'order_id' );
+		$amount 												= (float) Input::post( 'amount' );
+		$reason 												= Input::post( 'reason' );
+		$remove_student_from_enrolment 	= Input::post( 'is_remove_enrolment' );
 
 		$meta_value = array (
 			'amount' => $amount,
@@ -310,7 +310,7 @@ class OrderController {
 			$meta_key = OrderActivitiesModel::META_KEY_PARTIALLY_REFUND;
 		}
 
-		if ( $meta_key === OrderActivitiesModel::META_KEY_PARTIALLY_REFUND ) {
+		if ( OrderActivitiesModel::META_KEY_PARTIALLY_REFUND === $meta_key ) {
 			$meta_value['message'] = __('Partially refunded by ', 'tutor') . get_userdata( get_current_user_id() )->display_name;
 		}
 
