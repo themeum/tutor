@@ -3,6 +3,7 @@ import { colorTokens, spacing } from '@Config/styles';
 
 import CouponDiscount from '@CouponComponents/coupon/CouponDiscount';
 import CouponInfo from '@CouponComponents/coupon/CouponInfo';
+import CouponUsageLimitation from '@CouponComponents/coupon/CouponLimitation';
 import CouponPreview from '@CouponComponents/coupon/CouponPreview';
 import CouponValidity from '@CouponComponents/coupon/CouponValidity';
 import PurchaseRequirements from '@CouponComponents/coupon/PurchaseRequirements';
@@ -26,6 +27,7 @@ function Main() {
 						<div css={styles.left}>
 							<CouponInfo />
 							<CouponDiscount />
+							<CouponUsageLimitation />
 							<PurchaseRequirements />
 							<CouponValidity />
 						</div>

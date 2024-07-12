@@ -92,6 +92,7 @@ const styles = {
 	`,
 	requirementInput: css`
 		width: fit-content;
+		margin-left: ${spacing[28]};
 	`,
 	radioGroupWrapper: css`
 		display: flex;

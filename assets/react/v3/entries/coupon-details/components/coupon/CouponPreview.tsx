@@ -30,7 +30,7 @@ function CouponPreview() {
 	const discountValue = form.watch('discount_value');
 	const endDate = form.watch('end_date');
 	const appliesTo = form.watch('applies_to');
-	const isOneUserPerCustomer = form.watch('is_limit_to_one_use_per_customer');
+	const isOneUserPerCustomer = form.watch('is_one_use_per_user');
 
 	const discountText =
 		discountType === 'amount' ? `${tutor_currency?.symbol ?? '$'}${discountValue ?? 0}` : `${discountValue ?? 0}%`;

@@ -44,7 +44,7 @@ export interface Coupon {
 	bundles?: Course[];
 	usage_limit_status: boolean;
 	usage_limit_value: number;
-	is_limit_to_one_use_per_customer: boolean;
+	is_one_use_per_user: boolean;
 	purchase_requirements: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
 	purchase_requirements_value: number;
 	start_date: string;
@@ -70,7 +70,7 @@ export const couponInitialValue: Coupon = {
 	bundles: [],
 	usage_limit_status: false,
 	usage_limit_value: 0,
-	is_limit_to_one_use_per_customer: false,
+	is_one_use_per_user: false,
 	purchase_requirements: 'no_minimum',
 	purchase_requirements_value: 0,
 	start_date: '',
@@ -192,7 +192,7 @@ const mockCouponData: Coupon = {
 	],
 	usage_limit_status: true,
 	usage_limit_value: 100,
-	is_limit_to_one_use_per_customer: true,
+	is_one_use_per_user: true,
 	purchase_requirements: 'minimum_purchase',
 	purchase_requirements_value: 200,
 	start_date: '02/16/2024',
