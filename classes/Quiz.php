@@ -89,6 +89,7 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_quiz_delete', array( $this, 'ajax_quiz_delete' ) );
 		add_action( 'wp_ajax_tutor_quiz_details', array( $this, 'ajax_quiz_details' ) );
 
+		add_action( 'wp_ajax_tutor_quiz_question_create', array( $this, 'ajax_quiz_question_create' ) );
 		add_action( 'wp_ajax_tutor_quiz_question_sorting', array( $this, 'ajax_quiz_question_sorting' ) );
 
 		add_action( 'wp_ajax_tutor_load_quiz_builder_modal', array( $this, 'tutor_load_quiz_builder_modal' ), 10, 0 );
@@ -1151,83 +1152,6 @@ class Quiz {
 	}
 
 	/**
-	 * Load quiz question form for quiz
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function tutor_quiz_builder_get_question_form() {
-		tutor_utils()->checking_nonce();
-
-		global $wpdb;
-		$quiz_id     = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-		$topic_id    = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
-
-		// Check if the user can manage the quiz.
-		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-		}
-
-		// If question ID not provided, then create new before rendering the form.
-		if ( ! $question_id ) {
-			$next_question_id    = QuizModel::quiz_next_question_id();
-			$next_question_order = QuizModel::quiz_next_question_order_id( $quiz_id );
-			$question_title      = __( 'Question', 'tutor' ) . ' ' . $next_question_id;
-
-			$new_question_data = array(
-				'quiz_id'              => $quiz_id,
-				'question_title'       => $question_title,
-				'question_description' => '',
-				'question_type'        => 'true_false',
-				'question_mark'        => 1,
-				'question_settings'    => maybe_serialize( array() ),
-				'question_order'       => esc_sql( $next_question_order ),
-			);
-
-			$new_question_data = apply_filters( 'tutor_quiz_question_data', $new_question_data );
-
-			$wpdb->insert( $wpdb->prefix . 'tutor_quiz_questions', $new_question_data );
-			$question_id = $wpdb->insert_id;
-
-			// Add default true/false options for this question since it is by default true/false type.
-			$question_array = array(
-				$question_id => array(
-					'Question'             => $question_title,
-					'question_type'        => 'true_false',
-					'question_mark'        => '1.00',
-					'question_description' => '',
-				),
-			);
-
-			$answer_array = array(
-				$question_id => array(
-					'true_false' => true,
-				),
-			);
-
-			$this->tutor_save_quiz_answer_options( $question_array, $answer_array, false );
-		}
-
-		// Now get all data by this question id.
-		$question = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions
-			WHERE question_id = %d ",
-				$question_id
-			)
-		);
-
-		// Render the question form finally.
-		ob_start();
-		require tutor()->path . 'views/modal/question_form.php';
-		$output = ob_get_clean();
-
-		wp_send_json_success( array( 'output' => $output ) );
-	}
-
-	/**
 	 * Update quiz modal
 	 *
 	 * @since 1.0.0
@@ -1649,6 +1573,78 @@ class Quiz {
 
 		$wpdb->delete( $wpdb->prefix . 'tutor_quiz_question_answers', array( 'answer_id' => esc_sql( $answer_id ) ) );
 		wp_send_json_success();
+	}
+
+	/**
+	 * Create quiz question
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_quiz_question_create() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_FORBIDDEN );
+		}
+
+		global $wpdb;
+		$next_question_sl    = QueryHelper::get_count( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) ) + 1;
+		$next_question_order = QuizModel::quiz_next_question_order_id( $quiz_id );
+		$question_title      = __( 'Question', 'tutor' ) . ' ' . $next_question_sl;
+
+		$new_question_data = array(
+			'quiz_id'              => $quiz_id,
+			'question_title'       => $question_title,
+			'question_description' => '',
+			'question_type'        => 'true_false',
+			'question_mark'        => 1,
+			'question_settings'    => maybe_serialize( array() ),
+			'question_order'       => esc_sql( $next_question_order ),
+		);
+
+		$new_question_data = apply_filters( 'tutor_quiz_question_data', $new_question_data );
+
+		$wpdb->insert( $wpdb->prefix . 'tutor_quiz_questions', $new_question_data );
+		$question_id = $wpdb->insert_id;
+
+		// Add default true/false options for this question since it is by default true/false type.
+		$question_array = array(
+			$question_id => array(
+				'Question'             => $question_title,
+				'question_type'        => 'true_false',
+				'question_mark'        => '1.00',
+				'question_description' => '',
+			),
+		);
+
+		$answer_array = array(
+			$question_id => array(
+				'true_false' => true,
+			),
+		);
+
+		$this->tutor_save_quiz_answer_options( $question_array, $answer_array, false );
+
+		// Now get all data by this question id.
+		$question = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions
+			WHERE question_id = %d ",
+				$question_id
+			)
+		);
+
+		$this->json_response(
+			__( 'Question created successfully', 'tutor' ),
+			$question,
+			HttpHelper::STATUS_CREATED
+		);
 	}
 
 	/**
