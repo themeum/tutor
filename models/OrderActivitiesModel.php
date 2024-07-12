@@ -106,7 +106,6 @@ class OrderActivitiesModel {
 			self::META_KEY_PARTIALLY_REFUND
 		);
 
-		// $order_activities = QueryHelper::get_all_by_array( $this->table_name, 'meta_key', $values, 'id' );
 		$order_activities = QueryHelper::get_all(
 			$this->table_name,
 			array(
