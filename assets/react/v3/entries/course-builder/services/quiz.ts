@@ -149,139 +149,6 @@ export type QuizQuestion =
   | OrderingQuizQuestion
   | OtherQuizQuestion;
 
-// const mockQuizQuestions: QuizQuestion[] = [
-//   {
-//     question_id: '3',
-//     question_type: 'multiple-choice',
-//     question_title: 'Literally I am multiple choice don’t you see?',
-//     question_description: 'This is a multiple choice question',
-//     options: [
-//       { ID: '1', title: 'Option 1', isCorrect: true },
-//       { ID: '2', title: 'Option 2', isCorrect: false },
-//       { ID: '3', title: 'Option 3', isCorrect: false },
-//       { ID: '4', title: 'Option 4', isCorrect: false },
-//     ],
-//     answerRequired: false,
-//     question_mark: 1,
-//     randomizeQuestion: false,
-//     showQuestionMark: false,
-//     multipleCorrectAnswer: false,
-//     answer_explanation: 'This is the answer explanation',
-//   },
-//   {
-//     question_id: '1',
-//     question_type: 'true-false',
-//     question_title: 'Trust me I am True / False',
-//     question_description: 'This is a true false question',
-//     options: [
-//       { ID: '1', title: 'True', isCorrect: true },
-//       { ID: '2', title: 'False', isCorrect: false },
-//     ],
-//     answerRequired: false,
-//     question_mark: 1,
-//     randomizeQuestion: false,
-//     showQuestionMark: true,
-//     answer_explanation: '',
-//   },
-//   {
-//     question_id: '4',
-//     question_type: 'open-ended',
-//     question_title: 'Write an essay dude, I am open endeeed!',
-//     question_description: 'This is an open ended question',
-//     answerRequired: false,
-//     question_mark: 1,
-//     randomizeQuestion: false,
-//     showQuestionMark: true,
-//     answer_explanation: 'This is the answer explanation',
-//   },
-//   {
-//     question_id: '5',
-//     question_type: 'fill-in-the-blanks',
-//     question_title: 'Nature never keep spaces empty, fill in the Blanks!',
-//     question_description: 'This is a fill in the blanks question',
-//     answerRequired: false,
-//     question_mark: 1,
-//     randomizeQuestion: false,
-//     showQuestionMark: true,
-//     options: [{ ID: '1', title: 'Fill the {dash} in time', fillinTheBlanksCorrectAnswer: ['gap'] }],
-//     answer_explanation: 'This is the answer explanation',
-//   },
-//   {
-//     question_id: '6',
-//     question_type: 'short-answer',
-//     question_title: 'Keep it short!',
-//     question_description: 'This is a short answer question',
-//     answerRequired: false,
-//     question_mark: 1,
-//     randomizeQuestion: false,
-//     showQuestionMark: true,
-//     answer_explanation: 'This is the answer explanation',
-//   },
-//   {
-//     question_id: '7',
-//     question_type: 'matching',
-//     question_title: 'Matching matching matching',
-//     question_description: 'This is a matching question',
-//     answerRequired: false,
-//     question_mark: 1,
-//     randomizeQuestion: false,
-//     showQuestionMark: true,
-//     imageMatching: false,
-//     options: [
-//       { ID: '1', title: 'Option 1', matchedTitle: 'Matched Option 1', isCorrect: true },
-//       { ID: '2', title: 'Option 2', matchedTitle: 'Matched Option 2', isCorrect: false },
-//       { ID: '3', title: 'Option 3', matchedTitle: 'Matched Option 3', isCorrect: false },
-//       { ID: '4', title: 'Option 4', matchedTitle: 'Matched Option 4', isCorrect: false },
-//     ],
-//     answer_explanation: 'This is the answer explanation',
-//   },
-//   {
-//     question_id: '9',
-//     question_type: 'image-answering',
-//     question_title: 'Image answering is not that bad',
-//     question_description: 'This is an image answering question',
-//     answerRequired: false,
-//     question_mark: 1,
-//     randomizeQuestion: false,
-//     showQuestionMark: true,
-//     options: [
-//       { ID: '1', title: 'Option 1', isCorrect: true },
-//       { ID: '2', title: 'Option 2', isCorrect: false },
-//       { ID: '3', title: 'Option 3', isCorrect: false },
-//       { ID: '4', title: 'Option 4', isCorrect: false },
-//     ],
-//     answer_explanation: 'This is the answer explanation',
-//   },
-//   {
-//     question_id: '10',
-//     question_type: 'ordering',
-//     question_title: 'Order is not chaos!',
-//     question_description: 'This is an ordering question',
-//     options: [
-//       { ID: '1', title: 'Option 5', isCorrect: true },
-//       { ID: '2', title: 'Option 6', isCorrect: false },
-//       { ID: '3', title: 'Option 7', isCorrect: false },
-//       { ID: '4', title: 'Option 8', isCorrect: false },
-//     ],
-//     answerRequired: false,
-//     question_mark: 1,
-//     randomizeQuestion: false,
-//     showQuestionMark: true,
-//     answer_explanation: 'This is the answer explanation',
-//   },
-// ];
-
-// const getQuizQuestions = () => {
-//   return Promise.resolve({ data: mockQuizQuestions });
-// };
-
-// export const useGetQuizQuestionsQuery = () => {
-//   return useQuery({
-//     queryKey: ['GetQuizQuestions'],
-//     queryFn: () => getQuizQuestions().then((response) => response.data),
-//   });
-// };
-
 const importQuiz = (payload: ImportQuizPayload) => {
   return authApiInstance.post<
     string,
@@ -426,5 +293,38 @@ export const useGetQuizDetailsQuery = (quizId: ID) => {
   return useQuery({
     queryKey: ['GetQuizDetails', quizId],
     queryFn: () => getQuizDetails(quizId).then((response) => response.data),
+  });
+};
+
+const createQuizQuestion = (quizId: ID) => {
+  return authApiInstance.post<QuizQuestion, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_question_create',
+    quiz_id: quizId,
+  });
+};
+
+export const useCreateQuizQuestionMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: createQuizQuestion,
+    onSuccess: (response) => {
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['GetQuizDetails', response.data],
+        });
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
   });
 };

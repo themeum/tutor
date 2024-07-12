@@ -29,6 +29,7 @@ import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
 import type { ID } from '@CourseBuilderServices/curriculum';
+import { useCreateQuizQuestionMutation, useGetQuizDetailsQuery } from '@CourseBuilderServices/quiz';
 
 interface QuestionListProps {
   quizId?: ID;
@@ -39,6 +40,8 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
 
   const form = useFormContext<QuizForm>();
   const { setActiveQuestionId } = useQuizModalContext();
+  const createQuizQuestion = useCreateQuizQuestionMutation();
+  const getQuizDetailsQuery = useGetQuizDetailsQuery(quizId || '');
 
   const {
     append: addQuestion,
@@ -67,7 +70,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
     return questionFields.find((item) => item.question_id === activeSortId);
   }, [activeSortId, questionFields]);
 
-  const handleAddQuestion = () => {
+  const handleAddQuestion = async () => {
     const questionId = nanoid();
     addQuestion({
       question_id: questionId,
@@ -108,7 +111,12 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
         show_question_mark: true,
       },
     });
-    setActiveQuestionId(questionId);
+
+    if (quizId) {
+      await createQuizQuestion.mutateAsync(quizId);
+      setActiveQuestionId(questionId);
+      getQuizDetailsQuery.refetch();
+    }
   };
 
   if (!quizId) {
