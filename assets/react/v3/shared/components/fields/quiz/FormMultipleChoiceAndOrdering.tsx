@@ -17,6 +17,7 @@ import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { nanoid } from '@Utils/util';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -32,20 +33,24 @@ const FormMultipleChoiceAndOrdering = ({
   onRemoveOption,
   index,
 }: FormMultipleChoiceAndOrderingProps) => {
+  const { activeQuestionId } = useQuizModalContext();
   const inputValue = field.value ?? {
-    ID: nanoid(),
-    title: '',
+    answer_id: nanoid(),
+    answer_title: '',
+    is_correct: false,
+    belongs_question_id: activeQuestionId,
+    belongs_question_type: 'multiple_choice',
   };
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
-    isDefined(inputValue.image) && isDefined(inputValue.image.url)
+    isDefined(inputValue.image_id) && isDefined(inputValue.image_url)
   );
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: field.value?.ID || 0,
+    id: field.value?.answer_id || 0,
     animateLayoutChanges,
   });
 
@@ -69,25 +74,23 @@ const FormMultipleChoiceAndOrdering = ({
 
     field.onChange({
       ...inputValue,
-      image: { id, url, title },
+      image_id: id,
+      image_url: url,
     });
   });
 
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
-      image: {
-        id: null,
-        url: '',
-        title: '',
-      },
+      image_id: '',
+      image_url: '',
     });
   };
 
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
-      isCorrect: hasMultipleCorrectAnswers ? !inputValue.isCorrect : true,
+      is_correct: hasMultipleCorrectAnswers ? !inputValue.is_correct : true,
     });
   };
 
@@ -101,7 +104,7 @@ const FormMultipleChoiceAndOrdering = ({
     <div
       {...attributes}
       css={styles.option({
-        isSelected: !!inputValue.isCorrect,
+        isSelected: !!Number(inputValue.is_correct),
         isEditing,
         isMultipleChoice: hasMultipleCorrectAnswers,
       })}
@@ -112,19 +115,24 @@ const FormMultipleChoiceAndOrdering = ({
         <Show
           when={hasMultipleCorrectAnswers}
           fallback={
-            <SVGIcon data-check-icon name={inputValue.isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />
+            <SVGIcon
+              data-check-icon
+              name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
+              height={32}
+              width={32}
+            />
           }
         >
           <SVGIcon
             data-check-icon
-            name={inputValue.isCorrect ? 'checkSquareFilled' : 'checkSquare'}
+            name={Number(inputValue.is_correct) ? 'checkSquareFilled' : 'checkSquare'}
             height={32}
             width={32}
           />
         </Show>
       </button>
       <div
-        css={styles.optionLabel({ isSelected: !!inputValue.isCorrect, isEditing })}
+        css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isEditing })}
         onClick={handleCorrectAnswer}
         onKeyDown={(event) => {
           event.stopPropagation();
@@ -133,7 +141,7 @@ const FormMultipleChoiceAndOrdering = ({
       >
         <div css={styles.optionHeader}>
           <div css={styles.optionCounterAndButton}>
-            <div css={styles.optionCounter({ isSelected: !!inputValue.isCorrect, isEditing })}>
+            <div css={styles.optionCounter({ isSelected: !!Number(inputValue.is_correct), isEditing })}>
               {String.fromCharCode(65 + index)}
             </div>
             <Show when={isEditing}>
@@ -211,26 +219,32 @@ const FormMultipleChoiceAndOrdering = ({
             when={isEditing}
             fallback={
               <div css={styles.placeholderWrapper}>
-                <Show when={isUploadImageVisible && !isDefined(inputValue.image)}>
+                <Show when={isUploadImageVisible && !isDefined(inputValue.image_url)}>
                   <div css={styles.imagePlaceholder}>
                     <SVGIcon name="imagePreview" height={48} width={48} />
                   </div>
                 </Show>
-                <Show when={inputValue.image}>
+                <Show when={inputValue.image_url}>
                   {(image) => (
                     <div css={styles.imagePlaceholder}>
-                      <img src={image.url} alt={image.title} />
+                      <img src={inputValue.image_url} alt={inputValue.image_url} />
                     </div>
                   )}
                 </Show>
-                <div css={styles.optionPlaceholder}>{inputValue.title || __('Write answer option...', 'tutor')}</div>
+                <div css={styles.optionPlaceholder}>
+                  {inputValue.answer_title || __('Write answer option...', 'tutor')}
+                </div>
               </div>
             }
           >
             <div css={styles.optionInputWrapper}>
               <Show when={isUploadImageVisible}>
                 <ImageInput
-                  value={inputValue.image || null}
+                  value={{
+                    id: Number(inputValue.image_id),
+                    url: inputValue.image_url || '',
+                    title: 'Image',
+                  }}
                   infoText={__('Size: 700x430 pixels', 'tutor')}
                   uploadHandler={uploadHandler}
                   clearHandler={clearHandler}
@@ -244,7 +258,7 @@ const FormMultipleChoiceAndOrdering = ({
                 ref={inputRef}
                 css={styles.optionInput}
                 placeholder={__('Write option...', 'tutor')}
-                value={inputValue.title}
+                value={inputValue.answer_title}
                 onClick={(event) => {
                   event.stopPropagation();
                 }}
@@ -253,7 +267,7 @@ const FormMultipleChoiceAndOrdering = ({
 
                   field.onChange({
                     ...inputValue,
-                    title: value,
+                    answer_title: value,
                   });
                 }}
                 onKeyDown={(event) => {

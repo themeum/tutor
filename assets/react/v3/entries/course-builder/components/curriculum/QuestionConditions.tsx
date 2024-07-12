@@ -18,27 +18,27 @@ import type { QuizQuestionType } from '@CourseBuilderServices/quiz';
 export const questionTypeOptions: Option<QuizQuestionType>[] = [
   {
     label: __('True/ False', 'tutor'),
-    value: 'true-false',
+    value: 'true_false',
     icon: 'quizTrueFalse',
   },
   {
     label: __('Multiple Choice', 'tutor'),
-    value: 'multiple-choice',
+    value: 'multiple_choice',
     icon: 'quizMultiChoice',
   },
   {
     label: __('Open Ended/ Essay', 'tutor'),
-    value: 'open-ended',
+    value: 'open_ended',
     icon: 'quizEssay',
   },
   {
     label: __('Fill in the Blanks', 'tutor'),
-    value: 'fill-in-the-blanks',
+    value: 'fill_in_the_blank',
     icon: 'quizFillInTheBlanks',
   },
   {
     label: __('Short Answer', 'tutor'),
-    value: 'short-answer',
+    value: 'short_answer',
     icon: 'quizShortAnswer',
   },
   {
@@ -48,7 +48,7 @@ export const questionTypeOptions: Option<QuizQuestionType>[] = [
   },
   {
     label: __('Image Answering', 'tutor'),
-    value: 'image-answering',
+    value: 'image_answering',
     icon: 'quizImageAnswer',
   },
   {
@@ -62,7 +62,7 @@ const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.type`);
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
 
   if (!activeQuestionId) {
     return (
@@ -77,7 +77,7 @@ const QuestionConditions = () => {
       <div css={styles.questionTypeWrapper}>
         <Controller
           control={form.control}
-          name={`questions.${activeQuestionIndex}.type` as 'questions.0.type'}
+          name={`questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type'}
           render={(controllerProps) => (
             <FormSelectInput {...controllerProps} label={__('Question Type', 'tutor')} options={questionTypeOptions} />
           )}
@@ -88,7 +88,7 @@ const QuestionConditions = () => {
         <p>{__('Conditions', 'tutor')}</p>
 
         <div css={styles.conditionControls}>
-          <Show when={activeQuestionType === 'multiple-choice'}>
+          <Show when={activeQuestionType === 'multiple_choice'}>
             <Controller
               control={form.control}
               name={`questions.${activeQuestionIndex}.multipleCorrectAnswer` as 'questions.0.multipleCorrectAnswer'}
@@ -108,7 +108,9 @@ const QuestionConditions = () => {
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.answerRequired` as 'questions.0.answerRequired'}
+            name={
+              `questions.${activeQuestionIndex}.question_settings.answer_required` as 'questions.0.question_settings.answer_required'
+            }
             render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />}
           />
 
@@ -120,7 +122,9 @@ const QuestionConditions = () => {
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.questionMark` as 'questions.0.questionMark'}
+            name={
+              `questions.${activeQuestionIndex}.question_settings.question_mark` as 'questions.0.question_settings.question_mark'
+            }
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
@@ -136,7 +140,9 @@ const QuestionConditions = () => {
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.showQuestionMark` as 'questions.0.showQuestionMark'}
+            name={
+              `questions.${activeQuestionIndex}.question_settings.show_question_mark` as 'questions.0.question_settings.show_question_mark'
+            }
             render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />}
           />
         </div>

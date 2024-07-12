@@ -2,16 +2,16 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-
+import type { ID } from '@CourseBuilderServices/curriculum';
 interface QuizModalContextProps {
   activeQuestionIndex: number;
-  activeQuestionId: string | null;
-  setActiveQuestionId: React.Dispatch<React.SetStateAction<string | null>>;
+  activeQuestionId: ID;
+  setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
 }
 
 const QuizModalContext = createContext<QuizModalContextProps | null>({
   activeQuestionIndex: 0,
-  activeQuestionId: null,
+  activeQuestionId: '',
   setActiveQuestionId: () => {},
 });
 
@@ -28,23 +28,31 @@ export const QuizModalContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
+  const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
   const form = useFormContext<QuizForm>();
-  const questions = form.watch('questions');
+  const questions = form.watch('questions') || [];
 
-  const activeQuestionIndex = questions.findIndex((question) => question.ID === activeQuestionId);
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState(
+    questions.findIndex((question) => question.question_id === activeQuestionId)
+  );
 
   useEffect(() => {
     if (questions.length > 0 && !activeQuestionId) {
-      setActiveQuestionId(questions[0].ID);
+      setActiveQuestionId(questions[0].question_id);
     }
   }, [questions, activeQuestionId]);
 
   useEffect(() => {
-    if (activeQuestionIndex === -1 && activeQuestionId) {
-      setActiveQuestionId(null);
+    if (questions.length > 0 && activeQuestionId) {
+      setActiveQuestionIndex(questions.findIndex((question) => question.question_id === activeQuestionId));
     }
-  }, [activeQuestionIndex, activeQuestionId]);
+  }, [questions, activeQuestionId]);
+
+  // useEffect(() => {
+  //   if (activeQuestionIndex === -1 && activeQuestionId) {
+  //     setActiveQuestionId('');
+  //   }
+  // }, [activeQuestionIndex, activeQuestionId]);
 
   return (
     <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId }}>

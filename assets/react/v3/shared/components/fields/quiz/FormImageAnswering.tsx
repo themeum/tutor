@@ -17,6 +17,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { nanoid } from '@Utils/util';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -25,9 +26,11 @@ interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption
 }
 
 const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
+  const { activeQuestionId } = useQuizModalContext();
   const inputValue = field.value ?? {
-    ID: nanoid(),
-    title: '',
+    answer_id: nanoid(),
+    answer_title: '',
+    is_correct: false,
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -35,7 +38,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: field.value?.ID || 0,
+    id: field.value.answer_id || 0,
     animateLayoutChanges,
   });
 
@@ -59,25 +62,23 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
 
     field.onChange({
       ...inputValue,
-      image: { id, url, title },
+      image_id: id,
+      image_url: url,
     });
   });
 
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
-      image: {
-        id: null,
-        url: '',
-        title: '',
-      },
+      image_id: '',
+      image_url: '',
     });
   };
 
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
-      isCorrect: true,
+      is_correct: true,
     });
   };
 
@@ -90,15 +91,20 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   return (
     <div
       {...attributes}
-      css={styles.option({ isSelected: !!inputValue.isCorrect, isEditing })}
+      css={styles.option({ isSelected: !!Number(inputValue.is_correct), isEditing })}
       ref={setNodeRef}
       style={style}
     >
       <button type="button" css={styleUtils.resetButton} onClick={handleCorrectAnswer}>
-        <SVGIcon data-check-icon name={inputValue.isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />
+        <SVGIcon
+          data-check-icon
+          name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
+          height={32}
+          width={32}
+        />
       </button>
       <div
-        css={styles.optionLabel({ isSelected: !!inputValue.isCorrect, isEditing })}
+        css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isEditing })}
         onClick={handleCorrectAnswer}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
@@ -107,7 +113,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
         }}
       >
         <div css={styles.optionHeader}>
-          <div css={styles.optionCounter({ isSelected: !!inputValue.isCorrect, isEditing })}>
+          <div css={styles.optionCounter({ isSelected: !!Number(inputValue.is_correct), isEditing })}>
             {String.fromCharCode(65 + index)}
           </div>
 
@@ -157,7 +163,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
             fallback={
               <div css={styles.placeholderWrapper}>
                 <Show
-                  when={inputValue.image}
+                  when={inputValue.image_url}
                   fallback={
                     <div css={styles.imagePlaceholder}>
                       <SVGIcon name="imagePreview" height={48} width={48} />
@@ -166,17 +172,23 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                 >
                   {(image) => (
                     <div css={styles.imagePlaceholder}>
-                      <img src={image.url} alt={image.title} />
+                      <img src={inputValue.image_url} alt={inputValue.image_url} />
                     </div>
                   )}
                 </Show>
-                <div css={styles.optionPlaceholder}>{inputValue.title || __('Write answer option...', 'tutor')}</div>
+                <div css={styles.optionPlaceholder}>
+                  {inputValue.answer_title || __('Write answer option...', 'tutor')}
+                </div>
               </div>
             }
           >
             <div css={styles.optionInputWrapper}>
               <ImageInput
-                value={inputValue.image || null}
+                value={{
+                  id: Number(inputValue.image_id),
+                  url: inputValue.image_url || '',
+                  title: inputValue.image_url || '',
+                }}
                 buttonText={__('Upload Image', 'tutor')}
                 infoText={__('Size: 700x430 pixels', 'tutor')}
                 uploadHandler={uploadHandler}
@@ -191,14 +203,14 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   type="text"
                   css={styles.optionInput}
                   placeholder={__('Answer input value...', 'tutor')}
-                  value={inputValue.title}
+                  value={inputValue.answer_title}
                   onClick={(event) => {
                     event.stopPropagation();
                   }}
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
-                      title: event.target.value,
+                      answer_title: event.target.value,
                     });
                   }}
                   onKeyDown={(event) => {

@@ -30,7 +30,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 const Matching = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
 
   const {
     fields: optionsFields,
@@ -40,7 +40,7 @@ const Matching = () => {
     move: moveOption,
   } = useFieldArray({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.options`,
+    name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -53,7 +53,7 @@ const Matching = () => {
 
   const currentOptions = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.options`,
+    name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
     defaultValue: [],
   });
 
@@ -62,33 +62,33 @@ const Matching = () => {
       return null;
     }
 
-    return optionsFields.find((item) => item.ID === activeSortId);
+    return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
-      const index = optionsFields.findIndex((item) => item.ID === option.ID);
+      const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
       const previousOption = optionsFields[index];
-      return option.isCorrect !== previousOption.isCorrect;
+      return option.is_correct !== previousOption.is_correct;
     });
 
     if (changedOptions.length === 0) {
       return;
     }
 
-    const changedOptionIndex = currentOptions.findIndex((item) => item.ID === changedOptions[0].ID);
+    const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
     const updatedOptions = [...currentOptions];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: true });
 
     for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = { ...option, isCorrect: false };
+        updatedOptions[index] = { ...option, is_correct: false };
       }
     }
 
-    form.setValue(`questions.${activeQuestionIndex}.options`, updatedOptions);
+    form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
   }, [currentOptions]);
 
   return (
@@ -107,8 +107,8 @@ const Matching = () => {
           }
 
           if (active.id !== over.id) {
-            const activeIndex = optionsFields.findIndex((item) => item.ID === active.id);
-            const overIndex = optionsFields.findIndex((item) => item.ID === over.id);
+            const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
+            const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
 
             moveOption(activeIndex, overIndex);
           }
@@ -117,7 +117,7 @@ const Matching = () => {
         }}
       >
         <SortableContext
-          items={optionsFields.map((item) => ({ ...item, id: item.ID }))}
+          items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
           strategy={verticalListSortingStrategy}
         >
           <For each={optionsFields}>
@@ -125,7 +125,7 @@ const Matching = () => {
               <Controller
                 key={option.id}
                 control={form.control}
-                name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
+                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
                 render={(controllerProps) => (
                   <FormMatching
                     {...controllerProps}
@@ -152,12 +152,14 @@ const Matching = () => {
           <DragOverlay>
             <Show when={activeSortItem}>
               {(item) => {
-                const index = optionsFields.findIndex((option) => option.ID === item.ID);
+                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
                 return (
                   <Controller
                     key={activeSortId}
                     control={form.control}
-                    name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
+                    name={
+                      `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
+                    }
                     render={(controllerProps) => (
                       <FormMatching
                         {...controllerProps}
@@ -184,7 +186,18 @@ const Matching = () => {
         )}
       </DndContext>
 
-      <button type="button" onClick={() => appendOption({ ID: nanoid(), title: '' })} css={styles.addOptionButton}>
+      <button
+        type="button"
+        onClick={() =>
+          appendOption({
+            answer_id: nanoid(),
+            answer_title: '',
+            belongs_question_id: activeQuestionId,
+            belongs_question_type: 'matching',
+          })
+        }
+        css={styles.addOptionButton}
+      >
         <SVGIcon name="plus" height={24} width={24} />
         {__('Add Option', 'tutor')}
       </button>

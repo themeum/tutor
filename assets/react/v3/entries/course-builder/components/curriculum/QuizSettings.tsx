@@ -11,11 +11,32 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
-import { spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
+import Show from '@Controls/Show';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import FormDateInput from '@Components/fields/FormDateInput';
+import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
+import { type ContentDripType, usePrerequisiteCoursesQuery } from '@CourseBuilderServices/course';
+const courseId = getCourseId();
 
-const QuizSettings = () => {
+interface QuizSettingsProps {
+  contentDripType: ContentDripType;
+}
+
+const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const form = useFormContext<QuizForm>();
+  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Prerequisites');
+
+  // const prerequisiteCourses = lessonDetails?.content_drip_settings?.course_prerequisites
+  //   ? lessonDetails?.content_drip_settings?.course_prerequisites.map((item) => String(item.id))
+  //   : [];
+  const prerequisiteCourses = [] as string[];
+
+  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
+    String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
+    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites'
+  );
 
   return (
     <div css={styles.settings}>
@@ -139,18 +160,71 @@ const QuizSettings = () => {
             )}
           />
 
-          <Controller
-            name="quiz_option.available_after_days"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                type="number"
-                label={__('Available after days', 'tutor')}
-                helpText={__('Quiz will be scheduled after that days has passed', 'tutor')}
+          <Show when={isAddonEnabled('Content Drip')}>
+            <Show when={contentDripType === 'specific_days'}>
+              <Controller
+                name="quiz_option.content_drip_settings.after_xdays_of_enroll"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    type="number"
+                    label={
+                      <div css={styles.contentDripLabel}>
+                        <SVGIcon name="contentDrip" height={24} width={24} />
+                        {__('Available after days', 'tutor')}
+                      </div>
+                    }
+                    helpText={__('This lesson will be available after the given number of days.', 'tutor')}
+                    placeholder="0"
+                  />
+                )}
               />
-            )}
-          />
+            </Show>
+
+            <Show when={contentDripType === 'unlock_by_date'}>
+              <Controller
+                name="quiz_option.content_drip_settings.unlock_date"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormDateInput
+                    {...controllerProps}
+                    label={
+                      <div css={styles.contentDripLabel}>
+                        <SVGIcon name="contentDrip" height={24} width={24} />
+                        {__('Unlock Date', 'tutor')}
+                      </div>
+                    }
+                    helpText={__(
+                      'This lesson will be available from the given date. Leave empty to make it available immediately.',
+                      'tutor'
+                    )}
+                  />
+                )}
+              />
+            </Show>
+
+            <Show when={contentDripType === 'after_finishing_prerequisites'}>
+              <Controller
+                name="quiz_option.content_drip_settings.prerequisites"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCoursePrerequisites
+                    {...controllerProps}
+                    label={
+                      <div css={styles.contentDripLabel}>
+                        <SVGIcon name="contentDrip" height={24} width={24} />
+                        {__('Prerequisites', 'tutor')}
+                      </div>
+                    }
+                    placeholder={__('Select Prerequisite', 'tutor')}
+                    options={prerequisiteCoursesQuery.data || []}
+                    helpText={__('Select items that should be complete before this item', 'tutor')}
+                  />
+                )}
+              />
+            </Show>
+          </Show>
         </div>
       </Card>
 
@@ -275,5 +349,14 @@ const styles = {
   questionLayoutAndOrder: css`
     ${styleUtils.display.flex()}
     gap: ${spacing[20]};
+  `,
+  contentDripLabel: css`
+    display: flex;
+    align-items: center;
+
+    svg {
+      margin-right: ${spacing[4]};
+      color: ${colorTokens.icon.success};
+    }
   `,
 };
