@@ -89,6 +89,8 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_quiz_delete', array( $this, 'ajax_quiz_delete' ) );
 		add_action( 'wp_ajax_tutor_quiz_details', array( $this, 'ajax_quiz_details' ) );
 
+		add_action( 'wp_ajax_tutor_quiz_question_sorting', array( $this, 'ajax_quiz_question_sorting' ) );
+
 		add_action( 'wp_ajax_tutor_load_quiz_builder_modal', array( $this, 'tutor_load_quiz_builder_modal' ), 10, 0 );
 		add_action( 'wp_ajax_tutor_quiz_builder_get_question_form', array( $this, 'tutor_quiz_builder_get_question_form' ) );
 		add_action( 'wp_ajax_tutor_quiz_modal_update_question', array( $this, 'tutor_quiz_modal_update_question' ) );
@@ -98,7 +100,6 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_update_quiz_answer_options', array( $this, 'tutor_update_quiz_answer_options' ) );
 		add_action( 'wp_ajax_tutor_quiz_builder_change_type', array( $this, 'tutor_quiz_builder_change_type' ) );
 		add_action( 'wp_ajax_tutor_quiz_builder_delete_answer', array( $this, 'tutor_quiz_builder_delete_answer' ) );
-		add_action( 'wp_ajax_tutor_quiz_question_sorting', array( $this, 'tutor_quiz_question_sorting' ) );
 		add_action( 'wp_ajax_tutor_quiz_answer_sorting', array( $this, 'tutor_quiz_answer_sorting' ) );
 		add_action( 'wp_ajax_tutor_mark_answer_as_correct', array( $this, 'tutor_mark_answer_as_correct' ) );
 
@@ -1654,25 +1655,38 @@ class Quiz {
 	 * Save quiz questions sorting
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 refactor and update response.
 	 *
 	 * @return void
 	 */
-	public function tutor_quiz_question_sorting() {
-		tutor_utils()->checking_nonce();
+	public function ajax_quiz_question_sorting() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$quiz_id      = Input::post( 'quiz_id', 0, Input::TYPE_INT );
+		$question_ids = Input::post( 'sorted_question_ids', array(), Input::TYPE_ARRAY );
+
+		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_FORBIDDEN );
+		}
 
 		global $wpdb;
 
-		// Data sanitizing by helper method.
-		$question_ids = tutor_utils()->avalue_dot( 'sorted_question_ids', tutor_sanitize_data( $_POST ) ); //phpcs:ignore
-		if ( is_array( $question_ids ) && count( $question_ids ) ) {
-			$i = 0;
-			foreach ( $question_ids as $key => $question_id ) {
-				if ( tutor_utils()->can_user_manage( 'question', $question_id ) ) {
-					$i++;
-					$wpdb->update( $wpdb->prefix . 'tutor_quiz_questions', array( 'question_order' => $i ), array( 'question_id' => $question_id ) );
-				}
-			}
+		$i = 0;
+		foreach ( $question_ids as $question_id ) {
+			$i++;
+			$wpdb->update(
+				$wpdb->prefix . 'tutor_quiz_questions',
+				array( 'question_order' => $i ),
+				array(
+					'quiz_id'     => $quiz_id,
+					'question_id' => $question_id,
+				)
+			);
 		}
+
+		$this->json_response( __( 'Question order successfully updated', 'tutor' ) );
 	}
 
 	/**
