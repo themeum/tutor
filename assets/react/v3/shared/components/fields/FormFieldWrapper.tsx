@@ -1,9 +1,10 @@
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { nanoid } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
@@ -121,8 +122,11 @@ const styles = {
       }
 
       :focus {
-        outline: none;
-        box-shadow: ${shadow.focus};
+        ${styleUtils.inputFocus};
+
+        ${options.hasFieldError && css`
+          border-color: ${colorTokens.stroke.danger};
+        `}
       }
 
       ::-webkit-outer-spin-button,
@@ -136,24 +140,22 @@ const styles = {
         color: ${colorTokens.text.hints};
 
         ${
-          options.isSecondary &&
-          css`
+          options.isSecondary && css`
           color: ${colorTokens.text.hints};
         `
         }
       }
 
       ${
-        options.hasFieldError &&
-        css`
-        border: 1px solid ${colorTokens.stroke.danger};
+        options.hasFieldError && css`
+        border-color: ${colorTokens.stroke.danger};
+        background-color: ${colorTokens.background.status.errorFail};
       `
       }
 
       ${
-        options.readOnly &&
-        css`
-        border: 1px solid ${colorTokens.background.disable};
+        options.readOnly && css`
+        border-color: ${colorTokens.background.disable};
         background-color: ${colorTokens.background.disable};
       `
       }
@@ -168,11 +170,12 @@ const styles = {
     ${
       hasError &&
       css`
-      color: ${colorTokens.color.danger.main};
+      color: ${colorTokens.text.status.onHold};
     `
     }
     & svg {
-      margin-right: ${spacing[8]};
+      margin-right: ${spacing[2]};
+      transform: rotate(180deg);
     }
   `,
   labelContainer: css`
@@ -300,7 +303,7 @@ const FormFieldWrapper = <T,>({
       </div>
       {fieldState.error?.message && (
         <p css={styles.errorLabel(!!fieldState.error)}>
-          <SVGIcon style={styles.alertIcon} name="alert" width={20} height={20} /> {fieldState.error.message}
+          <SVGIcon style={styles.alertIcon} name="info" width={20} height={20} /> {fieldState.error.message}
         </p>
       )}
     </div>
