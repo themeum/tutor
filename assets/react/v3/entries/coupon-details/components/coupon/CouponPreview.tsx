@@ -55,10 +55,10 @@ function CouponPreview() {
 						<path
 							d="M1 1h278"
 							stroke={colorTokens.stroke.border}
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-dasharray="7 7"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeDasharray="7 7"
 						/>
 					</svg>
 				</div>

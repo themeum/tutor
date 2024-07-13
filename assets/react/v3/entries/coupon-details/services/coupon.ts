@@ -89,7 +89,7 @@ export const mockCouponData: Coupon = {
 	user_name: 'John Doe',
 	discount_type: 'amount',
 	discount_value: 20,
-	applies_to: 'all_courses_and_bundles',
+	applies_to: 'specific_bundles',
 	courses: [
 		{
 			id: 1,

@@ -4,7 +4,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { tutorConfig } from '@Config/config';
-import { spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -69,7 +69,7 @@ function CouponDiscount() {
 			/>
 			{(appliesTo === 'specific_courses' || appliesTo === 'specific_bundles' || appliesTo === 'specific_category') && (
 				<Button
-					variant="secondary"
+					variant="tertiary"
 					isOutlined={true}
 					buttonCss={styles.addCoursesButton}
 					icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
@@ -103,5 +103,10 @@ const styles = {
 	`,
 	addCoursesButton: css`
 		width: fit-content;
+		color: ${colorTokens.text.brand};
+
+		svg {
+			color: ${colorTokens.text.brand};
+		}
 	`,
 };
