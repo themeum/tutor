@@ -59,7 +59,7 @@ export interface Coupon {
 export const couponInitialValue: Coupon = {
 	id: 0,
 	coupon_type: 'code',
-	coupon_name: '',
+	coupon_name: 'Winter sale',
 	code: '',
 	user_name: 'User',
 	discount_type: 'amount',
@@ -81,7 +81,7 @@ export const couponInitialValue: Coupon = {
 	created_at: '02/16/2024 10:00:00',
 };
 
-const mockCouponData: Coupon = {
+export const mockCouponData: Coupon = {
 	id: 11211,
 	coupon_type: 'code',
 	coupon_name: 'Winter sale',

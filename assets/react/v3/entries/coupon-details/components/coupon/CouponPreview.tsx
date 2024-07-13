@@ -1,6 +1,7 @@
 import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
-import { headerHeight } from '@Config/styles';
+import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
 import { useSticky } from '@Hooks/useSticky';
@@ -41,7 +42,7 @@ function CouponPreview() {
 				<div css={styles.previewTop}>
 					<div css={styles.saleSection}>
 						<div css={styles.couponName}>{couponName}</div>
-						<div>{}</div>
+						<div css={styles.discountText}>{`${discountText} ${__('OFF', 'tutor')}`}</div>
 					</div>
 					<h1 css={styles.couponCode}>{couponCode}</h1>
 					<p css={styles.couponSubtitle}>
@@ -51,15 +52,15 @@ function CouponPreview() {
 				<div css={styles.previewMiddle}></div>
 				<div css={styles.previewBottom}>
 					<div>
-						<h6>{__('Type', 'tutor')}</h6>
-						<ul css={styles.previewList}>
+						<h6 css={styles.previewListTitle}>{__('Type', 'tutor')}</h6>
+						<ul css={styles.previewList} data-preview-list>
 							<li>{__('Amount off percentage', 'tutor')}</li>
 							<li>{__('One use per customer', 'tutor')}</li>
 						</ul>
 					</div>
 					<div>
-						<h6>{__('Details', 'tutor')}</h6>
-						<ul css={styles.previewList}>
+						<h6 css={styles.previewListTitle}>{__('Details', 'tutor')}</h6>
+						<ul css={styles.previewList} data-preview-list>
 							<li>{`${discountText} ${__('off', 'tutor')} ${appliesToLabel[appliesTo]}`}</li>
 							<Show when={isOneUserPerCustomer}>
 								<li>{__('One use per customer', 'tutor')}</li>
@@ -69,8 +70,8 @@ function CouponPreview() {
 						</ul>
 					</div>
 					<div>
-						<h6>{__('Activity', 'tutor')}</h6>
-						<ul css={styles.previewList}>
+						<h6 css={styles.previewListTitle}>{__('Activity', 'tutor')}</h6>
+						<ul css={styles.previewList} data-preview-list>
 							<li>{__('Not active yet', 'tutor')}</li>
 						</ul>
 					</div>
@@ -83,19 +84,66 @@ function CouponPreview() {
 export default CouponPreview;
 
 const styles = {
-	previewWrapper: (isSticky: boolean) =>
-		isSticky &&
+	previewWrapper: (isSticky: boolean) => css`
+		display: flex;
+		flex-direction: column;
+		gap: ${spacing[20]};
+		background-color: ${colorTokens.background.white};
+		padding: ${spacing[20]} ${spacing[32]} ${spacing[64]};
+		box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.25);
+		border-radius: ${borderRadius[6]};
+
+		${isSticky &&
 		css`
 			position: fixed;
 			top: ${headerHeight + STICKY_GAP}px;
-			width: 354px;
-		`,
-	previewTop: css``,
+			width: 342px;
+		`}
+	`,
+	previewTop: css`
+		display: flex;
+		flex-direction: column;
+		gap: ${spacing[6]};
+		text-align: center;
+	`,
 	previewMiddle: css``,
-	previewBottom: css``,
-	saleSection: css``,
-	couponName: css``,
-	couponCode: css``,
-	couponSubtitle: css``,
-	previewList: css``,
+	previewBottom: css`
+		display: flex;
+		flex-direction: column;
+		gap: ${spacing[32]};
+	`,
+	saleSection: css`
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	`,
+	couponName: css`
+		${typography.heading6('medium')};
+		color: ${colorTokens.text.primary};
+	`,
+	discountText: css`
+		${typography.body('medium')};
+		color: ${colorTokens.text.warning};
+	`,
+	couponCode: css`
+		${typography.heading3('medium')};
+		color: ${colorTokens.text.brand};
+		margin-top: ${spacing[24]};
+	`,
+	couponSubtitle: css`
+		${typography.small()};
+		color: ${colorTokens.text.hints};
+	`,
+	previewListTitle: css`
+		${typography.caption('medium')};
+		color: ${colorTokens.text.primary};
+	`,
+	previewList: css`
+		&[data-preview-list] {
+			${typography.caption()};
+			color: ${colorTokens.text.title};
+			list-style: disc;
+			padding-left: ${spacing[24]};
+		}
+	`,
 };
