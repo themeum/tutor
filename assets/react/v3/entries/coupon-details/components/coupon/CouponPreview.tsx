@@ -49,7 +49,20 @@ function CouponPreview() {
 						{__('Valid until', 'tutor') + ' ' + format(new Date(endDate), DateFormats.validityDate)}
 					</p>
 				</div>
-				<div css={styles.previewMiddle}></div>
+				<div css={styles.previewMiddle}>
+					<span css={styles.leftCircle} />
+					<span css={styles.rightCircle} />
+					<svg width="280" height="2" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M1 1h278"
+							stroke={colorTokens.stroke.border}
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-dasharray="7 7"
+						/>
+					</svg>
+				</div>
 				<div css={styles.previewBottom}>
 					<div>
 						<h6 css={styles.previewListTitle}>{__('Type', 'tutor')}</h6>
@@ -106,7 +119,30 @@ const styles = {
 		gap: ${spacing[6]};
 		text-align: center;
 	`,
-	previewMiddle: css``,
+	previewMiddle: css`
+		position: relative;
+		margin-block: ${spacing[16]};
+	`,
+	leftCircle: css`
+		position: absolute;
+		left: -${spacing[48]};
+		top: 50%;
+		transform: translate(0, -50%);
+		width: 32px;
+		height: 32px;
+		border-radius: ${borderRadius.circle};
+		background-color: ${colorTokens.background.default};
+	`,
+	rightCircle: css`
+		position: absolute;
+		right: -${spacing[48]};
+		top: 50%;
+		transform: translate(0, -50%);
+		width: 32px;
+		height: 32px;
+		border-radius: ${borderRadius.circle};
+		background-color: ${colorTokens.background.default};
+	`,
 	previewBottom: css`
 		display: flex;
 		flex-direction: column;
