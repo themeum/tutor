@@ -10,7 +10,6 @@ import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
 
-const STICKY_GAP = 40;
 const appliesToLabel: Record<CouponAppliesTo, string> = {
 	all_courses_and_bundles: __('all courses', 'tutor'),
 	all_bundles: __('all bundles', 'tutor'),
@@ -22,7 +21,7 @@ const appliesToLabel: Record<CouponAppliesTo, string> = {
 
 function CouponPreview() {
 	const form = useFormContext<Coupon>();
-	const { stickyRef, isSticky } = useSticky(STICKY_GAP);
+	const { stickyRef, isSticky } = useSticky();
 	const { tutor_currency } = tutorConfig;
 
 	const couponName = form.watch('coupon_name');
@@ -109,7 +108,7 @@ const styles = {
 		${isSticky &&
 		css`
 			position: fixed;
-			top: ${headerHeight + STICKY_GAP}px;
+			top: ${headerHeight}px;
 			width: 342px;
 		`}
 	`,
@@ -117,7 +116,7 @@ const styles = {
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[6]};
-		text-align: center;
+		align-items: center;
 	`,
 	previewMiddle: css`
 		position: relative;
@@ -132,6 +131,15 @@ const styles = {
 		height: 32px;
 		border-radius: ${borderRadius.circle};
 		background-color: ${colorTokens.background.default};
+		box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.25);
+
+		&::before {
+			content: '';
+			position: absolute;
+			width: 50%;
+			height: 100%;
+			background: ${colorTokens.background.default};
+		}
 	`,
 	rightCircle: css`
 		position: absolute;
@@ -142,6 +150,16 @@ const styles = {
 		height: 32px;
 		border-radius: ${borderRadius.circle};
 		background-color: ${colorTokens.background.default};
+		box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.25);
+
+		&::before {
+			content: '';
+			position: absolute;
+			width: 50%;
+			height: 100%;
+			background: ${colorTokens.background.default};
+			right: 0;
+		}
 	`,
 	previewBottom: css`
 		display: flex;
@@ -152,6 +170,7 @@ const styles = {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		width: 100%;
 	`,
 	couponName: css`
 		${typography.heading6('medium')};
