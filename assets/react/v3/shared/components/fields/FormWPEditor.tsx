@@ -8,16 +8,13 @@ import WPEditor from '@Atoms/WPEditor';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
   label?: string;
-  rows?: number;
-  columns?: number;
   maxLimit?: number;
   disabled?: boolean;
   readOnly?: boolean;
   loading?: boolean;
   placeholder?: string;
   helpText?: string;
-  onChange?: (value: string | number) => void;
-  onKeyDown?: (keyName: string) => void;
+  onChange?: (value: string) => void;
   isHidden?: boolean;
   enableResize?: boolean;
 }
@@ -26,8 +23,6 @@ const DEFAULT_ROWS = 6;
 
 const FormWPEditor = ({
   label,
-  rows = DEFAULT_ROWS,
-  columns,
   maxLimit,
   field,
   fieldState,
@@ -37,7 +32,6 @@ const FormWPEditor = ({
   placeholder,
   helpText,
   onChange,
-  onKeyDown,
   isHidden,
   enableResize = false,
 }: FormWPEditorProps) => {
@@ -66,7 +60,16 @@ const FormWPEditor = ({
         return (
           <>
             <div css={styles.container(enableResize)}>
-              <WPEditor value={field.value ?? ''} onChange={onChange} />
+              <WPEditor
+                value={field.value ?? ''}
+                onChange={(value) => {
+                  field.onChange(value);
+
+                  if (onChange) {
+                    onChange(value);
+                  }
+                }}
+              />
             </div>
           </>
         );
