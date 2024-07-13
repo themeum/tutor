@@ -10,7 +10,6 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { createPriceFormatter } from '@Utils/currency';
 import type { Option } from '@Utils/types';
 import { requiredRule } from '@Utils/validation';
 import { __ } from '@wordpress/i18n';
@@ -59,15 +58,13 @@ const reasonOptions: (Option<CancellationReason> & {explanation?: string})[] = [
 function CancelOrderModal({ title, closeModal, actions, total }: CancelOrderModalProps) {
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
-      reason: 'other',
       note: '',
       send_notification: true
     },
   });
-  const formatPrice = createPriceFormatter({ locale: 'en-US', currency: 'USD' });
-  const reasonValue = form.watch('reason');
-  const explanation = reasonOptions.find(item => item.value === reasonValue)?.explanation ?? '';
 
+  const reasonValue = form.watch('reason');
+  const explanation = reasonOptions.find(item => item.value === reasonValue)?.explanation ?? __('Please select a reason for the order cancellation. Your input is valuable for understanding the cause.');
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
@@ -86,7 +83,7 @@ function CancelOrderModal({ title, closeModal, actions, total }: CancelOrderModa
                 ...requiredRule(),
               }}
               render={(props) => (
-                <FormSelectInput {...props} label={__('Reason for cancellation', 'tutor')} options={reasonOptions} />
+                <FormSelectInput {...props} label={__('Reason for cancellation', 'tutor')} options={reasonOptions} placeholder={__('Select a reason')} />
               )}
             />
 

@@ -9,6 +9,7 @@ import { useState } from 'react';
 
 import Checkbox from '@Atoms/CheckBox';
 import Chip from '@Atoms/Chip';
+import Show from '@Controls/Show';
 import { useDebounce } from '@Hooks/useDebounce';
 import { type Tag, useCreateTagMutation, useTagListQuery } from '@Services/tags';
 import { __ } from '@wordpress/i18n';
@@ -129,15 +130,18 @@ const FormTagsInput = ({
                       </button>
                     </li>
                   )}
-                  {tagListQuery.data?.map((tag: Tag) => (
-                    <li key={String(tag.id)} css={styles.optionItem}>
-                      <Checkbox
-                        label={tag.name}
-                        checked={!!fieldValue.find((item) => item.id === tag.id)}
-                        onChange={(checked) => handleCheckboxChange(checked, tag)}
-                      />
-                    </li>
-                  ))}
+
+                  <Show when={tagListQuery.data} fallback={<div css={styles.notTag}>{__('No tag created yet.', 'tutor')}</div>}>
+                    {(tags) => tags.map((tag) => (
+                      <li key={String(tag.id)} css={styles.optionItem}>
+                        <Checkbox
+                          label={tag.name}
+                          checked={!!fieldValue.find((item) => item.id === tag.id)}
+                          onChange={(checked) => handleCheckboxChange(checked, tag)}
+                        />
+                      </li>
+                    ))}
+                  </Show>
                 </ul>
               </div>
             </Portal>
@@ -153,6 +157,14 @@ export default FormTagsInput;
 const styles = {
   mainWrapper: css`
     width: 100%;
+  `,
+  notTag: css`
+    ${typography.caption()};
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: ${colorTokens.text.subdued};
   `,
   inputWrapper: css`
     width: 100%;

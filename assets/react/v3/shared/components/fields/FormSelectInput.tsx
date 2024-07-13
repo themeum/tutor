@@ -120,7 +120,7 @@ const FormSelectInput = <T,>({
 
         return (
           <div css={styles.mainWrapper}>
-            <div css={styles.inputWrapper({ hasDescription })} ref={triggerRef}>
+            <div css={styles.inputWrapper} ref={triggerRef}>
               <div css={styles.leftIcon({ hasDescription })}>
                 <Show when={leftIcon}>{leftIcon}</Show>
                 <Show when={selectedItem?.icon}>
@@ -147,7 +147,14 @@ const FormSelectInput = <T,>({
                   {...restInputProps}
                   {...additionalAttributes}
                   ref={inputRef}
-                  css={[inputCss, styles.input(!!leftIcon || !!selectedItem?.icon)]}
+                  className="tutor-input-field"
+                  css={[
+                    inputCss,
+                    styles.input({
+                      hasLeftIcon: !!leftIcon || !!selectedItem?.icon,
+                      hasDescription,
+                    }),
+                  ]}
                   autoComplete="off"
                   readOnly={readOnly || !isSearchable}
                   placeholder={placeholder}
@@ -161,7 +168,7 @@ const FormSelectInput = <T,>({
                 />
 
                 <Show when={hasDescription}>
-                  <span css={styles.decription({ hasLeftIcon: !!leftIcon })} title={getInitialValue()?.description}>
+                  <span css={styles.description({ hasLeftIcon: !!leftIcon })} title={getInitialValue()?.description}>
                     {getInitialValue()?.description}
                   </span>
                 </Show>
@@ -259,26 +266,12 @@ const styles = {
   mainWrapper: css`
     width: 100%;
   `,
-  inputWrapper: ({
-    hasDescription = false,
-  }: {
-    hasDescription: boolean;
-  }) => css`
+  inputWrapper: css`
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
-
-		${
-      hasDescription &&
-      css`
-			input {
-				height: 56px;
-				padding-bottom: ${spacing[24]}
-			};
-		`
-    }
   `,
   leftIcon: ({
     hasDescription = false,
@@ -298,7 +291,7 @@ const styles = {
     }
 		
   `,
-  input: (hasLeftIcon: boolean) => css`
+  input: ({ hasLeftIcon, hasDescription }: { hasLeftIcon: boolean; hasDescription: boolean }) => css`
     &[data-select] {
       ${typography.body()};
       width: 100%;
@@ -314,13 +307,24 @@ const styles = {
         `
       }
 
+      ${
+        hasDescription &&
+        css`
+          &.tutor-input-field {
+            height: 56px;
+            padding-bottom: ${spacing[24]}
+          };
+        `
+      }
+
+
       :focus {
         outline: none;
         box-shadow: ${shadow.focus};
       }
     }
   `,
-  decription: ({
+  description: ({
     hasLeftIcon,
   }: {
     hasLeftIcon: boolean;

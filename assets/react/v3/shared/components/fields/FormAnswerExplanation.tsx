@@ -107,7 +107,11 @@ const FormAnswerExplanation = ({
               }}
             >
               <div css={styles.answerLabel}>{__('Answer explanation', 'tutor')}</div>
-              {inputValue}
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: inputValue,
+                }}
+              />
             </div>
           </Show>
         }

@@ -32,7 +32,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 const ImageAnswering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const {
     fields: optionsFields,
     append: appendOption,
@@ -41,7 +41,7 @@ const ImageAnswering = () => {
     move: moveOption,
   } = useFieldArray({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.options` as 'questions.0.options',
+    name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -54,7 +54,7 @@ const ImageAnswering = () => {
 
   const currentOptions = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.options` as 'questions.0.options',
+    name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
     defaultValue: [],
   });
 
@@ -63,32 +63,32 @@ const ImageAnswering = () => {
       return null;
     }
 
-    return optionsFields.find((item) => item.ID === activeSortId);
+    return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
-      const index = optionsFields.findIndex((item) => item.ID === option.ID);
+      const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
       const previousOption = optionsFields[index];
-      return option.isCorrect !== previousOption.isCorrect;
+      return option.is_correct !== previousOption.is_correct;
     });
 
     if (changedOptions.length === 0) {
       return;
     }
 
-    const changedOptionIndex = currentOptions.findIndex((item) => item.ID === changedOptions[0].ID);
+    const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
     const updatedOptions = [...currentOptions];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: true });
     updatedOptions.forEach((_, index) => {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = Object.assign({}, updatedOptions[index], { isCorrect: false });
+        updatedOptions[index] = Object.assign({}, updatedOptions[index], { is_correct: false });
       }
     });
 
-    form.setValue(`questions.${activeQuestionIndex}.options`, updatedOptions);
+    form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
   }, [currentOptions]);
 
   return (
@@ -107,8 +107,8 @@ const ImageAnswering = () => {
           }
 
           if (active.id !== over.id) {
-            const activeIndex = optionsFields.findIndex((item) => item.ID === active.id);
-            const overIndex = optionsFields.findIndex((item) => item.ID === over.id);
+            const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
+            const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
 
             moveOption(activeIndex, overIndex);
           }
@@ -117,7 +117,7 @@ const ImageAnswering = () => {
         }}
       >
         <SortableContext
-          items={optionsFields.map((item) => ({ ...item, id: item.ID }))}
+          items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
           strategy={verticalListSortingStrategy}
         >
           <For each={optionsFields}>
@@ -125,7 +125,7 @@ const ImageAnswering = () => {
               <Controller
                 key={option.id}
                 control={form.control}
-                name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
+                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
                 render={(controllerProps) => (
                   <FormImageAnswering
                     {...controllerProps}
@@ -151,20 +151,21 @@ const ImageAnswering = () => {
           <DragOverlay>
             <Show when={activeSortItem}>
               {(item) => {
-                const index = optionsFields.findIndex((option) => option.ID === item.ID);
+                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
                 return (
                   <Controller
                     key={activeSortId}
                     control={form.control}
-                    name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
+                    name={
+                      `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
+                    }
                     render={(controllerProps) => (
                       <FormImageAnswering
                         {...controllerProps}
                         onDuplicateOption={() => {
                           const duplicateOption = {
                             ...item,
-                            ID: nanoid(),
-                            isCorrect: false,
+                            answer_id: nanoid(),
                           };
                           const duplicateIndex = index + 1;
                           insertOption(duplicateIndex, duplicateOption);
@@ -182,7 +183,18 @@ const ImageAnswering = () => {
         )}
       </DndContext>
 
-      <button type="button" onClick={() => appendOption({ ID: nanoid(), title: '' })} css={styles.addOptionButton}>
+      <button
+        type="button"
+        onClick={() =>
+          appendOption({
+            answer_id: nanoid(),
+            answer_title: '',
+            belongs_question_id: activeQuestionId,
+            belongs_question_type: 'image_answering',
+          })
+        }
+        css={styles.addOptionButton}
+      >
         <SVGIcon name="plus" height={24} width={24} />
         {__('Add Option', 'tutor')}
       </button>

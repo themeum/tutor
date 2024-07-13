@@ -62,7 +62,7 @@ const ToastProvider = ({ children, position = 'bottom-right' }: { children: Reac
   const showToast = useCallback<ToastContextProps['showToast']>((option) => {
     const toastOption = { ...defaultToastOption, ...option, id: nanoid() };
     setToastList((prev) => [toastOption, ...prev]);
-    let timeout = 0;
+    let timeout: ReturnType<typeof setTimeout>;
 
     if (!isBoolean(toastOption.autoCloseDelay) && toastOption.autoCloseDelay) {
       timeout = setTimeout(() => {
