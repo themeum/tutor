@@ -121,6 +121,7 @@ const styles = {
 	previewMiddle: css`
 		position: relative;
 		margin-block: ${spacing[16]};
+		display: flex;
 	`,
 	leftCircle: css`
 		position: absolute;
