@@ -18,7 +18,6 @@ import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-
 
 import SVGIcon from '@Atoms/SVGIcon';
 import FormMatching from '@Components/fields/quiz/FormMatching';
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
 import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
@@ -26,6 +25,7 @@ import Show from '@Controls/Show';
 import { nanoid } from '@Utils/util';
 import { styleUtils } from '@Utils/style-utils';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
 
 const Matching = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -80,11 +80,11 @@ const Matching = () => {
     const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
     const updatedOptions = [...currentOptions];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: true });
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
 
     for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = { ...option, is_correct: false };
+        updatedOptions[index] = { ...option, is_correct: '0' };
       }
     }
 
@@ -132,10 +132,10 @@ const Matching = () => {
                     index={index}
                     onRemoveOption={() => removeOption(index)}
                     onDuplicateOption={() => {
-                      const duplicateOption = {
+                      const duplicateOption: QuizQuestionOption = {
                         ...option,
-                        ID: nanoid(),
-                        isCorrect: false,
+                        answer_id: nanoid(),
+                        is_correct: '0',
                       };
                       const duplicateIndex = index + 1;
                       insertOption(duplicateIndex, duplicateOption);
@@ -165,10 +165,10 @@ const Matching = () => {
                         {...controllerProps}
                         index={index}
                         onDuplicateOption={() => {
-                          const duplicateOption = {
+                          const duplicateOption: QuizQuestionOption = {
                             ...item,
-                            ID: nanoid(),
-                            isCorrect: false,
+                            answer_id: nanoid(),
+                            is_correct: '0',
                           };
                           const duplicateIndex = index + 1;
                           insertOption(duplicateIndex, duplicateOption);
@@ -192,8 +192,12 @@ const Matching = () => {
           appendOption({
             answer_id: nanoid(),
             answer_title: '',
+            is_correct: '0',
             belongs_question_id: activeQuestionId,
             belongs_question_type: 'matching',
+            answer_order: optionsFields.length,
+            answer_two_gap_match: '',
+            answer_view_format: '',
           })
         }
         css={styles.addOptionButton}

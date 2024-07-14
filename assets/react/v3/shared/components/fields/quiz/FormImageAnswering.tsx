@@ -27,10 +27,13 @@ interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption
 
 const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
   const { activeQuestionId } = useQuizModalContext();
+
   const inputValue = field.value ?? {
     answer_id: nanoid(),
     answer_title: '',
-    is_correct: false,
+    is_correct: '0',
+    belongs_question_id: activeQuestionId,
+    belongs_question_type: 'image_answering',
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -78,7 +81,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
-      is_correct: true,
+      is_correct: '1',
     });
   };
 

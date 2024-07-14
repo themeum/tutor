@@ -19,7 +19,6 @@ import { createPortal } from 'react-dom';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormMultipleChoiceAndOrdering from '@Components/fields/quiz/FormMultipleChoiceAndOrdering';
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import For from '@Controls/For';
@@ -27,11 +26,13 @@ import Show from '@Controls/Show';
 import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
+import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
 
 const MultipleChoiceAndOrdering = () => {
   const isInitialRenderRef = useRef(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
+
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const {
     fields: optionsFields,
@@ -96,7 +97,7 @@ const MultipleChoiceAndOrdering = () => {
 
     const changedOptions = currentOptions.filter((option) => {
       const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = optionsFields[index];
+      const previousOption = optionsFields[index] || {};
       return option.is_correct !== previousOption.is_correct;
     });
 
@@ -111,7 +112,7 @@ const MultipleChoiceAndOrdering = () => {
 
     for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = { ...option, is_correct: false };
+        updatedOptions[index] = { ...option, is_correct: '0' };
       }
     }
 
@@ -159,10 +160,10 @@ const MultipleChoiceAndOrdering = () => {
                     {...controllerProps}
                     hasMultipleCorrectAnswers={hasMultipleCorrectAnswers}
                     onDuplicateOption={() => {
-                      const duplicateOption = {
+                      const duplicateOption: QuizQuestionOption = {
                         ...option,
-                        ID: nanoid(),
-                        isCorrect: false,
+                        answer_id: nanoid(),
+                        is_correct: '0',
                       };
                       const duplicateIndex = index + 1;
                       insertOption(duplicateIndex, duplicateOption);
@@ -193,12 +194,10 @@ const MultipleChoiceAndOrdering = () => {
                         {...controllerProps}
                         hasMultipleCorrectAnswers={hasMultipleCorrectAnswers}
                         onDuplicateOption={() => {
-                          const duplicateOption = {
+                          const duplicateOption: QuizQuestionOption = {
                             ...item,
                             answer_id: nanoid(),
-                            answer_title: '',
-                            belongs_question_id: activeQuestionId,
-                            is_correct: false,
+                            is_correct: '0',
                           };
                           const duplicateIndex = index + 1;
                           insertOption(duplicateIndex, duplicateOption);
@@ -222,8 +221,12 @@ const MultipleChoiceAndOrdering = () => {
           appendOption({
             answer_id: nanoid(),
             answer_title: '',
+            is_correct: '0',
             belongs_question_id: activeQuestionId,
             belongs_question_type: 'multiple_choice',
+            answer_order: optionsFields.length,
+            answer_two_gap_match: '',
+            answer_view_format: '',
           })
         }
         css={styles.addOptionButton}

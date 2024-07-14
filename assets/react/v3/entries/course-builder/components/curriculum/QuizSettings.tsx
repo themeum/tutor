@@ -9,7 +9,6 @@ import Card from '@Molecules/Card';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
 import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
@@ -18,6 +17,8 @@ import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import { type ContentDripType, usePrerequisiteCoursesQuery } from '@CourseBuilderServices/course';
+import type { QuizForm } from '@CourseBuilderServices/quiz';
+
 const courseId = getCourseId();
 
 interface QuizSettingsProps {

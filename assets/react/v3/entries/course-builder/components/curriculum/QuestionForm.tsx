@@ -6,12 +6,11 @@ import FormAnswerExplanation from '@Components/fields/FormAnswerExplanation';
 import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
 import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
 
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/question-types/MultipleChoiceAndOrdering';
 import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/question-types/OpenEndedAndShortAnswer';
-import FillinTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
+import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillInTheBlanks';
 import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
 
@@ -22,6 +21,7 @@ import EmptyState from '@Molecules/EmptyState';
 
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import type { QuizForm } from '@CourseBuilderServices/quiz';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
@@ -34,7 +34,7 @@ const QuestionForm = () => {
     true_false: <TrueFalse key={activeQuestionId} />,
     multiple_choice: <MultipleChoiceAndOrdering key={activeQuestionId} />,
     open_ended: <OpenEndedAndShortAnswer key={activeQuestionId} />,
-    fill_in_the_blank: <FillinTheBlanks key={activeQuestionId} />,
+    fill_in_the_blank: <FillInTheBlanks key={activeQuestionId} />,
     short_answer: <OpenEndedAndShortAnswer key={activeQuestionId} />,
     matching: <Matching key={activeQuestionId} />,
     image_answering: <ImageAnswering key={activeQuestionId} />,
@@ -57,12 +57,15 @@ const QuestionForm = () => {
   }
 
   return (
-    <div key={activeQuestionId} css={styles.questionForm}>
+    <div key={activeQuestionIndex} css={styles.questionForm}>
       <div css={styles.questionWithIndex}>
         <div css={styles.questionIndex}>{activeQuestionIndex + 1}.</div>
         <div css={styles.questionTitleAndDesc}>
           <Controller
             control={form.control}
+            rules={{
+              required: __('Question title is required', 'tutor'),
+            }}
             name={`questions.${activeQuestionIndex}.question_title` as 'questions.0.question_title'}
             render={(controllerProps) => (
               <FormQuestionTitle {...controllerProps} placeholder={__('Write your question here..', 'tutor')} />

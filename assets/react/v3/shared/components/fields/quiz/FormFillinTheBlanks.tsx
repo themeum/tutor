@@ -14,18 +14,22 @@ import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { isDefined } from '@Utils/types';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-interface FormFillinTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
+interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
-const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
+const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const { activeQuestionId } = useQuizModalContext();
   const inputValue = field.value ?? {
     answer_id: '',
     answer_title: '',
     belongs_question_id: activeQuestionId,
     belongs_question_type: 'fill_in_the_blank',
+    answer_two_gap_match: '',
+    answer_view_format: 'text',
+    answer_order: 0,
+    is_correct: '0',
   };
   const inputRef = useRef<HTMLInputElement>(null);
-  const fillinTheBlanksCorrectAnswer = inputValue.answer_two_gap_match?.split('|');
+  const fillInTheBlanksCorrectAnswer = inputValue.answer_two_gap_match?.split('|');
 
   const [isEditing, setIsEditing] = useState(false);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
@@ -88,14 +92,14 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
                     ? inputValue.answer_title.replace(/{dash}/g, '_____')
                     : __('Question title...', 'tutor')}
                 </div>
-                <div css={styles.optionPlaceholder({ isCorrectAnswer: fillinTheBlanksCorrectAnswer?.length })}>
-                  {fillinTheBlanksCorrectAnswer && fillinTheBlanksCorrectAnswer.length > 0 ? (
-                    <For each={fillinTheBlanksCorrectAnswer}>
+                <div css={styles.optionPlaceholder({ isCorrectAnswer: fillInTheBlanksCorrectAnswer?.length })}>
+                  {fillInTheBlanksCorrectAnswer && fillInTheBlanksCorrectAnswer.length > 0 ? (
+                    <For each={fillInTheBlanksCorrectAnswer}>
                       {(answer, index) => (
                         <Fragment key={index}>
                           {answer}
                           <Show
-                            when={index < (fillinTheBlanksCorrectAnswer ? fillinTheBlanksCorrectAnswer.length - 1 : 0)}
+                            when={index < (fillInTheBlanksCorrectAnswer ? fillInTheBlanksCorrectAnswer.length - 1 : 0)}
                           >
                             <span>|</span>
                           </Show>
@@ -151,7 +155,7 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
                   type="text"
                   css={styles.optionInput}
                   placeholder={__('Correct Answer(s)...')}
-                  value={fillinTheBlanksCorrectAnswer?.join('|')}
+                  value={fillInTheBlanksCorrectAnswer?.join('|')}
                   onClick={(event) => {
                     event.stopPropagation();
                   }}
@@ -208,7 +212,7 @@ const FormFillinTheBlanks = ({ field }: FormFillinTheBlanksProps) => {
   );
 };
 
-export default FormFillinTheBlanks;
+export default FormFillInTheBlanks;
 
 const styles = {
   option: ({

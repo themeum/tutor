@@ -37,7 +37,7 @@ const FormMultipleChoiceAndOrdering = ({
   const inputValue = field.value ?? {
     answer_id: nanoid(),
     answer_title: '',
-    is_correct: false,
+    is_correct: '0',
     belongs_question_id: activeQuestionId,
     belongs_question_type: 'multiple_choice',
   };
@@ -90,7 +90,7 @@ const FormMultipleChoiceAndOrdering = ({
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
-      is_correct: hasMultipleCorrectAnswers ? !inputValue.is_correct : true,
+      is_correct: hasMultipleCorrectAnswers ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
     });
   };
 

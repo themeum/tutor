@@ -18,7 +18,6 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
 
 import { colorTokens, spacing } from '@Config/styles';
@@ -28,6 +27,7 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
 
 const ImageAnswering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -70,7 +70,7 @@ const ImageAnswering = () => {
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
       const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = optionsFields[index];
+      const previousOption = optionsFields[index] || {};
       return option.is_correct !== previousOption.is_correct;
     });
 
@@ -81,10 +81,10 @@ const ImageAnswering = () => {
     const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
     const updatedOptions = [...currentOptions];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: true });
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
     updatedOptions.forEach((_, index) => {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = Object.assign({}, updatedOptions[index], { is_correct: false });
+        updatedOptions[index] = Object.assign({}, updatedOptions[index], { is_correct: '0' });
       }
     });
 
@@ -130,10 +130,10 @@ const ImageAnswering = () => {
                   <FormImageAnswering
                     {...controllerProps}
                     onDuplicateOption={() => {
-                      const duplicateOption = {
+                      const duplicateOption: QuizQuestionOption = {
                         ...option,
-                        ID: nanoid(),
-                        isCorrect: false,
+                        answer_id: nanoid(),
+                        is_correct: '0' as '0' | '1',
                       };
                       const duplicateIndex = index + 1;
                       insertOption(duplicateIndex, duplicateOption);
@@ -163,9 +163,10 @@ const ImageAnswering = () => {
                       <FormImageAnswering
                         {...controllerProps}
                         onDuplicateOption={() => {
-                          const duplicateOption = {
+                          const duplicateOption: QuizQuestionOption = {
                             ...item,
                             answer_id: nanoid(),
+                            is_correct: '0',
                           };
                           const duplicateIndex = index + 1;
                           insertOption(duplicateIndex, duplicateOption);
@@ -189,8 +190,12 @@ const ImageAnswering = () => {
           appendOption({
             answer_id: nanoid(),
             answer_title: '',
+            is_correct: '0',
             belongs_question_id: activeQuestionId,
             belongs_question_type: 'image_answering',
+            answer_order: optionsFields.length,
+            answer_two_gap_match: '',
+            answer_view_format: '',
           })
         }
         css={styles.addOptionButton}

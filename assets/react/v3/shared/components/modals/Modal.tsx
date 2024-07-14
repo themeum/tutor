@@ -91,7 +91,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
 
   const { transitions } = useAnimation({
     data: state.modals,
-    animationType: AnimationType.zoomIn,
+    animationType: AnimationType.slideUp,
     animationDuration: 250,
   });
 
