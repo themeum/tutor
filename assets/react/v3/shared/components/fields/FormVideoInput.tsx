@@ -364,7 +364,7 @@ const FormVideoInput = ({
             styles.popover,
             {
               left: position.left,
-              top: position.top,
+              top: triggerRef.current?.getBoundingClientRect().top,
               maxWidth: triggerRef.current?.offsetWidth,
             },
           ]}

@@ -57,7 +57,7 @@ const QuestionForm = () => {
   }
 
   return (
-    <div key={activeQuestionIndex} css={styles.questionForm}>
+    <div key={activeQuestionId} css={styles.questionForm}>
       <div css={styles.questionWithIndex}>
         <div css={styles.questionIndex}>{activeQuestionIndex + 1}.</div>
         <div css={styles.questionTitleAndDesc}>
