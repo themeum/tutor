@@ -1,3 +1,14 @@
+<?php
+/**
+ * WP Editor link modal
+ *
+ * @package Tutor\Views
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 3.0.0
+ */
+
+?>
 <div id="wp-link-backdrop" style="display: none"></div>
 <div id="wp-link-wrap" class="wp-core-ui" style="display: none" role="dialog" aria-labelledby="link-modal-title">
 	<form id="wp-link" tabindex="-1">

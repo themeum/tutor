@@ -1151,7 +1151,7 @@ class Course extends Tutor_Base {
 	 */
 	public function load_wp_link_modal() {
 		if ( is_admin() ) {
-			include_once tutor()->path . 'views/modal/wp_editor_link.php';
+			include_once tutor()->path . 'views/modal/wp-editor-link.php';
 		}
 	}
 
