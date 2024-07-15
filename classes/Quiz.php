@@ -98,6 +98,7 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_quiz_question_answer_save', array( $this, 'ajax_quiz_question_answer_save' ) );
 		add_action( 'wp_ajax_tutor_quiz_question_answer_delete', array( $this, 'ajax_quiz_question_answer_delete' ) );
 		add_action( 'wp_ajax_tutor_quiz_question_answer_sorting', array( $this, 'ajax_quiz_question_answer_sorting' ) );
+		add_action( 'wp_ajax_tutor_mark_answer_as_correct', array( $this, 'ajax_mark_answer_as_correct' ) );
 
 		add_action( 'wp_ajax_tutor_load_quiz_builder_modal', array( $this, 'tutor_load_quiz_builder_modal' ), 10, 0 );
 		add_action( 'wp_ajax_tutor_quiz_builder_get_question_form', array( $this, 'tutor_quiz_builder_get_question_form' ) );
@@ -106,8 +107,6 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_save_quiz_answer_options', array( $this, 'tutor_save_quiz_answer_options' ), 10, 0 );
 		add_action( 'wp_ajax_tutor_update_quiz_answer_options', array( $this, 'tutor_update_quiz_answer_options' ) );
 		add_action( 'wp_ajax_tutor_quiz_builder_change_type', array( $this, 'tutor_quiz_builder_change_type' ) );
-
-		add_action( 'wp_ajax_tutor_mark_answer_as_correct', array( $this, 'tutor_mark_answer_as_correct' ) );
 
 		/**
 		 * Frontend Stuff
@@ -1919,15 +1918,19 @@ class Quiz {
 	 * Mark answer as correct
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 refactor and response updated.
 	 *
 	 * @return void
 	 */
-	public function tutor_mark_answer_as_correct() {
-		tutor_utils()->checking_nonce();
+	public function ajax_mark_answer_as_correct() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		global $wpdb;
 
 		$answer_id = Input::post( 'answer_id', 0, Input::TYPE_INT );
+
 		// get question info.
 		$belong_question = $wpdb->get_row(
 			$wpdb->prepare(
@@ -1939,6 +1942,7 @@ class Quiz {
 				$answer_id
 			)
 		);
+
 		if ( $belong_question ) {
 			// if question found update all answer is_correct to 0 except post answer.
 			$question_type = $belong_question->belongs_question_type;
@@ -1958,7 +1962,7 @@ class Quiz {
 			}
 		}
 
-		$input_value = Input::post( 'inputValue', '' );
+		$is_correct = Input::post( 'is_correct', 0, Input::TYPE_INT );
 
 		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -1974,6 +1978,7 @@ class Quiz {
 				$answer_id
 			)
 		);
+
 		if ( 'single_choice' === $answer->belongs_question_type ) {
 			$wpdb->update(
 				$wpdb->prefix . 'tutor_quiz_question_answers',
@@ -1981,10 +1986,16 @@ class Quiz {
 				array( 'belongs_question_id' => esc_sql( $answer->belongs_question_id ) )
 			);
 		}
+
 		$wpdb->update(
 			$wpdb->prefix . 'tutor_quiz_question_answers',
-			array( 'is_correct' => esc_sql( $input_value ) ),
-			array( 'answer_id' => esc_sql( $answer_id ) )
+			array( 'is_correct' => $is_correct ),
+			array( 'answer_id' => $answer_id )
+		);
+
+		$this->json_response(
+			__( 'Answer mark as correct updated', 'tutor' ),
+			$answer_id
 		);
 	}
 
