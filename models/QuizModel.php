@@ -1058,10 +1058,11 @@ class QuizModel {
 		$query = "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d";
 
 		if ( $question_type ) {
-			$query .= ' AND belongs_question_type = %s';
+			$query .= ' AND belongs_question_type = %s ORDER BY answer_order ASC';
 			//phpcs:ignore
 			$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id, $question_type ) );
 		} else {
+			$query .= ' ORDER BY answer_order ASC';
 			//phpcs:ignore
 			$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id ) );
 		}
