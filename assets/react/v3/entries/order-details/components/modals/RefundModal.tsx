@@ -8,6 +8,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { useRefundOrderMutation } from '@OrderServices/order';
 import { createPriceFormatter } from '@Utils/currency';
 import { requiredRule } from '@Utils/validation';
 import { __ } from '@wordpress/i18n';
@@ -16,6 +17,7 @@ import { Controller } from 'react-hook-form';
 interface RefundModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   available_amount: number;
+  order_id: number;
 }
 
 interface FormField {
@@ -24,7 +26,8 @@ interface FormField {
   reason: string;
 }
 
-function RefundModal({ title, closeModal, actions, available_amount }: RefundModalProps) {
+function RefundModal({ title, closeModal, actions, available_amount, order_id }: RefundModalProps) {
+  const refundOrderMutation = useRefundOrderMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
       amount: 0,
@@ -40,8 +43,8 @@ function RefundModal({ title, closeModal, actions, available_amount }: RefundMod
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          console.log(values);
-          alert('@TODO: will be implemented later.');
+          refundOrderMutation.mutate({...values, order_id});
+          closeModal();
         })}
       >
         <div css={styles.formContent}>
@@ -64,14 +67,13 @@ function RefundModal({ title, closeModal, actions, available_amount }: RefundMod
             />
 
             <p css={styles.availableMessage}>
-              {__('Available', 'tutor')} <strong>{formatPrice(available_amount)}</strong> {__('Available for refund', 'tutor')}
+              {__('Available', 'tutor')} <strong>{formatPrice(available_amount)}</strong> {__('for refund', 'tutor')}
             </p>
           </div>
 
           <Controller
             control={form.control}
             name="is_remove_enrolment"
-            rules={{ ...requiredRule() }}
             render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrolment', 'tutor')} />}
           />
 

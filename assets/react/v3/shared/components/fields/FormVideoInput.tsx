@@ -51,9 +51,12 @@ type FormVideoInputProps = {
   }) => void;
 } & FormControllerProps<CourseVideo | null>;
 
-const videoSources = Array.isArray(tutorConfig.settings.supported_video_sources)
-  ? tutorConfig.settings.supported_video_sources
-  : [tutorConfig.settings.supported_video_sources];
+const videoSources =
+  (tutorConfig.settings.supported_video_sources &&
+    (Array.isArray(tutorConfig.settings.supported_video_sources)
+      ? tutorConfig.settings.supported_video_sources
+      : [tutorConfig.settings.supported_video_sources])) ||
+  [];
 
 const videoSourceOptions = videoSources.reduce((options, source) => {
   let option: Option<string> | undefined;
@@ -110,12 +113,12 @@ const FormVideoInput = ({
   const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
     defaultValues: {
-      videoSource: fieldValue?.source || 'html5',
+      videoSource: fieldValue?.source || '',
       videoUrl: fieldValue?.[`source_${fieldValue?.source}` as keyof CourseVideo] || '',
     },
   });
 
-  const videoSource = form.watch('videoSource');
+  const videoSource = form.watch('videoSource') || [];
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -361,7 +364,7 @@ const FormVideoInput = ({
             styles.popover,
             {
               left: position.left,
-              top: position.top,
+              top: triggerRef.current?.getBoundingClientRect().top,
               maxWidth: triggerRef.current?.offsetWidth,
             },
           ]}

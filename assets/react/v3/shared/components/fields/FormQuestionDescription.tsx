@@ -87,7 +87,12 @@ const FormQuestionDescription = ({
         }
       }}
     >
-      <Show when={isEdit} fallback={<div css={styles.placeholder}>{field.value || placeholder}</div>}>
+      <Show
+        when={isEdit}
+        fallback={
+          <div css={styles.placeholder} dangerouslySetInnerHTML={{ __html: field.value || placeholder || '' }} />
+        }
+      >
         <FormFieldWrapper
           label={label}
           field={field}
