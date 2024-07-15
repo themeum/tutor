@@ -441,10 +441,8 @@ class OrderController {
 				case $this->model::ORDER_INCOMPLETE:
 					$actions[] = $this->bulk_action_mark_order_paid();
 					break;
-				case $this->model::ORDER_COMPLETED:
-					$actions[] = $this->bulk_action_mark_order_unpaid();
-					break;
 				case $this->model::ORDER_TRASH:
+					$actions[] = $this->bulk_action_mark_order_paid();
 					$actions[] = $this->bulk_action_delete();
 					break;
 				default:
@@ -594,7 +592,6 @@ class OrderController {
 
 		$allowed_bulk_actions = array(
 			$this->model::PAYMENT_PAID,
-			$this->model::PAYMENT_UNPAID,
 			$this->model::ORDER_TRASH,
 			'delete',
 		);
@@ -619,11 +616,6 @@ class OrderController {
 				case $this->model::PAYMENT_PAID:
 					$data = array(
 						'order_status' => $this->model::ORDER_COMPLETED,
-					);
-					break;
-				case $this->model::PAYMENT_UNPAID:
-					$data = array(
-						'order_status' => $this->model::ORDER_INCOMPLETE,
 					);
 					break;
 				case $this->model::ORDER_TRASH:
