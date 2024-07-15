@@ -9,6 +9,7 @@ declare global {
   interface Window {
     // biome-ignore lint/suspicious/noExplicitAny: <Allow explicit any for this>
     wp: any;
+    ajaxurl: string;
     tinymce: any;
     _tutorobject: {
       ajaxurl: string;
@@ -25,6 +26,7 @@ declare global {
       enable_lesson_classic_editor: string;
       tutor_frontend_dashboard_url: string;
       wp_date_format: string;
+      wp_rest_nonce: string;
       is_admin: string;
       is_admin_bar_showing: string;
       timezones: {
