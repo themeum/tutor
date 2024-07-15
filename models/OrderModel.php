@@ -280,7 +280,7 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return object The customer data retrieved from the database.
+	 * @return object|null The customer data retrieved from the database.
 	 */
 	public function get_tutor_customer_data( $user_id ) {
 		global $wpdb;
@@ -289,7 +289,7 @@ class OrderModel {
 		$customer_data = QueryHelper::get_row( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $user_id ), 'id' );
 
 		if ( empty( $customer_data ) ) {
-			return array();
+			return null;
 		}
 
 		$return_data = (object) array(
