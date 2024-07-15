@@ -280,10 +280,10 @@ export const convertQuizFormDataToPayloadForUpdate = (data: QuizQuestion): QuizU
     question_id: data.question_id,
     question_title: data.question_title,
     question_description: data.question_description,
-    question_type: data.question_settings.question_type,
+    question_type: data.question_type,
     question_mark: data.question_settings.question_mark,
     answer_explanation: data.answer_explanation,
-    'question_settings[question_type]': data.question_settings.question_type,
+    'question_settings[question_type]': data.question_type,
     'question_settings[answer_required]': data.question_settings.answer_required ? 1 : 0,
     'question_settings[question_mark]': data.question_settings.question_mark,
   };
