@@ -1,4 +1,5 @@
 import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
 import { nanoid } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEvent, type FocusEventHandler } from 'react';
@@ -53,7 +54,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
         css={[inputCss, styles.checkbox({ label, isIndeterminate, disabled })]}
       />
       <span />
-      {label}
+      <span css={styles.label}>{label}</span>
     </label>
   );
 });
@@ -64,6 +65,11 @@ const styles = {
     align-items: center;
     cursor: pointer;
     user-select: none;
+    color: ${colorTokens.text.title};
+  `,
+  label: css`
+    ${typography.caption()};
+    margin-top: ${spacing[2]};
     color: ${colorTokens.text.title};
   `,
   checkbox: ({
