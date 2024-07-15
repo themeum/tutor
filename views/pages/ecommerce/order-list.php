@@ -21,7 +21,7 @@ use TUTOR\Input;
 $active_tab = Input::get( 'data', 'all' );
 
 $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
-$limit        = tutor_utils()->get_option( 'pagination_per_page', 10 );
+$limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
 $order_controller = new OrderController();

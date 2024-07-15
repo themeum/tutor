@@ -24,7 +24,7 @@ $active_tab = Input::get( 'data', 'all' );
  * Pagination data
  */
 $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
-$limit        = tutor_utils()->get_option( 'pagination_per_page' );
+$limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
 $coupon_controller = new CouponController();
