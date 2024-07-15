@@ -8,7 +8,6 @@ import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
 import { tutorConfig } from '@Config/config';
@@ -341,8 +340,6 @@ const styles = {
   mainForm: css`
     padding-block: ${spacing[24]};
     align-self: start;
-    /* position: sticky; */
-    /* top: ${headerHeight}px; */
   `,
 
   fieldsWrapper: css`
