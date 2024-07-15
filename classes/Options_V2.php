@@ -1757,7 +1757,6 @@ class Options_V2 {
 								'default' => 'off',
 								'desc'    => __( 'Enable this to accept payments via Stripe.', 'tutor' ),
 							),
-							
 						),
 					),
 				),
@@ -1774,20 +1773,6 @@ class Options_V2 {
 						'slug'       => 'options',
 						'block_type' => 'uniform',
 						'fields'     => array(
-							array(
-								'key'     => OptionKeys::IS_TAX_APPLICABLE,
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Apply Tax Rate', 'tutor' ),
-								'default' => 'off',
-								'desc'    => __( 'Rates will be configurable and taxes will be calculated during checkout.', 'tutor' ),
-							),
-							array(
-								'key'     => OptionKeys::IS_COUPON_APPLICABLE,
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Include or exclude tax based on your customer’s location', 'tutor' ),
-								'default' => 'off',
-								'desc'    => __( 'Rates will be configurable and taxes will be calculated during checkout.', 'tutor' ),
-							),
 						),
 					),
 				),
