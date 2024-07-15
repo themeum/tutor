@@ -2,10 +2,20 @@ import { useCallback, useEffect, useRef } from 'react';
 import { nanoid } from '@Utils/util';
 import { __, _x } from '@wordpress/i18n';
 import { css } from '@emotion/react';
+import { tutorConfig } from '@Config/config';
 
 interface WPEditorProps {
   value: string;
   onChange: (value: string) => void;
+}
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
+// Without getDefaultSettings function editor does not initiate
+if (!window.wp.editor.getDefaultSettings) {
+  window.wp.editor.getDefaultSettings = function () {
+    return {};
+  };
 }
 
 function editorConfig(onChange?: (value: string) => void) {
@@ -20,21 +30,23 @@ function editorConfig(onChange?: (value: string) => void) {
       end_container_on_empty_block: true,
       entities: '38,amp,60,lt,62,gt',
       entity_encoding: 'raw',
-      external_plugins: {
-        codesample: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.2/plugins/codesample/plugin.min.js',
-      },
-      codesample_languages: [
-        { text: 'HTML/XML', value: 'markup' },
-        { text: 'JavaScript', value: 'javascript' },
-        { text: 'CSS', value: 'css' },
-        { text: 'PHP', value: 'php' },
-        { text: 'Ruby', value: 'ruby' },
-        { text: 'Python', value: 'python' },
-        { text: 'Java', value: 'java' },
-        { text: 'C', value: 'c' },
-        { text: 'C#', value: 'csharp' },
-        { text: 'C++', value: 'cpp' },
-      ],
+      ...(isTutorPro && {
+        external_plugins: {
+          codesample: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.1.2/plugins/codesample/plugin.min.js',
+        },
+        codesample_languages: [
+          { text: 'HTML/XML', value: 'markup' },
+          { text: 'JavaScript', value: 'javascript' },
+          { text: 'CSS', value: 'css' },
+          { text: 'PHP', value: 'php' },
+          { text: 'Ruby', value: 'ruby' },
+          { text: 'Python', value: 'python' },
+          { text: 'Java', value: 'java' },
+          { text: 'C', value: 'c' },
+          { text: 'C#', value: 'csharp' },
+          { text: 'C++', value: 'cpp' },
+        ],
+      }),
       fix_list_elements: true,
       indent: false,
       relative_urls: 0,
@@ -45,8 +57,9 @@ function editorConfig(onChange?: (value: string) => void) {
       submit_patch: true,
       link_context_toolbar: false,
       theme: 'modern',
-      toolbar1:
-        'formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,wp_more,fullscreen,wp_adv,tutor_button,codesample',
+      toolbar1: `formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,wp_more,fullscreen,wp_adv,tutor_button${
+        isTutorPro ? ',codesample' : ''
+      }`,
       toolbar2: 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
       content_css: '/wp-includes/css/dashicons.min.css,/wp-includes/js/tinymce/skins/wordpress/wp-content.css',
       setup: function (editor) {
@@ -94,8 +107,8 @@ function editorConfig(onChange?: (value: string) => void) {
                     {
                       type: 'listbox',
                       name: 'orderby',
-                      label: _x('Order By :', 'tinyMCE button order by', 'tutor'),
-                      onselect: function (e) {},
+                      label: _x('Order By', 'tinyMCE button order by', 'tutor'),
+                      onselect: function () {},
                       values: [
                         { text: 'ID', value: 'ID' },
                         { text: 'title', value: 'title' },
@@ -108,14 +121,13 @@ function editorConfig(onChange?: (value: string) => void) {
                     {
                       type: 'listbox',
                       name: 'order',
-                      label: _x('Order :', 'tinyMCE button order', 'tutor'),
-                      onselect: function (e) {},
+                      label: _x('Order', 'tinyMCE button order', 'tutor'),
+                      onselect: function () {},
                       values: [
                         { text: 'DESC', value: 'DESC' },
                         { text: 'ASC', value: 'ASC' },
                       ],
                     },
-                    ,
                     {
                       type: 'textbox',
                       name: 'count',
@@ -161,22 +173,16 @@ function editorConfig(onChange?: (value: string) => void) {
   };
 }
 
-window.wp.editor.getDefaultSettings = function () {
-  return {};
-};
-
 const WPEditor = ({ value, onChange }: WPEditorProps) => {
   const { current: editorId } = useRef(nanoid());
 
   const updateEditorContent = useCallback(
     (value: string) => {
-      if (typeof tinymce !== 'undefined') {
-        const editorInstance = tinymce.get(editorId);
+      if (typeof window.tinymce !== 'undefined') {
+        const editorInstance = window.tinymce.get(editorId);
         if (editorInstance) {
           if (value !== editorInstance.getContent()) {
-            setTimeout(() => {
-              editorInstance.setContent(value);
-            }, 1000);
+            editorInstance.setContent(value);
           }
         }
       }
@@ -185,7 +191,9 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
   );
 
   useEffect(() => {
-    updateEditorContent(value);
+    setTimeout(() => {
+      updateEditorContent(value);
+    }, 1000);
   }, [value]);
 
   useEffect(() => {
@@ -200,11 +208,9 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
   }, []);
 
   return (
-    <>
-      <div css={styles.wrapper}>
-        <textarea id={editorId} />
-      </div>
-    </>
+    <div css={styles.wrapper}>
+      <textarea id={editorId} />
+    </div>
   );
 };
 
@@ -215,7 +221,7 @@ const styles = {
     flex: 1;
 
     .wp-editor-tools {
-      z-index: 10;
+      z-index: auto;
     }
 
     textarea {
