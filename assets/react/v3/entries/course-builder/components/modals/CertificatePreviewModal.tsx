@@ -104,6 +104,7 @@ const CertificatePreviewModal = ({
             variant="primary"
             onClick={() => {
               handleSelectCertificate(currentCertificate);
+              closeModal({ action: 'CONFIRM' });
             }}
             disabled={selectedCertificate === currentCertificate.key}
           >
