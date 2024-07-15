@@ -1140,7 +1140,6 @@ class Course extends Tutor_Base {
 		$data['wp_rest_nonce'] = wp_create_nonce( 'wp_rest' );
 
 		wp_localize_script( 'tutor-course-builder-v3', '_tutorobject', $data );
-		wp_localize_script( 'tutor-course-builder-v3', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
 	}
 
 	/**
