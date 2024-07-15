@@ -4,13 +4,14 @@ import { type SerializedStyles, css } from '@emotion/react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 import Show from '@Controls/Show';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import { styleUtils } from '@Utils/style-utils';
 
 interface FormQuestionTitleProps extends FormControllerProps<string | null> {
   maxLimit?: number;
@@ -116,6 +117,7 @@ const FormQuestionTitle = ({
                     {...field}
                     {...inputProps}
                     {...additionalAttributes}
+                    className="tutor-input-field"
                     type="text"
                     ref={inputRef}
                     value={inputValue}
@@ -217,7 +219,7 @@ const styles = {
     };
 
 		&:focus-within {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus};
     }
 
     ${
@@ -226,6 +228,7 @@ const styles = {
         background-color: ${colorTokens.background.white};
         color: ${colorTokens.text.subdued};  
         padding-block: ${spacing[4]};
+        border: 1px solid ${colorTokens.stroke.default};
         cursor: default;
       `
     }
@@ -243,10 +246,16 @@ const styles = {
 			padding: 0;
       ${isClearable && `padding-right: ${spacing[36]};`};
       width: 100%;
-
-			&:focus {
+      
+			&.tutor-input-field {
+        border: none;
 				box-shadow: none;
 
+        &:focus {
+          border: none;
+          box-shadow: none;
+          outline: none;
+        }
 			}
     }
   `,

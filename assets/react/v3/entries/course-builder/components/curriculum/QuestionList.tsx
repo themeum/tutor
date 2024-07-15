@@ -18,7 +18,6 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 
@@ -29,7 +28,11 @@ import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 import { moveTo } from '@Utils/util';
 import type { ID } from '@CourseBuilderServices/curriculum';
-import { useCreateQuizQuestionMutation, useQuizQuestionSortingMutation } from '@CourseBuilderServices/quiz';
+import {
+  type QuizForm,
+  useCreateQuizQuestionMutation,
+  useQuizQuestionSortingMutation,
+} from '@CourseBuilderServices/quiz';
 
 interface QuestionListProps {
   quizId?: ID;

@@ -148,7 +148,27 @@ export const useMarkAsPaidMutation = () => {
     mutationFn: markAsPaid,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['OrderDetails']});
-      showToast({type: 'success', message: __('Order marked as paid')})
+      showToast({type: 'success', message: __('Order marked as paid', 'tutor')})
+    },
+    onError: (error) => {
+      showToast({type: 'danger', message: error.message});
+    }
+  })
+}
+
+const refundOrder = (params: {order_id: number; reason: string; is_remove_enrolment: boolean}) => {
+  return wpAjaxInstance.post(endpoints.ORDER_REFUND, params);
+}
+
+export const useRefundOrderMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: refundOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['OrderDetails']});
+      showToast({type: 'success', message: __('Order refunded successfully', 'tutor')})
     },
     onError: (error) => {
       showToast({type: 'danger', message: error.message});

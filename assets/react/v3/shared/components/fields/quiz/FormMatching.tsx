@@ -33,7 +33,7 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
     answer_id: '',
     answer_title: '',
     answer_two_gap_match: '',
-    is_correct: false,
+    is_correct: '0',
     belongs_question_id: activeQuestionId,
     belongs_question_type: 'matching',
   };
@@ -83,7 +83,7 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
-      is_correct: true,
+      is_correct: '1',
     });
   };
 

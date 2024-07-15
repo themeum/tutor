@@ -9,7 +9,6 @@ import Card from '@Molecules/Card';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 
 import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
@@ -17,7 +16,13 @@ import Show from '@Controls/Show';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
-import { type ContentDripType, usePrerequisiteCoursesQuery } from '@CourseBuilderServices/course';
+import {
+  type ContentDripType,
+  type PrerequisiteCourses,
+  usePrerequisiteCoursesQuery,
+} from '@CourseBuilderServices/course';
+import type { QuizForm } from '@CourseBuilderServices/quiz';
+
 const courseId = getCourseId();
 
 interface QuizSettingsProps {
@@ -27,11 +32,16 @@ interface QuizSettingsProps {
 const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const form = useFormContext<QuizForm>();
   const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Prerequisites');
+  const showPassRequired =
+    isAddonEnabled('Content Drip') &&
+    contentDripType === 'unlock_sequentially' &&
+    form.watch('quiz_option.feedback_mode') === 'retry';
 
-  // const prerequisiteCourses = lessonDetails?.content_drip_settings?.course_prerequisites
-  //   ? lessonDetails?.content_drip_settings?.course_prerequisites.map((item) => String(item.id))
-  //   : [];
-  const prerequisiteCourses = [] as string[];
+  const prerequisiteCoursesForm = form.watch(
+    'quiz_option.content_drip_settings.prerequisites'
+  ) as PrerequisiteCourses[];
+
+  const prerequisiteCourses = prerequisiteCoursesForm ? prerequisiteCoursesForm.map((item) => String(item.id)) : [];
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
@@ -130,6 +140,23 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               />
             )}
           />
+
+          <Show when={showPassRequired}>
+            <Controller
+              name="quiz_option.pass_is_required"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Passing is Required', 'tutor')}
+                  helpText={__(
+                    'By enabling this option, the student must have to pass it to access the next quiz',
+                    'tutor'
+                  )}
+                />
+              )}
+            />
+          </Show>
 
           <Controller
             name="quiz_option.passing_grade"

@@ -215,6 +215,28 @@ class QueryHelper {
 	}
 
 	/**
+	 * Make tge where clause base on its column operator and values.
+	 *
+	 * If the operator is IN then make the clause like `WHERE column_name IN (value1, value2, ...)`
+	 * Otherwise the clause would be `WHERE column_name = 'value'`
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $where  The where clause array. e.g. array( 'id', 'IN', array(1, 2, 3) ) or array( 'id', '=', 1 ).
+	 *
+	 * @return string
+	 */
+	private static function make_clause( array $where ) {
+		list ( $field, $operator, $value ) = $where;
+
+		if ( 'IN' === strtoupper( $operator ) ) {
+			$value = '(' . self::prepare_in_clause( $value ) . ')';
+		}
+
+		return "{$field} {$operator} {$value}";
+	}
+
+	/**
 	 * Build where clause string
 	 *
 	 * @param   array $where assoc array with field and value.
@@ -225,8 +247,14 @@ class QueryHelper {
 	private static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
-			$value = is_numeric( $value ) ? ( $value + 0 ) : "'" . $value . "'";
-			$arr[] = "{$field}={$value}";
+			if ( is_array( $value ) ) {
+				$value = array( $field, 'IN', $value );
+			} else {
+				$value = is_numeric( $value ) ? $value : "'" . $value . "'";
+				$value = array( $field, '=', $value );
+			}
+
+			$arr[] = self::make_clause( $value );
 		}
 
 		return implode( ' AND ', $arr );
@@ -402,7 +430,6 @@ class QueryHelper {
 			$output
 		);
 	}
-
 
 	/**
 	 * Update multiple rows by using where in

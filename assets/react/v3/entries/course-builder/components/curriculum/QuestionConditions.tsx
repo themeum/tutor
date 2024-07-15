@@ -6,14 +6,13 @@ import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { Option } from '@Utils/types';
-import type { QuizQuestionType } from '@CourseBuilderServices/quiz';
+import type { QuizForm, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
 export const questionTypeOptions: Option<QuizQuestionType>[] = [
   {
