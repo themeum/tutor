@@ -71,6 +71,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
                   options={discountTypeOptions}
                   placeholder={__('Select discount type', 'tutor')}
                   isSearchable
+                  isClearable
                 />
               )}
             />
