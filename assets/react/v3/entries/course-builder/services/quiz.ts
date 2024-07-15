@@ -636,7 +636,7 @@ export const useCreateQuizAnswerMutation = () => {
   return useMutation({
     mutationFn: createQuizAnswer,
     onSuccess: (response) => {
-      if (response.data) {
+      if (response.status_code === 200 || response.status_code === 201) {
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
