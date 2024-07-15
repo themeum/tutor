@@ -1510,7 +1510,7 @@ class Quiz {
 		}
 
 		global $wpdb;
-		$next_question_sl    = QueryHelper::get_count( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) ) + 1;
+		$next_question_sl    = QueryHelper::get_count( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ), array(), '*' ) + 1;
 		$next_question_order = QuizModel::quiz_next_question_order_id( $quiz_id );
 		$question_title      = __( 'Question', 'tutor' ) . ' ' . $next_question_sl;
 
@@ -1772,7 +1772,7 @@ class Quiz {
 		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
 		$answer_ids  = Input::post( 'sorted_answer_ids', array(), Input::TYPE_ARRAY );
 
-		if ( tutor_utils()->can_user_manage( 'question', $question_id ) ) {
+		if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
 			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_FORBIDDEN );
 		}
 
