@@ -22,16 +22,23 @@ import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
 
 import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
+import { moveTo, nanoid } from '@Utils/util';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import {
+  useQuizQuestionAnswerOrderingMutation,
+  type QuizForm,
+  type QuizQuestionOption,
+} from '@CourseBuilderServices/quiz';
 
 const ImageAnswering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
+
+  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
+
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const {
     fields: optionsFields,
@@ -109,6 +116,17 @@ const ImageAnswering = () => {
           if (active.id !== over.id) {
             const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
             const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
+
+            const updatedOptionsOrder = moveTo(
+              form.watch(`questions.${activeQuestionIndex}.question_answers`),
+              activeIndex,
+              overIndex
+            );
+
+            quizQuestionAnswerOrderingMutation.mutate({
+              question_id: activeQuestionId,
+              sorted_answer_ids: updatedOptionsOrder.map((option) => option.answer_id),
+            });
 
             moveOption(activeIndex, overIndex);
           }

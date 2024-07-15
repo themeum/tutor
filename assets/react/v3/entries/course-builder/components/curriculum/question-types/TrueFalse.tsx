@@ -1,14 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-
-import { typography } from '@Config/typography';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { useEffect, useMemo, useState } from 'react';
-import { nanoid } from '@Utils/util';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import {
   closestCenter,
   DndContext,
@@ -22,12 +15,28 @@ import {
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { createPortal } from 'react-dom';
-import Show from '@Controls/Show';
+
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import FormTrueFalse from '@Components/fields/quiz/FormTrueFalse';
+
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+import { typography } from '@Config/typography';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { styleUtils } from '@Utils/style-utils';
+import { moveTo, nanoid } from '@Utils/util';
+import {
+  useQuizQuestionAnswerOrderingMutation,
+  type QuizForm,
+  type QuizQuestionOption,
+} from '@CourseBuilderServices/quiz';
 
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
+
+  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
+
   const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
 
   const { fields: optionsFields, move: moveOption } = useFieldArray({
@@ -136,6 +145,17 @@ const TrueFalse = () => {
             const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
             const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
 
+            const updatedOptionsOrder = moveTo(
+              form.watch(`questions.${activeQuestionIndex}.question_answers`),
+              activeIndex,
+              overIndex
+            );
+
+            quizQuestionAnswerOrderingMutation.mutate({
+              question_id: activeQuestionId,
+              sorted_answer_ids: updatedOptionsOrder.map((option) => option.answer_id),
+            });
+
             moveOption(activeIndex, overIndex);
           }
 
@@ -146,14 +166,16 @@ const TrueFalse = () => {
           items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
           strategy={verticalListSortingStrategy}
         >
-          {optionsFields.map((option, index) => (
-            <Controller
-              key={option.id}
-              control={form.control}
-              name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
-              render={(controllerProps) => <FormTrueFalse {...controllerProps} index={index} />}
-            />
-          ))}
+          <For each={optionsFields}>
+            {(option, index) => (
+              <Controller
+                key={option.id}
+                control={form.control}
+                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
+                render={(controllerProps) => <FormTrueFalse {...controllerProps} index={index} />}
+              />
+            )}
+          </For>
         </SortableContext>
 
         {createPortal(

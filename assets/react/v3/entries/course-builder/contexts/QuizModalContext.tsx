@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import type { ID } from '@CourseBuilderServices/curriculum';
-import type { QuizForm } from '@CourseBuilderServices/quiz';
+import type { QuizForm, QuizQuestion } from '@CourseBuilderServices/quiz';
 
 interface QuizModalContextProps {
   activeQuestionIndex: number;
@@ -28,7 +28,7 @@ export const QuizModalContextProvider = ({
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
   const form = useFormContext<QuizForm>();
   const questions = form.watch('questions') || [];
-  const previousQuestionsLength = useRef<number>(questions.length);
+  const previousQuestions = useRef<QuizQuestion[]>(questions);
 
   const activeQuestionIndex = questions.findIndex((question) => question.question_id === activeQuestionId);
 
@@ -36,13 +36,17 @@ export const QuizModalContextProvider = ({
   useEffect(() => {
     if (questions.length === 0) {
       setActiveQuestionId('');
-    } else if (previousQuestionsLength.current !== 0 && previousQuestionsLength.current < questions.length) {
-      setActiveQuestionId(questions[questions.length - 1].question_id);
+    } else if (previousQuestions.current.length !== 0 && previousQuestions.current.length < questions.length) {
+      const newQuestion = questions.find(
+        (question) =>
+          !previousQuestions.current.some((prevQuestion) => prevQuestion.question_id === question.question_id)
+      );
+      setActiveQuestionId(newQuestion?.question_id || '');
     } else if (activeQuestionIndex === -1) {
       setActiveQuestionId(questions[0].question_id);
     }
 
-    previousQuestionsLength.current = questions.length;
+    previousQuestions.current = questions;
   }, [questions.length]);
 
   useEffect(() => {
