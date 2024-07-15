@@ -378,6 +378,7 @@ class CouponModel {
 	 *               - title: The title of the course.
 	 *               - type: The post type of the course (e.g., 'course', 'course-bundle').
 	 *               - price: The price of the course.
+	 *               - sale_price: The sale price of the course.
 	 *               - image: The URL of the course's thumbnail image.
 	 *               - total_courses: (optional) The total number of courses in a bundle, if applicable.
 	 */
@@ -410,9 +411,11 @@ class CouponModel {
 					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
 				}
 
-				$course->id    = (int) $course->id;
-				$course->price = (float) tutor_utils()->get_course_price( (int) $course->id, false );
-				$course->image = get_the_post_thumbnail_url( $course->id );
+				$course_prices      = tutor_utils()->get_course_raw_prices( (int) $course->id );
+				$course->id         = (int) $course->id;
+				$course->price      = $course_prices->price;
+				$course->sale_price = $course_prices->sale_price;
+				$course->image      = get_the_post_thumbnail_url( $course->id );
 			}
 		}
 
@@ -479,5 +482,62 @@ class CouponModel {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Retrieves categories to which a coupon applies.
+	 *
+	 * This function fetches all terms from the 'course-category' taxonomy and constructs a response array
+	 * with the following details for each category:
+	 * - Category ID
+	 * - Category name
+	 * - Number of courses in the category
+	 * - Category image URL (if available)
+	 *
+	 * If no categories are found, an empty array is returned.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @global wpdb $wpdb WordPress database abstraction object.
+	 *
+	 * @return array An array of stdClass objects, each containing:
+	 *               - int    $id                Category ID.
+	 *               - string $title             Category name.
+	 *               - int    $number_of_courses Number of courses in the category.
+	 *               - string $image             Category image URL.
+	 *               If no categories are found, returns an empty array.
+	 */
+	public function get_coupon_applies_to_categories() {
+		global $wpdb;
+
+		$categories = get_terms( 'course-category' );
+
+		$response = array();
+
+		if ( ! empty( $categories ) ) {
+			foreach ( $categories as &$category ) {
+				// Fetch the thumbnail_id from the wp_termmeta table.
+				$thumbnail_id = get_term_meta( $category->term_id, 'thumbnail_id', true );
+
+				// If the thumbnail ID is retrieved, get the image URL.
+				if ( $thumbnail_id ) {
+					$image = wp_get_attachment_url( $thumbnail_id );
+				} else {
+					$image = ''; // Or set a default image URL if needed.
+				}
+
+				$final_data                    = new \stdClass();
+				$final_data->id                = $category->term_id;
+				$final_data->title             = $category->name;
+				$final_data->number_of_courses = $category->count;
+				$final_data->image             = $image;
+
+				$response[] = $final_data;
+			}
+		}
+
+		unset( $category );
+
+		return ! empty( $response ) ? $response : array();
 	}
 }
