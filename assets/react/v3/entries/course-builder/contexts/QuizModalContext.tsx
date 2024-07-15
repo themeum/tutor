@@ -1,19 +1,16 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import type { ID } from '@CourseBuilderServices/curriculum';
+import type { QuizForm, QuizQuestion } from '@CourseBuilderServices/quiz';
+
 interface QuizModalContextProps {
   activeQuestionIndex: number;
   activeQuestionId: ID;
   setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
 }
 
-const QuizModalContext = createContext<QuizModalContextProps | null>({
-  activeQuestionIndex: 0,
-  activeQuestionId: '',
-  setActiveQuestionId: () => {},
-});
+const QuizModalContext = createContext<QuizModalContextProps | null>(null);
 
 export const useQuizModalContext = () => {
   const context = useContext(QuizModalContext);
@@ -31,28 +28,32 @@ export const QuizModalContextProvider = ({
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
   const form = useFormContext<QuizForm>();
   const questions = form.watch('questions') || [];
+  const previousQuestions = useRef<QuizQuestion[]>(questions);
 
-  const [activeQuestionIndex, setActiveQuestionIndex] = useState(
-    questions.findIndex((question) => question.question_id === activeQuestionId)
-  );
+  const activeQuestionIndex = questions.findIndex((question) => question.question_id === activeQuestionId);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (questions.length > 0 && !activeQuestionId) {
+    if (questions.length === 0) {
+      setActiveQuestionId('');
+    } else if (previousQuestions.current.length !== 0 && previousQuestions.current.length < questions.length) {
+      const newQuestion = questions.find(
+        (question) =>
+          !previousQuestions.current.some((prevQuestion) => prevQuestion.question_id === question.question_id)
+      );
+      setActiveQuestionId(newQuestion?.question_id || '');
+    } else if (activeQuestionIndex === -1) {
       setActiveQuestionId(questions[0].question_id);
     }
-  }, [questions, activeQuestionId]);
+
+    previousQuestions.current = questions;
+  }, [questions.length]);
 
   useEffect(() => {
-    if (questions.length > 0 && activeQuestionId) {
-      setActiveQuestionIndex(questions.findIndex((question) => question.question_id === activeQuestionId));
+    if (activeQuestionIndex === -1 && activeQuestionId) {
+      setActiveQuestionId('');
     }
-  }, [questions, activeQuestionId]);
-
-  // useEffect(() => {
-  //   if (activeQuestionIndex === -1 && activeQuestionId) {
-  //     setActiveQuestionId('');
-  //   }
-  // }, [activeQuestionIndex, activeQuestionId]);
+  }, [activeQuestionIndex, activeQuestionId]);
 
   return (
     <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId }}>
