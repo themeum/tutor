@@ -467,22 +467,10 @@ const updateQuizQuestion = (payload: QuizUpdateQuestionPayload) => {
 };
 
 export const useUpdateQuizQuestionMutation = () => {
-  const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: updateQuizQuestion,
-    onSuccess: (response) => {
-      if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['GetQuizDetails'],
-        });
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
-        });
-      }
-    },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,
