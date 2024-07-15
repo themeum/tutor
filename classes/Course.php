@@ -261,6 +261,7 @@ class Course extends Tutor_Base {
 		add_action( 'admin_init', array( $this, 'load_course_builder' ) );
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
+		add_action( 'tutor_course_builder_footer', array( $this, 'load_wp_link_modal' ) );
 
 		/**
 		 * Ajax list
@@ -1092,8 +1093,10 @@ class Course extends Tutor_Base {
 		// Fix: function print_emoji_styles is deprecated since version 6.4.0!
 		remove_action( 'wp_print_styles', 'print_emoji_styles' );
 
+		do_action( 'tutor_course_builder_before_wp_editor_load' );
 		wp_enqueue_script( 'wp-tinymce' );
 		wp_enqueue_editor();
+
 		wp_enqueue_media();
 		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/tutor-course-builder-v3.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 
@@ -1124,10 +1127,6 @@ class Course extends Tutor_Base {
 
 		$data = array_merge( $default_data, $new_data );
 
-		ob_start();
-		wp_editor( '', 'post_content' );
-		$data['wp_editor'] = ob_get_clean();
-
 		/**
 		 * Course builder dashboard URL based on role and settings.
 		 */
@@ -1138,9 +1137,23 @@ class Course extends Tutor_Base {
 
 		$data['dashboard_url'] = $dashboard_url;
 		$data['timezones']     = tutor_global_timezone_lists();
-		$data['wp_rest_nonce'] = wp_create_nonce('wp_rest');
+		$data['wp_rest_nonce'] = wp_create_nonce( 'wp_rest' );
 
 		wp_localize_script( 'tutor-course-builder-v3', '_tutorobject', $data );
+		wp_localize_script( 'tutor-course-builder-v3', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
+	}
+
+	/**
+	 * Load wp editor modal
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function load_wp_link_modal() {
+		if ( is_admin() ) {
+			include_once tutor()->path . 'views/modal/wp-editor-link.php';
+		}
 	}
 
 	/**

@@ -10,6 +10,7 @@ declare global {
     // biome-ignore lint/suspicious/noExplicitAny: <Allow explicit any for this>
     wp: any;
     ajaxurl: string;
+    tinymce: any;
     _tutorobject: {
       ajaxurl: string;
       home_url: string;
