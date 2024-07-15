@@ -18,7 +18,7 @@ foreach ( $section['blocks'] as $blocks ) :
 		?>
 		<div class="tutor-option-single-item tutor-mb-32">
 			<?php echo $this->blocks( $blocks ); //phpcs:ignore ?>
-			<?php do_action( 'tutor_inside_option_single_item', $blocks['slug'], $blocks ); ?>
+			<?php do_action( 'tutor_inside_basic_option_single_item', $blocks['slug'], $blocks ); ?>
 		</div>
 	<?php else : ?>
 		<?php
