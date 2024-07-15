@@ -116,11 +116,11 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 							if ( is_array( $section ) ) {
 								echo $this->template( $section ); //phpcs:ignore -- contain safe data
 							}
+							do_action( 'tutor_after_option_section', $key, $section );
 							?>
 						</div>
 						<?php
 					}
-					do_action( 'tutor_after_option_section', $section );
 					?>
 				</div>
 			</div>

@@ -1641,7 +1641,7 @@ class Options_V2 {
 			),
 			'ecommerce_basic'     => array(
 				'label'    => __( 'Basic', 'tutor' ),
-				'slug'     => 'ecommerce-basic',
+				'slug'     => 'ecommerce_basic',
 				'desc'     => __( 'Advanced Settings', 'tutor' ),
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-filter',
@@ -1649,7 +1649,7 @@ class Options_V2 {
 					array(
 						'label'      => false,
 						'block_type' => 'uniform',
-						'slug'       => 'cart-page',
+						'slug'       => 'cart_page',
 						'fields'     => array(
 							array(
 								'key'     => CartController::PAGE_ID_OPTION_NAME,
@@ -1664,7 +1664,7 @@ class Options_V2 {
 					array(
 						'label'      => false,
 						'block_type' => 'uniform',
-						'slug'       => 'checkout-page',
+						'slug'       => 'checkout_page',
 						'fields'     => array(
 							array(
 								'key'     => CheckoutController::PAGE_ID_OPTION_NAME,
@@ -1763,7 +1763,7 @@ class Options_V2 {
 			),
 			'ecommerce_tax'     => array(
 				'label'    => __( 'Tax', 'tutor' ),
-				'slug'     => 'advanced',
+				'slug'     => 'ecommerce_tax',
 				'desc'     => __( 'Advanced Settings', 'tutor' ),
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-filter',
@@ -1779,14 +1779,14 @@ class Options_V2 {
 			),
 			'ecommerce_checkout'     => array(
 				'label'    => __( 'Checkout', 'tutor' ),
-				'slug'     => 'advanced',
+				'slug'     => 'ecommerce_checkout',
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-filter',
 				'blocks'   => array(
 					array(
 						'label'      => __( 'Checkout Configuration', 'tutor' ),
 						'desc'       => __( 'Customize your checkout process to suit your preferences.', 'tutor' ),
-						'slug'       => 'options',
+						'slug'       => 'checkout_configuration',
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
