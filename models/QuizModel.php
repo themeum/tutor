@@ -1076,4 +1076,27 @@ class QuizModel {
 
 		return $answers;
 	}
+
+	/**
+	 * Get next answer order SL no
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $question_id question id.
+	 * @param int $question_type question type.
+	 *
+	 * @return int
+	 */
+	public static function get_next_answer_order( $question_id, $question_type ) {
+		global $wpdb;
+		$max_id = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT MAX(answer_order) FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND belongs_question_type = %s",//phpcs:ignore
+				$question_id,
+				$question_type
+			)
+		);
+
+		return $max_id + 1;
+	}
 }
