@@ -280,7 +280,7 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return object The customer data retrieved from the database.
+	 * @return object|null The customer data retrieved from the database.
 	 */
 	public function get_tutor_customer_data( $user_id ) {
 		global $wpdb;
@@ -289,7 +289,7 @@ class OrderModel {
 		$customer_data = QueryHelper::get_row( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $user_id ), 'id' );
 
 		if ( empty( $customer_data ) ) {
-			return array();
+			return null;
 		}
 
 		$return_data = (object) array(
@@ -329,12 +329,17 @@ class OrderModel {
 	public function get_order_refunds( $order_id ) {
 		global $wpdb;
 
+		$meta_keys = array(
+			OrderActivitiesModel::META_KEY_REFUND,
+			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND
+		);
+
 		// Retrieve order refunds for the given order ID from the 'tutor_ordermeta' table.
 		$order_refunds = QueryHelper::get_all(
 			"{$wpdb->prefix}tutor_ordermeta",
 			array(
 				'order_id' => $order_id,
-				'meta_key' => self::META_KEY_REFUND,
+				'meta_key' => $meta_keys,
 			),
 			'id'
 		);

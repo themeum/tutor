@@ -17,6 +17,7 @@ import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -26,9 +27,15 @@ interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
 }
 
 const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
+  const { activeQuestionId } = useQuizModalContext();
+
   const inputValue = field.value ?? {
-    ID: '',
-    title: '',
+    answer_id: '',
+    answer_title: '',
+    answer_two_gap_match: '',
+    is_correct: '0',
+    belongs_question_id: activeQuestionId,
+    belongs_question_type: 'matching',
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -36,7 +43,7 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: field.value?.ID || 0,
+    id: field.value.answer_id || 0,
     animateLayoutChanges,
   });
 
@@ -60,25 +67,23 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
 
     field.onChange({
       ...inputValue,
-      image: { id, url, title },
+      image_id: id,
+      image_url: url,
     });
   });
 
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
-      image: {
-        id: null,
-        url: '',
-        title: '',
-      },
+      image_id: '',
+      image_url: '',
     });
   };
 
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
-      isCorrect: true,
+      is_correct: '1',
     });
   };
 
@@ -91,15 +96,20 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   return (
     <div
       {...attributes}
-      css={styles.option({ isSelected: !!inputValue.isCorrect, isEditing })}
+      css={styles.option({ isSelected: !!Number(inputValue.is_correct), isEditing })}
       ref={setNodeRef}
       style={style}
     >
       <button type="button" css={styleUtils.resetButton} onClick={handleCorrectAnswer}>
-        <SVGIcon data-check-icon name={inputValue.isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />
+        <SVGIcon
+          data-check-icon
+          name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
+          height={32}
+          width={32}
+        />
       </button>
       <div
-        css={styles.optionLabel({ isSelected: !!inputValue.isCorrect, isEditing })}
+        css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isEditing })}
         onClick={handleCorrectAnswer}
         onKeyDown={(event) => {
           event.stopPropagation();
@@ -109,7 +119,7 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
         }}
       >
         <div css={styles.optionHeader}>
-          <div css={styles.optionCounter({ isSelected: !!inputValue.isCorrect, isEditing })}>
+          <div css={styles.optionCounter({ isSelected: !!Number(inputValue.is_correct), isEditing })}>
             {String.fromCharCode(65 + index)}
           </div>
 
@@ -161,11 +171,13 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                 <Show
                   when={imageMatching}
                   fallback={
-                    <div css={styles.optionPlaceholder}>{inputValue.title || __('Answer title...', 'tutor')}</div>
+                    <div css={styles.optionPlaceholder}>
+                      {inputValue.answer_title || __('Answer title...', 'tutor')}
+                    </div>
                   }
                 >
                   <Show
-                    when={inputValue.image}
+                    when={inputValue.image_url}
                     fallback={
                       <div css={styles.imagePlaceholder}>
                         <SVGIcon name="imagePreview" height={48} width={48} />
@@ -174,13 +186,13 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                   >
                     {(image) => (
                       <div css={styles.imagePlaceholder}>
-                        <img src={image.url} alt={image.title} />
+                        <img src={inputValue.image_url} alt={inputValue.image_url} />
                       </div>
                     )}
                   </Show>
                 </Show>
                 <div css={styles.optionPlaceholder}>
-                  {inputValue.matchedTitle || __('Matched answer titile...', 'tutor')}
+                  {inputValue.answer_two_gap_match || __('Matched answer title...', 'tutor')}
                 </div>
               </div>
             }
@@ -195,14 +207,14 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                     type="text"
                     css={styles.optionInput}
                     placeholder={__('Write anything..', 'tutor')}
-                    value={inputValue.title}
+                    value={inputValue.answer_title}
                     onClick={(event) => {
                       event.stopPropagation();
                     }}
                     onChange={(event) => {
                       field.onChange({
                         ...inputValue,
-                        title: event.target.value,
+                        answer_title: event.target.value,
                       });
                     }}
                     onKeyDown={(event) => {
@@ -215,7 +227,11 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                 }
               >
                 <ImageInput
-                  value={inputValue.image || null}
+                  value={{
+                    id: Number(inputValue.image_id),
+                    url: inputValue.image_url || '',
+                    title: inputValue.image_url || '',
+                  }}
                   infoText={__('Size: 700x430 pixels', 'tutor')}
                   uploadHandler={uploadHandler}
                   clearHandler={clearHandler}
@@ -228,14 +244,14 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                 type="text"
                 css={styles.optionInput}
                 placeholder={__('Matched option..', 'tutor')}
-                value={inputValue.matchedTitle}
+                value={inputValue.answer_two_gap_match}
                 onClick={(event) => {
                   event.stopPropagation();
                 }}
                 onChange={(event) => {
                   field.onChange({
                     ...inputValue,
-                    matchedTitle: event.target.value,
+                    answer_two_gap_match: event.target.value,
                   });
                 }}
                 onKeyDown={(event) => {

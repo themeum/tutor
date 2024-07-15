@@ -125,15 +125,20 @@ const styles = {
       hasFieldError &&
       css`
         border-color: ${colorTokens.stroke.danger};
+        background-color: ${colorTokens.background.status.errorFail};
       `
     };
 
     &:focus-within {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus};
+
+      ${hasFieldError && css`
+        border-color: ${colorTokens.stroke.danger};
+      `}
     }
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
-    // Increasing the css specificity
+    /** Increasing the css specificity */
     &[data-input] {
       ${typography.body()};
       border: none;
@@ -165,6 +170,7 @@ const styles = {
   
       &:focus {
         box-shadow: none;
+        outline: none;
       }
     }
   `,

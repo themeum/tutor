@@ -1,127 +1,204 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import SVGIcon from '@Atoms/SVGIcon';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  closestCenter,
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type UniqueIdentifier,
+} from '@dnd-kit/core';
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { createPortal } from 'react-dom';
 
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import FormTrueFalse from '@Components/fields/quiz/FormTrueFalse';
+
+import For from '@Controls/For';
+import Show from '@Controls/Show';
 import { typography } from '@Config/typography';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import { useEffect } from 'react';
+import { moveTo, nanoid } from '@Utils/util';
+import {
+  useQuizQuestionAnswerOrderingMutation,
+  type QuizForm,
+  type QuizQuestionOption,
+} from '@CourseBuilderServices/quiz';
 
-interface TrueFalseProps {
-  activeQuestionIndex: number;
-}
-
-const TrueFalse = ({ activeQuestionIndex }: TrueFalseProps) => {
+const TrueFalse = () => {
+  const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
 
-  const { fields: optionsFields } = useFieldArray({
+  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
+
+  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
+
+  const { fields: optionsFields, move: moveOption } = useFieldArray({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.options`,
+    name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   const currentOptions = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.options`,
+    name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
     defaultValue: [],
   });
 
+  const activeSortItem = useMemo(() => {
+    if (!activeSortId) {
+      return null;
+    }
+
+    return optionsFields.find((item) => item.answer_id === activeSortId);
+  }, [activeSortId, optionsFields]);
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (optionsFields.length === 2) {
+    if (
+      optionsFields.length === 2 &&
+      optionsFields.every((option: QuizQuestionOption) => option.belongs_question_type === 'true_false')
+    ) {
       return;
     }
 
-    form.setValue(`questions.${activeQuestionIndex}.options`, [
+    form.setValue(`questions.${activeQuestionIndex}.question_answers`, [
       {
-        ID: 'true',
-        title: __('True', 'tutor'),
-        isCorrect: false,
+        answer_id: nanoid(),
+        answer_title: __('True', 'tutor'),
+        is_correct: '0',
+        belongs_question_id: activeQuestionId,
+        belongs_question_type: 'true_false',
+        answer_order: 0,
+        answer_two_gap_match: '',
+        answer_view_format: '',
       },
       {
-        ID: 'false',
-        title: __('False', 'tutor'),
-        isCorrect: false,
+        answer_id: nanoid(),
+        answer_title: __('False', 'tutor'),
+        is_correct: '0',
+        belongs_question_id: activeQuestionId,
+        belongs_question_type: 'true_false',
+        answer_order: 1,
+        answer_two_gap_match: '',
+        answer_view_format: '',
       },
     ]);
-  }, []);
+  }, [optionsFields.length]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
-      const index = optionsFields.findIndex((item) => item.ID === option.ID);
-      const previousOption = optionsFields[index];
-      return option.isCorrect !== previousOption.isCorrect;
+      const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
+      const previousOption = optionsFields[index] || {};
+      return option.is_correct !== previousOption.is_correct;
     });
 
     if (changedOptions.length === 0) {
       return;
     }
 
-    const changedOptionIndex = optionsFields.findIndex((item) => item.ID === changedOptions[0].ID);
+    const changedOptionIndex = optionsFields.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
     const updatedOptions = [...optionsFields];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { isCorrect: true });
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
 
     for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = { ...option, isCorrect: false };
+        updatedOptions[index] = { ...option, is_correct: '0' };
       }
     }
 
-    form.setValue(`questions.${activeQuestionIndex}.options`, updatedOptions);
+    form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
   }, [currentOptions]);
 
   return (
     <div css={styles.optionWrapper}>
-      {optionsFields.map((option, index) => (
-        <Controller
-          key={option.id}
-          control={form.control}
-          name={`questions.${activeQuestionIndex}.options.${index}` as 'questions.0.options.0'}
-          render={({ field }) => (
-            <div css={styles.option({ isSelected: !!field.value.isCorrect })}>
-              <button
-                type="button"
-                css={styleUtils.resetButton}
-                onClick={() => {
-                  field.onChange({
-                    ...field.value,
-                    isCorrect: !field.value.isCorrect,
-                  });
-                }}
-              >
-                <SVGIcon
-                  data-check-icon
-                  name={field.value.isCorrect ? 'checkFilled' : 'check'}
-                  height={32}
-                  width={32}
-                />
-              </button>
-              <div
-                css={styles.optionLabel({ isSelected: !!field.value.isCorrect })}
-                onClick={() => {
-                  field.onChange({
-                    ...field.value,
-                    isCorrect: !field.value.isCorrect,
-                  });
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    field.onChange({
-                      ...field.value,
-                      isCorrect: !field.value.isCorrect,
-                    });
-                  }
-                }}
-              >
-                {index === 0 ? __('True', 'tutor') : __('False', 'tutor')}
-              </div>
-            </div>
-          )}
-        />
-      ))}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+        onDragStart={(event) => {
+          setActiveSortId(event.active.id);
+        }}
+        onDragEnd={(event) => {
+          const { active, over } = event;
+          if (!over) {
+            return;
+          }
+
+          if (active.id !== over.id) {
+            const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
+            const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
+
+            const updatedOptionsOrder = moveTo(
+              form.watch(`questions.${activeQuestionIndex}.question_answers`),
+              activeIndex,
+              overIndex
+            );
+
+            quizQuestionAnswerOrderingMutation.mutate({
+              question_id: activeQuestionId,
+              sorted_answer_ids: updatedOptionsOrder.map((option) => option.answer_id),
+            });
+
+            moveOption(activeIndex, overIndex);
+          }
+
+          setActiveSortId(null);
+        }}
+      >
+        <SortableContext
+          items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
+          strategy={verticalListSortingStrategy}
+        >
+          <For each={optionsFields}>
+            {(option, index) => (
+              <Controller
+                key={option.id}
+                control={form.control}
+                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
+                render={(controllerProps) => <FormTrueFalse {...controllerProps} index={index} />}
+              />
+            )}
+          </For>
+        </SortableContext>
+
+        {createPortal(
+          <DragOverlay>
+            <Show when={activeSortItem}>
+              {(item) => {
+                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
+                return (
+                  <Controller
+                    key={activeSortId}
+                    control={form.control}
+                    name={
+                      `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
+                    }
+                    render={(controllerProps) => <FormTrueFalse {...controllerProps} index={index} />}
+                  />
+                );
+              }}
+            </Show>
+          </DragOverlay>,
+          document.body
+        )}
+      </DndContext>
     </div>
   );
 };
@@ -175,14 +252,25 @@ const styles = {
   }: {
     isSelected: boolean;
   }) => css`
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
     width: 100%;
     border-radius: ${borderRadius.card};
     padding: ${spacing[12]} ${spacing[16]};
     background-color: ${colorTokens.background.white};
     cursor: pointer;
 
+    [data-visually-hidden] {
+      opacity: 0;
+    }
+
     &:hover {
       box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
 
     ${
@@ -196,5 +284,13 @@ const styles = {
         }
       `
     }
+  `,
+  optionDragButton: css`
+    ${styleUtils.resetButton}
+    ${styleUtils.flexCenter()}
+    transform: rotate(90deg);
+    color: ${colorTokens.icon.default};
+    cursor: grab;
+    place-self: center center;
   `,
 };

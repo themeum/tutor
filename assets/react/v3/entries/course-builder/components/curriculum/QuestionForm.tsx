@@ -6,12 +6,11 @@ import FormAnswerExplanation from '@Components/fields/FormAnswerExplanation';
 import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
 import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
 
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/question-types/MultipleChoiceAndOrdering';
 import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/question-types/OpenEndedAndShortAnswer';
-import FillinTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
+import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillInTheBlanks';
 import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
 
@@ -22,22 +21,23 @@ import EmptyState from '@Molecules/EmptyState';
 
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import type { QuizForm } from '@CourseBuilderServices/quiz';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.type`);
-  const questions = form.watch('questions');
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+  const questions = form.watch('questions') || [];
 
   const questionTypeForm = {
-    'true-false': <TrueFalse key={activeQuestionId} activeQuestionIndex={activeQuestionIndex} />,
-    'multiple-choice': <MultipleChoiceAndOrdering key={activeQuestionId} />,
-    'open-ended': <OpenEndedAndShortAnswer key={activeQuestionId} />,
-    'fill-in-the-blanks': <FillinTheBlanks key={activeQuestionId} />,
-    'short-answer': <OpenEndedAndShortAnswer key={activeQuestionId} />,
+    true_false: <TrueFalse key={activeQuestionId} />,
+    multiple_choice: <MultipleChoiceAndOrdering key={activeQuestionId} />,
+    open_ended: <OpenEndedAndShortAnswer key={activeQuestionId} />,
+    fill_in_the_blank: <FillInTheBlanks key={activeQuestionId} />,
+    short_answer: <OpenEndedAndShortAnswer key={activeQuestionId} />,
     matching: <Matching key={activeQuestionId} />,
-    'image-answering': <ImageAnswering key={activeQuestionId} />,
+    image_answering: <ImageAnswering key={activeQuestionId} />,
     ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
   } as const;
 
@@ -63,7 +63,10 @@ const QuestionForm = () => {
         <div css={styles.questionTitleAndDesc}>
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.title` as 'questions.0.title'}
+            rules={{
+              required: __('Question title is required', 'tutor'),
+            }}
+            name={`questions.${activeQuestionIndex}.question_title` as 'questions.0.question_title'}
             render={(controllerProps) => (
               <FormQuestionTitle {...controllerProps} placeholder={__('Write your question here..', 'tutor')} />
             )}
@@ -71,7 +74,7 @@ const QuestionForm = () => {
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.description` as 'questions.0.description'}
+            name={`questions.${activeQuestionIndex}.question_description` as 'questions.0.question_description'}
             render={(controllerProps) => (
               <FormQuestionDescription
                 {...controllerProps}
@@ -89,7 +92,7 @@ const QuestionForm = () => {
       <div css={styles.questionAnswer}>
         <Controller
           control={form.control}
-          name={`questions.${activeQuestionIndex}.answerExplanation` as 'questions.0.answerExplanation'}
+          name={`questions.${activeQuestionIndex}.answer_explanation` as 'questions.0.answer_explanation'}
           render={(controllerProps) => (
             <FormAnswerExplanation {...controllerProps} placeholder={__('Write answer explanation...', 'tutor')} />
           )}

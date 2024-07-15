@@ -1091,6 +1091,10 @@ class Course extends Tutor_Base {
 	public function enqueue_course_builder_assets() {
 		wp_enqueue_script( 'prism', tutor()->url . 'assets/lib/prism/prism.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		wp_enqueue_style( 'prism', tutor()->url . 'assets/lib/prism/prism.css', array(), TUTOR_VERSION );
+		
+		// Fix: function print_emoji_styles is deprecated since version 6.4.0!
+		remove_action( 'wp_print_styles', 'print_emoji_styles' );
+
 		wp_enqueue_script( 'wp-tinymce' );
 		wp_enqueue_editor();
 		wp_enqueue_media();

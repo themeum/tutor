@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -19,7 +19,13 @@ import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionConditions';
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
-import { type QuizQuestion, useGetQuizQuestionsQuery } from '@CourseBuilderServices/quiz';
+import {
+  convertQuizFormDataToPayload,
+  convertQuizResponseToFormData,
+  type QuizForm,
+  useGetQuizDetailsQuery,
+  useSaveQuizMutation,
+} from '@CourseBuilderServices/quiz';
 import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 
 import { modal } from '@Config/constants';
@@ -30,46 +36,33 @@ import { styleUtils } from '@Utils/style-utils';
 
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import type { ID } from '@CourseBuilderServices/curriculum';
+import type { ContentDripType } from '@CourseBuilderServices/course';
+import { isDefined } from '@Utils/types';
 
 interface QuizModalProps extends ModalProps {
+  quizId?: ID;
+  topicId: ID;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  contentDripType: ContentDripType;
 }
 
 export type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
+export type QuizFeedbackMode = 'default' | 'reveal' | 'retry';
+export type QuizLayoutView = '' | 'single_question' | 'question_pagination' | 'question_below_each_other';
+export type QuizQuestionsOrder = 'rand' | 'sorting' | 'asc' | 'desc';
 
-export interface QuizForm {
-  quiz_title: string;
-  quiz_description: string;
-  quiz_option: {
-    time_limit: {
-      time_value: number;
-      time_type: QuizTimeLimit;
-    };
-    hide_quiz_time_display: boolean;
-    feedback_mode: 'default' | 'reveal' | 'retry';
-    attempts_allowed: number;
-    passing_grade: number;
-    max_questions_for_answer: number;
-    available_after_days: number;
-    quiz_auto_start: boolean;
-    question_layout_view: '' | 'single_question' | 'question_pagination' | 'question_below_each_other';
-    questions_order: 'rand' | 'sorting' | 'asc' | 'desc';
-    hide_question_number_overview: boolean;
-    short_answer_characters_limit: number;
-    open_ended_answer_characters_limit: number;
-  };
-  questions: QuizQuestion[];
-}
+type QuizTabs = 'details' | 'settings';
 
-type QuizTabs = 'questions' | 'settings';
-
-const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
+const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, contentDripType }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<QuizTabs>('questions');
+  const [activeTab, setActiveTab] = useState<QuizTabs>('details');
+  const [localQuizId, setLocalQuizId] = useState<ID>(quizId || '');
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
-  const getQuizQuestionsQuery = useGetQuizQuestionsQuery();
+  const saveQuizMutation = useSaveQuizMutation();
+  const getQuizDetailsQuery = useGetQuizDetailsQuery(localQuizId);
 
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {
@@ -83,54 +76,53 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
         attempts_allowed: 0,
         passing_grade: 0,
         max_questions_for_answer: 0,
-        available_after_days: 0,
         quiz_auto_start: false,
         question_layout_view: '',
         questions_order: 'rand',
         hide_question_number_overview: false,
         short_answer_characters_limit: 0,
         open_ended_answer_characters_limit: 0,
+        content_drip_settings: {
+          unlock_date: '',
+          after_xdays_of_enroll: 0,
+          prerequisites: [],
+        },
       },
       questions: [],
     },
-    values: {
-      quiz_title: 'New Quiz',
-      quiz_description: 'Quiz description',
-      quiz_option: {
-        time_limit: {
-          time_value: 0,
-          time_type: 'minutes',
-        },
-        hide_quiz_time_display: false,
-        feedback_mode: 'default',
-        attempts_allowed: 0,
-        passing_grade: 0,
-        max_questions_for_answer: 0,
-        available_after_days: 0,
-        quiz_auto_start: false,
-        question_layout_view: '',
-        questions_order: 'rand',
-        hide_question_number_overview: false,
-        short_answer_characters_limit: 0,
-        open_ended_answer_characters_limit: 0,
-      },
-      questions: getQuizQuestionsQuery.data || [],
-    },
   });
 
-  // @TODO: isEdit will be calculated based on the quiz data form API
-  const [isEdit, setIsEdit] = useState(true);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!getQuizDetailsQuery.data) {
+      return;
+    }
 
-  const onQuizFormSubmit = (data: QuizForm) => {
-    // @TODO: will be implemented later
-    setIsEdit(false);
+    const convertedData = convertQuizResponseToFormData(getQuizDetailsQuery.data);
+
+    form.reset(convertedData);
+  }, [getQuizDetailsQuery.data]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (localQuizId) {
+      getQuizDetailsQuery.refetch();
+    }
+  }, [localQuizId]);
+
+  const [isEdit, setIsEdit] = useState(!isDefined(quizId));
+
+  const onQuizFormSubmit = async (data: QuizForm) => {
+    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, quizId || '');
+    const response = await saveQuizMutation.mutateAsync(payload);
+
+    if (response.data) {
+      setIsEdit(false);
+      setLocalQuizId(response.data);
+    }
   };
 
   const { isDirty } = form.formState;
-
-  if (getQuizQuestionsQuery.isLoading) {
-    return <LoadingSection />;
-  }
 
   return (
     <FormProvider {...form}>
@@ -148,8 +140,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
               activeTab={activeTab}
               tabList={[
                 {
-                  label: __('Questions', 'tutor'),
-                  value: 'questions',
+                  label: __('Question Details', 'tutor'),
+                  value: 'details',
                 },
                 { label: __('Settings', 'tutor'), value: 'settings' },
               ]}
@@ -181,7 +173,15 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                   </Button>
                 }
               >
-                <Button variant="primary" size="small" onClick={form.handleSubmit(onQuizFormSubmit)}>
+                <Button
+                  loading={saveQuizMutation.isPending}
+                  variant="primary"
+                  size="small"
+                  onClick={async () => {
+                    await form.handleSubmit(onQuizFormSubmit)();
+                    closeModal();
+                  }}
+                >
                   {__('Save', 'tutor')}
                 </Button>
               </Show>
@@ -189,9 +189,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
           }
         >
           <div css={styles.wrapper}>
-            <Show when={activeTab === 'questions'} fallback={<div />}>
+            <Show when={activeTab === 'details'} fallback={<div />}>
               <div css={styles.left}>
-                <Show when={activeTab === 'questions'}>
+                <Show when={activeTab === 'details'}>
                   <div css={styles.quizTitleWrapper}>
                     <Show
                       when={isEdit}
@@ -231,6 +231,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                             {__('Cancel', 'tutor')}
                           </Button>
                           <Button
+                            loading={saveQuizMutation.isPending}
                             variant="secondary"
                             type="submit"
                             size="small"
@@ -243,16 +244,25 @@ const QuizModal = ({ closeModal, icon, title, subtitle }: QuizModalProps) => {
                     </Show>
                   </div>
 
-                  <QuestionList />
+                  <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingSection />}>
+                    <QuestionList quizId={localQuizId} />
+                  </Show>
                 </Show>
               </div>
             </Show>
             <div css={styles.content({ activeTab })}>
-              <Show when={activeTab === 'settings'} fallback={<QuestionForm />}>
-                <QuizSettings />
+              <Show
+                when={activeTab === 'settings'}
+                fallback={
+                  <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingSection />}>
+                    <QuestionForm />
+                  </Show>
+                }
+              >
+                <QuizSettings contentDripType={contentDripType} />
               </Show>
             </div>
-            <Show when={activeTab === 'questions'} fallback={<div />}>
+            <Show when={activeTab === 'details'} fallback={<div />}>
               <div css={styles.right}>
                 <QuestionConditions />
               </div>

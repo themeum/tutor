@@ -27,6 +27,7 @@ class OrderActivitiesModel {
 	 */
 	const META_KEY_HISTORY = 'history';
 	const META_KEY_REFUND  = 'refund';
+	const META_KEY_PARTIALLY_REFUND  = 'partially-refund';
 	const META_KEY_COMMENT = 'comment';
 
 
@@ -98,15 +99,22 @@ class OrderActivitiesModel {
 		global $wpdb;
 
 		// Retrieve order activities for the given order ID from the 'tutor_ordermeta' table.
+		$meta_keys = array(
+			self::META_KEY_COMMENT,
+			self::META_KEY_HISTORY,
+			self::META_KEY_REFUND,
+			self::META_KEY_PARTIALLY_REFUND
+		);
+
 		$order_activities = QueryHelper::get_all(
 			$this->table_name,
 			array(
 				'order_id' => $order_id,
-				'meta_key' => self::META_KEY_HISTORY,
+				'meta_key' => $meta_keys
 			),
-			'updated_at_gmt'
+			'id'
 		);
-
+		
 		if ( empty( $order_activities ) ) {
 			return array();
 		}
@@ -117,21 +125,12 @@ class OrderActivitiesModel {
 			$values     = new \stdClass();
 			$values     = json_decode( $activity->meta_value );
 			$values->id = (int) $activity->id;
+			$values->date = $activity->created_at_gmt;
+			$values->type = $activity->meta_key;
 			$response[] = $values;
 		}
 
 		unset( $activity );
-
-		// Custom comparison function for sorting by date.
-		usort(
-			$response,
-			function ( $a, $b ) {
-				$date_a = strtotime( $a->date );
-				$date_b = strtotime( $b->date );
-
-				return $date_b - $date_a;
-			}
-		);
 
 		return $response;
 	}

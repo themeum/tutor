@@ -7,12 +7,20 @@ import Payment from '@OrderComponents/order/Payment';
 import Student from '@OrderComponents/order/Student';
 import Summary from '@OrderComponents/order/Summary';
 import { OrderProvider } from '@OrderContexts/order-context';
+import { isDefined } from '@Utils/types';
+import { getQueryParam } from '@Utils/url';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 
 function Main() {
+  const orderId = getQueryParam('id', 'number');
+  
+  if (!isDefined(orderId)) {
+    return null;
+  }
+  
   return (
     <div css={styles.wrapper}>
-      <OrderProvider orderId={1}>
+      <OrderProvider orderId={orderId}>
         <Topbar />
         <Container>
           <div css={styles.content}>

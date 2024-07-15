@@ -13,12 +13,7 @@ import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useModal } from '@Components/modals/Modal';
-import {
-  useDeleteLessonMutation,
-  useZoomMeetingDetailsQuery,
-  type ContentType,
-  type ID,
-} from '@CourseBuilderServices/curriculum';
+import { useDeleteLessonMutation, type ContentType, type ID } from '@CourseBuilderServices/curriculum';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 
@@ -29,10 +24,12 @@ import type { IconCollection } from '@Utils/types';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import Show from '@Controls/Show';
+import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
+import { useExportQuizMutation } from '@CourseBuilderServices/quiz';
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
-  content: { id: ID; title: string };
+  content: { id: ID; title: string; total_question: number };
   isDragging?: boolean;
   onDelete?: () => void;
   onCopy?: () => void;
@@ -92,9 +89,8 @@ const animateLayoutChanges: AnimateLayoutChanges = (args) =>
 const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
   const courseDetails = useCourseDetails();
   const form = useFormContext<CourseFormData>();
-  const getZoomMeetingDetails = useZoomMeetingDetailsQuery(type === 'tutor_zoom_meeting' ? content.id : '', topic.id);
-
   const [meetingType, setMeetingType] = useState<'tutor_zoom_meeting' | 'tutor-google-meet' | null>(null);
+
   const editButtonRef = useRef<HTMLButtonElement>(null);
 
   const icon = icons[type];
@@ -109,6 +105,9 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   };
   const { showModal } = useModal();
   const deleteLessonMutation = useDeleteLessonMutation();
+  const deleteGoogleMeetMutation = useDeleteLessonMutation();
+  const deleteZoomMeetingMutation = useDeleteLessonMutation();
+  const exportQuizMutation = useExportQuizMutation();
 
   const handleShowModalOrPopover = () => {
     const isContentType = type as keyof typeof modalComponent;
@@ -120,6 +119,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
           topicId: topic.id,
           lessonId: content.id,
           assignmentId: content.id,
+          quizId: content.id,
           title: modalTitle[isContentType],
           subtitle: `${__('Topic')}: ${topic.title}`,
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
@@ -129,23 +129,33 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
     if (type === 'tutor_zoom_meeting') {
       setMeetingType('tutor_zoom_meeting');
     }
+
+    if (type === 'tutor-google-meet') {
+      setMeetingType('tutor-google-meet');
+    }
   };
 
   const handleDelete = () => {
-    if (type === 'lesson' || type === 'tutor_assignments') {
+    if (type === 'lesson' || type === 'tutor_assignments' || type === 'tutor_quiz') {
       deleteLessonMutation.mutate(content.id);
-    } else {
-      alert('@TODO: will be implemented later');
+    }
+
+    if (type === 'tutor-google-meet') {
+      deleteGoogleMeetMutation.mutate(content.id);
+    }
+
+    if (type === 'tutor_zoom_meeting') {
+      deleteZoomMeetingMutation.mutate(content.id);
     }
   };
 
   return (
     <>
       <div
+        {...attributes}
         css={styles.wrapper({ isDragging, isMeetingSelected: meetingType === type })}
         ref={setNodeRef}
         style={style}
-        {...attributes}
       >
         <div css={styles.iconAndTitle({ isDragging })} {...listeners}>
           <div data-content-icon>
@@ -163,10 +173,24 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
           </div>
           <p css={styles.title}>
             <span dangerouslySetInnerHTML={{ __html: content.title }} />
+            <Show when={type === 'tutor_quiz' && !!content.total_question}>
+              <span data-question-count>({content.total_question} Questions)</span>
+            </Show>
           </p>
         </div>
 
         <div css={styles.actions} data-actions>
+          <Show when={type === 'tutor_quiz'}>
+            <button
+              type="button"
+              css={styles.actionButton}
+              onClick={() => {
+                exportQuizMutation.mutate(content.id);
+              }}
+            >
+              <SVGIcon name="upload" width={24} height={24} />
+            </button>
+          </Show>
           <button ref={editButtonRef} type="button" css={styles.actionButton} onClick={handleShowModalOrPopover}>
             <SVGIcon name="edit" width={24} height={24} />
           </button>
@@ -199,11 +223,15 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
-            data={getZoomMeetingDetails.data || null}
+            data={null}
             topicId={topic.id}
             meetingHost={courseDetails?.zoom_users || {}}
             onCancel={() => setMeetingType(null)}
+            meetingId={content.id}
           />
+        </Show>
+        <Show when={meetingType === 'tutor-google-meet'}>
+          <GoogleMeetForm data={null} topicId={topic.id} onCancel={() => setMeetingType(null)} meetingId={content.id} />
         </Show>
       </Popover>
     </>
