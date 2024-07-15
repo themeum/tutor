@@ -120,6 +120,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 						</div>
 						<?php
 					}
+					do_action( 'tutor_after_option_section', $section );
 					?>
 				</div>
 			</div>
