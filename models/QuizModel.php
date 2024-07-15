@@ -1023,6 +1023,7 @@ class QuizModel {
 				50		
 		";
 
+		//phpcs:ignore
 		$result = $wpdb->get_results( $wpdb->prepare( $query, $attempt_id ) );
 
 		// If array and count result then loop with each result and prepare given answer.
