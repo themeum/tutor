@@ -1740,7 +1740,7 @@ class Options_V2 {
 				'blocks'   => array(
 					array(
 						'label'      => __( 'Supported payment methods ', 'tutor' ),
-						'slug'       => 'options',
+						'slug'       => 'automate_payment_gateway',
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
@@ -1756,6 +1756,27 @@ class Options_V2 {
 								'label'   => __( 'Stripe', 'tutor' ),
 								'default' => 'off',
 								'desc'    => __( 'Enable this to accept payments via Stripe.', 'tutor' ),
+							),
+						),
+					),
+					array(
+						'label'      => __( 'Manual payment methods ', 'tutor' ),
+						'slug'       => 'manual_payment_gateway',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => OptionKeys::PAYMENT_METHOD_BANK_TRANSFER,
+								'type'    => 'toggle_switch',
+								'label'   => __( 'Bank Transfer', 'tutor' ),
+								'default' => 'off',
+								'desc'    => __( 'Enable this to accept payments via Bank Transfer.', 'tutor' ),
+							),
+							array(
+								'key'     => OptionKeys::PAYMENT_METHOD_COD,
+								'type'    => 'toggle_switch',
+								'label'   => __( 'Cash on Delivery', 'tutor' ),
+								'default' => 'off',
+								'desc'    => __( 'Enable this to accept payments via Cash on Delivery.', 'tutor' ),
 							),
 						),
 					),
