@@ -1791,11 +1791,6 @@ class Options_V2 {
 						),
 					),
 				),
-				'show_content' => 'false',
-				'js_event'     => array(
-					'type'   => 'onclick',
-					'script' => "window.location.href='" .OptionKeys::get_tax_config_page_url(). "'",
-				),
 			),
 			'ecommerce_checkout'     => array(
 				'label'    => __( 'Checkout', 'tutor' ),
