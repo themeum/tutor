@@ -24,7 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 </head>
 <body data-tutor-context="<?php echo is_admin() ? 'backend' : 'frontend'; ?>">
 	<div id="tutor-course-builder"></div>
-	<?php wp_print_footer_scripts(); ?>
+	<?php
+		do_action( 'tutor_course_builder_footer' );
+		wp_print_footer_scripts();
+	?>
 </body>
 </html>
 
