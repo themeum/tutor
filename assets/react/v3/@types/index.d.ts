@@ -9,6 +9,7 @@ declare global {
   interface Window {
     // biome-ignore lint/suspicious/noExplicitAny: <Allow explicit any for this>
     wp: any;
+    tinymce: any;
     _tutorobject: {
       ajaxurl: string;
       home_url: string;

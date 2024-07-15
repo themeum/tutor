@@ -23,8 +23,10 @@ class OptionKeys {
 	const NUMBER_OF_DECIMALS = 'number_of_decimals';
 
 	// Payment Methods.
-	const PAYMENT_METHOD_PAYPAL = 'payment_method_paypal';
-	const PAYMENT_METHOD_STRIPE = 'payment_method_stripe';
+	const PAYMENT_METHOD_PAYPAL        = 'payment_method_paypal';
+	const PAYMENT_METHOD_STRIPE        = 'payment_method_stripe';
+	const PAYMENT_METHOD_BANK_TRANSFER = 'payment_method_bank_transfer';
+	const PAYMENT_METHOD_COD           = 'payment_method_cod';
 
 	// Tax and Coupon Settings.
 	const IS_TAX_APPLICABLE    = 'is_tax_applicable';
@@ -54,5 +56,17 @@ class OptionKeys {
 		);
 
 		return apply_filters( 'tutor_ecommerce_billing_field_options', $options );
+	}
+
+	/**
+	 * Get tax configuration page url
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_tax_config_page_url() {
+		$url = admin_url( 'admin.php?page=tutor_settings&tab=tax_configuration' );
+		return apply_filters( 'tutor_tax_config_page_url', $url );
 	}
 }

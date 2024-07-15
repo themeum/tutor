@@ -195,6 +195,11 @@ class Assets {
 		if ( CouponController::PAGE_SLUG === $page && 'edit' === $action ) {
 			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array(), TUTOR_VERSION, true );
 		}
+
+		// @since 3.0.0 add tax react app on the settings page.
+		if ( 'tutor_settings' === $page ) {
+			wp_enqueue_script( 'tutor-tax-settings.min', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array(), TUTOR_VERSION, true );
+		}
 	}
 
 	/**

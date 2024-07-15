@@ -283,10 +283,43 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
+		$order_id                       = Input::post( 'order_id' );
+		$amount                         = (float) Input::post( 'amount' );
+		$reason                         = Input::post( 'reason' );
+		$remove_student_from_enrolment  = Input::post( 'is_remove_enrolment' );
+
+		$meta_value = array (
+			'amount' => $amount,
+			'reason' => $reason,
+			'message' => __('Refunded by ', 'tutor') . get_userdata( get_current_user_id() )->display_name,
+		);
+
+		$order_data = $this->model->get_order_by_id( $order_id );
+
+		if ( $amount > (float) $order_data->net_payment ) {
+			$this->json_response(
+				__('Refund amount exceeded.', 'tutor'),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$meta_key = OrderActivitiesModel::META_KEY_REFUND;
+
+		if ( $amount < (float) $order_data->net_payment ) {
+			$meta_key = OrderActivitiesModel::META_KEY_PARTIALLY_REFUND;
+		}
+
+		if ( OrderActivitiesModel::META_KEY_PARTIALLY_REFUND === $meta_key ) {
+			$meta_value['message'] = __('Partially refunded by ', 'tutor') . get_userdata( get_current_user_id() )->display_name;
+		}
+
+		//@TODO: need to update the net_payment after making refund
+
 		$params = array(
-			'order_id'   => Input::post( 'order_id' ),
-			'meta_key'   => OrderActivitiesModel::META_KEY_REFUND,
-			'meta_value' => Input::post( 'meta_value' ),
+			'order_id'   => $order_id,
+			'meta_key'   => $meta_key,
+			'meta_value' => wp_json_encode( $meta_value ),
 		);
 
 		do_action( 'tutor_before_order_refund', $params );
@@ -317,6 +350,10 @@ class OrderController {
 				null,
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
+		}
+
+		if ( $remove_student_from_enrolment ) {
+			// @TODO: need to remove student from enrolment
 		}
 
 		$this->json_response( __( 'Order refund successful', 'tutor' ) );

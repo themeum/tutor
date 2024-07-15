@@ -31,7 +31,6 @@ import ThreeDots from '@Molecules/ThreeDots';
 
 import {
   useDeleteTopicMutation,
-  useImportQuizMutation,
   useSaveTopicMutation,
   type Content as TopicContentType,
 } from '@CourseBuilderServices/curriculum';
@@ -67,6 +66,7 @@ import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { useFileUploader } from '@Molecules/FileUploader';
 import { useToast } from '@Atoms/Toast';
+import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -469,6 +469,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                           content={{
                             id: content.ID,
                             title: content.post_title,
+                            total_question: content.total_question || 0,
                           }}
                           onCopy={() => createDuplicateContent(content)}
                         />
@@ -481,14 +482,15 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               {createPortal(
                 <DragOverlay>
                   <Show when={activeSortItem}>
-                    {(item) => (
+                    {(content) => (
                       <TopicContent
                         topic={topic}
                         content={{
-                          id: item.ID,
-                          title: item.post_title,
+                          id: content.ID,
+                          title: content.post_title,
+                          total_question: content.total_question || 0,
                         }}
-                        type={item.post_type}
+                        type={content.post_type}
                         isDragging
                       />
                     )}
@@ -531,6 +533,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                     showModal({
                       component: QuizModal,
                       props: {
+                        topicId: topic.id,
+                        contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Quiz', 'tutor'),
                         icon: <SVGIcon name="quiz" width={24} height={24} />,
                         subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,

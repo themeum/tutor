@@ -82,12 +82,12 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 							}
 							$get_page = Input::get( 'page', '' );
 							?>
-						<li class="tutor-nav-item">
-							<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
-								<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
-								<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
-							</a>
-						</li>
+							<li class="tutor-nav-item">
+								<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
+									<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
+									<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
+								</a>
+							</li>
 							<?php
 						}
 						?>
@@ -119,6 +119,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 							?>
 						</div>
 						<?php
+						do_action( 'tutor_after_option_section', $key, $section );
 					}
 					?>
 				</div>

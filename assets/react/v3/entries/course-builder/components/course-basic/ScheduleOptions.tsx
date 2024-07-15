@@ -33,7 +33,7 @@ const ScheduleOptions = () => {
     },
   });
 
-  const [showForm, setShowForm] = useState(courseId ? false : true);
+  const [showForm, setShowForm] = useState(!courseId);
 
   const scheduleDate = scheduleForm.watch('schedule_date')
     ? format(new Date(scheduleForm.watch('schedule_date')), DateFormats.monthDayYear)
@@ -131,7 +131,7 @@ const styles = {
     border-radius: ${borderRadius[6]};
 
     &:focus-within {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus};
     }
 
     > div {
@@ -140,15 +140,23 @@ const styles = {
           border-top-right-radius: 0;
           border-bottom-right-radius: 0;
           border-right: none;
-          box-shadow: none;
+          &:focus {
+            box-shadow: none;
+            outline: none;
+          }
         }
       }
+
       &:last-of-type {
         input {
           border-top-left-radius: 0;
           border-bottom-left-radius: 0;
           border-left: none;
-          box-shadow: none;
+
+          &:focus {
+            box-shadow: none;
+            outline: none;
+          }
         }
       }
     }

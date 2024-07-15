@@ -1641,7 +1641,7 @@ class Options_V2 {
 			),
 			'ecommerce_basic'     => array(
 				'label'    => __( 'Basic', 'tutor' ),
-				'slug'     => 'ecommerce-basic',
+				'slug'     => 'ecommerce_basic',
 				'desc'     => __( 'Advanced Settings', 'tutor' ),
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-filter',
@@ -1649,7 +1649,7 @@ class Options_V2 {
 					array(
 						'label'      => false,
 						'block_type' => 'uniform',
-						'slug'       => 'cart-page',
+						'slug'       => 'cart_page',
 						'fields'     => array(
 							array(
 								'key'     => CartController::PAGE_ID_OPTION_NAME,
@@ -1664,7 +1664,7 @@ class Options_V2 {
 					array(
 						'label'      => false,
 						'block_type' => 'uniform',
-						'slug'       => 'checkout-page',
+						'slug'       => 'checkout_page',
 						'fields'     => array(
 							array(
 								'key'     => CheckoutController::PAGE_ID_OPTION_NAME,
@@ -1740,7 +1740,7 @@ class Options_V2 {
 				'blocks'   => array(
 					array(
 						'label'      => __( 'Supported payment methods ', 'tutor' ),
-						'slug'       => 'options',
+						'slug'       => 'automate_payment_gateway',
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
@@ -1757,36 +1757,57 @@ class Options_V2 {
 								'default' => 'off',
 								'desc'    => __( 'Enable this to accept payments via Stripe.', 'tutor' ),
 							),
-							
+						),
+					),
+					array(
+						'label'      => __( 'Manual payment methods ', 'tutor' ),
+						'slug'       => 'manual_payment_gateway',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => OptionKeys::PAYMENT_METHOD_BANK_TRANSFER,
+								'type'    => 'toggle_switch',
+								'label'   => __( 'Bank Transfer', 'tutor' ),
+								'default' => 'off',
+								'desc'    => __( 'Enable this to accept payments via Bank Transfer.', 'tutor' ),
+							),
+							array(
+								'key'     => OptionKeys::PAYMENT_METHOD_COD,
+								'type'    => 'toggle_switch',
+								'label'   => __( 'Cash on Delivery', 'tutor' ),
+								'default' => 'off',
+								'desc'    => __( 'Enable this to accept payments via Cash on Delivery.', 'tutor' ),
+							),
 						),
 					),
 				),
 			),
 			'ecommerce_tax'     => array(
 				'label'    => __( 'Tax', 'tutor' ),
-				'slug'     => 'advanced',
+				'slug'     => 'ecommerce_tax',
 				'desc'     => __( 'Advanced Settings', 'tutor' ),
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-filter',
 				'blocks'   => array(
 					array(
-						'label'      => __( 'Course', 'tutor' ),
+						'label'      => __( 'Tax Configuration', 'tutor' ),
 						'slug'       => 'options',
 						'block_type' => 'uniform',
-						'fields'     => array(),
+						'fields'     => array(
+						),
 					),
 				),
 			),
 			'ecommerce_checkout'     => array(
 				'label'    => __( 'Checkout', 'tutor' ),
-				'slug'     => 'advanced',
+				'slug'     => 'ecommerce_checkout',
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-filter',
 				'blocks'   => array(
 					array(
 						'label'      => __( 'Checkout Configuration', 'tutor' ),
 						'desc'       => __( 'Customize your checkout process to suit your preferences.', 'tutor' ),
-						'slug'       => 'options',
+						'slug'       => 'checkout_configuration',
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
@@ -1826,7 +1847,6 @@ class Options_V2 {
 								'default' => 'off',
 								'desc'    => __( 'Enable this to accept payments via Stripe.', 'tutor' ),
 							),
-							
 						),
 					),
 					array(
