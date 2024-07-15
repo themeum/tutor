@@ -13,12 +13,7 @@ import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useModal } from '@Components/modals/Modal';
-import {
-  useDeleteLessonMutation,
-  useExportQuizMutation,
-  type ContentType,
-  type ID,
-} from '@CourseBuilderServices/curriculum';
+import { useDeleteLessonMutation, type ContentType, type ID } from '@CourseBuilderServices/curriculum';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 
@@ -30,10 +25,11 @@ import LoadingSpinner from '@Atoms/LoadingSpinner';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import Show from '@Controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
+import { useExportQuizMutation } from '@CourseBuilderServices/quiz';
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
-  content: { id: ID; title: string };
+  content: { id: ID; title: string; total_question: number };
   isDragging?: boolean;
   onDelete?: () => void;
   onCopy?: () => void;
@@ -123,6 +119,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
           topicId: topic.id,
           lessonId: content.id,
           assignmentId: content.id,
+          quizId: content.id,
           title: modalTitle[isContentType],
           subtitle: `${__('Topic')}: ${topic.title}`,
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
@@ -176,6 +173,9 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
           </div>
           <p css={styles.title}>
             <span dangerouslySetInnerHTML={{ __html: content.title }} />
+            <Show when={type === 'tutor_quiz' && !!content.total_question}>
+              <span data-question-count>({content.total_question} Questions)</span>
+            </Show>
           </p>
         </div>
 

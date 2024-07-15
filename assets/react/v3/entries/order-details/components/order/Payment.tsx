@@ -166,6 +166,7 @@ function Payment() {
                   props: {
                     title: __('Refund', 'tutor'),
                     available_amount: order.net_payment,
+                    order_id: order.id
                   },
                 });
               }

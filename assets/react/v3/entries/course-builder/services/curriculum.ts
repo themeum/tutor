@@ -24,6 +24,7 @@ export interface Content {
   post_content: string;
   post_name: string | null;
   post_type: ContentType;
+  total_question?: number;
 }
 
 export interface Lesson extends Content {
@@ -44,34 +45,6 @@ export interface Lesson extends Content {
     course_prerequisites: PrerequisiteCourses[];
   };
 }
-export type QuestionType = 'single_choice';
-export interface QuestionSetting {
-  question_type: QuestionType;
-  answer_required: boolean;
-  randomize_question: boolean;
-  question_mark: number;
-  show_question_mark: boolean;
-}
-export interface QuestionAnswer {
-  answer_id: ID;
-  answer_title: string;
-  is_correct: boolean;
-}
-export interface QuizQuestion {
-  question_id: ID;
-  question_title: string;
-  question_description: string;
-  question_type: QuestionType;
-  question_mark: number;
-  question_settings: QuestionSetting;
-  question_answers: QuestionAnswer[];
-}
-
-export interface Quiz extends Content {
-  type: 'quiz';
-  questions: QuizQuestion[];
-}
-
 export interface Assignment extends Content {
   attachments: Media[];
   assignment_option: {
@@ -174,11 +147,6 @@ export interface CourseContentOrderPayload {
 export interface ZoomMeetingDetailsPayload {
   meeting_id: ID;
   topic_id: ID;
-}
-
-interface ImportQuizPayload {
-  topic_id: ID;
-  csv_file: File;
 }
 
 const getCourseTopic = (courseId: ID) => {
@@ -472,105 +440,5 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
     queryKey: ['GoogleMeet', meetingId],
     queryFn: () => getGoogleMeetDetails(meetingId, topicId).then((res) => res.data),
     enabled: !!meetingId && !!topicId,
-  });
-};
-
-const importQuiz = (payload: ImportQuizPayload) => {
-  return authApiInstance.post<
-    string,
-    {
-      data: {
-        message: string;
-      };
-      success: boolean;
-    }
-  >(endpoints.ADMIN_AJAX, {
-    action: 'quiz_import_data',
-    ...payload,
-  });
-};
-
-export const useImportQuizMutation = () => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: importQuiz,
-    onSuccess: (response) => {
-      console.log(response);
-      if (response.success) {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
-        showToast({
-          message: __('Quiz imported successfully', 'tutor'),
-          type: 'success',
-        });
-      } else {
-        showToast({
-          message: response.data.message,
-          type: 'danger',
-        });
-      }
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    },
-  });
-};
-
-const exportQuiz = (quizId: ID) => {
-  return authApiInstance.post<
-    string,
-    {
-      data: {
-        title: string;
-        output_quiz_data: unknown[][];
-      };
-      success: boolean;
-    }
-  >(endpoints.ADMIN_AJAX, {
-    action: 'quiz_export_data',
-    quiz_id: quizId,
-  });
-};
-
-export const useExportQuizMutation = () => {
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: exportQuiz,
-    onSuccess: (response) => {
-      let csvContent = '';
-      for (const rowArray of response.data.output_quiz_data) {
-        const row = rowArray.join(',');
-        csvContent += `${row}\r\n`;
-      }
-      const blob = new Blob([csvContent], {
-        type: 'text/csv',
-      });
-      const csvUrl = window.webkitURL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', csvUrl);
-      link.setAttribute('download', `tutor-quiz-${response.data.title}.csv`);
-      document.body.appendChild(link);
-      link.click();
-
-      if (response.success) {
-        showToast({
-          message: __('Quiz exported successfully', 'tutor'),
-          type: 'success',
-        });
-      }
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    },
   });
 };

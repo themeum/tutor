@@ -27,27 +27,26 @@ function Student() {
             <span>{student.email}</span>
             <span>{student.phone}</span>
           </div>
-          <Show when={order.student.billing_address}>
-            <div css={styles.row}>
-              <h4>{__('Billing Address', 'tutor')}</h4>
-              <Show when={order.student?.billing_address?.address}>
-                <span>{student.billing_address.address}</span>
-              </Show>
-              <Show when={order.student?.billing_address?.city}>
-                <span>{student.billing_address.city}</span>
-              </Show>
+          {isDefined(order.student.billing_address) && (
+              <div css={styles.row}>
+                <h4>{__('Billing Address', 'tutor')}</h4>
+                <Show when={order.student.billing_address?.address}>
+                  <span>{student.billing_address.address}</span>
+                </Show>
+                <Show when={order.student.billing_address?.city}>
+                  <span>{student.billing_address.city}</span>
+                </Show>
+                <span>
+                  {[student.billing_address.state, student.billing_address.zip_code, student.billing_address.country]
+                    .filter(isDefined)
+                    .join(', ')}
+                </span>
+                <Show when={order.student.billing_address?.phone}>
+                  <span>{student.billing_address.phone}</span>
+                </Show>
+              </div>
 
-              <span>
-                {[student.billing_address.state, student.billing_address.zip_code, student.billing_address.country]
-                  .filter(isDefined)
-                  .join(', ')}
-              </span>
-
-              <Show when={order.student?.billing_address?.phone}>
-                <span>{student.billing_address.phone}</span>
-              </Show>
-            </div>
-          </Show>
+          )}
         </div>
       </div>
     </Box>

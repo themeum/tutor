@@ -14,11 +14,10 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useMemo, useState } from 'react';
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import type { QuizForm } from '@CourseBuilderComponents/modals/QuizModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 
@@ -27,20 +26,28 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
+import { moveTo } from '@Utils/util';
+import type { ID } from '@CourseBuilderServices/curriculum';
+import {
+  type QuizForm,
+  useCreateQuizQuestionMutation,
+  useQuizQuestionSortingMutation,
+} from '@CourseBuilderServices/quiz';
 
-const QuestionList = () => {
+interface QuestionListProps {
+  quizId?: ID;
+}
+
+const QuestionList = ({ quizId }: QuestionListProps) => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
   const form = useFormContext<QuizForm>();
   const { setActiveQuestionId } = useQuizModalContext();
-
-  const quizTitle = useWatch({ control: form.control, name: 'quiz_title', defaultValue: '' });
-  const quizDescription = useWatch({ control: form.control, name: 'quiz_description', defaultValue: '' });
+  const createQuizQuestion = useCreateQuizQuestionMutation();
+  const quizQuestionSortingMutation = useQuizQuestionSortingMutation();
 
   const {
-    append: addQuestion,
-    remove: removeQustion,
+    remove: removeQuestion,
     move: moveQuestion,
     fields: questionFields,
   } = useFieldArray({
@@ -62,36 +69,17 @@ const QuestionList = () => {
       return null;
     }
 
-    return questionFields.find((item) => item.ID === activeSortId);
+    return questionFields.find((item) => item.question_id === activeSortId);
   }, [activeSortId, questionFields]);
 
-  const handleAddQuestion = () => {
-    const questionId = nanoid();
-    addQuestion({
-      ID: questionId,
-      title: __('Write anything here..', 'tutor'),
-      description: '',
-      type: 'true-false',
-      answerRequired: false,
-      options: [
-        {
-          ID: nanoid(),
-          title: __('True', 'tutor'),
-        },
-        {
-          ID: nanoid(),
-          title: __('False', 'tutor'),
-        },
-      ],
-      questionMark: 1,
-      randomizeQuestion: false,
-      showQuestionMark: false,
-      answerExplanation: '',
-    });
-    setActiveQuestionId(questionId);
+  const handleAddQuestion = async () => {
+    if (quizId) {
+      const response = await createQuizQuestion.mutateAsync(quizId);
+      setActiveQuestionId(response.data);
+    }
   };
 
-  if (!quizTitle || !quizDescription) {
+  if (!quizId) {
     return null;
   }
 
@@ -120,9 +108,14 @@ const QuestionList = () => {
               }
 
               if (active.id !== over.id) {
-                const activeIndex = questionFields.findIndex((item) => item.ID === active.id);
-                const overIndex = questionFields.findIndex((item) => item.ID === over.id);
+                const activeIndex = questionFields.findIndex((item) => item.question_id === active.id);
+                const overIndex = questionFields.findIndex((item) => item.question_id === over.id);
 
+                const updatedQuestionOrder = moveTo(form.watch('questions'), activeIndex, overIndex);
+                quizQuestionSortingMutation.mutate({
+                  quiz_id: quizId,
+                  sorted_question_ids: updatedQuestionOrder.map((question) => question.question_id),
+                });
                 moveQuestion(activeIndex, overIndex);
               }
 
@@ -130,18 +123,18 @@ const QuestionList = () => {
             }}
           >
             <SortableContext
-              items={questionFields.map((item) => ({ ...item, id: item.ID }))}
+              items={questionFields.map((item) => ({ ...item, id: item.question_id }))}
               strategy={verticalListSortingStrategy}
             >
               <For each={form.getValues('questions')}>
                 {(question, index) => (
                   <Question
-                    key={question.ID}
+                    key={question.question_id}
                     question={question}
                     index={index}
                     onRemoveQuestion={() => {
-                      removeQustion(index);
-                      setActiveQuestionId(null);
+                      removeQuestion(index);
+                      setActiveQuestionId('');
                     }}
                   />
                 )}
@@ -152,15 +145,15 @@ const QuestionList = () => {
               <DragOverlay>
                 <Show when={activeSortItem}>
                   {(item) => {
-                    const index = questionFields.findIndex((question) => question.ID === item.ID);
+                    const index = questionFields.findIndex((question) => question.question_id === item.question_id);
                     return (
                       <Question
-                        key={item.ID}
+                        key={item.question_id}
                         question={item}
                         index={index}
                         onRemoveQuestion={() => {
-                          removeQustion(index);
-                          setActiveQuestionId(null);
+                          removeQuestion(index);
+                          setActiveQuestionId('');
                         }}
                       />
                     );

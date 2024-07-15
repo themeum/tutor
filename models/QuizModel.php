@@ -1023,6 +1023,7 @@ class QuizModel {
 				50		
 		";
 
+		//phpcs:ignore
 		$result = $wpdb->get_results( $wpdb->prepare( $query, $attempt_id ) );
 
 		// If array and count result then loop with each result and prepare given answer.
@@ -1058,10 +1059,11 @@ class QuizModel {
 		$query = "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d";
 
 		if ( $question_type ) {
-			$query .= ' AND belongs_question_type = %s';
+			$query .= ' AND belongs_question_type = %s ORDER BY answer_order ASC';
 			//phpcs:ignore
 			$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id, $question_type ) );
 		} else {
+			$query .= ' ORDER BY answer_order ASC';
 			//phpcs:ignore
 			$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id ) );
 		}
@@ -1073,5 +1075,28 @@ class QuizModel {
 		}
 
 		return $answers;
+	}
+
+	/**
+	 * Get next answer order SL no
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $question_id question id.
+	 * @param int $question_type question type.
+	 *
+	 * @return int
+	 */
+	public static function get_next_answer_order( $question_id, $question_type ) {
+		global $wpdb;
+		$max_id = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT MAX(answer_order) FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND belongs_question_type = %s",//phpcs:ignore
+				$question_id,
+				$question_type
+			)
+		);
+
+		return $max_id + 1;
 	}
 }
