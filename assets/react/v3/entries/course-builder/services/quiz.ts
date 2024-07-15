@@ -7,12 +7,13 @@ import type {
   QuizTimeLimit,
 } from '@CourseBuilderComponents/modals/QuizModal';
 import { authApiInstance } from '@Utils/api';
-import type { TutorMutationResponse } from './course';
+import type { ContentDripType, TutorMutationResponse } from './course';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import { useToast } from '@Atoms/Toast';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 
 export type QuizQuestionType =
   | 'true_false'
@@ -29,12 +30,12 @@ export interface QuizQuestionOption {
   belongs_question_id: ID;
   belongs_question_type: QuizQuestionType;
   answer_title: string;
-  is_correct?: boolean;
+  is_correct: '0' | '1';
   image_id?: ID;
   image_url?: string;
-  answer_two_gap_match?: string;
-  answer_view_format?: string;
-  answer_order?: number;
+  answer_two_gap_match: string;
+  answer_view_format: string;
+  answer_order: number;
 }
 
 // Define a base interface for common properties
@@ -128,14 +129,23 @@ interface QuizDetailsResponse {
       time_value: number;
       time_type: QuizTimeLimit;
     };
+    hide_quiz_time_display: '0' | '1';
     feedback_mode: QuizFeedbackMode;
     attempts_allowed: number;
+    pass_is_required: '0' | '1';
     passing_grade: number;
     max_questions_for_answer: number;
+    quiz_auto_start: '0' | '1';
     question_layout_view: QuizLayoutView;
     questions_order: QuizQuestionsOrder;
+    hide_question_number_overview: '0' | '1';
     short_answer_characters_limit: number;
     open_ended_answer_characters_limit: number;
+    content_drip_settings: {
+      unlock_date: string;
+      after_xdays_of_enroll: number;
+      prerequisites: [];
+    };
   };
   questions: QuizQuestion[];
 }
@@ -148,6 +158,125 @@ export type QuizQuestion =
   | FillInTheBlanksQuizQuestion
   | OrderingQuizQuestion
   | OtherQuizQuestion;
+
+export interface QuizForm {
+  quiz_title: string;
+  quiz_description: string;
+  quiz_option: {
+    time_limit: {
+      time_value: number;
+      time_type: QuizTimeLimit;
+    };
+    hide_quiz_time_display: boolean;
+    feedback_mode: QuizFeedbackMode;
+    attempts_allowed: number;
+    pass_is_required: boolean;
+    passing_grade: number;
+    max_questions_for_answer: number;
+    quiz_auto_start: boolean;
+    question_layout_view: QuizLayoutView;
+    questions_order: QuizQuestionsOrder;
+    hide_question_number_overview: boolean;
+    short_answer_characters_limit: number;
+    open_ended_answer_characters_limit: number;
+    content_drip_settings: {
+      unlock_date: string;
+      after_xdays_of_enroll: number;
+      prerequisites: [];
+    };
+  };
+  questions: QuizQuestion[];
+}
+
+interface QuizUpdateQuestionPayload {
+  question_id: ID;
+  question_title: string;
+  question_description: string;
+  question_type: string;
+  question_mark: number;
+  'question_settings[question_type]': string;
+  'question_settings[answer_required]': 0 | 1;
+  'question_settings[question_mark]': number;
+}
+
+interface QuizQuestionAnswerOrderingPayload {
+  question_id: ID;
+  sorted_answer_ids: ID[];
+}
+
+export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
+  return {
+    quiz_title: quiz.post_title || '',
+    quiz_description: quiz.post_content || '',
+    quiz_option: {
+      time_limit: {
+        time_value: quiz.quiz_option.time_limit.time_value || 0,
+        time_type: quiz.quiz_option.time_limit.time_type || 'minutes',
+      },
+      hide_quiz_time_display: quiz.quiz_option.hide_quiz_time_display === '1',
+      feedback_mode: quiz.quiz_option.feedback_mode || 'default',
+      attempts_allowed: quiz.quiz_option.attempts_allowed || 0,
+      pass_is_required: quiz.quiz_option.pass_is_required === '1',
+      passing_grade: quiz.quiz_option.passing_grade || 0,
+      max_questions_for_answer: quiz.quiz_option.max_questions_for_answer || 0,
+      quiz_auto_start: quiz.quiz_option.quiz_auto_start === '1',
+      question_layout_view: quiz.quiz_option.question_layout_view || '',
+      questions_order: quiz.quiz_option.questions_order || 'rand',
+      hide_question_number_overview: quiz.quiz_option.hide_question_number_overview === '1',
+      short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit || 0,
+      open_ended_answer_characters_limit: quiz.quiz_option.open_ended_answer_characters_limit || 0,
+      content_drip_settings: quiz.quiz_option.content_drip_settings || {
+        unlock_date: '',
+        after_xdays_of_enroll: 0,
+        prerequisites: [],
+      },
+    },
+    questions: quiz.questions,
+  };
+};
+
+export const convertQuizFormDataToPayload = (
+  formData: QuizForm,
+  topicId: ID,
+  contentDripType: ContentDripType,
+  quizId?: ID
+): QuizPayload => {
+  return {
+    ...(quizId && { quiz_id: quizId }),
+    topic_id: topicId,
+    quiz_title: formData.quiz_title,
+    quiz_description: formData.quiz_description,
+    'quiz_option[time_limit][time_value]': formData.quiz_option.time_limit.time_value,
+    'quiz_option[time_limit][time_type]': formData.quiz_option.time_limit.time_type,
+    'quiz_option[feedback_mode]': formData.quiz_option.feedback_mode,
+    'quiz_option[attempts_allowed]': formData.quiz_option.attempts_allowed,
+    'quiz_option[passing_grade]': formData.quiz_option.passing_grade,
+    'quiz_option[max_questions_for_answer]': formData.quiz_option.max_questions_for_answer,
+    'quiz_option[question_layout_view]': formData.quiz_option.question_layout_view,
+    'quiz_option[questions_order]': formData.quiz_option.questions_order,
+    'quiz_option[short_answer_characters_limit]': formData.quiz_option.short_answer_characters_limit,
+    'quiz_option[open_ended_answer_characters_limit]': formData.quiz_option.open_ended_answer_characters_limit,
+    'quiz_option[hide_quiz_time_display]': formData.quiz_option.hide_quiz_time_display ? 1 : 0,
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'unlock_sequentially' &&
+      formData.quiz_option.feedback_mode === 'retry' && {
+        'quiz_option[pass_is_required]': formData.quiz_option.pass_is_required ? 1 : 0,
+      }),
+  };
+};
+
+export const convertQuizFormDataToPayloadForUpdate = (data: QuizQuestion): QuizUpdateQuestionPayload => {
+  return {
+    question_id: data.question_id,
+    question_title: data.question_title,
+    question_description: data.question_description,
+    question_type: data.question_type,
+    question_mark: data.question_mark,
+    'question_settings[question_type]': data.question_settings.question_type,
+    'question_settings[answer_required]': data.question_settings.answer_required ? 1 : 0,
+    'question_settings[question_mark]': data.question_settings.question_mark,
+  };
+};
 
 const importQuiz = (payload: ImportQuizPayload) => {
   return authApiInstance.post<
@@ -330,6 +459,27 @@ export const useCreateQuizQuestionMutation = () => {
   });
 };
 
+const updateQuizQuestion = (payload: QuizUpdateQuestionPayload) => {
+  return authApiInstance.post<QuizUpdateQuestionPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_question_update',
+    ...payload,
+  });
+};
+
+export const useUpdateQuizQuestionMutation = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: updateQuizQuestion,
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
 const quizQuestionSorting = (payload: { quiz_id: ID; sorted_question_ids: ID[] }) => {
   return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_sorting',
@@ -380,6 +530,72 @@ export const useDeleteQuizQuestionMutation = () => {
       if (response.data) {
         queryClient.invalidateQueries({
           queryKey: ['GetQuizDetails', response.data],
+        });
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const duplicateQuizQuestion = (questionId: ID) => {
+  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_question_duplicate',
+    question_id: questionId,
+  });
+};
+
+export const useDuplicateQuizQuestionMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: duplicateQuizQuestion,
+    onSuccess: (response) => {
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['GetQuizDetails'],
+        });
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const quizQuestionAnswerOrdering = (payload: QuizQuestionAnswerOrderingPayload) => {
+  return authApiInstance.post<QuizQuestionAnswerOrderingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_question_answer_sorting',
+    ...payload,
+  });
+};
+
+export const useQuizQuestionAnswerOrderingMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: quizQuestionAnswerOrdering,
+    onSuccess: (response) => {
+      if (response.data) {
+        queryClient.invalidateQueries({
+          queryKey: ['GetQuizDetails'],
         });
         showToast({
           message: __(response.message, 'tutor'),

@@ -45,34 +45,6 @@ export interface Lesson extends Content {
     course_prerequisites: PrerequisiteCourses[];
   };
 }
-export type QuestionType = 'single_choice';
-export interface QuestionSetting {
-  question_type: QuestionType;
-  answer_required: boolean;
-  randomize_question: boolean;
-  question_mark: number;
-  show_question_mark: boolean;
-}
-export interface QuestionAnswer {
-  answer_id: ID;
-  answer_title: string;
-  is_correct: boolean;
-}
-export interface QuizQuestion {
-  question_id: ID;
-  question_title: string;
-  question_description: string;
-  question_type: QuestionType;
-  question_mark: number;
-  question_settings: QuestionSetting;
-  question_answers: QuestionAnswer[];
-}
-
-export interface Quiz extends Content {
-  type: 'quiz';
-  questions: QuizQuestion[];
-}
-
 export interface Assignment extends Content {
   attachments: Media[];
   assignment_option: {
