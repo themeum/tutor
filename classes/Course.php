@@ -866,7 +866,7 @@ class Course extends Tutor_Base {
 		// Update course thumb.
 		$thumbnail_id = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
 		if ( $thumbnail_id ) {
-			set_post_thumbnail( $update_id, $params['thumbnail_id'] );
+			set_post_thumbnail( $update_id, $thumbnail_id );
 		} else {
 			delete_post_meta( $update_id, '_thumbnail_id' );
 		}
