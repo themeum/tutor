@@ -1002,8 +1002,8 @@ class Course extends Tutor_Base {
 		}
 
 		if ( 'tutor' === $monetize_by ) {
-			$price      = get_post_meta( $course_id, 'course_price', true );
-			$sale_price = get_post_meta( $course_id, 'course_sale_price', true );
+			$price      = get_post_meta( $course_id, self::COURSE_PRICE_META, true );
+			$sale_price = get_post_meta( $course_id, self::COURSE_SALE_PRICE_META, true );
 		}
 
 		$course_pricing = array(
