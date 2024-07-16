@@ -106,6 +106,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_vimeo: courseDetails.video.source_vimeo ?? '',
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
+    course_pricing_category: courseDetails.course_pricing_category ?? 'subscription',
     course_price_type: courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,

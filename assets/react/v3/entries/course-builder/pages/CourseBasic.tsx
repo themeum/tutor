@@ -13,13 +13,16 @@ import FormWPEditor from '@Components/fields/FormWPEditor';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
+import Show from '@Controls/Show';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
+import SubscriptionPreview from '@CourseBuilderComponents/course-basic/SubscriptionPreview';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import { useGetProductsQuery, useProductDetailsQuery, type CourseFormData } from '@CourseBuilderServices/course';
+import { useGetProductsQuery, useProductDetailsQuery, type CourseFormData, type PricingCategory } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
+import type { Option } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -60,6 +63,7 @@ const CourseBasic = () => {
     control: form.control,
     name: 'course_product_id',
   });
+  const courseCategory = useWatch({control: form.control, name: 'course_pricing_category'});
 
   const visibilityStatusOptions = [
     {
@@ -84,6 +88,17 @@ const CourseBasic = () => {
     {
       label: __('Paid', 'tutor'),
       value: 'paid',
+    },
+  ];
+
+  const coursePricingCategoryOptions: Option<PricingCategory>[] = [
+    {
+      label: __('Subscription', 'tutor'),
+      value: 'subscription',
+    },
+    {
+      label: __('Regular', 'tutor'),
+      value: 'regular',
     },
   ];
 
@@ -210,19 +225,34 @@ const CourseBasic = () => {
             />
           )}
         />
-
+        
         <Controller
-          name="course_price_type"
+          name="course_pricing_category"
           control={form.control}
           render={(controllerProps) => (
             <FormRadioGroup
               {...controllerProps}
-              label={__('Price', 'tutor')}
-              options={coursePriceOptions}
+              label={__('Pricing type', 'tutor')}
+              options={coursePricingCategoryOptions}
               wrapperCss={styles.priceRadioGroup}
             />
           )}
         />
+
+        <Show when={courseCategory === 'regular'} fallback={<SubscriptionPreview />}>
+          <Controller
+            name="course_price_type"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormRadioGroup
+                {...controllerProps}
+                label={__('Price', 'tutor')}
+                options={coursePriceOptions}
+                wrapperCss={styles.priceRadioGroup}
+              />
+            )}
+          />
+        </Show>
 
         {coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc' && (
           <Controller
