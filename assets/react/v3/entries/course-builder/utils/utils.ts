@@ -93,7 +93,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       avatar_url: courseDetails.post_author.tutor_profile_photo_url,
     },
     thumbnail: {
-      id: 0,
+      id: courseDetails.thumbnail_id ? Number(courseDetails.thumbnail_id) : 0,
       title: '',
       url: courseDetails.thumbnail,
     },

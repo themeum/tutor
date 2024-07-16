@@ -268,6 +268,7 @@ export interface CourseDetailsResponse {
     filter: string;
   }[];
   thumbnail: string;
+  thumbnail_id: ID;
   enable_qna: string;
   is_public_course: string;
   course_level: CourseLevel;
