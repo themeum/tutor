@@ -258,37 +258,39 @@ const FormFileUploader = ({
           >
             {(files) => (
               <div css={styles.wrapper({ hasFiles: Array.isArray(files) ? files.length > 0 : files !== null })}>
-                <For each={Array.isArray(files) ? files : [files]}>
-                  {(file) => (
-                    <div key={file.id} css={styles.attachmentCardWrapper}>
-                      <div css={styles.attachmentCard}>
-                        <SVGIcon style={styles.fileIcon} name={fileIcon(file.ext || 'file')} height={40} width={40} />
+                <div css={styles.attachmentsWrapper}>
+                  <For each={Array.isArray(files) ? files : [files]}>
+                    {(file) => (
+                      <div key={file.id} css={styles.attachmentCardWrapper}>
+                        <div css={styles.attachmentCard}>
+                          <SVGIcon style={styles.fileIcon} name={fileIcon(file.ext || 'file')} height={40} width={40} />
 
-                        <div css={styles.attachmentCardBody}>
-                          <div css={styles.attachmentCardTitle}>
-                            <div css={styleUtils.text.ellipsis(1)}>{file.title}</div>
+                          <div css={styles.attachmentCardBody}>
+                            <div css={styles.attachmentCardTitle}>
+                              <div css={styleUtils.text.ellipsis(1)}>{file.title}</div>
 
-                            <div css={styles.fileExtension}>{`.${file.ext}`}</div>
-                          </div>
+                              <div css={styles.fileExtension}>{`.${file.ext}`}</div>
+                            </div>
 
-                          <div css={styles.attachmentCardSubtitle}>
-                            <span>{`${__('Size', 'tutor')}: ${file.size}`}</span>
+                            <div css={styles.attachmentCardSubtitle}>
+                              <span>{`${__('Size', 'tutor')}: ${file.size}`}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <button
-                        type="button"
-                        css={styleUtils.resetButton}
-                        onClick={() => {
-                          clearHandler(file.id);
-                        }}
-                      >
-                        <SVGIcon name="cross" height={24} width={24} />
-                      </button>
-                    </div>
-                  )}
-                </For>
+                        <button
+                          type="button"
+                          css={styleUtils.resetButton}
+                          onClick={() => {
+                            clearHandler(file.id);
+                          }}
+                        >
+                          <SVGIcon name="cross" height={24} width={24} />
+                        </button>
+                      </div>
+                    )}
+                  </For>
+                </div>
 
                 <Button
                   buttonCss={styles.uploadButton}
@@ -318,6 +320,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[8]};
+    position: relative;
 
     ${
       hasFiles &&
@@ -327,6 +330,10 @@ const styles = {
         border-radius: ${borderRadius.card};
       `
     }
+  `,
+  attachmentsWrapper: css`
+    max-height: 260px;
+    ${styleUtils.overflowYAuto};
   `,
   attachmentCardWrapper: css`
     ${styleUtils.display.flex()};

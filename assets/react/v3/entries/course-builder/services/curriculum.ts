@@ -91,7 +91,7 @@ export interface LessonPayload {
   lesson_id?: ID; //only for update
   title: string;
   description: string;
-  thumbnail_id: ID;
+  thumbnail_id: ID | null;
 
   'video[source]': string;
   'video[source_video_id]': ID;

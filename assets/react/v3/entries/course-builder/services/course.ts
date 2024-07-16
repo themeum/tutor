@@ -24,6 +24,7 @@ export type ContentDripType =
   | 'unlock_sequentially'
   | 'after_finishing_prerequisites'
   | '';
+export type PricingCategory = 'subscription' | 'regular';
 
 export interface CourseFormData {
   post_date: string;
@@ -36,6 +37,7 @@ export interface CourseFormData {
   post_author: User | null;
   thumbnail: Media | null;
   video: CourseVideo;
+  course_pricing_category: PricingCategory;
   course_price_type: string;
   course_price: string;
   course_sale_price: string;
@@ -57,6 +59,7 @@ export interface CourseFormData {
   isContentDripEnabled: boolean;
   contentDripType: ContentDripType;
   course_product_id: string;
+  course_product_name: string;
   preview_link: string;
   course_prerequisites: PrerequisiteCourses[];
   tutor_course_certificate_template: string;
@@ -90,6 +93,7 @@ export const courseDefaultData: CourseFormData = {
     source_vimeo: '',
     source_embedded: '',
   },
+  course_pricing_category: 'regular',
   course_price_type: 'free',
   course_price: '',
   course_sale_price: '',
@@ -111,6 +115,7 @@ export const courseDefaultData: CourseFormData = {
   isContentDripEnabled: false,
   contentDripType: '',
   course_product_id: '',
+  course_product_name: '',
   preview_link: '',
   course_prerequisites: [],
   tutor_course_certificate_template: '',
