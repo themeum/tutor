@@ -40,6 +40,14 @@ class Course extends Tutor_Base {
 	const PRICE_TYPE_PAID = 'paid';
 
 	/**
+	 * Course price and sale price
+	 *
+	 * @since 3.0.0
+	 */
+	const COURSE_PRICE_META      = 'tutor_course_price';
+	const COURSE_SALE_PRICE_META = 'tutor_course_sale_price';
+
+	/**
 	 * Additional course meta info
 	 *
 	 * @var array
@@ -994,8 +1002,8 @@ class Course extends Tutor_Base {
 		}
 
 		if ( 'tutor' === $monetize_by ) {
-			$price      = get_post_meta( $course_id, 'course_price', true );
-			$sale_price = get_post_meta( $course_id, 'course_sale_price', true );
+			$price      = get_post_meta( $course_id, self::COURSE_PRICE_META, true );
+			$sale_price = get_post_meta( $course_id, self::COURSE_SALE_PRICE_META, true );
 		}
 
 		$course_pricing = array(
