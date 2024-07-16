@@ -30,6 +30,7 @@ export interface Content {
 export interface Lesson extends Content {
   attachments: Media[];
   thumbnail: string;
+  thumbnail_id: ID;
   available_on: string;
   video: CourseVideo & {
     runtime: {

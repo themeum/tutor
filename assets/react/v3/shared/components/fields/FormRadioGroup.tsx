@@ -30,7 +30,6 @@ const FormRadioGroup = ({
   wrapperCss,
   onSelect,
 }: FormRadioGroupProps) => {
-  console.log({value: field.value, name: field.name});
   return (
     <FormFieldWrapper field={field} fieldState={fieldState} label={label} disabled={disabled}>
       {(inputProps) => {

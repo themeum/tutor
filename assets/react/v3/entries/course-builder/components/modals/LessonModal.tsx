@@ -115,7 +115,7 @@ const LessonModal = ({
         title: lessonDetails.post_title || '',
         description: lessonDetails.post_content || '',
         thumbnail: {
-          id: 0,
+          id: lessonDetails.thumbnail_id ? Number(lessonDetails.thumbnail_id) : 0,
           title: '',
           url: lessonDetails.thumbnail || '',
         },

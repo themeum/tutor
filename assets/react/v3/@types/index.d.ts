@@ -10,6 +10,7 @@ declare global {
     // biome-ignore lint/suspicious/noExplicitAny: <Allow explicit any for this>
     wp: any;
     ajaxurl: string;
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     tinymce: any;
     _tutorobject: {
       ajaxurl: string;
@@ -29,6 +30,10 @@ declare global {
       wp_rest_nonce: string;
       is_admin: string;
       is_admin_bar_showing: string;
+      bp_groups: {
+        name: string;
+        id: number;
+      }[];
       timezones: {
         [key: string]: string;
       };
