@@ -35,6 +35,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'course_settings[enrollment_expiry]': data.enrollment_expiry ?? '',
     'course_settings[enable_content_drip]': data.isContentDripEnabled ? 1 : 0,
     'course_settings[content_drip_type]': data.contentDripType,
+    'course_settings[enable_tutor_bp]': data.enable_tutor_bp ? 1 : 0,
 
     'additional_content[course_benefits]': data.course_benefits ?? '',
     'additional_content[course_target_audience]': data.course_target_audience ?? '',
@@ -64,6 +65,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'video[source_vimeo]': data.video.source_vimeo,
     'video[source_embedded]': data.video.source_embedded,
     tutor_attachments: data.course_attachments?.map((item) => item.id) ?? [],
+    bp_attached_group_ids: data.bp_attached_group_ids,
   };
 };
 
@@ -91,7 +93,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       avatar_url: courseDetails.post_author.tutor_profile_photo_url,
     },
     thumbnail: {
-      id: 0,
+      id: courseDetails.thumbnail_id ? Number(courseDetails.thumbnail_id) : 0,
       title: '',
       url: courseDetails.thumbnail,
     },
@@ -145,8 +147,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
-    enable_tutor_bp: courseDetails.enable_tutor_bp === '1' ? true : false,
-    _tutor_bp_course_attached_groups: courseDetails._tutor_bp_course_attached_groups ?? [],
+    enable_tutor_bp: courseDetails.course_settings.enable_tutor_bp === 1 ? true : false,
+    bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
   };
 };
 

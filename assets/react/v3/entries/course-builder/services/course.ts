@@ -64,7 +64,7 @@ export interface CourseFormData {
   course_prerequisites: PrerequisiteCourses[];
   tutor_course_certificate_template: string;
   enable_tutor_bp: boolean;
-  _tutor_bp_course_attached_groups: [];
+  bp_attached_group_ids: string[];
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -120,7 +120,7 @@ export const courseDefaultData: CourseFormData = {
   course_prerequisites: [],
   tutor_course_certificate_template: '',
   enable_tutor_bp: false,
-  _tutor_bp_course_attached_groups: [],
+  bp_attached_group_ids: [],
 };
 
 export interface CoursePayload {
@@ -273,6 +273,7 @@ export interface CourseDetailsResponse {
     filter: string;
   }[];
   thumbnail: string;
+  thumbnail_id: ID;
   enable_qna: string;
   is_public_course: string;
   course_level: CourseLevel;
@@ -292,6 +293,7 @@ export interface CourseDetailsResponse {
     content_drip_type: ContentDripType;
     enable_content_drip: number;
     enrollment_expiry: number;
+    enable_tutor_bp: 1 | 0;
   };
   step_completion_status: Record<CourseBuilderSteps, boolean>;
   course_pricing: {
@@ -318,8 +320,7 @@ export interface CourseDetailsResponse {
     [key: string]: string;
   };
   google_meet_meetings: GoogleMeet[];
-  enable_tutor_bp: '0' | '1';
-  _tutor_bp_course_attached_groups: [];
+  bp_attached_groups: string[];
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
@@ -460,7 +461,7 @@ export const useCreateCourseMutation = () => {
 
   return useMutation({
     mutationFn: createCourse,
-    onSuccess: response => {
+    onSuccess: (response) => {
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
@@ -482,7 +483,7 @@ export const useUpdateCourseMutation = () => {
 
   return useMutation({
     mutationFn: updateCourse,
-    onSuccess: response => {
+    onSuccess: (response) => {
       showToast({ type: 'success', message: response.message });
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', response.data],
@@ -505,7 +506,7 @@ export const useCourseDetailsQuery = (courseId: number) => {
   return useQuery({
     queryKey: ['CourseDetails', courseId],
     queryFn: () =>
-      getCourseDetails(courseId).then(res => {
+      getCourseDetails(courseId).then((res) => {
         return res.data;
       }),
     enabled: !!courseId,
@@ -523,7 +524,7 @@ const getWcProducts = (courseId?: string) => {
 export const useGetProductsQuery = (courseId?: string) => {
   return useQuery({
     queryKey: ['WcProducts'],
-    queryFn: () => getWcProducts(courseId).then(res => res.data),
+    queryFn: () => getWcProducts(courseId).then((res) => res.data),
   });
 };
 
@@ -541,7 +542,7 @@ export const useProductDetailsQuery = (productId: string, courseId: string, cour
   return useQuery({
     queryKey: ['WcProductDetails', productId, courseId],
     queryFn: () =>
-      getProductDetails(productId, courseId).then(res => {
+      getProductDetails(productId, courseId).then((res) => {
         if (typeof res.data === 'string') {
           showToast({ type: 'danger', message: res.data });
           return null;
@@ -565,7 +566,7 @@ const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
 export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrerequisiteAddonEnabled: boolean) => {
   return useQuery({
     queryKey: ['PrerequisiteCourses', excludedCourseIds],
-    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then(res => res.data),
+    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then((res) => res.data),
     enabled: isPrerequisiteAddonEnabled,
   });
 };
@@ -583,7 +584,7 @@ export const useSaveZoomMeetingMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: saveZoomMeeting,
-    onSuccess: response => {
+    onSuccess: (response) => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
@@ -617,7 +618,7 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: deleteZoomMeeting,
-    onSuccess: response => {
+    onSuccess: (response) => {
       showToast({ type: 'success', message: __(response.data.message, 'tutor') });
 
       queryClient.invalidateQueries({
@@ -647,7 +648,7 @@ export const useSaveGoogleMeetMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: saveGoogleMeet,
-    onSuccess: response => {
+    onSuccess: (response) => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
@@ -678,7 +679,7 @@ export const useDeleteGoogleMeetMutation = (courseId: string, payload: GoogleMee
 
   return useMutation({
     mutationFn: () => deleteGoogleMeet(payload['post-id'], payload['event-id']),
-    onSuccess: response => {
+    onSuccess: (response) => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
