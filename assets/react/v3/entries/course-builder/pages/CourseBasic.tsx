@@ -76,16 +76,24 @@ const CourseBasic = () => {
     },
   ];
 
-  const coursePriceOptions = [
-    {
-      label: __('Free', 'tutor'),
-      value: 'free',
-    },
-    {
-      label: __('Paid', 'tutor'),
-      value: 'paid',
-    },
-  ];
+  const coursePriceOptions =
+    tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'tutor'
+      ? [
+          {
+            label: __('Free', 'tutor'),
+            value: 'free',
+          },
+          {
+            label: __('Paid', 'tutor'),
+            value: 'paid',
+          },
+        ]
+      : [
+          {
+            label: __('Free', 'tutor'),
+            value: 'free',
+          },
+        ];
 
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
@@ -253,36 +261,37 @@ const CourseBasic = () => {
           />
         )}
 
-        {coursePriceType === 'paid' && (
-          <div css={styles.coursePriceWrapper}>
-            <Controller
-              name="course_price"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInputWithContent
-                  {...controllerProps}
-                  label={__('Regular Price', 'tutor')}
-                  content={<SVGIcon name="currency" width={24} height={24} />}
-                  placeholder={__('0', 'tutor')}
-                  type="number"
-                />
-              )}
-            />
-            <Controller
-              name="course_sale_price"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInputWithContent
-                  {...controllerProps}
-                  label={__('Discount Price', 'tutor')}
-                  content={<SVGIcon name="currency" width={24} height={24} />}
-                  placeholder={__('0', 'tutor')}
-                  type="number"
-                />
-              )}
-            />
-          </div>
-        )}
+        {coursePriceType === 'paid' &&
+          (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc') && (
+            <div css={styles.coursePriceWrapper}>
+              <Controller
+                name="course_price"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInputWithContent
+                    {...controllerProps}
+                    label={__('Regular Price', 'tutor')}
+                    content={<SVGIcon name="currency" width={24} height={24} />}
+                    placeholder={__('0', 'tutor')}
+                    type="number"
+                  />
+                )}
+              />
+              <Controller
+                name="course_sale_price"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInputWithContent
+                    {...controllerProps}
+                    label={__('Discount Price', 'tutor')}
+                    content={<SVGIcon name="currency" width={24} height={24} />}
+                    placeholder={__('0', 'tutor')}
+                    type="number"
+                  />
+                )}
+              />
+            </div>
+          )}
 
         <Controller
           name="course_categories"
