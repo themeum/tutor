@@ -789,29 +789,36 @@ class CourseModel {
 			'post_type'   => $post_type,
 		);
 
-		$courses_data = QueryHelper::get_all( $wpdb->posts, $where, 'ID' );
-		$courses      = $courses_data['results'];
+		$courses = QueryHelper::get_all( $wpdb->posts, $where, 'ID' );
 
 		if ( tutor()->has_pro ) {
 			$bundle_model = new \TutorPro\CourseBundle\Models\BundleModel();
 		}
 
-		if ( ! empty( $courses_data['total_count'] ) ) {
-			foreach ( $courses as &$course ) {
+		$final_data = array();
+
+		if ( ! empty( count( $courses ) ) ) {
+			foreach ( $courses as $course ) {
+				$data = new \stdClass();
+
 				if ( tutor()->has_pro && 'course-bundle' === $course->type ) {
-					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
+					$data->total_courses = count( $bundle_model->get_bundle_course_ids( $course->ID ) );
 				}
 
-				$course_prices      = tutor_utils()->get_course_raw_prices( (int) $course->id );
-				$course->id         = (int) $course->id;
-				$course->price      = $course_prices->price;
-				$course->sale_price = $course_prices->sale_price;
-				$course->image      = get_the_post_thumbnail_url( $course->id );
+				$course_prices = tutor_utils()->get_course_raw_prices( (int) $course->ID );
+				$author_name   = get_the_author_meta( 'display_name', $course->post_author );
+
+				$data->id         = (int) $course->ID;
+				$data->title      = $course->post_title;
+				$data->price      = $course_prices->price;
+				$data->sale_price = $course_prices->sale_price;
+				$data->image      = get_the_post_thumbnail_url( $course->ID );
+				$data->author     = $author_name;
+
+				$final_data[] = $data;
 			}
 		}
 
-		unset( $course );
-
-		return ! empty( $courses ) ? $courses : array();
+		return ! empty( $final_data ) ? $final_data : array();
 	}
 }

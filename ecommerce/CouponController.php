@@ -101,7 +101,7 @@ class CouponController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_get_coupon_applies_to', array( $this, 'get_coupon_applies_to' ) );
+			add_action( 'wp_ajax_nopriv_tutor_get_coupon_applies_to', array( $this, 'get_coupon_applies_to' ) );
 		}
 	}
 
@@ -379,9 +379,9 @@ class CouponController {
 	 *              - Success response with the retrieved entities (courses, bundles, or categories).
 	 */
 	public function get_coupon_applies_to() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		// if ( ! tutor_utils()->is_nonce_verified() ) {
+		// $this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		// }
 
 		$applies_to = Input::post( 'applies_to' );
 
@@ -397,8 +397,6 @@ class CouponController {
 			$course_model = new CourseModel();
 			$response     = $course_model->get_coupon_applies_to_courses( $applies_to );
 
-		} elseif ( 'specific_category' === $applies_to ) {
-			$response = $this->model->get_coupon_applies_to_categories();
 		} else {
 			$this->json_response(
 				__( 'Applies to value invalid', 'tutor' ),
