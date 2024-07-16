@@ -163,7 +163,7 @@ export const convertLessonDataToPayload = (
     topic_id: topicId,
     title: data.title,
     description: data.description,
-    thumbnail_id: data.thumbnail?.id ?? 0,
+    thumbnail_id: data.thumbnail?.id ?? null,
     'video[source]': data.video?.source || '',
     'video[source_video_id]': data.video?.source_video_id || '',
     'video[poster]': data.video?.poster || '',
