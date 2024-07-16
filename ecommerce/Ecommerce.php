@@ -46,11 +46,12 @@ class Ecommerce {
 			return;
 		}
 
+		add_filter( 'tutor_monetization_options', array( $this, 'add_monetization_option' ) );
+
 		if ( ! tutor_utils()->is_monetize_by_tutor() ) {
 			return;
 		}
 
-		add_filter( 'tutor_monetization_options', array( $this, 'add_monetization_option' ) );
 		add_action( 'save_post_' . tutor()->course_post_type, array( $this, 'save_price' ), 10, 2 );
 
 		new OrderController();
