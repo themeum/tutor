@@ -165,14 +165,6 @@ const CourseSettings = () => {
             />
 
             <Controller
-              name="enable_tutor_bp"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
-              )}
-            />
-
-            <Controller
               name="bp_attached_group_ids"
               control={form.control}
               render={(controllerProps) => (
