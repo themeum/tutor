@@ -19,7 +19,13 @@ import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptio
 import SubscriptionPreview from '@CourseBuilderComponents/course-basic/SubscriptionPreview';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import { useGetProductsQuery, useProductDetailsQuery, type CourseFormData, type PricingCategory } from '@CourseBuilderServices/course';
+import {
+  useCourseDetailsQuery,
+  useGetProductsQuery,
+  useProductDetailsQuery,
+  type CourseFormData,
+  type PricingCategory,
+} from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
 import type { Option } from '@Utils/types';
@@ -63,7 +69,7 @@ const CourseBasic = () => {
     control: form.control,
     name: 'course_product_id',
   });
-  const courseCategory = useWatch({control: form.control, name: 'course_pricing_category'});
+  const courseCategory = useWatch({ control: form.control, name: 'course_pricing_category' });
 
   const visibilityStatusOptions = [
     {
@@ -110,6 +116,7 @@ const CourseBasic = () => {
     },
   ];
 
+  const courseDetailsQuery = useCourseDetailsQuery(courseId);
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
   const instructorOptions = instructorListQuery.data ?? [];
@@ -118,17 +125,19 @@ const CourseBasic = () => {
   const productDetailsQuery = useProductDetailsQuery(courseProductId, String(courseId), coursePriceType);
 
   const productOptions = () => {
-    const currentSelectedProduct = {
-      label: form.getValues('course_product_name'),
-      value: form.getValues('course_product_id'),
-    };
+    const currentSelectedProduct = courseDetailsQuery.data?.course_pricing.product_id
+      ? {
+          label: courseDetailsQuery.data?.course_pricing.product_name || '',
+          value: courseDetailsQuery.data?.course_pricing.product_id || '',
+        }
+      : null;
 
-    if (productsQuery.isSuccess && productsQuery.data && currentSelectedProduct.value) {
+    if (productsQuery.isSuccess && productsQuery.data && currentSelectedProduct) {
       return [
         currentSelectedProduct,
         ...productsQuery.data.map((product) => ({
           label: product.post_title,
-          value: product.ID.toString(),
+          value: product.ID,
         })),
       ];
     }
@@ -243,7 +252,7 @@ const CourseBasic = () => {
             />
           )}
         />
-        
+
         <Controller
           name="course_pricing_category"
           control={form.control}
