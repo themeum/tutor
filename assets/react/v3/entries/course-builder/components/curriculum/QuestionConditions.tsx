@@ -121,9 +121,7 @@ const QuestionConditions = () => {
 
           <Controller
             control={form.control}
-            name={
-              `questions.${activeQuestionIndex}.question_settings.question_mark` as 'questions.0.question_settings.question_mark'
-            }
+            name={`questions.${activeQuestionIndex}.question_mark` as 'questions.0.question_mark'}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}

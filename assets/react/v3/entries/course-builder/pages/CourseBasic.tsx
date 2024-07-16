@@ -94,13 +94,23 @@ const CourseBasic = () => {
   const productsQuery = useGetProductsQuery(courseId ? String(courseId) : '');
   const productDetailsQuery = useProductDetailsQuery(courseProductId, String(courseId), coursePriceType);
 
-  const productOptions =
-    productsQuery.data?.map((item) => {
-      return {
-        label: item.post_title,
-        value: item.ID,
-      };
-    }) ?? [];
+  const productOptions = () => {
+    const currentSelectedProduct = {
+      label: form.getValues('course_product_name'),
+      value: form.getValues('course_product_id'),
+    };
+
+    if (productsQuery.isSuccess && productsQuery.data && currentSelectedProduct.value) {
+      return [
+        currentSelectedProduct,
+        ...productsQuery.data.map((product) => ({
+          label: product.post_title,
+          value: product.ID.toString(),
+        })),
+      ];
+    }
+    return [];
+  };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -233,7 +243,7 @@ const CourseBasic = () => {
                 {...controllerProps}
                 label={__('Select product', 'tutor')}
                 placeholder={__('Select a product', 'tutor')}
-                options={productOptions}
+                options={productOptions()}
                 helpText={__(
                   'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.'
                 )}
