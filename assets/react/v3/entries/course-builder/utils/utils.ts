@@ -106,6 +106,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_vimeo: courseDetails.video.source_vimeo ?? '',
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
+    course_product_name: courseDetails.course_pricing.product_name,
+    course_pricing_category: courseDetails.course_pricing_category ?? 'subscription',
     course_price_type: courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
@@ -129,8 +131,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
     contentDripType: courseDetails.course_settings.content_drip_type ?? '',
-    course_product_id:
-      String(courseDetails.course_pricing.product_id) !== '0' ? String(courseDetails.course_pricing.product_id) : '',
+    course_product_id: courseDetails.course_pricing.product_id === '0' ? '' : courseDetails.course_pricing.product_id,
     course_instructors:
       courseDetails.course_instructors?.map((item) => {
         return {
@@ -144,6 +145,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
+    enable_tutor_bp: courseDetails.enable_tutor_bp === '1' ? true : false,
+    _tutor_bp_course_attached_groups: courseDetails._tutor_bp_course_attached_groups ?? [],
   };
 };
 
@@ -158,7 +161,7 @@ export const convertLessonDataToPayload = (
     topic_id: topicId,
     title: data.title,
     description: data.description,
-    thumbnail_id: data.thumbnail?.id || 0,
+    thumbnail_id: data.thumbnail?.id ?? null,
     'video[source]': data.video?.source || '',
     'video[source_video_id]': data.video?.source_video_id || '',
     'video[poster]': data.video?.poster || '',

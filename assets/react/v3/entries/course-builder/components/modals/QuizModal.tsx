@@ -126,7 +126,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   return (
     <FormProvider {...form}>
-      <QuizModalContextProvider>
+      <QuizModalContextProvider quizId={quizId || ''}>
         <ModalWrapper
           onClose={() => closeModal({ action: 'CLOSE' })}
           icon={icon}
