@@ -1,23 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useRef, useState } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
-import { useCreateQuizAnswerMutation, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import SVGIcon from '@Atoms/SVGIcon';
+import { type QuizQuestionOption, useCreateQuizAnswerMutation } from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
 import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { isDefined } from '@Utils/types';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { nanoid } from '@Utils/util';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
+import { nanoid } from '@Utils/util';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
   index: number;

@@ -152,7 +152,7 @@ export const convertLessonDataToPayload = (
   data: LessonForm,
   lessonId: ID,
   topicId: ID,
-  contentDripType: ContentDripType
+  contentDripType: ContentDripType,
 ): LessonPayload => {
   return {
     ...(lessonId && { lesson_id: lessonId }),
@@ -193,7 +193,7 @@ export const convertAssignmentDataToPayload = (
   data: AssignmentForm,
   assignmentId: ID,
   topicId: ID,
-  contentDripType: ContentDripType
+  contentDripType: ContentDripType,
 ): AssignmentPayload => {
   return {
     ...(assignmentId && { assignment_id: assignmentId }),

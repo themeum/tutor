@@ -5,13 +5,13 @@ import FormSwitch from '@Components/fields/FormSwitch';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { CourseFormData } from '@CourseBuilderServices/course';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import Tabs from '@Molecules/Tabs';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import ContentDripSettings from './ContentDripSettings';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
@@ -110,7 +110,7 @@ const CourseSettings = () => {
                   label={__('Enrollment Expiration', 'tutor')}
                   helpText={__(
                     "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
-                    'tutor'
+                    'tutor',
                   )}
                   placeholder="0"
                   type="number"

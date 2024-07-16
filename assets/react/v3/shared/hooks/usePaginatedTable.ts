@@ -47,7 +47,7 @@ export const usePaginatedTable = ({ limit = ITEMS_PER_PAGE, updateQueryParams = 
         setPaginationInfo((prevPageInfo) => ({ ...prevPageInfo, ...params }));
       }
     },
-    [setQuery, setPaginationInfo, updateQueryParams]
+    [setQuery, setPaginationInfo, updateQueryParams],
   );
 
   const onPageChange = (pageNumber: number) => updatePaginationInfo({ page: pageNumber });

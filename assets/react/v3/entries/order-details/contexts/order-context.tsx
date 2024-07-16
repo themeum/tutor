@@ -1,5 +1,5 @@
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import { useOrderDetailsQuery, type Order } from '@OrderServices/order';
+import { type Order, useOrderDetailsQuery } from '@OrderServices/order';
 import React from 'react';
 
 interface OrderContextType {

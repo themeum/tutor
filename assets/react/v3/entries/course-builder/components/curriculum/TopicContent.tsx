@@ -8,24 +8,24 @@ import { useFormContext } from 'react-hook-form';
 import SVGIcon from '@Atoms/SVGIcon';
 import Popover from '@Molecules/Popover';
 
-import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
-import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useModal } from '@Components/modals/Modal';
-import { useDeleteLessonMutation, type ContentType, type ID } from '@CourseBuilderServices/curriculum';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
+import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
+import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
+import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
+import { type ContentType, type ID, useDeleteLessonMutation } from '@CourseBuilderServices/curriculum';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import type { CourseFormData } from '@CourseBuilderServices/course';
 import Show from '@Controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import { useExportQuizMutation } from '@CourseBuilderServices/quiz';
+import { styleUtils } from '@Utils/style-utils';
+import type { IconCollection } from '@Utils/types';
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;

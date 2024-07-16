@@ -96,7 +96,7 @@ const FormMultiLevelInput = ({
                             return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
                           }
                           return [id];
-                        })
+                        }),
                       );
                     }}
                   />

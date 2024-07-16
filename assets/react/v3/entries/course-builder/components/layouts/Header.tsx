@@ -1,5 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import config, { tutorConfig } from '@Config/config';
 import {
   borderRadius,
   colorPalate,
@@ -11,27 +12,26 @@ import {
   zIndex,
 } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import Logo from '@CourseBuilderPublic/images/logo.svg';
 import { type CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
 import { convertCourseDataToPayload, getCourseId } from '@CourseBuilderUtils/utils';
 import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
+import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { isBefore } from 'date-fns';
+import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import Tracker from './Tracker';
-import config, { tutorConfig } from '@Config/config';
-import Show from '@Controls/Show';
-import { isBefore } from 'date-fns';
-import { noop } from '@Utils/util';
-import { useState } from 'react';
 
 const courseId = getCourseId();
 
 const Header = () => {
   const form = useFormContext<CourseFormData>();
   const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private'>(
-    form.watch('post_status')
+    form.watch('post_status'),
   );
 
   const createCourseMutation = useCreateCourseMutation();

@@ -94,12 +94,14 @@ const FormSelectInput = <T,>({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
       setInputValue(getInitialValue()?.label);
     }
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
   return (
@@ -153,7 +155,7 @@ const FormSelectInput = <T,>({
                     styles.input({
                       hasLeftIcon: !!leftIcon || !!selectedItem?.icon,
                       hasDescription,
-                      hasError: !!fieldState.error
+                      hasError: !!fieldState.error,
                     }),
                   ]}
                   autoComplete="off"
@@ -292,7 +294,11 @@ const styles = {
     }
 		
   `,
-  input: ({ hasLeftIcon, hasDescription, hasError = false }: { hasLeftIcon: boolean; hasDescription: boolean; hasError: boolean }) => css`
+  input: ({
+    hasLeftIcon,
+    hasDescription,
+    hasError = false,
+  }: { hasLeftIcon: boolean; hasDescription: boolean; hasError: boolean }) => css`
     &[data-select] {
       ${typography.body()};
       width: 100%;
@@ -300,6 +306,7 @@ const styles = {
       padding-right: ${spacing[32]};
       ${styleUtils.textEllipsis};
       background-color: transparent;
+      background-color: ${colorTokens.background.white};
 
       ${
         hasLeftIcon &&
@@ -318,17 +325,23 @@ const styles = {
         `
       }
 
-      ${hasError && css`
+      ${
+        hasError &&
+        css`
         background-color: ${colorTokens.background.status.errorFail};
-      `}
+      `
+      }
 
       :focus {
         ${styleUtils.inputFocus};
 
-        ${hasError && css`
+        ${
+          hasError &&
+          css`
           border-color: ${colorTokens.stroke.danger};
           background-color: ${colorTokens.background.status.errorFail};
-        `}
+        `
+        }
       }
     }
   `,

@@ -10,6 +10,7 @@ import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
+import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
@@ -19,7 +20,12 @@ import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptio
 import SubscriptionPreview from '@CourseBuilderComponents/course-basic/SubscriptionPreview';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import { useGetProductsQuery, useProductDetailsQuery, type CourseFormData, type PricingCategory } from '@CourseBuilderServices/course';
+import {
+  type CourseFormData,
+  type PricingCategory,
+  useGetProductsQuery,
+  useProductDetailsQuery,
+} from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
 import type { Option } from '@Utils/types';
@@ -33,6 +39,7 @@ const courseId = getCourseId();
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
+  const { showModal } = useModal();
 
   const author = form.watch('post_author');
 
@@ -63,7 +70,7 @@ const CourseBasic = () => {
     control: form.control,
     name: 'course_product_id',
   });
-  const courseCategory = useWatch({control: form.control, name: 'course_pricing_category'});
+  const courseCategory = useWatch({ control: form.control, name: 'course_pricing_category' });
 
   const visibilityStatusOptions = [
     {
@@ -225,7 +232,7 @@ const CourseBasic = () => {
             />
           )}
         />
-        
+
         <Controller
           name="course_pricing_category"
           control={form.control}
@@ -265,7 +272,7 @@ const CourseBasic = () => {
                 placeholder={__('Select a product', 'tutor')}
                 options={productOptions}
                 helpText={__(
-                  'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.'
+                  'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
                 )}
                 isSearchable
               />

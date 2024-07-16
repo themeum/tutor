@@ -30,20 +30,20 @@ import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import ThreeDots from '@Molecules/ThreeDots';
 
 import {
+  type Content as TopicContentType,
   useDeleteTopicMutation,
   useSaveTopicMutation,
-  type Content as TopicContentType,
 } from '@CourseBuilderServices/curriculum';
 
 import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
 
+import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
+import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
+import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
-import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
 
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -52,21 +52,21 @@ import { AnimationType } from '@Hooks/useAnimation';
 import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
+import { useToast } from '@Atoms/Toast';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { moveTo, nanoid, noop } from '@Utils/util';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import Popover from '@Molecules/Popover';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
-import { useFileUploader } from '@Molecules/FileUploader';
-import { useToast } from '@Atoms/Toast';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { useFileUploader } from '@Molecules/FileUploader';
+import Popover from '@Molecules/Popover';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
+import { moveTo, nanoid, noop } from '@Utils/util';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -129,7 +129,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
         easing: (t) => t * (2 - t),
       },
     },
-    [content.length]
+    [content.length],
   );
   const collapseAnimationDescription = useCollapseExpandAnimation({
     ref: descriptionRef,
@@ -186,7 +186,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const activeSortItem = useMemo(() => {
@@ -206,7 +206,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
         (wrapperRef as any).current = node;
       }
     },
-    [setNodeRef]
+    [setNodeRef],
   );
 
   const style = {
@@ -496,7 +496,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                     )}
                   </Show>
                 </DragOverlay>,
-                document.body
+                document.body,
               )}
             </DndContext>
 

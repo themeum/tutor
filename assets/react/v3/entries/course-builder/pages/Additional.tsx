@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import FormInput from '@Components/fields/FormInput';
@@ -9,19 +9,19 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import { useCourseDetailsQuery, usePrerequisiteCoursesQuery, type CourseFormData } from '@CourseBuilderServices/course';
+import { type CourseFormData, useCourseDetailsQuery, usePrerequisiteCoursesQuery } from '@CourseBuilderServices/course';
 
+import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
+import FormFileUploader from '@Components/fields/FormFileUploader';
+import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import { styleUtils } from '@Utils/style-utils';
-import FormFileUploader from '@Components/fields/FormFileUploader';
-import Certificate from '../components/additional/Certificate';
-import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useNavigate } from 'react-router-dom';
-import { Addons } from '@Config/constants';
 import Show from '@Controls/Show';
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { styleUtils } from '@Utils/style-utils';
+import { useNavigate } from 'react-router-dom';
+import Certificate from '../components/additional/Certificate';
 
 const Additional = () => {
   const courseId = getCourseId();
@@ -44,12 +44,12 @@ const Additional = () => {
 
   const courseDetailsQuery = useCourseDetailsQuery(courseId);
   const prerequisiteCourses = (courseDetailsQuery.data?.course_prerequisites || []).map((prerequisite) =>
-    String(prerequisite.id)
+    String(prerequisite.id),
   );
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    !!isPrerequisiteAddonEnabled
+    !!isPrerequisiteAddonEnabled,
   );
 
   const zoomMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
@@ -135,7 +135,7 @@ const Additional = () => {
                   label={__('Materials Included', 'tutor')}
                   placeholder={__(
                     'A list of assets you will be providing for the students in this course (One per line)',
-                    'tutor'
+                    'tutor',
                   )}
                   rows={3}
                   enableResize

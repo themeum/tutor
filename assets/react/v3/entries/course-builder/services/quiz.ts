@@ -1,19 +1,19 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { ID } from './curriculum';
+import { useToast } from '@Atoms/Toast';
 import type {
   QuizFeedbackMode,
   QuizLayoutView,
   QuizQuestionsOrder,
   QuizTimeLimit,
 } from '@CourseBuilderComponents/modals/QuizModal';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { authApiInstance } from '@Utils/api';
-import type { ContentDripType, TutorMutationResponse } from './course';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { useToast } from '@Atoms/Toast';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import type { ContentDripType, TutorMutationResponse } from './course';
+import type { ID } from './curriculum';
 
 export type QuizQuestionType =
   | 'true_false'
@@ -249,7 +249,7 @@ export const convertQuizFormDataToPayload = (
   formData: QuizForm,
   topicId: ID,
   contentDripType: ContentDripType,
-  quizId?: ID
+  quizId?: ID,
 ): QuizPayload => {
   return {
     ...(quizId && { quiz_id: quizId }),

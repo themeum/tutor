@@ -1,18 +1,18 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import SVGIcon from '@Atoms/SVGIcon';
-import Show from '@Controls/Show';
-import Button from '@Atoms/Button';
 import For from '@Controls/For';
-import type { FormControllerProps } from '@Utils/form';
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
-import { isDefined } from '@Utils/types';
+import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
 
 interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
@@ -144,7 +144,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   <p>
                     {__(
                       'Please make sure to use the {dash} variable in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
-                      'tutor'
+                      'tutor',
                     )}
                   </p>
                 </div>
@@ -176,7 +176,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   <p>
                     {__(
                       'Separate multiple answers by a vertical bar |. 1 answer per {dash} variable is defined in the question. Example: Apple | Banana | Orange',
-                      'tutor'
+                      'tutor',
                     )}
                   </p>
                 </div>

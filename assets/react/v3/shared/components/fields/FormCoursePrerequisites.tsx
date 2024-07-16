@@ -11,15 +11,15 @@ import { useDebounce } from '@Hooks/useDebounce';
 import { noop } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
-import type { PrerequisiteCourses } from '@CourseBuilderServices/course';
-import { useIsScrolling } from '@Hooks/useIsScrolling';
-import { __ } from '@wordpress/i18n';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
+import type { PrerequisiteCourses } from '@CourseBuilderServices/course';
+import { useIsScrolling } from '@Hooks/useIsScrolling';
 import EmptyState from '@Molecules/EmptyState';
+import { __ } from '@wordpress/i18n';
 
-import emptyStateImage from '@Images/empty-state-illustration.webp';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
 
 type FormCoursePrerequisitesProps = {
   label?: string | React.ReactNode;
@@ -60,7 +60,7 @@ const FormCoursePrerequisites = ({
   const { ref: scrollDivRef, isScrolling } = useIsScrolling({ defaultValue: true });
 
   const searchedOptions = options.filter((option) =>
-    option.post_title.toLowerCase().includes(debouncedSearchText.toLowerCase())
+    option.post_title.toLowerCase().includes(debouncedSearchText.toLowerCase()),
   );
 
   useEffect(() => {

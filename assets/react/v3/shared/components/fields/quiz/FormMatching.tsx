@@ -1,23 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { CSS } from '@dnd-kit/utilities';
-import { useSortable } from '@dnd-kit/sortable';
+import { useEffect, useRef, useState } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
+import SVGIcon from '@Atoms/SVGIcon';
 
-import { useCreateQuizAnswerMutation, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import { type QuizQuestionOption, useCreateQuizAnswerMutation } from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
 import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { isDefined } from '@Utils/types';
-import { animateLayoutChanges } from '@Utils/dndkit';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -42,7 +42,7 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
 
   const [isEditing, setIsEditing] = useState(
-    !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url
+    !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
   );
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 

@@ -1,8 +1,8 @@
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
-import { css, type SerializedStyles } from '@emotion/react';
-import { useRef, type ReactNode } from 'react';
+import { type SerializedStyles, css } from '@emotion/react';
+import { type ReactNode, useRef } from 'react';
 
 import { styleUtils } from '@Utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
@@ -46,7 +46,7 @@ const FormInputWithContent = ({
   isHidden,
   wrapperCss,
   removeBorder = false,
-  selectOnFocus = false
+  selectOnFocus = false,
 }: FormInputWithContentProps) => {
   const ref = useRef<HTMLInputElement>(null);
   return (
@@ -132,9 +132,12 @@ const styles = {
     &:focus-within {
       ${styleUtils.inputFocus};
 
-      ${hasFieldError && css`
+      ${
+        hasFieldError &&
+        css`
         border-color: ${colorTokens.stroke.danger};
-      `}
+      `
+      }
     }
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`

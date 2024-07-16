@@ -4,31 +4,31 @@ import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import ModalWrapper from '@Components/modals/ModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import type { Media } from '@Components/fields/FormImageInput';
+import FormInput from '@Components/fields/FormInput';
+import FormInputWithContent from '@Components/fields/FormInputWithContent';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import type { ModalProps } from '@Components/modals/Modal';
+import ModalWrapper from '@Components/modals/ModalWrapper';
 
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
-import { useAssignmentDetailsQuery, useSaveAssignmentMutation, type ID } from '@CourseBuilderServices/curriculum';
-import {
-  usePrerequisiteCoursesQuery,
-  type ContentDripType,
-  type PrerequisiteCourses,
-} from '@CourseBuilderServices/course';
-import { convertAssignmentDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useEffect } from 'react';
-import Show from '@Controls/Show';
+import SVGIcon from '@Atoms/SVGIcon';
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import FormDateInput from '@Components/fields/FormDateInput';
-import SVGIcon from '@Atoms/SVGIcon';
+import Show from '@Controls/Show';
+import {
+  type ContentDripType,
+  type PrerequisiteCourses,
+  usePrerequisiteCoursesQuery,
+} from '@CourseBuilderServices/course';
+import { type ID, useAssignmentDetailsQuery, useSaveAssignmentMutation } from '@CourseBuilderServices/curriculum';
+import { convertAssignmentDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { useEffect } from 'react';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -121,7 +121,7 @@ const AssignmentModal = ({
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites'
+    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites',
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -272,7 +272,7 @@ const AssignmentModal = ({
                     }
                     helpText={__(
                       'This lesson will be available from the given date. Leave empty to make it available immediately.',
-                      'tutor'
+                      'tutor',
                     )}
                   />
                 )}
@@ -370,7 +370,7 @@ const AssignmentModal = ({
                 label={__('File upload Limit', 'tutor')}
                 helpText={__(
                   'Define the number of files that a student can upload in this assignment. Input 0 to disable the option to upload.',
-                  'tutor'
+                  'tutor',
                 )}
               />
             )}

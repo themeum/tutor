@@ -49,7 +49,7 @@ const FormTimeInput = ({
         start,
         end,
       },
-      { step: interval }
+      { step: interval },
     );
 
     return range.map((date) => format(date, DateFormats.hoursMinutes));

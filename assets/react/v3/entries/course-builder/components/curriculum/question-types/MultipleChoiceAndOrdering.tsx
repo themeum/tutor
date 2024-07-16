@@ -1,6 +1,3 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import {
   DndContext,
   DragOverlay,
@@ -13,24 +10,27 @@ import {
 } from '@dnd-kit/core';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormMultipleChoiceAndOrdering from '@Components/fields/quiz/FormMultipleChoiceAndOrdering';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
+import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { colorTokens, spacing } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
 import {
-  useQuizQuestionAnswerOrderingMutation,
   type QuizForm,
   type QuizQuestionOption,
+  useQuizQuestionAnswerOrderingMutation,
 } from '@CourseBuilderServices/quiz';
+import { styleUtils } from '@Utils/style-utils';
+import { moveTo, nanoid } from '@Utils/util';
 
 const MultipleChoiceAndOrdering = () => {
   const isInitialRenderRef = useRef(false);
@@ -56,7 +56,7 @@ const MultipleChoiceAndOrdering = () => {
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
   const currentOptions = useWatch({
@@ -148,7 +148,7 @@ const MultipleChoiceAndOrdering = () => {
             const updatedOptionsOrder = moveTo(
               form.watch(`questions.${activeQuestionIndex}.question_answers`),
               activeIndex,
-              overIndex
+              overIndex,
             );
 
             quizQuestionAnswerOrderingMutation.mutate({
@@ -228,7 +228,7 @@ const MultipleChoiceAndOrdering = () => {
               }}
             </Show>
           </DragOverlay>,
-          document.body
+          document.body,
         )}
       </DndContext>
 
@@ -249,7 +249,7 @@ const MultipleChoiceAndOrdering = () => {
             {
               shouldFocus: true,
               focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
-            }
+            },
           )
         }
         css={styles.addOptionButton}

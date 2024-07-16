@@ -6,11 +6,11 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useOrderContext } from '@OrderContexts/order-context';
 import { useAdminCommentMutation } from '@OrderServices/order';
 import { requiredRule } from '@Utils/validation';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { Controller } from 'react-hook-form';
@@ -34,7 +34,7 @@ function Activities() {
             <span css={styles.dot} />
             <form
               onSubmit={form.handleSubmit((values) => {
-                adminCommentMutation.mutate({order_id: order.id, comment: values.comment});
+                adminCommentMutation.mutate({ order_id: order.id, comment: values.comment });
                 form.reset();
               })}
               css={styles.form}

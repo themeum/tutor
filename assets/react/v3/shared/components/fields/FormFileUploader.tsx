@@ -1,19 +1,19 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 import type { Media } from '@Components/fields/FormImageInput';
 
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
-import { typography } from '@Config/typography';
 import type { IconCollection } from '@Utils/types';
 
 export type WpMediaDetails = {
@@ -156,7 +156,7 @@ const FormFileUploader = ({
     const selected = wpMedia.state().get('selection').toJSON();
 
     const existingFileIds = new Set(
-      Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : []
+      Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : [],
     );
 
     const newFiles = selected.reduce((allFiles: Media[], file: WpMediaDetails) => {
@@ -223,7 +223,7 @@ const FormFileUploader = ({
   const clearHandler = (fileId: number) => {
     if (selectMultiple) {
       const newFiles = (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []).filter(
-        (file: Media) => file.id !== fileId
+        (file: Media) => file.id !== fileId,
       );
       field.onChange(newFiles.length > 0 ? newFiles : null);
 

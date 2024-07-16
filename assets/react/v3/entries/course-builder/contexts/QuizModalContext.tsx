@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import type { ID } from '@CourseBuilderServices/curriculum';
@@ -39,7 +39,7 @@ export const QuizModalContextProvider = ({
     } else if (previousQuestions.current.length !== 0 && previousQuestions.current.length < questions.length) {
       const newQuestion = questions.find(
         (question) =>
-          !previousQuestions.current.some((prevQuestion) => prevQuestion.question_id === question.question_id)
+          !previousQuestions.current.some((prevQuestion) => prevQuestion.question_id === question.question_id),
       );
       setActiveQuestionId(newQuestion?.question_id || '');
     } else if (activeQuestionIndex === -1) {

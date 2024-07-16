@@ -83,7 +83,7 @@ export const handleFormErrors = <T extends AnyObject>(err: AxiosResponse<ErrorRe
 export const mapErrorResponseToForm = <T extends AnyObject>(
   err: unknown,
   form: FormWithGlobalErrorType<T>,
-  values: T
+  values: T,
 ) => {
   if (!isAxiosError<ErrorResponse>(err) || !err.response) {
     throw err;
@@ -107,7 +107,7 @@ export const mapErrorResponseToForm = <T extends AnyObject>(
 
 export const submitHandler = <T extends AnyObject>(
   form: FormWithGlobalErrorType<T>,
-  submitFn: (values: T) => Promise<unknown> | undefined
+  submitFn: (values: T) => Promise<unknown> | undefined,
 ) => {
   return async (values: T) => {
     form.setSubmitError(undefined);

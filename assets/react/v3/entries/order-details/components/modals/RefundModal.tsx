@@ -6,11 +6,11 @@ import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useRefundOrderMutation } from '@OrderServices/order';
 import { createPriceFormatter } from '@Utils/currency';
 import { requiredRule } from '@Utils/validation';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
 
@@ -43,7 +43,7 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id }:
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          refundOrderMutation.mutate({...values, order_id});
+          refundOrderMutation.mutate({ ...values, order_id });
           closeModal();
         })}
       >
@@ -62,7 +62,13 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id }:
                 },
               }}
               render={(props) => (
-                <FormInputWithContent {...props} label={__('Refund amount', 'tutor')} content={'$'} type="number" selectOnFocus />
+                <FormInputWithContent
+                  {...props}
+                  label={__('Refund amount', 'tutor')}
+                  content={'$'}
+                  type="number"
+                  selectOnFocus
+                />
               )}
             />
 

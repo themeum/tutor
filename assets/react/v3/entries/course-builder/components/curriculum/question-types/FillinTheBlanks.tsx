@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { styleUtils } from '@Utils/style-utils';
+import FormFillInTheBlanks from '@Components/fields/quiz/FormFillInTheBlanks';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import FormFillInTheBlanks from '@Components/fields/quiz/FormFillInTheBlanks';
+import { styleUtils } from '@Utils/style-utils';
 
 const FillInTheBlanks = () => {
   const form = useFormContext<QuizForm>();

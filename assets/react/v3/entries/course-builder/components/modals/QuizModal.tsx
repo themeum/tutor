@@ -8,25 +8,25 @@ import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormInput from '@Components/fields/FormInput';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import Tabs from '@Molecules/Tabs';
 
-import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
-import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionConditions';
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
+import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
+import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
+import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 import {
+  type QuizForm,
   convertQuizFormDataToPayload,
   convertQuizResponseToFormData,
-  type QuizForm,
   useGetQuizDetailsQuery,
   useSaveQuizMutation,
 } from '@CourseBuilderServices/quiz';
-import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 
 import { modal } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
@@ -34,10 +34,10 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
+import type { ContentDripType } from '@CourseBuilderServices/course';
+import type { ID } from '@CourseBuilderServices/curriculum';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import type { ID } from '@CourseBuilderServices/curriculum';
-import type { ContentDripType } from '@CourseBuilderServices/course';
 import { isDefined } from '@Utils/types';
 
 interface QuizModalProps extends ModalProps {

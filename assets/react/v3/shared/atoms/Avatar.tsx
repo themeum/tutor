@@ -8,17 +8,20 @@ interface AvatarProps {
 }
 
 const generateAcronym = (name: string) => {
-	const parts = name.split(/\s+/);
-	if (parts.length === 1) {
-		return parts[0].charAt(0);
-	}
+  const parts = name.split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].charAt(0);
+  }
 
-	if (parts.length > 1) {
-		return parts.slice(0, 2).map(part => part.charAt(0)).join('');
-	}
-	
-	return '';
-}
+  if (parts.length > 1) {
+    return parts
+      .slice(0, 2)
+      .map((part) => part.charAt(0))
+      .join('');
+  }
+
+  return '';
+};
 
 export function Avatar({ image, name }: AvatarProps) {
   if (!image) {

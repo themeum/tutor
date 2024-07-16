@@ -1,35 +1,35 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import { useEffect, useMemo, useState } from 'react';
 import {
-  closestCenter,
   DndContext,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
+  type UniqueIdentifier,
+  closestCenter,
   useSensor,
   useSensors,
-  type UniqueIdentifier,
 } from '@dnd-kit/core';
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import FormTrueFalse from '@Components/fields/quiz/FormTrueFalse';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { typography } from '@Config/typography';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
 import {
-  useQuizQuestionAnswerOrderingMutation,
   type QuizForm,
   type QuizQuestionOption,
+  useQuizQuestionAnswerOrderingMutation,
 } from '@CourseBuilderServices/quiz';
+import { styleUtils } from '@Utils/style-utils';
+import { moveTo, nanoid } from '@Utils/util';
 
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -50,7 +50,7 @@ const TrueFalse = () => {
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
   const currentOptions = useWatch({
@@ -148,7 +148,7 @@ const TrueFalse = () => {
             const updatedOptionsOrder = moveTo(
               form.watch(`questions.${activeQuestionIndex}.question_answers`),
               activeIndex,
-              overIndex
+              overIndex,
             );
 
             quizQuestionAnswerOrderingMutation.mutate({
@@ -196,7 +196,7 @@ const TrueFalse = () => {
               }}
             </Show>
           </DragOverlay>,
-          document.body
+          document.body,
         )}
       </DndContext>
     </div>
