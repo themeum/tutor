@@ -10,6 +10,9 @@
 
 namespace Tutor\Ecommerce;
 
+use TUTOR\Course;
+use TUTOR\Input;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -43,12 +46,44 @@ class Ecommerce {
 			return;
 		}
 
+		if ( ! tutor_utils()->is_monetize_by_tutor() ) {
+			return;
+		}
+
 		add_filter( 'tutor_monetization_options', array( $this, 'add_monetization_option' ) );
+		add_action( 'save_post_' . tutor()->course_post_type, array( $this, 'save_price' ), 10, 2 );
 
 		new OrderController();
 		new OrderActivitiesController();
 		new CouponController();
 		new HooksHandler();
+	}
+
+	/**
+	 * Save course price and course sale price.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int   $post_ID course ID.
+	 * @param mixed $post    course details.
+	 *
+	 * @return void
+	 */
+	public function save_price( $post_ID, $post ) {
+		if ( ! tutor_utils()->is_monetize_by_tutor() ) {
+			return;
+		}
+
+		$course_price = Input::post( 'course_price', 0, Input::TYPE_NUMERIC );
+		$sale_price   = Input::post( 'course_sale_price', 0, Input::TYPE_NUMERIC );
+
+		if ( $course_price ) {
+			update_post_meta( $post_ID, Course::COURSE_PRICE_META, $course_price );
+		}
+
+		if ( $sale_price ) {
+			update_post_meta( $post_ID, Course::COURSE_SALE_PRICE_META, $sale_price );
+		}
 	}
 
 	/**
