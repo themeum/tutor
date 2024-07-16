@@ -536,8 +536,8 @@ class Utils {
 	 *
 	 * @return boolean
 	 */
-	public static function is_monetize_by_tutor() {
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+	public function is_monetize_by_tutor() {
+		$monetize_by = $this->get_option( 'monetize_by' );
 		return 'tutor' === $monetize_by;
 	}
 
