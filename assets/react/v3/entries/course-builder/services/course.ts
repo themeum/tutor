@@ -61,6 +61,7 @@ export interface CourseFormData {
   preview_link: string;
   course_prerequisites: PrerequisiteCourses[];
   tutor_course_certificate_template: string;
+  enable_tutor_bp: boolean;
   _tutor_bp_course_attached_groups: [];
 }
 
@@ -115,6 +116,7 @@ export const courseDefaultData: CourseFormData = {
   preview_link: '',
   course_prerequisites: [],
   tutor_course_certificate_template: '',
+  enable_tutor_bp: false,
   _tutor_bp_course_attached_groups: [],
 };
 
@@ -313,6 +315,7 @@ export interface CourseDetailsResponse {
     [key: string]: string;
   };
   google_meet_meetings: GoogleMeet[];
+  enable_tutor_bp: '0' | '1';
   _tutor_bp_course_attached_groups: [];
 }
 

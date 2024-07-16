@@ -146,6 +146,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
+    enable_tutor_bp: courseDetails.enable_tutor_bp === '1' ? true : false,
     _tutor_bp_course_attached_groups: courseDetails._tutor_bp_course_attached_groups ?? [],
   };
 };
