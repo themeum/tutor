@@ -60,7 +60,8 @@ export interface CourseFormData {
   preview_link: string;
   course_prerequisites: PrerequisiteCourses[];
   tutor_course_certificate_template: string;
-  _tutor_bp_course_attached_groups: [];
+  enable_tutor_bp: boolean;
+  bp_attached_group_ids: string[];
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -113,7 +114,8 @@ export const courseDefaultData: CourseFormData = {
   preview_link: '',
   course_prerequisites: [],
   tutor_course_certificate_template: '',
-  _tutor_bp_course_attached_groups: [],
+  enable_tutor_bp: false,
+  bp_attached_group_ids: [],
 };
 
 export interface CoursePayload {
@@ -285,6 +287,7 @@ export interface CourseDetailsResponse {
     content_drip_type: ContentDripType;
     enable_content_drip: number;
     enrollment_expiry: number;
+    enable_tutor_bp: 1 | 0;
   };
   step_completion_status: Record<CourseBuilderSteps, boolean>;
   course_pricing: {
@@ -311,6 +314,7 @@ export interface CourseDetailsResponse {
     [key: string]: string;
   };
   google_meet_meetings: GoogleMeet[];
+  bp_attached_groups: string[];
 }
 
 export type MeetingType = 'zoom' | 'google_meet';

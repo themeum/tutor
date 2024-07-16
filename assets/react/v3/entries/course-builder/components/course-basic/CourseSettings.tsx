@@ -1,17 +1,22 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import Tabs from '@Molecules/Tabs';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import ContentDripSettings from './ContentDripSettings';
+
+import SVGIcon from '@Atoms/SVGIcon';
+import Tabs from '@Molecules/Tabs';
+import FormInput from '@Components/fields/FormInput';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormSwitch from '@Components/fields/FormSwitch';
+import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
+
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@Config/config';
+import FormCheckbox from '@Components/fields/FormCheckbox';
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
@@ -152,14 +157,26 @@ const CourseSettings = () => {
         {activeTab === 'buddyPress' && (
           <div css={styles.settingsOptions}>
             <Controller
-              name="_tutor_bp_course_attached_groups"
+              name="enable_tutor_bp"
               control={form.control}
               render={(controllerProps) => (
-                <FormSelectInput
+                <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
+              )}
+            />
+
+            <Controller
+              name="bp_attached_group_ids"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormMultiSelectInput
                   {...controllerProps}
                   label={__('BuddyPress Groups', 'tutor')}
                   helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
-                  options={[]}
+                  placeholder={__('Search BuddyPress Groups', 'tutor')}
+                  options={tutorConfig.bp_groups.map((group) => ({
+                    label: group.name,
+                    value: String(group.id),
+                  }))}
                 />
               )}
             />
