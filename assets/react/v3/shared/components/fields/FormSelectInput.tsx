@@ -153,7 +153,7 @@ const FormSelectInput = <T,>({
                     styles.input({
                       hasLeftIcon: !!leftIcon || !!selectedItem?.icon,
                       hasDescription,
-                      hasError: !!fieldState.error
+                      hasError: !!fieldState.error,
                     }),
                   ]}
                   autoComplete="off"
@@ -273,6 +273,7 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     position: relative;
+    background-color: ${colorTokens.background.white};
   `,
   leftIcon: ({
     hasDescription = false,
@@ -292,7 +293,11 @@ const styles = {
     }
 		
   `,
-  input: ({ hasLeftIcon, hasDescription, hasError = false }: { hasLeftIcon: boolean; hasDescription: boolean; hasError: boolean }) => css`
+  input: ({
+    hasLeftIcon,
+    hasDescription,
+    hasError = false,
+  }: { hasLeftIcon: boolean; hasDescription: boolean; hasError: boolean }) => css`
     &[data-select] {
       ${typography.body()};
       width: 100%;
@@ -318,17 +323,23 @@ const styles = {
         `
       }
 
-      ${hasError && css`
+      ${
+        hasError &&
+        css`
         background-color: ${colorTokens.background.status.errorFail};
-      `}
+      `
+      }
 
       :focus {
         ${styleUtils.inputFocus};
 
-        ${hasError && css`
+        ${
+          hasError &&
+          css`
           border-color: ${colorTokens.stroke.danger};
           background-color: ${colorTokens.background.status.errorFail};
-        `}
+        `
+        }
       }
     }
   `,
