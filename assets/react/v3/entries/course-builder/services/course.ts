@@ -24,6 +24,7 @@ export type ContentDripType =
   | 'unlock_sequentially'
   | 'after_finishing_prerequisites'
   | '';
+export type PricingCategory = 'subscription' | 'regular';
 
 export interface CourseFormData {
   post_date: string;
@@ -36,6 +37,7 @@ export interface CourseFormData {
   post_author: User | null;
   thumbnail: Media | null;
   video: CourseVideo;
+  course_pricing_category: PricingCategory;
   course_price_type: string;
   course_price: string;
   course_sale_price: string;
@@ -91,6 +93,7 @@ export const courseDefaultData: CourseFormData = {
     source_vimeo: '',
     source_embedded: '',
   },
+  course_pricing_category: 'regular',
   course_price_type: 'free',
   course_price: '',
   course_sale_price: '',
@@ -457,7 +460,7 @@ export const useCreateCourseMutation = () => {
 
   return useMutation({
     mutationFn: createCourse,
-    onSuccess: (response) => {
+    onSuccess: response => {
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
@@ -479,7 +482,7 @@ export const useUpdateCourseMutation = () => {
 
   return useMutation({
     mutationFn: updateCourse,
-    onSuccess: (response) => {
+    onSuccess: response => {
       showToast({ type: 'success', message: response.message });
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', response.data],
@@ -502,7 +505,7 @@ export const useCourseDetailsQuery = (courseId: number) => {
   return useQuery({
     queryKey: ['CourseDetails', courseId],
     queryFn: () =>
-      getCourseDetails(courseId).then((res) => {
+      getCourseDetails(courseId).then(res => {
         return res.data;
       }),
     enabled: !!courseId,
@@ -520,7 +523,7 @@ const getWcProducts = (courseId?: string) => {
 export const useGetProductsQuery = (courseId?: string) => {
   return useQuery({
     queryKey: ['WcProducts'],
-    queryFn: () => getWcProducts(courseId).then((res) => res.data),
+    queryFn: () => getWcProducts(courseId).then(res => res.data),
   });
 };
 
@@ -538,7 +541,7 @@ export const useProductDetailsQuery = (productId: string, courseId: string, cour
   return useQuery({
     queryKey: ['WcProductDetails', productId, courseId],
     queryFn: () =>
-      getProductDetails(productId, courseId).then((res) => {
+      getProductDetails(productId, courseId).then(res => {
         if (typeof res.data === 'string') {
           showToast({ type: 'danger', message: res.data });
           return null;
@@ -562,7 +565,7 @@ const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
 export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrerequisiteAddonEnabled: boolean) => {
   return useQuery({
     queryKey: ['PrerequisiteCourses', excludedCourseIds],
-    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then((res) => res.data),
+    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then(res => res.data),
     enabled: isPrerequisiteAddonEnabled,
   });
 };
@@ -580,7 +583,7 @@ export const useSaveZoomMeetingMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: saveZoomMeeting,
-    onSuccess: (response) => {
+    onSuccess: response => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
@@ -614,7 +617,7 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: deleteZoomMeeting,
-    onSuccess: (response) => {
+    onSuccess: response => {
       showToast({ type: 'success', message: __(response.data.message, 'tutor') });
 
       queryClient.invalidateQueries({
@@ -644,7 +647,7 @@ export const useSaveGoogleMeetMutation = (courseId: string) => {
 
   return useMutation({
     mutationFn: saveGoogleMeet,
-    onSuccess: (response) => {
+    onSuccess: response => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
@@ -675,7 +678,7 @@ export const useDeleteGoogleMeetMutation = (courseId: string, payload: GoogleMee
 
   return useMutation({
     mutationFn: () => deleteGoogleMeet(payload['post-id'], payload['event-id']),
-    onSuccess: (response) => {
+    onSuccess: response => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
