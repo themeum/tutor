@@ -23,6 +23,7 @@ const CourseSettings = () => {
   const [activeTab, setActiveTab] = useState('general');
 
   const isContentDripActive = form.watch('contentDripType');
+  const isBuddyPressEnabled = form.watch('enable_tutor_bp');
 
   const tabList = [
     {
@@ -42,6 +43,7 @@ const CourseSettings = () => {
             label: __('BuddyPress', 'tutor'),
             value: 'buddyPress',
             icon: <SVGIcon name="buddyPress" width={24} height={24} />,
+            activeBadge: isBuddyPressEnabled ? true : false,
           },
         ]
       : []),
