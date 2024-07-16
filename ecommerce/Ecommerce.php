@@ -82,7 +82,7 @@ class Ecommerce {
 			update_post_meta( $post_ID, Course::COURSE_PRICE_META, $course_price );
 		}
 
-		if ( $sale_price ) {
+		if ( Input::has( 'course_sale_price' ) ) {
 			update_post_meta( $post_ID, Course::COURSE_SALE_PRICE_META, $sale_price );
 		}
 	}
