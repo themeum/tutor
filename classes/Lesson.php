@@ -230,8 +230,9 @@ class Lesson extends Tutor_Base {
 		$post = get_post( $lesson_id, ARRAY_A );
 
 		if ( $post ) {
-			$post['thumbnail']   = get_the_post_thumbnail_url( $lesson_id );
-			$post['attachments'] = tutor_utils()->get_attachments( $lesson_id );
+			$post['thumbnail_id'] = get_post_meta( $lesson_id, '_thumbnail_id', true );
+			$post['thumbnail']    = get_the_post_thumbnail_url( $lesson_id );
+			$post['attachments']  = tutor_utils()->get_attachments( $lesson_id );
 
 			$video = maybe_unserialize( get_post_meta( $lesson_id, '_video', true ) );
 			if ( $video ) {

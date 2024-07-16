@@ -62,6 +62,7 @@ export interface CourseFormData {
   preview_link: string;
   course_prerequisites: PrerequisiteCourses[];
   tutor_course_certificate_template: string;
+  _tutor_bp_course_attached_groups: [];
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -115,6 +116,7 @@ export const courseDefaultData: CourseFormData = {
   preview_link: '',
   course_prerequisites: [],
   tutor_course_certificate_template: '',
+  _tutor_bp_course_attached_groups: [],
 };
 
 export interface CoursePayload {

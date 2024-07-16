@@ -8,8 +8,8 @@ import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
+import FormWPEditor from '@Components/fields/FormWPEditor';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
@@ -64,7 +64,6 @@ const CourseBasic = () => {
     name: 'course_product_id',
   });
   const courseCategory = useWatch({control: form.control, name: 'course_pricing_category'});
-  console.log({courseCategory});
 
   const visibilityStatusOptions = [
     {
@@ -167,7 +166,7 @@ const CourseBasic = () => {
           <Controller
             name="post_content"
             control={form.control}
-            render={(controllerProps) => <FormTextareaInput {...controllerProps} label={__('Description', 'tutor')} />}
+            render={(controllerProps) => <FormWPEditor {...controllerProps} label={__('Description', 'tutor')} />}
           />
 
           <CourseSettings />
@@ -254,8 +253,6 @@ const CourseBasic = () => {
             )}
           />
         </Show>
-
-        
 
         {coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc' && (
           <Controller
@@ -373,8 +370,6 @@ const styles = {
   mainForm: css`
     padding-block: ${spacing[24]};
     align-self: start;
-    position: sticky;
-    top: ${headerHeight}px;
   `,
 
   fieldsWrapper: css`
