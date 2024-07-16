@@ -101,20 +101,10 @@ class OrderActivitiesController {
 		$payload->meta_key   = $params['meta_key'];
 		$payload->meta_value = $params['meta_value'];
 
-		$model    = new OrderActivitiesModel();
-		$response = $model->add_order_meta( $payload );
+		$model = new OrderActivitiesModel();
+		$model->add_order_meta( $payload );
 
 		do_action( 'tutor_after_adding_order_activity', $params );
-
-		if ( ! $response ) {
-			self::json_response(
-				__( 'Failed to add order activity', 'tutor' ),
-				null,
-				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
-			);
-		}
-
-		self::json_response( __( 'Order activity successfully added', 'tutor' ) );
 	}
 
 	/**
@@ -139,18 +129,17 @@ class OrderActivitiesController {
 
 		$message = empty( $user_name ) ? __( 'Order marked as paid', 'tutor' ) : __( 'Order marked as paid by ' . $user_name, 'tutor' );
 
-		$order_activities_model = new OrderActivitiesModel();
-		$payload                = new \stdClass();
-		$payload->order_id      = $order_id;
-		$payload->meta_key      = $order_activities_model::META_KEY_HISTORY;
-		$payload->meta_value    = wp_json_encode(
+		$payload             = new \stdClass();
+		$payload->order_id   = $order_id;
+		$payload->meta_key   = $this->model::META_KEY_HISTORY;
+		$payload->meta_value = wp_json_encode(
 			array(
 				'date'    => current_time( 'mysql' ),
 				'message' => $message,
 			)
 		);
 
-		return $order_activities_model->add_order_meta( $payload );
+		return $this->model->add_order_meta( $payload );
 	}
 
 	/**
@@ -167,7 +156,7 @@ class OrderActivitiesController {
 	 *
 	 * @return object The validation result. It returns validation object.
 	 */
-	protected function validate( array $data ) {
+	protected static function validate( array $data ) {
 
 		$validation_rules = array(
 			'order_id'   => 'required|numeric',

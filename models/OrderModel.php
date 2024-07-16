@@ -331,7 +331,7 @@ class OrderModel {
 
 		$meta_keys = array(
 			OrderActivitiesModel::META_KEY_REFUND,
-			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND
+			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND,
 		);
 
 		// Retrieve order refunds for the given order ID from the 'tutor_ordermeta' table.
@@ -525,6 +525,72 @@ class OrderModel {
 		if ( $response ) {
 			$activity_controller = new OrderActivitiesController();
 			$activity_controller->store_order_activity_for_marked_as_paid( $data->order_id );
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Updates the status of an order and logs the activity.
+	 *
+	 * This function updates the status of an order in the database and, if successful, logs the activity
+	 * with a message indicating the status change. The message includes the current user's display name,
+	 * if available.
+	 *
+	 * The possible order statuses include:
+	 * - ORDER_CANCELLED
+	 * - ORDER_COMPLETED
+	 * - ORDER_INCOMPLETE
+	 * - ORDER_TRASH
+	 *
+	 * If the update is successful, an order activity log entry is created with the current date, time,
+	 * and status change message.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $data An object containing:
+	 *                     - int    $order_id      The ID of the order to update.
+	 *                     - string $order_status  The new status of the order.
+	 *
+	 * @return bool True on successful update, false on failure.
+	 */
+	public function order_status_update( object $data ) {
+		$response = QueryHelper::update(
+			$this->table_name,
+			array(
+				'order_status' => $data->order_status,
+			),
+			array( 'id' => $data->order_id )
+		);
+
+		if ( $response ) {
+			$user_name    = '';
+			$current_user = wp_get_current_user();
+
+			if ( $current_user->exists() ) {
+				$user_name = $current_user->display_name;
+			}
+
+			$message = '';
+
+			if ( self::ORDER_CANCELLED === $data->order_status ) {
+				$message = empty( $user_name ) ? __( 'Order marked as cancelled', 'tutor' ) : __( 'Order marked as cancelled by ' . $user_name, 'tutor' );
+			} elseif ( self::ORDER_COMPLETED === $data->order_status ) {
+				$message = empty( $user_name ) ? __( 'Order marked as completed', 'tutor' ) : __( 'Order marked as completed by ' . $user_name, 'tutor' );
+			} elseif ( self::ORDER_INCOMPLETE === $data->order_status ) {
+				$message = empty( $user_name ) ? __( 'Order marked as incomplete', 'tutor' ) : __( 'Order marked as incomplete by ' . $user_name, 'tutor' );
+			} elseif ( self::ORDER_TRASH === $data->order_status ) {
+				$message = empty( $user_name ) ? __( 'Order marked as trash', 'tutor' ) : __( 'Order marked as trash by ' . $user_name, 'tutor' );
+			}
+
+			if ( $message ) {
+				$value = wp_json_encode(
+					array(
+						'message' => $message,
+					)
+				);
+				OrderActivitiesController::store_order_activity( $data->order_id, OrderActivitiesModel::META_KEY_HISTORY, $value );
+			}
 		}
 
 		return $response;
