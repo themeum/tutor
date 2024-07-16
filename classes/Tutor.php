@@ -928,18 +928,23 @@ final class Tutor {
 		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			coupon_status VARCHAR(50),
+			coupon_type VARCHAR(100) DEFAULT 'code', -- coupon type 'code' or 'automatic'
 			coupon_code VARCHAR(50) NOT NULL,
 			coupon_title VARCHAR(255) NOT NULL,
 			coupon_description TEXT,
 			discount_type ENUM('percentage', 'flat') NOT NULL,
 			discount_amount DECIMAL(13, 2) NOT NULL,
-			total_usage_limit INT(10) UNSIGNED,
-			per_user_usage_limit INT(10) UNSIGNED,
-			coupon_type VARCHAR(100) NOT NULL, -- product specific or category or all
+			applies_to VARCHAR(100) DEFAULT 'all_courses_and_bundles', -- possible values 'all_courses_and_bundles', 'all_courses', 'all_bundles', 'specific_courses', 'specific_bundles', 'specific_category'
+			total_usage_limit INT(10) UNSIGNED DEFAULT 0,
+			is_one_use_per_user TINYINT(4) UNSIGNED DEFAULT 0,
+			purchase_requirement VARCHAR(50) DEFAULT 'no_minimum', -- possible values 'no_minimum', 'minimum_purchase', 'minimum_quantity'
+			purchase_requirement_value DECIMAL(13, 2),
 			start_date_gmt DATETIME NOT NULL,
 			expire_date_gmt DATETIME DEFAULT NULL,
 			created_at_gmt DATETIME NOT NULL,
+			created_by BIGINT(20) UNSIGNED NOT NULL,
 			updated_at_gmt DATETIME,
+			updated_by BIGINT(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			UNIQUE KEY coupon_code (coupon_code),
 			KEY start_date_gmt (start_date_gmt),

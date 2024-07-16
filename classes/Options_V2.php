@@ -12,6 +12,7 @@ namespace Tutor;
 
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use TUTOR\Input;
 
@@ -552,6 +553,7 @@ class Options_V2 {
 
 		$page_posts             = get_posts( $page_args );
 		$course_archive_page_id = ( is_array( $page_posts ) && count( $page_posts ) ) ? $page_posts[0] : null;
+
 
 		$attr = array(
 			'general'      => array(
@@ -1742,43 +1744,13 @@ class Options_V2 {
 						'label'      => __( 'Supported payment methods ', 'tutor' ),
 						'slug'       => 'automate_payment_gateway',
 						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'     => OptionKeys::PAYMENT_METHOD_PAYPAL,
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Paypal', 'tutor' ),
-								'default' => 'off',
-								'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
-							),
-							array(
-								'key'     => OptionKeys::PAYMENT_METHOD_STRIPE,
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Stripe', 'tutor' ),
-								'default' => 'off',
-								'desc'    => __( 'Enable this to accept payments via Stripe.', 'tutor' ),
-							),
-						),
+						'fields'     => Ecommerce::get_automate_payment_setting_fields(),
 					),
 					array(
 						'label'      => __( 'Manual payment methods ', 'tutor' ),
 						'slug'       => 'manual_payment_gateway',
 						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'     => OptionKeys::PAYMENT_METHOD_BANK_TRANSFER,
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Bank Transfer', 'tutor' ),
-								'default' => 'off',
-								'desc'    => __( 'Enable this to accept payments via Bank Transfer.', 'tutor' ),
-							),
-							array(
-								'key'     => OptionKeys::PAYMENT_METHOD_COD,
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Cash on Delivery', 'tutor' ),
-								'default' => 'off',
-								'desc'    => __( 'Enable this to accept payments via Cash on Delivery.', 'tutor' ),
-							),
-						),
+						'fields'     => Ecommerce::get_manual_payment_setting_fields(),
 					),
 				),
 			),

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { nanoid } from '@Utils/util';
 import { __, _x } from '@wordpress/i18n';
 import { css } from '@emotion/react';
@@ -18,7 +18,7 @@ if (!window.wp.editor.getDefaultSettings) {
   };
 }
 
-function editorConfig(onChange?: (value: string) => void) {
+function editorConfig(onChange: (value: string) => void, setIsFocused: (value: boolean) => void) {
   return {
     tinymce: {
       wpautop: true,
@@ -162,6 +162,8 @@ function editorConfig(onChange?: (value: string) => void) {
             onChange(editor.getContent());
           }
         });
+        editor.on('focus', () => setIsFocused(true));
+        editor.on('blur', () => setIsFocused(false));
       },
       wp_keep_scroll_position: false,
       wpeditimage_html5_captions: true,
@@ -175,19 +177,23 @@ function editorConfig(onChange?: (value: string) => void) {
 
 const WPEditor = ({ value, onChange }: WPEditorProps) => {
   const { current: editorId } = useRef(nanoid());
+  const [isFocused, setIsFocused] = useState(false);
 
   const updateEditorContent = useCallback(
     (value: string) => {
-      if (typeof window.tinymce !== 'undefined') {
-        const editorInstance = window.tinymce.get(editorId);
-        if (editorInstance) {
-          if (value !== editorInstance.getContent()) {
-            editorInstance.setContent(value);
-          }
+      const { tinymce } = window;
+      if (!tinymce || isFocused) {
+        return;
+      }
+
+      const editorInstance = window.tinymce.get(editorId);
+      if (editorInstance) {
+        if (value !== editorInstance.getContent()) {
+          editorInstance.setContent(value);
         }
       }
     },
-    [editorId]
+    [editorId, isFocused]
   );
 
   useEffect(() => {
@@ -199,7 +205,7 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
   useEffect(() => {
     if (typeof window.wp !== 'undefined' && window.wp.editor) {
       window.wp.editor.remove(editorId);
-      window.wp.editor.initialize(editorId, editorConfig(onChange));
+      window.wp.editor.initialize(editorId, editorConfig(onChange, setIsFocused));
 
       return () => {
         window.wp.editor.remove(editorId);

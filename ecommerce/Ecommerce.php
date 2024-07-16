@@ -74,15 +74,16 @@ class Ecommerce {
 	 * @return array
 	 */
 	public static function get_automate_payment_gateways(): array {
+		$fields   = self::get_automate_payment_setting_fields();
 		$gateways = array(
 			'paypal' => array(
-				'label'       => 'PayPal',
+				'label'       => $fields[0]['label'],
 				'icon'        => tutor()->url . 'assets/images/payment-gateways/paypal.svg',
 				'package_url' => '',
 				'is_active'   => true,
 			),
 			'stripe' => array(
-				'label'       => 'Stripe',
+				'label'       => $fields[1]['label'],
 				'icon'        => tutor()->url . 'assets/images/payment-gateways/stripe.svg',
 				'package_url' => '',
 				'is_active'   => true,
@@ -100,21 +101,67 @@ class Ecommerce {
 	 * @return array
 	 */
 	public static function get_manual_payment_gateways(): array {
+		$fields   = self::get_manual_payment_setting_fields();
 		$gateways = array(
 			array(
-				'label'       => 'Bank Transfer',
+				'label'       => $fields[0]['label'],
 				'icon'        => tutor()->url . 'assets/images/payment-gateways/bank-transfer.svg',
-				'package_url' => '',
-				'is_active'   => true,
-			),
-			array(
-				'label'       => 'Cash on Delivery',
-				'icon'        => tutor()->url . 'assets/images/payment-gateways/cash-on-delivery.svg',
 				'package_url' => '',
 				'is_active'   => true,
 			),
 		);
 
 		return apply_filters( 'tutor_manual_payment_gateways', $gateways );
+	}
+
+	/**
+	 * Get automate payment setting fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param bool $is_manual_payment is manual payment.
+	 *
+	 * @return array
+	 */
+	public static function get_automate_payment_setting_fields( $is_manual_payment = false ) {
+		$fields = array(
+			array(
+				'key'     => OptionKeys::PAYMENT_METHOD_PAYPAL,
+				'type'    => 'toggle_switch',
+				'label'   => __( 'Paypal', 'tutor' ),
+				'default' => 'off',
+				'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
+			),
+			array(
+				'key'     => OptionKeys::PAYMENT_METHOD_STRIPE,
+				'type'    => 'toggle_switch',
+				'label'   => __( 'Stripe', 'tutor' ),
+				'default' => 'off',
+				'desc'    => __( 'Enable this to accept payments via Stripe.', 'tutor' ),
+			),
+		);
+
+		return $fields;
+	}
+
+	/**
+	 * Get manual payment setting fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_manual_payment_setting_fields() {
+		$fields = array(
+			array(
+				'key'     => OptionKeys::PAYMENT_METHOD_BANK_TRANSFER,
+				'type'    => 'toggle_switch',
+				'label'   => __( 'Bank Transfer', 'tutor' ),
+				'default' => 'off',
+				'desc'    => __( 'Enable this to accept payments via Bank Transfer.', 'tutor' ),
+			),
+		);
+
+		return $fields;
 	}
 }
