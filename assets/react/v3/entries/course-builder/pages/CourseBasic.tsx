@@ -80,16 +80,24 @@ const CourseBasic = () => {
     },
   ];
 
-  const coursePriceOptions = [
-    {
-      label: __('Free', 'tutor'),
-      value: 'free',
-    },
-    {
-      label: __('Paid', 'tutor'),
-      value: 'paid',
-    },
-  ];
+  const coursePriceOptions =
+    tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'tutor'
+      ? [
+          {
+            label: __('Free', 'tutor'),
+            value: 'free',
+          },
+          {
+            label: __('Paid', 'tutor'),
+            value: 'paid',
+          },
+        ]
+      : [
+          {
+            label: __('Free', 'tutor'),
+            value: 'free',
+          },
+        ];
 
   const coursePricingCategoryOptions: Option<PricingCategory>[] = [
     {
@@ -109,13 +117,23 @@ const CourseBasic = () => {
   const productsQuery = useGetProductsQuery(courseId ? String(courseId) : '');
   const productDetailsQuery = useProductDetailsQuery(courseProductId, String(courseId), coursePriceType);
 
-  const productOptions =
-    productsQuery.data?.map((item) => {
-      return {
-        label: item.post_title,
-        value: item.ID,
-      };
-    }) ?? [];
+  const productOptions = () => {
+    const currentSelectedProduct = {
+      label: form.getValues('course_product_name'),
+      value: form.getValues('course_product_id'),
+    };
+
+    if (productsQuery.isSuccess && productsQuery.data && currentSelectedProduct.value) {
+      return [
+        currentSelectedProduct,
+        ...productsQuery.data.map((product) => ({
+          label: product.post_title,
+          value: product.ID.toString(),
+        })),
+      ];
+    }
+    return [];
+  };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -263,7 +281,7 @@ const CourseBasic = () => {
                 {...controllerProps}
                 label={__('Select product', 'tutor')}
                 placeholder={__('Select a product', 'tutor')}
-                options={productOptions}
+                options={productOptions()}
                 helpText={__(
                   'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.'
                 )}
@@ -273,36 +291,37 @@ const CourseBasic = () => {
           />
         )}
 
-        {coursePriceType === 'paid' && (
-          <div css={styles.coursePriceWrapper}>
-            <Controller
-              name="course_price"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInputWithContent
-                  {...controllerProps}
-                  label={__('Regular Price', 'tutor')}
-                  content={<SVGIcon name="currency" width={24} height={24} />}
-                  placeholder={__('0', 'tutor')}
-                  type="number"
-                />
-              )}
-            />
-            <Controller
-              name="course_sale_price"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInputWithContent
-                  {...controllerProps}
-                  label={__('Discount Price', 'tutor')}
-                  content={<SVGIcon name="currency" width={24} height={24} />}
-                  placeholder={__('0', 'tutor')}
-                  type="number"
-                />
-              )}
-            />
-          </div>
-        )}
+        {coursePriceType === 'paid' &&
+          (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc') && (
+            <div css={styles.coursePriceWrapper}>
+              <Controller
+                name="course_price"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInputWithContent
+                    {...controllerProps}
+                    label={__('Regular Price', 'tutor')}
+                    content={<SVGIcon name="currency" width={24} height={24} />}
+                    placeholder={__('0', 'tutor')}
+                    type="number"
+                  />
+                )}
+              />
+              <Controller
+                name="course_sale_price"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInputWithContent
+                    {...controllerProps}
+                    label={__('Discount Price', 'tutor')}
+                    content={<SVGIcon name="currency" width={24} height={24} />}
+                    placeholder={__('0', 'tutor')}
+                    type="number"
+                  />
+                )}
+              />
+            </div>
+          )}
 
         <Controller
           name="course_categories"

@@ -2,6 +2,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
+import FormCheckbox from '@Components/fields/FormCheckbox';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { CourseFormData } from '@CourseBuilderServices/course';
@@ -151,6 +152,14 @@ const CourseSettings = () => {
 
         {activeTab === 'buddyPress' && (
           <div css={styles.settingsOptions}>
+            <Controller
+              name="enable_tutor_bp"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
+              )}
+            />
+
             <Controller
               name="_tutor_bp_course_attached_groups"
               control={form.control}
