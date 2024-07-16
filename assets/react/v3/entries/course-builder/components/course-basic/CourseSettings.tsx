@@ -11,6 +11,7 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import ContentDripSettings from './ContentDripSettings';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
@@ -18,19 +19,27 @@ const CourseSettings = () => {
 
   const isContentDripActive = form.watch('contentDripType');
 
-  // @TODO: Need to add buddyboss options based on plugin installation
   const tabList = [
     {
-      label: 'General',
+      label: __('General', 'tutor'),
       value: 'general',
       icon: <SVGIcon name="settings" width={24} height={24} />,
     },
     {
-      label: 'Content Drip',
+      label: __('Content Drip', 'tutor'),
       value: 'content_drip',
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
       activeBadge: isContentDripActive ? true : false,
     },
+    ...(isAddonEnabled('BuddyPress')
+      ? [
+          {
+            label: __('BuddyPress', 'tutor'),
+            value: 'buddyPress',
+            icon: <SVGIcon name="buddyPress" width={24} height={24} />,
+          },
+        ]
+      : []),
   ];
 
   const difficultyLevelOptions = [
@@ -139,6 +148,23 @@ const CourseSettings = () => {
         )}
 
         {activeTab === 'content_drip' && <ContentDripSettings />}
+
+        {activeTab === 'buddyPress' && (
+          <div css={styles.settingsOptions}>
+            <Controller
+              name="_tutor_bp_course_attached_groups"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSelectInput
+                  {...controllerProps}
+                  label={__('BuddyPress Groups', 'tutor')}
+                  helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
+                  options={[]}
+                />
+              )}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -16,7 +16,6 @@ export const authApiInstance = axios.create({
   baseURL: config.TUTOR_API_BASE_URL,
 });
 
-
 authApiInstance.interceptors.request.use(
   (config) => {
     config.headers ||= {};
@@ -60,7 +59,7 @@ wpAuthApiInstance.interceptors.request.use(
   (config) => {
     config.headers ||= {};
 
-    config.headers['X-WP-Nonce'] = tutorConfig._tutor_nonce;
+    config.headers['X-WP-Nonce'] = tutorConfig.wp_rest_nonce;
 
     if (config.method && ['post', 'put', 'patch'].includes(config.method.toLocaleLowerCase())) {
       if (config.data) {
@@ -91,31 +90,33 @@ wpAuthApiInstance.interceptors.response.use((response) => {
   return Promise.resolve<{ data: unknown }>(response).then((res) => res);
 });
 
-
 export const wpAjaxInstance = axios.create({
   baseURL: config.WP_AJAX_BASE_URL,
 });
 
-wpAjaxInstance.interceptors.request.use((config) => {
-  config.headers ||= {};
-  // config.headers['X-WP-Nonce'] = tutorConfig._tutor_nonce;
+wpAjaxInstance.interceptors.request.use(
+  (config) => {
+    config.headers ||= {};
+    // config.headers['X-WP-Nonce'] = tutorConfig._tutor_nonce;
 
-  // We will use REST methods while using but wp ajax only sent via post method.
-  config.method = 'POST';
+    // We will use REST methods while using but wp ajax only sent via post method.
+    config.method = 'POST';
 
-  if (config.params) {
-    config.params = serializeParams(config.params);
-  }
+    if (config.params) {
+      config.params = serializeParams(config.params);
+    }
 
-  config.data ||= {};
-  const {key: nonce_key, value: nonce_value} = window.tutor_get_nonce_data(true);
-  config.data = {...config.data, ...config.params, action: config.url, [nonce_key]: nonce_value };
-  config.data = convertToFormData(config.data, config.method);
-  
-  config.params = {};
-  config.url = undefined;
-  
-  return config;
-}, (error) => Promise.reject(error));
+    config.data ||= {};
+    const { key: nonce_key, value: nonce_value } = window.tutor_get_nonce_data(true);
+    config.data = { ...config.data, ...config.params, action: config.url, [nonce_key]: nonce_value };
+    config.data = convertToFormData(config.data, config.method);
 
-wpAjaxInstance.interceptors.response.use((response) => Promise.resolve(response).then(res => res.data));
+    config.params = {};
+    config.url = undefined;
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+wpAjaxInstance.interceptors.response.use((response) => Promise.resolve(response).then((res) => res.data));

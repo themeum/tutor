@@ -194,6 +194,7 @@ interface QuizUpdateQuestionPayload {
   question_description: string;
   question_type: string;
   question_mark: number;
+  answer_explanation: string;
   'question_settings[question_type]': string;
   'question_settings[answer_required]': 0 | 1;
   'question_settings[question_mark]': number;
@@ -202,6 +203,15 @@ interface QuizUpdateQuestionPayload {
 interface QuizQuestionAnswerOrderingPayload {
   question_id: ID;
   sorted_answer_ids: ID[];
+}
+
+interface CreateQuizQuestionAnswerPayload {
+  question_id: ID;
+  answer_id?: ID; //only for update
+  answer_title: string;
+  image_id: ID;
+  answer_view_format: string;
+  matched_answer_title?: string; //only when question type matching or image matching
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
@@ -271,8 +281,9 @@ export const convertQuizFormDataToPayloadForUpdate = (data: QuizQuestion): QuizU
     question_title: data.question_title,
     question_description: data.question_description,
     question_type: data.question_type,
-    question_mark: data.question_mark,
-    'question_settings[question_type]': data.question_settings.question_type,
+    question_mark: data.question_settings.question_mark,
+    answer_explanation: data.answer_explanation,
+    'question_settings[question_type]': data.question_type,
     'question_settings[answer_required]': data.question_settings.answer_required ? 1 : 0,
     'question_settings[question_mark]': data.question_settings.question_mark,
   };
@@ -597,6 +608,35 @@ export const useQuizQuestionAnswerOrderingMutation = () => {
         queryClient.invalidateQueries({
           queryKey: ['GetQuizDetails'],
         });
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const createQuizAnswer = (payload: CreateQuizQuestionAnswerPayload) => {
+  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_question_answer_save',
+    ...payload,
+  });
+};
+
+export const useCreateQuizAnswerMutation = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: createQuizAnswer,
+    onSuccess: (response) => {
+      if (response.status_code === 200 || response.status_code === 201) {
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
