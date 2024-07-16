@@ -311,7 +311,6 @@ export const useImportQuizMutation = () => {
   return useMutation({
     mutationFn: importQuiz,
     onSuccess: (response) => {
-      console.log(response);
       if (response.success) {
         queryClient.invalidateQueries({
           queryKey: ['Topic'],

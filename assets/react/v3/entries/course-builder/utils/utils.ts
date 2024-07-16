@@ -68,8 +68,6 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
 };
 
 export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
-  console.log(courseDetails.course_pricing.price, courseDetails.course_pricing.product_id);
-
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
@@ -157,7 +155,6 @@ export const convertLessonDataToPayload = (
   topicId: ID,
   contentDripType: ContentDripType
 ): LessonPayload => {
-  console.log(data.thumbnail);
   return {
     ...(lessonId && { lesson_id: lessonId }),
     topic_id: topicId,
