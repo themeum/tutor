@@ -530,6 +530,18 @@ class Utils {
 	}
 
 	/**
+	 * Check is monetize by tutor e-commerce
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_monetize_by_tutor() {
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+		return 'tutor' === $monetize_by;
+	}
+
+	/**
 	 * Check plugin active status.
 	 *
 	 * @since 1.0.0
