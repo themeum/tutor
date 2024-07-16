@@ -202,6 +202,7 @@ export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) =>
         onChange={() => {
           onChange(option.id);
         }}
+        labelCss={styles.checkboxLabel}
       />
 
       {renderBranches()}
@@ -219,6 +220,9 @@ const styles = {
   categoryListWrapper: css`
     max-height: 208px;
     overflow: auto;
+  `,
+  checkboxLabel: css`
+    line-height: 1.88rem !important;
   `,
   branchItem: ({ leftBarHeight, hasParent }: { leftBarHeight: string; hasParent: boolean }) => css`
     line-height: ${spacing[32]};
