@@ -40,6 +40,14 @@ class Course extends Tutor_Base {
 	const PRICE_TYPE_PAID = 'paid';
 
 	/**
+	 * Course price and sale price
+	 *
+	 * @since 3.0.0
+	 */
+	const COURSE_PRICE_META      = 'tutor_course_price';
+	const COURSE_SALE_PRICE_META = 'tutor_course_sale_price';
+
+	/**
 	 * Additional course meta info
 	 *
 	 * @var array
