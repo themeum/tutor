@@ -10,6 +10,10 @@
 
 namespace Tutor;
 
+use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Ecommerce\OptionKeys;
 use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -550,6 +554,7 @@ class Options_V2 {
 		$page_posts             = get_posts( $page_args );
 		$course_archive_page_id = ( is_array( $page_posts ) && count( $page_posts ) ) ? $page_posts[0] : null;
 
+
 		$attr = array(
 			'general'      => array(
 				'label'    => __( 'General', 'tutor' ),
@@ -570,36 +575,6 @@ class Options_V2 {
 								'default' => '0',
 								'options' => $pages,
 								'desc'    => __( 'This page will be used for student and instructor dashboard', 'tutor' ),
-							),
-						),
-					),
-					array(
-						'label'      => false,
-						'block_type' => 'uniform',
-						'slug'       => 'general-page',
-						'fields'     => array(
-							array(
-								'key'     => 'tutor_cart_page_id',
-								'type'    => 'select',
-								'label'   => __( 'Cart Page', 'tutor' ),
-								'default' => '0',
-								'options' => $pages,
-								'desc'    => __( 'This page will be used as the cart page', 'tutor' ),
-							),
-						),
-					),
-					array(
-						'label'      => false,
-						'block_type' => 'uniform',
-						'slug'       => 'general-page',
-						'fields'     => array(
-							array(
-								'key'     => 'tutor_checkout_page_id',
-								'type'    => 'select',
-								'label'   => __( 'Checkout Page', 'tutor' ),
-								'default' => '0',
-								'options' => $pages,
-								'desc'    => __( 'This page will be used as the checkout page', 'tutor' ),
 							),
 						),
 					),

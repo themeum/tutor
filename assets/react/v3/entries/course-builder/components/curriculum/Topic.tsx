@@ -42,7 +42,7 @@ import { useModal } from '@Components/modals/Modal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import AddAssignmentModal from '@CourseBuilderComponents/modals/AddAssignmentModal';
+import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
 
 import For from '@Controls/For';
@@ -64,6 +64,10 @@ import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMe
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
+import { useFileUploader } from '@Molecules/FileUploader';
+import { useToast } from '@Atoms/Toast';
+import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
+import Tooltip from '@Atoms/Tooltip';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -114,6 +118,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 
   const saveTopicMutation = useSaveTopicMutation();
   const deleteTopicMutation = useDeleteTopicMutation();
+  const importQuizMutation = useImportQuizMutation();
 
   const [collapseAnimation, collapseAnimate] = useSpring(
     {
@@ -133,7 +138,27 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     heightCalculator: 'client',
   });
 
+  const { showToast } = useToast();
   const { showModal } = useModal();
+  const { fileInputRef, handleChange } = useFileUploader({
+    acceptedTypes: ['.csv'],
+    onUpload: async (files) => {
+      await importQuizMutation.mutateAsync({
+        topic_id: topic.id,
+        csv_file: files[0],
+      });
+      setIsThreeDotOpen(false);
+    },
+    onError: (errorMessages) => {
+      for (const message of errorMessages) {
+        showToast({
+          message,
+          type: 'danger',
+        });
+      }
+      setIsThreeDotOpen(false);
+    },
+  });
 
   const courseDetails = useCourseDetails();
 
@@ -240,8 +265,19 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           })}
         >
           <div css={styles.headerContent}>
-            <div {...listeners} css={styles.grabberInput({ isOverlay })}>
-              <SVGIcon name="dragVertical" width={24} height={24} />
+            <div
+              css={styles.grabberInput({ isOverlay })}
+              onClick={() => onCollapse?.()}
+              onKeyDown={(event) => {
+                event.stopPropagation();
+                if (event.key === 'Enter' || event.key === ' ') {
+                  onCollapse?.();
+                }
+              }}
+            >
+              <button {...listeners} css={styles.grabButton({ isDragging: isDragging })} type="button">
+                <SVGIcon name="dragVertical" width={24} height={24} />
+              </button>
 
               <Show
                 when={isEdit}
@@ -265,41 +301,50 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             </div>
             <div css={styles.actions}>
               <Show when={!isEdit}>
+                <Tooltip content={__('Edit', 'tutor')}>
+                  <button
+                    type="button"
+                    css={styles.actionButton}
+                    disabled={!topic.isSaved}
+                    data-visually-hidden
+                    onClick={() => {
+                      setIsEdit(true);
+                      if (topic.isCollapsed) {
+                        onCollapse?.();
+                      }
+                    }}
+                  >
+                    <SVGIcon name="edit" width={24} height={24} />
+                  </button>
+                </Tooltip>
+              </Show>
+              <Tooltip content={__('Duplicate', 'tutor')}>
                 <button
                   type="button"
                   css={styles.actionButton}
+                  disabled={!topic.isSaved}
                   data-visually-hidden
                   onClick={() => {
-                    setIsEdit(true);
-                    if (topic.isCollapsed) {
-                      onCollapse?.();
-                    }
+                    alert('@TODO: will be implemented later');
                   }}
                 >
-                  <SVGIcon name="edit" width={24} height={24} />
+                  <SVGIcon name="copyPaste" width={24} height={24} />
                 </button>
-              </Show>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-visually-hidden
-                onClick={() => {
-                  alert('@TODO: will be implemented later');
-                }}
-              >
-                <SVGIcon name="copyPaste" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-visually-hidden
-                ref={deleteRef}
-                onClick={() => {
-                  setIsDeletePopoverOpen(true);
-                }}
-              >
-                <SVGIcon name="delete" width={24} height={24} />
-              </button>
+              </Tooltip>
+              <Tooltip content={__('Delete', 'tutor')}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  disabled={!topic.isSaved}
+                  data-visually-hidden
+                  ref={deleteRef}
+                  onClick={() => {
+                    setIsDeletePopoverOpen(true);
+                  }}
+                >
+                  <SVGIcon name="delete" width={24} height={24} />
+                </button>
+              </Tooltip>
               <ConfirmationPopover
                 isOpen={isDeletePopoverOpen}
                 triggerRef={deleteRef}
@@ -329,6 +374,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               <button
                 type="button"
                 css={styles.actionButton}
+                disabled={!topic.isSaved}
                 onClick={() => {
                   onCollapse?.();
                 }}
@@ -368,7 +414,17 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
 
           <Show when={isEdit}>
             <div css={styles.footer}>
-              <Button variant="text" size="small" onClick={() => setIsEdit(false)}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  if (!form.formState.isValid && !topic.isSaved) {
+                    onDelete?.();
+                  }
+                  form.reset();
+                  setIsEdit(false);
+                }}
+              >
                 {__('Cancel', 'tutor')}
               </Button>
               <Button
@@ -400,7 +456,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 if (active.id !== over.id) {
                   const activeIndex = content.findIndex((item) => item.ID === active.id);
                   const overIndex = content.findIndex((item) => item.ID === over.id);
-                  // Will be modified later
                   onSort?.(activeIndex, overIndex);
                   setContent(moveTo(content, activeIndex, overIndex));
                 }
@@ -421,6 +476,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                           content={{
                             id: content.ID,
                             title: content.post_title,
+                            total_question: content.total_question || 0,
                           }}
                           onCopy={() => createDuplicateContent(content)}
                         />
@@ -433,14 +489,15 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
               {createPortal(
                 <DragOverlay>
                   <Show when={activeSortItem}>
-                    {(item) => (
+                    {(content) => (
                       <TopicContent
                         topic={topic}
                         content={{
-                          id: item.ID,
-                          title: item.post_title,
+                          id: content.ID,
+                          title: content.post_title,
+                          total_question: content.total_question || 0,
                         }}
-                        type={item.post_type}
+                        type={content.post_type}
                         isDragging
                       />
                     )}
@@ -483,6 +540,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                     showModal({
                       component: QuizModal,
                       props: {
+                        topicId: topic.id,
+                        contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Quiz', 'tutor'),
                         icon: <SVGIcon name="quiz" width={24} height={24} />,
                         subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
@@ -500,8 +559,10 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                   disabled={!topic.isSaved}
                   onClick={() => {
                     showModal({
-                      component: AddAssignmentModal,
+                      component: AssignmentModal,
                       props: {
+                        topicId: topic.id,
+                        contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Assignment', 'tutor'),
                         icon: <SVGIcon name="assignment" width={24} height={24} />,
                         subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
@@ -523,7 +584,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                       icon={<SVGIcon name="download" width={24} height={24} />}
                       disabled={!topic.isSaved}
                       onClick={() => {
-                        alert('@TODO: will be implemented later');
+                        fileInputRef?.current?.click();
                       }}
                     >
                       {__('Import Quiz', 'tutor')}
@@ -543,24 +604,27 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                   >
                     <ThreeDots.Option
                       text={
-                        <button ref={triggerGoogleMeetRef} type="button" css={styleUtils.resetButton}>
+                        <span ref={triggerGoogleMeetRef} css={styleUtils.resetButton}>
                           {__('Meet live lesson', 'tutor')}
-                        </button>
+                        </span>
                       }
                       icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
                       onClick={() => setMeetingType('googleMeet')}
                     />
                     <ThreeDots.Option
                       text={
-                        <button ref={triggerZoomRef} type="button" css={styleUtils.resetButton}>
+                        <span ref={triggerZoomRef} css={styleUtils.resetButton}>
                           {__('Zoom live lesson', 'tutor')}
-                        </button>
+                        </span>
                       }
                       icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
                       onClick={() => setMeetingType('zoom')}
                     />
                     <ThreeDots.Option
                       text={__('Import Quiz', 'tutor')}
+                      onClick={() => {
+                        fileInputRef?.current?.click();
+                      }}
                       icon={<SVGIcon name="download" width={24} height={24} />}
                     />
                   </ThreeDots>
@@ -570,6 +634,17 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           </div>
         </animated.div>
       </div>
+
+      {/* This input is added for file input trigger point and it will be accessed by both 'ThreeDot' and 'Import Quiz' button */}
+      <input
+        css={styleUtils.display.none}
+        type="file"
+        ref={fileInputRef}
+        onChange={handleChange}
+        multiple={false}
+        accept=".csv"
+      />
+
       <Popover
         triggerRef={triggerGoogleMeetRef}
         isOpen={meetingType === 'googleMeet'}
@@ -693,7 +768,6 @@ const styles = {
       color: ${colorTokens.color.black[40]};
       flex-shrink: 0;
     }
-    cursor: ${isOverlay ? 'grabbing' : 'grab'};
   `,
   actions: css`
     ${styleUtils.display.flex()};
@@ -706,6 +780,10 @@ const styles = {
     color: ${colorTokens.icon.default};
     display: flex;
     cursor: pointer;
+
+    :disabled {
+      cursor: not-allowed;
+    }
   `,
   content: css`
     padding: ${spacing[16]};
@@ -758,5 +836,13 @@ const styles = {
   footerButtons: css`
     display: flex;
     align-items: center;
+  `,
+  grabButton: ({
+    isDragging = false,
+  }: {
+    isDragging: boolean;
+  }) => css`
+    ${styleUtils.resetButton};
+    cursor: ${isDragging ? 'grabbing' : 'grab'};
   `,
 };

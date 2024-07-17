@@ -68,6 +68,10 @@ function tutor_get_translate_text() {
 			'badge' => 'success',
 			'text'  => __( 'Completed', 'tutor' ),
 		),
+		'incomplete'  => array(
+			'badge' => 'default',
+			'text'  => __( 'Incomplete', 'tutor' ),
+		),
 		'processing' => array(
 			'badge' => 'warning',
 			'text'  => __( 'Processing', 'tutor' ),
@@ -115,6 +119,10 @@ function tutor_get_translate_text() {
 		'paid' => array(
 			'badge' => 'success',
 			'text'  => __( 'Paid', 'tutor' ),
+		),
+		'failed' => array(
+			'badge' => 'danger',
+			'text'  => __( 'Failed', 'tutor' ),
 		),
 		'partially-paid'    => array(
 			'badge' => 'success',

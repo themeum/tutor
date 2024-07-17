@@ -10,7 +10,7 @@ import { typography } from '@Config/typography';
 
 import { DateFormats } from '@Config/constants';
 import { styleUtils } from '@Utils/style-utils';
-import { useDeleteGoogleMeetMeetingMutation, type GoogleMeet } from '@CourseBuilderServices/course';
+import { useDeleteGoogleMeetMutation, type GoogleMeet } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useRef, useState } from 'react';
 import Popover from '@Molecules/Popover';
@@ -29,7 +29,7 @@ const courseId = getCourseId();
 
 const GoogleMeetMeetingCard = ({ data, timezones, topicId }: GoogleMeetMeetingCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const deleteGoogleMeetMeetingMutation = useDeleteGoogleMeetMeetingMutation(String(courseId), {
+  const deleteGoogleMeetMeetingMutation = useDeleteGoogleMeetMutation(String(courseId), {
     'post-id': data.ID,
     'event-id': data.meeting_data.id,
   });
@@ -117,7 +117,6 @@ const GoogleMeetMeetingCard = ({ data, timezones, topicId }: GoogleMeetMeetingCa
       <Popover isOpen={isOpen} triggerRef={triggerRef} closePopover={() => setIsOpen(false)} maxWidth={'306px'}>
         <GoogleMeetForm
           data={data}
-          timezones={timezones}
           topicId={topicId}
           onCancel={() => {
             setIsOpen(false);

@@ -10,6 +10,10 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\CouponController;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Ecommerce\OrderController;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -180,17 +184,24 @@ class Assets {
 
 		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
-		
+
 		// Tutor order detail & coupon scripts.
-		$page = Input::get( 'page', '' );
-		$id   = Input::get( 'id', 0, Input::TYPE_INT );
+		$page   = Input::get( 'page', '' );
+		$action = Input::get( 'action' );
 
-		if ( 'tutor-orders' === $page && $id > 0 ) {
-			wp_enqueue_script( 'tutor-order-details', tutor()->url . 'assets/js/tutor-order-details.min.js', array(), TUTOR_VERSION, true );
-		}
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			if ( OrderController::PAGE_SLUG === $page && 'edit' === $action ) {
+				wp_enqueue_script( 'tutor-order-details', tutor()->url . 'assets/js/tutor-order-details.min.js', array(), TUTOR_VERSION, true );
+			}
 
-		if ( 'tutor-coupons' === $page && $id > 0 ) {
-			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array(), TUTOR_VERSION, true );
+			if ( CouponController::PAGE_SLUG === $page && 'edit' === $action ) {
+				wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array(), TUTOR_VERSION, true );
+			}
+
+			// @since 3.0.0 add tax react app on the settings page.
+			if ( 'tutor_settings' === $page ) {
+				wp_enqueue_script( 'tutor-tax-settings.min', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array(), TUTOR_VERSION, true );
+			}
 		}
 	}
 

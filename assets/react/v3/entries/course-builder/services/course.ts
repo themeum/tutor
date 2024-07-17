@@ -24,6 +24,7 @@ export type ContentDripType =
   | 'unlock_sequentially'
   | 'after_finishing_prerequisites'
   | '';
+export type PricingCategory = 'subscription' | 'regular';
 
 export interface CourseFormData {
   post_date: string;
@@ -36,6 +37,7 @@ export interface CourseFormData {
   post_author: User | null;
   thumbnail: Media | null;
   video: CourseVideo;
+  course_pricing_category: PricingCategory;
   course_price_type: string;
   course_price: string;
   course_sale_price: string;
@@ -57,9 +59,12 @@ export interface CourseFormData {
   isContentDripEnabled: boolean;
   contentDripType: ContentDripType;
   course_product_id: string;
+  course_product_name: string;
   preview_link: string;
   course_prerequisites: PrerequisiteCourses[];
   tutor_course_certificate_template: string;
+  enable_tutor_bp: boolean;
+  bp_attached_group_ids: string[];
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -88,6 +93,7 @@ export const courseDefaultData: CourseFormData = {
     source_vimeo: '',
     source_embedded: '',
   },
+  course_pricing_category: 'regular',
   course_price_type: 'free',
   course_price: '',
   course_sale_price: '',
@@ -109,9 +115,12 @@ export const courseDefaultData: CourseFormData = {
   isContentDripEnabled: false,
   contentDripType: '',
   course_product_id: '',
+  course_product_name: '',
   preview_link: '',
   course_prerequisites: [],
   tutor_course_certificate_template: '',
+  enable_tutor_bp: false,
+  bp_attached_group_ids: [],
 };
 
 export interface CoursePayload {
@@ -264,6 +273,7 @@ export interface CourseDetailsResponse {
     filter: string;
   }[];
   thumbnail: string;
+  thumbnail_id: ID;
   enable_qna: string;
   is_public_course: string;
   course_level: CourseLevel;
@@ -283,6 +293,7 @@ export interface CourseDetailsResponse {
     content_drip_type: ContentDripType;
     enable_content_drip: number;
     enrollment_expiry: number;
+    enable_tutor_bp: 1 | 0;
   };
   step_completion_status: Record<CourseBuilderSteps, boolean>;
   course_pricing: {
@@ -309,6 +320,7 @@ export interface CourseDetailsResponse {
     [key: string]: string;
   };
   google_meet_meetings: GoogleMeet[];
+  bp_attached_groups: string[];
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
@@ -378,6 +390,7 @@ export interface PrerequisiteCourses {
 export interface Certificate {
   name: string;
   orientation: 'landscape' | 'portrait';
+  edit_url?: string;
   url: string;
   preview_src: string;
   background_src: string;
@@ -577,6 +590,14 @@ export const useSaveZoomMeetingMutation = (courseId: string) => {
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic', Number(courseId)],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['ZoomMeeting', response.data],
+      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
@@ -603,6 +624,10 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic', Number(courseId)],
+      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
@@ -610,19 +635,19 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
   });
 };
 
-const saveGoogleMeetMeeting = (payload: GoogleMeetMeetingPayload) => {
+const saveGoogleMeet = (payload: GoogleMeetMeetingPayload) => {
   return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_google_meet_new_meeting',
     ...payload,
   });
 };
 
-export const useSaveGoogleMeetMeetingMutation = (courseId: string) => {
+export const useSaveGoogleMeetMutation = (courseId: string) => {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: saveGoogleMeetMeeting,
+    mutationFn: saveGoogleMeet,
     onSuccess: (response) => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
@@ -640,7 +665,7 @@ export const useSaveGoogleMeetMeetingMutation = (courseId: string) => {
   });
 };
 
-const deleteGoogleMeetMeeting = (postId: string, eventId: string) => {
+const deleteGoogleMeet = (postId: string, eventId: string) => {
   return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
     action: 'tutor_google_meet_delete',
     'post-id': postId,
@@ -648,12 +673,12 @@ const deleteGoogleMeetMeeting = (postId: string, eventId: string) => {
   });
 };
 
-export const useDeleteGoogleMeetMeetingMutation = (courseId: string, payload: GoogleMeetMeetingDeletePayload) => {
+export const useDeleteGoogleMeetMutation = (courseId: string, payload: GoogleMeetMeetingDeletePayload) => {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => deleteGoogleMeetMeeting(payload['post-id'], payload['event-id']),
+    mutationFn: () => deleteGoogleMeet(payload['post-id'], payload['event-id']),
     onSuccess: (response) => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 

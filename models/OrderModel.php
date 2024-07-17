@@ -10,8 +10,8 @@
 
 namespace Tutor\Models;
 
+use Tutor\Ecommerce\OrderActivitiesController;
 use Tutor\Helpers\QueryHelper;
-use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * OrderModel Class
@@ -163,9 +163,11 @@ class OrderModel {
 	 * @return object|false The order data with the student's information included, or false if no order is found.
 	 */
 	public function get_order_by_id( $order_id ) {
-		global $wpdb;
-
-		$order_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table_name WHERE id = %d", $order_id ) );
+		$order_data = QueryHelper::get_row(
+			$this->table_name,
+			array( 'id' => $order_id ),
+			'id'
+		);
 
 		if ( ! $order_data ) {
 			return false;
@@ -174,7 +176,7 @@ class OrderModel {
 		$user_info = get_userdata( $order_data->user_id );
 
 		$student                  = new \stdClass();
-		$student->id              = $user_info->ID;
+		$student->id              = (int) $user_info->ID;
 		$student->name            = $user_info->data->display_name;
 		$student->email           = $user_info->data->user_email;
 		$student->phone           = get_user_meta( $order_data->user_id, 'phone_number', true );
@@ -183,9 +185,9 @@ class OrderModel {
 
 		$order_data->student         = $student;
 		$order_data->courses         = $this->get_order_items_by_id( $order_id );
-		$order_data->sub_total_price = (float) $order_data->sub_total_price;
+		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
-		$order_data->order_price     = (float) $order_data->order_price;
+		$order_data->net_payment     = (float) $order_data->net_payment;
 		$order_data->discount_amount = (float) $order_data->discount_amount;
 		$order_data->tax_rate        = (float) $order_data->tax_rate;
 		$order_data->tax_amount      = (float) $order_data->tax_amount;
@@ -193,7 +195,8 @@ class OrderModel {
 		$order_data->created_by = get_userdata( $order_data->created_by )->display_name;
 		$order_data->updated_by = get_userdata( $order_data->updated_by )->display_name;
 
-		$order_data->activities = $this->get_order_activities( $order_id );
+		$order_activities_model = new OrderActivitiesModel();
+		$order_data->activities = $order_activities_model->get_order_activities( $order_id );
 		$order_data->refunds    = $this->get_order_refunds( $order_id );
 
 		unset( $order_data->user_id );
@@ -240,11 +243,13 @@ class OrderModel {
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
 
-		$bundle_model = new BundleModel();
+		if ( tutor()->has_pro ) {
+			$bundle_model = new \TutorPro\CourseBundle\Models\BundleModel();
+		}
 
 		if ( ! empty( $courses_data['total_count'] ) ) {
 			foreach ( $courses as &$course ) {
-				if ( 'course-bundle' === $course->type ) {
+				if ( tutor()->has_pro && 'course-bundle' === $course->type ) {
 					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
 				}
 
@@ -275,7 +280,7 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return object The customer data retrieved from the database.
+	 * @return object|null The customer data retrieved from the database.
 	 */
 	public function get_tutor_customer_data( $user_id ) {
 		global $wpdb;
@@ -284,7 +289,7 @@ class OrderModel {
 		$customer_data = QueryHelper::get_row( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $user_id ), 'id' );
 
 		if ( empty( $customer_data ) ) {
-			return array();
+			return null;
 		}
 
 		$return_data = (object) array(
@@ -301,66 +306,6 @@ class OrderModel {
 		);
 
 		return $return_data;
-	}
-
-	/**
-	 * Retrieve order activities by order ID.
-	 *
-	 * This function fetches all order activities from the 'tutor_ordermeta' table
-	 * based on the given order ID and the 'history' meta key. It uses a helper
-	 * function from the QueryHelper class to perform the database query.
-	 *
-	 * If no order activities are found, the function returns an empty array.
-	 * Otherwise, it decodes the JSON-encoded meta values and returns them as an array.
-	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
-	 * @param int $order_id The ID of the order to retrieve activities for.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array An array of order activities, each decoded from its JSON representation.
-	 */
-	public function get_order_activities( $order_id ) {
-		global $wpdb;
-
-		// Retrieve order activities for the given order ID from the 'tutor_ordermeta' table.
-		$order_activities = QueryHelper::get_all(
-			"{$wpdb->prefix}tutor_ordermeta",
-			array(
-				'order_id' => $order_id,
-				'meta_key' => self::META_KEY_HISTORY,
-			),
-			'id'
-		);
-
-		if ( empty( $order_activities ) ) {
-			return array();
-		}
-
-		$response = array();
-
-		foreach ( $order_activities as &$activity ) {
-			$values     = new \stdClass();
-			$values     = json_decode( $activity->meta_value );
-			$values->id = (int) $activity->id;
-			$response[] = $values;
-		}
-
-		unset( $activity );
-
-		// Custom comparison function for sorting by date.
-		usort(
-			$response,
-			function ( $a, $b ) {
-				$date_a = strtotime( $a->date );
-				$date_b = strtotime( $b->date );
-
-				return $date_b - $date_a;
-			}
-		);
-
-		return $response;
 	}
 
 	/**
@@ -384,12 +329,17 @@ class OrderModel {
 	public function get_order_refunds( $order_id ) {
 		global $wpdb;
 
+		$meta_keys = array(
+			OrderActivitiesModel::META_KEY_REFUND,
+			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND
+		);
+
 		// Retrieve order refunds for the given order ID from the 'tutor_ordermeta' table.
 		$order_refunds = QueryHelper::get_all(
 			"{$wpdb->prefix}tutor_ordermeta",
 			array(
 				'order_id' => $order_id,
-				'meta_key' => self::META_KEY_REFUND,
+				'meta_key' => $meta_keys,
 			),
 			'id'
 		);
@@ -424,6 +374,32 @@ class OrderModel {
 	}
 
 	/**
+	 * Update an order
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $order_id Integer or array of ids sql escaped.
+	 * @param array     $data Data to update, escape data.
+	 *
+	 * @return bool
+	 */
+	public function update_order( $order_id, array $data ) {
+		$order_id = is_array( $order_id ) ? $order_id : array( $order_id );
+		$order_id = QueryHelper::prepare_in_clause( $order_id );
+		try {
+			QueryHelper::update_where_in(
+				$this->table_name,
+				$data,
+				$order_id
+			);
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
+			return false;
+		}
+	}
+
+	/**
 	 * Delete an order by order ID.
 	 *
 	 * This function deletes an order from the 'tutor_orders' table based on the given
@@ -431,12 +407,13 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int $order_id The ID of the order to delete.
+	 * @param int|array $order_id The ID of the order to delete.
 	 *
-	 * @return bool|int False on failure, or the number of rows affected if successful.
+	 * @return bool False on failure, or the number of rows affected if successful.
 	 */
 	public function delete_order( $order_id ) {
-		return QueryHelper::delete( $this->table_name, array( 'id' => $order_id ) );
+		$order_id = is_array( $order_id ) ? $order_id : array( intval( $order_id ) );
+		return QueryHelper::bulk_delete_by_ids( $this->table_name, $order_id ) ? true : false;
 	}
 
 	/**
@@ -528,8 +505,6 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @todo Need to store order activity after activity controller & model is created.
-	 *
 	 * @param object $data An object containing the payment status, note, and order ID.
 	 *                     - 'payment_status' (string): The new payment status.
 	 *                     - 'note' (string): A note regarding the payment status update.
@@ -538,7 +513,7 @@ class OrderModel {
 	 * @return bool True on successful update, false on failure.
 	 */
 	public function payment_status_update( object $data ) {
-		return QueryHelper::update(
+		$response = QueryHelper::update(
 			$this->table_name,
 			array(
 				'payment_status' => $data->payment_status,
@@ -546,5 +521,12 @@ class OrderModel {
 			),
 			array( 'id' => $data->order_id )
 		);
+
+		if ( $response ) {
+			$activity_controller = new OrderActivitiesController();
+			$activity_controller->store_order_activity_for_marked_as_paid( $data->order_id );
+		}
+
+		return $response;
 	}
 }

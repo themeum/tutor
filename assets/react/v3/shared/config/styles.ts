@@ -196,7 +196,7 @@ export const colorTokens = {
     blue: '#0049f8',
     black: '#092844',
   },
-  
+
   text: {
     primary: '#212327',
     title: '#41454f',
@@ -217,7 +217,7 @@ export const colorTokens = {
       cancelled: '#6f7073',
       primary: '#3e64de',
     },
-    wp: '#2271b1'
+    wp: '#2271b1',
   },
   surface: {
     tutor: '#ffffff',
@@ -304,7 +304,7 @@ export const colorTokens = {
       active: '#3453b8',
       disable: '#e3e6eb',
       wp: '#2271b1',
-      wp_hover: '#135e96'
+      wp_hover: '#135e96',
     },
     secondary: {
       default: '#e9edfb',
@@ -555,6 +555,7 @@ export const borderRadius = {
   circle: '50%',
   card: '8px',
   min: '4px',
+  input: '6px',
 } as const;
 
 export const zIndex = {

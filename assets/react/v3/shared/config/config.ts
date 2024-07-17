@@ -1,4 +1,5 @@
 export const tutorConfig = window._tutorobject;
+window.ajaxurl = tutorConfig.ajaxurl;
 
 const config = {
   TUTOR_API_BASE_URL: tutorConfig.home_url,

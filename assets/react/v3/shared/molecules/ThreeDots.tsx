@@ -16,6 +16,7 @@ interface ThreeDotsOptionProps {
   onClosePopover?: () => void;
   isTrash?: boolean;
   css?: SerializedStyles;
+  size?: 'small' | 'medium';
 }
 
 export const ThreeDotsOption = ({
@@ -24,12 +25,13 @@ export const ThreeDotsOption = ({
   onClick,
   onClosePopover,
   isTrash = false,
+  size = 'medium',
   css,
 }: ThreeDotsOptionProps) => {
   return (
     <button
       type="button"
-      css={[styles.option(isTrash), css]}
+      css={[styles.option({ isTrash: isTrash, size: size }), css]}
       onClick={(event) => {
         if (onClick) {
           onClick(event);
@@ -59,6 +61,7 @@ interface ThreeDotsProps {
   maxWidth?: string;
   isInverse?: boolean;
   hideArrow?: boolean;
+  size?: 'small' | 'medium';
 }
 
 const ThreeDots = ({
@@ -73,6 +76,7 @@ const ThreeDots = ({
   maxWidth = '148px',
   isInverse = false,
   hideArrow = false,
+  size = 'medium',
   ...props
 }: ThreeDotsProps) => {
   const ref = useRef<HTMLButtonElement>(null);
@@ -98,10 +102,11 @@ const ThreeDots = ({
         animationType={animationType}
         hideArrow={hideArrow}
       >
-        <div css={styles.wrapper}>
+        <div css={styles.wrapper({ size })}>
           {React.Children.map(children, (child) => {
             if (React.isValidElement(child)) {
               const props = {
+                size,
                 onClosePopover: closePopover,
               };
 
@@ -120,11 +125,28 @@ ThreeDots.Option = ThreeDotsOption;
 export default ThreeDots;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({
+    size = 'medium',
+  }: {
+    size: 'small' | 'medium';
+  }) => css`
     padding-block: ${spacing[8]};
     position: relative;
+
+    ${
+      size === 'small' &&
+      css`
+        padding-block: ${spacing[4]};
+      `
+    }
   `,
-  option: (isTrash: boolean) => css`
+  option: ({
+    isTrash = false,
+    size = 'medium',
+  }: {
+    isTrash: boolean;
+    size: 'small' | 'medium';
+  }) => css`
     ${styleUtils.resetButton};
     ${typography.body()};
 
@@ -139,6 +161,14 @@ const styles = {
     svg {
       flex-shrink: 0;
       color: ${colorTokens.icon.default};
+    }
+    
+    ${
+      size === 'small' &&
+      css`
+        padding: ${spacing[8]} ${spacing[16]};
+        ${typography.small('medium')};
+      `
     }
 
     :hover {
@@ -155,13 +185,26 @@ const styles = {
       isTrash &&
       css`
       color: ${colorTokens.text.error};
+      svg {
+        color: ${colorTokens.icon.error};
+      }
 
       &:hover {
+        color: ${colorTokens.text.error};
         background-color: ${rgba(colorTokens.bg.error, 0.1)};
+
+        svg {
+          color: ${colorTokens.icon.error};
+        }
       }
 
       &:active {
+        color: ${colorTokens.text.error};
         background-color: ${colorPalate.surface.critical.neutralPressed};
+
+        svg {
+          color: ${colorTokens.icon.error};
+        }
       }
     `
     }

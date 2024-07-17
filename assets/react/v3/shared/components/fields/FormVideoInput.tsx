@@ -44,11 +44,19 @@ type FormVideoInputProps = {
   buttonText?: string;
   infoText?: string;
   supportedFormats?: string[];
+  onGetDuration?: (duration: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+  }) => void;
 } & FormControllerProps<CourseVideo | null>;
 
-const videoSources = Array.isArray(tutorConfig.settings.supported_video_sources)
-  ? tutorConfig.settings.supported_video_sources
-  : [tutorConfig.settings.supported_video_sources];
+const videoSources =
+  (tutorConfig.settings.supported_video_sources &&
+    (Array.isArray(tutorConfig.settings.supported_video_sources)
+      ? tutorConfig.settings.supported_video_sources
+      : [tutorConfig.settings.supported_video_sources])) ||
+  [];
 
 const videoSourceOptions = videoSources.reduce((options, source) => {
   let option: Option<string> | undefined;
@@ -100,16 +108,17 @@ const FormVideoInput = ({
   infoText,
   onChange,
   supportedFormats,
+  onGetDuration,
 }: FormVideoInputProps) => {
   const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
     defaultValues: {
-      videoSource: fieldValue?.source || 'html5',
+      videoSource: fieldValue?.source || '',
       videoUrl: fieldValue?.[`source_${fieldValue?.source}` as keyof CourseVideo] || '',
     },
   });
 
-  const videoSource = form.watch('videoSource');
+  const videoSource = form.watch('videoSource') || '';
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -122,12 +131,16 @@ const FormVideoInput = ({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (!videoSource) {
+      return;
+    }
+
     if (!fieldValue?.[`source_${videoSource}` as keyof CourseVideo]) {
       form.setValue('videoUrl', '');
       return;
     }
-    form.setValue('videoUrl', fieldValue?.[`source_${videoSource}` as keyof CourseVideo]);
-  }, [videoSource]);
+    form.setValue('videoUrl', fieldValue?.[`source_${videoSource}` as keyof CourseVideo] || '');
+  }, [videoSource, fieldValue]);
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -154,6 +167,19 @@ const FormVideoInput = ({
         type === 'video'
           ? { source: 'html5', source_video_id: attachment.id }
           : { poster: attachment.id, poster_url: attachment.url };
+
+      if (type === 'video' && onGetDuration) {
+        const video = document.createElement('video');
+        video.src = attachment.url;
+        video.preload = 'metadata';
+        video.onloadedmetadata = () => {
+          const duration = Math.floor(video.duration);
+          const hours = Math.floor(duration / 3600);
+          const minutes = Math.floor((duration % 3600) / 60);
+          const seconds = duration % 60;
+          onGetDuration({ hours, minutes, seconds });
+        };
+      }
 
       field.onChange(updateFieldValue(fieldValue, updateData));
       onChange?.(updateFieldValue(fieldValue, updateData));
@@ -342,7 +368,7 @@ const FormVideoInput = ({
             styles.popover,
             {
               left: position.left,
-              top: position.top,
+              top: triggerRef.current?.getBoundingClientRect().top,
               maxWidth: triggerRef.current?.offsetWidth,
             },
           ]}

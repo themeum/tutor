@@ -7,7 +7,11 @@ import { CSS } from '@dnd-kit/utilities';
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import {
+  useCreateQuizAnswerMutation,
+  useDeleteQuizAnswerMutation,
+  type QuizQuestionOption,
+} from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -17,6 +21,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { nanoid } from '@Utils/util';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -25,17 +30,25 @@ interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption
 }
 
 const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
+  const { activeQuestionId } = useQuizModalContext();
+
   const inputValue = field.value ?? {
-    ID: nanoid(),
-    title: '',
+    answer_id: nanoid(),
+    answer_title: '',
+    is_correct: '0',
+    belongs_question_id: activeQuestionId,
+    belongs_question_type: 'image_answering',
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const createQuizAnswerMutation = useCreateQuizAnswerMutation();
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+
+  const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: field.value?.ID || 0,
+    id: field.value.answer_id || 0,
     animateLayoutChanges,
   });
 
@@ -59,25 +72,23 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
 
     field.onChange({
       ...inputValue,
-      image: { id, url, title },
+      image_id: id,
+      image_url: url,
     });
   });
 
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
-      image: {
-        id: null,
-        url: '',
-        title: '',
-      },
+      image_id: '',
+      image_url: '',
     });
   };
 
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
-      isCorrect: true,
+      is_correct: '1',
     });
   };
 
@@ -90,26 +101,23 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   return (
     <div
       {...attributes}
-      css={styles.option({ isSelected: !!inputValue.isCorrect, isEditing })}
+      css={styles.option({ isSelected: !!Number(inputValue.is_correct), isEditing })}
       ref={setNodeRef}
       style={style}
     >
-      <button type="button" css={styleUtils.resetButton} onClick={handleCorrectAnswer}>
-        <SVGIcon data-check-icon name={inputValue.isCorrect ? 'checkFilled' : 'check'} height={32} width={32} />
-      </button>
       <div
-        css={styles.optionLabel({ isSelected: !!inputValue.isCorrect, isEditing })}
-        onClick={handleCorrectAnswer}
+        css={styles.optionLabel({ isEditing })}
+        onClick={() => {
+          setIsEditing(true);
+        }}
         onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleCorrectAnswer();
+          if (event.key === 'Enter' || event.key === ' ') {
+            setIsEditing(true);
           }
         }}
       >
         <div css={styles.optionHeader}>
-          <div css={styles.optionCounter({ isSelected: !!inputValue.isCorrect, isEditing })}>
-            {String.fromCharCode(65 + index)}
-          </div>
+          <div css={styles.optionCounter({ isEditing })}>{String.fromCharCode(65 + index)}</div>
 
           <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
             <SVGIcon name="dragVertical" height={24} width={24} />
@@ -144,6 +152,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
+                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                 onRemoveOption();
               }}
             >
@@ -157,7 +166,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
             fallback={
               <div css={styles.placeholderWrapper}>
                 <Show
-                  when={inputValue.image}
+                  when={inputValue.image_url}
                   fallback={
                     <div css={styles.imagePlaceholder}>
                       <SVGIcon name="imagePreview" height={48} width={48} />
@@ -166,17 +175,23 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                 >
                   {(image) => (
                     <div css={styles.imagePlaceholder}>
-                      <img src={image.url} alt={image.title} />
+                      <img src={inputValue.image_url} alt={inputValue.image_url} />
                     </div>
                   )}
                 </Show>
-                <div css={styles.optionPlaceholder}>{inputValue.title || __('Write answer option...', 'tutor')}</div>
+                <div css={styles.optionPlaceholder}>
+                  {inputValue.answer_title || __('Write answer option...', 'tutor')}
+                </div>
               </div>
             }
           >
             <div css={styles.optionInputWrapper}>
               <ImageInput
-                value={inputValue.image || null}
+                value={{
+                  id: Number(inputValue.image_id),
+                  url: inputValue.image_url || '',
+                  title: inputValue.image_url || '',
+                }}
                 buttonText={__('Upload Image', 'tutor')}
                 infoText={__('Size: 700x430 pixels', 'tutor')}
                 uploadHandler={uploadHandler}
@@ -191,14 +206,14 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   type="text"
                   css={styles.optionInput}
                   placeholder={__('Answer input value...', 'tutor')}
-                  value={inputValue.title}
+                  value={inputValue.answer_title}
                   onClick={(event) => {
                     event.stopPropagation();
                   }}
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
-                      title: event.target.value,
+                      answer_title: event.target.value,
                     });
                   }}
                   onKeyDown={(event) => {
@@ -230,12 +245,26 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
+                  loading={createQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
-                  onClick={(event) => {
+                  onClick={async (event) => {
                     event.stopPropagation();
-                    setIsEditing(false);
+                    const response = await createQuizAnswerMutation.mutateAsync({
+                      ...(inputValue.answer_id && {
+                        answer_id: inputValue.answer_id,
+                      }),
+                      question_id: inputValue.belongs_question_id,
+                      answer_title: inputValue.answer_title,
+                      image_id: inputValue.image_id || '',
+                      answer_view_format: 'both',
+                    });
+
+                    if (response.status_code === 201 || response.status_code === 200) {
+                      setIsEditing(false);
+                    }
                   }}
+                  disabled={!inputValue.answer_title && !inputValue.image_id}
                 >
                   {__('Ok', 'tutor')}
                 </Button>
@@ -264,11 +293,6 @@ const styles = {
       color: ${colorTokens.text.subdued};
       gap: ${spacing[10]};
       align-items: center;
-  
-      [data-check-icon] {
-        opacity: 0;
-        fill: none;
-      }
 
       [data-visually-hidden] {
         opacity: 0;
@@ -279,10 +303,6 @@ const styles = {
       }
   
       &:hover {
-        [data-check-icon] {
-          opacity: 1;
-        }
-
         [data-visually-hidden] {
           opacity: 1;
         }
@@ -296,17 +316,6 @@ const styles = {
         `
         }
       }
-  
-  
-      ${
-        isSelected &&
-        css`
-          [data-check-icon] {
-            opacity: 1;
-            color: ${colorTokens.bg.success};
-          }
-        `
-      }
 
       ${
         isEditing &&
@@ -318,10 +327,8 @@ const styles = {
       }
     `,
   optionLabel: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
       ${styleUtils.display.flex('column')}
@@ -335,27 +342,15 @@ const styles = {
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
       }
-  
-      ${
-        isSelected &&
-        css`
-          background-color: ${colorTokens.background.success.fill40};
-          color: ${colorTokens.text.primary};
-  
-          &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
-          }
-        `
-      }
 
       ${
         isEditing &&
         css`
           background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
 
           &:hover {
-            box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+            box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
           }
         `
       }
@@ -366,10 +361,8 @@ const styles = {
     align-items: center;
   `,
   optionCounter: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
     height: ${spacing[24]};
@@ -382,7 +375,6 @@ const styles = {
     place-self: center start;
 
     ${
-      isSelected &&
       !isEditing &&
       css`
         background-color: ${colorTokens.bg.white};

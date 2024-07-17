@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -29,11 +29,40 @@ const CertificatePreviewModal = ({
   const [selectedCertificate, setSelectedCertificate] = useState(propsSelectedCertificate);
   const [currentCertificate, setCurrentCertificate] = useState(propsCurrentCertificate);
 
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   const currentCertificateIndex = certificates.findIndex((certificate) => certificate.key === currentCertificate.key);
 
   const previousIndex = Math.max(-1, currentCertificateIndex - 1);
 
   const nextIndex = Math.min(certificates.length, currentCertificateIndex + 1);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        handleNavigate('previous');
+      } else if (event.key === 'ArrowRight') {
+        handleNavigate('next');
+      } else if (event.key === 'Enter') {
+        handleSelectCertificate(currentCertificate);
+      } else if (event.key === 'Escape') {
+        closeModal({ action: 'CLOSE' });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentCertificateIndex, certificates]);
+
+  useEffect(() => {
+    if (closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+  }, []);
 
   const handleSelectCertificate = (certificate: Certificate) => {
     if (certificate.key === selectedCertificate) {
@@ -61,6 +90,7 @@ const CertificatePreviewModal = ({
             <div css={styles.actionsWrapper}>
               <Tooltip content={__('Close', 'tutor')}>
                 <button
+                  ref={closeButtonRef}
                   type="button"
                   css={[styles.actionButton, styles.closeButton]}
                   onClick={() => {
@@ -70,7 +100,7 @@ const CertificatePreviewModal = ({
                   <SVGIcon name="cross" width={40} height={40} />
                 </button>
               </Tooltip>
-              <Show when={currentCertificate.url}>
+              <Show when={currentCertificate.edit_url}>
                 {(editUrl) => (
                   <Tooltip content={__('Edit in Certificate Builder', 'tutor')}>
                     <button
@@ -104,6 +134,7 @@ const CertificatePreviewModal = ({
             variant="primary"
             onClick={() => {
               handleSelectCertificate(currentCertificate);
+              closeModal({ action: 'CONFIRM' });
             }}
             disabled={selectedCertificate === currentCertificate.key}
           >

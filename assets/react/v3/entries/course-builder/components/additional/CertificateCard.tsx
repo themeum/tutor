@@ -21,6 +21,7 @@ interface CertificateCardProps {
   data: Certificate;
   onSelectCertificate: (key: string) => void;
 }
+const courseId = getCourseId();
 
 const CertificateCard = ({
   selectedCertificate = '',
@@ -28,12 +29,13 @@ const CertificateCard = ({
   orientation,
   onSelectCertificate,
 }: CertificateCardProps) => {
-  const courseId = getCourseId();
   const { showModal } = useModal();
   const courseDetailsQuery = useCourseDetailsQuery(courseId);
   const certificatesData =
     courseDetailsQuery.data?.course_certificates_templates.filter(
-      (certificate) => certificate.orientation === orientation
+      (certificate) =>
+        certificate.orientation === orientation &&
+        (data.is_default ? certificate.is_default === true : certificate.is_default === false)
     ) ?? [];
 
   return (
@@ -43,7 +45,15 @@ const CertificateCard = ({
         isLandScape: orientation === 'landscape',
       })}
     >
-      <div data-overlay />
+      <div
+        data-overlay
+        onClick={() => onSelectCertificate(data.key)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            onSelectCertificate(data.key);
+          }
+        }}
+      />
       <Show
         when={data.preview_src}
         fallback={

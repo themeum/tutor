@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
 use Tutor\Helpers\QueryHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -129,17 +131,8 @@ class Upgrader {
 	 * @return void
 	 */
 	public function upgrade_to_3_0_0() {
-		// Create cart and checkout pages if not exists.
-		$tutor_cart_page_id     = (int) tutor_utils()->get_option( 'tutor_cart_page_id' );
-		$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
-
-		if ( ! $tutor_cart_page_id ) {
-			tutor_utils()->create_tutor_cart_page();
-		}
-
-		if ( ! $tutor_checkout_page_id ) {
-			tutor_utils()->create_tutor_checkout_page();
-		}
+		CartController::create_cart_page();
+		CheckoutController::create_checkout_page();
 	}
 
 	/**

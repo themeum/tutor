@@ -7,7 +7,15 @@ import { css } from '@emotion/react';
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
 
-import type { QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import {
+  type QuizForm,
+  useDeleteQuizQuestionMutation,
+  useDuplicateQuizQuestionMutation,
+  useUpdateQuizQuestionMutation,
+  type QuizQuestion,
+  type QuizQuestionType,
+  convertQuizFormDataToPayloadForUpdate,
+} from '@CourseBuilderServices/quiz';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
@@ -15,6 +23,8 @@ import { typography } from '@Config/typography';
 import type { IconCollection } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
+import type { ID } from '@CourseBuilderServices/curriculum';
+import { useFormContext } from 'react-hook-form';
 
 interface QuestionProps {
   question: QuizQuestion;
@@ -23,22 +33,27 @@ interface QuestionProps {
 }
 
 const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
-  'true-false': 'quizTrueFalse',
-  'multiple-choice': 'quizMultiChoice',
-  'open-ended': 'quizEssay',
-  'fill-in-the-blanks': 'quizFillInTheBlanks',
-  'short-answer': 'quizShortAnswer',
+  true_false: 'quizTrueFalse',
+  multiple_choice: 'quizMultiChoice',
+  open_ended: 'quizEssay',
+  fill_in_the_blank: 'quizFillInTheBlanks',
+  short_answer: 'quizShortAnswer',
   matching: 'quizImageMatching',
-  'image-answering': 'quizImageAnswer',
+  image_answering: 'quizImageAnswer',
   ordering: 'quizOrdering',
 };
 
 const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
-  const { activeQuestionId, setActiveQuestionId } = useQuizModalContext();
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string>('');
+  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId } = useQuizModalContext();
+  const form = useFormContext<QuizForm>();
+  const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
+
+  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation();
+  const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation();
+  const duplicateQuizQuestionMutation = useDuplicateQuizQuestionMutation();
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: question.ID,
+    id: question.question_id,
     animateLayoutChanges,
   });
 
@@ -51,39 +66,63 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
   return (
     <div
       {...attributes}
-      key={question.ID}
-      css={styles.questionItem({ isActive: activeQuestionId === question.ID, isDragging })}
+      key={question.question_id}
+      css={styles.questionItem({ isActive: Number(activeQuestionId) === Number(question.question_id), isDragging })}
       ref={setNodeRef}
       style={style}
       tabIndex={-1}
-      onClick={() => setActiveQuestionId(question.ID)}
-      onKeyDown={() => setActiveQuestionId(question.ID)}
+      onClick={() => {
+        const payload = convertQuizFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
+        updateQuizQuestionMutation.mutate(payload);
+
+        setActiveQuestionId(question.question_id);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          const payload = convertQuizFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
+          updateQuizQuestionMutation.mutate(payload);
+
+          setActiveQuestionId(question.question_id);
+        }
+      }}
     >
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
-        <SVGIcon name={questionTypeIconMap[question.type]} width={24} height={24} data-question-icon />
+        <SVGIcon name={questionTypeIconMap[question.question_type]} width={24} height={24} data-question-icon />
         <button {...listeners} type="button" css={styleUtils.resetButton}>
           <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
         </button>
         <span data-serial>{index + 1}</span>
       </div>
-      <span css={styles.questionTitle}>{question.title}</span>
+      <span css={styles.questionTitle}>{question.question_title}</span>
       <ThreeDots
-        isOpen={selectedQuestionId === question.ID}
-        onClick={() => setSelectedQuestionId(question.ID)}
+        isOpen={selectedQuestionId === question.question_id}
+        onClick={() => setSelectedQuestionId(question.question_id)}
         closePopover={() => setSelectedQuestionId('')}
         dotsOrientation="vertical"
-        maxWidth="220px"
+        maxWidth="150px"
         isInverse
         arrowPosition="auto"
+        size="small"
         hideArrow
         data-three-dots
       >
-        <ThreeDots.Option text={__('Duplicate', 'tutor')} icon={<SVGIcon name="duplicate" width={24} height={24} />} />
         <ThreeDots.Option
+          size="small"
+          text={__('Duplicate', 'tutor')}
+          icon={<SVGIcon name="duplicate" width={24} height={24} />}
+          onClick={(event) => {
+            event.stopPropagation();
+            duplicateQuizQuestionMutation.mutate(question.question_id);
+          }}
+        />
+        <ThreeDots.Option
+          isTrash
+          size="small"
           text={__('Delete', 'tutor')}
           icon={<SVGIcon name="delete" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
+            deleteQuizQuestionMutation.mutate(question.question_id);
             onRemoveQuestion();
           }}
         />

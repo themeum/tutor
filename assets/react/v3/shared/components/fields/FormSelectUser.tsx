@@ -136,6 +136,7 @@ const FormSelectUser = ({
                   <input
                     {...restInputProps}
                     onClick={() => setIsOpen((previousState) => !previousState)}
+                    className="tutor-input-field"
                     css={[inputCss, styles.input]}
                     autoComplete="off"
                     readOnly={readOnly || !isSearchable}
@@ -207,6 +208,7 @@ const FormSelectUser = ({
                           {...restInputProps}
                           // biome-ignore lint/a11y/noAutofocus: <explanation>
                           autoFocus
+                          className="tutor-input-field"
                           css={[inputCss, styles.input]}
                           autoComplete="off"
                           readOnly={readOnly || !isSearchable}
@@ -268,14 +270,16 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     position: relative;
+    padding: ${spacing[8]};
   `,
   inputWrapperListItem: css`
     padding: 0px;
   `,
   leftIcon: css`
     position: absolute;
-    left: ${spacing[8]};
-    top: ${spacing[8]};
+    left: ${spacing[12]};
+    top: 50%;
+    transform: translateY(-50%);
     color: ${colorTokens.icon.default};
     display: flex;
   `,
@@ -290,6 +294,11 @@ const styles = {
     :focus {
       outline: none;
       box-shadow: none;
+    }
+
+    &.tutor-input-field {
+      padding-right: ${spacing[32]};
+      padding-left: ${spacing[36]};
     }
   `,
   instructorList: css`
@@ -324,6 +333,7 @@ const styles = {
         display: block;
       }
     }
+    
   `,
   instructorInfo: css`
     display: flex;

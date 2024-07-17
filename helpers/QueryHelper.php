@@ -122,10 +122,8 @@ class QueryHelper {
 		global $wpdb;
 
 		$ids = self::prepare_in_clause( $ids );
-
-		$wpdb->query(
-			"DELETE FROM {$table} WHERE id IN ( $ids )"
-		);
+		//phpcs:ignore --ids already sanitized.
+		$wpdb->query( "DELETE FROM {$table} WHERE id IN ( $ids )");
 
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
@@ -146,13 +144,8 @@ class QueryHelper {
 	public static function table_clean( string $table ): bool {
 		global $wpdb;
 		$delete = $wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM
-					{$table}
-					WHERE 1 = %d
-				",
-				1
-			)
+			//phpcs:ignore
+			$wpdb->prepare( "DELETE FROM {$table} WHERE 1 = %d", 1 )
 		);
 		return $delete ? true : false;
 	}
@@ -166,8 +159,8 @@ class QueryHelper {
 	 * @param array  $request two dimensional array
 	 * for ex: [ [id => 1], [id => 2] ].
 	 *
-	 * @return mixed  wpdb response true or int on success,
-	 * false on failure
+	 * @return mixed  wpdb response true or int on success, false on failure.
+	 * @throws \Exception If error occur.
 	 */
 	public static function insert_multiple_rows( $table, $request ) {
 		global $wpdb;
@@ -204,7 +197,7 @@ class QueryHelper {
 			$column_values = '';
 		}
 
-		$wpdb->query( $sql );
+		$wpdb->query( $sql );//phpcs:ignore
 
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -212,6 +205,28 @@ class QueryHelper {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Make tge where clause base on its column operator and values.
+	 *
+	 * If the operator is IN then make the clause like `WHERE column_name IN (value1, value2, ...)`
+	 * Otherwise the clause would be `WHERE column_name = 'value'`
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $where  The where clause array. e.g. array( 'id', 'IN', array(1, 2, 3) ) or array( 'id', '=', 1 ).
+	 *
+	 * @return string
+	 */
+	private static function make_clause( array $where ) {
+		list ( $field, $operator, $value ) = $where;
+
+		if ( 'IN' === strtoupper( $operator ) ) {
+			$value = '(' . self::prepare_in_clause( $value ) . ')';
+		}
+
+		return "{$field} {$operator} {$value}";
 	}
 
 	/**
@@ -225,8 +240,14 @@ class QueryHelper {
 	private static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
-			$value = is_numeric( $value ) ? ( $value + 0 ) : "'" . $value . "'";
-			$arr[] = "{$field}={$value}";
+			if ( is_array( $value ) ) {
+				$value = array( $field, 'IN', $value );
+			} else {
+				$value = is_numeric( $value ) ? $value : "'" . $value . "'";
+				$value = array( $field, '=', $value );
+			}
+
+			$arr[] = self::make_clause( $value );
 		}
 
 		return implode( ' AND ', $arr );
@@ -248,6 +269,7 @@ class QueryHelper {
 		$like_conditions = array();
 
 		foreach ( $where as $column_name => $term ) {
+			//phpcs:ignore
 			$like_conditions[] = $wpdb->prepare( "$column_name LIKE %s", '%' . $wpdb->esc_like( $term ) . '%' );
 		}
 
@@ -277,7 +299,7 @@ class QueryHelper {
 	 * Delete comment with associate meta data
 	 *
 	 * @param array $where associative array with field and value.
-	 *              Example: array( 'comment_type' => 'comment', 'comment_id' => 1 )
+	 *              Example: array( 'comment_type' => 'comment', 'comment_id' => 1 ).
 	 * @return bool
 	 *
 	 * @since 2.0.9
@@ -290,14 +312,14 @@ class QueryHelper {
 		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
-		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );
+		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );//phpcs:ignore
 
 		if ( is_array( $ids ) && count( $ids ) ) {
 			$ids_str = "'" . implode( "','", $ids ) . "'";
-			// delete comment metas
-			$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN({$ids_str}) " );
-			// delete comment
-			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$where}" );
+			// delete comment metas.
+			$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN({$ids_str}) " );//phpcs:ignore
+			// delete comment.
+			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$where}" );//phpcs:ignore
 
 			return true;
 		}
@@ -309,7 +331,7 @@ class QueryHelper {
 	 * Delete post with associate meta data
 	 *
 	 * @param array $where associative array with field and value.
-	 *              Example: array( 'post_type' => 'post', 'id' => 1 )
+	 *              Example: array( 'post_type' => 'post', 'id' => 1 ).
 	 * @return bool
 	 *
 	 * @since 2.0.9
@@ -322,14 +344,14 @@ class QueryHelper {
 		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
-		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );
+		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );//phpcs:ignore
 
 		if ( is_array( $ids ) && count( $ids ) ) {
 			$ids_str = "'" . implode( "','", $ids ) . "'";
-			// delete post metas
-			$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE post_id IN({$ids_str}) " );
-			// delete post
-			$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE {$where}" );
+			// delete post metas.
+			$wpdb->query( "DELETE FROM {$wpdb->postmeta} WHERE post_id IN({$ids_str}) " );//phpcs:ignore
+			// delete post.
+			$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE {$where}" );//phpcs:ignore
 
 			return true;
 		}
@@ -353,7 +375,9 @@ class QueryHelper {
 		global $wpdb;
 
 		$where_clause = self::build_where_clause( $where );
-		$query        = $wpdb->prepare(
+
+		//phpcs:disable
+		$query = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
 				WHERE {$where_clause}
@@ -362,10 +386,12 @@ class QueryHelper {
 			",
 			1
 		);
+
 		return $wpdb->get_row(
 			$query,
 			$output
 		);
+		//phpcs:enable
 	}
 
 	/**
@@ -388,7 +414,9 @@ class QueryHelper {
 
 		$where_clause = self::build_where_clause( $where );
 		$limit        = sanitize_text_field( $limit );
-		$query        = $wpdb->prepare(
+
+		//phpcs:disable
+		$query = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
 				WHERE {$where_clause}
@@ -397,12 +425,13 @@ class QueryHelper {
 			",
 			$limit
 		);
+
 		return $wpdb->get_results(
 			$query,
 			$output
 		);
+		//phpcs:enable
 	}
-
 
 	/**
 	 * Update multiple rows by using where in

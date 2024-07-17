@@ -17,7 +17,7 @@ import { isDefined } from '@Utils/types';
 import { parseNumberOnly } from '@Utils/util';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
-  label?: string;
+  label?: string | React.ReactNode;
   type?: 'number' | 'text' | 'password';
   maxLimit?: number;
   disabled?: boolean;
@@ -59,7 +59,7 @@ const FormInput = ({
   isInlineLabel = false,
   isPassword = false,
   style,
-  selectOnFocus = false
+  selectOnFocus = false,
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
 
@@ -122,12 +122,19 @@ const FormInput = ({
                     onChange(fieldValue);
                   }
                 }}
+                onClick={(event) => {
+                  event.stopPropagation();
+                }}
                 onKeyDown={(event) => {
                   event.stopPropagation();
                   onKeyDown?.(event.key);
                 }}
                 autoComplete="off"
-                ref={ref}
+                ref={(element) => {
+                  field.ref(element);
+                  // @ts-ignore
+                  ref.current = element; // this is not ideal but it is the only way to set ref to the input element
+                }}
                 onFocus={() => {
                   if (!selectOnFocus || !ref.current) {
                     return;

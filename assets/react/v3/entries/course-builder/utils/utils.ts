@@ -1,8 +1,9 @@
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
+import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import type { ContentDripType, CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import type { ID, LessonPayload } from '@CourseBuilderServices/curriculum';
+import type { AssignmentPayload, ID, LessonPayload } from '@CourseBuilderServices/curriculum';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
@@ -34,6 +35,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'course_settings[enrollment_expiry]': data.enrollment_expiry ?? '',
     'course_settings[enable_content_drip]': data.isContentDripEnabled ? 1 : 0,
     'course_settings[content_drip_type]': data.contentDripType,
+    'course_settings[enable_tutor_bp]': data.enable_tutor_bp ? 1 : 0,
 
     'additional_content[course_benefits]': data.course_benefits ?? '',
     'additional_content[course_target_audience]': data.course_target_audience ?? '',
@@ -63,6 +65,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'video[source_vimeo]': data.video.source_vimeo,
     'video[source_embedded]': data.video.source_embedded,
     tutor_attachments: data.course_attachments?.map((item) => item.id) ?? [],
+    bp_attached_group_ids: data.bp_attached_group_ids,
   };
 };
 
@@ -90,7 +93,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       avatar_url: courseDetails.post_author.tutor_profile_photo_url,
     },
     thumbnail: {
-      id: 0,
+      id: courseDetails.thumbnail_id ? Number(courseDetails.thumbnail_id) : 0,
       title: '',
       url: courseDetails.thumbnail,
     },
@@ -105,6 +108,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_vimeo: courseDetails.video.source_vimeo ?? '',
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
+    course_product_name: courseDetails.course_pricing.product_name,
+    course_pricing_category: courseDetails.course_pricing_category ?? 'subscription',
     course_price_type: courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
@@ -128,8 +133,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
     contentDripType: courseDetails.course_settings.content_drip_type ?? '',
-    course_product_id:
-      String(courseDetails.course_pricing.product_id) !== '0' ? String(courseDetails.course_pricing.product_id) : '',
+    course_product_id: courseDetails.course_pricing.product_id === '0' ? '' : courseDetails.course_pricing.product_id,
     course_instructors:
       courseDetails.course_instructors?.map((item) => {
         return {
@@ -143,6 +147,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
+    enable_tutor_bp: courseDetails.course_settings.enable_tutor_bp === 1 ? true : false,
+    bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
   };
 };
 
@@ -157,7 +163,7 @@ export const convertLessonDataToPayload = (
     topic_id: topicId,
     title: data.title,
     description: data.description,
-    thumbnail_id: data.thumbnail?.id || 0,
+    thumbnail_id: data.thumbnail?.id ?? null,
     'video[source]': data.video?.source || '',
     'video[source_video_id]': data.video?.source_video_id || '',
     'video[poster]': data.video?.poster || '',
@@ -172,6 +178,40 @@ export const convertLessonDataToPayload = (
     'video[runtime][seconds]': data.duration.second || 0,
     ...(isAddonEnabled('Tutor Course Preview') && { _is_preview: data.lesson_preview ? 1 : 0 }),
     tutor_attachments: data.tutor_attachments.map((attachment) => attachment.id),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled('Content Drip') &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
+      }),
+  };
+};
+
+export const convertAssignmentDataToPayload = (
+  data: AssignmentForm,
+  assignmentId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType
+): AssignmentPayload => {
+  return {
+    ...(assignmentId && { assignment_id: assignmentId }),
+    topic_id: topicId,
+    title: data.title,
+    summary: data.summary,
+    attachments: data.attachments.map((attachment) => attachment.id),
+    'assignment_option[time_duration][time]': data.time_duration.time,
+    'assignment_option[time_duration][value]': data.time_duration.value,
+    'assignment_option[total_mark]': data.total_mark,
+    'assignment_option[pass_mark]': data.pass_mark,
+    'assignment_option[upload_files_limit]': data.upload_files_limit,
+    'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
+
     ...(isAddonEnabled('Content Drip') &&
       contentDripType === 'unlock_by_date' && {
         'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',

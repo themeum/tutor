@@ -21,7 +21,7 @@ use TUTOR\Input;
 $active_tab = Input::get( 'data', 'all' );
 
 $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
-$limit        = tutor_utils()->get_option( 'pagination_per_page', 10 );
+$limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
 $order_controller = new OrderController();
@@ -44,9 +44,9 @@ $navbar_data    = array(
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'  => $order_controller->bulk_action,
+	'bulk_action'  => true,
 	'bulk_actions' => $order_controller->prepare_bulk_actions(),
-	'ajax_action'  => 'tutor_order_list_bulk_action',
+	'ajax_action'  => 'tutor_order_bulk_action',
 	'filters'      => true,
 );
 
@@ -161,7 +161,7 @@ $available_status = array(
 										<?php echo wp_kses_post( tutor_utils()->tutor_price( $order->total_price ) ); ?>
 									</td>
 									<td>
-										<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-orders&id=' . $order->id ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+										<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . $order->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 											<?php esc_html_e( 'Edit', 'tutor' ); ?>
 										</a>
 									</td>

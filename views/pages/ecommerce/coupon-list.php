@@ -24,7 +24,7 @@ $active_tab = Input::get( 'data', 'all' );
  * Pagination data
  */
 $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
-$limit        = tutor_utils()->get_option( 'pagination_per_page' );
+$limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
 $coupon_controller = new CouponController();
@@ -159,8 +159,12 @@ $filters = array(
 													<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 												</button>
 												<div id="table-dashboard-coupon-list-<?php echo esc_attr( $coupon->id ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-coupon-delete"
-														data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $coupon->id ); ?>">
+													<!-- <a class="tutor-dropdown-item" href="javascript:void">
+														<i class="tutor-icon-copy tutor-mr-8" area-hidden="true"></i>
+														<span><?php esc_html_e( 'Duplicate', 'tutor' ); ?></span>
+													</a> -->
+													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-delete-permanently"
+														data-tutor-modal-target="tutor-common-confirmation-modal" data-action="tutor_coupon_permanent_delete" data-id="<?php echo esc_attr( $coupon->id ); ?>">
 														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
 														<span>
 															<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
