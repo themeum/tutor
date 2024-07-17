@@ -3,8 +3,12 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
+import Show from '@Controls/Show';
+import CourseListModal from '@CouponComponents/modals/CourseListModal';
+
 import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -26,6 +30,7 @@ const appliesToOptions = [
 function CouponDiscount() {
 	const form = useFormContext<Coupon>();
 	const { tutor_currency } = tutorConfig;
+	const { showModal } = useModal();
 
 	const appliesTo = form.watch('applies_to');
 	const discountType = form.watch('discount_type');
@@ -67,19 +72,26 @@ function CouponDiscount() {
 					<FormSelectInput {...controllerProps} label={__('Applies to', 'tutor')} options={appliesToOptions} />
 				)}
 			/>
-			{(appliesTo === 'specific_courses' || appliesTo === 'specific_bundles' || appliesTo === 'specific_category') && (
+			<Show
+				when={appliesTo === 'specific_courses' || appliesTo === 'specific_bundles' || appliesTo === 'specific_category'}
+			>
 				<Button
 					variant="tertiary"
 					isOutlined={true}
 					buttonCss={styles.addCoursesButton}
 					icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
 					onClick={() => {
-						// @TODO: will be updated later.
+						showModal({
+							component: CourseListModal,
+							props: {
+								title: __('Selected items', 'tutor'),
+							},
+						});
 					}}
 				>
 					{__('Add Items', 'tutor')}
 				</Button>
-			)}
+			</Show>
 		</Box>
 	);
 }

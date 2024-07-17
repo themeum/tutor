@@ -7,7 +7,7 @@ import { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
 import { useSticky } from '@Hooks/useSticky';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format } from 'date-fns';
+import { format, isToday, isTomorrow } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
 
 const appliesToLabel: Record<CouponAppliesTo, string> = {
@@ -28,12 +28,26 @@ function CouponPreview() {
 	const couponCode = form.watch('code');
 	const discountType = form.watch('discount_type');
 	const discountValue = form.watch('discount_value');
+	const startDate = form.watch('start_date');
+	const startTime = form.watch('start_time');
 	const endDate = form.watch('end_date');
 	const appliesTo = form.watch('applies_to');
 	const isOneUserPerCustomer = form.watch('is_one_use_per_user');
+	const redeemedCouponCount = form.watch('redeemed_coupons_count');
+
+	const startDateTime = `${startDate} ${startTime}`;
+	const activeFromSuffix = `${
+		isToday(new Date(startDateTime))
+			? __('today', 'tutor')
+			: isTomorrow(new Date(startDateTime))
+			? __('tomorrow', 'tutor')
+			: format(new Date(startDateTime), DateFormats.activityDate)
+	}`;
 
 	const discountText =
 		discountType === 'amount' ? `${tutor_currency?.symbol ?? '$'}${discountValue ?? 0}` : `${discountValue ?? 0}%`;
+	const totalUsedText = `${__('Total', 'tutor')} ${redeemedCouponCount} ${__('times used', 'tutor')}`;
+	const activeFromText = `${__('Active from ', 'tutor')} ${activeFromSuffix}`;
 
 	return (
 		<div ref={stickyRef}>
@@ -67,7 +81,6 @@ function CouponPreview() {
 						<h6 css={styles.previewListTitle}>{__('Type', 'tutor')}</h6>
 						<ul css={styles.previewList} data-preview-list>
 							<li>{__('Amount off percentage', 'tutor')}</li>
-							<li>{__('One use per customer', 'tutor')}</li>
 						</ul>
 					</div>
 					<div>
@@ -77,14 +90,14 @@ function CouponPreview() {
 							<Show when={isOneUserPerCustomer}>
 								<li>{__('One use per customer', 'tutor')}</li>
 							</Show>
-							<li>{__("Can't combine with discounts", 'tutor')}</li>
-							<li>{__('Active from today', 'tutor')}</li>
+							<li>{activeFromText}</li>
 						</ul>
 					</div>
 					<div>
 						<h6 css={styles.previewListTitle}>{__('Activity', 'tutor')}</h6>
 						<ul css={styles.previewList} data-preview-list>
 							<li>{__('Not active yet', 'tutor')}</li>
+							<li>{totalUsedText}</li>
 						</ul>
 					</div>
 				</div>

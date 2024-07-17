@@ -1,12 +1,14 @@
 import { useToast } from '@Atoms/Toast';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { ErrorResponse } from '@Utils/form';
+import { PaginatedParams, PaginatedResult } from '@Utils/types';
+import { transformParams } from '@Utils/util';
 
 export type CouponType = 'code' | 'automatic';
 
-interface Course {
+export interface Course {
 	id: number;
 	title: string;
 	image: '';
@@ -15,7 +17,7 @@ interface Course {
 	regular_price_formatted: string;
 }
 
-interface Category {
+export interface Category {
 	id: number;
 	title: string;
 	image: '';
@@ -54,6 +56,7 @@ export interface Coupon {
 	end_time: string;
 	created_at: string;
 	updated_at?: string;
+	redeemed_coupons_count: number;
 }
 
 export const couponInitialValue: Coupon = {
@@ -79,6 +82,7 @@ export const couponInitialValue: Coupon = {
 	end_date: '02/16/2024',
 	end_time: '',
 	created_at: '02/16/2024 10:00:00',
+	redeemed_coupons_count: 0,
 };
 
 export const mockCouponData: Coupon = {
@@ -202,6 +206,7 @@ export const mockCouponData: Coupon = {
 	end_time: '10:00:00',
 	created_at: '02/16/2024 10:00:00',
 	updated_at: '02/16/2024 10:00:00',
+	redeemed_coupons_count: 10,
 };
 
 const getCouponDetails = (couponId: number) => {
@@ -268,6 +273,29 @@ export const useUpdateCouponMutation = () => {
 		},
 		onError: (error: ErrorResponse) => {
 			showToast({ type: 'danger', message: error.response.data.message });
+		},
+	});
+};
+
+const getCourseList = (params: PaginatedParams) => {
+	return authApiInstance.get<PaginatedResult<Course>>(endpoints.COURSE_LIST, {
+		params: transformParams(params),
+	});
+};
+
+export const useCourseListQuery = (params: PaginatedParams) => {
+	return useQuery({
+		queryKey: ['CourseList', params],
+		placeholderData: keepPreviousData,
+		queryFn: () => {
+			return {
+				results: mockCouponData.courses ?? [],
+				totalItems: mockCouponData.courses?.length ?? 0,
+				totalPages: 1,
+			};
+			return getCourseList(params).then((res) => {
+				return res.data;
+			});
 		},
 	});
 };

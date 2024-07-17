@@ -194,7 +194,7 @@ export default Payment;
 
 const styles = {
 	content: css`
-		padding: ${spacing[12]} ${spacing[20]} ${spacing[16]} ${spacing[20]};
+		padding: ${spacing[12]} ${spacing[20]} ${spacing[16]} ${spacing[0]};
 	`,
 	paymentTitle: css`
 		display: flex;
