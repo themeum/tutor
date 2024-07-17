@@ -13,7 +13,6 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { OfferSalePrice } from './OfferSalePrice';
 import { formatRepeatUnit } from './PreviewItem';
@@ -22,7 +21,6 @@ export default function SubscriptionItem({
   subscription,
   toggleCollapse,
 }: { subscription: Subscription & { isExpanded: boolean }; toggleCollapse: (id: number) => void }) {
-  const [isEditTitle, setIsEditTitle] = useState(false);
   const form = useFormWithGlobalError<Subscription>({
     defaultValues: subscription,
   });
@@ -32,6 +30,8 @@ export default function SubscriptionItem({
     animationType: AnimationType.slideDown,
   });
 
+  const subscriptionName = form.watch('title');
+  const pricingType = form.watch('pricing_option');
   const repeatUnit = form.watch('repeat_unit', 'month');
   const chargeEnrolmentFee = form.watch('charge_enrolment_fee');
   const enableTrial = form.watch('enable_trial');
@@ -59,87 +59,45 @@ export default function SubscriptionItem({
       <div css={styles.subscriptionHeader(subscription.isExpanded)}>
         <div css={styles.grabber}>
           <SVGIcon name="threeDotsVerticalDouble" />
-          <Show
-            when={isEditTitle}
-            fallback={
-              <span title={form.getValues('title')} onDoubleClick={() => setIsEditTitle(true)}>
-                {form.getValues('title')}
-              </span>
-            }
-          >
-            <div css={styles.titleField}>
-              <Controller
-                control={form.control}
-                name="title"
-                render={(props) => (
-                  <FormInput
-                    {...props}
-                    placeholder="Enter subscription name"
-                    onKeyDown={(key) => {
-                      if (key === 'Enter') {
-                        setIsEditTitle(false);
-                        return;
-                      }
-
-                      if (key === 'Escape') {
-                        form.resetField('title');
-                        setIsEditTitle(false);
-                        return;
-                      }
-                    }}
-                  />
-                )}
-              />
-              <div css={styles.titleActions}>
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={() => {
-                    form.resetField('title');
-                    setIsEditTitle(false);
-                  }}
-                >
-                  {__('Cancel', 'tutor')}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="small"
-                  onClick={() => {
-                    setIsEditTitle(false);
-                  }}
-                >
-                  {__('Ok', 'tutor')}
-                </Button>
-              </div>
-            </div>
-          </Show>
+          <span title={subscriptionName}>{subscriptionName}</span>
         </div>
-        <Show when={!isEditTitle}>
-          <div css={styles.actions(subscription.isExpanded)}>
-            <button type="button" onClick={() => setIsEditTitle(true)} title={__('Edit subscription title', 'tutor')}>
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
-            <button type="button" title={__('Duplicate subscription', 'tutor')}>
-              <SVGIcon name="copyPaste" width={24} height={24} />
-            </button>
-            <button type="button" title={__('Delete subscription', 'tutor')}>
-              <SVGIcon name="delete" width={24} height={24} />
-            </button>
+        <div css={styles.actions(subscription.isExpanded)}>
+          <button type="button" title={__('Delete subscription', 'tutor')}>
+            <SVGIcon name="delete" width={24} height={24} />
+          </button>
+          <button type="button" title={__('Duplicate subscription', 'tutor')}>
+            <SVGIcon name="copyPaste" width={24} height={24} />
+          </button>
+          <Show when={!subscription.isExpanded}>
             <button
               type="button"
               onClick={() => toggleCollapse(subscription.id)}
-              title={__('Collapse/expand subscription', 'tutor')}
+              title={__('Edit subscription title', 'tutor')}
             >
-              <SVGIcon name="chevronDown" width={24} height={24} />
+              <SVGIcon name="edit" width={24} height={24} />
             </button>
-          </div>
-        </Show>
+          </Show>
+          <button
+            type="button"
+            onClick={() => toggleCollapse(subscription.id)}
+            title={__('Collapse/expand subscription', 'tutor')}
+          >
+            <SVGIcon name="chevronDown" width={24} height={24} />
+          </button>
+        </div>
       </div>
       {transitions((style, openState) => {
         if (openState) {
           return (
             <AnimatedDiv style={style} css={styles.itemWrapper(subscription.isExpanded)}>
               <div css={styles.subscriptionContent}>
+                <Controller
+                  control={form.control}
+                  name="title"
+                  render={(props) => (
+                    <FormInput {...props} placeholder="Enter subscription name" label="Subscription name" />
+                  )}
+                />
                 <Controller
                   control={form.control}
                   name="pricing_option"
@@ -154,48 +112,73 @@ export default function SubscriptionItem({
                     />
                   )}
                 />
-                <div css={styles.inputGroup}>
-                  <Controller
-                    control={form.control}
-                    name="price"
-                    render={(props) => (
-                      <FormInputWithContent
-                        {...props}
-                        label={__('Price', 'tutor')}
-                        content={'$'}
-                        placeholder={__('Subscription price', 'tutor')}
-                      />
-                    )}
-                  />
-                  <Controller
-                    control={form.control}
-                    name="repeat_every"
-                    render={(props) => (
-                      <FormInput {...props} label={__('Repeat every', 'tutor')} placeholder="1, 2, etc" />
-                    )}
-                  />
-                  <div
-                    css={css`
-                      margin-top: auto;
-                    `}
-                  >
+                <Show
+                  when={pricingType === 'recurring'}
+                  fallback={
                     <Controller
                       control={form.control}
-                      name="repeat_unit"
+                      name="price"
                       render={(props) => (
-                        <FormSelectInput
+                        <FormInputWithContent
                           {...props}
-                          options={[
-                            { label: __('Day(s)', 'tutor'), value: 'day' },
-                            { label: __('Week(s)', 'tutor'), value: 'week' },
-                            { label: __('Month(s)', 'tutor'), value: 'month' },
-                            { label: __('Year(s)', 'tutor'), value: 'year' },
-                          ]}
+                          label={__('Price', 'tutor')}
+                          content={'$'}
+                          placeholder={__('Subscription price', 'tutor')}
+                          selectOnFocus
                         />
                       )}
                     />
+                  }
+                >
+                  <div css={styles.inputGroup}>
+                    <Controller
+                      control={form.control}
+                      name="price"
+                      render={(props) => (
+                        <FormInputWithContent
+                          {...props}
+                          label={__('Price', 'tutor')}
+                          content={'$'}
+                          placeholder={__('Subscription price', 'tutor')}
+                          selectOnFocus
+                        />
+                      )}
+                    />
+                    <Controller
+                      control={form.control}
+                      name="repeat_every"
+                      render={(props) => (
+                        <FormInput
+                          {...props}
+                          label={__('Repeat every', 'tutor')}
+                          placeholder={__('Repeat every', 'tutor')}
+                          selectOnFocus
+                        />
+                      )}
+                    />
+                    <div
+                      css={css`
+												margin-top: auto;
+											`}
+                    >
+                      <Controller
+                        control={form.control}
+                        name="repeat_unit"
+                        render={(props) => (
+                          <FormSelectInput
+                            {...props}
+                            options={[
+                              { label: __('Day(s)', 'tutor'), value: 'day' },
+                              { label: __('Week(s)', 'tutor'), value: 'week' },
+                              { label: __('Month(s)', 'tutor'), value: 'month' },
+                              { label: __('Year(s)', 'tutor'), value: 'year' },
+                            ]}
+                          />
+                        )}
+                      />
+                    </div>
                   </div>
-                </div>
+                </Show>
 
                 <Controller
                   control={form.control}
@@ -226,6 +209,7 @@ export default function SubscriptionItem({
                         label={__('Enrolment fee', 'tutor')}
                         content={'$'}
                         placeholder={__('Enter enrolment fee')}
+                        selectOnFocus
                       />
                     )}
                   />
@@ -237,15 +221,7 @@ export default function SubscriptionItem({
                 />
 
                 <Show when={enableTrial}>
-                  <div
-                    css={css`
-                      display: grid;
-                      grid-template-columns: 1fr 1fr;
-                      align-items: center;
-                      gap: ${spacing[8]};
-                      
-                    `}
-                  >
+                  <div css={styles.trialWrapper}>
                     <Controller
                       control={form.control}
                       name="trial"
@@ -254,6 +230,7 @@ export default function SubscriptionItem({
                           {...props}
                           label={__('Length of free trial', 'tutor')}
                           placeholder={__('Enter trial duration', 'tutor')}
+                          selectOnFocus
                         />
                       )}
                     />
@@ -334,6 +311,13 @@ const styles = {
 			width: 100%;
 			${styleUtils.textEllipsis};
 		}
+	`,
+  trialWrapper: css`
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		gap: ${spacing[8]};
+		
 	`,
   titleField: css`
 		width: 100%;

@@ -129,7 +129,11 @@ const mockSubscriptions: Subscription[] = [
 
 const getCourseSubscriptions = (courseId: number) => {
   // @TODO: will be implemented later.
-  return Promise.resolve<Subscription[]>(mockSubscriptions);
+  return new Promise<Subscription[]>((resolve) => {
+    setTimeout(() => {
+      resolve(mockSubscriptions);
+    }, 500);
+  });
 };
 
 export const useCourseSubscriptionsQuery = (courseId: number) => {

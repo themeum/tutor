@@ -1,5 +1,5 @@
 import Button from '@Atoms/Button';
-import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
@@ -21,7 +21,7 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
   const { showModal } = useModal();
 
   if (courseSubscriptionsQuery.isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSection />;
   }
 
   if (!courseSubscriptionsQuery.data) {

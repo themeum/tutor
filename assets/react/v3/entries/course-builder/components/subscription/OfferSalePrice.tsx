@@ -37,7 +37,7 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<Subscription> }) 
               <Controller
                 control={form.control}
                 name="sale_price"
-                render={(props) => <FormInputWithContent {...props} label="Sale price" content={'$'} />}
+                render={(props) => <FormInputWithContent {...props} label="Sale price" content={'$'} selectOnFocus />}
               />
               <Controller
                 control={form.control}
@@ -120,6 +120,8 @@ const saleStyles = {
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[12]};
+		padding: ${spacing[4]};
+		margin: -${spacing[4]};
 	`,
   datetimeWrapper: css`
 		label {
