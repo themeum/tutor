@@ -90,7 +90,6 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_quiz_details', array( $this, 'ajax_quiz_details' ) );
 
 		add_action( 'wp_ajax_tutor_quiz_question_create', array( $this, 'ajax_quiz_question_create' ) );
-		add_action( 'wp_ajax_tutor_quiz_question_duplicate', array( $this, 'ajax_quiz_question_duplicate' ) );
 		add_action( 'wp_ajax_tutor_quiz_question_update', array( $this, 'ajax_quiz_question_update' ) );
 		add_action( 'wp_ajax_tutor_quiz_question_delete', array( $this, 'ajax_quiz_question_delete' ) );
 		add_action( 'wp_ajax_tutor_quiz_question_sorting', array( $this, 'ajax_quiz_question_sorting' ) );
@@ -1517,81 +1516,6 @@ class Quiz {
 			$question_id,
 			HttpHelper::STATUS_CREATED
 		);
-	}
-
-	/**
-	 * Duplicate a quiz question
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void
-	 */
-	public function ajax_quiz_question_duplicate() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
-
-		$question_id = Input::post( 'question_id', 0, Input::TYPE_INT );
-
-		if ( ! tutor_utils()->can_user_manage( 'question', $question_id ) ) {
-			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_FORBIDDEN );
-		}
-
-		global $wpdb;
-
-		try {
-			$wpdb->query( 'START TRANSACTION' );
-
-			$old_question = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = %d", $question_id ) );
-			$old_answers  = QuizModel::get_question_answers( $old_question->question_id, $old_question->question_type );
-
-			$next_question_order = $old_question->question_order + 1;
-			$new_question_data   = array(
-				'quiz_id'              => $old_question->quiz_id,
-				'question_title'       => $old_question->question_title . ' (copy)',
-				'question_description' => $old_question->question_description,
-				'answer_explanation'   => $old_question->answer_explanation,
-				'question_type'        => $old_question->question_type,
-				'question_mark'        => $old_question->question_mark,
-				'question_settings'    => $old_question->question_settings,
-				'question_order'       => $next_question_order,
-			);
-
-			$wpdb->insert( $wpdb->prefix . 'tutor_quiz_questions', $new_question_data );
-			$duplicated_question_id = $wpdb->insert_id;
-
-			foreach ( $old_answers as $answer ) {
-				$new_answer_data = array(
-					'belongs_question_id'   => $duplicated_question_id,
-					'belongs_question_type' => $answer->question_type,
-					'answer_title'          => $answer->answer_title,
-					'is_correct'            => $answer->is_correct,
-					'image_id'              => $answer->image_id,
-					'answer_two_gap_match'  => $answer->answer_two_gap_match,
-					'answer_view_format'    => $answer->answer_view_format,
-					'answer_settings'       => $answer->answer_settings,
-					'answer_order'          => $answer->answer_order,
-				);
-
-				$wpdb->insert( $wpdb->prefix . 'tutor_quiz_question_answers', $new_answer_data );
-			}
-
-			$wpdb->query( 'COMMIT' );
-
-			$this->json_response(
-				__( 'Question duplicated successfully', 'tutor' ),
-				$duplicated_question_id,
-				HttpHelper::STATUS_CREATED
-			);
-		} catch ( \Throwable $th ) {
-			$wpdb->query( 'ROLLBACK' );
-
-			$this->json_response(
-				__( 'Failed to duplicate question', 'tutor' ),
-				null,
-				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
-			);
-		}
 	}
 
 	/**
