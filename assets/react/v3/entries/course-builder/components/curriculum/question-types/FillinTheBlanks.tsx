@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import FormFillInTheBlanks from '@Components/fields/quiz/FormFillInTheBlanks';
+import { spacing } from '@Config/styles';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
@@ -26,6 +27,6 @@ export default FillInTheBlanks;
 const styles = {
   optionWrapper: css`
       ${styleUtils.display.flex('column')};
-      padding-left: 42px;
+      padding-left: ${spacing[40]};
     `,
 };

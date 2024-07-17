@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 const App = () => {
   return (
@@ -8,9 +8,5 @@ const App = () => {
   );
 };
 
-window.addEventListener('DOMContentLoaded', (e) => {
-  function TaxManagement() {
-    ReactDOM.render(<App />, document.getElementById('ecommerce_tax'));
-  }
-  TaxManagement();
-});
+const root = createRoot(document.getElementById('ecommerce_tax') as HTMLElement);
+root.render(<App />);

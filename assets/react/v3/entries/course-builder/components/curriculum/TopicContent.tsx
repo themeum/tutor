@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 import Popover from '@Molecules/Popover';
 
 import { useModal } from '@Components/modals/Modal';
@@ -181,38 +182,37 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
 
         <div css={styles.actions} data-actions>
           <Show when={type === 'tutor_quiz'}>
-            <button
-              type="button"
-              css={styles.actionButton}
-              onClick={() => {
-                exportQuizMutation.mutate(content.id);
-              }}
-            >
-              <SVGIcon name="upload" width={24} height={24} />
-            </button>
+            <Tooltip content={__('Export Quiz', 'tutor')}>
+              <button
+                type="button"
+                css={styles.actionButton}
+                onClick={() => {
+                  exportQuizMutation.mutate(content.id);
+                }}
+              >
+                <SVGIcon name="upload" width={24} height={24} />
+              </button>
+            </Tooltip>
           </Show>
-          <button ref={editButtonRef} type="button" css={styles.actionButton} onClick={handleShowModalOrPopover}>
-            <SVGIcon name="edit" width={24} height={24} />
-          </button>
-          <button type="button" css={styles.actionButton} onClick={onCopy}>
-            <SVGIcon name="copyPaste" width={24} height={24} />
-          </button>
-          <button type="button" css={styles.actionButton} onClick={handleDelete}>
-            {deleteLessonMutation.isPending ? (
-              <LoadingSpinner size={24} />
-            ) : (
-              <SVGIcon name="delete" width={24} height={24} />
-            )}
-          </button>
-          <button
-            type="button"
-            css={styles.actionButton}
-            onClick={() => {
-              alert('@TODO: will be implemented later');
-            }}
-          >
-            <SVGIcon name="threeDotsVertical" width={24} height={24} />
-          </button>
+          <Tooltip content={__('Edit', 'tutor')}>
+            <button ref={editButtonRef} type="button" css={styles.actionButton} onClick={handleShowModalOrPopover}>
+              <SVGIcon name="edit" width={24} height={24} />
+            </button>
+          </Tooltip>
+          <Tooltip content={__('Duplicate', 'tutor')}>
+            <button type="button" css={styles.actionButton} onClick={onCopy}>
+              <SVGIcon name="copyPaste" width={24} height={24} />
+            </button>
+          </Tooltip>
+          <Tooltip content={__('Delete', 'tutor')}>
+            <button type="button" css={styles.actionButton} onClick={handleDelete}>
+              {deleteLessonMutation.isPending ? (
+                <LoadingSpinner size={24} />
+              ) : (
+                <SVGIcon name="delete" width={24} height={24} />
+              )}
+            </button>
+          </Tooltip>
         </div>
       </div>
       <Popover

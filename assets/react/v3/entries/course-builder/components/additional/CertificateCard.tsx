@@ -45,7 +45,15 @@ const CertificateCard = ({
         isLandScape: orientation === 'landscape',
       })}
     >
-      <div data-overlay />
+      <div
+        data-overlay
+        onClick={() => onSelectCertificate(data.key)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            onSelectCertificate(data.key);
+          }
+        }}
+      />
       <Show
         when={data.preview_src}
         fallback={

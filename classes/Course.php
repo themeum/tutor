@@ -40,6 +40,14 @@ class Course extends Tutor_Base {
 	const PRICE_TYPE_PAID = 'paid';
 
 	/**
+	 * Course price and sale price
+	 *
+	 * @since 3.0.0
+	 */
+	const COURSE_PRICE_META      = 'tutor_course_price';
+	const COURSE_SALE_PRICE_META = 'tutor_course_sale_price';
+
+	/**
 	 * Additional course meta info
 	 *
 	 * @var array
@@ -47,39 +55,6 @@ class Course extends Tutor_Base {
 	private $additional_meta = array(
 		'_tutor_enable_qa',
 		'_tutor_is_public_course',
-	);
-
-	/**
-	 * Video sources
-	 *
-	 * @since 2.3.0
-	 *
-	 * @var array
-	 */
-	public $supported_video_sources = array(
-		'external_url',
-		'shortcode',
-		'youtube',
-		'vimeo',
-		'embedded',
-	);
-
-	/**
-	 * Video params
-	 *
-	 * @since 3.0.0
-	 *
-	 * @var array
-	 */
-	public $video_params = array(
-		'source'              => '',
-		'source_video_id'     => '',
-		'poster'              => '',
-		'source_external_url' => '',
-		'source_shortcode'    => '',
-		'source_youtube'      => '',
-		'source_vimeo'        => '',
-		'source_embedded'     => '',
 	);
 
 	/**
@@ -994,8 +969,8 @@ class Course extends Tutor_Base {
 		}
 
 		if ( 'tutor' === $monetize_by ) {
-			$price      = get_post_meta( $course_id, 'course_price', true );
-			$sale_price = get_post_meta( $course_id, 'course_sale_price', true );
+			$price      = get_post_meta( $course_id, self::COURSE_PRICE_META, true );
+			$sale_price = get_post_meta( $course_id, self::COURSE_SALE_PRICE_META, true );
 		}
 
 		$course_pricing = array(
@@ -1134,9 +1109,9 @@ class Course extends Tutor_Base {
 		/**
 		 * Course builder dashboard URL based on role and settings.
 		 */
-		$dashboard_url = get_admin_url();
-		if ( User::is_instructor() ) {
-			$dashboard_url = tutor_utils()->tutor_dashboard_url();
+		$dashboard_url = tutor_utils()->tutor_dashboard_url();
+		if ( User::is_admin() ) {
+			$dashboard_url = get_admin_url();
 		}
 
 		$data['dashboard_url'] = $dashboard_url;

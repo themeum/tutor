@@ -1,13 +1,13 @@
 import React from 'react';
-import ReactDom from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import TutorDatepicker from '../../../v2-library/src/components/datapicker/TutorDatepicker';
 
 function DatePicker() {
-    const wrappers =  document.querySelectorAll('.tutor-v2-date-picker');
-    for(let wrapper of wrappers) {
+    const wrappers = document.querySelectorAll('.tutor-v2-date-picker');
+    for (let wrapper of wrappers) {
         if (wrapper) {
             let disablePastDate = false;
-            const {dataset={}} = wrapper;
+            const { dataset = {} } = wrapper;
             /**
              * If has tutor-disable-past-date then disable past
              * date selection
@@ -17,7 +17,8 @@ function DatePicker() {
             if (wrapper.hasAttribute('tutor-disable-past-date')) {
                 disablePastDate = true;
             }
-            ReactDom.render(<TutorDatepicker {...dataset} disablePastDate={disablePastDate}/>, wrapper);
+            const root = createRoot(wrapper);
+            root.render(<TutorDatepicker {...dataset} disablePastDate={disablePastDate} />);
         }
     }
 }

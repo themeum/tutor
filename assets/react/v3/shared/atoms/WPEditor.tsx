@@ -156,9 +156,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
           ],
         });
         editor.on('change keyup paste', () => {
-          if (onChange) {
-            onChange(editor.getContent());
-          }
+          onChange(editor.getContent());
         });
         editor.on('focus', () => setIsFocused(true));
         editor.on('blur', () => setIsFocused(false));
@@ -167,13 +165,15 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
       wpeditimage_html5_captions: true,
     },
     mediaButtons: true,
-    dfw: true,
     drag_drop_upload: true,
-    quicktags: true,
+    quicktags: {
+      buttons: ['strong', 'em', 'block', 'del', 'ins', 'img', 'ul', 'ol', 'li', 'code', 'more', 'close'],
+    },
   };
 }
 
 const WPEditor = ({ value, onChange }: WPEditorProps) => {
+  const editorRef = useRef<HTMLTextAreaElement>(null);
   const { current: editorId } = useRef(nanoid());
   const [isFocused, setIsFocused] = useState(false);
 
@@ -205,15 +205,29 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
       window.wp.editor.remove(editorId);
       window.wp.editor.initialize(editorId, editorConfig(onChange, setIsFocused));
 
+      editorRef.current?.addEventListener('change', (e) => {
+        onChange((e.target as HTMLInputElement)?.value);
+      });
+      editorRef.current?.addEventListener('input', (e) => {
+        onChange((e.target as HTMLInputElement)?.value);
+      });
+
       return () => {
         window.wp.editor.remove(editorId);
+
+        editorRef.current?.removeEventListener('change', (e) => {
+          onChange((e.target as HTMLInputElement)?.value);
+        });
+        editorRef.current?.removeEventListener('input', (e) => {
+          onChange((e.target as HTMLInputElement)?.value);
+        });
       };
     }
   }, []);
 
   return (
     <div css={styles.wrapper}>
-      <textarea id={editorId} />
+      <textarea ref={editorRef} id={editorId} />
     </div>
   );
 };
@@ -231,7 +245,9 @@ const styles = {
     textarea {
       visibility: visible !important;
       width: 100%;
+      resize: none;
       border: none;
+      outline: none;
     }
   `,
 };

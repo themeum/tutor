@@ -8,6 +8,7 @@ interface QuizModalContextProps {
   activeQuestionIndex: number;
   activeQuestionId: ID;
   setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
+  quizId: ID;
 }
 
 const QuizModalContext = createContext<QuizModalContextProps | null>(null);
@@ -22,8 +23,10 @@ export const useQuizModalContext = () => {
 
 export const QuizModalContextProvider = ({
   children,
+  quizId,
 }: {
   children: React.ReactNode;
+  quizId: ID;
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
   const form = useFormContext<QuizForm>();
@@ -56,7 +59,7 @@ export const QuizModalContextProvider = ({
   }, [activeQuestionIndex, activeQuestionId]);
 
   return (
-    <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId }}>
+    <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId }}>
       {children}
     </QuizModalContext.Provider>
   );

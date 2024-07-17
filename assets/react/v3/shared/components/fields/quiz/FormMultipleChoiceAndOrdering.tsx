@@ -12,7 +12,12 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizQuestionOption, useCreateQuizAnswerMutation } from '@CourseBuilderServices/quiz';
+import {
+  type QuizQuestionOption,
+  useCreateQuizAnswerMutation,
+  useDeleteQuizAnswerMutation,
+  useMarkAnswerAsCorrectMutation,
+} from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -44,6 +49,8 @@ const FormMultipleChoiceAndOrdering = ({
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_url);
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
@@ -93,6 +100,10 @@ const FormMultipleChoiceAndOrdering = ({
     field.onChange({
       ...inputValue,
       is_correct: hasMultipleCorrectAnswers ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
+    });
+    markAnswerAsCorrectMutation.mutate({
+      answerId: inputValue.answer_id,
+      isCorrect: inputValue.is_correct === '1' ? '0' : '1',
     });
   };
 
@@ -213,6 +224,7 @@ const FormMultipleChoiceAndOrdering = ({
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
+                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                 onRemoveOption();
               }}
             >
@@ -292,6 +304,9 @@ const FormMultipleChoiceAndOrdering = ({
                     event.stopPropagation();
                     setIsEditing(false);
                     field.onChange(previousValue);
+                    if (!inputValue.answer_title && !inputValue.image_url && !inputValue.answer_id) {
+                      onRemoveOption();
+                    }
                   }}
                 >
                   {__('Cancel', 'tutor')}

@@ -30,6 +30,7 @@ export interface Content {
 export interface Lesson extends Content {
   attachments: Media[];
   thumbnail: string;
+  thumbnail_id: ID;
   available_on: string;
   video: CourseVideo & {
     runtime: {
@@ -90,7 +91,7 @@ export interface LessonPayload {
   lesson_id?: ID; //only for update
   title: string;
   description: string;
-  thumbnail_id: ID;
+  thumbnail_id: ID | null;
 
   'video[source]': string;
   'video[source_video_id]': ID;

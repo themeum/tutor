@@ -11,6 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Backend_Page_Trait;
+use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Traits\JsonResponse;
@@ -88,6 +89,12 @@ class CouponController {
 			// Register hooks here.
 			add_action( 'wp_ajax_tutor_coupon_bulk_action', array( $this, 'bulk_action_handler' ) );
 			add_action( 'wp_ajax_tutor_coupon_permanent_delete', array( $this, 'coupon_permanent_delete' ) );
+			/**
+			 * Handle AJAX request for getting coupon related data by coupon ID.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_coupon_details', array( $this, 'get_coupon_by_id' ) );
 		}
 	}
 
@@ -303,5 +310,47 @@ class CouponController {
 		} else {
 			wp_send_json_error( __( 'Failed to delete coupon.', 'tutor' ) );
 		}
+	}
+
+	/**
+	 * Retrieve coupon by ID.
+	 *
+	 * This function handles the retrieval of a coupon based on its ID. It performs several checks,
+	 * including nonce verification and validation of the coupon ID. If the coupon is found,
+	 * it returns the coupon data; otherwise, it returns appropriate error messages.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void Sends a JSON response with the coupon data or an error message.
+	 */
+	public function get_coupon_by_id() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$coupon_id = Input::post( 'coupon_id' );
+
+		if ( empty( $coupon_id ) ) {
+			$this->json_response(
+				__( 'Coupon ID is required', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$coupon_data = $this->model->get_coupon_by_id( $coupon_id );
+
+		if ( ! $coupon_data ) {
+			$this->json_response(
+				__( 'Coupon not found', 'tutor' ),
+				null,
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
+		$this->json_response(
+			__( 'Coupon retrieved successfully', 'tutor' ),
+			$coupon_data
+		);
 	}
 }

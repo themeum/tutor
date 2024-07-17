@@ -53,6 +53,7 @@ import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
 import { useToast } from '@Atoms/Toast';
+import Tooltip from '@Atoms/Tooltip';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
@@ -300,44 +301,50 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             </div>
             <div css={styles.actions}>
               <Show when={!isEdit}>
+                <Tooltip content={__('Edit', 'tutor')}>
+                  <button
+                    type="button"
+                    css={styles.actionButton}
+                    disabled={!topic.isSaved}
+                    data-visually-hidden
+                    onClick={() => {
+                      setIsEdit(true);
+                      if (topic.isCollapsed) {
+                        onCollapse?.();
+                      }
+                    }}
+                  >
+                    <SVGIcon name="edit" width={24} height={24} />
+                  </button>
+                </Tooltip>
+              </Show>
+              <Tooltip content={__('Duplicate', 'tutor')}>
                 <button
                   type="button"
                   css={styles.actionButton}
                   disabled={!topic.isSaved}
                   data-visually-hidden
                   onClick={() => {
-                    setIsEdit(true);
-                    if (topic.isCollapsed) {
-                      onCollapse?.();
-                    }
+                    alert('@TODO: will be implemented later');
                   }}
                 >
-                  <SVGIcon name="edit" width={24} height={24} />
+                  <SVGIcon name="copyPaste" width={24} height={24} />
                 </button>
-              </Show>
-              <button
-                type="button"
-                css={styles.actionButton}
-                disabled={!topic.isSaved}
-                data-visually-hidden
-                onClick={() => {
-                  alert('@TODO: will be implemented later');
-                }}
-              >
-                <SVGIcon name="copyPaste" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                css={styles.actionButton}
-                disabled={!topic.isSaved}
-                data-visually-hidden
-                ref={deleteRef}
-                onClick={() => {
-                  setIsDeletePopoverOpen(true);
-                }}
-              >
-                <SVGIcon name="delete" width={24} height={24} />
-              </button>
+              </Tooltip>
+              <Tooltip content={__('Delete', 'tutor')}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  disabled={!topic.isSaved}
+                  data-visually-hidden
+                  ref={deleteRef}
+                  onClick={() => {
+                    setIsDeletePopoverOpen(true);
+                  }}
+                >
+                  <SVGIcon name="delete" width={24} height={24} />
+                </button>
+              </Tooltip>
               <ConfirmationPopover
                 isOpen={isDeletePopoverOpen}
                 triggerRef={deleteRef}

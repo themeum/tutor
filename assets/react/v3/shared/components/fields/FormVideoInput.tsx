@@ -118,7 +118,7 @@ const FormVideoInput = ({
     },
   });
 
-  const videoSource = form.watch('videoSource') || [];
+  const videoSource = form.watch('videoSource') || '';
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -131,12 +131,16 @@ const FormVideoInput = ({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (!videoSource) {
+      return;
+    }
+
     if (!fieldValue?.[`source_${videoSource}` as keyof CourseVideo]) {
       form.setValue('videoUrl', '');
       return;
     }
-    form.setValue('videoUrl', fieldValue?.[`source_${videoSource}` as keyof CourseVideo]);
-  }, [videoSource]);
+    form.setValue('videoUrl', fieldValue?.[`source_${videoSource}` as keyof CourseVideo] || '');
+  }, [videoSource, fieldValue]);
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);

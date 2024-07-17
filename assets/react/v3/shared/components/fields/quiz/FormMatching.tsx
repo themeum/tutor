@@ -8,7 +8,12 @@ import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { type QuizQuestionOption, useCreateQuizAnswerMutation } from '@CourseBuilderServices/quiz';
+import {
+  type QuizQuestionOption,
+  useCreateQuizAnswerMutation,
+  useDeleteQuizAnswerMutation,
+  useMarkAnswerAsCorrectMutation,
+} from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -40,6 +45,8 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   const inputRef = useRef<HTMLInputElement>(null);
 
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
 
   const [isEditing, setIsEditing] = useState(
     !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
@@ -88,6 +95,11 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
     field.onChange({
       ...inputValue,
       is_correct: '1',
+    });
+
+    markAnswerAsCorrectMutation.mutate({
+      answerId: inputValue.answer_id,
+      isCorrect: '1',
     });
   };
 
@@ -162,6 +174,7 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
+                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                 onRemoveOption();
               }}
             >
@@ -275,6 +288,15 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                     event.stopPropagation();
                     setIsEditing(false);
                     field.onChange(previousValue);
+
+                    if (
+                      !inputValue.answer_title &&
+                      !inputValue.image_id &&
+                      !inputValue.answer_two_gap_match &&
+                      !inputValue.answer_id
+                    ) {
+                      onRemoveOption();
+                    }
                   }}
                 >
                   {__('Cancel', 'tutor')}
