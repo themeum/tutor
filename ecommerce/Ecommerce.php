@@ -54,6 +54,7 @@ class Ecommerce {
 
 		add_action( 'save_post_' . tutor()->course_post_type, array( $this, 'save_price' ), 10, 2 );
 
+		new AdminMenu();
 		new OrderController();
 		new OrderActivitiesController();
 		new CouponController();
