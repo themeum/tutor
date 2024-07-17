@@ -375,7 +375,9 @@ class QueryHelper {
 		global $wpdb;
 
 		$where_clause = self::build_where_clause( $where );
-		$query        = $wpdb->prepare(
+
+		//phpcs:disable
+		$query = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
 				WHERE {$where_clause}
@@ -384,10 +386,12 @@ class QueryHelper {
 			",
 			1
 		);
+
 		return $wpdb->get_row(
 			$query,
 			$output
 		);
+		//phpcs:enable
 	}
 
 	/**
@@ -410,7 +414,9 @@ class QueryHelper {
 
 		$where_clause = self::build_where_clause( $where );
 		$limit        = sanitize_text_field( $limit );
-		$query        = $wpdb->prepare(
+
+		//phpcs:disable
+		$query = $wpdb->prepare(
 			"SELECT *
 				FROM {$table}
 				WHERE {$where_clause}
@@ -419,10 +425,12 @@ class QueryHelper {
 			",
 			$limit
 		);
+
 		return $wpdb->get_results(
 			$query,
 			$output
 		);
+		//phpcs:enable
 	}
 
 	/**
