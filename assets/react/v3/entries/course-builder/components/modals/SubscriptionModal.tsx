@@ -9,9 +9,24 @@ import Show from '@Controls/Show';
 import { SubscriptionEmptyState } from '@CourseBuilderComponents/subscription/SubscriptionEmptyState';
 import SubscriptionItem from '@CourseBuilderComponents/subscription/SubscriptionItem';
 import { type Subscription, defaultSubscription } from '@CourseBuilderServices/subscription';
+import { droppableMeasuringStrategy } from '@Utils/dndkit';
+import { moveTo, noop } from '@Utils/util';
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  type UniqueIdentifier,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface SubscriptionModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -28,10 +43,29 @@ export default function SubscriptionModal({
 }: SubscriptionModalProps) {
   const [items, setItems] = useState(subscriptions);
   const [isExpandedAll, setIsExpandedAll] = useState(false);
+  const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
   useEffect(() => {
     setItems(subscriptions.map((item, index) => ({ ...item, isExpanded: index === 0 })));
   }, [subscriptions]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const activeSortItem = useMemo(() => {
+    if (!activeSortId) {
+      return null;
+    }
+    return items.find((item) => item.id === activeSortId);
+  }, [activeSortId, items]);
 
   return (
     <ModalWrapper
@@ -82,26 +116,65 @@ export default function SubscriptionModal({
               </Button>
             </div>
             <div css={styles.content}>
-              <For each={items}>
-                {(subscription) => {
-                  return (
-                    <SubscriptionItem
-                      key={subscription.id}
-                      subscription={subscription}
-                      toggleCollapse={(id) => {
-                        setItems((previous) => {
-                          return previous.map((item) => {
-                            if (item.id === id) {
-                              return { ...item, isExpanded: !item.isExpanded };
-                            }
-                            return { ...item, isExpanded: false };
-                          });
-                        });
-                      }}
-                    />
-                  );
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                measuring={droppableMeasuringStrategy}
+                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                onDragStart={(event) => {
+                  setActiveSortId(event.active.id);
                 }}
-              </For>
+                onDragEnd={(event) => {
+                  const { active, over } = event;
+
+                  if (!over) {
+                    setActiveSortId(null);
+                    return;
+                  }
+
+                  if (active.id !== over.id) {
+                    const activeIndex = items.findIndex((item) => item.id === active.id);
+                    const overIndex = items.findIndex((item) => item.id === over.id);
+                    const itemsAfterSort = moveTo(items, activeIndex, overIndex);
+                    setItems(itemsAfterSort);
+                  }
+
+                  setActiveSortId(null);
+                }}
+              >
+                <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                  <For each={items}>
+                    {(subscription) => {
+                      return (
+                        <SubscriptionItem
+                          key={subscription.id}
+                          subscription={subscription}
+                          toggleCollapse={(id) => {
+                            setItems((previous) => {
+                              return previous.map((item) => {
+                                if (item.id === id) {
+                                  return { ...item, isExpanded: !item.isExpanded };
+                                }
+                                return { ...item, isExpanded: false };
+                              });
+                            });
+                          }}
+                        />
+                      );
+                    }}
+                  </For>
+                </SortableContext>
+                {createPortal(
+                  <DragOverlay>
+                    <Show when={activeSortItem}>
+                      {(item) => {
+                        return <SubscriptionItem subscription={item} toggleCollapse={noop} bgLight />;
+                      }}
+                    </Show>
+                  </DragOverlay>,
+                  document.body,
+                )}
+              </DndContext>
               <div>
                 <Button
                   variant="secondary"

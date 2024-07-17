@@ -10,7 +10,10 @@ import Show from '@Controls/Show';
 import type { Subscription } from '@CourseBuilderServices/subscription';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
@@ -20,9 +23,15 @@ import { formatRepeatUnit } from './PreviewItem';
 export default function SubscriptionItem({
   subscription,
   toggleCollapse,
-}: { subscription: Subscription & { isExpanded: boolean }; toggleCollapse: (id: number) => void }) {
+  bgLight = false,
+}: { subscription: Subscription & { isExpanded: boolean }; toggleCollapse: (id: number) => void; bgLight?: boolean }) {
   const form = useFormWithGlobalError<Subscription>({
     defaultValues: subscription,
+  });
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: subscription.id,
+    animateLayoutChanges,
   });
 
   const { transitions } = useAnimation({
@@ -49,15 +58,24 @@ export default function SubscriptionItem({
     },
   ];
 
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : undefined,
+  };
+
   return (
     <form
-      css={styles.subscription}
+      {...attributes}
+      css={styles.subscription(bgLight)}
       onSubmit={form.handleSubmit((values) => {
         alert('@TODO: will be implemented later.');
       })}
+      style={style}
+      ref={setNodeRef}
     >
       <div css={styles.subscriptionHeader(subscription.isExpanded)}>
-        <div css={styles.grabber}>
+        <div css={styles.grabber} {...listeners}>
           <SVGIcon name="threeDotsVerticalDouble" />
           <span title={subscriptionName}>{subscriptionName}</span>
         </div>
@@ -336,11 +354,18 @@ const styles = {
 		align-items: center;
 		gap: ${spacing[8]};
 	`,
-  subscription: css`
+  subscription: (bgLight = false) => css`
 		width: 100%;
 		border: 1px solid ${colorTokens.stroke.default};
 		border-radius: ${borderRadius.card};
 		overflow: hidden;
+
+		${
+      bgLight &&
+      css`
+			background-color: ${colorTokens.background.white};
+		`
+    }
 	`,
   itemWrapper: (isActive = false) => css`
     ${
