@@ -1041,7 +1041,7 @@ class Quiz {
 		$quiz->questions   = tutor_utils()->get_questions_by_quiz( $quiz_id );
 
 		foreach ( $quiz->questions as $question ) {
-			$question->question_answers = QuizModel::get_question_answers( $question->question_id, $question->question_type );
+			$question->question_answers = QuizModel::get_question_answers( $question->question_id );
 			if ( isset( $question->question_settings ) ) {
 				$question->question_settings = maybe_unserialize( $question->question_settings );
 			}
@@ -1511,9 +1511,16 @@ class Quiz {
 		// Add question with default true_false type and options.
 		$this->add_true_false_options( $question_id );
 
+		// Add created question object to response.
+		$question                   = QuizModel::get_question( $question_id );
+		$question->question_answers = QuizModel::get_question_answers( $question->question_id );
+		if ( isset( $question->question_settings ) ) {
+			$question->question_settings = maybe_unserialize( $question->question_settings );
+		}
+
 		$this->json_response(
 			__( 'Question created successfully', 'tutor' ),
-			$question_id,
+			$question,
 			HttpHelper::STATUS_CREATED
 		);
 	}
@@ -1764,14 +1771,18 @@ class Quiz {
 			$wpdb->update( $table_answer, $answer_data, array( 'answer_id' => $answer_id ) );
 		} else {
 			$wpdb->insert( $table_answer, $answer_data );
+			$answer_id = $wpdb->insert_id;
 		}
 
 		if ( $is_update ) {
-			$this->json_response( __( 'Question answer updated successfully', 'tutor' ) );
+			$this->json_response(
+				__( 'Question answer updated successfully', 'tutor' ),
+				$answer_id
+			);
 		} else {
 			$this->json_response(
 				__( 'Question answer saved successfully', 'tutor' ),
-				null,
+				$answer_id,
 				HttpHelper::STATUS_CREATED
 			);
 		}
