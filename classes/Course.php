@@ -1109,9 +1109,9 @@ class Course extends Tutor_Base {
 		/**
 		 * Course builder dashboard URL based on role and settings.
 		 */
-		$dashboard_url = get_admin_url();
-		if ( User::is_instructor() ) {
-			$dashboard_url = tutor_utils()->tutor_dashboard_url();
+		$dashboard_url = tutor_utils()->tutor_dashboard_url();
+		if ( User::is_admin() ) {
+			$dashboard_url = get_admin_url();
 		}
 
 		$data['dashboard_url'] = $dashboard_url;
