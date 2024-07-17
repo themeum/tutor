@@ -21,6 +21,7 @@ class Settings {
 	public function __construct() {
 		add_filter( 'tutor/options/extend/attr', array( __CLASS__, 'add_ecommerce_settings' ) );
 		add_action( 'tutor_after_block_single_item', __CLASS__ . '::add_manual_payment_btn' );
+		add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::get_payment_gateway_settings' );
 	}
 
 	/**
@@ -128,24 +129,11 @@ class Settings {
 			),
 			'ecommerce_payment'  => array(
 				'label'    => __( 'Payment', 'tutor' ),
-				'slug'     => 'payment_method',
+				'slug'     => 'automate_payment_gateway',
 				'desc'     => __( 'Advanced Settings', 'tutor' ),
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-filter',
-				'blocks'   => array(
-					array(
-						'label'      => __( 'Supported payment methods ', 'tutor' ),
-						'slug'       => 'automate_payment_gateway',
-						'block_type' => 'uniform',
-						'fields'     => Ecommerce::get_automate_payment_setting_fields(),
-					),
-					array(
-						'label'      => __( 'Manual payment methods ', 'tutor' ),
-						'slug'       => 'manual_payment_gateway',
-						'block_type' => 'uniform',
-						'fields'     => Ecommerce::get_manual_payment_setting_fields(),
-					),
-				),
+				'blocks'   => array(),
 			),
 			'ecommerce_tax'      => array(
 				'label'    => __( 'Tax', 'tutor' ),
@@ -264,5 +252,118 @@ class Settings {
 		</div>
 		<?php
 		require_once tutor()->path . 'views/modal/ecommerce/add-manual-payment.php';
+	}
+
+	/**
+	 * Get default automate payment gateways
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $settings Tutor settings.
+	 *
+	 * @return array
+	 */
+	public static function get_payment_gateway_settings( $settings ): array {
+		$paypal   = array(
+			'label'      => __( 'Supported payment methods ', 'tutor' ),
+			'slug'       => 'paypal_payment_gateway',
+			'block_type' => 'uniform',
+			'fields'     => array(
+				array(
+					'key'           => 'enable_paypal',
+					'type'          => 'toggle_switch',
+					'label'         => __( 'Paypal', 'tutor-pro' ),
+					'label_title'   => '',
+					'default'       => 'off',
+					'desc'          => __( 'Enable Facebook Login', 'tutor-pro' ),
+					'toggle_fields' => 'paypal_id',
+				),
+				array(
+					'key'         => 'paypal_id',
+					'type'        => 'text',
+					'label'       => __( 'App ID', 'tutor-pro' ),
+					'desc'        => '',
+					'placeholder' => __( 'Enter your Facebook App ID here', 'tutor-pro' ),
+				),
+			),
+		);
+
+		$stripe = array(
+			'slug'       => 'stripe_payment_gateway',
+			'block_type' => 'uniform',
+			'fields'     => array(
+				array(
+					'key'           => 'enable_stripe',
+					'type'          => 'toggle_switch',
+					'label'         => __( 'Stripe', 'tutor-pro' ),
+					'label_title'   => '',
+					'default'       => 'off',
+					'desc'          => __( 'Enable Facebook Login', 'tutor-pro' ),
+					'toggle_fields' => 'stripe_id',
+				),
+				array(
+					'key'         => 'stripe_id',
+					'type'        => 'text',
+					'label'       => __( 'App ID', 'tutor-pro' ),
+					'desc'        => '',
+					'placeholder' => __( 'Enter your Facebook App ID here', 'tutor-pro' ),
+				),
+			),
+		);
+
+		// Manual Payments.
+		$manual_gateways = array(
+			'label'      => __( 'Manual payment methods ', 'tutor' ),
+			'slug'       => 'manual_payment_gateway',
+			'block_type' => 'uniform',
+			'fields'     => array(),
+		);
+
+		array_push( $settings['ecommerce_payment']['blocks'], $paypal );
+		array_push( $settings['ecommerce_payment']['blocks'], $stripe );
+		array_push( $settings['ecommerce_payment']['blocks'], $manual_gateways );
+
+		return $settings;
+	}
+
+	/**
+	 * Get automate payment setting fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_automate_payment_gateways() {
+		$fields = array(
+
+			// array(
+			// 	'key'     => OptionKeys::PAYMENT_METHOD_PAYPAL,
+			// 	'type'    => 'toggle_switch',
+			// 	'label'   => __( 'Paypal', 'tutor' ),
+			// 	'default' => 'off',
+			// 	'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
+			// ),
+			// array(
+			// 	'key'     => OptionKeys::PAYMENT_METHOD_STRIPE,
+			// 	'type'    => 'toggle_switch',
+			// 	'label'   => __( 'Stripe', 'tutor' ),
+			// 	'default' => 'off',
+			// 	'desc'    => __( 'Enable this to accept payments via Stripe.', 'tutor' ),
+			// ),
+		);
+
+		return $fields;
+	}
+
+	/**
+	 * Get manual payment setting fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_manual_payment_gateways() {
+		$fields = array();
+		return $fields;
 	}
 }
