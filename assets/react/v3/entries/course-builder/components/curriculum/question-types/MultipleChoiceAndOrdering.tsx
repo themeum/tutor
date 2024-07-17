@@ -103,8 +103,8 @@ const MultipleChoiceAndOrdering = () => {
 
     const changedOptions = currentOptions.filter((option) => {
       const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = optionsFields[index] || {};
-      return option.is_correct !== previousOption.is_correct;
+      const previousOption = optionsFields[index];
+      return previousOption && option.is_correct !== previousOption.is_correct;
     });
 
     if (changedOptions.length === 0) {
@@ -235,16 +235,22 @@ const MultipleChoiceAndOrdering = () => {
       <button
         type="button"
         onClick={() =>
-          appendOption({
-            answer_id: nanoid(),
-            answer_title: '',
-            is_correct: '0',
-            belongs_question_id: activeQuestionId,
-            belongs_question_type: 'multiple_choice',
-            answer_order: optionsFields.length,
-            answer_two_gap_match: '',
-            answer_view_format: '',
-          })
+          appendOption(
+            {
+              answer_id: '',
+              answer_title: '',
+              is_correct: '0',
+              belongs_question_id: activeQuestionId,
+              belongs_question_type: 'multiple_choice',
+              answer_order: optionsFields.length,
+              answer_two_gap_match: '',
+              answer_view_format: '',
+            },
+            {
+              shouldFocus: true,
+              focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
+            }
+          )
         }
         css={styles.addOptionButton}
       >

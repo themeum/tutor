@@ -78,7 +78,7 @@ const ImageAnswering = () => {
     const changedOptions = currentOptions.filter((option) => {
       const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
       const previousOption = optionsFields[index] || {};
-      return option.is_correct !== previousOption.is_correct;
+      return option?.is_correct !== previousOption?.is_correct;
     });
 
     if (changedOptions.length === 0) {
@@ -205,16 +205,22 @@ const ImageAnswering = () => {
       <button
         type="button"
         onClick={() =>
-          appendOption({
-            answer_id: nanoid(),
-            answer_title: '',
-            is_correct: '0',
-            belongs_question_id: activeQuestionId,
-            belongs_question_type: 'image_answering',
-            answer_order: optionsFields.length,
-            answer_two_gap_match: '',
-            answer_view_format: '',
-          })
+          appendOption(
+            {
+              answer_id: '',
+              answer_title: '',
+              is_correct: '0',
+              belongs_question_id: activeQuestionId,
+              belongs_question_type: 'image_answering',
+              answer_order: optionsFields.length,
+              answer_two_gap_match: '',
+              answer_view_format: '',
+            },
+            {
+              shouldFocus: true,
+              focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
+            }
+          )
         }
         css={styles.addOptionButton}
       >
@@ -231,6 +237,7 @@ const styles = {
   optionWrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
+    padding-left: ${spacing[40]};
   `,
   addOptionButton: css`
     ${styleUtils.resetButton}
@@ -238,7 +245,6 @@ const styles = {
     align-items: center;
     gap: ${spacing[8]};
     color: ${colorTokens.text.brand};
-    margin-left: ${spacing[48]};
     margin-top: ${spacing[28]};
 
     svg {

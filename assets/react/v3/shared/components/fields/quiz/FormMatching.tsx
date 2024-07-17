@@ -8,7 +8,12 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import {
+  useCreateQuizAnswerMutation,
+  useDeleteQuizAnswerMutation,
+  useMarkAnswerAsCorrectMutation,
+  type QuizQuestionOption,
+} from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -39,7 +44,13 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const createQuizAnswerMutation = useCreateQuizAnswerMutation();
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
+
+  const [isEditing, setIsEditing] = useState(
+    !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url
+  );
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -85,6 +96,11 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
       ...inputValue,
       is_correct: '1',
     });
+
+    markAnswerAsCorrectMutation.mutate({
+      answerId: inputValue.answer_id,
+      isCorrect: '1',
+    });
   };
 
   useEffect(() => {
@@ -110,11 +126,13 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
       </button>
       <div
         css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isEditing })}
-        onClick={handleCorrectAnswer}
+        onClick={() => {
+          setIsEditing(true);
+        }}
         onKeyDown={(event) => {
           event.stopPropagation();
-          if (event.key === 'Enter') {
-            handleCorrectAnswer();
+          if (event.key === 'Enter' || event.key === ' ') {
+            setIsEditing(true);
           }
         }}
       >
@@ -156,6 +174,7 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
+                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                 onRemoveOption();
               }}
             >
@@ -269,17 +288,39 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                     event.stopPropagation();
                     setIsEditing(false);
                     field.onChange(previousValue);
+
+                    if (
+                      !inputValue.answer_title &&
+                      !inputValue.image_id &&
+                      !inputValue.answer_two_gap_match &&
+                      !inputValue.answer_id
+                    ) {
+                      onRemoveOption();
+                    }
                   }}
                 >
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
+                  loading={createQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
-                  onClick={(event) => {
+                  onClick={async (event) => {
                     event.stopPropagation();
-                    setIsEditing(false);
+                    const response = await createQuizAnswerMutation.mutateAsync({
+                      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
+                      question_id: inputValue.belongs_question_id,
+                      answer_title: inputValue.answer_title,
+                      image_id: inputValue.image_id || '',
+                      answer_view_format: 'both',
+                      matched_answer_title: inputValue.answer_two_gap_match,
+                    });
+
+                    if (response.status_code === 201 || response.status_code === 200) {
+                      setIsEditing(false);
+                    }
                   }}
+                  disabled={(!inputValue.answer_title && !inputValue.image_id) || !inputValue.answer_two_gap_match}
                 >
                   {__('Ok', 'tutor')}
                 </Button>

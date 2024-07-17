@@ -69,6 +69,7 @@ module.exports = (env, options) => {
 				'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
 				'tutor-course-builder-v3.min': './assets/react/v3/entries/course-builder/index.tsx',
 				'tutor-order-details.min': './assets/react/v3/entries/order-details/index.tsx',
+				'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
 				'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
 			},
 		},

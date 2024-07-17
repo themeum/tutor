@@ -7,7 +7,11 @@ import { CSS } from '@dnd-kit/utilities';
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import {
+  useCreateQuizAnswerMutation,
+  useDeleteQuizAnswerMutation,
+  type QuizQuestionOption,
+} from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -37,7 +41,10 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const createQuizAnswerMutation = useCreateQuizAnswerMutation();
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+
+  const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -98,27 +105,19 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
       ref={setNodeRef}
       style={style}
     >
-      <button type="button" css={styleUtils.resetButton} onClick={handleCorrectAnswer}>
-        <SVGIcon
-          data-check-icon
-          name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
-          height={32}
-          width={32}
-        />
-      </button>
       <div
-        css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isEditing })}
-        onClick={handleCorrectAnswer}
+        css={styles.optionLabel({ isEditing })}
+        onClick={() => {
+          setIsEditing(true);
+        }}
         onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleCorrectAnswer();
+          if (event.key === 'Enter' || event.key === ' ') {
+            setIsEditing(true);
           }
         }}
       >
         <div css={styles.optionHeader}>
-          <div css={styles.optionCounter({ isSelected: !!Number(inputValue.is_correct), isEditing })}>
-            {String.fromCharCode(65 + index)}
-          </div>
+          <div css={styles.optionCounter({ isEditing })}>{String.fromCharCode(65 + index)}</div>
 
           <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
             <SVGIcon name="dragVertical" height={24} width={24} />
@@ -153,6 +152,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
+                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                 onRemoveOption();
               }}
             >
@@ -245,12 +245,26 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
+                  loading={createQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
-                  onClick={(event) => {
+                  onClick={async (event) => {
                     event.stopPropagation();
-                    setIsEditing(false);
+                    const response = await createQuizAnswerMutation.mutateAsync({
+                      ...(inputValue.answer_id && {
+                        answer_id: inputValue.answer_id,
+                      }),
+                      question_id: inputValue.belongs_question_id,
+                      answer_title: inputValue.answer_title,
+                      image_id: inputValue.image_id || '',
+                      answer_view_format: 'both',
+                    });
+
+                    if (response.status_code === 201 || response.status_code === 200) {
+                      setIsEditing(false);
+                    }
                   }}
+                  disabled={!inputValue.answer_title && !inputValue.image_id}
                 >
                   {__('Ok', 'tutor')}
                 </Button>
@@ -279,11 +293,6 @@ const styles = {
       color: ${colorTokens.text.subdued};
       gap: ${spacing[10]};
       align-items: center;
-  
-      [data-check-icon] {
-        opacity: 0;
-        fill: none;
-      }
 
       [data-visually-hidden] {
         opacity: 0;
@@ -294,10 +303,6 @@ const styles = {
       }
   
       &:hover {
-        [data-check-icon] {
-          opacity: 1;
-        }
-
         [data-visually-hidden] {
           opacity: 1;
         }
@@ -311,17 +316,6 @@ const styles = {
         `
         }
       }
-  
-  
-      ${
-        isSelected &&
-        css`
-          [data-check-icon] {
-            opacity: 1;
-            color: ${colorTokens.bg.success};
-          }
-        `
-      }
 
       ${
         isEditing &&
@@ -333,10 +327,8 @@ const styles = {
       }
     `,
   optionLabel: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
       ${styleUtils.display.flex('column')}
@@ -350,27 +342,15 @@ const styles = {
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
       }
-  
-      ${
-        isSelected &&
-        css`
-          background-color: ${colorTokens.background.success.fill40};
-          color: ${colorTokens.text.primary};
-  
-          &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
-          }
-        `
-      }
 
       ${
         isEditing &&
         css`
           background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
 
           &:hover {
-            box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+            box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
           }
         `
       }
@@ -381,10 +361,8 @@ const styles = {
     align-items: center;
   `,
   optionCounter: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
     height: ${spacing[24]};
@@ -397,7 +375,6 @@ const styles = {
     place-self: center start;
 
     ${
-      isSelected &&
       !isEditing &&
       css`
         background-color: ${colorTokens.bg.white};

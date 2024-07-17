@@ -75,7 +75,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                       {__('Save', 'tutor')}
                     </Button>
                     <Button
-                      buttonContentCss={styles.cancleButton}
+                      buttonContentCss={styles.cancelButton}
                       variant="text"
                       size="small"
                       onClick={() => {
@@ -104,6 +104,7 @@ const styles = {
     gap: ${spacing[4]};
   `,
   label: css`
+    flex-shrink: 0;
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
   `,
@@ -117,6 +118,8 @@ const styles = {
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
     text-decoration: none;
+    ${styleUtils.text.ellipsis(1)}
+    max-width: fit-content;
   `,
   iconWrapper: css`
     ${styleUtils.resetButton}
@@ -139,6 +142,8 @@ const styles = {
   prefix: css`
     ${typography.caption()}
     color: ${colorTokens.text.subdued};
+    ${styleUtils.text.ellipsis(1)}
+    max-width: fit-content;
   `,
   editWrapper: css`
     display: flex;
@@ -163,7 +168,7 @@ const styles = {
   saveBtn: css`
     margin-right: ${spacing[8]};
   `,
-  cancleButton: css`
+  cancelButton: css`
     color: ${colorTokens.text.brand};
   `,
 };

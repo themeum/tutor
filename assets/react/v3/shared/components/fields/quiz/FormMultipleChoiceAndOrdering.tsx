@@ -15,7 +15,12 @@ import { styleUtils } from '@Utils/style-utils';
 import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import {
+  useCreateQuizAnswerMutation,
+  useDeleteQuizAnswerMutation,
+  useMarkAnswerAsCorrectMutation,
+  type QuizQuestionOption,
+} from '@CourseBuilderServices/quiz';
 import { nanoid } from '@Utils/util';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
@@ -43,7 +48,11 @@ const FormMultipleChoiceAndOrdering = ({
   };
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const createQuizAnswerMutation = useCreateQuizAnswerMutation();
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
+
+  const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_url);
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
     isDefined(inputValue.image_id) && isDefined(inputValue.image_url)
   );
@@ -92,6 +101,10 @@ const FormMultipleChoiceAndOrdering = ({
       ...inputValue,
       is_correct: hasMultipleCorrectAnswers ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
     });
+    markAnswerAsCorrectMutation.mutate({
+      answerId: inputValue.answer_id,
+      isCorrect: inputValue.is_correct === '1' ? '0' : '1',
+    });
   };
 
   useEffect(() => {
@@ -133,10 +146,14 @@ const FormMultipleChoiceAndOrdering = ({
       </button>
       <div
         css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isEditing })}
-        onClick={handleCorrectAnswer}
+        onClick={() => {
+          setIsEditing(true);
+        }}
         onKeyDown={(event) => {
           event.stopPropagation();
-          handleCorrectAnswer();
+          if (event.key === 'Enter' || event.key === ' ') {
+            setIsEditing(true);
+          }
         }}
       >
         <div css={styles.optionHeader}>
@@ -207,6 +224,7 @@ const FormMultipleChoiceAndOrdering = ({
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
+                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                 onRemoveOption();
               }}
             >
@@ -286,17 +304,32 @@ const FormMultipleChoiceAndOrdering = ({
                     event.stopPropagation();
                     setIsEditing(false);
                     field.onChange(previousValue);
+                    if (!inputValue.answer_title && !inputValue.image_url && !inputValue.answer_id) {
+                      onRemoveOption();
+                    }
                   }}
                 >
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
+                  loading={createQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
-                  onClick={(event) => {
+                  onClick={async (event) => {
                     event.stopPropagation();
-                    setIsEditing(false);
+                    const response = await createQuizAnswerMutation.mutateAsync({
+                      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
+                      question_id: inputValue.belongs_question_id,
+                      answer_title: inputValue.answer_title,
+                      image_id: inputValue.image_id || '',
+                      answer_view_format: 'both',
+                    });
+
+                    if (response.status_code === 201 || response.status_code === 200) {
+                      setIsEditing(false);
+                    }
                   }}
+                  disabled={!inputValue.answer_title || inputValue.image_url === ''}
                 >
                   {__('Ok', 'tutor')}
                 </Button>

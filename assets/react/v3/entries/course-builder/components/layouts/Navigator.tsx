@@ -21,8 +21,8 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   const form = useFormContext<CourseFormData>();
 
   const currentIndex = steps.findIndex((item) => item.path === currentPath);
-  const previousIndex = Math.max(0, currentIndex - 1);
-  const nextIndex = Math.min(steps.length - 1, currentIndex + 1);
+  const previousIndex = Math.max(-1, currentIndex - 1);
+  const nextIndex = Math.min(steps.length, currentIndex + 1);
   const previousStep = steps[previousIndex];
   const nextStep = steps[nextIndex];
   const postTitle = form.watch('post_title');
@@ -89,7 +89,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         buttonCss={css`
           padding: ${spacing[6]};
         `}
-        disabled={previousIndex >= 0}
+        disabled={previousIndex < 0}
       >
         <SVGIcon name="chevronLeft" height={18} width={18} />
       </Button>

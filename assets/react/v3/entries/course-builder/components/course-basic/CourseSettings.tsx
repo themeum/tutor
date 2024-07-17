@@ -1,36 +1,52 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import Tabs from '@Molecules/Tabs';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import ContentDripSettings from './ContentDripSettings';
+
+import SVGIcon from '@Atoms/SVGIcon';
+import Tabs from '@Molecules/Tabs';
+import FormInput from '@Components/fields/FormInput';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormSwitch from '@Components/fields/FormSwitch';
+import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
+
+import FormCheckbox from '@Components/fields/FormCheckbox';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@Config/config';
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
   const [activeTab, setActiveTab] = useState('general');
 
   const isContentDripActive = form.watch('contentDripType');
+  const isBuddyPressEnabled = form.watch('enable_tutor_bp');
 
-  // @TODO: Need to add buddyboss options based on plugin installation
   const tabList = [
     {
-      label: 'General',
+      label: __('General', 'tutor'),
       value: 'general',
       icon: <SVGIcon name="settings" width={24} height={24} />,
     },
     {
-      label: 'Content Drip',
+      label: __('Content Drip', 'tutor'),
       value: 'content_drip',
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
       activeBadge: isContentDripActive ? true : false,
     },
+    ...(isAddonEnabled('BuddyPress')
+      ? [
+          {
+            label: __('BuddyPress', 'tutor'),
+            value: 'buddyPress',
+            icon: <SVGIcon name="buddyPress" width={24} height={24} />,
+            activeBadge: isBuddyPressEnabled ? true : false,
+          },
+        ]
+      : []),
   ];
 
   const difficultyLevelOptions = [
@@ -139,6 +155,35 @@ const CourseSettings = () => {
         )}
 
         {activeTab === 'content_drip' && <ContentDripSettings />}
+
+        {activeTab === 'buddyPress' && (
+          <div css={styles.settingsOptions}>
+            <Controller
+              name="enable_tutor_bp"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
+              )}
+            />
+
+            <Controller
+              name="bp_attached_group_ids"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormMultiSelectInput
+                  {...controllerProps}
+                  label={__('BuddyPress Groups', 'tutor')}
+                  helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
+                  placeholder={__('Search BuddyPress Groups', 'tutor')}
+                  options={tutorConfig.bp_groups.map((group) => ({
+                    label: group.name,
+                    value: String(group.id),
+                  }))}
+                />
+              )}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
