@@ -504,6 +504,72 @@ class OrderController {
 	}
 
 	/**
+	 * Count orders by status & filters
+	 * Count all | min | published | pending | draft
+	 *
+	 * @param string $status | required.
+	 * @param string $order_id selected order id | optional.
+	 * @param string $date selected date | optional.
+	 * @param string $search_term search by user name or email | optional.
+	 *
+	 * @return int
+	 *
+	 * @since 3.0.0
+	 */
+	protected static function count_order( string $status, $order_id = '', $date = '', $search_term = '' ): int {
+		$user_id     = get_current_user_id();
+		$status      = sanitize_text_field( $status );
+		$order_id    = sanitize_text_field( $order_id );
+		$date        = sanitize_text_field( $date );
+		$search_term = sanitize_text_field( $search_term );
+
+		$args = array(
+			'post_type' => tutor()->order_post_type,
+		);
+
+		if ( 'all' === $status || 'mine' === $status ) {
+			$args['post_status'] = array( 'publish', 'pending', 'draft', 'private', 'future' );
+		} else {
+			$args['post_status'] = array( $status );
+		}
+
+		// Author query.
+		if ( 'mine' === $status || ! current_user_can( 'administrator' ) ) {
+			$args['author'] = $user_id;
+		}
+
+		$date_filter = sanitize_text_field( $date );
+
+		$year  = date( 'Y', strtotime( $date_filter ) );
+		$month = date( 'm', strtotime( $date_filter ) );
+		$day   = date( 'd', strtotime( $date_filter ) );
+
+		// Add date query.
+		if ( '' !== $date_filter ) {
+			$args['date_query'] = array(
+				array(
+					'year'  => $year,
+					'month' => $month,
+					'day'   => $day,
+				),
+			);
+		}
+
+		if ( '' !== $order_id ) {
+			$args['p'] = $order_id;
+		}
+
+		// Search filter.
+		if ( '' !== $search_term ) {
+			$args['s'] = $search_term;
+		}
+
+		$the_query = new \WP_Query( $args );
+
+		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : $the_query;
+	}
+
+	/**
 	 * Handle order bulk action
 	 *
 	 * @since 3.0.0
@@ -573,6 +639,44 @@ class OrderController {
 		} else {
 			wp_send_json_error( __( 'Failed to update order.', 'tutor' ) );
 		}
+	}
+
+	/**
+	 * Handle ajax request for updating order status
+	 *
+	 * @return void
+	 * @since 3.0.0
+	 */
+	public static function tutor_change_order_status() {
+		tutor_utils()->checking_nonce();
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
+		$status = Input::post( 'status' );
+		$id     = Input::post( 'id' );
+		$order  = get_post( $id );
+
+		if ( OrderModel::POST_TYPE !== $order->post_type ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
+		$args = array(
+			'ID'          => $id,
+			'post_status' => $status,
+		);
+
+		if ( OrderModel::STATUS_FUTURE === $order->post_status && OrderModel::STATUS_PUBLISH === $status ) {
+			$args['post_status']   = OrderModel::STATUS_PUBLISH;
+			$args['post_date']     = current_time( 'mysql' );
+			$args['post_date_gmt'] = current_time( 'mysql', 1 );
+		}
+
+		wp_update_post( $args );
+		wp_send_json_success();
+		exit;
 	}
 
 	/**

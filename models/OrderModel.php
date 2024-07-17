@@ -488,7 +488,7 @@ class OrderModel {
 
 		$join_table    = array(
 			array(
-				'type'  => 'LEFT',
+				'type'  => 'INNER',
 				'table' => "{$wpdb->users} u",
 				'on'    => 'o.user_id = u.ID',
 			),
