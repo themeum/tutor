@@ -51,6 +51,8 @@ const FormMultipleChoiceAndOrdering = ({
   };
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
   const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
@@ -326,7 +328,7 @@ const FormMultipleChoiceAndOrdering = ({
                       question_id: inputValue.belongs_question_id,
                       answer_title: inputValue.answer_title,
                       image_id: inputValue.image_id || '',
-                      answer_view_format: 'both',
+                      answer_view_format: 'text_image',
                     });
 
                     const currentAnswerIndex = form
@@ -449,7 +451,6 @@ const styles = {
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
       background-color: ${colorTokens.background.white};
-      cursor: pointer;
   
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};

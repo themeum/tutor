@@ -20,7 +20,10 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
       source: '',
     }),
     'pricing[type]': data.course_price_type,
-    'pricing[product_id]': data.course_product_id,
+    ...(data.course_price_type !== 'free' &&
+      data.course_product_id && {
+        'pricing[product_id]': data.course_product_id,
+      }),
 
     course_price: data.course_price ?? 0,
     course_sale_price: data.course_sale_price ?? 0,

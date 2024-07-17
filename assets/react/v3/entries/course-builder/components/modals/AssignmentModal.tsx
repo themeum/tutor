@@ -157,7 +157,7 @@ const AssignmentModal = ({
     const payload = convertAssignmentDataToPayload(data, assignmentId, topicId, contentDripType);
     const response = await saveAssignmentMutation.mutateAsync(payload);
 
-    if (response.status_code === 200) {
+    if (response.status_code === 200 || response.status_code === 201) {
       closeModal({ action: 'CONFIRM' });
     }
   };

@@ -166,7 +166,7 @@ export const useCourseTopicQuery = (courseId: ID) => {
 };
 
 const saveTopic = (payload: TopicPayload) => {
-  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse<number>>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_save_topic',
     ...payload,
   });
@@ -199,7 +199,7 @@ export const useSaveTopicMutation = () => {
 };
 
 const deleteTopic = (topicId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_delete_topic',
     topic_id: topicId,
   });
@@ -248,7 +248,7 @@ export const useLessonDetailsQuery = (lessonId: ID, topicId: ID) => {
 };
 
 const saveLesson = (payload: LessonPayload) => {
-  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse<number>>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_save_lesson',
     ...payload,
   });
@@ -293,7 +293,7 @@ export const useSaveLessonMutation = ({
 };
 
 const deleteLesson = (lessonId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_delete_lesson',
     lesson_id: lessonId,
   });
@@ -368,7 +368,7 @@ export const useAssignmentDetailsQuery = (assignmentId: ID, topicId: ID) => {
 };
 
 const saveAssignment = (payload: AssignmentPayload) => {
-  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_assignment_save',
     ...payload,
   });
@@ -389,7 +389,7 @@ export const useSaveAssignmentMutation = ({
   return useMutation({
     mutationFn: (payload: AssignmentPayload) => saveAssignment(payload),
     onSuccess: (response) => {
-      if (response.status_code === 200) {
+      if (response.status_code === 200 || response.status_code === 201) {
         queryClient.invalidateQueries({
           queryKey: ['Topic', Number(courseId)],
         });

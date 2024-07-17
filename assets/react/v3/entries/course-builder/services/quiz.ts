@@ -296,7 +296,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
         prerequisites: [],
       },
     },
-    questions: quiz.questions.map((question) => convertedQuestion(question)),
+    questions: (quiz.questions || []).map((question) => convertedQuestion(question)),
   };
 };
 
@@ -457,7 +457,7 @@ export const useExportQuizMutation = () => {
 };
 
 const saveQuiz = (payload: QuizPayload) => {
-  return authApiInstance.post<QuizPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<QuizPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_save',
     ...payload,
   });
@@ -505,23 +505,19 @@ export const useGetQuizDetailsQuery = (quizId: ID) => {
 };
 
 const createQuizQuestion = (quizId: ID) => {
-  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ID, TutorMutationResponse<QuizQuestion>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_create',
     quiz_id: quizId,
   });
 };
 
 export const useCreateQuizQuestionMutation = () => {
-  const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: createQuizQuestion,
     onSuccess: (response) => {
       if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['GetQuizDetails'],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
@@ -538,7 +534,7 @@ export const useCreateQuizQuestionMutation = () => {
 };
 
 const updateQuizQuestion = (payload: QuizUpdateQuestionPayload) => {
-  return authApiInstance.post<QuizUpdateQuestionPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<QuizUpdateQuestionPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_update',
     ...payload,
   });
@@ -559,7 +555,7 @@ export const useUpdateQuizQuestionMutation = () => {
 };
 
 const quizQuestionSorting = (payload: { quiz_id: ID; sorted_question_ids: ID[] }) => {
-  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_sorting',
     ...payload,
   });
@@ -592,7 +588,7 @@ export const useQuizQuestionSortingMutation = () => {
 };
 
 const deleteQuizQuestion = (questionId: ID) => {
-  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_delete',
     question_id: questionId,
   });
@@ -625,7 +621,7 @@ export const useDeleteQuizQuestionMutation = () => {
 };
 
 const duplicateQuizQuestion = (questionId: ID) => {
-  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_duplicate',
     question_id: questionId,
   });
@@ -658,7 +654,7 @@ export const useDuplicateQuizQuestionMutation = () => {
 };
 
 const quizQuestionAnswerOrdering = (payload: QuizQuestionAnswerOrderingPayload) => {
-  return authApiInstance.post<QuizQuestionAnswerOrderingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<QuizQuestionAnswerOrderingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_answer_sorting',
     ...payload,
   });
@@ -691,7 +687,7 @@ export const useQuizQuestionAnswerOrderingMutation = () => {
 };
 
 const createQuizAnswer = (payload: CreateQuizQuestionAnswerPayload) => {
-  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_answer_save',
     ...payload,
   });
@@ -724,7 +720,7 @@ export const useCreateQuizAnswerMutation = () => {
 };
 
 const deleteQuizQuestionAnswer = (answerId: ID) => {
-  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_answer_delete',
     answer_id: answerId,
   });
@@ -760,7 +756,7 @@ const markAnswerAsCorrect = (payload: {
   answerId: ID;
   isCorrect: '1' | '0';
 }) => {
-  return authApiInstance.post<ID, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_mark_answer_as_correct',
     answer_id: payload.answerId,
     is_correct: payload.isCorrect,

@@ -442,8 +442,8 @@ const createCourse = (payload: CoursePayload) => {
   });
 };
 
-export interface TutorMutationResponse {
-  data: number;
+export interface TutorMutationResponse<T> {
+  data: T;
   message: string;
   status_code: number;
 }
@@ -572,7 +572,7 @@ export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrere
 };
 
 const saveZoomMeeting = (payload: ZoomMeetingPayload) => {
-  return authApiInstance.post<ZoomMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<ZoomMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_zoom_save_meeting',
     ...payload,
   });
@@ -636,7 +636,7 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
 };
 
 const saveGoogleMeet = (payload: GoogleMeetMeetingPayload) => {
-  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_google_meet_new_meeting',
     ...payload,
   });
@@ -666,7 +666,7 @@ export const useSaveGoogleMeetMutation = (courseId: string) => {
 };
 
 const deleteGoogleMeet = (postId: string, eventId: string) => {
-  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_google_meet_delete',
     'post-id': postId,
     'event-id': eventId,

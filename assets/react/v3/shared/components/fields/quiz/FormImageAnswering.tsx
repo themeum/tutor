@@ -337,7 +337,6 @@ const styles = {
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
       background-color: ${colorTokens.background.white};
-      cursor: pointer;
   
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};

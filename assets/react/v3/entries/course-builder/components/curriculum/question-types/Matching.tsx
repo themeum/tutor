@@ -81,7 +81,7 @@ const Matching = () => {
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
     defaultValue: [],
-  }).filter((option) => option.belongs_question_type === (imageMatching ? 'image_matching' : 'matching'));
+  });
 
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
@@ -94,8 +94,8 @@ const Matching = () => {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
-      const index = filteredOptionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = filteredOptionsFields[index];
+      const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
+      const previousOption = optionsFields[index];
       return previousOption && option.is_correct !== previousOption.is_correct;
     });
 
@@ -189,7 +189,7 @@ const Matching = () => {
           <DragOverlay>
             <Show when={activeSortItem}>
               {(item) => {
-                const index = filteredOptionsFields.findIndex((option) => option.answer_id === item.answer_id);
+                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
                 return (
                   <Controller
                     key={activeSortId}

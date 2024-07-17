@@ -27,6 +27,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { moveTo, nanoid } from '@Utils/util';
 import {
+  type QuizQuestionType,
   useQuizQuestionAnswerOrderingMutation,
   type QuizForm,
   type QuizQuestionOption,
@@ -36,10 +37,26 @@ const MultipleChoiceAndOrdering = () => {
   const isInitialRenderRef = useRef(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
+  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
+  const multipleCorrectAnswer = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.multipleCorrectAnswer`,
+    defaultValue: false,
+  });
+
+  const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+  const filterByQuestionType = (currentQuestionType: QuizQuestionType) => {
+    if (currentQuestionType === 'multiple_choice') {
+      return multipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
+    }
+
+    return 'ordering';
+  };
+
+  console.log(filterByQuestionType(currentQuestionType));
 
   const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
 
-  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const {
     fields: optionsFields,
     append: appendOption,
@@ -51,15 +68,9 @@ const MultipleChoiceAndOrdering = () => {
     name: `questions.${activeQuestionIndex}.question_answers`,
   });
 
-  const multipleCorrectAnswer = useWatch({
-    control: form.control,
-    name: `questions.${activeQuestionIndex}.multipleCorrectAnswer`,
-    defaultValue: false,
-  });
-
   const filteredOptionsFields = optionsFields.reduce(
     (allOptions, option, index) => {
-      if (option.belongs_question_type === (multipleCorrectAnswer ? 'multiple_choice' : 'single_choice')) {
+      if (option.belongs_question_type === filterByQuestionType(currentQuestionType)) {
         allOptions.push({
           ...option,
           index: index,
@@ -257,7 +268,7 @@ const MultipleChoiceAndOrdering = () => {
               answer_title: '',
               is_correct: '0',
               belongs_question_id: activeQuestionId,
-              belongs_question_type: multipleCorrectAnswer ? 'multiple_choice' : 'single_choice',
+              belongs_question_type: filterByQuestionType(currentQuestionType),
               answer_order: filteredOptionsFields.length,
               answer_two_gap_match: '',
               answer_view_format: '',
