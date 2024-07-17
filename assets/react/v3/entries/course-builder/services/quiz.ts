@@ -17,11 +17,13 @@ import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 
 export type QuizQuestionType =
   | 'true_false'
+  | 'single_choice'
   | 'multiple_choice'
   | 'open_ended'
   | 'fill_in_the_blank'
   | 'short_answer'
   | 'matching'
+  | 'image_matching'
   | 'image_answering'
   | 'ordering';
 
@@ -195,6 +197,7 @@ interface QuizUpdateQuestionPayload {
   question_type: string;
   question_mark: number;
   answer_explanation: string;
+  multipleCorrectAnswer: boolean;
   'question_settings[question_type]': string;
   'question_settings[answer_required]': 0 | 1;
   'question_settings[question_mark]': number;
@@ -215,6 +218,58 @@ interface CreateQuizQuestionAnswerPayload {
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
+  const convertedQuestion = (question: QuizQuestion): QuizQuestion => {
+    switch (question.question_type) {
+      case 'single_choice': {
+        // @ts-expect-error
+        return {
+          ...question,
+          question_type: 'multiple_choice',
+          multipleCorrectAnswer: false,
+          question_settings: {
+            ...question.question_settings,
+            question_type: 'multiple_choice',
+          } as MultipleChoiceQuizQuestion['question_settings'],
+        };
+      }
+      case 'multiple_choice': {
+        return {
+          ...question,
+          question_type: 'multiple_choice',
+          multipleCorrectAnswer: true,
+          question_settings: {
+            ...question.question_settings,
+            question_type: 'multiple_choice',
+          } as MultipleChoiceQuizQuestion['question_settings'],
+        };
+      }
+      case 'matching': {
+        return {
+          ...question,
+          question_type: 'matching',
+          imageMatching: false,
+          question_settings: {
+            ...question.question_settings,
+            question_type: 'matching',
+          } as MatchingQuizQuestion['question_settings'],
+        };
+      }
+      case 'image_matching': {
+        // @ts-expect-error
+        return {
+          ...question,
+          question_type: 'matching',
+          imageMatching: true,
+          question_settings: {
+            ...question.question_settings,
+            question_type: 'matching',
+          } as MatchingQuizQuestion['question_settings'],
+        };
+      }
+      default:
+        return question;
+    }
+  };
   return {
     quiz_title: quiz.post_title || '',
     quiz_description: quiz.post_content || '',
@@ -241,7 +296,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
         prerequisites: [],
       },
     },
-    questions: quiz.questions,
+    questions: quiz.questions.map((question) => convertedQuestion(question)),
   };
 };
 
@@ -276,16 +331,29 @@ export const convertQuizFormDataToPayload = (
 };
 
 export const convertQuizFormDataToPayloadForUpdate = (data: QuizQuestion): QuizUpdateQuestionPayload => {
+  const finalQuestionType = () => {
+    switch (data.question_type) {
+      case 'multiple_choice': {
+        return (data as MultipleChoiceQuizQuestion).multipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
+      }
+      case 'matching':
+        return (data as MatchingQuizQuestion).imageMatching ? 'image_matching' : 'matching';
+      default:
+        return data.question_type;
+    }
+  };
+
   return {
     question_id: data.question_id,
     question_title: data.question_title,
     question_description: data.question_description,
-    question_type: data.question_type,
+    question_type: finalQuestionType(),
     question_mark: data.question_mark,
     answer_explanation: data.answer_explanation,
-    'question_settings[question_type]': data.question_type,
+    'question_settings[question_type]': finalQuestionType(),
     'question_settings[answer_required]': data.question_settings.answer_required ? 1 : 0,
     'question_settings[question_mark]': data.question_mark,
+    multipleCorrectAnswer: (data as MultipleChoiceQuizQuestion).multipleCorrectAnswer,
   };
 };
 
@@ -630,6 +698,7 @@ const createQuizAnswer = (payload: CreateQuizQuestionAnswerPayload) => {
 };
 
 export const useCreateQuizAnswerMutation = () => {
+  const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
@@ -641,6 +710,9 @@ export const useCreateQuizAnswerMutation = () => {
           type: 'success',
         });
       }
+      // queryClient.invalidateQueries({
+      //   queryKey: ['GetQuizDetails'],
+      // });
     },
     onError: (error: ErrorResponse) => {
       showToast({
@@ -703,9 +775,6 @@ export const useMarkAnswerAsCorrectMutation = () => {
     mutationFn: markAnswerAsCorrect,
     onSuccess: (response) => {
       if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['GetQuizDetails'],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',

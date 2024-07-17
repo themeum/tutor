@@ -50,6 +50,9 @@ const ImageAnswering = () => {
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
+
+  const filteredOptionsFields = optionsFields.filter((option) => option.belongs_question_type === 'image_answering');
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -63,21 +66,21 @@ const ImageAnswering = () => {
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
     defaultValue: [],
-  });
+  }).filter((option) => option.belongs_question_type === 'image_answering');
 
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
     }
 
-    return optionsFields.find((item) => item.answer_id === activeSortId);
-  }, [activeSortId, optionsFields]);
+    return filteredOptionsFields.find((item) => item.answer_id === activeSortId);
+  }, [activeSortId, filteredOptionsFields]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
-      const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = optionsFields[index] || {};
+      const index = filteredOptionsFields.findIndex((item) => item.answer_id === option.answer_id);
+      const previousOption = filteredOptionsFields[index] || {};
       return option?.is_correct !== previousOption?.is_correct;
     });
 
@@ -114,8 +117,8 @@ const ImageAnswering = () => {
           }
 
           if (active.id !== over.id) {
-            const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
-            const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
+            const activeIndex = filteredOptionsFields.findIndex((item) => item.answer_id === active.id);
+            const overIndex = filteredOptionsFields.findIndex((item) => item.answer_id === over.id);
 
             const updatedOptionsOrder = moveTo(
               form.watch(`questions.${activeQuestionIndex}.question_answers`),
@@ -135,10 +138,10 @@ const ImageAnswering = () => {
         }}
       >
         <SortableContext
-          items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
+          items={filteredOptionsFields.map((item) => ({ ...item, id: item.answer_id }))}
           strategy={verticalListSortingStrategy}
         >
-          <For each={optionsFields}>
+          <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
                 key={option.id}
@@ -169,7 +172,7 @@ const ImageAnswering = () => {
           <DragOverlay>
             <Show when={activeSortItem}>
               {(item) => {
-                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
+                const index = filteredOptionsFields.findIndex((option) => option.answer_id === item.answer_id);
                 return (
                   <Controller
                     key={activeSortId}
@@ -212,13 +215,13 @@ const ImageAnswering = () => {
               is_correct: '0',
               belongs_question_id: activeQuestionId,
               belongs_question_type: 'image_answering',
-              answer_order: optionsFields.length,
+              answer_order: filteredOptionsFields.length,
               answer_two_gap_match: '',
               answer_view_format: '',
             },
             {
               shouldFocus: true,
-              focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
+              focusName: `questions.${activeQuestionIndex}.question_answers.${filteredOptionsFields.length}.answer_title`,
             }
           )
         }
@@ -246,6 +249,7 @@ const styles = {
     gap: ${spacing[8]};
     color: ${colorTokens.text.brand};
     margin-top: ${spacing[28]};
+    margin-left: ${spacing[8]};
 
     svg {
       color: ${colorTokens.icon.brand};

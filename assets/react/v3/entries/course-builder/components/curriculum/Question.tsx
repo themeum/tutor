@@ -32,7 +32,7 @@ interface QuestionProps {
   onRemoveQuestion: () => void;
 }
 
-const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
+const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>, IconCollection> = {
   true_false: 'quizTrueFalse',
   multiple_choice: 'quizMultiChoice',
   open_ended: 'quizEssay',
@@ -87,7 +87,14 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       }}
     >
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
-        <SVGIcon name={questionTypeIconMap[question.question_type]} width={24} height={24} data-question-icon />
+        <SVGIcon
+          name={
+            questionTypeIconMap[question.question_type as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]
+          }
+          width={24}
+          height={24}
+          data-question-icon
+        />
         <button {...listeners} type="button" css={styleUtils.resetButton}>
           <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
         </button>

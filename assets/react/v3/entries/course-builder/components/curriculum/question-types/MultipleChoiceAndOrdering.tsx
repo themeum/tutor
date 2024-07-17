@@ -50,6 +50,26 @@ const MultipleChoiceAndOrdering = () => {
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers`,
   });
+
+  const multipleCorrectAnswer = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.multipleCorrectAnswer`,
+    defaultValue: false,
+  });
+
+  const filteredOptionsFields = optionsFields.reduce(
+    (allOptions, option, index) => {
+      if (option.belongs_question_type === (multipleCorrectAnswer ? 'multiple_choice' : 'single_choice')) {
+        allOptions.push({
+          ...option,
+          index: index,
+        });
+      }
+      return allOptions;
+    },
+    [] as Array<QuizQuestionOption & { index: number }>
+  );
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -70,14 +90,8 @@ const MultipleChoiceAndOrdering = () => {
       return null;
     }
 
-    return optionsFields.find((item) => item.answer_id === activeSortId);
-  }, [activeSortId, optionsFields]);
-
-  const hasMultipleCorrectAnswers = useWatch({
-    control: form.control,
-    name: `questions.${activeQuestionIndex}.multipleCorrectAnswer`,
-    defaultValue: false,
-  });
+    return filteredOptionsFields.find((item) => item.answer_id === activeSortId);
+  }, [activeSortId, filteredOptionsFields]);
 
   useEffect(() => {
     isInitialRenderRef.current = true;
@@ -87,17 +101,17 @@ const MultipleChoiceAndOrdering = () => {
   }, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!hasMultipleCorrectAnswers && !isInitialRenderRef.current) {
-      const resetOptions = optionsFields.map((option) => ({ ...option, isCorrect: false }));
-      form.setValue(`questions.${activeQuestionIndex}.question_answers`, resetOptions);
-    }
-    isInitialRenderRef.current = false;
-  }, [hasMultipleCorrectAnswers]);
+  // useEffect(() => {
+  //   if (!multipleCorrectAnswer && !isInitialRenderRef.current) {
+  //     const resetOptions = optionsFields.map((option) => ({ ...option, is_correct: '0' as '0' | '1' }));
+  //     form.setValue(`questions.${activeQuestionIndex}.question_answers`, resetOptions);
+  //   }
+  //   isInitialRenderRef.current = false;
+  // }, [multipleCorrectAnswer]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (hasMultipleCorrectAnswers) {
+    if (multipleCorrectAnswer) {
       return;
     }
 
@@ -114,7 +128,7 @@ const MultipleChoiceAndOrdering = () => {
     const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
     const updatedOptions = [...currentOptions];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: true });
+    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
 
     for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
@@ -142,8 +156,8 @@ const MultipleChoiceAndOrdering = () => {
           }
 
           if (active.id !== over.id) {
-            const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
-            const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
+            const activeIndex = filteredOptionsFields.findIndex((item) => item.answer_id === active.id);
+            const overIndex = filteredOptionsFields.findIndex((item) => item.answer_id === over.id);
 
             const updatedOptionsOrder = moveTo(
               form.watch(`questions.${activeQuestionIndex}.question_answers`),
@@ -163,29 +177,31 @@ const MultipleChoiceAndOrdering = () => {
         }}
       >
         <SortableContext
-          items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
+          items={filteredOptionsFields.map((item) => ({ ...item, id: item.answer_id }))}
           strategy={verticalListSortingStrategy}
         >
-          <For each={optionsFields}>
+          <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
-                key={option.id}
+                key={`${option.answer_id}-${option.is_correct}`}
                 control={form.control}
-                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
+                name={
+                  `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
+                }
                 render={(controllerProps) => (
                   <FormMultipleChoiceAndOrdering
                     {...controllerProps}
-                    hasMultipleCorrectAnswers={hasMultipleCorrectAnswers}
+                    hasMultipleCorrectAnswers={multipleCorrectAnswer}
                     onDuplicateOption={() => {
                       const duplicateOption: QuizQuestionOption = {
                         ...option,
-                        answer_id: nanoid(),
+                        answer_id: '',
                         is_correct: '0',
                       };
-                      const duplicateIndex = index + 1;
+                      const duplicateIndex = option.index + 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
-                    onRemoveOption={() => removeOption(index)}
+                    onRemoveOption={() => removeOption(option.index)}
                     index={index}
                   />
                 )}
@@ -198,7 +214,7 @@ const MultipleChoiceAndOrdering = () => {
           <DragOverlay>
             <Show when={activeSortItem}>
               {(item) => {
-                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
+                const index = filteredOptionsFields.findIndex((option) => option.answer_id === item.answer_id);
                 return (
                   <Controller
                     key={activeSortId}
@@ -209,7 +225,7 @@ const MultipleChoiceAndOrdering = () => {
                     render={(controllerProps) => (
                       <FormMultipleChoiceAndOrdering
                         {...controllerProps}
-                        hasMultipleCorrectAnswers={hasMultipleCorrectAnswers}
+                        hasMultipleCorrectAnswers={multipleCorrectAnswer}
                         onDuplicateOption={() => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
@@ -241,14 +257,14 @@ const MultipleChoiceAndOrdering = () => {
               answer_title: '',
               is_correct: '0',
               belongs_question_id: activeQuestionId,
-              belongs_question_type: 'multiple_choice',
-              answer_order: optionsFields.length,
+              belongs_question_type: multipleCorrectAnswer ? 'multiple_choice' : 'single_choice',
+              answer_order: filteredOptionsFields.length,
               answer_two_gap_match: '',
               answer_view_format: '',
             },
             {
               shouldFocus: true,
-              focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
+              focusName: `questions.${activeQuestionIndex}.question_answers.${filteredOptionsFields.length}.answer_title`,
             }
           )
         }

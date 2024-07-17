@@ -110,22 +110,9 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   }, [isEditing]);
 
   return (
-    <div
-      {...attributes}
-      css={styles.option({ isSelected: !!Number(inputValue.is_correct), isEditing })}
-      ref={setNodeRef}
-      style={style}
-    >
-      <button type="button" css={styleUtils.resetButton} onClick={handleCorrectAnswer}>
-        <SVGIcon
-          data-check-icon
-          name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
-          height={32}
-          width={32}
-        />
-      </button>
+    <div {...attributes} css={styles.option({ isEditing })} ref={setNodeRef} style={style}>
       <div
-        css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isEditing })}
+        css={styles.optionLabel({ isEditing })}
         onClick={() => {
           setIsEditing(true);
         }}
@@ -337,10 +324,8 @@ export default FormMatching;
 
 const styles = {
   option: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
       ${styleUtils.display.flex()};
@@ -349,11 +334,6 @@ const styles = {
       color: ${colorTokens.text.subdued};
       gap: ${spacing[10]};
       align-items: center;
-  
-      [data-check-icon] {
-        opacity: 0;
-        fill: none;
-      }
 
       [data-visually-hidden] {
         opacity: 0;
@@ -364,10 +344,6 @@ const styles = {
       }
   
       &:hover {
-        [data-check-icon] {
-          opacity: 1;
-        }
-
         [data-visually-hidden] {
           opacity: 1;
         }
@@ -381,17 +357,6 @@ const styles = {
         `
         }
       }
-  
-  
-      ${
-        isSelected &&
-        css`
-          [data-check-icon] {
-            opacity: 1;
-            color: ${colorTokens.bg.success};
-          }
-        `
-      }
 
       ${
         isEditing &&
@@ -403,10 +368,8 @@ const styles = {
       }
     `,
   optionLabel: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
       display: flex;
@@ -421,27 +384,15 @@ const styles = {
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
       }
-  
-      ${
-        isSelected &&
-        css`
-          background-color: ${colorTokens.background.success.fill40};
-          color: ${colorTokens.text.primary};
-  
-          &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
-          }
-        `
-      }
 
       ${
         isEditing &&
         css`
           background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
 
           &:hover {
-            box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+            box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
           }
         `
       }

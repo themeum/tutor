@@ -131,7 +131,9 @@ const Curriculum = () => {
           <div css={styles.content}>
             <Show
               when={
-                !courseCurriculumQuery.isLoading && courseCurriculumQuery.data && courseCurriculumQuery.data.length > 0
+                !courseCurriculumQuery.isLoading &&
+                courseCurriculumQuery.data &&
+                (courseCurriculumQuery.data.length > 0 || content.length > 0)
               }
               fallback={
                 <EmptyState
@@ -151,13 +153,9 @@ const Curriculum = () => {
                         // @TODO: will be updated later.
                         setContent((previous) => {
                           return [
-                            ...previous.map((item) => ({
-                              ...item,
-                              isCollapsed: true,
-                            })),
                             {
                               id: nanoid(),
-                              title: 'New Course Topic',
+                              title: '',
                               summary: '',
                               contents: [],
                               isCollapsed: false,

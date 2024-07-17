@@ -25,6 +25,7 @@ import {
   type QuizForm,
   useGetQuizDetailsQuery,
   useSaveQuizMutation,
+  useUpdateQuizQuestionMutation,
 } from '@CourseBuilderServices/quiz';
 import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 
@@ -63,6 +64,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   const saveQuizMutation = useSaveQuizMutation();
   const getQuizDetailsQuery = useGetQuizDetailsQuery(localQuizId);
+  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation();
 
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {

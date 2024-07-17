@@ -16,6 +16,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import {
+  type QuizForm,
   useCreateQuizAnswerMutation,
   useDeleteQuizAnswerMutation,
   useMarkAnswerAsCorrectMutation,
@@ -23,6 +24,7 @@ import {
 } from '@CourseBuilderServices/quiz';
 import { nanoid } from '@Utils/util';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { useFormContext } from 'react-hook-form';
 
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -38,7 +40,8 @@ const FormMultipleChoiceAndOrdering = ({
   onRemoveOption,
   index,
 }: FormMultipleChoiceAndOrderingProps) => {
-  const { activeQuestionId } = useQuizModalContext();
+  const form = useFormContext<QuizForm>();
+  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
   const inputValue = field.value ?? {
     answer_id: nanoid(),
     answer_title: '',
@@ -304,6 +307,7 @@ const FormMultipleChoiceAndOrdering = ({
                     event.stopPropagation();
                     setIsEditing(false);
                     field.onChange(previousValue);
+
                     if (!inputValue.answer_title && !inputValue.image_url && !inputValue.answer_id) {
                       onRemoveOption();
                     }
@@ -325,7 +329,15 @@ const FormMultipleChoiceAndOrdering = ({
                       answer_view_format: 'both',
                     });
 
+                    const currentAnswerIndex = form
+                      .getValues(`questions.${activeQuestionIndex}.question_answers`)
+                      .findIndex((answer) => answer.answer_id === inputValue.answer_id);
+
                     if (response.status_code === 201 || response.status_code === 200) {
+                      form.setValue(`questions.${activeQuestionIndex}.question_answers.${currentAnswerIndex}`, {
+                        ...inputValue,
+                        answer_id: response.data,
+                      });
                       setIsEditing(false);
                     }
                   }}
