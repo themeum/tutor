@@ -20,6 +20,7 @@ class Settings {
 	 */
 	public function __construct() {
 		add_filter( 'tutor/options/extend/attr', array( __CLASS__, 'add_ecommerce_settings' ) );
+		add_action( 'tutor_after_block_single_item', __CLASS__ . '::add_manual_payment_btn' );
 	}
 
 	/**
@@ -240,5 +241,28 @@ class Settings {
 		);
 
 		return apply_filters( 'tutor_after_ecommerce_settings', $fields + $arr );
+	}
+
+	/**
+	 * Show add manual payment btn
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $slug Block slug.
+	 *
+	 * @return void
+	 */
+	public static function add_manual_payment_btn( $slug ) {
+		if ( 'manual_payment_gateway' !== $slug ) {
+			return;
+		}
+		?>
+		<div class="tutor-add-payment-method-container">
+			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
+				<?php esc_html_e( '+ Add manual payment', 'tutor' ); ?>
+			</button>
+		</div>
+		<?php
+		require_once tutor()->path . 'views/modal/ecommerce/add-manual-payment.php';
 	}
 }

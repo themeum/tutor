@@ -132,36 +132,13 @@ class Ecommerce {
 	}
 
 	/**
-	 * Get default automate payment gateways
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_manual_payment_gateways(): array {
-		$fields   = self::get_manual_payment_setting_fields();
-		$gateways = array(
-			array(
-				'label'       => $fields[0]['label'],
-				'icon'        => tutor()->url . 'assets/images/payment-gateways/bank-transfer.svg',
-				'package_url' => '',
-				'is_active'   => true,
-			),
-		);
-
-		return apply_filters( 'tutor_manual_payment_gateways', $gateways );
-	}
-
-	/**
 	 * Get automate payment setting fields
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param bool $is_manual_payment is manual payment.
-	 *
 	 * @return array
 	 */
-	public static function get_automate_payment_setting_fields( $is_manual_payment = false ) {
+	public static function get_automate_payment_setting_fields() {
 		$fields = array(
 			array(
 				'key'     => OptionKeys::PAYMENT_METHOD_PAYPAL,
@@ -190,16 +167,7 @@ class Ecommerce {
 	 * @return array
 	 */
 	public static function get_manual_payment_setting_fields() {
-		$fields = array(
-			array(
-				'key'     => OptionKeys::PAYMENT_METHOD_BANK_TRANSFER,
-				'type'    => 'toggle_switch',
-				'label'   => __( 'Bank Transfer', 'tutor' ),
-				'default' => 'off',
-				'desc'    => __( 'Enable this to accept payments via Bank Transfer.', 'tutor' ),
-			),
-		);
-
+		$fields = array();
 		return $fields;
 	}
 }

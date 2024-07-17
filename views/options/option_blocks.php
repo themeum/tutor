@@ -19,13 +19,15 @@ $block_slug = $blocks['slug'] ?? '';
 				<div class="tutor-fs-6 tutor-color-muted"><?php echo esc_attr( $blocks['label'] ); ?></div>
 			</div>
 		<?php endif; ?>
-		<div class="item-wrapper">
-			<?php
-			foreach ( $blocks['fields'] as $field ) :
-				$this->generate_field( $field );
-			endforeach;
-			?>
-		</div>
+		<?php if ( ! empty( $blocks['fields'] ) ) : ?>
+			<div class="item-wrapper">
+				<?php
+				foreach ( $blocks['fields'] as $field ) :
+					$this->generate_field( $field );
+				endforeach;
+				?>
+			</div>
+		<?php endif; ?>
 		<?php do_action( 'tutor_after_block_single_item', $block_slug ); ?>
 	</div>
 
