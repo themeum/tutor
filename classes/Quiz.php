@@ -1764,14 +1764,18 @@ class Quiz {
 			$wpdb->update( $table_answer, $answer_data, array( 'answer_id' => $answer_id ) );
 		} else {
 			$wpdb->insert( $table_answer, $answer_data );
+			$answer_id = $wpdb->insert_id;
 		}
 
 		if ( $is_update ) {
-			$this->json_response( __( 'Question answer updated successfully', 'tutor' ) );
+			$this->json_response(
+				__( 'Question answer updated successfully', 'tutor' ),
+				$answer_id
+			);
 		} else {
 			$this->json_response(
 				__( 'Question answer saved successfully', 'tutor' ),
-				null,
+				$answer_id,
 				HttpHelper::STATUS_CREATED
 			);
 		}
