@@ -58,39 +58,6 @@ class Course extends Tutor_Base {
 	);
 
 	/**
-	 * Video sources
-	 *
-	 * @since 2.3.0
-	 *
-	 * @var array
-	 */
-	public $supported_video_sources = array(
-		'external_url',
-		'shortcode',
-		'youtube',
-		'vimeo',
-		'embedded',
-	);
-
-	/**
-	 * Video params
-	 *
-	 * @since 3.0.0
-	 *
-	 * @var array
-	 */
-	public $video_params = array(
-		'source'              => '',
-		'source_video_id'     => '',
-		'poster'              => '',
-		'source_external_url' => '',
-		'source_shortcode'    => '',
-		'source_youtube'      => '',
-		'source_vimeo'        => '',
-		'source_embedded'     => '',
-	);
-
-	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
