@@ -84,7 +84,6 @@ function CancelOrderModal({ title, closeModal, actions, total }: CancelOrderModa
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          console.log(values);
           alert('@TODO: will be implemented later.');
         })}
       >

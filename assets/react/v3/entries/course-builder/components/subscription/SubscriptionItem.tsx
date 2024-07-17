@@ -1,174 +1,144 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormDateInput from '@Components/fields/FormDateInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTimeInput from '@Components/fields/FormTimeInput';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { Subscription } from '@CourseBuilderComponents/course-basic/SubscriptionPreview';
+import type { Subscription } from '@CourseBuilderServices/subscription';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { Controller, type UseFormReturn } from 'react-hook-form';
-
-function OfferSalePrice({ form }: { form: UseFormReturn<Subscription> }) {
-  const hasSale = form.watch('has_sale');
-  const { transitions } = useAnimation({
-    animationType: AnimationType.slideDown,
-    data: hasSale,
-  });
-
-  return (
-    <div css={saleStyles.wrapper}>
-      <div>
-        <Controller
-          control={form.control}
-          name="has_sale"
-          render={(props) => <FormSwitch {...props} label="Offer sale price" />}
-        />
-      </div>
-      {transitions((style, openState) => {
-        if (openState) {
-          return (
-            <AnimatedDiv style={style} css={saleStyles.inputWrapper}>
-              <Controller
-                control={form.control}
-                name="sale_price"
-                render={(props) => <FormInputWithContent {...props} label="Sale price" content={'$'} />}
-              />
-              <Controller
-                control={form.control}
-                name="schedule_sale_price"
-                render={(props) => <FormCheckbox {...props} label="Schedule the sale price" />}
-              />
-              <div css={saleStyles.datetimeWrapper}>
-                <label>Schedule start</label>
-                <div css={styleUtils.dateAndTimeWrapper}>
-                  <Controller
-                    name="schedule_start_date"
-                    control={form.control}
-                    rules={{
-                      required: __('Schedule date is required', 'tutor'),
-                    }}
-                    render={(controllerProps) => (
-                      <FormDateInput {...controllerProps} isClearable={false} placeholder="yyyy-mm-dd" />
-                    )}
-                  />
-
-                  <Controller
-                    name="schedule_start_time"
-                    control={form.control}
-                    rules={{
-                      required: __('Schedule time is required', 'tutor'),
-                    }}
-                    render={(controllerProps) => (
-                      <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
-                    )}
-                  />
-                </div>
-              </div>
-              <div css={saleStyles.datetimeWrapper}>
-                <label>Schedule end</label>
-                <div css={styleUtils.dateAndTimeWrapper}>
-                  <Controller
-                    name="schedule_end_date"
-                    control={form.control}
-                    rules={{
-                      required: __('Schedule date is required', 'tutor'),
-                    }}
-                    render={(controllerProps) => (
-                      <FormDateInput {...controllerProps} isClearable={false} placeholder="yyyy-mm-dd" />
-                    )}
-                  />
-
-                  <Controller
-                    name="schedule_end_time"
-                    control={form.control}
-                    rules={{
-                      required: __('Schedule time is required', 'tutor'),
-                    }}
-                    render={(controllerProps) => (
-                      <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
-                    )}
-                  />
-                </div>
-              </div>
-            </AnimatedDiv>
-          );
-        }
-      })}
-    </div>
-  );
-}
-
-const saleStyles = {
-  wrapper: css`
-		background-color: ${colorTokens.background.white};
-		padding: ${spacing[12]};
-		border: 1px solid ${colorTokens.stroke.default};
-		border-radius: ${borderRadius[8]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[20]};
-	`,
-  inputWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-	`,
-  datetimeWrapper: css`
-		label {
-			${typography.caption()};
-			color: ${colorTokens.text.title};
-		}
-	`,
-};
+import { useState } from 'react';
+import { Controller } from 'react-hook-form';
+import { OfferSalePrice } from './OfferSalePrice';
+import { formatRepeatUnit } from './PreviewItem';
 
 export default function SubscriptionItem({
   subscription,
   toggleCollapse,
-}: { subscription: Subscription & { isEdit: boolean }; toggleCollapse: (id: number) => void }) {
+}: { subscription: Subscription & { isExpanded: boolean }; toggleCollapse: (id: number) => void }) {
+  const [isEditTitle, setIsEditTitle] = useState(false);
   const form = useFormWithGlobalError<Subscription>({
     defaultValues: subscription,
   });
+
   const { transitions } = useAnimation({
-    data: subscription.isEdit,
+    data: subscription.isExpanded,
     animationType: AnimationType.slideDown,
   });
 
+  const repeatUnit = form.watch('repeat_unit', 'month');
   const chargeEnrolmentFee = form.watch('charge_enrolment_fee');
   const enableTrial = form.watch('enable_trial');
+  const { isDirty } = form.formState;
+
+  const lifetimePresets = [3, 6, 9, 12];
+  const lifetimeOptions = [
+    ...lifetimePresets.map((preset) => ({
+      label: `${preset.toString()} ${formatRepeatUnit(repeatUnit, preset)}`,
+      value: preset,
+    })),
+    {
+      label: __('Until cancelled', 'tutor'),
+      value: 'until_cancellation',
+    },
+  ];
 
   return (
-    <div css={styles.subscription}>
-      <div css={styles.subscriptionHeader(subscription.isEdit)}>
+    <form
+      css={styles.subscription}
+      onSubmit={form.handleSubmit((values) => {
+        alert('@TODO: will be implemented later.');
+      })}
+    >
+      <div css={styles.subscriptionHeader(subscription.isExpanded)}>
         <div css={styles.grabber}>
           <SVGIcon name="threeDotsVerticalDouble" />
-          <span>{subscription.title}</span>
+          <Show
+            when={isEditTitle}
+            fallback={
+              <span title={form.getValues('title')} onDoubleClick={() => setIsEditTitle(true)}>
+                {form.getValues('title')}
+              </span>
+            }
+          >
+            <div css={styles.titleField}>
+              <Controller
+                control={form.control}
+                name="title"
+                render={(props) => (
+                  <FormInput
+                    {...props}
+                    placeholder="Enter subscription name"
+                    onKeyDown={(key) => {
+                      if (key === 'Enter') {
+                        setIsEditTitle(false);
+                        return;
+                      }
+
+                      if (key === 'Escape') {
+                        form.resetField('title');
+                        setIsEditTitle(false);
+                        return;
+                      }
+                    }}
+                  />
+                )}
+              />
+              <div css={styles.titleActions}>
+                <Button
+                  variant="text"
+                  size="small"
+                  onClick={() => {
+                    form.resetField('title');
+                    setIsEditTitle(false);
+                  }}
+                >
+                  {__('Cancel', 'tutor')}
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={() => {
+                    setIsEditTitle(false);
+                  }}
+                >
+                  {__('Ok', 'tutor')}
+                </Button>
+              </div>
+            </div>
+          </Show>
         </div>
-        <div css={styles.actions(subscription.isEdit)}>
-          <button type="button">
-            <SVGIcon name="copyPaste" width={24} height={24} />
-          </button>
-          <button type="button">
-            <SVGIcon name="delete" width={24} height={24} />
-          </button>
-          <button type="button" onClick={() => toggleCollapse(subscription.id)}>
-            <SVGIcon name="chevronDown" width={24} height={24} />
-          </button>
-        </div>
+        <Show when={!isEditTitle}>
+          <div css={styles.actions(subscription.isExpanded)}>
+            <button type="button" onClick={() => setIsEditTitle(true)} title={__('Edit subscription title', 'tutor')}>
+              <SVGIcon name="edit" width={24} height={24} />
+            </button>
+            <button type="button" title={__('Duplicate subscription', 'tutor')}>
+              <SVGIcon name="copyPaste" width={24} height={24} />
+            </button>
+            <button type="button" title={__('Delete subscription', 'tutor')}>
+              <SVGIcon name="delete" width={24} height={24} />
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleCollapse(subscription.id)}
+              title={__('Collapse/expand subscription', 'tutor')}
+            >
+              <SVGIcon name="chevronDown" width={24} height={24} />
+            </button>
+          </div>
+        </Show>
       </div>
       {transitions((style, openState) => {
         if (openState) {
           return (
-            <AnimatedDiv style={style} css={styles.itemWrapper(subscription.isEdit)}>
+            <AnimatedDiv style={style} css={styles.itemWrapper(subscription.isExpanded)}>
               <div css={styles.subscriptionContent}>
                 <Controller
                   control={form.control}
@@ -184,14 +154,7 @@ export default function SubscriptionItem({
                     />
                   )}
                 />
-                <div
-                  css={css`
-                    display: grid;
-                    grid-template-columns: 2fr 1fr 1fr;
-                    align-items: center;
-                    gap: ${spacing[8]};
-                  `}
-                >
+                <div css={styles.inputGroup}>
                   <Controller
                     control={form.control}
                     name="price"
@@ -242,28 +205,7 @@ export default function SubscriptionItem({
                       {...props}
                       label={__('Length of the plan', 'tutor')}
                       placeholder={__('Select the length of the plan', 'tutor')}
-                      options={[
-                        {
-                          label: '3',
-                          value: 3,
-                        },
-                        {
-                          label: '6',
-                          value: 6,
-                        },
-                        {
-                          label: '9',
-                          value: 9,
-                        },
-                        {
-                          label: '12',
-                          value: 12,
-                        },
-                        {
-                          label: __('Until cancelled', 'tutor'),
-                          value: 'until_cancellation',
-                        },
-                      ]}
+                      options={lifetimeOptions}
                     />
                   )}
                 />
@@ -340,13 +282,26 @@ export default function SubscriptionItem({
                   </div>
                 </Show>
 
+                <Controller
+                  control={form.control}
+                  name="do_not_provide_certificate"
+                  render={(props) => <FormCheckbox {...props} label={__('Do not provide certificate', 'tutor')} />}
+                />
+
                 <OfferSalePrice form={form} />
               </div>
               <div css={styles.subscriptionFooter}>
-                <Button variant="text" size="small">
+                <Button
+                  variant="text"
+                  size="small"
+                  onClick={() => {
+                    form.reset();
+                  }}
+                  disabled={!isDirty}
+                >
                   {__('Discard', 'tutor')}
                 </Button>
-                <Button variant="secondary" size="small">
+                <Button variant="secondary" size="small" type="submit">
                   {__('Save', 'tutor')}
                 </Button>
               </div>
@@ -354,7 +309,7 @@ export default function SubscriptionItem({
           );
         }
       })}
-    </div>
+    </form>
   );
 }
 
@@ -365,18 +320,43 @@ const styles = {
 		gap: ${spacing[4]};
 		${typography.body()};
 		color: ${colorTokens.text.hints};
+		width: 100%;
+		min-height: 40px;
 
 		svg {
 			color: ${colorTokens.icon.default};
 			cursor: grab;
+			flex-shrink: 0;
 		}
+
+		span {
+			max-width: 496px;
+			width: 100%;
+			${styleUtils.textEllipsis};
+		}
+	`,
+  titleField: css`
+		width: 100%;
+		position: relative;
+
+		input {
+			padding-right: ${spacing[128]} !important;
+		}
+	`,
+  titleActions: css`
+		position: absolute;
+		right: ${spacing[4]};
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		align-items: center;
+		gap: ${spacing[8]};
 	`,
   subscription: css`
 		width: 100%;
 		border: 1px solid ${colorTokens.stroke.default};
 		border-radius: ${borderRadius.card};
 		overflow: hidden;
-    
 	`,
   itemWrapper: (isActive = false) => css`
     ${
@@ -403,8 +383,6 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[12]};
-
-    
 	`,
   subscriptionFooter: css`
 		background-color: ${colorTokens.background.white};
@@ -428,7 +406,6 @@ const styles = {
 			align-items: center;
 			justify-content: center;
 			transition: color 0.3s ease;
-			
 
 			&:last-of-type {
 				transition: transform 0.3s ease;
@@ -452,18 +429,22 @@ const styles = {
 		}
 	`,
   collapse: (isEdit: boolean) => css`
+		transition: transform 0.3s ease;
 		svg {
 			width: 16px;
 			height: 16px;
 		}
-
-		transition: transform 0.3s ease;
-
 		${
       isEdit &&
       css`
 			transform: rotate(180deg);
 		`
     }
+	`,
+  inputGroup: css`
+		display: grid;
+		grid-template-columns: 2fr 1fr 1fr;
+		align-items: center;
+		gap: ${spacing[8]};
 	`,
 };

@@ -17,9 +17,9 @@ import { colorTokens, headerHeight, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
-import SubscriptionPreview from '@CourseBuilderComponents/course-basic/SubscriptionPreview';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 import {
   type CourseFormData,
   type PricingCategory,
@@ -246,7 +246,7 @@ const CourseBasic = () => {
           )}
         />
 
-        <Show when={courseCategory === 'regular'} fallback={<SubscriptionPreview />}>
+        <Show when={courseCategory === 'regular'} fallback={<SubscriptionPreview courseId={courseId} />}>
           <Controller
             name="course_price_type"
             control={form.control}

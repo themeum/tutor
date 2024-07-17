@@ -55,7 +55,6 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          console.log(values);
           alert('@TODO: will be implemented later.');
         })}
       >
