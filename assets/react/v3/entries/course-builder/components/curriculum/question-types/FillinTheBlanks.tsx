@@ -5,6 +5,7 @@ import { styleUtils } from '@Utils/style-utils';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import FormFillInTheBlanks from '@Components/fields/quiz/FormFillInTheBlanks';
+import { spacing } from '@Config/styles';
 
 const FillInTheBlanks = () => {
   const form = useFormContext<QuizForm>();
@@ -26,6 +27,6 @@ export default FillInTheBlanks;
 const styles = {
   optionWrapper: css`
       ${styleUtils.display.flex('column')};
-      padding-left: 42px;
+      padding-left: ${spacing[40]};
     `,
 };

@@ -115,7 +115,7 @@ const LessonModal = ({
         title: lessonDetails.post_title || '',
         description: lessonDetails.post_content || '',
         thumbnail: {
-          id: 0,
+          id: lessonDetails.thumbnail_id ? Number(lessonDetails.thumbnail_id) : 0,
           title: '',
           url: lessonDetails.thumbnail || '',
         },
@@ -216,7 +216,7 @@ const LessonModal = ({
               <FormImageInput
                 {...controllerProps}
                 label={__('Featured Image', 'tutor')}
-                buttonText={__('Upload Course Thumbnail', 'tutor')}
+                buttonText={__('Upload Featured Image', 'tutor')}
                 infoText={__('Size: 700x430 pixels', 'tutor')}
               />
             )}

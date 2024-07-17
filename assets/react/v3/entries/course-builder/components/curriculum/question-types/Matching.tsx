@@ -76,7 +76,7 @@ const Matching = () => {
     const changedOptions = currentOptions.filter((option) => {
       const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
       const previousOption = optionsFields[index];
-      return option.is_correct !== previousOption.is_correct;
+      return previousOption && option.is_correct !== previousOption.is_correct;
     });
 
     if (changedOptions.length === 0) {

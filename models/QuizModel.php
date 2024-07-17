@@ -1044,6 +1044,20 @@ class QuizModel {
 	}
 
 	/**
+	 * Get a question record.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $question_id quiz question id.
+	 *
+	 * @return array|object|null|void
+	 */
+	public static function get_question( $question_id ) {
+		global $wpdb;
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = %d", $question_id ) );
+	}
+
+	/**
 	 * Get all answer's of a quiz question.
 	 *
 	 * @since 3.0.0

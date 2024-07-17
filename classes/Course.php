@@ -40,6 +40,14 @@ class Course extends Tutor_Base {
 	const PRICE_TYPE_PAID = 'paid';
 
 	/**
+	 * Course price and sale price
+	 *
+	 * @since 3.0.0
+	 */
+	const COURSE_PRICE_META      = 'tutor_course_price';
+	const COURSE_SALE_PRICE_META = 'tutor_course_sale_price';
+
+	/**
 	 * Additional course meta info
 	 *
 	 * @var array
@@ -47,39 +55,6 @@ class Course extends Tutor_Base {
 	private $additional_meta = array(
 		'_tutor_enable_qa',
 		'_tutor_is_public_course',
-	);
-
-	/**
-	 * Video sources
-	 *
-	 * @since 2.3.0
-	 *
-	 * @var array
-	 */
-	public $supported_video_sources = array(
-		'external_url',
-		'shortcode',
-		'youtube',
-		'vimeo',
-		'embedded',
-	);
-
-	/**
-	 * Video params
-	 *
-	 * @since 3.0.0
-	 *
-	 * @var array
-	 */
-	public $video_params = array(
-		'source'              => '',
-		'source_video_id'     => '',
-		'poster'              => '',
-		'source_external_url' => '',
-		'source_shortcode'    => '',
-		'source_youtube'      => '',
-		'source_vimeo'        => '',
-		'source_embedded'     => '',
 	);
 
 	/**
@@ -864,8 +839,11 @@ class Course extends Tutor_Base {
 		$this->prepare_update_post_meta( $params );
 
 		// Update course thumb.
-		if ( isset( $params['thumbnail_id'] ) ) {
-			set_post_thumbnail( $update_id, $params['thumbnail_id'] );
+		$thumbnail_id = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
+		if ( $thumbnail_id ) {
+			set_post_thumbnail( $update_id, $thumbnail_id );
+		} else {
+			delete_post_meta( $update_id, '_thumbnail_id' );
 		}
 
 		$this->json_response(
@@ -991,8 +969,8 @@ class Course extends Tutor_Base {
 		}
 
 		if ( 'tutor' === $monetize_by ) {
-			$price      = get_post_meta( $course_id, 'course_price', true );
-			$sale_price = get_post_meta( $course_id, 'course_sale_price', true );
+			$price      = get_post_meta( $course_id, self::COURSE_PRICE_META, true );
+			$sale_price = get_post_meta( $course_id, self::COURSE_SALE_PRICE_META, true );
 		}
 
 		$course_pricing = array(
@@ -1018,6 +996,7 @@ class Course extends Tutor_Base {
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
 			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),
 			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),
+			'thumbnail_id'             => get_post_meta( $course_id, '_thumbnail_id', true ),
 			'thumbnail'                => get_the_post_thumbnail_url( $course_id ),
 
 			'enable_qna'               => get_post_meta( $course_id, '_tutor_enable_qa', true ),
@@ -1139,8 +1118,9 @@ class Course extends Tutor_Base {
 		$data['timezones']     = tutor_global_timezone_lists();
 		$data['wp_rest_nonce'] = wp_create_nonce( 'wp_rest' );
 
+		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
+
 		wp_localize_script( 'tutor-course-builder-v3', '_tutorobject', $data );
-		wp_localize_script( 'tutor-course-builder-v3', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
 	}
 
 	/**
