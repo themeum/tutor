@@ -1772,7 +1772,7 @@ class Quiz {
 		} else {
 			$question_type = Input::has( 'question_type' );
 			if ( ! in_array( $question_type, $question_types, true ) ) {
-				return $this->json_response( __( 'Invalid question type', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+				$this->json_response( __( 'Invalid question type', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
 			}
 
 			$answer_data['belongs_question_type'] = Input::post( 'question_type' );
