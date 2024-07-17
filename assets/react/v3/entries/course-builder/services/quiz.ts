@@ -197,7 +197,6 @@ interface QuizUpdateQuestionPayload {
   question_type: string;
   question_mark: number;
   answer_explanation: string;
-  multipleCorrectAnswer: boolean;
   'question_settings[question_type]': string;
   'question_settings[answer_required]': 0 | 1;
   'question_settings[question_mark]': number;
@@ -213,6 +212,7 @@ interface CreateQuizQuestionAnswerPayload {
   answer_id?: ID; //only for update
   answer_title: string;
   image_id: ID;
+  question_type?: QuizQuestionType;
   answer_view_format: string;
   matched_answer_title?: string; //only when question type matching or image matching
 }
@@ -330,7 +330,7 @@ export const convertQuizFormDataToPayload = (
   };
 };
 
-export const convertQuizFormDataToPayloadForUpdate = (data: QuizQuestion): QuizUpdateQuestionPayload => {
+export const convertQuizQuestionFormDataToPayloadForUpdate = (data: QuizQuestion): QuizUpdateQuestionPayload => {
   const finalQuestionType = () => {
     switch (data.question_type) {
       case 'multiple_choice': {
@@ -353,7 +353,6 @@ export const convertQuizFormDataToPayloadForUpdate = (data: QuizQuestion): QuizU
     'question_settings[question_type]': finalQuestionType(),
     'question_settings[answer_required]': data.question_settings.answer_required ? 1 : 0,
     'question_settings[question_mark]': data.question_mark,
-    multipleCorrectAnswer: (data as MultipleChoiceQuizQuestion).multipleCorrectAnswer,
   };
 };
 
@@ -513,6 +512,7 @@ const createQuizQuestion = (quizId: ID) => {
 
 export const useCreateQuizQuestionMutation = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createQuizQuestion,
@@ -528,6 +528,10 @@ export const useCreateQuizQuestionMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['GetQuizDetails'],
       });
     },
   });
@@ -569,9 +573,6 @@ export const useQuizQuestionSortingMutation = () => {
     mutationFn: quizQuestionSorting,
     onSuccess: (response) => {
       if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['GetQuizDetails', response.data],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
@@ -582,6 +583,10 @@ export const useQuizQuestionSortingMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['GetQuizDetails'],
       });
     },
   });
@@ -602,9 +607,6 @@ export const useDeleteQuizQuestionMutation = () => {
     mutationFn: deleteQuizQuestion,
     onSuccess: (response) => {
       if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['GetQuizDetails', response.data],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
@@ -615,6 +617,10 @@ export const useDeleteQuizQuestionMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['GetQuizDetails'],
       });
     },
   });
@@ -668,9 +674,6 @@ export const useQuizQuestionAnswerOrderingMutation = () => {
     mutationFn: quizQuestionAnswerOrdering,
     onSuccess: (response) => {
       if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['GetQuizDetails'],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
@@ -681,6 +684,10 @@ export const useQuizQuestionAnswerOrderingMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['GetQuizDetails'],
       });
     },
   });
@@ -706,14 +713,15 @@ export const useCreateQuizAnswerMutation = () => {
           type: 'success',
         });
       }
-      // queryClient.invalidateQueries({
-      //   queryKey: ['GetQuizDetails'],
-      // });
     },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['GetQuizDetails'],
       });
     },
   });
@@ -781,6 +789,10 @@ export const useMarkAnswerAsCorrectMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['GetQuizDetails'],
       });
     },
   });

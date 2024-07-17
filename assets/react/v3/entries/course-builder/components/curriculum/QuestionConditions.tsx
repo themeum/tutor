@@ -12,13 +12,7 @@ import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { Option } from '@Utils/types';
-import {
-  convertQuizFormDataToPayloadForUpdate,
-  useUpdateQuizQuestionMutation,
-  type QuizForm,
-  type QuizQuestionType,
-} from '@CourseBuilderServices/quiz';
-import { useEffect } from 'react';
+import type { QuizForm, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
 export const questionTypeOptions: Option<QuizQuestionType>[] = [
   {
@@ -67,22 +61,7 @@ const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation();
-
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-  const isMultipleCorrectAnswerToggled = form.watch(`questions.${activeQuestionIndex}.multipleCorrectAnswer`);
-
-  const isImageMatchingToggled = form.watch(`questions.${activeQuestionIndex}.imageMatching`);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  // useEffect(() => {
-  //   if (activeQuestionIndex < 0) {
-  //     return;
-  //   }
-
-  //   const payload = convertQuizFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
-  //   updateQuizQuestionMutation.mutate(payload);
-  // }, [isMultipleCorrectAnswerToggled, isImageMatchingToggled]);
 
   if (!activeQuestionId) {
     return (
@@ -149,6 +128,8 @@ const QuestionConditions = () => {
                 label={__('Point For This Answer', 'tutor')}
                 type="number"
                 isInlineLabel
+                placeholder="0"
+                selectOnFocus
                 style={css`
                   max-width: 72px;
                 `}

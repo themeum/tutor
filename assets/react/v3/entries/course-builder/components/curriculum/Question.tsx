@@ -14,7 +14,7 @@ import {
   useUpdateQuizQuestionMutation,
   type QuizQuestion,
   type QuizQuestionType,
-  convertQuizFormDataToPayloadForUpdate,
+  convertQuizQuestionFormDataToPayloadForUpdate,
 } from '@CourseBuilderServices/quiz';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
@@ -72,14 +72,14 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       style={style}
       tabIndex={-1}
       onClick={() => {
-        const payload = convertQuizFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
+        const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
         updateQuizQuestionMutation.mutate(payload);
 
         setActiveQuestionId(question.question_id);
       }}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
-          const payload = convertQuizFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
+          const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
           updateQuizQuestionMutation.mutate(payload);
 
           setActiveQuestionId(question.question_id);

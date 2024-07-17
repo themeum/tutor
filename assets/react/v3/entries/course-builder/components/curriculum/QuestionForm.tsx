@@ -10,7 +10,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/question-types/MultipleChoiceAndOrdering';
 import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/question-types/OpenEndedAndShortAnswer';
-import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillInTheBlanks';
+import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
 import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
 
@@ -21,7 +21,7 @@ import EmptyState from '@Molecules/EmptyState';
 
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import type { QuizForm } from '@CourseBuilderServices/quiz';
+import type { QuizForm, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
@@ -87,7 +87,7 @@ const QuestionForm = () => {
         </div>
       </div>
 
-      {questionTypeForm[activeQuestionType]}
+      {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]}
 
       <div css={styles.questionAnswer}>
         <Controller

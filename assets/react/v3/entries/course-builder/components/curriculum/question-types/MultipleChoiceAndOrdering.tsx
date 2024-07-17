@@ -53,8 +53,6 @@ const MultipleChoiceAndOrdering = () => {
     return 'ordering';
   };
 
-  console.log(filterByQuestionType(currentQuestionType));
-
   const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
 
   const {
@@ -110,15 +108,6 @@ const MultipleChoiceAndOrdering = () => {
       isInitialRenderRef.current = false;
     };
   }, []);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  // useEffect(() => {
-  //   if (!multipleCorrectAnswer && !isInitialRenderRef.current) {
-  //     const resetOptions = optionsFields.map((option) => ({ ...option, is_correct: '0' as '0' | '1' }));
-  //     form.setValue(`questions.${activeQuestionIndex}.question_answers`, resetOptions);
-  //   }
-  //   isInitialRenderRef.current = false;
-  // }, [multipleCorrectAnswer]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -269,7 +258,7 @@ const MultipleChoiceAndOrdering = () => {
               is_correct: '0',
               belongs_question_id: activeQuestionId,
               belongs_question_type: filterByQuestionType(currentQuestionType),
-              answer_order: filteredOptionsFields.length,
+              answer_order: optionsFields.length,
               answer_two_gap_match: '',
               answer_view_format: '',
             },

@@ -9,13 +9,13 @@ import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 
 import {
+  type QuizForm,
   useCreateQuizAnswerMutation,
   useDeleteQuizAnswerMutation,
-  useMarkAnswerAsCorrectMutation,
   type QuizQuestionOption,
 } from '@CourseBuilderServices/quiz';
 
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import Show from '@Controls/Show';
@@ -23,16 +23,17 @@ import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  imageMatching: boolean;
   onDuplicateOption: () => void;
   onRemoveOption: () => void;
 }
 
-const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
-  const { activeQuestionId } = useQuizModalContext();
+const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
+  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
+  const form = useFormContext<QuizForm>();
 
   const inputValue = field.value ?? {
     answer_id: '',
@@ -44,9 +45,14 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const imageMatching = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.imageMatching` as 'questions.0.imageMatching',
+    defaultValue: false,
+  });
+
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
-  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
 
   const [isEditing, setIsEditing] = useState(
     !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url
@@ -88,18 +94,6 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
       ...inputValue,
       image_id: '',
       image_url: '',
-    });
-  };
-
-  const handleCorrectAnswer = () => {
-    field.onChange({
-      ...inputValue,
-      is_correct: '1',
-    });
-
-    markAnswerAsCorrectMutation.mutate({
-      answerId: inputValue.answer_id,
-      isCorrect: '1',
     });
   };
 
@@ -301,6 +295,7 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                       image_id: inputValue.image_id || '',
                       answer_view_format: 'both',
                       matched_answer_title: inputValue.answer_two_gap_match,
+                      question_type: imageMatching ? 'image_matching' : 'matching',
                     });
 
                     if (response.status_code === 201 || response.status_code === 200) {
@@ -503,13 +498,13 @@ const styles = {
     flex: 1;
     color: ${colorTokens.text.subdued};
     padding: ${spacing[4]} ${spacing[10]};
-    box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
+    border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     resize: vertical;
     cursor: text;
 
     &:focus {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus};
     }
   `,
   optionInputButtons: css`

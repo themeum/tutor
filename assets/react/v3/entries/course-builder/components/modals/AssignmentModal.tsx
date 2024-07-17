@@ -148,10 +148,9 @@ const AssignmentModal = ({
     }
   }, [assignmentDetails]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('title');
-  }, []);
+  }, [form]);
 
   const onSubmit = async (data: AssignmentForm) => {
     const payload = convertAssignmentDataToPayload(data, assignmentId, topicId, contentDripType);
@@ -200,6 +199,7 @@ const AssignmentModal = ({
                   placeholder={__('Enter Assignment Title', 'tutor')}
                   maxLimit={245}
                   isClearable
+                  selectOnFocus
                 />
               )}
             />
@@ -252,6 +252,7 @@ const AssignmentModal = ({
                     }
                     helpText={__('This lesson will be available after the given number of days.', 'tutor')}
                     placeholder="0"
+                    selectOnFocus
                   />
                 )}
               />
@@ -313,6 +314,7 @@ const AssignmentModal = ({
                   placeholder="0"
                   helpText={__('Set the time limit for the course. Set 0 for unlimited time', 'tutor')}
                   dataAttribute="data-time-limit"
+                  selectOnFocus
                 />
               )}
             />
@@ -341,6 +343,7 @@ const AssignmentModal = ({
                 label={__('Total points', 'tutor')}
                 placeholder="0"
                 helpText={__('Maximum points a student can score', 'tutor')}
+                selectOnFocus
               />
             )}
           />
@@ -355,6 +358,7 @@ const AssignmentModal = ({
                 label={__('Minimum pass points', 'tutor')}
                 placeholder="0"
                 helpText={__('Minimum points required for the student to pass this assignment', 'tutor')}
+                selectOnFocus
               />
             )}
           />
@@ -372,6 +376,7 @@ const AssignmentModal = ({
                   'Define the number of files that a student can upload in this assignment. Input 0 to disable the option to upload.',
                   'tutor'
                 )}
+                selectOnFocus
               />
             )}
           />

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -77,12 +77,6 @@ const Matching = () => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const currentOptions = useWatch({
-    control: form.control,
-    name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
-    defaultValue: [],
-  });
-
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
@@ -90,32 +84,6 @@ const Matching = () => {
 
     return filteredOptionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, filteredOptionsFields]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    const changedOptions = currentOptions.filter((option) => {
-      const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = optionsFields[index];
-      return previousOption && option.is_correct !== previousOption.is_correct;
-    });
-
-    if (changedOptions.length === 0) {
-      return;
-    }
-
-    const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
-
-    const updatedOptions = [...currentOptions];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
-
-    for (const [index, option] of updatedOptions.entries()) {
-      if (index !== changedOptionIndex) {
-        updatedOptions[index] = { ...option, is_correct: '0' };
-      }
-    }
-
-    form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
-  }, [currentOptions]);
 
   return (
     <div css={styles.optionWrapper}>
@@ -133,8 +101,8 @@ const Matching = () => {
           }
 
           if (active.id !== over.id) {
-            const activeIndex = filteredOptionsFields.findIndex((item) => item.answer_id === active.id);
-            const overIndex = filteredOptionsFields.findIndex((item) => item.answer_id === over.id);
+            const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
+            const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
 
             const updatedOptionsOrder = moveTo(
               form.watch(`questions.${activeQuestionIndex}.question_answers`),
@@ -162,7 +130,9 @@ const Matching = () => {
               <Controller
                 key={option.answer_id}
                 control={form.control}
-                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
+                name={
+                  `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
+                }
                 render={(controllerProps) => (
                   <FormMatching
                     {...controllerProps}
@@ -177,7 +147,6 @@ const Matching = () => {
                       const duplicateIndex = option.index + 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
-                    imageMatching={form.watch(`questions.${activeQuestionIndex}.imageMatching`)}
                   />
                 )}
               />
@@ -211,7 +180,6 @@ const Matching = () => {
                           insertOption(duplicateIndex, duplicateOption);
                         }}
                         onRemoveOption={() => removeOption(index)}
-                        imageMatching={form.watch(`questions.${activeQuestionIndex}.imageMatching`)}
                       />
                     )}
                   />
@@ -233,13 +201,13 @@ const Matching = () => {
               is_correct: '0',
               belongs_question_id: activeQuestionId,
               belongs_question_type: imageMatching ? 'image_matching' : 'matching',
-              answer_order: filteredOptionsFields.length,
+              answer_order: optionsFields.length,
               answer_two_gap_match: '',
               answer_view_format: '',
             },
             {
               shouldFocus: true,
-              focusName: `questions.${activeQuestionIndex}.question_answers.${filteredOptionsFields.length}.answer_title`,
+              focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
             }
           )
         }

@@ -45,6 +45,7 @@ import emptyStateImage from '@Images/empty-state-illustration.webp';
 import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 
 const courseId = getCourseId();
+
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean; isSaved: boolean };
 
 const Curriculum = () => {
@@ -65,6 +66,7 @@ const Curriculum = () => {
   const [allCollapsed, setAllCollapsed] = useState(true);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
+  const [currentExpandedTopic, setCurrentExpandedTopic] = useState<ID>('');
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
@@ -73,6 +75,7 @@ const Curriculum = () => {
     setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
   }, [allCollapsed]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!courseCurriculumQuery.data) {
       return;
@@ -80,7 +83,7 @@ const Curriculum = () => {
     setContent(
       courseCurriculumQuery.data.map((item, index) => ({
         ...item,
-        isCollapsed: index > 0,
+        isCollapsed: currentExpandedTopic ? currentExpandedTopic !== item.id : index > 0,
         isSaved: true,
       }))
     );
@@ -236,14 +239,11 @@ const Curriculum = () => {
                             key={topic.id}
                             topic={topic}
                             onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
-                            onCollapse={() =>
+                            onCollapse={(topicId) =>
                               setContent((previous) =>
-                                previous.map((item, idx) => {
-                                  if (idx === index) {
-                                    return {
-                                      ...item,
-                                      isCollapsed: !item.isCollapsed,
-                                    };
+                                previous.map((item) => {
+                                  if (item.id === topicId) {
+                                    return { ...item, isCollapsed: !item.isCollapsed };
                                   }
 
                                   return item;
@@ -252,6 +252,9 @@ const Curriculum = () => {
                             }
                             onCopy={() => {
                               createDuplicateTopic(topic);
+                            }}
+                            onEdit={(topicId) => {
+                              setCurrentExpandedTopic(topicId);
                             }}
                             onSort={(activeIndex, overIndex) => {
                               const previousContent = content;

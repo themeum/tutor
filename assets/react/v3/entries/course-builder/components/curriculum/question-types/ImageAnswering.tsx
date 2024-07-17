@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { createPortal } from 'react-dom';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   KeyboardSensor,
   PointerSensor,
@@ -51,7 +51,18 @@ const ImageAnswering = () => {
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
 
-  const filteredOptionsFields = optionsFields.filter((option) => option.belongs_question_type === 'image_answering');
+  const filteredOptionsFields = optionsFields.reduce(
+    (allOptions, option, index) => {
+      if (option.belongs_question_type === 'image_answering') {
+        allOptions.push({
+          ...option,
+          index: index,
+        });
+      }
+      return allOptions;
+    },
+    [] as Array<QuizQuestionOption & { index: number }>
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -62,11 +73,11 @@ const ImageAnswering = () => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const currentOptions = useWatch({
-    control: form.control,
-    name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
-    defaultValue: [],
-  }).filter((option) => option.belongs_question_type === 'image_answering');
+  // const currentOptions = useWatch({
+  //   control: form.control,
+  //   name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
+  //   defaultValue: [],
+  // }).filter((option) => option.belongs_question_type === 'image_answering');
 
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
@@ -77,29 +88,29 @@ const ImageAnswering = () => {
   }, [activeSortId, filteredOptionsFields]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    const changedOptions = currentOptions.filter((option) => {
-      const index = filteredOptionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = filteredOptionsFields[index] || {};
-      return option?.is_correct !== previousOption?.is_correct;
-    });
+  // useEffect(() => {
+  //   const changedOptions = currentOptions.filter((option) => {
+  //     const index = filteredOptionsFields.findIndex((item) => item.answer_id === option.answer_id);
+  //     const previousOption = filteredOptionsFields[index] || {};
+  //     return option?.is_correct !== previousOption?.is_correct;
+  //   });
 
-    if (changedOptions.length === 0) {
-      return;
-    }
+  //   if (changedOptions.length === 0) {
+  //     return;
+  //   }
 
-    const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
+  //   const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
-    const updatedOptions = [...currentOptions];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
-    updatedOptions.forEach((_, index) => {
-      if (index !== changedOptionIndex) {
-        updatedOptions[index] = Object.assign({}, updatedOptions[index], { is_correct: '0' });
-      }
-    });
+  //   const updatedOptions = [...currentOptions];
+  //   updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
+  //   updatedOptions.forEach((_, index) => {
+  //     if (index !== changedOptionIndex) {
+  //       updatedOptions[index] = Object.assign({}, updatedOptions[index], { is_correct: '0' });
+  //     }
+  //   });
 
-    form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
-  }, [currentOptions]);
+  //   form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
+  // }, [currentOptions]);
 
   return (
     <div css={styles.optionWrapper}>
@@ -117,8 +128,8 @@ const ImageAnswering = () => {
           }
 
           if (active.id !== over.id) {
-            const activeIndex = filteredOptionsFields.findIndex((item) => item.answer_id === active.id);
-            const overIndex = filteredOptionsFields.findIndex((item) => item.answer_id === over.id);
+            const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
+            const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
 
             const updatedOptionsOrder = moveTo(
               form.watch(`questions.${activeQuestionIndex}.question_answers`),
@@ -144,9 +155,11 @@ const ImageAnswering = () => {
           <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
-                key={option.id}
+                key={option.answer_id}
                 control={form.control}
-                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
+                name={
+                  `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
+                }
                 render={(controllerProps) => (
                   <FormImageAnswering
                     {...controllerProps}
@@ -215,13 +228,13 @@ const ImageAnswering = () => {
               is_correct: '0',
               belongs_question_id: activeQuestionId,
               belongs_question_type: 'image_answering',
-              answer_order: filteredOptionsFields.length,
+              answer_order: optionsFields.length,
               answer_two_gap_match: '',
               answer_view_format: '',
             },
             {
               shouldFocus: true,
-              focusName: `questions.${activeQuestionIndex}.question_answers.${filteredOptionsFields.length}.answer_title`,
+              focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
             }
           )
         }

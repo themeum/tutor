@@ -14,7 +14,7 @@ import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useModal } from '@Components/modals/Modal';
-import { useDeleteLessonMutation, type ContentType, type ID } from '@CourseBuilderServices/curriculum';
+import { useDeleteContentMutation, type ContentType, type ID } from '@CourseBuilderServices/curriculum';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 
@@ -22,11 +22,12 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
-import LoadingSpinner from '@Atoms/LoadingSpinner';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import Show from '@Controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import { useExportQuizMutation } from '@CourseBuilderServices/quiz';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import { AnimationType } from '@Hooks/useAnimation';
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
@@ -91,8 +92,10 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   const courseDetails = useCourseDetails();
   const form = useFormContext<CourseFormData>();
   const [meetingType, setMeetingType] = useState<'tutor_zoom_meeting' | 'tutor-google-meet' | null>(null);
+  const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
 
   const editButtonRef = useRef<HTMLButtonElement>(null);
+  const deleteRef = useRef<HTMLButtonElement>(null);
 
   const icon = icons[type];
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
@@ -105,9 +108,9 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
     transition,
   };
   const { showModal } = useModal();
-  const deleteLessonMutation = useDeleteLessonMutation();
-  const deleteGoogleMeetMutation = useDeleteLessonMutation();
-  const deleteZoomMeetingMutation = useDeleteLessonMutation();
+  const deleteContentMutation = useDeleteContentMutation();
+  const deleteGoogleMeetMutation = useDeleteContentMutation();
+  const deleteZoomMeetingMutation = useDeleteContentMutation();
   const exportQuizMutation = useExportQuizMutation();
 
   const handleShowModalOrPopover = () => {
@@ -137,24 +140,21 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   };
 
   const handleDelete = () => {
-    if (type === 'lesson' || type === 'tutor_assignments' || type === 'tutor_quiz') {
-      deleteLessonMutation.mutate(content.id);
+    if (['lesson', 'tutor_assignments', 'tutor_quiz'].includes(type)) {
+      deleteContentMutation.mutateAsync(content.id);
+    } else if (type === 'tutor-google-meet') {
+      deleteGoogleMeetMutation.mutateAsync(content.id);
+    } else if (type === 'tutor_zoom_meeting') {
+      deleteZoomMeetingMutation.mutateAsync(content.id);
     }
-
-    if (type === 'tutor-google-meet') {
-      deleteGoogleMeetMutation.mutate(content.id);
-    }
-
-    if (type === 'tutor_zoom_meeting') {
-      deleteZoomMeetingMutation.mutate(content.id);
-    }
+    onDelete?.();
   };
 
   return (
     <>
       <div
         {...attributes}
-        css={styles.wrapper({ isDragging, isMeetingSelected: meetingType === type })}
+        css={styles.wrapper({ isDragging, isActive: meetingType === type || isDeletePopoverOpen })}
         ref={setNodeRef}
         style={style}
       >
@@ -205,12 +205,15 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
             </button>
           </Tooltip>
           <Tooltip content={__('Delete', 'tutor')}>
-            <button type="button" css={styles.actionButton} onClick={handleDelete}>
-              {deleteLessonMutation.isPending ? (
-                <LoadingSpinner size={24} />
-              ) : (
-                <SVGIcon name="delete" width={24} height={24} />
-              )}
+            <button
+              ref={deleteRef}
+              type="button"
+              css={styles.actionButton}
+              onClick={() => {
+                setIsDeletePopoverOpen(true);
+              }}
+            >
+              <SVGIcon name="delete" width={24} height={24} />
             </button>
           </Tooltip>
         </div>
@@ -234,6 +237,27 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
           <GoogleMeetForm data={null} topicId={topic.id} onCancel={() => setMeetingType(null)} meetingId={content.id} />
         </Show>
       </Popover>
+      <ConfirmationPopover
+        isOpen={isDeletePopoverOpen}
+        triggerRef={deleteRef}
+        closePopover={() => setIsDeletePopoverOpen(false)}
+        maxWidth="258px"
+        title={`Delete topic "${topic.title}"`}
+        message="Are you sure you want to delete this content from your course? This cannot be undone."
+        animationType={AnimationType.slideUp}
+        arrow="auto"
+        hideArrow
+        confirmButton={{
+          text: __('Delete', 'tutor'),
+          variant: 'text',
+          isDelete: true,
+        }}
+        cancelButton={{
+          text: __('Cancel', 'tutor'),
+          variant: 'text',
+        }}
+        onConfirmation={handleDelete}
+      />
     </>
   );
 };
@@ -243,10 +267,10 @@ export default TopicContent;
 const styles = {
   wrapper: ({
     isDragging = false,
-    isMeetingSelected = false,
+    isActive: isMeetingSelected = false,
   }: {
     isDragging: boolean;
-    isMeetingSelected: boolean;
+    isActive: boolean;
   }) => css`
     width: 100%;
     padding: ${spacing[10]} ${spacing[8]};

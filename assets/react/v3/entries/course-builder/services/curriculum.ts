@@ -166,7 +166,7 @@ export const useCourseTopicQuery = (courseId: ID) => {
 };
 
 const saveTopic = (payload: TopicPayload) => {
-  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse<number>>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<TopicPayload, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_save_topic',
     ...payload,
   });
@@ -180,9 +180,6 @@ export const useSaveTopicMutation = () => {
     mutationFn: saveTopic,
     onSuccess: (response) => {
       if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
         showToast({
           message: __('Topic saved successfully', 'tutor'),
           type: 'success',
@@ -193,6 +190,9 @@ export const useSaveTopicMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['Topic'],
       });
     },
   });
@@ -213,9 +213,6 @@ export const useDeleteTopicMutation = () => {
     mutationFn: deleteTopic,
     onSuccess: (response) => {
       if (response.status_code === 200) {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
@@ -226,6 +223,10 @@ export const useDeleteTopicMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic'],
       });
     },
   });
@@ -292,24 +293,21 @@ export const useSaveLessonMutation = ({
   });
 };
 
-const deleteLesson = (lessonId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
+const deleteContent = (lessonId: ID) => {
+  return authApiInstance.post<string, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_delete_lesson',
     lesson_id: lessonId,
   });
 };
 
-export const useDeleteLessonMutation = () => {
+export const useDeleteContentMutation = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
-    mutationFn: deleteLesson,
+    mutationFn: deleteContent,
     onSuccess: (response) => {
       if (response.status_code === 200) {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
@@ -320,6 +318,9 @@ export const useDeleteLessonMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['Topic'],
       });
     },
   });

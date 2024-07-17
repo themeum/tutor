@@ -21,10 +21,12 @@ import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionCond
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
 import {
   convertQuizFormDataToPayload,
+  convertQuizQuestionFormDataToPayloadForUpdate,
   convertQuizResponseToFormData,
   type QuizForm,
   useGetQuizDetailsQuery,
   useSaveQuizMutation,
+  useUpdateQuizQuestionMutation,
 } from '@CourseBuilderServices/quiz';
 import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 
@@ -63,6 +65,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   const saveQuizMutation = useSaveQuizMutation();
   const getQuizDetailsQuery = useGetQuizDetailsQuery(localQuizId);
+  const updateQuestionMutation = useUpdateQuizQuestionMutation();
 
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {
@@ -114,186 +117,224 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
 
   const onQuizFormSubmit = async (data: QuizForm) => {
+    if (!data.quiz_title) {
+      setActiveTab('details');
+      form.setError('quiz_title', { type: 'required', message: __('Quiz title is required', 'tutor') });
+      form.setFocus('quiz_title', {
+        shouldSelect: true,
+      });
+      return;
+    }
+
     const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, quizId || '');
     const response = await saveQuizMutation.mutateAsync(payload);
 
     if (response.data) {
       setIsEdit(false);
       setLocalQuizId(response.data);
+      closeModal({ action: 'CONFIRM' });
     }
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isEdit) {
+      form.setFocus('quiz_title');
+    }
+  }, [isEdit]);
 
   const { isDirty } = form.formState;
 
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''}>
-        <ModalWrapper
-          onClose={() => closeModal({ action: 'CLOSE' })}
-          icon={icon}
-          title={title}
-          subtitle={subtitle}
-          headerChildren={
-            <Tabs
-              wrapperCss={css`
+        {(activeQuestionIndex) => (
+          <ModalWrapper
+            onClose={() => closeModal({ action: 'CLOSE' })}
+            icon={icon}
+            title={title}
+            subtitle={subtitle}
+            headerChildren={
+              <Tabs
+                wrapperCss={css`
                 height: ${modal.HEADER_HEIGHT}px;
               `}
-              activeTab={activeTab}
-              tabList={[
-                {
-                  label: __('Question Details', 'tutor'),
-                  value: 'details',
-                },
-                { label: __('Settings', 'tutor'), value: 'settings' },
-              ]}
-              onChange={(tab) => setActiveTab(tab)}
-            />
-          }
-          actions={
-            <>
-              <Button
-                variant="text"
-                size="small"
-                onClick={() => {
-                  if (isDirty) {
-                    setIsConfirmationOpen(true);
-                    return;
-                  }
-
-                  closeModal();
-                }}
-                ref={cancelRef}
-              >
-                {__('Cancel', 'tutor')}
-              </Button>
-              <Show
-                when={activeTab === 'settings'}
-                fallback={
-                  <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
-                    {__('Next', 'tutor')}
-                  </Button>
-                }
-              >
+                activeTab={activeTab}
+                tabList={[
+                  {
+                    label: __('Question Details', 'tutor'),
+                    value: 'details',
+                  },
+                  { label: __('Settings', 'tutor'), value: 'settings' },
+                ]}
+                onChange={(tab) => setActiveTab(tab)}
+              />
+            }
+            actions={
+              <>
                 <Button
-                  loading={saveQuizMutation.isPending}
-                  variant="primary"
+                  variant="text"
                   size="small"
-                  onClick={async () => {
-                    await form.handleSubmit(onQuizFormSubmit)();
+                  onClick={() => {
+                    if (isDirty) {
+                      setIsConfirmationOpen(true);
+                      return;
+                    }
+
                     closeModal();
                   }}
+                  ref={cancelRef}
                 >
-                  {__('Save', 'tutor')}
+                  {__('Cancel', 'tutor')}
                 </Button>
-              </Show>
-            </>
-          }
-        >
-          <div css={styles.wrapper}>
-            <Show when={activeTab === 'details'} fallback={<div />}>
-              <div css={styles.left}>
-                <Show when={activeTab === 'details'}>
-                  <div css={styles.quizTitleWrapper}>
-                    <Show
-                      when={isEdit}
-                      fallback={
-                        <div css={styles.quizNameWithButton}>
-                          <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
-                          <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
-                            <SVGIcon name="edit" width={24} height={24} />
-                          </Button>
-                        </div>
+                <Show
+                  when={activeTab === 'settings' || quizId}
+                  fallback={
+                    <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                      {__('Next', 'tutor')}
+                    </Button>
+                  }
+                >
+                  <Button
+                    loading={saveQuizMutation.isPending}
+                    variant="primary"
+                    size="small"
+                    onClick={async () => {
+                      if (activeQuestionIndex < 0) {
+                        await form.handleSubmit(onQuizFormSubmit)();
+                        return;
                       }
-                    >
-                      <div css={styles.quizForm}>
-                        <Controller
-                          control={form.control}
-                          name="quiz_title"
-                          rules={{ required: __('Quiz title is required', 'tutor') }}
-                          render={(controllerProps) => (
-                            <FormInput {...controllerProps} placeholder={__('Add quiz title', 'tutor')} />
-                          )}
-                        />
-                        <Controller
-                          control={form.control}
-                          name="quiz_description"
-                          render={(controllerProps) => (
-                            <FormTextareaInput
-                              {...controllerProps}
-                              placeholder={__('Add a summary', 'tutor')}
-                              enableResize
-                              rows={2}
-                            />
-                          )}
-                        />
 
-                        <div css={styles.quizFormButtonWrapper}>
-                          <Button variant="text" type="button" onClick={() => setIsEdit(false)} size="small">
-                            {__('Cancel', 'tutor')}
-                          </Button>
-                          <Button
-                            loading={saveQuizMutation.isPending}
-                            variant="secondary"
-                            type="submit"
-                            size="small"
-                            onClick={form.handleSubmit(onQuizFormSubmit)}
-                          >
-                            {__('Ok', 'tutor')}
-                          </Button>
+                      const payload = form.watch(`questions.${activeQuestionIndex}`);
+
+                      try {
+                        await updateQuestionMutation.mutateAsync(
+                          convertQuizQuestionFormDataToPayloadForUpdate(payload)
+                        );
+                      } catch (error) {
+                        console.log(error);
+                        return;
+                      }
+
+                      await form.handleSubmit(onQuizFormSubmit)();
+                    }}
+                  >
+                    {__('Save', 'tutor')}
+                  </Button>
+                </Show>
+              </>
+            }
+          >
+            <div css={styles.wrapper}>
+              <Show when={activeTab === 'details'} fallback={<div />}>
+                <div css={styles.left}>
+                  <Show when={activeTab === 'details'}>
+                    <div css={styles.quizTitleWrapper}>
+                      <Show
+                        when={isEdit}
+                        fallback={
+                          <div css={styles.quizNameWithButton}>
+                            <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
+                            <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
+                              <SVGIcon name="edit" width={24} height={24} />
+                            </Button>
+                          </div>
+                        }
+                      >
+                        <div css={styles.quizForm}>
+                          <Controller
+                            control={form.control}
+                            name="quiz_title"
+                            rules={{ required: __('Quiz title is required', 'tutor') }}
+                            render={(controllerProps) => (
+                              <FormInput
+                                {...controllerProps}
+                                placeholder={__('Add quiz title', 'tutor')}
+                                selectOnFocus
+                              />
+                            )}
+                          />
+                          <Controller
+                            control={form.control}
+                            name="quiz_description"
+                            render={(controllerProps) => (
+                              <FormTextareaInput
+                                {...controllerProps}
+                                placeholder={__('Add a summary', 'tutor')}
+                                enableResize
+                                rows={2}
+                              />
+                            )}
+                          />
+
+                          <div css={styles.quizFormButtonWrapper}>
+                            <Button variant="text" type="button" onClick={() => setIsEdit(false)} size="small">
+                              {__('Cancel', 'tutor')}
+                            </Button>
+                            <Button
+                              loading={saveQuizMutation.isPending}
+                              variant="secondary"
+                              type="submit"
+                              size="small"
+                              onClick={form.handleSubmit(onQuizFormSubmit)}
+                            >
+                              {__('Ok', 'tutor')}
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    </Show>
-                  </div>
+                      </Show>
+                    </div>
 
-                  <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingSection />}>
-                    <QuestionList quizId={localQuizId} />
+                    <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingSection />}>
+                      <QuestionList quizId={localQuizId} />
+                    </Show>
                   </Show>
+                </div>
+              </Show>
+              <div css={styles.content({ activeTab })}>
+                <Show
+                  when={activeTab === 'settings'}
+                  fallback={
+                    <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingSection />}>
+                      <QuestionForm />
+                    </Show>
+                  }
+                >
+                  <QuizSettings contentDripType={contentDripType} />
                 </Show>
               </div>
-            </Show>
-            <div css={styles.content({ activeTab })}>
-              <Show
-                when={activeTab === 'settings'}
-                fallback={
-                  <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingSection />}>
-                    <QuestionForm />
-                  </Show>
-                }
-              >
-                <QuizSettings contentDripType={contentDripType} />
+              <Show when={activeTab === 'details'} fallback={<div />}>
+                <div css={styles.right}>
+                  <QuestionConditions />
+                </div>
               </Show>
             </div>
-            <Show when={activeTab === 'details'} fallback={<div />}>
-              <div css={styles.right}>
-                <QuestionConditions />
-              </div>
-            </Show>
-          </div>
 
-          <ConfirmationPopover
-            isOpen={isConfirmationOpen}
-            triggerRef={cancelRef}
-            closePopover={() => setIsConfirmationOpen(false)}
-            maxWidth="258px"
-            title={__('Do you want to cancel the progress without saving?', 'tutor')}
-            message="There is unsaved changes."
-            animationType={AnimationType.slideUp}
-            arrow="top"
-            positionModifier={{ top: -50, left: 0 }}
-            hideArrow
-            confirmButton={{
-              text: __('Yes', 'tutor'),
-              variant: 'primary',
-            }}
-            cancelButton={{
-              text: __('No', 'tutor'),
-              variant: 'text',
-            }}
-            onConfirmation={() => {
-              closeModal();
-            }}
-          />
-        </ModalWrapper>
+            <ConfirmationPopover
+              isOpen={isConfirmationOpen}
+              triggerRef={cancelRef}
+              closePopover={() => setIsConfirmationOpen(false)}
+              maxWidth="258px"
+              title={__('Do you want to cancel the progress without saving?', 'tutor')}
+              message="There is unsaved changes."
+              animationType={AnimationType.slideUp}
+              arrow="top"
+              positionModifier={{ top: -50, left: 0 }}
+              hideArrow
+              confirmButton={{
+                text: __('Yes', 'tutor'),
+                variant: 'primary',
+              }}
+              cancelButton={{
+                text: __('No', 'tutor'),
+                variant: 'text',
+              }}
+              onConfirmation={() => {
+                closeModal();
+              }}
+            />
+          </ModalWrapper>
+        )}
       </QuizModalContextProvider>
     </FormProvider>
   );

@@ -44,7 +44,10 @@ const FormMultiLevelInput = ({
   const [isOpen, setIsOpen] = useState(false);
   const { ref: scrollElementRef, isScrolling } = useIsScrolling<HTMLDivElement>();
 
-  const form = useFormWithGlobalError();
+  const form = useFormWithGlobalError<{
+    name: string;
+    parent: number | null;
+  }>();
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -115,7 +118,9 @@ const FormMultiLevelInput = ({
                 <Controller
                   name="name"
                   control={form.control}
-                  render={(controllerProps) => <FormInput {...controllerProps} placeholder="Category name" />}
+                  render={(controllerProps) => (
+                    <FormInput {...controllerProps} placeholder="Category name" selectOnFocus />
+                  )}
                 />
                 <Controller
                   name="parent"
