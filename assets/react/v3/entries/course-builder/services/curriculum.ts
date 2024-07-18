@@ -131,6 +131,12 @@ export interface AssignmentPayload {
   'content_drip_settings[prerequisites]'?: ID[];
 }
 
+export interface ContentDuplicatePayload {
+  content_id: ID;
+  course_id: ID;
+  content_type: 'lesson' | 'assignment' | 'answer' | 'question' | 'quiz' | 'topic';
+}
+
 export interface CourseContentOrderPayload {
   tutor_topics_lessons_sorting: {
     [order: string]: {
@@ -396,6 +402,44 @@ export const useSaveAssignmentMutation = ({
         });
         queryClient.invalidateQueries({
           queryKey: ['Assignment', topicId, assignmentId],
+        });
+
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
+
+const duplicateContent = (payload: ContentDuplicatePayload) => {
+  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_duplicate_content',
+    ...payload,
+  });
+};
+
+export const useDuplicateContentMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: duplicateContent,
+    onSuccess: (response) => {
+      if (response.status_code === 200 || response.status_code === 201) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['GetQuizDetails'],
         });
 
         showToast({
