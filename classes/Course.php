@@ -956,11 +956,10 @@ class Course extends Tutor_Base {
 		$product_name = '';
 		$price        = 0;
 		$sale_price   = 0;
-		$product_id   = 0;
+		$product_id   = tutor_utils()->get_course_product_id( $course_id );
 
 		if ( 'wc' === $monetize_by ) {
-			$product_id = tutor_utils()->get_course_product_id( $course_id );
-			$product    = wc_get_product( $product_id );
+			$product = wc_get_product( $product_id );
 			if ( $product ) {
 				$product_name = $product->get_name();
 				$price        = $product->get_regular_price();
