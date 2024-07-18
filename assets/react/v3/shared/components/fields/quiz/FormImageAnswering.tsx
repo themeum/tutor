@@ -257,7 +257,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                       question_id: inputValue.belongs_question_id,
                       answer_title: inputValue.answer_title,
                       image_id: inputValue.image_id || '',
-                      answer_view_format: 'both',
+                      answer_view_format: 'text_image',
                       question_type: 'image_answering',
                     });
 

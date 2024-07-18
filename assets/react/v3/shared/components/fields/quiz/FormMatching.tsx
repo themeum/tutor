@@ -293,7 +293,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                       question_id: inputValue.belongs_question_id,
                       answer_title: inputValue.answer_title,
                       image_id: inputValue.image_id || '',
-                      answer_view_format: 'both',
+                      answer_view_format: 'text_image',
                       matched_answer_title: inputValue.answer_two_gap_match,
                       question_type: imageMatching ? 'image_matching' : 'matching',
                     });
