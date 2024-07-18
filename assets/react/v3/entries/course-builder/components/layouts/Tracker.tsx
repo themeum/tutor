@@ -46,7 +46,6 @@ const Tracker = () => {
             key={step.id}
             css={styles.element({
               isActive: step.isActive,
-              isCompleted: step.isCompleted,
               isDisabled: step.id !== 'basic' && !postTitle,
             })}
             onClick={() => handleClick(step)}
@@ -71,7 +70,7 @@ const styles = {
     display: flex;
     align-items: center;
   `,
-  element: ({ isActive = false, isCompleted = false, isDisabled = false }) => css`
+  element: ({ isActive = false, isDisabled = false }) => css`
     ${styleUtils.resetButton};
     ${styleUtils.display.flex()};
     ${typography.small()};
@@ -80,7 +79,7 @@ const styles = {
     align-items: center;
 
     ${
-      (isActive || isCompleted) &&
+      isActive &&
       css`
       color: ${colorTokens.text.primary};
     `
@@ -110,14 +109,6 @@ const styles = {
         isActive &&
         css`
         border-color: ${colorTokens.stroke.brand};
-        color: ${colorTokens.text.brand};
-      `
-      }
-
-      ${
-        isCompleted &&
-        !isActive &&
-        css`
         border-color: ${colorTokens.stroke.brand};
         background-color: ${colorTokens.design.brand};
         color: ${colorTokens.text.white};
