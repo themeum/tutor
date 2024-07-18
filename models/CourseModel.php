@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -207,19 +208,19 @@ class CourseModel {
 		return false;
 	}
 
-	 /**
-	  * Get courses by a instructor
-	  *
-	  * @since 1.0.0
-	  *
-	  * @param integer      $instructor_id instructor id.
-	  * @param array|string $post_status post status.
-	  * @param integer      $offset offset.
-	  * @param integer      $limit limit.
-	  * @param boolean      $count_only count or not.
-	  *
-	  * @return array|null|object
-	  */
+	/**
+	 * Get courses by a instructor
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param integer      $instructor_id instructor id.
+	 * @param array|string $post_status post status.
+	 * @param integer      $offset offset.
+	 * @param integer      $limit limit.
+	 * @param boolean      $count_only count or not.
+	 *
+	 * @return array|null|object
+	 */
 	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false ) {
 		global $wpdb;
 		$offset           = sanitize_text_field( $offset );
@@ -667,7 +668,6 @@ class CourseModel {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -753,5 +753,72 @@ class CourseModel {
 	 */
 	public static function get_course_preview_image_placeholder() {
 		return tutor()->url . 'assets/images/placeholder.svg';
+	}
+
+	/**
+	 * Retrieve the courses or course bundles that a given coupon code applies to.
+	 *
+	 * This function fetches published courses or course bundles from the database
+	 * based on the specified type. For each course, it retrieves the course prices
+	 * and the course thumbnail URL. If the user has Tutor Pro, it additionally
+	 * retrieves the total number of courses in a course bundle.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $applies_to The type of items the coupon applies to. Accepts 'specific_courses'
+	 *                           for individual courses or any other value for course bundles.
+	 *
+	 * @global wpdb $wpdb WordPress database abstraction object.
+	 *
+	 * @return array An array of course objects. Each course object contains:
+	 *               - int $id: The ID of the course.
+	 *               - string $title: The title of the course.
+	 *               - string $type: The post type of the course (e.g., 'courses', 'course-bundle').
+	 *               - float $price: The regular price of the course.
+	 *               - float $sale_price: The sale price of the course.
+	 *               - string $image: The URL of the course's thumbnail image.
+	 *               - int|null $total_courses: The total number of courses in the bundle
+	 *                                          (only if the user has Tutor Pro and the course type is 'course-bundle').
+	 */
+	public function get_coupon_applies_to_courses( string $applies_to ) {
+		global $wpdb;
+
+		$post_type = 'specific_courses' === $applies_to ? 'courses' : 'course-bundle';
+
+		$where = array(
+			'post_status' => 'publish',
+			'post_type'   => $post_type,
+		);
+
+		$courses = QueryHelper::get_all( $wpdb->posts, $where, 'ID' );
+
+		if ( tutor()->has_pro ) {
+			$bundle_model = new \TutorPro\CourseBundle\Models\BundleModel();
+		}
+
+		$final_data = array();
+
+		if ( ! empty( $courses ) ) {
+			foreach ( $courses as $course ) {
+				$data = new \stdClass();
+
+				if ( tutor()->has_pro && 'course-bundle' === $course->type ) {
+					$data->total_courses = count( $bundle_model->get_bundle_course_ids( $course->ID ) );
+				}
+
+				$author_name      = get_the_author_meta( 'display_name', $course->post_author );
+				$course_prices    = tutor_utils()->get_raw_course_price( $course->ID );
+				$data->id         = (int) $course->ID;
+				$data->title      = $course->post_title;
+				$data->price      = $course_prices->regular_price;
+				$data->sale_price = $course_prices->sale_price;
+				$data->image      = get_the_post_thumbnail_url( $course->ID );
+				$data->author     = $author_name;
+
+				$final_data[] = $data;
+			}
+		}
+
+		return ! empty( $final_data ) ? $final_data : array();
 	}
 }
