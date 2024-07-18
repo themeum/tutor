@@ -574,13 +574,13 @@ class OrderModel {
 			$message = '';
 
 			if ( self::ORDER_CANCELLED === $data->order_status ) {
-				$message = empty( $user_name ) ? __( 'Order marked as cancelled', 'tutor' ) : __( 'Order marked as cancelled by ' . $user_name, 'tutor' );
+				$message = empty( $user_name ) ? __( 'Order marked as cancelled', 'tutor' ) : sprintf( __( 'Order marked as cancelled by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_COMPLETED === $data->order_status ) {
-				$message = empty( $user_name ) ? __( 'Order marked as completed', 'tutor' ) : __( 'Order marked as completed by ' . $user_name, 'tutor' );
+				$message = empty( $user_name ) ? __( 'Order marked as completed', 'tutor' ) : sprintf( __( 'Order marked as completed by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_INCOMPLETE === $data->order_status ) {
-				$message = empty( $user_name ) ? __( 'Order marked as incomplete', 'tutor' ) : __( 'Order marked as incomplete by ' . $user_name, 'tutor' );
+				$message = empty( $user_name ) ? __( 'Order marked as incomplete', 'tutor' ) : sprintf( __( 'Order marked as incomplete by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_TRASH === $data->order_status ) {
-				$message = empty( $user_name ) ? __( 'Order marked as trash', 'tutor' ) : __( 'Order marked as trash by ' . $user_name, 'tutor' );
+				$message = empty( $user_name ) ? __( 'Order marked as trash', 'tutor' ) : sprintf( __( 'Order marked as trash by %s', 'tutor' ), $user_name );
 			}
 
 			if ( $message ) {
