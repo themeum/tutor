@@ -464,11 +464,8 @@ class OrderController {
 			);
 		}
 
-		$payload                  = new \stdClass();
-		$payload->order_id        = $params['order_id'];
-		$payload->discount_type   = $params['discount_type'];
-		$payload->discount_amount = $params['discount_amount'];
-		$payload->discount_reason = $params['discount_reason'];
+		$payload = new \stdClass();
+		$payload = (object) $params;
 
 		$response = $this->model->add_order_discount( $payload );
 
