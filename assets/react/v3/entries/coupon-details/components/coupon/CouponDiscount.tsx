@@ -91,7 +91,7 @@ function CouponDiscount() {
 									appliesTo === 'specific_category' ? (
 										<CategoryListTable form={form} />
 									) : (
-										<CourseListTable form={form} />
+										<CourseListTable form={form} type={appliesTo === 'specific_bundles' ? 'bundles' : 'courses'} />
 									),
 							},
 						});

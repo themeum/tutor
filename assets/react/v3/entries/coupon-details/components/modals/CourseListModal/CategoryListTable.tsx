@@ -31,7 +31,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 	const columns: Column<CourseCategory>[] = [
 		{
 			Header: categoryListQuery.data?.results.length ? (
-				<Checkbox onChange={() => {}} checked={true} />
+				<Checkbox onChange={() => {}} checked={true} label={__('Category', 'tutor')} />
 			) : (
 				__('Category', 'tutor')
 			),

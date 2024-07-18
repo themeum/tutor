@@ -1,13 +1,13 @@
 import Checkbox from '@Atoms/CheckBox';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
-import { borderRadius, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { Column } from '@Molecules/Table';
 
-import { Coupon, Course, mockCouponData, useCourseListQuery } from '@CouponServices/coupon';
+import { Coupon, Course, useCourseListQuery } from '@CouponServices/coupon';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
 import { UseFormReturn } from 'react-hook-form';
@@ -15,10 +15,10 @@ import SearchField from './SearchField';
 
 interface CourseListTableProps {
 	form: UseFormReturn<Coupon, any, undefined>;
+	type: 'bundles' | 'courses';
 }
 
-const CourseListTable = ({ form }: CourseListTableProps) => {
-	console.log(form.getValues());
+const CourseListTable = ({ form, type }: CourseListTableProps) => {
 	const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
 		updateQueryParams: false,
 	});
@@ -28,17 +28,46 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
 		filter: pageInfo.filter,
 	});
 
+	function toggleSelection(isChecked = false) {
+		form.setValue(type, isChecked ? courseListQuery.data?.results : []);
+	}
+
+	function handleAllIsChecked() {
+		const values = form.watch(type) || [];
+		return values?.every((item) => courseListQuery.data?.results?.map((result) => result.id).includes(item.id));
+	}
+
 	const columns: Column<Course>[] = [
 		{
 			Header: courseListQuery.data?.results.length ? (
-				<Checkbox onChange={() => {}} checked={true} />
+				<Checkbox
+					onChange={toggleSelection}
+					checked={handleAllIsChecked()}
+					label={type === 'courses' ? __('Courses', 'tutor') : __('Bundles', 'tutor')}
+					labelCss={styles.checkboxLabel}
+				/>
 			) : (
-				__('Courses', 'tutor')
+				__('#', 'tutor')
 			),
 			Cell: (item) => {
 				return (
 					<div css={styles.checkboxWrapper}>
-						<Checkbox onChange={() => {}} checked={true} />
+						<Checkbox
+							onChange={() => {
+								const values = form.watch(type) || [];
+								const filteredItems = values.filter((course) => course.id !== item.id);
+
+								if (filteredItems?.length === values.length) {
+									form.setValue(type, [...filteredItems, item]);
+								} else {
+									form.setValue(type, filteredItems);
+								}
+							}}
+							checked={form
+								.getValues(type)
+								?.map((course) => course.id)
+								.includes(item.id)}
+						/>
 						<img src={item.image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
 						<div css={styles.courseItem}>
 							<div>{item.title}</div>
@@ -74,7 +103,7 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
 			<div css={styles.tableWrapper}>
 				<Table
 					columns={columns}
-					data={mockCouponData.courses ?? []}
+					data={courseListQuery.data.results ?? []}
 					itemsPerPage={itemsPerPage}
 					loading={courseListQuery.isFetching || courseListQuery.isRefetching}
 				/>
@@ -118,5 +147,9 @@ const styles = {
 		width: 48px;
 		height: 48px;
 		border-radius: ${borderRadius[4]};
+	`,
+	checkboxLabel: css`
+		${typography.body()};
+		color: ${colorPalate.text.neutral};
 	`,
 };

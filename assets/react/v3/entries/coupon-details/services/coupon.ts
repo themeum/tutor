@@ -1,6 +1,6 @@
 import { useToast } from '@Atoms/Toast';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { authApiInstance, wpAjaxInstance } from '@Utils/api';
+import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { ErrorResponse } from '@Utils/form';
 import { PaginatedParams, PaginatedResult } from '@Utils/types';
@@ -212,9 +212,9 @@ export const mockCouponData: Coupon = {
 const getCouponDetails = (couponId: number) => {
 	return mockCouponData;
 	// biome-ignore lint/correctness/noUnreachable: <will be implemented later>
-	return wpAjaxInstance
-		.get<Coupon>(endpoints.COUPON_DETAILS, { params: { coupon_id: couponId } })
-		.then((response) => response.data);
+	// return wpAjaxInstance
+	// 	.get<Coupon>(endpoints.COUPON_DETAILS, { params: { coupon_id: couponId } })
+	// 	.then((response) => response.data);
 };
 
 export const useCouponDetailsQuery = (couponId: number) => {
@@ -301,7 +301,7 @@ export const useCourseListQuery = (params: PaginatedParams) => {
 };
 
 const getCategoryList = (params: PaginatedParams) => {
-	return authApiInstance.get<PaginatedResult<Category>>(endpoints.CATEGORY_LIST, {
+	return authApiInstance.get<PaginatedResult<CourseCategory>>(endpoints.CATEGORY_LIST, {
 		params: transformParams(params),
 	});
 };

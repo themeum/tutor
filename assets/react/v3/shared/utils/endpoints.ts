@@ -7,6 +7,7 @@ const endpoints = {
 	ADMIN_COMMENT: 'tutor_order_comment',
 	ORDER_MARK_AS_PAID: 'tutor_order_paid',
 	ORDER_REFUND: 'tutor_order_refund',
+	ADD_ORDER_DISCOUNT: 'tutor_order_discount',
 	COURSE_LIST: 'course_list',
 	CATEGORY_LIST: 'category_list',
 };
