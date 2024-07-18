@@ -114,6 +114,13 @@ class OrderController {
 			add_action( 'wp_ajax_tutor_order_comment', array( $this, 'add_comment' ) );
 
 			/**
+			 * Handle AJAX request for add/update an order's discount action.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_discount', array( $this, 'add_discount' ) );
+
+			/**
 			 * Handle bulk action
 			 *
 			 * @since 3.0.0
@@ -417,6 +424,62 @@ class OrderController {
 		}
 
 		$this->json_response( __( 'Order comment successful added', 'tutor' ) );
+	}
+
+	/**
+	 * Add a discount to an order.
+	 *
+	 * This function handles the request to add a discount to an order. It verifies the nonce,
+	 * checks user permissions, validates the input, and then updates the order with the discount details.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void This function outputs a JSON response and does not return a value.
+	 */
+	public function add_discount() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+
+		$params = array(
+			'order_id'        => Input::post( 'order_id' ),
+			'discount_type'   => Input::post( 'discount_type' ),
+			'discount_amount' => Input::post( 'discount_amount' ),
+			'discount_reason' => Input::post( 'discount_reason' ),
+		);
+
+		do_action( 'tutor_before_add_order_discount', $params );
+
+		// Validate request.
+		$validation = $this->validate( $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
+				$validation->errors,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$payload = new \stdClass();
+		$payload = (object) $params;
+
+		$response = $this->model->add_order_discount( $payload );
+
+		do_action( 'tutor_after_add_order_discount', $params );
+
+		if ( ! $response ) {
+			$this->json_response(
+				__( 'Failed to add a discount', 'tutor' ),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$this->json_response( __( 'Order discount successful added', 'tutor' ) );
 	}
 
 	/**
@@ -820,9 +883,11 @@ class OrderController {
 	protected function validate( array $data ) {
 
 		$validation_rules = array(
-			'order_id'   => 'required|numeric',
-			'meta_key'   => 'required',
-			'meta_value' => 'required',
+			'order_id'        => 'required|numeric',
+			'meta_key'        => 'required',
+			'meta_value'      => 'required',
+			'discount_type'   => 'required',
+			'discount_amount' => 'required',
 		);
 
 		// Skip validation rules for not available fields in data.
