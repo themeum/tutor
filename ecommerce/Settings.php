@@ -258,11 +258,10 @@ class Settings {
 		}
 		?>
 		<div class="tutor-add-payment-method-container">
-			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
+			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
 				<?php esc_html_e( '+ Add manual payment', 'tutor' ); ?>
 			</button>
 		</div>
 		<?php
-		require_once tutor()->path . 'views/modal/ecommerce/add-manual-payment.php';
 	}
 }
