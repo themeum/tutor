@@ -566,4 +566,83 @@ class OrderModel {
 
 		return $response;
 	}
+
+	/**
+	 * Updates the status of an order and logs the activity.
+	 *
+	 * This function updates the status of an order in the database and, if successful, logs the activity
+	 * with a message indicating the status change. The message includes the current user's display name,
+	 * if available.
+	 *
+	 * The possible order statuses include:
+	 * - ORDER_CANCELLED
+	 * - ORDER_COMPLETED
+	 * - ORDER_INCOMPLETE
+	 * - ORDER_TRASH
+	 *
+	 * If the update is successful, an order activity log entry is created with the current date, time,
+	 * and status change message.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $data An object containing:
+	 *                     - int    $order_id       The ID of the order to update.
+	 *                     - string $order_status   The new status of the order.
+	 *                     - string $cancel_reason  The reason for the order cancellation (optional).
+	 *
+	 * @return bool True on successful update, false on failure.
+	 */
+	public function order_status_update( object $data ) {
+		$response = QueryHelper::update(
+			$this->table_name,
+			array(
+				'order_status' => $data->order_status,
+			),
+			array( 'id' => $data->order_id )
+		);
+
+		if ( $response ) {
+			$user_name    = '';
+			$current_user = wp_get_current_user();
+
+			if ( $current_user->exists() ) {
+				$user_name = $current_user->display_name;
+			}
+
+			$message = '';
+
+			if ( self::ORDER_CANCELLED === $data->order_status ) {
+				$message = empty( $user_name ) ? __( 'Order marked as cancelled', 'tutor' ) : sprintf( __( 'Order marked as cancelled by %s', 'tutor' ), $user_name );
+			} elseif ( self::ORDER_COMPLETED === $data->order_status ) {
+				$message = empty( $user_name ) ? __( 'Order marked as completed', 'tutor' ) : sprintf( __( 'Order marked as completed by %s', 'tutor' ), $user_name );
+			} elseif ( self::ORDER_INCOMPLETE === $data->order_status ) {
+				$message = empty( $user_name ) ? __( 'Order marked as incomplete', 'tutor' ) : sprintf( __( 'Order marked as incomplete by %s', 'tutor' ), $user_name );
+			} elseif ( self::ORDER_TRASH === $data->order_status ) {
+				$message = empty( $user_name ) ? __( 'Order marked as trash', 'tutor' ) : sprintf( __( 'Order marked as trash by %s', 'tutor' ), $user_name );
+			}
+
+			// insert cancel reason in tutor_ordermeta table.
+			if ( self::ORDER_CANCELLED === $data->order_status && ! empty( $data->cancel_reason ) ) {
+				$meta_payload             = new \stdClass();
+				$meta_payload->order_id   = $data->order_id;
+				$meta_payload->meta_key   = OrderActivitiesModel::META_KEY_CANCEL_REASON;
+				$meta_payload->meta_value = $data->cancel_reason;
+
+				$order_activities_model = new OrderActivitiesModel();
+				$order_activities_model->add_order_meta( $meta_payload );
+			}
+
+			if ( $message ) {
+				$value = wp_json_encode(
+					array(
+						'message' => $message,
+					)
+				);
+				OrderActivitiesController::store_order_activity( $data->order_id, OrderActivitiesModel::META_KEY_HISTORY, $value );
+			}
+		}
+
+		return $response;
+	}
+
 }

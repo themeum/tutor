@@ -100,6 +100,13 @@ class OrderController {
 			add_action( 'wp_ajax_tutor_order_paid', array( $this, 'order_mark_as_paid' ) );
 
 			/**
+			 * Handle AJAX request for canceling an order status.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_order_cancel', array( $this, 'order_cancel' ) );
+
+			/**
 			 * Handle AJAX request for marking an order's refund action.
 			 *
 			 * @since 3.0.0
@@ -246,14 +253,6 @@ class OrderController {
 		$payload->note           = $params['note'];
 		$payload->payment_status = $this->model::PAYMENT_PAID;
 
-		if ( empty( $payload->order_id ) ) {
-			$this->json_response(
-				__( 'Order ID is required', 'tutor' ),
-				null,
-				HttpHelper::STATUS_BAD_REQUEST
-			);
-		}
-
 		$response = $this->model->payment_status_update( $payload );
 
 		do_action( 'tutor_after_order_mark_as_paid', $params );
@@ -267,6 +266,64 @@ class OrderController {
 		}
 
 		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
+	}
+
+	/**
+	 * Cancels an order.
+	 *
+	 * This function cancels an order by updating its status to 'cancelled'. It performs nonce verification
+	 * and checks the user's permissions before proceeding. It also validates the input parameters and
+	 * triggers actions before and after the order cancellation.
+	 *
+	 * The function responds with an appropriate JSON message depending on the outcome of the cancellation process.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void Responds with a JSON message indicating success or failure.
+	 */
+	public function order_cancel() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+
+		$params = array(
+			'order_id'      => Input::post( 'order_id' ),
+			'cancel_reason' => Input::post( 'cancel_reason' ),
+		);
+
+		// Validate request.
+		$validation = $this->validate( $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
+				$validation->errors,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		do_action( 'tutor_before_order_cancel', $params );
+
+		$payload               = new \stdClass();
+		$payload               = (object) $params;
+		$payload->order_status = $this->model::ORDER_CANCELLED;
+
+		$response = $this->model->order_status_update( $payload );
+
+		do_action( 'tutor_after_order_cancel', $params );
+
+		if ( ! $response ) {
+			$this->json_response(
+				__( 'Failed to cancel order status', 'tutor' ),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$this->json_response( __( 'Order successfully canceled', 'tutor' ) );
 	}
 
 	/**
@@ -298,7 +355,7 @@ class OrderController {
 		$meta_value = array(
 			'amount'  => $amount,
 			'reason'  => $reason,
-			'message' => __( 'Refunded by ', 'tutor' ) . get_userdata( get_current_user_id() )->display_name,
+			'message' => __( 'Order refunded by ', 'tutor' ) . get_userdata( get_current_user_id() )->display_name,
 		);
 
 		$order_data = $this->model->get_order_by_id( $order_id );
