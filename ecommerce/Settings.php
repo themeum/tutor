@@ -391,7 +391,7 @@ class Settings {
 		array_push( $settings['ecommerce_payment']['blocks'], $paypal );
 		array_push( $settings['ecommerce_payment']['blocks'], $stripe );
 
-		apply_filters( 'tutor_ecommerce_payment_settings', $settings );
+		$settings = apply_filters( 'tutor_ecommerce_payment_settings', $settings );
 
 		array_push( $settings['ecommerce_payment']['blocks'], $manual_gateways );
 
