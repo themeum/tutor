@@ -626,39 +626,6 @@ export const useDeleteQuizQuestionMutation = () => {
   });
 };
 
-const duplicateQuizQuestion = (questionId: ID) => {
-  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_question_duplicate',
-    question_id: questionId,
-  });
-};
-
-export const useDuplicateQuizQuestionMutation = () => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: duplicateQuizQuestion,
-    onSuccess: (response) => {
-      if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['GetQuizDetails'],
-        });
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
-        });
-      }
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    },
-  });
-};
-
 const quizQuestionAnswerOrdering = (payload: QuizQuestionAnswerOrderingPayload) => {
   return authApiInstance.post<QuizQuestionAnswerOrderingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_answer_sorting',

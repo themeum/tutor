@@ -19,6 +19,8 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -27,9 +29,11 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: () => void;
+  onDuplicateOption: (answerId: ID) => void;
   onRemoveOption: () => void;
 }
+
+const courseId = getCourseId();
 
 const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
   const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
@@ -53,6 +57,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
 
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+  const duplicateContentMutation = useDuplicateContentMutation();
 
   const [isEditing, setIsEditing] = useState(
     !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
@@ -95,6 +100,41 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
       image_id: '',
       image_url: '',
     });
+  };
+
+  const createQuizAnswer = async () => {
+    const response = await createQuizAnswerMutation.mutateAsync({
+      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
+      question_id: inputValue.belongs_question_id,
+      answer_title: inputValue.answer_title,
+      image_id: inputValue.image_id || '',
+      answer_view_format: 'text_image',
+      matched_answer_title: inputValue.answer_two_gap_match,
+      question_type: imageMatching ? 'image_matching' : 'matching',
+    });
+
+    const currentAnswerIndex = form
+      .getValues(`questions.${activeQuestionIndex}.question_answers`)
+      .findIndex((answer) => answer.answer_id === inputValue.answer_id);
+
+    if (response.status_code === 201 || response.status_code === 200) {
+      form.setValue(`questions.${activeQuestionIndex}.question_answers.${currentAnswerIndex}`, {
+        ...inputValue,
+        answer_id: response.data,
+      });
+      setIsEditing(false);
+    }
+  };
+
+  const handleDuplicateAnswer = async () => {
+    const response = await duplicateContentMutation.mutateAsync({
+      course_id: courseId,
+      content_id: inputValue.answer_id,
+      content_type: 'answer',
+    });
+    if (response.data) {
+      onDuplicateOption?.(response.data);
+    }
   };
 
   useEffect(() => {
@@ -144,7 +184,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
-                onDuplicateOption();
+                handleDuplicateAnswer();
               }}
             >
               <SVGIcon name="copyPaste" width={24} height={24} />
@@ -288,19 +328,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
-                    const response = await createQuizAnswerMutation.mutateAsync({
-                      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
-                      question_id: inputValue.belongs_question_id,
-                      answer_title: inputValue.answer_title,
-                      image_id: inputValue.image_id || '',
-                      answer_view_format: 'text_image',
-                      matched_answer_title: inputValue.answer_two_gap_match,
-                      question_type: imageMatching ? 'image_matching' : 'matching',
-                    });
-
-                    if (response.status_code === 201 || response.status_code === 200) {
-                      setIsEditing(false);
-                    }
+                    createQuizAnswer();
                   }}
                   disabled={(!inputValue.answer_title && !inputValue.image_id) || !inputValue.answer_two_gap_match}
                 >

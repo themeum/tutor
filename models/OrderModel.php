@@ -331,7 +331,7 @@ class OrderModel {
 
 		$meta_keys = array(
 			OrderActivitiesModel::META_KEY_REFUND,
-			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND
+			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND,
 		);
 
 		// Retrieve order refunds for the given order ID from the 'tutor_ordermeta' table.
@@ -341,7 +341,9 @@ class OrderModel {
 				'order_id' => $order_id,
 				'meta_key' => $meta_keys,
 			),
-			'id'
+			'created_at_gmt',
+			1000,
+			'ASC'
 		);
 
 		if ( empty( $order_refunds ) ) {
@@ -350,14 +352,19 @@ class OrderModel {
 
 		$response = array();
 
-		foreach ( $order_refunds as &$refund ) {
-			$values     = new \stdClass();
-			$values     = json_decode( $refund->meta_value );
-			$values->id = (int) $refund->id;
+		foreach ( $order_refunds as $refund ) {
+			$parsed_meta_value = json_decode( $refund->meta_value );
+			$values            = new \stdClass();
+			$values->id        = (int) $refund->id;
+
+			foreach ( $parsed_meta_value as $key => $value ) {
+				$values->$key = $value;
+			}
+
+			$values->data = $refund->created_at_gmt;
+
 			$response[] = $values;
 		}
-
-		unset( $refund );
 
 		// Custom comparison function for sorting by date.
 		usort(
@@ -526,6 +533,36 @@ class OrderModel {
 			$activity_controller = new OrderActivitiesController();
 			$activity_controller->store_order_activity_for_marked_as_paid( $data->order_id );
 		}
+
+		return $response;
+	}
+
+	/**
+	 * Add a discount to an order.
+	 *
+	 * This function updates the order in the database with the provided discount details.
+	 * It updates the discount type, discount amount, and discount reason for the given order ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $data An object containing the discount details:
+	 *                     - $data->order_id       (int)    The ID of the order.
+	 *                     - $data->discount_type  (string) The type of the discount.
+	 *                     - $data->discount_amount(float)  The amount of the discount.
+	 *                     - $data->discount_reason(string) The reason for the discount.
+	 *
+	 * @return bool True on successful update, false on failure.
+	 */
+	public function add_order_discount( object $data ) {
+		$response = QueryHelper::update(
+			$this->table_name,
+			array(
+				'discount_type'   => $data->discount_type,
+				'discount_amount' => $data->discount_amount,
+				'discount_reason' => $data->discount_reason,
+			),
+			array( 'id' => $data->order_id )
+		);
 
 		return $response;
 	}

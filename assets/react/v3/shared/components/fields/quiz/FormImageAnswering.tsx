@@ -17,6 +17,8 @@ import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -25,9 +27,11 @@ import { nanoid } from '@Utils/util';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: () => void;
+  onDuplicateOption: (answerId: ID) => void;
   onRemoveOption: () => void;
 }
+
+const courseId = getCourseId();
 
 const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
   const { activeQuestionId } = useQuizModalContext();
@@ -43,6 +47,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
 
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+  const duplicateContentMutation = useDuplicateContentMutation();
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
@@ -85,11 +90,15 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
     });
   };
 
-  const handleCorrectAnswer = () => {
-    field.onChange({
-      ...inputValue,
-      is_correct: '1',
+  const handleDuplicateAnswer = async () => {
+    const response = await duplicateContentMutation.mutateAsync({
+      course_id: courseId,
+      content_id: inputValue.answer_id,
+      content_type: 'answer',
     });
+    if (response.data) {
+      onDuplicateOption?.(response.data);
+    }
   };
 
   useEffect(() => {
@@ -141,7 +150,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
-                onDuplicateOption();
+                handleDuplicateAnswer();
               }}
             >
               <SVGIcon name="copyPaste" width={24} height={24} />
