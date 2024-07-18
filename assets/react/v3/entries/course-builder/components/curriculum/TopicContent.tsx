@@ -34,6 +34,7 @@ import { AnimationType } from '@Hooks/useAnimation';
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
+
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;

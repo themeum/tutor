@@ -170,7 +170,7 @@ const Matching = () => {
                       <FormMatching
                         {...controllerProps}
                         index={index}
-                        onDuplicateOption={() => {
+                        onDuplicateOption={(answerId) => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
                             answer_id: nanoid(),

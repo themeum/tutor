@@ -132,10 +132,10 @@ const ImageAnswering = () => {
                 render={(controllerProps) => (
                   <FormImageAnswering
                     {...controllerProps}
-                    onDuplicateOption={() => {
+                    onDuplicateOption={(answerId) => {
                       const duplicateOption: QuizQuestionOption = {
                         ...option,
-                        answer_id: nanoid(),
+                        answer_id: answerId || '',
                         is_correct: '0' as '0' | '1',
                       };
                       const duplicateIndex = index + 1;

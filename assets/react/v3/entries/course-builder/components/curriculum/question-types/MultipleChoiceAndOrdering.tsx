@@ -31,7 +31,7 @@ import {
   useQuizQuestionAnswerOrderingMutation,
 } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
+import { moveTo } from '@Utils/util';
 
 const MultipleChoiceAndOrdering = () => {
   const isInitialRenderRef = useRef(false);
@@ -214,7 +214,7 @@ const MultipleChoiceAndOrdering = () => {
           <DragOverlay>
             <Show when={activeSortItem}>
               {(item) => {
-                const index = filteredOptionsFields.findIndex((option) => option.answer_id === item.answer_id);
+                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
                 return (
                   <Controller
                     key={activeSortId}
@@ -226,10 +226,11 @@ const MultipleChoiceAndOrdering = () => {
                       <FormMultipleChoiceAndOrdering
                         {...controllerProps}
                         hasMultipleCorrectAnswers={multipleCorrectAnswer}
-                        onDuplicateOption={() => {
+                        onDuplicateOption={(answerId) => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
-                            answer_id: nanoid(),
+                            answer_id: answerId || '',
+                            answer_title: `${item.answer_title} (Copy)`,
                             is_correct: '0',
                           };
                           const duplicateIndex = index + 1;
