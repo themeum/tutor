@@ -331,7 +331,7 @@ class OrderModel {
 
 		$meta_keys = array(
 			OrderActivitiesModel::META_KEY_REFUND,
-			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND
+			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND,
 		);
 
 		// Retrieve order refunds for the given order ID from the 'tutor_ordermeta' table.
@@ -341,7 +341,9 @@ class OrderModel {
 				'order_id' => $order_id,
 				'meta_key' => $meta_keys,
 			),
-			'id'
+			'created_at_gmt',
+			1000,
+			'ASC'
 		);
 
 		if ( empty( $order_refunds ) ) {
@@ -350,14 +352,19 @@ class OrderModel {
 
 		$response = array();
 
-		foreach ( $order_refunds as &$refund ) {
-			$values     = new \stdClass();
-			$values     = json_decode( $refund->meta_value );
-			$values->id = (int) $refund->id;
+		foreach ( $order_refunds as $refund ) {
+			$parsed_meta_value = json_decode( $refund->meta_value );
+			$values            = new \stdClass();
+			$values->id        = (int) $refund->id;
+
+			foreach ( $parsed_meta_value as $key => $value ) {
+				$values->$key = $value;
+			}
+
+			$values->data = $refund->created_at_gmt;
+
 			$response[] = $values;
 		}
-
-		unset( $refund );
 
 		// Custom comparison function for sorting by date.
 		usort(
