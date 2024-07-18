@@ -11,5 +11,5 @@ const badgeMap: Record<PaymentStatus, { label: string; type: Variant }> = {
 };
 
 export function PaymentBadge({ status }: { status: PaymentStatus }) {
-	return <TutorBadge variant={badgeMap[status]?.type}>{badgeMap[status]?.label}</TutorBadge>;
+	return <TutorBadge variant={badgeMap[status].type}>{badgeMap[status].label}</TutorBadge>;
 }

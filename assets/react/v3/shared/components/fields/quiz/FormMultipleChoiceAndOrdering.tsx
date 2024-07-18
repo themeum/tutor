@@ -1,30 +1,30 @@
-import { useEffect, useRef, useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { CSS } from '@dnd-kit/utilities';
-import { useSortable } from '@dnd-kit/sortable';
+import { useEffect, useRef, useState } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
+import SVGIcon from '@Atoms/SVGIcon';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import type { FormControllerProps } from '@Utils/form';
-import { isDefined } from '@Utils/types';
-import { animateLayoutChanges } from '@Utils/dndkit';
+import Show from '@Controls/Show';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
   type QuizForm,
+  type QuizQuestionOption,
+  type QuizQuestionType,
   useCreateQuizAnswerMutation,
   useDeleteQuizAnswerMutation,
   useMarkAnswerAsCorrectMutation,
-  type QuizQuestionOption,
-  type QuizQuestionType,
 } from '@CourseBuilderServices/quiz';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
 import { nanoid } from '@Utils/util';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
@@ -72,7 +72,7 @@ const FormMultipleChoiceAndOrdering = ({
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_url);
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
-    isDefined(inputValue.image_id) && isDefined(inputValue.image_url)
+    isDefined(inputValue.image_id) && isDefined(inputValue.image_url),
   );
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 

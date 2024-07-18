@@ -6,10 +6,10 @@ import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import type { Discount } from '@OrderServices/order';
 import { requiredRule } from '@Utils/validation';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
@@ -55,7 +55,6 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          console.log(values);
           alert('@TODO: will be implemented later.');
         })}
       >

@@ -1,9 +1,9 @@
 import { Box, BoxTitle } from '@Atoms/Box';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
 import { useOrderContext } from '@OrderContexts/order-context';
 import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
 function Notes() {

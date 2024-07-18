@@ -1,11 +1,12 @@
 import { css } from '@emotion/react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import { styleUtils } from '@Utils/style-utils';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import FormFillInTheBlanks from '@Components/fields/quiz/FormFillinTheBlanks';
 import { spacing } from '@Config/styles';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import { styleUtils } from '@Utils/style-utils';
+
 const FillInTheBlanks = () => {
   const form = useFormContext<QuizForm>();
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
@@ -25,7 +26,7 @@ const FillInTheBlanks = () => {
       }
       return allOptions;
     },
-    [] as Array<QuizQuestionOption & { index: number }>
+    [] as Array<QuizQuestionOption & { index: number }>,
   );
 
   return (

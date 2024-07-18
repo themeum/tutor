@@ -12,19 +12,19 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 
+import config, { tutorConfig } from '@Config/config';
+import type { GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import type { GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import ZoomMeetingCard from './meeting/ZoomMeetingCard';
-import config, { tutorConfig } from '@Config/config';
-import ZoomMeetingForm from './meeting/ZoomMeetingForm';
-import GoogleMeetForm from './meeting/GoogleMeetForm';
 import GoogleMeetMeetingCard from './meeting/GoogleMeetCard';
+import GoogleMeetForm from './meeting/GoogleMeetForm';
+import ZoomMeetingCard from './meeting/ZoomMeetingCard';
+import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
-import emptyStateImage from '@Images/empty-state-illustration.webp';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
 
 interface LiveClassProps {
   zoomMeetings: ZoomMeeting[];
@@ -74,7 +74,7 @@ const LiveClass = ({
             title={__('Make the learning more interactive and fun using Live class feature! ', 'tutor')}
             description={__(
               'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-              'tutor'
+              'tutor',
             )}
             actions={
               <Button
@@ -102,7 +102,7 @@ const LiveClass = ({
               title={__('You can use this feature by activating Google meet, Zoom or Jitsi from addons', 'tutor')}
               description={__(
                 'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-                'tutor'
+                'tutor',
               )}
               actions={
                 <Button

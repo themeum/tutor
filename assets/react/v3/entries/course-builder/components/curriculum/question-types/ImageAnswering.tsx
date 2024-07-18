@@ -1,36 +1,36 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { createPortal } from 'react-dom';
-import { useMemo, useState } from 'react';
 import {
+  DndContext,
+  DragOverlay,
   KeyboardSensor,
   PointerSensor,
   type UniqueIdentifier,
+  closestCenter,
   useSensor,
   useSensors,
-  DndContext,
-  closestCenter,
-  DragOverlay,
 } from '@dnd-kit/core';
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
 
 import { colorTokens, spacing } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
+import { styleUtils } from '@Utils/style-utils';
+import { moveTo, nanoid } from '@Utils/util';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
-  useQuizQuestionAnswerOrderingMutation,
   type QuizForm,
   type QuizQuestionOption,
+  useQuizQuestionAnswerOrderingMutation,
 } from '@CourseBuilderServices/quiz';
 
 const ImageAnswering = () => {
@@ -61,7 +61,7 @@ const ImageAnswering = () => {
       }
       return allOptions;
     },
-    [] as Array<QuizQuestionOption & { index: number }>
+    [] as Array<QuizQuestionOption & { index: number }>,
   );
 
   const sensors = useSensors(
@@ -70,7 +70,7 @@ const ImageAnswering = () => {
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
   const activeSortItem = useMemo(() => {
@@ -103,7 +103,7 @@ const ImageAnswering = () => {
             const updatedOptionsOrder = moveTo(
               form.watch(`questions.${activeQuestionIndex}.question_answers`),
               activeIndex,
-              overIndex
+              overIndex,
             );
 
             quizQuestionAnswerOrderingMutation.mutate({
@@ -183,7 +183,7 @@ const ImageAnswering = () => {
               }}
             </Show>
           </DragOverlay>,
-          document.body
+          document.body,
         )}
       </DndContext>
 
@@ -204,7 +204,7 @@ const ImageAnswering = () => {
             {
               shouldFocus: true,
               focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
-            }
+            },
           )
         }
         css={styles.addOptionButton}
