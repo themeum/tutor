@@ -119,7 +119,7 @@ const FormMultiLevelInput = ({
                   name="name"
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormInput {...controllerProps} placeholder={__('Category name')} selectOnFocus />
+                    <FormInput {...controllerProps} placeholder={__('Category name', 'tutor')} selectOnFocus />
                   )}
                 />
                 <Controller
@@ -128,7 +128,7 @@ const FormMultiLevelInput = ({
                   render={(controllerProps) => (
                     <FormMultiLevelSelect
                       {...controllerProps}
-                      placeholder="Select parent"
+                      placeholder={__('Select parent', 'tutor')}
                       options={categoryListQuery.data ?? []}
                       clearable
                     />
