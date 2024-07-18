@@ -438,6 +438,10 @@ export const useDuplicateContentMutation = () => {
           queryKey: ['Topic'],
         });
 
+        queryClient.invalidateQueries({
+          queryKey: ['GetQuizDetails'],
+        });
+
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
