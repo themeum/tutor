@@ -312,7 +312,6 @@ const AssignmentModal = ({
                   type="number"
                   label={__('Time limit', 'tutor')}
                   placeholder="0"
-                  helpText={__('Set the time limit for the course. Set 0 for unlimited time', 'tutor')}
                   dataAttribute="data-time-limit"
                   selectOnFocus
                 />

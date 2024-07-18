@@ -119,10 +119,12 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   const onQuizFormSubmit = async (data: QuizForm) => {
     if (!data.quiz_title) {
       setActiveTab('details');
-      form.setError('quiz_title', { type: 'required', message: __('Quiz title is required', 'tutor') });
-      form.setFocus('quiz_title', {
-        shouldSelect: true,
+
+      Promise.resolve().then(() => {
+        form.trigger('quiz_title');
+        form.setFocus('quiz_title');
       });
+
       return;
     }
 
