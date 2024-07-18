@@ -549,8 +549,9 @@ class OrderModel {
 	 * @since 3.0.0
 	 *
 	 * @param object $data An object containing:
-	 *                     - int    $order_id      The ID of the order to update.
-	 *                     - string $order_status  The new status of the order.
+	 *                     - int    $order_id       The ID of the order to update.
+	 *                     - string $order_status   The new status of the order.
+	 *                     - string $cancel_reason  The reason for the order cancellation (optional).
 	 *
 	 * @return bool True on successful update, false on failure.
 	 */
@@ -581,6 +582,17 @@ class OrderModel {
 				$message = empty( $user_name ) ? __( 'Order marked as incomplete', 'tutor' ) : sprintf( __( 'Order marked as incomplete by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_TRASH === $data->order_status ) {
 				$message = empty( $user_name ) ? __( 'Order marked as trash', 'tutor' ) : sprintf( __( 'Order marked as trash by %s', 'tutor' ), $user_name );
+			}
+
+			// insert cancel reason in tutor_ordermeta table.
+			if ( self::ORDER_CANCELLED === $data->order_status && ! empty( $data->cancel_reason ) ) {
+				$meta_payload             = new \stdClass();
+				$meta_payload->order_id   = $data->order_id;
+				$meta_payload->meta_key   = OrderActivitiesModel::META_KEY_CANCEL_REASON;
+				$meta_payload->meta_value = $data->cancel_reason;
+
+				$order_activities_model = new OrderActivitiesModel();
+				$order_activities_model->add_order_meta( $meta_payload );
 			}
 
 			if ( $message ) {

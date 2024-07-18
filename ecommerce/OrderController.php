@@ -284,7 +284,8 @@ class OrderController {
 		}
 
 		$params = array(
-			'order_id' => Input::post( 'order_id' ),
+			'order_id'      => Input::post( 'order_id' ),
+			'cancel_reason' => Input::post( 'cancel_reason' ),
 		);
 
 		// Validate request.
@@ -300,7 +301,7 @@ class OrderController {
 		do_action( 'tutor_before_order_cancel', $params );
 
 		$payload               = new \stdClass();
-		$payload->order_id     = $params['order_id'];
+		$payload               = (object) $params;
 		$payload->order_status = $this->model::ORDER_CANCELLED;
 
 		$response = $this->model->order_status_update( $payload );
