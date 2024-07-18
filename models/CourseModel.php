@@ -807,10 +807,11 @@ class CourseModel {
 				}
 
 				$author_name      = get_the_author_meta( 'display_name', $course->post_author );
+				$course_prices    = tutor_utils()->get_raw_course_price( $course->ID );
 				$data->id         = (int) $course->ID;
 				$data->title      = $course->post_title;
-				$data->price      = (float) get_post_meta( $data->id, Course::COURSE_PRICE_META, true );
-				$data->sale_price = (float) get_post_meta( $data->id, Course::COURSE_SALE_PRICE_META, true );
+				$data->price      = $course_prices->regular_price;
+				$data->sale_price = $course_prices->sale_price;
 				$data->image      = get_the_post_thumbnail_url( $course->ID );
 				$data->author     = $author_name;
 

@@ -1177,17 +1177,22 @@ class Utils {
 
 		$monetize_by = $this->get_option( 'monetize_by' );
 
-		$product_id = $this->get_course_product_id( $course_id );
-		if ( $product_id ) {
-			if ( 'wc' === $monetize_by && $this->has_wc() ) {
-				$product = wc_get_product( $product_id );
-				if ( $product ) {
-					$prices['regular_price'] = $product->get_regular_price();
-					$prices['sale_price']    = $product->get_sale_price();
+		if ( $this->is_monetize_by_tutor() ) {
+			$prices['regular_price'] = (float) get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+			$prices['sale_price']    = (float) get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+		} else {
+			$product_id = $this->get_course_product_id( $course_id );
+			if ( $product_id ) {
+				if ( 'wc' === $monetize_by && $this->has_wc() ) {
+					$product = wc_get_product( $product_id );
+					if ( $product ) {
+						$prices['regular_price'] = $product->get_regular_price();
+						$prices['sale_price']    = $product->get_sale_price();
+					}
+				} elseif ( 'edd' === $monetize_by && $this->has_edd() ) {
+					$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
+					$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
 				}
-			} elseif ( 'edd' === $monetize_by && $this->has_edd() ) {
-				$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
-				$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
 			}
 		}
 

@@ -412,9 +412,10 @@ class CouponModel {
 					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
 				}
 
+				$course_prices      = tutor_utils()->get_raw_course_price( $course->id );
 				$course->id         = (int) $course->id;
-				$course->price      = (float) get_post_meta( $course->id, Course::COURSE_PRICE_META, true );
-				$course->sale_price = (float) get_post_meta( $course->id, Course::COURSE_SALE_PRICE_META, true );
+				$course->price      = $course_prices->regular_price;
+				$course->sale_price = $course_prices->sale_price;
 				$course->image      = get_the_post_thumbnail_url( $course->id );
 			}
 		}
