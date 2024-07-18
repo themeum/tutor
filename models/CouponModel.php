@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -378,6 +379,7 @@ class CouponModel {
 	 *               - title: The title of the course.
 	 *               - type: The post type of the course (e.g., 'course', 'course-bundle').
 	 *               - price: The price of the course.
+	 *               - sale_price: The sale price of the course.
 	 *               - image: The URL of the course's thumbnail image.
 	 *               - total_courses: (optional) The total number of courses in a bundle, if applicable.
 	 */
@@ -410,9 +412,11 @@ class CouponModel {
 					$course->total_courses = count( $bundle_model->get_bundle_course_ids( $course->id ) );
 				}
 
-				$course->id    = (int) $course->id;
-				$course->price = (float) tutor_utils()->get_course_price( (int) $course->id, false );
-				$course->image = get_the_post_thumbnail_url( $course->id );
+				$course_prices      = tutor_utils()->get_raw_course_price( $course->id );
+				$course->id         = (int) $course->id;
+				$course->price      = $course_prices->regular_price;
+				$course->sale_price = $course_prices->sale_price;
+				$course->image      = get_the_post_thumbnail_url( $course->id );
 			}
 		}
 

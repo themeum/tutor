@@ -14,13 +14,13 @@ import {
   type QuizQuestionType,
   convertQuizQuestionFormDataToPayloadForUpdate,
   useDeleteQuizQuestionMutation,
-  useDuplicateQuizQuestionMutation,
   useUpdateQuizQuestionMutation,
 } from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import type { ID } from '@CourseBuilderServices/curriculum';
+import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -43,6 +43,8 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   ordering: 'quizOrdering',
 };
 
+const courseId = getCourseId();
+
 const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
   const { activeQuestionIndex, activeQuestionId, setActiveQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
@@ -50,7 +52,15 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
 
   const updateQuizQuestionMutation = useUpdateQuizQuestionMutation();
   const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation();
-  const duplicateQuizQuestionMutation = useDuplicateQuizQuestionMutation();
+  const duplicateContentMutation = useDuplicateContentMutation();
+
+  const handleDuplicateQuestion = () => {
+    duplicateContentMutation.mutate({
+      course_id: courseId,
+      content_id: question.question_id,
+      content_type: 'question',
+    });
+  };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
@@ -119,7 +129,7 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
           icon={<SVGIcon name="duplicate" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
-            duplicateQuizQuestionMutation.mutate(question.question_id);
+            handleDuplicateQuestion();
           }}
         />
         <ThreeDots.Option

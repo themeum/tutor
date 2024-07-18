@@ -211,7 +211,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
                       try {
                         await updateQuestionMutation.mutateAsync(
-                          convertQuizQuestionFormDataToPayloadForUpdate(payload)
+                          convertQuizQuestionFormDataToPayloadForUpdate(payload),
                         );
                       } catch (error) {
                         console.log(error);
@@ -270,7 +270,17 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                           />
 
                           <div css={styles.quizFormButtonWrapper}>
-                            <Button variant="text" type="button" onClick={() => setIsEdit(false)} size="small">
+                            <Button
+                              variant="text"
+                              type="button"
+                              onClick={() => {
+                                if (!form.watch('quiz_title')) {
+                                  closeModal();
+                                }
+                                setIsEdit(false);
+                              }}
+                              size="small"
+                            >
                               {__('Cancel', 'tutor')}
                             </Button>
                             <Button

@@ -12,6 +12,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
 import {
   type QuizForm,
   type QuizQuestionOption,
@@ -20,6 +21,7 @@ import {
   useDeleteQuizAnswerMutation,
   useMarkAnswerAsCorrectMutation,
 } from '@CourseBuilderServices/quiz';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -30,9 +32,11 @@ import { useFormContext, useWatch } from 'react-hook-form';
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   hasMultipleCorrectAnswers: boolean;
-  onDuplicateOption: () => void;
+  onDuplicateOption: (answerId: ID) => void;
   onRemoveOption: () => void;
 }
+
+const courseId = getCourseId();
 
 const FormMultipleChoiceAndOrdering = ({
   field,
@@ -69,6 +73,7 @@ const FormMultipleChoiceAndOrdering = ({
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
   const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
+  const duplicateContentMutation = useDuplicateContentMutation();
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_url);
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
@@ -123,6 +128,17 @@ const FormMultipleChoiceAndOrdering = ({
       answerId: inputValue.answer_id,
       isCorrect: inputValue.is_correct === '1' ? '0' : '1',
     });
+  };
+
+  const handleDuplicateAnswer = async () => {
+    const response = await duplicateContentMutation.mutateAsync({
+      course_id: courseId,
+      content_id: inputValue.answer_id,
+      content_type: 'answer',
+    });
+    if (response.data) {
+      onDuplicateOption?.(response.data);
+    }
   };
 
   const createQuizAnswer = async () => {
@@ -254,7 +270,7 @@ const FormMultipleChoiceAndOrdering = ({
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
-                onDuplicateOption();
+                handleDuplicateAnswer();
               }}
             >
               <SVGIcon name="copyPaste" width={24} height={24} />
