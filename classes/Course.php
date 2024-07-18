@@ -1114,6 +1114,14 @@ class Course extends Tutor_Base {
 			$dashboard_url = get_admin_url();
 		}
 
+		/**
+		 * EDD product list
+		 */
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+		if ( 'edd' === $monetize_by && tutor_utils()->has_edd() ) {
+			$data['edd_products'] = tutor_utils()->get_edd_products();
+		}
+
 		$data['dashboard_url'] = $dashboard_url;
 		$data['timezones']     = tutor_global_timezone_lists();
 		$data['wp_rest_nonce'] = wp_create_nonce( 'wp_rest' );
