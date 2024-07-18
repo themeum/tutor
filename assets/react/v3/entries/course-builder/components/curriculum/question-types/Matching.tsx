@@ -1,18 +1,18 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useMemo, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
+  type UniqueIdentifier,
   closestCenter,
   useSensor,
   useSensors,
-  type UniqueIdentifier,
 } from '@dnd-kit/core';
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
@@ -22,14 +22,14 @@ import FormMatching from '@Components/fields/quiz/FormMatching';
 import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { moveTo, nanoid } from '@Utils/util';
-import { styleUtils } from '@Utils/style-utils';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
-  useQuizQuestionAnswerOrderingMutation,
   type QuizForm,
   type QuizQuestionOption,
+  useQuizQuestionAnswerOrderingMutation,
 } from '@CourseBuilderServices/quiz';
+import { styleUtils } from '@Utils/style-utils';
+import { moveTo, nanoid } from '@Utils/util';
 
 const Matching = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -65,7 +65,7 @@ const Matching = () => {
       }
       return allOptions;
     },
-    [] as Array<QuizQuestionOption & { index: number }>
+    [] as Array<QuizQuestionOption & { index: number }>,
   );
 
   const sensors = useSensors(
@@ -74,7 +74,7 @@ const Matching = () => {
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
   const activeSortItem = useMemo(() => {
@@ -107,7 +107,7 @@ const Matching = () => {
             const updatedOptionsOrder = moveTo(
               form.watch(`questions.${activeQuestionIndex}.question_answers`),
               activeIndex,
-              overIndex
+              overIndex,
             );
 
             quizQuestionAnswerOrderingMutation.mutate({
@@ -187,7 +187,7 @@ const Matching = () => {
               }}
             </Show>
           </DragOverlay>,
-          document.body
+          document.body,
         )}
       </DndContext>
 
@@ -208,7 +208,7 @@ const Matching = () => {
             {
               shouldFocus: true,
               focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
-            }
+            },
           )
         }
         css={styles.addOptionButton}

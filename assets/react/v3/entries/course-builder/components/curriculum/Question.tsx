@@ -1,29 +1,29 @@
-import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { __ } from '@wordpress/i18n';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
 
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
   type QuizForm,
-  useDeleteQuizQuestionMutation,
-  useDuplicateQuizQuestionMutation,
-  useUpdateQuizQuestionMutation,
   type QuizQuestion,
   type QuizQuestionType,
   convertQuizQuestionFormDataToPayloadForUpdate,
+  useDeleteQuizQuestionMutation,
+  useDuplicateQuizQuestionMutation,
+  useUpdateQuizQuestionMutation,
 } from '@CourseBuilderServices/quiz';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import type { IconCollection } from '@Utils/types';
+import type { ID } from '@CourseBuilderServices/curriculum';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
-import type { ID } from '@CourseBuilderServices/curriculum';
+import type { IconCollection } from '@Utils/types';
 import { useFormContext } from 'react-hook-form';
 
 interface QuestionProps {

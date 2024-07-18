@@ -1,8 +1,8 @@
 import { useToast } from '@Atoms/Toast';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { Prettify } from '@Utils/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 
 interface OrderSummary {
@@ -25,7 +25,7 @@ interface OrderBundle extends OrderSummary {
 export type OrderSummaryItem = Prettify<OrderCourse | OrderBundle>;
 
 export type DiscountType = 'flat' | 'percentage';
-export type PaymentStatus =  'paid' | 'unpaid' | 'failed' | 'partially-refunded' | 'refunded';
+export type PaymentStatus = 'paid' | 'unpaid' | 'failed' | 'partially-refunded' | 'refunded';
 export type OrderStatus = 'incomplete' | 'completed' | 'cancelled' | 'trash';
 export type ActivityType =
   | 'order-placed'
@@ -58,7 +58,6 @@ export interface Refund {
   reason?: string;
   date?: string;
 }
-
 
 export interface Activity {
   id: number;
@@ -97,7 +96,7 @@ export interface Order {
   refunds?: Refund[];
   transaction_id?: string | null;
   activities?: Activity[];
-  coupon_code?: string|null;
+  coupon_code?: string | null;
   created_by: string;
   updated_by?: string;
   created_at_gmt: string;
@@ -118,9 +117,9 @@ export const useOrderDetailsQuery = (orderId: number) => {
   });
 };
 
-const postAdminComment = (params: {order_id: number; comment: string;}) => {
+const postAdminComment = (params: { order_id: number; comment: string }) => {
   return wpAjaxInstance.post(endpoints.ADMIN_COMMENT, params);
-}
+};
 
 export const useAdminCommentMutation = () => {
   const queryClient = useQueryClient();
@@ -128,18 +127,18 @@ export const useAdminCommentMutation = () => {
   return useMutation({
     mutationFn: postAdminComment,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['OrderDetails']});
-      showToast({type: 'success', message: __('Comment added successfully.')});
+      queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
+      showToast({ type: 'success', message: __('Comment added successfully.') });
     },
     onError: (error) => {
-      showToast({type: 'danger', message: error.message});
-    }
+      showToast({ type: 'danger', message: error.message });
+    },
   });
-}
+};
 
-const markAsPaid = (params: {order_id: number; note: string}) => {
+const markAsPaid = (params: { order_id: number; note: string }) => {
   return wpAjaxInstance.post(endpoints.ORDER_MARK_AS_PAID, params);
-}
+};
 
 export const useMarkAsPaidMutation = () => {
   const queryClient = useQueryClient();
@@ -147,18 +146,18 @@ export const useMarkAsPaidMutation = () => {
   return useMutation({
     mutationFn: markAsPaid,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['OrderDetails']});
-      showToast({type: 'success', message: __('Order marked as paid', 'tutor')})
+      queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
+      showToast({ type: 'success', message: __('Order marked as paid', 'tutor') });
     },
     onError: (error) => {
-      showToast({type: 'danger', message: error.message});
-    }
-  })
-}
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
+};
 
-const refundOrder = (params: {order_id: number; reason: string; is_remove_enrolment: boolean}) => {
+const refundOrder = (params: { order_id: number; reason: string; is_remove_enrolment: boolean }) => {
   return wpAjaxInstance.post(endpoints.ORDER_REFUND, params);
-}
+};
 
 export const useRefundOrderMutation = () => {
   const queryClient = useQueryClient();
@@ -167,11 +166,11 @@ export const useRefundOrderMutation = () => {
   return useMutation({
     mutationFn: refundOrder,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['OrderDetails']});
-      showToast({type: 'success', message: __('Order refunded successfully', 'tutor')})
+      queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
+      showToast({ type: 'success', message: __('Order refunded successfully', 'tutor') });
     },
     onError: (error) => {
-      showToast({type: 'danger', message: error.message});
-    }
-  })
-}
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
+};

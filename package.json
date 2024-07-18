@@ -34,7 +34,7 @@
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.23.3",
-    "@biomejs/biome": "^1.6.1",
+    "@biomejs/biome": "^1.8.3",
     "@emotion/babel-preset-css-prop": "^11.11.0",
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.48",

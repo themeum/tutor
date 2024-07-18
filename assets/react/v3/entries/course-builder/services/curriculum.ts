@@ -3,17 +3,17 @@ import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
 import { useToast } from '@Atoms/Toast';
-import { authApiInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
+import type { Media } from '@Components/fields/FormImageInput';
+import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type {
   GoogleMeet,
   PrerequisiteCourses,
   TutorMutationResponse,
   ZoomMeeting,
 } from '@CourseBuilderServices/course';
-import type { CourseVideo } from '@Components/fields/FormVideoInput';
-import type { Media } from '@Components/fields/FormImageInput';
+import { authApiInstance } from '@Utils/api';
+import endpoints from '@Utils/endpoints';
+import type { ErrorResponse } from '@Utils/form';
 
 export type ID = string | number;
 

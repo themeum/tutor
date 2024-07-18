@@ -1,7 +1,7 @@
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
 import React from 'react';
 
 const badgeVariants = {
@@ -50,7 +50,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
 Badge.displayName = 'Badge';

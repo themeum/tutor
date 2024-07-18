@@ -1,16 +1,16 @@
-import { css } from '@emotion/react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { css } from '@emotion/react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import type { FormControllerProps } from '@Utils/form';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { nanoid } from '@Utils/util';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { useMarkAnswerAsCorrectMutation, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import { type QuizQuestionOption, useMarkAnswerAsCorrectMutation } from '@CourseBuilderServices/quiz';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { nanoid } from '@Utils/util';
 
 interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
   index: number;

@@ -117,7 +117,7 @@ export const CourseNavigatorProvider = ({ children }: CourseNavigatorProviderPro
           ...step,
           isActive: index === currentIndex,
         };
-      })
+      }),
     );
   }, [currentIndex]);
 
@@ -132,7 +132,7 @@ export const CourseNavigatorProvider = ({ children }: CourseNavigatorProviderPro
           isCompleted: courseContent.step_completion_status[step.id],
           isDisabled: false,
         };
-      })
+      }),
     );
   }, [courseContent]);
 

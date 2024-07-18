@@ -349,4 +349,45 @@ export const styleUtils = {
     outline: 2px solid ${colorTokens.stroke.brand};
     outline-offset: 1px;
   `,
+  dateAndTimeWrapper: css`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background-image: linear-gradient(to right, transparent, ${colorTokens.stroke.default}, transparent);
+    border-radius: ${borderRadius[6]};
+
+    &:focus-within {
+      box-shadow: none;
+      border-color: ${colorTokens.stroke.default};
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+
+    > div {
+      &:first-of-type {
+        input {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          border-right: none;
+          &:focus {
+            box-shadow: none;
+            outline: none;
+          }
+        }
+      }
+
+      &:last-of-type {
+        input {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left: none;
+
+          &:focus {
+            box-shadow: none;
+            outline: none;
+          }
+        }
+      }
+    }
+  `,
 };

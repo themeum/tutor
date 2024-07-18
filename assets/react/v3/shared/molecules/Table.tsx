@@ -149,7 +149,7 @@ const Table = <TableItem,>({
   const renderTableBody = () => {
     if (loading) {
       return range(itemsPerPage).map((index) =>
-        renderRow(index, () => <Skeleton animation height={20} width={`${getRandom(40, 80)}%`} />)
+        renderRow(index, () => <Skeleton animation height={20} width={`${getRandom(40, 80)}%`} />),
       );
     }
 

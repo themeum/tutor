@@ -1,6 +1,6 @@
-import { TutorBadge, type Variant } from "@Atoms/TutorBadge";
-import type { PaymentStatus } from "@OrderServices/order";
-import { __ } from "@wordpress/i18n";
+import { TutorBadge, type Variant } from '@Atoms/TutorBadge';
+import type { PaymentStatus } from '@OrderServices/order';
+import { __ } from '@wordpress/i18n';
 
 const badgeMap: Record<PaymentStatus, { label: string; type: Variant }> = {
   paid: { label: __('Paid', 'tutor'), type: 'success' },

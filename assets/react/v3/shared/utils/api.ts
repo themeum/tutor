@@ -1,6 +1,6 @@
+import * as querystring from 'querystring';
 import config, { tutorConfig } from '@Config/config';
 import axios from 'axios';
-import * as querystring from 'querystring';
 
 import { convertToFormData, serializeParams } from './form';
 
@@ -44,7 +44,7 @@ authApiInstance.interceptors.request.use(
   },
   (err) => {
     return Promise.reject(err);
-  }
+  },
 );
 
 authApiInstance.interceptors.response.use((response) => {
@@ -83,7 +83,7 @@ wpAuthApiInstance.interceptors.request.use(
   },
   (err) => {
     return Promise.reject(err);
-  }
+  },
 );
 
 wpAuthApiInstance.interceptors.response.use((response) => {
@@ -116,7 +116,7 @@ wpAjaxInstance.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 wpAjaxInstance.interceptors.response.use((response) => Promise.resolve(response).then((res) => res.data));
