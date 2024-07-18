@@ -318,7 +318,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               closePopover={() => setIsConfirmationOpen(false)}
               maxWidth="258px"
               title={__('Do you want to cancel the progress without saving?', 'tutor')}
-              message="There is unsaved changes."
+              message={__('There is unsaved changes.')}
               animationType={AnimationType.slideUp}
               arrow="top"
               positionModifier={{ top: -50, left: 0 }}

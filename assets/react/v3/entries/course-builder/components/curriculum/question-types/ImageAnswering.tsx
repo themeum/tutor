@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { createPortal } from 'react-dom';
 import { useMemo, useState } from 'react';
 import {
@@ -73,12 +73,6 @@ const ImageAnswering = () => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  // const currentOptions = useWatch({
-  //   control: form.control,
-  //   name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
-  //   defaultValue: [],
-  // }).filter((option) => option.belongs_question_type === 'image_answering');
-
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
@@ -86,31 +80,6 @@ const ImageAnswering = () => {
 
     return filteredOptionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, filteredOptionsFields]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  // useEffect(() => {
-  //   const changedOptions = currentOptions.filter((option) => {
-  //     const index = filteredOptionsFields.findIndex((item) => item.answer_id === option.answer_id);
-  //     const previousOption = filteredOptionsFields[index] || {};
-  //     return option?.is_correct !== previousOption?.is_correct;
-  //   });
-
-  //   if (changedOptions.length === 0) {
-  //     return;
-  //   }
-
-  //   const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
-
-  //   const updatedOptions = [...currentOptions];
-  //   updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
-  //   updatedOptions.forEach((_, index) => {
-  //     if (index !== changedOptionIndex) {
-  //       updatedOptions[index] = Object.assign({}, updatedOptions[index], { is_correct: '0' });
-  //     }
-  //   });
-
-  //   form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
-  // }, [currentOptions]);
 
   return (
     <div css={styles.optionWrapper}>

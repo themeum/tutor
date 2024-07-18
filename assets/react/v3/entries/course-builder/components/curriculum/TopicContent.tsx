@@ -242,8 +242,8 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         triggerRef={deleteRef}
         closePopover={() => setIsDeletePopoverOpen(false)}
         maxWidth="258px"
-        title={`Delete topic "${topic.title}"`}
-        message="Are you sure you want to delete this content from your course? This cannot be undone."
+        title={`${__('Delete topic')} "${topic.title}"`}
+        message={__('Are you sure you want to delete this content from your course? This cannot be undone.')}
         animationType={AnimationType.slideUp}
         arrow="auto"
         hideArrow

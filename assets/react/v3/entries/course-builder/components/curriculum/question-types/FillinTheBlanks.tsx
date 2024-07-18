@@ -28,8 +28,6 @@ const FillInTheBlanks = () => {
     [] as Array<QuizQuestionOption & { index: number }>
   );
 
-  console.log(filteredOptionsFields);
-
   return (
     <div css={styles.optionWrapper}>
       <Controller

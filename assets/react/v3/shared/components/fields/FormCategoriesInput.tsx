@@ -119,7 +119,7 @@ const FormMultiLevelInput = ({
                   name="name"
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormInput {...controllerProps} placeholder="Category name" selectOnFocus />
+                    <FormInput {...controllerProps} placeholder={__('Category name')} selectOnFocus />
                   )}
                 />
                 <Controller
