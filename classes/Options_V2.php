@@ -70,7 +70,6 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_apply_settings', array( $this, 'tutor_apply_settings' ) );
 		add_action( 'wp_ajax_load_saved_data', array( $this, 'load_saved_data' ) );
 		add_action( 'wp_ajax_reset_settings_data', array( $this, 'reset_settings_data' ) );
-		add_action( 'wp_ajax_add_manual_payment_method', array( $this, 'add_manual_payment_method' ) );
 	}
 
 	/**
@@ -1759,26 +1758,5 @@ class Options_V2 {
 			require tutor()->path . "views/options/template/{$template_slug}";
 		}
 		return ob_get_clean();
-	}
-
-	/**
-	 * Save tutor manual payments.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void send wp_json response
-	 */
-	public function add_manual_payment_method() {
-		tutor_utils()->checking_nonce();
-
-		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
-
-		$payment_name         = (array) tutor_utils()->array_get( 'payment_name', $_POST, array() );
-		$additional_details   = (array) tutor_utils()->array_get( 'additional_details', $_POST, array() );
-		$payment_instructions = (array) tutor_utils()->array_get( 'payment_instructions', $_POST, array() );
-
-		// @TODO Need to save to the database
-
-		wp_send_json_success();
 	}
 }
