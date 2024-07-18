@@ -136,10 +136,9 @@ const LessonModal = ({
     }
   }, [lessonDetails]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('title');
-  }, []);
+  }, [form]);
 
   const onSubmit = async (data: LessonForm) => {
     const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
@@ -187,6 +186,7 @@ const LessonModal = ({
                   label={__('Lesson Name', 'tutor')}
                   placeholder={__('Enter Lesson Name', 'tutor')}
                   maxLimit={245}
+                  selectOnFocus
                   isClearable
                 />
               )}
@@ -304,6 +304,7 @@ const LessonModal = ({
                     }
                     helpText={__('This lesson will be available after the given number of days.', 'tutor')}
                     placeholder="0"
+                    selectOnFocus
                   />
                 )}
               />

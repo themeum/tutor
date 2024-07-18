@@ -123,6 +123,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
         meeting_enrolledAsAttendee: currentMeeting.meeting_data.attendees === 'Yes' ? true : false,
       });
     }
+    meetingForm.setFocus('meeting_name');
   }, [currentMeeting]);
 
   return (
@@ -137,6 +138,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
               {...controllerProps}
               label={__('Meeting Name', 'tutor')}
               placeholder={__('Enter meeting name', 'tutor')}
+              selectOnFocus
             />
           )}
         />
@@ -251,6 +253,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
               label={__('Timezone', 'tutor')}
               placeholder={__('Timezone', 'tutor')}
               options={timeZonesOptions}
+              isSearchable
             />
           )}
         />

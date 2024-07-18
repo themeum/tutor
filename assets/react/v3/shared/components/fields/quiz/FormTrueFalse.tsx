@@ -10,7 +10,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { nanoid } from '@Utils/util';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import { useMarkAnswerAsCorrectMutation, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
 
 interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -27,6 +27,8 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
     belongs_question_type: 'true_false',
   };
 
+  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.value.answer_id || 0,
     animateLayoutChanges,
@@ -42,6 +44,11 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
     field.onChange({
       ...inputValue,
       is_correct: '1',
+    });
+
+    markAnswerAsCorrectMutation.mutate({
+      answerId: inputValue.answer_id,
+      isCorrect: '1',
     });
   };
 
@@ -60,15 +67,7 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
           width={32}
         />
       </button>
-      <div
-        css={styles.optionLabel({ isSelected: !!Number(field.value.is_correct) })}
-        onClick={handleCorrectAnswer}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleCorrectAnswer();
-          }
-        }}
-      >
+      <div css={styles.optionLabel({ isSelected: !!Number(field.value.is_correct) })}>
         <span>{inputValue.answer_title}</span>
 
         <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
@@ -135,7 +134,6 @@ const styles = {
     border-radius: ${borderRadius.card};
     padding: ${spacing[12]} ${spacing[16]};
     background-color: ${colorTokens.background.white};
-    cursor: pointer;
 
     [data-visually-hidden] {
       opacity: 0;

@@ -1,3 +1,4 @@
+import type React from 'react';
 import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -25,7 +26,7 @@ export const QuizModalContextProvider = ({
   children,
   quizId,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode | ((item: NonNullable<number>) => React.ReactNode);
   quizId: ID;
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
@@ -60,7 +61,7 @@ export const QuizModalContextProvider = ({
 
   return (
     <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId }}>
-      {children}
+      {typeof children === 'function' ? children(activeQuestionIndex) : children}
     </QuizModalContext.Provider>
   );
 };

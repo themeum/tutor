@@ -88,6 +88,7 @@ const CourseSettings = () => {
                   placeholder="0"
                   type="number"
                   isClearable
+                  selectOnFocus
                 />
               )}
             />
@@ -122,6 +123,7 @@ const CourseSettings = () => {
                   placeholder="0"
                   type="number"
                   isClearable
+                  selectOnFocus
                 />
               )}
             />
