@@ -7,7 +7,8 @@ import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
-import CourseListModal from '@CouponComponents/modals/CourseListModal';
+import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
+import CategoryListTable from '@CouponComponents/modals/CourseListModal/CategoryListTable';
 
 import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
@@ -82,9 +83,10 @@ function CouponDiscount() {
 					icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
 					onClick={() => {
 						showModal({
-							component: CourseListModal,
+							component: CouponSelectItemModal,
 							props: {
 								title: __('Selected items', 'tutor'),
+								children: <CategoryListTable form={form} />,
 							},
 						});
 					}}

@@ -1,26 +1,24 @@
 import Checkbox from '@Atoms/CheckBox';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
-import { borderRadius, colorPalate, spacing } from '@Config/styles';
+import { borderRadius, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
-import Table, { Colors, Column } from '@Molecules/Table';
+import Table, { Column } from '@Molecules/Table';
 
-import { Course, mockCouponData, useCourseListQuery } from '@CouponServices/coupon';
+import { Coupon, Course, mockCouponData, useCourseListQuery } from '@CouponServices/coupon';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
+import { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
 
-const tableColors: Colors = {
-	bodyRowSelectedHover: colorPalate.surface.selected.neutral,
-};
-
-interface CourseListProps {
-	selectedCourseIds: string[];
+interface CourseListTableProps {
+	form: UseFormReturn<Coupon, any, undefined>;
 }
 
-const CourseList = ({ selectedCourseIds }: CourseListProps) => {
+const CourseListTable = ({ form }: CourseListTableProps) => {
+	console.log(form.getValues());
 	const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
 		updateQueryParams: false,
 	});
@@ -94,7 +92,7 @@ const CourseList = ({ selectedCourseIds }: CourseListProps) => {
 	);
 };
 
-export default CourseList;
+export default CourseListTable;
 
 const styles = {
 	tableActions: css`

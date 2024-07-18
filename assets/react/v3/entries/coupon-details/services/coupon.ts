@@ -17,7 +17,7 @@ export interface Course {
 	regular_price_formatted: string;
 }
 
-export interface Category {
+export interface CourseCategory {
 	id: number;
 	title: string;
 	image: '';
@@ -42,7 +42,7 @@ export interface Coupon {
 	discount_value: number;
 	applies_to: CouponAppliesTo;
 	courses?: Course[];
-	categories?: Category[];
+	categories?: CourseCategory[];
 	bundles?: Course[];
 	usage_limit_status: boolean;
 	usage_limit_value: number;
@@ -294,6 +294,29 @@ export const useCourseListQuery = (params: PaginatedParams) => {
 				totalPages: 1,
 			};
 			return getCourseList(params).then((res) => {
+				return res.data;
+			});
+		},
+	});
+};
+
+const getCategoryList = (params: PaginatedParams) => {
+	return authApiInstance.get<PaginatedResult<Category>>(endpoints.CATEGORY_LIST, {
+		params: transformParams(params),
+	});
+};
+
+export const useCategoryListQuery = (params: PaginatedParams) => {
+	return useQuery({
+		queryKey: ['CourseList', params],
+		placeholderData: keepPreviousData,
+		queryFn: () => {
+			return {
+				results: mockCouponData.categories ?? [],
+				totalItems: mockCouponData.categories?.length ?? 0,
+				totalPages: 1,
+			};
+			return getCategoryList(params).then((res) => {
 				return res.data;
 			});
 		},

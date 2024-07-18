@@ -4,16 +4,17 @@ import type { ModalProps } from '@Components/modals/Modal';
 import { spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import CourseList from './CourseList';
+import { ReactNode } from 'react';
 
-interface CourseListModalProps extends ModalProps {
+interface CouponSelectItemModalProps extends ModalProps {
 	closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+	children: ReactNode;
 }
 
-function CourseListModal({ title, closeModal, actions }: CourseListModalProps) {
+function CouponSelectItemModal({ title, closeModal, actions, children }: CouponSelectItemModalProps) {
 	return (
 		<BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
-			<CourseList selectedCourseIds={[]} />
+			{children}
 			<div css={styles.footer}>
 				<Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
 					{__('Cancel', 'tutor')}
@@ -26,7 +27,7 @@ function CourseListModal({ title, closeModal, actions }: CourseListModalProps) {
 	);
 }
 
-export default CourseListModal;
+export default CouponSelectItemModal;
 
 const styles = {
 	footer: css`
