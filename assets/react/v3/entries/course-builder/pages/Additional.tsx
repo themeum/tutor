@@ -80,6 +80,7 @@ const Additional = () => {
                   label={__('What Will I Learn?', 'tutor')}
                   placeholder={__('Write here the course benefits', 'tutor')}
                   maxLimit={245}
+                  selectOnFocus
                 />
               )}
             />
@@ -92,6 +93,7 @@ const Additional = () => {
                   {...controllerProps}
                   label={__('Targeted Audience', 'tutor')}
                   placeholder={__('Specify the target audience that will benefit the most from the course', 'tutor')}
+                  selectOnFocus
                 />
               )}
             />
@@ -151,6 +153,7 @@ const Additional = () => {
                   {...controllerProps}
                   label={__('Requirements/Instructions', 'tutor')}
                   placeholder={__('Additional requirements or special instructions for the students', 'tutor')}
+                  selectOnFocus
                 />
               )}
             />

@@ -175,6 +175,7 @@ const CourseBasic = () => {
                   maxLimit={255}
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
+                  selectOnFocus
                 />
               )}
             />
@@ -222,7 +223,13 @@ const CourseBasic = () => {
             name="post_password"
             control={form.control}
             render={(controllerProps) => (
-              <FormInput {...controllerProps} label={__('Password', 'tutor')} type="password" isPassword />
+              <FormInput
+                {...controllerProps}
+                label={__('Password', 'tutor')}
+                type="password"
+                isPassword
+                selectOnFocus
+              />
             )}
           />
         )}

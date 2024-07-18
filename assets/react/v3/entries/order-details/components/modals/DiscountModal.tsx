@@ -116,6 +116,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
                   {...props}
                   label={__('Discount reason', 'tutor')}
                   placeholder={__('Enter the reason of this discount', 'tutor')}
+                  selectOnFocus
                 />
               )}
             />

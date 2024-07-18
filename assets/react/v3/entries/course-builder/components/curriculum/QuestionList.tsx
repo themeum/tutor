@@ -75,7 +75,9 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   const handleAddQuestion = async () => {
     if (quizId) {
       const response = await createQuizQuestion.mutateAsync(quizId);
-      setActiveQuestionId(response.data);
+      if (response) {
+        form.setValue('questions', [...form.watch('questions'), response.data]);
+      }
     }
   };
 

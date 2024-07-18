@@ -62,6 +62,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   type="number"
                   label={__('Time limit', 'tutor')}
                   helpText={__('Time limit for this quiz. 0 means no time limit.', 'tutor')}
+                  selectOnFocus
                 />
               )}
             />
@@ -137,6 +138,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   'Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit',
                   'tutor',
                 )}
+                selectOnFocus
               />
             )}
           />
@@ -183,6 +185,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   'This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount is greater than available question, then all questions will be available for a student to answer.',
                   'tutor',
                 )}
+                selectOnFocus
               />
             )}
           />
@@ -204,6 +207,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     }
                     helpText={__('This lesson will be available after the given number of days.', 'tutor')}
                     placeholder="0"
+                    selectOnFocus
                   />
                 )}
               />
@@ -333,6 +337,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   'Student will place answer in short answer question type within this characters limit.',
                   'tutor',
                 )}
+                selectOnFocus
               />
             )}
           />
@@ -348,6 +353,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   'Students will place the answer in the Open-Ended/Essay question type within this character limit.',
                   'tutor',
                 )}
+                selectOnFocus
               />
             )}
           />

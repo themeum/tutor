@@ -12,7 +12,7 @@ import {
   type QuizForm,
   type QuizQuestion,
   type QuizQuestionType,
-  convertQuizFormDataToPayloadForUpdate,
+  convertQuizQuestionFormDataToPayloadForUpdate,
   useDeleteQuizQuestionMutation,
   useDuplicateQuizQuestionMutation,
   useUpdateQuizQuestionMutation,
@@ -32,7 +32,7 @@ interface QuestionProps {
   onRemoveQuestion: () => void;
 }
 
-const questionTypeIconMap: Record<QuizQuestionType, IconCollection> = {
+const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>, IconCollection> = {
   true_false: 'quizTrueFalse',
   multiple_choice: 'quizMultiChoice',
   open_ended: 'quizEssay',
@@ -72,14 +72,14 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       style={style}
       tabIndex={-1}
       onClick={() => {
-        const payload = convertQuizFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
+        const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
         updateQuizQuestionMutation.mutate(payload);
 
         setActiveQuestionId(question.question_id);
       }}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
-          const payload = convertQuizFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
+          const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
           updateQuizQuestionMutation.mutate(payload);
 
           setActiveQuestionId(question.question_id);
@@ -87,7 +87,14 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       }}
     >
       <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
-        <SVGIcon name={questionTypeIconMap[question.question_type]} width={24} height={24} data-question-icon />
+        <SVGIcon
+          name={
+            questionTypeIconMap[question.question_type as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]
+          }
+          width={24}
+          height={24}
+          data-question-icon
+        />
         <button {...listeners} type="button" css={styleUtils.resetButton}>
           <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
         </button>

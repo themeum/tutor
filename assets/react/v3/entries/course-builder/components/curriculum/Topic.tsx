@@ -30,6 +30,7 @@ import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import ThreeDots from '@Molecules/ThreeDots';
 
 import {
+  type ID,
   type Content as TopicContentType,
   useDeleteTopicMutation,
   useSaveTopicMutation,
@@ -74,7 +75,8 @@ interface TopicProps {
   onDelete?: () => void;
   onCopy?: () => void;
   onSort?: (activeIndex: number, overIndex: number) => void;
-  onCollapse?: () => void;
+  onCollapse?: (topicId: ID) => void;
+  onEdit?: (topicId: ID) => void;
   isOverlay?: boolean;
 }
 
@@ -87,7 +89,7 @@ const hasLiveAddons = true;
 
 const courseId = getCourseId();
 
-const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false }: TopicProps) => {
+const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay = false }: TopicProps) => {
   const courseDetailsForm = useFormContext<CourseFormData>();
   const form = useFormWithGlobalError<TopicForm>({
     defaultValues: {
@@ -177,7 +179,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     }
 
     return () => document.removeEventListener('click', handleOutsideClick);
-  }, []);
+  }, [isEdit]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -232,6 +234,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     });
 
     if (response.data) {
+      onEdit?.(response.data);
       setIsEdit(false);
     }
   };
@@ -267,11 +270,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           <div css={styles.headerContent}>
             <div
               css={styles.grabberInput({ isOverlay })}
-              onClick={() => onCollapse?.()}
+              onClick={() => onCollapse?.(topic.id)}
               onKeyDown={(event) => {
                 event.stopPropagation();
                 if (event.key === 'Enter' || event.key === ' ') {
-                  onCollapse?.();
+                  onCollapse?.(topic.id);
                 }
               }}
             >
@@ -293,7 +296,12 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                     name="title"
                     rules={{ required: __('Title is required', 'tutor') }}
                     render={(controllerProps) => (
-                      <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
+                      <FormInput
+                        {...controllerProps}
+                        placeholder={__('Add a title', 'tutor')}
+                        isSecondary
+                        selectOnFocus
+                      />
                     )}
                   />
                 </div>
@@ -310,7 +318,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                     onClick={() => {
                       setIsEdit(true);
                       if (topic.isCollapsed) {
-                        onCollapse?.();
+                        onCollapse?.(topic.id);
                       }
                     }}
                   >
@@ -376,7 +384,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 css={styles.actionButton}
                 disabled={!topic.isSaved}
                 onClick={() => {
-                  onCollapse?.();
+                  onCollapse?.(topic.id);
                 }}
               >
                 <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
@@ -479,6 +487,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                             total_question: content.total_question || 0,
                           }}
                           onCopy={() => createDuplicateContent(content)}
+                          onDelete={() => {
+                            setContent((previousContent) => previousContent.filter((item) => item.ID !== content.ID));
+                          }}
                         />
                       );
                     }}

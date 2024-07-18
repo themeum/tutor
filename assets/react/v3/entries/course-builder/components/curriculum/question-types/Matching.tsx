@@ -12,7 +12,7 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
@@ -48,6 +48,26 @@ const Matching = () => {
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
+
+  const imageMatching = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.imageMatching` as 'questions.0.imageMatching',
+    defaultValue: false,
+  });
+
+  const filteredOptionsFields = optionsFields.reduce(
+    (allOptions, option, index) => {
+      if (option.belongs_question_type === (imageMatching ? 'image_matching' : 'matching')) {
+        allOptions.push({
+          ...option,
+          index: index,
+        });
+      }
+      return allOptions;
+    },
+    [] as Array<QuizQuestionOption & { index: number }>,
+  );
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -57,45 +77,13 @@ const Matching = () => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
-  const currentOptions = useWatch({
-    control: form.control,
-    name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
-    defaultValue: [],
-  });
-
   const activeSortItem = useMemo(() => {
     if (!activeSortId) {
       return null;
     }
 
-    return optionsFields.find((item) => item.answer_id === activeSortId);
-  }, [activeSortId, optionsFields]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    const changedOptions = currentOptions.filter((option) => {
-      const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = optionsFields[index];
-      return previousOption && option.is_correct !== previousOption.is_correct;
-    });
-
-    if (changedOptions.length === 0) {
-      return;
-    }
-
-    const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
-
-    const updatedOptions = [...currentOptions];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
-
-    for (const [index, option] of updatedOptions.entries()) {
-      if (index !== changedOptionIndex) {
-        updatedOptions[index] = { ...option, is_correct: '0' };
-      }
-    }
-
-    form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
-  }, [currentOptions]);
+    return filteredOptionsFields.find((item) => item.answer_id === activeSortId);
+  }, [activeSortId, filteredOptionsFields]);
 
   return (
     <div css={styles.optionWrapper}>
@@ -134,30 +122,31 @@ const Matching = () => {
         }}
       >
         <SortableContext
-          items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
+          items={filteredOptionsFields.map((item) => ({ ...item, id: item.answer_id }))}
           strategy={verticalListSortingStrategy}
         >
-          <For each={optionsFields}>
+          <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
-                key={option.id}
+                key={option.answer_id}
                 control={form.control}
-                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
+                name={
+                  `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
+                }
                 render={(controllerProps) => (
                   <FormMatching
                     {...controllerProps}
                     index={index}
-                    onRemoveOption={() => removeOption(index)}
+                    onRemoveOption={() => removeOption(option.index)}
                     onDuplicateOption={() => {
                       const duplicateOption: QuizQuestionOption = {
                         ...option,
                         answer_id: nanoid(),
                         is_correct: '0',
                       };
-                      const duplicateIndex = index + 1;
+                      const duplicateIndex = option.index + 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
-                    imageMatching={form.watch(`questions.${activeQuestionIndex}.imageMatching`)}
                   />
                 )}
               />
@@ -191,7 +180,6 @@ const Matching = () => {
                           insertOption(duplicateIndex, duplicateOption);
                         }}
                         onRemoveOption={() => removeOption(index)}
-                        imageMatching={form.watch(`questions.${activeQuestionIndex}.imageMatching`)}
                       />
                     )}
                   />
@@ -212,7 +200,7 @@ const Matching = () => {
               answer_title: '',
               is_correct: '0',
               belongs_question_id: activeQuestionId,
-              belongs_question_type: 'matching',
+              belongs_question_type: imageMatching ? 'image_matching' : 'matching',
               answer_order: optionsFields.length,
               answer_two_gap_match: '',
               answer_view_format: '',
@@ -238,6 +226,7 @@ const styles = {
   optionWrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
+    padding-left: ${spacing[40]};
   `,
   addOptionButton: css`
     ${styleUtils.resetButton}
@@ -245,7 +234,7 @@ const styles = {
     align-items: center;
     gap: ${spacing[8]};
     color: ${colorTokens.text.brand};
-    margin-left: ${spacing[48]};
+    margin-left: ${spacing[8]};
     margin-top: ${spacing[28]};
 
     svg {

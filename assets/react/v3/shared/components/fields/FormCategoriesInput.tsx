@@ -44,7 +44,10 @@ const FormMultiLevelInput = ({
   const [isOpen, setIsOpen] = useState(false);
   const { ref: scrollElementRef, isScrolling } = useIsScrolling<HTMLDivElement>();
 
-  const form = useFormWithGlobalError();
+  const form = useFormWithGlobalError<{
+    name: string;
+    parent: number | null;
+  }>();
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -115,7 +118,9 @@ const FormMultiLevelInput = ({
                 <Controller
                   name="name"
                   control={form.control}
-                  render={(controllerProps) => <FormInput {...controllerProps} placeholder="Category name" />}
+                  render={(controllerProps) => (
+                    <FormInput {...controllerProps} placeholder={__('Category name', 'tutor')} selectOnFocus />
+                  )}
                 />
                 <Controller
                   name="parent"
@@ -123,7 +128,7 @@ const FormMultiLevelInput = ({
                   render={(controllerProps) => (
                     <FormMultiLevelSelect
                       {...controllerProps}
-                      placeholder="Select parent"
+                      placeholder={__('Select parent', 'tutor')}
                       options={categoryListQuery.data ?? []}
                       clearable
                     />
@@ -202,6 +207,7 @@ export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) =>
         onChange={() => {
           onChange(option.id);
         }}
+        labelCss={styles.checkboxLabel}
       />
 
       {renderBranches()}
@@ -219,6 +225,9 @@ const styles = {
   categoryListWrapper: css`
     max-height: 208px;
     overflow: auto;
+  `,
+  checkboxLabel: css`
+    line-height: 1.88rem !important;
   `,
   branchItem: ({ leftBarHeight, hasParent }: { leftBarHeight: string; hasParent: boolean }) => css`
     line-height: ${spacing[32]};

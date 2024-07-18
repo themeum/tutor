@@ -128,6 +128,8 @@ const QuestionConditions = () => {
                 label={__('Point For This Answer', 'tutor')}
                 type="number"
                 isInlineLabel
+                placeholder="0"
+                selectOnFocus
                 style={css`
                   max-width: 72px;
                 `}

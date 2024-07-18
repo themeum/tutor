@@ -161,7 +161,7 @@ const FormSelectInput = <T,>({
                   autoComplete="off"
                   readOnly={readOnly || !isSearchable}
                   placeholder={placeholder}
-                  value={inputValue}
+                  value={searchText || inputValue}
                   title={inputValue}
                   onChange={(event) => {
                     setInputValue(event.target.value);
@@ -275,6 +275,7 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     position: relative;
+    background-color: ${colorTokens.background.white};
   `,
   leftIcon: ({
     hasDescription = false,

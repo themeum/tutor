@@ -11,7 +11,6 @@ import {
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
@@ -29,7 +28,7 @@ import {
   useQuizQuestionAnswerOrderingMutation,
 } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
+import { moveTo } from '@Utils/util';
 
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -43,6 +42,17 @@ const TrueFalse = () => {
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
+
+  const filteredOptionsFields = optionsFields.reduce(
+    (allOptions, option, index) => {
+      if (option.belongs_question_type === 'true_false') {
+        allOptions.push({ ...option, index: index });
+      }
+
+      return allOptions;
+    },
+    [] as Array<QuizQuestionOption & { index: number }>,
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -64,41 +74,8 @@ const TrueFalse = () => {
       return null;
     }
 
-    return optionsFields.find((item) => item.answer_id === activeSortId);
-  }, [activeSortId, optionsFields]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (
-      optionsFields.length === 2 &&
-      optionsFields.every((option: QuizQuestionOption) => option.belongs_question_type === 'true_false')
-    ) {
-      return;
-    }
-
-    form.setValue(`questions.${activeQuestionIndex}.question_answers`, [
-      {
-        answer_id: nanoid(),
-        answer_title: __('True', 'tutor'),
-        is_correct: '0',
-        belongs_question_id: activeQuestionId,
-        belongs_question_type: 'true_false',
-        answer_order: 0,
-        answer_two_gap_match: '',
-        answer_view_format: '',
-      },
-      {
-        answer_id: nanoid(),
-        answer_title: __('False', 'tutor'),
-        is_correct: '0',
-        belongs_question_id: activeQuestionId,
-        belongs_question_type: 'true_false',
-        answer_order: 1,
-        answer_two_gap_match: '',
-        answer_view_format: '',
-      },
-    ]);
-  }, [optionsFields.length]);
+    return filteredOptionsFields.find((item) => item.answer_id === activeSortId);
+  }, [activeSortId, filteredOptionsFields]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -163,15 +140,17 @@ const TrueFalse = () => {
         }}
       >
         <SortableContext
-          items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
+          items={filteredOptionsFields.map((item) => ({ ...item, id: item.answer_id }))}
           strategy={verticalListSortingStrategy}
         >
-          <For each={optionsFields}>
+          <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
-                key={option.id}
+                key={option.answer_id}
                 control={form.control}
-                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
+                name={
+                  `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
+                }
                 render={(controllerProps) => <FormTrueFalse {...controllerProps} index={index} />}
               />
             )}

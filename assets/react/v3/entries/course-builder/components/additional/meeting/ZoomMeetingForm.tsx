@@ -114,6 +114,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
         meeting_host: Object.keys(meetingHost)[0],
       });
     }
+    meetingForm.setFocus('meeting_name');
   }, [currentMeeting]);
 
   return (
@@ -130,6 +131,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               {...controllerProps}
               label={__('Meeting Name', 'tutor')}
               placeholder={__('Enter meeting name', 'tutor')}
+              selectOnFocus
             />
           )}
         />
@@ -184,7 +186,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 required: __('Duration is required', 'tutor'),
               }}
               render={(controllerProps) => (
-                <FormInput {...controllerProps} placeholder={__('Duration', 'tutor')} type="number" />
+                <FormInput {...controllerProps} placeholder={__('Duration', 'tutor')} type="number" selectOnFocus />
               )}
             />
             <Controller
@@ -255,6 +257,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               placeholder={__('Enter meeting password', 'tutor')}
               type="password"
               isPassword
+              selectOnFocus
             />
           )}
         />
@@ -271,6 +274,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               label={__('Meeting Host', 'tutor')}
               placeholder={__('Enter meeting host', 'tutor')}
               disabled
+              selectOnFocus
             />
           )}
         />
