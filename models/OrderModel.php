@@ -353,11 +353,11 @@ class OrderModel {
 		$response = array();
 
 		foreach ( $order_refunds as $refund ) {
-			$json_values = json_decode( $refund->meta_value );
-			$values      = new \stdClass();
-			$values->id  = (int) $refund->id;
+			$parsed_meta_value = json_decode( $refund->meta_value );
+			$values            = new \stdClass();
+			$values->id        = (int) $refund->id;
 
-			foreach ( $json_values as $key => $value ) {
+			foreach ( $parsed_meta_value as $key => $value ) {
 				$values->$key = $value;
 			}
 
