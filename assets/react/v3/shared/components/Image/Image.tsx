@@ -92,7 +92,7 @@ const Image = ({ src, alt, width = 0, height = 0, layout = ImageLayout.Intrinsic
   if (layout !== ImageLayout.Fill) {
     if (!width && !height) {
       throw Error(
-        `Image with src "${src}" must use "width" and "height" properties or layout={ImageLayout.Fill} property.`
+        `Image with src "${src}" must use "width" and "height" properties or layout={ImageLayout.Fill} property.`,
       );
     }
   }

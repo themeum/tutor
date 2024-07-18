@@ -1,4 +1,3 @@
-import { createPortal } from 'react-dom';
 import {
   DndContext,
   DragOverlay,
@@ -14,25 +13,26 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import Question from '@CourseBuilderComponents/curriculum/Question';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
-import { moveTo } from '@Utils/util';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import {
   type QuizForm,
   useCreateQuizQuestionMutation,
   useQuizQuestionSortingMutation,
 } from '@CourseBuilderServices/quiz';
+import { styleUtils } from '@Utils/style-utils';
+import { moveTo } from '@Utils/util';
 
 interface QuestionListProps {
   quizId?: ID;
@@ -61,7 +61,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
   const activeSortItem = useMemo(() => {
@@ -75,7 +75,9 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   const handleAddQuestion = async () => {
     if (quizId) {
       const response = await createQuizQuestion.mutateAsync(quizId);
-      setActiveQuestionId(response.data);
+      if (response) {
+        form.setValue('questions', [...form.watch('questions'), response.data]);
+      }
     }
   };
 
@@ -160,7 +162,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
                   }}
                 </Show>
               </DragOverlay>,
-              document.body
+              document.body,
             )}
           </DndContext>
         </Show>

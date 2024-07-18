@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { animated } from '@react-spring/web';
-import { useRef, useState, type ReactNode } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
@@ -107,9 +107,12 @@ const styles = {
 			`
     }
 
-    ${isAlternative && css`
+    ${
+      isAlternative &&
+      css`
       padding: ${spacing[12]} ${spacing[16]} ${spacing[12]} ${spacing[24]};
-    `}
+    `
+    }
 	`,
   headerAndAction: css`
 		display: flex;

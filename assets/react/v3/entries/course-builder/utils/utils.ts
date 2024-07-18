@@ -20,7 +20,10 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
       source: '',
     }),
     'pricing[type]': data.course_price_type,
-    'pricing[product_id]': data.course_product_id,
+    ...(data.course_price_type !== 'free' &&
+      data.course_product_id && {
+        'pricing[product_id]': data.course_product_id,
+      }),
 
     course_price: data.course_price ?? 0,
     course_sale_price: data.course_sale_price ?? 0,
@@ -109,7 +112,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
-    course_pricing_category: courseDetails.course_pricing_category ?? 'subscription',
+    course_pricing_category: courseDetails.course_pricing_category ?? 'regular',
     course_price_type: courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
@@ -156,7 +159,7 @@ export const convertLessonDataToPayload = (
   data: LessonForm,
   lessonId: ID,
   topicId: ID,
-  contentDripType: ContentDripType
+  contentDripType: ContentDripType,
 ): LessonPayload => {
   return {
     ...(lessonId && { lesson_id: lessonId }),
@@ -197,7 +200,7 @@ export const convertAssignmentDataToPayload = (
   data: AssignmentForm,
   assignmentId: ID,
   topicId: ID,
-  contentDripType: ContentDripType
+  contentDripType: ContentDripType,
 ): AssignmentPayload => {
   return {
     ...(assignmentId && { assignment_id: assignmentId }),

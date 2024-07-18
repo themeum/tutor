@@ -1,34 +1,34 @@
-import { Controller } from 'react-hook-form';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
-import { css } from '@emotion/react';
+import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
+import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
+import FormDateInput from '@Components/fields/FormDateInput';
+import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
-import FormFileUploader from '@Components/fields/FormFileUploader';
-import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { useLessonDetailsQuery, useSaveLessonMutation, type ID } from '@CourseBuilderServices/curriculum';
-import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import Show from '@Controls/Show';
 import {
+  type ContentDripType,
   type PrerequisiteCourses,
   usePrerequisiteCoursesQuery,
-  type ContentDripType,
 } from '@CourseBuilderServices/course';
+import { type ID, useLessonDetailsQuery, useSaveLessonMutation } from '@CourseBuilderServices/curriculum';
+import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
@@ -105,7 +105,7 @@ const LessonModal = ({
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites'
+    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites',
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -136,10 +136,9 @@ const LessonModal = ({
     }
   }, [lessonDetails]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('title');
-  }, []);
+  }, [form]);
 
   const onSubmit = async (data: LessonForm) => {
     const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
@@ -187,6 +186,7 @@ const LessonModal = ({
                   label={__('Lesson Name', 'tutor')}
                   placeholder={__('Enter Lesson Name', 'tutor')}
                   maxLimit={245}
+                  selectOnFocus
                   isClearable
                 />
               )}
@@ -304,6 +304,7 @@ const LessonModal = ({
                     }
                     helpText={__('This lesson will be available after the given number of days.', 'tutor')}
                     placeholder="0"
+                    selectOnFocus
                   />
                 )}
               />
@@ -324,7 +325,7 @@ const LessonModal = ({
                     }
                     helpText={__(
                       'This lesson will be available from the given date. Leave empty to make it available immediately.',
-                      'tutor'
+                      'tutor',
                     )}
                   />
                 )}
@@ -391,7 +392,7 @@ const LessonModal = ({
               <div css={styles.previewInfo}>
                 {__(
                   'Course preview is on, from now on any users/guest can view this lesson without enrolling the course.',
-                  'tutor'
+                  'tutor',
                 )}
               </div>
             </Show>

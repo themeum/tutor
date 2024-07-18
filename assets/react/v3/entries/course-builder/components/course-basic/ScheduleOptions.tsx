@@ -52,7 +52,7 @@ const ScheduleOptions = () => {
     setShowForm(false);
     form.setValue(
       'post_date',
-      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond)
+      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond),
     );
   };
 
@@ -73,7 +73,7 @@ const ScheduleOptions = () => {
           when={showForm}
           fallback={<div css={styles.scheduleInfo}>{__(`${scheduleDate} at ${scheduleTime}`, 'tutor')}</div>}
         >
-          <div css={styles.dateAndTimeWrapper}>
+          <div css={styleUtils.dateAndTimeWrapper}>
             <Controller
               name="schedule_date"
               control={scheduleForm.control}
@@ -123,44 +123,7 @@ const styles = {
     gap: ${spacing[8]};
     background-color: ${colorTokens.bg.white};
   `,
-  dateAndTimeWrapper: css`
-    display: grid;
-    grid-template-columns: 1fr 124px;
-    gap: 1px;
-    background-image: linear-gradient(to right, transparent, ${colorTokens.stroke.default}, transparent);
-    border-radius: ${borderRadius[6]};
 
-    &:focus-within {
-      ${styleUtils.inputFocus};
-    }
-
-    > div {
-      &:first-of-type {
-        input {
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-          border-right: none;
-          &:focus {
-            box-shadow: none;
-            outline: none;
-          }
-        }
-      }
-
-      &:last-of-type {
-        input {
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-          border-left: none;
-
-          &:focus {
-            box-shadow: none;
-            outline: none;
-          }
-        }
-      }
-    }
-  `,
   scheduleButtonsWrapper: css`
     display: flex;
     gap: ${spacing[12]};
