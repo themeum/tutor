@@ -10016,29 +10016,4 @@ class Utils {
 
 		return (object) json_decode( $response['body'], true );
 	}
-
-	/**
-	 * Retrieve raw prices for a given course.
-	 *
-	 * This method fetches the regular price and sale price for a specified course 
-	 * from the post meta. It returns the prices as a stdClass object with properties 
-	 * for price and sale_price.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int $course_id The ID of the course to retrieve prices for.
-	 * @return object An object containing the price and sale price of the course.
-	 *                   - float $price: The regular price of the course.
-	 *                   - float $sale_price: The sale price of the course.
-	 */
-	public function get_course_raw_prices( $course_id ) {
-		$price      = get_post_meta( $course_id, 'tutor_course_price', true );
-		$sale_price = get_post_meta( $course_id, 'tutor_course_sale_price', true );
-
-		$course_prices             = new \stdClass();
-		$course_prices->price      = $price ? (float) $price : 0;
-		$course_prices->sale_price = $sale_price ? (float) $sale_price : 0;
-
-		return $course_prices;
-	}
 }

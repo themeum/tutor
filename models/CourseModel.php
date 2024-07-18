@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -805,13 +806,11 @@ class CourseModel {
 					$data->total_courses = count( $bundle_model->get_bundle_course_ids( $course->ID ) );
 				}
 
-				$course_prices = tutor_utils()->get_course_raw_prices( (int) $course->ID );
-				$author_name   = get_the_author_meta( 'display_name', $course->post_author );
-
+				$author_name      = get_the_author_meta( 'display_name', $course->post_author );
 				$data->id         = (int) $course->ID;
 				$data->title      = $course->post_title;
-				$data->price      = $course_prices->price;
-				$data->sale_price = $course_prices->sale_price;
+				$data->price      = (float) get_post_meta( $data->id, Course::COURSE_PRICE_META, true );
+				$data->sale_price = (float) get_post_meta( $data->id, Course::COURSE_SALE_PRICE_META, true );
 				$data->image      = get_the_post_thumbnail_url( $course->ID );
 				$data->author     = $author_name;
 
