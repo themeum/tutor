@@ -14,6 +14,7 @@ echo $this->view_template( 'common/reset-button-template.php', $section ); ?>
 
 <?php
 foreach ( $section['blocks'] as $blocks ) :
+	do_action( 'tutor_before_basic_option_single_item', $blocks['slug'], $blocks );
 	if ( empty( $blocks['label'] ) ) :
 		?>
 		<div class="tutor-option-single-item tutor-mb-32">
