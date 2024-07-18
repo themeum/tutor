@@ -174,3 +174,28 @@ export const useRefundOrderMutation = () => {
     },
   });
 };
+
+interface DiscountPayload {
+  order_id: number;
+  discount_type: 'flat' | 'percentage';
+  discount_amount: number;
+  discount_reason: string;
+}
+const addOrderDiscount = (payload: DiscountPayload) => {
+  return wpAjaxInstance.post(endpoints.ADD_ORDER_DISCOUNT, payload);
+};
+
+export const useOrderDiscountMutation = () => {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: addOrderDiscount,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
+      showToast({ type: 'success', message: __('Discount added successfully.', 'tutor') });
+    },
+    onError(error) {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
+};
