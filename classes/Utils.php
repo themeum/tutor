@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
 
@@ -538,7 +539,7 @@ class Utils {
 	 */
 	public function is_monetize_by_tutor() {
 		$monetize_by = $this->get_option( 'monetize_by' );
-		return 'tutor' === $monetize_by;
+		return Ecommerce::MONETIZE_BY === $monetize_by;
 	}
 
 	/**

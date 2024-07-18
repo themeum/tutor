@@ -25,10 +25,10 @@ class OrderActivitiesModel {
 	 *
 	 * @var string
 	 */
-	const META_KEY_HISTORY = 'history';
-	const META_KEY_REFUND  = 'refund';
-	const META_KEY_PARTIALLY_REFUND  = 'partially-refund';
-	const META_KEY_COMMENT = 'comment';
+	const META_KEY_HISTORY          = 'history';
+	const META_KEY_REFUND           = 'refund';
+	const META_KEY_PARTIALLY_REFUND = 'partially-refund';
+	const META_KEY_COMMENT          = 'comment';
 
 
 	/**
@@ -103,31 +103,36 @@ class OrderActivitiesModel {
 			self::META_KEY_COMMENT,
 			self::META_KEY_HISTORY,
 			self::META_KEY_REFUND,
-			self::META_KEY_PARTIALLY_REFUND
+			self::META_KEY_PARTIALLY_REFUND,
 		);
 
 		$order_activities = QueryHelper::get_all(
 			$this->table_name,
 			array(
 				'order_id' => $order_id,
-				'meta_key' => $meta_keys
+				'meta_key' => $meta_keys,
 			),
 			'id'
 		);
-		
+
 		if ( empty( $order_activities ) ) {
 			return array();
 		}
 
 		$response = array();
 
-		foreach ( $order_activities as &$activity ) {
-			$values     = new \stdClass();
-			$values     = json_decode( $activity->meta_value );
-			$values->id = (int) $activity->id;
-			$values->date = $activity->created_at_gmt;
-			$values->type = $activity->meta_key;
-			$response[] = $values;
+		try {
+			foreach ( $order_activities as &$activity ) {
+				$values       = new \stdClass();
+				$values       = json_decode( $activity->meta_value );
+				$values->id   = (int) $activity->id;
+				$values->date = $activity->created_at_gmt;
+				$values->type = $activity->meta_key;
+				$response[]   = $values;
+			}
+		} catch ( \Throwable $th ) {
+			// Log error message with file info.
+			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
 		}
 
 		unset( $activity );
