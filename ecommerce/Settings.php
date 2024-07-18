@@ -21,7 +21,10 @@ class Settings {
 	public function __construct() {
 		add_filter( 'tutor/options/extend/attr', array( __CLASS__, 'add_ecommerce_settings' ) );
 		add_action( 'tutor_after_block_single_item', __CLASS__ . '::add_manual_payment_btn' );
+
+		add_action( 'wp_ajax_add_manual_payment_method', array( $this, 'add_manual_payment_method' ) );
 		add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::get_payment_gateway_settings' );
+
 	}
 
 	/**
@@ -246,12 +249,32 @@ class Settings {
 		}
 		?>
 		<div class="tutor-add-payment-method-container">
-			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
+			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
 				<?php esc_html_e( '+ Add manual payment', 'tutor' ); ?>
 			</button>
 		</div>
 		<?php
-		require_once tutor()->path . 'views/modal/ecommerce/add-manual-payment.php';
+	}
+
+	/**
+	 * Save tutor manual payments methods.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function add_manual_payment_method() {
+		tutor_utils()->checking_nonce();
+
+		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+
+		$payment_name         = (array) tutor_utils()->array_get( 'payment_name', $_POST, array() );
+		$additional_details   = (array) tutor_utils()->array_get( 'additional_details', $_POST, array() );
+		$payment_instructions = (array) tutor_utils()->array_get( 'payment_instructions', $_POST, array() );
+
+		// @TODO Need to save to the database
+
+		wp_send_json_success();
 	}
 
 	/**
