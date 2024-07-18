@@ -331,7 +331,7 @@ class OrderModel {
 
 		$meta_keys = array(
 			OrderActivitiesModel::META_KEY_REFUND,
-			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND
+			OrderActivitiesModel::META_KEY_PARTIALLY_REFUND,
 		);
 
 		// Retrieve order refunds for the given order ID from the 'tutor_ordermeta' table.
@@ -526,6 +526,36 @@ class OrderModel {
 			$activity_controller = new OrderActivitiesController();
 			$activity_controller->store_order_activity_for_marked_as_paid( $data->order_id );
 		}
+
+		return $response;
+	}
+
+	/**
+	 * Add a discount to an order.
+	 *
+	 * This function updates the order in the database with the provided discount details.
+	 * It updates the discount type, discount amount, and discount reason for the given order ID.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $data An object containing the discount details:
+	 *                     - $data->order_id       (int)    The ID of the order.
+	 *                     - $data->discount_type  (string) The type of the discount.
+	 *                     - $data->discount_amount(float)  The amount of the discount.
+	 *                     - $data->discount_reason(string) The reason for the discount.
+	 *
+	 * @return bool True on successful update, false on failure.
+	 */
+	public function add_order_discount( object $data ) {
+		$response = QueryHelper::update(
+			$this->table_name,
+			array(
+				'discount_type'   => $data->discount_type,
+				'discount_amount' => $data->discount_amount,
+				'discount_reason' => $data->discount_reason,
+			),
+			array( 'id' => $data->order_id )
+		);
 
 		return $response;
 	}
