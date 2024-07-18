@@ -35,6 +35,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'course_settings[enrollment_expiry]': data.enrollment_expiry ?? '',
     'course_settings[enable_content_drip]': data.isContentDripEnabled ? 1 : 0,
     'course_settings[content_drip_type]': data.contentDripType,
+    'course_settings[enable_tutor_bp]': data.enable_tutor_bp ? 1 : 0,
 
     'additional_content[course_benefits]': data.course_benefits ?? '',
     'additional_content[course_target_audience]': data.course_target_audience ?? '',
@@ -64,6 +65,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     'video[source_vimeo]': data.video.source_vimeo,
     'video[source_embedded]': data.video.source_embedded,
     tutor_attachments: data.course_attachments?.map((item) => item.id) ?? [],
+    bp_attached_group_ids: data.bp_attached_group_ids,
   };
 };
 
@@ -91,7 +93,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       avatar_url: courseDetails.post_author.tutor_profile_photo_url,
     },
     thumbnail: {
-      id: 0,
+      id: courseDetails.thumbnail_id ? Number(courseDetails.thumbnail_id) : 0,
       title: '',
       url: courseDetails.thumbnail,
     },
@@ -106,6 +108,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_vimeo: courseDetails.video.source_vimeo ?? '',
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
+    course_product_name: courseDetails.course_pricing.product_name,
+    course_pricing_category: courseDetails.course_pricing_category ?? 'subscription',
     course_price_type: courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
@@ -129,8 +133,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
     contentDripType: courseDetails.course_settings.content_drip_type ?? '',
-    course_product_id:
-      String(courseDetails.course_pricing.product_id) !== '0' ? String(courseDetails.course_pricing.product_id) : '',
+    course_product_id: courseDetails.course_pricing.product_id === '0' ? '' : courseDetails.course_pricing.product_id,
     course_instructors:
       courseDetails.course_instructors?.map((item) => {
         return {
@@ -144,6 +147,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
+    enable_tutor_bp: courseDetails.course_settings.enable_tutor_bp === 1 ? true : false,
+    bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
   };
 };
 
@@ -158,7 +163,7 @@ export const convertLessonDataToPayload = (
     topic_id: topicId,
     title: data.title,
     description: data.description,
-    thumbnail_id: data.thumbnail?.id || 0,
+    thumbnail_id: data.thumbnail?.id ?? null,
     'video[source]': data.video?.source || '',
     'video[source_video_id]': data.video?.source_video_id || '',
     'video[poster]': data.video?.poster || '',
