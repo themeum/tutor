@@ -383,7 +383,7 @@ class OrderController {
 		$params = array(
 			'order_id'   => Input::post( 'order_id' ),
 			'meta_key'   => OrderActivitiesModel::META_KEY_COMMENT,
-			'meta_value' => Input::post( 'meta_value' ),
+			'meta_value' => Input::post( 'comment' ),
 		);
 
 		do_action( 'tutor_before_order_comment', $params );
