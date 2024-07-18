@@ -559,7 +559,7 @@ const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
     {
       action: 'tutor_course_list',
       exclude: excludedCourseIds,
-    }
+    },
   );
 };
 

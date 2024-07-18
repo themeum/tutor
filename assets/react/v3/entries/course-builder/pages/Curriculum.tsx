@@ -1,6 +1,3 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -13,6 +10,9 @@ import {
 } from '@dnd-kit/core';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,9 +21,9 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
-import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
 import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
 import For from '@Controls/For';
@@ -36,13 +36,13 @@ import {
   useUpdateCourseContentOrderMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
 import { droppableMeasuringStrategy } from '@Utils/dndkit';
+import { styleUtils } from '@Utils/style-utils';
 import { moveTo, nanoid } from '@Utils/util';
 
+import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
-import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 
 const courseId = getCourseId();
 
@@ -85,7 +85,7 @@ const Curriculum = () => {
         ...item,
         isCollapsed: currentExpandedTopic ? currentExpandedTopic !== item.id : index > 0,
         isSaved: true,
-      }))
+      })),
     );
   }, [courseCurriculumQuery.data]);
 
@@ -104,7 +104,7 @@ const Curriculum = () => {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   if (courseCurriculumQuery.isLoading) {
@@ -146,7 +146,7 @@ const Curriculum = () => {
                   title={__('Create the course journey from here!', 'tutor')}
                   description={__(
                     'when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries',
-                    'tutor'
+                    'tutor',
                   )}
                   actions={
                     <Button
@@ -211,12 +211,12 @@ const Curriculum = () => {
 
                                 return contents;
                               },
-                              {} as { [key: ID]: ID }
+                              {} as { [key: ID]: ID },
                             ),
                           };
                           return topics;
                         },
-                        {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } }
+                        {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } },
                       );
 
                     updateCourseContentOrderMutation.mutate({
@@ -247,7 +247,7 @@ const Curriculum = () => {
                                   }
 
                                   return item;
-                                })
+                                }),
                               )
                             }
                             onCopy={() => {
@@ -285,12 +285,12 @@ const Curriculum = () => {
 
                                           return contents;
                                         },
-                                        {} as { [key: ID]: ID }
+                                        {} as { [key: ID]: ID },
                                       ),
                                     };
                                     return topics;
                                   },
-                                  {} as CourseContentOrderPayload['tutor_topics_lessons_sorting']
+                                  {} as CourseContentOrderPayload['tutor_topics_lessons_sorting'],
                                 );
 
                               updateCourseContentOrderMutation.mutate({
@@ -319,7 +319,7 @@ const Curriculum = () => {
                       }}
                     </Show>
                   </DragOverlay>,
-                  document.body
+                  document.body,
                 )}
               </DndContext>
             </Show>

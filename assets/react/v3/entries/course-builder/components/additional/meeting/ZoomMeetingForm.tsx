@@ -14,14 +14,14 @@ import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import { tutorConfig } from '@Config/config';
+import { DateFormats } from '@Config/constants';
+import { type ZoomMeeting, type ZoomMeetingFormData, useSaveZoomMeetingMutation } from '@CourseBuilderServices/course';
+import { type ID, useZoomMeetingDetailsQuery } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { styleUtils } from '@Utils/style-utils';
-import { useSaveZoomMeetingMutation, type ZoomMeeting, type ZoomMeetingFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { format } from 'date-fns';
-import { DateFormats } from '@Config/constants';
-import { useZoomMeetingDetailsQuery, type ID } from '@CourseBuilderServices/curriculum';
-import { tutorConfig } from '@Config/config';
 import { useEffect } from 'react';
 
 interface ZoomMeetingFormProps {

@@ -1,6 +1,6 @@
 export const useConfirmBeforeUnload = (
   callback: () => boolean,
-  message = 'Are you sure to reload the window? You will lose all of your changes.'
+  message = 'Are you sure to reload the window? You will lose all of your changes.',
 ) => {
   const response = callback();
 
@@ -12,6 +12,6 @@ export const useConfirmBeforeUnload = (
         event.returnValue = message;
       }
     },
-    { capture: true }
+    { capture: true },
   );
 };

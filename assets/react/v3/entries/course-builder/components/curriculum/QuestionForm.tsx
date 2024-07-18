@@ -1,27 +1,27 @@
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
-import { css } from '@emotion/react';
 
 import FormAnswerExplanation from '@Components/fields/FormAnswerExplanation';
 import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
 import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
 
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
+import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
+import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
 import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/question-types/MultipleChoiceAndOrdering';
 import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/question-types/OpenEndedAndShortAnswer';
-import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
-import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
-import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
+import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { styleUtils } from '@Utils/style-utils';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import EmptyState from '@Molecules/EmptyState';
+import { styleUtils } from '@Utils/style-utils';
 
-import emptyStateImage from '@Images/empty-state-illustration.webp';
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import type { QuizForm, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
+import FillInTheBlanks from './question-types/FillinTheBlanks';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();

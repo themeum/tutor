@@ -23,7 +23,7 @@ const App = () => {
             networkMode: 'always',
           },
         },
-      })
+      }),
   );
 
   const routers = useRoutes(routes);
