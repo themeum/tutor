@@ -798,7 +798,7 @@ class CourseModel {
 
 		$final_data = array();
 
-		if ( ! empty( count( $courses ) ) ) {
+		if ( ! empty( $courses ) ) {
 			foreach ( $courses as $course ) {
 				$data = new \stdClass();
 
