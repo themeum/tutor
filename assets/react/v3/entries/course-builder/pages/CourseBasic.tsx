@@ -29,7 +29,7 @@ import {
 } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
-import type { Option } from '@Utils/types';
+import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -142,7 +142,7 @@ const CourseBasic = () => {
       ? [
           currentSelectedProduct,
           ...productsQuery.data.map(({ post_title: label, ID: value }) => ({ label, value })),
-        ].filter((option) => option !== null)
+        ].filter(isDefined)
       : [];
   };
 
@@ -326,7 +326,7 @@ const CourseBasic = () => {
                       }))
                     : []
                 }
-                helpText={__('Sell your product, process by EDD')}
+                helpText={__('Sell your product, process by EDD', 'tutor')}
                 isSearchable
               />
             )}

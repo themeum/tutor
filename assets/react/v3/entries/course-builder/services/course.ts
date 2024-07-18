@@ -555,7 +555,7 @@ export const useProductDetailsQuery = (
         }
         return res.data;
       }),
-    enabled: (!!productId || String(productId) === '0') && coursePriceType === 'paid' && monetizedBy === 'wc',
+    enabled: !!productId && coursePriceType === 'paid' && monetizedBy === 'wc',
   });
 };
 
