@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
+import { useEffect, useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { typography } from '@Config/typography';
 import { LocalStorageKeys, notebook } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { isDefined } from '@Utils/types';
-import { jsonParse, throttle } from '@Utils/util';
-import { styleUtils } from '@Utils/style-utils';
+import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { getFromLocalStorage, setToLocalStorage } from '@Utils/localStorage';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
+import { jsonParse, throttle } from '@Utils/util';
 
 import { useResize } from '@Hooks/useResize';
 
@@ -72,7 +72,7 @@ const Notebook = () => {
       JSON.stringify({
         ...notebookData,
         content: text,
-      })
+      }),
     );
   };
 
@@ -126,7 +126,7 @@ const Notebook = () => {
       const wrapper = wrapperRef.current;
       const { left, top, height, width } = wrapper.style;
       const notebookData: NotebookData = jsonParse<NotebookData>(
-        getFromLocalStorage(LocalStorageKeys.notebook) || '{}'
+        getFromLocalStorage(LocalStorageKeys.notebook) || '{}',
       );
 
       setToLocalStorage(
@@ -139,7 +139,7 @@ const Notebook = () => {
             height,
             width,
           },
-        })
+        }),
       );
     }
   };
@@ -186,7 +186,7 @@ const Notebook = () => {
             height,
             width,
           },
-        })
+        }),
       );
     };
 

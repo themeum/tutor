@@ -3,7 +3,14 @@ import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
 
-export type BadgeVariant = 'neutral' | 'neutralDefault' | 'informational' | 'success' | 'warning' | 'attention' | 'success_fade';
+export type BadgeVariant =
+  | 'neutral'
+  | 'neutralDefault'
+  | 'informational'
+  | 'success'
+  | 'warning'
+  | 'attention'
+  | 'success_fade';
 
 interface BadgeProps {
   children: ReactNode;
@@ -36,8 +43,8 @@ const colorMapping = {
     background: colorPalate.surface.critical.subDuedDepressed,
   },
   success_fade: {
-    background: colorTokens.background.status.success
-  }
+    background: colorTokens.background.status.success,
+  },
 } as const;
 
 const styles = {
