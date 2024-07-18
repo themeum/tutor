@@ -1,6 +1,6 @@
-import * as querystring from 'querystring';
 import config, { tutorConfig } from '@Config/config';
 import axios from 'axios';
+import * as querystring from 'querystring';
 
 import { convertToFormData, serializeParams } from './form';
 
@@ -107,7 +107,9 @@ wpAjaxInstance.interceptors.request.use(
     }
 
     config.data ||= {};
-    const { key: nonce_key, value: nonce_value } = window.tutor_get_nonce_data(true);
+
+    const nonce_key = tutorConfig.nonce_key;
+    const nonce_value = tutorConfig._tutor_nonce;
     config.data = { ...config.data, ...config.params, action: config.url, [nonce_key]: nonce_value };
     config.data = convertToFormData(config.data, config.method);
 
