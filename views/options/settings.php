@@ -134,6 +134,9 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 	<?php
 	//phpcs:ignore -- contain safe data
 	echo $this->view_template( 'common/modal-confirm.php', array() );
-	require_once tutor()->path . 'views/modal/ecommerce/add-manual-payment.php';
+
+	if ( tutor_utils()->is_monetize_by_tutor() ) {
+		require_once tutor()->path . 'views/modal/ecommerce/add-manual-payment.php';
+	}
 	?>
 </div>
