@@ -1,7 +1,7 @@
-import { __ } from '@wordpress/i18n';
-import { Controller, useFormContext } from 'react-hook-form';
 import FormInput from '@Components/fields/FormInput';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import Card from '@Molecules/Card';
@@ -10,18 +10,18 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 
-import { colorTokens, spacing } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
-import Show from '@Controls/Show';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import FormDateInput from '@Components/fields/FormDateInput';
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
+import FormDateInput from '@Components/fields/FormDateInput';
+import { colorTokens, spacing } from '@Config/styles';
+import Show from '@Controls/Show';
 import {
   type ContentDripType,
   type PrerequisiteCourses,
   usePrerequisiteCoursesQuery,
 } from '@CourseBuilderServices/course';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { styleUtils } from '@Utils/style-utils';
 
 const courseId = getCourseId();
 
@@ -38,14 +38,14 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
     form.watch('quiz_option.feedback_mode') === 'retry';
 
   const prerequisiteCoursesForm = form.watch(
-    'quiz_option.content_drip_settings.prerequisites'
+    'quiz_option.content_drip_settings.prerequisites',
   ) as PrerequisiteCourses[];
 
   const prerequisiteCourses = prerequisiteCoursesForm ? prerequisiteCoursesForm.map((item) => String(item.id)) : [];
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites'
+    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites',
   );
 
   return (
@@ -62,6 +62,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   type="number"
                   label={__('Time limit', 'tutor')}
                   helpText={__('Time limit for this quiz. 0 means no time limit.', 'tutor')}
+                  selectOnFocus
                 />
               )}
             />
@@ -135,8 +136,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 label={__('Attempts Allowed', 'tutor')}
                 helpText={__(
                   'Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit',
-                  'tutor'
+                  'tutor',
                 )}
+                selectOnFocus
               />
             )}
           />
@@ -151,7 +153,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   label={__('Passing is Required', 'tutor')}
                   helpText={__(
                     'By enabling this option, the student must have to pass it to access the next quiz',
-                    'tutor'
+                    'tutor',
                   )}
                 />
               )}
@@ -181,8 +183,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 label={__('Max Question Allowed to Answer', 'tutor')}
                 helpText={__(
                   'This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount is greater than available question, then all questions will be available for a student to answer.',
-                  'tutor'
+                  'tutor',
                 )}
+                selectOnFocus
               />
             )}
           />
@@ -204,6 +207,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     }
                     helpText={__('This lesson will be available after the given number of days.', 'tutor')}
                     placeholder="0"
+                    selectOnFocus
                   />
                 )}
               />
@@ -224,7 +228,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     }
                     helpText={__(
                       'This lesson will be available from the given date. Leave empty to make it available immediately.',
-                      'tutor'
+                      'tutor',
                     )}
                   />
                 )}
@@ -266,7 +270,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 label={__('Quiz Auto Start', 'tutor')}
                 helpText={__(
                   'If you enable this option, the quiz will start automatically after the page is loaded.',
-                  'tutor'
+                  'tutor',
                 )}
               />
             )}
@@ -331,8 +335,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 label={__('Short Answer Characters Limit', 'tutor')}
                 helpText={__(
                   'Student will place answer in short answer question type within this characters limit.',
-                  'tutor'
+                  'tutor',
                 )}
+                selectOnFocus
               />
             )}
           />
@@ -346,8 +351,9 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 label={__('Open-Ended/Essay questions answer character limit', 'tutor')}
                 helpText={__(
                   'Students will place the answer in the Open-Ended/Essay question type within this character limit.',
-                  'tutor'
+                  'tutor',
                 )}
+                selectOnFocus
               />
             )}
           />

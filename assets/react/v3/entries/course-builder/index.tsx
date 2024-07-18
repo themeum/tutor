@@ -14,5 +14,5 @@ root.render(
         <App />
       </ErrorBoundary>
     </HashRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

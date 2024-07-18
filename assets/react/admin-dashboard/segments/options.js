@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const inputNumberFields = document.querySelectorAll('.tutor-form-control[type="number"]');
 	// const inputNumberFields = document.querySelectorAll('[type="number"]');
 
-	if(inputNumberFields.length) checkNumberFields(inputNumberFields);
+	if (inputNumberFields.length) checkNumberFields(inputNumberFields);
 
 	if (0 !== inputEmailFields.length) {
 		checkEmailFields(inputEmailFields);
@@ -186,8 +186,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			checkEmailFieldsOnSubmit(inputEmailFields);
 		}
 
-		// console.log(formSubmit);
-
 		if (true === formSubmit) {
 			if (!e.detail || e.detail == 1) {
 				$.ajax({
@@ -199,17 +197,17 @@ document.addEventListener('DOMContentLoaded', function () {
 						button.attr('disabled', true);
 					},
 					success: function (resp) {
-						const { data = {}, success, message = __('Settings Saved', 'tutor')  } = resp || {};
+						const { data = {}, success, message = __('Settings Saved', 'tutor') } = resp || {};
 
 						if (success) {
 							// Disableing save btn after saved successfully
 							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = true;
 							}
-							tutor_toast( __('Success!','tutor'), message , 'success');
-							window.dispatchEvent(new CustomEvent('tutor_option_saved', {detail: data}));
-						}else{
-							tutor_toast( __('Warning!','tutor'), message, 'warning');
+							tutor_toast(__('Success!', 'tutor'), message, 'success');
+							window.dispatchEvent(new CustomEvent('tutor_option_saved', { detail: data }));
+						} else {
+							tutor_toast(__('Warning!', 'tutor'), message, 'warning');
 						}
 					},
 					complete: function () {
@@ -219,6 +217,40 @@ document.addEventListener('DOMContentLoaded', function () {
 				});
 			}
 		}
+	});
+
+	$('#tutor-manual-payment-form').submit(function (e) {
+		e.preventDefault();
+
+		const button = $('#tutor-manual-payment-button');
+		const $form = $(this);
+		const data = $form.serializeObject();
+
+		$.ajax({
+			url: window._tutorobject.ajaxurl,
+			type: 'POST',
+			data: data,
+			beforeSend: function () {
+				button.addClass('is-loading');
+				button.attr('disabled', true);
+			},
+			success: function (resp) {
+				const { data = {}, success, message = __('Something went wrong!', 'tutor') } = resp || {};
+
+				if (success) {
+					tutor_toast(__('Success!', 'tutor'), message, 'success');
+					$form[0].reset();
+					$('body').removeClass('tutor-modal-open');
+					$('.tutor-modal.tutor-is-active').removeClass('tutor-is-active');
+				} else {
+					tutor_toast(__('Error!', 'tutor'), message, 'error');
+				}
+			},
+			complete: function () {
+				button.removeClass('is-loading');
+				button.attr('disabled', false);
+			},
+		});
 	});
 
 	function view_item(text, section_slug, section, block, field_key) {

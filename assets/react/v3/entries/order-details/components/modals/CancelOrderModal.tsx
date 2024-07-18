@@ -8,10 +8,10 @@ import type { ModalProps } from '@Components/modals/Modal';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import type { Option } from '@Utils/types';
 import { requiredRule } from '@Utils/validation';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
 
@@ -20,7 +20,12 @@ interface CancelOrderModalProps extends ModalProps {
   total: number;
 }
 
-type CancellationReason = 'customer_changed_or_canceled_order'|'payment_declined'|'fraudulent_order'|'matter_of_unavailability'|'other';
+type CancellationReason =
+  | 'customer_changed_or_canceled_order'
+  | 'payment_declined'
+  | 'fraudulent_order'
+  | 'matter_of_unavailability'
+  | 'other';
 
 interface FormField {
   reason: CancellationReason;
@@ -28,30 +33,36 @@ interface FormField {
   send_notification: boolean;
 }
 
-const reasonOptions: (Option<CancellationReason> & {explanation?: string})[] = [
+const reasonOptions: (Option<CancellationReason> & { explanation?: string })[] = [
   {
     label: __('Customer changed or canceled order', 'tutor'),
     value: 'customer_changed_or_canceled_order',
-    explanation: __('The customer has modified or canceled their order. This action indicates that the customer has either updated their order details or decided to cancel their order entirely. Please review the order history for specific changes or cancellation details.', 'tutor')
+    explanation: __(
+      'The customer has modified or canceled their order. This action indicates that the customer has either updated their order details or decided to cancel their order entirely. Please review the order history for specific changes or cancellation details.',
+      'tutor',
+    ),
   },
   {
     label: __('Payment declined', 'tutor'),
     value: 'payment_declined',
-    explanation: __('Payment is declined by the gateway.', 'tutor')
+    explanation: __('Payment is declined by the gateway.', 'tutor'),
   },
   {
     label: __('Fraudulent order', 'tutor'),
     value: 'fraudulent_order',
-    explanation: __('The order has been flagged as fraudulent. This action indicates that the order has been identified as potentially fraudulent and requires immediate attention. Please investigate the order details and take appropriate measures to prevent any unauthorized transactions.', 'tutor')
+    explanation: __(
+      'The order has been flagged as fraudulent. This action indicates that the order has been identified as potentially fraudulent and requires immediate attention. Please investigate the order details and take appropriate measures to prevent any unauthorized transactions.',
+      'tutor',
+    ),
   },
   {
     label: __('Courses unavailable', 'tutor'),
     value: 'matter_of_unavailability',
-    explanation: __('Unfortunately the courses selected on this order is not anymore available.')
+    explanation: __('Unfortunately the courses selected on this order is not anymore available.'),
   },
   {
     label: __('Other', 'tutor'),
-    value: 'other'
+    value: 'other',
   },
 ];
 
@@ -59,65 +70,68 @@ function CancelOrderModal({ title, closeModal, actions, total }: CancelOrderModa
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
       note: '',
-      send_notification: true
+      send_notification: true,
     },
   });
 
   const reasonValue = form.watch('reason');
-  const explanation = reasonOptions.find(item => item.value === reasonValue)?.explanation ?? __('Please select a reason for the order cancellation. Your input is valuable for understanding the cause.');
+  const explanation =
+    reasonOptions.find((item) => item.value === reasonValue)?.explanation ??
+    __('Please select a reason for the order cancellation. Your input is valuable for understanding the cause.');
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          console.log(values);
           alert('@TODO: will be implemented later.');
         })}
       >
         <div css={styles.formContent}>
-            <Controller
-              control={form.control}
-              name="reason"
-              rules={{
-                ...requiredRule(),
-              }}
-              render={(props) => (
-                <FormSelectInput {...props} label={__('Reason for cancellation', 'tutor')} options={reasonOptions} placeholder={__('Select a reason')} />
-              )}
-            />
-
-            <Show when={reasonValue !== 'other'}>
-              <Alert type='info' icon='bulb'>{explanation}</Alert>
-            </Show>
-
-            <Show when={reasonValue === 'other'}>
-              <Controller
-                control={form.control}
-                name="note"
-                render={(props) => (
-                  <FormTextareaInput
-                    {...props}
-                    label={__('Note', 'tutor')}
-                    placeholder={__('Write a note for this action.', 'tutor')}
-                    rows={3}
-                    enableResize
-                  />
-                )}
+          <Controller
+            control={form.control}
+            name="reason"
+            rules={{
+              ...requiredRule(),
+            }}
+            render={(props) => (
+              <FormSelectInput
+                {...props}
+                label={__('Reason for cancellation', 'tutor')}
+                options={reasonOptions}
+                placeholder={__('Select a reason')}
               />
-            </Show>
+            )}
+          />
 
+          <Show when={reasonValue !== 'other'}>
+            <Alert type="info" icon="bulb">
+              {explanation}
+            </Alert>
+          </Show>
+
+          <Show when={reasonValue === 'other'}>
             <Controller
               control={form.control}
-              name="send_notification"
-              rules={{ ...requiredRule() }}
+              name="note"
               render={(props) => (
-                <FormCheckbox
+                <FormTextareaInput
                   {...props}
-                  label={__('Send a notification to the customer', 'tutor')}
+                  label={__('Note', 'tutor')}
+                  placeholder={__('Write a note for this action.', 'tutor')}
+                  rows={3}
+                  enableResize
                 />
               )}
             />
+          </Show>
+
+          <Controller
+            control={form.control}
+            name="send_notification"
+            rules={{ ...requiredRule() }}
+            render={(props) => <FormCheckbox {...props} label={__('Send a notification to the customer', 'tutor')} />}
+          />
         </div>
         <div css={styles.footer}>
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>

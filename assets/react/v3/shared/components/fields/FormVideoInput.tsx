@@ -1,24 +1,24 @@
 import Button from '@Atoms/Button';
+import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
+import config, { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, fontWeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+import { AnimationType } from '@Hooks/useAnimation';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import type { Option } from '@Utils/types';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { rgba } from 'polished';
-import FormFieldWrapper from './FormFieldWrapper';
-import { styleUtils } from '@Utils/style-utils';
 import { useEffect, useRef, useState } from 'react';
-import ImageInput from '@Atoms/ImageInput';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { AnimationType } from '@Hooks/useAnimation';
-import { css } from '@emotion/react';
-import config, { tutorConfig } from '@Config/config';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Controller } from 'react-hook-form';
+import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
-import type { Option } from '@Utils/types';
 
 export interface CourseVideo {
   source: string;
@@ -118,7 +118,7 @@ const FormVideoInput = ({
     },
   });
 
-  const videoSource = form.watch('videoSource') || [];
+  const videoSource = form.watch('videoSource') || '';
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -131,12 +131,16 @@ const FormVideoInput = ({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (!videoSource) {
+      return;
+    }
+
     if (!fieldValue?.[`source_${videoSource}` as keyof CourseVideo]) {
       form.setValue('videoUrl', '');
       return;
     }
-    form.setValue('videoUrl', fieldValue?.[`source_${videoSource}` as keyof CourseVideo]);
-  }, [videoSource]);
+    form.setValue('videoUrl', fieldValue?.[`source_${videoSource}` as keyof CourseVideo] || '');
+  }, [videoSource, fieldValue]);
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);

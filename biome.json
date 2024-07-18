@@ -1,52 +1,45 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.6.1/schema.json",
-  "organizeImports": {
-    "enabled": true,
-    "include": [
-      "./assets/react/v3"
-    ]
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
-      },
-      "performance": {
-        "noAccumulatingSpread": "off"
-      },
-      "suspicious": {
-        "noArrayIndexKey": "off"
-      },
-      "correctness": {
-        "noUnusedImports": "error"
-      }
-    }
-  },
-  "formatter": {
-    "enabled": true,
-    "include": [
-      "./assets/react/v3"
-    ]
-  },
-  "javascript": {
-    "formatter": {
-      "enabled": true,
-      "semicolons": "always",
-      "quoteStyle": "single",
-      "jsxQuoteStyle": "double",
-      "trailingComma": "es5",
-      "bracketSpacing": true,
-      "arrowParentheses": "always",
-      "bracketSameLine": false,
-      "lineEnding": "lf",
-      "indentStyle": "space",
-      "indentWidth": 2,
-      "lineWidth": 120
-    },
-    "globals": [
-      "_"
-    ]
-  }
+	"$schema": "https://biomejs.dev/schemas/1.6.1/schema.json",
+	"organizeImports": {
+		"enabled": true,
+		"include": ["./assets/react/v3/**"]
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"security": {
+				"noDangerouslySetInnerHtml": "off"
+			},
+			"performance": {
+				"noAccumulatingSpread": "off"
+			},
+			"suspicious": {
+				"noArrayIndexKey": "off"
+			},
+			"correctness": {
+				"noUnusedImports": "error"
+			}
+		}
+	},
+	"formatter": {
+		"enabled": true,
+		"include": ["./assets/react/v3/**"]
+	},
+	"javascript": {
+		"formatter": {
+			"enabled": true,
+			"semicolons": "always",
+			"quoteStyle": "single",
+			"jsxQuoteStyle": "double",
+			"bracketSpacing": true,
+			"arrowParentheses": "always",
+			"bracketSameLine": false,
+			"lineEnding": "lf",
+			"indentStyle": "space",
+			"indentWidth": 2,
+			"lineWidth": 120
+		},
+		"globals": ["_"]
+	}
 }

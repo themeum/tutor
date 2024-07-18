@@ -1,16 +1,21 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import Tabs from '@Molecules/Tabs';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import ContentDripSettings from './ContentDripSettings';
+
+import SVGIcon from '@Atoms/SVGIcon';
+import FormInput from '@Components/fields/FormInput';
+import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormSwitch from '@Components/fields/FormSwitch';
+import Tabs from '@Molecules/Tabs';
+
+import FormCheckbox from '@Components/fields/FormCheckbox';
+import { tutorConfig } from '@Config/config';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 
 const CourseSettings = () => {
@@ -18,6 +23,7 @@ const CourseSettings = () => {
   const [activeTab, setActiveTab] = useState('general');
 
   const isContentDripActive = form.watch('contentDripType');
+  const isBuddyPressEnabled = form.watch('enable_tutor_bp');
 
   const tabList = [
     {
@@ -37,6 +43,7 @@ const CourseSettings = () => {
             label: __('BuddyPress', 'tutor'),
             value: 'buddyPress',
             icon: <SVGIcon name="buddyPress" width={24} height={24} />,
+            activeBadge: isBuddyPressEnabled ? true : false,
           },
         ]
       : []),
@@ -81,6 +88,7 @@ const CourseSettings = () => {
                   placeholder="0"
                   type="number"
                   isClearable
+                  selectOnFocus
                 />
               )}
             />
@@ -110,11 +118,12 @@ const CourseSettings = () => {
                   label={__('Enrollment Expiration', 'tutor')}
                   helpText={__(
                     "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
-                    'tutor'
+                    'tutor',
                   )}
                   placeholder="0"
                   type="number"
                   isClearable
+                  selectOnFocus
                 />
               )}
             />
@@ -152,14 +161,26 @@ const CourseSettings = () => {
         {activeTab === 'buddyPress' && (
           <div css={styles.settingsOptions}>
             <Controller
-              name="_tutor_bp_course_attached_groups"
+              name="enable_tutor_bp"
               control={form.control}
               render={(controllerProps) => (
-                <FormSelectInput
+                <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
+              )}
+            />
+
+            <Controller
+              name="bp_attached_group_ids"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormMultiSelectInput
                   {...controllerProps}
                   label={__('BuddyPress Groups', 'tutor')}
                   helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
-                  options={[]}
+                  placeholder={__('Search BuddyPress Groups', 'tutor')}
+                  options={tutorConfig.bp_groups.map((group) => ({
+                    label: group.name,
+                    value: String(group.id),
+                  }))}
                 />
               )}
             />

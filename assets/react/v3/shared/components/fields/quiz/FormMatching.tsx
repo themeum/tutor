@@ -1,33 +1,39 @@
-import { useEffect, useRef, useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { CSS } from '@dnd-kit/utilities';
-import { useSortable } from '@dnd-kit/sortable';
+import { useEffect, useRef, useState } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
+import SVGIcon from '@Atoms/SVGIcon';
 
-import { useCreateQuizAnswerMutation, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import {
+  type QuizForm,
+  type QuizQuestionOption,
+  useCreateQuizAnswerMutation,
+  useDeleteQuizAnswerMutation,
+} from '@CourseBuilderServices/quiz';
 
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
 import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { isDefined } from '@Utils/types';
-import { animateLayoutChanges } from '@Utils/dndkit';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  imageMatching: boolean;
   onDuplicateOption: () => void;
   onRemoveOption: () => void;
 }
 
-const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
-  const { activeQuestionId } = useQuizModalContext();
+const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
+  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
+  const form = useFormContext<QuizForm>();
 
   const inputValue = field.value ?? {
     answer_id: '',
@@ -39,10 +45,17 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const imageMatching = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.imageMatching` as 'questions.0.imageMatching',
+    defaultValue: false,
+  });
+
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
 
   const [isEditing, setIsEditing] = useState(
-    !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url
+    !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
   );
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
@@ -84,13 +97,6 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
     });
   };
 
-  const handleCorrectAnswer = () => {
-    field.onChange({
-      ...inputValue,
-      is_correct: '1',
-    });
-  };
-
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
       inputRef.current.focus();
@@ -98,22 +104,9 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
   }, [isEditing]);
 
   return (
-    <div
-      {...attributes}
-      css={styles.option({ isSelected: !!Number(inputValue.is_correct), isEditing })}
-      ref={setNodeRef}
-      style={style}
-    >
-      <button type="button" css={styleUtils.resetButton} onClick={handleCorrectAnswer}>
-        <SVGIcon
-          data-check-icon
-          name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
-          height={32}
-          width={32}
-        />
-      </button>
+    <div {...attributes} css={styles.option({ isEditing })} ref={setNodeRef} style={style}>
       <div
-        css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isEditing })}
+        css={styles.optionLabel({ isEditing })}
         onClick={() => {
           setIsEditing(true);
         }}
@@ -162,6 +155,7 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
+                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                 onRemoveOption();
               }}
             >
@@ -275,6 +269,15 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                     event.stopPropagation();
                     setIsEditing(false);
                     field.onChange(previousValue);
+
+                    if (
+                      !inputValue.answer_title &&
+                      !inputValue.image_id &&
+                      !inputValue.answer_two_gap_match &&
+                      !inputValue.answer_id
+                    ) {
+                      onRemoveOption();
+                    }
                   }}
                 >
                   {__('Cancel', 'tutor')}
@@ -290,8 +293,9 @@ const FormMatching = ({ index, imageMatching, onDuplicateOption, onRemoveOption,
                       question_id: inputValue.belongs_question_id,
                       answer_title: inputValue.answer_title,
                       image_id: inputValue.image_id || '',
-                      answer_view_format: 'both',
+                      answer_view_format: 'text_image',
                       matched_answer_title: inputValue.answer_two_gap_match,
+                      question_type: imageMatching ? 'image_matching' : 'matching',
                     });
 
                     if (response.status_code === 201 || response.status_code === 200) {
@@ -315,10 +319,8 @@ export default FormMatching;
 
 const styles = {
   option: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
       ${styleUtils.display.flex()};
@@ -327,11 +329,6 @@ const styles = {
       color: ${colorTokens.text.subdued};
       gap: ${spacing[10]};
       align-items: center;
-  
-      [data-check-icon] {
-        opacity: 0;
-        fill: none;
-      }
 
       [data-visually-hidden] {
         opacity: 0;
@@ -342,10 +339,6 @@ const styles = {
       }
   
       &:hover {
-        [data-check-icon] {
-          opacity: 1;
-        }
-
         [data-visually-hidden] {
           opacity: 1;
         }
@@ -359,17 +352,6 @@ const styles = {
         `
         }
       }
-  
-  
-      ${
-        isSelected &&
-        css`
-          [data-check-icon] {
-            opacity: 1;
-            color: ${colorTokens.bg.success};
-          }
-        `
-      }
 
       ${
         isEditing &&
@@ -381,10 +363,8 @@ const styles = {
       }
     `,
   optionLabel: ({
-    isSelected,
     isEditing,
   }: {
-    isSelected: boolean;
     isEditing: boolean;
   }) => css`
       display: flex;
@@ -394,32 +374,19 @@ const styles = {
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
       background-color: ${colorTokens.background.white};
-      cursor: pointer;
   
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
-      }
-  
-      ${
-        isSelected &&
-        css`
-          background-color: ${colorTokens.background.success.fill40};
-          color: ${colorTokens.text.primary};
-  
-          &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
-          }
-        `
       }
 
       ${
         isEditing &&
         css`
           background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
 
           &:hover {
-            box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+            box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
           }
         `
       }
@@ -531,13 +498,13 @@ const styles = {
     flex: 1;
     color: ${colorTokens.text.subdued};
     padding: ${spacing[4]} ${spacing[10]};
-    box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
+    border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     resize: vertical;
     cursor: text;
 
     &:focus {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus};
     }
   `,
   optionInputButtons: css`

@@ -3,25 +3,25 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
 
-import Tabs from '@Molecules/Tabs';
 import EmptyState from '@Molecules/EmptyState';
+import Tabs from '@Molecules/Tabs';
 
 import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
 import { type CourseFormData, useCourseDetailsQuery } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 
-import Show from '@Controls/Show';
-import For from '@Controls/For';
-import { colorTokens, spacing } from '@Config/styles';
 import config, { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
+import { colorTokens, spacing } from '@Config/styles';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
-import emptyStateImage from '@Images/empty-state-illustration.webp';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
 
 type CertificateTabValue = 'templates' | 'custom_certificates';
 
@@ -44,7 +44,7 @@ const Certificate = () => {
 
   const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>('templates');
   const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>(
-    currentCertificate?.orientation ?? 'landscape'
+    currentCertificate?.orientation ?? 'landscape',
   );
   const [selectedCertificate, setSelectedCertificate] = useState(currentCertificateKey);
 
@@ -67,7 +67,7 @@ const Certificate = () => {
   const filteredCertificatesData = certificatesData.filter(
     (certificate) =>
       certificate.orientation === activeOrientation &&
-      (activeCertificateTab === 'templates' ? certificate?.is_default : !certificate?.is_default)
+      (activeCertificateTab === 'templates' ? certificate?.is_default : !certificate?.is_default),
   );
 
   const handleTabChange = (tab: CertificateTabValue) => {

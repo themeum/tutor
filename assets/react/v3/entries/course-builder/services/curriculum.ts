@@ -3,17 +3,17 @@ import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
 import { useToast } from '@Atoms/Toast';
-import { authApiInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
+import type { Media } from '@Components/fields/FormImageInput';
+import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type {
   GoogleMeet,
   PrerequisiteCourses,
   TutorMutationResponse,
   ZoomMeeting,
 } from '@CourseBuilderServices/course';
-import type { CourseVideo } from '@Components/fields/FormVideoInput';
-import type { Media } from '@Components/fields/FormImageInput';
+import { authApiInstance } from '@Utils/api';
+import endpoints from '@Utils/endpoints';
+import type { ErrorResponse } from '@Utils/form';
 
 export type ID = string | number;
 
@@ -30,6 +30,7 @@ export interface Content {
 export interface Lesson extends Content {
   attachments: Media[];
   thumbnail: string;
+  thumbnail_id: ID;
   available_on: string;
   video: CourseVideo & {
     runtime: {
@@ -90,7 +91,7 @@ export interface LessonPayload {
   lesson_id?: ID; //only for update
   title: string;
   description: string;
-  thumbnail_id: ID;
+  thumbnail_id: ID | null;
 
   'video[source]': string;
   'video[source_video_id]': ID;
@@ -165,7 +166,7 @@ export const useCourseTopicQuery = (courseId: ID) => {
 };
 
 const saveTopic = (payload: TopicPayload) => {
-  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<TopicPayload, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_save_topic',
     ...payload,
   });
@@ -179,9 +180,6 @@ export const useSaveTopicMutation = () => {
     mutationFn: saveTopic,
     onSuccess: (response) => {
       if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
         showToast({
           message: __('Topic saved successfully', 'tutor'),
           type: 'success',
@@ -193,12 +191,15 @@ export const useSaveTopicMutation = () => {
         message: error.response.data.message,
         type: 'danger',
       });
+      queryClient.invalidateQueries({
+        queryKey: ['Topic'],
+      });
     },
   });
 };
 
 const deleteTopic = (topicId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_delete_topic',
     topic_id: topicId,
   });
@@ -212,9 +213,6 @@ export const useDeleteTopicMutation = () => {
     mutationFn: deleteTopic,
     onSuccess: (response) => {
       if (response.status_code === 200) {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
@@ -225,6 +223,10 @@ export const useDeleteTopicMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Topic'],
       });
     },
   });
@@ -247,7 +249,7 @@ export const useLessonDetailsQuery = (lessonId: ID, topicId: ID) => {
 };
 
 const saveLesson = (payload: LessonPayload) => {
-  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse<number>>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_save_lesson',
     ...payload,
   });
@@ -291,24 +293,21 @@ export const useSaveLessonMutation = ({
   });
 };
 
-const deleteLesson = (lessonId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+const deleteContent = (lessonId: ID) => {
+  return authApiInstance.post<string, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_delete_lesson',
     lesson_id: lessonId,
   });
 };
 
-export const useDeleteLessonMutation = () => {
+export const useDeleteContentMutation = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
-    mutationFn: deleteLesson,
+    mutationFn: deleteContent,
     onSuccess: (response) => {
       if (response.status_code === 200) {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
@@ -319,6 +318,9 @@ export const useDeleteLessonMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['Topic'],
       });
     },
   });
@@ -367,7 +369,7 @@ export const useAssignmentDetailsQuery = (assignmentId: ID, topicId: ID) => {
 };
 
 const saveAssignment = (payload: AssignmentPayload) => {
-  return authApiInstance.post<string, TutorMutationResponse>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_assignment_save',
     ...payload,
   });
@@ -388,7 +390,7 @@ export const useSaveAssignmentMutation = ({
   return useMutation({
     mutationFn: (payload: AssignmentPayload) => saveAssignment(payload),
     onSuccess: (response) => {
-      if (response.status_code === 200) {
+      if (response.status_code === 200 || response.status_code === 201) {
         queryClient.invalidateQueries({
           queryKey: ['Topic', Number(courseId)],
         });

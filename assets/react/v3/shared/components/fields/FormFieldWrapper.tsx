@@ -124,9 +124,12 @@ const styles = {
       :focus {
         ${styleUtils.inputFocus};
 
-        ${options.hasFieldError && css`
+        ${
+          options.hasFieldError &&
+          css`
           border-color: ${colorTokens.stroke.danger};
-        `}
+        `
+        }
       }
 
       ::-webkit-outer-spin-button,
@@ -140,21 +143,24 @@ const styles = {
         color: ${colorTokens.text.hints};
 
         ${
-          options.isSecondary && css`
+          options.isSecondary &&
+          css`
           color: ${colorTokens.text.hints};
         `
         }
       }
 
       ${
-        options.hasFieldError && css`
+        options.hasFieldError &&
+        css`
         border-color: ${colorTokens.stroke.danger};
         background-color: ${colorTokens.background.status.errorFail};
       `
       }
 
       ${
-        options.readOnly && css`
+        options.readOnly &&
+        css`
         border-color: ${colorTokens.background.disable};
         background-color: ${colorTokens.background.disable};
       `

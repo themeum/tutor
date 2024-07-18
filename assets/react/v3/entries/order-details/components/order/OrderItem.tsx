@@ -1,10 +1,10 @@
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { css } from '@emotion/react';
 import coursePlaceholder from '@Images/orders/course-placeholder.png';
 import type { OrderSummaryItem } from '@OrderServices/order';
 import { createPriceFormatter } from '@Utils/currency';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 
@@ -22,7 +22,9 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
           <p css={styles.title}>{item.title}</p>
 
           {item.type === 'bundle' && (
-            <div css={styles.bundleCount}>{item.total_courses} {__('Courses', 'tutor')}</div>
+            <div css={styles.bundleCount}>
+              {item.total_courses} {__('Courses', 'tutor')}
+            </div>
           )}
         </div>
       </div>

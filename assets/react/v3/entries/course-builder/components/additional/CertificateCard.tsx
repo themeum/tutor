@@ -6,7 +6,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 
 import { useModal } from '@Components/modals/Modal';
 import CertificatePreviewModal from '@CourseBuilderComponents/modals/CertificatePreviewModal';
-import { useCourseDetailsQuery, type Certificate } from '@CourseBuilderServices/course';
+import { type Certificate, useCourseDetailsQuery } from '@CourseBuilderServices/course';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -35,7 +35,7 @@ const CertificateCard = ({
     courseDetailsQuery.data?.course_certificates_templates.filter(
       (certificate) =>
         certificate.orientation === orientation &&
-        (data.is_default ? certificate.is_default === true : certificate.is_default === false)
+        (data.is_default ? certificate.is_default === true : certificate.is_default === false),
     ) ?? [];
 
   return (
@@ -45,7 +45,15 @@ const CertificateCard = ({
         isLandScape: orientation === 'landscape',
       })}
     >
-      <div data-overlay />
+      <div
+        data-overlay
+        onClick={() => onSelectCertificate(data.key)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            onSelectCertificate(data.key);
+          }
+        }}
+      />
       <Show
         when={data.preview_src}
         fallback={

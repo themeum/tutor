@@ -8,7 +8,7 @@ export const useResetForm = <T extends FieldValues>(form: FormWithGlobalErrorTyp
     (localDefault?: T) => {
       form.reset.call(null, localDefault ? localDefault : defaultValue);
     },
-    [form.reset, defaultValue]
+    [form.reset, defaultValue],
   );
 
   return {

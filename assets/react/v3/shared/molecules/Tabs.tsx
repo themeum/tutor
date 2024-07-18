@@ -56,7 +56,7 @@ const Tabs = <T extends string | number>({
         accumulate[current.value] = dimension;
         return accumulate;
       },
-      {} as Record<T, ItemProperty>
+      {} as Record<T, ItemProperty>,
     );
 
     setProperties(temptProperties);

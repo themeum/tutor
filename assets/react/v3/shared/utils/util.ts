@@ -154,7 +154,7 @@ export const mapInBetween = (
   originalMin: number,
   originalMax: number,
   expectedMin: number,
-  expectedMax: number
+  expectedMax: number,
 ) => {
   return ((value - originalMin) * (expectedMax - expectedMin)) / (originalMax - originalMin) + expectedMin;
 };

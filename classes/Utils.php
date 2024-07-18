@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
 
@@ -527,6 +528,18 @@ class Utils {
 	public function has_pmpro( $check_monetization = false ) {
 		$has_pmpro = $this->is_plugin_active( 'paid-memberships-pro/paid-memberships-pro.php' );
 		return $has_pmpro && ( ! $check_monetization || get_tutor_option( 'monetize_by' ) == 'pmpro' );
+	}
+
+	/**
+	 * Check is monetize by tutor e-commerce
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_monetize_by_tutor() {
+		$monetize_by = $this->get_option( 'monetize_by' );
+		return Ecommerce::MONETIZE_BY === $monetize_by;
 	}
 
 	/**
@@ -8541,7 +8554,8 @@ class Utils {
 
 				// Add add-on enable status.
 				$addon_url                                = "tutor-pro/addons/{$base_name}/{$base_name}.php";
-				$plugins_data[ $base_name ]['is_enabled'] = $has_pro ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
+
+				$plugins_data[ $base_name ]['is_enabled'] = $has_pro && isset( $addons_config[ $addon_url ]['is_enable'] ) ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
 			}
 		}
 

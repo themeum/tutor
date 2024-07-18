@@ -1,5 +1,5 @@
 import { useSpring } from '@react-spring/web';
-import { useEffect, type RefObject, useState } from 'react';
+import { type RefObject, useEffect, useState } from 'react';
 
 export const useCollapseExpandAnimation = <T extends HTMLElement>({
   ref,
@@ -11,7 +11,7 @@ export const useCollapseExpandAnimation = <T extends HTMLElement>({
   heightCalculator?: 'scroll' | 'client';
 }) => {
   const [height, setHeight] = useState<number | undefined>(
-    heightCalculator === 'scroll' ? ref.current?.scrollHeight : ref.current?.clientHeight
+    heightCalculator === 'scroll' ? ref.current?.scrollHeight : ref.current?.clientHeight,
   );
 
   useEffect(() => {

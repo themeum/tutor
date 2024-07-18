@@ -30,20 +30,21 @@ import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import ThreeDots from '@Molecules/ThreeDots';
 
 import {
+  type ID,
+  type Content as TopicContentType,
   useDeleteTopicMutation,
   useSaveTopicMutation,
-  type Content as TopicContentType,
 } from '@CourseBuilderServices/curriculum';
 
 import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
 
+import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
+import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
+import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
-import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
-import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
 
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -52,28 +53,30 @@ import { AnimationType } from '@Hooks/useAnimation';
 import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
+import { useToast } from '@Atoms/Toast';
+import Tooltip from '@Atoms/Tooltip';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { moveTo, nanoid, noop } from '@Utils/util';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import Popover from '@Molecules/Popover';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
-import { useFileUploader } from '@Molecules/FileUploader';
-import { useToast } from '@Atoms/Toast';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { useFileUploader } from '@Molecules/FileUploader';
+import Popover from '@Molecules/Popover';
+import { animateLayoutChanges } from '@Utils/dndkit';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
+import { moveTo, nanoid, noop } from '@Utils/util';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
   onDelete?: () => void;
   onCopy?: () => void;
   onSort?: (activeIndex: number, overIndex: number) => void;
-  onCollapse?: () => void;
+  onCollapse?: (topicId: ID) => void;
+  onEdit?: (topicId: ID) => void;
   isOverlay?: boolean;
 }
 
@@ -86,7 +89,7 @@ const hasLiveAddons = true;
 
 const courseId = getCourseId();
 
-const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false }: TopicProps) => {
+const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay = false }: TopicProps) => {
   const courseDetailsForm = useFormContext<CourseFormData>();
   const form = useFormWithGlobalError<TopicForm>({
     defaultValues: {
@@ -129,7 +132,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
         easing: (t) => t * (2 - t),
       },
     },
-    [content.length]
+    [content.length],
   );
   const collapseAnimationDescription = useCollapseExpandAnimation({
     ref: descriptionRef,
@@ -176,7 +179,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     }
 
     return () => document.removeEventListener('click', handleOutsideClick);
-  }, []);
+  }, [isEdit]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -186,7 +189,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const activeSortItem = useMemo(() => {
@@ -206,7 +209,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
         (wrapperRef as any).current = node;
       }
     },
-    [setNodeRef]
+    [setNodeRef],
   );
 
   const style = {
@@ -231,6 +234,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
     });
 
     if (response.data) {
+      onEdit?.(response.data);
       setIsEdit(false);
     }
   };
@@ -266,11 +270,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
           <div css={styles.headerContent}>
             <div
               css={styles.grabberInput({ isOverlay })}
-              onClick={() => onCollapse?.()}
+              onClick={() => onCollapse?.(topic.id)}
               onKeyDown={(event) => {
                 event.stopPropagation();
                 if (event.key === 'Enter' || event.key === ' ') {
-                  onCollapse?.();
+                  onCollapse?.(topic.id);
                 }
               }}
             >
@@ -292,7 +296,12 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                     name="title"
                     rules={{ required: __('Title is required', 'tutor') }}
                     render={(controllerProps) => (
-                      <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
+                      <FormInput
+                        {...controllerProps}
+                        placeholder={__('Add a title', 'tutor')}
+                        isSecondary
+                        selectOnFocus
+                      />
                     )}
                   />
                 </div>
@@ -300,44 +309,50 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
             </div>
             <div css={styles.actions}>
               <Show when={!isEdit}>
+                <Tooltip content={__('Edit', 'tutor')}>
+                  <button
+                    type="button"
+                    css={styles.actionButton}
+                    disabled={!topic.isSaved}
+                    data-visually-hidden
+                    onClick={() => {
+                      setIsEdit(true);
+                      if (topic.isCollapsed) {
+                        onCollapse?.(topic.id);
+                      }
+                    }}
+                  >
+                    <SVGIcon name="edit" width={24} height={24} />
+                  </button>
+                </Tooltip>
+              </Show>
+              <Tooltip content={__('Duplicate', 'tutor')}>
                 <button
                   type="button"
                   css={styles.actionButton}
                   disabled={!topic.isSaved}
                   data-visually-hidden
                   onClick={() => {
-                    setIsEdit(true);
-                    if (topic.isCollapsed) {
-                      onCollapse?.();
-                    }
+                    alert('@TODO: will be implemented later');
                   }}
                 >
-                  <SVGIcon name="edit" width={24} height={24} />
+                  <SVGIcon name="copyPaste" width={24} height={24} />
                 </button>
-              </Show>
-              <button
-                type="button"
-                css={styles.actionButton}
-                disabled={!topic.isSaved}
-                data-visually-hidden
-                onClick={() => {
-                  alert('@TODO: will be implemented later');
-                }}
-              >
-                <SVGIcon name="copyPaste" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                css={styles.actionButton}
-                disabled={!topic.isSaved}
-                data-visually-hidden
-                ref={deleteRef}
-                onClick={() => {
-                  setIsDeletePopoverOpen(true);
-                }}
-              >
-                <SVGIcon name="delete" width={24} height={24} />
-              </button>
+              </Tooltip>
+              <Tooltip content={__('Delete', 'tutor')}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  disabled={!topic.isSaved}
+                  data-visually-hidden
+                  ref={deleteRef}
+                  onClick={() => {
+                    setIsDeletePopoverOpen(true);
+                  }}
+                >
+                  <SVGIcon name="delete" width={24} height={24} />
+                </button>
+              </Tooltip>
               <ConfirmationPopover
                 isOpen={isDeletePopoverOpen}
                 triggerRef={deleteRef}
@@ -369,7 +384,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                 css={styles.actionButton}
                 disabled={!topic.isSaved}
                 onClick={() => {
-                  onCollapse?.();
+                  onCollapse?.(topic.id);
                 }}
               >
                 <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
@@ -472,6 +487,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                             total_question: content.total_question || 0,
                           }}
                           onCopy={() => createDuplicateContent(content)}
+                          onDelete={() => {
+                            setContent((previousContent) => previousContent.filter((item) => item.ID !== content.ID));
+                          }}
                         />
                       );
                     }}
@@ -496,7 +514,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, isOverlay = false 
                     )}
                   </Show>
                 </DragOverlay>,
-                document.body
+                document.body,
               )}
             </DndContext>
 
