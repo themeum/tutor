@@ -3,8 +3,8 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { css } from '@emotion/react';
 import { useOrderContext } from '@OrderContexts/order-context';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { OrderItem } from './OrderItem';
 
@@ -15,7 +15,10 @@ function Summary() {
     <Box css={styles.outerBox} bordered>
       <BoxTitle>{__('Order Summary', 'tutor')}</BoxTitle>
       <Box css={styles.innerBox} bordered>
-        <Show when={order.courses.length > 0} fallback={<div css={styles.noCourse}>{__('No course added.', 'tutor')}</div>}>
+        <Show
+          when={order.courses.length > 0}
+          fallback={<div css={styles.noCourse}>{__('No course added.', 'tutor')}</div>}
+        >
           <For each={order.courses}>{(course) => <OrderItem key={course.id} item={course} />}</For>
         </Show>
       </Box>

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
-import { format } from 'date-fns';
 import { __ } from '@wordpress/i18n';
+import { format } from 'date-fns';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -8,14 +8,14 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 
-import { DateFormats } from '@Config/constants';
-import { styleUtils } from '@Utils/style-utils';
-import { useDeleteGoogleMeetMutation, type GoogleMeet } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useRef, useState } from 'react';
-import Popover from '@Molecules/Popover';
-import GoogleMeetForm from './GoogleMeetForm';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { DateFormats } from '@Config/constants';
+import { type GoogleMeet, useDeleteGoogleMeetMutation } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import Popover from '@Molecules/Popover';
+import { styleUtils } from '@Utils/style-utils';
+import { useRef, useState } from 'react';
+import GoogleMeetForm from './GoogleMeetForm';
 
 interface GoogleMeetMeetingCardProps {
   data: GoogleMeet;

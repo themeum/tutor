@@ -1,17 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 const App = () => {
-    return(
-        <>
-            <h3>Hello</h3>
-        </>
-    );
-}
+  return (
+    <>
+      <h3>Hello</h3>
+    </>
+  );
+};
 
-window.addEventListener('DOMContentLoaded', (e) => {
-	function TaxManagement() {
-		ReactDOM.render(<App />, document.getElementById('ecommerce_tax'));
-	}
-	TaxManagement();
-});
+const root = createRoot(document.getElementById('ecommerce_tax') as HTMLElement);
+root.render(<App />);

@@ -1,6 +1,6 @@
-import { Controller, useFormContext } from 'react-hook-form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
@@ -9,10 +9,10 @@ import FormSwitch from '@Components/fields/FormSwitch';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { Option } from '@Utils/types';
 import type { QuizForm, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import { styleUtils } from '@Utils/style-utils';
+import type { Option } from '@Utils/types';
 
 export const questionTypeOptions: Option<QuizQuestionType>[] = [
   {
@@ -128,6 +128,8 @@ const QuestionConditions = () => {
                 label={__('Point For This Answer', 'tutor')}
                 type="number"
                 isInlineLabel
+                placeholder="0"
+                selectOnFocus
                 style={css`
                   max-width: 72px;
                 `}

@@ -15,19 +15,19 @@ import { typography } from '@Config/typography';
 
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
-import { styleUtils } from '@Utils/style-utils';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import { tutorConfig } from '@Config/config';
+import { DateFormats } from '@Config/constants';
 import {
-  useSaveGoogleMeetMutation,
   type GoogleMeet,
   type GoogleMeetMeetingFormData,
+  useSaveGoogleMeetMutation,
 } from '@CourseBuilderServices/course';
+import { type ID, useGoogleMeetDetailsQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { format } from 'date-fns';
-import { DateFormats } from '@Config/constants';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { useGoogleMeetDetailsQuery, type ID } from '@CourseBuilderServices/curriculum';
-import { tutorConfig } from '@Config/config';
+import { styleUtils } from '@Utils/style-utils';
+import { format } from 'date-fns';
 import { useEffect } from 'react';
 
 interface GoogleMeetFormProps {
@@ -123,6 +123,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
         meeting_enrolledAsAttendee: currentMeeting.meeting_data.attendees === 'Yes' ? true : false,
       });
     }
+    meetingForm.setFocus('meeting_name');
   }, [currentMeeting]);
 
   return (
@@ -137,6 +138,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
               {...controllerProps}
               label={__('Meeting Name', 'tutor')}
               placeholder={__('Enter meeting name', 'tutor')}
+              selectOnFocus
             />
           )}
         />
@@ -251,6 +253,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
               label={__('Timezone', 'tutor')}
               placeholder={__('Timezone', 'tutor')}
               options={timeZonesOptions}
+              isSearchable
             />
           )}
         />

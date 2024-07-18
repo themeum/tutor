@@ -5,7 +5,6 @@ import ErrorBoundary from '@Components/ErrorBoundary';
 import App from '@OrderComponents/App';
 import { HashRouter } from 'react-router-dom';
 
-
 const root = ReactDOM.createRoot(document.getElementById('tutor-order-details-root') as HTMLElement);
 
 root.render(
@@ -15,5 +14,5 @@ root.render(
         <App />
       </ErrorBoundary>
     </HashRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

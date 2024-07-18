@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { nanoid } from '@Utils/util';
-import { __, _x } from '@wordpress/i18n';
-import { css } from '@emotion/react';
 import { tutorConfig } from '@Config/config';
+import { nanoid } from '@Utils/util';
+import { css } from '@emotion/react';
+import { __, _x } from '@wordpress/i18n';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface WPEditorProps {
   value: string;
@@ -13,9 +13,7 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 // Without getDefaultSettings function editor does not initiate
 if (!window.wp.editor.getDefaultSettings) {
-  window.wp.editor.getDefaultSettings = function () {
-    return {};
-  };
+  window.wp.editor.getDefaultSettings = () => ({});
 }
 
 function editorConfig(onChange: (value: string) => void, setIsFocused: (value: boolean) => void) {
@@ -62,7 +60,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
       }`,
       toolbar2: 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
       content_css: '/wp-includes/css/dashicons.min.css,/wp-includes/js/tinymce/skins/wordpress/wp-content.css',
-      setup: function (editor) {
+      setup: (editor) => {
         editor.addButton('tutor_button', {
           text: __('Tutor ShortCode', 'tutor'),
           icon: false,
@@ -70,19 +68,19 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
           menu: [
             {
               text: __('Student Registration Form', 'tutor'),
-              onclick: function () {
+              onclick: () => {
                 editor.insertContent('[tutor_student_registration_form]');
               },
             },
             {
               text: __('Instructor Registration Form', 'tutor'),
-              onclick: function () {
+              onclick: () => {
                 editor.insertContent('[tutor_instructor_registration_form]');
               },
             },
             {
               text: _x('Courses', 'tinyMCE button courses', 'tutor'),
-              onclick: function () {
+              onclick: () => {
                 editor.windowManager.open({
                   title: __('Courses Shortcode', 'tutor'),
                   body: [
@@ -108,7 +106,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
                       type: 'listbox',
                       name: 'orderby',
                       label: _x('Order By', 'tinyMCE button order by', 'tutor'),
-                      onselect: function () {},
+                      onselect: () => {},
                       values: [
                         { text: 'ID', value: 'ID' },
                         { text: 'title', value: 'title' },
@@ -122,7 +120,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
                       type: 'listbox',
                       name: 'order',
                       label: _x('Order', 'tinyMCE button order', 'tutor'),
-                      onselect: function () {},
+                      onselect: () => {},
                       values: [
                         { text: 'DESC', value: 'DESC' },
                         { text: 'ASC', value: 'ASC' },
@@ -135,7 +133,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
                       value: '6',
                     },
                   ],
-                  onsubmit: function (e) {
+                  onsubmit: (e) => {
                     editor.insertContent(
                       '[tutor_course id="' +
                         e.data.id +
@@ -149,7 +147,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
                         e.data.order +
                         '" count="' +
                         e.data.count +
-                        '"]'
+                        '"]',
                     );
                   },
                 });
@@ -157,7 +155,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
             },
           ],
         });
-        editor.on('change keyup paste', function () {
+        editor.on('change keyup paste', () => {
           onChange(editor.getContent());
         });
         editor.on('focus', () => setIsFocused(true));
@@ -193,7 +191,7 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
         }
       }
     },
-    [editorId, isFocused]
+    [editorId, isFocused],
   );
 
   useEffect(() => {
@@ -207,10 +205,10 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
       window.wp.editor.remove(editorId);
       window.wp.editor.initialize(editorId, editorConfig(onChange, setIsFocused));
 
-      editorRef.current?.addEventListener('change', function (e) {
+      editorRef.current?.addEventListener('change', (e) => {
         onChange((e.target as HTMLInputElement)?.value);
       });
-      editorRef.current?.addEventListener('input', function (e) {
+      editorRef.current?.addEventListener('input', (e) => {
         onChange((e.target as HTMLInputElement)?.value);
       });
 

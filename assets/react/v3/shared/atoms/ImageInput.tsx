@@ -5,10 +5,10 @@ import { rgba } from 'polished';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
+import type { Media } from '@Components/fields/FormImageInput';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { Media } from '@Components/fields/FormImageInput';
 
 interface ImageInputProps {
   buttonText?: string;
