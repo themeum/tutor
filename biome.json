@@ -2,7 +2,7 @@
 	"$schema": "https://biomejs.dev/schemas/1.6.1/schema.json",
 	"organizeImports": {
 		"enabled": true,
-		"include": ["./assets/react/v3"]
+		"include": ["./assets/react/v3/**"]
 	},
 	"linter": {
 		"enabled": true,
@@ -24,7 +24,7 @@
 	},
 	"formatter": {
 		"enabled": true,
-		"include": ["./assets/react/v3"]
+		"include": ["./assets/react/v3/**"]
 	},
 	"javascript": {
 		"formatter": {
@@ -32,7 +32,6 @@
 			"semicolons": "always",
 			"quoteStyle": "single",
 			"jsxQuoteStyle": "double",
-			"trailingComma": "es5",
 			"bracketSpacing": true,
 			"arrowParentheses": "always",
 			"bracketSameLine": false,

@@ -7,9 +7,9 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import Show from '@Controls/Show';
 import type { Certificate } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
-import Show from '@Controls/Show';
 
 export interface CertificatePreviewModalProps {
   certificates: Certificate[];

@@ -6,10 +6,10 @@ import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import type { Discount } from '@OrderServices/order';
 import { requiredRule } from '@Utils/validation';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
@@ -45,7 +45,8 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
   const value = form.watch('amount');
   const content = type === 'flat' ? '$' : '%';
   const priceAfterDiscount = useMemo(() => {
-    const discountedPrice =  type === 'percentage' ? total_price - calculatePercentage(total_price, value) : total_price - value;
+    const discountedPrice =
+      type === 'percentage' ? total_price - calculatePercentage(total_price, value) : total_price - value;
     return Math.max(0, discountedPrice).toFixed(2);
   }, [type, value, total_price]);
 
@@ -54,7 +55,6 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          console.log(values);
           alert('@TODO: will be implemented later.');
         })}
       >
@@ -78,15 +78,18 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
             <Controller
               control={form.control}
               name="amount"
-              rules={{ ...requiredRule(), validate: value => {
-                if (type === 'percentage' && value > 100) {
-                  return __('Should not be more than 100%.', 'tutor');
-                }
-                if (type === 'flat' && value > total_price) {
-                  return __('Discount should not exceed the total price.', 'tutor');
-                }
-                return undefined;
-              } }}
+              rules={{
+                ...requiredRule(),
+                validate: (value) => {
+                  if (type === 'percentage' && value > 100) {
+                    return __('Should not be more than 100%.', 'tutor');
+                  }
+                  if (type === 'flat' && value > total_price) {
+                    return __('Discount should not exceed the total price.', 'tutor');
+                  }
+                  return undefined;
+                },
+              }}
               render={(props) => (
                 <FormInputWithContent
                   {...props}
@@ -113,6 +116,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
                   {...props}
                   label={__('Discount reason', 'tutor')}
                   placeholder={__('Enter the reason of this discount', 'tutor')}
+                  selectOnFocus
                 />
               )}
             />

@@ -5,5 +5,5 @@ declare module '*.gif';
 declare module '*.webp';
 
 interface Window {
-	tutor_get_nonce_data: (value: boolean) => {key: string; value: string};
+  tutor_get_nonce_data: (value: boolean) => { key: string; value: string };
 }

@@ -4,19 +4,19 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
-import Tabs from '@Molecules/Tabs';
 import FormInput from '@Components/fields/FormInput';
+import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
-import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
+import Tabs from '@Molecules/Tabs';
 
 import FormCheckbox from '@Components/fields/FormCheckbox';
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import type { CourseFormData } from '@CourseBuilderServices/course';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { tutorConfig } from '@Config/config';
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
@@ -88,6 +88,7 @@ const CourseSettings = () => {
                   placeholder="0"
                   type="number"
                   isClearable
+                  selectOnFocus
                 />
               )}
             />
@@ -117,11 +118,12 @@ const CourseSettings = () => {
                   label={__('Enrollment Expiration', 'tutor')}
                   helpText={__(
                     "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
-                    'tutor'
+                    'tutor',
                   )}
                   placeholder="0"
                   type="number"
                   isClearable
+                  selectOnFocus
                 />
               )}
             />

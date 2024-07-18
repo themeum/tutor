@@ -36,6 +36,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   isPassword?: boolean;
   style?: SerializedStyles;
   selectOnFocus?: boolean;
+  autoFocus?: boolean;
 }
 
 const FormInput = ({
@@ -60,6 +61,7 @@ const FormInput = ({
   isPassword = false,
   style,
   selectOnFocus = false,
+  autoFocus = false,
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
 
@@ -111,6 +113,8 @@ const FormInput = ({
                 {...additionalAttributes}
                 type={fieldType === 'number' ? 'text' : fieldType}
                 value={inputValue}
+                // biome-ignore lint/a11y/noAutofocus: <explanation>
+                autoFocus={autoFocus}
                 onChange={(event) => {
                   const { value } = event.target;
 

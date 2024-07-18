@@ -8,7 +8,7 @@ export type FormWithGlobalErrorType<T extends FieldValues> = UseFormReturn<T> & 
 };
 
 export const useFormWithGlobalError = <FormValues extends FieldValues>(
-  formOptions?: UseFormProps<FormValues>
+  formOptions?: UseFormProps<FormValues>,
 ): FormWithGlobalErrorType<FormValues> => {
   const [submitError, setSubmitError] = useState<string>();
   const form = useForm<FormValues>(formOptions);
