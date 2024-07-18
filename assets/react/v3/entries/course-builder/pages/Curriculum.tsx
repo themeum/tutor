@@ -1,6 +1,3 @@
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -13,6 +10,9 @@ import {
 } from '@dnd-kit/core';
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,9 +21,9 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
-import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
+import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
 import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
 import For from '@Controls/For';
@@ -36,15 +36,16 @@ import {
   useUpdateCourseContentOrderMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
 import { droppableMeasuringStrategy } from '@Utils/dndkit';
+import { styleUtils } from '@Utils/style-utils';
 import { moveTo, nanoid } from '@Utils/util';
 
+import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
-import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 
 const courseId = getCourseId();
+
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean; isSaved: boolean };
 
 const Curriculum = () => {
@@ -65,6 +66,7 @@ const Curriculum = () => {
   const [allCollapsed, setAllCollapsed] = useState(true);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
+  const [currentExpandedTopic, setCurrentExpandedTopic] = useState<ID>('');
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
@@ -73,6 +75,7 @@ const Curriculum = () => {
     setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
   }, [allCollapsed]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!courseCurriculumQuery.data) {
       return;
@@ -80,9 +83,9 @@ const Curriculum = () => {
     setContent(
       courseCurriculumQuery.data.map((item, index) => ({
         ...item,
-        isCollapsed: index > 0,
+        isCollapsed: currentExpandedTopic ? currentExpandedTopic !== item.id : index > 0,
         isSaved: true,
-      }))
+      })),
     );
   }, [courseCurriculumQuery.data]);
 
@@ -101,7 +104,7 @@ const Curriculum = () => {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   if (courseCurriculumQuery.isLoading) {
@@ -131,7 +134,9 @@ const Curriculum = () => {
           <div css={styles.content}>
             <Show
               when={
-                !courseCurriculumQuery.isLoading && courseCurriculumQuery.data && courseCurriculumQuery.data.length > 0
+                !courseCurriculumQuery.isLoading &&
+                courseCurriculumQuery.data &&
+                (courseCurriculumQuery.data.length > 0 || content.length > 0)
               }
               fallback={
                 <EmptyState
@@ -141,7 +146,7 @@ const Curriculum = () => {
                   title={__('Create the course journey from here!', 'tutor')}
                   description={__(
                     'when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries',
-                    'tutor'
+                    'tutor',
                   )}
                   actions={
                     <Button
@@ -151,13 +156,9 @@ const Curriculum = () => {
                         // @TODO: will be updated later.
                         setContent((previous) => {
                           return [
-                            ...previous.map((item) => ({
-                              ...item,
-                              isCollapsed: true,
-                            })),
                             {
                               id: nanoid(),
-                              title: 'New Course Topic',
+                              title: '',
                               summary: '',
                               contents: [],
                               isCollapsed: false,
@@ -210,12 +211,12 @@ const Curriculum = () => {
 
                                 return contents;
                               },
-                              {} as { [key: ID]: ID }
+                              {} as { [key: ID]: ID },
                             ),
                           };
                           return topics;
                         },
-                        {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } }
+                        {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } },
                       );
 
                     updateCourseContentOrderMutation.mutate({
@@ -238,22 +239,22 @@ const Curriculum = () => {
                             key={topic.id}
                             topic={topic}
                             onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
-                            onCollapse={() =>
+                            onCollapse={(topicId) =>
                               setContent((previous) =>
-                                previous.map((item, idx) => {
-                                  if (idx === index) {
-                                    return {
-                                      ...item,
-                                      isCollapsed: !item.isCollapsed,
-                                    };
+                                previous.map((item) => {
+                                  if (item.id === topicId) {
+                                    return { ...item, isCollapsed: !item.isCollapsed };
                                   }
 
                                   return item;
-                                })
+                                }),
                               )
                             }
                             onCopy={() => {
                               createDuplicateTopic(topic);
+                            }}
+                            onEdit={(topicId) => {
+                              setCurrentExpandedTopic(topicId);
                             }}
                             onSort={(activeIndex, overIndex) => {
                               const previousContent = content;
@@ -284,12 +285,12 @@ const Curriculum = () => {
 
                                           return contents;
                                         },
-                                        {} as { [key: ID]: ID }
+                                        {} as { [key: ID]: ID },
                                       ),
                                     };
                                     return topics;
                                   },
-                                  {} as CourseContentOrderPayload['tutor_topics_lessons_sorting']
+                                  {} as CourseContentOrderPayload['tutor_topics_lessons_sorting'],
                                 );
 
                               updateCourseContentOrderMutation.mutate({
@@ -318,7 +319,7 @@ const Curriculum = () => {
                       }}
                     </Show>
                   </DragOverlay>,
-                  document.body
+                  document.body,
                 )}
               </DndContext>
             </Show>

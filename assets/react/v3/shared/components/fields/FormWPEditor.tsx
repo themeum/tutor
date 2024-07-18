@@ -1,6 +1,6 @@
+import WPEditor from '@Atoms/WPEditor';
 import type { FormControllerProps } from '@Utils/form';
 import FormFieldWrapper from './FormFieldWrapper';
-import WPEditor from '@Atoms/WPEditor';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
   label?: string;

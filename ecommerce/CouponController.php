@@ -11,8 +11,10 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Backend_Page_Trait;
+use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
+use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -88,6 +90,18 @@ class CouponController {
 			// Register hooks here.
 			add_action( 'wp_ajax_tutor_coupon_bulk_action', array( $this, 'bulk_action_handler' ) );
 			add_action( 'wp_ajax_tutor_coupon_permanent_delete', array( $this, 'coupon_permanent_delete' ) );
+			/**
+			 * Handle AJAX request for getting coupon related data by coupon ID.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_coupon_details', array( $this, 'get_coupon_by_id' ) );
+			/**
+			 * Handle AJAX request for getting courses for coupon.
+			 *
+			 * @since 3.0.0
+			 */
+			add_action( 'wp_ajax_tutor_get_coupon_applies_to', array( $this, 'get_coupon_applies_to' ) );
 		}
 	}
 
@@ -303,5 +317,109 @@ class CouponController {
 		} else {
 			wp_send_json_error( __( 'Failed to delete coupon.', 'tutor' ) );
 		}
+	}
+
+	/**
+	 * Retrieve coupon by ID.
+	 *
+	 * This function handles the retrieval of a coupon based on its ID. It performs several checks,
+	 * including nonce verification and validation of the coupon ID. If the coupon is found,
+	 * it returns the coupon data; otherwise, it returns appropriate error messages.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void Sends a JSON response with the coupon data or an error message.
+	 */
+	public function get_coupon_by_id() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$coupon_id = Input::post( 'coupon_id' );
+
+		if ( empty( $coupon_id ) ) {
+			$this->json_response(
+				__( 'Coupon ID is required', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$coupon_data = $this->model->get_coupon_by_id( $coupon_id );
+
+		if ( ! $coupon_data ) {
+			$this->json_response(
+				__( 'Coupon not found', 'tutor' ),
+				null,
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
+		$this->json_response(
+			__( 'Coupon retrieved successfully', 'tutor' ),
+			$coupon_data
+		);
+	}
+
+	/**
+	 * Handles AJAX request to get the entities (courses, bundles, or categories) a coupon applies to.
+	 *
+	 * This function validates the nonce and the required input parameter `applies_to`.
+	 * Based on the `applies_to` value, it retrieves the relevant entities:
+	 * - 'specific_courses' or 'specific_bundles': Retrieves courses or course bundles the coupon applies to.
+	 * - 'specific_category': Retrieves categories the coupon applies to.
+	 * If the required inputs are missing or invalid, it returns an appropriate error response.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @global wpdb $wpdb WordPress database abstraction object.
+	 *
+	 * @return void This function echoes a JSON response and exits. Possible JSON responses include:
+	 *              - Error response if the nonce is invalid, required inputs are missing, or the `applies_to` value is invalid.
+	 *              - Success response with the retrieved entities (courses, bundles, or categories).
+	 */
+	public function get_coupon_applies_to() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$applies_to = Input::post( 'applies_to' );
+
+		if ( empty( $applies_to ) ) {
+			$this->json_response(
+				__( 'Applies to is required', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		if ( 'specific_courses' === $applies_to || 'specific_bundles' === $applies_to ) {
+			$course_model = new CourseModel();
+			$response     = $course_model->get_coupon_applies_to_courses( $applies_to );
+
+		} else {
+			$this->json_response(
+				__( 'Applies to value invalid', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$error_message_txt = 'specific_category' === $applies_to ? __( 'Categories not found', 'tutor' ) : __( 'Courses not found', 'tutor' );
+
+		if ( ! $response ) {
+			$this->json_response(
+				$error_message_txt,
+				null,
+				HttpHelper::STATUS_NOT_FOUND
+			);
+		}
+
+		$success_message_txt = 'specific_category' === $applies_to ? __( 'Categories retrieved successfully', 'tutor' ) : __( 'Courses retrieved successfully', 'tutor' );
+
+		$this->json_response(
+			$success_message_txt,
+			$response
+		);
 	}
 }

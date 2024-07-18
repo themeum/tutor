@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
 
@@ -527,6 +528,18 @@ class Utils {
 	public function has_pmpro( $check_monetization = false ) {
 		$has_pmpro = $this->is_plugin_active( 'paid-memberships-pro/paid-memberships-pro.php' );
 		return $has_pmpro && ( ! $check_monetization || get_tutor_option( 'monetize_by' ) == 'pmpro' );
+	}
+
+	/**
+	 * Check is monetize by tutor e-commerce
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_monetize_by_tutor() {
+		$monetize_by = $this->get_option( 'monetize_by' );
+		return Ecommerce::MONETIZE_BY === $monetize_by;
 	}
 
 	/**
@@ -1119,7 +1132,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course ID.
+	 * @param int  $course_id course ID.
 	 *
 	 * @return null|string
 	 */
@@ -1139,8 +1152,8 @@ class Utils {
 				$price    = \edd_price( $download->ID, false );
 			}
 		}
-		return apply_filters( 'get_tutor_course_price', $price, $course_id );
 
+		return apply_filters( 'get_tutor_course_price', $price, $course_id );
 	}
 
 	/**
@@ -1164,17 +1177,22 @@ class Utils {
 
 		$monetize_by = $this->get_option( 'monetize_by' );
 
-		$product_id = $this->get_course_product_id( $course_id );
-		if ( $product_id ) {
-			if ( 'wc' === $monetize_by && $this->has_wc() ) {
-				$product = wc_get_product( $product_id );
-				if ( $product ) {
-					$prices['regular_price'] = $product->get_regular_price();
-					$prices['sale_price']    = $product->get_sale_price();
+		if ( $this->is_monetize_by_tutor() ) {
+			$prices['regular_price'] = (float) get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+			$prices['sale_price']    = (float) get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+		} else {
+			$product_id = $this->get_course_product_id( $course_id );
+			if ( $product_id ) {
+				if ( 'wc' === $monetize_by && $this->has_wc() ) {
+					$product = wc_get_product( $product_id );
+					if ( $product ) {
+						$prices['regular_price'] = $product->get_regular_price();
+						$prices['sale_price']    = $product->get_sale_price();
+					}
+				} elseif ( 'edd' === $monetize_by && $this->has_edd() ) {
+					$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
+					$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
 				}
-			} elseif ( 'edd' === $monetize_by && $this->has_edd() ) {
-				$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
-				$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
 			}
 		}
 
@@ -3357,7 +3375,7 @@ class Utils {
 			// Exclude instructor if already in main instructor.
 			$instructors = array_filter(
 				$instructors,
-				function( $instructor ) use ( $main_instructor ) {
+				function ( $instructor ) use ( $main_instructor ) {
 					if ( $instructor->ID !== $main_instructor[0]->ID ) {
 						return true;
 					}
@@ -5420,7 +5438,7 @@ class Utils {
 	 * @return bool|false|string
 	 */
 	public function instructor_register_url() {
-		 $instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
+		$instructor_register_page = (int) $this->get_option( 'instructor_register_page' );
 
 		if ( $instructor_register_page ) {
 			return apply_filters( 'tutor_instructor_register_url', get_the_permalink( $instructor_register_page ) );
@@ -6836,7 +6854,7 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_script_debug() {
-		 return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+		return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
 	}
 
 	/**
@@ -7044,7 +7062,6 @@ class Utils {
 	 *
 	 * @return object
 	 */
-
 	public function get_rating_by_id( $rating_id = 0 ) {
 		global $wpdb;
 
@@ -8108,7 +8125,7 @@ class Utils {
 	 * @return object
 	 */
 	function get_package_object() {
-		 $params = func_get_args();
+		$params = func_get_args();
 
 		$is_pro     = $params[0];
 		$class      = $params[1];
@@ -9417,7 +9434,6 @@ class Utils {
 	 *
 	 * @return string
 	 */
-
 	public function clean_html_content( $content = '', $allowed = array() ) {
 
 		$default = array(
@@ -9672,7 +9688,7 @@ class Utils {
 		// Prepare course IDs to get quiz count based on.
 		$course_ids = is_array( $course_id ) ? $course_id : array( $course_id );
 		$course_ids = array_map(
-			function( $id ) {
+			function ( $id ) {
 				return (int) $id;
 			},
 			$course_ids
@@ -9879,7 +9895,7 @@ class Utils {
 	 *
 	 * @return array allowed tags
 	 */
-	public function allowed_avatar_tags( array $tags = array() ):array {
+	public function allowed_avatar_tags( array $tags = array() ): array {
 		$defaults = array(
 			'a'    => array(
 				'href'   => true,

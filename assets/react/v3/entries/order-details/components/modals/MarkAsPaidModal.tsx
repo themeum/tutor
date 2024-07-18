@@ -4,10 +4,10 @@ import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useMarkAsPaidMutation } from '@OrderServices/order';
 import { createPriceFormatter } from '@Utils/currency';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
 
@@ -25,29 +25,37 @@ function MarkAsPaidModal({ title, closeModal, actions, total, order_id }: MarkAs
   const markAsPaidMutation = useMarkAsPaidMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
-      note: ''
+      note: '',
     },
   });
-  const formatPrice = createPriceFormatter({currency: 'USD', locale: 'en-US'});
+  const formatPrice = createPriceFormatter({ currency: 'USD', locale: 'en-US' });
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          markAsPaidMutation.mutate({note: values.note, order_id});
+          markAsPaidMutation.mutate({ note: values.note, order_id });
           closeModal();
         })}
       >
         <div css={styles.formContent}>
-            <p css={styles.availableMessage}>{__('This will create an order. Mark this order as paid if you received ')} <span>{formatPrice(total)}</span> {__(' manually.', 'tutor')}</p>
-            <Controller
-              control={form.control}
-              name="note"
-              render={(props) => (
-                <FormTextareaInput {...props} label={__('Note', 'tutor')} rows={3} placeholder={__('Write some note against this action.', 'tutor')} />
-              )}
-            />
+          <p css={styles.availableMessage}>
+            {__('This will create an order. Mark this order as paid if you received ')}{' '}
+            <span>{formatPrice(total)}</span> {__(' manually.', 'tutor')}
+          </p>
+          <Controller
+            control={form.control}
+            name="note"
+            render={(props) => (
+              <FormTextareaInput
+                {...props}
+                label={__('Note', 'tutor')}
+                rows={3}
+                placeholder={__('Write some note against this action.', 'tutor')}
+              />
+            )}
+          />
         </div>
         <div css={styles.footer}>
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>

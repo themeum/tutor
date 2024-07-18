@@ -10,21 +10,22 @@ import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
+import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
-import SubscriptionPreview from '@CourseBuilderComponents/course-basic/SubscriptionPreview';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 import {
+  type CourseFormData,
+  type PricingCategory,
   useCourseDetailsQuery,
   useGetProductsQuery,
   useProductDetailsQuery,
-  type CourseFormData,
-  type PricingCategory,
 } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
@@ -39,6 +40,7 @@ const courseId = getCourseId();
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
+  const { showModal } = useModal();
 
   const author = form.watch('post_author');
 
@@ -173,6 +175,7 @@ const CourseBasic = () => {
                   maxLimit={255}
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
+                  selectOnFocus
                 />
               )}
             />
@@ -220,7 +223,13 @@ const CourseBasic = () => {
             name="post_password"
             control={form.control}
             render={(controllerProps) => (
-              <FormInput {...controllerProps} label={__('Password', 'tutor')} type="password" isPassword />
+              <FormInput
+                {...controllerProps}
+                label={__('Password', 'tutor')}
+                type="password"
+                isPassword
+                selectOnFocus
+              />
             )}
           />
         )}
@@ -266,7 +275,7 @@ const CourseBasic = () => {
           )}
         />
 
-        <Show when={courseCategory === 'regular'} fallback={<SubscriptionPreview />}>
+        <Show when={courseCategory === 'regular'} fallback={<SubscriptionPreview courseId={courseId} />}>
           <Controller
             name="course_price_type"
             control={form.control}
@@ -292,7 +301,7 @@ const CourseBasic = () => {
                 placeholder={__('Select a product', 'tutor')}
                 options={productOptions()}
                 helpText={__(
-                  'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.'
+                  'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
                 )}
                 isSearchable
               />

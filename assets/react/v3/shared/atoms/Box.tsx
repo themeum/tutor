@@ -37,7 +37,7 @@ export const BoxTitle = React.forwardRef<HTMLDivElement, BoxTitleProps>(
         </Show>
       </div>
     );
-  }
+  },
 );
 
 BoxTitle.displayName = 'BoxTitle';

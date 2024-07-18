@@ -1,23 +1,25 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import SVGIcon from '@Atoms/SVGIcon';
-import Show from '@Controls/Show';
 import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
 import For from '@Controls/For';
-import type { FormControllerProps } from '@Utils/form';
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
-import { isDefined } from '@Utils/types';
+import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type QuizForm, type QuizQuestionOption, useCreateQuizAnswerMutation } from '@CourseBuilderServices/quiz';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
+import { useFormContext } from 'react-hook-form';
 
 interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
 const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
-  const { activeQuestionId } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
+  const form = useFormContext<QuizForm>();
   const inputValue = field.value ?? {
     answer_id: '',
     answer_title: '',
@@ -31,8 +33,33 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const fillInTheBlanksCorrectAnswer = inputValue.answer_two_gap_match?.split('|');
 
-  const [isEditing, setIsEditing] = useState(false);
+  const createQuizAnswerMutation = useCreateQuizAnswerMutation();
+
+  const [isEditing, setIsEditing] = useState(!inputValue.answer_title || !inputValue.answer_two_gap_match);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
+
+  const createQuizAnswer = async () => {
+    const response = await createQuizAnswerMutation.mutateAsync({
+      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
+      question_id: inputValue.belongs_question_id,
+      answer_title: inputValue.answer_title,
+      image_id: inputValue.image_id || '',
+      answer_view_format: 'text_image',
+      ...(!inputValue.answer_id && { question_type: 'fill_in_the_blank' }),
+    });
+
+    const currentAnswerIndex = form
+      .getValues(`questions.${activeQuestionIndex}.question_answers`)
+      .findIndex((answer) => answer.answer_id === inputValue.answer_id);
+
+    if (response.status_code === 201 || response.status_code === 200) {
+      form.setValue(`questions.${activeQuestionIndex}.question_answers.${currentAnswerIndex}`, {
+        ...inputValue,
+        answer_id: response.data,
+      });
+      setIsEditing(false);
+    }
+  };
 
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
@@ -144,7 +171,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   <p>
                     {__(
                       'Please make sure to use the {dash} variable in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
-                      'tutor'
+                      'tutor',
                     )}
                   </p>
                 </div>
@@ -176,30 +203,33 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   <p>
                     {__(
                       'Separate multiple answers by a vertical bar |. 1 answer per {dash} variable is defined in the question. Example: Apple | Banana | Orange',
-                      'tutor'
+                      'tutor',
                     )}
                   </p>
                 </div>
               </div>
               <div css={styles.optionInputButtons}>
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setIsEditing(false);
-                    field.onChange(previousValue);
-                  }}
-                >
-                  {__('Cancel', 'tutor')}
-                </Button>
+                <Show when={inputValue.answer_id}>
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setIsEditing(false);
+                      field.onChange(previousValue);
+                    }}
+                  >
+                    {__('Cancel', 'tutor')}
+                  </Button>
+                </Show>
                 <Button
                   variant="secondary"
                   size="small"
-                  onClick={(event) => {
+                  onClick={async (event) => {
                     event.stopPropagation();
-                    setIsEditing(false);
+                    await createQuizAnswer();
                   }}
+                  disabled={!inputValue.answer_title || !inputValue.answer_two_gap_match}
                 >
                   {__('Ok', 'tutor')}
                 </Button>
@@ -284,7 +314,6 @@ const styles = {
       padding: ${spacing[12]} ${spacing[16]};
       transition: box-shadow 0.15s ease-in-out;
       background-color: ${colorTokens.background.white};
-      cursor: pointer;
   
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
@@ -390,12 +419,12 @@ const styles = {
     flex: 1;
     color: ${colorTokens.text.subdued};
     padding: ${spacing[4]} ${spacing[10]};
-    box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
+    border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     resize: vertical;
 
     &:focus {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus};
     }
   `,
   optionInputButtons: css`
