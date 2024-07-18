@@ -1770,7 +1770,7 @@ class Quiz {
 		if ( $is_update ) {
 			$wpdb->update( $table_answer, $answer_data, array( 'answer_id' => $answer_id ) );
 		} else {
-			$question_type = Input::has( 'question_type' );
+			$question_type = Input::post( 'question_type' );
 			if ( ! in_array( $question_type, $question_types, true ) ) {
 				$this->json_response( __( 'Invalid question type', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
 			}

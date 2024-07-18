@@ -8,7 +8,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
@@ -16,13 +16,16 @@ import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import {
+  type QuizForm,
   useCreateQuizAnswerMutation,
   useDeleteQuizAnswerMutation,
   useMarkAnswerAsCorrectMutation,
   type QuizQuestionOption,
+  type QuizQuestionType,
 } from '@CourseBuilderServices/quiz';
 import { nanoid } from '@Utils/util';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -38,7 +41,8 @@ const FormMultipleChoiceAndOrdering = ({
   onRemoveOption,
   index,
 }: FormMultipleChoiceAndOrderingProps) => {
-  const { activeQuestionId } = useQuizModalContext();
+  const form = useFormContext<QuizForm>();
+  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
   const inputValue = field.value ?? {
     answer_id: nanoid(),
     answer_title: '',
@@ -47,6 +51,20 @@ const FormMultipleChoiceAndOrdering = ({
     belongs_question_type: 'multiple_choice',
   };
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const multipleCorrectAnswer = useWatch({
+    control: form.control,
+    name: `questions.${activeQuestionIndex}.multipleCorrectAnswer`,
+    defaultValue: false,
+  });
+  const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+  const filterByQuestionType = (currentQuestionType: QuizQuestionType) => {
+    if (currentQuestionType === 'multiple_choice') {
+      return multipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
+    }
+
+    return 'ordering';
+  };
 
   const createQuizAnswerMutation = useCreateQuizAnswerMutation();
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
@@ -105,6 +123,29 @@ const FormMultipleChoiceAndOrdering = ({
       answerId: inputValue.answer_id,
       isCorrect: inputValue.is_correct === '1' ? '0' : '1',
     });
+  };
+
+  const createQuizAnswer = async () => {
+    const response = await createQuizAnswerMutation.mutateAsync({
+      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
+      question_id: inputValue.belongs_question_id,
+      answer_title: inputValue.answer_title,
+      image_id: inputValue.image_id || '',
+      answer_view_format: 'text_image',
+      ...(!inputValue.answer_id && { question_type: filterByQuestionType(currentQuestionType) }),
+    });
+
+    const currentAnswerIndex = form
+      .getValues(`questions.${activeQuestionIndex}.question_answers`)
+      .findIndex((answer) => answer.answer_id === inputValue.answer_id);
+
+    if (response.status_code === 201 || response.status_code === 200) {
+      form.setValue(`questions.${activeQuestionIndex}.question_answers.${currentAnswerIndex}`, {
+        ...inputValue,
+        answer_id: response.data,
+      });
+      setIsEditing(false);
+    }
   };
 
   useEffect(() => {
@@ -304,6 +345,7 @@ const FormMultipleChoiceAndOrdering = ({
                     event.stopPropagation();
                     setIsEditing(false);
                     field.onChange(previousValue);
+
                     if (!inputValue.answer_title && !inputValue.image_url && !inputValue.answer_id) {
                       onRemoveOption();
                     }
@@ -317,17 +359,7 @@ const FormMultipleChoiceAndOrdering = ({
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
-                    const response = await createQuizAnswerMutation.mutateAsync({
-                      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
-                      question_id: inputValue.belongs_question_id,
-                      answer_title: inputValue.answer_title,
-                      image_id: inputValue.image_id || '',
-                      answer_view_format: 'both',
-                    });
-
-                    if (response.status_code === 201 || response.status_code === 200) {
-                      setIsEditing(false);
-                    }
+                    await createQuizAnswer();
                   }}
                   disabled={!inputValue.answer_title || inputValue.image_url === ''}
                 >
@@ -437,7 +469,6 @@ const styles = {
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
       background-color: ${colorTokens.background.white};
-      cursor: pointer;
   
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
@@ -517,7 +548,6 @@ const styles = {
     ${styleUtils.resetButton};
     color: ${colorTokens.icon.default};
     ${styleUtils.display.flex()}
-    cursor: pointer;
   `,
   optionBody: css`
     ${styleUtils.display.flex()}
@@ -568,11 +598,12 @@ const styles = {
     flex: 1;
     color: ${colorTokens.text.subdued};
     padding: ${spacing[4]} ${spacing[10]};
-    box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
+    border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     resize: vertical;
+    
     &:focus {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus}
     }
   `,
   optionInputButtons: css`
