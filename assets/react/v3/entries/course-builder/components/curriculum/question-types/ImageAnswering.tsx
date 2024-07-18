@@ -138,7 +138,7 @@ const ImageAnswering = () => {
                         answer_id: answerId || '',
                         is_correct: '0' as '0' | '1',
                       };
-                      const duplicateIndex = index + 1;
+                      const duplicateIndex = index - 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
                     onRemoveOption={() => removeOption(index)}
@@ -171,7 +171,7 @@ const ImageAnswering = () => {
                             answer_id: nanoid(),
                             is_correct: '0',
                           };
-                          const duplicateIndex = index + 1;
+                          const duplicateIndex = index - 1;
                           insertOption(duplicateIndex, duplicateOption);
                         }}
                         onRemoveOption={() => removeOption(index)}

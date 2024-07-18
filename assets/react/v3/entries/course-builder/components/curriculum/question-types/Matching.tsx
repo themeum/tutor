@@ -144,7 +144,7 @@ const Matching = () => {
                         answer_id: nanoid(),
                         is_correct: '0',
                       };
-                      const duplicateIndex = option.index + 1;
+                      const duplicateIndex = option.index - 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
                   />
@@ -176,7 +176,7 @@ const Matching = () => {
                             answer_id: nanoid(),
                             is_correct: '0',
                           };
-                          const duplicateIndex = index + 1;
+                          const duplicateIndex = index - 1;
                           insertOption(duplicateIndex, duplicateOption);
                         }}
                         onRemoveOption={() => removeOption(index)}
