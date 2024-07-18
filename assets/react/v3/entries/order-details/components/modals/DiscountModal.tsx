@@ -7,7 +7,7 @@ import type { ModalProps } from '@Components/modals/Modal';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import type { Discount } from '@OrderServices/order';
+import { type Discount, useOrderDiscountMutation } from '@OrderServices/order';
 import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -18,6 +18,7 @@ interface DiscountModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   discount: Discount;
   total_price: number;
+  order_id: number;
 }
 
 type FormField = Discount;
@@ -37,7 +38,8 @@ const calculatePercentage = (total: number, percent: number) => {
   return total * (percent / 100);
 };
 
-function DiscountModal({ title, closeModal, actions, discount, total_price }: DiscountModalProps) {
+function DiscountModal({ title, closeModal, actions, discount, total_price, order_id }: DiscountModalProps) {
+  const orderDiscountMutation = useOrderDiscountMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: discount,
   });
@@ -55,7 +57,13 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
       <form
         css={styles.form}
         onSubmit={form.handleSubmit((values) => {
-          alert('@TODO: will be implemented later.');
+          orderDiscountMutation.mutate({
+            order_id,
+            discount_type: values.type,
+            discount_amount: values.amount,
+            discount_reason: values.reason,
+          });
+          closeModal();
         })}
       >
         <div css={styles.formContent}>
@@ -116,7 +124,6 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
                   {...props}
                   label={__('Discount reason', 'tutor')}
                   placeholder={__('Enter the reason of this discount', 'tutor')}
-                  selectOnFocus
                 />
               )}
             />
@@ -126,7 +133,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price }: Di
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
             {__('Cancel', 'tutor')}
           </Button>
-          <Button type="submit" size="small" variant="WP">
+          <Button type="submit" size="small" variant="WP" loading={orderDiscountMutation.isPending}>
             {__('Apply', 'tutor')}
           </Button>
         </div>
