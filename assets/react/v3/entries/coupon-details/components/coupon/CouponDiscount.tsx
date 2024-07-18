@@ -8,8 +8,6 @@ import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
-import CategoryListTable from '@CouponComponents/modals/CourseListModal/CategoryListTable';
-import CourseListTable from '@CouponComponents/modals/CourseListModal/CourseListTable';
 
 import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
@@ -87,12 +85,13 @@ function CouponDiscount() {
 							component: CouponSelectItemModal,
 							props: {
 								title: __('Selected items', 'tutor'),
-								children:
-									appliesTo === 'specific_category' ? (
-										<CategoryListTable form={form} />
-									) : (
-										<CourseListTable form={form} type={appliesTo === 'specific_bundles' ? 'bundles' : 'courses'} />
-									),
+								type:
+									appliesTo === 'specific_category'
+										? 'category'
+										: appliesTo === 'specific_courses'
+										? 'courses'
+										: 'bundles',
+								form,
 							},
 						});
 					}}

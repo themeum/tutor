@@ -2,24 +2,44 @@ import Button from '@Atoms/Button';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import { spacing } from '@Config/styles';
+import Show from '@Controls/Show';
+import { Coupon } from '@CouponServices/coupon';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { ReactNode } from 'react';
+import { UseFormReturn } from 'react-hook-form';
+import CategoryListTable from './CategoryListTable';
+import CourseListTable from './CourseListTable';
 
 interface CouponSelectItemModalProps extends ModalProps {
 	closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-	children: ReactNode;
+	form: UseFormReturn<Coupon, any, undefined>;
+	type: 'bundles' | 'courses' | 'category';
 }
 
-function CouponSelectItemModal({ title, closeModal, actions, children }: CouponSelectItemModalProps) {
+function CouponSelectItemModal({ title, closeModal, actions, form, type }: CouponSelectItemModalProps) {
+	const _form = useFormWithGlobalError<Coupon>({
+		defaultValues: form.getValues(),
+	});
+
+	function handleApply() {
+		form.reset(_form.getValues());
+		closeModal({ action: 'CONFIRM' });
+	}
+
 	return (
 		<BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
-			{children}
+			<Show
+				when={type === 'category'}
+				fallback={<CourseListTable form={_form} type={type === 'bundles' ? 'bundles' : 'courses'} />}
+			>
+				<CategoryListTable form={_form} />
+			</Show>
 			<div css={styles.footer}>
 				<Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
 					{__('Cancel', 'tutor')}
 				</Button>
-				<Button type="submit" size="small" variant="primary">
+				<Button type="submit" size="small" variant="primary" onClick={handleApply}>
 					{__('Apply', 'tutor')}
 				</Button>
 			</div>

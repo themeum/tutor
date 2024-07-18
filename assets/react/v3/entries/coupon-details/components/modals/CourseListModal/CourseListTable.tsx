@@ -18,7 +18,8 @@ interface CourseListTableProps {
 	type: 'bundles' | 'courses';
 }
 
-const CourseListTable = ({ form, type }: CourseListTableProps) => {
+const CourseListTable = ({ type, form }: CourseListTableProps) => {
+	const courseList = form.watch(type) || [];
 	const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
 		updateQueryParams: false,
 	});
@@ -33,8 +34,10 @@ const CourseListTable = ({ form, type }: CourseListTableProps) => {
 	}
 
 	function handleAllIsChecked() {
-		const values = form.watch(type) || [];
-		return values?.every((item) => courseListQuery.data?.results?.map((result) => result.id).includes(item.id));
+		return (
+			courseList.length === courseListQuery.data?.results.length &&
+			courseList?.every((item) => courseListQuery.data?.results?.map((result) => result.id).includes(item.id))
+		);
 	}
 
 	const columns: Column<Course>[] = [
@@ -54,19 +57,15 @@ const CourseListTable = ({ form, type }: CourseListTableProps) => {
 					<div css={styles.checkboxWrapper}>
 						<Checkbox
 							onChange={() => {
-								const values = form.watch(type) || [];
-								const filteredItems = values.filter((course) => course.id !== item.id);
+								const filteredItems = courseList.filter((course) => course.id !== item.id);
 
-								if (filteredItems?.length === values.length) {
+								if (filteredItems?.length === courseList.length) {
 									form.setValue(type, [...filteredItems, item]);
 								} else {
 									form.setValue(type, filteredItems);
 								}
 							}}
-							checked={form
-								.getValues(type)
-								?.map((course) => course.id)
-								.includes(item.id)}
+							checked={courseList.map((course) => course.id).includes(item.id)}
 						/>
 						<img src={item.image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
 						<div css={styles.courseItem}>
