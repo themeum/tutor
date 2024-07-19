@@ -39,8 +39,12 @@ class OptionKeys {
 	const REFUND_POLICY  = 'ecommerce_refund_policy';
 	const PRIVACY_POLICY = 'ecommerce_privacy_policy';
 
+	// Manual payment settings.
+	const MANUAL_PAYMENT_KEY = 'manual_payments';
+
+
 	/**
-	 * Get billing fiend options
+	 * Get billing field options
 	 *
 	 * @since 3.0.0
 	 *
@@ -66,5 +70,21 @@ class OptionKeys {
 	public static function get_tax_config_page_url() {
 		$url = admin_url( 'admin.php?page=tutor_settings&tab=tax_configuration' );
 		return apply_filters( 'tutor_tax_config_page_url', $url );
+	}
+
+	/**
+	 * Get manual payment config keys
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_manual_payment_config_keys() {
+		return array(
+			'payment_id',
+			'payment_name',
+			'additional_details',
+			'payment_instructions',
+		);
 	}
 }

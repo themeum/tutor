@@ -10,6 +10,8 @@
 
 namespace Tutor\Ecommerce;
 
+use TUTOR\Input;
+
 /**
  * Configure ecommerce settings
  */
@@ -266,15 +268,102 @@ class Settings {
 	public function add_manual_payment_method() {
 		tutor_utils()->checking_nonce();
 
-		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
 
-		$payment_name         = (array) tutor_utils()->array_get( 'payment_name', $_POST, array() );
-		$additional_details   = (array) tutor_utils()->array_get( 'additional_details', $_POST, array() );
-		$payment_instructions = (array) tutor_utils()->array_get( 'payment_instructions', $_POST, array() );
+		$request = Input::sanitize_array(
+			$_POST,
+			array(
+				'additional_details'   => 'sanitize_textarea',
+				'payment_instructions' => 'sanitize_textarea',
+			)
+		);
 
-		// @TODO Need to save to the database
+		$payment_id = $request['payment_id'] ?? null;
 
-		wp_send_json_success();
+		$success = false;
+		if ( $payment_id ) {
+			$success = $this->update_manual_method( $payment_id, $request );
+		} else {
+			$request['payment_id'] = uniqid();
+			$success               = $this->add_new_manual_method( $request );
+		}
+
+		if ( $success ) {
+			wp_send_json_success( __( 'Manual payment added successfully!', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'Failed to add manual payment', 'tutor' ) );
+		}
+	}
+
+	/**
+	 * Register new custom manual payment
+	 *
+	 * Store it inside tutor_options
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data Payment config data.
+	 *
+	 * @see OptionKeys::get_manual_payment_config_keys for data array.
+	 *
+	 * @return bool
+	 */
+	public function add_new_manual_method( array $data ) {
+		$fillable_fields = OptionKeys::get_manual_payment_config_keys();
+
+		// Extract fillable fields.
+		$new_payment = array_intersect_key( array_flip( $fillable_fields ), $data );
+
+		$existing_payments = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		array_push( $existing_payments, $new_payment );
+
+		try {
+			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $existing_payments );
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
+			return false;
+		}
+	}
+
+	/**
+	 * Update a custom manual payment
+	 *
+	 * Update it inside tutor_options
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $payment_id Unique payment id.
+	 * @param array $data Updated data.
+	 *
+	 * @return bool
+	 */
+	public function update_manual_method( $payment_id, $data ) {
+		$fillable_fields = OptionKeys::get_manual_payment_config_keys();
+
+		// Extract fillable fields.
+		$data = array_intersect_key( array_flip( $fillable_fields ), $data );
+
+		$existing_payments = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+
+		foreach ( $existing_payments as $key => $payment ) {
+			if ( $payment['payment_id'] === $payment_id ) {
+				foreach ( $data as $k => $value ) {
+					$existing_payments[ $key ][ $k ] = $value;
+				}
+				break;
+			}
+		}
+
+		try {
+			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $existing_payments );
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
+			return false;
+		}
 	}
 
 	/**
