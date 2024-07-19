@@ -1321,10 +1321,7 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box() {
 		$course_post_type = tutor()->course_post_type;
-
 		tutor_meta_box_wrapper( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array( $this, 'course_meta_box' ), $course_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-
-		tutor_meta_box_wrapper( 'tutor-course-videos', __( 'Video', 'tutor' ), array( $this, 'video_metabox' ), $course_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
 	}
 
 	/**
@@ -1351,29 +1348,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Video meta box
-	 *
-	 * @since 1.0.0
-	 * @param boolean $echo print data or return.
-	 * @return string
-	 */
-	public function video_metabox( $echo = true ) {
-		$file_path = tutor()->path . 'views/metabox/video-metabox.php';
-
-		if ( $echo ) {
-			/**
-			 * Use echo raise WPCS security issue
-			 * Helper wp_kses_post break content.
-			 */
-			include $file_path;
-		} else {
-			ob_start();
-			include $file_path;
-			return ob_get_clean();
-		}
-	}
-
-	/**
 	 * Register metabox in course builder tutor
 	 *
 	 * @since 1.3.4
@@ -1383,9 +1357,6 @@ class Course extends Tutor_Base {
 		global $post;
 
 		do_action( 'tutor_course_builder_metabox_before', get_the_ID() );
-
-		course_builder_section_wrap( $this->video_metabox( false ), __( 'Video', 'tutor' ) );
-		do_action( 'tutor/frontend_course_edit/after/video', $post );
 
 		course_builder_section_wrap( $this->course_meta_box( false ), __( 'Course Builder', 'tutor' ) );
 		do_action( 'tutor/frontend_course_edit/after/course_builder', $post );
