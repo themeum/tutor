@@ -37,12 +37,18 @@ $courses         = $get_cart['results'];
 							?>
 							<div class="tutor-cart-course-item">
 								<div class="tutor-cart-course-thumb">
-									<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="Course thumb">
+									<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">
+										<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="Course thumb">
+									</a>
 								</div>
 								<div class="tutor-cart-course-title">
 									<!-- @TODO: Need to add bundle product support -->
 									<!-- <div class="tutor-cart-course-bundle-badge">5 Course bundle</div> -->
-									<h5 class="tutor-fs-6 tutor-fw-medium tutor-color-black"><?php echo esc_html( $course->post_title ); ?></h5>
+									<h5 class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+										<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">
+											<?php echo esc_html( $course->post_title ); ?>
+										</a>
+									</h5>
 									<ul class="tutor-cart-course-info">
 										<li><?php echo esc_html( tutor_utils()->clean_html_content( $course_duration ) ); ?> <span></span></li>
 										<li>147 lectures <span></span></li>
