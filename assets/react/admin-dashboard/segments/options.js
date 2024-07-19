@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const manualPaymentForm = document.getElementById('tutor-manual-payment-form');
 	if (manualPaymentForm) {
-		manualPaymentForm.onsubmit( async (e) => {
+		manualPaymentForm.addEventListener('submit', async (e) => {
 			const button = manualPaymentForm.querySelector('#tutor-manual-payment-button');
 			e.preventDefault();
 			const formData = new FormData(manualPaymentForm);
@@ -237,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					const {success, data} = await post.json();
 					if (success) {
 						tutor_toast(__('Success!', 'tutor'), data, 'success');
+						this.location.reload();
 					} else {
 						tutor_toast(__('Error!', 'tutor'), data, 'error');
 					}
@@ -248,44 +249,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			} finally {
 				button.classList.remove('is-loading');
 				button.removeAttribute('disabled');
-				this.location.reload();
 			}
 			
 		});
 	}
-	// $('#tutor-manual-payment-form').submit(function (e) {
-	// 	e.preventDefault();
-
-	// 	const button = $('#tutor-manual-payment-button');
-	// 	const $form = $(this);
-	// 	const data = $form.serializeObject();
-
-	// 	$.ajax({
-	// 		url: window._tutorobject.ajaxurl,
-	// 		type: 'POST',
-	// 		data: data,
-	// 		beforeSend: function () {
-	// 			button.addClass('is-loading');
-	// 			button.attr('disabled', true);
-	// 		},
-	// 		success: function (resp) {
-	// 			const { data = {}, success, message = __('Something went wrong!', 'tutor') } = resp || {};
-
-	// 			if (success) {
-	// 				tutor_toast(__('Success!', 'tutor'), message, 'success');
-	// 				$form[0].reset();
-	// 				$('body').removeClass('tutor-modal-open');
-	// 				$('.tutor-modal.tutor-is-active').removeClass('tutor-is-active');
-	// 			} else {
-	// 				tutor_toast(__('Error!', 'tutor'), message, 'error');
-	// 			}
-	// 		},
-	// 		complete: function () {
-	// 			button.removeClass('is-loading');
-	// 			button.attr('disabled', false);
-	// 		},
-	// 	});
-	// });
 
 	function view_item(text, section_slug, section, block, field_key) {
 		var navTrack = block ? `${angleRight} ${block}` : '';

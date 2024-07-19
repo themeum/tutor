@@ -33,7 +33,7 @@
 								<?php esc_html_e( 'Custom payment method name', 'tutor' ); ?>
 							</label>
 							<div class="tutor-mb-16">
-								<input type="text" name="payment_name" class="tutor-form-control tutor-mb-12" required/>
+								<input type="text" name="payment_method_name" class="tutor-form-control tutor-mb-12" required/>
 							</div>
 						</div>
 						<div class="tutor-col">

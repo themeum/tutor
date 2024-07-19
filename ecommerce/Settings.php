@@ -275,19 +275,20 @@ class Settings {
 		$request = Input::sanitize_array(
 			$_POST,
 			array(
-				'additional_details'   => 'sanitize_textarea',
-				'payment_instructions' => 'sanitize_textarea',
+				'additional_details'   => 'sanitize_textarea_field',
+				'payment_instructions' => 'sanitize_textarea_field',
 			)
 		);
 
-		$payment_id = $request['payment_id'] ?? null;
+		$method_id = $request['payment_method_id'] ?? null;
 
 		$success = false;
-		if ( $payment_id ) {
-			$success = $this->update_manual_method( $payment_id, $request );
+		if ( $method_id ) {
+			$success = $this->update_manual_method( $method_id, $request );
 		} else {
-			$request['payment_id'] = uniqid();
-			$success               = $this->add_new_manual_method( $request );
+			$request['payment_method_id'] = uniqid();
+
+			$success = $this->add_new_manual_method( $request );
 		}
 
 		if ( $success ) {
@@ -311,16 +312,16 @@ class Settings {
 	 * @return bool
 	 */
 	public function add_new_manual_method( array $data ) {
-		$fillable_fields = OptionKeys::get_manual_payment_config_keys();
+		$fillable_fields = array_keys( OptionKeys::get_manual_payment_config_keys() );
 
 		// Extract fillable fields.
-		$new_payment = array_intersect_key( array_flip( $fillable_fields ), $data );
+		$new_payment_method = array_intersect_key( $data, array_flip( $fillable_fields ) );
 
-		$existing_payments = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
-		array_push( $existing_payments, $new_payment );
+		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		array_push( $payment_methods, $new_payment_method );
 
 		try {
-			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $existing_payments );
+			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
 			return true;
 		} catch ( \Throwable $th ) {
 			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
@@ -335,30 +336,30 @@ class Settings {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param mixed $payment_id Unique payment id.
+	 * @param mixed $method_id Unique payment method id.
 	 * @param array $data Updated data.
 	 *
 	 * @return bool
 	 */
-	public function update_manual_method( $payment_id, $data ) {
-		$fillable_fields = OptionKeys::get_manual_payment_config_keys();
+	public function update_manual_method( $method_id, $data ) {
+		$fillable_fields = array_keys( OptionKeys::get_manual_payment_config_keys() );
 
 		// Extract fillable fields.
 		$data = array_intersect_key( array_flip( $fillable_fields ), $data );
 
-		$existing_payments = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
 
-		foreach ( $existing_payments as $key => $payment ) {
-			if ( $payment['payment_id'] === $payment_id ) {
+		foreach ( $payment_methods as $key => $payment_method ) {
+			if ( $payment_method['payment_method_id'] === $method_id ) {
 				foreach ( $data as $k => $value ) {
-					$existing_payments[ $key ][ $k ] = $value;
+					$payment_methods[ $key ][ $k ] = $value;
 				}
 				break;
 			}
 		}
 
 		try {
-			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $existing_payments );
+			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
 			return true;
 		} catch ( \Throwable $th ) {
 			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );

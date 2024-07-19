@@ -81,10 +81,10 @@ class OptionKeys {
 	 */
 	public static function get_manual_payment_config_keys() {
 		return array(
-			'payment_id',
-			'payment_name',
-			'additional_details',
-			'payment_instructions',
+			'payment_method_id'    => 'hidden',
+			'payment_method_name'  => 'text',
+			'additional_details'   => 'textarea',
+			'payment_instructions' => 'textarea',
 		);
 	}
 }
