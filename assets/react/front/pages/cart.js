@@ -9,38 +9,32 @@ document.addEventListener('DOMContentLoaded', function () {
         const deleteButtons = document.querySelectorAll('.tutor-cart-remove-button');
         deleteButtons.forEach((button) => {
             button.addEventListener('click', async (e) => {
-                button.setAttribute('disabled', 'disabled');
-                button.classList.add('is-loading');
-
                 const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
                 const formData = new FormData();
                 formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
                 formData.set('action', 'tutor_course_from_cart');
                 formData.set('course_id', button.dataset.courseId);
 
-                const post = await ajaxHandler(formData);
+                try {
+                    button.setAttribute('disabled', 'disabled');
+                    button.classList.add('is-loading');
 
-                button.removeAttribute('disabled');
-                button.classList.remove('is-loading');
-
-                if (post.ok) {
-                    const response = await post.json();
-
-                    if (response.success) {
+                    const post = await ajaxHandler(formData);
+                    const { success, data = defaultErrorMessage } = await post.json();
+                    if (success) {
                         button.closest('.tutor-cart-course-item').remove();
-                        tutor_toast(__('Success', 'tutor'), response.data, 'success');
+                        tutor_toast(__('Success', 'tutor'), data, 'success');
                         // @TODO: Update the cart summary.
                     } else {
-                        if (response.data.error_message) {
-                            tutor_toast(__('Failed', 'tutor'), response.data, 'error');
-                        } else {
-                            tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
-                        }
+                        tutor_toast(__('Failed', 'tutor'), data, 'error');
                     }
-                } else {
+                } catch (error) {
                     tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
+                } finally {
+                    button.removeAttribute('disabled');
+                    button.classList.remove('is-loading');
                 }
-            })
+            });
         });
     }
 });

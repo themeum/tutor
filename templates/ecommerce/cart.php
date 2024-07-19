@@ -5,7 +5,7 @@
  * @package Tutor\Views
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 3.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,7 +30,8 @@ $courses         = $get_cart['results'];
 					<?php if ( is_array( $courses ) && count( $courses ) ) : ?>
 						<?php
 						foreach ( $courses as $key => $course ) :
-							$course_duration  = get_tutor_course_duration_context( $course->ID, true );
+							$course_duration = get_tutor_course_duration_context( $course->ID, true );
+							// @TODO: Need to add tutor commerce support
 							$price            = tutor_utils()->get_course_price( $course->ID );
 							$tutor_course_img = get_tutor_course_thumbnail_src( '', $course->ID );
 							$is_bundle        = false;
@@ -64,11 +65,7 @@ $courses         = $get_cart['results'];
 							</div>
 						<?php endforeach; ?>
 					<?php else : ?>
-						<tr>
-							<td colspan="100%" class="column-empty-state">
-								<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-							</td>
-						</tr>
+						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 					<?php endif; ?>
 				</div>
 			</div>
