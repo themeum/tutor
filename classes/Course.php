@@ -76,14 +76,8 @@ class Course extends Tutor_Base {
 
 		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ), 10, 2 );
+
 		add_action( 'wp_ajax_tutor_save_topic', array( $this, 'tutor_save_topic' ) );
-
-		/**
-		 * Add Column
-		 */
-		add_filter( "manage_{$this->course_post_type}_posts_columns", array( $this, 'add_column' ), 10, 1 );
-		add_action( "manage_{$this->course_post_type}_posts_custom_column", array( $this, 'custom_lesson_column' ), 10, 2 );
-
 		add_action( 'wp_ajax_tutor_delete_topic', array( $this, 'tutor_delete_topic' ) );
 
 		/**
@@ -100,7 +94,7 @@ class Course extends Tutor_Base {
 		/**
 		 * Gutenberg author support
 		 */
-		add_filter( 'wp_insert_post_data', array( $this, 'tutor_add_gutenberg_author' ), '99', 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'tutor_add_gutenberg_author' ), 99, 2 );
 
 		/**
 		 * Frontend metabox supports for course builder
@@ -230,13 +224,17 @@ class Course extends Tutor_Base {
 
 		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
 
-		add_action( 'admin_menu', __CLASS__ . '::load_media_scripts' );
-		add_action( 'init', __CLASS__ . '::load_media_scripts' );
-
+		/**
+		 * New course builder
+		 *
+		 * @since 3.0.0
+		 */
 		add_action( 'admin_init', array( $this, 'load_course_builder' ) );
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
 		add_action( 'tutor_course_builder_footer', array( $this, 'load_wp_link_modal' ) );
+		add_action( 'admin_menu', array( $this, 'load_media_scripts' ) );
+		add_action( 'init', array( $this, 'load_media_scripts' ) );
 
 		/**
 		 * Ajax list
@@ -1660,68 +1658,6 @@ class Course extends Tutor_Base {
 			);
 		}
 	}
-
-	/**
-	 * Add columns to course row in default WP list table
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $columns column list.
-	 * @return mixed
-	 */
-	public function add_column( $columns ) {
-		$date_col = $columns['date'];
-		unset( $columns['date'] );
-		$columns['lessons']  = __( 'Lessons', 'tutor' );
-		$columns['students'] = __( 'Students', 'tutor' );
-		$columns['price']    = __( 'Price', 'tutor' );
-		$columns['date']     = $date_col;
-
-		return $columns;
-	}
-
-	/**
-	 * Add data to custom column
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string  $column column name.
-	 * @param integer $post_id post ID.
-	 *
-	 * @return void
-	 */
-	public function custom_lesson_column( $column, $post_id ) {
-		if ( 'lessons' === $column ) {
-			echo esc_html( tutor_utils()->get_lesson_count_by_course( $post_id ) );
-		}
-
-		if ( 'students' === $column ) {
-			echo esc_html( tutor_utils()->count_enrolled_users_by_course( $post_id ) );
-		}
-
-		if ( 'price' === $column ) {
-			$price = tutor_utils()->get_course_price( $post_id );
-			if ( $price ) {
-				$monetize_by = tutils()->get_option( 'monetize_by' );
-				if ( function_exists( 'wc_price' ) && 'wc' === $monetize_by ) {
-					echo wp_kses(
-						'<span class="tutor-label-success">' . wc_price( $price ) . '</span>',
-						array(
-							'span' => array( 'class' => true ),
-						)
-					);
-				} else {
-					echo wp_kses(
-						'<span class="tutor-label-success">' . $price . '</span>',
-						array( 'span' => array( 'class' => true ) )
-					);
-				}
-			} else {
-				echo esc_html( apply_filters( 'tutor-loop-default-price', __( 'free', 'tutor' ) ) );
-			}
-		}
-	}
-
 
 	/**
 	 * Delete a course topic
