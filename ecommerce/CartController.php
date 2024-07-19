@@ -94,7 +94,7 @@ class CartController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_cart_delete', array( $this, 'tutor_cart_delete' ) );
+			add_action( 'wp_ajax_tutor_course_from_cart', array( $this, 'tutor_course_from_cart' ) );
 		}
 	}
 
@@ -164,6 +164,40 @@ class CartController {
 			__( 'Cart retrieved successfully', 'tutor' ),
 			$cart_data
 		);
+	}
+
+	/**
+	 * Get cart items
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function get_cart_items() {
+		return $this->model->get_cart_items();
+	}
+
+	/**
+	 * Get delete course from cart
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void JSON response
+	 */
+	public function tutor_course_from_cart() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$course_id = Input::post( 'course_id' );
+
+		$response = $this->model->delete_course_from_cart( $course_id );
+
+		if ( $response ) {
+			wp_send_json_success( __( 'Course removed successfully.', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'Course remove failed.', 'tutor' ) );
+		}
 	}
 
 	/**

@@ -4,6 +4,7 @@ import './dashboard';
 import './dashboard/export-csv';
 import './pages/course-landing';
 import './pages/instructor-list-filter';
+import './pages/cart';
 import './_select_dd_search';
 import sprintf from '../helper/sprintf';
 /**
