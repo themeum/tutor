@@ -645,4 +645,12 @@ class OrderModel {
 		return $response;
 	}
 
+	public function recalculate_order_prices( $order_id ) {
+		// get the order item prices
+		// get discount/coupon amount
+		// get tax amount
+		// calculate sub total (item_price - discount + tax)
+		// get refund values if refunded
+		// update net_price (sub_total - refund_amount)
+	}
 }
