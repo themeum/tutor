@@ -71,20 +71,4 @@ class OptionKeys {
 		$url = admin_url( 'admin.php?page=tutor_settings&tab=tax_configuration' );
 		return apply_filters( 'tutor_tax_config_page_url', $url );
 	}
-
-	/**
-	 * Get manual payment config keys
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_manual_payment_config_keys() {
-		return array(
-			'payment_method_id'    => 'hidden',
-			'payment_method_name'  => 'text',
-			'additional_details'   => 'textarea',
-			'payment_instructions' => 'textarea',
-		);
-	}
 }

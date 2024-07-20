@@ -23,7 +23,6 @@ class Settings {
 	public function __construct() {
 		add_filter( 'tutor/options/extend/attr', array( __CLASS__, 'add_ecommerce_settings' ) );
 		add_action( 'tutor_after_block_single_item', __CLASS__ . '::add_manual_payment_btn' );
-
 		add_action( 'wp_ajax_add_manual_payment_method', array( $this, 'add_manual_payment_method' ) );
 		add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::get_payment_gateway_settings' );
 
@@ -251,7 +250,7 @@ class Settings {
 		}
 		?>
 		<div class="tutor-add-payment-method-container">
-			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
+			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
 				<?php esc_html_e( '+ Add manual payment', 'tutor' ); ?>
 			</button>
 		</div>
@@ -286,9 +285,19 @@ class Settings {
 		if ( $method_id ) {
 			$success = $this->update_manual_method( $method_id, $request );
 		} else {
-			$request['payment_method_id'] = uniqid();
+			$method_id   = uniqid();
+			$config_keys = array_keys( self::get_manual_payment_config_keys() );
 
-			$success = $this->add_new_manual_method( $request );
+			$data = array();
+			foreach ( $config_keys as $key ) {
+				if ( 'payment_method_id' === $key ) {
+					$data['payment_method_id'] = $method_id;
+				} else {
+					$data[ "{$method_id}_$key" ] = $request[ $key ];
+				}
+			}
+
+			$success = $this->add_new_manual_method( $data );
 		}
 
 		if ( $success ) {
@@ -312,7 +321,7 @@ class Settings {
 	 * @return bool
 	 */
 	public function add_new_manual_method( array $data ) {
-		$fillable_fields = array_keys( OptionKeys::get_manual_payment_config_keys() );
+		$fillable_fields = array_keys( self::get_manual_payment_config_keys() );
 
 		// Extract fillable fields.
 		$new_payment_method = array_intersect_key( $data, array_flip( $fillable_fields ) );
@@ -342,7 +351,7 @@ class Settings {
 	 * @return bool
 	 */
 	public function update_manual_method( $method_id, $data ) {
-		$fillable_fields = array_keys( OptionKeys::get_manual_payment_config_keys() );
+		$fillable_fields = array_keys( self::get_manual_payment_config_keys() );
 
 		// Extract fillable fields.
 		$data = array_intersect_key( array_flip( $fillable_fields ), $data );
@@ -470,6 +479,11 @@ class Settings {
 			),
 		);
 
+		array_push( $settings['ecommerce_payment']['blocks'], $paypal );
+		array_push( $settings['ecommerce_payment']['blocks'], $stripe );
+
+		$settings = apply_filters( 'tutor_ecommerce_payment_settings', $settings );
+
 		// Manual Payments.
 		$manual_gateways = array(
 			'label'      => __( 'Manual payment methods ', 'tutor' ),
@@ -478,43 +492,15 @@ class Settings {
 			'fields'     => array(),
 		);
 
-		array_push( $settings['ecommerce_payment']['blocks'], $paypal );
-		array_push( $settings['ecommerce_payment']['blocks'], $stripe );
-
-		$settings = apply_filters( 'tutor_ecommerce_payment_settings', $settings );
-
 		array_push( $settings['ecommerce_payment']['blocks'], $manual_gateways );
 
+		$manual_gateways = self::get_manual_payment_setting_fields();
+
+		foreach ( $manual_gateways as $gateway ) {
+			array_push( $settings['ecommerce_payment']['blocks'], $gateway );
+		}
+
 		return $settings;
-	}
-
-	/**
-	 * Get automate payment setting fields
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_automate_payment_gateways() {
-		$fields = array(
-
-			// array(
-			// 'key'     => OptionKeys::PAYMENT_METHOD_PAYPAL,
-			// 'type'    => 'toggle_switch',
-			// 'label'   => __( 'Paypal', 'tutor' ),
-			// 'default' => 'off',
-			// 'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
-			// ),
-			// array(
-			// 'key'     => OptionKeys::PAYMENT_METHOD_STRIPE,
-			// 'type'    => 'toggle_switch',
-			// 'label'   => __( 'Stripe', 'tutor' ),
-			// 'default' => 'off',
-			// 'desc'    => __( 'Enable this to accept payments via Stripe.', 'tutor' ),
-			// ),
-		);
-
-		return $fields;
 	}
 
 	/**
@@ -524,9 +510,68 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	public static function get_manual_payment_gateways() {
-		$fields = array();
-		return $fields;
+	public static function get_manual_payment_setting_fields() {
+		$blocks = array();
+
+		$manual_payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY );
+		if ( is_array( $manual_payment_methods ) && count( $manual_payment_methods ) ) {
+			foreach ( $manual_payment_methods as $method ) {
+
+				$method_name = $method['payment_method_name'];
+				$method_id   = $method['payment_method_id'];
+
+				$block = array(
+					'label'      => $method_name,
+					'slug'       => "manual_payment_gateway_{$method_id}",
+					'block_type' => 'uniform',
+					'fields'     => array(),
+				);
+
+				$enable_field = array(
+					'key'           => "is_enable_{$method_id}",
+					'type'          => 'toggle_switch',
+					'label'         => $method_name,
+					'label_title'   => '',
+					'default'       => 'off',
+					'desc'          => sprintf( __( 'Enable %s payment', 'tutor-pro' ), $method_name ),
+					'toggle_fields' => "{$method_id}_payment_method_name, {$method_id}_additional_detail, {$method_id}_payment_instructions",
+				);
+
+				// Construct config fields.
+				$name_field = array(
+					'key'         => "{$method_id}_payment_method_name",
+					'type'        => 'text',
+					'label'       => __( 'Custom method name', 'tutor' ),
+					'label_title' => __( 'Custom method name', 'tutor' ),
+					'default'     => '',
+					'desc'        => '',
+				);
+
+				$addition_detail_field = array(
+					'key'         => "{$method_id}_additional_detail",
+					'type'        => 'textarea',
+					'label'       => __( 'Additional details', 'tutor' ),
+					'label_title' => __( 'Additional details', 'tutor' ),
+					'desc'        => __( 'Displays to customers when they’re choosing a payment method.', 'tutor' ),
+					'default'     => '',
+				);
+
+				$instruction_field = array(
+					'key'         => "{$method_id}_payment_instructions",
+					'type'        => 'textarea',
+					'label'       => __( 'Payment instructions', 'tutor' ),
+					'label_title' => __( 'Payment instructions', 'tutor' ),
+					'default'     => '',
+					'desc'        => __( 'Displays to customers when they’re choosing a payment method.', 'tutor' ),
+				);
+
+				array_push( $block['fields'], $enable_field, $name_field, $addition_detail_field, $instruction_field );
+
+				array_push( $blocks, $block );
+			}
+		}
+
+		return $blocks;
 	}
 
 	/**
@@ -572,6 +617,22 @@ class Settings {
 		return array(
 			'test' => __( 'Test', 'tutor' ),
 			'live' => __( 'Live', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Get manual payment config keys
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_manual_payment_config_keys() {
+		return array(
+			'payment_method_id'    => 'hidden',
+			'payment_method_name'  => 'text',
+			'additional_details'   => 'textarea',
+			'payment_instructions' => 'textarea',
 		);
 	}
 
