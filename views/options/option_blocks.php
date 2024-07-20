@@ -30,7 +30,54 @@ $block_slug = $blocks['slug'] ?? '';
 		<?php endif; ?>
 		<?php do_action( 'tutor_after_block_single_item', $block_slug ); ?>
 	</div>
+<?php elseif ( 'manual_payment' === $blocks['block_type'] ) : ?>
+	<div class="tutor-option-single-item tutor-mb-32 <?php echo isset( $blocks['class'] ) ? esc_attr( $blocks['class'] ) : ( isset( $blocks['slug'] ) ? esc_attr( $blocks['slug'] ) : null ); ?>">
+		<?php if ( isset( $blocks['label'] ) ) : ?>
+			<div class="tutor-option-group-title tutor-mb-16">
+				<div class="tutor-fs-6 tutor-color-muted"><?php echo esc_attr( $blocks['label'] ); ?></div>
+			</div>
+		<?php endif; ?>
+		<div class="item-wrapper">
+			<div class="tutor-option-field-row">
+				<div class="tutor-option-field-label">
+					<?php isset( $blocks['label'] ) ? printf( '<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name>%s</div>', esc_attr( $blocks['label'] ) ) : null; ?>
+					<?php isset( $blocks['desc'] ) ? printf( '<div class="tutor-fs-7 tutor-color-muted">%s</div>', wp_kses_post( $blocks['desc'] ) ) : null; ?>
+				</div>
 
+				<div class="tutor-option-field-input tutor-d-flex tutor-gap-1">
+					<label class="tutor-form-toggle">
+						<input type="checkbox" 
+							<?php checked( esc_attr( $blocks['default'] ), 'on' ); ?> 
+							class="tutor-form-toggle-input" data-payment-method-id="<?php echo esc_attr( $blocks['payment_method_id'] ); ?>">
+						<span class="tutor-form-toggle-control"></span>
+					</label>
+					<div class="tutor-dropdown-parent">
+						<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+							<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+						</button>
+						<div class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+							<a class="tutor-dropdown-item" href="javascript:void(0)" 
+							<?php
+							if ( is_array( $blocks['data-attrs'] ) && count( $blocks['data-attrs'] ) ) {
+								foreach ( $blocks['data-attrs'] as $k => $attr ) {
+									echo wp_kses_post( "data-{$k}" . '="' . $attr . '"' );
+								}
+							}
+							?>
+							>
+								<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+								<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
+							</a>
+							<a href="javascript:void(0)" class="tutor-dropdown-item tutor-manual-payment-method-delete" data-payment-method-id="<?php echo esc_attr( $blocks['payment_method_id'] ); ?>">
+								<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+								<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 <?php elseif ( 'isolate' == $blocks['block_type'] ) : ?>
 	<div class="tutor-option-single-item tutor-mb-32 <?php echo esc_attr( $blocks['slug'] ); ?>">
 		<?php if ( isset( $blocks['label'] ) ) : ?>
@@ -93,5 +140,7 @@ elseif ( 'color_picker' == $blocks['block_type'] ) :
 	);
 elseif ( 'custom' == $blocks['block_type'] ) :
 	include $blocks['template_path'];
+elseif ( 'action_placeholder' === $blocks['block_type'] ) :
+	do_action( $blocks['action'] );
 endif;
 ?>

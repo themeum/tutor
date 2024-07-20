@@ -22,9 +22,10 @@ class Settings {
 	 */
 	public function __construct() {
 		add_filter( 'tutor/options/extend/attr', array( __CLASS__, 'add_ecommerce_settings' ) );
-		add_action( 'tutor_after_block_single_item', __CLASS__ . '::add_manual_payment_btn' );
-		add_action( 'wp_ajax_add_manual_payment_method', array( $this, 'add_manual_payment_method' ) );
 		add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::get_payment_gateway_settings' );
+
+		add_action( 'add_manual_payment_btn', __CLASS__ . '::add_manual_payment_btn' );
+		add_action( 'wp_ajax_add_manual_payment_method', array( $this, 'add_manual_payment_method' ) );
 
 	}
 
@@ -245,9 +246,6 @@ class Settings {
 	 * @return void
 	 */
 	public static function add_manual_payment_btn( $slug ) {
-		if ( 'manual_payment_gateway' !== $slug ) {
-			return;
-		}
 		?>
 		<div class="tutor-add-payment-method-container">
 			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
@@ -321,51 +319,11 @@ class Settings {
 	 * @return bool
 	 */
 	public function add_new_manual_method( array $data ) {
-		$fillable_fields = array_keys( self::get_manual_payment_config_keys() );
-
 		// Extract fillable fields.
-		$new_payment_method = array_intersect_key( $data, array_flip( $fillable_fields ) );
+		$new_payment_method = $data;
 
 		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
 		array_push( $payment_methods, $new_payment_method );
-
-		try {
-			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
-			return true;
-		} catch ( \Throwable $th ) {
-			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
-			return false;
-		}
-	}
-
-	/**
-	 * Update a custom manual payment
-	 *
-	 * Update it inside tutor_options
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param mixed $method_id Unique payment method id.
-	 * @param array $data Updated data.
-	 *
-	 * @return bool
-	 */
-	public function update_manual_method( $method_id, $data ) {
-		$fillable_fields = array_keys( self::get_manual_payment_config_keys() );
-
-		// Extract fillable fields.
-		$data = array_intersect_key( array_flip( $fillable_fields ), $data );
-
-		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
-
-		foreach ( $payment_methods as $key => $payment_method ) {
-			if ( $payment_method['payment_method_id'] === $method_id ) {
-				foreach ( $data as $k => $value ) {
-					$payment_methods[ $key ][ $k ] = $value;
-				}
-				break;
-			}
-		}
 
 		try {
 			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
@@ -500,6 +458,13 @@ class Settings {
 			array_push( $settings['ecommerce_payment']['blocks'], $gateway );
 		}
 
+		$add_btn = array(
+			'block_type' => 'action_placeholder',
+			'action'     => 'add_manual_payment_btn',
+		);
+
+		array_push( $settings['ecommerce_payment']['blocks'], $add_btn );
+
 		return $settings;
 	}
 
@@ -517,55 +482,26 @@ class Settings {
 		if ( is_array( $manual_payment_methods ) && count( $manual_payment_methods ) ) {
 			foreach ( $manual_payment_methods as $method ) {
 
-				$method_name = $method['payment_method_name'];
-				$method_id   = $method['payment_method_id'];
+				$method_id            = $method['payment_method_id'] ?? '';
+				$is_enable            = $method[ "{$method_id}_is_enable" ] ?? 'off';
+				$method_name          = $method[ "{$method_id}_payment_method_name" ] ?? '';
+				$additional_details   = $method[ "{$method_id}_additional_details" ] ?? '';
+				$payment_instructions = $method[ "{$method_id}_payment_instructions" ] ?? '';
 
 				$block = array(
-					'label'      => $method_name,
-					'slug'       => "manual_payment_gateway_{$method_id}",
-					'block_type' => 'uniform',
-					'fields'     => array(),
+					'label'             => $method_name,
+					'slug'              => "manual_payment_gateway_{$method_id}",
+					'block_type'        => 'manual_payment',
+					'fields'            => array(),
+					'payment_method_id' => $method_id,
+					'default'           => $is_enable,
+					'desc'              => sprintf( __( 'Enable %s payment method', 'tutor' ), $method_name ),
+					'data-attrs'        => array(
+						'method-name'          => $method_name,
+						'additional-details'   => $additional_details,
+						'payment-instructions' => $payment_instructions,
+					),
 				);
-
-				$enable_field = array(
-					'key'           => "is_enable_{$method_id}",
-					'type'          => 'toggle_switch',
-					'label'         => $method_name,
-					'label_title'   => '',
-					'default'       => 'off',
-					'desc'          => sprintf( __( 'Enable %s payment', 'tutor-pro' ), $method_name ),
-					'toggle_fields' => "{$method_id}_payment_method_name, {$method_id}_additional_detail, {$method_id}_payment_instructions",
-				);
-
-				// Construct config fields.
-				$name_field = array(
-					'key'         => "{$method_id}_payment_method_name",
-					'type'        => 'text',
-					'label'       => __( 'Custom method name', 'tutor' ),
-					'label_title' => __( 'Custom method name', 'tutor' ),
-					'default'     => '',
-					'desc'        => '',
-				);
-
-				$addition_detail_field = array(
-					'key'         => "{$method_id}_additional_detail",
-					'type'        => 'textarea',
-					'label'       => __( 'Additional details', 'tutor' ),
-					'label_title' => __( 'Additional details', 'tutor' ),
-					'desc'        => __( 'Displays to customers when they’re choosing a payment method.', 'tutor' ),
-					'default'     => '',
-				);
-
-				$instruction_field = array(
-					'key'         => "{$method_id}_payment_instructions",
-					'type'        => 'textarea',
-					'label'       => __( 'Payment instructions', 'tutor' ),
-					'label_title' => __( 'Payment instructions', 'tutor' ),
-					'default'     => '',
-					'desc'        => __( 'Displays to customers when they’re choosing a payment method.', 'tutor' ),
-				);
-
-				array_push( $block['fields'], $enable_field, $name_field, $addition_detail_field, $instruction_field );
 
 				array_push( $blocks, $block );
 			}
