@@ -56,7 +56,7 @@ $block_slug = $blocks['slug'] ?? '';
 							<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 						</button>
 						<div class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-							<a class="tutor-dropdown-item" href="javascript:void(0)" 
+							<a class="tutor-dropdown-item tutor-manual-payment-method-edit" href="javascript:void(0)" 
 							<?php
 							if ( is_array( $blocks['data-attrs'] ) && count( $blocks['data-attrs'] ) ) {
 								foreach ( $blocks['data-attrs'] as $k => $attr ) {

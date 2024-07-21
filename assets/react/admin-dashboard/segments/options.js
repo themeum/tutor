@@ -1,5 +1,6 @@
 import ajaxHandler from '../../../../../tutor-pro/assets/react/lib/ajax-handler';
 import { get_response_message } from '../../helper/response';
+import tutorFormData from '../../helper/tutor-formdata';
 
 // SVG Icons Totor V2
 const tutorIconsV2 = {
@@ -220,14 +221,22 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
+	/**
+	 * Manual payment management
+	 *
+	 * @since 3.0.0
+	 */
 	const manualPaymentForm = document.getElementById('tutor-manual-payment-form');
+	const editManualPaymentBtns = document.querySelectorAll('.tutor-manual-payment-method-edit');
+	const deleteManualPaymentBtns = document.querySelectorAll('.tutor-manual-payment-method-delete');
+	const defaultErrorMsg = __('Something went wrong, please try again!', 'tutor');
+
 	if (manualPaymentForm) {
 		manualPaymentForm.addEventListener('submit', async (e) => {
 			const button = manualPaymentForm.querySelector('#tutor-manual-payment-button');
 			e.preventDefault();
 			const formData = new FormData(manualPaymentForm);
-			const defaultErrorMsg = __('Something went wrong, please try again!', 'tutor');
-
+			
 			button.classList.add('is-loading');
 			button.setAttribute('disabled', true);
 
@@ -253,6 +262,40 @@ document.addEventListener('DOMContentLoaded', function () {
 			
 		});
 	}
+
+	deleteManualPaymentBtns.forEach(btn => {
+		btn.addEventListener('click', async(e) => {
+			// Set target elem
+			let t = e.target;
+			if (t.tagName === 'I' || t.tagName === 'SPAN') {
+				t = t.closest('a');
+			}
+
+			const paymentMethodId = t.dataset.paymentMethodId;
+			const formData = tutorFormData([{payment_method_id: paymentMethodId, action: 'tutor_delete_manual_payment_method'}]);
+
+			t.classList.add('is-loading');
+			t.setAttribute('disabled', true);
+
+			try {
+				const post = await ajaxHandler(formData);
+				if (post.ok) {
+					const {success, data} = await post.json();
+					if (success) {
+						tutor_toast(__('Success!', 'tutor'), data, 'success');
+						e.target.closest('.tutor-option-single-item').remove(); 
+					} else {
+						tutor_toast(__('Failed!', 'tutor'), data, 'error');
+					}
+				}
+			} catch (error) {
+				tutor_toast(__('Error!', 'tutor'), error, 'error');
+			} finally {
+				t.classList.remove('is-loading');
+				t.removeAttribute('disabled');
+			}
+		})
+	})
 
 	function view_item(text, section_slug, section, block, field_key) {
 		var navTrack = block ? `${angleRight} ${block}` : '';

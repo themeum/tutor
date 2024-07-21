@@ -21,11 +21,12 @@ class Settings {
 	 * Register hooks
 	 */
 	public function __construct() {
-		add_filter( 'tutor/options/extend/attr', array( __CLASS__, 'add_ecommerce_settings' ) );
+		add_filter( 'tutor/options/extend/attr', __CLASS__ . '::add_ecommerce_settings' );
 		add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::get_payment_gateway_settings' );
 
 		add_action( 'add_manual_payment_btn', __CLASS__ . '::add_manual_payment_btn' );
-		add_action( 'wp_ajax_add_manual_payment_method', array( $this, 'add_manual_payment_method' ) );
+		add_action( 'wp_ajax_tutor_add_manual_payment_method', __CLASS__ . '::ajax_add_manual_payment_method' );
+		add_action( 'wp_ajax_tutor_delete_manual_payment_method', __CLASS__ . '::ajax_delete_manual_payment_method' );
 
 	}
 
@@ -262,7 +263,7 @@ class Settings {
 	 *
 	 * @return void send wp_json response
 	 */
-	public function add_manual_payment_method() {
+	public static function ajax_add_manual_payment_method() {
 		tutor_utils()->checking_nonce();
 
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -281,7 +282,7 @@ class Settings {
 
 		$success = false;
 		if ( $method_id ) {
-			$success = $this->update_manual_method( $method_id, $request );
+			$success = self::update_manual_method( $method_id, $request );
 		} else {
 			$method_id   = uniqid();
 			$config_keys = array_keys( self::get_manual_payment_config_keys() );
@@ -295,13 +296,41 @@ class Settings {
 				}
 			}
 
-			$success = $this->add_new_manual_method( $data );
+			$success = self::add_new_manual_method( $data );
 		}
 
 		if ( $success ) {
 			wp_send_json_success( __( 'Manual payment added successfully!', 'tutor' ) );
 		} else {
 			wp_send_json_error( __( 'Failed to add manual payment', 'tutor' ) );
+		}
+	}
+
+	/**
+	 * Ajax handler for deleting a manual payment
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public static function ajax_delete_manual_payment_method() {
+		tutor_utils()->checking_nonce();
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
+		$payment_method_id = Input::post( 'payment_method_id' );
+		if ( ! $payment_method_id ) {
+			wp_send_json_error( __( 'Payment method id required', 'tutor' ) );
+		}
+
+		$success = self::delete_manual_method( $payment_method_id );
+
+		if ( $success ) {
+			wp_send_json_success( __( 'Payment method deleted successfully', 'tutor' ) );
+		} else {
+			wp_send_json_error( __( 'Payment method delete failed', 'tutor' ) );
 		}
 	}
 
@@ -318,12 +347,71 @@ class Settings {
 	 *
 	 * @return bool
 	 */
-	public function add_new_manual_method( array $data ) {
+	public static function add_new_manual_method( array $data ) {
 		// Extract fillable fields.
 		$new_payment_method = $data;
 
 		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
 		array_push( $payment_methods, $new_payment_method );
+
+		try {
+			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
+			return false;
+		}
+	}
+
+	/**
+	 * Register new custom manual payment
+	 *
+	 * Store it inside tutor_options
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data Payment config data.
+	 *
+	 * @see OptionKeys::get_manual_payment_config_keys for data array.
+	 *
+	 * @return bool
+	 */
+	public static function update_manual_method( array $data ) {
+		// Extract fillable fields.
+		$new_payment_method = $data;
+
+		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		array_push( $payment_methods, $new_payment_method );
+
+		try {
+			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
+			return true;
+		} catch ( \Throwable $th ) {
+			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
+			return false;
+		}
+	}
+
+	/**
+	 * Delete a manual method
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $method_id Payment method id.
+	 *
+	 * @return bool
+	 */
+	public static function delete_manual_method( $method_id ) {
+		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+
+		if ( is_array( $payment_methods ) && count( $payment_methods ) ) {
+			$payment_methods = array_filter(
+				$payment_methods,
+				function( $method ) use ( $method_id ) {
+					return $method['payment_method_id'] !== $method_id;
+				}
+			);
+		}
 
 		try {
 			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
@@ -482,7 +570,11 @@ class Settings {
 		if ( is_array( $manual_payment_methods ) && count( $manual_payment_methods ) ) {
 			foreach ( $manual_payment_methods as $method ) {
 
-				$method_id            = $method['payment_method_id'] ?? '';
+				$method_id = $method['payment_method_id'] ?? '';
+				if ( empty( $method_id ) ) {
+					continue;
+				}
+
 				$is_enable            = $method[ "{$method_id}_is_enable" ] ?? 'off';
 				$method_name          = $method[ "{$method_id}_payment_method_name" ] ?? '';
 				$additional_details   = $method[ "{$method_id}_additional_details" ] ?? '';

@@ -25,7 +25,7 @@
 
 				<div class="tutor-modal-body">
 					<?php tutor_nonce_field(); ?>
-					<input type="hidden" name="action" value="add_manual_payment_method">
+					<input type="hidden" name="action" value="tutor_add_manual_payment_method">
 
 					<div class="tutor-rows">
 						<div class="tutor-col">
