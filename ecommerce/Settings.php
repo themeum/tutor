@@ -345,11 +345,11 @@ class Settings {
 		// Extract fillable fields.
 		$new_payment_method = $data;
 
-		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		$payment_methods = get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
 		array_push( $payment_methods, $new_payment_method );
 
 		try {
-			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
+			update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
 			return true;
 		} catch ( \Throwable $th ) {
 			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
@@ -373,7 +373,7 @@ class Settings {
 		// Extract fillable fields.
 		$data = array_intersect_key( $data, self::get_manual_payment_config_keys() );
 
-		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		$payment_methods = get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
 
 		if ( is_array( $payment_methods ) && count( $payment_methods ) ) {
 			foreach ( $payment_methods as $key => $method ) {
@@ -389,7 +389,7 @@ class Settings {
 		}
 
 		try {
-			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
+			update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
 			return true;
 		} catch ( \Throwable $th ) {
 			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
@@ -407,7 +407,7 @@ class Settings {
 	 * @return bool
 	 */
 	public static function delete_manual_method( $method_id ) {
-		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		$payment_methods = get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
 
 		if ( is_array( $payment_methods ) && count( $payment_methods ) ) {
 			$payment_methods = array_filter(
@@ -419,7 +419,7 @@ class Settings {
 		}
 
 		try {
-			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
+			update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
 			return true;
 		} catch ( \Throwable $th ) {
 			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
@@ -578,7 +578,7 @@ class Settings {
 	public static function get_manual_payment_setting_fields() {
 		$blocks = array();
 
-		$manual_payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY );
+		$manual_payment_methods = get_option( OptionKeys::MANUAL_PAYMENT_KEY );
 		if ( is_array( $manual_payment_methods ) && count( $manual_payment_methods ) ) {
 			foreach ( $manual_payment_methods as $method ) {
 
