@@ -48,7 +48,7 @@ $block_slug = $blocks['slug'] ?? '';
 					<label class="tutor-form-toggle">
 						<input type="checkbox" 
 							<?php checked( esc_attr( $blocks['default'] ), 'on' ); ?> 
-							class="tutor-form-toggle-input" data-payment-method-id="<?php echo esc_attr( $blocks['payment_method_id'] ); ?>">
+							class="tutor-form-toggle-input tutor-manual-payment-switch" data-payment-method-id="<?php echo esc_attr( $blocks['payment_method_id'] ); ?>">
 						<span class="tutor-form-toggle-control"></span>
 					</label>
 					<div class="tutor-dropdown-parent">
@@ -56,7 +56,7 @@ $block_slug = $blocks['slug'] ?? '';
 							<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 						</button>
 						<div class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-							<a class="tutor-dropdown-item tutor-manual-payment-method-edit" href="javascript:void(0)" 
+							<a class="tutor-dropdown-item tutor-manual-payment-method-edit" data-tutor-modal-target="tutor-update-manual-payment-modal" href="javascript:void(0)" 
 							<?php
 							if ( is_array( $blocks['data-attrs'] ) && count( $blocks['data-attrs'] ) ) {
 								foreach ( $blocks['data-attrs'] as $k => $attr ) {

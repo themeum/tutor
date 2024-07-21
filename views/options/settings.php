@@ -136,7 +136,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 	echo $this->view_template( 'common/modal-confirm.php', array() );
 
 	if ( tutor_utils()->is_monetize_by_tutor() ) {
-		require_once tutor()->path . 'views/modal/ecommerce/add-manual-payment.php';
+		require_once tutor()->path . 'views/modal/ecommerce/manual-payment.php';
 	}
 	?>
 </div>

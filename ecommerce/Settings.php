@@ -278,15 +278,17 @@ class Settings {
 			)
 		);
 
+		$is_update = false;
 		$method_id = $request['payment_method_id'] ?? null;
 
 		$success = false;
 		if ( $method_id ) {
-			$success = self::update_manual_method( $method_id, $request );
+			$is_update = true;
+			$success   = self::update_manual_method( $method_id, $request );
 		} else {
-			$method_id   = uniqid();
+			$method_id                    = uniqid();
 			$request['payment_method_id'] = $method_id;
-			
+
 			$config_keys = self::get_manual_payment_config_keys();
 			$data        = array_intersect_key( $request, $config_keys );
 
@@ -294,9 +296,9 @@ class Settings {
 		}
 
 		if ( $success ) {
-			wp_send_json_success( __( 'Manual payment added successfully!', 'tutor' ) );
+			wp_send_json_success( $is_update ? __( 'Data updated successfully!', 'tutor' ) : __( 'Manual payment added successfully!', 'tutor' ) );
 		} else {
-			wp_send_json_error( __( 'Failed to add manual payment', 'tutor' ) );
+			wp_send_json_error( $is_update ? __( 'Failed to update!', 'tutor' ) : __( 'Failed to add manual payment', 'tutor' ) );
 		}
 	}
 
@@ -366,12 +368,24 @@ class Settings {
 	 *
 	 * @return bool
 	 */
-	public static function update_manual_method( array $data ) {
+	public static function update_manual_method( $method_id, array $data ) {
 		// Extract fillable fields.
-		$new_payment_method = $data;
+		$data = array_intersect_key( $data, self::get_manual_payment_config_keys() );
 
 		$payment_methods = tutor_utils()->get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
-		array_push( $payment_methods, $new_payment_method );
+
+		if ( is_array( $payment_methods ) && count( $payment_methods ) ) {
+			foreach ( $payment_methods as $key => $method ) {
+				// Update payment method.
+				if ( $method['payment_method_id'] === $method_id ) {
+					foreach ( $data as $k => $v ) {
+						$method[ $k ] = $v;
+					}
+					$payment_methods[ $key ] = $method;
+					break;
+				}
+			}
+		}
 
 		try {
 			tutor_utils()->update_option( OptionKeys::MANUAL_PAYMENT_KEY, $payment_methods );
@@ -579,7 +593,9 @@ class Settings {
 					'default'           => $is_enable,
 					'desc'              => sprintf( __( 'Enable %s payment method', 'tutor' ), $method_name ),
 					'data-attrs'        => array(
-						'method-name'          => $method_name,
+						'is-enable'            => $is_enable,
+						'payment-method-id'    => $method_id,
+						'payment-method-name'  => $method_name,
 						'additional-details'   => $additional_details,
 						'payment-instructions' => $payment_instructions,
 					),
