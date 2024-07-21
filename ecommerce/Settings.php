@@ -285,16 +285,10 @@ class Settings {
 			$success = self::update_manual_method( $method_id, $request );
 		} else {
 			$method_id   = uniqid();
-			$config_keys = array_keys( self::get_manual_payment_config_keys() );
-
-			$data = array();
-			foreach ( $config_keys as $key ) {
-				if ( 'payment_method_id' === $key ) {
-					$data['payment_method_id'] = $method_id;
-				} else {
-					$data[ "{$method_id}_$key" ] = $request[ $key ];
-				}
-			}
+			$request['payment_method_id'] = $method_id;
+			
+			$config_keys = self::get_manual_payment_config_keys();
+			$data        = array_intersect_key( $request, $config_keys );
 
 			$success = self::add_new_manual_method( $data );
 		}
@@ -343,8 +337,6 @@ class Settings {
 	 *
 	 * @param array $data Payment config data.
 	 *
-	 * @see OptionKeys::get_manual_payment_config_keys for data array.
-	 *
 	 * @return bool
 	 */
 	public static function add_new_manual_method( array $data ) {
@@ -371,8 +363,6 @@ class Settings {
 	 * @since 3.0.0
 	 *
 	 * @param array $data Payment config data.
-	 *
-	 * @see OptionKeys::get_manual_payment_config_keys for data array.
 	 *
 	 * @return bool
 	 */
@@ -575,10 +565,10 @@ class Settings {
 					continue;
 				}
 
-				$is_enable            = $method[ "{$method_id}_is_enable" ] ?? 'off';
-				$method_name          = $method[ "{$method_id}_payment_method_name" ] ?? '';
-				$additional_details   = $method[ "{$method_id}_additional_details" ] ?? '';
-				$payment_instructions = $method[ "{$method_id}_payment_instructions" ] ?? '';
+				$is_enable            = $method['is_enable'] ?? 'off';
+				$method_name          = $method['payment_method_name'] ?? '';
+				$additional_details   = $method['additional_details'] ?? '';
+				$payment_instructions = $method['payment_instructions'] ?? '';
 
 				$block = array(
 					'label'             => $method_name,
@@ -657,6 +647,7 @@ class Settings {
 	 */
 	public static function get_manual_payment_config_keys() {
 		return array(
+			'is_enable'            => 'toggle',
 			'payment_method_id'    => 'hidden',
 			'payment_method_name'  => 'text',
 			'additional_details'   => 'textarea',
