@@ -535,6 +535,13 @@ class Settings {
 
 		$settings = apply_filters( 'tutor_ecommerce_payment_settings', $settings );
 
+		$add_more_gateway = array(
+			'block_type' => 'action_placeholder',
+			'action'     => 'add_more_automate_payment_gateway',
+		);
+
+		array_push( $settings['ecommerce_payment']['blocks'], $add_more_gateway );
+
 		// Manual Payments.
 		$manual_gateways = array(
 			'label'      => __( 'Manual payment methods ', 'tutor' ),
