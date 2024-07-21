@@ -364,6 +364,7 @@ class Settings {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @param mixed $method_id Payment method id.
 	 * @param array $data Payment config data.
 	 *
 	 * @return bool
