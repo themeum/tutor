@@ -22,7 +22,7 @@ class Settings {
 	 */
 	public function __construct() {
 		add_filter( 'tutor/options/extend/attr', __CLASS__ . '::add_ecommerce_settings' );
-		add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::get_payment_gateway_settings' );
+		add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::add_payment_gateway_settings' );
 
 		add_action( 'add_manual_payment_btn', __CLASS__ . '::add_manual_payment_btn' );
 		add_action( 'wp_ajax_tutor_add_manual_payment_method', __CLASS__ . '::ajax_add_manual_payment_method' );
@@ -428,7 +428,9 @@ class Settings {
 	}
 
 	/**
-	 * Get default automate payment gateways
+	 * Add payment gateway settings
+	 *
+	 * Using filter hook this method will add payment gateway settings
 	 *
 	 * @since 3.0.0
 	 *
@@ -436,7 +438,7 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	public static function get_payment_gateway_settings( $settings ): array {
+	public static function add_payment_gateway_settings( $settings ): array {
 		$payment_gateway = array(
 			'label'      => __( 'Supported payment methods', 'tutor' ),
 			'slug'       => 'supported_payment_gateway',
@@ -444,101 +446,7 @@ class Settings {
 			'fields'     => array(),
 		);
 
-		// $paypal = array(
-		// 'slug'       => 'paypal_payment_gateway',
-		// 'block_type' => 'uniform',
-		// 'fields'     => array(
-		// array(
-		// 'key'           => OptionKeys::IS_ENABLE_PAYPAL_PAYMENT,
-		// 'type'          => 'toggle_switch',
-		// 'label'         => __( 'Paypal', 'tutor-pro' ),
-		// 'label_title'   => '',
-		// 'default'       => 'off',
-		// 'desc'          => __( 'Enable Paypal payment', 'tutor-pro' ),
-		// 'toggle_fields' => implode( ',', self::get_paypal_config_keys() ),
-		// ),
-		// array(
-		// 'key'         => 'paypal_environment',
-		// 'type'        => 'select',
-		// 'label'       => __( 'PayPal Environment', 'tutor-pro' ),
-		// 'desc'        => '',
-		// 'default'     => array_keys( self::get_payment_environments() )[0],
-		// 'options'     => self::get_payment_environments(),
-		// 'placeholder' => __( 'Enter your PayPal Environment here', 'tutor-pro' ),
-		// ),
-		// array(
-		// 'key'         => 'paypal_merchant_email',
-		// 'type'        => 'text',
-		// 'label'       => __( 'Merchant Email', 'tutor-pro' ),
-		// 'desc'        => '',
-		// 'placeholder' => __( 'Enter your Merchant Email here', 'tutor-pro' ),
-		// ),
-		// array(
-		// 'key'         => 'paypal_client_id',
-		// 'type'        => 'text',
-		// 'label'       => __( 'Client ID', 'tutor-pro' ),
-		// 'desc'        => '',
-		// 'placeholder' => __( 'Enter your Client ID here', 'tutor-pro' ),
-		// ),
-		// array(
-		// 'key'         => 'paypal_client_secret',
-		// 'type'        => 'text',
-		// 'label'       => __( 'Client Secret', 'tutor-pro' ),
-		// 'desc'        => '',
-		// 'placeholder' => __( 'Enter your Client Secret here', 'tutor-pro' ),
-		// ),
-		// array(
-		// 'key'         => 'paypal_webhook_id',
-		// 'type'        => 'text',
-		// 'label'       => __( 'Webhook ID', 'tutor-pro' ),
-		// 'desc'        => '',
-		// 'placeholder' => __( 'Enter your Webhook ID here', 'tutor-pro' ),
-		// ),
-		// ),
-		// );
-
-		// $stripe = array(
-		// 'slug'       => 'stripe_payment_gateway',
-		// 'block_type' => 'uniform',
-		// 'fields'     => array(
-		// array(
-		// 'key'           => OptionKeys::IS_ENABLE_STRIPE_PAYMENT,
-		// 'type'          => 'toggle_switch',
-		// 'label'         => __( 'Stripe', 'tutor-pro' ),
-		// 'label_title'   => '',
-		// 'default'       => 'off',
-		// 'desc'          => __( 'Enable stripe payment', 'tutor-pro' ),
-		// 'toggle_fields' => implode( ',', self::get_stripe_config_keys() ),
-		// ),
-		// array(
-		// 'key'         => 'stripe_environment',
-		// 'type'        => 'select',
-		// 'label'       => __( 'Stripe Environment', 'tutor-pro' ),
-		// 'desc'        => '',
-		// 'default'     => array_keys( self::get_payment_environments() )[0],
-		// 'options'     => self::get_payment_environments(),
-		// 'placeholder' => __( 'Enter your Stripe Environment here', 'tutor-pro' ),
-		// ),
-		// array(
-		// 'key'         => 'stripe_secret_key',
-		// 'type'        => 'text',
-		// 'label'       => __( 'Stripe Secret Key', 'tutor-pro' ),
-		// 'desc'        => '',
-		// 'placeholder' => __( 'Enter your Stripe Secret Key here', 'tutor-pro' ),
-		// ),
-		// array(
-		// 'key'         => 'stripe_webhook_signature_key',
-		// 'type'        => 'text',
-		// 'label'       => __( 'Stripe Webhook Signature Key', 'tutor-pro' ),
-		// 'desc'        => '',
-		// 'placeholder' => __( 'Enter your Stripe Webhook Signature Key here', 'tutor-pro' ),
-		// ),
-		// ),
-		// );
-
 		array_push( $settings['ecommerce_payment']['blocks'], $payment_gateway );
-		// array_push( $settings['ecommerce_payment']['blocks'], $paypal );
-		// array_push( $settings['ecommerce_payment']['blocks'], $stripe );
 
 		foreach ( self::get_default_automate_payment_gateways() as $key => $gateway ) {
 
