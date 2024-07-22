@@ -437,101 +437,139 @@ class Settings {
 	 * @return array
 	 */
 	public static function get_payment_gateway_settings( $settings ): array {
-		$paypal = array(
-			'label'      => __( 'Supported payment methods ', 'tutor' ),
-			'slug'       => 'paypal_payment_gateway',
+		$payment_gateway = array(
+			'label'      => __( 'Supported payment methods', 'tutor' ),
+			'slug'       => 'supported_payment_gateway',
 			'block_type' => 'uniform',
-			'fields'     => array(
-				array(
-					'key'           => OptionKeys::IS_ENABLE_PAYPAL_PAYMENT,
-					'type'          => 'toggle_switch',
-					'label'         => __( 'Paypal', 'tutor-pro' ),
-					'label_title'   => '',
-					'default'       => 'off',
-					'desc'          => __( 'Enable Paypal payment', 'tutor-pro' ),
-					'toggle_fields' => implode( ',', self::get_paypal_config_keys() ),
-				),
-				array(
-					'key'         => 'paypal_environment',
-					'type'        => 'select',
-					'label'       => __( 'PayPal Environment', 'tutor-pro' ),
-					'desc'        => '',
-					'default'     => array_keys( self::get_payment_environments() )[0],
-					'options'     => self::get_payment_environments(),
-					'placeholder' => __( 'Enter your PayPal Environment here', 'tutor-pro' ),
-				),
-				array(
-					'key'         => 'paypal_merchant_email',
-					'type'        => 'text',
-					'label'       => __( 'Merchant Email', 'tutor-pro' ),
-					'desc'        => '',
-					'placeholder' => __( 'Enter your Merchant Email here', 'tutor-pro' ),
-				),
-				array(
-					'key'         => 'paypal_client_id',
-					'type'        => 'text',
-					'label'       => __( 'Client ID', 'tutor-pro' ),
-					'desc'        => '',
-					'placeholder' => __( 'Enter your Client ID here', 'tutor-pro' ),
-				),
-				array(
-					'key'         => 'paypal_client_secret',
-					'type'        => 'text',
-					'label'       => __( 'Client Secret', 'tutor-pro' ),
-					'desc'        => '',
-					'placeholder' => __( 'Enter your Client Secret here', 'tutor-pro' ),
-				),
-				array(
-					'key'         => 'paypal_webhook_id',
-					'type'        => 'text',
-					'label'       => __( 'Webhook ID', 'tutor-pro' ),
-					'desc'        => '',
-					'placeholder' => __( 'Enter your Webhook ID here', 'tutor-pro' ),
-				),
-			),
+			'fields'     => array(),
 		);
 
-		$stripe = array(
-			'slug'       => 'stripe_payment_gateway',
-			'block_type' => 'uniform',
-			'fields'     => array(
+		// $paypal = array(
+		// 'slug'       => 'paypal_payment_gateway',
+		// 'block_type' => 'uniform',
+		// 'fields'     => array(
+		// array(
+		// 'key'           => OptionKeys::IS_ENABLE_PAYPAL_PAYMENT,
+		// 'type'          => 'toggle_switch',
+		// 'label'         => __( 'Paypal', 'tutor-pro' ),
+		// 'label_title'   => '',
+		// 'default'       => 'off',
+		// 'desc'          => __( 'Enable Paypal payment', 'tutor-pro' ),
+		// 'toggle_fields' => implode( ',', self::get_paypal_config_keys() ),
+		// ),
+		// array(
+		// 'key'         => 'paypal_environment',
+		// 'type'        => 'select',
+		// 'label'       => __( 'PayPal Environment', 'tutor-pro' ),
+		// 'desc'        => '',
+		// 'default'     => array_keys( self::get_payment_environments() )[0],
+		// 'options'     => self::get_payment_environments(),
+		// 'placeholder' => __( 'Enter your PayPal Environment here', 'tutor-pro' ),
+		// ),
+		// array(
+		// 'key'         => 'paypal_merchant_email',
+		// 'type'        => 'text',
+		// 'label'       => __( 'Merchant Email', 'tutor-pro' ),
+		// 'desc'        => '',
+		// 'placeholder' => __( 'Enter your Merchant Email here', 'tutor-pro' ),
+		// ),
+		// array(
+		// 'key'         => 'paypal_client_id',
+		// 'type'        => 'text',
+		// 'label'       => __( 'Client ID', 'tutor-pro' ),
+		// 'desc'        => '',
+		// 'placeholder' => __( 'Enter your Client ID here', 'tutor-pro' ),
+		// ),
+		// array(
+		// 'key'         => 'paypal_client_secret',
+		// 'type'        => 'text',
+		// 'label'       => __( 'Client Secret', 'tutor-pro' ),
+		// 'desc'        => '',
+		// 'placeholder' => __( 'Enter your Client Secret here', 'tutor-pro' ),
+		// ),
+		// array(
+		// 'key'         => 'paypal_webhook_id',
+		// 'type'        => 'text',
+		// 'label'       => __( 'Webhook ID', 'tutor-pro' ),
+		// 'desc'        => '',
+		// 'placeholder' => __( 'Enter your Webhook ID here', 'tutor-pro' ),
+		// ),
+		// ),
+		// );
+
+		// $stripe = array(
+		// 'slug'       => 'stripe_payment_gateway',
+		// 'block_type' => 'uniform',
+		// 'fields'     => array(
+		// array(
+		// 'key'           => OptionKeys::IS_ENABLE_STRIPE_PAYMENT,
+		// 'type'          => 'toggle_switch',
+		// 'label'         => __( 'Stripe', 'tutor-pro' ),
+		// 'label_title'   => '',
+		// 'default'       => 'off',
+		// 'desc'          => __( 'Enable stripe payment', 'tutor-pro' ),
+		// 'toggle_fields' => implode( ',', self::get_stripe_config_keys() ),
+		// ),
+		// array(
+		// 'key'         => 'stripe_environment',
+		// 'type'        => 'select',
+		// 'label'       => __( 'Stripe Environment', 'tutor-pro' ),
+		// 'desc'        => '',
+		// 'default'     => array_keys( self::get_payment_environments() )[0],
+		// 'options'     => self::get_payment_environments(),
+		// 'placeholder' => __( 'Enter your Stripe Environment here', 'tutor-pro' ),
+		// ),
+		// array(
+		// 'key'         => 'stripe_secret_key',
+		// 'type'        => 'text',
+		// 'label'       => __( 'Stripe Secret Key', 'tutor-pro' ),
+		// 'desc'        => '',
+		// 'placeholder' => __( 'Enter your Stripe Secret Key here', 'tutor-pro' ),
+		// ),
+		// array(
+		// 'key'         => 'stripe_webhook_signature_key',
+		// 'type'        => 'text',
+		// 'label'       => __( 'Stripe Webhook Signature Key', 'tutor-pro' ),
+		// 'desc'        => '',
+		// 'placeholder' => __( 'Enter your Stripe Webhook Signature Key here', 'tutor-pro' ),
+		// ),
+		// ),
+		// );
+
+		array_push( $settings['ecommerce_payment']['blocks'], $payment_gateway );
+		// array_push( $settings['ecommerce_payment']['blocks'], $paypal );
+		// array_push( $settings['ecommerce_payment']['blocks'], $stripe );
+
+		foreach ( self::get_default_automate_payment_gateways() as $key => $gateway ) {
+
+			$new_gateway = array(
+				'slug'       => "{$key}_payment_gateway",
+				'block_type' => 'uniform',
+			);
+
+			$config_keys_method = 'get_' . $key . '_config_keys';
+
+			// Set enable field.
+			$fields = array(
 				array(
-					'key'           => OptionKeys::IS_ENABLE_STRIPE_PAYMENT,
+					'key'           => "is_enable_{$key}",
 					'type'          => 'toggle_switch',
-					'label'         => __( 'Stripe', 'tutor-pro' ),
+					'label'         => $gateway['label'],
 					'label_title'   => '',
 					'default'       => 'off',
-					'desc'          => __( 'Enable stripe payment', 'tutor-pro' ),
-					'toggle_fields' => implode( ',', self::get_stripe_config_keys() ),
+					'desc'          => sprintf( __( 'Enable %s payment', 'tutor-pro' ), $gateway['label'] ),
+					'toggle_fields' => implode( ',', array_keys( self::$config_keys_method() ) ),
 				),
-				array(
-					'key'         => 'stripe_environment',
-					'type'        => 'select',
-					'label'       => __( 'Stripe Environment', 'tutor-pro' ),
-					'desc'        => '',
-					'default'     => array_keys( self::get_payment_environments() )[0],
-					'options'     => self::get_payment_environments(),
-					'placeholder' => __( 'Enter your Stripe Environment here', 'tutor-pro' ),
-				),
-				array(
-					'key'         => 'stripe_secret_key',
-					'type'        => 'text',
-					'label'       => __( 'Stripe Secret Key', 'tutor-pro' ),
-					'desc'        => '',
-					'placeholder' => __( 'Enter your Stripe Secret Key here', 'tutor-pro' ),
-				),
-				array(
-					'key'         => 'stripe_webhook_signature_key',
-					'type'        => 'text',
-					'label'       => __( 'Stripe Webhook Signature Key', 'tutor-pro' ),
-					'desc'        => '',
-					'placeholder' => __( 'Enter your Stripe Webhook Signature Key here', 'tutor-pro' ),
-				),
-			),
-		);
+			);
 
-		array_push( $settings['ecommerce_payment']['blocks'], $paypal );
-		array_push( $settings['ecommerce_payment']['blocks'], $stripe );
+			// Set config fields.
+			$fields = array_merge( $fields, self::get_config_fields( $key ) );
+
+			$new_gateway['fields'] = $fields;
+
+			// Append new gateways inside ecommerce payment.
+			$settings['ecommerce_payment']['blocks'][] = $new_gateway;
+		}
 
 		$settings = apply_filters( 'tutor_ecommerce_payment_settings', $settings );
 
@@ -566,6 +604,41 @@ class Settings {
 		array_push( $settings['ecommerce_payment']['blocks'], $add_btn );
 
 		return $settings;
+	}
+
+	/**
+	 * Get default automate payment gateways
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_default_automate_payment_gateways() {
+		$gateways = array(
+			'paypal' => array(
+				'label'     => 'Papal',
+				'is_active' => self::is_active( 'paypal' ),
+			),
+			'stripe' => array(
+				'label'     => 'Stripe',
+				'is_active' => self::is_active( 'stripe' ),
+			),
+		);
+
+		return apply_filters( 'tutor_default_automate_payment_gateways', $gateways );
+	}
+
+	/**
+	 * Check if a payment gateways is active
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $gateway Gateway key.
+	 *
+	 * @return boolean
+	 */
+	public static function is_active( $gateway ) {
+		return tutor_utils()->get_option( "is_enable_{$gateway}_payment", false );
 	}
 
 	/**
@@ -625,11 +698,11 @@ class Settings {
 	 */
 	public static function get_paypal_config_keys() {
 		return array(
-			'paypal_environment',
-			'paypal_merchant_email',
-			'paypal_client_id',
-			'paypal_client_secret',
-			'paypal_webhook_id',
+			'paypal_environment'    => 'environment',
+			'paypal_merchant_email' => 'text',
+			'paypal_client_id'      => 'text',
+			'paypal_client_secret'  => 'text',
+			'paypal_webhook_id'     => 'text',
 		);
 	}
 
@@ -642,9 +715,9 @@ class Settings {
 	 */
 	public static function get_stripe_config_keys() {
 		return array(
-			'stripe_environment',
-			'stripe_secret_key',
-			'stripe_webhook_signature_key',
+			'stripe_environment'           => 'environment',
+			'stripe_secret_key'            => 'text',
+			'stripe_webhook_signature_key' => 'textarea',
 		);
 	}
 
@@ -677,6 +750,52 @@ class Settings {
 			'additional_details'   => 'textarea',
 			'payment_instructions' => 'textarea',
 		);
+	}
+
+	/**
+	 * Construct config fields based on gateway
+	 *
+	 * This method will return an array of config fields based on the provided gateway key.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $gateway Gateway name.
+	 *
+	 * @return array
+	 */
+	public static function get_config_fields( string $gateway ): array {
+		$config_keys_method = 'get_' . $gateway . '_config_keys';
+
+		if ( ! method_exists( __CLASS__, $config_keys_method ) ) {
+			return array();
+		}
+
+		$config_keys   = self::$config_keys_method();
+		$config_fields = array();
+
+		foreach ( $config_keys as $key => $type ) {
+			if ( 'environment' === $type ) {
+				$config_fields[] = array(
+					'key'         => $key,
+					'type'        => 'select',
+					'default'     => array_keys( self::get_payment_environments() )[0],
+					'options'     => self::get_payment_environments(),
+					'label'       => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'desc'        => '',
+					'placeholder' => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
+				);
+			} else {
+				$config_fields[] = array(
+					'key'         => $key,
+					'type'        => $type,
+					'label'       => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'desc'        => '',
+					'placeholder' => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
+				);
+			}
+		}
+
+		return $config_fields;
 	}
 
 }
