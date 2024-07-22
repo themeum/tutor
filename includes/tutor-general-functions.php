@@ -9,6 +9,8 @@
  */
 
 use Tutor\Cache\FlashMessage;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
@@ -803,7 +805,7 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	 * @return string ( date )
 	 */
 	function tutor_get_formated_date( string $require_format = '', string $user_date ) {
-		$require_format = $require_format ?: 'Y-m-d';  
+		$require_format = $require_format ?: 'Y-m-d';
 
 		$date = date_create( str_replace( '/', '-', $user_date ) );
 		if ( is_a( $date, 'DateTime' ) ) {
@@ -1407,5 +1409,56 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 			'Pacific/Fiji'                   => '(GMT+12:00) Fiji Islands, Marshall Islands ',
 			'Pacific/Auckland'               => '(GMT+12:00) Auckland, Wellington',
 		);
+	}
+
+	if ( ! function_exists( 'tutor_get_all_active_payment_gateways' ) ) {
+		/**
+		 * Get all active payment gateways including manual & automate
+		 *
+		 * @since 3.0.0
+		 *
+		 * @return array [ automate =>[], manual => [] ]
+		 */
+		function tutor_get_all_active_payment_gateways() {
+			$active_gateways = array(
+				'automate' => array(),
+				'manual'   => array(),
+			);
+
+			foreach ( Settings::get_default_automate_payment_gateways() as $gateway ) {
+				list( $label, $is_active) = $gateway;
+				if ( $is_active ) {
+					$active_gateways['automate'][] = array( 'label' => $label );
+				}
+			}
+
+			$manual_gateways = tutor_get_manual_payment_gateways();
+			if ( is_array( $manual_gateways ) && count( $manual_gateways ) ) {
+				foreach ( $manual_gateways as $gateway ) {
+					if ( isset( $gateway['is_enable'] ) && 'on' === $gateway['is_enable'] ) {
+						$active_gateways['manual'][] = array(
+							'label'                => $gateway['payment_method_name'],
+							'addition_details'     => $gateway['addition_details'],
+							'payment_instructions' => $gateway['payment_instructions'],
+						);
+					}
+				}
+			}
+
+			return apply_filters( 'tutor_active_payment_gateways', $active_gateways );
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_manual_payment_gateways' ) ) {
+		/**
+		 * Get manual payment gateways
+		 *
+		 * @since 3.0.0
+		 *
+		 * @return array
+		 */
+		function tutor_get_manual_payment_gateways() {
+			return get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		}
 	}
 }
