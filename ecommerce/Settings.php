@@ -460,7 +460,7 @@ class Settings {
 			// Set enable field.
 			$fields = array(
 				array(
-					'key'           => "is_enable_{$key}",
+					'key'           => "is_enable_{$key}_payment",
 					'type'          => 'toggle_switch',
 					'label'         => $gateway['label'],
 					'label_title'   => '',

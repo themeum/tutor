@@ -1426,7 +1426,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 			);
 
 			foreach ( Settings::get_default_automate_payment_gateways() as $gateway ) {
-				list( $label, $is_active) = $gateway;
+				list( $label, $is_active) = array_values( $gateway );
 				if ( $is_active ) {
 					$active_gateways['automate'][] = array( 'label' => $label );
 				}
@@ -1438,7 +1438,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 					if ( isset( $gateway['is_enable'] ) && 'on' === $gateway['is_enable'] ) {
 						$active_gateways['manual'][] = array(
 							'label'                => $gateway['payment_method_name'],
-							'addition_details'     => $gateway['addition_details'],
+							'additional_details'   => $gateway['additional_details'],
 							'payment_instructions' => $gateway['payment_instructions'],
 						);
 					}
