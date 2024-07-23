@@ -36,6 +36,8 @@ class HooksHandler {
 
 		// Register hooks.
 		add_action( 'tutor_after_order_bulk_action', array( $this, 'store_order_activity_after' ), 10, 2 );
+
+		add_filter( 'tutor_course_sell_by', array( $this, 'alter_course_sell_by' ) );
 	}
 
 	/**
@@ -63,6 +65,23 @@ class HooksHandler {
 				error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
 			}
 		}
+	}
+
+	/**
+	 * Alter course sell by value
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $sell_by Default sell by.
+	 *
+	 * @return mixed
+	 */
+	public function alter_course_sell_by( $sell_by ) {
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			$sell_by = Ecommerce::MONETIZE_BY;
+		}
+
+		return $sell_by;
 	}
 }
 

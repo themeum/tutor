@@ -13,6 +13,7 @@ use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Course;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -1459,6 +1460,49 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 */
 		function tutor_get_manual_payment_gateways() {
 			return get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_course_formatted_price' ) ) {
+		/**
+		 * Get course formatted price
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int     $course_id Course price.
+		 * @param boolean $echo Whether to echo content.
+		 *
+		 * @return string|void
+		 */
+		function tutor_get_course_formatted_price( $course_id, $echo = true ) {
+			$regular_price      = get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+			$sale_price         = get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+			$currency           = '$';
+			$thousand_separator = ',';
+			$decimal_value      = '2';
+
+			if ( ! $regular_price ) {
+				return;
+			}
+			ob_start();
+			?>
+			<?php if ( $regular_price ) : ?>
+				<div>
+					<?php if ( $sale_price ) : ?>
+						<span><?php echo esc_html( $currency . number_format( $sale_price, $decimal_value, $thousand_separator ) ); ?></span>
+						<del><?php echo esc_html( $currency . number_format( $regular_price, $decimal_value, $thousand_separator ) ); ?></del>
+					<?php else : ?>
+						<span><?php echo esc_html( $currency . number_format( $regular_price, $decimal_value, $thousand_separator ) ); ?></span>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
+			<?php
+			$content = apply_filters( 'tutor_course_formatted_price', ob_get_clean() );
+			if ( $echo ) {
+				echo $content; // PHPCS:ignore
+			} else {
+				return $content;
+			}
 		}
 	}
 }

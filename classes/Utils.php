@@ -1115,16 +1115,18 @@ class Utils {
 	 */
 	public function is_course_purchasable( $course_id = 0 ) {
 
+		$is_purchaseable = false;
+
 		$course_id  = $this->get_post_id( $course_id );
 		$price_type = $this->price_type( $course_id );
-		if ( 'free' === $price_type ) {
-			$is_paid = apply_filters( 'is_course_paid', false, $course_id );
-			if ( ! $is_paid ) {
-				return false;
-			}
+
+		if ( 'paid' === $price_type ) {
+			$is_purchaseable = true;
+		} elseif ( 'free' === $price_type ) {
+			$is_purchaseable = apply_filters( 'is_course_paid', $is_purchaseable, $course_id );
 		}
 
-		return apply_filters( 'is_course_purchasable', false, $course_id );
+		return apply_filters( 'is_course_purchasable', $is_purchaseable, $course_id );
 	}
 
 	/**
@@ -1132,7 +1134,14 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int  $course_id course ID.
+	 * @since 3.0.0
+	 *
+	 * If monetize by is Tutor then it will return course 
+	 * formatted price
+	 *
+	 * @see tutor_get_course_formatted_price
+	 *
+	 * @param int $course_id course ID.
 	 *
 	 * @return null|string
 	 */
@@ -1150,6 +1159,8 @@ class Utils {
 			} elseif ( 'edd' === $monetize_by && function_exists( 'edd_price' ) ) {
 				$download = new \EDD_Download( $product_id );
 				$price    = \edd_price( $download->ID, false );
+			} elseif ( Ecommerce::MONETIZE_BY === $monetize_by ) {
+				$price = tutor_get_course_formatted_price( $course_id, false );
 			}
 		}
 
