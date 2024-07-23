@@ -84,13 +84,13 @@ class Settings {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'            => OptionKeys::CURRENCY_TYPE,
+								'key'            => OptionKeys::CURRENCY_SYMBOL,
 								'type'           => 'select',
-								'label'          => __( 'Currency', 'tutor' ),
+								'label'          => __( 'Currency Symbol', 'tutor' ),
 								'select_options' => true,
 								'options'        => array(
-									'USD' => 'USD Dollar',
-									'ER'  => 'Euro',
+									'$' => 'USD Dollar',
+									'U' => 'Euro',
 								),
 								'default'        => 'USD',
 								'desc'           => __( 'Choose the currency for transactions.', 'tutor' ),

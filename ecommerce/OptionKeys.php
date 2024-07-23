@@ -16,7 +16,7 @@ namespace Tutor\Ecommerce;
 class OptionKeys {
 
 	// Currency Settings.
-	const CURRENCY_TYPE      = 'currency_type';
+	const CURRENCY_SYMBOL      = 'currency_symbol';
 	const CURRENCY_POSITION  = 'currency_position';
 	const THOUSAND_SEPARATOR = 'thousand_separator';
 	const DECIMAL_SEPARATOR  = 'decimal_separator';

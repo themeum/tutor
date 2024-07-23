@@ -1160,7 +1160,7 @@ class Utils {
 				$download = new \EDD_Download( $product_id );
 				$price    = \edd_price( $download->ID, false );
 			} elseif ( Ecommerce::MONETIZE_BY === $monetize_by ) {
-				$price = tutor_get_course_formatted_price( $course_id, false );
+				$price = tutor_get_formatted_price_html( $course_id, false );
 			}
 		}
 

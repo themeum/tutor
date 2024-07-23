@@ -1463,7 +1463,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		}
 	}
 
-	if ( ! function_exists( 'tutor_get_course_formatted_price' ) ) {
+	if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 		/**
 		 * Get course formatted price
 		 *
@@ -1474,28 +1474,23 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 *
 		 * @return string|void
 		 */
-		function tutor_get_course_formatted_price( $course_id, $echo = true ) {
-			$regular_price      = get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
-			$sale_price         = get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
-			$currency           = '$';
-			$thousand_separator = ',';
-			$decimal_value      = '2';
+		function tutor_get_formatted_price_html( $course_id, $echo = true ) {
+			$regular_price = get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+			$sale_price    = get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
 
 			if ( ! $regular_price ) {
 				return;
 			}
 			ob_start();
 			?>
-			<?php if ( $regular_price ) : ?>
 				<div>
 					<?php if ( $sale_price ) : ?>
-						<span><?php echo esc_html( $currency . number_format( $sale_price, $decimal_value, $thousand_separator ) ); ?></span>
-						<del><?php echo esc_html( $currency . number_format( $regular_price, $decimal_value, $thousand_separator ) ); ?></del>
+						<span><?php echo tutor_get_formatted_price( $sale_price ); ?></span>
+						<del><?php echo tutor_get_formatted_price( $regular_price ); ?></del>
 					<?php else : ?>
-						<span><?php echo esc_html( $currency . number_format( $regular_price, $decimal_value, $thousand_separator ) ); ?></span>
+						<span><?php echo tutor_get_formatted_price( $regular_price ); ?></span>
 					<?php endif; ?>
 				</div>
-			<?php endif; ?>
 			<?php
 			$content = apply_filters( 'tutor_course_formatted_price', ob_get_clean() );
 			if ( $echo ) {
@@ -1503,6 +1498,38 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 			} else {
 				return $content;
 			}
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_course_formatted_price' ) ) {
+		/**
+		 * Get course formatted price
+		 *
+		 * Formatting as per ecommerce price settings
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param mixed $price Raw price.
+		 *
+		 * @return string|void
+		 */
+		function tutor_get_formatted_price( $price ) {
+			if ( ! $price ) {
+				return;
+			}
+
+			$price = Input::sanitize( $price );
+
+			$currency_symbol    = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL );
+			$currency_position  = tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION );
+			$thousand_separator = tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR );
+			$decimal_separator  = tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR );
+			$no_of_decimal      = tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS );
+
+			$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
+			$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
+
+			return $price;
 		}
 	}
 }
