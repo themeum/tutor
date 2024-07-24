@@ -416,15 +416,25 @@ class QueryHelper {
 		$limit        = sanitize_text_field( $limit );
 
 		//phpcs:disable
-		$query = $wpdb->prepare(
-			"SELECT *
-				FROM {$table}
-				WHERE {$where_clause}
-				ORDER BY {$order_by} {$order}
-				LIMIT %d
-			",
-			$limit
-		);
+		if ( 0 === $limit ) {
+			$query = $wpdb->prepare(
+				"SELECT *
+					FROM {$table}
+					WHERE {$where_clause}
+					ORDER BY {$order_by} {$order}
+				"
+			);
+		} else {
+			$query = $wpdb->prepare(
+				"SELECT *
+					FROM {$table}
+					WHERE {$where_clause}
+					ORDER BY {$order_by} {$order}
+					LIMIT %d
+				",
+				$limit
+			);
+		}
 
 		return $wpdb->get_results(
 			$query,

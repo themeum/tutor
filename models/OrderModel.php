@@ -46,17 +46,6 @@ class OrderModel {
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
 
 	/**
-	 * Order Meta keys for history & refunds
-	 *
-	 * @since 3.0.0
-	 *
-	 * @var string
-	 */
-	const META_KEY_HISTORY = 'history';
-	const META_KEY_REFUND  = 'refund';
-
-
-	/**
 	 * Order table name
 	 *
 	 * @since 3.0.0
@@ -438,7 +427,6 @@ class OrderModel {
 	 * @return array
 	 */
 	public function get_orders( array $where = array(), $search_term = '', int $limit = 10, int $offset = 0, string $order_by = 'o.id', string $order = 'desc' ) {
-
 		global $wpdb;
 
 		$primary_table  = "{$this->table_name} o";
@@ -538,25 +526,31 @@ class OrderModel {
 	}
 
 	/**
-	 * Add a discount to an order.
+	 * Adds a discount to an order by updating the order's discount details and recalculating order prices.
 	 *
-	 * This function updates the order in the database with the provided discount details.
-	 * It updates the discount type, discount amount, and discount reason for the given order ID.
+	 * This method recalculates the subtotal, total price, and net payment for an order
+	 * based on the provided discount type and amount. It then updates these prices along with the
+	 * discount details in the database.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param object $data An object containing the discount details:
-	 *                     - $data->order_id       (int)    The ID of the order.
-	 *                     - $data->discount_type  (string) The type of the discount.
-	 *                     - $data->discount_amount(float)  The amount of the discount.
-	 *                     - $data->discount_reason(string) The reason for the discount.
+	 * @param object $data An object containing the following properties:
+	 *                     - order_id (int): The ID of the order to be updated.
+	 *                     - discount_type (string): The type of discount applied.
+	 *                     - discount_amount (float): The amount of discount applied.
+	 *                     - discount_reason (string): The reason for the discount.
 	 *
 	 * @return bool True on successful update, false on failure.
 	 */
 	public function add_order_discount( object $data ) {
+		$order_prices = $this->recalculate_order_prices( $data->order_id, $data->discount_type, $data->discount_amount );
+
 		$response = QueryHelper::update(
 			$this->table_name,
 			array(
+				'subtotal_price'  => $order_prices->sub_total,
+				'total_price'     => $order_prices->total_price,
+				'net_payment'     => $order_prices->net_price,
 				'discount_type'   => $data->discount_type,
 				'discount_amount' => $data->discount_amount,
 				'discount_reason' => $data->discount_reason,
@@ -645,12 +639,167 @@ class OrderModel {
 		return $response;
 	}
 
-	public function recalculate_order_prices( $order_id ) {
-		// get the order item prices
-		// get discount/coupon amount
-		// get tax amount
-		// calculate sub total (item_price - discount + tax)
-		// get refund values if refunded
-		// update net_price (sub_total - refund_amount)
+	/**
+	 * Recalculates the order prices including discounts, taxes, and refunds.
+	 *
+	 * This method retrieves the order data and item prices, applies any given discounts or those already
+	 * associated with the order, calculates the tax amount, and adjusts for any refunds to determine
+	 * the final net price.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $order_id      The ID of the order to recalculate prices for.
+	 * @param string $discount_type Optional. The type of discount to apply.
+	 * @param float  $discount_value Optional. The value of the discount to apply.
+	 *
+	 * @return object An object containing the recalculated prices:
+	 *                  - sub_total (float): The sum of order item prices.
+	 *                  - discount_amount (float): The total discount applied.
+	 *                  - tax_amount (float): The tax amount.
+	 *                  - total_price (float): The total price after applying discount and tax.
+	 *                  - net_price (float): The final price after accounting for refunds.
+	 */
+	public function recalculate_order_prices( $order_id, $discount_type = null, $discount_value = null ) {
+		$order_data = QueryHelper::get_row( $this->table_name, array( 'id' => $order_id ), 'id' );
+
+		// get the order item prices/sub_total.
+		$order_items_price = $this->get_order_items_price( $order_id );
+		$sub_total         = $order_items_price->sub_total;
+
+		// get discount/coupon amount.
+		$discount_amount = 0;
+
+		$discount_type  = ! empty( $discount_type ) ? $discount_type : $order_data->discount_type;
+		$discount_value = ! empty( $discount_value ) ? $discount_value : $order_data->discount_amount;
+
+		if ( ! empty( $discount_type ) && ! empty( $discount_value ) ) {
+			$discount_amount = $this->calculate_discount_amount( $discount_type, $discount_value, $sub_total );
+		}
+
+		// get tax amount.
+		$tax_amount = (float) $order_data->tax_amount ?? 0;
+
+		// calculate total (sub_total - discount + tax).
+		$total = $sub_total - $discount_amount + $tax_amount;
+
+		// get refund values if refunded.
+		$refund_amount = 0;
+		if ( self::PAYMENT_REFUNDED === $order_data->payment_status || self::PAYMENT_PARTIALLY_REFUNDED === $order_data->payment_status ) {
+			// refund amount code here.
+			$refund_amount = $this->get_refund_amount( $order_id );
+		}
+
+		// update net_price (total - refund_amount).
+		$net_price = $total - $refund_amount;
+
+		$response                  = new \stdClass();
+		$response->sub_total       = $sub_total;
+		$response->discount_amount = $discount_amount;
+		$response->tax_amount      = $tax_amount;
+		$response->total_price     = $total;
+		$response->net_price       = $net_price;
+
+		return $response;
+	}
+
+	/**
+	 * Retrieves and calculates the total price of order items.
+	 *
+	 * This method fetches all order items associated with the given order ID,
+	 * calculates the subtotal by summing up the item prices, and returns an object
+	 * containing the order items and the subtotal.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $order_id The ID of the order to retrieve items for.
+	 *
+	 * @return object An object containing the order items and their total price:
+	 *                  - items (array): An array of order item objects.
+	 *                  - sub_total (float): The sum of order item prices.
+	 */
+	public function get_order_items_price( $order_id ) {
+		global $wpdb;
+
+		$where       = array( 'order_id' => $order_id );
+		$order_items = QueryHelper::get_all( $wpdb->prefix . 'tutor_order_items', $where, 'id', 0 );
+
+		$response            = new \stdClass();
+		$response->items     = $order_items;
+		$response->sub_total = 0;
+
+		foreach ( $order_items as $item ) {
+			$response->sub_total += empty( $item->sale_price ) ? (float) $item->regular_price : (float) $item->sale_price;
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Calculates the discounted price based on the discount type and amount.
+	 *
+	 * This method calculates the discounted price of a given subtotal based on the provided
+	 * discount type (either 'percent' or a fixed amount) and the discount amount.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $discount_type The type of discount ('percent' or 'fixed').
+	 * @param float  $discount_amount The amount of discount to apply.
+	 * @param float  $sub_total The subtotal amount before applying the discount.
+	 *
+	 * @return float The discounted price after applying the discount.
+	 */
+	public function calculate_discount_amount( $discount_type, $discount_amount, $sub_total ) {
+		if ( 'percent' === $discount_type ) {
+			$discounted_price = (float) $sub_total - ( (float) $sub_total * (float) $discount_amount ) / 100;
+		} else {
+			$discounted_price = (float) $sub_total - (float) $discount_amount;
+		}
+		return $discounted_price;
+	}
+
+	/**
+	 * Retrieves the total refund amount for a given order.
+	 *
+	 * This method fetches all refund records for the specified order ID from the database,
+	 * calculates the total refund amount, and returns it. The refund records are retrieved
+	 * from the `tutor_ordermeta` table where the `meta_key` matches the refund meta keys.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $order_id The ID of the order for which the refund amount is to be calculated.
+	 *
+	 * @return float The total refund amount for the order.
+	 */
+	public function get_refund_amount( $order_id ) {
+		global $wpdb;
+
+		$table    = $wpdb->prefix . 'tutor_ordermeta';
+		$where_id = OrderActivitiesModel::META_KEY_REFUND . ',' . OrderActivitiesModel::META_KEY_PARTIALLY_REFUND;
+
+		$refund_records = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT *
+					FROM %s
+					WHERE order_id = %d
+					AND meta_key IN ( %s )
+					ORDER BY created_at_gmt DESC
+				',
+				$table,
+				$order_id,
+				$where_id
+			)
+		);
+
+		$refund_amount = 0;
+
+		foreach ( $refund_records as $refund ) {
+			$refund_data = json_decode( $refund->meta_value );
+
+			if ( ! empty( $refund_data->amount ) ) {
+				$refund_amount += (float) $refund_data->amount;
+			}
+		}
+
+		return $refund_amount;
 	}
 }
