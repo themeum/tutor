@@ -11,6 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use Tutor\Models\OrderActivitiesModel;
+use TUTOR\Course;
 
 /**
  * Handle custom hooks
@@ -38,6 +39,7 @@ class HooksHandler {
 		add_action( 'tutor_after_order_bulk_action', array( $this, 'store_order_activity_after' ), 10, 2 );
 
 		add_filter( 'tutor_course_sell_by', array( $this, 'alter_course_sell_by' ) );
+		add_filter( 'get_tutor_course_price', array( $this, 'alter_course_price' ), 10, 2 );
 	}
 
 	/**
@@ -82,6 +84,25 @@ class HooksHandler {
 		}
 
 		return $sell_by;
+	}
+
+	/**
+	 * Alter course price to show price on the course
+	 * entry box
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $price Course price.
+	 * @param int   $course_id Course id.
+	 *
+	 * @return mixed
+	 */
+	public function alter_course_price( $price, $course_id ) {
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			$price = tutor_get_formatted_price_html( $course_id, false );
+		}
+
+		return $price;
 	}
 }
 
