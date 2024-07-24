@@ -1,8 +1,11 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { format } from 'date-fns';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormDateInput from '@Components/fields/FormDateInput';
@@ -18,6 +21,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
+import Show from '@Controls/Show';
 import {
   type GoogleMeet,
   type GoogleMeetMeetingFormData,
@@ -27,8 +31,7 @@ import { type ID, useGoogleMeetDetailsQuery } from '@CourseBuilderServices/curri
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { styleUtils } from '@Utils/style-utils';
-import { format } from 'date-fns';
-import { useEffect } from 'react';
+import { isDefined } from '@Utils/types';
 
 interface GoogleMeetFormProps {
   onCancel: () => void;
@@ -67,7 +70,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
     shouldFocusError: true,
   });
 
-  const saveGoogleMeetMeeting = useSaveGoogleMeetMutation(String(courseId));
+  const saveGoogleMeetMeeting = useSaveGoogleMeetMutation();
 
   const timezones = tutorConfig.timezones;
 
@@ -95,7 +98,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
       attendees: data.meeting_enrolledAsAttendee ? 'Yes' : 'No',
     });
 
-    if (response.status_code === 200) {
+    if (response.status_code === 200 || response.status_code === 201) {
       onCancel();
       meetingForm.reset();
     }
@@ -103,7 +106,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (currentMeeting) {
+    if (isDefined(currentMeeting)) {
       meetingForm.reset({
         meeting_name: currentMeeting.post_title,
         meeting_summary: currentMeeting.post_content,
@@ -123,148 +126,156 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
         meeting_enrolledAsAttendee: currentMeeting.meeting_data.attendees === 'Yes' ? true : false,
       });
     }
-    meetingForm.setFocus('meeting_name');
+    const timeout = setTimeout(() => {
+      meetingForm.setFocus('meeting_name');
+    }, 0);
+
+    return () => clearTimeout(timeout);
   }, [currentMeeting]);
 
   return (
     <div css={styles.container}>
       <div css={styles.formWrapper} ref={ref}>
-        <Controller
-          name="meeting_name"
-          control={meetingForm.control}
-          rules={{ required: __('Name is required', 'tutor') }}
-          render={(controllerProps) => (
-            <FormInput
-              {...controllerProps}
-              label={__('Meeting Name', 'tutor')}
-              placeholder={__('Enter meeting name', 'tutor')}
-              selectOnFocus
-            />
-          )}
-        />
+        <Show when={!googleMeetDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
+          <Controller
+            name="meeting_name"
+            control={meetingForm.control}
+            rules={{ required: __('Name is required', 'tutor') }}
+            render={(controllerProps) => (
+              <FormInput
+                {...controllerProps}
+                label={__('Meeting Name', 'tutor')}
+                placeholder={__('Enter meeting name', 'tutor')}
+                selectOnFocus
+              />
+            )}
+          />
 
-        <Controller
-          name="meeting_summary"
-          control={meetingForm.control}
-          rules={{ required: __('Summary is required', 'tutor') }}
-          render={(controllerProps) => (
-            <FormTextareaInput
-              {...controllerProps}
-              label={__('Meeting Summary', 'tutor')}
-              placeholder={__('Enter meeting summary', 'tutor')}
-              rows={3}
-              enableResize
-            />
-          )}
-        />
+          <Controller
+            name="meeting_summary"
+            control={meetingForm.control}
+            rules={{ required: __('Summary is required', 'tutor') }}
+            render={(controllerProps) => (
+              <FormTextareaInput
+                {...controllerProps}
+                label={__('Meeting Summary', 'tutor')}
+                placeholder={__('Enter meeting summary', 'tutor')}
+                rows={3}
+                enableResize
+              />
+            )}
+          />
 
-        <div css={styles.meetingDateTimeWrapper}>
-          <div css={styles.dateLabel}>{__('Meeting Start Date', 'tutor')}</div>
-          <div css={styles.meetingDateTime}>
-            <Controller
-              name="meeting_start_date"
-              control={meetingForm.control}
-              rules={{ required: __('Start date is required', 'tutor') }}
-              render={(controllerProps) => (
-                <FormDateInput
-                  {...controllerProps}
-                  placeholder={__('Start date', 'tutor')}
-                  disabledBefore={new Date().toISOString()}
-                />
-              )}
-            />
+          <div css={styles.meetingDateTimeWrapper}>
+            <div css={styles.dateLabel}>{__('Meeting Start Date', 'tutor')}</div>
+            <div css={styles.meetingDateTime}>
+              <Controller
+                name="meeting_start_date"
+                control={meetingForm.control}
+                rules={{ required: __('Start date is required', 'tutor') }}
+                render={(controllerProps) => (
+                  <FormDateInput
+                    {...controllerProps}
+                    placeholder={__('Start date', 'tutor')}
+                    disabledBefore={new Date().toISOString()}
+                  />
+                )}
+              />
 
-            <Controller
-              name="meeting_start_time"
-              control={meetingForm.control}
-              rules={{ required: __('Start time is required', 'tutor') }}
-              render={(controllerProps) => (
-                <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />
-              )}
-            />
+              <Controller
+                name="meeting_start_time"
+                control={meetingForm.control}
+                rules={{ required: __('Start time is required', 'tutor') }}
+                render={(controllerProps) => (
+                  <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />
+                )}
+              />
+            </div>
           </div>
-        </div>
 
-        <div css={styles.meetingDateTimeWrapper}>
-          <div css={styles.dateLabel}>{__('Meeting End Date', 'tutor')}</div>
+          <div css={styles.meetingDateTimeWrapper}>
+            <div css={styles.dateLabel}>{__('Meeting End Date', 'tutor')}</div>
 
-          <div css={styles.meetingDateTime}>
-            <Controller
-              name="meeting_end_date"
-              control={meetingForm.control}
-              rules={{
-                required: __('End date is required', 'tutor'),
-                validate: {
-                  checkEndDate: (value) => {
-                    const startDate = meetingForm.watch('meeting_start_date');
-                    const endDate = value;
-                    if (startDate && endDate) {
-                      return new Date(startDate) > new Date(endDate)
-                        ? __('End date should be greater than start date', 'tutor')
-                        : undefined;
-                    }
-                    return undefined;
+            <div css={styles.meetingDateTime}>
+              <Controller
+                name="meeting_end_date"
+                control={meetingForm.control}
+                rules={{
+                  required: __('End date is required', 'tutor'),
+                  validate: {
+                    checkEndDate: (value) => {
+                      const startDate = meetingForm.watch('meeting_start_date');
+                      const endDate = value;
+                      if (startDate && endDate) {
+                        return new Date(startDate) > new Date(endDate)
+                          ? __('End date should be greater than start date', 'tutor')
+                          : undefined;
+                      }
+                      return undefined;
+                    },
                   },
-                },
-                deps: ['meeting_start_date'],
-              }}
-              render={(controllerProps) => (
-                <FormDateInput
-                  {...controllerProps}
-                  placeholder={__('End date', 'tutor')}
-                  disabledBefore={meetingForm.watch('meeting_start_date') || new Date().toISOString()}
-                />
-              )}
-            />
+                  deps: ['meeting_start_date'],
+                }}
+                render={(controllerProps) => (
+                  <FormDateInput
+                    {...controllerProps}
+                    placeholder={__('End date', 'tutor')}
+                    disabledBefore={meetingForm.watch('meeting_start_date') || new Date().toISOString()}
+                  />
+                )}
+              />
 
-            <Controller
-              name="meeting_end_time"
-              control={meetingForm.control}
-              rules={{
-                required: __('End time is required', 'tutor'),
-                validate: {
-                  checkEndTime: (value) => {
-                    const startDate = meetingForm.watch('meeting_start_date');
-                    const startTime = meetingForm.watch('meeting_start_time');
-                    const endDate = meetingForm.watch('meeting_end_date');
-                    const endTime = value;
-                    if (startDate && endDate && startTime && endTime) {
-                      return new Date(`${startDate} ${startTime}`) > new Date(`${endDate} ${endTime}`)
-                        ? __('End time should be greater than start time', 'tutor')
-                        : undefined;
-                    }
-                    return undefined;
+              <Controller
+                name="meeting_end_time"
+                control={meetingForm.control}
+                rules={{
+                  required: __('End time is required', 'tutor'),
+                  validate: {
+                    checkEndTime: (value) => {
+                      const startDate = meetingForm.watch('meeting_start_date');
+                      const startTime = meetingForm.watch('meeting_start_time');
+                      const endDate = meetingForm.watch('meeting_end_date');
+                      const endTime = value;
+                      if (startDate && endDate && startTime && endTime) {
+                        return new Date(`${startDate} ${startTime}`) > new Date(`${endDate} ${endTime}`)
+                          ? __('End time should be greater than start time', 'tutor')
+                          : undefined;
+                      }
+                      return undefined;
+                    },
                   },
-                },
-                deps: ['meeting_start_time', 'meeting_start_date', 'meeting_end_date'],
-              }}
-              render={(controllerProps) => <FormTimeInput {...controllerProps} placeholder={__('End time', 'tutor')} />}
-            />
+                  deps: ['meeting_start_time', 'meeting_start_date', 'meeting_end_date'],
+                }}
+                render={(controllerProps) => (
+                  <FormTimeInput {...controllerProps} placeholder={__('End time', 'tutor')} />
+                )}
+              />
+            </div>
           </div>
-        </div>
 
-        <Controller
-          name="meeting_timezone"
-          control={meetingForm.control}
-          rules={{ required: __('Timezone is required', 'tutor') }}
-          render={(controllerProps) => (
-            <FormSelectInput
-              {...controllerProps}
-              label={__('Timezone', 'tutor')}
-              placeholder={__('Timezone', 'tutor')}
-              options={timeZonesOptions}
-              isSearchable
-            />
-          )}
-        />
+          <Controller
+            name="meeting_timezone"
+            control={meetingForm.control}
+            rules={{ required: __('Timezone is required', 'tutor') }}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Timezone', 'tutor')}
+                placeholder={__('Timezone', 'tutor')}
+                options={timeZonesOptions}
+                isSearchable
+              />
+            )}
+          />
 
-        <Controller
-          name="meeting_enrolledAsAttendee"
-          control={meetingForm.control}
-          render={(controllerProps) => (
-            <FormCheckbox {...controllerProps} label={__('Add enrolled students as attendees', 'tutor')} />
-          )}
-        />
+          <Controller
+            name="meeting_enrolledAsAttendee"
+            control={meetingForm.control}
+            render={(controllerProps) => (
+              <FormCheckbox {...controllerProps} label={__('Add enrolled students as attendees', 'tutor')} />
+            )}
+          />
+        </Show>
       </div>
 
       <div css={styles.buttonWrapper({ isScrolling })}>
@@ -277,7 +288,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
           size="small"
           onClick={meetingForm.handleSubmit(onSubmit)}
         >
-          {data ? __('Update Meeting', 'tutor') : __('Create Meeting', 'tutor')}
+          {currentMeeting || meetingId ? __('Update Meeting', 'tutor') : __('Create Meeting', 'tutor')}
         </Button>
       </div>
     </div>
@@ -303,8 +314,7 @@ const styles = {
     padding-inline: ${spacing[12]};
     padding-bottom: ${spacing[8]};
     gap: ${spacing[12]};
-    max-height: 400px;
-    height: 100%;
+    height: 400px;
     overflow-y: auto;
   `,
   dateLabel: css`
@@ -328,11 +338,12 @@ const styles = {
     justify-content: flex-end;
     gap: ${spacing[8]};
     z-index: ${zIndex.positive};
+
     ${
       isScrolling &&
       css`
-      box-shadow: ${shadow.scrollable};
-    `
+        box-shadow: ${shadow.scrollable};
+      `
     }
   `,
 };

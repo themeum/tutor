@@ -33,10 +33,9 @@ import { moveTo } from '@Utils/util';
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
+  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
 
-  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
-
-  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
+  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
 
   const { fields: optionsFields, move: moveOption } = useFieldArray({
     control: form.control,

@@ -60,7 +60,8 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
       }`,
       toolbar2: 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
       content_css: '/wp-includes/css/dashicons.min.css,/wp-includes/js/tinymce/skins/wordpress/wp-content.css',
-      setup: (editor) => {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      setup: (editor: any) => {
         editor.addButton('tutor_button', {
           text: __('Tutor ShortCode', 'tutor'),
           icon: false,
@@ -133,21 +134,10 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
                       value: '6',
                     },
                   ],
-                  onsubmit: (e) => {
+                  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                  onsubmit: (e: any) => {
                     editor.insertContent(
-                      '[tutor_course id="' +
-                        e.data.id +
-                        '" exclude_ids="' +
-                        e.data.exclude_ids +
-                        '" category="' +
-                        e.data.category +
-                        '" orderby="' +
-                        e.data.orderby +
-                        '" order="' +
-                        e.data.order +
-                        '" count="' +
-                        e.data.count +
-                        '"]',
+                      `[tutor_course id="${e.data.id}" exclude_ids="${e.data.exclude_ids}" category="${e.data.category}" orderby="${e.data.orderby}" order="${e.data.order}" count="${e.data.count}"]`,
                     );
                   },
                 });
@@ -177,6 +167,7 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
   const { current: editorId } = useRef(nanoid());
   const [isFocused, setIsFocused] = useState(false);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const updateEditorContent = useCallback(
     (value: string) => {
       const { tinymce } = window;
@@ -194,12 +185,14 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
     [editorId, isFocused],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setTimeout(() => {
       updateEditorContent(value);
     }, 1000);
   }, [value]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (typeof window.wp !== 'undefined' && window.wp.editor) {
       window.wp.editor.remove(editorId);
@@ -248,6 +241,10 @@ const styles = {
       resize: none;
       border: none;
       outline: none;
+    }
+
+    .mce-active {
+      background: #555c66 !important;
     }
   `,
 };

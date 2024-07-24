@@ -227,8 +227,11 @@ const styles = {
     & textarea {
       ${typography.heading6()}
       height: auto;
-      padding: ${spacing[8]} ${spacing[12]};
       resize: none;
+
+      &.tutor-input-field {
+        padding: ${spacing[8]};
+      }
 
       ${
         enableResize &&

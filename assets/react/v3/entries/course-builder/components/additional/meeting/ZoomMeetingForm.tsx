@@ -1,8 +1,11 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { format } from 'date-fns';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormInput from '@Components/fields/FormInput';
@@ -16,13 +19,13 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
+import Show from '@Controls/Show';
 import { type ZoomMeeting, type ZoomMeetingFormData, useSaveZoomMeetingMutation } from '@CourseBuilderServices/course';
 import { type ID, useZoomMeetingDetailsQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { styleUtils } from '@Utils/style-utils';
-import { format } from 'date-fns';
-import { useEffect } from 'react';
+import { isDefined } from '@Utils/types';
 
 interface ZoomMeetingFormProps {
   onCancel: () => void;
@@ -62,7 +65,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
     shouldFocusError: true,
   });
 
-  const saveZoomMeeting = useSaveZoomMeetingMutation(String(courseId));
+  const saveZoomMeeting = useSaveZoomMeetingMutation();
 
   const timezones = tutorConfig.timezones;
   const timeZonesOptions = Object.keys(timezones).map((key) => ({
@@ -100,7 +103,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (currentMeeting) {
+    if (isDefined(currentMeeting)) {
       meetingForm.reset({
         meeting_name: currentMeeting.post_title,
         meeting_summary: currentMeeting.post_content,
@@ -114,170 +117,178 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
         meeting_host: Object.keys(meetingHost)[0],
       });
     }
-    meetingForm.setFocus('meeting_name');
+    const timeout = setTimeout(() => {
+      meetingForm.setFocus('meeting_name');
+    }, 0);
+
+    return () => clearTimeout(timeout);
   }, [currentMeeting]);
 
   return (
     <div css={styles.container}>
       <div css={styles.formWrapper} ref={ref}>
-        <Controller
-          name="meeting_name"
-          control={meetingForm.control}
-          rules={{
-            required: __('Name is required', 'tutor'),
-          }}
-          render={(controllerProps) => (
-            <FormInput
-              {...controllerProps}
-              label={__('Meeting Name', 'tutor')}
-              placeholder={__('Enter meeting name', 'tutor')}
-              selectOnFocus
-            />
-          )}
-        />
-
-        <Controller
-          name="meeting_summary"
-          control={meetingForm.control}
-          rules={{
-            required: __('Summary is required', 'tutor'),
-          }}
-          render={(controllerProps) => (
-            <FormTextareaInput
-              {...controllerProps}
-              label={__('Meeting Summary', 'tutor')}
-              placeholder={__('Enter meeting summary', 'tutor')}
-              rows={3}
-              enableResize
-            />
-          )}
-        />
-
-        <div css={styles.meetingDateTimeWrapper}>
+        <Show when={!zoomMeetingDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
           <Controller
-            name="meeting_date"
+            name="meeting_name"
             control={meetingForm.control}
             rules={{
-              required: __('Date is required', 'tutor'),
+              required: __('Name is required', 'tutor'),
             }}
             render={(controllerProps) => (
-              <FormDateInput
+              <FormInput
                 {...controllerProps}
-                label={__('Meeting Date', 'tutor')}
-                placeholder={__('Enter meeting date', 'tutor')}
-                disabledBefore={new Date().toISOString()}
+                label={__('Meeting Name', 'tutor')}
+                placeholder={__('Enter meeting name', 'tutor')}
+                selectOnFocus
               />
             )}
           />
 
           <Controller
-            name="meeting_time"
+            name="meeting_summary"
             control={meetingForm.control}
             rules={{
-              required: __('Time is required', 'tutor'),
+              required: __('Summary is required', 'tutor'),
             }}
-            render={(controllerProps) => <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />}
+            render={(controllerProps) => (
+              <FormTextareaInput
+                {...controllerProps}
+                label={__('Meeting Summary', 'tutor')}
+                placeholder={__('Enter meeting summary', 'tutor')}
+                rows={3}
+                enableResize
+              />
+            )}
           />
-          <div css={styles.meetingTimeWrapper}>
+
+          <div css={styles.meetingDateTimeWrapper}>
             <Controller
-              name="meeting_duration"
+              name="meeting_date"
               control={meetingForm.control}
               rules={{
-                required: __('Duration is required', 'tutor'),
+                required: __('Date is required', 'tutor'),
               }}
               render={(controllerProps) => (
-                <FormInput {...controllerProps} placeholder={__('Duration', 'tutor')} type="number" selectOnFocus />
-              )}
-            />
-            <Controller
-              name="meeting_duration_unit"
-              control={meetingForm.control}
-              rules={{
-                required: __('Duration unit is required', 'tutor'),
-              }}
-              render={(controllerProps) => (
-                <FormSelectInput
+                <FormDateInput
                   {...controllerProps}
-                  options={[
-                    { label: 'Minutes', value: 'min' },
-                    { label: 'Hours', value: 'hr' },
-                  ]}
+                  label={__('Meeting Date', 'tutor')}
+                  placeholder={__('Enter meeting date', 'tutor')}
+                  disabledBefore={new Date().toISOString()}
                 />
               )}
             />
+
+            <Controller
+              name="meeting_time"
+              control={meetingForm.control}
+              rules={{
+                required: __('Time is required', 'tutor'),
+              }}
+              render={(controllerProps) => (
+                <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />
+              )}
+            />
+            <div css={styles.meetingTimeWrapper}>
+              <Controller
+                name="meeting_duration"
+                control={meetingForm.control}
+                rules={{
+                  required: __('Duration is required', 'tutor'),
+                }}
+                render={(controllerProps) => (
+                  <FormInput {...controllerProps} placeholder={__('Duration', 'tutor')} type="number" selectOnFocus />
+                )}
+              />
+              <Controller
+                name="meeting_duration_unit"
+                control={meetingForm.control}
+                rules={{
+                  required: __('Duration unit is required', 'tutor'),
+                }}
+                render={(controllerProps) => (
+                  <FormSelectInput
+                    {...controllerProps}
+                    options={[
+                      { label: 'Minutes', value: 'min' },
+                      { label: 'Hours', value: 'hr' },
+                    ]}
+                  />
+                )}
+              />
+            </div>
           </div>
-        </div>
 
-        <Controller
-          name="meeting_timezone"
-          control={meetingForm.control}
-          rules={{
-            required: __('Time zone is required', 'tutor'),
-          }}
-          render={(controllerProps) => (
-            <FormSelectInput
-              {...controllerProps}
-              label={__('Time Zone', 'tutor')}
-              placeholder={__('Select time zone', 'tutor')}
-              options={timeZonesOptions}
-              isSearchable
-            />
-          )}
-        />
-        <Controller
-          name="auto_recording"
-          control={meetingForm.control}
-          rules={{
-            required: __('Auto recording is required', 'tutor'),
-          }}
-          render={(controllerProps) => (
-            <FormSelectInput
-              {...controllerProps}
-              label={__('Auto recording', 'tutor')}
-              placeholder="Select auto recording option"
-              options={[
-                { label: 'No Recordings', value: 'none' },
-                { label: 'Local', value: 'local' },
-                { label: 'Cloud', value: 'cloud' },
-              ]}
-            />
-          )}
-        />
+          <Controller
+            name="meeting_timezone"
+            control={meetingForm.control}
+            rules={{
+              required: __('Time zone is required', 'tutor'),
+            }}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Time Zone', 'tutor')}
+                placeholder={__('Select time zone', 'tutor')}
+                options={timeZonesOptions}
+                isSearchable
+              />
+            )}
+          />
+          <Controller
+            name="auto_recording"
+            control={meetingForm.control}
+            rules={{
+              required: __('Auto recording is required', 'tutor'),
+            }}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Auto recording', 'tutor')}
+                placeholder="Select auto recording option"
+                options={[
+                  { label: 'No Recordings', value: 'none' },
+                  { label: 'Local', value: 'local' },
+                  { label: 'Cloud', value: 'cloud' },
+                ]}
+              />
+            )}
+          />
 
-        <Controller
-          name="meeting_password"
-          control={meetingForm.control}
-          rules={{
-            required: __('Password is required', 'tutor'),
-          }}
-          render={(controllerProps) => (
-            <FormInput
-              {...controllerProps}
-              label={__('Meeting Password', 'tutor')}
-              placeholder={__('Enter meeting password', 'tutor')}
-              type="password"
-              isPassword
-              selectOnFocus
-            />
-          )}
-        />
+          <Controller
+            name="meeting_password"
+            control={meetingForm.control}
+            rules={{
+              required: __('Password is required', 'tutor'),
+            }}
+            render={(controllerProps) => (
+              <FormInput
+                {...controllerProps}
+                label={__('Meeting Password', 'tutor')}
+                placeholder={__('Enter meeting password', 'tutor')}
+                type="password"
+                isPassword
+                selectOnFocus
+              />
+            )}
+          />
 
-        <Controller
-          name="meeting_host"
-          control={meetingForm.control}
-          rules={{
-            required: __('Meeting host is required', 'tutor'),
-          }}
-          render={(controllerProps) => (
-            <FormInput
-              {...controllerProps}
-              label={__('Meeting Host', 'tutor')}
-              placeholder={__('Enter meeting host', 'tutor')}
-              disabled
-              selectOnFocus
-            />
-          )}
-        />
+          <Controller
+            name="meeting_host"
+            control={meetingForm.control}
+            rules={{
+              required: __('Meeting host is required', 'tutor'),
+            }}
+            render={(controllerProps) => (
+              <FormInput
+                {...controllerProps}
+                label={__('Meeting Host', 'tutor')}
+                placeholder={__('Enter meeting host', 'tutor')}
+                disabled
+                selectOnFocus
+              />
+            )}
+          />
+        </Show>
       </div>
 
       <div css={styles.buttonWrapper({ isScrolling })}>
@@ -290,7 +301,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
           size="small"
           onClick={meetingForm.handleSubmit(onSubmit)}
         >
-          {data ? __('Update Meeting', 'tutor') : __('Create Meeting', 'tutor')}
+          {currentMeeting || meetingId ? __('Update Meeting', 'tutor') : __('Create Meeting', 'tutor')}
         </Button>
       </div>
     </div>
@@ -318,8 +329,7 @@ const styles = {
     padding-inline: ${spacing[12]};
     padding-bottom: ${spacing[8]};
     gap: ${spacing[12]};
-    max-height: 400px;
-    height: 100%;
+    height: 400px;
     overflow-y: auto;
   `,
   meetingDateTimeWrapper: css`
@@ -339,11 +349,12 @@ const styles = {
     justify-content: flex-end;
     gap: ${spacing[8]};
     z-index: ${zIndex.positive};
+
     ${
       isScrolling &&
       css`
-      box-shadow: ${shadow.scrollable};
-    `
+        box-shadow: ${shadow.scrollable};
+      `
     }
   `,
 };

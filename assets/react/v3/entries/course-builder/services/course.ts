@@ -584,22 +584,26 @@ const saveZoomMeeting = (payload: ZoomMeetingPayload) => {
   });
 };
 
-export const useSaveZoomMeetingMutation = (courseId: string) => {
+export const useSaveZoomMeetingMutation = () => {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: saveZoomMeeting,
-    onSuccess: (response) => {
+    onSuccess: (response, payload) => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
-      queryClient.invalidateQueries({
-        queryKey: ['CourseDetails', Number(courseId)],
-      });
+      if (payload.click_form === 'course_builder') {
+        queryClient.invalidateQueries({
+          queryKey: ['CourseDetails', payload.course_id],
+        });
+      }
 
-      queryClient.invalidateQueries({
-        queryKey: ['Topic', Number(courseId)],
-      });
+      if (payload.click_form === 'metabox') {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic', payload.course_id],
+        });
+      }
 
       queryClient.invalidateQueries({
         queryKey: ['ZoomMeeting', response.data],
@@ -648,21 +652,21 @@ const saveGoogleMeet = (payload: GoogleMeetMeetingPayload) => {
   });
 };
 
-export const useSaveGoogleMeetMutation = (courseId: string) => {
+export const useSaveGoogleMeetMutation = () => {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: saveGoogleMeet,
-    onSuccess: (response) => {
+    onSuccess: (response, payload) => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
       queryClient.invalidateQueries({
-        queryKey: ['CourseDetails', Number(courseId)],
+        queryKey: ['CourseDetails', payload.course_id],
       });
 
       queryClient.invalidateQueries({
-        queryKey: ['Topic', Number(courseId)],
+        queryKey: ['Topic', payload.course_id],
       });
     },
     onError: (error: ErrorResponse) => {
@@ -679,7 +683,7 @@ const deleteGoogleMeet = (postId: string, eventId: string) => {
   });
 };
 
-export const useDeleteGoogleMeetMutation = (courseId: string, payload: GoogleMeetMeetingDeletePayload) => {
+export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMeetingDeletePayload) => {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
 
