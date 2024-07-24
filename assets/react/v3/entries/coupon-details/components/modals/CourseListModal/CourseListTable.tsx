@@ -58,8 +58,9 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
 						<Checkbox
 							onChange={() => {
 								const filteredItems = courseList.filter((course) => course.id !== item.id);
+								const isNewItem = filteredItems?.length !== courseList.length;
 
-								if (filteredItems?.length === courseList.length) {
+								if (isNewItem) {
 									form.setValue(type, [...filteredItems, item]);
 								} else {
 									form.setValue(type, filteredItems);
