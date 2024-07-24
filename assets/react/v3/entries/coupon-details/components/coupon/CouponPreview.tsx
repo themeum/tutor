@@ -35,14 +35,16 @@ function CouponPreview() {
 	const isOneUserPerCustomer = form.watch('is_one_use_per_user');
 	const redeemedCouponCount = form.watch('redeemed_coupons_count');
 
-	const startDateTime = `${startDate} ${startTime}`;
-	const activeFromSuffix = `${
-		isToday(new Date(startDateTime))
-			? __('today', 'tutor')
-			: isTomorrow(new Date(startDateTime))
-			? __('tomorrow', 'tutor')
-			: format(new Date(startDateTime), DateFormats.activityDate)
-	}`;
+	const startDateTime = startDate && startTime ? `${startDate} ${startTime}` : '';
+	const activeFromSuffix = startDateTime
+		? `${
+				isToday(new Date(startDateTime))
+					? __('today', 'tutor')
+					: isTomorrow(new Date(startDateTime))
+					? __('tomorrow', 'tutor')
+					: format(new Date(startDateTime), DateFormats.activityDate)
+		  }`
+		: '';
 
 	const discountText =
 		discountType === 'amount' ? `${tutor_currency?.symbol ?? '$'}${discountValue ?? 0}` : `${discountValue ?? 0}%`;
