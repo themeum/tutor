@@ -65,7 +65,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 						<img src={item.image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
 						<div css={styles.courseItem}>
 							<div>{item.title}</div>
-							<p>{item.number_of_courses + __('Courses', 'tutor')}</p>
+							<p>{`${item.number_of_courses} ${__('Courses', 'tutor')}`}</p>
 						</div>
 					</div>
 				);
