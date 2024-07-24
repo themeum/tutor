@@ -114,7 +114,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
         meeting_timezone: currentMeeting.meeting_data.timezone,
         auto_recording: currentMeeting.meeting_data.settings.auto_recording,
         meeting_password: currentMeeting.meeting_data.password,
-        meeting_host: Object.keys(meetingHost)[0],
+        meeting_host: Object.values(meetingHost)[0],
       });
     }
     const timeout = setTimeout(() => {
