@@ -52,7 +52,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 						<Checkbox
 							onChange={() => {
 								const filteredItems = categoryList.filter((course) => course.id !== item.id);
-								const isNewItem = filteredItems?.length !== categoryList.length;
+								const isNewItem = filteredItems?.length === categoryList.length;
 
 								if (isNewItem) {
 									form.setValue('categories', [...filteredItems, item]);
