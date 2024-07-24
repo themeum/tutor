@@ -521,10 +521,11 @@ const getWcProducts = (courseId?: string) => {
   });
 };
 
-export const useGetProductsQuery = (courseId?: string) => {
+export const useGetProductsQuery = (monetizeBy: 'tutor' | 'wc' | 'edd', courseId?: string) => {
   return useQuery({
     queryKey: ['WcProducts'],
     queryFn: () => getWcProducts(courseId).then((res) => res.data),
+    enabled: monetizeBy === 'wc',
   });
 };
 
@@ -536,7 +537,12 @@ const getProductDetails = (productId: string, courseId: string) => {
   });
 };
 
-export const useProductDetailsQuery = (productId: string, courseId: string, coursePriceType: string) => {
+export const useProductDetailsQuery = (
+  productId: string,
+  courseId: string,
+  coursePriceType: string,
+  monetizedBy: 'tutor' | 'wc' | 'edd',
+) => {
   const { showToast } = useToast();
 
   return useQuery({
@@ -549,7 +555,7 @@ export const useProductDetailsQuery = (productId: string, courseId: string, cour
         }
         return res.data;
       }),
-    enabled: !!productId && coursePriceType === 'paid',
+    enabled: !!productId && coursePriceType === 'paid' && monetizedBy === 'wc',
   });
 };
 
