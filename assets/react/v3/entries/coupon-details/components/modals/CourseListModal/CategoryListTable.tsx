@@ -7,7 +7,7 @@ import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { Column } from '@Molecules/Table';
 
-import { Coupon, CourseCategory, mockCouponData, useCategoryListQuery } from '@CouponServices/coupon';
+import { Coupon, CourseCategory, useCategoryListQuery } from '@CouponServices/coupon';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
 import { UseFormReturn } from 'react-hook-form';
@@ -18,7 +18,6 @@ interface CategoryListTableProps {
 }
 
 const CategoryListTable = ({ form }: CategoryListTableProps) => {
-	console.log(form.getValues());
 	const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
 		updateQueryParams: false,
 	});
@@ -28,10 +27,14 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 		filter: pageInfo.filter,
 	});
 
+	function toggleSelection(isChecked = false) {
+		form.setValue('categories', isChecked ? categoryListQuery.data?.results : []);
+	}
+
 	const columns: Column<CourseCategory>[] = [
 		{
 			Header: categoryListQuery.data?.results.length ? (
-				<Checkbox onChange={() => {}} checked={true} label={__('Category', 'tutor')} />
+				<Checkbox onChange={toggleSelection} checked={true} label={__('Category', 'tutor')} />
 			) : (
 				__('Category', 'tutor')
 			),
@@ -68,7 +71,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 			<div css={styles.tableWrapper}>
 				<Table
 					columns={columns}
-					data={mockCouponData.categories ?? []}
+					data={categoryListQuery.data.results ?? []}
 					itemsPerPage={itemsPerPage}
 					loading={categoryListQuery.isFetching || categoryListQuery.isRefetching}
 				/>
