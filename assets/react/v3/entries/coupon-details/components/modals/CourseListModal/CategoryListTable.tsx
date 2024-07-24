@@ -18,6 +18,7 @@ interface CategoryListTableProps {
 }
 
 const CategoryListTable = ({ form }: CategoryListTableProps) => {
+	const categoryList = form.watch('categories') ?? [];
 	const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
 		updateQueryParams: false,
 	});
@@ -31,10 +32,17 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 		form.setValue('categories', isChecked ? categoryListQuery.data?.results : []);
 	}
 
+	function handleAllIsChecked() {
+		return (
+			categoryList.length === categoryListQuery.data?.results.length &&
+			categoryList?.every((item) => categoryListQuery.data?.results?.map((result) => result.id).includes(item.id))
+		);
+	}
+
 	const columns: Column<CourseCategory>[] = [
 		{
 			Header: categoryListQuery.data?.results.length ? (
-				<Checkbox onChange={toggleSelection} checked={true} label={__('Category', 'tutor')} />
+				<Checkbox onChange={toggleSelection} checked={handleAllIsChecked()} label={__('Category', 'tutor')} />
 			) : (
 				__('Category', 'tutor')
 			),
