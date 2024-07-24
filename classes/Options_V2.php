@@ -554,7 +554,6 @@ class Options_V2 {
 		$page_posts             = get_posts( $page_args );
 		$course_archive_page_id = ( is_array( $page_posts ) && count( $page_posts ) ) ? $page_posts[0] : null;
 
-
 		$attr = array(
 			'general'      => array(
 				'label'    => __( 'General', 'tutor' ),
@@ -1744,7 +1743,7 @@ class Options_V2 {
 	}
 
 	/**
-	 * Load template inside template dirctory
+	 * Load template inside template directory
 	 *
 	 * @since 2.0.0
 	 *

@@ -23,10 +23,8 @@ class OptionKeys {
 	const NUMBER_OF_DECIMALS = 'number_of_decimals';
 
 	// Payment Methods.
-	const PAYMENT_METHOD_PAYPAL        = 'payment_method_paypal';
-	const PAYMENT_METHOD_STRIPE        = 'payment_method_stripe';
-	const PAYMENT_METHOD_BANK_TRANSFER = 'payment_method_bank_transfer';
-	const PAYMENT_METHOD_COD           = 'payment_method_cod';
+	const IS_ENABLE_PAYPAL_PAYMENT = 'is_enable_paypal_payment';
+	const IS_ENABLE_STRIPE_PAYMENT = 'is_enable_stripe_payment';
 
 	// Tax and Coupon Settings.
 	const IS_TAX_APPLICABLE    = 'is_tax_applicable';

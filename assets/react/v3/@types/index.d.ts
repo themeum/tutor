@@ -110,6 +110,10 @@ declare global {
       wp_rest_nonce: string;
       is_admin: string;
       is_admin_bar_showing: string;
+      edd_products: {
+        ID: string;
+        post_title: string;
+      }[];
       bp_groups: {
         name: string;
         id: number;

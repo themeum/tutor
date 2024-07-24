@@ -29,6 +29,7 @@ class OrderActivitiesModel {
 	const META_KEY_REFUND           = 'refund';
 	const META_KEY_PARTIALLY_REFUND = 'partially-refund';
 	const META_KEY_COMMENT          = 'comment';
+	const META_KEY_CANCEL_REASON    = 'cancel-reason';
 
 
 	/**

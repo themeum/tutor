@@ -8556,7 +8556,8 @@ class Utils {
 
 				// Add add-on enable status.
 				$addon_url                                = "tutor-pro/addons/{$base_name}/{$base_name}.php";
-				$plugins_data[ $base_name ]['is_enabled'] = $has_pro ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
+
+				$plugins_data[ $base_name ]['is_enabled'] = $has_pro && isset( $addons_config[ $addon_url ]['is_enable'] ) ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
 			}
 		}
 

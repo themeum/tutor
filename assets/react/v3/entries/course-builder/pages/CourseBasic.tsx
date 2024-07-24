@@ -29,7 +29,7 @@ import {
 } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
-import type { Option } from '@Utils/types';
+import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -123,27 +123,27 @@ const CourseBasic = () => {
 
   const instructorOptions = instructorListQuery.data ?? [];
 
-  const productsQuery = useGetProductsQuery(courseId ? String(courseId) : '');
-  const productDetailsQuery = useProductDetailsQuery(courseProductId, String(courseId), coursePriceType);
+  const productsQuery = useGetProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
+  const productDetailsQuery = useProductDetailsQuery(
+    courseProductId,
+    String(courseId),
+    coursePriceType,
+    tutorConfig.settings.monetize_by,
+  );
 
   const productOptions = () => {
-    const currentSelectedProduct = courseDetailsQuery.data?.course_pricing.product_id
-      ? {
-          label: courseDetailsQuery.data?.course_pricing.product_name || '',
-          value: courseDetailsQuery.data?.course_pricing.product_id || '',
-        }
-      : null;
+    const { course_pricing } = courseDetailsQuery.data || {};
+    const currentSelectedProduct =
+      course_pricing?.product_id && course_pricing.product_id !== '0'
+        ? { label: course_pricing.product_name || '', value: course_pricing.product_id }
+        : null;
 
-    if (productsQuery.isSuccess && productsQuery.data && currentSelectedProduct) {
-      return [
-        currentSelectedProduct,
-        ...productsQuery.data.map((product) => ({
-          label: product.post_title,
-          value: product.ID,
-        })),
-      ];
-    }
-    return [];
+    return productsQuery.isSuccess && productsQuery.data
+      ? [
+          currentSelectedProduct,
+          ...productsQuery.data.map(({ post_title: label, ID: value }) => ({ label, value })),
+        ].filter(isDefined)
+      : [];
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -303,6 +303,30 @@ const CourseBasic = () => {
                 helpText={__(
                   'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
                 )}
+                isSearchable
+              />
+            )}
+          />
+        )}
+
+        {coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'edd' && (
+          <Controller
+            name="course_product_id"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Select product', 'tutor')}
+                placeholder={__('Select a product', 'tutor')}
+                options={
+                  tutorConfig.edd_products
+                    ? tutorConfig.edd_products.map((product) => ({
+                        label: product.post_title,
+                        value: Number(product.ID),
+                      }))
+                    : []
+                }
+                helpText={__('Sell your product, process by EDD', 'tutor')}
                 isSearchable
               />
             )}
