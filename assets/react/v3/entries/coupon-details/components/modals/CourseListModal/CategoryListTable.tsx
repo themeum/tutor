@@ -49,7 +49,19 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 			Cell: (item) => {
 				return (
 					<div css={styles.checkboxWrapper}>
-						<Checkbox onChange={() => {}} checked={true} />
+						<Checkbox
+							onChange={() => {
+								const filteredItems = categoryList.filter((course) => course.id !== item.id);
+								const isNewItem = filteredItems?.length !== categoryList.length;
+
+								if (isNewItem) {
+									form.setValue('categories', [...filteredItems, item]);
+								} else {
+									form.setValue('categories', filteredItems);
+								}
+							}}
+							checked={categoryList.map((course) => course.id).includes(item.id)}
+						/>
 						<img src={item.image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
 						<div css={styles.courseItem}>
 							<div>{item.title}</div>
