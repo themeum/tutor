@@ -14,7 +14,7 @@ import CourseListTable from './CourseListTable';
 interface CouponSelectItemModalProps extends ModalProps {
 	closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
 	form: UseFormReturn<Coupon, any, undefined>;
-	type: 'bundles' | 'courses' | 'category';
+	type: 'bundles' | 'courses' | 'categories';
 }
 
 function CouponSelectItemModal({ title, closeModal, actions, form, type }: CouponSelectItemModalProps) {
@@ -23,14 +23,14 @@ function CouponSelectItemModal({ title, closeModal, actions, form, type }: Coupo
 	});
 
 	function handleApply() {
-		form.reset(_form.getValues());
+		form.setValue(type, _form.getValues(type));
 		closeModal({ action: 'CONFIRM' });
 	}
 
 	return (
 		<BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
 			<Show
-				when={type === 'category'}
+				when={type === 'categories'}
 				fallback={<CourseListTable form={_form} type={type === 'bundles' ? 'bundles' : 'courses'} />}
 			>
 				<CategoryListTable form={_form} />

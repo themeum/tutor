@@ -87,7 +87,7 @@ function CouponDiscount() {
 								title: __('Selected items', 'tutor'),
 								type:
 									appliesTo === 'specific_category'
-										? 'category'
+										? 'categories'
 										: appliesTo === 'specific_courses'
 										? 'courses'
 										: 'bundles',
