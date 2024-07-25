@@ -56,9 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     const post = await ajaxHandler(formData);
                     const { success, data = defaultErrorMessage } = await post.json();
                     if (success) {
-                        button.closest('.tutor-cart-course-item').remove();
                         tutor_toast(__('Success', 'tutor'), data, 'success');
-                        // @TODO: Update the cart summary.
+                        window.location.reload();
                     } else {
                         tutor_toast(__('Failed', 'tutor'), data, 'error');
                     }

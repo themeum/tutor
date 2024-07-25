@@ -40,7 +40,6 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 							$regular_price    = $course_price->regular_price;
 							$sale_price       = $course_price->sale_price;
 							$tutor_course_img = get_tutor_course_thumbnail_src( '', $course->ID );
-							$is_bundle        = false;
 
 							$subtotal += $sale_price ? $sale_price : $regular_price;
 							?>
