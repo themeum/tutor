@@ -18,21 +18,55 @@ use Tutor\Helpers\QueryHelper;
 class CartModel {
 
 	/**
-	 * Get cart items
+	 * Add a course to the user's cart.
 	 *
-	 * @return array
+	 * @param int $user_id User ID.
+	 * @param int $course_id Course ID.
+	 *
+	 * @return array Array containing the result of the insert operation.
 	 */
-	public function add_cart_item() {
-		$cart_items = QueryHelper::get_all();
-		return $cart_items;
+	public function add_course_to_cart( $user_id, $course_id ) {
+		global $wpdb;
+
+		$current_time = current_time( 'mysql', true );
+
+		$user_cart = QueryHelper::get_row(
+			"{$wpdb->prefix}tutor_carts",
+			array(
+				'user_id' => $user_id,
+			),
+			'id'
+		);
+
+		$user_cart_id = $user_cart->id;
+
+		if ( ! $user_cart_id ) {
+			$user_cart_id = QueryHelper::insert(
+				"{$wpdb->prefix}tutor_carts",
+				array(
+					'user_id'        => $user_id,
+					'created_at_gmt' => $current_time,
+				)
+			);
+		}
+
+		return QueryHelper::insert(
+			"{$wpdb->prefix}tutor_cart_items",
+			array(
+				'cart_id'   => $user_cart_id,
+				'course_id' => $course_id,
+			)
+		);
 	}
 
 	/**
-	 * Get cart items
+	 * Get items from the user's cart.
 	 *
-	 * @return array
+	 * @param int $user_id User ID.
+	 *
+	 * @return array Array containing the cart items and their total count.
 	 */
-	public function get_cart_items() {
+	public function get_cart_items( $user_id ) {
 		global $wpdb;
 
 		$cart_data = array(
@@ -40,7 +74,6 @@ class CartModel {
 			'results'     => array(),
 		);
 
-		$user_id   = tutils()->get_user_id();
 		$user_cart = QueryHelper::get_row(
 			"{$wpdb->prefix}tutor_carts",
 			array(
@@ -60,7 +93,16 @@ class CartModel {
 			);
 			$where          = array( 'ci.cart_id' => $user_cart->id );
 			$select_columns = array( 'p.*' );
-			$cart_data      = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'p.ID', 0, 0 );
+			$cart_data      = QueryHelper::get_joined_data(
+				$primary_table,
+				$joining_tables,
+				$select_columns,
+				$where,
+				array(),
+				'p.ID',
+				0,
+				0
+			);
 		}
 
 		return $cart_data;
@@ -84,18 +126,18 @@ class CartModel {
 	}
 
 	/**
-	 * Delete course from cart.
+	 * Delete a course from the user's cart.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int $course_id Course id.
+	 * @param int $user_id User ID.
+	 * @param int $course_id Course ID.
 	 *
-	 * @return boolean
+	 * @return boolean True if the course was successfully deleted, otherwise false.
 	 */
-	public function delete_course_from_cart( $course_id ) {
+	public function delete_course_from_cart( $user_id, $course_id ) {
 		global $wpdb;
 
-		$user_id   = tutils()->get_user_id();
 		$user_cart = QueryHelper::get_row(
 			"{$wpdb->prefix}tutor_carts",
 			array(
@@ -104,14 +146,58 @@ class CartModel {
 			'id'
 		);
 
-		$delete = QueryHelper::delete(
+		return QueryHelper::delete(
 			"{$wpdb->prefix}tutor_cart_items",
 			array(
 				'cart_id'   => $user_cart->id,
 				'course_id' => $course_id,
 			)
 		);
-
-		return $delete;
 	}
+
+	/**
+	 * Determine if a course is already added to the user's cart.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $user_id User ID.
+	 * @param int $course_id Course ID.
+	 *
+	 * @return boolean True if the course is already in the cart, otherwise false.
+	 */
+	public static function is_course_in_user_cart( $user_id, $course_id ) {
+		global $wpdb;
+
+		$cart_table = "{$wpdb->prefix}tutor_carts AS cart";
+		$item_table = "{$wpdb->prefix}tutor_cart_items AS item";
+
+		$join_conditions = array(
+			array(
+				'type'  => 'LEFT',
+				'table' => $item_table,
+				'on'    => 'cart.id = item.cart_id',
+			),
+		);
+
+		$conditions = array(
+			'cart.user_id'   => $user_id,
+			'item.course_id' => $course_id,
+		);
+
+		$select_columns = array( 'item.course_id' );
+
+		$cart_data = QueryHelper::get_joined_data(
+			$cart_table,
+			$join_conditions,
+			$select_columns,
+			$conditions,
+			array(),
+			'item.id',
+			0,
+			0
+		);
+
+		return (bool) $cart_data['total_count'];
+	}
+
 }
