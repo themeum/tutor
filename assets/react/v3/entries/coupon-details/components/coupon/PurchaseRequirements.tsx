@@ -4,6 +4,7 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import { tutorConfig } from '@Config/config';
 import { spacing } from '@Config/styles';
+import Show from '@Controls/Show';
 import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -13,8 +14,6 @@ function PurchaseRequirements() {
 	const form = useFormContext<Coupon>();
 	const { tutor_currency } = tutorConfig;
 	const purchaseAmountLabel = __('Minimum purchase amount', 'tutor') + ` (${tutor_currency?.symbol ?? '$'})`;
-
-	const appliesTo = form.watch('applies_to');
 	const purchaseRequirements = form.watch('purchase_requirements');
 
 	const requirementOptions = [
@@ -48,7 +47,7 @@ function PurchaseRequirements() {
 				)}
 			/>
 			<div css={styles.requirementInput}>
-				{purchaseRequirements === 'minimum_purchase' && (
+				<Show when={purchaseRequirements === 'minimum_purchase'}>
 					<Controller
 						name="purchase_requirements_value"
 						control={form.control}
@@ -61,9 +60,8 @@ function PurchaseRequirements() {
 							/>
 						)}
 					/>
-				)}
-
-				{purchaseRequirements === 'minimum_quantity' && (
+				</Show>
+				<Show when={purchaseRequirements === 'minimum_quantity'}>
 					<Controller
 						name="purchase_requirements_value"
 						control={form.control}
@@ -71,7 +69,7 @@ function PurchaseRequirements() {
 							<FormInput {...controllerProps} type="number" placeholder={__('0', 'tutor')} />
 						)}
 					/>
-				)}
+				</Show>
 			</div>
 		</Box>
 	);
