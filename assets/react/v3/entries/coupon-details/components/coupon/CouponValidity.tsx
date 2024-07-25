@@ -4,6 +4,7 @@ import FormDateInput from '@Components/fields/FormDateInput';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { Coupon } from '@CouponServices/coupon';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -56,7 +57,7 @@ function CouponValidity() {
 						/>
 					)}
 				/>
-				{hasStartDateTime && isEndEnabled && (
+				<Show when={hasStartDateTime && isEndEnabled}>
 					<>
 						<BoxSubtitle css={styles.dateTimeTitle}>{__('Ends in', 'tutor')}</BoxSubtitle>
 						<div css={styles.dateTimeWrapper}>
@@ -72,7 +73,7 @@ function CouponValidity() {
 							/>
 						</div>
 					</>
-				)}
+				</Show>
 			</Box>
 		</Box>
 	);
