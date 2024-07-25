@@ -82,13 +82,12 @@ function CouponPreview() {
 					<div>
 						<h6 css={styles.previewListTitle}>{__('Type', 'tutor')}</h6>
 						<ul css={styles.previewList} data-preview-list>
-							<li>{__('Amount off percentage', 'tutor')}</li>
+							<li>{`${discountText} ${__('off', 'tutor')} ${appliesToLabel[appliesTo]}`}</li>
 						</ul>
 					</div>
 					<div>
 						<h6 css={styles.previewListTitle}>{__('Details', 'tutor')}</h6>
 						<ul css={styles.previewList} data-preview-list>
-							<li>{`${discountText} ${__('off', 'tutor')} ${appliesToLabel[appliesTo]}`}</li>
 							<Show when={isOneUserPerCustomer}>
 								<li>{__('One use per customer', 'tutor')}</li>
 							</Show>
@@ -98,7 +97,9 @@ function CouponPreview() {
 					<div>
 						<h6 css={styles.previewListTitle}>{__('Activity', 'tutor')}</h6>
 						<ul css={styles.previewList} data-preview-list>
-							<li>{__('Not active yet', 'tutor')}</li>
+							<Show when={new Date(startDateTime) > new Date()}>
+								<li>{__('Not active yet', 'tutor')}</li>
+							</Show>
 							<li>{totalUsedText}</li>
 						</ul>
 					</div>
