@@ -40,6 +40,9 @@ class HooksHandler {
 
 		add_filter( 'tutor_course_sell_by', array( $this, 'alter_course_sell_by' ) );
 		add_filter( 'get_tutor_course_price', array( $this, 'alter_course_price' ), 10, 2 );
+
+		// Order hooks.
+		add_action( 'tutor_after_order_bulk_action', array( $this, 'manage_earnings' ), 10, 2 );
 	}
 
 	/**
@@ -103,6 +106,20 @@ class HooksHandler {
 		}
 
 		return $price;
+	}
+
+	/**
+	 * Manage earnings after order bulk action
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $bulk_action Action name.
+	 * @param array  $order_ids Order ID.
+	 *
+	 * @return void
+	 */
+	public function manage_earnings( $bulk_action, $order_ids ) {
+
 	}
 }
 
