@@ -32,6 +32,10 @@
         }
 
         .tutor-cart-course-title {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
             a {
                 color: var(--tutor-body-color);
                 text-decoration: none;
@@ -49,7 +53,7 @@
             display: flex;
             align-items: center;
             gap: 32px;
-            margin-top: 8px;
+            margin-top: auto;
 
             li {
                 font-size: 13px;
@@ -82,16 +86,31 @@
             }
         }
 
-        .tutor-cart-course-price {
+        .tutor-cart-course-price-wrapper {
             margin-left: auto;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            align-items: end;
+
+            .tutor-cart-course-price {
+                display: flex;
+                flex-direction: column;
+                align-items: end;
+                color: var(--tutor-body-color);
+            }
+
+            .tutor-cart-discount-price {
+                font-size: 13px;
+                color: #767C8E;
+                text-decoration: line-through;
+            }
         }
     }
 
     .tutor-cart-course-bundle-badge {
         display: inline-block;
+        width: fit-content;
         font-size: 11px;
         line-height: 16px;
         background-color: #7A078D;

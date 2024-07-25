@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
@@ -24,15 +25,18 @@ $courses         = $get_cart['results'];
 	<div class="tutor-container">
 		<div class="tutor-row tutor-g-4">
 			<div class="tutor-col-md-8">
-				<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16"><?php echo esc_html( $total_count ); ?> <?php esc_html_e( 'Course in Cart', 'tutor' ); ?></h3>
+				<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16">
+					<?php echo esc_html( $total_count ); ?> <?php echo esc_html( _n( 'Course in Cart', 'Courses in Cart', $total_count, 'tutor' ) ); ?>
+				</h3>
 
 				<div class="tutor-cart-course-list">
 					<?php if ( is_array( $courses ) && count( $courses ) ) : ?>
 						<?php
 						foreach ( $courses as $key => $course ) :
-							$course_duration = get_tutor_course_duration_context( $course->ID, true );
-							// @TODO: Need to add tutor commerce support
-							$price            = tutor_utils()->get_course_price( $course->ID );
+							$course_duration  = get_tutor_course_duration_context( $course->ID, true );
+							$course_price     = tutor_utils()->get_raw_course_price( $course->ID );
+							$regular_price    = $course_price->regular_price;
+							$sale_price       = $course_price->sale_price;
 							$tutor_course_img = get_tutor_course_thumbnail_src( '', $course->ID );
 							$is_bundle        = false;
 							?>
@@ -51,13 +55,23 @@ $courses         = $get_cart['results'];
 										</a>
 									</h5>
 									<ul class="tutor-cart-course-info">
+										<?php if ( $course_duration ) : ?>
 										<li><?php echo esc_html( tutor_utils()->clean_html_content( $course_duration ) ); ?> <span></span></li>
-										<li>147 lectures <span></span></li>
+										<?php endif; ?>
 										<li><?php echo esc_html( get_tutor_course_level( $course->ID ) ); ?></li>
 									</ul>
 								</div>
-								<div class="tutor-cart-course-price">
-									<div class="tutor-fs-6 tutor-fw-medium tutor-color-black"><?php echo esc_html( $price ); ?></div>
+								<div class="tutor-cart-course-price-wrapper">
+									<div class="tutor-cart-course-price">
+										<div class="tutor-fw-bold">
+											<?php echo tutor_get_formatted_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
+										</div>
+										<?php if ( $regular_price && $sale_price && $sale_price !== $regular_price ) : ?>
+										<div class="tutor-cart-discount-price">
+											<?php echo tutor_get_formatted_price( $regular_price ); //phpcs:ignore?>
+										</div>
+										<?php endif; ?>
+									</div>
 									<button class="tutor-btn tutor-btn-link tutor-cart-remove-button" data-course-id="<?php echo esc_attr( $course->ID ); ?>">
 										<?php esc_html_e( 'Remove', 'tutor' ); ?>
 									</button>
@@ -70,25 +84,25 @@ $courses         = $get_cart['results'];
 				</div>
 			</div>
 			<div class="tutor-col-md-4">
-				<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16">Summary</h3>
+				<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16"><div><?php esc_html_e( 'Summary:', 'tutor' ); ?></div></h3>
 				<div class="tutor-cart-summery">
 					<div class="tutor-cart-summery-top">
 						<div class="tutor-cart-summery-item tutor-fw-medium">
-							<div>Subtotal:</div>
+							<div><?php esc_html_e( 'Subtotal:', 'tutor' ); ?></div>
 							<div>$400.00</div>
 						</div>
 						<div class="tutor-cart-summery-item">
-							<div>Tax:</div>
+							<div><?php esc_html_e( 'Tax:', 'tutor' ); ?></div>
 							<div>$0.00</div>
 						</div>
 					</div>
 					<div class="tutor-cart-summery-bottom">
 						<div class="tutor-cart-summery-item tutor-fw-medium tutor-mb-40">
-							<div>Grand total</div>
+							<div><?php esc_html_e( 'Grand total', 'tutor' ); ?></div>
 							<div>$400.00</div>
 						</div>
-						<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center" href="#">
-							Proceed to checkout
+						<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center" href="<?php echo esc_url( CheckoutController::get_page_url() ); ?>">
+							<?php esc_html_e( 'Proceed to checkout', 'tutor' ); ?>
 						</a>
 					</div>
 				</div>
