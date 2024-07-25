@@ -3,6 +3,7 @@ import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInput from '@Components/fields/FormInput';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -10,9 +11,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 function CouponLimitation() {
 	const form = useFormContext<Coupon>();
-
 	const enabledLimit = form.watch('usage_limit_status');
-	const enabledOneUsePerUser = form.watch('is_one_use_per_user');
 
 	return (
 		<Box bordered css={styles.discountWrapper}>
@@ -35,7 +34,7 @@ function CouponLimitation() {
 							/>
 						)}
 					/>
-					{enabledLimit && (
+					<Show when={enabledLimit}>
 						<Controller
 							name="usage_limit_value"
 							control={form.control}
@@ -45,7 +44,7 @@ function CouponLimitation() {
 								</div>
 							)}
 						/>
-					)}
+					</Show>
 				</div>
 			</div>
 			<Controller
