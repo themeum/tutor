@@ -19,6 +19,8 @@ $tutor_toc_page_link = tutor_utils()->get_toc_page_link();
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
 $courses         = $get_cart['results'];
+$subtotal        = 0;
+$tax_amount      = 0; // @TODO: Need to implement later.
 
 ?>
 <div class="tutor-checkout-page">
@@ -96,7 +98,7 @@ $courses         = $get_cart['results'];
 							</button>
 						</div>
 
-						<div class="tutor-checkout-separator">
+						<!-- <div class="tutor-checkout-separator">
 							<span><?php esc_html_e( 'Or', 'tutor' ); ?></span>
 						</div>
 
@@ -121,7 +123,7 @@ $courses         = $get_cart['results'];
 									<input type="text" name="cvc" class="tutor-form-control">
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -139,6 +141,8 @@ $courses         = $get_cart['results'];
 									$course_price  = tutor_utils()->get_raw_course_price( $course->ID );
 									$regular_price = $course_price->regular_price;
 									$sale_price    = $course_price->sale_price;
+
+									$subtotal += $sale_price ? $sale_price : $regular_price;
 									?>
 									<div class="tutor-checkout-course-item">
 										<!-- @TODO: Need to add bundle product support -->
@@ -179,7 +183,9 @@ $courses         = $get_cart['results'];
 					<div class="tutor-checkout-summary tutor-p-32 tutor-border-bottom">
 						<div class="tutor-checkout-summary-item">
 							<div class="tutor-fw-medium"><?php esc_html_e( 'Subtotal', 'tutor' ); ?></div>
-							<div class="tutor-fw-bold">$190.00</div>
+							<div class="tutor-fw-bold">
+								<?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?>
+							</div>
 						</div>
 						<div class="tutor-checkout-summary-item">
 							<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
@@ -207,14 +213,14 @@ $courses         = $get_cart['results'];
 						</div>
 						<div class="tutor-checkout-summary-item">
 							<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
-							<div>$0.00</div>
+							<div><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
 						</div>
 					</div>
 
 					<div class="tutor-p-32">
 						<div class="tutor-checkout-summary-item tutor-mb-40">
 							<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
-							<div class="tutor-fw-bold">$200.00</div>
+							<div class="tutor-fw-bold"><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
 						</div>
 
 						<?php if ( null !== $tutor_toc_page_link ) : ?>
