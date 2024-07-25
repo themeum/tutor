@@ -311,11 +311,18 @@ const styles = {
     align-items: center;
     gap: ${spacing[8]};
     color: ${colorTokens.text.brand};
-    margin-left: ${spacing[8]};
+    margin-left: ${spacing[48]};
     margin-top: ${spacing[28]};
 
     svg {
       color: ${colorTokens.icon.brand};
+    }
+
+    ${
+      currentQuestionType === 'ordering' &&
+      css`
+        margin-left: ${spacing[8]};
+      `
     }
   `,
 };
