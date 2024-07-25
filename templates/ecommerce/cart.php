@@ -19,6 +19,8 @@ $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
 $total_count     = $get_cart['total_count'];
 $courses         = $get_cart['results'];
+$subtotal        = 0;
+$tax_amount      = 0; // @TODO: Need to implement later.
 
 ?>
 <div class="tutor-cart-page">
@@ -39,6 +41,8 @@ $courses         = $get_cart['results'];
 							$sale_price       = $course_price->sale_price;
 							$tutor_course_img = get_tutor_course_thumbnail_src( '', $course->ID );
 							$is_bundle        = false;
+
+							$subtotal += $sale_price ? $sale_price : $regular_price;
 							?>
 							<div class="tutor-cart-course-item">
 								<div class="tutor-cart-course-thumb">
@@ -89,17 +93,17 @@ $courses         = $get_cart['results'];
 					<div class="tutor-cart-summery-top">
 						<div class="tutor-cart-summery-item tutor-fw-medium">
 							<div><?php esc_html_e( 'Subtotal:', 'tutor' ); ?></div>
-							<div>$400.00</div>
+							<div><?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?></div>
 						</div>
 						<div class="tutor-cart-summery-item">
 							<div><?php esc_html_e( 'Tax:', 'tutor' ); ?></div>
-							<div>$0.00</div>
+							<div><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
 						</div>
 					</div>
 					<div class="tutor-cart-summery-bottom">
 						<div class="tutor-cart-summery-item tutor-fw-medium tutor-mb-40">
 							<div><?php esc_html_e( 'Grand total', 'tutor' ); ?></div>
-							<div>$400.00</div>
+							<div><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
 						</div>
 						<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center" href="<?php echo esc_url( CheckoutController::get_page_url() ); ?>">
 							<?php esc_html_e( 'Proceed to checkout', 'tutor' ); ?>
