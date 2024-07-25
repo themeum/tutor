@@ -1681,7 +1681,7 @@ class Options_V2 {
 	 *
 	 * Generate Option Field
 	 */
-	public function generate_field( $field = array() ) {
+	public function generate_field( $field = array(), $blocks = array() ) {
 		ob_start();
 		if ( isset( $field['type'] ) ) {
 			include tutor()->path . "views/options/field-types/{$field['type']}.php";

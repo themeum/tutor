@@ -1,4 +1,6 @@
+import ajaxHandler from '../../../../../tutor-pro/assets/react/lib/ajax-handler';
 import { get_response_message } from '../../helper/response';
+import tutorFormData from '../../helper/tutor-formdata';
 
 // SVG Icons Totor V2
 const tutorIconsV2 = {
@@ -219,39 +221,163 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	$('#tutor-manual-payment-form').submit(function (e) {
-		e.preventDefault();
+	/**
+	 * Manual payment management
+	 *
+	 * @since 3.0.0
+	 */
+	const manualPaymentForm = document.getElementById('tutor-manual-payment-form');
+	const manualPaymentUpdateForm = document.getElementById('tutor-update-manual-payment-form');
+	const editManualPaymentBtns = document.querySelectorAll('.tutor-manual-payment-method-edit');
+	const deleteManualPaymentBtns = document.querySelectorAll('.tutor-manual-payment-method-delete');
+	const defaultErrorMsg = __('Something went wrong, please try again!', 'tutor');
 
-		const button = $('#tutor-manual-payment-button');
-		const $form = $(this);
-		const data = $form.serializeObject();
+	if (manualPaymentForm) {
+		manualPaymentForm.addEventListener('submit', async (e) => {
+			const button = manualPaymentForm.querySelector('#tutor-manual-payment-button');
+			e.preventDefault();
+			const formData = new FormData(manualPaymentForm);
+			
+			button.classList.add('is-loading');
+			button.setAttribute('disabled', true);
 
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: data,
-			beforeSend: function () {
-				button.addClass('is-loading');
-				button.attr('disabled', true);
-			},
-			success: function (resp) {
-				const { data = {}, success, message = __('Something went wrong!', 'tutor') } = resp || {};
-
-				if (success) {
-					tutor_toast(__('Success!', 'tutor'), message, 'success');
-					$form[0].reset();
-					$('body').removeClass('tutor-modal-open');
-					$('.tutor-modal.tutor-is-active').removeClass('tutor-is-active');
+			try {
+				const post = await ajaxHandler(formData);
+				if (post.ok) {
+					const {success, data} = await post.json();
+					if (success) {
+						tutor_toast(__('Success!', 'tutor'), data, 'success');
+						this.location.reload();
+					} else {
+						tutor_toast(__('Error!', 'tutor'), data, 'error');
+					}
 				} else {
-					tutor_toast(__('Error!', 'tutor'), message, 'error');
+					tutor_toast(__('Error!', 'tutor'), defaultErrorMsg, 'error');
 				}
-			},
-			complete: function () {
-				button.removeClass('is-loading');
-				button.attr('disabled', false);
-			},
+			} catch (error) {
+				tutor_toast(__('Error!', 'tutor'), error, 'error');
+			} finally {
+				button.classList.remove('is-loading');
+				button.removeAttribute('disabled');
+			}
+			
+		});
+	}
+
+	deleteManualPaymentBtns.forEach(btn => {
+		btn.addEventListener('click', async(e) => {
+			// Set target elem
+			let t = e.target;
+			if (t.tagName === 'I' || t.tagName === 'SPAN') {
+				t = t.closest('a');
+			}
+
+			const paymentMethodId = t.dataset.paymentMethodId;
+			const formData = tutorFormData([{payment_method_id: paymentMethodId, action: 'tutor_delete_manual_payment_method'}]);
+
+			t.classList.add('is-loading');
+			t.setAttribute('disabled', true);
+
+			try {
+				const post = await ajaxHandler(formData);
+				if (post.ok) {
+					const {success, data} = await post.json();
+					if (success) {						
+						e.target.closest('.tutor-option-single-item').remove(); 
+						tutor_toast(__('Success!', 'tutor'), data, 'success');
+					} else {
+						tutor_toast(__('Failed!', 'tutor'), data, 'error');
+					}
+				}
+			} catch (error) {
+				tutor_toast(__('Error!', 'tutor'), error, 'error');
+			} finally {
+				t.classList.remove('is-loading');
+				t.removeAttribute('disabled');
+			}
+		})
+	})
+	editManualPaymentBtns.forEach(btn => {
+		btn.addEventListener('click', async(e) => {
+			// Set target elem
+			let t = e.target;
+			if (t.tagName === 'I' || t.tagName === 'SPAN') {
+				t = t.closest('a');
+			}
+
+			// Set update form data.
+			manualPaymentUpdateForm.querySelector('input[name=is_enable]').value = t.dataset.isEnable;
+			manualPaymentUpdateForm.querySelector('input[name=payment_method_id]').value = t.dataset.paymentMethodId;
+			manualPaymentUpdateForm.querySelector('input[name=payment_method_name]').value = t.dataset.paymentMethodName;
+			manualPaymentUpdateForm.querySelector('textarea[name=additional_details]').value = t.dataset.additionalDetails;
+			manualPaymentUpdateForm.querySelector('textarea[name=payment_instructions]').value = t.dataset.paymentInstructions;
+		})
+	});
+
+	if (manualPaymentUpdateForm) {
+		manualPaymentUpdateForm.addEventListener('submit', async (e) => {
+			const button = manualPaymentUpdateForm.querySelector('button[type=submit]');
+			e.preventDefault();
+			const formData = new FormData(manualPaymentUpdateForm);
+			
+			button.classList.add('is-loading');
+			button.setAttribute('disabled', true);
+
+			try {
+				const post = await ajaxHandler(formData);
+				if (post.ok) {
+					const {success, data} = await post.json();
+					if (success) {
+						tutor_toast(__('Success!', 'tutor'), data, 'success');
+						this.location.reload();
+					} else {
+						tutor_toast(__('Error!', 'tutor'), data, 'error');
+					}
+				} else {
+					tutor_toast(__('Error!', 'tutor'), defaultErrorMsg, 'error');
+				}
+			} catch (error) {
+				tutor_toast(__('Error!', 'tutor'), error, 'error');
+			} finally {
+				button.classList.remove('is-loading');
+				button.removeAttribute('disabled');
+			}
+			
+		});
+	}
+
+	// Handle enable/disable
+	const manualPaymentToggleBtn = document.querySelectorAll('.tutor-manual-payment-switch');
+	manualPaymentToggleBtn.forEach(btn => {
+		btn.addEventListener('click', async (e) => {
+			const data = [
+				{
+					is_enable: e.target.checked ? 'on' : 'off',
+					payment_method_id: e.target.dataset.paymentMethodId,
+					action: 'tutor_add_manual_payment_method',
+				}
+			];
+
+			const formData = tutorFormData(data);
+
+			try {
+				const post = await ajaxHandler(formData);
+				if (post.ok) {
+					const {success, data} = await post.json();
+					if (success) {
+						tutor_toast(__('Success!', 'tutor'), data, 'success');
+					} else {
+						tutor_toast(__('Error!', 'tutor'), data, 'error');
+					}
+				} else {
+					tutor_toast(__('Error!', 'tutor'), defaultErrorMsg, 'error');
+				}
+			} catch (error) {
+				tutor_toast(__('Error!', 'tutor'), error, 'error');
+			}
 		});
 	});
+
 
 	function view_item(text, section_slug, section, block, field_key) {
 		var navTrack = block ? `${angleRight} ${block}` : '';

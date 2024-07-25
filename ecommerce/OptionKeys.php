@@ -16,7 +16,7 @@ namespace Tutor\Ecommerce;
 class OptionKeys {
 
 	// Currency Settings.
-	const CURRENCY_TYPE      = 'currency_type';
+	const CURRENCY_SYMBOL      = 'currency_symbol';
 	const CURRENCY_POSITION  = 'currency_position';
 	const THOUSAND_SEPARATOR = 'thousand_separator';
 	const DECIMAL_SEPARATOR  = 'decimal_separator';
@@ -39,8 +39,12 @@ class OptionKeys {
 	const REFUND_POLICY  = 'ecommerce_refund_policy';
 	const PRIVACY_POLICY = 'ecommerce_privacy_policy';
 
+	// Manual payment settings.
+	const MANUAL_PAYMENT_KEY = 'tutor_manual_payments';
+
+
 	/**
-	 * Get billing fiend options
+	 * Get billing field options
 	 *
 	 * @since 3.0.0
 	 *
