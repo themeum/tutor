@@ -99,7 +99,7 @@ const styles = {
 		gap: ${spacing[4]};
 	`,
 	requirementInput: css`
-		width: fit-content;
+		width: 30%;
 		margin-left: ${spacing[28]};
 		margin-top: ${spacing[8]};
 	`,
