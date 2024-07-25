@@ -10,12 +10,13 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
+const couponTypeOptions = [
+	{ label: __('Code', 'tutor'), value: 'code' },
+	{ label: __('Automatic', 'tutor'), value: 'automatic' },
+];
+
 function CouponInfo() {
 	const form = useFormContext<Coupon>();
-	const couponTypeOptions = [
-		{ label: __('Code', 'tutor'), value: 'code' },
-		{ label: __('Automatic', 'tutor'), value: 'automatic' },
-	];
 
 	function handleGenerateCouponCode() {
 		const newCouponCode = generateCouponCode();
@@ -96,9 +97,9 @@ const styles = {
 		right: ${spacing[0]};
 		top: ${spacing[0]};
 
-		:hover,
-		:active,
-		:focus {
+		&:hover,
+		&:active,
+		&:focus {
 			color: ${colorPalate.actions.primary.hover};
 		}
 	`,
