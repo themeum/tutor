@@ -9,8 +9,11 @@
  */
 
 use Tutor\Cache\FlashMessage;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Course;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -803,7 +806,7 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	 * @return string ( date )
 	 */
 	function tutor_get_formated_date( string $require_format = '', string $user_date ) {
-		$require_format = $require_format ?: 'Y-m-d';  
+		$require_format = $require_format ?: 'Y-m-d';
 
 		$date = date_create( str_replace( '/', '-', $user_date ) );
 		if ( is_a( $date, 'DateTime' ) ) {
@@ -1407,5 +1410,126 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 			'Pacific/Fiji'                   => '(GMT+12:00) Fiji Islands, Marshall Islands ',
 			'Pacific/Auckland'               => '(GMT+12:00) Auckland, Wellington',
 		);
+	}
+
+	if ( ! function_exists( 'tutor_get_all_active_payment_gateways' ) ) {
+		/**
+		 * Get all active payment gateways including manual & automate
+		 *
+		 * @since 3.0.0
+		 *
+		 * @return array [ automate =>[], manual => [] ]
+		 */
+		function tutor_get_all_active_payment_gateways() {
+			$active_gateways = array(
+				'automate' => array(),
+				'manual'   => array(),
+			);
+
+			foreach ( Settings::get_default_automate_payment_gateways() as $gateway ) {
+				list( $label, $is_active) = array_values( $gateway );
+				if ( $is_active ) {
+					$active_gateways['automate'][] = array( 'label' => $label );
+				}
+			}
+
+			$manual_gateways = tutor_get_manual_payment_gateways();
+			if ( is_array( $manual_gateways ) && count( $manual_gateways ) ) {
+				foreach ( $manual_gateways as $gateway ) {
+					if ( isset( $gateway['is_enable'] ) && 'on' === $gateway['is_enable'] ) {
+						$active_gateways['manual'][] = array(
+							'label'                => $gateway['payment_method_name'],
+							'additional_details'   => $gateway['additional_details'],
+							'payment_instructions' => $gateway['payment_instructions'],
+						);
+					}
+				}
+			}
+
+			return apply_filters( 'tutor_active_payment_gateways', $active_gateways );
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_manual_payment_gateways' ) ) {
+		/**
+		 * Get manual payment gateways
+		 *
+		 * @since 3.0.0
+		 *
+		 * @return array
+		 */
+		function tutor_get_manual_payment_gateways() {
+			return get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
+		/**
+		 * Get course formatted price
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int     $course_id Course price.
+		 * @param boolean $echo Whether to echo content.
+		 *
+		 * @return string|void
+		 */
+		function tutor_get_formatted_price_html( $course_id, $echo = true ) {
+			$regular_price = get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+			$sale_price    = get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+
+			if ( ! $regular_price ) {
+				return;
+			}
+			ob_start();
+			?>
+				<div>
+					<?php if ( $sale_price ) : ?>
+						<span><?php echo tutor_get_formatted_price( $sale_price ); ?></span>
+						<del><?php echo tutor_get_formatted_price( $regular_price ); ?></del>
+					<?php else : ?>
+						<span><?php echo tutor_get_formatted_price( $regular_price ); ?></span>
+					<?php endif; ?>
+				</div>
+			<?php
+			$content = apply_filters( 'tutor_course_formatted_price', ob_get_clean() );
+			if ( $echo ) {
+				echo $content; // PHPCS:ignore
+			} else {
+				return $content;
+			}
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_course_formatted_price' ) ) {
+		/**
+		 * Get course formatted price
+		 *
+		 * Formatting as per ecommerce price settings
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param mixed $price Raw price.
+		 *
+		 * @return string|void
+		 */
+		function tutor_get_formatted_price( $price ) {
+			if ( ! $price ) {
+				return;
+			}
+
+			$price = Input::sanitize( $price );
+
+			$currency_symbol    = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL );
+			$currency_position  = tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION );
+			$thousand_separator = tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR );
+			$decimal_separator  = tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR );
+			$no_of_decimal      = tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS );
+
+			$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
+			$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
+
+			return $price;
+		}
 	}
 }
