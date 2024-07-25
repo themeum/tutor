@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
                 const formData = new FormData();
                 formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                formData.set('action', 'tutor_course_from_cart');
+                formData.set('action', 'tutor_delete_course_from_cart');
                 formData.set('course_id', button.dataset.courseId);
 
                 try {

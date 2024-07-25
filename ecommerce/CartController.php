@@ -94,7 +94,7 @@ class CartController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_course_from_cart', array( $this, 'tutor_course_from_cart' ) );
+			add_action( 'wp_ajax_tutor_delete_course_from_cart', array( $this, 'tutor_delete_course_from_cart' ) );
 		}
 	}
 
@@ -184,9 +184,9 @@ class CartController {
 	 *
 	 * @return void JSON response
 	 */
-	public function tutor_course_from_cart() {
+	public function tutor_delete_course_from_cart() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+			wp_send_json_error( tutor_utils()->error_message( 'nonce' ) );
 		}
 
 		$course_id = Input::post( 'course_id' );
