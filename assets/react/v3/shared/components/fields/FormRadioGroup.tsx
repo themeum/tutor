@@ -4,6 +4,7 @@ import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { css, type SerializedStyles } from '@emotion/react';
 
+import { ReactNode } from 'react';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface OptionWithDisabled {
@@ -19,6 +20,7 @@ interface FormRadioGroupProps extends FormControllerProps<string | number> {
 	disabled?: boolean;
 	wrapperCss?: SerializedStyles;
 	onSelect?: (value: OptionWithDisabled) => void;
+	onSelectRender?: (value: OptionWithDisabled) => ReactNode;
 }
 
 const FormRadioGroup = ({
@@ -29,6 +31,7 @@ const FormRadioGroup = ({
 	disabled,
 	wrapperCss,
 	onSelect,
+	onSelectRender,
 }: FormRadioGroupProps) => {
 	return (
 		<FormFieldWrapper field={field} fieldState={fieldState} label={label} disabled={disabled}>
@@ -54,6 +57,7 @@ const FormRadioGroup = ({
 										}
 									}}
 								/>
+								{onSelectRender && field.value === option.value && onSelectRender(option)}
 								{option.legend && <span css={styles.radioLegend}>{option.legend}</span>}
 							</div>
 						))}

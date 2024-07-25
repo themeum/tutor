@@ -43,34 +43,44 @@ function PurchaseRequirements() {
 				name="purchase_requirements"
 				control={form.control}
 				render={(controllerProps) => (
-					<FormRadioGroup {...controllerProps} options={requirementOptions} wrapperCss={styles.radioGroupWrapper} />
+					<FormRadioGroup
+						{...controllerProps}
+						options={requirementOptions}
+						wrapperCss={styles.radioGroupWrapper}
+						onSelectRender={(selectedOption) => {
+							return (
+								<Show when={selectedOption.value === 'minimum_purchase' || selectedOption.value === 'minimum_quantity'}>
+									<div css={styles.requirementInput}>
+										<Show when={selectedOption.value === 'minimum_purchase'}>
+											<Controller
+												name="purchase_requirements_value"
+												control={form.control}
+												render={(controllerProps) => (
+													<FormInputWithContent
+														{...controllerProps}
+														type="number"
+														placeholder={__('0.00', 'tutor')}
+														content={tutor_currency?.symbol ?? '$'}
+													/>
+												)}
+											/>
+										</Show>
+										<Show when={selectedOption.value === 'minimum_quantity'}>
+											<Controller
+												name="purchase_requirements_value"
+												control={form.control}
+												render={(controllerProps) => (
+													<FormInput {...controllerProps} type="number" placeholder={__('0', 'tutor')} />
+												)}
+											/>
+										</Show>
+									</div>
+								</Show>
+							);
+						}}
+					/>
 				)}
 			/>
-			<div css={styles.requirementInput}>
-				<Show when={purchaseRequirements === 'minimum_purchase'}>
-					<Controller
-						name="purchase_requirements_value"
-						control={form.control}
-						render={(controllerProps) => (
-							<FormInputWithContent
-								{...controllerProps}
-								type="number"
-								placeholder={__('0.00', 'tutor')}
-								content={tutor_currency?.symbol ?? '$'}
-							/>
-						)}
-					/>
-				</Show>
-				<Show when={purchaseRequirements === 'minimum_quantity'}>
-					<Controller
-						name="purchase_requirements_value"
-						control={form.control}
-						render={(controllerProps) => (
-							<FormInput {...controllerProps} type="number" placeholder={__('0', 'tutor')} />
-						)}
-					/>
-				</Show>
-			</div>
 		</Box>
 	);
 }
@@ -91,6 +101,7 @@ const styles = {
 	requirementInput: css`
 		width: fit-content;
 		margin-left: ${spacing[28]};
+		margin-top: ${spacing[8]};
 	`,
 	radioGroupWrapper: css`
 		display: flex;
