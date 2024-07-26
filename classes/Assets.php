@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Assets {
 
+
 	/**
 	 * Constructor
 	 *
@@ -41,7 +42,7 @@ class Assets {
 			return;
 		}
 
-		 /**
+		/**
 		 * Common scripts loading
 		 */
 		add_action( 'admin_enqueue_scripts', array( $this, 'common_scripts' ) );
@@ -67,7 +68,7 @@ class Assets {
 		 * Handled script with text domain attached to
 		 *
 		 * @since 1.9.0
-		*/
+		 */
 		add_action( 'admin_head', array( $this, 'tutor_add_mce_button' ) );
 		add_filter( 'get_the_generator_html', array( $this, 'tutor_generator_tag' ), 10, 2 );
 		add_filter( 'get_the_generator_xhtml', array( $this, 'tutor_generator_tag' ), 10, 2 );
@@ -245,7 +246,7 @@ class Assets {
 		 * Enabling Sorting, draggable, droppable...
 		 */
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		wp_enqueue_script( 'jquery-touch-punch', array( 'jquery-ui-sortable' ) ); //phpcs:ignore
+        wp_enqueue_script('jquery-touch-punch', ['jquery-ui-sortable']); //phpcs:ignore
 
 		// Plyr.
 		if ( is_single_course( true ) ) {
@@ -436,92 +437,92 @@ class Assets {
 	 * @return string
 	 */
 	private function load_color_palette() {
-		 $colors = array(
-			 'tutor_primary_color'       => '--tutor-color-primary',
-			 'tutor_primary_hover_color' => '--tutor-color-primary-hover',
-			 'tutor_text_color'          => '--tutor-body-color',
-			 'tutor_border_color'        => '--tutor-border-color',
-			 'tutor_gray_color'          => '--tutor-color-gray',
-		 );
+		$colors = array(
+			'tutor_primary_color'       => '--tutor-color-primary',
+			'tutor_primary_hover_color' => '--tutor-color-primary-hover',
+			'tutor_text_color'          => '--tutor-body-color',
+			'tutor_border_color'        => '--tutor-border-color',
+			'tutor_gray_color'          => '--tutor-color-gray',
+		);
 
-		 // Admin colors.
-		 $admin_colors = array();
-		 if ( is_admin() ) {
-			 $admin_color = get_user_option( 'admin_color' );
+		// Admin colors.
+		$admin_colors = array();
+		if ( is_admin() ) {
+			$admin_color = get_user_option( 'admin_color' );
 
-			 switch ( $admin_color ) {
-				 case 'light':
-					 $admin_color_codes = array( '#04a4cc', '#04b0db' );
-					 break;
+			switch ( $admin_color ) {
+				case 'light':
+					$admin_color_codes = array( '#04a4cc', '#04b0db' );
+					break;
 
-				 case 'modern':
-					 $admin_color_codes = array( '#3858e9', '#4664eb' );
-					 break;
+				case 'modern':
+					$admin_color_codes = array( '#3858e9', '#4664eb' );
+					break;
 
-				 case 'blue':
-					 $admin_color_codes = array( '#e1a948', '#e3af55' );
-					 break;
+				case 'blue':
+					$admin_color_codes = array( '#e1a948', '#e3af55' );
+					break;
 
-				 case 'coffee':
-					 $admin_color_codes = array( '#c7a589', '#ccad93' );
-					 break;
+				case 'coffee':
+					$admin_color_codes = array( '#c7a589', '#ccad93' );
+					break;
 
-				 case 'ectoplasm':
-					 $admin_color_codes = array( '#a3b745', '#a9bd4f' );
-					 break;
+				case 'ectoplasm':
+					$admin_color_codes = array( '#a3b745', '#a9bd4f' );
+					break;
 
-				 case 'midnight':
-					 $admin_color_codes = array( '#e14d43', '#e35950' );
-					 break;
+				case 'midnight':
+					$admin_color_codes = array( '#e14d43', '#e35950' );
+					break;
 
-				 case 'ocean':
-					 $admin_color_codes = array( '#9ebaa0', '#a7c0a9' );
-					 break;
+				case 'ocean':
+					$admin_color_codes = array( '#9ebaa0', '#a7c0a9' );
+					break;
 
-				 case 'sunrise':
-					 $admin_color_codes = array( '#dd823b', '#df8a48' );
-					 break;
+				case 'sunrise':
+					$admin_color_codes = array( '#dd823b', '#df8a48' );
+					break;
 
-				 default:
-					 $admin_color_codes = array( '#007cba', '#006ba1' );
-					 break;
-			 }
+				default:
+					$admin_color_codes = array( '#007cba', '#006ba1' );
+					break;
+			}
 
-			 $admin_colors = array(
-				 '--tutor-color-primary'       => $admin_color_codes[0],
-				 '--tutor-color-primary-hover' => $admin_color_codes[1],
-			 );
-		 }
+			$admin_colors = array(
+				'--tutor-color-primary'       => $admin_color_codes[0],
+				'--tutor-color-primary-hover' => $admin_color_codes[1],
+			);
+		}
 
-		 $fallback_colors = array(
-			 'tutor_primary_color'       => '#3E64DE',
-			 'tutor_primary_hover_color' => '#395BCA',
-			 'tutor_text_color'          => '#212327',
-			 'tutor_border_color'        => '#E3E5EB',
-			 'tutor_gray_color'          => '#CDCFD5',
-		 );
+		$fallback_colors = array(
+			'tutor_primary_color'       => '#3E64DE',
+			'tutor_primary_hover_color' => '#395BCA',
+			'tutor_text_color'          => '#212327',
+			'tutor_border_color'        => '#E3E5EB',
+			'tutor_gray_color'          => '#CDCFD5',
+		);
 
-		 $color_string = '';
-		 foreach ( $colors as $key => $property ) {
-			 $fallback_color = isset( $fallback_colors[ $key ] ) ? $fallback_colors[ $key ] : '#212327';
-			 $color          = tutor_utils()->get_option( $key, $fallback_color );
-			 $color_rgb      = tutor_utils()->hex2rgb( $color );
+		$color_string = '';
+		foreach ( $colors as $key => $property ) {
+			$fallback_color = isset( $fallback_colors[ $key ] ) ? $fallback_colors[ $key ] : '#212327';
+			$color          = tutor_utils()->get_option( $key, $fallback_color );
+			$color_rgb      = tutor_utils()->hex2rgb( $color );
 
-			 if ( is_admin() && isset( $admin_colors[ $property ] ) ) {
-				 $color     = $admin_colors[ $property ];
-				 $color_rgb = tutor_utils()->hex2rgb( $admin_colors[ $property ] );
-			 }
+			if ( is_admin() && isset( $admin_colors[ $property ] ) ) {
+				$color     = $admin_colors[ $property ];
+				$color_rgb = tutor_utils()->hex2rgb( $admin_colors[ $property ] );
+			}
 
-			 if ( $color ) {
-				 $color_string .= $property . ':' . $color . ';';
-			 }
+			if ( $color ) {
+				$color_string .= $property . ':' . $color . ';';
+			}
 
-			 if ( $color_rgb ) {
-				 $color_string .= $property . '-rgb:' . $color_rgb . ';';
-			 }
-		 }
+			if ( $color_rgb ) {
+				$color_string .= $property . '-rgb:' . $color_rgb . ';';
+			}
+		}
 
-		 return ':root{' . $color_string . '}';
+		return ':root{' . $color_string . '}';
 	}
 
 	/**
