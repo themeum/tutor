@@ -1,4 +1,4 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { DurationUnit, Subscription } from '@CourseBuilderServices/subscription';
@@ -34,7 +34,7 @@ export function PreviewItem({ subscription }: { subscription: Subscription }) {
         {subscription.pricing_option === 'one-time-purchase' && <span>{__('Lifetime', 'tutor')}</span>}
 
         <Show when={subscription.trial}>
-          <span css={styles.dot} />
+          <span>•</span>
           <span>
             {subscription.trial.toString().padStart(2, '0')}{' '}
             {formatRepeatUnit(subscription.trial_unit, subscription.trial)} {__('trial', 'tutor')}
@@ -43,12 +43,12 @@ export function PreviewItem({ subscription }: { subscription: Subscription }) {
 
         {subscription.lifetime_unit === 'until_cancellation' ? (
           <>
-            <span css={styles.dot} />
+            <span>•</span>
             <span>{formatRepeatUnit(subscription.lifetime_unit, 0)}</span>
           </>
         ) : (
           <>
-            <span css={styles.dot} />
+            <span>•</span>
             <span>
               {subscription.lifetime.toString().padStart(2, '0')}{' '}
               {formatRepeatUnit(subscription.lifetime_unit, subscription.lifetime)}
@@ -73,12 +73,6 @@ const styles = {
     &:not(:last-of-type) {
       border-bottom: 1px solid ${colorTokens.stroke.default};
     }
-	`,
-  dot: css`
-		width: 2px;
-		height: 2px;
-		background-color: ${colorTokens.icon.default};
-		border-radius: ${borderRadius.circle};
 	`,
   title: css`
 		${typography.small('medium')};

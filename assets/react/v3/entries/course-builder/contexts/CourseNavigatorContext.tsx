@@ -21,9 +21,7 @@ export interface Step {
   label: string;
   path: string;
   isDisabled: boolean;
-  isCompleted: boolean;
   isActive: boolean;
-  isVisited: boolean;
 }
 
 interface CourseNavigatorContextType {
@@ -41,8 +39,6 @@ const defaultSteps: Step[] = [
     label: __('Course Basic', 'tutor'),
     path: CourseBuilderRouteConfigs.CourseBasics.buildLink(),
     isDisabled: false,
-    isVisited: true,
-    isCompleted: false,
     isActive: true,
   },
   {
@@ -51,8 +47,6 @@ const defaultSteps: Step[] = [
     label: __('Curriculum', 'tutor'),
     path: CourseBuilderRouteConfigs.CourseCurriculum.buildLink(),
     isDisabled: true,
-    isCompleted: false,
-    isVisited: false,
     isActive: false,
   },
   {
@@ -61,8 +55,6 @@ const defaultSteps: Step[] = [
     label: __('Additional', 'tutor'),
     path: CourseBuilderRouteConfigs.CourseAdditional.buildLink(),
     isDisabled: true,
-    isCompleted: false,
-    isVisited: false,
     isActive: false,
   },
 ];
@@ -129,7 +121,6 @@ export const CourseNavigatorProvider = ({ children }: CourseNavigatorProviderPro
       previous.map((step) => {
         return {
           ...step,
-          isCompleted: courseContent.step_completion_status[step.id],
           isDisabled: false,
         };
       }),

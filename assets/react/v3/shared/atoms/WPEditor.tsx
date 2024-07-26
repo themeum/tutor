@@ -187,9 +187,13 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    Promise.resolve().then(() => {
+    const intervalId = setInterval(() => {
       updateEditorContent(value);
-    });
+    }, 0);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [value]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
