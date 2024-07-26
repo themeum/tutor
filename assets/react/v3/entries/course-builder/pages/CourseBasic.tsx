@@ -338,7 +338,8 @@ const CourseBasic = () => {
           />
         )}
 
-        {coursePriceType === 'paid' &&
+        {courseCategory === 'regular' &&
+          coursePriceType === 'paid' &&
           (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc') && (
             <div css={styles.coursePriceWrapper}>
               <Controller
