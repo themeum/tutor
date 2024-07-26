@@ -31,13 +31,13 @@ import {
   useQuizQuestionAnswerOrderingMutation,
 } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
+import { moveTo } from '@Utils/util';
 
 const MultipleChoiceAndOrdering = () => {
   const isInitialRenderRef = useRef(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, quizId } = useQuizModalContext();
   const multipleCorrectAnswer = useWatch({
     control: form.control,
     name: `questions.${activeQuestionIndex}.multipleCorrectAnswer`,
@@ -53,7 +53,7 @@ const MultipleChoiceAndOrdering = () => {
     return 'ordering';
   };
 
-  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
+  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
 
   const {
     fields: optionsFields,
@@ -141,7 +141,11 @@ const MultipleChoiceAndOrdering = () => {
   }, [currentOptions]);
 
   return (
-    <div css={styles.optionWrapper}>
+    <div
+      css={styles.optionWrapper({
+        currentQuestionType: currentQuestionType as 'multiple_choice' | 'ordering',
+      })}
+    >
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -156,8 +160,8 @@ const MultipleChoiceAndOrdering = () => {
           }
 
           if (active.id !== over.id) {
-            const activeIndex = filteredOptionsFields.findIndex((item) => item.answer_id === active.id);
-            const overIndex = filteredOptionsFields.findIndex((item) => item.answer_id === over.id);
+            const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
+            const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
 
             const updatedOptionsOrder = moveTo(
               form.watch(`questions.${activeQuestionIndex}.question_answers`),
@@ -183,7 +187,7 @@ const MultipleChoiceAndOrdering = () => {
           <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
-                key={`${option.answer_id}-${option.is_correct}`}
+                key={`${option.answer_id}-${option.index}-${option.is_correct}`}
                 control={form.control}
                 name={
                   `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
@@ -191,14 +195,14 @@ const MultipleChoiceAndOrdering = () => {
                 render={(controllerProps) => (
                   <FormMultipleChoiceAndOrdering
                     {...controllerProps}
-                    hasMultipleCorrectAnswers={multipleCorrectAnswer}
-                    onDuplicateOption={() => {
+                    onDuplicateOption={(answerId) => {
                       const duplicateOption: QuizQuestionOption = {
                         ...option,
-                        answer_id: '',
+                        answer_id: answerId || '',
+                        answer_title: `${option.answer_title} (Copy)`,
                         is_correct: '0',
                       };
-                      const duplicateIndex = option.index + 1;
+                      const duplicateIndex = option.index - 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
                     onRemoveOption={() => removeOption(option.index)}
@@ -220,22 +224,22 @@ const MultipleChoiceAndOrdering = () => {
                     key={activeSortId}
                     control={form.control}
                     name={
-                      `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
+                      `questions.${activeQuestionIndex}.question_answers.${item.index}` as 'questions.0.question_answers.0'
                     }
                     render={(controllerProps) => (
                       <FormMultipleChoiceAndOrdering
                         {...controllerProps}
-                        hasMultipleCorrectAnswers={multipleCorrectAnswer}
-                        onDuplicateOption={() => {
+                        onDuplicateOption={(answerId) => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
-                            answer_id: nanoid(),
+                            answer_id: answerId || '',
+                            answer_title: `${item.answer_title} (Copy)`,
                             is_correct: '0',
                           };
-                          const duplicateIndex = index + 1;
+                          const duplicateIndex = item.index - 1;
                           insertOption(duplicateIndex, duplicateOption);
                         }}
-                        onRemoveOption={() => removeOption(index)}
+                        onRemoveOption={() => removeOption(item.index)}
                         index={index}
                       />
                     )}
@@ -268,7 +272,9 @@ const MultipleChoiceAndOrdering = () => {
             },
           )
         }
-        css={styles.addOptionButton}
+        css={styles.addOptionButton({
+          currentQuestionType: currentQuestionType as 'multiple_choice' | 'ordering',
+        })}
       >
         <SVGIcon name="plus" height={24} width={24} />
         {__('Add Option', 'tutor')}
@@ -280,11 +286,26 @@ const MultipleChoiceAndOrdering = () => {
 export default MultipleChoiceAndOrdering;
 
 const styles = {
-  optionWrapper: css`
+  optionWrapper: ({
+    currentQuestionType,
+  }: {
+    currentQuestionType: 'multiple_choice' | 'ordering';
+  }) => css`
       ${styleUtils.display.flex('column')};
       gap: ${spacing[12]};
+      
+      ${
+        currentQuestionType === 'ordering' &&
+        css`
+        padding-left: ${spacing[40]};
+      `
+      }
     `,
-  addOptionButton: css`
+  addOptionButton: ({
+    currentQuestionType,
+  }: {
+    currentQuestionType: 'multiple_choice' | 'ordering';
+  }) => css`
     ${styleUtils.resetButton}
     ${styleUtils.display.flex()}
     align-items: center;
@@ -295,6 +316,13 @@ const styles = {
 
     svg {
       color: ${colorTokens.icon.brand};
+    }
+
+    ${
+      currentQuestionType === 'ordering' &&
+      css`
+        margin-left: ${spacing[8]};
+      `
     }
   `,
 };

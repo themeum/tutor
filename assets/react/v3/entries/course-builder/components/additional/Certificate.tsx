@@ -143,6 +143,7 @@ const Certificate = () => {
         <div
           css={styles.certificateWrapper({
             hasCertificates: filteredCertificatesData.length > 0,
+            activeCertificateTab,
           })}
         >
           <Show when={activeCertificateTab === 'templates'}>
@@ -201,8 +202,10 @@ const styles = {
   `,
   certificateWrapper: ({
     hasCertificates,
+    activeCertificateTab,
   }: {
     hasCertificates: boolean;
+    activeCertificateTab: CertificateTabValue;
   }) => css`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -211,6 +214,7 @@ const styles = {
 
     ${
       !hasCertificates &&
+      activeCertificateTab !== 'templates' &&
       css`
         grid-template-columns: 1fr;
         place-items: center;

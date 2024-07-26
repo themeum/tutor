@@ -33,6 +33,7 @@ import {
   type ID,
   type Content as TopicContentType,
   useDeleteTopicMutation,
+  useDuplicateContentMutation,
   useSaveTopicMutation,
 } from '@CourseBuilderServices/curriculum';
 
@@ -68,7 +69,7 @@ import Popover from '@Molecules/Popover';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
-import { moveTo, nanoid, noop } from '@Utils/util';
+import { moveTo, noop } from '@Utils/util';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -119,6 +120,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
   const triggerZoomRef = useRef<HTMLButtonElement>(null);
 
   const saveTopicMutation = useSaveTopicMutation();
+  const duplicateContentMutation = useDuplicateContentMutation();
   const deleteTopicMutation = useDeleteTopicMutation();
   const importQuizMutation = useImportQuizMutation();
 
@@ -218,10 +220,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     opacity: isDragging ? 0.3 : undefined,
   };
 
-  const createDuplicateContent = (data: TopicContentType) => {
-    setContent((previousContent) => {
-      const newContent = { ...data, ID: nanoid() };
-      return [...previousContent, newContent];
+  const handleDuplicateTopic = () => {
+    duplicateContentMutation.mutate({
+      course_id: courseId,
+      content_id: topic.id,
+      content_type: 'topic',
     });
   };
 
@@ -332,9 +335,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   css={styles.actionButton}
                   disabled={!topic.isSaved}
                   data-visually-hidden
-                  onClick={() => {
-                    alert('@TODO: will be implemented later');
-                  }}
+                  onClick={handleDuplicateTopic}
                 >
                   <SVGIcon name="copyPaste" width={24} height={24} />
                 </button>
@@ -486,7 +487,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                             title: content.post_title,
                             total_question: content.total_question || 0,
                           }}
-                          onCopy={() => createDuplicateContent(content)}
                           onDelete={() => {
                             setContent((previousContent) => previousContent.filter((item) => item.ID !== content.ID));
                           }}
@@ -659,7 +659,10 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
       <Popover
         triggerRef={triggerGoogleMeetRef}
         isOpen={meetingType === 'googleMeet'}
-        closePopover={() => setMeetingType(null)}
+        closePopover={() => {
+          setMeetingType(null);
+          setIsThreeDotOpen(false);
+        }}
         maxWidth="306px"
       >
         <GoogleMeetForm
@@ -667,13 +670,17 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
           data={null}
           onCancel={() => {
             setMeetingType(null);
+            setIsThreeDotOpen(false);
           }}
         />
       </Popover>
       <Popover
         triggerRef={triggerZoomRef}
         isOpen={meetingType === 'zoom'}
-        closePopover={() => setMeetingType(null)}
+        closePopover={() => {
+          setMeetingType(null);
+          setIsThreeDotOpen(false);
+        }}
         maxWidth="306px"
       >
         <ZoomMeetingForm
@@ -682,6 +689,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
           data={null}
           onCancel={() => {
             setMeetingType(null);
+            setIsThreeDotOpen(false);
           }}
         />
       </Popover>

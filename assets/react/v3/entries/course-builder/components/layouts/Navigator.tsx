@@ -33,7 +33,6 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         if (index === currentIndex) {
           return {
             ...item,
-            isVisited: true,
             isActive: false,
           };
         }
@@ -41,7 +40,6 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         if (index === previousIndex) {
           return {
             ...item,
-            isVisited: true,
             isActive: true,
           };
         }
@@ -59,8 +57,6 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         if (index === currentIndex) {
           return {
             ...item,
-            isVisited: true,
-            isCompleted: true,
             isActive: false,
           };
         }
@@ -68,7 +64,6 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         if (index === nextIndex) {
           return {
             ...item,
-            isVisited: true,
             isActive: true,
           };
         }

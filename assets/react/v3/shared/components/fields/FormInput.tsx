@@ -207,10 +207,10 @@ const styles = {
   `,
   eyeButtonWrapper: css`
     position: absolute;
-    right: ${spacing[4]};
-    top: -${spacing[2]};
-    width: 36px;
-    height: 36px;
+    display: flex;
+    right: ${spacing[8]};
+    top: 50%;
+    transform: translateY(-50%);
     border-radius: ${borderRadius[2]};
     background: transparent;
   `,
@@ -221,7 +221,7 @@ const styles = {
     type: 'password' | 'text' | 'number';
   }) => css`
     ${styleUtils.resetButton}
-    padding: ${spacing[10]};
+    ${styleUtils.flexCenter()}
     color: ${colorTokens.icon.default};
 
     ${

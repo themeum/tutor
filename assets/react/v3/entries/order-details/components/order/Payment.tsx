@@ -1,5 +1,6 @@
 import { Box, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
 import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -10,7 +11,7 @@ import MarkAsPaidModal from '@OrderComponents/modals/MarkAsPaidModal';
 import RefundModal from '@OrderComponents/modals/RefundModal';
 import { useOrderContext } from '@OrderContexts/order-context';
 import type { PaymentStatus } from '@OrderServices/order';
-import { createPriceFormatter } from '@Utils/currency';
+import { calculateDiscountValue, createPriceFormatter } from '@Utils/currency';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -82,6 +83,7 @@ function Payment() {
                             type: 'percentage',
                           },
                           total_price: order.net_payment,
+                          order_id: order.id,
                         },
                       })
                     }
@@ -93,12 +95,45 @@ function Payment() {
                 </>
               }
             >
-              <div>{__('Discount', 'tutor')}</div>
+              <div css={styles.discountTitleWrapper}>
+                <span>{__('Discount', 'tutor')}</span>
+                <button
+                  type="button"
+                  css={styles.editDiscountButton}
+                  onClick={() => {
+                    showModal({
+                      component: DiscountModal,
+                      props: {
+                        title: __('Add discount', 'tutor'),
+                        discount: {
+                          amount: order.discount_amount ?? 0,
+                          discounted_value: 0,
+                          reason: order.discount_reason ?? '',
+                          type: order.discount_type ?? 'percentage',
+                        },
+                        total_price: order.net_payment,
+                        order_id: order.id,
+                      },
+                    });
+                  }}
+                >
+                  <SVGIcon name="edit" width={20} height={20} />
+                </button>
+              </div>
               <div>
                 {order.discount_reason ?? '-'}
                 <strong> ({`${order.discount_amount}${order.discount_type === 'percentage' ? '%' : ''}`})</strong>
               </div>
-              <div>-{formatPrice(order.discount_amount)}</div>
+              <div>
+                -
+                {formatPrice(
+                  calculateDiscountValue({
+                    discount_amount: order.discount_amount,
+                    discount_type: order.discount_type,
+                    total: order.net_payment,
+                  }),
+                )}
+              </div>
             </Show>
           </div>
           <Show when={order.tax_amount}>
@@ -202,6 +237,25 @@ const styles = {
 		margin-top: ${spacing[12]};
 		text-align: right;
 	`,
+  discountTitleWrapper: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    &:hover {
+      button {
+        opacity: 1;
+      }
+    }
+  `,
+  editDiscountButton: css`
+    ${styleUtils.resetButton};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.3s ease opacity;
+    color: ${colorTokens.icon.brand};
+  `,
   item: ({ action = 'regular' }: { action: 'regular' | 'bold' | 'destructive' }) => css`
 		${typography.caption()};
 		display: grid;
