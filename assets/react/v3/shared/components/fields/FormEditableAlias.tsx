@@ -1,6 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -146,6 +146,7 @@ const styles = {
     max-width: fit-content;
   `,
   editWrapper: css`
+    margin-left: ${spacing[2]};
     display: flex;
     align-items: center;
     width: fit-content;
@@ -160,9 +161,10 @@ const styles = {
     border-radius: ${borderRadius[6]};
     margin-right: ${spacing[8]};
     outline: none;
+    border: 1px solid ${colorPalate.border.default};
 
     :focus {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus}
     }
   `,
   saveBtn: css`

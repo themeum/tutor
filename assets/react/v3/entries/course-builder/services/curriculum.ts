@@ -238,7 +238,7 @@ export const useDeleteTopicMutation = () => {
   });
 };
 
-const getLessonDetails = (topicId: ID, lessonId: ID) => {
+const getLessonDetails = (lessonId: ID, topicId: ID) => {
   return authApiInstance.post<string, AxiosResponse<Lesson>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_lesson_details',
     topic_id: topicId,
@@ -261,27 +261,19 @@ const saveLesson = (payload: LessonPayload) => {
   });
 };
 
-export const useSaveLessonMutation = ({
-  courseId,
-  topicId,
-  lessonId,
-}: {
-  courseId: ID;
-  topicId: ID;
-  lessonId: ID;
-}) => {
+export const useSaveLessonMutation = (courseId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: (payload: LessonPayload) => saveLesson(payload),
-    onSuccess: (response) => {
+    onSuccess: (response, payload) => {
       if (response.data) {
         queryClient.invalidateQueries({
           queryKey: ['Topic', courseId],
         });
         queryClient.invalidateQueries({
-          queryKey: ['Lesson', topicId, lessonId],
+          queryKey: ['Lesson', payload.lesson_id, payload.topic_id],
         });
 
         showToast({
@@ -358,7 +350,7 @@ export const useUpdateCourseContentOrderMutation = () => {
   });
 };
 
-const getAssignmentDetails = (topicId: ID, assignmentId: ID) => {
+const getAssignmentDetails = (assignmentId: ID, topicId: ID) => {
   return authApiInstance.post<string, AxiosResponse<Assignment>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_assignment_details',
     topic_id: topicId,
@@ -381,27 +373,19 @@ const saveAssignment = (payload: AssignmentPayload) => {
   });
 };
 
-export const useSaveAssignmentMutation = ({
-  courseId,
-  topicId,
-  assignmentId,
-}: {
-  courseId: ID;
-  topicId: ID;
-  assignmentId: ID;
-}) => {
+export const useSaveAssignmentMutation = (courseId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: (payload: AssignmentPayload) => saveAssignment(payload),
-    onSuccess: (response) => {
+    onSuccess: (response, payload) => {
       if (response.status_code === 200 || response.status_code === 201) {
         queryClient.invalidateQueries({
           queryKey: ['Topic', Number(courseId)],
         });
         queryClient.invalidateQueries({
-          queryKey: ['Assignment', topicId, assignmentId],
+          queryKey: ['Assignment', payload.assignment_id, payload.topic_id],
         });
 
         showToast({
@@ -439,7 +423,7 @@ export const useDuplicateContentMutation = () => {
         });
 
         queryClient.invalidateQueries({
-          queryKey: ['GetQuizDetails'],
+          queryKey: ['Quiz'],
         });
 
         showToast({

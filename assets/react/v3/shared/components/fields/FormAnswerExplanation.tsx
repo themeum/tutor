@@ -10,7 +10,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 
 import { __ } from '@wordpress/i18n';
-import FormFieldWrapper from './FormFieldWrapper';
+import FormWPEditor from './FormWPEditor';
 
 interface FormAnswerExplanationProps extends FormControllerProps<string | null> {
   label?: string;
@@ -116,55 +116,18 @@ const FormAnswerExplanation = ({
           </Show>
         }
       >
-        <FormFieldWrapper
-          label={label}
+        <FormWPEditor
           field={field}
           fieldState={fieldState}
           disabled={disabled}
-          readOnly={readOnly}
-          loading={loading}
           helpText={helpText}
-          isHidden={isHidden}
-          characterCount={characterCount}
-          isSecondary={isSecondary}
-        >
-          {(inputProps) => {
-            return (
-              <>
-                <div css={styles.inputContainer(enableResize)}>
-                  <textarea
-                    {...field}
-                    {...inputProps}
-                    ref={textareaRef}
-                    value={inputValue}
-                    onChange={(event) => {
-                      const { value } = event.target;
-                      if (maxLimit && value.trim().length > maxLimit) {
-                        return;
-                      }
-
-                      field.onChange(value);
-
-                      if (onChange) {
-                        onChange(value);
-                      }
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Escape') {
-                        field.onChange(previousValue);
-                        setIsEdit(false);
-                      }
-                      onKeyDown?.(event.key);
-                    }}
-                    autoComplete="off"
-                    rows={rows}
-                    cols={columns}
-                  />
-                </div>
-              </>
-            );
-          }}
-        </FormFieldWrapper>
+          key={field.name}
+          label={label}
+          loading={loading}
+          onChange={onChange}
+          placeholder={placeholder}
+          readOnly={readOnly}
+        />
         <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
           <Button
             variant="text"
