@@ -44,6 +44,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
       ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
       question_id: inputValue.belongs_question_id,
       answer_title: inputValue.answer_title,
+      answer_two_gap_match: inputValue.answer_two_gap_match,
       image_id: inputValue.image_id || '',
       ...(!inputValue.answer_id && { question_type: 'fill_in_the_blank' }),
     });
@@ -424,6 +425,7 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     resize: vertical;
+    cursor: text;
 
     &:focus {
       ${styleUtils.inputFocus};

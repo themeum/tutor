@@ -216,6 +216,7 @@ interface CreateQuizQuestionAnswerPayload {
   image_id: ID;
   question_type?: QuizQuestionType;
   answer_view_format?: string;
+  answer_two_gap_match?: string;
   matched_answer_title?: string; //only when question type matching or image matching
 }
 
