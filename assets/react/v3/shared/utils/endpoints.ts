@@ -8,6 +8,7 @@ const endpoints = {
   ORDER_MARK_AS_PAID: 'tutor_order_paid',
   ORDER_REFUND: 'tutor_order_refund',
   ADD_ORDER_DISCOUNT: 'tutor_order_discount',
+  CREATED_COURSE: 'tutor_create_course',
 };
 
 export default endpoints;

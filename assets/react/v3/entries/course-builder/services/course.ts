@@ -9,7 +9,7 @@ import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
-import { authApiInstance } from '@Utils/api';
+import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { ID } from './curriculum';
@@ -436,10 +436,7 @@ interface GoogleMeetMeetingDeletePayload {
 }
 
 const createCourse = (payload: CoursePayload) => {
-  return authApiInstance.post<CoursePayload, CourseResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_create_course',
-    ...payload,
-  });
+  return wpAjaxInstance.post<CoursePayload, CourseResponse>(endpoints.CREATED_COURSE, payload);
 };
 
 export interface TutorMutationResponse<T> {
