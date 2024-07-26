@@ -24,7 +24,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
+import { moveTo } from '@Utils/util';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
@@ -36,10 +36,10 @@ import {
 const ImageAnswering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
+  const { activeQuestionIndex, activeQuestionId, quizId } = useQuizModalContext();
 
-  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
+  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
 
-  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const {
     fields: optionsFields,
     append: appendOption,
@@ -124,7 +124,7 @@ const ImageAnswering = () => {
           <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
-                key={option.answer_id}
+                key={`${option.answer_id}-${option.index}`}
                 control={form.control}
                 name={
                   `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
@@ -132,16 +132,17 @@ const ImageAnswering = () => {
                 render={(controllerProps) => (
                   <FormImageAnswering
                     {...controllerProps}
-                    onDuplicateOption={() => {
+                    onDuplicateOption={(answerId) => {
                       const duplicateOption: QuizQuestionOption = {
                         ...option,
-                        answer_id: nanoid(),
-                        is_correct: '0' as '0' | '1',
+                        answer_id: answerId || '',
+                        answer_title: `${option.answer_title} (Copy)`,
+                        is_correct: '0',
                       };
-                      const duplicateIndex = index + 1;
+                      const duplicateIndex = option.index - 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
-                    onRemoveOption={() => removeOption(index)}
+                    onRemoveOption={() => removeOption(option.index)}
                     index={index}
                   />
                 )}
@@ -160,21 +161,22 @@ const ImageAnswering = () => {
                     key={activeSortId}
                     control={form.control}
                     name={
-                      `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
+                      `questions.${activeQuestionIndex}.question_answers.${item.index}` as 'questions.0.question_answers.0'
                     }
                     render={(controllerProps) => (
                       <FormImageAnswering
                         {...controllerProps}
-                        onDuplicateOption={() => {
+                        onDuplicateOption={(answerId) => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
-                            answer_id: nanoid(),
+                            answer_id: answerId || '',
+                            answer_title: `${item.answer_title} (Copy)`,
                             is_correct: '0',
                           };
-                          const duplicateIndex = index + 1;
+                          const duplicateIndex = item.index - 1;
                           insertOption(duplicateIndex, duplicateOption);
                         }}
-                        onRemoveOption={() => removeOption(index)}
+                        onRemoveOption={() => removeOption(item.index)}
                         index={index}
                       />
                     )}

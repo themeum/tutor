@@ -76,14 +76,8 @@ class Course extends Tutor_Base {
 
 		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ), 10, 2 );
+
 		add_action( 'wp_ajax_tutor_save_topic', array( $this, 'tutor_save_topic' ) );
-
-		/**
-		 * Add Column
-		 */
-		add_filter( "manage_{$this->course_post_type}_posts_columns", array( $this, 'add_column' ), 10, 1 );
-		add_action( "manage_{$this->course_post_type}_posts_custom_column", array( $this, 'custom_lesson_column' ), 10, 2 );
-
 		add_action( 'wp_ajax_tutor_delete_topic', array( $this, 'tutor_delete_topic' ) );
 
 		/**
@@ -100,7 +94,7 @@ class Course extends Tutor_Base {
 		/**
 		 * Gutenberg author support
 		 */
-		add_filter( 'wp_insert_post_data', array( $this, 'tutor_add_gutenberg_author' ), '99', 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'tutor_add_gutenberg_author' ), 99, 2 );
 
 		/**
 		 * Frontend metabox supports for course builder
@@ -230,13 +224,17 @@ class Course extends Tutor_Base {
 
 		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
 
-		add_action( 'admin_menu', __CLASS__ . '::load_media_scripts' );
-		add_action( 'init', __CLASS__ . '::load_media_scripts' );
-
+		/**
+		 * New course builder
+		 *
+		 * @since 3.0.0
+		 */
 		add_action( 'admin_init', array( $this, 'load_course_builder' ) );
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
 		add_action( 'tutor_course_builder_footer', array( $this, 'load_wp_link_modal' ) );
+		add_action( 'admin_menu', array( $this, 'load_media_scripts' ) );
+		add_action( 'init', array( $this, 'load_media_scripts' ) );
 
 		/**
 		 * Ajax list
@@ -956,11 +954,10 @@ class Course extends Tutor_Base {
 		$product_name = '';
 		$price        = 0;
 		$sale_price   = 0;
-		$product_id   = 0;
+		$product_id   = tutor_utils()->get_course_product_id( $course_id );
 
 		if ( 'wc' === $monetize_by ) {
-			$product_id = tutor_utils()->get_course_product_id( $course_id );
-			$product    = wc_get_product( $product_id );
+			$product = wc_get_product( $product_id );
 			if ( $product ) {
 				$product_name = $product->get_name();
 				$price        = $product->get_regular_price();
@@ -1112,6 +1109,14 @@ class Course extends Tutor_Base {
 		$dashboard_url = tutor_utils()->tutor_dashboard_url();
 		if ( User::is_admin() ) {
 			$dashboard_url = get_admin_url();
+		}
+
+		/**
+		 * EDD product list
+		 */
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+		if ( 'edd' === $monetize_by && tutor_utils()->has_edd() ) {
+			$data['edd_products'] = tutor_utils()->get_edd_products();
 		}
 
 		$data['dashboard_url'] = $dashboard_url;
@@ -1316,12 +1321,7 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box() {
 		$course_post_type = tutor()->course_post_type;
-
 		tutor_meta_box_wrapper( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array( $this, 'course_meta_box' ), $course_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-
-		tutor_meta_box_wrapper( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array( $this, 'course_additional_data_meta_box' ), $course_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-
-		tutor_meta_box_wrapper( 'tutor-course-videos', __( 'Video', 'tutor' ), array( $this, 'video_metabox' ), $course_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
 	}
 
 	/**
@@ -1348,52 +1348,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Additional data meta box
-	 *
-	 * @since 1.0.0
-	 * @param boolean $echo print data or return.
-	 * @return string
-	 */
-	public function course_additional_data_meta_box( $echo = true ) {
-		$file_path = tutor()->path . 'views/metabox/course-additional-data.php';
-
-		if ( $echo ) {
-			/**
-			 * Use echo raise WPCS security issue
-			 * Helper wp_kses_post break content.
-			 */
-			include $file_path;
-		} else {
-			ob_start();
-			include $file_path;
-			return ob_get_clean();
-		}
-	}
-
-	/**
-	 * Video meta box
-	 *
-	 * @since 1.0.0
-	 * @param boolean $echo print data or return.
-	 * @return string
-	 */
-	public function video_metabox( $echo = true ) {
-		$file_path = tutor()->path . 'views/metabox/video-metabox.php';
-
-		if ( $echo ) {
-			/**
-			 * Use echo raise WPCS security issue
-			 * Helper wp_kses_post break content.
-			 */
-			include $file_path;
-		} else {
-			ob_start();
-			include $file_path;
-			return ob_get_clean();
-		}
-	}
-
-	/**
 	 * Register metabox in course builder tutor
 	 *
 	 * @since 1.3.4
@@ -1404,14 +1358,8 @@ class Course extends Tutor_Base {
 
 		do_action( 'tutor_course_builder_metabox_before', get_the_ID() );
 
-		course_builder_section_wrap( $this->video_metabox( false ), __( 'Video', 'tutor' ) );
-		do_action( 'tutor/frontend_course_edit/after/video', $post );
-
 		course_builder_section_wrap( $this->course_meta_box( false ), __( 'Course Builder', 'tutor' ) );
 		do_action( 'tutor/frontend_course_edit/after/course_builder', $post );
-
-		course_builder_section_wrap( $this->course_additional_data_meta_box( false ), __( 'Additional Data', 'tutor' ) );
-		do_action( 'tutor/frontend_course_edit/after/additional_data', $post );
 
 		do_action( 'tutor_course_builder_metabox_after', get_the_ID() );
 	}
@@ -1681,68 +1629,6 @@ class Course extends Tutor_Base {
 			);
 		}
 	}
-
-	/**
-	 * Add columns to course row in default WP list table
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $columns column list.
-	 * @return mixed
-	 */
-	public function add_column( $columns ) {
-		$date_col = $columns['date'];
-		unset( $columns['date'] );
-		$columns['lessons']  = __( 'Lessons', 'tutor' );
-		$columns['students'] = __( 'Students', 'tutor' );
-		$columns['price']    = __( 'Price', 'tutor' );
-		$columns['date']     = $date_col;
-
-		return $columns;
-	}
-
-	/**
-	 * Add data to custom column
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string  $column column name.
-	 * @param integer $post_id post ID.
-	 *
-	 * @return void
-	 */
-	public function custom_lesson_column( $column, $post_id ) {
-		if ( 'lessons' === $column ) {
-			echo esc_html( tutor_utils()->get_lesson_count_by_course( $post_id ) );
-		}
-
-		if ( 'students' === $column ) {
-			echo esc_html( tutor_utils()->count_enrolled_users_by_course( $post_id ) );
-		}
-
-		if ( 'price' === $column ) {
-			$price = tutor_utils()->get_course_price( $post_id );
-			if ( $price ) {
-				$monetize_by = tutils()->get_option( 'monetize_by' );
-				if ( function_exists( 'wc_price' ) && 'wc' === $monetize_by ) {
-					echo wp_kses(
-						'<span class="tutor-label-success">' . wc_price( $price ) . '</span>',
-						array(
-							'span' => array( 'class' => true ),
-						)
-					);
-				} else {
-					echo wp_kses(
-						'<span class="tutor-label-success">' . $price . '</span>',
-						array( 'span' => array( 'class' => true ) )
-					);
-				}
-			} else {
-				echo esc_html( apply_filters( 'tutor-loop-default-price', __( 'free', 'tutor' ) ) );
-			}
-		}
-	}
-
 
 	/**
 	 * Delete a course topic

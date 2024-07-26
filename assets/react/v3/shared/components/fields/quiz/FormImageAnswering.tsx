@@ -3,11 +3,13 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
 import {
+  type QuizForm,
   type QuizQuestionOption,
   useCreateQuizAnswerMutation,
   useDeleteQuizAnswerMutation,
@@ -17,6 +19,8 @@ import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -25,12 +29,15 @@ import { nanoid } from '@Utils/util';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: () => void;
+  onDuplicateOption: (answerId: ID) => void;
   onRemoveOption: () => void;
 }
 
+const courseId = getCourseId();
+
 const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
-  const { activeQuestionId } = useQuizModalContext();
+  const form = useFormContext<QuizForm>();
+  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
 
   const inputValue = field.value ?? {
     answer_id: nanoid(),
@@ -41,8 +48,9 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const createQuizAnswerMutation = useCreateQuizAnswerMutation();
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+  const createQuizAnswerMutation = useCreateQuizAnswerMutation(quizId);
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
+  const duplicateContentMutation = useDuplicateContentMutation();
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
@@ -85,11 +93,40 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
     });
   };
 
-  const handleCorrectAnswer = () => {
-    field.onChange({
-      ...inputValue,
-      is_correct: '1',
+  const handleDuplicateAnswer = async () => {
+    const response = await duplicateContentMutation.mutateAsync({
+      course_id: courseId,
+      content_id: inputValue.answer_id,
+      content_type: 'answer',
     });
+    if (response.data) {
+      onDuplicateOption?.(response.data);
+    }
+  };
+
+  const createQuizAnswer = async () => {
+    const response = await createQuizAnswerMutation.mutateAsync({
+      ...(inputValue.answer_id && {
+        answer_id: inputValue.answer_id,
+      }),
+      question_id: inputValue.belongs_question_id,
+      answer_title: inputValue.answer_title,
+      image_id: inputValue.image_id || '',
+      answer_view_format: 'text_image',
+      question_type: 'image_answering',
+    });
+
+    const currentAnswerIndex = form
+      .getValues(`questions.${activeQuestionIndex}.question_answers`)
+      .findIndex((answer) => answer.answer_id === inputValue.answer_id);
+
+    if (response.status_code === 201 || response.status_code === 200) {
+      form.setValue(`questions.${activeQuestionIndex}.question_answers.${currentAnswerIndex}`, {
+        ...inputValue,
+        answer_id: response.data,
+      });
+      setIsEditing(false);
+    }
   };
 
   useEffect(() => {
@@ -111,6 +148,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
           setIsEditing(true);
         }}
         onKeyDown={(event) => {
+          event.stopPropagation();
           if (event.key === 'Enter' || event.key === ' ') {
             setIsEditing(true);
           }
@@ -141,7 +179,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
               data-visually-hidden
               onClick={(event) => {
                 event.stopPropagation();
-                onDuplicateOption();
+                handleDuplicateAnswer();
               }}
             >
               <SVGIcon name="copyPaste" width={24} height={24} />
@@ -216,9 +254,10 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                       answer_title: event.target.value,
                     });
                   }}
-                  onKeyDown={(event) => {
+                  onKeyDown={async (event) => {
                     event.stopPropagation();
-                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
+                      await createQuizAnswer();
                       setIsEditing(false);
                     }
                   }}
@@ -250,20 +289,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
-                    const response = await createQuizAnswerMutation.mutateAsync({
-                      ...(inputValue.answer_id && {
-                        answer_id: inputValue.answer_id,
-                      }),
-                      question_id: inputValue.belongs_question_id,
-                      answer_title: inputValue.answer_title,
-                      image_id: inputValue.image_id || '',
-                      answer_view_format: 'text_image',
-                      question_type: 'image_answering',
-                    });
-
-                    if (response.status_code === 201 || response.status_code === 200) {
-                      setIsEditing(false);
-                    }
+                    await createQuizAnswer();
                   }}
                   disabled={!inputValue.answer_title && !inputValue.image_id}
                 >

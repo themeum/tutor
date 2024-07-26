@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
@@ -14,17 +15,16 @@ import {
   type QuizQuestionType,
   convertQuizQuestionFormDataToPayloadForUpdate,
   useDeleteQuizQuestionMutation,
-  useDuplicateQuizQuestionMutation,
   useUpdateQuizQuestionMutation,
 } from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import type { ID } from '@CourseBuilderServices/curriculum';
+import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
-import { useFormContext } from 'react-hook-form';
 
 interface QuestionProps {
   question: QuizQuestion;
@@ -43,14 +43,31 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   ordering: 'quizOrdering',
 };
 
+const courseId = getCourseId();
+
 const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
-  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
 
-  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation();
-  const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation();
-  const duplicateQuizQuestionMutation = useDuplicateQuizQuestionMutation();
+  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation(quizId);
+  const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation(quizId);
+  const duplicateContentMutation = useDuplicateContentMutation();
+
+  const handleDuplicateQuestion = () => {
+    duplicateContentMutation.mutate({
+      course_id: courseId,
+      content_id: question.question_id,
+      content_type: 'question',
+    });
+    setSelectedQuestionId('');
+  };
+
+  const handleDeleteQuestion = () => {
+    deleteQuizQuestionMutation.mutate(question.question_id);
+    onRemoveQuestion();
+    setSelectedQuestionId('');
+  };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
@@ -114,23 +131,20 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
         data-three-dots
       >
         <ThreeDots.Option
-          size="small"
           text={__('Duplicate', 'tutor')}
           icon={<SVGIcon name="duplicate" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
-            duplicateQuizQuestionMutation.mutate(question.question_id);
+            handleDuplicateQuestion();
           }}
         />
         <ThreeDots.Option
           isTrash
-          size="small"
           text={__('Delete', 'tutor')}
           icon={<SVGIcon name="delete" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
-            deleteQuizQuestionMutation.mutate(question.question_id);
-            onRemoveQuestion();
+            handleDeleteQuestion();
           }}
         />
       </ThreeDots>

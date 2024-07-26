@@ -1115,16 +1115,18 @@ class Utils {
 	 */
 	public function is_course_purchasable( $course_id = 0 ) {
 
+		$is_purchaseable = false;
+
 		$course_id  = $this->get_post_id( $course_id );
 		$price_type = $this->price_type( $course_id );
-		if ( 'free' === $price_type ) {
-			$is_paid = apply_filters( 'is_course_paid', false, $course_id );
-			if ( ! $is_paid ) {
-				return false;
-			}
+
+		if ( 'paid' === $price_type ) {
+			$is_purchaseable = true;
+		} elseif ( 'free' === $price_type ) {
+			$is_purchaseable = apply_filters( 'is_course_paid', $is_purchaseable, $course_id );
 		}
 
-		return apply_filters( 'is_course_purchasable', false, $course_id );
+		return apply_filters( 'is_course_purchasable', $is_purchaseable, $course_id );
 	}
 
 	/**
@@ -1132,12 +1134,18 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int  $course_id course ID.
-	 * @param bool $apply_filter false if you don't want to apply the filter on return.
+	 * @since 3.0.0
+	 *
+	 * If monetize by is Tutor then it will return course 
+	 * formatted price
+	 *
+	 * @see tutor_get_course_formatted_price
+	 *
+	 * @param int $course_id course ID.
 	 *
 	 * @return null|string
 	 */
-	public function get_course_price( $course_id = 0, $apply_filter = true ) {
+	public function get_course_price( $course_id = 0 ) {
 		$price      = null;
 		$course_id  = $this->get_post_id( $course_id );
 		$product_id = $this->get_course_product_id( $course_id );
@@ -1151,12 +1159,12 @@ class Utils {
 			} elseif ( 'edd' === $monetize_by && function_exists( 'edd_price' ) ) {
 				$download = new \EDD_Download( $product_id );
 				$price    = \edd_price( $download->ID, false );
+			} elseif ( $this->is_monetize_by_tutor() ) {
+				$price = tutor_get_formatted_price_html( $course_id, false );
 			}
 		}
 
-		$response = $apply_filter ? apply_filters( 'get_tutor_course_price', $price, $course_id ) : $price;
-
-		return $response;
+		return apply_filters( 'get_tutor_course_price', $price, $course_id );
 	}
 
 	/**
@@ -1180,17 +1188,22 @@ class Utils {
 
 		$monetize_by = $this->get_option( 'monetize_by' );
 
-		$product_id = $this->get_course_product_id( $course_id );
-		if ( $product_id ) {
-			if ( 'wc' === $monetize_by && $this->has_wc() ) {
-				$product = wc_get_product( $product_id );
-				if ( $product ) {
-					$prices['regular_price'] = $product->get_regular_price();
-					$prices['sale_price']    = $product->get_sale_price();
+		if ( $this->is_monetize_by_tutor() ) {
+			$prices['regular_price'] = (float) get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+			$prices['sale_price']    = (float) get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+		} else {
+			$product_id = $this->get_course_product_id( $course_id );
+			if ( $product_id ) {
+				if ( 'wc' === $monetize_by && $this->has_wc() ) {
+					$product = wc_get_product( $product_id );
+					if ( $product ) {
+						$prices['regular_price'] = $product->get_regular_price();
+						$prices['sale_price']    = $product->get_sale_price();
+					}
+				} elseif ( 'edd' === $monetize_by && $this->has_edd() ) {
+					$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
+					$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
 				}
-			} elseif ( 'edd' === $monetize_by && $this->has_edd() ) {
-				$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
-				$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
 			}
 		}
 
@@ -8554,7 +8567,8 @@ class Utils {
 
 				// Add add-on enable status.
 				$addon_url                                = "tutor-pro/addons/{$base_name}/{$base_name}.php";
-				$plugins_data[ $base_name ]['is_enabled'] = $has_pro ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
+
+				$plugins_data[ $base_name ]['is_enabled'] = $has_pro && isset( $addons_config[ $addon_url ]['is_enable'] ) ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
 			}
 		}
 
@@ -10018,5 +10032,210 @@ class Utils {
 		}
 
 		return (object) json_decode( $response['body'], true );
+	}
+
+	/**
+	 * Get all the countries info
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function country_options() {
+		$options = array(
+			'AF' => 'Afghanistan',
+			'AL' => 'Albania',
+			'DZ' => 'Algeria',
+			'AD' => 'Andorra',
+			'AO' => 'Angola',
+			'AR' => 'Argentina',
+			'AM' => 'Armenia',
+			'AW' => 'Aruba',
+			'AU' => 'Australia',
+			'AT' => 'Austria',
+			'AZ' => 'Azerbaijan',
+			'BH' => 'Bahrain',
+			'BD' => 'Bangladesh',
+			'BY' => 'Belarus',
+			'BE' => 'Belgium',
+			'BZ' => 'Belize',
+			'BJ' => 'Benin',
+			'BT' => 'Bhutan',
+			'BO' => 'Bolivia',
+			'BA' => 'Bosnia And Herzegovina',
+			'BW' => 'Botswana',
+			'BR' => 'Brazil',
+			'IO' => 'British Indian Ocean Territory',
+			'BN' => 'Brunei Darussalam',
+			'BG' => 'Bulgaria',
+			'BF' => 'Burkina Faso',
+			'BI' => 'Burundi',
+			'KH' => 'Cambodia',
+			'CA' => 'Canada',
+			'CM' => 'Cameroon',
+			'CV' => 'Cape Verde',
+			'CF' => 'Central African Republic',
+			'TD' => 'Chad',
+			'CL' => 'Chile',
+			'CN' => 'China',
+			'CO' => 'Colombia',
+			'KM' => 'Comoros',
+			'CG' => 'Congo',
+			'CD' => 'Congo, Democratic Republic',
+			'CK' => 'Cook Islands',
+			'CR' => 'Costa Rica',
+			'CI' => "Cote D'Ivoire",
+			'HR' => 'Croatia',
+			'CU' => 'Cuba',
+			'CY' => 'Cyprus',
+			'CZ' => 'Czech Republic',
+			'DK' => 'Denmark',
+			'DJ' => 'Djibouti',
+			'EC' => 'Ecuador',
+			'EG' => 'Egypt',
+			'SV' => 'El Salvador',
+			'GQ' => 'Equatorial Guinea',
+			'ER' => 'Eritrea',
+			'EE' => 'Estonia',
+			'ET' => 'Ethiopia',
+			'FK' => 'Falkland Islands (Malvinas)',
+			'FO' => 'Faroe Islands',
+			'FJ' => 'Fiji',
+			'FI' => 'Finland',
+			'FR' => 'France',
+			'PF' => 'French Polynesia',
+			'GA' => 'Gabon',
+			'GM' => 'Gambia',
+			'GE' => 'Georgia',
+			'DE' => 'Germany',
+			'GH' => 'Ghana',
+			'GI' => 'Gibraltar',
+			'GR' => 'Greece',
+			'GL' => 'Greenland',
+			'GT' => 'Guatemala',
+			'GN' => 'Guinea',
+			'GW' => 'Guinea-Bissau',
+			'GY' => 'Guyana',
+			'HT' => 'Haiti',
+			'HN' => 'Honduras',
+			'HK' => 'Hong Kong',
+			'HU' => 'Hungary',
+			'IS' => 'Iceland',
+			'IN' => 'India',
+			'ID' => 'Indonesia',
+			'IR' => 'Iran, Islamic Republic Of',
+			'IQ' => 'Iraq',
+			'IE' => 'Ireland',
+			'IL' => 'Israel',
+			'IT' => 'Italy',
+			'JP' => 'Japan',
+			'JO' => 'Jordan',
+			'KP' => 'North Korea',
+			'KE' => 'Kenya',
+			'KI' => 'Kiribati',
+			'KR' => 'South Korea',
+			'KW' => 'Kuwait',
+			'KG' => 'Kyrgyzstan',
+			'LA' => "Lao People's Democratic Republic",
+			'LV' => 'Latvia',
+			'LB' => 'Lebanon',
+			'LS' => 'Lesotho',
+			'LR' => 'Liberia',
+			'LY' => 'Libyan Arab Jamahiriya',
+			'LI' => 'Liechtenstein',
+			'LT' => 'Lithuania',
+			'LU' => 'Luxembourg',
+			'MO' => 'Macao',
+			'MK' => 'Macedonia',
+			'MG' => 'Madagascar',
+			'MW' => 'Malawi',
+			'MY' => 'Malaysia',
+			'MV' => 'Maldives',
+			'ML' => 'Mali',
+			'MT' => 'Malta',
+			'MH' => 'Marshall Islands',
+			'MR' => 'Mauritania',
+			'MU' => 'Mauritius',
+			'MX' => 'Mexico',
+			'FM' => 'Micronesia, Federated States Of',
+			'MD' => 'Moldova',
+			'MC' => 'Monaco',
+			'MN' => 'Mongolia',
+			'ME' => 'Montenegro',
+			'MA' => 'Morocco',
+			'MZ' => 'Mozambique',
+			'NA' => 'Namibia',
+			'NL' => 'Netherlands',
+			'NC' => 'New Caledonia',
+			'NZ' => 'New Zealand',
+			'NI' => 'Nicaragua',
+			'NE' => 'Niger',
+			'NG' => 'Nigeria',
+			'NU' => 'Niue',
+			'NF' => 'Norfolk Island',
+			'NO' => 'Norway',
+			'OM' => 'Oman',
+			'PK' => 'Pakistan',
+			'PA' => 'Panama',
+			'PG' => 'Papua New Guinea',
+			'PY' => 'Paraguay',
+			'PE' => 'Peru',
+			'PH' => 'Philippines',
+			'PL' => 'Poland',
+			'PT' => 'Portugal',
+			'QA' => 'Qatar',
+			'RO' => 'Romania',
+			'RU' => 'Russian Federation',
+			'RW' => 'Rwanda',
+			'WS' => 'Samoa',
+			'SM' => 'San Marino',
+			'ST' => 'Sao Tome And Principe',
+			'SA' => 'Saudi Arabia',
+			'SN' => 'Senegal',
+			'RS' => 'Serbia',
+			'SC' => 'Seychelles',
+			'SL' => 'Sierra Leone',
+			'SG' => 'Singapore',
+			'SK' => 'Slovakia',
+			'SI' => 'Slovenia',
+			'SB' => 'Solomon Islands',
+			'SO' => 'Somalia',
+			'ZA' => 'South Africa',
+			'ES' => 'Spain',
+			'LK' => 'Sri Lanka',
+			'SD' => 'Sudan',
+			'SR' => 'Suriname',
+			'SZ' => 'Swaziland',
+			'SE' => 'Sweden',
+			'CH' => 'Switzerland',
+			'SY' => 'Syrian Arab Republic',
+			'TW' => 'Taiwan',
+			'TJ' => 'Tajikistan',
+			'TZ' => 'Tanzania',
+			'TH' => 'Thailand',
+			'TL' => 'Timor-Leste',
+			'TG' => 'Togo',
+			'TK' => 'Tokelau',
+			'TO' => 'Tonga',
+			'TN' => 'Tunisia',
+			'TR' => 'Turkey',
+			'TM' => 'Turkmenistan',
+			'TV' => 'Tuvalu',
+			'UG' => 'Uganda',
+			'UA' => 'Ukraine',
+			'AE' => 'United Arab Emirates',
+			'GB' => 'United Kingdom',
+			'US' => 'United States',
+			'UY' => 'Uruguay',
+			'VU' => 'Vanuatu',
+			'VE' => 'Venezuela',
+			'VN' => 'Viet Nam',
+			'WF' => 'Wallis And Futuna',
+			'YE' => 'Yemen',
+			'ZM' => 'Zambia',
+			'ZW' => 'Zimbabwe',
+		);
+
+		return $options;
 	}
 }

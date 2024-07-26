@@ -131,7 +131,7 @@ const LiveClass = ({
                       hasMeeting: zoomMeetings.length > 0,
                     })}
                   >
-                    <ZoomMeetingCard data={meeting} meetingHost={zoomUsers} timezones={zoomTimezones} />
+                    <ZoomMeetingCard data={meeting} meetingHost={zoomUsers} />
                   </div>
                 )}
               </For>
@@ -169,7 +169,7 @@ const LiveClass = ({
                       hasMeeting: googleMeetMeetings.length > 0,
                     })}
                   >
-                    <GoogleMeetMeetingCard data={meeting} timezones={googleMeetTimezones} />
+                    <GoogleMeetMeetingCard data={meeting} />
                   </div>
                 )}
               </For>
@@ -207,7 +207,6 @@ const LiveClass = ({
           onCancel={() => {
             setShowMeetingForm(null);
           }}
-          timezones={zoomTimezones}
         />
       </Popover>
       <Popover
@@ -221,7 +220,6 @@ const LiveClass = ({
           onCancel={() => {
             setShowMeetingForm(null);
           }}
-          timezones={googleMeetTimezones}
         />
       </Popover>
     </div>

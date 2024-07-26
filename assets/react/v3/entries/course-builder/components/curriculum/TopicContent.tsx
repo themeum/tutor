@@ -15,19 +15,26 @@ import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
-import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import { type ContentType, type ID, useDeleteContentMutation } from '@CourseBuilderServices/curriculum';
+import {
+  type ContentType,
+  type ID,
+  useDeleteContentMutation,
+  useDuplicateContentMutation,
+} from '@CourseBuilderServices/curriculum';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { useExportQuizMutation } from '@CourseBuilderServices/quiz';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
+
 interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
@@ -88,6 +95,8 @@ const modalIcon: {
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
+const courseId = getCourseId();
+
 const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
   const courseDetails = useCourseDetails();
   const form = useFormContext<CourseFormData>();
@@ -108,6 +117,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
     transition,
   };
   const { showModal } = useModal();
+  const duplicateContentMutation = useDuplicateContentMutation();
   const deleteContentMutation = useDeleteContentMutation();
   const deleteGoogleMeetMutation = useDeleteContentMutation();
   const deleteZoomMeetingMutation = useDeleteContentMutation();
@@ -148,6 +158,29 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
       deleteZoomMeetingMutation.mutateAsync(content.id);
     }
     onDelete?.();
+  };
+
+  const handleDuplicate = () => {
+    const convertedContentType: {
+      [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]:
+        | 'lesson'
+        | 'assignment'
+        | 'answer'
+        | 'question'
+        | 'quiz'
+        | 'topic';
+    } = {
+      lesson: 'lesson',
+      tutor_assignments: 'assignment',
+      tutor_quiz: 'quiz',
+    } as const;
+
+    duplicateContentMutation.mutateAsync({
+      course_id: courseId,
+      content_id: content.id,
+      content_type: convertedContentType[type as Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>],
+    });
+    onCopy?.();
   };
 
   return (
@@ -199,11 +232,13 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
-          <Tooltip content={__('Duplicate', 'tutor')}>
-            <button type="button" css={styles.actionButton} onClick={onCopy}>
-              <SVGIcon name="copyPaste" width={24} height={24} />
-            </button>
-          </Tooltip>
+          <Show when={type !== 'tutor_zoom_meeting' && type !== 'tutor-google-meet'}>
+            <Tooltip content={__('Duplicate', 'tutor')}>
+              <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
+                <SVGIcon name="copyPaste" width={24} height={24} />
+              </button>
+            </Tooltip>
+          </Show>
           <Tooltip content={__('Delete', 'tutor')}>
             <button
               ref={deleteRef}

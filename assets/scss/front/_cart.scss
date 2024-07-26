@@ -31,6 +31,17 @@
             }
         }
 
+        .tutor-cart-course-title {
+            a {
+                color: var(--tutor-body-color);
+                text-decoration: none;
+                
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
         .tutor-cart-course-info {
             list-style: none;
             margin: 0;

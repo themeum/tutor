@@ -16,17 +16,15 @@ namespace Tutor\Ecommerce;
 class OptionKeys {
 
 	// Currency Settings.
-	const CURRENCY_TYPE      = 'currency_type';
+	const CURRENCY_SYMBOL      = 'currency_symbol';
 	const CURRENCY_POSITION  = 'currency_position';
 	const THOUSAND_SEPARATOR = 'thousand_separator';
 	const DECIMAL_SEPARATOR  = 'decimal_separator';
 	const NUMBER_OF_DECIMALS = 'number_of_decimals';
 
 	// Payment Methods.
-	const PAYMENT_METHOD_PAYPAL        = 'payment_method_paypal';
-	const PAYMENT_METHOD_STRIPE        = 'payment_method_stripe';
-	const PAYMENT_METHOD_BANK_TRANSFER = 'payment_method_bank_transfer';
-	const PAYMENT_METHOD_COD           = 'payment_method_cod';
+	const IS_ENABLE_PAYPAL_PAYMENT = 'is_enable_paypal_payment';
+	const IS_ENABLE_STRIPE_PAYMENT = 'is_enable_stripe_payment';
 
 	// Tax and Coupon Settings.
 	const IS_TAX_APPLICABLE    = 'is_tax_applicable';
@@ -41,8 +39,12 @@ class OptionKeys {
 	const REFUND_POLICY  = 'ecommerce_refund_policy';
 	const PRIVACY_POLICY = 'ecommerce_privacy_policy';
 
+	// Manual payment settings.
+	const MANUAL_PAYMENT_KEY = 'tutor_manual_payments';
+
+
 	/**
-	 * Get billing fiend options
+	 * Get billing field options
 	 *
 	 * @since 3.0.0
 	 *

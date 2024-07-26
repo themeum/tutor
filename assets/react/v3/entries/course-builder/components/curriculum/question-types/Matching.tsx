@@ -29,14 +29,14 @@ import {
   useQuizQuestionAnswerOrderingMutation,
 } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
+import { moveTo } from '@Utils/util';
 
 const Matching = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, quizId } = useQuizModalContext();
 
-  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
+  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
 
   const {
     fields: optionsFields,
@@ -128,7 +128,7 @@ const Matching = () => {
           <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
-                key={option.answer_id}
+                key={`${option.answer_id}-${option.index}`}
                 control={form.control}
                 name={
                   `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
@@ -138,13 +138,14 @@ const Matching = () => {
                     {...controllerProps}
                     index={index}
                     onRemoveOption={() => removeOption(option.index)}
-                    onDuplicateOption={() => {
+                    onDuplicateOption={(answerId) => {
                       const duplicateOption: QuizQuestionOption = {
                         ...option,
-                        answer_id: nanoid(),
+                        answer_id: answerId || '',
+                        answer_title: `${option.answer_title} (Copy)`,
                         is_correct: '0',
                       };
-                      const duplicateIndex = option.index + 1;
+                      const duplicateIndex = option.index - 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
                   />
@@ -158,28 +159,28 @@ const Matching = () => {
           <DragOverlay>
             <Show when={activeSortItem}>
               {(item) => {
-                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
+                const index = filteredOptionsFields.findIndex((option) => option.answer_id === item.answer_id);
                 return (
                   <Controller
                     key={activeSortId}
                     control={form.control}
                     name={
-                      `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
+                      `questions.${activeQuestionIndex}.question_answers.${item.index}` as 'questions.0.question_answers.0'
                     }
                     render={(controllerProps) => (
                       <FormMatching
                         {...controllerProps}
                         index={index}
-                        onDuplicateOption={() => {
+                        onDuplicateOption={(answerId) => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
-                            answer_id: nanoid(),
+                            answer_id: answerId || '',
                             is_correct: '0',
                           };
-                          const duplicateIndex = index + 1;
+                          const duplicateIndex = item.index - 1;
                           insertOption(duplicateIndex, duplicateOption);
                         }}
-                        onRemoveOption={() => removeOption(index)}
+                        onRemoveOption={() => removeOption(item.index)}
                       />
                     )}
                   />
