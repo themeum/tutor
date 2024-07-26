@@ -9,6 +9,7 @@ const endpoints = {
   ORDER_REFUND: 'tutor_order_refund',
   ADD_ORDER_DISCOUNT: 'tutor_order_discount',
   CREATED_COURSE: 'tutor_create_course',
+  TUTOR_INSTRUCTOR_SEARCH: 'tutor_course_instructor_search',
 };
 
 export default endpoints;
