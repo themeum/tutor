@@ -18,6 +18,7 @@ import FormWPEditor from '@Components/fields/FormWPEditor';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
+import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -87,7 +88,7 @@ const AssignmentModal = ({
   subtitle,
   contentDripType,
 }: AssignmentModalProps) => {
-  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Prerequisites');
+  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
   const getAssignmentDetailsQuery = useAssignmentDetailsQuery(assignmentId, topicId);
   const saveAssignmentMutation = useSaveAssignmentMutation(courseId);
 
@@ -236,7 +237,7 @@ const AssignmentModal = ({
               )}
             />
 
-            <Show when={isAddonEnabled('Content Drip')}>
+            <Show when={isAddonEnabled(Addons.CONTENT_DRIP)}>
               <Show when={contentDripType === 'specific_days'}>
                 <Controller
                   name="content_drip_settings.after_xdays_of_enroll"

@@ -187,12 +187,12 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    const timeoutId = setTimeout(() => {
       updateEditorContent(value);
-    }, 0);
+    }, 100);
 
     return () => {
-      clearInterval(intervalId);
+      clearTimeout(timeoutId);
     };
   }, [value]);
 
