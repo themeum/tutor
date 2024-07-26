@@ -80,14 +80,14 @@ class CartController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_add_course_to_cart', array( $this, 'tutor_add_course_to_cart' ) );
+			add_action( 'wp_ajax_tutor_add_course_to_cart', array( $this, 'add_course_to_cart' ) );
 
 			/**
 			 * Handle AJAX request for deleting course from cart
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_delete_course_from_cart', array( $this, 'tutor_delete_course_from_cart' ) );
+			add_action( 'wp_ajax_tutor_delete_course_from_cart', array( $this, 'delete_course_from_cart' ) );
 		}
 	}
 
@@ -154,15 +154,15 @@ class CartController {
 	 *
 	 * @return void JSON response
 	 */
-	public function tutor_add_course_to_cart() {
+	public function add_course_to_cart() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
 			wp_send_json_error( tutor_utils()->error_message( 'nonce' ) );
 		}
 
 		$user_id   = tutils()->get_user_id();
-		$course_id = Input::post( 'course_id' );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		if ( ! is_numeric( $course_id ) ) {
+		if ( ! $course_id ) {
 			wp_send_json_error( __( 'Invalid course id.', 'tutor' ) );
 		}
 
@@ -175,12 +175,7 @@ class CartController {
 		$response = $this->model->add_course_to_cart( $user_id, $course_id );
 
 		if ( $response ) {
-			wp_send_json_success(
-				array(
-					'message'       => __( 'The course was added to the cart successfully.', 'tutor' ),
-					'cart_page_url' => self::get_page_url(),
-				)
-			);
+			wp_send_json_success( self::get_page_url() );
 		} else {
 			wp_send_json_error( __( 'Failed to add to cart.', 'tutor' ) );
 		}
@@ -193,15 +188,15 @@ class CartController {
 	 *
 	 * @return void JSON response
 	 */
-	public function tutor_delete_course_from_cart() {
+	public function delete_course_from_cart() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
 			wp_send_json_error( tutor_utils()->error_message( 'nonce' ) );
 		}
 
 		$user_id   = tutils()->get_user_id();
-		$course_id = Input::post( 'course_id' );
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
-		if ( ! is_numeric( $course_id ) ) {
+		if ( ! $course_id ) {
 			wp_send_json_error( __( 'Invalid course id.', 'tutor' ) );
 		}
 

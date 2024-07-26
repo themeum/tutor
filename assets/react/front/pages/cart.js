@@ -1,4 +1,5 @@
 import ajaxHandler from "../../admin-dashboard/segments/filter";
+import tutorFormData from "../../helper/tutor-formdata";
 const { __ } = wp.i18n;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -8,11 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const addToCartButtons = document.querySelectorAll('.tutor-native-add-to-cart');
     addToCartButtons.forEach((button) => {
         button.addEventListener('click', async (e) => {
-            const formData = new FormData();
-            formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-            formData.set('action', 'tutor_add_course_to_cart');
-            formData.set('course_id', button.dataset.courseId);
-
+            const formData = tutorFormData([{ action: 'tutor_add_course_to_cart', course_id: button.dataset.courseId }]);
             const isSinglePage = document.body.classList.contains('single-courses');
 
             try {
@@ -20,11 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 button.classList.add('is-loading');
 
                 const post = await ajaxHandler(formData);
-                const { success, data } = await post.json();
+                const { success, data = defaultErrorMessage } = await post.json();
                 if (success) {
-                    const { cart_page_url, message = defaultErrorMessage } = data;
-                    tutor_toast(__('Success', 'tutor'), message, 'success');
-                    const viewCartButton = `<a href="${cart_page_url}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'}">${__('View Cart', 'tutor')}</a>`
+                    tutor_toast(__('Success', 'tutor'), __('The course was added to the cart successfully.'), 'success');
+                    const viewCartButton = `<a href="${data}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'}">${__('View Cart', 'tutor')}</a>`
                     button.parentElement.innerHTML = viewCartButton;
                 } else {
                     tutor_toast(__('Failed', 'tutor'), data, 'error');
@@ -44,10 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const deleteButtons = document.querySelectorAll('.tutor-cart-remove-button');
         deleteButtons.forEach((button) => {
             button.addEventListener('click', async (e) => {
-                const formData = new FormData();
-                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                formData.set('action', 'tutor_delete_course_from_cart');
-                formData.set('course_id', button.dataset.courseId);
+                const formData = tutorFormData([{ action: 'tutor_add_course_to_cart', course_id: button.dataset.courseId }]);
 
                 try {
                     button.setAttribute('disabled', 'disabled');
