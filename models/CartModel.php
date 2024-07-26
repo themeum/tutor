@@ -70,8 +70,11 @@ class CartModel {
 		global $wpdb;
 
 		$cart_data = array(
-			'total_count' => 0,
-			'results'     => array(),
+			'cart'    => null,
+			'courses' => array(
+				'total_count' => 0,
+				'results'     => array(),
+			),
 		);
 
 		$user_cart = QueryHelper::get_row(
@@ -83,24 +86,26 @@ class CartModel {
 		);
 
 		if ( $user_cart ) {
-			$primary_table  = "{$wpdb->prefix}tutor_cart_items AS ci";
-			$joining_tables = array(
+			$cart_data['cart'] = $user_cart;
+
+			$primary_table        = "{$wpdb->prefix}tutor_cart_items AS item";
+			$joining_tables       = array(
 				array(
 					'type'  => 'LEFT',
-					'table' => "{$wpdb->prefix}posts AS p",
-					'on'    => 'ci.course_id = p.ID',
+					'table' => "{$wpdb->prefix}posts AS post",
+					'on'    => 'item.course_id = post.ID',
 				),
 			);
-			$where          = array( 'ci.cart_id' => $user_cart->id );
-			$select_columns = array( 'p.*' );
-			$cart_data      = QueryHelper::get_joined_data(
+			$where                = array( 'item.cart_id' => $user_cart->id );
+			$select_columns       = array( 'post.*' );
+			$cart_data['courses'] = QueryHelper::get_joined_data(
 				$primary_table,
 				$joining_tables,
 				$select_columns,
 				$where,
 				array(),
-				'p.ID',
-				0,
+				'item.id',
+				1000,
 				0
 			);
 		}

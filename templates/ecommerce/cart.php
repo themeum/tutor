@@ -17,8 +17,9 @@ use Tutor\Ecommerce\CheckoutController;
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
-$total_count     = $get_cart['total_count'];
-$courses         = $get_cart['results'];
+$courses         = $get_cart['courses'];
+$total_count     = $courses['total_count'];
+$course_list     = $courses['results'];
 $subtotal        = 0;
 $tax_amount      = 0; // @TODO: Need to implement later.
 
@@ -32,9 +33,9 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 				</h3>
 
 				<div class="tutor-cart-course-list">
-					<?php if ( is_array( $courses ) && count( $courses ) ) : ?>
+					<?php if ( is_array( $course_list ) && count( $course_list ) ) : ?>
 						<?php
-						foreach ( $courses as $key => $course ) :
+						foreach ( $course_list as $key => $course ) :
 							$course_duration  = get_tutor_course_duration_context( $course->ID, true );
 							$course_price     = tutor_utils()->get_raw_course_price( $course->ID );
 							$regular_price    = $course_price->regular_price;

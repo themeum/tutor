@@ -18,7 +18,9 @@ $tutor_toc_page_link = tutor_utils()->get_toc_page_link();
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
-$courses         = $get_cart['results'];
+$courses         = $get_cart['courses'];
+$total_count     = $courses['total_count'];
+$course_list     = $courses['results'];
 $subtotal        = 0;
 $tax_amount      = 0; // @TODO: Need to implement later.
 
@@ -135,9 +137,9 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 						</h5>
 
 						<div class="tutor-checkout-courses">
-							<?php if ( is_array( $courses ) && count( $courses ) ) : ?>
+							<?php if ( is_array( $course_list ) && count( $course_list ) ) : ?>
 								<?php
-								foreach ( $courses as $key => $course ) :
+								foreach ( $course_list as $key => $course ) :
 									$course_price  = tutor_utils()->get_raw_course_price( $course->ID );
 									$regular_price = $course_price->regular_price;
 									$sale_price    = $course_price->sale_price;
