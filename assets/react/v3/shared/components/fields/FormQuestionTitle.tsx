@@ -200,7 +200,7 @@ const styles = {
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: ${spacing[8]};
-		min-height: 46px;
+		min-height: 50px;
     height: 100%;
     width: 100%;
     cursor: text;
@@ -208,6 +208,7 @@ const styles = {
     padding-block: ${spacing[8]};
     border-radius: ${borderRadius[6]};
 		transition: box-shadow 0.15s ease-in-out;
+    border: 1px solid transparent;
 
     &:hover {
       background-color: ${colorTokens.background.white};
@@ -250,6 +251,7 @@ const styles = {
 			&.tutor-input-field {
         border: none;
 				box-shadow: none;
+        padding-inline: 0;
 
         &:focus {
           border: none;

@@ -659,7 +659,10 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
       <Popover
         triggerRef={triggerGoogleMeetRef}
         isOpen={meetingType === 'googleMeet'}
-        closePopover={() => setMeetingType(null)}
+        closePopover={() => {
+          setMeetingType(null);
+          setIsThreeDotOpen(false);
+        }}
         maxWidth="306px"
       >
         <GoogleMeetForm
@@ -667,13 +670,17 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
           data={null}
           onCancel={() => {
             setMeetingType(null);
+            setIsThreeDotOpen(false);
           }}
         />
       </Popover>
       <Popover
         triggerRef={triggerZoomRef}
         isOpen={meetingType === 'zoom'}
-        closePopover={() => setMeetingType(null)}
+        closePopover={() => {
+          setMeetingType(null);
+          setIsThreeDotOpen(false);
+        }}
         maxWidth="306px"
       >
         <ZoomMeetingForm
@@ -682,6 +689,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
           data={null}
           onCancel={() => {
             setMeetingType(null);
+            setIsThreeDotOpen(false);
           }}
         />
       </Popover>

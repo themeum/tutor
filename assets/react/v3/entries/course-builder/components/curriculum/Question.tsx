@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
@@ -24,7 +25,6 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
-import { useFormContext } from 'react-hook-form';
 
 interface QuestionProps {
   question: QuizQuestion;
@@ -46,12 +46,12 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
 const courseId = getCourseId();
 
 const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
-  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
 
-  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation();
-  const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation();
+  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation(quizId);
+  const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation(quizId);
   const duplicateContentMutation = useDuplicateContentMutation();
 
   const handleDuplicateQuestion = () => {
@@ -60,6 +60,13 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       content_id: question.question_id,
       content_type: 'question',
     });
+    setSelectedQuestionId('');
+  };
+
+  const handleDeleteQuestion = () => {
+    deleteQuizQuestionMutation.mutate(question.question_id);
+    onRemoveQuestion();
+    setSelectedQuestionId('');
   };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -124,7 +131,6 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
         data-three-dots
       >
         <ThreeDots.Option
-          size="small"
           text={__('Duplicate', 'tutor')}
           icon={<SVGIcon name="duplicate" width={24} height={24} />}
           onClick={(event) => {
@@ -134,13 +140,11 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
         />
         <ThreeDots.Option
           isTrash
-          size="small"
           text={__('Delete', 'tutor')}
           icon={<SVGIcon name="delete" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
-            deleteQuizQuestionMutation.mutate(question.question_id);
-            onRemoveQuestion();
+            handleDeleteQuestion();
           }}
         />
       </ThreeDots>

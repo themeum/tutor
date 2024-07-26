@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
@@ -27,11 +28,9 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { nanoid } from '@Utils/util';
-import { useFormContext, useWatch } from 'react-hook-form';
 
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  hasMultipleCorrectAnswers: boolean;
   onDuplicateOption: (answerId: ID) => void;
   onRemoveOption: () => void;
 }
@@ -40,13 +39,12 @@ const courseId = getCourseId();
 
 const FormMultipleChoiceAndOrdering = ({
   field,
-  hasMultipleCorrectAnswers,
   onDuplicateOption,
   onRemoveOption,
   index,
 }: FormMultipleChoiceAndOrderingProps) => {
   const form = useFormContext<QuizForm>();
-  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
   const inputValue = field.value ?? {
     answer_id: nanoid(),
     answer_title: '',
@@ -70,9 +68,9 @@ const FormMultipleChoiceAndOrdering = ({
     return 'ordering';
   };
 
-  const createQuizAnswerMutation = useCreateQuizAnswerMutation();
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
-  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
+  const createQuizAnswerMutation = useCreateQuizAnswerMutation(quizId);
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
+  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation(quizId);
   const duplicateContentMutation = useDuplicateContentMutation();
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_url);
@@ -122,7 +120,7 @@ const FormMultipleChoiceAndOrdering = ({
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
-      is_correct: hasMultipleCorrectAnswers ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
+      is_correct: multipleCorrectAnswer ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
     });
     markAnswerAsCorrectMutation.mutate({
       answerId: inputValue.answer_id,
@@ -176,33 +174,38 @@ const FormMultipleChoiceAndOrdering = ({
       css={styles.option({
         isSelected: !!Number(inputValue.is_correct),
         isEditing,
-        isMultipleChoice: hasMultipleCorrectAnswers,
+        isMultipleChoice: multipleCorrectAnswer,
       })}
       ref={setNodeRef}
       style={style}
     >
-      <button css={styleUtils.resetButton} type="button" onClick={handleCorrectAnswer}>
-        <Show
-          when={hasMultipleCorrectAnswers}
-          fallback={
+      <Show when={currentQuestionType === 'multiple_choice'}>
+        <button css={styleUtils.resetButton} type="button" onClick={handleCorrectAnswer}>
+          <Show
+            when={multipleCorrectAnswer}
+            fallback={
+              <SVGIcon
+                data-check-icon
+                name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
+                height={32}
+                width={32}
+              />
+            }
+          >
             <SVGIcon
               data-check-icon
-              name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
+              name={Number(inputValue.is_correct) ? 'checkSquareFilled' : 'checkSquare'}
               height={32}
               width={32}
             />
-          }
-        >
-          <SVGIcon
-            data-check-icon
-            name={Number(inputValue.is_correct) ? 'checkSquareFilled' : 'checkSquare'}
-            height={32}
-            width={32}
-          />
-        </Show>
-      </button>
+          </Show>
+        </button>
+      </Show>
       <div
-        css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isEditing })}
+        css={styles.optionLabel({
+          isSelected: !!Number(inputValue.is_correct),
+          isEditing,
+        })}
         onClick={() => {
           setIsEditing(true);
         }}
@@ -345,9 +348,10 @@ const FormMultipleChoiceAndOrdering = ({
                     answer_title: value,
                   });
                 }}
-                onKeyDown={(event) => {
+                onKeyDown={async (event) => {
                   event.stopPropagation();
-                  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
+                    await createQuizAnswer();
                     setIsEditing(false);
                   }
                 }}
@@ -617,6 +621,7 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     resize: vertical;
+    cursor: text;
     
     &:focus {
       ${styleUtils.inputFocus}

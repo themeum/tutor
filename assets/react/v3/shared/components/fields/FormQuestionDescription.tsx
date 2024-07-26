@@ -9,12 +9,10 @@ import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 import { isDefined } from '@Utils/types';
 
-import FormFieldWrapper from './FormFieldWrapper';
+import FormWPEditor from './FormWPEditor';
 
 interface FormQuestionDescriptionProps extends FormControllerProps<string | null> {
   label?: string;
-  rows?: number;
-  columns?: number;
   maxLimit?: number;
   disabled?: boolean;
   readOnly?: boolean;
@@ -22,18 +20,10 @@ interface FormQuestionDescriptionProps extends FormControllerProps<string | null
   placeholder?: string;
   helpText?: string;
   onChange?: (value: string | number) => void;
-  onKeyDown?: (keyName: string) => void;
-  isHidden?: boolean;
-  enableResize?: boolean;
-  isSecondary?: boolean;
 }
-
-const DEFAULT_ROWS = 6;
 
 const FormQuestionDescription = ({
   label,
-  rows = DEFAULT_ROWS,
-  columns,
   maxLimit,
   field,
   fieldState,
@@ -43,10 +33,6 @@ const FormQuestionDescription = ({
   placeholder,
   helpText,
   onChange,
-  onKeyDown,
-  isHidden,
-  enableResize = false,
-  isSecondary = false,
 }: FormQuestionDescriptionProps) => {
   const inputValue = field.value ?? '';
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -93,55 +79,18 @@ const FormQuestionDescription = ({
           <div css={styles.placeholder} dangerouslySetInnerHTML={{ __html: field.value || placeholder || '' }} />
         }
       >
-        <FormFieldWrapper
-          label={label}
+        <FormWPEditor
           field={field}
           fieldState={fieldState}
+          label={label}
           disabled={disabled}
-          readOnly={readOnly}
-          loading={loading}
           helpText={helpText}
-          isHidden={isHidden}
-          characterCount={characterCount}
-          isSecondary={isSecondary}
-        >
-          {(inputProps) => {
-            return (
-              <>
-                <div css={styles.inputContainer(enableResize)}>
-                  <textarea
-                    {...field}
-                    {...inputProps}
-                    ref={textareaRef}
-                    value={inputValue}
-                    onChange={(event) => {
-                      const { value } = event.target;
-                      if (maxLimit && value.trim().length > maxLimit) {
-                        return;
-                      }
-
-                      field.onChange(value);
-
-                      if (onChange) {
-                        onChange(value);
-                      }
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Escape') {
-                        field.onChange(previousValue);
-                        setIsEdit(false);
-                      }
-                      onKeyDown?.(event.key);
-                    }}
-                    autoComplete="off"
-                    rows={rows}
-                    cols={columns}
-                  />
-                </div>
-              </>
-            );
-          }}
-        </FormFieldWrapper>
+          key={field.name}
+          loading={loading}
+          readOnly={readOnly}
+          onChange={onChange}
+          placeholder={placeholder}
+        />
         <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
           <Button
             variant="text"
@@ -227,8 +176,11 @@ const styles = {
     & textarea {
       ${typography.heading6()}
       height: auto;
-      padding: ${spacing[8]} ${spacing[12]};
       resize: none;
+
+      &.tutor-input-field {
+        padding: ${spacing[8]};
+      }
 
       ${
         enableResize &&

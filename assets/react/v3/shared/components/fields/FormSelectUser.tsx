@@ -200,7 +200,7 @@ const FormSelectUser = ({
                 <ul css={[styles.options]}>
                   {!isMultiSelect && (
                     <li css={styles.inputWrapperListItem}>
-                      <div css={styles.inputWrapper}>
+                      <div css={[styles.inputWrapper, styles.portalInputWrapper]}>
                         <div css={styles.leftIcon}>
                           <SVGIcon name="search" width={24} height={24} />
                         </div>
@@ -270,6 +270,8 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     position: relative;
+  `,
+  portalInputWrapper: css`
     padding: ${spacing[8]};
   `,
   inputWrapperListItem: css`

@@ -17,7 +17,7 @@ interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
 }
 
 const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
-  const { activeQuestionId } = useQuizModalContext();
+  const { activeQuestionId, quizId } = useQuizModalContext();
 
   const inputValue = field.value ?? {
     answer_id: nanoid(),
@@ -27,7 +27,7 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
     belongs_question_type: 'true_false',
   };
 
-  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation();
+  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation(quizId);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.value.answer_id || 0,
