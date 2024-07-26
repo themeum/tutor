@@ -162,6 +162,10 @@ class CartController {
 		$user_id   = tutils()->get_user_id();
 		$course_id = Input::post( 'course_id' );
 
+		if ( ! is_numeric( $course_id ) ) {
+			wp_send_json_error( __( 'Invalid course id.', 'tutor' ) );
+		}
+
 		// Check if the course already exists in the cart or not.
 		$is_course_in_user_cart = $this->model->is_course_in_user_cart( $user_id, $course_id );
 		if ( $is_course_in_user_cart ) {
@@ -196,6 +200,10 @@ class CartController {
 
 		$user_id   = tutils()->get_user_id();
 		$course_id = Input::post( 'course_id' );
+
+		if ( ! is_numeric( $course_id ) ) {
+			wp_send_json_error( __( 'Invalid course id.', 'tutor' ) );
+		}
 
 		$response = $this->model->delete_course_from_cart( $user_id, $course_id );
 
