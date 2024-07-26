@@ -19,6 +19,7 @@ import FormWPEditor from '@Components/fields/FormWPEditor';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -68,6 +69,7 @@ const LessonModal = ({
   subtitle,
   contentDripType,
 }: LessonModalProps) => {
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Prerequisites');
   const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
   const saveLessonMutation = useSaveLessonMutation(courseId);
@@ -107,6 +109,8 @@ const LessonModal = ({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     if (lessonDetails) {
       form.reset({
         title: lessonDetails.post_title || '',
@@ -130,12 +134,21 @@ const LessonModal = ({
           prerequisites: lessonDetails.content_drip_settings?.course_prerequisites || [],
         },
       });
+
+      timeoutId = setTimeout(() => {
+        form.setFocus('title');
+      }, 0);
     }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [lessonDetails]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('title');
-  }, [form]);
+  }, []);
 
   const onSubmit = async (data: LessonForm) => {
     const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
@@ -372,14 +385,17 @@ const LessonModal = ({
                 render={(controllerProps) => (
                   <FormSwitch
                     {...controllerProps}
+                    disabled={!isTutorPro || !isAddonEnabled('Tutor Course Preview')}
                     label={
                       <div css={styles.previewLabel}>
                         {__('Lesson Preview', 'tutor')}
-                        {!isAddonEnabled('Tutor Course Preview') && <SVGIcon name="crown" width={24} height={24} />}
+                        {!isTutorPro && !isAddonEnabled('Tutor Course Preview') && (
+                          <SVGIcon name="crown" width={24} height={24} />
+                        )}
                       </div>
                     }
                     helpText={
-                      isAddonEnabled('Tutor Course Preview')
+                      isTutorPro && isAddonEnabled('Tutor Course Preview')
                         ? __('If checked, any users/guest can view this lesson without enroll course', 'tutor')
                         : ''
                     }
