@@ -145,7 +145,7 @@ const TrueFalse = () => {
           <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
-                key={option.answer_id}
+                key={`${option.answer_id}-${option.is_correct}`}
                 control={form.control}
                 name={
                   `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
