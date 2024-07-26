@@ -10,6 +10,8 @@ const endpoints = {
 	ADD_ORDER_DISCOUNT: 'tutor_order_discount',
 	COURSE_LIST: 'course_list',
 	CATEGORY_LIST: 'category_list',
+	CREATED_COURSE: 'tutor_create_course',
+	TUTOR_INSTRUCTOR_SEARCH: 'tutor_course_instructor_search',
 };
 
 export default endpoints;

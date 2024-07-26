@@ -1,9 +1,11 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Fragment, useEffect, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -13,12 +15,11 @@ import { type QuizForm, type QuizQuestionOption, useCreateQuizAnswerMutation } f
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
-import { useFormContext } from 'react-hook-form';
 
 interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
 const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
-  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const inputValue = field.value ?? {
     answer_id: '',
@@ -33,7 +34,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const fillInTheBlanksCorrectAnswer = inputValue.answer_two_gap_match?.split('|');
 
-  const createQuizAnswerMutation = useCreateQuizAnswerMutation();
+  const createQuizAnswerMutation = useCreateQuizAnswerMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title || !inputValue.answer_two_gap_match);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
@@ -158,9 +159,10 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                       answer_title: event.target.value,
                     });
                   }}
-                  onKeyDown={(event) => {
+                  onKeyDown={async (event) => {
                     event.stopPropagation();
-                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
+                      await createQuizAnswer();
                       setIsEditing(false);
                     }
                   }}
@@ -192,8 +194,9 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                       answer_two_gap_match: event.target.value,
                     });
                   }}
-                  onKeyDown={(event) => {
-                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                  onKeyDown={async (event) => {
+                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_two_gap_match) {
+                      await createQuizAnswer();
                       setIsEditing(false);
                     }
                   }}

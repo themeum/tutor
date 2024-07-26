@@ -1,17 +1,19 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { type IconCollection, type Option, isDefined } from '@Utils/types';
-import { css } from '@emotion/react';
-import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
 import Show from '@Controls/Show';
 import { noop } from '@Utils/util';
-import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {
@@ -60,9 +62,14 @@ const FormSelectInput = <T,>({
   dataAttribute,
   isSecondary = false,
 }: FormSelectInputProps<T>) => {
-  const getInitialValue = () => options.find((item) => item.value === field.value);
+  const getInitialValue = () =>
+    options.find((item) => item.value === field.value) || {
+      label: '',
+      value: '',
+      description: '',
+    };
 
-  const hasDescription = options.some((option) => isDefined(option.description));
+  const hasDescription = useMemo(() => options.some((option) => isDefined(option.description)), [options]);
 
   const [inputValue, setInputValue] = useState(getInitialValue()?.label);
   const [searchText, setSearchText] = useState('');
@@ -94,14 +101,12 @@ const FormSelectInput = <T,>({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
       setInputValue(getInitialValue()?.label);
     }
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
   return (
@@ -165,7 +170,9 @@ const FormSelectInput = <T,>({
                   title={inputValue}
                   onChange={(event) => {
                     setInputValue(event.target.value);
-                    setSearchText(event.target.value);
+                    if (isSearchable) {
+                      setSearchText(event.target.value);
+                    }
                   }}
                   data-select
                 />

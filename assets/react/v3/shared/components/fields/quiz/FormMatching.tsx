@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
@@ -25,7 +26,6 @@ import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
-import { useFormContext, useWatch } from 'react-hook-form';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -36,7 +36,7 @@ interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
 const courseId = getCourseId();
 
 const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
-  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const inputValue = field.value ?? {
@@ -55,8 +55,8 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
     defaultValue: false,
   });
 
-  const createQuizAnswerMutation = useCreateQuizAnswerMutation();
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation();
+  const createQuizAnswerMutation = useCreateQuizAnswerMutation(quizId);
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
   const duplicateContentMutation = useDuplicateContentMutation();
 
   const [isEditing, setIsEditing] = useState(
@@ -257,9 +257,15 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                         answer_title: event.target.value,
                       });
                     }}
-                    onKeyDown={(event) => {
+                    onKeyDown={async (event) => {
                       event.stopPropagation();
-                      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                      if (
+                        (event.metaKey || event.ctrlKey) &&
+                        event.key === 'Enter' &&
+                        inputValue.answer_title &&
+                        inputValue.answer_two_gap_match
+                      ) {
+                        await createQuizAnswer();
                         setIsEditing(false);
                       }
                     }}
@@ -294,9 +300,15 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     answer_two_gap_match: event.target.value,
                   });
                 }}
-                onKeyDown={(event) => {
+                onKeyDown={async (event) => {
                   event.stopPropagation();
-                  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                  if (
+                    (event.metaKey || event.ctrlKey) &&
+                    event.key === 'Enter' &&
+                    inputValue.answer_title &&
+                    inputValue.answer_two_gap_match
+                  ) {
+                    await createQuizAnswer();
                     setIsEditing(false);
                   }
                 }}
@@ -328,7 +340,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
-                    createQuizAnswer();
+                    await createQuizAnswer();
                   }}
                   disabled={(!inputValue.answer_title && !inputValue.image_id) || !inputValue.answer_two_gap_match}
                 >

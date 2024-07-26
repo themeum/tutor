@@ -1,7 +1,6 @@
-import { authApiInstance, wpAuthApiInstance } from '@Utils/api';
+import { wpAjaxInstance, wpAuthApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { useQuery } from '@tanstack/react-query';
-import type { AxiosResponse } from 'axios';
 
 export interface User {
   id: number;
@@ -46,10 +45,11 @@ export const useUserListQuery = (params: UserParams) => {
 };
 
 const getInstructorList = (courseId: string) => {
-  return authApiInstance.post<string, AxiosResponse<InstructorListResponse[]>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_course_instructor_search',
-    course_id: courseId,
-  });
+  return wpAjaxInstance
+    .get<InstructorListResponse[]>(endpoints.TUTOR_INSTRUCTOR_SEARCH, {
+      params: { course_id: courseId },
+    })
+    .then((response) => response.data);
 };
 
 export const useInstructorListQuery = (courseId: string) => {
@@ -57,7 +57,7 @@ export const useInstructorListQuery = (courseId: string) => {
     queryKey: ['InstructorList', courseId],
     queryFn: () =>
       getInstructorList(courseId).then((res) => {
-        return res.data.map((item) => ({
+        return res.map((item) => ({
           id: item.id,
           name: item.display_name,
           email: item.user_email,

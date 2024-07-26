@@ -6,7 +6,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 
 import Show from '@Controls/Show';
@@ -190,12 +190,6 @@ const styles = {
 			${isClearable && `padding-right: ${spacing[36]};`};
 			${typography.body()}
 			width: 100%;
-			border: 1px solid ${colorTokens.stroke.default};
-			border-radius: ${borderRadius[6]};
-
-			:focus {
-				box-shadow: ${shadow.focus};
-			}
 		}
 	`,
 	clearButton: css`
@@ -213,18 +207,18 @@ const styles = {
 	`,
 	eyeButtonWrapper: css`
 		position: absolute;
-		right: ${spacing[4]};
-		top: -${spacing[2]};
-		width: 36px;
-		height: 36px;
+		display: flex;
+		right: ${spacing[8]};
+		top: 50%;
+		transform: translateY(-50%);
 		border-radius: ${borderRadius[2]};
 		background: transparent;
 	`,
 
 	eyeButton: ({ type }: { type: 'password' | 'text' | 'number' }) => css`
 		${styleUtils.resetButton}
-		padding: ${spacing[10]};
-		color: ${colorTokens.icon.default};
+		${styleUtils.flexCenter()}
+    color: ${colorTokens.icon.default};
 
 		${type !== 'password' &&
 		css`
