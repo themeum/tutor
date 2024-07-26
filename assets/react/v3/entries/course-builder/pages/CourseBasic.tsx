@@ -1,4 +1,10 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
+
 import SVGIcon from '@Atoms/SVGIcon';
+
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
 import FormImageInput from '@Components/fields/FormImageInput';
@@ -11,6 +17,7 @@ import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
 import { useModal } from '@Components/modals/Modal';
+
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
@@ -31,10 +38,6 @@ import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
 import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const courseId = getCourseId();
 
@@ -89,7 +92,9 @@ const CourseBasic = () => {
   ];
 
   const coursePriceOptions =
-    tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'tutor'
+    tutorConfig.settings.monetize_by === 'wc' ||
+    tutorConfig.settings.monetize_by === 'tutor' ||
+    tutorConfig.settings.monetize_by === 'edd'
       ? [
           {
             label: __('Free', 'tutor'),

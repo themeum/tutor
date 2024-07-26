@@ -107,7 +107,6 @@ const ThreeDots = ({
             if (React.isValidElement(child)) {
               const props = {
                 size,
-                onClosePopover: closePopover,
               };
 
               return React.cloneElement(child, props);

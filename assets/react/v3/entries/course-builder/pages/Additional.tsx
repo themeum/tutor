@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
@@ -75,12 +74,12 @@ const Additional = () => {
               name="course_benefits"
               control={form.control}
               render={(controllerProps) => (
-                <FormInput
+                <FormTextareaInput
                   {...controllerProps}
                   label={__('What Will I Learn?', 'tutor')}
-                  placeholder={__('Write here the course benefits', 'tutor')}
-                  maxLimit={245}
-                  selectOnFocus
+                  placeholder={__('Write here the course benefits (One Per Line)', 'tutor')}
+                  rows={2}
+                  enableResize
                 />
               )}
             />
@@ -89,11 +88,15 @@ const Additional = () => {
               name="course_target_audience"
               control={form.control}
               render={(controllerProps) => (
-                <FormInput
+                <FormTextareaInput
                   {...controllerProps}
                   label={__('Targeted Audience', 'tutor')}
-                  placeholder={__('Specify the target audience that will benefit the most from the course', 'tutor')}
-                  selectOnFocus
+                  placeholder={__(
+                    'Specify the target audience that will benefit the most from the course.(One Line Per target audience)',
+                    'tutor',
+                  )}
+                  rows={2}
+                  enableResize
                 />
               )}
             />
@@ -136,10 +139,10 @@ const Additional = () => {
                   {...controllerProps}
                   label={__('Materials Included', 'tutor')}
                   placeholder={__(
-                    'A list of assets you will be providing for the students in this course (One per line)',
+                    'A list of assets you will be providing for the students in this course (One Per Line)',
                     'tutor',
                   )}
-                  rows={3}
+                  rows={4}
                   enableResize
                 />
               )}
@@ -149,11 +152,15 @@ const Additional = () => {
               name="course_requirements"
               control={form.control}
               render={(controllerProps) => (
-                <FormInput
+                <FormTextareaInput
                   {...controllerProps}
                   label={__('Requirements/Instructions', 'tutor')}
-                  placeholder={__('Additional requirements or special instructions for the students', 'tutor')}
-                  selectOnFocus
+                  placeholder={__(
+                    'Additional requirements or special instructions for the students (One Per Line)',
+                    'tutor',
+                  )}
+                  rows={2}
+                  enableResize
                 />
               )}
             />
