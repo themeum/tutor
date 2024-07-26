@@ -16,6 +16,7 @@ import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { ContentDripType, TutorMutationResponse } from './course';
 import type { ID } from './curriculum';
+import { Addons } from '@Config/constants';
 
 export type QuizQuestionType =
   | 'true_false'
@@ -325,7 +326,7 @@ export const convertQuizFormDataToPayload = (
     'quiz_option[short_answer_characters_limit]': formData.quiz_option.short_answer_characters_limit,
     'quiz_option[open_ended_answer_characters_limit]': formData.quiz_option.open_ended_answer_characters_limit,
     'quiz_option[hide_quiz_time_display]': formData.quiz_option.hide_quiz_time_display ? 1 : 0,
-    ...(isAddonEnabled('Content Drip') &&
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'unlock_sequentially' &&
       formData.quiz_option.feedback_mode === 'retry' && {
         'quiz_option[pass_is_required]': formData.quiz_option.pass_is_required ? 1 : 0,
