@@ -12,6 +12,7 @@ namespace Tutor\Ecommerce;
 
 use Tutor\Models\OrderActivitiesModel;
 use TUTOR\Course;
+use Tutor\Models\OrderModel;
 
 /**
  * Handle custom hooks
@@ -119,7 +120,25 @@ class HooksHandler {
 	 * @return void
 	 */
 	public function manage_earnings( $bulk_action, $order_ids ) {
+		$actions = array(
+			OrderModel::PAYMENT_PAID,
+			OrderModel::PAYMENT_UNPAID,
+		);
 
+		if ( in_array( $bulk_action, $actions ) ) {
+			foreach ( $order_ids as $order_id ) {
+				$earnings = EarningController::instance();
+				$earnings->prepare_order_earnings( $order_id );
+				try {
+					$earning_id = $earnings->remove_before_store_earnings();
+					if ( $earning_id ) {
+						do_action( 'tutor_ecommerce_after_earning_stored', $earning_id, $earnings->earning_data );
+					}
+				} catch ( \Throwable $th ) {
+					error_log( $th->getMessage() );
+				}
+			}
+		}
 	}
 }
 
