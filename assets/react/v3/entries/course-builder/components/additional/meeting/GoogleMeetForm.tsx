@@ -126,11 +126,10 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
         meeting_enrolledAsAttendee: currentMeeting.meeting_data.attendees === 'Yes' ? true : false,
       });
     }
-    const timeout = setTimeout(() => {
-      meetingForm.setFocus('meeting_name');
-    }, 0);
 
-    return () => clearTimeout(timeout);
+    Promise.resolve().then(() => {
+      meetingForm.setFocus('meeting_name');
+    });
   }, [currentMeeting]);
 
   return (
