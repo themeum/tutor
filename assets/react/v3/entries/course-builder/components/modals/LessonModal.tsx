@@ -20,6 +20,7 @@ import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
 import { tutorConfig } from '@Config/config';
+import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -70,7 +71,7 @@ const LessonModal = ({
   contentDripType,
 }: LessonModalProps) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
-  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Prerequisites');
+  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
   const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
   const saveLessonMutation = useSaveLessonMutation(courseId);
 
@@ -109,8 +110,6 @@ const LessonModal = ({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-
     if (lessonDetails) {
       form.reset({
         title: lessonDetails.post_title || '',
@@ -135,14 +134,14 @@ const LessonModal = ({
         },
       });
 
-      timeoutId = setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         form.setFocus('title');
       }, 0);
-    }
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
   }, [lessonDetails]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -298,7 +297,7 @@ const LessonModal = ({
               </div>
             </div>
 
-            <Show when={isAddonEnabled('Content Drip')}>
+            <Show when={isAddonEnabled(Addons.CONTENT_DRIP)}>
               <Show when={contentDripType === 'specific_days'}>
                 <Controller
                   name="content_drip_settings.after_xdays_of_enroll"
@@ -385,17 +384,17 @@ const LessonModal = ({
                 render={(controllerProps) => (
                   <FormSwitch
                     {...controllerProps}
-                    disabled={!isTutorPro || !isAddonEnabled('Tutor Course Preview')}
+                    disabled={!isTutorPro || !isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)}
                     label={
                       <div css={styles.previewLabel}>
                         {__('Lesson Preview', 'tutor')}
-                        {!isTutorPro && !isAddonEnabled('Tutor Course Preview') && (
+                        {!isTutorPro && !isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && (
                           <SVGIcon name="crown" width={24} height={24} />
                         )}
                       </div>
                     }
                     helpText={
-                      isTutorPro && isAddonEnabled('Tutor Course Preview')
+                      isTutorPro && isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)
                         ? __('If checked, any users/guest can view this lesson without enroll course', 'tutor')
                         : ''
                     }
