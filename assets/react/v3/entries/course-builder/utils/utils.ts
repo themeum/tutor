@@ -179,17 +179,17 @@ export const convertLessonDataToPayload = (
     'video[runtime][hours]': data.duration.hour || 0,
     'video[runtime][minutes]': data.duration.minute || 0,
     'video[runtime][seconds]': data.duration.second || 0,
-    ...(isAddonEnabled('Tutor Course Preview') && { _is_preview: data.lesson_preview ? 1 : 0 }),
+    ...(isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && { _is_preview: data.lesson_preview ? 1 : 0 }),
     tutor_attachments: data.tutor_attachments.map((attachment) => attachment.id),
-    ...(isAddonEnabled('Content Drip') &&
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'unlock_by_date' && {
         'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
       }),
-    ...(isAddonEnabled('Content Drip') &&
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'specific_days' && {
         'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
       }),
-    ...(isAddonEnabled('Content Drip') &&
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
         'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
       }),
@@ -215,15 +215,15 @@ export const convertAssignmentDataToPayload = (
     'assignment_option[upload_files_limit]': data.upload_files_limit,
     'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
 
-    ...(isAddonEnabled('Content Drip') &&
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'unlock_by_date' && {
         'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
       }),
-    ...(isAddonEnabled('Content Drip') &&
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'specific_days' && {
         'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
       }),
-    ...(isAddonEnabled('Content Drip') &&
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
         'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
       }),

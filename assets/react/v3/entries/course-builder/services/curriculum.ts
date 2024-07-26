@@ -190,15 +190,15 @@ export const useSaveTopicMutation = () => {
           message: __('Topic saved successfully', 'tutor'),
           type: 'success',
         });
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
       }
     },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['Topic'],
       });
     },
   });
