@@ -12,6 +12,7 @@ import Tabs from '@Molecules/Tabs';
 
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import { tutorConfig } from '@Config/config';
+import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
@@ -37,7 +38,7 @@ const CourseSettings = () => {
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
       activeBadge: isContentDripActive ? true : false,
     },
-    ...(isAddonEnabled('BuddyPress')
+    ...(isAddonEnabled(Addons.BUDDYPRESS)
       ? [
           {
             label: __('BuddyPress', 'tutor'),
