@@ -282,9 +282,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				const post = await ajaxHandler(formData);
 				if (post.ok) {
 					const {success, data} = await post.json();
-					if (success) {
-						tutor_toast(__('Success!', 'tutor'), data, 'success');
+					if (success) {						
 						e.target.closest('.tutor-option-single-item').remove(); 
+						tutor_toast(__('Success!', 'tutor'), data, 'success');
 					} else {
 						tutor_toast(__('Failed!', 'tutor'), data, 'error');
 					}

@@ -56,6 +56,7 @@ class Ecommerce {
 
 		new AdminMenu();
 		new Settings();
+		new CartController();
 		new OrderController();
 		new OrderActivitiesController();
 		new CouponController();

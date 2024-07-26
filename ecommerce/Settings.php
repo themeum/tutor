@@ -264,7 +264,9 @@ class Settings {
 	 * @return void send wp_json response
 	 */
 	public static function ajax_add_manual_payment_method() {
-		tutor_utils()->checking_nonce();
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			wp_send_json_error( tutor_utils()->error_message( 'nonce' ) );
+		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
@@ -310,7 +312,9 @@ class Settings {
 	 * @return void send wp_json response
 	 */
 	public static function ajax_delete_manual_payment_method() {
-		tutor_utils()->checking_nonce();
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			wp_send_json_error( tutor_utils()->error_message( 'nonce' ) );
+		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
@@ -524,7 +528,7 @@ class Settings {
 	public static function get_default_automate_payment_gateways() {
 		$gateways = array(
 			'paypal' => array(
-				'label'     => 'Papal',
+				'label'     => 'Paypal',
 				'is_active' => self::is_active( 'paypal' ),
 			),
 			'stripe' => array(
