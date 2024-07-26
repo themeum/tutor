@@ -255,42 +255,44 @@ const FormMultipleChoiceAndOrdering = ({
             <SVGIcon name="dragVertical" height={24} width={24} />
           </button>
 
-          <div css={styles.optionActions}>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-edit-button
-              onClick={(event) => {
-                event.stopPropagation();
-                setIsEditing(true);
-              }}
-            >
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={(event) => {
-                event.stopPropagation();
-                handleDuplicateAnswer();
-              }}
-            >
-              <SVGIcon name="copyPaste" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={(event) => {
-                event.stopPropagation();
-                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
-                onRemoveOption();
-              }}
-            >
-              <SVGIcon name="delete" width={24} height={24} />
-            </button>
-          </div>
+          <Show when={inputValue.answer_id}>
+            <div css={styles.optionActions}>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-edit-button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsEditing(true);
+                }}
+              >
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleDuplicateAnswer();
+                }}
+              >
+                <SVGIcon name="copyPaste" width={24} height={24} />
+              </button>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                onClick={(event) => {
+                  event.stopPropagation();
+                  deleteQuizAnswerMutation.mutate(inputValue.answer_id);
+                  onRemoveOption();
+                }}
+              >
+                <SVGIcon name="delete" width={24} height={24} />
+              </button>
+            </div>
+          </Show>
         </div>
         <div css={styles.optionBody}>
           <Show

@@ -45,7 +45,6 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
       question_id: inputValue.belongs_question_id,
       answer_title: inputValue.answer_title,
       image_id: inputValue.image_id || '',
-      answer_view_format: 'text_image',
       ...(!inputValue.answer_id && { question_type: 'fill_in_the_blank' }),
     });
 

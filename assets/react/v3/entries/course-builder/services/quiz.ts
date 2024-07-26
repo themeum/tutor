@@ -215,7 +215,7 @@ interface CreateQuizQuestionAnswerPayload {
   answer_title: string;
   image_id: ID;
   question_type?: QuizQuestionType;
-  answer_view_format: string;
+  answer_view_format?: string;
   matched_answer_title?: string; //only when question type matching or image matching
 }
 
@@ -691,16 +691,16 @@ export const useCreateQuizAnswerMutation = (quizId: ID) => {
           message: __(response.message, 'tutor'),
           type: 'success',
         });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Quiz', quizId],
+        });
       }
     },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['Quiz', quizId],
       });
     },
   });

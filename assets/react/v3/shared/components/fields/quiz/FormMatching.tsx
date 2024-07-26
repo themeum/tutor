@@ -143,6 +143,8 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
     }
   }, [isEditing]);
 
+  console.log(!inputValue.answer_title, !inputValue.image_id);
+
   return (
     <div {...attributes} css={styles.option({ isEditing })} ref={setNodeRef} style={style}>
       <div
@@ -166,42 +168,44 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
             <SVGIcon name="dragVertical" height={24} width={24} />
           </button>
 
-          <div css={styles.optionActions}>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-edit-button
-              onClick={(event) => {
-                event.stopPropagation();
-                setIsEditing(true);
-              }}
-            >
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={(event) => {
-                event.stopPropagation();
-                handleDuplicateAnswer();
-              }}
-            >
-              <SVGIcon name="copyPaste" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={(event) => {
-                event.stopPropagation();
-                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
-                onRemoveOption();
-              }}
-            >
-              <SVGIcon name="delete" width={24} height={24} />
-            </button>
-          </div>
+          <Show when={inputValue.answer_id}>
+            <div css={styles.optionActions}>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-edit-button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsEditing(true);
+                }}
+              >
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleDuplicateAnswer();
+                }}
+              >
+                <SVGIcon name="copyPaste" width={24} height={24} />
+              </button>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                onClick={(event) => {
+                  event.stopPropagation();
+                  deleteQuizAnswerMutation.mutate(inputValue.answer_id);
+                  onRemoveOption();
+                }}
+              >
+                <SVGIcon name="delete" width={24} height={24} />
+              </button>
+            </div>
+          </Show>
         </div>
         <div css={styles.optionBody}>
           <Show
@@ -232,46 +236,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   </Show>
                 </Show>
                 <div css={styles.optionPlaceholder}>
-                  {inputValue.answer_two_gap_match || __('Matched answer title...', 'tutor')}
+                  {imageMatching ? inputValue.answer_two_gap_match : inputValue.answer_title}
                 </div>
               </div>
             }
           >
             <div css={styles.optionInputWrapper}>
-              <Show
-                when={imageMatching}
-                fallback={
-                  <input
-                    {...field}
-                    ref={inputRef}
-                    type="text"
-                    css={styles.optionInput}
-                    placeholder={__('Write anything..', 'tutor')}
-                    value={inputValue.answer_title}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                    }}
-                    onChange={(event) => {
-                      field.onChange({
-                        ...inputValue,
-                        answer_title: event.target.value,
-                      });
-                    }}
-                    onKeyDown={async (event) => {
-                      event.stopPropagation();
-                      if (
-                        (event.metaKey || event.ctrlKey) &&
-                        event.key === 'Enter' &&
-                        inputValue.answer_title &&
-                        inputValue.answer_two_gap_match
-                      ) {
-                        await createQuizAnswer();
-                        setIsEditing(false);
-                      }
-                    }}
-                  />
-                }
-              >
+              <Show when={imageMatching}>
                 <ImageInput
                   value={{
                     id: Number(inputValue.image_id),
@@ -288,16 +259,17 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
               <input
                 {...field}
                 type="text"
+                ref={inputRef}
                 css={styles.optionInput}
-                placeholder={__('Matched option..', 'tutor')}
-                value={inputValue.answer_two_gap_match}
+                placeholder={__('Write anything..', 'tutor')}
+                value={inputValue.answer_title}
                 onClick={(event) => {
                   event.stopPropagation();
                 }}
                 onChange={(event) => {
                   field.onChange({
                     ...inputValue,
-                    answer_two_gap_match: event.target.value,
+                    answer_title: event.target.value,
                   });
                 }}
                 onKeyDown={async (event) => {
@@ -313,6 +285,36 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   }
                 }}
               />
+              <Show when={!imageMatching}>
+                <input
+                  {...field}
+                  type="text"
+                  css={styles.optionInput}
+                  placeholder={__('Matched option..', 'tutor')}
+                  value={inputValue.answer_two_gap_match}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
+                  onChange={(event) => {
+                    field.onChange({
+                      ...inputValue,
+                      answer_two_gap_match: event.target.value,
+                    });
+                  }}
+                  onKeyDown={async (event) => {
+                    event.stopPropagation();
+                    if (
+                      (event.metaKey || event.ctrlKey) &&
+                      event.key === 'Enter' &&
+                      inputValue.answer_title &&
+                      inputValue.answer_two_gap_match
+                    ) {
+                      await createQuizAnswer();
+                      setIsEditing(false);
+                    }
+                  }}
+                />
+              </Show>
               <div css={styles.optionInputButtons}>
                 <Button
                   variant="text"
@@ -342,7 +344,10 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     event.stopPropagation();
                     await createQuizAnswer();
                   }}
-                  disabled={(!inputValue.answer_title && !inputValue.image_id) || !inputValue.answer_two_gap_match}
+                  disabled={
+                    !inputValue.answer_title ||
+                    (imageMatching ? !inputValue.image_id : !inputValue.answer_two_gap_match)
+                  }
                 >
                   {__('Ok', 'tutor')}
                 </Button>
