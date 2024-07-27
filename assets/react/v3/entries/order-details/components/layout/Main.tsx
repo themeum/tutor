@@ -12,49 +12,49 @@ import { css } from '@emotion/react';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 
 function Main() {
-  const orderId = getQueryParam('id', 'number');
+	const orderId = getQueryParam('id', 'number');
 
-  if (!isDefined(orderId)) {
-    return null;
-  }
+	if (!isDefined(orderId)) {
+		return null;
+	}
 
-  return (
-    <div css={styles.wrapper}>
-      <OrderProvider orderId={orderId}>
-        <Topbar />
-        <Container>
-          <div css={styles.content}>
-            <div css={styles.left}>
-              <Summary />
-              <Payment />
-              <Activities />
-            </div>
-            <div css={styles.right}>
-              <Student />
-              <Notes />
-            </div>
-          </div>
-        </Container>
-      </OrderProvider>
-    </div>
-  );
+	return (
+		<div css={styles.wrapper}>
+			<OrderProvider orderId={orderId}>
+				<Topbar />
+				<Container>
+					<div css={styles.content}>
+						<div css={styles.left}>
+							<Summary />
+							<Payment />
+							<Activities />
+						</div>
+						<div css={styles.right}>
+							<Student />
+							<Notes />
+						</div>
+					</div>
+				</Container>
+			</OrderProvider>
+		</div>
+	);
 }
 
 export default Main;
 
 const styles = {
-  wrapper: css`
+	wrapper: css`
 		background-color: ${colorTokens.background.default};
 	`,
 
-  content: css`
+	content: css`
 		min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
 		width: 100%;
 		display: flex;
 		gap: ${spacing[24]};
 		margin-top: ${spacing[32]};
 	`,
-  left: css`
+	left: css`
 		max-width: 736px;
 		width: 100%;
 		flex-shrink: 0;
@@ -62,7 +62,7 @@ const styles = {
 		flex-direction: column;
 		gap: ${spacing[16]};
 	`,
-  right: css`
+	right: css`
 		width: 100%;
 		display: flex;
 		flex-direction: column;
