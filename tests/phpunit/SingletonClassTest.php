@@ -12,8 +12,6 @@ use TUTOR\Singleton;
 
 /**
  * MySingletonClass class
- *
- * Run test by: vendor/bin/phpunit --filter=MySingletonClass
  */
 class MySingletonClass extends Singleton {
 	/**
@@ -28,6 +26,8 @@ class MySingletonClass extends Singleton {
 
 /**
  * SingletonClassTest Class
+ *
+ * Run test by: vendor/bin/phpunit --filter=SingletonClassTest
  *
  * @since 3.0.0
  */
