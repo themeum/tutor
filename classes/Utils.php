@@ -10240,6 +10240,61 @@ class Utils {
 	}
 
 	/**
+	 * Get editor list for post content.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $post_id post id.
+	 *
+	 * @return array
+	 */
+	public static function get_editor_list( $post_id ) {
+		$editors = array();
+
+		$gutenberg_enabled = (bool) tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
+		if ( $gutenberg_enabled ) {
+			$name             = 'gutenberg';
+			$editors[ $name ] = array(
+				'name'  => $name,
+				'label' => __( 'Edit with Gutenberg', 'tutor' ),
+				'link'  => add_query_arg(
+					array(
+						'post'   => $post_id,
+						'action' => 'edit',
+					),
+					get_admin_url( null, 'post.php' )
+				),
+			);
+		}
+
+		if ( is_plugin_active( 'droip/droip.php' ) ) {
+			$name             = 'droip';
+			$editors[ $name ] = array(
+				'name'  => $name,
+				'label' => __( 'Edit with Droip', 'tutor' ),
+				'link'  => add_query_arg(
+					array(
+						'action'  => 'droip',
+						'post_id' => $post_id,
+					),
+					get_permalink( $post_id )
+				),
+			);
+		}
+
+		if ( is_plugin_active( 'elementor/elementor.php' ) ) {
+			$name             = 'elementor';
+			$editors[ $name ] = array(
+				'name'  => $name,
+				'label' => __( 'Edit with Elementor', 'tutor' ),
+				'link'  => get_admin_url() . 'post.php?post=' . $post_id . '&action=elementor',
+			);
+		}
+
+		return apply_filters( 'tutor_course_builder_editor_list', $editors, $post_id );
+	}
+
+	/**
 	 * Check which editor is used for edit content.
 	 *
 	 * @since 3.0.0
@@ -10259,8 +10314,10 @@ class Utils {
 		$content = get_post_field( 'post_content', $post_id );
 		if ( has_blocks( $content ) ) {
 			$name = 'gutenberg';
-		} elseif ( get_post_meta( $post_id, '_elementor_data', true ) ) {
+		} elseif ( 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) ) {
 			$name = 'elementor';
+		} elseif ( 'droip' === get_post_meta( $post_id, 'droip_editor_mode', true ) ) {
+			$name = 'droip';
 		}
 
 		$editor_list = $this->get_editor_list( $post_id );
