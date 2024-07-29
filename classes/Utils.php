@@ -10248,7 +10248,7 @@ class Utils {
 	 *
 	 * @return array
 	 */
-	public static function get_editor_list( $post_id ) {
+	public function get_editor_list( $post_id ) {
 		$editors = array();
 
 		$gutenberg_enabled = (bool) tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
@@ -10303,7 +10303,7 @@ class Utils {
 	 *
 	 * @return string
 	 */
-	function get_editor_used( $post_id ) {
+	public function get_editor_used( $post_id ) {
 		$name   = 'classic';
 		$editor = array(
 			'name'  => $name,
