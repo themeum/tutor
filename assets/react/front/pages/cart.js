@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const deleteButtons = document.querySelectorAll('.tutor-cart-remove-button');
         deleteButtons.forEach((button) => {
             button.addEventListener('click', async (e) => {
-                const formData = tutorFormData([{ action: 'tutor_add_course_to_cart', course_id: button.dataset.courseId }]);
+                const formData = tutorFormData([{ action: 'tutor_delete_course_from_cart', course_id: button.dataset.courseId }]);
 
                 try {
                     button.setAttribute('disabled', 'disabled');
