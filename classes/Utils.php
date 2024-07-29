@@ -1136,7 +1136,7 @@ class Utils {
 	 *
 	 * @since 3.0.0
 	 *
-	 * If monetize by is Tutor then it will return course 
+	 * If monetize by is Tutor then it will return course
 	 * formatted price
 	 *
 	 * @see tutor_get_course_formatted_price
@@ -8566,7 +8566,7 @@ class Utils {
 				$plugins_data[ $base_name ]['url'] = $thumbnailURL;
 
 				// Add add-on enable status.
-				$addon_url                                = "tutor-pro/addons/{$base_name}/{$base_name}.php";
+				$addon_url = "tutor-pro/addons/{$base_name}/{$base_name}.php";
 
 				$plugins_data[ $base_name ]['is_enabled'] = $has_pro && isset( $addons_config[ $addon_url ]['is_enable'] ) ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
 			}
@@ -10237,5 +10237,27 @@ class Utils {
 		);
 
 		return $options;
+	}
+
+	/**
+	 * Check which editor is used for edit content.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $post_id post id.
+	 *
+	 * @return string
+	 */
+	function get_editor_used( $post_id ) {
+		$editor  = 'classic';
+		$content = get_post_field( 'post_content', $post_id );
+
+		if ( has_blocks( $content ) ) {
+			$editor = 'gutenberg';
+		} elseif ( get_post_meta( $post_id, '_elementor_data', true ) ) {
+			$editor = 'elementor';
+		}
+
+		return $editor;
 	}
 }
