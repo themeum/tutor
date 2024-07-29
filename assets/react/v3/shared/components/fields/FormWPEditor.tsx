@@ -10,6 +10,8 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   placeholder?: string;
   helpText?: string;
   onChange?: (value: string) => void;
+  generateWithAi?: boolean;
+  onClickAiButton?: () => void;
 }
 
 const FormWPEditor = ({
@@ -22,6 +24,8 @@ const FormWPEditor = ({
   placeholder,
   helpText,
   onChange,
+  generateWithAi = false,
+  onClickAiButton,
 }: FormWPEditorProps) => {
   return (
     <FormFieldWrapper
@@ -33,6 +37,8 @@ const FormWPEditor = ({
       loading={loading}
       placeholder={placeholder}
       helpText={helpText}
+      generateWithAi={generateWithAi}
+      onClickAiButton={onClickAiButton}
     >
       {() => {
         return (
