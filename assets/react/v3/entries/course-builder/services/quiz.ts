@@ -10,13 +10,13 @@ import type {
   QuizTimeLimit,
 } from '@CourseBuilderComponents/modals/QuizModal';
 
+import { Addons } from '@Config/constants';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { ContentDripType, TutorMutationResponse } from './course';
 import type { ID } from './curriculum';
-import { Addons } from '@Config/constants';
 
 export type QuizQuestionType =
   | 'true_false'
@@ -60,6 +60,7 @@ interface BaseQuizQuestion {
     question_mark: number;
     show_question_mark: boolean;
   };
+  question_answers: QuizQuestionOption[];
 }
 
 interface TrueFalseQuizQuestion extends BaseQuizQuestion {
@@ -210,21 +211,25 @@ interface QuizQuestionAnswerOrderingPayload {
   sorted_answer_ids: ID[];
 }
 
-interface CreateQuizQuestionAnswerPayload {
+interface SaveQuizQuestionAnswerPayload {
   question_id: ID;
   answer_id?: ID; //only for update
   answer_title: string;
   image_id: ID;
   question_type?: QuizQuestionType;
-  answer_view_format: string;
+  answer_view_format?: string;
+  answer_two_gap_match?: string;
   matched_answer_title?: string; //only when question type matching or image matching
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
   const convertedQuestion = (question: QuizQuestion): QuizQuestion => {
+    question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
+    question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
+    question.randomizeQuestion = !!Number(question.question_settings.randomize_options);
+
     switch (question.question_type) {
       case 'single_choice': {
-        // @ts-expect-error
         return {
           ...question,
           question_type: 'multiple_choice',
@@ -258,7 +263,6 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
         };
       }
       case 'image_matching': {
-        // @ts-expect-error
         return {
           ...question,
           question_type: 'matching',
@@ -273,6 +277,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
         return question;
     }
   };
+
   return {
     quiz_title: quiz.post_title || '',
     quiz_description: quiz.post_content || '',
@@ -520,11 +525,22 @@ export const useCreateQuizQuestionMutation = () => {
 
   return useMutation({
     mutationFn: createQuizQuestion,
-    onSuccess: (response) => {
+    onSuccess: (response, payload) => {
       if (response.data) {
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
+        });
+
+        queryClient.setQueryData(['Quiz', payload], (oldData: QuizDetailsResponse) => {
+          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as QuizDetailsResponse;
+          if (oldDataCopy) {
+            return {
+              ...oldDataCopy,
+              questions: oldData.questions.length ? [...oldData.questions, response.data] : [response.data],
+            };
+          }
+          return oldDataCopy;
         });
       }
     },
@@ -673,24 +689,67 @@ export const useQuizQuestionAnswerOrderingMutation = (quizId: ID) => {
   });
 };
 
-const createQuizAnswer = (payload: CreateQuizQuestionAnswerPayload) => {
-  return authApiInstance.post<CreateQuizQuestionAnswerPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
+const saveQuizAnswer = (payload: SaveQuizQuestionAnswerPayload) => {
+  return authApiInstance.post<SaveQuizQuestionAnswerPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_answer_save',
     ...payload,
   });
 };
 
-export const useCreateQuizAnswerMutation = (quizId: ID) => {
+export const useSaveQuizAnswerMutation = (quizId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
-    mutationFn: createQuizAnswer,
-    onSuccess: (response) => {
+    mutationFn: saveQuizAnswer,
+    onSuccess: (response, payload) => {
       if (response.status_code === 200 || response.status_code === 201) {
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
+        });
+
+        queryClient.setQueryData(['Quiz', quizId], (oldData: QuizDetailsResponse) => {
+          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as QuizDetailsResponse;
+          if (!oldDataCopy) {
+            return;
+          }
+
+          return {
+            ...oldDataCopy,
+            questions: oldDataCopy.questions.map((question) => {
+              if (String(question.question_id) !== String(payload.question_id)) {
+                return question;
+              }
+
+              return {
+                ...question,
+                question_type: payload.question_type,
+
+                question_answers: payload.answer_id
+                  ? question.question_answers.map((answer) =>
+                      String(answer.answer_id) === String(payload.answer_id) ? Object.assign(answer, payload) : answer,
+                    )
+                  : [
+                      ...question.question_answers,
+                      {
+                        answer_id: String(response.data),
+                        belongs_question_id: payload.question_id,
+                        belongs_question_type: payload.question_type,
+                        answer_title: payload.answer_title,
+                        is_correct: '0',
+                        image_id: payload.image_id,
+                        image_url: '',
+                        answer_two_gap_match: payload.answer_two_gap_match,
+                        answer_view_format: payload.answer_view_format,
+                        answer_order: question.question_answers.length
+                          ? question.question_answers[question.question_answers.length - 1].answer_order + 1
+                          : 1,
+                      },
+                    ],
+              };
+            }),
+          };
         });
       }
     },

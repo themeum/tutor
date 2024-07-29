@@ -76,12 +76,7 @@ const QuestionForm = () => {
             control={form.control}
             name={`questions.${activeQuestionIndex}.question_description` as 'questions.0.question_description'}
             render={(controllerProps) => (
-              <FormQuestionDescription
-                {...controllerProps}
-                placeholder={__('Description (optional)', 'tutor')}
-                enableResize
-                rows={2}
-              />
+              <FormQuestionDescription {...controllerProps} placeholder={__('Description (optional)', 'tutor')} />
             )}
           />
         </div>
