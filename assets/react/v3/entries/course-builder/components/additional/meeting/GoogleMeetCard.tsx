@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
+import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -14,20 +15,16 @@ import { type GoogleMeet, useDeleteGoogleMeetMutation } from '@CourseBuilderServ
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import { useRef, useState } from 'react';
 import GoogleMeetForm from './GoogleMeetForm';
 
 interface GoogleMeetMeetingCardProps {
   data: GoogleMeet;
-  timezones: {
-    [key: string]: string;
-  };
   topicId?: string;
 }
 
 const courseId = getCourseId();
 
-const GoogleMeetMeetingCard = ({ data, timezones, topicId }: GoogleMeetMeetingCardProps) => {
+const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const deleteGoogleMeetMeetingMutation = useDeleteGoogleMeetMutation(String(courseId), {
     'post-id': data.ID,

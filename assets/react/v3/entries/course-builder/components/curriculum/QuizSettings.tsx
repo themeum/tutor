@@ -12,6 +12,7 @@ import FormSwitch from '@Components/fields/FormSwitch';
 
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import FormDateInput from '@Components/fields/FormDateInput';
+import { Addons } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import {
@@ -31,9 +32,9 @@ interface QuizSettingsProps {
 
 const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const form = useFormContext<QuizForm>();
-  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Prerequisites');
+  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
   const showPassRequired =
-    isAddonEnabled('Content Drip') &&
+    isAddonEnabled(Addons.CONTENT_DRIP) &&
     contentDripType === 'unlock_sequentially' &&
     form.watch('quiz_option.feedback_mode') === 'retry';
 
@@ -190,7 +191,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             )}
           />
 
-          <Show when={isAddonEnabled('Content Drip')}>
+          <Show when={isAddonEnabled(Addons.CONTENT_DRIP)}>
             <Show when={contentDripType === 'specific_days'}>
               <Controller
                 name="quiz_option.content_drip_settings.after_xdays_of_enroll"

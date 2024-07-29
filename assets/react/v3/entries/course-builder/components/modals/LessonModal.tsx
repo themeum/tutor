@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
@@ -13,11 +14,13 @@ import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSwitch from '@Components/fields/FormSwitch';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
+import FormWPEditor from '@Components/fields/FormWPEditor';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
+import { tutorConfig } from '@Config/config';
+import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -67,13 +70,10 @@ const LessonModal = ({
   subtitle,
   contentDripType,
 }: LessonModalProps) => {
-  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Prerequisites');
-  const getLessonDetailsQuery = useLessonDetailsQuery(topicId, lessonId);
-  const saveLessonMutation = useSaveLessonMutation({
-    courseId,
-    topicId,
-    lessonId,
-  });
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
+  const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
+  const saveLessonMutation = useSaveLessonMutation(courseId);
 
   const { data: lessonDetails } = getLessonDetailsQuery;
 
@@ -133,12 +133,21 @@ const LessonModal = ({
           prerequisites: lessonDetails.content_drip_settings?.course_prerequisites || [],
         },
       });
+
+      const timeoutId = setTimeout(() => {
+        form.setFocus('title');
+      }, 0);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
     }
   }, [lessonDetails]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('title');
-  }, [form]);
+  }, []);
 
   const onSubmit = async (data: LessonForm) => {
     const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
@@ -172,232 +181,237 @@ const LessonModal = ({
       }
     >
       <div css={styles.wrapper}>
-        <div>
-          <div css={styles.lessonInfo}>
-            <Controller
-              name="title"
-              control={form.control}
-              rules={{
-                required: __('Lesson Name is required', 'tutor'),
-              }}
-              render={(controllerProps) => (
-                <FormInput
-                  {...controllerProps}
-                  label={__('Lesson Name', 'tutor')}
-                  placeholder={__('Enter Lesson Name', 'tutor')}
-                  maxLimit={245}
-                  selectOnFocus
-                  isClearable
-                />
-              )}
-            />
-            <Controller
-              name="description"
-              control={form.control}
-              rules={{
-                required: __('Description is required', 'tutor'),
-              }}
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  label={__('Description', 'tutor')}
-                  placeholder={__('Enter Lesson Description', 'tutor')}
-                />
-              )}
-            />
-          </div>
-        </div>
-
-        <div css={styles.rightPanel}>
-          <Controller
-            name="thumbnail"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormImageInput
-                {...controllerProps}
-                label={__('Featured Image', 'tutor')}
-                buttonText={__('Upload Featured Image', 'tutor')}
-                infoText={__('Size: 700x430 pixels', 'tutor')}
-              />
-            )}
-          />
-          <Controller
-            name="video"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormVideoInput
-                {...controllerProps}
-                label={__('Video', 'tutor')}
-                buttonText={__('Upload Video', 'tutor')}
-                infoText={__('Supported file formats .mp4', 'tutor')}
-                supportedFormats={['mp4']}
-                onGetDuration={(duration) => {
-                  form.setValue('duration.hour', duration.hours);
-                  form.setValue('duration.minute', duration.minutes);
-                  form.setValue('duration.second', duration.seconds);
+        <Show when={!getLessonDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
+          <div>
+            <div css={styles.lessonInfo}>
+              <Controller
+                name="title"
+                control={form.control}
+                rules={{
+                  required: __('Lesson Name is required', 'tutor'),
                 }}
-              />
-            )}
-          />
-          <div css={styles.durationWrapper}>
-            <span css={styles.additionLabel}>{__('Video playback time', 'tutor')}</span>
-            <div css={styles.duration}>
-              <Controller
-                name="duration.hour"
-                control={form.control}
                 render={(controllerProps) => (
-                  <FormInputWithContent
+                  <FormInput
                     {...controllerProps}
-                    type="number"
-                    content={<span css={styles.durationContent}>{__('hour', 'tutor')}</span>}
-                    contentPosition="right"
-                    placeholder="0"
-                    showVerticalBar={false}
+                    label={__('Lesson Name', 'tutor')}
+                    placeholder={__('Enter Lesson Name', 'tutor')}
+                    maxLimit={245}
+                    selectOnFocus
+                    isClearable
                   />
                 )}
               />
               <Controller
-                name="duration.minute"
+                name="description"
                 control={form.control}
+                rules={{
+                  required: __('Description is required', 'tutor'),
+                }}
                 render={(controllerProps) => (
-                  <FormInputWithContent
+                  <FormWPEditor
                     {...controllerProps}
-                    type="number"
-                    content={<span css={styles.durationContent}>{__('min', 'tutor')}</span>}
-                    contentPosition="right"
-                    placeholder="0"
-                    showVerticalBar={false}
-                  />
-                )}
-              />
-              <Controller
-                name="duration.second"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormInputWithContent
-                    {...controllerProps}
-                    type="number"
-                    content={<span css={styles.durationContent}>{__('sec', 'tutor')}</span>}
-                    contentPosition="right"
-                    placeholder="0"
-                    showVerticalBar={false}
+                    label={__('Description', 'tutor')}
+                    placeholder={__('Enter Lesson Description', 'tutor')}
                   />
                 )}
               />
             </div>
           </div>
 
-          <Show when={isAddonEnabled('Content Drip')}>
-            <Show when={contentDripType === 'specific_days'}>
-              <Controller
-                name="content_drip_settings.after_xdays_of_enroll"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormInput
-                    {...controllerProps}
-                    type="number"
-                    label={
-                      <div css={styles.contentDripLabel}>
-                        <SVGIcon name="contentDrip" height={24} width={24} />
-                        {__('Available after days', 'tutor')}
-                      </div>
-                    }
-                    helpText={__('This lesson will be available after the given number of days.', 'tutor')}
-                    placeholder="0"
-                    selectOnFocus
-                  />
-                )}
-              />
-            </Show>
-
-            <Show when={contentDripType === 'unlock_by_date'}>
-              <Controller
-                name="content_drip_settings.unlock_date"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormDateInput
-                    {...controllerProps}
-                    label={
-                      <div css={styles.contentDripLabel}>
-                        <SVGIcon name="contentDrip" height={24} width={24} />
-                        {__('Unlock Date', 'tutor')}
-                      </div>
-                    }
-                    helpText={__(
-                      'This lesson will be available from the given date. Leave empty to make it available immediately.',
-                      'tutor',
-                    )}
-                  />
-                )}
-              />
-            </Show>
-
-            <Show when={contentDripType === 'after_finishing_prerequisites'}>
-              <Controller
-                name="content_drip_settings.prerequisites"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormCoursePrerequisites
-                    {...controllerProps}
-                    label={
-                      <div css={styles.contentDripLabel}>
-                        <SVGIcon name="contentDrip" height={24} width={24} />
-                        {__('Prerequisites', 'tutor')}
-                      </div>
-                    }
-                    placeholder={__('Select Prerequisite', 'tutor')}
-                    options={prerequisiteCoursesQuery.data || []}
-                    helpText={__('Select items that should be complete before this item', 'tutor')}
-                  />
-                )}
-              />
-            </Show>
-          </Show>
-
-          <Controller
-            name="tutor_attachments"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormFileUploader
-                {...controllerProps}
-                label={__('Exercise Files', 'tutor')}
-                buttonText={__('Upload Attachment', 'tutor')}
-                selectMultiple
-              />
-            )}
-          />
-
-          <div css={styles.lessonPreview}>
+          <div css={styles.rightPanel}>
             <Controller
-              name="lesson_preview"
+              name="thumbnail"
               control={form.control}
               render={(controllerProps) => (
-                <FormSwitch
+                <FormImageInput
                   {...controllerProps}
-                  label={
-                    <div css={styles.previewLabel}>
-                      {__('Lesson Preview', 'tutor')}
-                      {!isAddonEnabled('Tutor Course Preview') && <SVGIcon name="crown" width={24} height={24} />}
-                    </div>
-                  }
-                  helpText={
-                    isAddonEnabled('Tutor Course Preview')
-                      ? __('If checked, any users/guest can view this lesson without enroll course', 'tutor')
-                      : ''
-                  }
+                  label={__('Featured Image', 'tutor')}
+                  buttonText={__('Upload Featured Image', 'tutor')}
+                  infoText={__('Size: 700x430 pixels', 'tutor')}
                 />
               )}
             />
-            <Show when={form.watch('lesson_preview')}>
-              <div css={styles.previewInfo}>
-                {__(
-                  'Course preview is on, from now on any users/guest can view this lesson without enrolling the course.',
-                  'tutor',
-                )}
+            <Controller
+              name="video"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormVideoInput
+                  {...controllerProps}
+                  label={__('Video', 'tutor')}
+                  buttonText={__('Upload Video', 'tutor')}
+                  infoText={__('Supported file formats .mp4', 'tutor')}
+                  supportedFormats={['mp4']}
+                  onGetDuration={(duration) => {
+                    form.setValue('duration.hour', duration.hours);
+                    form.setValue('duration.minute', duration.minutes);
+                    form.setValue('duration.second', duration.seconds);
+                  }}
+                />
+              )}
+            />
+            <div css={styles.durationWrapper}>
+              <span css={styles.additionLabel}>{__('Video playback time', 'tutor')}</span>
+              <div css={styles.duration}>
+                <Controller
+                  name="duration.hour"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormInputWithContent
+                      {...controllerProps}
+                      type="number"
+                      content={<span css={styles.durationContent}>{__('hour', 'tutor')}</span>}
+                      contentPosition="right"
+                      placeholder="0"
+                      showVerticalBar={false}
+                    />
+                  )}
+                />
+                <Controller
+                  name="duration.minute"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormInputWithContent
+                      {...controllerProps}
+                      type="number"
+                      content={<span css={styles.durationContent}>{__('min', 'tutor')}</span>}
+                      contentPosition="right"
+                      placeholder="0"
+                      showVerticalBar={false}
+                    />
+                  )}
+                />
+                <Controller
+                  name="duration.second"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormInputWithContent
+                      {...controllerProps}
+                      type="number"
+                      content={<span css={styles.durationContent}>{__('sec', 'tutor')}</span>}
+                      contentPosition="right"
+                      placeholder="0"
+                      showVerticalBar={false}
+                    />
+                  )}
+                />
               </div>
+            </div>
+
+            <Show when={isAddonEnabled(Addons.CONTENT_DRIP)}>
+              <Show when={contentDripType === 'specific_days'}>
+                <Controller
+                  name="content_drip_settings.after_xdays_of_enroll"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormInput
+                      {...controllerProps}
+                      type="number"
+                      label={
+                        <div css={styles.contentDripLabel}>
+                          <SVGIcon name="contentDrip" height={24} width={24} />
+                          {__('Available after days', 'tutor')}
+                        </div>
+                      }
+                      helpText={__('This lesson will be available after the given number of days.', 'tutor')}
+                      placeholder="0"
+                      selectOnFocus
+                    />
+                  )}
+                />
+              </Show>
+
+              <Show when={contentDripType === 'unlock_by_date'}>
+                <Controller
+                  name="content_drip_settings.unlock_date"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormDateInput
+                      {...controllerProps}
+                      label={
+                        <div css={styles.contentDripLabel}>
+                          <SVGIcon name="contentDrip" height={24} width={24} />
+                          {__('Unlock Date', 'tutor')}
+                        </div>
+                      }
+                      helpText={__(
+                        'This lesson will be available from the given date. Leave empty to make it available immediately.',
+                        'tutor',
+                      )}
+                    />
+                  )}
+                />
+              </Show>
+
+              <Show when={contentDripType === 'after_finishing_prerequisites'}>
+                <Controller
+                  name="content_drip_settings.prerequisites"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormCoursePrerequisites
+                      {...controllerProps}
+                      label={
+                        <div css={styles.contentDripLabel}>
+                          <SVGIcon name="contentDrip" height={24} width={24} />
+                          {__('Prerequisites', 'tutor')}
+                        </div>
+                      }
+                      placeholder={__('Select Prerequisite', 'tutor')}
+                      options={prerequisiteCoursesQuery.data || []}
+                      helpText={__('Select items that should be complete before this item', 'tutor')}
+                    />
+                  )}
+                />
+              </Show>
             </Show>
+
+            <Controller
+              name="tutor_attachments"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormFileUploader
+                  {...controllerProps}
+                  label={__('Exercise Files', 'tutor')}
+                  buttonText={__('Upload Attachment', 'tutor')}
+                  selectMultiple
+                />
+              )}
+            />
+
+            <div css={styles.lessonPreview}>
+              <Controller
+                name="lesson_preview"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormSwitch
+                    {...controllerProps}
+                    disabled={!isTutorPro || !isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)}
+                    label={
+                      <div css={styles.previewLabel}>
+                        {__('Lesson Preview', 'tutor')}
+                        {!isTutorPro && !isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && (
+                          <SVGIcon name="crown" width={24} height={24} />
+                        )}
+                      </div>
+                    }
+                    helpText={
+                      isTutorPro && isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)
+                        ? __('If checked, any users/guest can view this lesson without enroll course', 'tutor')
+                        : ''
+                    }
+                  />
+                )}
+              />
+              <Show when={form.watch('lesson_preview')}>
+                <div css={styles.previewInfo}>
+                  {__(
+                    'Course preview is on, from now on any users/guest can view this lesson without enrolling the course.',
+                    'tutor',
+                  )}
+                </div>
+              </Show>
+            </div>
           </div>
-        </div>
+        </Show>
       </div>
     </ModalWrapper>
   );

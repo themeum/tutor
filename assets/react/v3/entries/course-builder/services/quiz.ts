@@ -1,3 +1,7 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
+import type { AxiosResponse } from 'axios';
+
 import { useToast } from '@Atoms/Toast';
 import type {
   QuizFeedbackMode,
@@ -5,15 +9,14 @@ import type {
   QuizQuestionsOrder,
   QuizTimeLimit,
 } from '@CourseBuilderComponents/modals/QuizModal';
+
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
-import type { AxiosResponse } from 'axios';
 import type { ContentDripType, TutorMutationResponse } from './course';
 import type { ID } from './curriculum';
+import { Addons } from '@Config/constants';
 
 export type QuizQuestionType =
   | 'true_false'
@@ -322,7 +325,7 @@ export const convertQuizFormDataToPayload = (
     'quiz_option[short_answer_characters_limit]': formData.quiz_option.short_answer_characters_limit,
     'quiz_option[open_ended_answer_characters_limit]': formData.quiz_option.open_ended_answer_characters_limit,
     'quiz_option[hide_quiz_time_display]': formData.quiz_option.hide_quiz_time_display ? 1 : 0,
-    ...(isAddonEnabled('Content Drip') &&
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'unlock_sequentially' &&
       formData.quiz_option.feedback_mode === 'retry' && {
         'quiz_option[pass_is_required]': formData.quiz_option.pass_is_required ? 1 : 0,
@@ -424,6 +427,14 @@ export const useExportQuizMutation = () => {
   return useMutation({
     mutationFn: exportQuiz,
     onSuccess: (response) => {
+      if (!response.success) {
+        showToast({
+          message: __('Something went wrong.', 'tutor'),
+          type: 'danger',
+        });
+        return;
+      }
+
       let csvContent = '';
       for (const rowArray of response.data.output_quiz_data) {
         const row = rowArray.join(',');
@@ -438,13 +449,6 @@ export const useExportQuizMutation = () => {
       link.setAttribute('download', `tutor-quiz-${response.data.title}.csv`);
       document.body.appendChild(link);
       link.click();
-
-      if (!response.success) {
-        showToast({
-          message: __('Something went wrong.', 'tutor'),
-          type: 'danger',
-        });
-      }
     },
     onError: (error: ErrorResponse) => {
       showToast({
@@ -497,7 +501,7 @@ const getQuizDetails = (quizId: ID) => {
 
 export const useGetQuizDetailsQuery = (quizId: ID) => {
   return useQuery({
-    queryKey: ['GetQuizDetails', quizId],
+    queryKey: ['Quiz', quizId],
     queryFn: () => getQuizDetails(quizId).then((response) => response.data),
     enabled: !!quizId,
   });
@@ -524,14 +528,14 @@ export const useCreateQuizQuestionMutation = () => {
         });
       }
     },
-    onError: (error: ErrorResponse) => {
+    onError: (error: ErrorResponse, quizId) => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
       });
 
       queryClient.invalidateQueries({
-        queryKey: ['GetQuizDetails'],
+        queryKey: ['Quiz', quizId],
       });
     },
   });
@@ -544,8 +548,9 @@ const updateQuizQuestion = (payload: QuizUpdateQuestionPayload) => {
   });
 };
 
-export const useUpdateQuizQuestionMutation = () => {
+export const useUpdateQuizQuestionMutation = (quizId: ID) => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateQuizQuestion,
@@ -553,6 +558,10 @@ export const useUpdateQuizQuestionMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Quiz', quizId],
       });
     },
   });
@@ -579,14 +588,14 @@ export const useQuizQuestionSortingMutation = () => {
         });
       }
     },
-    onError: (error: ErrorResponse) => {
+    onError: (error: ErrorResponse, payload) => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
       });
 
       queryClient.invalidateQueries({
-        queryKey: ['GetQuizDetails'],
+        queryKey: ['Quiz', payload.quiz_id],
       });
     },
   });
@@ -599,7 +608,7 @@ const deleteQuizQuestion = (questionId: ID) => {
   });
 };
 
-export const useDeleteQuizQuestionMutation = () => {
+export const useDeleteQuizQuestionMutation = (quizId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
@@ -611,16 +620,20 @@ export const useDeleteQuizQuestionMutation = () => {
           message: __(response.message, 'tutor'),
           type: 'success',
         });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Quiz', quizId],
+        });
       }
     },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['GetQuizDetails'],
       });
     },
   });
@@ -633,7 +646,7 @@ const quizQuestionAnswerOrdering = (payload: QuizQuestionAnswerOrderingPayload) 
   });
 };
 
-export const useQuizQuestionAnswerOrderingMutation = () => {
+export const useQuizQuestionAnswerOrderingMutation = (quizId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
@@ -654,20 +667,20 @@ export const useQuizQuestionAnswerOrderingMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ['GetQuizDetails'],
+        queryKey: ['Quiz', quizId],
       });
     },
   });
 };
 
 const createQuizAnswer = (payload: CreateQuizQuestionAnswerPayload) => {
-  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
+  return authApiInstance.post<CreateQuizQuestionAnswerPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_quiz_question_answer_save',
     ...payload,
   });
 };
 
-export const useCreateQuizAnswerMutation = () => {
+export const useCreateQuizAnswerMutation = (quizId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
@@ -688,7 +701,7 @@ export const useCreateQuizAnswerMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ['GetQuizDetails'],
+        queryKey: ['Quiz', quizId],
       });
     },
   });
@@ -701,7 +714,7 @@ const deleteQuizQuestionAnswer = (answerId: ID) => {
   });
 };
 
-export const useDeleteQuizAnswerMutation = () => {
+export const useDeleteQuizAnswerMutation = (quizId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
@@ -709,9 +722,6 @@ export const useDeleteQuizAnswerMutation = () => {
     mutationFn: deleteQuizQuestionAnswer,
     onSuccess: (response) => {
       if (response.data) {
-        queryClient.invalidateQueries({
-          queryKey: ['GetQuizDetails'],
-        });
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
@@ -722,6 +732,10 @@ export const useDeleteQuizAnswerMutation = () => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['Quiz', quizId],
       });
     },
   });
@@ -738,20 +752,12 @@ const markAnswerAsCorrect = (payload: {
   });
 };
 
-export const useMarkAnswerAsCorrectMutation = () => {
+export const useMarkAnswerAsCorrectMutation = (quizId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: markAnswerAsCorrect,
-    onSuccess: (response) => {
-      if (response.data) {
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
-        });
-      }
-    },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,
@@ -759,7 +765,7 @@ export const useMarkAnswerAsCorrectMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ['GetQuizDetails'],
+        queryKey: ['Quiz', quizId],
       });
     },
   });

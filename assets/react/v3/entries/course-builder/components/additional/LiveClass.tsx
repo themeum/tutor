@@ -23,6 +23,7 @@ import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
+import { Addons } from '@Config/constants';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 
@@ -41,8 +42,8 @@ interface LiveClassProps {
 }
 
 const isPro = !!tutorConfig.tutor_pro_url;
-const isZoomAddonEnabled = isAddonEnabled('Tutor Zoom Integration');
-const isGoogleMeetAddonEnabled = isAddonEnabled('Tutor Google Meet Integration');
+const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
+const isGoogleMeetAddonEnabled = isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION);
 
 const LiveClass = ({
   zoomMeetings,
@@ -131,7 +132,7 @@ const LiveClass = ({
                       hasMeeting: zoomMeetings.length > 0,
                     })}
                   >
-                    <ZoomMeetingCard data={meeting} meetingHost={zoomUsers} timezones={zoomTimezones} />
+                    <ZoomMeetingCard data={meeting} meetingHost={zoomUsers} />
                   </div>
                 )}
               </For>
@@ -169,7 +170,7 @@ const LiveClass = ({
                       hasMeeting: googleMeetMeetings.length > 0,
                     })}
                   >
-                    <GoogleMeetMeetingCard data={meeting} timezones={googleMeetTimezones} />
+                    <GoogleMeetMeetingCard data={meeting} />
                   </div>
                 )}
               </For>
@@ -207,7 +208,6 @@ const LiveClass = ({
           onCancel={() => {
             setShowMeetingForm(null);
           }}
-          timezones={zoomTimezones}
         />
       </Popover>
       <Popover
@@ -221,7 +221,6 @@ const LiveClass = ({
           onCancel={() => {
             setShowMeetingForm(null);
           }}
-          timezones={googleMeetTimezones}
         />
       </Popover>
     </div>

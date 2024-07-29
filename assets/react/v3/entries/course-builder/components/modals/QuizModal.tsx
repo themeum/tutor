@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormInput from '@Components/fields/FormInput';
@@ -36,6 +35,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { AnimationType } from '@Hooks/useAnimation';
@@ -65,7 +65,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   const saveQuizMutation = useSaveQuizMutation();
   const getQuizDetailsQuery = useGetQuizDetailsQuery(localQuizId);
-  const updateQuestionMutation = useUpdateQuizQuestionMutation();
+  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation(localQuizId);
 
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {
@@ -134,7 +134,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     if (response.data) {
       setIsEdit(false);
       setLocalQuizId(response.data);
-      closeModal({ action: 'CONFIRM' });
     }
   };
 
@@ -210,7 +209,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                       const payload = form.watch(`questions.${activeQuestionIndex}`);
 
                       try {
-                        await updateQuestionMutation.mutateAsync(
+                        await updateQuizQuestionMutation.mutateAsync(
                           convertQuizQuestionFormDataToPayloadForUpdate(payload),
                         );
                       } catch (error) {
@@ -219,6 +218,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                       }
 
                       await form.handleSubmit(onQuizFormSubmit)();
+                      closeModal({ action: 'CONFIRM' });
                     }}
                   >
                     {__('Save', 'tutor')}
@@ -228,97 +228,90 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
             }
           >
             <div css={styles.wrapper}>
-              <Show when={activeTab === 'details'} fallback={<div />}>
-                <div css={styles.left}>
-                  <Show when={activeTab === 'details'}>
-                    <div css={styles.quizTitleWrapper}>
-                      <Show
-                        when={isEdit}
-                        fallback={
-                          <div css={styles.quizNameWithButton}>
-                            <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
-                            <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
-                              <SVGIcon name="edit" width={24} height={24} />
-                            </Button>
-                          </div>
-                        }
-                      >
-                        <div css={styles.quizForm}>
-                          <Controller
-                            control={form.control}
-                            name="quiz_title"
-                            rules={{ required: __('Quiz title is required', 'tutor') }}
-                            render={(controllerProps) => (
-                              <FormInput
-                                {...controllerProps}
-                                placeholder={__('Add quiz title', 'tutor')}
-                                selectOnFocus
-                              />
-                            )}
-                          />
-                          <Controller
-                            control={form.control}
-                            name="quiz_description"
-                            render={(controllerProps) => (
-                              <FormTextareaInput
-                                {...controllerProps}
-                                placeholder={__('Add a summary', 'tutor')}
-                                enableResize
-                                rows={2}
-                              />
-                            )}
-                          />
+              <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
+                <Show when={activeTab === 'details'} fallback={<div />}>
+                  <div css={styles.left}>
+                    <Show when={activeTab === 'details'}>
+                      <div css={styles.quizTitleWrapper}>
+                        <Show
+                          when={isEdit}
+                          fallback={
+                            <div css={styles.quizNameWithButton}>
+                              <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
+                              <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
+                                <SVGIcon name="edit" width={24} height={24} />
+                              </Button>
+                            </div>
+                          }
+                        >
+                          <div css={styles.quizForm}>
+                            <Controller
+                              control={form.control}
+                              name="quiz_title"
+                              rules={{ required: __('Quiz title is required', 'tutor') }}
+                              render={(controllerProps) => (
+                                <FormInput
+                                  {...controllerProps}
+                                  placeholder={__('Add quiz title', 'tutor')}
+                                  selectOnFocus
+                                />
+                              )}
+                            />
+                            <Controller
+                              control={form.control}
+                              name="quiz_description"
+                              render={(controllerProps) => (
+                                <FormTextareaInput
+                                  {...controllerProps}
+                                  placeholder={__('Add a summary', 'tutor')}
+                                  enableResize
+                                  rows={2}
+                                />
+                              )}
+                            />
 
-                          <div css={styles.quizFormButtonWrapper}>
-                            <Button
-                              variant="text"
-                              type="button"
-                              onClick={() => {
-                                if (!form.watch('quiz_title')) {
-                                  closeModal();
-                                }
-                                setIsEdit(false);
-                              }}
-                              size="small"
-                            >
-                              {__('Cancel', 'tutor')}
-                            </Button>
-                            <Button
-                              loading={saveQuizMutation.isPending}
-                              variant="secondary"
-                              type="submit"
-                              size="small"
-                              onClick={form.handleSubmit(onQuizFormSubmit)}
-                            >
-                              {__('Ok', 'tutor')}
-                            </Button>
+                            <div css={styles.quizFormButtonWrapper}>
+                              <Button
+                                variant="text"
+                                type="button"
+                                onClick={() => {
+                                  if (!form.watch('quiz_title')) {
+                                    closeModal();
+                                  }
+                                  setIsEdit(false);
+                                }}
+                                size="small"
+                              >
+                                {__('Cancel', 'tutor')}
+                              </Button>
+                              <Button
+                                loading={saveQuizMutation.isPending}
+                                variant="secondary"
+                                type="submit"
+                                size="small"
+                                onClick={form.handleSubmit(onQuizFormSubmit)}
+                              >
+                                {__('Ok', 'tutor')}
+                              </Button>
+                            </div>
                           </div>
-                        </div>
-                      </Show>
-                    </div>
+                        </Show>
+                      </div>
 
-                    <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingSection />}>
                       <QuestionList quizId={localQuizId} />
                     </Show>
+                  </div>
+                </Show>
+                <div css={styles.content({ activeTab })}>
+                  <Show when={activeTab === 'settings'} fallback={<QuestionForm />}>
+                    <QuizSettings contentDripType={contentDripType} />
                   </Show>
                 </div>
-              </Show>
-              <div css={styles.content({ activeTab })}>
-                <Show
-                  when={activeTab === 'settings'}
-                  fallback={
-                    <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingSection />}>
-                      <QuestionForm />
-                    </Show>
-                  }
-                >
-                  <QuizSettings contentDripType={contentDripType} />
+                <Show when={activeTab === 'details'} fallback={<div />}>
+                  <div css={styles.right}>
+                    <QuestionConditions />
+                  </div>
                 </Show>
-              </div>
-              <Show when={activeTab === 'details'} fallback={<div />}>
-                <div css={styles.right}>
-                  <QuestionConditions />
-                </div>
               </Show>
             </div>
 

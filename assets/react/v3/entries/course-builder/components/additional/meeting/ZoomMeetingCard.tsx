@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
+import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -15,14 +16,10 @@ import { type ZoomMeeting, useDeleteZoomMeetingMutation } from '@CourseBuilderSe
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import { useRef, useState } from 'react';
 import ZoomMeetingForm from './ZoomMeetingForm';
 
 interface ZoomMeetingCardProps {
   data: ZoomMeeting;
-  timezones: {
-    [key: string]: string;
-  };
   meetingHost: {
     [key: string]: string;
   };
@@ -31,7 +28,7 @@ interface ZoomMeetingCardProps {
 
 const courseId = getCourseId();
 
-const ZoomMeetingCard = ({ data, meetingHost, timezones, topicId }: ZoomMeetingCardProps) => {
+const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const deleteZoomMeetingMutation = useDeleteZoomMeetingMutation(String(courseId));
   const triggerRef = useRef<HTMLButtonElement>(null);

@@ -528,7 +528,7 @@ class Settings {
 	public static function get_default_automate_payment_gateways() {
 		$gateways = array(
 			'paypal' => array(
-				'label'     => 'Papal',
+				'label'     => 'Paypal',
 				'is_active' => self::is_active( 'paypal' ),
 			),
 			'stripe' => array(

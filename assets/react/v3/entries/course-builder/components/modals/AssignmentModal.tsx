@@ -1,25 +1,26 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import SVGIcon from '@Atoms/SVGIcon';
 
+import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
+import FormDateInput from '@Components/fields/FormDateInput';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import type { Media } from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import FormWPEditor from '@Components/fields/FormWPEditor';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
+import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-
-import SVGIcon from '@Atoms/SVGIcon';
-import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
-import FormDateInput from '@Components/fields/FormDateInput';
 import Show from '@Controls/Show';
 import {
   type ContentDripType,
@@ -28,7 +29,7 @@ import {
 } from '@CourseBuilderServices/course';
 import { type ID, useAssignmentDetailsQuery, useSaveAssignmentMutation } from '@CourseBuilderServices/curriculum';
 import { convertAssignmentDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useEffect } from 'react';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -87,9 +88,9 @@ const AssignmentModal = ({
   subtitle,
   contentDripType,
 }: AssignmentModalProps) => {
-  const isPrerequisiteAddonEnabled = isAddonEnabled('Tutor Prerequisites');
-  const getAssignmentDetailsQuery = useAssignmentDetailsQuery(topicId, assignmentId);
-  const saveAssignmentMutation = useSaveAssignmentMutation({ courseId, topicId, assignmentId });
+  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
+  const getAssignmentDetailsQuery = useAssignmentDetailsQuery(assignmentId, topicId);
+  const saveAssignmentMutation = useSaveAssignmentMutation(courseId);
 
   const { data: assignmentDetails } = getAssignmentDetailsQuery;
 
@@ -184,218 +185,220 @@ const AssignmentModal = ({
       }
     >
       <div css={styles.wrapper}>
-        <div>
-          <div css={styles.assignmentInfo}>
-            <Controller
-              name="title"
-              control={form.control}
-              rules={{
-                required: __('Assignment title is required', 'tutor'),
-              }}
-              render={(controllerProps) => (
-                <FormInput
-                  {...controllerProps}
-                  label={__('Assignment Title', 'tutor')}
-                  placeholder={__('Enter Assignment Title', 'tutor')}
-                  maxLimit={245}
-                  isClearable
-                  selectOnFocus
-                />
-              )}
-            />
-
-            <Controller
-              name="summary"
-              control={form.control}
-              rules={{
-                required: __('Assignment summary is required', 'tutor'),
-              }}
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  label={__('Summary', 'tutor')}
-                  placeholder={__('Enter Assignment Summary', 'tutor')}
-                />
-              )}
-            />
-          </div>
-        </div>
-
-        <div css={styles.rightPanel}>
-          <Controller
-            name="attachments"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormFileUploader
-                {...controllerProps}
-                label={__('Attachments', 'tutor')}
-                buttonText={__('Upload Attachment', 'tutor')}
-                selectMultiple
-              />
-            )}
-          />
-
-          <Show when={isAddonEnabled('Content Drip')}>
-            <Show when={contentDripType === 'specific_days'}>
+        <Show when={!getAssignmentDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
+          <div>
+            <div css={styles.assignmentInfo}>
               <Controller
-                name="content_drip_settings.after_xdays_of_enroll"
+                name="title"
+                control={form.control}
+                rules={{
+                  required: __('Assignment title is required', 'tutor'),
+                }}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Assignment Title', 'tutor')}
+                    placeholder={__('Enter Assignment Title', 'tutor')}
+                    maxLimit={245}
+                    isClearable
+                    selectOnFocus
+                  />
+                )}
+              />
+
+              <Controller
+                name="summary"
+                control={form.control}
+                rules={{
+                  required: __('Assignment summary is required', 'tutor'),
+                }}
+                render={(controllerProps) => (
+                  <FormWPEditor
+                    {...controllerProps}
+                    label={__('Summary', 'tutor')}
+                    placeholder={__('Enter Assignment Summary', 'tutor')}
+                  />
+                )}
+              />
+            </div>
+          </div>
+
+          <div css={styles.rightPanel}>
+            <Controller
+              name="attachments"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormFileUploader
+                  {...controllerProps}
+                  label={__('Attachments', 'tutor')}
+                  buttonText={__('Upload Attachment', 'tutor')}
+                  selectMultiple
+                />
+              )}
+            />
+
+            <Show when={isAddonEnabled(Addons.CONTENT_DRIP)}>
+              <Show when={contentDripType === 'specific_days'}>
+                <Controller
+                  name="content_drip_settings.after_xdays_of_enroll"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormInput
+                      {...controllerProps}
+                      type="number"
+                      label={
+                        <div css={styles.contentDripLabel}>
+                          <SVGIcon name="contentDrip" height={24} width={24} />
+                          {__('Available after days', 'tutor')}
+                        </div>
+                      }
+                      helpText={__('This lesson will be available after the given number of days.', 'tutor')}
+                      placeholder="0"
+                      selectOnFocus
+                    />
+                  )}
+                />
+              </Show>
+
+              <Show when={contentDripType === 'unlock_by_date'}>
+                <Controller
+                  name="content_drip_settings.unlock_date"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormDateInput
+                      {...controllerProps}
+                      label={
+                        <div css={styles.contentDripLabel}>
+                          <SVGIcon name="contentDrip" height={24} width={24} />
+                          {__('Unlock Date', 'tutor')}
+                        </div>
+                      }
+                      helpText={__(
+                        'This lesson will be available from the given date. Leave empty to make it available immediately.',
+                        'tutor',
+                      )}
+                    />
+                  )}
+                />
+              </Show>
+
+              <Show when={contentDripType === 'after_finishing_prerequisites'}>
+                <Controller
+                  name="content_drip_settings.prerequisites"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormCoursePrerequisites
+                      {...controllerProps}
+                      label={
+                        <div css={styles.contentDripLabel}>
+                          <SVGIcon name="contentDrip" height={24} width={24} />
+                          {__('Prerequisites', 'tutor')}
+                        </div>
+                      }
+                      placeholder={__('Select Prerequisite', 'tutor')}
+                      options={prerequisiteCoursesQuery.data || []}
+                      helpText={__('Select items that should be complete before this item', 'tutor')}
+                    />
+                  )}
+                />
+              </Show>
+            </Show>
+
+            <div css={styles.timeLimit}>
+              <Controller
+                name="time_duration.time"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
                     type="number"
-                    label={
-                      <div css={styles.contentDripLabel}>
-                        <SVGIcon name="contentDrip" height={24} width={24} />
-                        {__('Available after days', 'tutor')}
-                      </div>
-                    }
-                    helpText={__('This lesson will be available after the given number of days.', 'tutor')}
+                    label={__('Time limit', 'tutor')}
                     placeholder="0"
+                    dataAttribute="data-time-limit"
                     selectOnFocus
                   />
                 )}
               />
-            </Show>
 
-            <Show when={contentDripType === 'unlock_by_date'}>
               <Controller
-                name="content_drip_settings.unlock_date"
+                name="time_duration.value"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormDateInput
+                  <FormSelectInput
                     {...controllerProps}
-                    label={
-                      <div css={styles.contentDripLabel}>
-                        <SVGIcon name="contentDrip" height={24} width={24} />
-                        {__('Unlock Date', 'tutor')}
-                      </div>
-                    }
-                    helpText={__(
-                      'This lesson will be available from the given date. Leave empty to make it available immediately.',
-                      'tutor',
-                    )}
+                    options={timeLimitOptions}
+                    removeOptionsMinWidth
+                    dataAttribute="data-time-limit-unit"
                   />
                 )}
               />
-            </Show>
+            </div>
 
-            <Show when={contentDripType === 'after_finishing_prerequisites'}>
-              <Controller
-                name="content_drip_settings.prerequisites"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormCoursePrerequisites
-                    {...controllerProps}
-                    label={
-                      <div css={styles.contentDripLabel}>
-                        <SVGIcon name="contentDrip" height={24} width={24} />
-                        {__('Prerequisites', 'tutor')}
-                      </div>
-                    }
-                    placeholder={__('Select Prerequisite', 'tutor')}
-                    options={prerequisiteCoursesQuery.data || []}
-                    helpText={__('Select items that should be complete before this item', 'tutor')}
-                  />
-                )}
-              />
-            </Show>
-          </Show>
-
-          <div css={styles.timeLimit}>
             <Controller
-              name="time_duration.time"
+              name="total_mark"
               control={form.control}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
                   type="number"
-                  label={__('Time limit', 'tutor')}
+                  label={__('Total points', 'tutor')}
                   placeholder="0"
-                  dataAttribute="data-time-limit"
+                  helpText={__('Maximum points a student can score', 'tutor')}
                   selectOnFocus
                 />
               )}
             />
 
             <Controller
-              name="time_duration.value"
+              name="pass_mark"
               control={form.control}
               render={(controllerProps) => (
-                <FormSelectInput
+                <FormInput
                   {...controllerProps}
-                  options={timeLimitOptions}
-                  removeOptionsMinWidth
-                  dataAttribute="data-time-limit-unit"
+                  type="number"
+                  label={__('Minimum pass points', 'tutor')}
+                  placeholder="0"
+                  helpText={__('Minimum points required for the student to pass this assignment', 'tutor')}
+                  selectOnFocus
+                />
+              )}
+            />
+
+            <Controller
+              name="upload_files_limit"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInput
+                  {...controllerProps}
+                  placeholder="0"
+                  type="number"
+                  label={__('File upload Limit', 'tutor')}
+                  helpText={__(
+                    'Define the number of files that a student can upload in this assignment. Input 0 to disable the option to upload.',
+                    'tutor',
+                  )}
+                  selectOnFocus
+                />
+              )}
+            />
+
+            <Controller
+              name="upload_file_size_limit"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  type="number"
+                  label={__('Maximum file size limit', 'tutor')}
+                  placeholder="0"
+                  content={__('MB', 'tutor')}
+                  contentPosition="right"
+                  helpText={__('Define maximum file size attachment in MB', 'tutor')}
                 />
               )}
             />
           </div>
-
-          <Controller
-            name="total_mark"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                type="number"
-                label={__('Total points', 'tutor')}
-                placeholder="0"
-                helpText={__('Maximum points a student can score', 'tutor')}
-                selectOnFocus
-              />
-            )}
-          />
-
-          <Controller
-            name="pass_mark"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                type="number"
-                label={__('Minimum pass points', 'tutor')}
-                placeholder="0"
-                helpText={__('Minimum points required for the student to pass this assignment', 'tutor')}
-                selectOnFocus
-              />
-            )}
-          />
-
-          <Controller
-            name="upload_files_limit"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                placeholder="0"
-                type="number"
-                label={__('File upload Limit', 'tutor')}
-                helpText={__(
-                  'Define the number of files that a student can upload in this assignment. Input 0 to disable the option to upload.',
-                  'tutor',
-                )}
-                selectOnFocus
-              />
-            )}
-          />
-
-          <Controller
-            name="upload_file_size_limit"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInputWithContent
-                {...controllerProps}
-                type="number"
-                label={__('Maximum file size limit', 'tutor')}
-                placeholder="0"
-                content={__('MB', 'tutor')}
-                contentPosition="right"
-                helpText={__('Define maximum file size attachment in MB', 'tutor')}
-              />
-            )}
-          />
-        </div>
+        </Show>
       </div>
     </ModalWrapper>
   );

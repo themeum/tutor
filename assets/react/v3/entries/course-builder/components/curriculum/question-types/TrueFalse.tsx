@@ -33,10 +33,9 @@ import { moveTo } from '@Utils/util';
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
+  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
 
-  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation();
-
-  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
+  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
 
   const { fields: optionsFields, move: moveOption } = useFieldArray({
     control: form.control,
@@ -146,7 +145,7 @@ const TrueFalse = () => {
           <For each={filteredOptionsFields}>
             {(option, index) => (
               <Controller
-                key={option.answer_id}
+                key={`${option.answer_id}-${option.is_correct}`}
                 control={form.control}
                 name={
                   `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
