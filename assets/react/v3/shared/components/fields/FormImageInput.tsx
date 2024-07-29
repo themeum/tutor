@@ -28,6 +28,8 @@ type FormImageInputProps = {
   helpText?: string;
   buttonText?: string;
   infoText?: string;
+  generateWithAi?: boolean;
+  onClickAiButton?: () => void;
 } & FormControllerProps<Media | null>;
 
 const FormImageInput = ({
@@ -38,6 +40,8 @@ const FormImageInput = ({
   buttonText = __('Upload Media', 'tutor'),
   infoText,
   onChange,
+  generateWithAi = false,
+  onClickAiButton,
 }: FormImageInputProps) => {
   const wpMedia = window.wp.media({
     library: { type: 'image' },
@@ -69,7 +73,14 @@ const FormImageInput = ({
   };
 
   return (
-    <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
+    <FormFieldWrapper
+      label={label}
+      field={field}
+      fieldState={fieldState}
+      helpText={helpText}
+      onClickAiButton={onClickAiButton}
+      generateWithAi={generateWithAi}
+    >
       {() => {
         return (
           <div>

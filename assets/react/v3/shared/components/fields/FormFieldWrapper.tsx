@@ -3,6 +3,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
@@ -45,6 +46,8 @@ interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
   characterCount?: { maxLimit: number; inputCharacter: number };
   isSecondary?: boolean;
   inputStyle?: SerializedStyles;
+  generateWithAi?: boolean;
+  onClickAiButton?: () => void;
 }
 
 const styles = {
@@ -197,12 +200,24 @@ const styles = {
   label: (isInlineLabel: boolean) => css`
     ${typography.caption()};
     color: ${colorTokens.text.title};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
 
     ${
       isInlineLabel &&
       css`
       ${typography.caption()};
     `
+    }
+
+    & > button {
+      ${styleUtils.resetButton};
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   `,
   inputWrapper: css`
@@ -237,6 +252,8 @@ const FormFieldWrapper = <T,>({
   characterCount,
   isSecondary = false,
   inputStyle,
+  generateWithAi = false,
+  onClickAiButton,
 }: FormFieldWrapperProps<T>) => {
   const id = nanoid();
 
@@ -284,6 +301,11 @@ const FormFieldWrapper = <T,>({
             {label && (
               <label htmlFor={id} css={styles.label(isInlineLabel)}>
                 {label}
+                <Show when={generateWithAi}>
+                  <button type="button" onClick={onClickAiButton}>
+                    <SVGIcon name="magicAiColorize" width={32} height={32} />
+                  </button>
+                </Show>
               </label>
             )}
 

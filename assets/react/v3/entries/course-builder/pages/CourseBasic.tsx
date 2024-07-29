@@ -18,6 +18,7 @@ import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
 import { useModal } from '@Components/modals/Modal';
 
+import AiButton from '@Atoms/AiButton';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
@@ -165,7 +166,22 @@ const CourseBasic = () => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.mainForm}>
-        <CanvasHead title={__('Course Basic', 'tutor')} />
+        <CanvasHead
+          title={__('Course Basic', 'tutor')}
+          rightButton={
+            <AiButton
+              css={css`
+                display: inline-flex;
+                align-items: center;
+                gap: ${spacing[4]};
+              `}
+              onClick={() => alert('@TODO: will be implemented later.')}
+            >
+              <SVGIcon name="magicAi" width={24} height={24} />
+              Generate with AI
+            </AiButton>
+          }
+        />
 
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
@@ -181,6 +197,7 @@ const CourseBasic = () => {
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
+                  generateWithAi
                 />
               )}
             />
@@ -201,7 +218,9 @@ const CourseBasic = () => {
           <Controller
             name="post_content"
             control={form.control}
-            render={(controllerProps) => <FormWPEditor {...controllerProps} label={__('Description', 'tutor')} />}
+            render={(controllerProps) => (
+              <FormWPEditor {...controllerProps} label={__('Description', 'tutor')} generateWithAi />
+            )}
           />
 
           <CourseSettings />
@@ -250,6 +269,8 @@ const CourseBasic = () => {
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
               infoText={__('Size: 700x430 pixels', 'tutor')}
+              generateWithAi={true}
+              onClickAiButton={() => alert('@TODO: will be implemented later.')}
             />
           )}
         />
