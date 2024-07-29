@@ -681,7 +681,7 @@ class Ajax {
 
 		if ( ! empty( $form_data['ID'] ) ) {
 			if ( ! tutor_utils()->can_user_manage( 'announcement', $form_data['ID'] ) ) {
-				wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+				wp_send_json_error( tutor_utils()->error_message() );
 			}
 		}
 
