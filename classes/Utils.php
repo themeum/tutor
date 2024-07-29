@@ -10287,7 +10287,13 @@ class Utils {
 			$editors[ $name ] = array(
 				'name'  => $name,
 				'label' => __( 'Edit with Elementor', 'tutor' ),
-				'link'  => get_admin_url() . 'post.php?post=' . $post_id . '&action=elementor',
+				'link'  => add_query_arg(
+					array(
+						'post'   => $post_id,
+						'action' => $name,
+					),
+					get_admin_url( null, 'post.php' )
+				),
 			);
 		}
 
