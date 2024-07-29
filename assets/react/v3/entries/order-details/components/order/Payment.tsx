@@ -18,245 +18,248 @@ import { __ } from '@wordpress/i18n';
 import { PaymentBadge } from './PaymentBadge';
 
 function PaymentActionButton({
-  status,
-  onClick,
-}: { status: PaymentStatus; onClick: (buttonType: 'refund' | 'mark-as-paid') => void }) {
-  switch (status) {
-    case 'paid':
-    case 'partially-refunded':
-    case 'failed':
-      return (
-        <Button variant="tertiary" size="small" isOutlined onClick={() => onClick('refund')}>
-          {__('Refund', 'tutor')}
-        </Button>
-      );
-    case 'unpaid':
-      return (
-        <Button variant="primary" size="small" isOutlined onClick={() => onClick('mark-as-paid')}>
-          {__('Mark as paid', 'tutor')}
-        </Button>
-      );
-    default:
-      return null;
-  }
+	status,
+	onClick,
+}: {
+	status: PaymentStatus;
+	onClick: (buttonType: 'refund' | 'mark-as-paid') => void;
+}) {
+	switch (status) {
+		case 'paid':
+		case 'partially-refunded':
+		case 'failed':
+			return (
+				<Button variant="tertiary" size="small" isOutlined onClick={() => onClick('refund')}>
+					{__('Refund', 'tutor')}
+				</Button>
+			);
+		case 'unpaid':
+			return (
+				<Button variant="primary" size="small" isOutlined onClick={() => onClick('mark-as-paid')}>
+					{__('Mark as paid', 'tutor')}
+				</Button>
+			);
+		default:
+			return null;
+	}
 }
 
 function Payment() {
-  const { showModal } = useModal();
-  const { order } = useOrderContext();
-  const formatPrice = createPriceFormatter({ locale: 'en-US', currency: 'USD' });
-  return (
-    <Box bordered>
-      <BoxTitle>
-        <div css={styles.paymentTitle}>
-          <span>{__('Payment', 'tutor')}</span>
-          <PaymentBadge status={order.payment_status} />
-        </div>
-      </BoxTitle>
-      <div css={styles.content}>
-        <Box bordered>
-          <div css={styles.item({ action: 'regular' })}>
-            <div>{__('Subtotal', 'tutor')}</div>
-            <div>
-              {order.courses.length} {__('Items', 'tutor')}
-            </div>
-            <div>{formatPrice(order.subtotal_price)}</div>
-          </div>
+	const { showModal } = useModal();
+	const { order } = useOrderContext();
+	const formatPrice = createPriceFormatter({ locale: 'en-US', currency: 'USD' });
+	return (
+		<Box bordered>
+			<BoxTitle>
+				<div css={styles.paymentTitle}>
+					<span>{__('Payment', 'tutor')}</span>
+					<PaymentBadge status={order.payment_status} />
+				</div>
+			</BoxTitle>
+			<div css={styles.content}>
+				<Box bordered>
+					<div css={styles.item({ action: 'regular' })}>
+						<div>{__('Subtotal', 'tutor')}</div>
+						<div>
+							{order.courses.length} {__('Items', 'tutor')}
+						</div>
+						<div>{formatPrice(order.subtotal_price)}</div>
+					</div>
 
-          <div css={styles.item({ action: 'regular' })}>
-            <Show
-              when={order.discount_amount}
-              fallback={
-                <>
-                  <button
-                    type="button"
-                    css={styles.discountButton}
-                    onClick={() =>
-                      showModal({
-                        component: DiscountModal,
-                        props: {
-                          title: __('Add discount', 'tutor'),
-                          discount: {
-                            amount: 0,
-                            discounted_value: 0,
-                            reason: '',
-                            type: 'percentage',
-                          },
-                          total_price: order.net_payment,
-                          order_id: order.id,
-                        },
-                      })
-                    }
-                  >
-                    {__('Add discount', 'tutor')}
-                  </button>
-                  <div>-</div>
-                  <div>-{formatPrice(0)}</div>
-                </>
-              }
-            >
-              <div css={styles.discountTitleWrapper}>
-                <span>{__('Discount', 'tutor')}</span>
-                <button
-                  type="button"
-                  css={styles.editDiscountButton}
-                  onClick={() => {
-                    showModal({
-                      component: DiscountModal,
-                      props: {
-                        title: __('Add discount', 'tutor'),
-                        discount: {
-                          amount: order.discount_amount ?? 0,
-                          discounted_value: 0,
-                          reason: order.discount_reason ?? '',
-                          type: order.discount_type ?? 'percentage',
-                        },
-                        total_price: order.net_payment,
-                        order_id: order.id,
-                      },
-                    });
-                  }}
-                >
-                  <SVGIcon name="edit" width={20} height={20} />
-                </button>
-              </div>
-              <div>
-                {order.discount_reason ?? '-'}
-                <strong> ({`${order.discount_amount}${order.discount_type === 'percentage' ? '%' : ''}`})</strong>
-              </div>
-              <div>
-                -
-                {formatPrice(
-                  calculateDiscountValue({
-                    discount_amount: order.discount_amount,
-                    discount_type: order.discount_type,
-                    total: order.net_payment,
-                  }),
-                )}
-              </div>
-            </Show>
-          </div>
-          <Show when={order.tax_amount}>
-            {(taxAmount) => (
-              <div css={styles.item({ action: 'regular' })}>
-                <div>{__('Estimated tax', 'tutor')}</div>
-                <div>{order.tax_rate}%</div>
-                <div>{formatPrice(taxAmount)}</div>
-              </div>
-            )}
-          </Show>
+					<div css={styles.item({ action: 'regular' })}>
+						<Show
+							when={order.discount_amount}
+							fallback={
+								<>
+									<button
+										type="button"
+										css={styles.discountButton}
+										onClick={() =>
+											showModal({
+												component: DiscountModal,
+												props: {
+													title: __('Add discount', 'tutor'),
+													discount: {
+														amount: 0,
+														discounted_value: 0,
+														reason: '',
+														type: 'percentage',
+													},
+													total_price: order.net_payment,
+													order_id: order.id,
+												},
+											})
+										}
+									>
+										{__('Add discount', 'tutor')}
+									</button>
+									<div>-</div>
+									<div>-{formatPrice(0)}</div>
+								</>
+							}
+						>
+							<div css={styles.discountTitleWrapper}>
+								<span>{__('Discount', 'tutor')}</span>
+								<button
+									type="button"
+									css={styles.editDiscountButton}
+									onClick={() => {
+										showModal({
+											component: DiscountModal,
+											props: {
+												title: __('Add discount', 'tutor'),
+												discount: {
+													amount: order.discount_amount ?? 0,
+													discounted_value: 0,
+													reason: order.discount_reason ?? '',
+													type: order.discount_type ?? 'percentage',
+												},
+												total_price: order.net_payment,
+												order_id: order.id,
+											},
+										});
+									}}
+								>
+									<SVGIcon name="edit" width={20} height={20} />
+								</button>
+							</div>
+							<div>
+								{order.discount_reason ?? '-'}
+								<strong> ({`${order.discount_amount}${order.discount_type === 'percentage' ? '%' : ''}`})</strong>
+							</div>
+							<div>
+								-
+								{formatPrice(
+									calculateDiscountValue({
+										discount_amount: order.discount_amount,
+										discount_type: order.discount_type,
+										total: order.net_payment,
+									}),
+								)}
+							</div>
+						</Show>
+					</div>
+					<Show when={order.tax_amount}>
+						{(taxAmount) => (
+							<div css={styles.item({ action: 'regular' })}>
+								<div>{__('Estimated tax', 'tutor')}</div>
+								<div>{order.tax_rate}%</div>
+								<div>{formatPrice(taxAmount)}</div>
+							</div>
+						)}
+					</Show>
 
-          <Show when={order.fees}>
-            {(fees) => (
-              <div css={styles.item({ action: 'regular' })}>
-                <div>{__('Fees', 'tutor')}</div>
-                <div>-</div>
-                <div>{formatPrice(fees)}</div>
-              </div>
-            )}
-          </Show>
+					<Show when={order.fees}>
+						{(fees) => (
+							<div css={styles.item({ action: 'regular' })}>
+								<div>{__('Fees', 'tutor')}</div>
+								<div>-</div>
+								<div>{formatPrice(fees)}</div>
+							</div>
+						)}
+					</Show>
 
-          <div css={styles.item({ action: 'bold' })}>
-            <div>{__('Total Paid', 'tutor')}</div>
-            <div />
-            <div>{formatPrice(order.total_price)}</div>
-          </div>
+					<div css={styles.item({ action: 'bold' })}>
+						<div>{__('Total Paid', 'tutor')}</div>
+						<div />
+						<div>{formatPrice(order.total_price)}</div>
+					</div>
 
-          <Show when={order.refunds?.length}>
-            <div css={styles.separator} />
-            <Show when={order.refunds}>
-              {(refunds) => (
-                <For each={refunds}>
-                  {(refund, index) => (
-                    <div css={styles.item({ action: 'destructive' })} key={index}>
-                      <div>{index === 0 ? 'Refunded' : ''}</div>
-                      <div>
-                        {__('Reason: ')}
-                        {refund.reason ?? '-'}
-                      </div>
-                      <div>-{formatPrice(refund.amount)}</div>
-                    </div>
-                  )}
-                </For>
-              )}
-            </Show>
+					<Show when={order.refunds?.length}>
+						<div css={styles.separator} />
+						<Show when={order.refunds}>
+							{(refunds) => (
+								<For each={refunds}>
+									{(refund, index) => (
+										<div css={styles.item({ action: 'destructive' })} key={index}>
+											<div>{index === 0 ? 'Refunded' : ''}</div>
+											<div>
+												{__('Reason: ')}
+												{refund.reason ?? '-'}
+											</div>
+											<div>-{formatPrice(refund.amount)}</div>
+										</div>
+									)}
+								</For>
+							)}
+						</Show>
 
-            <div css={styles.item({ action: 'bold' })}>
-              <div>{__('Net payment', 'tutor')}</div>
-              <div />
-              <div>{formatPrice(order.net_payment)}</div>
-            </div>
-          </Show>
-        </Box>
+						<div css={styles.item({ action: 'bold' })}>
+							<div>{__('Net payment', 'tutor')}</div>
+							<div />
+							<div>{formatPrice(order.net_payment)}</div>
+						</div>
+					</Show>
+				</Box>
 
-        <div css={styles.markAsPaid}>
-          <PaymentActionButton
-            status={order.payment_status}
-            onClick={(buttonType) => {
-              if (buttonType === 'refund') {
-                return showModal({
-                  component: RefundModal,
-                  props: {
-                    title: __('Refund', 'tutor'),
-                    available_amount: order.net_payment,
-                    order_id: order.id,
-                  },
-                });
-              }
+				<div css={styles.markAsPaid}>
+					<PaymentActionButton
+						status={order.payment_status}
+						onClick={(buttonType) => {
+							if (buttonType === 'refund') {
+								return showModal({
+									component: RefundModal,
+									props: {
+										title: __('Refund', 'tutor'),
+										available_amount: order.net_payment,
+										order_id: order.id,
+									},
+								});
+							}
 
-              if (buttonType === 'mark-as-paid') {
-                return showModal({
-                  component: MarkAsPaidModal,
-                  props: {
-                    title: __('Mark as Paid', 'tutor'),
-                    total: order.net_payment,
-                    order_id: order.id,
-                  },
-                });
-              }
-            }}
-          />
-        </div>
-      </div>
-    </Box>
-  );
+							if (buttonType === 'mark-as-paid') {
+								return showModal({
+									component: MarkAsPaidModal,
+									props: {
+										title: __('Mark as Paid', 'tutor'),
+										total: order.net_payment,
+										order_id: order.id,
+									},
+								});
+							}
+						}}
+					/>
+				</div>
+			</div>
+		</Box>
+	);
 }
 
 export default Payment;
 
 const styles = {
-  content: css`
-		padding: ${spacing[12]} ${spacing[20]} ${spacing[16]} ${spacing[20]};
+	content: css`
+		padding: ${spacing[12]} ${spacing[20]} ${spacing[16]} ${spacing[0]};
 	`,
-  paymentTitle: css`
+	paymentTitle: css`
 		display: flex;
 		gap: ${spacing[4]};
 		align-items: center;
 	`,
-  markAsPaid: css`
+	markAsPaid: css`
 		margin-top: ${spacing[12]};
 		text-align: right;
 	`,
-  discountTitleWrapper: css`
-    display: flex;
-    align-items: center;
-    gap: ${spacing[4]};
-    &:hover {
-      button {
-        opacity: 1;
-      }
-    }
-  `,
-  editDiscountButton: css`
-    ${styleUtils.resetButton};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: 0.3s ease opacity;
-    color: ${colorTokens.icon.brand};
-  `,
-  item: ({ action = 'regular' }: { action: 'regular' | 'bold' | 'destructive' }) => css`
+	discountTitleWrapper: css`
+		display: flex;
+		align-items: center;
+		gap: ${spacing[4]};
+		&:hover {
+			button {
+				opacity: 1;
+			}
+		}
+	`,
+	editDiscountButton: css`
+		${styleUtils.resetButton};
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0;
+		transition: 0.3s ease opacity;
+		color: ${colorTokens.icon.brand};
+	`,
+	item: ({ action = 'regular' }: { action: 'regular' | 'bold' | 'destructive' }) => css`
 		${typography.caption()};
 		display: grid;
 		grid-template-columns: 120px 1fr auto;
@@ -265,21 +268,17 @@ const styles = {
 		color: ${colorTokens.text.primary};
 		padding-inline: ${spacing[12]};
 
-		${
-      action === 'bold' &&
-      css`
+		${action === 'bold' &&
+		css`
 			font-weight: ${fontWeight.bold};
-		`
-    }
+		`}
 
-		${
-      action === 'destructive' &&
-      css`
+		${action === 'destructive' &&
+		css`
 			& > div:first-of-type {
 				color: ${colorTokens.text.error};
 			}
-		`
-    }
+		`}
 
 		& > div:nth-of-type(2) {
 			color: ${colorTokens.text.subdued};
@@ -293,13 +292,13 @@ const styles = {
 			padding-bottom: ${spacing[4]};
 		}
 	`,
-  separator: css`
+	separator: css`
 		height: 1px;
 		width: 100%;
 		background-color: ${colorTokens.stroke.divider};
 		margin-block: ${spacing[12]};
 	`,
-  discountButton: css`
+	discountButton: css`
 		${styleUtils.resetButton};
 		${typography.small('medium')};
 		color: ${colorTokens.brand.blue};

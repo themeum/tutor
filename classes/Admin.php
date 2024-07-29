@@ -562,6 +562,51 @@ class Admin {
 	}
 
 	/**
+	 * Orders view page
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function orders_view() {
+		$current_page = Input::get( 'page' );
+		$action       = Input::get( 'action' );
+
+		if ( OrderController::PAGE_SLUG === $current_page && 'edit' === $action ) {
+			?>
+				<div class="tutor-admin-wrap tutor-order-details-wrapper">
+					<div id="tutor-order-details-root">
+					</div>
+				</div>
+			<?php
+			return;
+		}
+
+		include tutor()->path . 'views/pages/ecommerce/order-list.php';
+	}
+
+	/**
+	 * Coupons view page
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function coupons_view() {
+		$action = Input::get( 'action' );
+		if ( in_array( $action, array( 'add_new', 'edit' ) ) ) {
+			?>
+				<div class="tutor-admin-wrap">
+					<div id="tutor-coupon-root">
+					</div>
+				</div>
+			<?php
+			return;
+		}
+		include tutor()->path . 'views/pages/ecommerce/coupon-list.php';
+	}
+
+	/**
 	 * Show welcome page
 	 *
 	 * @since 1.0.0
