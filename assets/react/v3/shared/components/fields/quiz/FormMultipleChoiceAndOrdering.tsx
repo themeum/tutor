@@ -18,9 +18,9 @@ import {
   type QuizForm,
   type QuizQuestionOption,
   type QuizQuestionType,
-  useCreateQuizAnswerMutation,
   useDeleteQuizAnswerMutation,
   useMarkAnswerAsCorrectMutation,
+  useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
@@ -68,7 +68,7 @@ const FormMultipleChoiceAndOrdering = ({
     return 'ordering';
   };
 
-  const createQuizAnswerMutation = useCreateQuizAnswerMutation(quizId);
+  const saveQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
   const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation(quizId);
   const duplicateContentMutation = useDuplicateContentMutation();
@@ -140,24 +140,18 @@ const FormMultipleChoiceAndOrdering = ({
   };
 
   const createQuizAnswer = async () => {
-    const response = await createQuizAnswerMutation.mutateAsync({
+    const response = await saveQuizAnswerMutation.mutateAsync({
       ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
       question_id: inputValue.belongs_question_id,
       answer_title: inputValue.answer_title,
       image_id: inputValue.image_id || '',
       answer_view_format: 'text_image',
-      ...(!inputValue.answer_id && { question_type: filterByQuestionType(currentQuestionType) }),
+      ...(inputValue.answer_id && {
+        question_type: filterByQuestionType(currentQuestionType),
+      }),
     });
 
-    const currentAnswerIndex = form
-      .getValues(`questions.${activeQuestionIndex}.question_answers`)
-      .findIndex((answer) => answer.answer_id === inputValue.answer_id);
-
     if (response.status_code === 201 || response.status_code === 200) {
-      form.setValue(`questions.${activeQuestionIndex}.question_answers.${currentAnswerIndex}`, {
-        ...inputValue,
-        answer_id: response.data,
-      });
       setIsEditing(false);
     }
   };
@@ -255,42 +249,44 @@ const FormMultipleChoiceAndOrdering = ({
             <SVGIcon name="dragVertical" height={24} width={24} />
           </button>
 
-          <div css={styles.optionActions}>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-edit-button
-              onClick={(event) => {
-                event.stopPropagation();
-                setIsEditing(true);
-              }}
-            >
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={(event) => {
-                event.stopPropagation();
-                handleDuplicateAnswer();
-              }}
-            >
-              <SVGIcon name="copyPaste" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={(event) => {
-                event.stopPropagation();
-                deleteQuizAnswerMutation.mutate(inputValue.answer_id);
-                onRemoveOption();
-              }}
-            >
-              <SVGIcon name="delete" width={24} height={24} />
-            </button>
-          </div>
+          <Show when={inputValue.answer_id}>
+            <div css={styles.optionActions}>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-edit-button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsEditing(true);
+                }}
+              >
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleDuplicateAnswer();
+                }}
+              >
+                <SVGIcon name="copyPaste" width={24} height={24} />
+              </button>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                onClick={(event) => {
+                  event.stopPropagation();
+                  deleteQuizAnswerMutation.mutate(inputValue.answer_id);
+                  onRemoveOption();
+                }}
+              >
+                <SVGIcon name="delete" width={24} height={24} />
+              </button>
+            </div>
+          </Show>
         </div>
         <div css={styles.optionBody}>
           <Show
@@ -374,14 +370,14 @@ const FormMultipleChoiceAndOrdering = ({
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
-                  loading={createQuizAnswerMutation.isPending}
+                  loading={saveQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
                     await createQuizAnswer();
                   }}
-                  disabled={!inputValue.answer_title || inputValue.image_url === ''}
+                  disabled={!inputValue.answer_title && inputValue.image_url === ''}
                 >
                   {__('Ok', 'tutor')}
                 </Button>

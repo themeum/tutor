@@ -32,6 +32,7 @@ const FillInTheBlanks = () => {
   return (
     <div css={styles.optionWrapper}>
       <Controller
+        key={filteredOptionsFields.length ? JSON.stringify(filteredOptionsFields[0]) : ''}
         control={form.control}
         name={
           `questions.${activeQuestionIndex}.question_answers.${filteredOptionsFields[0]?.index}` as 'questions.0.question_answers.0'
