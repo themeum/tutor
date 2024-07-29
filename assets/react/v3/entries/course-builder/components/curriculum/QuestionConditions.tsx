@@ -107,7 +107,6 @@ const QuestionConditions = () => {
 
           <Controller
             control={form.control}
-            defaultValue={false}
             name={
               `questions.${activeQuestionIndex}.question_settings.answer_required` as 'questions.0.question_settings.answer_required'
             }

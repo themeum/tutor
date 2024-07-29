@@ -12,8 +12,8 @@ import SVGIcon from '@Atoms/SVGIcon';
 import {
   type QuizForm,
   type QuizQuestionOption,
-  useCreateQuizAnswerMutation,
   useDeleteQuizAnswerMutation,
+  useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
@@ -55,7 +55,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
     defaultValue: false,
   });
 
-  const createQuizAnswerMutation = useCreateQuizAnswerMutation(quizId);
+  const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
   const duplicateContentMutation = useDuplicateContentMutation();
 
@@ -113,15 +113,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
       question_type: imageMatching ? 'image_matching' : 'matching',
     });
 
-    const currentAnswerIndex = form
-      .getValues(`questions.${activeQuestionIndex}.question_answers`)
-      .findIndex((answer) => answer.answer_id === inputValue.answer_id);
-
     if (response.status_code === 201 || response.status_code === 200) {
-      form.setValue(`questions.${activeQuestionIndex}.question_answers.${currentAnswerIndex}`, {
-        ...inputValue,
-        answer_id: response.data,
-      });
       setIsEditing(false);
     }
   };
@@ -142,8 +134,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
       inputRef.current.focus();
     }
   }, [isEditing]);
-
-  console.log(!inputValue.answer_title, !inputValue.image_id);
 
   return (
     <div {...attributes} css={styles.option({ isEditing })} ref={setNodeRef} style={style}>
@@ -236,7 +226,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   </Show>
                 </Show>
                 <div css={styles.optionPlaceholder}>
-                  {imageMatching ? inputValue.answer_two_gap_match : inputValue.answer_title}
+                  {!imageMatching ? inputValue.answer_two_gap_match : inputValue.answer_title}
                 </div>
               </div>
             }

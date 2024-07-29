@@ -15,10 +15,6 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     post_status: data.post_password.length ? 'publish' : (data.post_status as 'publish' | 'private'),
     post_password: data.post_password,
     post_author: data.post_author?.id ?? null,
-    ...(data.video && {
-      source_type: '',
-      source: '',
-    }),
     'pricing[type]': data.course_price_type,
     ...(data.course_price_type !== 'free' &&
       data.course_product_id && {
@@ -59,14 +55,16 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     tutor_course_certificate_template: data.tutor_course_certificate_template,
     _tutor_course_additional_data_edit: true,
     _tutor_attachments_main_edit: true,
-    'video[source]': data.video.source,
-    'video[source_video_id]': data.video.source_video_id,
-    'video[poster]': data.video.poster,
-    'video[source_external_url]': data.video.source_external_url,
-    'video[source_shortcode]': data.video.source_shortcode,
-    'video[source_youtube]': data.video.source_youtube,
-    'video[source_vimeo]': data.video.source_vimeo,
-    'video[source_embedded]': data.video.source_embedded,
+    ...(data.video.source && {
+      'video[source]': data.video.source,
+      'video[source_video_id]': data.video.source_video_id,
+      'video[poster]': data.video.poster,
+      'video[source_external_url]': data.video.source_external_url,
+      'video[source_shortcode]': data.video.source_shortcode,
+      'video[source_youtube]': data.video.source_youtube,
+      'video[source_vimeo]': data.video.source_vimeo,
+      'video[source_embedded]': data.video.source_embedded,
+    }),
     tutor_attachments: data.course_attachments?.map((item) => item.id) ?? [],
     bp_attached_group_ids: data.bp_attached_group_ids,
   };

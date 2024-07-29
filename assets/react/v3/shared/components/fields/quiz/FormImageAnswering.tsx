@@ -11,8 +11,8 @@ import SVGIcon from '@Atoms/SVGIcon';
 import {
   type QuizForm,
   type QuizQuestionOption,
-  useCreateQuizAnswerMutation,
   useDeleteQuizAnswerMutation,
+  useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
@@ -48,7 +48,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const createQuizAnswerMutation = useCreateQuizAnswerMutation(quizId);
+  const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
   const duplicateContentMutation = useDuplicateContentMutation();
 
@@ -116,15 +116,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
       question_type: 'image_answering',
     });
 
-    const currentAnswerIndex = form
-      .getValues(`questions.${activeQuestionIndex}.question_answers`)
-      .findIndex((answer) => answer.answer_id === inputValue.answer_id);
-
     if (response.status_code === 201 || response.status_code === 200) {
-      form.setValue(`questions.${activeQuestionIndex}.question_answers.${currentAnswerIndex}`, {
-        ...inputValue,
-        answer_id: response.data,
-      });
       setIsEditing(false);
     }
   };
