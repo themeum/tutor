@@ -965,7 +965,7 @@ class Quiz {
 
 		if ( 0 !== $topic_id && 0 !== $ex_quiz_id ) {
 			if ( ! tutor_utils()->can_user_manage( 'quiz', $ex_quiz_id ) ) {
-				wp_send_json_error( tutor_utils()->error_message() );
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 			}
 		}
 
