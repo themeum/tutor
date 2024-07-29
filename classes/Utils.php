@@ -1136,7 +1136,7 @@ class Utils {
 	 *
 	 * @since 3.0.0
 	 *
-	 * If monetize by is Tutor then it will return course 
+	 * If monetize by is Tutor then it will return course
 	 * formatted price
 	 *
 	 * @see tutor_get_course_formatted_price
@@ -8566,7 +8566,7 @@ class Utils {
 				$plugins_data[ $base_name ]['url'] = $thumbnailURL;
 
 				// Add add-on enable status.
-				$addon_url                                = "tutor-pro/addons/{$base_name}/{$base_name}.php";
+				$addon_url = "tutor-pro/addons/{$base_name}/{$base_name}.php";
 
 				$plugins_data[ $base_name ]['is_enabled'] = $has_pro && isset( $addons_config[ $addon_url ]['is_enable'] ) ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
 			}
@@ -10237,5 +10237,100 @@ class Utils {
 		);
 
 		return $options;
+	}
+
+	/**
+	 * Get editor list for post content.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $post_id post id.
+	 *
+	 * @return array
+	 */
+	public function get_editor_list( $post_id ) {
+		$editors = array();
+
+		$gutenberg_enabled = (bool) tutor_utils()->get_option( 'enable_gutenberg_course_edit' );
+		if ( $gutenberg_enabled ) {
+			$name             = 'gutenberg';
+			$editors[ $name ] = array(
+				'name'  => $name,
+				'label' => __( 'Edit with Gutenberg', 'tutor' ),
+				'link'  => add_query_arg(
+					array(
+						'post'   => $post_id,
+						'action' => 'edit',
+					),
+					get_admin_url( null, 'post.php' )
+				),
+			);
+		}
+
+		if ( is_plugin_active( 'droip/droip.php' ) ) {
+			$name             = 'droip';
+			$editors[ $name ] = array(
+				'name'  => $name,
+				'label' => __( 'Edit with Droip', 'tutor' ),
+				'link'  => add_query_arg(
+					array(
+						'action'  => 'droip',
+						'post_id' => $post_id,
+					),
+					get_permalink( $post_id )
+				),
+			);
+		}
+
+		if ( is_plugin_active( 'elementor/elementor.php' ) ) {
+			$name             = 'elementor';
+			$editors[ $name ] = array(
+				'name'  => $name,
+				'label' => __( 'Edit with Elementor', 'tutor' ),
+				'link'  => add_query_arg(
+					array(
+						'post'   => $post_id,
+						'action' => $name,
+					),
+					get_admin_url( null, 'post.php' )
+				),
+			);
+		}
+
+		return apply_filters( 'tutor_course_builder_editor_list', $editors, $post_id );
+	}
+
+	/**
+	 * Check which editor is used for edit content.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $post_id post id.
+	 *
+	 * @return string
+	 */
+	public function get_editor_used( $post_id ) {
+		$name   = 'classic';
+		$editor = array(
+			'name'  => $name,
+			'label' => __( 'Classic Editor', 'tutor' ),
+			'link'  => '',
+		);
+
+		$content = get_post_field( 'post_content', $post_id );
+		if ( has_blocks( $content ) ) {
+			$name = 'gutenberg';
+		} elseif ( 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) ) {
+			$name = 'elementor';
+		} elseif ( 'droip' === get_post_meta( $post_id, 'droip_editor_mode', true ) ) {
+			$name = 'droip';
+		}
+
+		$editor_list = $this->get_editor_list( $post_id );
+		if ( isset( $editor_list[ $name ] ) ) {
+			$editor = $editor_list[ $name ];
+		}
+
+		return apply_filters( 'tutor_course_builder_editor_used', $editor, $post_id );
 	}
 }

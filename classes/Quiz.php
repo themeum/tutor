@@ -1040,6 +1040,10 @@ class Quiz {
 		$quiz->quiz_option = get_post_meta( $quiz_id, 'tutor_quiz_option', true );
 		$quiz->questions   = tutor_utils()->get_questions_by_quiz( $quiz_id );
 
+		if ( ! is_array( $quiz->questions ) ) {
+			$quiz->questions = array();
+		}
+
 		foreach ( $quiz->questions as $question ) {
 			$question->question_answers = QuizModel::get_question_answers( $question->question_id );
 			if ( isset( $question->question_settings ) ) {
