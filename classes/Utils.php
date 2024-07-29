@@ -10249,15 +10249,25 @@ class Utils {
 	 * @return string
 	 */
 	function get_editor_used( $post_id ) {
-		$editor  = 'classic';
-		$content = get_post_field( 'post_content', $post_id );
+		$name   = 'classic';
+		$editor = array(
+			'name'  => $name,
+			'label' => __( 'Classic Editor', 'tutor' ),
+			'link'  => '',
+		);
 
+		$content = get_post_field( 'post_content', $post_id );
 		if ( has_blocks( $content ) ) {
-			$editor = 'gutenberg';
+			$name = 'gutenberg';
 		} elseif ( get_post_meta( $post_id, '_elementor_data', true ) ) {
-			$editor = 'elementor';
+			$name = 'elementor';
 		}
 
-		return $editor;
+		$editor_list = $this->get_editor_list( $post_id );
+		if ( isset( $editor_list[ $name ] ) ) {
+			$editor = $editor_list[ $name ];
+		}
+
+		return apply_filters( 'tutor_course_builder_editor_used', $editor, $post_id );
 	}
 }
