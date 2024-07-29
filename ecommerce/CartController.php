@@ -156,28 +156,48 @@ class CartController {
 	 */
 	public function add_course_to_cart() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			wp_send_json_error( tutor_utils()->error_message( 'nonce' ) );
+			$this->json_response(
+				tutor_utils()->error_message( 'nonce' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		$user_id   = tutils()->get_user_id();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		if ( ! $course_id ) {
-			wp_send_json_error( __( 'Invalid course id.', 'tutor' ) );
+			$this->json_response(
+				__( 'Invalid course id.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		// Check if the course already exists in the cart or not.
 		$is_course_in_user_cart = $this->model->is_course_in_user_cart( $user_id, $course_id );
 		if ( $is_course_in_user_cart ) {
-			wp_send_json_error( __( 'The course is already in the cart.', 'tutor' ) );
+			$this->json_response(
+				__( 'The course is already in the cart.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		$response = $this->model->add_course_to_cart( $user_id, $course_id );
 
 		if ( $response ) {
-			wp_send_json_success( self::get_page_url() );
+			$this->json_response(
+				__( 'The course was added to the cart successfully.', 'tutor' ),
+				self::get_page_url(),
+				HttpHelper::STATUS_CREATED
+			);
 		} else {
-			wp_send_json_error( __( 'Failed to add to cart.', 'tutor' ) );
+			$this->json_response(
+				__( 'Failed to add to cart.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 	}
 
@@ -190,22 +210,42 @@ class CartController {
 	 */
 	public function delete_course_from_cart() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			wp_send_json_error( tutor_utils()->error_message( 'nonce' ) );
+			$this->json_response(
+				tutor_utils()->error_message( 'nonce' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		$user_id   = tutils()->get_user_id();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
 		if ( ! $course_id ) {
-			wp_send_json_error( __( 'Invalid course id.', 'tutor' ) );
+			$this->json_response(
+				__( 'Invalid course id.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 
 		$response = $this->model->delete_course_from_cart( $user_id, $course_id );
 
 		if ( $response ) {
-			wp_send_json_success( __( 'Course removed successfully.', 'tutor' ) );
+			ob_start();
+			tutor_load_template( 'ecommerce.cart' );
+			$data = ob_get_clean();
+
+			$this->json_response(
+				__( 'The course was removed successfully.', 'tutor' ),
+				$data,
+				HttpHelper::STATUS_OK
+			);
 		} else {
-			wp_send_json_error( __( 'Course remove failed.', 'tutor' ) );
+			$this->json_response(
+				__( 'Course remove failed.', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
 	}
 }

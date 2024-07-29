@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
 
     // Add to cart functionalities
-    const addToCartButtons = document.querySelectorAll('.tutor-native-add-to-cart');
-    addToCartButtons.forEach((button) => {
-        button.addEventListener('click', async (e) => {
+    document.addEventListener('click', async (e) => {
+        const button = e.target.closest('.tutor-native-add-to-cart');
+        if (button) {
             const formData = tutorFormData([{ action: 'tutor_add_course_to_cart', course_id: button.dataset.courseId }]);
             const isSinglePage = document.body.classList.contains('single-courses');
 
@@ -17,13 +17,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 button.classList.add('is-loading');
 
                 const post = await ajaxHandler(formData);
-                const { success, data = defaultErrorMessage } = await post.json();
-                if (success) {
-                    tutor_toast(__('Success', 'tutor'), __('The course was added to the cart successfully.'), 'success');
+                const { status_code, data, message = defaultErrorMessage } = await post.json();
+                if (status_code === 201) {
+                    tutor_toast(__('Success', 'tutor'), message, 'success');
                     const viewCartButton = `<a href="${data}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'}">${__('View Cart', 'tutor')}</a>`
                     button.parentElement.innerHTML = viewCartButton;
                 } else {
-                    tutor_toast(__('Failed', 'tutor'), data, 'error');
+                    tutor_toast(__('Failed', 'tutor'), message, 'error');
                 }
             } catch (error) {
                 tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
@@ -31,36 +31,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 button.removeAttribute('disabled');
                 button.classList.remove('is-loading');
             }
-        });
+        }
     });
 
-    const cartPageWrapper = document.querySelector('.tutor-cart-page');
-    if (cartPageWrapper) {
-        // Remove course from card
-        const deleteButtons = document.querySelectorAll('.tutor-cart-remove-button');
-        deleteButtons.forEach((button) => {
-            button.addEventListener('click', async (e) => {
-                const formData = tutorFormData([{ action: 'tutor_delete_course_from_cart', course_id: button.dataset.courseId }]);
+    // Remove course from card
+    document.addEventListener('click', async (e) => {
+        const button = e.target.closest('.tutor-cart-remove-button');
+        if (button) {
+            const formData = tutorFormData([{ action: 'tutor_delete_course_from_cart', course_id: button.dataset.courseId }]);
 
-                try {
-                    button.setAttribute('disabled', 'disabled');
-                    button.classList.add('is-loading');
+            try {
+                button.setAttribute('disabled', 'disabled');
+                button.classList.add('is-loading');
 
-                    const post = await ajaxHandler(formData);
-                    const { success, data = defaultErrorMessage } = await post.json();
-                    if (success) {
-                        tutor_toast(__('Success', 'tutor'), data, 'success');
-                        window.location.reload();
-                    } else {
-                        tutor_toast(__('Failed', 'tutor'), data, 'error');
-                    }
-                } catch (error) {
-                    tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
-                } finally {
-                    button.removeAttribute('disabled');
-                    button.classList.remove('is-loading');
+                const post = await ajaxHandler(formData);
+                const { status_code, data, message = defaultErrorMessage } = await post.json();
+                if (status_code === 200) {
+                    document.querySelector('.tutor-cart-page').parentElement.innerHTML = data;
+                    tutor_toast(__('Success', 'tutor'), message, 'success');
+                } else {
+                    tutor_toast(__('Failed', 'tutor'), message, 'error');
                 }
-            });
-        });
-    }
+            } catch (error) {
+                tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
+            } finally {
+                button.removeAttribute('disabled');
+                button.classList.remove('is-loading');
+            }
+        }
+    });
 });
