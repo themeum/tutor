@@ -432,7 +432,6 @@ const styles = {
       &:hover {
         [data-check-icon] {
           opacity: 1;
-          color: ${colorTokens.icon.default};
         }
         [data-visually-hidden] {
           opacity: 1;
