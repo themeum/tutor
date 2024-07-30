@@ -65,6 +65,7 @@ export interface CourseFormData {
   tutor_course_certificate_template: string;
   enable_tutor_bp: boolean;
   bp_attached_group_ids: string[];
+  editor_used: Editor;
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -121,6 +122,11 @@ export const courseDefaultData: CourseFormData = {
   tutor_course_certificate_template: '',
   enable_tutor_bp: false,
   bp_attached_group_ids: [],
+  editor_used: {
+    label: '',
+    link: '',
+    name: '',
+  },
 };
 
 export interface CoursePayload {
@@ -204,6 +210,12 @@ export interface GoogleMeet {
     timezone: string;
     meet_link: string;
   };
+}
+
+export interface Editor {
+  label: string;
+  link: string;
+  name: string;
 }
 
 export interface CourseDetailsResponse {
@@ -321,6 +333,8 @@ export interface CourseDetailsResponse {
   };
   google_meet_meetings: GoogleMeet[];
   bp_attached_groups: string[];
+  editor_used: Editor;
+  editors: Editor[];
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
