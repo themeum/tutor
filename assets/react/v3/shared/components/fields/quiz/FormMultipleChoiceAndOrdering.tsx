@@ -69,7 +69,7 @@ const FormMultipleChoiceAndOrdering = ({
   };
 
   const saveQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId, activeQuestionId);
   const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation(quizId);
   const duplicateContentMutation = useDuplicateContentMutation();
 
@@ -146,7 +146,7 @@ const FormMultipleChoiceAndOrdering = ({
       answer_title: inputValue.answer_title,
       image_id: inputValue.image_id || '',
       answer_view_format: 'text_image',
-      ...(inputValue.answer_id && {
+      ...(!inputValue.answer_id && {
         question_type: filterByQuestionType(currentQuestionType),
       }),
     });
