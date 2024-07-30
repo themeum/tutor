@@ -235,34 +235,32 @@ const CourseBasic = () => {
             </Show>
 
             <div css={styles.editorWrapper}>
-              <div
-                css={{
-                  visibility: courseDetails?.editor_used?.name === 'classic' ? 'visible' : 'hidden',
-                }}
+              <Show
+                when={courseDetails?.editor_used?.name === 'classic'}
+                fallback={
+                  <div css={styles.editorOverlay}>
+                    <Button
+                      variant="primary"
+                      onClick={() =>
+                        showModal({
+                          component: EditorModal,
+                          props: {
+                            title: courseDetails?.editor_used?.label,
+                            editorUsed: courseDetails?.editor_used,
+                          },
+                        })
+                      }
+                    >
+                      {courseDetails?.editor_used?.label}
+                    </Button>
+                  </div>
+                }
               >
                 <Controller
                   name="post_content"
                   control={form.control}
                   render={(controllerProps) => <FormWPEditor {...controllerProps} />}
                 />
-              </div>
-              <Show when={courseDetails?.editor_used?.name !== 'classic'}>
-                <div css={styles.editorOverlay}>
-                  <Button
-                    variant="primary"
-                    onClick={() =>
-                      showModal({
-                        component: EditorModal,
-                        props: {
-                          title: courseDetails?.editor_used?.label,
-                          editorUsed: courseDetails?.editor_used,
-                        },
-                      })
-                    }
-                  >
-                    {courseDetails?.editor_used?.label}
-                  </Button>
-                </div>
               </Show>
             </div>
           </div>
@@ -560,8 +558,7 @@ const styles = {
     position: relative;
   `,
   editorOverlay: css`
-    position: absolute;
-    inset: 0;  
+    height: 360px;
     ${styleUtils.flexCenter()};
     background-color: ${colorTokens.bg.gray20};
     border-radius: ${borderRadius.card};
