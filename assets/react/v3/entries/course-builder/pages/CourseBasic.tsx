@@ -28,21 +28,23 @@ import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 import {
+  type CourseDetailsResponse,
   type CourseFormData,
   type PricingCategory,
-  useCourseDetailsQuery,
-  useGetProductsQuery,
-  useProductDetailsQuery,
+  useGetWcProductsQuery,
+  useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery } from '@Services/users';
 import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
+import { useQueryClient } from '@tanstack/react-query';
 
 const courseId = getCourseId();
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
+  const queryClient = useQueryClient();
   const { showModal } = useModal();
 
   const author = form.watch('post_author');
@@ -123,44 +125,44 @@ const CourseBasic = () => {
     },
   ];
 
-  const courseDetailsQuery = useCourseDetailsQuery(courseId);
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
   const instructorOptions = instructorListQuery.data ?? [];
 
-  const productsQuery = useGetProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
-  const productDetailsQuery = useProductDetailsQuery(
+  const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
+  const wcProductDetailsQuery = useWcProductDetailsQuery(
     courseProductId,
     String(courseId),
     coursePriceType,
     tutorConfig.settings.monetize_by,
   );
 
-  const productOptions = () => {
-    const { course_pricing } = courseDetailsQuery.data || {};
-    const currentSelectedProduct =
-      course_pricing?.product_id && course_pricing.product_id !== '0'
+  const wcProductOptions = () => {
+    const { course_pricing } = courseDetails || {};
+    const currentSelectedWcProduct =
+      course_pricing?.product_id && course_pricing.product_id !== '0' && course_pricing.product_name
         ? { label: course_pricing.product_name || '', value: course_pricing.product_id }
         : null;
 
-    return productsQuery.isSuccess && productsQuery.data
+    return wcProductsQuery.isSuccess && wcProductsQuery.data
       ? [
-          currentSelectedProduct,
-          ...productsQuery.data.map(({ post_title: label, ID: value }) => ({ label, value })),
+          currentSelectedWcProduct,
+          ...wcProductsQuery.data.map(({ post_title: label, ID: value }) => ({ label, value })),
         ].filter(isDefined)
       : [];
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (productDetailsQuery.isSuccess && productDetailsQuery.data) {
-      form.setValue('course_price', productDetailsQuery.data.regular_price || '0');
-      form.setValue('course_sale_price', productDetailsQuery.data.sale_price || '0');
+    if (wcProductDetailsQuery.isSuccess && wcProductDetailsQuery.data) {
+      form.setValue('course_price', wcProductDetailsQuery.data.regular_price || '0');
+      form.setValue('course_sale_price', wcProductDetailsQuery.data.sale_price || '0');
     } else {
       form.setValue('course_price', '0');
       form.setValue('course_sale_price', '0');
     }
-  }, [productDetailsQuery.data]);
+  }, [wcProductDetailsQuery.data]);
 
   return (
     <div css={styles.wrapper}>
@@ -263,6 +265,7 @@ const CourseBasic = () => {
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
               infoText={__('Supported file formats .mp4 ', 'tutor')}
+              supportedFormats={['mp4']}
             />
           )}
         />
@@ -304,7 +307,7 @@ const CourseBasic = () => {
                 {...controllerProps}
                 label={__('Select product', 'tutor')}
                 placeholder={__('Select a product', 'tutor')}
-                options={productOptions()}
+                options={wcProductOptions()}
                 helpText={__(
                   'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
                 )}
@@ -338,7 +341,8 @@ const CourseBasic = () => {
           />
         )}
 
-        {coursePriceType === 'paid' &&
+        {courseCategory === 'regular' &&
+          coursePriceType === 'paid' &&
           (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc') && (
             <div css={styles.coursePriceWrapper}>
               <Controller

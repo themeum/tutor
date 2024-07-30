@@ -30,33 +30,21 @@
 			"@Utils/*": ["assets/react/v3/shared/utils/*"],
 			"@Images/*": ["assets/images/*"],
 			"@Controls/*": ["assets/react/v3/shared/controls/*"],
-			"@CourseBuilderComponents/*": [
-				"assets/react/v3/entries/course-builder/components/*"
-			],
-			"@CourseBuilderServices/*": [
-				"assets/react/v3/entries/course-builder/services/*"
-			],
-			"@CourseBuilderConfig/*": [
-				"assets/react/v3/entries/course-builder/config/*"
-			],
-			"@CourseBuilderPages/*": [
-				"assets/react/v3/entries/course-builder/pages/*"
-			],
-			"@CourseBuilderUtils/*": [
-				"assets/react/v3/entries/course-builder/utils/*"
-			],
-			"@CourseBuilderPublic/*": [
-				"assets/react/v3/entries/course-builder/public/*"
-			],
-			"@CourseBuilderContexts/*": [
-				"assets/react/v3/entries/course-builder/contexts/*"
-			],
-			"@OrderComponents/*": [
-				"assets/react/v3/entries/order-details/components/*"
-			],
+			"@CourseBuilderComponents/*": ["assets/react/v3/entries/course-builder/components/*"],
+			"@CourseBuilderServices/*": ["assets/react/v3/entries/course-builder/services/*"],
+			"@CourseBuilderConfig/*": ["assets/react/v3/entries/course-builder/config/*"],
+			"@CourseBuilderPages/*": ["assets/react/v3/entries/course-builder/pages/*"],
+			"@CourseBuilderUtils/*": ["assets/react/v3/entries/course-builder/utils/*"],
+			"@CourseBuilderPublic/*": ["assets/react/v3/entries/course-builder/public/*"],
+			"@CourseBuilderContexts/*": ["assets/react/v3/entries/course-builder/contexts/*"],
+			"@OrderComponents/*": ["assets/react/v3/entries/order-details/components/*"],
 			"@OrderServices/*": ["assets/react/v3/entries/order-details/services/*"],
 			"@OrderAtoms/*": ["assets/react/v3/entries/order-details/atoms/*"],
-			"@OrderContexts/*": ["assets/react/v3/entries/order-details/contexts/*"]
+			"@OrderContexts/*": ["assets/react/v3/entries/order-details/contexts/*"],
+			"@CouponComponents/*": ["assets/react/v3/entries/coupon-details/components/*"],
+			"@CouponServices/*": ["assets/react/v3/entries/coupon-details/services/*"],
+			"@CouponAtoms/*": ["assets/react/v3/entries/coupon-details/atoms/*"],
+			"@CouponContexts/*": ["assets/react/v3/entries/coupon-details/contexts/*"]
 		}
 	},
 	"include": ["./assets/react/v3"],

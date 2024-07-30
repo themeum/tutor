@@ -69,7 +69,7 @@ class AdminMenu {
 		if ( in_array( $action, array( 'add_new', 'edit' ) ) ) {
 			?>
 				<div class="tutor-admin-wrap">
-					<div class="tutor-coupon-root">
+					<div id="tutor-coupon-root">
 					</div>
 				</div>
 			<?php
@@ -77,5 +77,4 @@ class AdminMenu {
 		}
 		include tutor()->path . 'views/pages/ecommerce/coupon-list.php';
 	}
-
 }

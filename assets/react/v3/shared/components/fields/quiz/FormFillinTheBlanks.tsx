@@ -11,7 +11,7 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizForm, type QuizQuestionOption, useCreateQuizAnswerMutation } from '@CourseBuilderServices/quiz';
+import { type QuizForm, type QuizQuestionOption, useSaveQuizAnswerMutation } from '@CourseBuilderServices/quiz';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
@@ -34,7 +34,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const fillInTheBlanksCorrectAnswer = inputValue.answer_two_gap_match?.split('|');
 
-  const createQuizAnswerMutation = useCreateQuizAnswerMutation(quizId);
+  const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title || !inputValue.answer_two_gap_match);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
@@ -44,20 +44,12 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
       ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
       question_id: inputValue.belongs_question_id,
       answer_title: inputValue.answer_title,
+      answer_two_gap_match: inputValue.answer_two_gap_match,
       image_id: inputValue.image_id || '',
-      answer_view_format: 'text_image',
-      ...(!inputValue.answer_id && { question_type: 'fill_in_the_blank' }),
+      question_type: 'fill_in_the_blank',
     });
 
-    const currentAnswerIndex = form
-      .getValues(`questions.${activeQuestionIndex}.question_answers`)
-      .findIndex((answer) => answer.answer_id === inputValue.answer_id);
-
     if (response.status_code === 201 || response.status_code === 200) {
-      form.setValue(`questions.${activeQuestionIndex}.question_answers.${currentAnswerIndex}`, {
-        ...inputValue,
-        answer_id: response.data,
-      });
       setIsEditing(false);
     }
   };
@@ -74,41 +66,21 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
         <div css={styles.optionHeader}>
           <div css={styles.optionTitle}>{__('Fill in the blanks', 'tutor')}</div>
 
-          <div css={styles.optionActions}>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-edit-button
-              onClick={(event) => {
-                event.stopPropagation();
-                setIsEditing(true);
-              }}
-            >
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={(event) => {
-                event.stopPropagation();
-                alert('@TODO: will be implemented later');
-              }}
-            >
-              <SVGIcon name="copyPaste" width={24} height={24} />
-            </button>
-            <button
-              type="button"
-              css={styles.actionButton}
-              data-visually-hidden
-              onClick={(event) => {
-                event.stopPropagation();
-                alert('@TODO: will be implemented later');
-              }}
-            >
-              <SVGIcon name="delete" width={24} height={24} />
-            </button>
-          </div>
+          <Show when={inputValue.answer_id}>
+            <div css={styles.optionActions}>
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-edit-button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsEditing(true);
+                }}
+              >
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+            </div>
+          </Show>
         </div>
         <div css={styles.optionBody}>
           <Show
@@ -425,6 +397,7 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[6]};
     resize: vertical;
+    cursor: text;
 
     &:focus {
       ${styleUtils.inputFocus};

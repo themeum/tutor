@@ -987,8 +987,12 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		$course = get_post( $course_id, ARRAY_A );
-		$data   = array(
+		$course  = get_post( $course_id, ARRAY_A );
+		$editors = tutor_utils()->get_editor_list( $course_id );
+
+		$data = array(
+			'editors'                  => array_values( $editors ),
+			'editor_used'              => tutor_utils()->get_editor_used( $course_id ),
 			'preview_link'             => get_preview_post_link( $course_id ),
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
 			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),

@@ -72,12 +72,9 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
     return questionFields.find((item) => item.question_id === activeSortId);
   }, [activeSortId, questionFields]);
 
-  const handleAddQuestion = async () => {
+  const handleAddQuestion = () => {
     if (quizId) {
-      const response = await createQuizQuestion.mutateAsync(quizId);
-      if (response) {
-        form.setValue('questions', [...form.watch('questions'), response.data]);
-      }
+      createQuizQuestion.mutate(quizId);
     }
   };
 
