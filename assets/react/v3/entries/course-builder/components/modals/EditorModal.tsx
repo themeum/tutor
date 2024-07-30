@@ -12,6 +12,9 @@ export interface EditorModalProps extends ModalProps {
   onEditorContentChange?: (content: string) => void;
 }
 
+// This is the skeleton of the EditorModal component to load custom editors using iframes.
+// Will be updated with the actual implementation later.
+
 const EditorModal = ({ closeModal, title, subtitle, editorUsed, icon, onEditorContentChange }: EditorModalProps) => {
   return (
     <BasicModalWrapper
