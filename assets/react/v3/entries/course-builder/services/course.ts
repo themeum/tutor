@@ -65,6 +65,7 @@ export interface CourseFormData {
   tutor_course_certificate_template: string;
   enable_tutor_bp: boolean;
   bp_attached_group_ids: string[];
+  editor_used: Editor;
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -121,6 +122,11 @@ export const courseDefaultData: CourseFormData = {
   tutor_course_certificate_template: '',
   enable_tutor_bp: false,
   bp_attached_group_ids: [],
+  editor_used: {
+    label: '',
+    link: '',
+    name: '',
+  },
 };
 
 export interface CoursePayload {

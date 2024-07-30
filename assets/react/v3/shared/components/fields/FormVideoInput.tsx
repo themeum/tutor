@@ -1,21 +1,25 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { rgba } from 'polished';
+import { useEffect, useRef, useState } from 'react';
+import { Controller } from 'react-hook-form';
+
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
+
 import config, { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, fontWeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { rgba } from 'polished';
-import { useEffect, useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
+
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -125,8 +129,8 @@ const FormVideoInput = ({
     if (!fieldValue) {
       return;
     }
-    form.setValue('videoSource', fieldValue.source);
-    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
+    form.setValue('videoSource', fieldValue.source || 'external_url');
+    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source || 'external_url'}` as keyof CourseVideo] || '');
   }, [fieldValue]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -139,7 +143,7 @@ const FormVideoInput = ({
       form.setValue('videoUrl', '');
       return;
     }
-    form.setValue('videoUrl', fieldValue?.[`source_${videoSource}` as keyof CourseVideo] || '');
+    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source || 'external_url'}` as keyof CourseVideo] || '');
   }, [videoSource, fieldValue]);
 
   const [isOpen, setIsOpen] = useState(false);

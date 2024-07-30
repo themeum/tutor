@@ -178,7 +178,7 @@ const CourseSettings = () => {
                   label={__('BuddyPress Groups', 'tutor')}
                   helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
                   placeholder={__('Search BuddyPress Groups', 'tutor')}
-                  options={tutorConfig.bp_groups.map((group) => ({
+                  options={(tutorConfig.bp_groups || []).map((group) => ({
                     label: group.name,
                     value: String(group.id),
                   }))}

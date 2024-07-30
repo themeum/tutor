@@ -11,7 +11,9 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     post_date: data.post_date,
     post_title: data.post_title,
     post_name: data.post_name,
-    post_content: data.post_content,
+    ...(data.editor_used.name === 'classic' && {
+      post_content: data.post_content,
+    }),
     post_status: data.post_password.length ? 'publish' : (data.post_status as 'publish' | 'private'),
     post_password: data.post_password,
     post_author: data.post_author?.id ?? null,
@@ -150,6 +152,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_attachments: courseDetails.course_attachments ?? [],
     enable_tutor_bp: courseDetails.course_settings.enable_tutor_bp === 1 ? true : false,
     bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
+    editor_used: courseDetails.editor_used,
   };
 };
 
