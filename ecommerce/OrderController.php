@@ -738,12 +738,14 @@ class OrderController {
 			switch ( $bulk_action ) {
 				case $this->model::PAYMENT_PAID:
 					$data = array(
-						'order_status' => $this->model::ORDER_COMPLETED,
+						'payment_status' => $this->model::PAYMENT_PAID,
+						'order_status'   => $this->model::ORDER_COMPLETED,
 					);
 					break;
 				case $this->model::PAYMENT_UNPAID:
 					$data = array(
-						'order_status' => $this->model::ORDER_INCOMPLETE,
+						'payment_status' => $this->model::PAYMENT_UNPAID,
+						'order_status'   => $this->model::ORDER_INCOMPLETE,
 					);
 					break;
 				case $this->model::ORDER_TRASH:

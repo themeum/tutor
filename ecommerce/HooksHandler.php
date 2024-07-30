@@ -12,6 +12,7 @@ namespace Tutor\Ecommerce;
 
 use Tutor\Models\OrderActivitiesModel;
 use TUTOR\Course;
+use Tutor\Models\OrderModel;
 
 /**
  * Handle custom hooks
@@ -40,6 +41,9 @@ class HooksHandler {
 
 		add_filter( 'tutor_course_sell_by', array( $this, 'alter_course_sell_by' ) );
 		add_filter( 'get_tutor_course_price', array( $this, 'alter_course_price' ), 10, 2 );
+
+		// Order hooks.
+		add_action( 'tutor_after_order_bulk_action', array( $this, 'manage_earnings' ), 10, 2 );
 	}
 
 	/**
@@ -103,6 +107,38 @@ class HooksHandler {
 		}
 
 		return $price;
+	}
+
+	/**
+	 * Manage earnings after order bulk action
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $bulk_action Action name.
+	 * @param array  $order_ids Order ID.
+	 *
+	 * @return void
+	 */
+	public function manage_earnings( $bulk_action, $order_ids ) {
+		$actions = array(
+			OrderModel::PAYMENT_PAID,
+			OrderModel::PAYMENT_UNPAID,
+		);
+
+		if ( in_array( $bulk_action, $actions ) ) {
+			foreach ( $order_ids as $order_id ) {
+				$earnings = EarningController::get_instance();
+				$earnings->prepare_order_earnings( $order_id );
+				try {
+					$earning_id = $earnings->remove_before_store_earnings();
+					if ( $earning_id ) {
+						do_action( 'tutor_ecommerce_after_earning_stored', $earning_id, $earnings->earning_data );
+					}
+				} catch ( \Throwable $th ) {
+					error_log( $th->getMessage() );
+				}
+			}
+		}
 	}
 }
 
