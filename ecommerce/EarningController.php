@@ -65,20 +65,13 @@ class EarningController extends Singleton {
 	public $earning_data = array();
 
 	/**
-	 * Instance of this class
+	 * Set table name prop
 	 *
 	 * @since 3.0.0
-	 *
-	 * @return EarningController object
 	 */
-	public static function get_instance() {
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new self();
-
-			global $wpdb;
-			self::$instance->earning_table = $wpdb->prefix . 'tutor_earnings';
-		}
-		return self::$instance;
+	protected function __construct() {
+		global $wpdb;
+		$this->earning_table = $wpdb->prefix . 'tutor_earnings';
 	}
 
 	/**
@@ -92,7 +85,7 @@ class EarningController extends Singleton {
 	 * @return mixed
 	 */
 	public function prepare_order_earnings( int $order_id ) {
-        $this->order_id = $order_id;
+		$this->order_id = $order_id;
 
 		$order_model   = new OrderModel();
 		$order_details = $order_model->get_order_by_id( $order_id );
