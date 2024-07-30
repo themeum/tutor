@@ -10,19 +10,21 @@
  */
 
 use Tutor\Ecommerce\CartController;
+use Tutor\Models\CartModel;
 
 $course_id                = get_the_ID();
 $is_logged_in             = is_user_logged_in();
+$user_id                  = get_current_user_id();
 $enable_guest_course_cart = false;
 $required_loggedin_class  = '';
 if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
-$has_course_in_cart = false; // @TODO
-$cart_page_url      = CartController::get_page_url();
-if ( $has_course_in_cart ) {
+$is_course_in_user_cart = CartModel::is_course_in_user_cart( $user_id, $course_id );
+$cart_page_url          = CartController::get_page_url();
+if ( $is_course_in_user_cart ) {
 	?>
-	<a href="<?php echo esc_url( $cart_page_url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block tutor-native-view-cart">
+	<a href="<?php echo esc_url( $cart_page_url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block">
 	<?php esc_html_e( 'View Cart', 'tutor' ); ?>
 	</a>
 	<?php
@@ -66,11 +68,9 @@ if ( $has_course_in_cart ) {
 		?>
         <?php echo apply_filters( 'tutor_after_course_details_tutor_cart_price', ob_get_clean(), $course_id ); //phpcs:ignore ?>
 	</div>
-	<form method="post" enctype="multipart/form-data" id="tutor-native-add-to-cart-form">
-		<button type="submit" name="add-to-cart-btn" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-add-to-cart-button <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>">
-			<span class="tutor-icon-cart-line tutor-mr-8"></span>
-			<span><?php esc_html_e( 'Add to cart', 'tutor' ); ?></span>
-		</button>
-	</form>
+	<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-native-add-to-cart <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
+		<span class="tutor-icon-cart-line tutor-mr-8"></span>
+		<span><?php esc_html_e( 'Add to cart', 'tutor' ); ?></span>
+	</button>
 	<?php
 }

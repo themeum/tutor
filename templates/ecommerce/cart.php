@@ -13,83 +13,103 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
-$total_count     = $get_cart['total_count'];
-$courses         = $get_cart['results'];
+$courses         = $get_cart['courses'];
+$total_count     = $courses['total_count'];
+$course_list     = $courses['results'];
+$subtotal        = 0;
+$tax_amount      = 0; // @TODO: Need to implement later.
 
 ?>
 <div class="tutor-cart-page">
-	<div class="tutor-container">
-		<div class="tutor-row tutor-g-4">
-			<div class="tutor-col-md-8">
-				<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16"><?php echo esc_html( $total_count ); ?> <?php esc_html_e( 'Course in Cart', 'tutor' ); ?></h3>
+	<div class="tutor-cart-page-wrapper">
+		<div class="tutor-container">
+			<div class="tutor-row tutor-g-4">
+				<div class="tutor-col-md-8">
+					<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16">
+						<?php echo esc_html( $total_count ); ?> <?php echo esc_html( _n( 'Course in Cart', 'Courses in Cart', $total_count, 'tutor' ) ); ?>
+					</h3>
 
-				<div class="tutor-cart-course-list">
-					<?php if ( is_array( $courses ) && count( $courses ) ) : ?>
-						<?php
-						foreach ( $courses as $key => $course ) :
-							$course_duration = get_tutor_course_duration_context( $course->ID, true );
-							// @TODO: Need to add tutor commerce support
-							$price            = tutor_utils()->get_course_price( $course->ID );
-							$tutor_course_img = get_tutor_course_thumbnail_src( '', $course->ID );
-							$is_bundle        = false;
-							?>
-							<div class="tutor-cart-course-item">
-								<div class="tutor-cart-course-thumb">
-									<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">
-										<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="Course thumb">
-									</a>
-								</div>
-								<div class="tutor-cart-course-title">
-									<!-- @TODO: Need to add bundle product support -->
-									<!-- <div class="tutor-cart-course-bundle-badge">5 Course bundle</div> -->
-									<h5 class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+					<div class="tutor-cart-course-list">
+						<?php if ( is_array( $course_list ) && count( $course_list ) ) : ?>
+							<?php
+							foreach ( $course_list as $key => $course ) :
+								$course_duration  = get_tutor_course_duration_context( $course->ID, true );
+								$course_price     = tutor_utils()->get_raw_course_price( $course->ID );
+								$regular_price    = $course_price->regular_price;
+								$sale_price       = $course_price->sale_price;
+								$tutor_course_img = get_tutor_course_thumbnail_src( '', $course->ID );
+
+								$subtotal += $sale_price ? $sale_price : $regular_price;
+								?>
+								<div class="tutor-cart-course-item">
+									<div class="tutor-cart-course-thumb">
 										<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">
-											<?php echo esc_html( $course->post_title ); ?>
+											<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="Course thumb">
 										</a>
-									</h5>
-									<ul class="tutor-cart-course-info">
-										<li><?php echo esc_html( tutor_utils()->clean_html_content( $course_duration ) ); ?> <span></span></li>
-										<li>147 lectures <span></span></li>
-										<li><?php echo esc_html( get_tutor_course_level( $course->ID ) ); ?></li>
-									</ul>
+									</div>
+									<div class="tutor-cart-course-title">
+										<!-- @TODO: Need to add bundle product support -->
+										<!-- <div class="tutor-cart-course-bundle-badge">5 Course bundle</div> -->
+										<h5 class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+											<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">
+												<?php echo esc_html( $course->post_title ); ?>
+											</a>
+										</h5>
+										<ul class="tutor-cart-course-info">
+											<?php if ( $course_duration ) : ?>
+											<li><?php echo esc_html( tutor_utils()->clean_html_content( $course_duration ) ); ?> <span></span></li>
+											<?php endif; ?>
+											<li><?php echo esc_html( get_tutor_course_level( $course->ID ) ); ?></li>
+										</ul>
+									</div>
+									<div class="tutor-cart-course-price-wrapper">
+										<div class="tutor-cart-course-price">
+											<div class="tutor-fw-bold">
+												<?php echo tutor_get_formatted_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
+											</div>
+											<?php if ( $regular_price && $sale_price && $sale_price !== $regular_price ) : ?>
+											<div class="tutor-cart-discount-price">
+												<?php echo tutor_get_formatted_price( $regular_price ); //phpcs:ignore?>
+											</div>
+											<?php endif; ?>
+										</div>
+										<button class="tutor-btn tutor-btn-link tutor-cart-remove-button" data-course-id="<?php echo esc_attr( $course->ID ); ?>">
+											<?php esc_html_e( 'Remove', 'tutor' ); ?>
+										</button>
+									</div>
 								</div>
-								<div class="tutor-cart-course-price">
-									<div class="tutor-fs-6 tutor-fw-medium tutor-color-black"><?php echo esc_html( $price ); ?></div>
-									<button class="tutor-btn tutor-btn-link tutor-cart-remove-button" data-course-id="<?php echo esc_attr( $course->ID ); ?>">
-										<?php esc_html_e( 'Remove', 'tutor' ); ?>
-									</button>
-								</div>
-							</div>
-						<?php endforeach; ?>
-					<?php else : ?>
-						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-					<?php endif; ?>
-				</div>
-			</div>
-			<div class="tutor-col-md-4">
-				<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16">Summary</h3>
-				<div class="tutor-cart-summery">
-					<div class="tutor-cart-summery-top">
-						<div class="tutor-cart-summery-item tutor-fw-medium">
-							<div>Subtotal:</div>
-							<div>$400.00</div>
-						</div>
-						<div class="tutor-cart-summery-item">
-							<div>Tax:</div>
-							<div>$0.00</div>
-						</div>
+							<?php endforeach; ?>
+						<?php else : ?>
+							<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+						<?php endif; ?>
 					</div>
-					<div class="tutor-cart-summery-bottom">
-						<div class="tutor-cart-summery-item tutor-fw-medium tutor-mb-40">
-							<div>Grand total</div>
-							<div>$400.00</div>
+				</div>
+				<div class="tutor-col-md-4">
+					<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16"><div><?php esc_html_e( 'Summary:', 'tutor' ); ?></div></h3>
+					<div class="tutor-cart-summery">
+						<div class="tutor-cart-summery-top">
+							<div class="tutor-cart-summery-item tutor-fw-medium">
+								<div><?php esc_html_e( 'Subtotal:', 'tutor' ); ?></div>
+								<div><?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?></div>
+							</div>
+							<div class="tutor-cart-summery-item">
+								<div><?php esc_html_e( 'Tax:', 'tutor' ); ?></div>
+								<div><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
+							</div>
 						</div>
-						<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center" href="#">
-							Proceed to checkout
-						</a>
+						<div class="tutor-cart-summery-bottom">
+							<div class="tutor-cart-summery-item tutor-fw-medium tutor-mb-40">
+								<div><?php esc_html_e( 'Grand total', 'tutor' ); ?></div>
+								<div><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
+							</div>
+							<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center" href="<?php echo esc_url( CheckoutController::get_page_url() ); ?>">
+								<?php esc_html_e( 'Proceed to checkout', 'tutor' ); ?>
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
