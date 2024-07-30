@@ -12,11 +12,12 @@ namespace Tutor\Ecommerce;
 
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\OrderModel;
+use TUTOR\Singleton;
 
 /**
  * Manage earnings
  */
-class EarningController {
+class EarningController extends Singleton {
 
 	/**
 	 * Error message for the invalid earning data
@@ -64,22 +65,13 @@ class EarningController {
 	public $earning_data = array();
 
 	/**
-	 * Private construct to prevent direct object creation
-	 *
-	 * @since 3.0.0
-	 */
-	private function __construct() {
-
-	}
-
-	/**
 	 * Instance of this class
 	 *
 	 * @since 3.0.0
 	 *
 	 * @return EarningController object
 	 */
-	public static function instance() {
+	public static function get_instance() {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 

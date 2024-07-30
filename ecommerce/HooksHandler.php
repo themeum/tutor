@@ -127,7 +127,7 @@ class HooksHandler {
 
 		if ( in_array( $bulk_action, $actions ) ) {
 			foreach ( $order_ids as $order_id ) {
-				$earnings = EarningController::instance();
+				$earnings = EarningController::get_instance();
 				$earnings->prepare_order_earnings( $order_id );
 				try {
 					$earning_id = $earnings->remove_before_store_earnings();
