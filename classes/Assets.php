@@ -190,12 +190,14 @@ class Assets {
 		$page   = Input::get( 'page', '' );
 		$action = Input::get( 'action' );
 
+		$allowed_actions = array( 'add_new', 'edit' );
+
 		if ( tutor_utils()->is_monetize_by_tutor() ) {
 			if ( OrderController::PAGE_SLUG === $page && 'edit' === $action ) {
 				wp_enqueue_script( 'tutor-order-details', tutor()->url . 'assets/js/tutor-order-details.min.js', array(), TUTOR_VERSION, true );
 			}
 
-			if ( CouponController::PAGE_SLUG === $page && 'edit' === $action ) {
+			if ( CouponController::PAGE_SLUG === $page && in_array( $action, $allowed_actions, true ) ) {
 				wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array(), TUTOR_VERSION, true );
 			}
 
