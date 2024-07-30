@@ -18,6 +18,7 @@ import {
   useUpdateQuizQuestionMutation,
 } from '@CourseBuilderServices/quiz';
 
+import { useToast } from '@Atoms/Toast';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
@@ -49,6 +50,7 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
   const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
+  const { showToast } = useToast();
 
   const updateQuizQuestionMutation = useUpdateQuizQuestionMutation(quizId);
   const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation(quizId);
@@ -89,6 +91,37 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       style={style}
       tabIndex={-1}
       onClick={() => {
+        const hasMultipleAnswers = form.watch(`questions.${activeQuestionIndex}.multipleCorrectAnswer`);
+
+        const currentQuestionType = () => {
+          const questionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+
+          if (questionType === 'multiple_choice' && !hasMultipleAnswers) {
+            return 'single_choice';
+          }
+          return questionType;
+        };
+
+        if (['single_choice', 'multiple_choice', 'true_false'].includes(currentQuestionType())) {
+          const answers = form.watch(`questions.${activeQuestionIndex}.question_answers`);
+
+          if (answers.length === 0) {
+            return;
+          }
+
+          const hasCorrectAnswer = answers.some(
+            (answer) => answer.belongs_question_type === currentQuestionType() && answer.is_correct === '1',
+          );
+
+          if (!hasCorrectAnswer) {
+            showToast({
+              message: __('Please select a correct answer', 'tutor'),
+              type: 'danger',
+            });
+            return;
+          }
+        }
+
         const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
         updateQuizQuestionMutation.mutate(payload);
 
