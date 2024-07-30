@@ -146,9 +146,7 @@ const FormMultipleChoiceAndOrdering = ({
       answer_title: inputValue.answer_title,
       image_id: inputValue.image_id || '',
       answer_view_format: 'text_image',
-      ...(!inputValue.answer_id && {
-        question_type: filterByQuestionType(currentQuestionType),
-      }),
+      question_type: filterByQuestionType(currentQuestionType),
     });
 
     if (response.status_code === 201 || response.status_code === 200) {
