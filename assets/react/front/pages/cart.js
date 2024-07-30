@@ -6,38 +6,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
 
     // Add to cart functionalities
-    const archivePage = document.querySelector('.course-archive-page');
-    const singleCourse = document.querySelector('.single-courses');
-    const singleCourseBundle = document.querySelector('.single-course-bundle');
-    if (archivePage || singleCourse || singleCourseBundle) {
-        document.addEventListener('click', async (e) => {
-            const button = e.target.closest('.tutor-native-add-to-cart');
-            if (button) {
-                const formData = tutorFormData([{ action: 'tutor_add_course_to_cart', course_id: button.dataset.courseId }]);
-                const isSinglePage = document.body.classList.contains('single-courses');
+    document.addEventListener('click', async (e) => {
+        const button = e.target.closest('.tutor-native-add-to-cart');
+        if (button) {
+            const formData = tutorFormData([{ action: 'tutor_add_course_to_cart', course_id: button.dataset.courseId }]);
+            const isSinglePage = document.body.classList.contains('single-courses');
 
-                try {
-                    button.setAttribute('disabled', 'disabled');
-                    button.classList.add('is-loading');
+            try {
+                button.setAttribute('disabled', 'disabled');
+                button.classList.add('is-loading');
 
-                    const post = await ajaxHandler(formData);
-                    const { status_code, data, message = defaultErrorMessage } = await post.json();
-                    if (status_code === 201) {
-                        tutor_toast(__('Success', 'tutor'), message, 'success');
-                        const viewCartButton = `<a href="${data}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'}">${__('View Cart', 'tutor')}</a>`
-                        button.parentElement.innerHTML = viewCartButton;
-                    } else {
-                        tutor_toast(__('Failed', 'tutor'), message, 'error');
-                    }
-                } catch (error) {
-                    tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
-                } finally {
-                    button.removeAttribute('disabled');
-                    button.classList.remove('is-loading');
+                const post = await ajaxHandler(formData);
+                const { status_code, data, message = defaultErrorMessage } = await post.json();
+                if (status_code === 201) {
+                    tutor_toast(__('Success', 'tutor'), message, 'success');
+                    const viewCartButton = `<a href="${data}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'}">${__('View Cart', 'tutor')}</a>`
+                    button.parentElement.innerHTML = viewCartButton;
+                } else {
+                    tutor_toast(__('Failed', 'tutor'), message, 'error');
                 }
+            } catch (error) {
+                tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
+            } finally {
+                button.removeAttribute('disabled');
+                button.classList.remove('is-loading');
             }
-        });
-    }
+        }
+    });
 
     // Remove course from card
     const tutorCartPage = document.querySelector('.tutor-cart-page');
