@@ -1,4 +1,5 @@
 import { tutorConfig } from '@Config/config';
+import { borderRadius, colorTokens } from '@Config/styles';
 import { nanoid } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __, _x } from '@wordpress/i18n';
@@ -237,6 +238,48 @@ const styles = {
 
     .wp-editor-tools {
       z-index: auto;
+    }
+
+    .wp-editor-container {
+      border-color: ${colorTokens.stroke.default};
+      border-top-left-radius: ${borderRadius[6]};
+      border-bottom-left-radius: ${borderRadius[6]};
+      border-bottom-right-radius: ${borderRadius[6]};
+      background-color: ${colorTokens.background.white};
+    }
+
+    .wp-switch-editor {
+      border-top-left-radius: ${borderRadius[4]};
+      border-top-right-radius: ${borderRadius[4]};
+      border-color: ${colorTokens.stroke.default};
+      background-color: ${colorTokens.background.default};
+    }
+
+    .html-active .switch-html,
+    .tmce-active .switch-tmce {
+      border-bottom-color: ${colorTokens.background.default};
+    }
+
+    .mce-toolbar-grp,
+    .quicktags-toolbar {
+      border-top-left-radius: ${borderRadius[6]};
+      background-color: ${colorTokens.background.default};
+      border-color: ${colorTokens.stroke.default};
+    }
+
+    .mce-top-part::before {
+      display: none;
+    }
+
+    .mce-statusbar {
+      border-color: ${colorTokens.stroke.default};
+      border-bottom-left-radius: ${borderRadius[6]};
+      border-bottom-right-radius: ${borderRadius[6]};
+    }
+
+    .mce-tinymce {
+      box-shadow: none;
+      background-color: transparent;
     }
 
     textarea {
