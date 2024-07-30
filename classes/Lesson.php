@@ -225,7 +225,7 @@ class Lesson extends Tutor_Base {
 
 		if ( 0 !== $lesson_id ) {
 			if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 			}
 		}
 
@@ -312,7 +312,7 @@ class Lesson extends Tutor_Base {
 			$lesson_data['ID'] = $lesson_id;
 
 			if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
 			}
 
 			do_action( 'tutor/lesson_update/before', $lesson_id );
