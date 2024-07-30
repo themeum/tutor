@@ -206,6 +206,12 @@ export interface GoogleMeet {
   };
 }
 
+export interface Editor {
+  label: string;
+  link: string;
+  name: string;
+}
+
 export interface CourseDetailsResponse {
   ID: number;
   post_author: {
@@ -321,6 +327,8 @@ export interface CourseDetailsResponse {
   };
   google_meet_meetings: GoogleMeet[];
   bp_attached_groups: string[];
+  editor_used: Editor;
+  editors: Editor[];
 }
 
 export type MeetingType = 'zoom' | 'google_meet';

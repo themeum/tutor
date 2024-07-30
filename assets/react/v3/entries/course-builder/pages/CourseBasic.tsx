@@ -18,9 +18,11 @@ import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
 import { useModal } from '@Components/modals/Modal';
 
+import Button from '@Atoms/Button';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { colorTokens, headerHeight, spacing } from '@Config/styles';
+import For from '@Controls/For';
 import Show from '@Controls/Show';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
@@ -199,6 +201,23 @@ const CourseBasic = () => {
               )}
             />
           </div>
+
+          <Show when={courseDetails?.editor_used?.name === 'classic'}>
+            <For each={courseDetails?.editors}>
+              {(editor) => (
+                <Button
+                  key={editor.name}
+                  onClick={() => {
+                    window.open(editor.link, '_blank');
+                  }}
+                  type="button"
+                  variant="secondary"
+                >
+                  {editor.name}
+                </Button>
+              )}
+            </For>
+          </Show>
 
           <Controller
             name="post_content"
