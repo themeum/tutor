@@ -647,9 +647,7 @@ class Course extends Tutor_Base {
 	 * @return void  JSON response
 	 */
 	public function ajax_create_new_draft_course() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$this->check_access();
 
@@ -738,9 +736,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_create_course() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$this->check_access();
 
@@ -833,9 +829,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_update_course() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$params = Input::sanitize_array(
 			//phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -943,9 +937,7 @@ class Course extends Tutor_Base {
 	 * @since 3.0.0
 	 */
 	public function ajax_course_contents() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
@@ -975,9 +967,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_course_details() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$errors    = array();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
@@ -1617,9 +1607,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function tutor_save_topic() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$is_update   = false;
 		$errors      = array();
@@ -1687,9 +1675,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function tutor_delete_topic() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$topic_id = Input::post( 'topic_id', 0, Input::TYPE_INT );
 		if ( ! $topic_id || ! is_numeric( $topic_id ) || ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
