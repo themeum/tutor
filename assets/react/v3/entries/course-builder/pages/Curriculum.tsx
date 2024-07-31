@@ -136,7 +136,7 @@ const Curriculum = () => {
               when={
                 !courseCurriculumQuery.isLoading &&
                 courseCurriculumQuery.data &&
-                (content.length > 0 || courseCurriculumQuery.data.length > 0)
+                (courseCurriculumQuery.data.length > 0 || content.length > 0)
               }
               fallback={
                 <EmptyState
