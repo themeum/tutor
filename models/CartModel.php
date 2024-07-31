@@ -105,7 +105,7 @@ class CartModel {
 				$where,
 				array(),
 				'item.id',
-				1000,
+				0,
 				0
 			);
 		}
