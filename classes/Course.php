@@ -241,6 +241,7 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 3.0.0
 		 */
+		add_action( 'wp_ajax_tutor_create_new_draft_course', array( $this, 'ajax_create_new_draft_course' ) );
 		add_action( 'wp_ajax_tutor_course_list', array( $this, 'ajax_course_list' ) );
 		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
 		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
@@ -636,6 +637,47 @@ class Course extends Tutor_Base {
 		}
 
 		return ValidationHelper::validate( $rules, $params );
+	}
+
+	/**
+	 * Create new draft course
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void  JSON response
+	 */
+	public function ajax_create_new_draft_course() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$this->check_access();
+
+		$course_id = wp_insert_post(
+			array(
+				'post_title'  => __( 'New Course', 'tutor' ),
+				'post_type'   => tutor()->course_post_type,
+				'post_status' => 'draft',
+				'post_name'   => 'new-course',
+			)
+		);
+
+		if ( is_wp_error( $course_id ) ) {
+			$this->json_response( $course_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+		}
+
+		$link = tutor_utils()->tutor_dashboard_url( 'create-course' );
+		if ( is_admin() ) {
+			$link = admin_url( 'admin.php?page=create-course' );
+		}
+
+		$link = add_query_arg( array( 'course_id' => $course_id ), $link );
+
+		$this->json_response(
+			__( 'Draft course created', 'tutor' ),
+			$link,
+			HttpHelper::STATUS_CREATED
+		);
 	}
 
 	/**
