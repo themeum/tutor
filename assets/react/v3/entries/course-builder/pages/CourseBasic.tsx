@@ -241,11 +241,18 @@ const CourseBasic = () => {
                   <div css={styles.editorOverlay}>
                     <Button
                       variant="primary"
+                      loading={
+                        !!queryClient.isFetching({
+                          queryKey: ['CourseDetails', courseId],
+                        })
+                      }
                       onClick={() =>
                         showModal({
                           component: EditorModal,
                           props: {
-                            title: courseDetails?.editor_used?.label,
+                            title: `${
+                              courseDetails?.editor_used?.name.charAt(0).toUpperCase() + courseDetails?.editor_used.name
+                            } editor`,
                             editorUsed: courseDetails?.editor_used,
                           },
                         })
@@ -540,6 +547,7 @@ const styles = {
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: ${spacing[10]};
+    gap: ${spacing[8]};
 
     * {
       flex-shrink: 0;
