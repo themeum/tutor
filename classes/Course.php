@@ -555,7 +555,7 @@ class Course extends Tutor_Base {
 		if ( isset( $params['pricing'] ) && ! empty( $params['pricing'] ) ) {
 			try {
 				if ( isset( $params['pricing']['type'] ) ) {
-					update_post_meta( $post_id, '_tutor_course_price_type', $params['pricing']['type'] );
+					update_post_meta( $post_id, self::COURSE_PRICE_TYPE_META, $params['pricing']['type'] );
 				}
 				if ( isset( $params['pricing']['product_id'] ) ) {
 					update_post_meta( $post_id, '_tutor_course_product_id', $params['pricing']['product_id'] );
@@ -665,7 +665,7 @@ class Course extends Tutor_Base {
 			$this->json_response( $course_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
 		}
 
-		update_post_meta( $course_id, '_tutor_course_price_type', self::PRICE_TYPE_FREE );
+		update_post_meta( $course_id, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_FREE );
 
 		$link = admin_url( 'admin.php?page=create-course' );
 		if ( Input::post( 'from_dashboard', false, Input::TYPE_BOOL ) ) {
@@ -983,7 +983,7 @@ class Course extends Tutor_Base {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
 
-		$price_type  = get_post_meta( $course_id, '_tutor_course_price_type', true );
+		$price_type  = get_post_meta( $course_id, self::COURSE_PRICE_TYPE_META, true );
 		$monetize_by = tutils()->get_option( 'monetize_by' );
 
 		$product_name = '';
@@ -1482,7 +1482,7 @@ class Course extends Tutor_Base {
 		 */
 		$price_type = Input::post( 'tutor_course_price_type' );
 		if ( $price_type ) {
-			update_post_meta( $post_ID, '_tutor_course_price_type', $price_type );
+			update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, $price_type );
 		}
 
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
