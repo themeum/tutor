@@ -10,8 +10,6 @@
 
 namespace TUTOR;
 
-use Tutor\Traits\EarningData;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -22,13 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class WooCommerce extends Tutor_Base {
-
-	/**
-	 * Trait for preparing earning data
-	 *
-	 * @since 3.0.0
-	 */
-	use EarningData;
 
 	/**
 	 * Register hooks
@@ -530,7 +521,8 @@ class WooCommerce extends Tutor_Base {
 
 			$total_price = $item->get_total();
 
-			$earning_data = apply_filters( 'tutor_new_earning_data', $this->prepare_earning_data( $total_price, $course_id, $order_id, $order_status ) );
+			$earnings     = Earnings::get_instance();
+			$earning_data = apply_filters( 'tutor_new_earning_data', $earnings->prepare_earning_data( $total_price, $course_id, $order_id, $order_status ) );
 
 			$wpdb->insert( $wpdb->prefix . 'tutor_earnings', $earning_data );
 		}
