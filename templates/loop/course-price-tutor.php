@@ -46,11 +46,10 @@ if ( tutor_utils()->is_course_purchasable() ) {
 						<?php echo wp_kses_post( apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) ); ?>
 					</div>
 				</div>
-			<?
-		} elseif ( $total_enrolled < $maximum_students ) {
-			$total_booked     = 100 / $maximum_students * $total_enrolled;
-			$b_total          = ceil( $total_booked );
-			$add_to_cart_text = $product->add_to_cart_text();
+			<?php
+		} elseif ( $maximum_students > 0 && $total_enrolled < $maximum_students ) {
+			$total_booked = 100 / $maximum_students * $total_enrolled;
+			$b_total      = ceil( $total_booked );
 			?>
 			<div class="<?php echo esc_attr( $utility_classes ); ?>">
 				<div> 
@@ -72,7 +71,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 				<?php echo wp_kses_post( apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) ); ?>
 			</div>
 			<?php
-		} elseif ( $maximum_students === $total_enrolled ) {
+		} elseif ( $maximum_students > 0 && $maximum_students === $total_enrolled ) {
 			?>
 			<div class="<?php echo esc_attr( $utility_classes ); ?>">
 				<div class="list-item-price tutor-d-flex tutor-align-center"> 
@@ -88,6 +87,8 @@ if ( tutor_utils()->is_course_purchasable() ) {
 				</div>
 			</div>
 			<?php
+		} else {
+			echo $free_html; //phpcs:ignore --contain safe data
 		}
 	}
 } else {
