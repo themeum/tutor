@@ -483,7 +483,8 @@ if (createNewCourse) {
 			createNewCourse.setAttribute('disabled', 'disabled');
 			createNewCourse.classList.add('is-loading');
 
-			const formData = tutorFormData([{ action: 'tutor_create_new_draft_course'}]);
+			const from_dashboard = createNewCourse.classList.contains('tutor-dashboard-create-course')
+			const formData = tutorFormData([{ action: 'tutor_create_new_draft_course', from_dashboard: from_dashboard }]);
 			const post = await ajaxHandler(formData);
 
 			const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');

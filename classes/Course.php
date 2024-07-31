@@ -668,9 +668,9 @@ class Course extends Tutor_Base {
 
 		update_post_meta( $course_id, '_tutor_course_price_type', self::PRICE_TYPE_FREE );
 
-		$link = tutor_utils()->tutor_dashboard_url( 'create-course' );
-		if ( is_admin() ) {
-			$link = admin_url( 'admin.php?page=create-course' );
+		$link = admin_url( 'admin.php?page=create-course' );
+		if ( Input::post( 'from_dashboard', false, Input::TYPE_BOOL ) ) {
+			$link = tutor_utils()->tutor_dashboard_url( 'create-course' );
 		}
 
 		$link = add_query_arg( array( 'course_id' => $course_id ), $link );
