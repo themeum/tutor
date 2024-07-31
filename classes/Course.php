@@ -666,6 +666,8 @@ class Course extends Tutor_Base {
 			$this->json_response( $course_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
 		}
 
+		update_post_meta( $course_id, '_tutor_course_price_type', self::PRICE_TYPE_FREE );
+
 		$link = tutor_utils()->tutor_dashboard_url( 'create-course' );
 		if ( is_admin() ) {
 			$link = admin_url( 'admin.php?page=create-course' );
