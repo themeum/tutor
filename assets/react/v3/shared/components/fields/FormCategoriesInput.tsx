@@ -47,7 +47,9 @@ const FormMultiLevelInput = ({
   const form = useFormWithGlobalError<{
     name: string;
     parent: number | null;
-  }>();
+  }>({
+    shouldFocusError: true,
+  });
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -63,7 +65,7 @@ const FormMultiLevelInput = ({
     if (data.name) {
       createCategoryMutation.mutate({
         name: data.name,
-        parent: data.parent,
+        ...(data.parent && { parent: data.parent }),
       });
 
       form.reset();
@@ -118,6 +120,9 @@ const FormMultiLevelInput = ({
                 <Controller
                   name="name"
                   control={form.control}
+                  rules={{
+                    required: __('Category name is required', 'tutor'),
+                  }}
                   render={(controllerProps) => (
                     <FormInput {...controllerProps} placeholder={__('Category name', 'tutor')} selectOnFocus />
                   )}
