@@ -6,36 +6,6 @@
 import ajaxHandler from '../../admin-dashboard/segments/filter';
 const { __, _x, _n, _nx } = wp.i18n;
 document.addEventListener('DOMContentLoaded', function() {
-    // Create new course
-    const createNewCourse = document.getElementById('tutor-create-new-course');
-    if (createNewCourse) {
-        createNewCourse.onclick = async (e) => {
-            e.preventDefault();
-            createNewCourse.setAttribute('disabled', 'disabled');
-            createNewCourse.classList.add('is-loading');
-            const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
-            const formData = new FormData();
-            formData.set('action', 'tutor_create_new_draft_course');
-            formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-            const post = await ajaxHandler(formData);
-            if (post.ok) {
-                createNewCourse.classList.remove('is-loading');
-                const response = await post.json();
-                
-                if (response.success) {
-                    window.location = response.data.url;
-                } else {
-                    if (response.data.error_message) {
-                        tutor_toast(__('Failed', 'tutor'), response.data.error_message, 'error');
-                    } else {
-                        tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
-                    }
-                }
-            } else {
-                tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
-            }
-        }
-    }
 
     // Course save draft
     const tutor_course_save_draft = document.getElementById('tutor-course-save-draft');
