@@ -239,17 +239,20 @@ const Curriculum = () => {
                             key={topic.id}
                             topic={topic}
                             onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
-                            onCollapse={(topicId) =>
+                            onCollapse={(topicId) => {
                               setContent((previous) =>
                                 previous.map((item) => {
                                   if (item.id === topicId) {
+                                    setCurrentExpandedTopic(
+                                      item.isCollapsed ? topicId : currentExpandedTopic === topicId ? '' : topicId,
+                                    );
                                     return { ...item, isCollapsed: !item.isCollapsed };
                                   }
 
                                   return item;
                                 }),
-                              )
-                            }
+                              );
+                            }}
                             onCopy={() => {
                               createDuplicateTopic(topic);
                             }}
