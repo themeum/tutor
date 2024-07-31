@@ -47,7 +47,8 @@ $navbar_data    = array(
 	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
-	'button_url'   => $add_course_url,
+	'button_url'   => '#',
+	'button_class' => 'tutor-create-new-course',
 );
 
 /**
