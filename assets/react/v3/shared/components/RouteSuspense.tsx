@@ -1,4 +1,4 @@
-import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import { type ReactNode, Suspense } from 'react';
 
 type RouteSuspenseProps = {
@@ -6,7 +6,7 @@ type RouteSuspenseProps = {
 };
 
 const RouteSuspense = ({ component }: RouteSuspenseProps) => {
-  return <Suspense fallback={<LoadingSpinner />}>{component}</Suspense>;
+  return <Suspense fallback={<LoadingOverlay />}>{component}</Suspense>;
 };
 
 export default RouteSuspense;

@@ -127,7 +127,7 @@ interface QuizPayload {
   'quiz_option[pass_is_required]'?: 1 | 0; // when => content_drip enabled + drip settings sequential + retry mode
 }
 
-interface QuizDetailsResponse {
+export interface QuizDetailsResponse {
   post_title: string;
   post_content: string;
   quiz_option: {
@@ -727,54 +727,11 @@ export const useSaveQuizAnswerMutation = (quizId: ID) => {
 
   return useMutation({
     mutationFn: saveQuizAnswer,
-    onSuccess: (response, payload) => {
+    onSuccess: (response) => {
       if (response.status_code === 200 || response.status_code === 201) {
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
-        });
-
-        queryClient.setQueryData(['Quiz', quizId], (oldData: QuizDetailsResponse) => {
-          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as QuizDetailsResponse;
-          if (!oldDataCopy) {
-            return;
-          }
-
-          return {
-            ...oldDataCopy,
-            questions: oldDataCopy.questions.map((question) => {
-              if (String(question.question_id) !== String(payload.question_id)) {
-                return question;
-              }
-
-              return {
-                ...question,
-                question_type: payload.question_type,
-
-                question_answers: payload.answer_id
-                  ? question.question_answers.map((answer) =>
-                      String(answer.answer_id) === String(payload.answer_id) ? Object.assign(answer, payload) : answer,
-                    )
-                  : [
-                      ...question.question_answers,
-                      {
-                        answer_id: String(response.data),
-                        belongs_question_id: payload.question_id,
-                        belongs_question_type: payload.question_type,
-                        answer_title: payload.answer_title,
-                        is_correct: '0',
-                        image_id: payload.image_id,
-                        image_url: '',
-                        answer_two_gap_match: payload.answer_two_gap_match,
-                        answer_view_format: payload.answer_view_format,
-                        answer_order: question.question_answers.length
-                          ? question.question_answers[question.question_answers.length - 1].answer_order + 1
-                          : 1,
-                      },
-                    ],
-              };
-            }),
-          };
         });
       }
     },
@@ -798,40 +755,17 @@ const deleteQuizQuestionAnswer = (answerId: ID) => {
   });
 };
 
-export const useDeleteQuizAnswerMutation = (quizId: ID, questionId: ID) => {
+export const useDeleteQuizAnswerMutation = (quizId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: deleteQuizQuestionAnswer,
-    onSuccess: (response, answerId) => {
-      if (response.data) {
+    onSuccess: (response) => {
+      if (response.status_code === 200) {
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
-        });
-
-        queryClient.setQueryData(['Quiz', quizId], (oldData: QuizDetailsResponse) => {
-          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as QuizDetailsResponse;
-          if (!oldDataCopy) {
-            return;
-          }
-
-          return {
-            ...oldDataCopy,
-            questions: oldDataCopy.questions.map((question) => {
-              if (String(question.question_id) !== String(questionId)) {
-                return question;
-              }
-
-              return {
-                ...question,
-                question_answers: question.question_answers.filter(
-                  (answer) => String(answer.answer_id) !== String(answerId),
-                ),
-              };
-            }),
-          };
         });
       }
     },

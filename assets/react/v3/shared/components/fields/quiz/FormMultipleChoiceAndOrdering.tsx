@@ -69,9 +69,9 @@ const FormMultipleChoiceAndOrdering = ({
   };
 
   const saveQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId, activeQuestionId);
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
   const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation(quizId);
-  const duplicateContentMutation = useDuplicateContentMutation();
+  const duplicateContentMutation = useDuplicateContentMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_url);
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
@@ -151,6 +151,13 @@ const FormMultipleChoiceAndOrdering = ({
 
     if (response.status_code === 201 || response.status_code === 200) {
       setIsEditing(false);
+
+      if (!inputValue.answer_id && response.data) {
+        field.onChange({
+          ...inputValue,
+          answer_id: response.data,
+        });
+      }
     }
   };
 
