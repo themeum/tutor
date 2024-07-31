@@ -65,7 +65,7 @@ const FormMultiLevelInput = ({
     if (data.name) {
       createCategoryMutation.mutate({
         name: data.name,
-        parent: data.parent,
+        ...(data.parent && { parent: data.parent }),
       });
 
       form.reset();
@@ -130,9 +130,6 @@ const FormMultiLevelInput = ({
                 <Controller
                   name="parent"
                   control={form.control}
-                  rules={{
-                    required: __('Parent category is required', 'tutor'),
-                  }}
                   render={(controllerProps) => (
                     <FormMultiLevelSelect
                       {...controllerProps}
