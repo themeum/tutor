@@ -104,9 +104,7 @@ class CartModel {
 				$select_columns,
 				$where,
 				array(),
-				'item.id',
-				0,
-				0
+				'item.id'
 			);
 		}
 
@@ -197,9 +195,7 @@ class CartModel {
 			$select_columns,
 			$conditions,
 			array(),
-			'item.id',
-			0,
-			0
+			'item.id'
 		);
 
 		return (bool) $cart_data['total_count'];
