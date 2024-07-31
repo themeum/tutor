@@ -44,6 +44,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 3.0.0
 	 */
+	const COURSE_PRICE_TYPE_META = '_tutor_course_price_type';
 	const COURSE_PRICE_META      = 'tutor_course_price';
 	const COURSE_SALE_PRICE_META = 'tutor_course_sale_price';
 
