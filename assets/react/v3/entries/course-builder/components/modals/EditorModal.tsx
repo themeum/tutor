@@ -10,13 +10,12 @@ import type { Editor } from '@CourseBuilderServices/course';
 export interface EditorModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   editorUsed: Editor;
-  onEditorContentChange?: (content: string) => void;
 }
 
 // This is the skeleton of the EditorModal component to load custom editors using iframes.
 // Will be updated with the actual implementation later.
 
-const EditorModal = ({ closeModal, title, subtitle, editorUsed, icon, onEditorContentChange }: EditorModalProps) => {
+const EditorModal = ({ closeModal, title, subtitle, editorUsed, icon }: EditorModalProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
