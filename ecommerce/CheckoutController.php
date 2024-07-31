@@ -36,7 +36,7 @@ class CheckoutController {
 	 */
 	public function __construct( $register_hooks = true ) {
 		if ( $register_hooks ) {
-
+			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
 		}
 	}
 
@@ -102,4 +102,26 @@ class CheckoutController {
 		}
 	}
 
+	/**
+	 * Restrict checkout page
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function restrict_checkout_page() {
+		$page_id = self::get_page_id();
+
+		if ( is_page( $page_id ) ) {
+			$cart_controller = new CartController();
+			$get_cart        = $cart_controller->get_cart_items();
+			$courses         = $get_cart['courses'];
+			$total_count     = $courses['total_count'];
+
+			if ( 0 === $total_count ) {
+				wp_safe_redirect( $cart_controller::get_page_url() );
+				exit;
+			}
+		}
+	}
 }
