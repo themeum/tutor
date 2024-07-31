@@ -92,7 +92,7 @@ class Settings {
 									'$' => 'USD Dollar',
 									'U' => 'Euro',
 								),
-								'default'        => 'USD',
+								'default'        => '$',
 								'desc'           => __( 'Choose the currency for transactions.', 'tutor' ),
 							),
 							array(
