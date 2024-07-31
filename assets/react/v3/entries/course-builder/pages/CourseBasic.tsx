@@ -210,7 +210,7 @@ const CourseBasic = () => {
               <FormWPEditor
                 {...controllerProps}
                 label={__('Description', 'tutor')}
-                showCustomEditorOverlay
+                hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
                 loading={

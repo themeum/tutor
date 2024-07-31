@@ -1,7 +1,11 @@
+import { css } from '@emotion/react';
+import { useState } from 'react';
+
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
+import Show from '@Controls/Show';
 import type { Editor } from '@CourseBuilderServices/course';
-import { css } from '@emotion/react';
 
 export interface EditorModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -13,6 +17,8 @@ export interface EditorModalProps extends ModalProps {
 // Will be updated with the actual implementation later.
 
 const EditorModal = ({ closeModal, title, subtitle, editorUsed, icon, onEditorContentChange }: EditorModalProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
     <BasicModalWrapper
       onClose={() =>
@@ -26,7 +32,18 @@ const EditorModal = ({ closeModal, title, subtitle, editorUsed, icon, onEditorCo
       fullScreen
     >
       <div css={styles.wrapper}>
-        <iframe css={styles.iframe} src={editorUsed.link} title={editorUsed.name} />
+        <Show when={!isLoaded}>
+          <LoadingOverlay />
+        </Show>
+
+        <iframe
+          css={styles.iframe}
+          src={editorUsed.link}
+          title={editorUsed.name}
+          onLoad={() => {
+            setIsLoaded(true);
+          }}
+        />
       </div>
     </BasicModalWrapper>
   );

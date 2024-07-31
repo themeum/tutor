@@ -21,7 +21,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   placeholder?: string;
   helpText?: string;
   onChange?: (value: string) => void;
-  showCustomEditorOverlay?: boolean;
+  hasCustomEditorSupport?: boolean;
   editors?: Editor[];
   editorUsed?: Editor;
 }
@@ -36,9 +36,9 @@ const FormWPEditor = ({
   placeholder,
   helpText,
   onChange,
-  showCustomEditorOverlay,
+  hasCustomEditorSupport = false,
   editors,
-  editorUsed,
+  editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
@@ -49,14 +49,13 @@ const FormWPEditor = ({
       fieldState={fieldState}
       disabled={disabled}
       readOnly={readOnly}
-      loading={loading}
       placeholder={placeholder}
       helpText={helpText}
     >
       {() => {
         return (
           <Show
-            when={showCustomEditorOverlay}
+            when={hasCustomEditorSupport}
             fallback={
               <WPEditor
                 value={field.value ?? ''}
@@ -71,7 +70,7 @@ const FormWPEditor = ({
             }
           >
             <Show
-              when={editorUsed?.name === 'classic'}
+              when={editorUsed.name === 'classic' && !loading}
               fallback={
                 <div css={styles.editorOverlay}>
                   <Button
@@ -82,8 +81,8 @@ const FormWPEditor = ({
                       showModal({
                         component: EditorModal,
                         props: {
-                          title: `${editorUsed?.name.charAt(0).toUpperCase() + editorUsed?.name} editor`,
-                          editorUsed: editorUsed || { name: 'classic', label: 'Classic' },
+                          title: `${editorUsed.name.charAt(0).toUpperCase() + editorUsed.name} editor`,
+                          editorUsed: editorUsed,
                         },
                       })
                     }
@@ -115,7 +114,6 @@ const FormWPEditor = ({
                   )}
                 </For>
               </div>
-
               <WPEditor
                 value={field.value ?? ''}
                 onChange={(value) => {
