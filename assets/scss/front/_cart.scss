@@ -142,4 +142,29 @@
             color: var(--tutor-body-color);
         }
     }
+
+    .tutor-cart-empty-state {
+        max-width: 800px;
+        margin: 0 auto;
+        border:  1px solid var(--tutor-border-color);
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+
+        p {
+            font-size: 24px;
+            line-height: 32px;
+            color: var(--tutor-body-color);
+            padding: 0px;
+            margin-bottom: 24px;
+        }
+
+        a {
+            width: 280px;
+            justify-content: center;
+        }
+    }
 }
