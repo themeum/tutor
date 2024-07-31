@@ -41,7 +41,13 @@ class ValidationHelper {
 		foreach ( $validation_rules as $key => $validation_rule ) {
 			$rules = explode( '|', $validation_rule );
 
+			$required_rule_failed = false;
+
 			foreach ( $rules as $rule ) {
+				if ( $required_rule_failed ) {
+					break;
+				}
+
 				$nested_rules = explode( ':', $rule );
 
 				/**
@@ -59,6 +65,7 @@ class ValidationHelper {
 							if ( ! self::has_key( $key, $data ) || self::is_empty( $data[ $key ] ) ) {
 								$validation_pass             = false;
 								$validation_errors[ $key ][] = $key . __( ' is required', 'tutor' );
+								$required_rule_failed        = true;
 							}
 							break;
 						case 'numeric':
@@ -71,6 +78,12 @@ class ValidationHelper {
 							if ( strlen( $data[ $key ] ) < $nested_rules[1] ) {
 								$validation_pass             = false;
 								$validation_errors[ $key ][] = $key . __( ' minimum length is ', 'tutor' ) . $nested_rules[1];
+							}
+							break;
+						case 'max_length':
+							if ( strlen( $data[ $key ] ) > $nested_rules[1] ) {
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' maximum length is ', 'tutor' ) . $nested_rules[1];
 							}
 							break;
 						case 'mimes':
