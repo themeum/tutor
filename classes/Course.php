@@ -44,6 +44,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 3.0.0
 	 */
+	const COURSE_PRICE_TYPE_META = '_tutor_course_price_type';
 	const COURSE_PRICE_META      = 'tutor_course_price';
 	const COURSE_SALE_PRICE_META = 'tutor_course_sale_price';
 
@@ -241,6 +242,7 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 3.0.0
 		 */
+		add_action( 'wp_ajax_tutor_create_new_draft_course', array( $this, 'ajax_create_new_draft_course' ) );
 		add_action( 'wp_ajax_tutor_course_list', array( $this, 'ajax_course_list' ) );
 		add_action( 'wp_ajax_tutor_create_course', array( $this, 'ajax_create_course' ) );
 		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
@@ -553,7 +555,7 @@ class Course extends Tutor_Base {
 		if ( isset( $params['pricing'] ) && ! empty( $params['pricing'] ) ) {
 			try {
 				if ( isset( $params['pricing']['type'] ) ) {
-					update_post_meta( $post_id, '_tutor_course_price_type', $params['pricing']['type'] );
+					update_post_meta( $post_id, self::COURSE_PRICE_TYPE_META, $params['pricing']['type'] );
 				}
 				if ( isset( $params['pricing']['product_id'] ) ) {
 					update_post_meta( $post_id, '_tutor_course_product_id', $params['pricing']['product_id'] );
@@ -639,6 +641,47 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Create new draft course
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void  JSON response
+	 */
+	public function ajax_create_new_draft_course() {
+		tutor_utils()->check_nonce();
+
+		$this->check_access();
+
+		$course_id = wp_insert_post(
+			array(
+				'post_title'  => __( 'New Course', 'tutor' ),
+				'post_type'   => tutor()->course_post_type,
+				'post_status' => 'draft',
+				'post_name'   => 'new-course',
+			)
+		);
+
+		if ( is_wp_error( $course_id ) ) {
+			$this->json_response( $course_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+		}
+
+		update_post_meta( $course_id, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_FREE );
+
+		$link = admin_url( 'admin.php?page=create-course' );
+		if ( Input::post( 'from_dashboard', false, Input::TYPE_BOOL ) ) {
+			$link = tutor_utils()->tutor_dashboard_url( 'create-course' );
+		}
+
+		$link = add_query_arg( array( 'course_id' => $course_id ), $link );
+
+		$this->json_response(
+			__( 'Draft course created', 'tutor' ),
+			$link,
+			HttpHelper::STATUS_CREATED
+		);
+	}
+
+	/**
 	 * Get course list
 	 *
 	 * @since 3.0.0
@@ -694,9 +737,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_create_course() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$this->check_access();
 
@@ -789,9 +830,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_update_course() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$params = Input::sanitize_array(
 			//phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -899,9 +938,7 @@ class Course extends Tutor_Base {
 	 * @since 3.0.0
 	 */
 	public function ajax_course_contents() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 
@@ -931,9 +968,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_course_details() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$errors    = array();
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
@@ -948,7 +983,7 @@ class Course extends Tutor_Base {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
 
-		$price_type  = get_post_meta( $course_id, '_tutor_course_price_type', true );
+		$price_type  = get_post_meta( $course_id, self::COURSE_PRICE_TYPE_META, true );
 		$monetize_by = tutils()->get_option( 'monetize_by' );
 
 		$product_name = '';
@@ -1447,7 +1482,7 @@ class Course extends Tutor_Base {
 		 */
 		$price_type = Input::post( 'tutor_course_price_type' );
 		if ( $price_type ) {
-			update_post_meta( $post_ID, '_tutor_course_price_type', $price_type );
+			update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, $price_type );
 		}
 
 		//phpcs:disable WordPress.Security.NonceVerification.Missing
@@ -1573,9 +1608,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function tutor_save_topic() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$is_update   = false;
 		$errors      = array();
@@ -1643,9 +1676,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function tutor_delete_topic() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$topic_id = Input::post( 'topic_id', 0, Input::TYPE_INT );
 		if ( ! $topic_id || ! is_numeric( $topic_id ) || ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {

@@ -49,7 +49,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   const inputRef = useRef<HTMLInputElement>(null);
 
   const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId, activeQuestionId);
   const duplicateContentMutation = useDuplicateContentMutation();
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);

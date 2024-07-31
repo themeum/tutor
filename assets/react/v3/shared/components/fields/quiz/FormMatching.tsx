@@ -56,7 +56,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
   });
 
   const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId, activeQuestionId);
   const duplicateContentMutation = useDuplicateContentMutation();
 
   const [isEditing, setIsEditing] = useState(

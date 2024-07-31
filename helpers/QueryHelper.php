@@ -606,13 +606,12 @@ class QueryHelper {
 		$total_count = $wpdb->get_var($count_query);
 
 		if (empty($limit) && empty($offset)) {
-			$query = $wpdb->prepare(
-				"SELECT {$select_clause}
+			$query = "SELECT 
+				{$select_clause}
 				FROM {$from_clause}
 				{$join_clauses}
 				{$where_clause}
-				{$order_by_clause}"
-			);
+				{$order_by_clause}";
 		} else {
 			$query = $wpdb->prepare(
 				"SELECT {$select_clause}

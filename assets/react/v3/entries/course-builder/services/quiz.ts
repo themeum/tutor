@@ -668,11 +668,36 @@ export const useQuizQuestionAnswerOrderingMutation = (quizId: ID) => {
 
   return useMutation({
     mutationFn: quizQuestionAnswerOrdering,
-    onSuccess: (response) => {
-      if (response.data) {
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
+    onSuccess: (response, payload) => {
+      if (response.status_code === 200) {
+        queryClient.setQueryData(['Quiz', quizId], (oldData: QuizDetailsResponse) => {
+          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as QuizDetailsResponse;
+          if (!oldDataCopy) {
+            return;
+          }
+
+          return {
+            ...oldDataCopy,
+            questions: oldDataCopy.questions.map((question) => {
+              if (String(question.question_id) !== String(payload.question_id)) {
+                return question;
+              }
+
+              return {
+                ...question,
+                question_answers: payload.sorted_answer_ids.map((answerId, index) => {
+                  const answer = question.question_answers.find((a) => String(a.answer_id) === String(answerId));
+                  if (answer) {
+                    return {
+                      ...answer,
+                      answer_order: index,
+                    };
+                  }
+                  return answer;
+                }),
+              };
+            }),
+          };
         });
       }
     },
@@ -773,17 +798,40 @@ const deleteQuizQuestionAnswer = (answerId: ID) => {
   });
 };
 
-export const useDeleteQuizAnswerMutation = (quizId: ID) => {
+export const useDeleteQuizAnswerMutation = (quizId: ID, questionId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: deleteQuizQuestionAnswer,
-    onSuccess: (response) => {
+    onSuccess: (response, answerId) => {
       if (response.data) {
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
+        });
+
+        queryClient.setQueryData(['Quiz', quizId], (oldData: QuizDetailsResponse) => {
+          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as QuizDetailsResponse;
+          if (!oldDataCopy) {
+            return;
+          }
+
+          return {
+            ...oldDataCopy,
+            questions: oldDataCopy.questions.map((question) => {
+              if (String(question.question_id) !== String(questionId)) {
+                return question;
+              }
+
+              return {
+                ...question,
+                question_answers: question.question_answers.filter(
+                  (answer) => String(answer.answer_id) !== String(answerId),
+                ),
+              };
+            }),
+          };
         });
       }
     },
