@@ -3,7 +3,7 @@ Contributors: themeum
 Donate link: https://tutorlms.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.5
+Tested up to: 6.6
 Requires PHP: 7.4
 Stable tag: 2.7.4
 License: GPLv3
@@ -27,7 +27,9 @@ You can create unlimited courses, quizzes, interactive lessons, generate reports
 
 You can also join our [official Facebook Community](https://www.facebook.com/groups/tutorlms) to know all the latest news and be part of the Tutor LMS.
 
-Also, check out our Tutor LMS overview video: https://www.youtube.com/watch?v=Eu9cVlNATwk
+Also, check out our Tutor LMS overview video:
+
+https://www.youtube.com/watch?v=Eu9cVlNATwk
 
 Overall, Tutor LMS is the best WordPress LMS plugin for eLearning enthusiasts. It comes with every core feature you’ll need to build a perfect eLearning website. Additionally, it also has plenty of premium add-ons to empower the core plugin more! A few important add-ons are Course Builder, Certificate, Social Login, Reports, Content Drip, Assignments, Calendar, etc.
 
@@ -282,7 +284,7 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 2.7.4 - July 30, 2024
+= 2.7.4 - July 31, 2024
 
 Fix: Enhanced security by solving a few vulnerabilities
 
