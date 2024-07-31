@@ -101,7 +101,7 @@ const FormWPEditor = ({
                         showModal({
                           component: EditorModal,
                           props: {
-                            title: editor.label,
+                            title: `${editor.name.charAt(0).toUpperCase() + editor.name} Editor`,
                             editorUsed: editor,
                           },
                         });

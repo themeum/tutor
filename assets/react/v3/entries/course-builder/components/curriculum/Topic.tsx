@@ -121,7 +121,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
 
   const saveTopicMutation = useSaveTopicMutation();
   const duplicateContentMutation = useDuplicateContentMutation();
-  const deleteTopicMutation = useDeleteTopicMutation();
+  const deleteTopicMutation = useDeleteTopicMutation(courseId);
   const importQuizMutation = useImportQuizMutation();
 
   const [collapseAnimation, collapseAnimate] = useSpring(
