@@ -207,7 +207,18 @@ const CourseBasic = () => {
             name="post_content"
             control={form.control}
             render={(controllerProps) => (
-              <FormWPEditor {...controllerProps} label={__('Description', 'tutor')} showCustomEditorOverlay />
+              <FormWPEditor
+                {...controllerProps}
+                label={__('Description', 'tutor')}
+                showCustomEditorOverlay
+                editorUsed={courseDetails?.editor_used}
+                editors={courseDetails?.editors}
+                loading={
+                  !!queryClient.isFetching({
+                    queryKey: ['CourseDetails', courseId],
+                  })
+                }
+              />
             )}
           />
 

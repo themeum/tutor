@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
 
 import Button from '@Atoms/Button';
 import WPEditor from '@Atoms/WPEditor';
@@ -9,8 +8,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import EditorModal from '@CourseBuilderComponents/modals/EditorModal';
-import type { CourseDetailsResponse } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import type { Editor } from '@CourseBuilderServices/course';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
@@ -24,9 +22,9 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   helpText?: string;
   onChange?: (value: string) => void;
   showCustomEditorOverlay?: boolean;
+  editors?: Editor[];
+  editorUsed?: Editor;
 }
-
-const courseId = getCourseId();
 
 const FormWPEditor = ({
   label,
@@ -39,11 +37,10 @@ const FormWPEditor = ({
   helpText,
   onChange,
   showCustomEditorOverlay,
+  editors,
+  editorUsed,
 }: FormWPEditorProps) => {
-  const queryClient = useQueryClient();
   const { showModal } = useModal();
-
-  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   return (
     <FormFieldWrapper
@@ -74,35 +71,30 @@ const FormWPEditor = ({
             }
           >
             <Show
-              when={courseDetails?.editor_used?.name === 'classic'}
+              when={editorUsed?.name === 'classic'}
               fallback={
                 <div css={styles.editorOverlay}>
                   <Button
                     variant="primary"
-                    loading={
-                      !!queryClient.isFetching({
-                        queryKey: ['CourseDetails', courseId],
-                      })
-                    }
+                    loading={loading}
                     onClick={() =>
+                      editorUsed &&
                       showModal({
                         component: EditorModal,
                         props: {
-                          title: `${
-                            courseDetails?.editor_used?.name.charAt(0).toUpperCase() + courseDetails?.editor_used.name
-                          } editor`,
-                          editorUsed: courseDetails?.editor_used,
+                          title: `${editorUsed?.name.charAt(0).toUpperCase() + editorUsed?.name} editor`,
+                          editorUsed: editorUsed || { name: 'classic', label: 'Classic' },
                         },
                       })
                     }
                   >
-                    {courseDetails?.editor_used?.label}
+                    {editorUsed?.label}
                   </Button>
                 </div>
               }
             >
               <div css={styles.editorsButtonWrapper}>
-                <For each={courseDetails?.editors}>
+                <For each={editors || []}>
                   {(editor) => (
                     <Button
                       key={editor.name}
