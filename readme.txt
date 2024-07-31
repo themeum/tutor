@@ -3,7 +3,7 @@ Contributors: themeum
 Donate link: https://tutorlms.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.5
+Tested up to: 6.6
 Requires PHP: 7.4
 Stable tag: 2.7.4
 License: GPLv3
@@ -284,7 +284,7 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 2.7.4 - July 30, 2024
+= 2.7.4 - July 31, 2024
 
 Fix: Enhanced security by solving a few vulnerabilities
 

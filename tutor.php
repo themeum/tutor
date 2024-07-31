@@ -8,7 +8,7 @@
  * Author URI: https://themeum.com
  * Requires PHP: 7.4
  * Requires at least: 5.3
- * Tested up to: 6.5
+ * Tested up to: 6.6
  * License: GPLv2 or later
  * Text Domain: tutor
  *
