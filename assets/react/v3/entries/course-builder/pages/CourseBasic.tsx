@@ -4,7 +4,6 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
@@ -24,14 +23,12 @@ import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import EditorModal from '@CourseBuilderComponents/modals/EditorModal';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import For from '@Controls/For';
 import Show from '@Controls/Show';
 import {
   type CourseDetailsResponse,
@@ -206,71 +203,13 @@ const CourseBasic = () => {
             />
           </div>
 
-          <div css={styles.descriptionWrapper}>
-            <label css={styles.descriptionLabel}>{__('Description', 'tutor')}</label>
-
-            <Show when={courseDetails?.editor_used?.name === 'classic'}>
-              <div css={styles.editorsButtonWrapper}>
-                <For each={courseDetails?.editors}>
-                  {(editor) => (
-                    <Button
-                      key={editor.name}
-                      onClick={() => {
-                        showModal({
-                          component: EditorModal,
-                          props: {
-                            title: editor.label,
-                            editorUsed: editor,
-                          },
-                        });
-                      }}
-                      type="button"
-                      variant="secondary"
-                    >
-                      {editor.label}
-                    </Button>
-                  )}
-                </For>
-              </div>
-            </Show>
-
-            <div css={styles.editorWrapper}>
-              <Show
-                when={courseDetails?.editor_used?.name === 'classic'}
-                fallback={
-                  <div css={styles.editorOverlay}>
-                    <Button
-                      variant="primary"
-                      loading={
-                        !!queryClient.isFetching({
-                          queryKey: ['CourseDetails', courseId],
-                        })
-                      }
-                      onClick={() =>
-                        showModal({
-                          component: EditorModal,
-                          props: {
-                            title: `${
-                              courseDetails?.editor_used?.name.charAt(0).toUpperCase() + courseDetails?.editor_used.name
-                            } editor`,
-                            editorUsed: courseDetails?.editor_used,
-                          },
-                        })
-                      }
-                    >
-                      {courseDetails?.editor_used?.label}
-                    </Button>
-                  </div>
-                }
-              >
-                <Controller
-                  name="post_content"
-                  control={form.control}
-                  render={(controllerProps) => <FormWPEditor {...controllerProps} />}
-                />
-              </Show>
-            </div>
-          </div>
+          <Controller
+            name="post_content"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormWPEditor {...controllerProps} label={__('Description', 'tutor')} showCustomEditorOverlay />
+            )}
+          />
 
           <CourseSettings />
         </div>
