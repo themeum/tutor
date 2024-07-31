@@ -136,7 +136,7 @@ const Curriculum = () => {
               when={
                 !courseCurriculumQuery.isLoading &&
                 courseCurriculumQuery.data &&
-                (courseCurriculumQuery.data.length > 0 || content.length > 0)
+                (content.length > 0 || courseCurriculumQuery.data.length > 0)
               }
               fallback={
                 <EmptyState
@@ -153,7 +153,6 @@ const Curriculum = () => {
                       variant="secondary"
                       icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
                       onClick={() => {
-                        // @TODO: will be updated later.
                         setContent((previous) => {
                           return [
                             {
