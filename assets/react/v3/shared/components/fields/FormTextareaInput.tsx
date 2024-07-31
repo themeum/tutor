@@ -20,6 +20,7 @@ interface FormTextareaInputProps extends FormControllerProps<string | null> {
   isHidden?: boolean;
   enableResize?: boolean;
   isSecondary?: boolean;
+  isMagicAi?: boolean;
 }
 
 const DEFAULT_ROWS = 6;
@@ -41,6 +42,7 @@ const FormTextareaInput = ({
   isHidden,
   enableResize = true,
   isSecondary = false,
+  isMagicAi = false,
 }: FormTextareaInputProps) => {
   const inputValue = field.value ?? '';
 
@@ -63,6 +65,7 @@ const FormTextareaInput = ({
       isHidden={isHidden}
       characterCount={characterCount}
       isSecondary={isSecondary}
+      isMagicAi={isMagicAi}
     >
       {(inputProps) => {
         return (

@@ -18,6 +18,7 @@ interface InputOptions {
   readOnly: boolean;
   hasHelpText: boolean;
   isSecondary: boolean;
+  isMagicAi: boolean;
 }
 
 interface InputProps {
@@ -48,6 +49,7 @@ interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
   inputStyle?: SerializedStyles;
   generateWithAi?: boolean;
   onClickAiButton?: () => void;
+  isMagicAi?: boolean;
 }
 
 const styles = {
@@ -126,6 +128,14 @@ const styles = {
 
       :focus {
         ${styleUtils.inputFocus};
+
+        ${
+          options.isMagicAi &&
+          css`
+          outline-color: ${colorTokens.stroke.magicAi};
+          background-color: ${colorTokens.background.magicAi[8]};
+        `
+        } 
 
         ${
           options.hasFieldError &&
@@ -254,6 +264,7 @@ const FormFieldWrapper = <T,>({
   inputStyle,
   generateWithAi = false,
   onClickAiButton,
+  isMagicAi = false,
 }: FormFieldWrapperProps<T>) => {
   const id = nanoid();
 
@@ -265,6 +276,7 @@ const FormFieldWrapper = <T,>({
       readOnly,
       hasHelpText: !!helpText,
       isSecondary,
+      isMagicAi,
     }),
   ];
 

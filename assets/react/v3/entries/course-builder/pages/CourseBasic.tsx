@@ -169,17 +169,19 @@ const CourseBasic = () => {
         <CanvasHead
           title={__('Course Basic', 'tutor')}
           rightButton={
-            <AiButton
-              css={css`
+            <div>
+              <AiButton
+                css={css`
                 display: inline-flex;
                 align-items: center;
                 gap: ${spacing[4]};
               `}
-              onClick={() => alert('@TODO: will be implemented later.')}
-            >
-              <SVGIcon name="magicAi" width={24} height={24} />
-              Generate with AI
-            </AiButton>
+                onClick={() => alert('@TODO: will be implemented later.')}
+              >
+                <SVGIcon name="magicAi" width={24} height={24} />
+                Generate with AI
+              </AiButton>
+            </div>
           }
         />
 
@@ -269,8 +271,7 @@ const CourseBasic = () => {
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
               infoText={__('Size: 700x430 pixels', 'tutor')}
-              generateWithAi={true}
-              onClickAiButton={() => alert('@TODO: will be implemented later.')}
+              generateWithAi
             />
           )}
         />

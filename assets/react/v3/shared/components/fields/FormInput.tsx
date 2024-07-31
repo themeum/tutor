@@ -39,6 +39,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   autoFocus?: boolean;
   generateWithAi?: boolean;
   onClickAiButton?: () => void;
+  isMagicAi?: boolean;
 }
 
 const FormInput = ({
@@ -66,6 +67,7 @@ const FormInput = ({
   autoFocus = false,
   generateWithAi = false,
   onClickAiButton,
+  isMagicAi = false,
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
 
@@ -107,6 +109,7 @@ const FormInput = ({
       inputStyle={style}
       generateWithAi={generateWithAi}
       onClickAiButton={onClickAiButton}
+      isMagicAi={isMagicAi}
     >
       {(inputProps) => {
         const ref = useRef<HTMLInputElement>(null);

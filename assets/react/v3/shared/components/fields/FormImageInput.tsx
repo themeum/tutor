@@ -2,6 +2,9 @@ import { __ } from '@wordpress/i18n';
 
 import ImageInput from '@Atoms/ImageInput';
 
+import SVGIcon from '@Atoms/SVGIcon';
+import AiImageModal from '@Components/modals/AiImageModal';
+import { useModal } from '@Components/modals/Modal';
 import type { FormControllerProps } from '@Utils/form';
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -29,7 +32,6 @@ type FormImageInputProps = {
   buttonText?: string;
   infoText?: string;
   generateWithAi?: boolean;
-  onClickAiButton?: () => void;
 } & FormControllerProps<Media | null>;
 
 const FormImageInput = ({
@@ -41,8 +43,8 @@ const FormImageInput = ({
   infoText,
   onChange,
   generateWithAi = false,
-  onClickAiButton,
 }: FormImageInputProps) => {
+  const { showModal } = useModal();
   const wpMedia = window.wp.media({
     library: { type: 'image' },
   });
@@ -78,7 +80,17 @@ const FormImageInput = ({
       field={field}
       fieldState={fieldState}
       helpText={helpText}
-      onClickAiButton={onClickAiButton}
+      onClickAiButton={() => {
+        showModal({
+          component: AiImageModal,
+          isMagicAi: true,
+          closeOnOutsideClick: true,
+          props: {
+            title: 'AI Studio',
+            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+          },
+        });
+      }}
       generateWithAi={generateWithAi}
     >
       {() => {

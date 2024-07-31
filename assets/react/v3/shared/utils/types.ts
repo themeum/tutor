@@ -66,6 +66,13 @@ export interface OptionWithIcon<T> {
   label: string;
   value: T;
   icon: ReactNode;
+  disabled?: boolean;
+}
+export interface OptionWithImage<T> {
+  label: string;
+  value: T;
+  image: string;
+  disabled?: boolean;
 }
 
 export interface PaginatedResult<T> {
