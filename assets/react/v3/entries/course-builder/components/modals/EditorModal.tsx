@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
@@ -6,6 +7,9 @@ import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import Show from '@Controls/Show';
 import type { Editor } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+
+const courseId = getCourseId();
 
 export interface EditorModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -17,14 +21,18 @@ export interface EditorModalProps extends ModalProps {
 
 const EditorModal = ({ closeModal, title, subtitle, editorUsed, icon }: EditorModalProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const queryClient = useQueryClient();
 
   return (
     <BasicModalWrapper
-      onClose={() =>
+      onClose={() => {
         closeModal({
           action: 'CLOSE',
-        })
-      }
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['CourseDetails', courseId],
+        });
+      }}
       title={title}
       subtitle={subtitle}
       icon={icon}
