@@ -47,7 +47,9 @@ const FormMultiLevelInput = ({
   const form = useFormWithGlobalError<{
     name: string;
     parent: number | null;
-  }>();
+  }>({
+    shouldFocusError: true,
+  });
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -118,6 +120,9 @@ const FormMultiLevelInput = ({
                 <Controller
                   name="name"
                   control={form.control}
+                  rules={{
+                    required: __('Category name is required', 'tutor'),
+                  }}
                   render={(controllerProps) => (
                     <FormInput {...controllerProps} placeholder={__('Category name', 'tutor')} selectOnFocus />
                   )}
@@ -125,6 +130,9 @@ const FormMultiLevelInput = ({
                 <Controller
                   name="parent"
                   control={form.control}
+                  rules={{
+                    required: __('Parent category is required', 'tutor'),
+                  }}
                   render={(controllerProps) => (
                     <FormMultiLevelSelect
                       {...controllerProps}
