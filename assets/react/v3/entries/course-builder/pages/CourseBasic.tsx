@@ -213,11 +213,7 @@ const CourseBasic = () => {
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
-                loading={
-                  !!queryClient.isFetching({
-                    queryKey: ['CourseDetails', courseId],
-                  })
-                }
+                loading={!courseDetails}
               />
             )}
           />
