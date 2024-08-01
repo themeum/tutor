@@ -1736,7 +1736,7 @@ class Quiz {
 			);
 		}
 
-		$question_type      = $question->question_type;
+		$question_type      = Input::post( 'question_type' );
 		$answer_title       = Input::post( 'answer_title', '' );
 		$image_id           = Input::post( 'image_id', 0, Input::TYPE_INT );
 		$answer_view_format = Input::post( 'answer_view_format', '' );
@@ -1774,7 +1774,6 @@ class Quiz {
 		if ( $is_update ) {
 			$wpdb->update( $table_answer, $answer_data, array( 'answer_id' => $answer_id ) );
 		} else {
-			$question_type    = Input::post( 'question_type' );
 			$question_types[] = 'fill_in_the_blank';
 			if ( ! in_array( $question_type, $question_types, true ) ) {
 				$this->json_response( __( 'Invalid question type', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );

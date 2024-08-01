@@ -211,17 +211,23 @@ const deleteTopic = (topicId: ID) => {
   });
 };
 
-export const useDeleteTopicMutation = () => {
+export const useDeleteTopicMutation = (courseId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: deleteTopic,
-    onSuccess: (response) => {
+    onSuccess: (response, topicId) => {
       if (response.status_code === 200) {
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
+        });
+
+        queryClient.setQueryData(['Topic', courseId], (oldData: CourseTopic[]) => {
+          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as CourseTopic[];
+
+          return oldDataCopy.filter((topic) => topic.id !== topicId);
         });
       }
     },

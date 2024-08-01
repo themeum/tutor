@@ -97,11 +97,11 @@ const CourseSettings = () => {
             <Controller
               name="course_level"
               control={form.control}
-              defaultValue="all_levels"
               render={(controllerProps) => (
                 <FormSelectInput
                   {...controllerProps}
                   label={__('Difficulty Level', 'tutor')}
+                  placeholder={__('Select Difficulty Level', 'tutor')}
                   helpText={__('Course difficulty level', 'tutor')}
                   options={difficultyLevelOptions}
                   isClearable={false}
