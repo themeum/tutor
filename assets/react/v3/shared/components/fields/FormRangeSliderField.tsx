@@ -1,5 +1,6 @@
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import { useDebounce } from '@Hooks/useDebounce';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
@@ -42,6 +43,11 @@ const FormRangeSliderField = ({
   const [value, setValue] = useState<number>(field.value);
   const sliderRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
+  const debounceValue = useDebounce(value);
+
+  useEffect(() => {
+    field.onChange(debounceValue);
+  }, [debounceValue, field.onChange]);
 
   useEffect(() => {
     let isDragging = false;

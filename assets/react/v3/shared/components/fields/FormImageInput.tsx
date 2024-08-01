@@ -84,7 +84,6 @@ const FormImageInput = ({
         showModal({
           component: AiImageModal,
           isMagicAi: true,
-          closeOnOutsideClick: true,
           props: {
             title: 'AI Studio',
             icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,

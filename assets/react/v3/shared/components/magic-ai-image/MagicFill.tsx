@@ -3,25 +3,45 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { Separator } from '@Atoms/Separator';
 import FormRangeSliderField from '@Components/fields/FormRangeSliderField';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
+import { useDebounce } from '@Hooks/useDebounce';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import imageSrc from '@Images/mock-images/mock-image-2.jpg';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
+import { DrawingCanvas } from './DrawingCanvas';
 import { useMagicImageGeneration } from './ImageContext';
 import { magicAIStyles } from './styles';
+const width = 492;
+const height = 498;
 
 const MagicFill = () => {
   const form = useFormWithGlobalError<{ brush_size: number; prompt: string }>({
     defaultValues: {
-      brush_size: 10,
+      brush_size: 40,
       prompt: '',
     },
   });
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   const { onDropdownMenuChange } = useMagicImageGeneration();
+  const brushSize = useDebounce(form.watch('brush_size', 40));
+  const [trackStack, setTrackStack] = useState<ImageData[]>([]);
+  const [pointer, setPointer] = useState(1);
+
+  useEffect(() => {
+    const context = canvasRef.current?.getContext('2d');
+    if (!context) {
+      return;
+    }
+
+    context.lineWidth = brushSize;
+  }, [brushSize]);
 
   return (
     <div css={magicAIStyles.wrapper}>
@@ -32,24 +52,74 @@ const MagicFill = () => {
               <button type="button" css={styles.backButton} onClick={() => onDropdownMenuChange('generation')}>
                 <SVGIcon name="arrowLeft" />
               </button>
-              Magic Fill
+              {__('Magic Fill', 'tutor')}
             </div>
             <div css={styles.actions}>
-              <AiButton variant="ghost">Revert to Original</AiButton>
+              <AiButton
+                variant="ghost"
+                disabled={trackStack.length === 0}
+                onClick={() => {
+                  setTrackStack([]);
+                  setPointer(0);
+                }}
+              >
+                Revert to Original
+              </AiButton>
               <Separator variant="vertical" css={css`min-height: 16px;`} />
               <div css={styles.undoRedo}>
-                <AiButton variant="ghost" size="icon">
+                <AiButton
+                  variant="ghost"
+                  size="icon"
+                  disabled={pointer <= 1}
+                  onClick={() => {
+                    const context = canvasRef.current?.getContext('2d');
+
+                    if (!context) {
+                      return;
+                    }
+
+                    for (const image of trackStack.slice(0, pointer - 1)) {
+                      context.putImageData(image, 0, 0);
+                    }
+
+                    setPointer((previous) => Math.max(previous - 1, 1));
+                  }}
+                >
                   <SVGIcon name="undo" width={20} height={20} />
                 </AiButton>
-                <AiButton variant="ghost" size="icon">
+                <AiButton
+                  variant="ghost"
+                  size="icon"
+                  disabled={pointer === trackStack.length}
+                  onClick={() => {
+                    const context = canvasRef.current?.getContext('2d');
+
+                    if (!context) {
+                      return;
+                    }
+
+                    for (const image of trackStack.slice(0, pointer + 1)) {
+                      context.putImageData(image, 0, 0);
+                    }
+                    setPointer((previous) => Math.min(previous + 1, trackStack.length));
+                  }}
+                >
                   <SVGIcon name="redo" width={20} height={20} />
                 </AiButton>
               </div>
             </div>
           </div>
-          <div css={styles.image}>
-            <img src={imageSrc} alt="fill magic item" />
-          </div>
+          <DrawingCanvas
+            ref={canvasRef}
+            width={width}
+            height={height}
+            src={imageSrc}
+            brushSize={brushSize}
+            trackStack={trackStack}
+            pointer={pointer}
+            setTrackStack={setTrackStack}
+            setPointer={setPointer}
+          />
           <div css={styles.footerActions}>
             <div css={styles.footerActionsLeft}>
               <AiButton variant="secondary">
@@ -76,7 +146,7 @@ const MagicFill = () => {
             control={form.control}
             name="brush_size"
             render={(props) => (
-              <FormRangeSliderField {...props} label="Brush size" min={0} max={20} isMagicAi hasBorder />
+              <FormRangeSliderField {...props} label="Brush size" min={1} max={100} isMagicAi hasBorder />
             )}
           />
           <Controller
@@ -185,7 +255,21 @@ const styles = {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			ratio: 1/1;
 		}
+	`,
+  canvasWrapper: css`
+		position: relative;
+	`,
+  customCursor: (size: number) => css`
+		position: absolute;
+		width: ${size}px;
+		height: ${size}px;
+		border-radius: ${borderRadius.circle};
+		background: linear-gradient(73.09deg, rgba(255, 150, 69, 0.4) 18.05%, rgba(255, 100, 113, 0.4) 30.25%, rgba(207, 110, 189, 0.4) 55.42%, rgba(164, 119, 209, 0.4) 71.66%, rgba(62, 100, 222, 0.4) 97.9%);
+		border: 3px solid ${colorTokens.stroke.white};
+		pointer-events: none;
+		transform: translate(-50%, -50%);
+		z-index: ${zIndex.highest};
+		display: none;
 	`,
 };
