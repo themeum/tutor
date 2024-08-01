@@ -45,7 +45,7 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 							<div class="tutor-col-12">
 								<div class="tutor-form-group">
 									<label><?php echo esc_html_e( 'Country', 'tutor' ); ?></label>
-									<select name="country" class="tutor-form-control" require>
+									<select name="country" class="tutor-form-control" required>
 										<option value="">Select Country</option>
 										<?php foreach ( tutils()->country_options() as $key => $name ) : ?>
 											<option value="<?php echo esc_attr( $key ); ?>">
