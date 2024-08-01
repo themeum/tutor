@@ -39,19 +39,34 @@ const Header = () => {
 
   const previewLink = useWatch({ name: 'preview_link' });
   const postStatus = useWatch({ name: 'post_status' });
+  const postVisibility = useWatch({ name: 'visibility' });
   const postDate = useWatch({ name: 'post_date' });
+  const isPostDateDirty = form.formState.dirtyFields.post_date;
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future') => {
     const payload = convertCourseDataToPayload(data);
     setLocalPostStatus(postStatus);
 
+    const determinePostStatus = () => {
+      if (postVisibility === 'password_protected' && postStatus !== 'draft' && postStatus !== 'future') {
+        return 'publish';
+      }
+      if (postVisibility === 'private' && postStatus !== 'draft' && postStatus !== 'future') {
+        return 'private';
+      }
+      return postStatus;
+    };
+
     if (courseId) {
-      updateCourseMutation.mutate({ course_id: Number(courseId), ...payload, post_status: postStatus });
+      updateCourseMutation.mutate({
+        course_id: Number(courseId),
+        ...payload,
+        post_status: determinePostStatus(),
+      });
       return;
     }
-    const response = await createCourseMutation.mutateAsync({
-      ...payload,
-    });
+
+    const response = await createCourseMutation.mutateAsync({ ...payload });
 
     if (response.data) {
       window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
@@ -62,12 +77,12 @@ const Header = () => {
     let text: string;
     let action: 'publish' | 'draft' | 'future';
 
-    if (!courseId || (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))) {
+    if (isBefore(new Date(), new Date(postDate))) {
+      text = isPostDateDirty ? __('Schedule', 'tutor') : __('Update', 'tutor');
+      action = 'future';
+    } else if (!courseId || (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))) {
       text = __('Publish', 'tutor');
       action = 'publish';
-    } else if (postStatus === 'draft' && isBefore(new Date(), new Date(postDate))) {
-      text = __('Schedule', 'tutor');
-      action = 'future';
     } else {
       text = __('Update', 'tutor');
       action = 'publish';
@@ -162,20 +177,19 @@ const Header = () => {
         </div>
         <div css={styles.headerRight}>
           <Show
-            when={postStatus === 'draft'}
+            when={postStatus === 'draft' && postVisibility !== 'private'}
             fallback={
-              <Show when={previewLink}>
-                <Button
-                  variant="text"
-                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-                  iconPosition="right"
-                  onClick={() => {
-                    window.open(previewLink, '_blank');
-                  }}
-                >
-                  {__('Preview', 'tutor')}
-                </Button>
-              </Show>
+              <Button
+                variant="text"
+                icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                iconPosition="right"
+                onClick={() => {
+                  window.open(previewLink, '_blank');
+                }}
+                disabled={!previewLink}
+              >
+                {__('Preview', 'tutor')}
+              </Button>
             }
           >
             <Button

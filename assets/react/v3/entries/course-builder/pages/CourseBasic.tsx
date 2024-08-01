@@ -234,6 +234,9 @@ const CourseBasic = () => {
               placeholder="Select visibility status"
               options={visibilityStatusOptions}
               leftIcon={<SVGIcon name="eye" width={32} height={32} />}
+              onChange={() => {
+                form.setValue('post_password', '');
+              }}
             />
           )}
         />
@@ -242,10 +245,14 @@ const CourseBasic = () => {
           <Controller
             name="post_password"
             control={form.control}
+            rules={{
+              required: __('Password is required', 'tutor'),
+            }}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
                 label={__('Password', 'tutor')}
+                placeholder={__('Enter password', 'tutor')}
                 type="password"
                 isPassword
                 selectOnFocus

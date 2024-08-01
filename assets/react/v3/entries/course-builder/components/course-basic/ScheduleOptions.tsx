@@ -13,7 +13,7 @@ import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format, isBefore, parseISO } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 interface ScheduleForm {
@@ -28,8 +28,8 @@ const ScheduleOptions = () => {
   const postDate = useWatch({ name: 'post_date' }) || new Date().toISOString();
   const scheduleForm = useFormWithGlobalError<ScheduleForm>({
     defaultValues: {
-      schedule_date: format(courseId ? parseISO(postDate) : new Date(), DateFormats.yearMonthDay),
-      schedule_time: format(courseId ? parseISO(postDate) : new Date(), DateFormats.hoursMinutes),
+      schedule_date: format(new Date(), DateFormats.yearMonthDay),
+      schedule_time: format(new Date(), DateFormats.hoursMinutes),
     },
   });
 
@@ -53,8 +53,21 @@ const ScheduleOptions = () => {
     form.setValue(
       'post_date',
       format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond),
+      {
+        shouldDirty: true,
+      },
     );
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (postDate) {
+      scheduleForm.reset({
+        schedule_date: format(courseId ? parseISO(postDate) : new Date(), DateFormats.yearMonthDay),
+        schedule_time: format(courseId ? parseISO(postDate) : new Date(), DateFormats.hoursMinutes),
+      });
+    }
+  }, [postDate]);
 
   return (
     <div css={styles.scheduleOptions}>
