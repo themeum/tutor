@@ -188,13 +188,7 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      updateEditorContent(value);
-    }, 100);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
+    updateEditorContent(value);
   }, [value]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -225,7 +219,7 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
 
   return (
     <div css={styles.wrapper}>
-      <textarea ref={editorRef} id={editorId} />
+      <textarea ref={editorRef} id={editorId} defaultValue={value || ''} />
     </div>
   );
 };
@@ -283,7 +277,6 @@ const styles = {
     }
 
     textarea {
-      visibility: visible !important;
       width: 100%;
       resize: none;
       border: none;
