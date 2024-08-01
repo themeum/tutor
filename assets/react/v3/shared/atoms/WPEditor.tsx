@@ -163,7 +163,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
   };
 }
 
-const WPEditor = ({ value, onChange }: WPEditorProps) => {
+const WPEditor = ({ value = '', onChange }: WPEditorProps) => {
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const { current: editorId } = useRef(nanoid());
   const [isFocused, setIsFocused] = useState(false);
