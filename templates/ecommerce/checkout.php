@@ -23,13 +23,13 @@ $total_count     = $courses['total_count'];
 $course_list     = $courses['results'];
 $subtotal        = 0;
 $tax_amount      = 0; // @TODO: Need to implement later.
-
+$course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID') ) );
 ?>
 <div class="tutor-checkout-page">
 	<form id="tutor-checkout-form">
 		<?php tutor_nonce_field(); ?>
-		<input type="hidden" name="action" value="tutor-checkout-pay-now">
-
+		<input type="hidden" name="action" value="tutor_pay_now">
+		<input type="hidden" name="course_id" value="<?php echo esc_attr( $course_ids ); ?>">
 		<div class="tutor-row tutor-g-0">
 			<div class="tutor-col-md-6">
 				<div class="tutor-checkout-billing">

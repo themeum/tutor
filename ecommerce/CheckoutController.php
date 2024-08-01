@@ -10,6 +10,10 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Helpers\HttpHelper;
+use TUTOR\Input;
+use Tutor\Traits\JsonResponse;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -20,6 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.0.0
  */
 class CheckoutController {
+
+	use JsonResponse;
 
 	/**
 	 * Constructor.
@@ -36,7 +42,7 @@ class CheckoutController {
 	 */
 	public function __construct( $register_hooks = true ) {
 		if ( $register_hooks ) {
-
+			add_action( 'wp_ajax_tutor_pay_now', array( $this, '::ajax_pay_now' ) );
 		}
 	}
 
@@ -102,4 +108,29 @@ class CheckoutController {
 		}
 	}
 
+	/**
+	 * Pay now ajax handler
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_pay_now() {
+		tutor_utils()->check_nonce();
+
+		$request = Input::sanitize_array( $_POST );
+
+		$course_ids  = $request['course_ids'] ?? '';
+		$coupon_code = $request['coupon_code'] ?? '';
+
+		if ( empty( $course_ids ) ) {
+			$this->json_response(
+				__( 'Invalid cart items' ),
+				'',
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		// @TODO: $this->calculate_order_price( $course_ids );
+	}
 }
