@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
@@ -51,9 +51,7 @@ const CourseBasic = () => {
     queryKey: ['CourseDetails', courseId],
   });
 
-  const author = form.watch('post_author');
-
-  const [instructorSearchText, setInstructorSearchText] = useState('');
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
@@ -64,7 +62,7 @@ const CourseBasic = () => {
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
     isAdministrator &&
-    String(tutorConfig.current_user.data.id) === String(author?.id || '');
+    String(tutorConfig.current_user.data.id) === String(courseDetails?.post_author.ID || '');
 
   const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
 
@@ -129,7 +127,6 @@ const CourseBasic = () => {
     },
   ];
 
-  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
   const instructorOptions = instructorListQuery.data ?? [];
@@ -284,7 +281,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
-              infoText={__('Supported file formats .mp4 ', 'tutor')}
+              infoText={__('Supported file formats .mp4', 'tutor')}
               supportedFormats={['mp4']}
             />
           )}
@@ -417,10 +414,17 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Author', 'tutor')}
-                options={instructorOptions}
+                options={[
+                  ...instructorOptions,
+                  {
+                    id: Number(courseDetails?.post_author.ID),
+                    name: courseDetails?.post_author.display_name || '',
+                    email: courseDetails?.post_author.user_email || '',
+                    avatar_url: courseDetails?.post_author.tutor_profile_photo_url || '',
+                  },
+                ]}
                 placeholder={__('Search to add author', 'tutor')}
                 isSearchable
-                handleSearchOnChange={setInstructorSearchText}
                 disabled={!isAuthorEditable}
               />
             )}
@@ -438,7 +442,6 @@ const CourseBasic = () => {
                 options={instructorOptions}
                 placeholder={__('Search to add instructor', 'tutor')}
                 isSearchable
-                handleSearchOnChange={setInstructorSearchText}
                 isMultiSelect
               />
             )}

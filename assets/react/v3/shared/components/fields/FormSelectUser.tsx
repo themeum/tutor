@@ -67,6 +67,15 @@ const FormSelectUser = ({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
 
+  const filteredOption =
+    options.filter((item) => {
+      const matchesSearchText =
+        item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.email?.toLowerCase().includes(searchText.toLowerCase());
+      const isNotSelected = !selectedIds.includes(item.id);
+      return matchesSearchText && isNotSelected;
+    }) || [];
+
   useEffect(() => {
     if (handleSearchOnChange) {
       handleSearchOnChange(debouncedSearchText);
@@ -110,7 +119,7 @@ const FormSelectUser = ({
                   type="button"
                   css={styles.instructorItem({ isDefaultItem: true })}
                   onClick={() => setIsOpen((previousState) => !previousState)}
-                  disabled={readOnly || options.length === 0}
+                  disabled={readOnly || filteredOption.length === 0}
                 >
                   <div css={styles.instructorInfo}>
                     <img
@@ -222,32 +231,31 @@ const FormSelectUser = ({
                     </li>
                   )}
 
-                  {options
-                    .filter((item) => !selectedIds.includes(item.id))
-                    .map((instructor) => (
-                      <li key={String(instructor.id)} css={styles.optionItem}>
-                        <button
-                          type="button"
-                          css={styles.label}
-                          onClick={() => {
-                            field.onChange(Array.isArray(inputValue) ? [...inputValue, instructor] : instructor);
-                            setSearchText('');
-                            onChange(Array.isArray(inputValue) ? [...inputValue, instructor] : instructor);
-                            setIsOpen(false);
-                          }}
-                        >
-                          <img
-                            src={instructor.avatar_url ? instructor.avatar_url : profileImage}
-                            alt={instructor.name}
-                            css={styles.instructorAvatar}
-                          />
-                          <div>
-                            <div css={styles.instructorName}>{instructor.name}</div>
-                            <div css={styles.instructorEmail}>{instructor.email}</div>
-                          </div>
-                        </button>
-                      </li>
-                    ))}
+                  {filteredOption.map((instructor) => (
+                    <li key={String(instructor.id)} css={styles.optionItem}>
+                      <button
+                        type="button"
+                        css={styles.label}
+                        onClick={() => {
+                          const newValue = Array.isArray(inputValue) ? [...inputValue, instructor] : instructor;
+                          field.onChange(newValue);
+                          setSearchText('');
+                          onChange(newValue);
+                          setIsOpen(false);
+                        }}
+                      >
+                        <img
+                          src={instructor.avatar_url ? instructor.avatar_url : profileImage}
+                          alt={instructor.name}
+                          css={styles.instructorAvatar}
+                        />
+                        <div>
+                          <div css={styles.instructorName}>{instructor.name}</div>
+                          <div css={styles.instructorEmail}>{instructor.email}</div>
+                        </div>
+                      </button>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </Portal>
