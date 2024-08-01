@@ -62,28 +62,19 @@ const videoSources =
       : [tutorConfig.settings.supported_video_sources])) ||
   [];
 
+const videoSourceLabels: Record<string, string> = {
+  external_url: __('External URL', 'tutor'),
+  shortcode: __('Shortcode', 'tutor'),
+  youtube: __('YouTube', 'tutor'),
+  vimeo: __('Vimeo', 'tutor'),
+  embedded: __('Embedded', 'tutor'),
+};
+
 const videoSourceOptions = videoSources.reduce((options, source) => {
-  let option: Option<string> | undefined;
-  switch (source) {
-    case 'external_url':
-      option = { label: __('External URL', 'tutor'), value: 'external_url' };
-      break;
-    case 'shortcode':
-      option = { label: __('Shortcode', 'tutor'), value: 'shortcode' };
-      break;
-    case 'youtube':
-      option = { label: __('YouTube', 'tutor'), value: 'youtube' };
-      break;
-    case 'vimeo':
-      option = { label: __('Vimeo', 'tutor'), value: 'vimeo' };
-      break;
-    case 'embedded':
-      option = { label: __('Embedded', 'tutor'), value: 'embedded' };
-      break;
-    default:
-      option = undefined;
+  const label = videoSourceLabels[source];
+  if (label) {
+    options.push({ label, value: source });
   }
-  if (option) options.push(option);
   return options;
 }, [] as Option<string>[]);
 
