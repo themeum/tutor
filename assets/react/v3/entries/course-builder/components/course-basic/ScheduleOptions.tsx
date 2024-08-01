@@ -25,7 +25,7 @@ const courseId = getCourseId();
 
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
-  const postDate = useWatch({ name: 'post_date' }) || new Date().toISOString();
+  const postDate = useWatch({ name: 'post_date' });
   const scheduleForm = useFormWithGlobalError<ScheduleForm>({
     defaultValues: {
       schedule_date: format(new Date(), DateFormats.yearMonthDay),
@@ -63,8 +63,8 @@ const ScheduleOptions = () => {
   useEffect(() => {
     if (postDate) {
       scheduleForm.reset({
-        schedule_date: format(courseId ? parseISO(postDate) : new Date(), DateFormats.yearMonthDay),
-        schedule_time: format(courseId ? parseISO(postDate) : new Date(), DateFormats.hoursMinutes),
+        schedule_date: format(parseISO(postDate), DateFormats.yearMonthDay),
+        schedule_time: format(parseISO(postDate), DateFormats.hoursMinutes),
       });
     }
   }, [postDate]);
