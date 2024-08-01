@@ -56,8 +56,8 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
   });
 
   const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId, activeQuestionId);
-  const duplicateContentMutation = useDuplicateContentMutation();
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
+  const duplicateContentMutation = useDuplicateContentMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(
     !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
@@ -115,6 +115,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
 
     if (response.status_code === 201 || response.status_code === 200) {
       setIsEditing(false);
+
+      if (!inputValue.answer_id && response.data) {
+        field.onChange({
+          ...inputValue,
+          answer_id: response.data,
+        });
+      }
     }
   };
 

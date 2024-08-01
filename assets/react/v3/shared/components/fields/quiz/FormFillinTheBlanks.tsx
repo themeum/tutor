@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -11,7 +10,7 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizForm, type QuizQuestionOption, useSaveQuizAnswerMutation } from '@CourseBuilderServices/quiz';
+import { type QuizQuestionOption, useSaveQuizAnswerMutation } from '@CourseBuilderServices/quiz';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
@@ -19,8 +18,7 @@ import { isDefined } from '@Utils/types';
 interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
 const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
-  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
-  const form = useFormContext<QuizForm>();
+  const { activeQuestionId, quizId } = useQuizModalContext();
   const inputValue = field.value ?? {
     answer_id: '',
     answer_title: '',
@@ -51,6 +49,13 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
 
     if (response.status_code === 201 || response.status_code === 200) {
       setIsEditing(false);
+
+      if (!inputValue.answer_id && response.data) {
+        field.onChange({
+          ...inputValue,
+          answer_id: response.data,
+        });
+      }
     }
   };
 

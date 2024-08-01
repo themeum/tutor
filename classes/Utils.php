@@ -12,8 +12,10 @@ namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,6 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Utils {
+	use JsonResponse;
 
 	/**
 	 * Compatibility for splitting utils functions to specific model
@@ -1101,6 +1104,19 @@ class Utils {
 		if ( ! $this->is_nonce_verified( $request_method ) ) {
 			wp_send_json_error( array( 'message' => $this->error_message( 'nonce' ) ) );
 			exit;
+		}
+	}
+
+	/**
+	 * Check nonce
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void JSON response.
+	 */
+	public function check_nonce() {
+		if ( ! $this->is_nonce_verified() ) {
+			$this->json_response( $this->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 	}
 
