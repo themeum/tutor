@@ -219,7 +219,7 @@ const WPEditor = ({ value = '', onChange }: WPEditorProps) => {
 
   return (
     <div css={styles.wrapper}>
-      <textarea ref={editorRef} id={editorId} defaultValue={value || ''} />
+      <textarea ref={editorRef} id={editorId} defaultValue={value} />
     </div>
   );
 };
