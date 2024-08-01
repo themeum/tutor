@@ -158,8 +158,8 @@ const FormVideoInput = ({
     }
 
     if (!fieldValue.source) {
-      form.setValue('videoSource', videoSourceOptions[0].value);
-      form.setValue('videoUrl', fieldValue[`source_${videoSourceOptions[0].value}` as keyof CourseVideo] || '');
+      form.setValue('videoSource', videoSourceOptions[0]?.value);
+      form.setValue('videoUrl', fieldValue[`source_${videoSourceOptions[0]?.value}` as keyof CourseVideo] || '');
       return;
     }
 
@@ -294,11 +294,21 @@ const FormVideoInput = ({
                         {buttonText}
                       </Button>
                     </Show>
-                    <Show
-                      when={
-                        videoSources.filter((source) => source !== 'html5').length > 0 && videoSources.includes('html5')
-                      }
-                      fallback={
+                    <Show when={videoSources.filter((source) => source !== 'html5').length > 0}>
+                      <Show
+                        when={!videoSources.includes('html5')}
+                        fallback={
+                          <button
+                            type="button"
+                            css={styles.urlButton}
+                            onClick={() => {
+                              setIsOpen((previousState) => !previousState);
+                            }}
+                          >
+                            {__('Add from URL', 'tutor')}
+                          </button>
+                        }
+                      >
                         <Button
                           variant="secondary"
                           icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
@@ -308,17 +318,7 @@ const FormVideoInput = ({
                         >
                           {__('Add from URL', 'tutor')}
                         </Button>
-                      }
-                    >
-                      <button
-                        type="button"
-                        css={styles.urlButton}
-                        onClick={() => {
-                          setIsOpen((previousState) => !previousState);
-                        }}
-                      >
-                        {__('Add from URL', 'tutor')}
-                      </button>
+                      </Show>
                     </Show>
 
                     <Show when={videoSources.includes('html5')}>
