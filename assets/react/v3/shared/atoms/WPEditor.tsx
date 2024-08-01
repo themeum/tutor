@@ -277,6 +277,7 @@ const styles = {
     }
 
     textarea {
+      visibility: visible !important;
       width: 100%;
       resize: none;
       border: none;
