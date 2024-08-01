@@ -963,6 +963,12 @@ class Quiz {
 			);
 		}
 
+		if ( 0 !== $topic_id && 0 !== $ex_quiz_id ) {
+			if ( ! tutor_utils()->can_user_manage( 'quiz', $ex_quiz_id ) ) {
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+			}
+		}
+
 		// Prepare quiz data to save in database.
 		$post_arr = array(
 			'ID'           => $ex_quiz_id,
@@ -1805,16 +1811,21 @@ class Quiz {
 	 */
 	public function attempt_delete() {
 		tutor_utils()->checking_nonce();
-		if ( current_user_can( 'administrator' ) || current_user_can( tutor()->instructor_role ) ) {
-			$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
-			if ( $attempt_id ) {
-				QuizModel::delete_quiz_attempt( $attempt_id );
-				wp_send_json_success( __( 'Attempt deleted successfully!', 'tutor' ) );
-			} else {
-				wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
-			}
+
+		$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
+		$attempt    = tutor_utils()->get_attempt( $attempt_id );
+		if ( ! $attempt ) {
+			wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
+		}
+
+		$user_id   = get_current_user_id();
+		$course_id = $attempt->course_id;
+
+		if ( tutor_utils()->can_user_edit_course( $user_id, $course_id ) ) {
+			QuizModel::delete_quiz_attempt( $attempt_id );
+			wp_send_json_success( __( 'Attempt deleted successfully!', 'tutor' ) );
 		} else {
-			wp_send_json_error( __( 'You are not authorized to perform this action!', 'tutor' ) );
+			wp_send_json_error( tutor_utils()->error_message() );
 		}
 	}
 

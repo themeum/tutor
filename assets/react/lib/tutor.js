@@ -1,5 +1,4 @@
 import '../../../v2-library/_src/js/main';
-
 window.tutor_get_nonce_data = function(send_key_value) {
 	var nonce_data = window._tutorobject || {};
 	var nonce_key = nonce_data.nonce_key || '';
@@ -460,6 +459,15 @@ window.tutor_esc_html = function (unsafeText) {
 	div.remove()
 
 	return safeHTML;
+}
+
+
+window.tutor_esc_attr = function(str) {
+    return str.replace(/&/g, '&amp;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
 }
 
 // enable custom selector when modal opens

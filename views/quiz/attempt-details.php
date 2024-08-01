@@ -171,11 +171,9 @@ if ( is_array( $answers ) && count( $answers ) > 0 ) {
 	foreach ( $answers as $answer ) {
 		if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
 			$correct++;
+		} elseif ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
 		} else {
-			if ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
-			} else {
-				$incorrect++;
-			}
+			$incorrect++;
 		}
 	}
 }
@@ -296,7 +294,7 @@ endif;
 								$has_pending = count(
 									array_filter(
 										$ans_array,
-										function( $ans ) {
+										function ( $ans ) {
 											return null === $ans->is_correct;
 										}
 									)
@@ -503,14 +501,14 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													foreach ( $original_saved_answers as $key => $original_saved_answer ) {
 														$provided_answer_order_id = isset( $ordering_ids[ $key ] ) ? $ordering_ids[ $key ] : 0;
 														$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
-														foreach ( $provided_answer_order as $provided_answer_order ) {
+														foreach ( $provided_answer_order as $p_answer ) {
+															if ( $p_answer->answer_title ) {
+																$original_saved_answer->answer_view_format = 'text_image';
+																$original_saved_answer->answer_title       = $p_answer->answer_title;
+																$answers[]                                 = $original_saved_answer;
+															}
 														}
-
-														if ( $provided_answer_order->answer_title ) {
-															$original_saved_answer->answer_view_format = 'text_image';
-															$original_saved_answer->answer_title       = $provided_answer_order->answer_title;
-															$answers[]                                 = $original_saved_answer;
-														}
+														
 													}
 
 													tutor_render_answer_list( $answers );
@@ -733,7 +731,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 								<?php endforeach; ?>
 							</tr>
 							
-							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status )?>
+							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status ); ?>
 
 							<?php
 				}

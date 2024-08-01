@@ -679,6 +679,12 @@ class Ajax {
 			$form_data['ID'] = Input::post( 'announcement_id' );
 		}
 
+		if ( ! empty( $form_data['ID'] ) ) {
+			if ( ! tutor_utils()->can_user_manage( 'announcement', $form_data['ID'] ) ) {
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+			}
+		}
+
 		// Validation message set.
 		if ( empty( $form_data['post_parent'] ) ) {
 			$error['post_parent'] = __( 'Course name required', 'tutor' );

@@ -555,16 +555,23 @@ final class Tutor {
 		add_action( 'init', array( $this, 'init_action' ) );
 
 		/**
-		 * Redirect to the wizard page
+		 * Check activated plugin
 		 *
 		 * @since 1.5.7
 		 */
 
 		add_action( 'activated_plugin', array( $this, 'activated_tutor' ), 10, 2 );
+
+		/**
+		 * Redirect to setup page
+		 *
+		 * @since 2.8.0
+		 */
+		add_action( 'admin_init', array( $this, 'redirect_to_setup_page' ) );
 	}
 
 	/**
-	 * Redirect to the wizard page
+	 * Check activated plugin
 	 *
 	 * @since 1.5.7
 	 *
@@ -575,7 +582,19 @@ final class Tutor {
 	 */
 	public function activated_tutor( $plugin, $network_wide = null ) {
 		if ( tutor()->basename === $plugin ) {
-			if ( ( ! get_option( 'tutor_wizard' ) ) && version_compare( TUTOR_VERSION, '1.5.6', '>' ) ) {
+			$this->redirect_to_setup_page();
+		}
+	}
+	/**
+	 * Redirect to setup page
+	 *
+	 * @since 2.8.0
+	 *
+	 * @return void
+	 */
+	public function redirect_to_setup_page() {
+		if ( ( ! get_option( 'tutor_wizard' ) ) && version_compare( TUTOR_VERSION, '1.5.6', '>' ) ) {
+			if ( ! wp_doing_ajax() ) {
 				update_option( 'tutor_wizard', 'active' );
 				wp_safe_redirect( admin_url( 'admin.php?page=tutor-setup' ) );
 				exit;
@@ -945,7 +964,6 @@ final class Tutor {
 		if ( current_user_can( 'administrator' ) ) {
 			tutor_utils()->add_instructor_role( get_current_user_id() );
 		}
-
 	}
 
 	/**

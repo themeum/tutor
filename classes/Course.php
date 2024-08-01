@@ -197,6 +197,34 @@ class Course extends Tutor_Base {
 		add_action( 'trashed_post', __CLASS__ . '::redirect_to_course_list_page' );
 
 		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
+		/**
+		 * Remove wp trash button if instructor settings is disabled
+		 *
+		 * @since 2.7.3
+		 */
+		add_action( 'admin_init', array( $this, 'disable_course_trash_instructor' ) );
+	}
+
+	/**
+	 * Remove move to trash button on WordPress editor for instructor.
+	 *
+	 * @since 2.7.3
+	 *
+	 * @return void
+	 */
+	public function disable_course_trash_instructor() {
+		if ( current_user_can( 'edit_tutor_course' ) && ! current_user_can( 'administrator' ) ) {
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+			$role           = get_role( tutor()->instructor_role );
+
+			if ( ! $can_trash_post ) {
+				$role->remove_cap( 'delete_tutor_courses' );
+				$role->remove_cap( 'delete_tutor_course' );
+			} else {
+				$role->add_cap( 'delete_tutor_courses' );
+				$role->add_cap( 'delete_tutor_course' );
+			}
+		}
 	}
 
 	/**
@@ -299,9 +327,9 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 
-		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">'.
+		return '<div class="list-item-booking booking-full tutor-d-flex tutor-align-center"><div class="booking-progress tutor-d-flex"><span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium">' .
 		__( 'Fully Booked', 'tutor' )
-		.'</div></div>';
+		. '</div></div>';
 	}
 
 	/**
@@ -944,7 +972,26 @@ class Course extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Only main instructor can delete this course', 'tutor' ) ) );
 		}
 
-		CourseModel::delete_course( $course_id );
+		// Check if user is only an instructor.
+		if ( ! current_user_can( 'administrator' ) ) {
+			// Check if instructor can trash course.
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+
+			if ( ! $can_trash_post ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+		}
+
+		$trash_course = wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_status' => 'trash',
+			)
+		);
+
+		if ( $trash_course ) {
+			wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
+		}
 		wp_send_json_success();
 	}
 
@@ -1309,7 +1356,7 @@ class Course extends Tutor_Base {
 
 		return array_filter(
 			$items,
-			function( $item ) use ( $is_enrolled ) {
+			function ( $item ) use ( $is_enrolled ) {
 				if ( isset( $item['require_enrolment'] ) && $item['require_enrolment'] ) {
 					return $is_enrolled;
 				}
@@ -1334,6 +1381,7 @@ class Course extends Tutor_Base {
 		add_action( 'pre_get_posts', array( $this, 'filter_archive_meta_query' ), 1 );
 	}
 
+
 	/**
 	 * Tutor product meta query
 	 *
@@ -1357,8 +1405,38 @@ class Course extends Tutor_Base {
 	 * @return \WP_Query
 	 */
 	public function filter_woocommerce_product_query( $wp_query ) {
-		$wp_query->set( 'meta_query', array( $this->tutor_product_meta_query() ) );
+		$product_ids = $this->get_connected_wc_product_ids();
+		$wp_query->set( 'post__not_in', $product_ids );
 		return $wp_query;
+	}
+
+	/**
+	 * Get connected woocommerce product ids for course and course bundle
+	 *
+	 * @since 2.7.2
+	 *
+	 * @return array
+	 */
+	public function get_connected_wc_product_ids() {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT DISTINCT pm.meta_value product_id
+				FROM {$wpdb->posts} p
+				INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID
+				AND pm.meta_key = %s
+				WHERE post_type IN( 'courses','course-bundle' )",
+				'_tutor_course_product_id'
+			)
+		);
+
+		$ids = array();
+		if ( is_array( $results ) && count( $results ) ) {
+			$ids = array_column( $results, 'product_id' );
+		}
+
+		return $ids;
 	}
 
 	/**
@@ -1718,5 +1796,4 @@ class Course extends Tutor_Base {
 
 		return $product_obj->save();
 	}
-
 }
