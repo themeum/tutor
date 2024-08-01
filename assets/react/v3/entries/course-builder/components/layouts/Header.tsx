@@ -149,7 +149,7 @@ const Header = () => {
         type="button"
         css={[styleUtils.resetButton, styles.logo]}
         onClick={() => {
-          window.open(tutorConfig.dashboard_url, '_blank');
+          window.open(tutorConfig.tutor_frontend_dashboard_url, '_blank');
         }}
       >
         <Logo width={108} height={24} />
