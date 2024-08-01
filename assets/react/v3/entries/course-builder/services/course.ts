@@ -84,7 +84,7 @@ export const courseDefaultData: CourseFormData = {
   },
   thumbnail: null,
   video: {
-    source: 'external_url',
+    source: '',
     source_video_id: '',
     poster: '',
     poster_url: '',

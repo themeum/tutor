@@ -114,11 +114,38 @@ const FormVideoInput = ({
   supportedFormats,
   onGetDuration,
 }: FormVideoInputProps) => {
+  if (!videoSources.length) {
+    return (
+      <div
+        css={styles.emptyMedia({
+          hasVideoSource: false,
+        })}
+      >
+        <p css={styles.warningText}>
+          <SVGIcon name="info" height={20} width={20} />
+          {__('No video source selected', 'tutor')}
+        </p>
+
+        <Button
+          buttonCss={styles.selectFromSettingsButton}
+          variant="secondary"
+          size="small"
+          icon={<SVGIcon name="linkExternal" height={24} width={24} />}
+          onClick={() => {
+            window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank');
+          }}
+        >
+          {__('Select from settings', 'tutor')}
+        </Button>
+      </div>
+    );
+  }
+
   const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
     defaultValues: {
-      videoSource: fieldValue?.source || '',
-      videoUrl: fieldValue?.[`source_${fieldValue?.source}` as keyof CourseVideo] || '',
+      videoSource: '',
+      videoUrl: '',
     },
   });
 
@@ -129,8 +156,22 @@ const FormVideoInput = ({
     if (!fieldValue) {
       return;
     }
-    form.setValue('videoSource', fieldValue.source || 'external_url');
-    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source || 'external_url'}` as keyof CourseVideo] || '');
+
+    if (!fieldValue.source) {
+      form.setValue('videoSource', videoSourceOptions[0].value);
+      form.setValue('videoUrl', fieldValue[`source_${videoSourceOptions[0].value}` as keyof CourseVideo] || '');
+      return;
+    }
+
+    const isVideoSourceAvailable = videoSources.includes(fieldValue.source);
+
+    if (!isVideoSourceAvailable) {
+      field.onChange(updateFieldValue(fieldValue, { source: '' }));
+      return;
+    }
+
+    form.setValue('videoSource', fieldValue.source);
+    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo]);
   }, [fieldValue]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -143,8 +184,8 @@ const FormVideoInput = ({
       form.setValue('videoUrl', '');
       return;
     }
-    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source || 'external_url'}` as keyof CourseVideo] || '');
-  }, [videoSource, fieldValue]);
+    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo]);
+  }, [videoSource]);
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -152,7 +193,7 @@ const FormVideoInput = ({
     isOpen,
     triggerRef,
     positionModifier: {
-      top: -(triggerRef.current?.offsetHeight || 0) - 9, // 9 is the gap between the trigger and the popover
+      top: triggerRef.current?.getBoundingClientRect().top || 0,
       left: 0,
     },
   });
@@ -199,7 +240,7 @@ const FormVideoInput = ({
   };
 
   const isVideoAvailable = () => {
-    if (!fieldValue?.source) {
+    if (!fieldValue?.source || !videoSources.includes(fieldValue.source)) {
       return false;
     }
     const sourceType = fieldValue?.source;
@@ -242,52 +283,45 @@ const FormVideoInput = ({
                       hasVideoSource: videoSources.length > 0,
                     })}
                   >
+                    <Show when={videoSources.includes('html5')}>
+                      <Button
+                        variant="secondary"
+                        icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
+                        onClick={() => {
+                          handleUpload('video');
+                        }}
+                      >
+                        {buttonText}
+                      </Button>
+                    </Show>
                     <Show
-                      when={videoSources.length > 0}
-                      fallback={
-                        <>
-                          <p css={styles.warningText}>
-                            <SVGIcon name="info" height={20} width={20} />
-                            {__('No video source selected', 'tutor')}
-                          </p>
-
-                          <Button
-                            buttonCss={styles.selectFromSettingsButton}
-                            variant="secondary"
-                            size="small"
-                            icon={<SVGIcon name="linkExternal" height={24} width={24} />}
-                            onClick={() => {
-                              window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank');
-                            }}
-                          >
-                            {__('Select from settings', 'tutor')}
-                          </Button>
-                        </>
+                      when={
+                        videoSources.filter((source) => source !== 'html5').length > 0 && videoSources.includes('html5')
                       }
-                    >
-                      <Show when={videoSources.includes('html5')}>
+                      fallback={
                         <Button
                           variant="secondary"
-                          icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
-                          onClick={() => {
-                            handleUpload('video');
-                          }}
-                        >
-                          {buttonText}
-                        </Button>
-                      </Show>
-                      <Show when={videoSources.filter((source) => source !== 'html5').length > 0}>
-                        <button
-                          type="button"
-                          css={styles.urlButton}
+                          icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
                           onClick={() => {
                             setIsOpen((previousState) => !previousState);
                           }}
                         >
                           {__('Add from URL', 'tutor')}
-                        </button>
-                      </Show>
+                        </Button>
+                      }
+                    >
+                      <button
+                        type="button"
+                        css={styles.urlButton}
+                        onClick={() => {
+                          setIsOpen((previousState) => !previousState);
+                        }}
+                      >
+                        {__('Add from URL', 'tutor')}
+                      </button>
+                    </Show>
 
+                    <Show when={videoSources.includes('html5')}>
                       <p css={styles.infoTexts}>{infoText}</p>
                     </Show>
                   </div>
@@ -432,7 +466,7 @@ const styles = {
   }) => css`
     width: 100%;
     height: 100%;
-    min-height: 168px;
+    min-height: 196px;
     display: flex;
     flex-direction: column;
     align-items: center;
