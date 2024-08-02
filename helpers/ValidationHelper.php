@@ -92,20 +92,23 @@ class ValidationHelper {
 							break;
 						case 'email':
 							if ( ! is_email( $data[ $key ] ) ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' is not valid email', 'tutor' );
+								$validation_pass = false;
+								/* translators: %s: field name */
+								$validation_errors[ $key ][] = sprintf( __( '%s is not valid email', 'tutor' ), $key );
 							}
 							break;
 						case 'min_length':
 							if ( strlen( $data[ $key ] ) < $nested_rules[1] ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' minimum length is ', 'tutor' ) . $nested_rules[1];
+								$validation_pass = false;
+								/* translators: %1$s: field name, %2$d: value */
+								$validation_errors[ $key ][] = sprintf( __( '%1$s minimum length is %2$d' ), $key, $nested_rule[1] );
 							}
 							break;
 						case 'max_length':
 							if ( strlen( $data[ $key ] ) > $nested_rules[1] ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' maximum length is ', 'tutor' ) . $nested_rules[1];
+								$validation_pass = false;
+								/* translators: %1$s: field name, %2$d: value */
+								$validation_errors[ $key ][] = sprintf( __( '%1$s maximum length is %2$d' ), $key, $nested_rule[1] );
 							}
 							break;
 						case 'mimes':
