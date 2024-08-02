@@ -227,7 +227,6 @@ const LessonModal = ({
                   {...controllerProps}
                   label={__('Featured Image', 'tutor')}
                   buttonText={__('Upload Featured Image', 'tutor')}
-                  infoText={__('Size: 700x430 pixels', 'tutor')}
                 />
               )}
             />
