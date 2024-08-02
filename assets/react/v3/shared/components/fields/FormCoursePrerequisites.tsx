@@ -1,22 +1,23 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 
+import SVGIcon from '@Atoms/SVGIcon';
+import EmptyState from '@Molecules/EmptyState';
+
 import { useDebounce } from '@Hooks/useDebounce';
+import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import { noop } from '@Utils/util';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import type { PrerequisiteCourses } from '@CourseBuilderServices/course';
-import { useIsScrolling } from '@Hooks/useIsScrolling';
-import EmptyState from '@Molecules/EmptyState';
-import { __ } from '@wordpress/i18n';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
 
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
@@ -57,7 +58,6 @@ const FormCoursePrerequisites = ({
 
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
-  const { ref: scrollDivRef, isScrolling } = useIsScrolling({ defaultValue: true });
 
   const searchedOptions = options.filter((option) =>
     option.post_title.toLowerCase().includes(debouncedSearchText.toLowerCase()),
@@ -134,12 +134,7 @@ const FormCoursePrerequisites = ({
                 />
               }
             >
-              <div
-                ref={scrollDivRef}
-                css={styles.courseList({
-                  isScrolling,
-                })}
-              >
+              <div css={styles.courseList}>
                 <For each={inputValue}>
                   {(course, index) => (
                     <div key={index} css={styles.courseCard}>
@@ -264,24 +259,13 @@ const styles = {
       box-shadow: ${shadow.focus}
     }
   `,
-  courseList: ({
-    isScrolling = false,
-  }: {
-    isScrolling: boolean;
-  }) => css`
+  courseList: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
     max-height: 256px;
     height: 100%;
     margin-top: ${spacing[8]};
     ${styleUtils.overflowYAuto};
-
-    ${
-      isScrolling &&
-      css`
-        box-shadow: ${shadow.scrollable};
-      `
-    }
   `,
   optionsWrapper: css`
     position: absolute;

@@ -16,7 +16,7 @@ $course_id                = get_the_ID();
 $is_logged_in             = is_user_logged_in();
 $user_id                  = get_current_user_id();
 $enable_guest_course_cart = false;
-$required_loggedin_class  = '';
+$required_loggedin_class  = 'tutor-native-add-to-cart';
 if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
@@ -68,7 +68,7 @@ if ( $is_course_in_user_cart ) {
 		?>
         <?php echo apply_filters( 'tutor_after_course_details_tutor_cart_price', ob_get_clean(), $course_id ); //phpcs:ignore ?>
 	</div>
-	<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-native-add-to-cart <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
+	<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
 		<span class="tutor-icon-cart-line tutor-mr-8"></span>
 		<span><?php esc_html_e( 'Add to cart', 'tutor' ); ?></span>
 	</button>

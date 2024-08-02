@@ -102,7 +102,7 @@ class CartController {
 		$page_id = self::get_page_id();
 		if ( ! $page_id ) {
 			$args = array(
-				'post_title'   => self::PAGE_SLUG,
+				'post_title'   => ucfirst( self::PAGE_SLUG ),
 				'post_content' => '',
 				'post_type'    => 'page',
 				'post_status'  => 'publish',

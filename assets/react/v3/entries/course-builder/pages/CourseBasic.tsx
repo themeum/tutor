@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
@@ -37,7 +37,7 @@ import {
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useInstructorListQuery } from '@Services/users';
+import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
@@ -50,21 +50,20 @@ const CourseBasic = () => {
   const isCourseDetailsFetching = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
+  const currentUser = tutorConfig.current_user;
 
-  const author = form.watch('post_author');
-
-  const [instructorSearchText, setInstructorSearchText] = useState('');
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
-  const isAdministrator = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
 
   const isInstructorVisible =
     isTutorProEnabled &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
     isAdministrator &&
-    String(tutorConfig.current_user.data.id) === String(author?.id || '');
+    String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
 
   const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
 
@@ -129,10 +128,35 @@ const CourseBasic = () => {
     },
   ];
 
-  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
+  const userList = useUserListQuery({
+    context: 'edit',
+    roles: [],
+  });
+
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
-  const instructorOptions = instructorListQuery.data ?? [];
+  const instructorOptions = () => {
+    const convertedCourseInstructors = (courseDetails?.course_instructors || []).map((instructor) => ({
+      id: instructor.id,
+      name: instructor.display_name,
+      email: instructor.user_email,
+      avatar_url: instructor.avatar_url,
+    }));
+
+    if (convertedCourseInstructors.length && instructorListQuery.data?.length) {
+      return [...convertedCourseInstructors, ...instructorListQuery.data];
+    }
+
+    if (convertedCourseInstructors.length > 0) {
+      return convertedCourseInstructors;
+    }
+
+    if (instructorListQuery.data) {
+      return instructorListQuery.data;
+    }
+
+    return [];
+  };
 
   const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
@@ -234,6 +258,9 @@ const CourseBasic = () => {
               placeholder="Select visibility status"
               options={visibilityStatusOptions}
               leftIcon={<SVGIcon name="eye" width={32} height={32} />}
+              onChange={() => {
+                form.setValue('post_password', '');
+              }}
             />
           )}
         />
@@ -242,10 +269,14 @@ const CourseBasic = () => {
           <Controller
             name="post_password"
             control={form.control}
+            rules={{
+              required: __('Password is required', 'tutor'),
+            }}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
                 label={__('Password', 'tutor')}
+                placeholder={__('Enter password', 'tutor')}
                 type="password"
                 isPassword
                 selectOnFocus
@@ -264,7 +295,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
-              infoText={__('Size: 700x430 pixels', 'tutor')}
+              infoText={__('Standard Size: 800x450 pixels', 'tutor')}
             />
           )}
         />
@@ -277,7 +308,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
-              infoText={__('Supported file formats .mp4 ', 'tutor')}
+              infoText={__('Supported file formats .mp4', 'tutor')}
               supportedFormats={['mp4']}
             />
           )}
@@ -402,7 +433,7 @@ const CourseBasic = () => {
           )}
         />
 
-        {tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
+        {currentUser.roles.includes(TutorRoles.ADMINISTRATOR) && (
           <Controller
             name="post_author"
             control={form.control}
@@ -410,10 +441,9 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Author', 'tutor')}
-                options={instructorOptions}
+                options={userList.data ?? []}
                 placeholder={__('Search to add author', 'tutor')}
                 isSearchable
-                handleSearchOnChange={setInstructorSearchText}
                 disabled={!isAuthorEditable}
               />
             )}
@@ -428,10 +458,9 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Instructors', 'tutor')}
-                options={instructorOptions}
+                options={instructorOptions()}
                 placeholder={__('Search to add instructor', 'tutor')}
                 isSearchable
-                handleSearchOnChange={setInstructorSearchText}
                 isMultiSelect
               />
             )}
