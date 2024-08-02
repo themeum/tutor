@@ -65,6 +65,16 @@ class CouponModel {
 	const REQUIREMENT_MINIMUM_QUANTITY = 'minimum_quantity';
 
 	/**
+	 * Discount type
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const DISCOUNT_TYPE_FLAT       = 'flat';
+	const DISCOUNT_TYPE_PERCENTAGE = 'percentage';
+
+	/**
 	 * Coupon table name
 	 *
 	 * @since 3.0.0
@@ -529,35 +539,105 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int|array $course_id Required, course id or array of ids.
+	 * @param int|array $course_ids Required, course id or array of ids.
 	 * @param mixed     $coupon_code Required, coupon code.
 	 *
 	 * @todo  Need to implement the logic for manual coupon type
 	 *
-	 * @return float Discount price in float format
+	 * @return object Detail of discount on object format.
+	 *
+	 * For ex: {
+	 *     total_price: 100,
+	 *    {
+	 *     course_id: 1,
+	 *     discount_price: 60
+	 *    },
+	 *    {
+	 *     course_id: 2,
+	 *     discount_price: 40
+	 *    }
+	 * }
 	 */
-	public function apply_coupon_discount( $course_id, $coupon_code ) {
-		$discount_price      = 0;
+	public function apply_coupon_discount( $course_ids, $coupon_code ) {
+		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
+
+		$response              = new \stdClass();
+		$response->total_price = 0;
+
 		$should_apply_coupon = false;
 
-		$course_price = tutor_utils()->get_raw_course_price( $course_id );
-		if ( $course_price->sale_price ) {
-			$discount_price = $course_price->sale_price;
-		} else {
-			$discount_price = $course_price->price;
+		foreach ( $course_ids as $course_id ) {
+			$course_price   = tutor_utils()->get_raw_course_price( $course_id );
+			$reg_price      = $course_price->reg_price;
+			$sale_price     = $course_price->sale_price;
+			$discount_price = $reg_price;
 
-			$coupon = $this->get_coupon( $coupon_code );
-			if ( $coupon ) {
-				$is_valid = $this->is_coupon_valid( $coupon );
-				if ( $is_valid ) {
-					$is_meet_min_requirement = $this->is_coupon_requirement_meet( $course_id, $coupon );
-					if ( $is_meet_min_requirement ) {
-						$should_apply_coupon = $this->is_coupon_applicable( $coupon, $course_id );
+			if ( $sale_price ) {
+				$discount_price = $sale_price;
+			} else {
+				$coupon = $this->get_coupon( $coupon_code );
+				if ( $coupon ) {
+					$is_valid = $this->is_coupon_valid( $coupon );
+					if ( $is_valid ) {
+						$is_meet_min_requirement = $this->is_coupon_requirement_meet( $course_id, $coupon );
+						if ( $is_meet_min_requirement ) {
+							$should_apply_coupon = $this->is_coupon_applicable( $coupon, $course_id );
+						}
+					}
+
+					// Apply discount if pass all checks.
+					if ( $should_apply_coupon ) {
+						$discount_price = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
 					}
 				}
 			}
+
+			$response[] = (object) array(
+				'course_id'      => $course_id,
+				'discount_price' => $discount_price,
+			);
+
+			$response->total_price += $discount_price;
 		}
-		return floatval( $discount_price );
+
+		return $response;
+	}
+
+	/**
+	 * Deduct coupon discount
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed  $regular_price Regular price.
+	 * @param string $discount_type Discount type.
+	 * @param mixed  $discount_value Discount value.
+	 *
+	 * @return float Deducted price
+	 */
+	public function deduct_coupon_discount( $regular_price, $discount_type, $discount_value ) {
+		$deducted_price = $regular_price;
+		if ( self::DISCOUNT_TYPE_PERCENTAGE === $discount_type ) {
+			$deducted_price = $regular_price - ( $regular_price * ( $discount_value / 100 ) );
+		} else {
+			$deducted_price = $regular_price - $discount_value;
+		}
+
+		return floatval( $deducted_price );
+	}
+
+	/**
+	 * Check whether this coupon is valid or not.
+	 *
+	 * Considering start-expire time & use limit.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $coupon Coupon object.
+	 *
+	 * @return bool
+	 */
+	public function is_coupon_valid( object $coupon ): bool {
+		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, get_current_user_id() );
 	}
 
 	/**
@@ -643,21 +723,6 @@ class CouponModel {
 		}
 
 		return $is_meet_requirement;
-	}
-
-	/**
-	 * Check whether this coupon is valid or not.
-	 *
-	 * Considering start-expire time & use limit.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param object $coupon Coupon object.
-	 *
-	 * @return bool
-	 */
-	public function is_coupon_valid( object $coupon ): bool {
-		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, get_current_user_id() );
 	}
 
 	/**
