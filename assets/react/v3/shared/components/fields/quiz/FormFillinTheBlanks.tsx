@@ -418,6 +418,7 @@ const styles = {
 
     svg {
       flex-shrink: 0;
+      color: ${colorTokens.icon.error};
     }
   `,
   optionInput: css`
