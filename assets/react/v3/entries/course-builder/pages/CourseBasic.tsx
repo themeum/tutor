@@ -295,6 +295,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
+              infoText={__('Standard Size: 800x450 pixels', 'tutor')}
             />
           )}
         />
