@@ -89,6 +89,7 @@ class BillingController {
 		$user_id = get_current_user_id();
 
 		$params = array(
+			'user_id'    => $user_id,
 			'first_name' => Input::post( 'first_name' ),
 			'last_name'  => Input::post( 'last_name' ),
 			'email'      => Input::post( 'email' ),
@@ -100,7 +101,6 @@ class BillingController {
 			'city'       => Input::post( 'city' ),
 		);
 
-		// Validate request.
 		$validation = $this->validate( $params );
 		if ( ! $validation->success ) {
 			$this->json_response(
@@ -110,7 +110,13 @@ class BillingController {
 			);
 		}
 
-		$response = $this->model->save_billing_info( $user_id, $params );
+		$billing_info = $this->get_billing_info();
+
+		if ( $billing_info ) {
+			$response = $this->model->update( $params );
+		} else {
+			$response = $this->model->insert( $params );
+		}
 
 		if ( ! $response ) {
 			$this->json_response(
@@ -127,7 +133,8 @@ class BillingController {
 	 * Get billing info.
 	 */
 	public function get_billing_info() {
-
+		$user_id = get_current_user_id();
+		return $this->model->get_info( $user_id );
 	}
 
 	/**
@@ -147,9 +154,10 @@ class BillingController {
 	protected function validate( array $data ) {
 
 		$validation_rules = array(
+			'user_id'    => 'required|numeric',
 			'first_name' => 'required',
 			'last_name'  => 'required',
-			'email'      => 'required',
+			'email'      => 'required|email',
 			'phone'      => 'required',
 			'zip_code'   => 'required',
 			'address'    => 'required',

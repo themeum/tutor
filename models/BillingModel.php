@@ -18,21 +18,20 @@ use Tutor\Helpers\QueryHelper;
 class BillingModel {
 
 	/**
-	 * Save billing info
+	 * Insert billing info
 	 *
-	 * @param int   $user_id User ID.
 	 * @param array $data Bulling info data.
 	 *
-	 * @return array
+	 * @return int The ID of the inserted row on success, or 0 on failure.
 	 */
-	public function save_billing_info( $user_id, $data ) {
+	public function insert( $data ) {
 		global $wpdb;
 
-		$billing_info = QueryHelper::insert(
+		return QueryHelper::insert(
 			"{$wpdb->prefix}tutor_customers",
 			array(
-				'user_id'          => $user_id,
-				'billing_name'     => $data['first_name'] . $data['last_name'],
+				'user_id'          => $data['user_id'],
+				'billing_name'     => $data['first_name'] . ' ' . $data['last_name'],
 				'billing_email'    => $data['email'],
 				'billing_phone'    => $data['phone'],
 				'billing_zip_code' => $data['zip_code'],
@@ -42,25 +41,23 @@ class BillingModel {
 				'billing_city'     => $data['city'],
 			),
 		);
-		return $billing_info;
 	}
 
 	/**
 	 * Update billing info
 	 *
-	 * @param int   $user_id User ID.
 	 * @param array $data Bulling info data.
 	 *
-	 * @return array
+	 * @return bool True on success, false on failure.
 	 */
-	public function update_billing_info( $user_id, $data ) {
+	public function update( $data ) {
 		global $wpdb;
 
-		$billing_info = QueryHelper::update(
+		return QueryHelper::update(
 			"{$wpdb->prefix}tutor_customers",
 			array(
-				'user_id'          => $user_id,
-				'billing_name'     => $data['first_name'] . $data['last_name'],
+				'user_id'          => $data['user_id'],
+				'billing_name'     => $data['first_name'] . ' ' . $data['last_name'],
 				'billing_email'    => $data['email'],
 				'billing_phone'    => $data['phone'],
 				'billing_zip_code' => $data['zip_code'],
@@ -70,10 +67,9 @@ class BillingModel {
 				'billing_city'     => $data['city'],
 			),
 			array(
-				'user_id' => $user_id,
+				'user_id' => $data['user_id'],
 			),
 		);
-		return $billing_info;
 	}
 
 	/**
@@ -81,9 +77,9 @@ class BillingModel {
 	 *
 	 * @param int $user_id User ID.
 	 *
-	 * @return array
+	 * @return object|false The billing info as an object if found, or false if not found.
 	 */
-	public function get_billing_info( $user_id ) {
+	public function get_info( $user_id ) {
 		global $wpdb;
 
 		$billing_info = QueryHelper::get_row(
