@@ -135,28 +135,14 @@ const CourseBasic = () => {
 
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
-  const instructorOptions = () => {
-    const convertedCourseInstructors = (courseDetails?.course_instructors || []).map((instructor) => ({
-      id: instructor.id,
-      name: instructor.display_name,
-      email: instructor.user_email,
-      avatar_url: instructor.avatar_url,
-    }));
+  const convertedCourseInstructors = (courseDetails?.course_instructors || []).map((instructor) => ({
+    id: instructor.id,
+    name: instructor.display_name,
+    email: instructor.user_email,
+    avatar_url: instructor.avatar_url,
+  }));
 
-    if (convertedCourseInstructors.length && instructorListQuery.data?.length) {
-      return [...convertedCourseInstructors, ...instructorListQuery.data];
-    }
-
-    if (convertedCourseInstructors.length > 0) {
-      return convertedCourseInstructors;
-    }
-
-    if (instructorListQuery.data) {
-      return instructorListQuery.data;
-    }
-
-    return [];
-  };
+  const instructorOptions = [...convertedCourseInstructors, ...(instructorListQuery.data || [])];
 
   const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
@@ -458,7 +444,7 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Instructors', 'tutor')}
-                options={instructorOptions()}
+                options={instructorOptions}
                 placeholder={__('Search to add instructor', 'tutor')}
                 isSearchable
                 isMultiSelect
