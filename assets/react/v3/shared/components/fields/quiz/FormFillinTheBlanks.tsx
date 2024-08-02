@@ -37,6 +37,9 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title || !inputValue.answer_two_gap_match);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
+  const totalDashesInTitle = inputValue.answer_title?.match(/{dash}/g)?.length || 0;
+  const totalAnswers = inputValue.answer_two_gap_match?.split('|').length || 0;
+
   const createQuizAnswer = async () => {
     const response = await createQuizAnswerMutation.mutateAsync({
       ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
@@ -178,6 +181,18 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                     }
                   }}
                 />
+                <Show
+                  when={
+                    inputValue.answer_title && inputValue.answer_two_gap_match && totalDashesInTitle !== totalAnswers
+                  }
+                >
+                  <div css={styles.errorMessage}>
+                    <SVGIcon name="info" height={20} width={20} />
+                    <p>
+                      {__('Number of answer variables should match the number of {dash}es in the question.', 'tutor')}
+                    </p>
+                  </div>
+                </Show>
                 <div css={styles.inputHints}>
                   <SVGIcon name="info" height={20} width={20} />
                   <p>
@@ -388,6 +403,18 @@ const styles = {
     ${typography.small()};
     color: ${colorTokens.text.hints};
     align-items: flex-start;
+
+    svg {
+      flex-shrink: 0;
+    }
+  `,
+  errorMessage: css`
+    display: flex;
+    gap: ${spacing[4]};
+    ${typography.small()};
+    color: ${colorTokens.text.error};
+    align-items: flex-start;
+    color: ${colorTokens.text.error};
 
     svg {
       flex-shrink: 0;
