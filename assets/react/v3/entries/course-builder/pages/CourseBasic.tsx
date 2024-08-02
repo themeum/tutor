@@ -130,7 +130,28 @@ const CourseBasic = () => {
 
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
-  const instructorOptions = instructorListQuery.data ?? [];
+  const instructorOptions = () => {
+    const convertedCourseInstructors = (courseDetails?.course_instructors || []).map((instructor) => ({
+      id: instructor.id,
+      name: instructor.display_name,
+      email: instructor.user_email,
+      avatar_url: instructor.avatar_url,
+    }));
+
+    if (convertedCourseInstructors.length && instructorListQuery.data?.length) {
+      return [...convertedCourseInstructors, ...instructorListQuery.data];
+    }
+
+    if (convertedCourseInstructors.length > 0) {
+      return convertedCourseInstructors;
+    }
+
+    if (instructorListQuery.data) {
+      return instructorListQuery.data;
+    }
+
+    return [];
+  };
 
   const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
@@ -416,10 +437,12 @@ const CourseBasic = () => {
                 {...controllerProps}
                 label={__('Author', 'tutor')}
                 options={
-                  instructorOptions.some((instructor) => String(instructor.id) === String(courseDetails.post_author.ID))
-                    ? instructorOptions
+                  instructorOptions().some(
+                    (instructor) => String(instructor.id) === String(courseDetails.post_author.ID),
+                  )
+                    ? instructorOptions()
                     : [
-                        ...instructorOptions,
+                        ...instructorOptions(),
                         {
                           id: Number(courseDetails?.post_author.ID),
                           name: courseDetails?.post_author.display_name,
@@ -444,7 +467,7 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Instructors', 'tutor')}
-                options={instructorOptions}
+                options={instructorOptions()}
                 placeholder={__('Search to add instructor', 'tutor')}
                 isSearchable
                 isMultiSelect

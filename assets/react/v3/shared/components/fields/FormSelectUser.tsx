@@ -159,35 +159,40 @@ const FormSelectUser = ({
               )}
             </div>
 
-            {isMultiSelect && Array.isArray(inputValue) && inputValue.length > 0 && (
-              <div css={styles.instructorList}>
-                {inputValue.map((instructor) => (
-                  <div key={instructor.id} css={styles.instructorItem({ isDefaultItem: false })}>
-                    <div css={styles.instructorInfo}>
-                      <img
-                        src={instructor.avatar_url ? instructor.avatar_url : profileImage}
-                        alt={instructor.name}
-                        css={styles.instructorAvatar}
-                      />
-                      <div>
-                        <div css={styles.instructorName}>{instructor.name}</div>
-                        <div css={styles.instructorEmail}>{instructor.email}</div>
+            {isMultiSelect &&
+              Array.isArray(inputValue) &&
+              (inputValue.length > 0 ? (
+                <div css={styles.instructorList}>
+                  {inputValue.map((instructor) => (
+                    <div key={instructor.id} css={styles.instructorItem({ isDefaultItem: false })}>
+                      <div css={styles.instructorInfo}>
+                        <img
+                          src={instructor.avatar_url ? instructor.avatar_url : profileImage}
+                          alt={instructor.name}
+                          css={styles.instructorAvatar}
+                        />
+                        <div>
+                          <div css={styles.instructorName}>{instructor.name}</div>
+                          <div css={styles.instructorEmail}>{instructor.email}</div>
+                        </div>
                       </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSelection(instructor.id)}
+                        css={styles.instructorDeleteButton}
+                        data-instructor-delete-button
+                      >
+                        <SVGIcon name="cross" width={32} height={32} />
+                      </button>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteSelection(instructor.id)}
-                      css={styles.instructorDeleteButton}
-                      data-instructor-delete-button
-                    >
-                      <SVGIcon name="cross" width={32} height={32} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
+                  ))}
+                </div>
+              ) : (
+                <div css={styles.emptyState}>
+                  <p>{__('No user selected', 'tutor')}</p>
+                </div>
+              ))}
             <Portal
               isOpen={isOpen}
               onClickOutside={() => {
@@ -449,5 +454,12 @@ const styles = {
       transform: rotate(180deg);
     `
     }
+  `,
+  emptyState: css`
+    ${styleUtils.flexCenter()};
+    ${typography.caption()};
+    margin-top: ${spacing[8]};
+    padding: ${spacing[8]};
+    background-color: ${colorTokens.background.white};
   `,
 };
