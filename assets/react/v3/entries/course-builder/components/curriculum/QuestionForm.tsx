@@ -41,7 +41,7 @@ const QuestionForm = () => {
     ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
   } as const;
 
-  if (!activeQuestionId && questions.length === 0) {
+  if (!activeQuestionId && !form.formState.isLoading && questions.length === 0) {
     return (
       <div css={styles.emptyState}>
         <EmptyState

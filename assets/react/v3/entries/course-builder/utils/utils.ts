@@ -125,7 +125,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     }),
     enable_qna: courseDetails.enable_qna === 'yes' ? true : false,
     is_public_course: courseDetails.is_public_course === 'yes' ? true : false,
-    course_level: courseDetails.course_level,
+    course_level: courseDetails.course_level || 'intermediate',
     maximum_students: courseDetails.course_settings.maximum_students,
     enrollment_expiry: courseDetails.course_settings.enrollment_expiry,
     course_benefits: courseDetails.course_benefits,

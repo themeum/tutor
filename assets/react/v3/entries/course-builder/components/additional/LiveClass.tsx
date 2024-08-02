@@ -32,26 +32,14 @@ interface LiveClassProps {
   zoomUsers: {
     [key: string]: string;
   };
-  zoomTimezones: {
-    [key: string]: string;
-  };
   googleMeetMeetings: GoogleMeet[];
-  googleMeetTimezones: {
-    [key: string]: string;
-  };
 }
 
 const isPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
 const isGoogleMeetAddonEnabled = isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION);
 
-const LiveClass = ({
-  zoomMeetings,
-  zoomUsers,
-  zoomTimezones,
-  googleMeetMeetings,
-  googleMeetTimezones,
-}: LiveClassProps) => {
+const LiveClass = ({ zoomMeetings, zoomUsers, googleMeetMeetings }: LiveClassProps) => {
   const [showMeetingForm, setShowMeetingForm] = useState<MeetingType | null>(null);
 
   const zoomButtonRef = useRef<HTMLButtonElement>(null);

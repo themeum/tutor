@@ -163,7 +163,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
   };
 }
 
-const WPEditor = ({ value, onChange }: WPEditorProps) => {
+const WPEditor = ({ value = '', onChange }: WPEditorProps) => {
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const { current: editorId } = useRef(nanoid());
   const [isFocused, setIsFocused] = useState(false);
@@ -188,13 +188,7 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      updateEditorContent(value);
-    }, 100);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
+    updateEditorContent(value);
   }, [value]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -225,7 +219,7 @@ const WPEditor = ({ value, onChange }: WPEditorProps) => {
 
   return (
     <div css={styles.wrapper}>
-      <textarea ref={editorRef} id={editorId} />
+      <textarea ref={editorRef} id={editorId} defaultValue={value} />
     </div>
   );
 };

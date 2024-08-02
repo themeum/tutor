@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 
 import Button from '@Atoms/Button';
 import WPEditor from '@Atoms/WPEditor';
@@ -81,7 +82,7 @@ const FormWPEditor = ({
                       showModal({
                         component: EditorModal,
                         props: {
-                          title: `${editorUsed.name.charAt(0).toUpperCase() + editorUsed.name} Editor`,
+                          title: __(`${editorUsed.name} Editor`, 'tutor'),
                           editorUsed: editorUsed,
                         },
                       })
@@ -101,7 +102,7 @@ const FormWPEditor = ({
                         showModal({
                           component: EditorModal,
                           props: {
-                            title: editor.label,
+                            title: __(`${editorUsed.name} Editor`, 'tutor'),
                             editorUsed: editor,
                           },
                         });
