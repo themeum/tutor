@@ -60,7 +60,7 @@ const FormSelectUser = ({
   helpText,
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
-  const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => item.id) : [inputValue.id];
+  const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => String(item.id)) : [String(inputValue.id)];
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -72,7 +72,7 @@ const FormSelectUser = ({
       const matchesSearchText =
         item.name.toLowerCase().includes(searchText.toLowerCase()) ||
         item.email?.toLowerCase().includes(searchText.toLowerCase());
-      const isNotSelected = !selectedIds.includes(item.id);
+      const isNotSelected = !selectedIds.includes(String(item.id));
       return matchesSearchText && isNotSelected;
     }) || [];
 

@@ -50,19 +50,20 @@ const CourseBasic = () => {
   const isCourseDetailsFetching = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
+  const currentUser = tutorConfig.current_user;
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
-  const isAdministrator = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
 
   const isInstructorVisible =
     isTutorProEnabled &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
     isAdministrator &&
-    String(tutorConfig.current_user.data.id) === String(courseDetails?.post_author.ID || '');
+    String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
 
   const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
 
@@ -130,6 +131,24 @@ const CourseBasic = () => {
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
   const instructorOptions = instructorListQuery.data ?? [];
+  const authorOptions = () => {
+    const { post_author } = courseDetails || {};
+    const { ID: authorId, user_email: authorEmail } = post_author || {};
+    const { id: currentUserId, display_name: currentUserName, user_email: currentUserEmail } = currentUser.data;
+
+    const isAuthorInstructor = instructorOptions.some((instructor) => String(instructor.id) === String(authorId));
+
+    const newInstructor = {
+      id: Number(currentUserId),
+      name: currentUserName,
+      avatar_url: '',
+      email: isAuthorInstructor ? currentUserEmail : authorEmail,
+    };
+
+    return isAuthorInstructor && String(authorId) === String(currentUserId)
+      ? instructorOptions
+      : [...instructorOptions, newInstructor];
+  };
 
   const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
@@ -406,7 +425,7 @@ const CourseBasic = () => {
           )}
         />
 
-        {tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
+        {currentUser.roles.includes(TutorRoles.ADMINISTRATOR) && (
           <Controller
             name="post_author"
             control={form.control}
@@ -414,15 +433,7 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Author', 'tutor')}
-                options={[
-                  ...instructorOptions,
-                  {
-                    id: Number(courseDetails?.post_author.ID),
-                    name: courseDetails?.post_author.display_name || '',
-                    email: courseDetails?.post_author.user_email || '',
-                    avatar_url: courseDetails?.post_author.tutor_profile_photo_url || '',
-                  },
-                ]}
+                options={authorOptions()}
                 placeholder={__('Search to add author', 'tutor')}
                 isSearchable
                 disabled={!isAuthorEditable}
