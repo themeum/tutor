@@ -74,6 +74,22 @@ class ValidationHelper {
 								$validation_errors[ $key ][] = $key . __( ' is not numeric', 'tutor' );
 							}
 							break;
+						/* Greater than (gt) */
+						case 'gt':
+							if ( $data[ $key ] < $nested_rules[1] ) {
+								$validation_pass = false;
+								/* translators: %1$s: field name, %2$d: value */
+								$validation_errors[ $key ][] = sprintf( __( '%1$s need to be greater than %2$d', 'tutor' ), $key, $nested_rules[1] );
+							}
+							break;
+						/* Less than (lt) */
+						case 'lt':
+							if ( $data[ $key ] > $nested_rules[1] ) {
+								$validation_pass = false;
+								/* translators: %1$s: field name, %2$d: value */
+								$validation_errors[ $key ][] = sprintf( __( '%1$s need to be less than %2$d', 'tutor' ), $key, $nested_rules[1] );
+							}
+							break;
 						case 'email':
 							if ( ! is_email( $data[ $key ] ) ) {
 								$validation_pass             = false;
