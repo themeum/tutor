@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\CartController;
 
 $tutor_toc_page_link = tutor_utils()->get_toc_page_link();
@@ -24,12 +25,25 @@ $course_list     = $courses['results'];
 $subtotal        = 0;
 $tax_amount      = 0; // @TODO: Need to implement later.
 
+$billing_controller = new BillingController();
+$billing_info       = $billing_controller->get_billing_info();
+
+$billing_name = $billing_info ? $billing_info->billing_name : '';
+$name_parts   = $billing_name ? explode( ' ', $billing_name, 2 ) : array( '', '' );
+
+$first_name = $name_parts[0] ?? '';
+$last_name  = $name_parts[1] ?? '';
+
+$email    = $billing_info ? $billing_info->billing_email : '';
+$phone    = $billing_info ? $billing_info->billing_phone : '';
+$zip_code = $billing_info ? $billing_info->billing_zip_code : '';
+$address  = $billing_info ? $billing_info->billing_address : '';
+$country  = $billing_info ? $billing_info->billing_country : '';
+$state    = $billing_info ? $billing_info->billing_state : '';
+$city     = $billing_info ? $billing_info->billing_city : '';
 ?>
 <div class="tutor-checkout-page">
-	<form id="tutor-checkout-form">
-		<?php tutor_nonce_field(); ?>
-		<input type="hidden" name="action" value="tutor-checkout-pay-now">
-
+	<div>
 		<div class="tutor-row tutor-g-0">
 			<div class="tutor-col-md-6">
 				<div class="tutor-checkout-billing">
@@ -41,49 +55,100 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 							<?php echo esc_html_e( 'Billing Address', 'tutor' ); ?>
 						</h5>
 
-						<div class="tutor-row">
-							<div class="tutor-col-12">
-								<div class="tutor-form-group">
-									<label><?php echo esc_html_e( 'Country', 'tutor' ); ?></label>
-									<select name="country" class="tutor-form-control" required>
-										<option value="">Select Country</option>
-										<?php foreach ( tutils()->country_options() as $key => $name ) : ?>
-											<option value="<?php echo esc_attr( $key ); ?>">
-												<?php echo esc_html( $name ); ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-								</div>
-							</div>
+						<form id="user_billing_form" style="max-width: 600px;">
+							<?php tutor_nonce_field(); ?>
+							<input type="hidden" value="tutor_save_billing_info" name="action" />
 
-							<div class="tutor-col-6">
-								<div class="tutor-form-group">
-									<label><?php echo esc_html_e( 'First Name', 'tutor' ); ?></label>
-									<input type="text" name="first_name" class="tutor-form-control" required>
+							<div class="tutor-row">
+								<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
+									<div class="tutor-mb-32">
+										<label class="tutor-form-label tutor-color-secondary">
+											<?php esc_html_e( 'First Name', 'tutor' ); ?>
+										</label>
+										<input class="tutor-form-control" type="text" name="first_name" value="<?php echo esc_attr( $first_name ); ?>" required>
+									</div>
 								</div>
-							</div>
 
-							<div class="tutor-col-6">
-								<div class="tutor-form-group">
-									<label><?php echo esc_html_e( 'Last Name', 'tutor' ); ?></label>
-									<input type="text" name="last_name" class="tutor-form-control" required>
+								<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
+									<div class="tutor-mb-32">
+										<label class="tutor-form-label tutor-color-secondary">
+											<?php esc_html_e( 'Last Name', 'tutor' ); ?>
+										</label>
+										<input class="tutor-form-control" type="text" name="last_name" value="<?php echo esc_attr( $last_name ); ?>" required>
+									</div>
 								</div>
-							</div>
 
-							<div class="tutor-col-12">
-								<div class="tutor-form-group">
-									<label><?php echo esc_html_e( 'Email Address', 'tutor' ); ?></label>
-									<input type="email" name="email" class="tutor-form-control" required>
+								<div class="tutor-col-12">
+									<div class="tutor-mb-32">
+										<label class="tutor-form-label tutor-color-secondary">
+											<?php esc_html_e( 'Email Address', 'tutor' ); ?>
+										</label>
+										<input class="tutor-form-control" type="email" name="email" value="<?php echo esc_attr( $email ); ?>" required>
+									</div>
 								</div>
-							</div>
 
-							<div class="tutor-col-12">
-								<div class="tutor-form-group">
-									<label><?php echo esc_html_e( 'Mobile', 'tutor' ); ?></label>
-									<input type="text" name="mobile" class="tutor-form-control" required>
+								<div class="tutor-col-12">
+									<div class="tutor-mb-32">
+										<label class="tutor-form-label tutor-color-secondary">
+											<?php esc_html_e( 'Country', 'tutor' ); ?>
+										</label>
+										<select name="country" class="tutor-form-control" required>
+											<option value=""><?php esc_html_e( 'Select Country', 'tutor' ); ?></option>
+											<?php foreach ( tutils()->country_options() as $key => $name ) : ?>
+												<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $country, $key ); ?>>
+													<?php echo esc_html( $name ); ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+								</div>
+
+								<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
+									<div class="tutor-mb-32">
+										<label class="tutor-form-label tutor-color-secondary">
+											<?php esc_html_e( 'State', 'tutor' ); ?>
+										</label>
+										<input class="tutor-form-control" type="text" name="state" value="<?php echo esc_attr( $state ); ?>" required>
+									</div>
+								</div>
+
+								<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
+									<div class="tutor-mb-32">
+										<label class="tutor-form-label tutor-color-secondary">
+											<?php esc_html_e( 'City', 'tutor' ); ?>
+										</label>
+										<input class="tutor-form-control" type="text" name="city" value="<?php echo esc_attr( $city ); ?>" required>
+									</div>
+								</div>
+
+								<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
+									<div class="tutor-mb-32">
+										<label class="tutor-form-label tutor-color-secondary">
+											<?php esc_html_e( 'Postcode / ZIP', 'tutor' ); ?>
+										</label>
+										<input class="tutor-form-control" type="text" name="zip_code" value="<?php echo esc_attr( $zip_code ); ?>" required>
+									</div>
+								</div>
+
+								<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
+									<div class="tutor-mb-32">
+										<label class="tutor-form-label tutor-color-secondary">
+											<?php esc_html_e( 'Phone', 'tutor' ); ?>
+										</label>
+										<input class="tutor-form-control" type="text" name="phone" value="<?php echo esc_attr( $phone ); ?>" required>
+									</div>
+								</div>
+
+								<div class="tutor-col-12">
+									<div class="tutor-mb-32">
+										<label class="tutor-form-label tutor-color-secondary">
+											<?php esc_html_e( 'Address', 'tutor' ); ?>
+										</label>
+										<input class="tutor-form-control" type="text" name="address" value="<?php echo esc_attr( $address ); ?>" required>
+									</div>
 								</div>
 							</div>
-						</div>
+						</form>
 
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
@@ -99,33 +164,6 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 								Stripe
 							</button>
 						</div>
-
-						<!-- <div class="tutor-checkout-separator">
-							<span><?php esc_html_e( 'Or', 'tutor' ); ?></span>
-						</div>
-
-						<div class="tutor-row">
-							<div class="tutor-col-12">
-								<div class="tutor-form-group">
-									<label><?php echo esc_html_e( 'Card Number', 'tutor' ); ?></label>
-									<input type="text" name="card_number" class="tutor-form-control">
-								</div>
-							</div>
-
-							<div class="tutor-col-6">
-								<div class="tutor-form-group">
-									<label><?php echo esc_html_e( 'Expiration', 'tutor' ); ?></label>
-									<input type="text" name="expiration" class="tutor-form-control">
-								</div>
-							</div>
-
-							<div class="tutor-col-6">
-								<div class="tutor-form-group">
-									<label><?php echo esc_html_e( 'CVC', 'tutor' ); ?></label>
-									<input type="text" name="cvc" class="tutor-form-control">
-								</div>
-							</div>
-						</div> -->
 					</div>
 				</div>
 			</div>
@@ -251,5 +289,5 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 				</div>
 			</div>
 		</div>
-	</form>
+	</div>
 </div>
