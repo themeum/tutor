@@ -31,7 +31,10 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 			<div class="tutor-row tutor-g-4">
 				<div class="tutor-col-md-8">
 					<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16">
-						<?php echo esc_html( $total_count ); ?> <?php echo esc_html( _n( 'Course in Cart', 'Courses in Cart', $total_count, 'tutor' ) ); ?>
+						<?php
+						// translators: %d: Number of courses in the cart.
+						echo esc_html( sprintf( _n( '%d Course in Cart', '%d Courses in Cart', $total_count, 'tutor' ), $total_count ) );
+						?>
 					</h3>
 
 					<div class="tutor-cart-course-list">
@@ -52,8 +55,16 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 									</a>
 								</div>
 								<div class="tutor-cart-course-title">
-									<!-- @TODO: Need to add bundle product support -->
-									<!-- <div class="tutor-cart-course-bundle-badge">5 Course bundle</div> -->
+									<?php if ( tutor()->has_pro && 'course-bundle' === $course->post_type ) : ?>
+									<div class="tutor-cart-course-bundle-badge">
+										<?php
+										$bundle_model      = new \TutorPro\CourseBundle\Models\BundleModel();
+										$bundle_course_ids = $bundle_model::get_bundle_course_ids( $course->ID );
+										// translators: %d: Number of courses in the cart.
+										echo esc_html( sprintf( __( '%d Course bundle', 'tutor' ), count( $bundle_course_ids ) ) );
+										?>
+									</div>
+									<?php endif; ?>
 									<h5 class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 										<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">
 											<?php echo esc_html( $course->post_title ); ?>
