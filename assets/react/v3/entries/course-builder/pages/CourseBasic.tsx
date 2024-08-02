@@ -37,7 +37,7 @@ import {
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useInstructorListQuery } from '@Services/users';
+import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
@@ -127,6 +127,11 @@ const CourseBasic = () => {
       value: 'regular',
     },
   ];
+
+  const userList = useUserListQuery({
+    context: 'edit',
+    roles: [],
+  });
 
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
@@ -436,21 +441,7 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Author', 'tutor')}
-                options={
-                  instructorOptions().some(
-                    (instructor) => String(instructor.id) === String(courseDetails.post_author.ID),
-                  )
-                    ? instructorOptions()
-                    : [
-                        ...instructorOptions(),
-                        {
-                          id: Number(courseDetails?.post_author.ID),
-                          name: courseDetails?.post_author.display_name,
-                          email: courseDetails?.post_author.user_email,
-                          avatar_url: courseDetails?.post_author.tutor_profile_photo_url,
-                        },
-                      ]
-                }
+                options={userList.data ?? []}
                 placeholder={__('Search to add author', 'tutor')}
                 isSearchable
                 disabled={!isAuthorEditable}
