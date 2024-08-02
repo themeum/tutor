@@ -70,7 +70,7 @@ const FormSelectUser = ({
   const filteredOption =
     options.filter((item) => {
       const matchesSearchText =
-        item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.name?.toLowerCase().includes(searchText.toLowerCase()) ||
         item.email?.toLowerCase().includes(searchText.toLowerCase());
       const isNotSelected = !selectedIds.includes(String(item.id));
       return matchesSearchText && isNotSelected;
