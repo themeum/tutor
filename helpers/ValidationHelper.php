@@ -74,6 +74,12 @@ class ValidationHelper {
 								$validation_errors[ $key ][] = $key . __( ' is not numeric', 'tutor' );
 							}
 							break;
+						case 'email':
+							if ( ! is_email( $data[ $key ] ) ) {
+								$validation_pass             = false;
+								$validation_errors[ $key ][] = $key . __( ' is not valid email', 'tutor' );
+							}
+							break;
 						case 'min_length':
 							if ( strlen( $data[ $key ] ) < $nested_rules[1] ) {
 								$validation_pass             = false;
