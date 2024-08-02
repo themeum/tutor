@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -17,7 +17,6 @@ import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
-import { useModal } from '@Components/modals/Modal';
 
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
@@ -48,7 +47,9 @@ const courseId = getCourseId();
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
   const queryClient = useQueryClient();
-  const { showModal } = useModal();
+  const isCourseDetailsFetching = useIsFetching({
+    queryKey: ['CourseDetails', courseId],
+  });
 
   const author = form.watch('post_author');
 
@@ -213,7 +214,7 @@ const CourseBasic = () => {
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
-                loading={!courseDetails}
+                loading={!!isCourseDetailsFetching}
               />
             )}
           />

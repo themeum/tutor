@@ -8,7 +8,11 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import { type CourseFormData, useCourseDetailsQuery, usePrerequisiteCoursesQuery } from '@CourseBuilderServices/course';
+import {
+  type CourseDetailsResponse,
+  type CourseFormData,
+  usePrerequisiteCoursesQuery,
+} from '@CourseBuilderServices/course';
 
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import FormFileUploader from '@Components/fields/FormFileUploader';
@@ -19,12 +23,14 @@ import Show from '@Controls/Show';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Certificate from '../components/additional/Certificate';
 
 const Additional = () => {
   const courseId = getCourseId();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!courseId) {
@@ -41,8 +47,8 @@ const Additional = () => {
   const form = useFormContext<CourseFormData>();
   const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
 
-  const courseDetailsQuery = useCourseDetailsQuery(courseId);
-  const prerequisiteCourses = (courseDetailsQuery.data?.course_prerequisites || []).map((prerequisite) =>
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
+  const prerequisiteCourses = (courseDetails?.course_prerequisites || []).map((prerequisite) =>
     String(prerequisite.id),
   );
 
@@ -51,12 +57,10 @@ const Additional = () => {
     !!isPrerequisiteAddonEnabled,
   );
 
-  const zoomMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
-  const zoomUsers = courseDetailsQuery.data?.zoom_users ?? {};
-  const zoomTimezones = courseDetailsQuery.data?.zoom_timezones ?? {};
+  const zoomMeetings = courseDetails?.zoom_meetings ?? [];
+  const zoomUsers = courseDetails?.zoom_users ?? {};
 
-  const googleMeetMeetings = courseDetailsQuery.data?.google_meet_meetings ?? [];
-  const googleMeetTimezones = courseDetailsQuery.data?.google_meet_timezones ?? {};
+  const googleMeetMeetings = courseDetails?.google_meet_meetings ?? [];
 
   return (
     <div css={styles.wrapper}>
@@ -210,13 +214,7 @@ const Additional = () => {
             )}
           />
         </div>
-        <LiveClass
-          zoomMeetings={zoomMeetings}
-          zoomTimezones={zoomTimezones}
-          zoomUsers={zoomUsers}
-          googleMeetMeetings={googleMeetMeetings}
-          googleMeetTimezones={googleMeetTimezones}
-        />
+        <LiveClass zoomMeetings={zoomMeetings} zoomUsers={zoomUsers} googleMeetMeetings={googleMeetMeetings} />
       </div>
     </div>
   );
