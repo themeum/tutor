@@ -37,8 +37,8 @@ $city     = $billing_info ? $billing_info->billing_city : '';
 		<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-32"><?php esc_html_e( 'Billing Address', 'tutor' ); ?></div>
 	</div>
 
-	<form id="user_billing_form" action="" method="post" enctype="multipart/form-data" style="max-width: 600px;">
-		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+	<form id="user_billing_form" style="max-width: 600px;">
+		<?php tutor_nonce_field(); ?>
 		<input type="hidden" value="tutor_save_billing_info" name="action" />
 
 		<div class="tutor-row">
