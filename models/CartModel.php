@@ -112,6 +112,54 @@ class CartModel {
 	}
 
 	/**
+	 * Check if the user has any items in their cart.
+	 *
+	 * @param int $user_id User ID.
+	 * @return bool True if the user has items in the cart, false otherwise.
+	 */
+	public function has_item_in_cart( $user_id ) {
+		global $wpdb;
+
+		$user_cart = QueryHelper::get_row(
+			"{$wpdb->prefix}tutor_carts",
+			array(
+				'user_id' => $user_id,
+			),
+			'id'
+		);
+
+		if ( ! $user_cart ) {
+			return false;
+		}
+
+		$primary_table  = "{$wpdb->prefix}tutor_cart_items AS item";
+		$joining_tables = array(
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->prefix}posts AS post",
+				'on'    => 'item.course_id = post.ID',
+			),
+		);
+		$where          = array( 'item.cart_id' => $user_cart->id );
+		$select_columns = array( 'post.*' );
+
+		$cart_data = QueryHelper::get_joined_data(
+			$primary_table,
+			$joining_tables,
+			$select_columns,
+			$where,
+			array(),
+			'item.id'
+		);
+
+		if ( $cart_data && isset( $cart_data['total_count'] ) ) {
+			return (int) $cart_data['total_count'] > 0;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Delete cart item.
 	 *
 	 * @since 3.0.0

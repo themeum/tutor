@@ -10,6 +10,8 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Models\CartModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -114,11 +116,12 @@ class CheckoutController {
 
 		if ( is_page( $page_id ) ) {
 			$cart_controller = new CartController();
-			$get_cart        = $cart_controller->get_cart_items();
-			$courses         = $get_cart['courses'];
-			$total_count     = $courses['total_count'];
+			$cart_model      = new CartModel();
 
-			if ( 0 === $total_count ) {
+			$user_id       = tutils()->get_user_id();
+			$has_cart_item = $cart_model->has_item_in_cart( $user_id );
+
+			if ( ! $has_cart_item ) {
 				wp_safe_redirect( $cart_controller::get_page_url() );
 				exit;
 			}
