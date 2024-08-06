@@ -398,6 +398,7 @@ class QueryHelper {
 	 * Get all row from any table with where clause
 	 *
 	 * @since 2.2.1
+	 * @since 3.0.0  added support for -1 value in the limit parameter.
 	 *
 	 * @param string $table  table name with prefix.
 	 *
