@@ -793,8 +793,23 @@ class CouponModel {
 	 *
 	 * @return array [1,2,4]
 	 */
-	public function get_coupon_applications( $coupon_code ) {
-		return array( 1, 2, 3 );
+	public function get_coupon_applications( $coupon_code ): array {
+		global $wpdb;
+		$application_table = $wpdb->prefix . 'tutor_coupon_applications';
+
+		$response = array();
+
+		$result = QueryHelper::get_all(
+			$application_table,
+			array( 'coupon_code' => $coupon_code ),
+			'coupon_code'
+		);
+
+		if ( is_array( $result ) && count( $result ) ) {
+			$response = array_column( $result, 'reference_id' );
+		}
+
+		return $response;
 	}
 
 }
