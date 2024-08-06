@@ -18,6 +18,58 @@ use Tutor\Helpers\QueryHelper;
 class BillingModel {
 
 	/**
+	 * Fillable fields
+	 *
+	 * @var array
+	 */
+	private $fillable_fields = array(
+		'billing_first_name',
+		'billing_last_name',
+		'billing_email',
+		'billing_phone',
+		'billing_zip_code',
+		'billing_address',
+		'billing_country',
+		'billing_state',
+		'billing_city',
+	);
+
+	/**
+	 * Required fields
+	 *
+	 * @var array
+	 */
+	private $required_fields = array(
+		'billing_first_name',
+		'billing_last_name',
+		'billing_email',
+		'billing_phone',
+		'billing_zip_code',
+		'billing_address',
+		'billing_country',
+		'billing_state',
+		'billing_city',
+	);
+
+	/**
+	 * Get fillable fields
+	 *
+	 * @return array
+	 */
+	public function get_fillable_fields() {
+		return $this->fillable_fields;
+	}
+
+	/**
+	 * Get required fields
+	 *
+	 * @return array
+	 */
+	public function get_required_fields() {
+		return $this->required_fields;
+	}
+
+	/**
 	 * Insert billing info
 	 *
 	 * @param array $data Bulling info data.
@@ -29,17 +81,7 @@ class BillingModel {
 
 		return QueryHelper::insert(
 			"{$wpdb->prefix}tutor_customers",
-			array(
-				'user_id'          => $data['user_id'],
-				'billing_name'     => $data['first_name'] . ' ' . $data['last_name'],
-				'billing_email'    => $data['email'],
-				'billing_phone'    => $data['phone'],
-				'billing_zip_code' => $data['zip_code'],
-				'billing_address'  => $data['address'],
-				'billing_country'  => $data['country'],
-				'billing_state'    => $data['state'],
-				'billing_city'     => $data['city'],
-			),
+			$data,
 		);
 	}
 
@@ -55,17 +97,7 @@ class BillingModel {
 
 		return QueryHelper::update(
 			"{$wpdb->prefix}tutor_customers",
-			array(
-				'user_id'          => $data['user_id'],
-				'billing_name'     => $data['first_name'] . ' ' . $data['last_name'],
-				'billing_email'    => $data['email'],
-				'billing_phone'    => $data['phone'],
-				'billing_zip_code' => $data['zip_code'],
-				'billing_address'  => $data['address'],
-				'billing_country'  => $data['country'],
-				'billing_state'    => $data['state'],
-				'billing_city'     => $data['city'],
-			),
+			$data,
 			array(
 				'user_id' => $data['user_id'],
 			),
