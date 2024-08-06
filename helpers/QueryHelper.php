@@ -403,7 +403,7 @@ class QueryHelper {
 	 *
 	 * @param array  $where  assoc_array. For ex: [col_name => value ].
 	 * @param string $order_by  order by column name.
-	 * @param int    $limit default is 1000.
+	 * @param int    $limit default is 1000, -1 for no limit.
 	 * @param string $order  DESC or ASC, default is DESC.
 	 * @param string $output  expected output type, default is object.
 	 *
@@ -413,18 +413,15 @@ class QueryHelper {
 		global $wpdb;
 
 		$where_clause = self::build_where_clause( $where );
-		$limit        = sanitize_text_field( $limit );
+		$limit        = (int) sanitize_text_field( $limit );
+		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
 
 		//phpcs:disable
-		$query = $wpdb->prepare(
-			"SELECT *
+		$query = "SELECT *
 				FROM {$table}
 				WHERE {$where_clause}
 				ORDER BY {$order_by} {$order}
-				LIMIT %d
-			",
-			$limit
-		);
+				{$limit_clause}";
 
 		return $wpdb->get_results(
 			$query,
