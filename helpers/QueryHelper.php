@@ -219,7 +219,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	private static function make_clause( array $where ) {
+	public static function make_clause( array $where ) {
 		list ( $field, $operator, $value ) = $where;
 
 		if ( 'IN' === strtoupper( $operator ) ) {
@@ -237,7 +237,7 @@ class QueryHelper {
 	 *
 	 * @since 2.0.9
 	 */
-	private static function build_where_clause( array $where ) {
+	public static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
 			if ( is_array( $value ) ) {
