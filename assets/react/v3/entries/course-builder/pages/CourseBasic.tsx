@@ -197,6 +197,7 @@ const CourseBasic = () => {
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
+                  loading={!!isCourseDetailsFetching}
                 />
               )}
             />
@@ -244,6 +245,7 @@ const CourseBasic = () => {
               placeholder="Select visibility status"
               options={visibilityStatusOptions}
               leftIcon={<SVGIcon name="eye" width={32} height={32} />}
+              loading={!!isCourseDetailsFetching}
               onChange={() => {
                 form.setValue('post_password', '');
               }}
@@ -266,6 +268,7 @@ const CourseBasic = () => {
                 type="password"
                 isPassword
                 selectOnFocus
+                loading={!!isCourseDetailsFetching}
               />
             )}
           />
@@ -282,6 +285,7 @@ const CourseBasic = () => {
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
               infoText={__('Standard Size: 800x450 pixels', 'tutor')}
+              loading={!!isCourseDetailsFetching}
             />
           )}
         />
@@ -296,6 +300,7 @@ const CourseBasic = () => {
               buttonText={__('Upload Video', 'tutor')}
               infoText={__('Supported file formats .mp4', 'tutor')}
               supportedFormats={['mp4']}
+              loading={!!isCourseDetailsFetching}
             />
           )}
         />

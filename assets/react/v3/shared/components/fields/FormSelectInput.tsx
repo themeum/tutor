@@ -184,7 +184,7 @@ const FormSelectInput = <T,>({
                 </Show>
               </div>
 
-              {!hideCaret && (
+              {!hideCaret && !loading && (
                 <button
                   type="button"
                   css={styles.caretButton({ isOpen })}

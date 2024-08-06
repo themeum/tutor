@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -10,7 +11,7 @@ import EmptyState from '@Molecules/EmptyState';
 import Tabs from '@Molecules/Tabs';
 
 import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
-import { type CourseFormData, useCourseDetailsQuery } from '@CourseBuilderServices/course';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 
 import config, { tutorConfig } from '@Config/config';
@@ -30,11 +31,14 @@ const certificateTabs: { label: string; value: CertificateTabValue }[] = [
   { label: __('Custom Certificates', 'tutor'), value: 'custom_certificates' },
 ];
 
+const courseId = getCourseId();
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
 const Certificate = () => {
-  const courseId = getCourseId();
-  const isTutorPro = !!tutorConfig.tutor_pro_url;
-  const courseDetailsQuery = useCourseDetailsQuery(courseId);
-  const certificatesData = courseDetailsQuery.data?.course_certificates_templates ?? [];
+  const queryClient = useQueryClient();
+
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
+  const certificatesData = courseDetails?.course_certificates_templates ?? [];
 
   const form = useFormContext<CourseFormData>();
   const currentCertificateKey = form.watch('tutor_course_certificate_template');

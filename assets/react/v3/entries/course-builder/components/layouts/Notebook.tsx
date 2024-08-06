@@ -37,14 +37,13 @@ const Notebook = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [isFloating, setIsFloating] = useState(false);
   const [offset, setOffset] = useState<Position>({ x: 0, y: 0 });
-  const [contentEditable, setContentEditable] = useState(false);
   const [content, setContent] = useState('');
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const notebookRef = useRef<HTMLDivElement>(null);
 
   const expandAnimation = useSpring({
-    height: !isCollapsed ? notebook.MIN_NOTEBOOK_HEIGHT : notebook.NOTEBOOK_HEADER,
+    width: !isCollapsed ? notebook.MIN_NOTEBOOK_WIDTH : notebook.NOTEBOOK_HEADER,
     config: {
       duration: 300,
       easing: (t) => t * (2 - t),
@@ -59,8 +58,8 @@ const Notebook = () => {
     },
   });
 
-  const onContentBlur = (event: React.FocusEvent) => {
-    setContentEditable(false);
+  const onContentBlur = (event: React.FocusEvent<HTMLDivElement, Element>) => {
+    event.currentTarget.contentEditable = 'false';
 
     const notebookData = jsonParse<NotebookData>(getFromLocalStorage(LocalStorageKeys.notebook) ?? '{}');
     const tempDiv = document.createElement('div');
@@ -151,15 +150,15 @@ const Notebook = () => {
       }
       setIsFloating(true);
 
-      const warpper = wrapperRef.current;
-      const { offsetWidth: notebookWidth, offsetHeight: notebookHeight } = warpper;
+      const wrapper = wrapperRef.current;
+      const { offsetWidth: notebookWidth, offsetHeight: notebookHeight } = wrapper;
       const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
 
       const newX = Math.min(Math.max(event.clientX - offset.x, 0), windowWidth - notebookWidth);
       const newY = Math.min(Math.max(event.clientY - offset.y, 0), windowHeight - notebookHeight);
 
-      warpper.style.left = `${newX}px`;
-      warpper.style.top = `${newY}px`;
+      wrapper.style.left = `${newX}px`;
+      wrapper.style.top = `${newY}px`;
     }, 10);
 
     const handleMouseUp = () => {
@@ -203,13 +202,15 @@ const Notebook = () => {
     if (!isDefined(wrapperRef.current)) {
       return;
     }
-    if (isCollapsed && !isFloating) {
-      setIsFloating(false);
-      const wrapper = wrapperRef.current;
 
+    const wrapper = wrapperRef.current;
+
+    if (!isFloating) {
       wrapper.style.left = 'auto';
       wrapper.style.top = 'auto';
-      wrapper.style.width = '360px';
+      wrapper.style.height = `${notebook.MIN_NOTEBOOK_HEIGHT}px`;
+
+      return;
     }
 
     if (!isCollapsed && isFloating) {
@@ -219,12 +220,12 @@ const Notebook = () => {
         top: 'auto',
       };
 
-      const wrapper = wrapperRef.current;
-
       wrapper.style.left = left === 'auto' ? `${window.innerWidth / 2 - notebook.MIN_NOTEBOOK_WIDTH}px` : left;
       wrapper.style.top = top === 'auto' ? `${window.innerHeight / 2 - notebook.MIN_NOTEBOOK_HEIGHT}px` : top;
       wrapper.style.height = isDefined(height) ? height : `${2 * notebook.MIN_NOTEBOOK_HEIGHT}px`;
       wrapper.style.width = isDefined(width) ? width : `${2 * notebook.MIN_NOTEBOOK_WIDTH}px`;
+
+      return;
     }
   }, [isCollapsed, isFloating]);
 
@@ -242,60 +243,70 @@ const Notebook = () => {
       css={styles.wrapper({ isCollapsed, isFloating })}
       style={!isFloating ? { ...expandAnimation } : {}}
     >
-      <div css={styles.header({ isCollapsed, isFloating })} onMouseDown={handleMouseDown}>
-        <span css={styleUtils.text.ellipsis(1)}>{__('Notebook', 'tutor')}</span>
-
-        <div css={styles.actions}>
-          <Button
-            variant="text"
-            size="small"
-            onClick={() => {
-              setIsCollapsed((previous) => !previous);
-              setIsFloating(false);
-            }}
-            buttonCss={styles.collapseButton({ isCollapsed })}
-          >
-            <SVGIcon name="plusMinus" height={24} width={24} />
-          </Button>
-          <Button
-            variant="text"
-            size="small"
-            onClick={() => {
-              setIsCollapsed((previouState) => {
-                if (isFloating) {
-                  return true;
-                }
-
-                return previouState ? false : previouState;
-              });
-              setIsFloating((previous) => !previous);
-            }}
-          >
-            <SVGIcon name={isFloating ? 'arrowsIn' : 'arrowsOut'} height={24} width={24} />
-          </Button>
-          <Show when={isFloating}>
-            <Button
-              variant="text"
-              size="small"
-              onClick={() => {
-                setIsFloating(false);
-                setIsCollapsed(true);
-              }}
+      <Show
+        when={!isCollapsed}
+        fallback={
+          <div css={styles.verticalTitleWrapper}>
+            <button
+              type="button"
+              css={[styleUtils.resetButton, styles.verticalButton]}
+              onClick={() => setIsCollapsed(false)}
             >
-              <SVGIcon name="cross" height={24} width={24} />
+              {__('Notebook', 'tutor')}
+            </button>
+          </div>
+        }
+      >
+        <div css={styles.header({ isCollapsed, isFloating })} onMouseDown={handleMouseDown}>
+          <span css={styleUtils.text.ellipsis(1)}>{__('Notebook', 'tutor')}</span>
+
+          <div css={styles.actions}>
+            <Show when={!isFloating}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  setIsCollapsed((previous) => !previous);
+                  setIsFloating(false);
+                }}
+                buttonCss={styles.collapseButton({ isCollapsed })}
+              >
+                <SVGIcon name="plusMinus" height={24} width={24} />
+              </Button>
+            </Show>
+            <Button variant="text" size="small" onClick={() => setIsFloating((previous) => !previous)}>
+              <SVGIcon name={isFloating ? 'arrowsIn' : 'arrowsOut'} height={24} width={24} />
             </Button>
-          </Show>
+            <Show when={isFloating}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  setIsFloating(false);
+                  setIsCollapsed(true);
+                }}
+              >
+                <SVGIcon name="cross" height={24} width={24} />
+              </Button>
+            </Show>
+          </div>
         </div>
-      </div>
+      </Show>
       <div css={styles.notebookWrapper}>
         <div
           ref={notebookRef}
-          css={styles.notebook}
-          contentEditable={contentEditable}
+          css={styles.notebook({
+            isCollapsed,
+          })}
           onBlur={(event) => onContentBlur(event)}
           onPaste={(event) => onContentPaste(event)}
-          onClick={() => setContentEditable(true)}
+          onClick={(event) => {
+            event.stopPropagation();
+            event.currentTarget.contentEditable = 'true';
+            event.currentTarget.focus();
+          }}
           onKeyDown={(event) => {
+            event.stopPropagation();
             if (event.key === 'Escape') {
               event.preventDefault();
               event.currentTarget.blur();
@@ -308,7 +319,7 @@ const Notebook = () => {
       <Show when={isFloating && !isCollapsed}>
         <button
           type="button"
-          css={[styleUtils.resetButton, styles.textFieldExpand]}
+          css={styles.textFieldExpand}
           onMouseDown={(event) => handleResize(event, 'bottom-right')}
           onMouseUp={saveAfterResize}
         >
@@ -333,16 +344,17 @@ const styles = {
 		background-color: ${colorTokens.background.active};
 		bottom: 0;
 		right: 0;
-		width: 360px;
+		height: ${notebook.MIN_NOTEBOOK_HEIGHT}px;
 		border-radius: ${borderRadius.card} 0 ${borderRadius.card} 0;
 		transition: box-shadow background 0.3s ease-in-out;
 		box-shadow: ${shadow.notebook};
 		z-index: ${zIndex.notebook};
+    overflow: hidden;
 		
 		${
       !isCollapsed &&
       css`
-				border-radius: ${borderRadius.card};
+				border-top-left-radius: ${borderRadius.card};
 				background-color: ${colorTokens.background.white};
 				box-shadow: ${shadow.dropList};
 			`
@@ -352,9 +364,24 @@ const styles = {
       isFloating &&
       css`
 				bottom: auto;
+        border-radius: ${borderRadius.card};
 			`
     }
 	`,
+  verticalTitleWrapper: css`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    background-color: ${colorTokens.background.active};
+    color: ${colorTokens.text.title};
+  `,
+  verticalButton: css`
+    text-align: center;
+    width: ${notebook.MIN_NOTEBOOK_HEIGHT}px;
+    height: ${notebook.NOTEBOOK_HEADER}px;
+    ${typography.body('bold')};
+  `,
   header: ({
     isCollapsed,
     isFloating,
@@ -367,12 +394,13 @@ const styles = {
 		align-items: center;
 		padding: ${spacing[12]} ${spacing[16]};
 		${typography.body('medium')};
-		color: ${colorTokens.text.title};
+    color: transparent;
 
     ${
       isFloating &&
       css`
         cursor: grab;
+        color: ${colorTokens.text.title};
       `
     }
 
@@ -381,6 +409,7 @@ const styles = {
       css`
 				border-bottom: 1px solid ${colorTokens.stroke.divider};
 				padding: ${spacing[8]} ${spacing[12]};
+        color: ${colorTokens.text.title};
 			`
     }
 	`,
@@ -406,16 +435,29 @@ const styles = {
 		width: 100%;
 		height: calc(100% - ${notebook.NOTEBOOK_HEADER}px);
 		background: url('data:image/svg+xml,<svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23D9D9D9"/></svg>') repeat;
+    transition: all 0.3s ease-in-out;
 	`,
-  notebook: css`
+  notebook: ({
+    isCollapsed,
+  }: {
+    isCollapsed: boolean;
+  }) => css`
 		padding-inline: ${spacing[16]};
 		outline: none;
 		word-wrap: break-word;
 		overflow-y: auto;
 		height: 100%;
     white-space: pre-wrap;
+
+    ${
+      isCollapsed &&
+      css`
+        display: none;
+      `
+    }
 	`,
   textFieldExpand: css`
+    ${styleUtils.resetButton};
 		position: absolute;
 		bottom: ${spacing[4]};
 		right: ${spacing[4]};

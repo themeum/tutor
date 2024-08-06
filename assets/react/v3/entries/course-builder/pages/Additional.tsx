@@ -23,14 +23,15 @@ import Show from '@Controls/Show';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
-import { useQueryClient } from '@tanstack/react-query';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Certificate from '../components/additional/Certificate';
 
+const courseId = getCourseId();
+const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
+
 const Additional = () => {
-  const courseId = getCourseId();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!courseId) {
@@ -38,14 +39,17 @@ const Additional = () => {
         replace: true,
       });
     }
-  }, [navigate, courseId]);
+  }, [navigate]);
 
   if (!courseId) {
     return null;
   }
 
   const form = useFormContext<CourseFormData>();
-  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
+  const queryClient = useQueryClient();
+  const isCourseDetailsFetching = useIsFetching({
+    queryKey: ['CourseDetails', courseId],
+  });
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
   const prerequisiteCourses = (courseDetails?.course_prerequisites || []).map((prerequisite) =>
@@ -54,13 +58,8 @@ const Additional = () => {
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    !!isPrerequisiteAddonEnabled,
+    !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,
   );
-
-  const zoomMeetings = courseDetails?.zoom_meetings ?? [];
-  const zoomUsers = courseDetails?.zoom_users ?? {};
-
-  const googleMeetMeetings = courseDetails?.google_meet_meetings ?? [];
 
   return (
     <div css={styles.wrapper}>
@@ -84,6 +83,7 @@ const Additional = () => {
                   placeholder={__('Write here the course benefits (One Per Line)', 'tutor')}
                   rows={2}
                   enableResize
+                  loading={!!isCourseDetailsFetching}
                 />
               )}
             />
@@ -101,6 +101,7 @@ const Additional = () => {
                   )}
                   rows={2}
                   enableResize
+                  loading={!!isCourseDetailsFetching}
                 />
               )}
             />
@@ -117,6 +118,7 @@ const Additional = () => {
                     placeholder="0"
                     contentPosition="right"
                     content={__('hour', 'tutor')}
+                    loading={!!isCourseDetailsFetching}
                   />
                 )}
               />
@@ -130,6 +132,7 @@ const Additional = () => {
                     placeholder="0"
                     contentPosition="right"
                     content={__('min', 'tutor')}
+                    loading={!!isCourseDetailsFetching}
                   />
                 )}
               />
@@ -148,6 +151,7 @@ const Additional = () => {
                   )}
                   rows={4}
                   enableResize
+                  loading={!!isCourseDetailsFetching}
                 />
               )}
             />
@@ -165,6 +169,7 @@ const Additional = () => {
                   )}
                   rows={2}
                   enableResize
+                  loading={!!isCourseDetailsFetching}
                 />
               )}
             />
@@ -196,6 +201,7 @@ const Additional = () => {
                 placeholder={__('Search to add course prerequisites', 'tutor')}
                 options={prerequisiteCoursesQuery.data || []}
                 isSearchable
+                loading={prerequisiteCoursesQuery.isLoading || !!isCourseDetailsFetching}
               />
             )}
           />
@@ -214,7 +220,7 @@ const Additional = () => {
             )}
           />
         </div>
-        <LiveClass zoomMeetings={zoomMeetings} zoomUsers={zoomUsers} googleMeetMeetings={googleMeetMeetings} />
+        <LiveClass />
       </div>
     </div>
   );

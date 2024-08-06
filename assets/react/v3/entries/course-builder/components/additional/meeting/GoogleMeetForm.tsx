@@ -127,9 +127,13 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
       });
     }
 
-    Promise.resolve().then(() => {
+    const timeoutId = setTimeout(() => {
       meetingForm.setFocus('meeting_name');
-    });
+    }, 0);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [currentMeeting]);
 
   return (
