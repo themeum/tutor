@@ -83,7 +83,7 @@ const Additional = () => {
                   placeholder={__('Write here the course benefits (One Per Line)', 'tutor')}
                   rows={2}
                   enableResize
-                  loading={!!isCourseDetailsFetching}
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -101,7 +101,7 @@ const Additional = () => {
                   )}
                   rows={2}
                   enableResize
-                  loading={!!isCourseDetailsFetching}
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -118,7 +118,7 @@ const Additional = () => {
                     placeholder="0"
                     contentPosition="right"
                     content={__('hour', 'tutor')}
-                    loading={!!isCourseDetailsFetching}
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   />
                 )}
               />
@@ -132,7 +132,7 @@ const Additional = () => {
                     placeholder="0"
                     contentPosition="right"
                     content={__('min', 'tutor')}
-                    loading={!!isCourseDetailsFetching}
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   />
                 )}
               />
@@ -151,7 +151,7 @@ const Additional = () => {
                   )}
                   rows={4}
                   enableResize
-                  loading={!!isCourseDetailsFetching}
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -169,7 +169,7 @@ const Additional = () => {
                   )}
                   rows={2}
                   enableResize
-                  loading={!!isCourseDetailsFetching}
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -201,7 +201,9 @@ const Additional = () => {
                 placeholder={__('Search to add course prerequisites', 'tutor')}
                 options={prerequisiteCoursesQuery.data || []}
                 isSearchable
-                loading={prerequisiteCoursesQuery.isLoading || !!isCourseDetailsFetching}
+                loading={
+                  prerequisiteCoursesQuery.isLoading || (!!isCourseDetailsFetching && !controllerProps.field.value)
+                }
               />
             )}
           />

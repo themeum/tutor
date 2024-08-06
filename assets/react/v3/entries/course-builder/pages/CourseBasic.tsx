@@ -197,7 +197,7 @@ const CourseBasic = () => {
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
-                  loading={!!isCourseDetailsFetching}
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -225,7 +225,7 @@ const CourseBasic = () => {
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
-                loading={!!isCourseDetailsFetching}
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
               />
             )}
           />
@@ -245,7 +245,7 @@ const CourseBasic = () => {
               placeholder="Select visibility status"
               options={visibilityStatusOptions}
               leftIcon={<SVGIcon name="eye" width={32} height={32} />}
-              loading={!!isCourseDetailsFetching}
+              loading={!!isCourseDetailsFetching && !controllerProps.field.value}
               onChange={() => {
                 form.setValue('post_password', '');
               }}
@@ -268,7 +268,7 @@ const CourseBasic = () => {
                 type="password"
                 isPassword
                 selectOnFocus
-                loading={!!isCourseDetailsFetching}
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
               />
             )}
           />
@@ -285,7 +285,7 @@ const CourseBasic = () => {
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
               infoText={__('Standard Size: 800x450 pixels', 'tutor')}
-              loading={!!isCourseDetailsFetching}
+              loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
           )}
         />
@@ -300,7 +300,7 @@ const CourseBasic = () => {
               buttonText={__('Upload Video', 'tutor')}
               infoText={__('Supported file formats .mp4', 'tutor')}
               supportedFormats={['mp4']}
-              loading={!!isCourseDetailsFetching}
+              loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
           )}
         />
@@ -347,6 +347,7 @@ const CourseBasic = () => {
                   'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
                 )}
                 isSearchable
+                loading={wcProductsQuery.isLoading && !controllerProps.field.value}
               />
             )}
           />
@@ -371,6 +372,7 @@ const CourseBasic = () => {
                 }
                 helpText={__('Sell your product, process by EDD', 'tutor')}
                 isSearchable
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
               />
             )}
           />
@@ -390,6 +392,7 @@ const CourseBasic = () => {
                     content={<SVGIcon name="currency" width={24} height={24} />}
                     placeholder={__('0', 'tutor')}
                     type="number"
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   />
                 )}
               />
@@ -403,6 +406,7 @@ const CourseBasic = () => {
                     content={<SVGIcon name="currency" width={24} height={24} />}
                     placeholder={__('0', 'tutor')}
                     type="number"
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   />
                 )}
               />
@@ -436,6 +440,7 @@ const CourseBasic = () => {
                 placeholder={__('Search to add author', 'tutor')}
                 isSearchable
                 disabled={!isAuthorEditable}
+                loading={userList.isLoading && !controllerProps.field.value}
               />
             )}
           />
@@ -453,6 +458,7 @@ const CourseBasic = () => {
                 placeholder={__('Search to add instructor', 'tutor')}
                 isSearchable
                 isMultiSelect
+                loading={instructorListQuery.isLoading && !controllerProps.field.value}
               />
             )}
           />
