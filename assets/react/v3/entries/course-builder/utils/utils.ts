@@ -14,8 +14,8 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     ...(data.editor_used.name === 'classic' && {
       post_content: data.post_content,
     }),
-    post_status: data.post_password.length ? 'publish' : (data.post_status as 'publish' | 'private'),
-    post_password: data.post_password,
+    post_status: data.post_status,
+    post_password: data.visibility === 'password_protected' ? data.post_password : '',
     post_author: data.post_author?.id ?? null,
     'pricing[type]': data.course_price_type,
     ...(data.course_price_type !== 'free' &&

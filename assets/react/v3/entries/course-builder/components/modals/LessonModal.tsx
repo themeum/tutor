@@ -195,6 +195,7 @@ const LessonModal = ({
                     {...controllerProps}
                     label={__('Lesson Name', 'tutor')}
                     placeholder={__('Enter Lesson Name', 'tutor')}
+                    helpText={__('Lesson titles are displayed publicly wherever required.', 'tutor')}
                     maxLimit={245}
                     selectOnFocus
                     isClearable
@@ -212,6 +213,10 @@ const LessonModal = ({
                     {...controllerProps}
                     label={__('Description', 'tutor')}
                     placeholder={__('Enter Lesson Description', 'tutor')}
+                    helpText={__(
+                      'The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.',
+                      'tutor',
+                    )}
                   />
                 )}
               />
@@ -227,7 +232,7 @@ const LessonModal = ({
                   {...controllerProps}
                   label={__('Featured Image', 'tutor')}
                   buttonText={__('Upload Featured Image', 'tutor')}
-                  infoText={__('Size: 700x430 pixels', 'tutor')}
+                  infoText={__('Standard Size: 800x450 pixels', 'tutor')}
                 />
               )}
             />

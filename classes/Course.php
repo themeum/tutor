@@ -594,7 +594,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @return void
 	 */
-	private function check_access( $course_id = null ) {
+	public function check_access( $course_id = null ) {
 		$has_access = false;
 
 		if ( $course_id ) {
