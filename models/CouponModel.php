@@ -561,14 +561,14 @@ class CouponModel {
 	public function apply_coupon_discount( $course_ids, $coupon_code ) {
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
 
-		$response              = new \stdClass();
-		$response->total_price = 0;
+		$response                = array();
+		$response['total_price'] = 0;
 
 		$should_apply_coupon = false;
 
 		foreach ( $course_ids as $course_id ) {
 			$course_price   = tutor_utils()->get_raw_course_price( $course_id );
-			$reg_price      = $course_price->reg_price;
+			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
 			$discount_price = $reg_price;
 
@@ -597,10 +597,10 @@ class CouponModel {
 				'discount_price' => $discount_price,
 			);
 
-			$response->total_price += $discount_price;
+			$response['total_price'] += $discount_price;
 		}
 
-		return $response;
+		return (object) $response;
 	}
 
 	/**
@@ -687,7 +687,10 @@ class CouponModel {
 
 			case self::APPLIES_TO_SPECIFIC_CATEGORY:
 				$course_categories = wp_get_post_terms( $object_id, 'course-category' );
-				$is_applicable     = array_search( $course_categories, $applications );
+				if ( is_a( $course_categories, 'WP_Term' ) ) {
+					$term_ids      = array_column( $course_categories, 'term_id' );
+					$is_applicable = count( array_intersect( $applications, $term_ids ) );
+				}
 				break;
 		}
 		return apply_filters( 'tutor_coupon_is_applicable_to_bundle', $is_applicable, $coupon, $object_id );
