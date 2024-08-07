@@ -533,7 +533,7 @@ class CouponModel {
 	}
 
 	/**
-	 * Apply coupon discount on the given price
+	 * Apply coupon discount
 	 *
 	 * All type of coupons has been considered while applying coupon.
 	 *
@@ -542,19 +542,19 @@ class CouponModel {
 	 * @param int|array $course_ids Required, course id or array of ids.
 	 * @param mixed     $coupon_code Required, coupon code.
 	 *
-	 * @todo  Need to implement the logic for manual coupon type
-	 *
 	 * @return object Detail of discount on object format.
 	 *
 	 * For ex: {
 	 *     total_price: 100,
 	 *    {
 	 *     course_id: 1,
+	 *     regular_price: 80
 	 *     discount_price: 60
 	 *    },
 	 *    {
 	 *     course_id: 2,
-	 *     discount_price: 40
+	 *     regular_price: 40
+	 *     discount_price: 0
 	 *    }
 	 * }
 	 */
@@ -570,7 +570,7 @@ class CouponModel {
 			$course_price   = tutor_utils()->get_raw_course_price( $course_id );
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
-			$discount_price = $reg_price;
+			$discount_price = 0;
 
 			if ( $sale_price ) {
 				$discount_price = $sale_price;
@@ -594,6 +594,59 @@ class CouponModel {
 
 			$response[] = (object) array(
 				'course_id'      => $course_id,
+				'regular_price'  => $reg_price,
+				'discount_price' => $discount_price,
+			);
+
+			$response['total_price'] += $discount_price > 0 ? $discount_price : $reg_price;
+		}
+
+		return (object) $response;
+	}
+
+	/**
+	 * Apply automatic coupon discount
+	 *
+	 * All type of coupons has been considered while applying coupon.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $course_ids Required, course id or array of ids.
+	 *
+	 * @return object Detail of discount on object format.
+	 *
+	 * For ex: {
+	 *     total_price: 60,
+	 *    {
+	 *     course_id: 1,
+	 *     regular_price, 80,
+	 *     discount_price: 60
+	 *    },
+	 * }
+	 */
+	public function apply_automatic_coupon_discount( $course_ids ) {
+		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
+
+		$response                = array();
+		$response['total_price'] = 0;
+
+		$should_apply_coupon = false;
+
+		foreach ( $course_ids as $course_id ) {
+			$course_price   = tutor_utils()->get_raw_course_price( $course_id );
+			$reg_price      = $course_price->regular_price;
+			$sale_price     = $course_price->sale_price;
+			$discount_price = 0;
+
+			if ( $sale_price ) {
+				$discount_price = $sale_price;
+			} else {
+				// @TODO deduct automatic coupon price.
+			}
+
+			$response[] = (object) array(
+				'course_id'      => $course_id,
+				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,
 			);
 

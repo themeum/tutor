@@ -14,6 +14,7 @@ use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
+use Tutor\Models\CouponModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -133,7 +134,11 @@ class CheckoutController {
 			);
 		}
 
-		// @TODO: $this->calculate_order_price( $course_ids );
+		$coupon_model  = new CouponModel();
+		$course_ids    = explode( ',', $course_ids );
+		$price_details = $coupon_model->apply_coupon_discount( $course_ids, $coupon_code );
+
+		// @TODO Prepare payment data.
 	}
 
 	/**
