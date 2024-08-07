@@ -996,7 +996,8 @@ final class Tutor {
 		$customer_table = "CREATE TABLE {$wpdb->prefix}tutor_customers (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			user_id BIGINT(20) UNSIGNED DEFAULT NULL,
-			billing_name VARCHAR(255) NOT NULL,
+			billing_first_name VARCHAR(255) NOT NULL,
+			billing_last_name VARCHAR(255) NOT NULL,
 			billing_email VARCHAR(255) NOT NULL,
 			billing_phone VARCHAR(20) NOT NULL,
 			billing_zip_code VARCHAR(20) NOT NULL,
