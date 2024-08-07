@@ -42,14 +42,9 @@ const Certificate = () => {
 
   const form = useFormContext<CourseFormData>();
   const currentCertificateKey = form.watch('tutor_course_certificate_template');
-  const currentCertificate = currentCertificateKey
-    ? certificatesData.find((certificate) => certificate.key === currentCertificateKey)
-    : null;
 
   const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>('templates');
-  const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>(
-    currentCertificate?.orientation ?? 'landscape',
-  );
+  const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>('landscape');
   const [selectedCertificate, setSelectedCertificate] = useState(currentCertificateKey);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

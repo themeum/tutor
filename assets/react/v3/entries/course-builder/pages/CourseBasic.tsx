@@ -41,6 +41,7 @@ import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const courseId = getCourseId();
 
@@ -50,6 +51,8 @@ const CourseBasic = () => {
   const isCourseDetailsFetching = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
+  const navigate = useNavigate();
+  const { state, pathname } = useLocation();
   const currentUser = tutorConfig.current_user;
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
@@ -153,29 +156,49 @@ const CourseBasic = () => {
   );
 
   const wcProductOptions = () => {
+    if (!wcProductDetailsQuery.isSuccess || !wcProductsQuery.data) {
+      return [];
+    }
+
     const { course_pricing } = courseDetails || {};
     const currentSelectedWcProduct =
       course_pricing?.product_id && course_pricing.product_id !== '0' && course_pricing.product_name
-        ? { label: course_pricing.product_name || '', value: course_pricing.product_id }
+        ? { label: course_pricing.product_name || '', value: String(course_pricing.product_id) }
         : null;
 
-    return wcProductsQuery.isSuccess && wcProductsQuery.data
-      ? [
-          currentSelectedWcProduct,
-          ...wcProductsQuery.data.map(({ post_title: label, ID: value }) => ({ label, value })),
-        ].filter(isDefined)
-      : [];
+    const convertedCourseProducts =
+      wcProductsQuery.data.map(({ post_title: label, ID: value }) => ({
+        label,
+        value: String(value),
+      })) ?? [];
+
+    return (
+      wcProductsQuery.data?.find(({ ID }) => ID !== currentSelectedWcProduct?.value)
+        ? [currentSelectedWcProduct, ...convertedCourseProducts]
+        : convertedCourseProducts
+    ).filter(isDefined);
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (wcProductDetailsQuery.isSuccess && wcProductDetailsQuery.data) {
-      form.setValue('course_price', wcProductDetailsQuery.data.regular_price || '0');
-      form.setValue('course_sale_price', wcProductDetailsQuery.data.sale_price || '0');
-    } else {
-      form.setValue('course_price', '0');
-      form.setValue('course_sale_price', '0');
+      if (state?.isError) {
+        navigate('/basics', { state: { isError: false } });
+        return;
+      }
+
+      form.setValue('course_price', wcProductDetailsQuery.data.regular_price || '0', {
+        shouldValidate: true,
+      });
+      form.setValue('course_sale_price', wcProductDetailsQuery.data.sale_price || '0', {
+        shouldValidate: true,
+      });
+
+      return;
     }
+
+    form.setValue('course_price', '0');
+    form.setValue('course_sale_price', '0');
   }, [wcProductDetailsQuery.data]);
 
   return (
@@ -337,6 +360,9 @@ const CourseBasic = () => {
           <Controller
             name="course_product_id"
             control={form.control}
+            rules={{
+              ...requiredRule(),
+            }}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
@@ -357,6 +383,9 @@ const CourseBasic = () => {
           <Controller
             name="course_product_id"
             control={form.control}
+            rules={{
+              ...requiredRule(),
+            }}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
@@ -385,6 +414,9 @@ const CourseBasic = () => {
               <Controller
                 name="course_price"
                 control={form.control}
+                rules={{
+                  ...requiredRule(),
+                }}
                 render={(controllerProps) => (
                   <FormInputWithContent
                     {...controllerProps}
@@ -399,6 +431,9 @@ const CourseBasic = () => {
               <Controller
                 name="course_sale_price"
                 control={form.control}
+                rules={{
+                  ...requiredRule(),
+                }}
                 render={(controllerProps) => (
                   <FormInputWithContent
                     {...controllerProps}
@@ -509,7 +544,7 @@ const styles = {
   `,
   coursePriceWrapper: css`
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: ${spacing[16]};
   `,
   navigator: css`

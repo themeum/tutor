@@ -88,7 +88,11 @@ const FormInputWithContent = ({
               onKeyDown={(event) => onKeyDown?.(event.key)}
               css={[inputCss, styles.input(contentPosition, showVerticalBar, size)]}
               autoComplete="off"
-              ref={ref}
+              ref={(element) => {
+                field.ref(element);
+                // @ts-ignore
+                ref.current = element; // this is not ideal but it is the only way to set ref to the input element
+              }}
               onFocus={() => {
                 if (!selectOnFocus || !ref.current) {
                   return;

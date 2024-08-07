@@ -10,17 +10,18 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormInput from '@Components/fields/FormInput';
+import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 
+import { tutorConfig } from '@Config/config';
+import { DateFormats } from '@Config/constants';
 import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { useIsScrolling } from '@Hooks/useIsScrolling';
 
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
 import Show from '@Controls/Show';
 import {
   type GoogleMeet,
@@ -29,7 +30,6 @@ import {
 } from '@CourseBuilderServices/course';
 import { type ID, useGoogleMeetDetailsQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 
@@ -129,7 +129,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
 
     const timeoutId = setTimeout(() => {
       meetingForm.setFocus('meeting_name');
-    }, 0);
+    }, 250);
 
     return () => {
       clearTimeout(timeoutId);

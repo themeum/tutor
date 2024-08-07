@@ -15,13 +15,15 @@ const Layout = () => {
 
   const form = useFormWithGlobalError<CourseFormData>({
     defaultValues: courseDefaultData,
+    shouldFocusError: true,
+    mode: 'onChange',
   });
 
   const courseDetailsQuery = useCourseDetailsQuery(Number(courseId));
 
   useEffect(() => {
     if (courseDetailsQuery.data) {
-      form.reset.call(null, convertCourseDataToFormData(courseDetailsQuery.data));
+      form.reset(convertCourseDataToFormData(courseDetailsQuery.data));
     }
   }, [courseDetailsQuery.data, form.reset]);
 
