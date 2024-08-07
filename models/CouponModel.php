@@ -93,6 +93,53 @@ class CouponModel {
 	private $coupon_usage_table = 'tutor_coupon_usages';
 
 	/**
+	 * Fillable fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var array
+	 */
+	private $fillable_fields = array(
+		'coupon_status',
+		'coupon_type',
+		'coupon_code',
+		'coupon_title',
+		'coupon_description',
+		'discount_type',
+		'discount_amount',
+		'applies_to',
+		'total_usage_limit',
+		'per_user_usage_limit',
+		'purchase_requirement',
+		'purchase_requirement_value',
+		'start_date_gmt',
+		'expire_date_gmt',
+	);
+
+	/**
+	 * Fillable fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var array
+	 */
+	private $required_fields = array(
+		'coupon_status',
+		'coupon_type',
+		'coupon_code',
+		'coupon_title',
+		'discount_type',
+		'discount_amount',
+		'applies_to',
+		'total_usage_limit',
+		'per_user_usage_limit',
+		'purchase_requirement',
+		'purchase_requirement_value',
+		'start_date_gmt',
+		'expire_date_gmt',
+	);
+
+	/**
 	 * Resolve props & dependencies
 	 *
 	 * @since 3.0.0
@@ -112,6 +159,28 @@ class CouponModel {
 	 */
 	public function get_table_name() {
 		return $this->table_name;
+	}
+
+	/**
+	 * Get fillable fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_fillable_fields() {
+		return $this->fillable_fields;
+	}
+
+	/**
+	 * Get required fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_required_fields() {
+		return $this->required_fields;
 	}
 
 	/**
@@ -192,6 +261,19 @@ class CouponModel {
 			'coupon_code',
 			'coupon_title',
 		);
+	}
+
+	/**
+	 * Create coupon using the data argument
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data Array as per table column.
+	 *
+	 * @return int Coupon id or 0 if failed
+	 */
+	public function create_coupon( array $data ) {
+		return QueryHelper::insert( $this->table_name, $data );
 	}
 
 	/**
