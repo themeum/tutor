@@ -14,8 +14,8 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     ...(data.editor_used.name === 'classic' && {
       post_content: data.post_content,
     }),
-    post_status: data.post_password.length ? 'publish' : (data.post_status as 'publish' | 'private'),
-    post_password: data.post_password,
+    post_status: data.post_status,
+    post_password: data.visibility === 'password_protected' ? data.post_password : '',
     post_author: data.post_author?.id ?? null,
     'pricing[type]': data.course_price_type,
     ...(data.course_price_type !== 'free' &&
@@ -125,7 +125,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     }),
     enable_qna: courseDetails.enable_qna === 'yes' ? true : false,
     is_public_course: courseDetails.is_public_course === 'yes' ? true : false,
-    course_level: courseDetails.course_level,
+    course_level: courseDetails.course_level || 'intermediate',
     maximum_students: courseDetails.course_settings.maximum_students,
     enrollment_expiry: courseDetails.course_settings.enrollment_expiry,
     course_benefits: courseDetails.course_benefits,

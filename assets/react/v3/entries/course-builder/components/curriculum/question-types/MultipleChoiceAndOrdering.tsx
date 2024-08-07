@@ -199,7 +199,7 @@ const MultipleChoiceAndOrdering = () => {
                       const duplicateOption: QuizQuestionOption = {
                         ...option,
                         answer_id: answerId || '',
-                        answer_title: `${option.answer_title} (Copy)`,
+                        answer_title: `${option.answer_title} (copy)`,
                         is_correct: '0',
                       };
                       const duplicateIndex = option.index - 1;
@@ -233,7 +233,7 @@ const MultipleChoiceAndOrdering = () => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
                             answer_id: answerId || '',
-                            answer_title: `${item.answer_title} (Copy)`,
+                            answer_title: `${item.answer_title} (copy)`,
                             is_correct: '0',
                           };
                           const duplicateIndex = item.index - 1;

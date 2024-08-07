@@ -147,8 +147,16 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 									$subtotal += $sale_price ? $sale_price : $regular_price;
 									?>
 									<div class="tutor-checkout-course-item">
-										<!-- @TODO: Need to add bundle product support -->
-										<!-- <div class="tutor-checkout-course-bundle-badge">5 Course bundle</div> -->
+										<?php if ( tutor()->has_pro && 'course-bundle' === $course->post_type ) : ?>
+										<div class="tutor-checkout-course-bundle-badge">
+											<?php
+												$bundle_model      = new \TutorPro\CourseBundle\Models\BundleModel();
+												$bundle_course_ids = $bundle_model::get_bundle_course_ids( $course->ID );
+												// translators: %d: Number of courses in the cart.
+												echo esc_html( sprintf( __( '%d Course bundle', 'tutor' ), count( $bundle_course_ids ) ) );
+											?>
+										</div>
+										<?php endif; ?>
 										<div class="tutor-checkout-course-content">
 											<div>
 												<h6 class="tutor-checkout-course-title">

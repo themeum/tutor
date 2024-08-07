@@ -49,8 +49,8 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   const inputRef = useRef<HTMLInputElement>(null);
 
   const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId, activeQuestionId);
-  const duplicateContentMutation = useDuplicateContentMutation();
+  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
+  const duplicateContentMutation = useDuplicateContentMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
@@ -118,6 +118,13 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
 
     if (response.status_code === 201 || response.status_code === 200) {
       setIsEditing(false);
+
+      if (!inputValue.answer_id && response.data) {
+        field.onChange({
+          ...inputValue,
+          answer_id: response.data,
+        });
+      }
     }
   };
 
@@ -285,7 +292,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                     event.stopPropagation();
                     await createQuizAnswer();
                   }}
-                  disabled={!inputValue.answer_title && !inputValue.image_id}
+                  disabled={!inputValue.answer_title || !inputValue.image_id}
                 >
                   {__('Ok', 'tutor')}
                 </Button>

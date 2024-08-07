@@ -84,7 +84,7 @@ export const courseDefaultData: CourseFormData = {
   },
   thumbnail: null,
   video: {
-    source: 'external_url',
+    source: '',
     source_video_id: '',
     poster: '',
     poster_url: '',
@@ -602,18 +602,20 @@ export const useSaveZoomMeetingMutation = () => {
   return useMutation({
     mutationFn: saveZoomMeeting,
     onSuccess: (response, payload) => {
-      showToast({ type: 'success', message: __(response.message, 'tutor') });
+      if (response.data) {
+        showToast({ type: 'success', message: __(response.message, 'tutor') });
 
-      if (payload.click_form === 'course_builder') {
-        queryClient.invalidateQueries({
-          queryKey: ['CourseDetails', payload.course_id],
-        });
-      }
+        if (payload.click_form === 'course_builder') {
+          queryClient.invalidateQueries({
+            queryKey: ['Topic', payload.course_id],
+          });
+        }
 
-      if (payload.click_form === 'metabox') {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic', payload.course_id],
-        });
+        if (payload.click_form === 'metabox') {
+          queryClient.invalidateQueries({
+            queryKey: ['CourseDetails', Number(payload.course_id)],
+          });
+        }
       }
 
       queryClient.invalidateQueries({
@@ -640,15 +642,17 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
   return useMutation({
     mutationFn: deleteZoomMeeting,
     onSuccess: (response) => {
-      showToast({ type: 'success', message: __(response.data.message, 'tutor') });
+      if (response.data) {
+        showToast({ type: 'success', message: __(response.data.message, 'tutor') });
 
-      queryClient.invalidateQueries({
-        queryKey: ['CourseDetails', Number(courseId)],
-      });
+        queryClient.invalidateQueries({
+          queryKey: ['CourseDetails', Number(courseId)],
+        });
 
-      queryClient.invalidateQueries({
-        queryKey: ['Topic', Number(courseId)],
-      });
+        queryClient.invalidateQueries({
+          queryKey: ['Topic', courseId],
+        });
+      }
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });

@@ -204,33 +204,35 @@ export const createGlobalCss = () => css`
 `;
 
 export const styleUtils = {
-	centeredFlex: css`
+  centeredFlex: css`
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		width: 100%;
 		height: 100%;
 	`,
-	flexCenter: (direction: 'row' | 'column' = 'row') => css`
+  flexCenter: (direction: 'row' | 'column' = 'row') => css`
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		flex-direction: row;
 
-		${direction === 'column' &&
-		css`
+		${
+      direction === 'column' &&
+      css`
 			flex-direction: column;
-		`}
+		`
+    }
 	`,
-	boxReset: css`
+  boxReset: css`
 		padding: 0;
 	`,
-	ulReset: css`
+  ulReset: css`
 		list-style: none;
 		padding: 0;
 		margin: 0;
 	`,
-	resetButton: css`
+  resetButton: css`
 		background: none;
 		border: none;
 		outline: none;
@@ -240,18 +242,18 @@ export const styleUtils = {
 		font-family: ${fontFamily.sfProDisplay};
 		cursor: pointer;
 	`,
-	cardInnerSection: css`
+  cardInnerSection: css`
 		padding: ${spacing[24]};
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[24]};
 	`,
-	fieldGroups: (gap: keyof typeof spacing) => css`
+  fieldGroups: (gap: keyof typeof spacing) => css`
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[gap]};
 	`,
-	addAnotherOptionButton: css`
+  addAnotherOptionButton: css`
 		background: none;
 		border: none;
 		outline: none;
@@ -267,17 +269,17 @@ export const styleUtils = {
 			text-decoration: underline;
 		}
 	`,
-	titleAliasWrapper: css`
+  titleAliasWrapper: css`
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[12]};
 	`,
-	inlineSwitch: css`
+  inlineSwitch: css`
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	`,
-	overflowYAuto: css`
+  overflowYAuto: css`
 		overflow-y: auto;
 
 		::-webkit-scrollbar {
@@ -290,68 +292,66 @@ export const styleUtils = {
 			border-radius: ${borderRadius[6]};
 		}
 	`,
-	textEllipsis: css`
+  textEllipsis: css`
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
 	`,
-	container: css`
+  container: css`
 		width: ${containerMaxWidth}px;
 		margin: 0 auto;
 	`,
-	display: {
-		flex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
+  display: {
+    flex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
 			display: flex;
 			flex-direction: ${direction};
 		`,
-		inlineFlex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
+    inlineFlex: (direction: 'row' | 'column' | 'row-reverse' | 'column-reverse' = 'row') => css`
 			display: inline-flex;
 			flex-direction: ${direction};
 		`,
-		none: css`
+    none: css`
 			display: none;
 		`,
-		block: css`
+    block: css`
 			display: block;
 		`,
-		inlineBlock: css`
+    inlineBlock: css`
 			display: inline-block;
 		`,
-	},
-	text: {
-		ellipsis: (lines = 1) => css`
+  },
+  text: {
+    ellipsis: (lines = 1) => css`
 			display: -webkit-box;
 			-webkit-line-clamp: ${lines};
 			-webkit-box-orient: vertical;
 			overflow: hidden;
 			-webkit-box-pack: end;
 		`,
-		align: {
-			center: css`
+    align: {
+      center: css`
 				text-align: center;
 			`,
-			left: css`
+      left: css`
 				text-align: left;
 			`,
-			right: css`
+      right: css`
 				text-align: right;
 			`,
-			justify: css`
+      justify: css`
 				text-align: justify;
 			`,
-		},
-	},
-	inputFocus: css`
+    },
+  },
+  inputFocus: css`
 		box-shadow: none;
 		border-color: ${colorTokens.stroke.default};
 		outline: 2px solid ${colorTokens.stroke.brand};
 		outline-offset: 1px;
 	`,
-	dateAndTimeWrapper: css`
+  dateAndTimeWrapper: css`
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 1px;
-		background-image: linear-gradient(to right, transparent, ${colorTokens.stroke.default}, transparent);
 		border-radius: ${borderRadius[6]};
 
 		&:focus-within {
@@ -366,7 +366,6 @@ export const styleUtils = {
 				input {
 					border-top-right-radius: 0;
 					border-bottom-right-radius: 0;
-					border-right: none;
 					&:focus {
 						box-shadow: none;
 						outline: none;

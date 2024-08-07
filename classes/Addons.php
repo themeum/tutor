@@ -42,6 +42,10 @@ class Addons {
 				'name'        => __( 'Course Bundle', 'tutor' ),
 				'description' => __( 'Group multiple courses to sell together.', 'tutor' ),
 			),
+			'subscription'             => array(
+				'name'        => __( 'Subscription', 'tutor' ),
+				'description' => __( 'Manage subscription', 'tutor' ),
+			),
 			'social-login'             => array(
 				'name'        => __( 'Social Login', 'tutor' ),
 				'description' => __( 'Let users register & login through social network like Facebook, Google, etc.', 'tutor' ),
@@ -78,7 +82,7 @@ class Addons {
 				'name'        => __( 'Email', 'tutor' ),
 				'description' => 'Send email on various tutor events',
 			),
-			'calendar'           => array(
+			'calendar'                 => array(
 				'name'        => 'Calendar',
 				'description' => 'Allow students to see everything in a calendar view in the front dashboard.',
 			),

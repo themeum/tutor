@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -11,7 +10,7 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizForm, type QuizQuestionOption, useSaveQuizAnswerMutation } from '@CourseBuilderServices/quiz';
+import { type QuizQuestionOption, useSaveQuizAnswerMutation } from '@CourseBuilderServices/quiz';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
@@ -19,8 +18,7 @@ import { isDefined } from '@Utils/types';
 interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
 const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
-  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
-  const form = useFormContext<QuizForm>();
+  const { activeQuestionId, quizId } = useQuizModalContext();
   const inputValue = field.value ?? {
     answer_id: '',
     answer_title: '',
@@ -39,6 +37,9 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title || !inputValue.answer_two_gap_match);
   const [previousValue] = useState<QuizQuestionOption>(inputValue);
 
+  const totalDashesInTitle = inputValue.answer_title?.match(/{dash}/g)?.length || 0;
+  const totalAnswers = inputValue.answer_two_gap_match?.split('|').length || 0;
+
   const createQuizAnswer = async () => {
     const response = await createQuizAnswerMutation.mutateAsync({
       ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
@@ -51,6 +52,13 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
 
     if (response.status_code === 201 || response.status_code === 200) {
       setIsEditing(false);
+
+      if (!inputValue.answer_id && response.data) {
+        field.onChange({
+          ...inputValue,
+          answer_id: response.data,
+        });
+      }
     }
   };
 
@@ -173,6 +181,18 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                     }
                   }}
                 />
+                <Show
+                  when={
+                    inputValue.answer_title && inputValue.answer_two_gap_match && totalDashesInTitle !== totalAnswers
+                  }
+                >
+                  <div css={styles.errorMessage}>
+                    <SVGIcon name="info" height={20} width={20} />
+                    <p>
+                      {__('Number of answer variables should match the number of {dash}es in the question.', 'tutor')}
+                    </p>
+                  </div>
+                </Show>
                 <div css={styles.inputHints}>
                   <SVGIcon name="info" height={20} width={20} />
                   <p>
@@ -386,6 +406,19 @@ const styles = {
 
     svg {
       flex-shrink: 0;
+    }
+  `,
+  errorMessage: css`
+    display: flex;
+    gap: ${spacing[4]};
+    ${typography.small()};
+    color: ${colorTokens.text.error};
+    align-items: flex-start;
+    color: ${colorTokens.text.error};
+
+    svg {
+      flex-shrink: 0;
+      color: ${colorTokens.icon.error};
     }
   `,
   optionInput: css`

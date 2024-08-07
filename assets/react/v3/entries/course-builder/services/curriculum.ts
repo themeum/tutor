@@ -211,17 +211,23 @@ const deleteTopic = (topicId: ID) => {
   });
 };
 
-export const useDeleteTopicMutation = () => {
+export const useDeleteTopicMutation = (courseId: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: deleteTopic,
-    onSuccess: (response) => {
+    onSuccess: (response, topicId) => {
       if (response.status_code === 200) {
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
+        });
+
+        queryClient.setQueryData(['Topic', courseId], (oldData: CourseTopic[]) => {
+          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as CourseTopic[];
+
+          return oldDataCopy.filter((topic) => topic.id !== topicId);
         });
       }
     },
@@ -410,33 +416,50 @@ const duplicateContent = (payload: ContentDuplicatePayload) => {
   });
 };
 
-export const useDuplicateContentMutation = () => {
+/**
+ *
+ * @param quizId pass when duplicating 'answer'
+ * @returns useMutation
+ */
+export const useDuplicateContentMutation = (quizId?: ID) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
     mutationFn: duplicateContent,
-    onSuccess: (response) => {
+    onSuccess: (response, payload) => {
       if (response.status_code === 200 || response.status_code === 201) {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
-
-        queryClient.invalidateQueries({
-          queryKey: ['Quiz'],
-        });
-
         showToast({
           message: __(response.message, 'tutor'),
           type: 'success',
         });
+
+        if (['lesson', 'assignment', 'quiz', 'topic'].includes(payload.content_type)) {
+          queryClient.invalidateQueries({
+            queryKey: ['Topic'],
+          });
+          return;
+        }
+
+        if (['question'].includes(payload.content_type)) {
+          queryClient.invalidateQueries({
+            queryKey: ['Quiz', quizId],
+          });
+          return;
+        }
       }
     },
-    onError: (error: ErrorResponse) => {
+    onError: (error: ErrorResponse, payload) => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
       });
+
+      if (['answer'].includes(payload.content_type)) {
+        queryClient.invalidateQueries({
+          queryKey: ['Quiz', quizId],
+        });
+      }
     },
   });
 };

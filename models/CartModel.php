@@ -104,13 +104,25 @@ class CartModel {
 				$select_columns,
 				$where,
 				array(),
-				'item.id',
-				0,
-				0
+				'item.id'
 			);
 		}
 
 		return $cart_data;
+	}
+
+	/**
+	 * Check if the user has any items in their cart.
+	 *
+	 * @param int $user_id User ID.
+	 * @return bool True if the user has items in the cart, false otherwise.
+	 */
+	public function has_item_in_cart( $user_id ) {
+		$get_cart    = $this->get_cart_items( $user_id );
+		$courses     = $get_cart['courses'];
+		$total_count = $courses['total_count'];
+
+		return (int) $total_count > 0;
 	}
 
 	/**
@@ -197,9 +209,7 @@ class CartModel {
 			$select_columns,
 			$conditions,
 			array(),
-			'item.id',
-			0,
-			0
+			'item.id'
 		);
 
 		return (bool) $cart_data['total_count'];

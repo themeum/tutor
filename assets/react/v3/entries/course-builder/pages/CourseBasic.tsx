@@ -1,10 +1,9 @@
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
@@ -18,20 +17,17 @@ import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
-import { useModal } from '@Components/modals/Modal';
 
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import EditorModal from '@CourseBuilderComponents/modals/EditorModal';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import For from '@Controls/For';
 import Show from '@Controls/Show';
 import {
   type CourseDetailsResponse,
@@ -41,7 +37,7 @@ import {
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useInstructorListQuery } from '@Services/users';
+import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
@@ -51,22 +47,23 @@ const courseId = getCourseId();
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
   const queryClient = useQueryClient();
-  const { showModal } = useModal();
+  const isCourseDetailsFetching = useIsFetching({
+    queryKey: ['CourseDetails', courseId],
+  });
+  const currentUser = tutorConfig.current_user;
 
-  const author = form.watch('post_author');
-
-  const [instructorSearchText, setInstructorSearchText] = useState('');
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
-  const isAdministrator = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
 
   const isInstructorVisible =
     isTutorProEnabled &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
     isAdministrator &&
-    String(tutorConfig.current_user.data.id) === String(author?.id || '');
+    String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
 
   const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
 
@@ -131,10 +128,35 @@ const CourseBasic = () => {
     },
   ];
 
-  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
+  const userList = useUserListQuery({
+    context: 'edit',
+    roles: [],
+  });
+
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
-  const instructorOptions = instructorListQuery.data ?? [];
+  const instructorOptions = () => {
+    const convertedCourseInstructors = (courseDetails?.course_instructors || []).map((instructor) => ({
+      id: instructor.id,
+      name: instructor.display_name,
+      email: instructor.user_email,
+      avatar_url: instructor.avatar_url,
+    }));
+
+    if (convertedCourseInstructors.length && instructorListQuery.data?.length) {
+      return [...convertedCourseInstructors, ...instructorListQuery.data];
+    }
+
+    if (convertedCourseInstructors.length > 0) {
+      return convertedCourseInstructors;
+    }
+
+    if (instructorListQuery.data) {
+      return instructorListQuery.data;
+    }
+
+    return [];
+  };
 
   const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
@@ -206,64 +228,20 @@ const CourseBasic = () => {
             />
           </div>
 
-          <div css={styles.descriptionWrapper}>
-            <label css={styles.descriptionLabel}>{__('Description', 'tutor')}</label>
-
-            <Show when={courseDetails?.editor_used?.name === 'classic'}>
-              <div css={styles.editorsButtonWrapper}>
-                <For each={courseDetails?.editors}>
-                  {(editor) => (
-                    <Button
-                      key={editor.name}
-                      onClick={() => {
-                        showModal({
-                          component: EditorModal,
-                          props: {
-                            title: editor.label,
-                            editorUsed: editor,
-                          },
-                        });
-                      }}
-                      type="button"
-                      variant="secondary"
-                    >
-                      {editor.label}
-                    </Button>
-                  )}
-                </For>
-              </div>
-            </Show>
-
-            <div css={styles.editorWrapper}>
-              <Show
-                when={courseDetails?.editor_used?.name === 'classic'}
-                fallback={
-                  <div css={styles.editorOverlay}>
-                    <Button
-                      variant="primary"
-                      onClick={() =>
-                        showModal({
-                          component: EditorModal,
-                          props: {
-                            title: courseDetails?.editor_used?.label,
-                            editorUsed: courseDetails?.editor_used,
-                          },
-                        })
-                      }
-                    >
-                      {courseDetails?.editor_used?.label}
-                    </Button>
-                  </div>
-                }
-              >
-                <Controller
-                  name="post_content"
-                  control={form.control}
-                  render={(controllerProps) => <FormWPEditor {...controllerProps} />}
-                />
-              </Show>
-            </div>
-          </div>
+          <Controller
+            name="post_content"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormWPEditor
+                {...controllerProps}
+                label={__('Description', 'tutor')}
+                hasCustomEditorSupport
+                editorUsed={courseDetails?.editor_used}
+                editors={courseDetails?.editors}
+                loading={!!isCourseDetailsFetching}
+              />
+            )}
+          />
 
           <CourseSettings />
         </div>
@@ -280,6 +258,9 @@ const CourseBasic = () => {
               placeholder="Select visibility status"
               options={visibilityStatusOptions}
               leftIcon={<SVGIcon name="eye" width={32} height={32} />}
+              onChange={() => {
+                form.setValue('post_password', '');
+              }}
             />
           )}
         />
@@ -288,10 +269,14 @@ const CourseBasic = () => {
           <Controller
             name="post_password"
             control={form.control}
+            rules={{
+              required: __('Password is required', 'tutor'),
+            }}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
                 label={__('Password', 'tutor')}
+                placeholder={__('Enter password', 'tutor')}
                 type="password"
                 isPassword
                 selectOnFocus
@@ -310,7 +295,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
-              infoText={__('Size: 700x430 pixels', 'tutor')}
+              infoText={__('Standard Size: 800x450 pixels', 'tutor')}
             />
           )}
         />
@@ -323,7 +308,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
-              infoText={__('Supported file formats .mp4 ', 'tutor')}
+              infoText={__('Supported file formats .mp4', 'tutor')}
               supportedFormats={['mp4']}
             />
           )}
@@ -448,7 +433,7 @@ const CourseBasic = () => {
           )}
         />
 
-        {tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
+        {currentUser.roles.includes(TutorRoles.ADMINISTRATOR) && (
           <Controller
             name="post_author"
             control={form.control}
@@ -456,10 +441,9 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Author', 'tutor')}
-                options={instructorOptions}
+                options={userList.data ?? []}
                 placeholder={__('Search to add author', 'tutor')}
                 isSearchable
-                handleSearchOnChange={setInstructorSearchText}
                 disabled={!isAuthorEditable}
               />
             )}
@@ -474,10 +458,9 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Instructors', 'tutor')}
-                options={instructorOptions}
+                options={instructorOptions()}
                 placeholder={__('Search to add instructor', 'tutor')}
                 isSearchable
-                handleSearchOnChange={setInstructorSearchText}
                 isMultiSelect
               />
             )}
@@ -540,6 +523,7 @@ const styles = {
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: ${spacing[10]};
+    gap: ${spacing[8]};
 
     * {
       flex-shrink: 0;

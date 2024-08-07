@@ -9,70 +9,76 @@ import type React from 'react';
 import { useEffect } from 'react';
 
 interface BasicModalWrapperProps {
-	children: React.ReactNode;
-	onClose: () => void;
-	icon?: React.ReactNode;
-	title?: string;
-	subtitle?: string;
-	actions?: React.ReactNode;
-	headerChildren?: React.ReactNode;
-	entireHeader?: React.ReactNode;
+  children: React.ReactNode;
+  onClose: () => void;
+  icon?: React.ReactNode;
+  title?: string;
+  subtitle?: string;
+  actions?: React.ReactNode;
+  headerChildren?: React.ReactNode;
+  entireHeader?: React.ReactNode;
+  fullScreen?: boolean;
 }
 
 const BasicModalWrapper = ({
-	children,
-	onClose,
-	title,
-	subtitle,
-	icon,
-	headerChildren,
-	entireHeader,
-	actions,
+  children,
+  onClose,
+  title,
+  subtitle,
+  icon,
+  headerChildren,
+  entireHeader,
+  actions,
+  fullScreen,
 }: BasicModalWrapperProps) => {
-	useEffect(() => {
-		document.body.style.overflow = 'hidden';
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
 
-		return () => {
-			document.body.style.overflow = 'initial';
-		};
-	}, []);
+    return () => {
+      document.body.style.overflow = 'initial';
+    };
+  }, []);
 
-	return (
-		<div css={styles.container}>
-			<div css={styles.header}>
-				<div css={styles.headerContent}>
-					<div css={styles.iconWithTitle}>
-						<Show when={icon}>{icon}</Show>
-						<Show when={title}>
-							<p css={styles.title}>{title}</p>
-						</Show>
-					</div>
-					<Show when={subtitle}>
-						<span css={styles.subtitle}>{subtitle}</span>
-					</Show>
-				</div>
-				<div css={styles.actionsWrapper}>
-					<Show
-						when={actions}
-						fallback={
-							<button type="button" css={styles.closeButton} onClick={onClose}>
-								<SVGIcon name="timesThin" width={24} height={24} />
-							</button>
-						}
-					>
-						{actions}
-					</Show>
-				</div>
-			</div>
-			<div css={styles.content}>{children}</div>
-		</div>
-	);
+  return (
+    <div css={styles.container({ isFullScreen: fullScreen })}>
+      <div css={styles.header}>
+        <div css={styles.headerContent}>
+          <div css={styles.iconWithTitle}>
+            <Show when={icon}>{icon}</Show>
+            <Show when={title}>
+              <p css={styles.title}>{title}</p>
+            </Show>
+          </div>
+          <Show when={subtitle}>
+            <span css={styles.subtitle}>{subtitle}</span>
+          </Show>
+        </div>
+        <div css={styles.actionsWrapper}>
+          <Show
+            when={actions}
+            fallback={
+              <button type="button" css={styles.closeButton} onClick={onClose}>
+                <SVGIcon name="timesThin" width={24} height={24} />
+              </button>
+            }
+          >
+            {actions}
+          </Show>
+        </div>
+      </div>
+      <div css={styles.content({ isFullScreen: fullScreen })}>{children}</div>
+    </div>
+  );
 };
 
 export default BasicModalWrapper;
 
 const styles = {
-	container: css`
+  container: ({
+    isFullScreen,
+  }: {
+    isFullScreen?: boolean;
+  }) => css`
 		position: relative;
 		background: ${colorTokens.background.white};
 		max-width: 1218px;
@@ -81,12 +87,21 @@ const styles = {
 		overflow: hidden;
 		top: 50%;
 		transform: translateY(-50%);
+		
+		${
+      isFullScreen &&
+      css`
+				max-width: 100vw;
+				width: 100vw;
+				height: 100vh;
+			`
+    }
 
 		${Breakpoint.smallTablet} {
 			width: 90%;
 		}
 	`,
-	header: css`
+  header: css`
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -96,33 +111,34 @@ const styles = {
 		border-bottom: 1px solid ${colorTokens.stroke.divider};
 		padding-inline: ${spacing[16]};
 	`,
-	headerContent: css`
+  headerContent: css`
 		place-self: center start;
 		display: inline-flex;
 		align-items: center;
 		gap: ${spacing[12]};
 	`,
-	iconWithTitle: css`
+  iconWithTitle: css`
 		display: inline-flex;
 		align-items: center;
 		gap: ${spacing[4]};
 		color: ${colorTokens.icon.default};
 	`,
-	title: css`
+  title: css`
 		${typography.body('medium')};
 		color: ${colorTokens.text.title};
+    text-transform: capitalize;
 	`,
-	subtitle: css`
+  subtitle: css`
 		${styleUtils.text.ellipsis(1)}
 		${typography.caption()};
 		color: ${colorTokens.text.hints};
 	`,
-	actionsWrapper: css`
+  actionsWrapper: css`
 		place-self: center end;
 		display: inline-flex;
 		gap: ${spacing[16]};
 	`,
-	closeButton: css`
+  closeButton: css`
 		${styleUtils.resetButton};
 		display: inline-flex;
 		align-items: center;
@@ -147,8 +163,19 @@ const styles = {
 			box-shadow: ${shadow.focus};
 		}
 	`,
-	content: css`
+  content: ({
+    isFullScreen,
+  }: {
+    isFullScreen?: boolean;
+  }) => css`
 		background-color: ${colorTokens.background.white};
 		overflow-y: auto;
+
+		${
+      isFullScreen &&
+      css`
+				height: calc(100% - ${modal.BASIC_MODAL_HEADER_HEIGHT}px);
+			`
+    }
 	`,
 };
