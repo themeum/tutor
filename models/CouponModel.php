@@ -746,7 +746,7 @@ class CouponModel {
 				}
 				break;
 		}
-	
+
 		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id );
 	}
 
@@ -792,24 +792,12 @@ class CouponModel {
 	 * @return boolean
 	 */
 	public function has_coupon_validity( object $coupon ): bool {
-		$has_validity = true;
-
+		$now         = time();
 		$start_date  = strtotime( $coupon->start_date_gmt );
 		$expire_date = strtotime( $coupon->expire_date_gmt );
 
-		$now = time();
-
-		// Check if coupon start date is greater than current date.
-		if ( $start_date > $now ) {
-			$has_validity = false;
-		}
-
-		// Check if coupon expiry date is less than current date.
-		if ( $expire_date < gmdate( 'Y-m-d' ) ) {
-			$has_validity = false;
-		}
-
-		return $has_validity;
+		// Check if the current time is within the start and expiry dates.
+		return ( $now >= $start_date ) && ( $now <= $expire_date );
 	}
 
 	/**
