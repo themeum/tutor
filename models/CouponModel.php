@@ -819,11 +819,11 @@ class CouponModel {
 		$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
 		if ( $coupon_usage_count >= $coupon_usage_limit ) {
 			$has_limit = false;
-		}
-
-		$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
-		if ( $user_usage_count >= $user_usage_limit ) {
-			$has_limit = false;
+		} else {
+			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
+			if ( $user_usage_count >= $user_usage_limit ) {
+				$has_limit = false;
+			}
 		}
 
 		return apply_filters( 'tutor_coupon_has_user_usage_limit', $has_limit, $coupon, $user_id );
