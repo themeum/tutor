@@ -746,7 +746,8 @@ class CouponModel {
 				}
 				break;
 		}
-		return apply_filters( 'tutor_coupon_is_applicable_to_bundle', $is_applicable, $coupon, $object_id );
+	
+		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id );
 	}
 
 	/**
@@ -778,7 +779,7 @@ class CouponModel {
 			$is_meet_requirement = count( $course_ids ) >= $min_quantity;
 		}
 
-		return $is_meet_requirement;
+		return apply_filters( 'tutor_coupon_is_meet_requirement', $is_meet_requirement, $coupon, $course_id );
 	}
 
 	/**
@@ -837,7 +838,7 @@ class CouponModel {
 			$has_limit = false;
 		}
 
-		return $has_limit;
+		return apply_filters( 'tutor_coupon_has_user_usage_limit', $has_limit, $coupon, $user_id );
 	}
 
 	/**
